@@ -1,15 +1,15 @@
 #include "bumblebee_weapons.qh"
 
-#ifdef IMPLEMENTATION
-
+#ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
+#endif
 
 #ifdef SVQC
 
 void bumblebee_fire_cannon(entity this, entity _gun, string _tagname, entity _owner)
 {
     vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND_VEH_BUMBLEBEE_FIRE,
+    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH, SND_VEH_BUMBLEBEE_FIRE,
                         v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
                         autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
                         DEATH_VH_BUMB_GUN.m_id, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
@@ -29,16 +29,12 @@ bool bumble_raygun_send(entity this, entity to, float sf)
 
     if(sf & BRG_START)
     {
-        WriteCoord(MSG_ENTITY, this.hook_start_x);
-        WriteCoord(MSG_ENTITY, this.hook_start_y);
-        WriteCoord(MSG_ENTITY, this.hook_start_z);
+        WriteVector(MSG_ENTITY, this.hook_start);
     }
 
     if(sf & BRG_END)
     {
-        WriteCoord(MSG_ENTITY, this.hook_end_x);
-        WriteCoord(MSG_ENTITY, this.hook_end_y);
-        WriteCoord(MSG_ENTITY, this.hook_end_z);
+        WriteVector(MSG_ENTITY, this.hook_end);
     }
 
     return true;
@@ -77,17 +73,13 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
 
     if(sf & BRG_START)
     {
-        this.origin_x = ReadCoord();
-        this.origin_y = ReadCoord();
-        this.origin_z = ReadCoord();
+        this.origin = ReadVector();
         setorigin(this, this.origin);
     }
 
     if(sf & BRG_END)
     {
-        this.bumble_origin_x = ReadCoord();
-        this.bumble_origin_y = ReadCoord();
-        this.bumble_origin_z = ReadCoord();
+        this.bumble_origin = ReadVector();
     }
     return true;
 }
@@ -104,7 +96,8 @@ void bumble_raygun_draw(entity this)
 
     if(this.bumble_raygun_nextdraw < time)
     {
-        boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        entity eff = REGISTRY_GET(Effects, this.traileffect);
+        boxparticles(particleeffectnum(eff), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(this.lip, this, this.bumble_origin, this.bumble_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
         this.bumble_raygun_nextdraw = time + 0.1;
     }
@@ -130,7 +123,5 @@ void bumble_raygun_draw(entity this)
         Draw_CylindricLine(_vtmp1, this.bumble_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
     }
 }
-
-#endif
 
 #endif

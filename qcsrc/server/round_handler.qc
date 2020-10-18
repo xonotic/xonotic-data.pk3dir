@@ -1,8 +1,10 @@
 #include "round_handler.qh"
 
-#include "campaign.qh"
-#include "command/vote.qh"
-#include "../common/util.qh"
+#include <common/mapobjects/triggers.qh>
+#include <common/util.qh>
+#include <server/campaign.qh>
+#include <server/command/vote.qh>
+#include <server/world.qh>
 
 void round_handler_Think(entity this)
 {
@@ -84,7 +86,7 @@ void round_handler_FirstThink(entity this)
 	this.nextthink = max(time, game_starttime);
 }
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func)
+void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, void() roundStart_func)
 {
 	if (round_handler)
 	{

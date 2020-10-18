@@ -1,0 +1,59 @@
+#pragma once
+
+CLASS(OverkillShotgun, Weapon)
+/* spawnfunc */ ATTRIB(OverkillShotgun, m_canonical_spawnfunc, string, "weapon_okshotgun");
+/* ammotype  */ ATTRIB(OverkillShotgun, ammo_type, int, RES_SHELLS);
+/* impulse   */ ATTRIB(OverkillShotgun, impulse, int, 2);
+/* flags     */ ATTRIB(OverkillShotgun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
+/* rating    */ ATTRIB(OverkillShotgun, bot_pickupbasevalue, float, 6000);
+/* color     */ ATTRIB(OverkillShotgun, wpcolor, vector, '0.5 0.25 0');
+/* modelname */ ATTRIB(OverkillShotgun, mdl, string, "ok_shotgun");
+#ifdef GAMEQC
+/* model     */ ATTRIB(OverkillShotgun, m_model, Model, MDL_OK_SHOTGUN_ITEM);
+#endif
+/* crosshair */ ATTRIB(OverkillShotgun, w_crosshair, string, "gfx/crosshairshotgun");
+/* crosshair */ ATTRIB(OverkillShotgun, w_crosshair_size, float, 0.65);
+/* wepimg    */ ATTRIB(OverkillShotgun, model2, string, "ok_weapon_shotgun");
+/* refname   */ ATTRIB(OverkillShotgun, netname, string, "okshotgun");
+/* wepname   */ ATTRIB(OverkillShotgun, m_name, string, _("Overkill Shotgun"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, animtime, float, PRI) \
+		P(class, prefix, bot_range, float, PRI) \
+		P(class, prefix, bullets, float, PRI) \
+		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, refire, float, PRI) \
+		P(class, prefix, solidpenetration, float, PRI) \
+		P(class, prefix, spread, float, PRI) \
+		P(class, prefix, animtime, float, SEC) \
+		P(class, prefix, damage, float, SEC) \
+		P(class, prefix, delay, float, SEC) \
+		P(class, prefix, edgedamage, float, SEC) \
+		P(class, prefix, force, float, SEC) \
+		P(class, prefix, force_zscale, float, SEC) \
+		P(class, prefix, lifetime, float, SEC) \
+		P(class, prefix, radius, float, SEC) \
+		P(class, prefix, refire, float, SEC) \
+		P(class, prefix, refire_type, float, SEC) \
+		P(class, prefix, shotangle, float, SEC) \
+		P(class, prefix, speed, float, SEC) \
+		P(class, prefix, spread, float, SEC) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, OverkillShotgun, okshotgun)
+#undef X
+
+ENDCLASS(OverkillShotgun)
+REGISTER_WEAPON(OVERKILL_SHOTGUN, okshotgun, NEW(OverkillShotgun));
+
+//SPAWNFUNC_WEAPON(weapon_okshotgun, WEP_OVERKILL_SHOTGUN)

@@ -1,15 +1,12 @@
+#include "radarmap.qh"
 #ifdef RADARMAP
 
-#include "radarmap.qh"
 #include <common/command/_mod.qh>
-#include "radarmap.qh"
-
-#include "../g_world.qh"
-#include "../g_subs.qh"
-
+#include <common/mapobjects/triggers.qh>
 #include <common/util.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
+#include <server/intermission.qh>
+#include <server/world.qh>
 
 // ===============================================
 //	Generates radar map images for use in the HUD
@@ -231,7 +228,7 @@ void RadarMap_Think(entity this)
 		this.maxs_x = (mi_picmax.x - mi_picmin.x) / this.size.x;
 		this.maxs_y = (mi_picmax.y - mi_picmin.y) / this.size.y;
 		this.maxs_z = mi_max.z - mi_min.z;
-		LOG_INFO("Picture mins/maxs: ", ftos(this.maxs.x), " and ", ftos(this.maxs.y), " should match\n");
+		LOG_INFO("Picture mins/maxs: ", ftos(this.maxs.x), " and ", ftos(this.maxs.y), " should match");
 		this.netname = strzone(strcat("gfx/", mi_shortname, "_radar.xpm"));
 		if (!(this.count & 1))
 		{
@@ -246,7 +243,7 @@ void RadarMap_Think(entity this)
 			{
 				fclose(this.cnt);
 
-				LOG_INFO(this.netname, " already exists, aborting (you may want to specify --force)\n");
+				LOG_INFO(this.netname, " already exists, aborting (you may want to specify --force)");
 				RadarMap_Next();
 				return;
 			}
@@ -254,12 +251,12 @@ void RadarMap_Think(entity this)
 		this.cnt = fopen(this.netname, FILE_WRITE);
 		if (this.cnt < 0)
 		{
-			LOG_INFO("Error writing ", this.netname, "\n");
+			LOG_INFO("Error writing ", this.netname);
 			delete(this);
 			radarmapper = NULL;
 			return;
 		}
-		LOG_INFO("Writing to ", this.netname, "...\n");
+		LOG_INFO("Writing to ", this.netname, "...");
 		fputs(this.cnt, "/* XPM */\n");
 		fputs(this.cnt, "static char *RadarMap[] = {\n");
 		fputs(this.cnt, "/* columns rows colors chars-per-pixel */\n");
@@ -329,7 +326,7 @@ void RadarMap_Think(entity this)
 			else
 			{
 				fputs(this.cnt, "\",\n");
-				LOG_INFO(ftos(this.size.y - this.frame), " lines left\n");
+				LOG_INFO(ftos(this.size.y - this.frame), " lines left");
 			}
 		}
 
@@ -351,7 +348,7 @@ void RadarMap_Think(entity this)
 			else
 			{
 				fputs(this.cnt, "\",\n");
-				LOG_INFO(ftos(this.size.y - this.frame), " lines left\n");
+				LOG_INFO(ftos(this.size.y - this.frame), " lines left");
 			}
 		}
 
@@ -363,12 +360,12 @@ void RadarMap_Think(entity this)
 		// close the file
 		fputs(this.cnt, "};\n");
 		fclose(this.cnt);
-		LOG_INFO("Finished. Please edit data/", this.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
+		LOG_INFO("Finished. Please edit data/", this.netname, " with an image editing application and place it in the TGA format in the gfx folder.");
 		RadarMap_Next();
 	}
 }
 
-bool RadarMap_Make(float argc)
+bool RadarMap_Make(int argc)
 {
 	float i;
 
@@ -449,7 +446,7 @@ bool RadarMap_Make(float argc)
 
 		if (radarmapper)  // after doing the arguments, see if we successfully went forward.
 		{
-			LOG_INFO("Radarmap entity spawned.\n");
+			LOG_INFO("Radarmap entity spawned.");
 			return true;  // if so, don't print usage.
 		}
 	}

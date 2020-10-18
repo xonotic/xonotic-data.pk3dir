@@ -6,5 +6,8 @@
 #ifdef SVQC
     #include <common/monsters/sv_spawn.qh>
 #endif
+#ifdef SVQC
+    #include <common/monsters/sv_spawner.qh>
+#endif
 
 #include <common/monsters/monster/_mod.qh>

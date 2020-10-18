@@ -3,7 +3,7 @@
 #include <common/deathtypes/all.qh>
 #include <server/round_handler.qh>
 
-REGISTER_MUTATOR(rm, cvar("g_instagib"));
+REGISTER_MUTATOR(rm, autocvar_g_instagib);
 
 MUTATOR_HOOKFUNCTION(rm, Damage_Calculate)
 {

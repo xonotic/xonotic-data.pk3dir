@@ -1,23 +1,147 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include "constants.qh"
-	#include "../client/mutators/events.qh"
-    #include "mapinfo.qh"
-    #include "notifications/all.qh"
-	#include "scores.qh"
-    #include <common/deathtypes/all.qh>
+	#include <client/mutators/_mod.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+	#include <common/scores.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
-	#include "../server/mutators/events.qh"
-    #include "notifications/all.qh"
-    #include <common/deathtypes/all.qh>
-	#include "scores.qh"
-    #include "mapinfo.qh"
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+	#include <common/scores.qh>
+	#include <server/mutators/_mod.qh>
+#endif
+
+#ifdef SVQC
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity) // returns the number of traces done, for benchmarking
+{
+	vector pos, dir, t;
+	float nudge;
+	entity stopentity;
+
+	//nudge = 2 * cvar("collision_impactnudge"); // why not?
+	nudge = 0.5;
+
+	dir = normalize(v2 - v1);
+
+	pos = v1 + dir * nudge;
+
+	float c;
+	c = 0;
+
+	for (;;)
+	{
+		if(pos * dir >= v2 * dir)
+		{
+			// went too far
+			trace_fraction = 1;
+			trace_endpos = v2;
+			return c;
+		}
+
+		tracebox(pos, mi, ma, v2, nomonsters, forent);
+		++c;
+
+		if(c == 50)
+		{
+			LOG_TRACE("When tracing from ", vtos(v1), " to ", vtos(v2));
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos));
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos));
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)));
+		}
+
+		stopentity = trace_ent;
+
+		if(trace_startsolid)
+		{
+			// we started inside solid.
+			// then trace from endpos to pos
+			t = trace_endpos;
+			tracebox(t, mi, ma, pos, nomonsters, forent);
+			++c;
+			if(trace_startsolid)
+			{
+				// t is still inside solid? bad
+				// force advance, then, and retry
+				pos = t + dir * nudge;
+
+				// but if we hit an entity, stop RIGHT before it
+				if(stopatentity && stopentity && stopentity != ignorestopatentity)
+				{
+					trace_ent = stopentity;
+					trace_endpos = t;
+					trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+					return c;
+				}
+			}
+			else
+			{
+				// we actually LEFT solid!
+				trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+				return c;
+			}
+		}
+		else
+		{
+			// pos is outside solid?!? but why?!? never mind, just return it.
+			trace_endpos = pos;
+			trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+			return c;
+		}
+	}
+}
+
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity)
+{
+	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity, ignorestopatentity);
+}
 #endif
 
 #ifdef GAMEQC
+/*
+==================
+findbetterlocation
+
+Returns a point at least 12 units away from walls
+(useful for explosion animations, although the blast is performed where it really happened)
+Ripped from DPMod
+==================
+*/
+vector findbetterlocation (vector org, float mindist)
+{
+	vector vec = mindist * '1 0 0';
+	int c = 0;
+	while (c < 6)
+	{
+		traceline (org, org + vec, true, NULL);
+		vec = vec * -1;
+		if (trace_fraction < 1)
+		{
+			vector loc = trace_endpos;
+			traceline (loc, loc + vec, true, NULL);
+			if (trace_fraction >= 1)
+				org = loc + vec;
+		}
+		if (c & 1)
+		{
+			float h = vec.y;
+			vec.y = vec.x;
+			vec.x = vec.z;
+			vec.z = h;
+		}
+		c = c + 1;
+	}
+
+	return org;
+}
+
 /*
 * Get "real" origin, in worldspace, even if ent is attached to something else.
 */
@@ -95,7 +219,8 @@ void wordwrap_cb(string s, float l, void(string) callback)
 
 	s = strzone(s);
 	lleft = l;
-	for (i = 0;i < strlen(s);++i)
+	int len = strlen(s);
+	for (i = 0; i < len; ++i)
 	{
 		if (substring(s, i, 2) == "\\n")
 		{
@@ -113,12 +238,12 @@ void wordwrap_cb(string s, float l, void(string) callback)
 			if (lleft > 0)
 			{
 				callback(" ");
-				lleft = lleft - 1;
+				--lleft;
 			}
 		}
 		else
 		{
-			for (j = i+1;j < strlen(s);++j)
+			for (j = i+1; j < len; ++j)
 				//    ^^ this skips over the first character of a word, which
 				//       is ALWAYS part of the word
 				//       this is safe since if i+1 == strlen(s), i will become
@@ -146,7 +271,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 				lleft = l;
 			}
 			callback(substring(s, i, wlen));
-			lleft = lleft - wlen;
+			lleft -= wlen;
 			i = j - 1;
 		}
 	}
@@ -193,20 +318,7 @@ string ScoreString(int pFlags, float pValue)
 	if((pValue == 0) && (pFlags & (SFL_HIDE_ZERO | SFL_RANK | SFL_TIME)))
 		valstr = "";
 	else if(pFlags & SFL_RANK)
-	{
-		valstr = ftos(pValue);
-		l = strlen(valstr);
-		if((l >= 2) && (substring(valstr, l - 2, 1) == "1"))
-			valstr = strcat(valstr, "th");
-		else if(substring(valstr, l - 1, 1) == "1")
-			valstr = strcat(valstr, "st");
-		else if(substring(valstr, l - 1, 1) == "2")
-			valstr = strcat(valstr, "nd");
-		else if(substring(valstr, l - 1, 1) == "3")
-			valstr = strcat(valstr, "rd");
-		else
-			valstr = strcat(valstr, "th");
-	}
+		valstr = count_ordinal(pValue);
 	else if(pFlags & SFL_TIME)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
@@ -334,19 +446,20 @@ STATIC_INIT(compressShortVector)
 		l *= f;
 	}
 
-	if(cvar("developer"))
+	if(cvar("developer") > 0)
 	{
-		LOG_INFO("Verifying vector compression table...\n");
+		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFO("BROKEN vector compression: ", ftos(i));
-				LOG_INFO(" -> ", vtos(decompressShortVector(i)));
-				LOG_INFO(" -> ", ftos(compressShortVector(decompressShortVector(i))));
-				LOG_INFO("\n");
-				error("b0rk");
+				LOG_FATALF(
+				    "BROKEN vector compression: %s -> %s -> %s",
+				    ftos(i),
+				    vtos(decompressShortVector(i)),
+				    ftos(compressShortVector(decompressShortVector(i)))
+                );
 			}
-		LOG_INFO("Done.\n");
+		LOG_TRACE("Done.");
 	}
 }
 
@@ -397,8 +510,8 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
-			int wflags = Weapons_from(w).spawnflags;
-			if((wflags & WEP_FLAG_HIDDEN) && (wflags & WEP_FLAG_MUTATORBLOCKED) && !(wflags & WEP_FLAG_NORMAL))
+			int wflags = REGISTRY_GET(Weapons, w).spawnflags;
+			if(wflags & WEP_FLAG_SPECIALATTACK)
 				continue;
 			for(i = 0; i < n; ++i)
 				if(stof(argv(i)) == w)
@@ -451,14 +564,12 @@ void get_mi_min_max(float mode)
 {
 	vector mi, ma;
 
-	if(mi_shortname)
-		strunzone(mi_shortname);
-	mi_shortname = mapname;
-	if(!strcasecmp(substring(mi_shortname, 0, 5), "maps/"))
-		mi_shortname = substring(mi_shortname, 5, strlen(mi_shortname) - 5);
-	if(!strcasecmp(substring(mi_shortname, strlen(mi_shortname) - 4, 4), ".bsp"))
-		mi_shortname = substring(mi_shortname, 0, strlen(mi_shortname) - 4);
-	mi_shortname = strzone(mi_shortname);
+	string s = mapname;
+	if(!strcasecmp(substring(s, 0, 5), "maps/"))
+		s = substring(s, 5, strlen(s) - 5);
+	if(!strcasecmp(substring(s, strlen(s) - 4, 4), ".bsp"))
+		s = substring(s, 0, strlen(s) - 4);
+	strcpy(mi_shortname, s);
 
 #ifdef CSQC
 	mi = world.mins;
@@ -596,7 +707,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		LOG_INFOF("Error: cvar %s doesn't exist!\n", tmp_cvar);
+		LOG_INFOF("Error: cvar %s doesn't exist!", tmp_cvar);
 		return 0;
 	}
 
@@ -638,7 +749,7 @@ int cvar_settemp_restore()
 			++j;
 		}
 		else
-			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", it.netname);
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.", it.netname);
 	});
 
 #else
@@ -652,7 +763,7 @@ int cvar_settemp_restore()
 			++j;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.", e.netname));
 	}
 #endif
 
@@ -1127,6 +1238,8 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 	vector v;
 	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
 		armorblock = 0;
+	if (deathtype & HITTYPE_ARMORPIERCE)
+		armorblock = 0;
 	v.y = bound(0, damage * armorblock, a); // save
 	v.x = bound(0, damage - v.y, damage); // take
 	v.z = 0;
@@ -1175,9 +1288,17 @@ float matchacl(string acl, string str)
 		if(s == t)
 		{
 			r = d;
+			break; // if we found a killing case, apply it! other settings may be allowed in the future, but this one is caught
 		}
 	}
 	return r;
+}
+
+ERASEABLE
+void write_String_To_File(int fh, string str, bool alsoprint)
+{
+	fputs(fh, str);
+	if (alsoprint) LOG_INFO(str);
 }
 
 string get_model_datafilename(string m, float sk, string fil)
@@ -1267,7 +1388,12 @@ float get_model_parameters(string m, float sk)
 				case "reserved":    get_model_parameters_species = SPECIES_RESERVED;    break;
 			}
 		if(c == "sex")
+		{
+			if (s == "Male")				s = _("Male");
+			else if (s == "Female")			s = _("Female");
+			else if (s == "Undisclosed")	s = _("Undisclosed");
 			get_model_parameters_sex = s;
+		}
 		if(c == "weight")
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
@@ -1304,6 +1430,158 @@ float get_model_parameters(string m, float sk)
 	fclose(fh);
 
 	return 1;
+}
+
+string translate_key(string key)
+{
+	if (prvm_language == "en") return key;
+
+	if (substring(key, 0, 1) == "<")
+	{
+		if (key == "<KEY NOT FOUND>") return _("<KEY NOT FOUND>");
+		if (key == "<UNKNOWN KEYNUM>") return _("<UNKNOWN KEYNUM>");
+	}
+
+	switch(key)
+	{
+		case "TAB":				return _("TAB");
+		case "ENTER":			return _("ENTER");
+		case "ESCAPE":			return _("ESCAPE");
+		case "SPACE":			return _("SPACE");
+
+		case "BACKSPACE":		return _("BACKSPACE");
+		case "UPARROW":			return _("UPARROW");
+		case "DOWNARROW":		return _("DOWNARROW");
+		case "LEFTARROW":		return _("LEFTARROW");
+		case "RIGHTARROW":		return _("RIGHTARROW");
+
+		case "ALT":				return _("ALT");
+		case "CTRL":			return _("CTRL");
+		case "SHIFT":			return _("SHIFT");
+
+		case "INS":				return _("INS");
+		case "DEL":				return _("DEL");
+		case "PGDN":			return _("PGDN");
+		case "PGUP":			return _("PGUP");
+		case "HOME":			return _("HOME");
+		case "END":				return _("END");
+
+		case "PAUSE":			return _("PAUSE");
+
+		case "NUMLOCK":			return _("NUMLOCK");
+		case "CAPSLOCK":		return _("CAPSLOCK");
+		case "SCROLLOCK":		return _("SCROLLOCK");
+
+		case "SEMICOLON":		return _("SEMICOLON");
+		case "TILDE":			return _("TILDE");
+		case "BACKQUOTE":		return _("BACKQUOTE");
+		case "QUOTE":			return _("QUOTE");
+		case "APOSTROPHE":		return _("APOSTROPHE");
+		case "BACKSLASH":		return _("BACKSLASH");
+	}
+
+	if (substring(key, 0, 1) == "F")
+	{
+		string subkey = substring(key, 1, -1);
+		if (IS_DIGIT(substring(key, 3, 1))) // check only first digit
+		{
+			return sprintf(_("F%d"), stof(subkey));
+		}
+		// continue in case there is another key name starting with F
+	}
+
+	if (substring(key, 0, 3) == "KP_")
+	{
+		string subkey = substring(key, 3, -1);
+		if (IS_DIGIT(substring(key, 3, 1))) // check only first digit
+		{
+			return sprintf(_("KP_%d"), stof(subkey));
+		}
+
+		switch(subkey)
+		{
+			case "INS":				return sprintf(_("KP_%s"), _("INS"));
+			case "END":				return sprintf(_("KP_%s"), _("END"));
+			case "DOWNARROW":		return sprintf(_("KP_%s"), _("DOWNARROW"));
+			case "PGDN":			return sprintf(_("KP_%s"), _("PGDN"));
+			case "LEFTARROW":		return sprintf(_("KP_%s"), _("LEFTARROW"));
+			case "RIGHTARROW":		return sprintf(_("KP_%s"), _("RIGHTARROW"));
+			case "HOME":			return sprintf(_("KP_%s"), _("HOME"));
+			case "UPARROW":			return sprintf(_("KP_%s"), _("UPARROW"));
+			case "PGUP":			return sprintf(_("KP_%s"), _("PGUP"));
+			case "PERIOD":			return sprintf(_("KP_%s"), _("PERIOD"));
+			case "DEL":				return sprintf(_("KP_%s"), _("DEL"));
+			case "DIVIDE":			return sprintf(_("KP_%s"), _("DIVIDE"));
+			case "SLASH":			return sprintf(_("KP_%s"), _("SLASH"));
+			case "MULTIPLY":		return sprintf(_("KP_%s"), _("MULTIPLY"));
+			case "MINUS":			return sprintf(_("KP_%s"), _("MINUS"));
+			case "PLUS":			return sprintf(_("KP_%s"), _("PLUS"));
+			case "ENTER":			return sprintf(_("KP_%s"), _("ENTER"));
+			case "EQUALS":			return sprintf(_("KP_%s"), _("EQUALS"));
+			default:				return key;
+		}
+	}
+
+	if (key == "PRINTSCREEN") return _("PRINTSCREEN");
+
+	if (substring(key, 0, 5) == "MOUSE")
+		return sprintf(_("MOUSE%d"), stof(substring(key, 5, -1)));
+
+	if (key == "MWHEELUP") return _("MWHEELUP");
+	if (key == "MWHEELDOWN") return _("MWHEELDOWN");
+
+	if (substring(key, 0,3) == "JOY")
+		return sprintf(_("JOY%d"), stof(substring(key, 3, -1)));
+
+	if (substring(key, 0,3) == "AUX")
+		return sprintf(_("AUX%d"), stof(substring(key, 3, -1)));
+
+	if (substring(key, 0, 4) == "X360_")
+	{
+		string subkey = substring(key, 4, -1);
+		switch(subkey)
+		{
+			case "DPAD_UP":					return sprintf(_("X360_%s"), _("DPAD_UP"));
+			case "DPAD_DOWN":				return sprintf(_("X360_%s"), _("DPAD_DOWN"));
+			case "DPAD_LEFT":				return sprintf(_("X360_%s"), _("DPAD_LEFT"));
+			case "DPAD_RIGHT":				return sprintf(_("X360_%s"), _("DPAD_RIGHT"));
+			case "START":					return sprintf(_("X360_%s"), _("START"));
+			case "BACK":					return sprintf(_("X360_%s"), _("BACK"));
+			case "LEFT_THUMB":				return sprintf(_("X360_%s"), _("LEFT_THUMB"));
+			case "RIGHT_THUMB":				return sprintf(_("X360_%s"), _("RIGHT_THUMB"));
+			case "LEFT_SHOULDER":			return sprintf(_("X360_%s"), _("LEFT_SHOULDER"));
+			case "RIGHT_SHOULDER":			return sprintf(_("X360_%s"), _("RIGHT_SHOULDER"));
+			case "LEFT_TRIGGER":			return sprintf(_("X360_%s"), _("LEFT_TRIGGER"));
+			case "RIGHT_TRIGGER":			return sprintf(_("X360_%s"), _("RIGHT_TRIGGER"));
+			case "LEFT_THUMB_UP":			return sprintf(_("X360_%s"), _("LEFT_THUMB_UP"));
+			case "LEFT_THUMB_DOWN":			return sprintf(_("X360_%s"), _("LEFT_THUMB_DOWN"));
+			case "LEFT_THUMB_LEFT":			return sprintf(_("X360_%s"), _("LEFT_THUMB_LEFT"));
+			case "LEFT_THUMB_RIGHT":		return sprintf(_("X360_%s"), _("LEFT_THUMB_RIGHT"));
+			case "RIGHT_THUMB_UP":			return sprintf(_("X360_%s"), _("RIGHT_THUMB_UP"));
+			case "RIGHT_THUMB_DOWN":		return sprintf(_("X360_%s"), _("RIGHT_THUMB_DOWN"));
+			case "RIGHT_THUMB_LEFT":		return sprintf(_("X360_%s"), _("RIGHT_THUMB_LEFT"));
+			case "RIGHT_THUMB_RIGHT":		return sprintf(_("X360_%s"), _("RIGHT_THUMB_RIGHT"));
+			default:						return key;
+		}
+	}
+
+	if (substring(key, 0, 4) == "JOY_")
+	{
+		string subkey = substring(key, 4, -1);
+		switch(subkey)
+		{
+			case "UP":			return sprintf(_("JOY_%s"), _("UP"));
+			case "DOWN":		return sprintf(_("JOY_%s"), _("DOWN"));
+			case "LEFT":		return sprintf(_("JOY_%s"), _("LEFT"));
+			case "RIGHT":		return sprintf(_("JOY_%s"), _("RIGHT"));
+			default:			return key;
+		}
+	}
+
+	if (substring(key, 0, 8) == "MIDINOTE")
+		return sprintf(_("MIDINOTE%d"), stof(substring(key, 8, -1)));
+
+	return key;
 }
 
 // x-encoding (encoding as zero length invisible string)
@@ -1362,7 +1640,7 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...");
 	}
 	else
 	{
@@ -1395,8 +1673,7 @@ void execute_next_frame()
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");
-		strunzone(to_execute_next_frame);
-		to_execute_next_frame = string_null;
+		strfree(to_execute_next_frame);
 	}
 }
 void queue_to_execute_next_frame(string s)
@@ -1404,9 +1681,8 @@ void queue_to_execute_next_frame(string s)
 	if(to_execute_next_frame)
 	{
 		s = strcat(s, "\n", to_execute_next_frame);
-		strunzone(to_execute_next_frame);
 	}
-	to_execute_next_frame = strzone(s);
+	strcpy(to_execute_next_frame, s);
 }
 
 .float FindConnectedComponent_processing;
@@ -1618,3 +1894,216 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 	return CONTENT_EMPTY;
 }
 #endif
+
+#ifdef SVQC
+void attach_sameorigin(entity e, entity to, string tag)
+{
+    vector org, t_forward, t_left, t_up, e_forward, e_up;
+    float tagscale;
+
+    org = e.origin - gettaginfo(to, gettagindex(to, tag));
+    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
+    t_forward = v_forward * tagscale;
+    t_left = v_right * -tagscale;
+    t_up = v_up * tagscale;
+
+    e.origin_x = org * t_forward;
+    e.origin_y = org * t_left;
+    e.origin_z = org * t_up;
+
+    // current forward and up directions
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_FromVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_FromAngles(e.angles);
+    fixedmakevectors(e.angles);
+
+    // untransform forward, up!
+    e_forward.x = v_forward * t_forward;
+    e_forward.y = v_forward * t_left;
+    e_forward.z = v_forward * t_up;
+    e_up.x = v_up * t_forward;
+    e_up.y = v_up * t_left;
+    e_up.z = v_up * t_up;
+
+    e.angles = fixedvectoangles2(e_forward, e_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+
+    setattachment(e, to, tag);
+    setorigin(e, e.origin);
+}
+
+void detach_sameorigin(entity e)
+{
+    vector org;
+    org = gettaginfo(e, 0);
+    e.angles = fixedvectoangles2(v_forward, v_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+    setorigin(e, org);
+    setattachment(e, NULL, "");
+    setorigin(e, e.origin);
+}
+
+void follow_sameorigin(entity e, entity to)
+{
+    set_movetype(e, MOVETYPE_FOLLOW); // make the hole follow
+    e.aiment = to; // make the hole follow bmodel
+    e.punchangle = to.angles; // the original angles of bmodel
+    e.view_ofs = e.origin - to.origin; // relative origin
+    e.v_angle = e.angles - to.angles; // relative angles
+}
+
+#if 0
+// TODO: unused, likely for a reason, possibly needs extensions (allow setting the new movetype as a parameter?)
+void unfollow_sameorigin(entity e)
+{
+    set_movetype(e, MOVETYPE_NONE);
+}
+#endif
+
+.string aiment_classname;
+.float aiment_deadflag;
+void SetMovetypeFollow(entity ent, entity e)
+{
+	// FIXME this may not be warpzone aware
+	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
+	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
+	ent.aiment = e; // make the hole follow bmodel
+	ent.punchangle = e.angles; // the original angles of bmodel
+	ent.view_ofs = ent.origin - e.origin; // relative origin
+	ent.v_angle = ent.angles - e.angles; // relative angles
+	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_deadflag = e.deadflag;
+}
+void UnsetMovetypeFollow(entity ent)
+{
+	set_movetype(ent, MOVETYPE_FLY);
+	PROJECTILE_MAKETRIGGER(ent);
+	ent.aiment = NULL;
+}
+float LostMovetypeFollow(entity ent)
+{
+/*
+	if(ent.move_movetype != MOVETYPE_FOLLOW)
+		if(ent.aiment)
+			error("???");
+*/
+	if(ent.aiment)
+	{
+		if(ent.aiment.classname != ent.aiment_classname)
+			return 1;
+		if(ent.aiment.deadflag != ent.aiment_deadflag)
+			return 1;
+	}
+	return 0;
+}
+#endif
+
+#ifdef GAMEQC
+// decolorizes and team colors the player name when needed
+string playername(string thename, int teamid, bool team_colorize)
+{
+	TC(int, teamid);
+	bool do_colorize = (teamplay && team_colorize);
+#ifdef SVQC
+	if(do_colorize && !intermission_running)
+#else
+	if(do_colorize)
+#endif
+    {
+        string t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return thename;
+}
+
+float trace_hits_box_a0, trace_hits_box_a1;
+
+float trace_hits_box_1d(float end, float thmi, float thma)
+{
+    if (end == 0)
+    {
+        // just check if x is in range
+        if (0 < thmi)
+            return false;
+        if (0 > thma)
+            return false;
+    }
+    else
+    {
+        // do the trace with respect to x
+        // 0 -> end has to stay in thmi -> thma
+        trace_hits_box_a0 = max(trace_hits_box_a0, min(thmi / end, thma / end));
+        trace_hits_box_a1 = min(trace_hits_box_a1, max(thmi / end, thma / end));
+        if (trace_hits_box_a0 > trace_hits_box_a1)
+            return false;
+    }
+    return true;
+}
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma)
+{
+    end -= start;
+    thmi -= start;
+    thma -= start;
+    // now it is a trace from 0 to end
+
+    trace_hits_box_a0 = 0;
+    trace_hits_box_a1 = 1;
+
+    if (!trace_hits_box_1d(end.x, thmi.x, thma.x))
+        return false;
+    if (!trace_hits_box_1d(end.y, thmi.y, thma.y))
+        return false;
+    if (!trace_hits_box_1d(end.z, thmi.z, thma.z))
+        return false;
+
+    return true;
+}
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma)
+{
+    return trace_hits_box(start, end, thmi - ma, thma - mi);
+}
+#endif
+
+ERASEABLE
+float cvar_or(string cv, float v)
+{
+	string s = cvar_string(cv);
+	if(s == "")
+		return v;
+	else
+		return stof(s);
+}
+
+// NOTE base is the central value
+// freq: circle frequency, = 2*pi*frequency in hertz
+// start_pos:
+//  -1 start from the lower value
+//   0 start from the base value
+//   1 start from the higher value
+ERASEABLE
+float blink_synced(float base, float range, float freq, float start_time, int start_pos)
+{
+	// note:
+	//   RMS = sqrt(base^2 + 0.5 * range^2)
+	// thus
+	//   base = sqrt(RMS^2 - 0.5 * range^2)
+	// ensure RMS == 1
+
+	return base + range * sin((time - start_time - (M_PI / 2) * start_pos) * freq);
+}
+
+ERASEABLE
+float blink(float base, float range, float freq)
+{
+	return blink_synced(base, range, freq, 0, 0);
+}

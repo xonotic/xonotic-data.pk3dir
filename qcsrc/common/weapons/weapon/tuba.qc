@@ -1,47 +1,4 @@
 #include "tuba.qh"
-#ifndef IMPLEMENTATION
-CLASS(Tuba, Weapon)
-/* impulse   */ ATTRIB(Tuba, impulse, int, 1);
-/* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
-/* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, 2000);
-/* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
-/* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Tuba, m_model, Model, MDL_TUBA_ITEM);
-#endif
-/* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");
-/* crosshair */ //ATTRIB(Tuba, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(Tuba, model2, string, "weapontuba");
-/* refname   */ ATTRIB(Tuba, netname, string, "tuba");
-/* xgettext:no-c-format */
-/* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, NONE) \
-		P(class, prefix, attenuation, float, NONE) \
-		P(class, prefix, damage, float, NONE) \
-		P(class, prefix, edgedamage, float, NONE) \
-		P(class, prefix, fadetime, float, NONE) \
-		P(class, prefix, force, float, NONE) \
-		P(class, prefix, pitchstep, float, NONE) \
-		P(class, prefix, radius, float, NONE) \
-		P(class, prefix, refire, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, volume, float, NONE) \
-		P(class, prefix, weaponreplace, string, NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Tuba, tuba)
-#undef X
-ENDCLASS(Tuba)
-REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
-#endif
-
-#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 
@@ -52,8 +9,6 @@ REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
 .float tuba_lastnotes_last;
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
-
-spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(this, WEP_TUBA); }
 
 bool W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
@@ -268,9 +223,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	}
 	if (sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 	return true;
 }
@@ -313,17 +266,15 @@ void W_Tuba_NoteThink(entity this)
 void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 {
 	vector o;
-	float n;
+	float n = W_Tuba_GetNote(actor, hittype);
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
-
-	n = W_Tuba_GetNote(actor, hittype);
-
-	hittype = 0;
+	hittype = HITTYPE_SOUND;
 	if(actor.(weaponentity).tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
 	if(actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
+
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage), hittype | WEP_TUBA.m_id);
 
 	if(actor.(weaponentity).tuba_note)
 	{
@@ -350,7 +301,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, NULL);
+	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
 	o = gettaginfo(actor.exteriorweaponentity, 0);
 	if(time > actor.(weaponentity).tuba_smoketime)
@@ -423,7 +374,12 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				actor.(weaponentity).weaponname = "tuba";
 				break;
 		}
-		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
+		int hittype = 0;
+		if(actor.(weaponentity).tuba_instrument & 1)
+			hittype |= HITTYPE_SECONDARY;
+		if(actor.(weaponentity).tuba_instrument & 2)
+			hittype |= HITTYPE_BOUNCE;
+		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0, hittype | WEP_TUBA.m_id);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
@@ -595,9 +551,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 	}
 
 	if (f & 2) {
-		this.enemy.origin_x = ReadCoord();
-		this.enemy.origin_y = ReadCoord();
-		this.enemy.origin_z = ReadCoord();
+		this.enemy.origin = ReadVector();
 		setorigin(this.enemy, this.enemy.origin);
 		if (this.enemy.enemy) {
 			setorigin(this.enemy.enemy, this.enemy.origin);
@@ -633,5 +587,4 @@ PRECACHE(Tuba)
 	}
 }
 
-#endif
 #endif

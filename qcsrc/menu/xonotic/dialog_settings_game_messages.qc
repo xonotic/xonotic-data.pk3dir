@@ -80,7 +80,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_allow_chatboxprint", _("Display all info messages in the chatbox"), "-"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_INFO_QUIT_DISCONNECT", _("Display player statuses in the chatbox"), "-"));
-			makeMulti(e, "notification_INFO_QUIT_KICK_IDLING notification_INFO_JOIN_CONNECT_TEAM");
+			makeMulti(e, "notification_INFO_QUIT_KICK_IDLING notification_INFO_JOIN_CONNECT");
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "notification_CENTER_POWERUP_INVISIBILITY", _("Powerup notifications"), "-"));

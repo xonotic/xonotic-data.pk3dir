@@ -1,0 +1,94 @@
+#pragma once
+
+/// \file
+/// \brief Header file that describes the functions related to game items.
+/// \copyright GNU GPLv2 or any later version.
+
+bool startitem_failed;
+
+/// \brief Returns the item definition corresponding to the given class name.
+/// \param[in] class_name Class name to search for.
+/// \return Item definition corresponding to the given class name or NULL is not
+/// found.
+entity Item_FindDefinition(string class_name);
+
+/// \brief Checks whether the items with the specified class name are allowed to
+/// spawn.
+/// \param[in] class_name Item class name to check.
+/// \return True items with the specified class name are allowed to spawn, false
+/// otherwise.
+bool Item_IsAllowed(string class_name);
+
+/// \brief Checks whether the items with the specified definition are allowed to
+/// spawn.
+/// \param[in] definition Item definition to check.
+/// \return True items with the specified definition are allowed to spawn, false
+/// otherwise.
+bool Item_IsDefinitionAllowed(entity definition);
+
+/// \brief Creates a new item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] no_align True if item should be placed directly at specified
+/// position, false to let it drop to the ground.
+/// \return Item on success, NULL otherwise.
+entity Item_Create(string class_name, vector position, bool no_align);
+
+/// \brief Initializes the item according to class name.
+/// \param[in,out] item Item to initialize.
+/// \param[in] class_name Class name to use.
+/// \return No return.
+/// \nore This function is useful if you want to set some item properties before
+/// initialization.
+void Item_Initialize(entity item, string class_name);
+
+/// \brief Creates a loot item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] velocity of the item.
+/// \param[in] time_to_live Amount of time after which the item will disappear.
+/// \return Item on success, NULL otherwise.
+entity Item_CreateLoot(string class_name, vector position, vector vel,
+	float time_to_live);
+
+/// \brief Initializes the loot item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] velocity of the item.
+/// \param[in] time_to_live Amount of time after which the item will disappear.
+/// \return True on success, false otherwise.
+/// \nore This function is useful if you want to set some item properties before
+/// initialization.
+bool Item_InitializeLoot(entity item, string class_name, vector position,
+	vector vel, float time_to_live);
+
+/// \brief Returns whether the item is loot.
+/// \param[in] item Item to check.
+/// \return True if the item is loot, false otherwise.
+bool Item_IsLoot(entity item);
+
+/// \brief Sets the item loot status.
+/// \param[in,out] item Item to adjust.
+/// \param[in] loot Whether item is loot.
+/// \return No return.
+void Item_SetLoot(entity item, bool loot);
+
+/// \brief Returns whether item should keep its position or be dropped to the
+/// ground.
+/// \param[in] item Item to check.
+/// \return True if item should keep its position or false if it should be
+/// dropped to the ground.
+bool Item_ShouldKeepPosition(entity item);
+
+/// \brief Returns whether the item is expiring (i.e. its strength, shield and
+/// superweapon timers expire while it is on the ground).
+/// \param[in] item Item to check.
+/// \return True if the item is expiring, false otherwise.
+bool Item_IsExpiring(entity item);
+
+/// \brief Sets the item expiring status (i.e. whether its strength, shield
+/// and superweapon timers expire while it is on the ground).
+/// \param[in,out] item Item to adjust.
+/// \param[in] expiring Whether item is expiring.
+/// \return No return.
+void Item_SetExpiring(entity item, bool expiring);

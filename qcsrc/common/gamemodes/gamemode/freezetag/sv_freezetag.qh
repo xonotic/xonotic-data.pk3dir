@@ -1,0 +1,39 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <server/command/sv_cmd.qh>
+
+int autocvar_g_freezetag_point_limit;
+int autocvar_g_freezetag_point_leadlimit;
+bool autocvar_g_freezetag_team_spawns;
+string autocvar_g_freezetag_weaponarena = "most_available";
+
+const int ST_FT_ROUNDS = 1;
+
+void freezetag_Initialize();
+
+REGISTER_MUTATOR(ft, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+        GameRules_spawning_teams(autocvar_g_freezetag_team_spawns);
+        GameRules_limit_score(autocvar_g_freezetag_point_limit);
+        GameRules_limit_lead(autocvar_g_freezetag_point_leadlimit);
+
+		freezetag_Initialize();
+	}
+	return 0;
+}
+
+.float freezetag_frozen_time;
+.float freezetag_frozen_timeout;
+const float ICE_MAX_ALPHA = 1;
+const float ICE_MIN_ALPHA = 0.1;
+float freezetag_teams;
+
+float autocvar_g_freezetag_revive_extra_size;
+float autocvar_g_freezetag_revive_speed;
+bool autocvar_g_freezetag_revive_nade;
+float autocvar_g_freezetag_revive_nade_health;

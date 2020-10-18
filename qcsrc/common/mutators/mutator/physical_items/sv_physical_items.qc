@@ -4,7 +4,7 @@ int autocvar_g_physical_items;
 float autocvar_g_physical_items_damageforcescale;
 float autocvar_g_physical_items_reset;
 
-REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
+REGISTER_MUTATOR(physical_items, autocvar_g_physical_items)
 {
 	// check if we have a physics engine
 	MUTATOR_ONADD
@@ -23,7 +23,7 @@ REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
 
 	MUTATOR_ONREMOVE
 	{
-		LOG_INFO("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime");
 		return -1;
 	}
 
@@ -79,7 +79,7 @@ void physical_item_touch(entity this, entity toucher)
 	}
 }
 
-void physical_item_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void physical_item_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(!this.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
@@ -100,8 +100,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
-	entity wep;
-	wep = spawn();
+	entity wep = spawn();
 	_setmodel(wep, item.model);
 	setsize(wep, item.mins, item.maxs);
 	setorigin(wep, item.origin);

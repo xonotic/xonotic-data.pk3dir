@@ -1,11 +1,3 @@
-electro
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/electro.tga
-		rgbgen lightingDiffuse
-	}
-}
 nexgun
 {
 	dpreflectcube cubemaps/default/sky

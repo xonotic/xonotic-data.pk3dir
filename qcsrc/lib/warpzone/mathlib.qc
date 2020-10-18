@@ -24,8 +24,17 @@ bool isinf(float e)
 }
 bool isnan(float e)
 {
-	float f = e;
-	return (e != f);
+	// The sane way to detect NaN is this:
+	// float f = e;
+	// return (e != f);
+	// but darkplaces used to be compiled with -ffinite-math-only which broke it.
+	// DP is fixed now but until all clients update (so after 0.8.3) we have to use the following workaround
+	// or they'd have issues when connecting to newer servers.
+
+	// Negative NaN ("-nan") is much more common but plain "nan" can be created by negating *some* -nans so we need to check both.
+	// DP's QCVM and GMQCC's QCVM behave differently - one needs ftos(-(0.0 / 0.0)), the other ftos(-sqrt(-1)).
+	string s = ftos(e);
+	return s == "nan" || s == "-nan";
 }
 bool isnormal(float e)
 {
@@ -63,11 +72,11 @@ float tanh(float e)
 
 float exp(float e)
 {
-	return (M_E ** e);
+	return pow(M_E, e);
 }
 float exp2(float e)
 {
-	return (2 ** e);
+	return pow(2, e);
 }
 float expm1(float e)
 {
@@ -79,16 +88,16 @@ vector frexp(float e)
 	vector v;
 	v.z = 0;
 	v.y = ilogb(e) + 1;
-	v.x = e / (2 ** v.y);
+	v.x = e / pow(2, v.y);
 	return v;
 }
 int ilogb(float e)
 {
 	return floor(log2(fabs(e)));
 }
-float ldexp(float e, int e)
+float ldexp(float x, int e)
 {
-	return e * (2 ** e);
+	return x * pow(2, e);
 }
 float logn(float e, float base)
 {
@@ -117,12 +126,12 @@ vector modf(float f)
 
 float scalbn(float e, int n)
 {
-	return e * (2 ** n);
+	return e * pow(2, n);
 }
 
 float cbrt(float e)
 {
-	return copysign((fabs(e) ** (1.0/3.0)), e);
+	return copysign(pow(fabs(e), (1.0/3.0)), e);
 }
 float hypot(float e, float f)
 {
@@ -217,6 +226,7 @@ float copysign(float e, float f)
 {
 	return fabs(e) * ((f>0) ? 1 : -1);
 }
+
 float nan(string tag)
 {
 	return sqrt(-1);

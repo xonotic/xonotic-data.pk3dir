@@ -1,8 +1,0 @@
-#pragma once
-
-.float swamp_interval;	//Hurt players in swamp with this interval
-.float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
-.entity swampslug;
-
-.float in_swamp;              // bool
-.entity swampslug;            // Uses this to release from swamp ("untouch" fix)

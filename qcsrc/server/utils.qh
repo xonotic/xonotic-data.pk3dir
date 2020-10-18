@@ -1,0 +1,76 @@
+#pragma once
+
+int maxclients;
+
+const string STR_PLAYER = "player";
+const string STR_SPECTATOR = "spectator";
+const string STR_OBSERVER = "observer";
+
+#define IS_PLAYER(v) ((v).classname == STR_PLAYER)
+#define IS_SPEC(v) ((v).classname == STR_SPECTATOR)
+#define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
+
+#define IS_CLIENT(v) (v.flags & FL_CLIENT)
+/** want: (IS_CLIENT(v) && !IS_REAL_CLIENT(v)) */
+#define IS_BOT_CLIENT(v) (clienttype(v) == CLIENTTYPE_BOT)
+#define IS_FAKE_CLIENT(v) (clienttype(v) == CLIENTTYPE_NOTACLIENT)
+#define IS_REAL_CLIENT(v) (clienttype(v) == CLIENTTYPE_REAL)
+/** was: (clienttype(v) == CLIENTTYPE_NOTACLIENT) */
+#define IS_NOT_A_CLIENT(v) (!IS_CLIENT(v))
+
+#define IS_MONSTER(v) (v.flags & FL_MONSTER)
+#define IS_VEHICLE(v) (v.vehicle_flags & VHF_ISVEHICLE)
+#define IS_TURRET(v) (v.turret_flags & TUR_FLAG_ISTURRET)
+
+#define IS_MOVABLE(v) ((IS_PLAYER(v) || IS_MONSTER(v)) && !STAT(FROZEN, v))
+#define IS_DEAD(s) ((s).deadflag != DEAD_NO)
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+
+// NOTE: FOR_EACH_CLIENTSLOT deprecated! Use the following instead: FOREACH_CLIENTSLOT(true, { code; });
+// NOTE: FOR_EACH_CLIENT deprecated! Use the following instead: FOREACH_CLIENT(true, { code; });
+// NOTE: FOR_EACH_REALCLIENT deprecated! Use the following instead: FOREACH_CLIENT(IS_REAL_CLIENT(it), { code; });
+
+// NOTE: FOR_EACH_PLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it), { code; });
+// NOTE: FOR_EACH_SPEC deprecated! Use the following instead: FOREACH_CLIENT(IS_SPEC(it), { code; });
+// NOTE: FOR_EACH_OBSERVER deprecated! Use the following instead: FOREACH_CLIENT(IS_OBSERVER(it), { code; });
+// NOTE: FOR_EACH_REALPLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { code; });
+
+#define FOREACH_CLIENTSLOT(cond, body) \
+	MACRO_BEGIN \
+		for(int _i = 1; _i <= maxclients; ++_i) \
+		{ \
+			const noref int i = _i; \
+			ITER_CONST noref entity it = ftoe(i); \
+			if(cond) { LAMBDA(body) } \
+		} \
+	MACRO_END
+
+#define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), LAMBDA(body))
+
+// using the "inside out" version of knuth-fisher-yates shuffle
+// https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
+entity _FCR_clients[255];
+bool _FCR_entered = false;
+#define FOREACH_CLIENT_RANDOM(cond, body) \
+	MACRO_BEGIN \
+		if (_FCR_entered) LOG_FATAL("FOREACH_CLIENT_RANDOM must not be nested"); \
+		_FCR_entered = true; \
+		int _cnt = 0; \
+		FOREACH_CLIENT(cond, { \
+			int _j = floor(random() * (_cnt + 1)); \
+			if (_j != _cnt) \
+				_FCR_clients[_cnt] = _FCR_clients[_j]; \
+			_FCR_clients[_j] = it; \
+			++_cnt; \
+		}); \
+		for (int _i = 0; _i < _cnt; ++_i) \
+		{ \
+			const noref int i = _i; \
+			ITER_CONST noref entity it = _FCR_clients[i]; \
+			if (cond) { LAMBDA(body) } \
+		} \
+		_FCR_entered = false; \
+	MACRO_END
+
+// NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: IL_EACH(g_monsters, true, { code; });

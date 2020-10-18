@@ -1,0 +1,4 @@
+#pragma once
+
+
+const int CHANGELEVEL_MULTIPLAYER = BIT(1);

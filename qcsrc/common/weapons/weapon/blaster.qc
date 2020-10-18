@@ -1,61 +1,6 @@
 #include "blaster.qh"
-#ifndef IMPLEMENTATION
-CLASS(Blaster, Weapon)
-/* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none);
-/* impulse   */ ATTRIB(Blaster, impulse, int, 1);
-/* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
-/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
-#endif
-/* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
-/* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
-/* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
-/* refname   */ ATTRIB(Blaster, netname, string, "blaster");
-/* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, delay, float, BOTH) \
-		P(class, prefix, edgedamage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, force_zscale, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, shotangle, float, BOTH) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Blaster, blaster)
-#undef X
-
-ENDCLASS(Blaster)
-REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 
 #ifdef SVQC
-.float blaster_damage;
-.float blaster_edgedamage;
-.float blaster_radius;
-.float blaster_force;
-.float blaster_lifetime;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
-spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
 void W_Blaster_Touch(entity this, entity toucher)
 {
@@ -63,16 +8,21 @@ void W_Blaster_Touch(entity this, entity toucher)
 
 	this.event_damage = func_null;
 
-	RadiusDamage(
+	RadiusDamageForSource(
 		this,
+		(this.origin + (this.mins + this.maxs) * 0.5),
+		this.velocity,
 		this.realowner,
 		this.blaster_damage,
 		this.blaster_edgedamage,
 		this.blaster_radius,
 		NULL,
 		NULL,
+		false,
 		this.blaster_force,
+		this.blaster_force_zscale,
 		this.projectiledeathtype,
+		this.weaponentity_fld,
 		toucher
 	);
 
@@ -96,6 +46,7 @@ void W_Blaster_Attack(
 	float atk_edgedamage,
 	float atk_radius,
 	float atk_force,
+	float atk_force_zscale,
 	float atk_speed,
 	float atk_spread,
 	float atk_delay,
@@ -103,8 +54,8 @@ void W_Blaster_Attack(
 {
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);
-	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
+	W_MuzzleFlash(WEP_BLASTER, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = new(blasterbolt);
 	missile.owner = missile.realowner = actor;
@@ -116,6 +67,7 @@ void W_Blaster_Attack(
 	missile.blaster_edgedamage = atk_edgedamage;
 	missile.blaster_radius = atk_radius;
 	missile.blaster_force = atk_force;
+	missile.blaster_force_zscale = atk_force_zscale;
 	missile.blaster_lifetime = atk_lifetime;
 
 	setorigin(missile, w_shotorg);
@@ -143,6 +95,7 @@ void W_Blaster_Attack(
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = atk_deathtype;
+	missile.weaponentity_fld = weaponentity;
 	setthink(missile, W_Blaster_Think);
 	missile.nextthink = time + atk_delay;
 
@@ -182,6 +135,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
                 WEP_CVAR_PRI(blaster, edgedamage),
                 WEP_CVAR_PRI(blaster, radius),
                 WEP_CVAR_PRI(blaster, force),
+                WEP_CVAR_PRI(blaster, force_zscale),
                 WEP_CVAR_PRI(blaster, speed),
                 WEP_CVAR_PRI(blaster, spread),
                 WEP_CVAR_PRI(blaster, delay),
@@ -214,6 +168,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
                         WEP_CVAR_SEC(blaster, edgedamage),
                         WEP_CVAR_SEC(blaster, radius),
                         WEP_CVAR_SEC(blaster, force),
+                        WEP_CVAR_SEC(blaster, force_zscale),
                         WEP_CVAR_SEC(blaster, speed),
                         WEP_CVAR_SEC(blaster, spread),
                         WEP_CVAR_SEC(blaster, delay),
@@ -248,6 +203,17 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
     return WEAPON_BLASTER_MURDER;
 }
 
+METHOD(OffhandBlaster, offhand_think, void(OffhandBlaster this, entity actor, bool key_pressed))
+{
+	if (!key_pressed || (time < actor.jump_interval))
+	{
+		return;
+	}
+	actor.jump_interval = time + WEP_CVAR_SEC(blaster, refire) * W_WeaponRateFactor(actor);
+	.entity weaponentity = weaponentities[1];
+	BLASTER_SECONDARY_ATTACK(blaster, actor, weaponentity);
+}
+
 #endif
 #ifdef CSQC
 
@@ -259,5 +225,4 @@ METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
     if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 }
 
-#endif
 #endif

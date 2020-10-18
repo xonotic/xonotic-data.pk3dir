@@ -1,12 +1,12 @@
 #include "csqcprojectile.qh"
 
-#include <common/t_items.qh>
-
-#include "../command/common.qh"
-
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/stats.qh>
 #include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/common.qh>
+#include <server/items/items.qh>
 
 .float csqcprojectile_type;
 
@@ -40,15 +40,11 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		if(sf & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, this.velocity.x);
-			WriteCoord(MSG_ENTITY, this.velocity.y);
-			WriteCoord(MSG_ENTITY, this.velocity.z);
+			WriteVector(MSG_ENTITY, this.velocity);
 			if(sf & 0x10)
 				WriteCoord(MSG_ENTITY, this.gravity);
 		}

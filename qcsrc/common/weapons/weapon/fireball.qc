@@ -1,67 +1,6 @@
 #include "fireball.qh"
-#ifndef IMPLEMENTATION
-CLASS(Fireball, Weapon)
-/* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none);
-/* impulse   */ ATTRIB(Fireball, impulse, int, 9);
-/* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
-/* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
-/* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
-#endif
-/* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");
-/* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
-/* refname   */ ATTRIB(Fireball, netname, string, "fireball");
-/* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bfgdamage, float, PRI) \
-		P(class, prefix, bfgforce, float, PRI) \
-		P(class, prefix, bfgradius, float, PRI) \
-		P(class, prefix, damageforcescale, float, BOTH) \
-		P(class, prefix, damagetime, float, SEC) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, edgedamage, float, PRI) \
-		P(class, prefix, force, float, PRI) \
-		P(class, prefix, health, float, PRI) \
-		P(class, prefix, laserburntime, float, BOTH) \
-		P(class, prefix, laserdamage, float, BOTH) \
-		P(class, prefix, laseredgedamage, float, BOTH) \
-		P(class, prefix, laserradius, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, PRI) \
-		P(class, prefix, refire2, float, PRI) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, speed_up, float, SEC) \
-		P(class, prefix, speed_z, float, SEC) \
-		P(class, prefix, spread, float, BOTH) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Fireball, fireball)
-#undef X
-
-ENDCLASS(Fireball)
-REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 
 #ifdef SVQC
-.float bot_primary_fireballmooth; // whatever a mooth is
-.vector fireball_impactvec;
-.float fireball_primarytime;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(this, WEP_FIREBALL); }
 
 void W_Fireball_Explode(entity this, entity directhitentity)
 {
@@ -75,9 +14,9 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	// 1. dist damage
-	d = (this.realowner.health + this.realowner.armorvalue);
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, directhitentity);
-	if(this.realowner.health + this.realowner.armorvalue >= d)
+	d = (GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR));
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+	if(GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR) >= d)
 	if(!this.cnt)
 	{
 		modeleffect_spawn("models/sphere/sphere.md3", 0, 0, this.origin, '0 0 0', '0 0 0', '0 0 0', 0, WEP_CVAR_PRI(fireball, bfgradius), 0.2, 0.05, 0.25);
@@ -103,9 +42,9 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 			dir = normalize(e.origin + e.view_ofs - this.origin);
 
 			if(accuracy_isgooddamage(this.realowner, e))
-				accuracy_add(this.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+				accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
-			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
+			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
 		}
 	}
@@ -178,16 +117,16 @@ void W_Fireball_Think(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
-	if(this.health <= 0)
+	TakeResource(this, RES_HEALTH, damage);
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.cnt = 1;
 		W_PrepareExplosionByDamage(this, attacker, W_Fireball_Explode_think);
@@ -196,9 +135,9 @@ void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float dam
 
 void W_Fireball_Attack1(entity actor, .entity weaponentity)
 {
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage), WEP_FIREBALL.m_id);
 
-	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(plasma_prim);
 	proj.owner = proj.realowner = actor;
@@ -208,13 +147,14 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.use = W_Fireball_Explode_use;
 	setthink(proj, W_Fireball_Think);
 	proj.nextthink = time;
-	proj.health = WEP_CVAR_PRI(fireball, health);
+	SetResourceExplicit(proj, RES_HEALTH, WEP_CVAR_PRI(fireball, health));
 	proj.team = actor.team;
 	proj.event_damage = W_Fireball_Damage;
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_PRI(fireball, damageforcescale);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_FIREBALL.m_id;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	set_movetype(proj, MOVETYPE_FLY);
@@ -225,7 +165,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY;
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
 
@@ -234,7 +174,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 
 void W_Fireball_AttackEffect(entity actor, .entity weaponentity, float i, vector f_diff)
 {
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0, WEP_FIREBALL.m_id); // TODO: probably doesn't need deathtype, just a prefire effect
 	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
@@ -331,11 +271,11 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 
-	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	proj = new(grenade);
 	proj.owner = proj.realowner = actor;
@@ -357,7 +297,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);
 
@@ -455,5 +395,4 @@ METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

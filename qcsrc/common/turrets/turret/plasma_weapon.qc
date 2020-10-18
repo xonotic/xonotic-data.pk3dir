@@ -1,7 +1,5 @@
 #include "plasma_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 SOUND(PlasmaAttack_FIRE, W_Sound("electro_fire"));
 METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -10,7 +8,7 @@ METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PlasmaAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PlasmaAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_PLASMA.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -21,7 +19,5 @@ METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 	}
 }
-
-#endif
 
 #endif

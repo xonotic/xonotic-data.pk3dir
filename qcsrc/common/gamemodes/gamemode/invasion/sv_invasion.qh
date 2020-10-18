@@ -1,0 +1,46 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
+int autocvar_g_invasion_teams;
+int autocvar_g_invasion_type;
+bool autocvar_g_invasion_team_spawns;
+bool g_invasion;
+void invasion_Initialize();
+
+REGISTER_MUTATOR(inv, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		if (autocvar_g_invasion_teams >= 2) {
+			GameRules_teams(true);
+			GameRules_spawning_teams(autocvar_g_invasion_team_spawns);
+		}
+        GameRules_limit_score(autocvar_g_invasion_point_limit);
+
+		g_invasion = true;
+		cvar_settemp("g_monsters", "1");
+		invasion_Initialize();
+	}
+	return 0;
+}
+
+float inv_numspawned;
+float inv_maxspawned;
+float inv_roundcnt;
+float inv_maxrounds;
+float inv_numkilled;
+float inv_lastcheck;
+float inv_maxcurrent;
+
+float invasion_teams;
+float inv_monsters_perteam[17];
+
+float inv_monsterskill;
+
+const float ST_INV_KILLS = 1;
+
+const int INV_TYPE_ROUND = 0; // round-based waves of enemies
+const int INV_TYPE_HUNT = 1; // clear the map of placed enemies
+const int INV_TYPE_STAGE = 2; // reach the end of the level

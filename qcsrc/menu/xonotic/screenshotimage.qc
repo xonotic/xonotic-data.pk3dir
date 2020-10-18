@@ -19,17 +19,15 @@ void XonoticScreenshotImage_load(entity me, string theImage)
 {
 	me.screenshotTime = time;
 	me.src = theImage;
-	if (me.screenshotTitle)
-		strunzone(me.screenshotTitle);
-	me.screenshotTitle = strzone(substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
+	strcpy(me.screenshotTitle, substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
 
 	me.initZoom(me); // this image may have a different size
 	me.setZoom(me, 0, 0);
 }
 
-float XonoticScreenshotImage_mousePress(entity me, vector coords)
+METHOD(XonoticScreenshotImage, mousePress, bool(XonoticScreenshotImage this, vector pos))
 {
-	return me.drag_setStartPos(me, coords);
+	return this.drag_setStartPos(this, pos);
 }
 
 float XonoticScreenshotImage_mouseDrag(entity me, vector coords)

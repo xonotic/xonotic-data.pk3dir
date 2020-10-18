@@ -55,6 +55,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.addValue(e, _("Never"), "0");
 			e.addValue(e, _("In non teamplay modes only"), "1");
 			e.addValue(e, _("Always"), "2");
+			e.addValue(e, _("Only in Duel"), "3");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));

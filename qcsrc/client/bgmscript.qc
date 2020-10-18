@@ -1,17 +1,21 @@
 #include "bgmscript.qh"
 
+#include <client/autocvars.qh>
+#include <client/main.qh>
+#include <common/util.qh>
+
 #define CONSTANT_SPEED_DECAY
 
 float bgmscriptbuf;
 float bgmscriptbufsize;
 float bgmscriptbufloaded;
 
-class(BGMScript) .float bgmscriptline;
-class(BGMScript) .float bgmscriptline0;
-class(BGMScript) .float bgmscriptvolume;
-class(BGMScript) .float bgmscripttime;
-class(BGMScript) .float bgmscriptstate;
-class(BGMScript) .float bgmscriptstatetime;
+classfield(BGMScript) .float bgmscriptline;
+classfield(BGMScript) .float bgmscriptline0;
+classfield(BGMScript) .float bgmscriptvolume;
+classfield(BGMScript) .float bgmscripttime;
+classfield(BGMScript) .float bgmscriptstate;
+classfield(BGMScript) .float bgmscriptstatetime;
 
 float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 {
@@ -133,9 +137,8 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			LOG_INFOF("ERROR: bgmscript does not define %s\n", e.bgmscript);
-			strunzone(e.bgmscript);
-			e.bgmscript = string_null;
+			LOG_INFOF("ERROR: bgmscript does not define %s", e.bgmscript);
+			strfree(e.bgmscript);
 		}
 	}
 }

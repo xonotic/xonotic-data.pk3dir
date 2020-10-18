@@ -12,5 +12,15 @@ CLASS(Hellion, Turret)
 /* netname    */ ATTRIB(Hellion, netname, string, "hellion");
 /* fullname   */ ATTRIB(Hellion, turret_name, string, _("Hellion Missile Turret"));
     ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+		P(class, prefix, shot_speed_gain, float) \
+		P(class, prefix, shot_speed_max, float) \
+	END()
+	TR_PROPS(X, Hellion, hellion)
+#undef X
+
 ENDCLASS(Hellion)
 REGISTER_TURRET(HELLION, NEW(Hellion));

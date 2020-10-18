@@ -1,2 +1,4 @@
 #pragma once
 #include "../panel.qh"
+
+float uid2name_dialog;

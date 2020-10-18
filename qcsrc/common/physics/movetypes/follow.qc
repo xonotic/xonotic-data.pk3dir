@@ -1,4 +1,5 @@
 #include "follow.qh"
+
 void _Movetype_Physics_Follow(entity this) // SV_Physics_Follow
 {
 	entity e = this.aiment;

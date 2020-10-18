@@ -69,7 +69,7 @@ ERASEABLE
 void db_dump(int db, string filename)
 {
 	int fh = fopen(filename, FILE_WRITE);
-	if (fh < 0) LOG_FATALF("Can't dump DB to %s");
+	if (fh < 0) LOG_FATALF("Can't dump DB to %s", filename);
 	fputs(fh, "0\n");
 	for (int i = 0, n = buf_getsize(db); i < n; ++i)
 	{

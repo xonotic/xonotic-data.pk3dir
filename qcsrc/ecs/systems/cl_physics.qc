@@ -3,10 +3,8 @@
 void sys_phys_fix(entity this, float dt)
 {
 	this.team = myteam + 1; // is this correct?
-	PHYS_WATERJUMP_TIME(this) -= dt;
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 	this.items = STAT(ITEMS, this);
-	this.spectatorspeed = STAT(SPECTATORSPEED, this);
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this);           // canjump = true
 	PM_ClientMovement_UpdateStatus(this);
@@ -26,4 +24,15 @@ void sys_phys_pregame_hold(entity this) {}
 
 void sys_phys_spectator_control(entity this) {}
 
-void sys_phys_fixspeed(entity this, float maxspeed_mod) {}
+void sys_phys_fixspeed(entity this, float maxspeed_mod)
+{
+	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
+	if (this.speed != spd) {
+		this.speed = spd;
+		string temps = ftos(spd);
+		cvar_set("cl_forwardspeed", temps);
+		cvar_set("cl_backspeed", temps);
+		cvar_set("cl_sidespeed", temps);
+		cvar_set("cl_upspeed", temps);
+	}
+}

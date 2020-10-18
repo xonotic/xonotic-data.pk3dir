@@ -1,10 +1,12 @@
 #include "ipban.qh"
 
-#include "autocvars.qh"
-#include "command/banning.qh"
-#include "defs.qh"
-#include "../common/constants.qh"
-#include "../common/util.qh"
+#include <common/constants.qh>
+#include <common/stats.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/autocvars.qh>
+#include <server/command/banning.qh>
+#include <server/main.qh>
 
 /*
  * Protocol of online ban list:
@@ -28,8 +30,6 @@
  */
 
 #define MAX_IPBAN_URIS (URI_GET_IPBAN_END - URI_GET_IPBAN + 1)
-
-float Ban_Insert(string ip, float bantime, string reason, float dosync);
 
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
 {
@@ -91,18 +91,18 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(id >= MAX_IPBAN_URIS)
 	{
-		LOG_INFO("Received ban list for invalid ID\n");
+		LOG_INFO("Received ban list for invalid ID");
 		return;
 	}
 
 	tokenize_console(autocvar_g_ban_sync_uri);
 	uri = argv(id);
 
-	LOG_INFO("Received ban list from ", uri, ": ");
+	string prelude = strcat("Received ban list from ", uri, ": ");
 
 	if(OnlineBanList_RequestWaiting[id] == 0)
 	{
-		LOG_INFO("rejected (unexpected)\n");
+		LOG_INFO(prelude, "rejected (unexpected)");
 		return;
 	}
 
@@ -110,14 +110,14 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(time > OnlineBanList_Timeout)
 	{
-		LOG_INFO("rejected (too late)\n");
+		LOG_INFO(prelude, "rejected (too late)");
 		return;
 	}
 
 	syncinterval = autocvar_g_ban_sync_interval;
 	if(syncinterval == 0)
 	{
-		LOG_INFO("rejected (syncing disabled)\n");
+		LOG_INFO(prelude, "rejected (syncing disabled)");
 		return;
 	}
 	if(syncinterval > 0)
@@ -125,19 +125,19 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(status != 0)
 	{
-		LOG_INFO("error: status is ", ftos(status), "\n");
+		LOG_INFO(prelude, "error: status is ", ftos(status));
 		return;
 	}
 
 	if(substring(data, 0, 1) == "<")
 	{
-		LOG_INFO("error: received HTML instead of a ban list\n");
+		LOG_INFO(prelude, "error: received HTML instead of a ban list");
 		return;
 	}
 
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		LOG_INFO("error: received carriage returns\n");
+		LOG_INFO(prelude, "error: received carriage returns");
 		return;
 	}
 
@@ -148,11 +148,11 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if((n % 4) != 0)
 	{
-		LOG_INFO("error: received invalid item count: ", ftos(n), "\n");
+		LOG_INFO(prelude, "error: received invalid item count: ", ftos(n));
 		return;
 	}
 
-	LOG_INFO("OK, ", ftos(n / 4), " items\n");
+	LOG_INFO(prelude, "OK, ", ftos(n / 4), " items");
 
 	for(i = 0; i < n; i += 4)
 	{
@@ -175,7 +175,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 			for(j = 0; j < l; ++j)
 				if(strstrofs("0123456789.", substring(ip, j, 1), 0) == -1)
 				{
-					LOG_INFO("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
+					LOG_INFO("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.");
 					goto skip;
 				}
 		}
@@ -189,8 +189,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 			// the ban will be prolonged on the next sync
 			// or expire 5 seconds after the next timeout
 		Ban_Insert(ip, timeleft, strcat("ban synced from ", serverip, " at ", uri), 0);
-		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ");
-		LOG_INFO(reason, "\n");
+		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ", reason);
 
 LABEL(skip)
 	}
@@ -198,24 +197,29 @@ LABEL(skip)
 
 void OnlineBanList_Think(entity this)
 {
-	float argc;
+	int argc;
 	string uri;
 	float i, n;
 
 	if(autocvar_g_ban_sync_uri == "")
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 	if(autocvar_g_ban_sync_interval == 0) // < 0 is okay, it means "sync on level start only"
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 	argc = tokenize_console(autocvar_g_ban_sync_trusted_servers);
 	if(argc == 0)
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 
-	if(OnlineBanList_Servers)
-		strunzone(OnlineBanList_Servers);
-	OnlineBanList_Servers = argv(0);
-	for(i = 1; i < argc; ++i)
-		OnlineBanList_Servers = strcat(OnlineBanList_Servers, ";", argv(i));
-	OnlineBanList_Servers = strzone(OnlineBanList_Servers);
+	string s = argv(0); for(i = 1; i < argc; ++i) s = strcat(s, ";", argv(i));
+	strcpy(OnlineBanList_Servers, s);
 
 	uri = strcat(     "action=list&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&servers=", uri_escape(OnlineBanList_Servers));
@@ -236,14 +240,13 @@ void OnlineBanList_Think(entity this)
 			uri_get(strcat(argv(i), "?", uri), URI_GET_IPBAN + i); // 1000 = "banlist" callback target
 	}
 
-	if(autocvar_g_ban_sync_interval > 0)
-		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
-	else
-		goto killme;
-	return;
+	if(autocvar_g_ban_sync_interval <= 0)
+	{
+		delete(this);
+		return;
+	}
 
-LABEL(killme)
-	delete(this);
+	this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 }
 
 const float BAN_MAX = 256;
@@ -328,7 +331,7 @@ void Ban_View()
 	float i, n;
 	string msg;
 
-	LOG_INFO("^2Listing all existing active bans:\n");
+	LOG_INFO("^2Listing all existing active bans:");
 
 	n = 0;
 	for(i = 0; i < ban_count; ++i)
@@ -342,10 +345,10 @@ void Ban_View()
 		msg = strcat(msg, ban_ip[i], " is still banned for ");
 		msg = strcat(msg, ftos(ban_expire[i] - time), " seconds");
 
-		LOG_INFO("  ", msg, "\n");
+		LOG_INFO("  ", msg);
 	}
 
-	LOG_INFO("^2Done listing all active (", ftos(n), ") bans.\n");
+	LOG_INFO("^2Done listing all active (", ftos(n), ") bans.");
 }
 
 float Ban_GetClientIP(entity client)
@@ -450,9 +453,16 @@ bool Ban_MaybeEnforceBan(entity client)
 {
 	if (Ban_IsClientBanned(client, -1))
 	{
-		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
+		if (!client.crypto_idfp)
+			LOG_INFOF("^1NOTE:^7 banned client %s just tried to enter\n",
+				client.netaddress);
+		else
+			LOG_INFOF("^1NOTE:^7 banned client %s (%s) just tried to enter\n",
+				client.netaddress, client.crypto_idfp);
+
+		if(autocvar_g_ban_telluser)
+			sprint(client, "You are banned from this server.\n");
 		dropclient(client);
-		bprint(s);
 		return true;
 	}
 	return false;
@@ -484,7 +494,7 @@ string Ban_Enforce(float j, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netname, "^7 has to go\n");
 			dropclient(it);
 		}
 	});
@@ -547,7 +557,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 	if(i < ban_count)
 	if(ban_expire[i] > time + bantime)
 	{
-		LOG_INFO(ip, " could not get banned due to no free ban slot\n");
+		LOG_INFO(ip, " could not get banned due to no free ban slot");
 		return false;
 	}
 	// okay, insert our new victim as i

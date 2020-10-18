@@ -6,10 +6,22 @@ const int SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;
 const int SPAWN_PRIO_RACE_PREVIOUS_SPAWN = 50;
 const int SPAWN_PRIO_GOOD_DISTANCE = 10;
 
+bool some_spawn_has_been_used;
+int have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it has no spawns; team 0 is the "no-team"
+
 .vector spawnpoint_score;
 float spawnpoint_nag;
 bool SpawnEvent_Send(entity this, entity to, int sf);
-entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck);
+entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck, bool targetcheck);
 entity SelectSpawnPoint(entity this, bool anypoint);
 spawnfunc(info_player_deathmatch);
 void spawnpoint_use(entity this, entity actor, entity trigger);
+
+USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
+.spawn_evalfunc_t spawn_evalfunc;
+
+.int restriction;
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }

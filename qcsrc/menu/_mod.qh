@@ -3,3 +3,9 @@
 #include <menu/item.qh>
 #include <menu/matrix.qh>
 #include <menu/menu.qh>
+
+#include <menu/anim/_mod.qh>
+#include <menu/command/_mod.qh>
+#include <menu/item/_mod.qh>
+#include <menu/mutators/_mod.qh>
+#include <menu/xonotic/_mod.qh>

@@ -1,9 +1,6 @@
 #pragma once
 
 #define droptofloor builtin_droptofloor
-#define cvar_set builtin_cvar_set
-#define cvar_string builtin_cvar_string
-#define cvar builtin_cvar
 
 #define IT_SHOTGUN          _IT_SHOTGUN /* BIT(0) */
 #define IT_SUPER_SHOTGUN    _IT_SUPER_SHOTGUN /* BIT(1) */
@@ -29,5 +26,10 @@
 #define IT_INVULNERABILITY  _IT_INVULNERABILITY /* BIT(20) */
 #define IT_SUIT             _IT_SUIT /* BIT(21) */
 #define IT_QUAD             _IT_QUAD /* BIT(22) */
+
+#define STATE_TOP           _STATE_TOP /* 0 */
+#define STATE_BOTTOM        _STATE_BOTTOM /* 1 */
+#define STATE_UP            _STATE_UP /* 2 */
+#define STATE_DOWN          _STATE_DOWN /* 3 */
 
 #pragma noref 1

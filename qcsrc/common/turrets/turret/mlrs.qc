@@ -1,7 +1,5 @@
 #include "mlrs.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_mlrs) { if (!turret_initialize(this, TUR_MLRS)) delete(this); }
@@ -27,4 +25,3 @@ METHOD(MLRSTurret, tr_setup, void(MLRSTurret this, entity it))
 }
 
 #endif // SVQC
-#endif

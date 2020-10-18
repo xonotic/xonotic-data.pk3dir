@@ -1,12 +1,27 @@
 #include "radar.qh"
 
-#include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
+#include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <client/mapvoting.qh>
+#include <client/resources.qh>
 #include <client/teamradar.qh>
+#include <common/ent_cs.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 
 // Radar (#6)
+
+void HUD_Radar_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
+	HUD_Write_Cvar("hud_panel_radar_rotation");
+	HUD_Write_Cvar("hud_panel_radar_zoommode");
+	HUD_Write_Cvar("hud_panel_radar_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_size");
+	HUD_Write_Cvar("hud_panel_radar_maximized_rotation");
+	HUD_Write_Cvar("hud_panel_radar_maximized_zoommode");
+}
 
 bool HUD_Radar_Clickable()
 {
@@ -15,7 +30,7 @@ bool HUD_Radar_Clickable()
 
 void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 {
-    TC(bool, doshow);
+	TC(bool, doshow);
 	hud_panel_radar_maximized = doshow;
 	hud_panel_radar_temp_hidden = 0;
 
@@ -23,8 +38,6 @@ void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 	{
 		if (clickable)
 		{
-			if(autocvar_hud_cursormode)
-				setcursormode(1);
 			hud_panel_radar_mouse = 1;
 
 			// we must unset the player's buttons, as they aren't released elsewhere
@@ -39,9 +52,6 @@ void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 	{
 		hud_panel_radar_mouse = 0;
 		mouseClicked = 0;
-		if(autocvar_hud_cursormode)
-		if(!mv_active)
-			setcursormode(0);
 	}
 }
 void HUD_Radar_Hide_Maximized()
@@ -52,7 +62,7 @@ void HUD_Radar_Hide_Maximized()
 
 float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
+	TC(int, bInputType);
 	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
 		autocvar__hud_configure || mv_active)
 		return false;
@@ -137,9 +147,6 @@ void HUD_Radar_Mouse()
 		return;
 	}
 
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
-
 	panel = HUD_PANEL(RADAR);
 	HUD_Panel_LoadCvars();
 
@@ -165,9 +172,6 @@ void HUD_Radar_Mouse()
 		HUD_Radar_Hide_Maximized();
 		return;
 	}
-
-
-	draw_cursor_normal(mousepos, '1 1 1', 0.8);
 }
 
 void HUD_Radar()
@@ -211,9 +215,7 @@ void HUD_Radar()
 			panel_bg = "gfx/hud/default/border_default"; // fallback
 		if(!radar_panel_modified && panel_bg != panel.current_panel_bg)
 			radar_panel_modified = true;
-		if(panel.current_panel_bg)
-			strunzone(panel.current_panel_bg);
-		panel.current_panel_bg = strzone(panel_bg);
+		strcpy(panel.current_panel_bg, panel_bg);
 
 		switch(hud_panel_radar_maximized_zoommode)
 		{
@@ -349,10 +351,12 @@ void HUD_Radar()
 
 	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamRadar_Draw); // TODO: allow players to show on the radar as well!
+
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health >= 0 )
-		if ( it.team == myteam + 1 || gametype == MAPINFO_TYPE_RACE || !teamplay )
+		if ( GetResource(it, RES_HEALTH) >= 0 )
+		if ( it.team == myteam + 1 || mutator_returnvalue || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))
@@ -364,7 +368,7 @@ void HUD_Radar()
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-		entity icon = RadarIcons_from(it.teamradar_icon);
+		entity icon = REGISTRY_GET(RadarIcons, it.teamradar_icon);
 		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
 	});
 	AL_EACH(_entcs, e, it != NULL, {
@@ -379,11 +383,11 @@ void HUD_Radar()
 
 	if ( hud_panel_radar_mouse )
 	{
-		string message = "Click to select teleport destination";
+		string message = _("Click to select teleport destination");
 
 		if ( STAT(HEALTH) <= 0 )
 		{
-			message = "Click to select spawn location";
+			message = _("Click to select spawn location");
 		}
 
 		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,

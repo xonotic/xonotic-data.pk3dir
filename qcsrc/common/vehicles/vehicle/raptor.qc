@@ -1,6 +1,10 @@
 #include "raptor.qh"
 
-#ifdef IMPLEMENTATION
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
+#ifdef GAMEQC
 
 #ifdef SVQC
 
@@ -256,7 +260,7 @@ bool raptor_frame(entity this, float dt)
 	setorigin(this, vehic.origin + '0 0 32');
 	this.oldorigin = this.origin; // negate fall damage
 
-	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
+	STAT(VEHICLESTAT_W2MODE, this) = STAT(VEHICLESTAT_W2MODE, vehic);
 
 	vector vf, ad;
 	// Target lock & predict
@@ -345,11 +349,11 @@ bool raptor_frame(entity this, float dt)
 
 	vehicle_aimturret(vehic, trace_endpos, vehic.gun1, "fire1",
 						  autocvar_g_vehicle_raptor_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_raptor_cannon_pitchlimit_up,
-						  autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed);
+						  autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed, dt);
 
 	vehicle_aimturret(vehic, trace_endpos, vehic.gun2, "fire1",
 						  autocvar_g_vehicle_raptor_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_raptor_cannon_pitchlimit_up,
-						  autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed);
+						  autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed, dt);
 
 	/*
 	ad = ad * 0.5;
@@ -360,7 +364,7 @@ bool raptor_frame(entity this, float dt)
 
 	Weapon wep1 = WEP_RAPTOR;
 	.entity weaponentity = weaponentities[0];
-	if(!forbidWeaponUse(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
@@ -371,14 +375,14 @@ bool raptor_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, dt, false);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, dt, false, RES_HEALTH);
 
 	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(vehic, vehic.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, dt, false);
 
 	Weapon wep2a = WEP_RAPTOR_BOMB;
-	if(!forbidWeaponUse(this))
-	if(vehic.vehicle_weapon2mode == RSM_BOMB)
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
+	if(STAT(VEHICLESTAT_W2MODE, vehic) == RSM_BOMB)
 	{
 		if(time > vehic.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
@@ -411,7 +415,7 @@ bool raptor_frame(entity this, float dt)
 		bool incoming = false;
 		IL_EACH(g_projectiles, it.enemy == vehic,
 		{
-			if(MISSILE_IS_TRACKING(it))
+			if(it.missile_flags & MIF_GUIDED_TRACKING)
 			if(vdist(vehic.origin - it.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
 			{
 				incoming = true;
@@ -422,14 +426,14 @@ bool raptor_frame(entity this, float dt)
 		if(incoming)
 		{
 			msg_entity = this;
-			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE);
+			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE, 0);
 		}
 
 		vehic.bomb1.cnt = time + 1;
 	}
 
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, raptor);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, raptor, RES_HEALTH);
 	VEHICLE_UPDATE_PLAYER(this, vehic, energy, raptor);
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, raptor);
@@ -455,7 +459,7 @@ bool raptor_takeoff(entity this, float dt)
 	// Takeoff sequense
 	if(vehic.frame < 25)
 	{
-		vehic.frame += 25 / (autocvar_g_vehicle_raptor_takeofftime / PHYS_INPUT_FRAMETIME);
+		vehic.frame += 25 / (autocvar_g_vehicle_raptor_takeofftime / dt);
 		vehic.velocity_z = min(vehic.velocity_z * 1.5, 256);
 		vehic.bomb1.gun1.avelocity_y = 90 + ((vehic.frame / 25) * 25000);
 		vehic.bomb1.gun2.avelocity_y = -vehic.bomb1.gun1.avelocity_y;
@@ -467,13 +471,13 @@ bool raptor_takeoff(entity this, float dt)
 	else
 		this.PlayerPhysplug = raptor_frame;
 
-	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
+	STAT(VEHICLESTAT_W2MODE, this) = STAT(VEHICLESTAT_W2MODE, vehic);
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, dt, false);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, dt, false, RES_HEALTH);
 
 	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(vehic, vehic.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, dt, false);
@@ -483,7 +487,7 @@ bool raptor_takeoff(entity this, float dt)
 	this.vehicle_reload2 = bound(0, vehic.bomb1.alpha * 100, 100);
 	this.vehicle_ammo2 = (this.vehicle_reload2 == 100) ? 100 : 0;
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, raptor);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, raptor, RES_HEALTH);
 	VEHICLE_UPDATE_PLAYER(this, vehic, energy, raptor);
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, raptor);
@@ -495,7 +499,7 @@ void raptor_blowup(entity this, entity toucher)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
-	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_RAPT_DEATH.m_id, NULL);
+	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_RAPT_DEATH.m_id, DMG_NOWEP, NULL);
 
 	this.alpha		  = -1;
 	set_movetype(this, MOVETYPE_NONE);
@@ -541,20 +545,20 @@ bool raptor_impulse(entity this, int _imp)
 	switch(_imp)
 	{
 		case IMP_weapon_group_1.impulse:
-			this.vehicle.vehicle_weapon2mode = RSM_BOMB;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) = RSM_BOMB;
 			CSQCVehicleSetup(this, 0);
 			return true;
 		case IMP_weapon_group_2.impulse:
-			this.vehicle.vehicle_weapon2mode = RSM_FLARE;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) = RSM_FLARE;
 			CSQCVehicleSetup(this, 0);
 			return true;
 
 		case IMP_weapon_next_byid.impulse:
 		case IMP_weapon_next_bypriority.impulse:
 		case IMP_weapon_next_bygroup.impulse:
-			this.vehicle.vehicle_weapon2mode += 1;
-			if(this.vehicle.vehicle_weapon2mode > RSM_LAST)
-				this.vehicle.vehicle_weapon2mode = RSM_FIRST;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) += 1;
+			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) > RSM_LAST)
+				STAT(VEHICLESTAT_W2MODE, this.vehicle) = RSM_FIRST;
 
 			CSQCVehicleSetup(this, 0);
 			return true;
@@ -562,9 +566,9 @@ bool raptor_impulse(entity this, int _imp)
 		case IMP_weapon_prev_byid.impulse:
 		case IMP_weapon_prev_bypriority.impulse:
 		case IMP_weapon_prev_bygroup.impulse:
-			this.vehicle.vehicle_weapon2mode -= 1;
-			if(this.vehicle.vehicle_weapon2mode < RSM_FIRST)
-				this.vehicle.vehicle_weapon2mode = RSM_LAST;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) -= 1;
+			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) < RSM_FIRST)
+				STAT(VEHICLESTAT_W2MODE, this.vehicle) = RSM_LAST;
 
 			CSQCVehicleSetup(this, 0);
 			return true;
@@ -592,11 +596,11 @@ METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 {
-    instance.vehicle_weapon2mode = RSM_BOMB;
+    STAT(VEHICLESTAT_W2MODE, instance) = RSM_BOMB;
     instance.owner.PlayerPhysplug = raptor_takeoff;
     set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
     instance.solid		  = SOLID_SLIDEBOX;
-    instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
+    instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_raptor_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
     instance.velocity = '0 0 1'; // nudge upwards so takeoff sequence can work
     instance.tur_head.exteriormodeltoclient = instance.owner;
@@ -611,7 +615,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 {
-    instance.health				= 0;
+	SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.solid				= SOLID_CORPSE;
     instance.takedamage			= DAMAGE_NO;
@@ -703,7 +707,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     }
 
     instance.frame		  = 0;
-    instance.vehicle_health = autocvar_g_vehicle_raptor_health;
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     set_movetype(instance, MOVETYPE_TOSS);
     instance.solid		  = SOLID_SLIDEBOX;
@@ -722,7 +726,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     instance.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
     instance.bouncestop = autocvar_g_vehicle_raptor_bouncestop;
     instance.damageforcescale = 0.25;
-    instance.vehicle_health = autocvar_g_vehicle_raptor_health;
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 }
 METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
@@ -741,9 +745,9 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 
     instance.vehicle_exit = raptor_exit;
     instance.respawntime = autocvar_g_vehicle_raptor_respawntime;
-    instance.vehicle_health = autocvar_g_vehicle_raptor_health;
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-    instance.max_health = instance.vehicle_health;
+    instance.max_health = GetResource(instance, RES_HEALTH);
 
     if(!autocvar_g_vehicle_raptor_swim)
     	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
@@ -776,7 +780,7 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
 
         if(!dropmark)
         {
-            dropmark = spawn();
+            dropmark = new(raptor_dropmark);
             dropmark.owner = player;
             dropmark.gravity = 1;
             dropmark.dphitcontentsmask = DPCONTENTS_SOLID;
@@ -833,4 +837,5 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 }
 
 #endif
+
 #endif

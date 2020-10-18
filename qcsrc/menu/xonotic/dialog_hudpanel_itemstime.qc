@@ -13,12 +13,12 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_itemstime"));
-			e.addValue(e, ZCTX(_("PNL^Disabled")), "0");
-			e.addValue(e, ZCTX(_("PNL^Enabled spectating")), "1");
-			e.addValue(e, ZCTX(_("PNL^Enabled even playing in warmup")), "2");
+			e.addValue(e, _("Disable"), "0");
+			e.addValue(e, _("Enable spectating"), "1");
+			e.addValue(e, _("Enable even playing in warmup"), "2");
 			e.configureXonoticTextSliderValues(e);
 
-	DIALOG_HUDPANEL_COMMON_NOTOGGLE();
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Align icon:")));

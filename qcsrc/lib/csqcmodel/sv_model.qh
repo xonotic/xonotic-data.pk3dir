@@ -34,7 +34,9 @@ void CSQCModel_UnlinkEntity(entity e);
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	.t f; \
 	.t csqcmodel_##f;
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
+	.t f; \
+	.t csqcmodel_##f;
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

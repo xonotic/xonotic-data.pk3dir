@@ -72,6 +72,39 @@ vector vsnap(vector point, float fsize)
 }
 
 ERASEABLE
+float lerpratio(float f0, float f1, float ratio)
+{
+	return f0 * (1 - ratio) + f1 * ratio;
+}
+
+ERASEABLE
+float lerp(float t0, float f0, float t1, float f1, float t)
+{
+	return lerpratio(f0, f1, (t - t0) / (t1 - t0));
+}
+
+ERASEABLE
+float lerp3ratio(float f0, float f1, float f2, float ratio)
+{
+	float mid = 0.5;
+	return ratio < mid ? lerpratio(f0, f1, ratio / mid) : ratio > mid ? lerpratio(f1, f2, (ratio - mid) / mid) : f1;
+}
+
+
+ERASEABLE
+vector lerpvratio(vector f0, vector f1, float ratio)
+{
+	return f0 * (1 - ratio) + f1 * ratio;
+}
+
+ERASEABLE
+vector lerpv3ratio(vector f0, vector f1, vector f2, float ratio)
+{
+	float mid = 0.5;
+	return ratio < mid ? lerpvratio(f0, f1, ratio / mid) : ratio > mid ? lerpvratio(f1, f2, (ratio - mid) / mid) : f1;
+}
+
+ERASEABLE
 vector lerpv(float t0, vector v0, float t1, vector v1, float t)
 {
 	return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
@@ -321,4 +354,26 @@ vector solve_quadratic(float a, float b, float c)
 		}
 	}
 	return v;
+}
+
+/// Maps values between the src and dest range: src_min to dest_min, src_max to dest_max, values between them
+/// to the corresponding values between and extrapolates for values outside the range.
+///
+/// src_min and src_max must not be the same or division by zero occurs.
+///
+/// dest_max can be smaller than dest_min if you want the resulting range to be inverted, all values can be negative.
+ERASEABLE
+float map_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
+	float src_diff = src_max - src_min;
+	float dest_diff = dest_max - dest_min;
+	float ratio = (value - src_min) / src_diff;
+	return dest_min + dest_diff * ratio;
+}
+
+/// Same as `map_ranges` except that values outside the source range are clamped to min or max.
+ERASEABLE
+float map_bound_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
+	if (value <= src_min) return dest_min;
+	if (value >= src_max) return dest_max;
+	return map_ranges(value, src_min, src_max, dest_min, dest_max);
 }

@@ -12,5 +12,13 @@ CLASS(PhaserTurret, Turret)
 /* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
 /* fullname   */ ATTRIB(PhaserTurret, turret_name, string, _("Phaser Cannon"));
     ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+	END()
+	TR_PROPS(X, PhaserTurret, phaser)
+#undef X
+
 ENDCLASS(PhaserTurret)
 REGISTER_TURRET(PHASER, NEW(PhaserTurret));

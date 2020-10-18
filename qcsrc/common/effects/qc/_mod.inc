@@ -1,5 +1,4 @@
 // generated file; do not modify
-#include <common/effects/qc/all.qc>
 #include <common/effects/qc/casings.qc>
 #include <common/effects/qc/damageeffects.qc>
 #include <common/effects/qc/gibs.qc>

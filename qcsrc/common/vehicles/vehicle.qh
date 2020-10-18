@@ -77,3 +77,4 @@ const int VHF_PLAYERSLOT		= BIT(14); /// This ent is a player slot on a multi-pe
 
 // fields:
 .entity tur_head;
+.entity vehicledef;

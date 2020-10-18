@@ -6,10 +6,17 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
-	#include <common/triggers/subs.qh>
+	#include <common/mapobjects/subs.qh>
+	#include <common/mapobjects/teleporters.qh>
 	#include <common/util.qh>
-	#include <server/constants.qh>
-	#include <server/defs.qh>
+	#include <common/weapons/_all.qh>
+	#include <common/stats.qh>
+	#include <server/utils.qh>
+	#include <server/weapons/common.qh>
+#endif
+
+#ifdef SVQC
+bool autocvar_sv_warpzone_allow_selftarget;
 #endif
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -28,21 +35,31 @@
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
 
-#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
+#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN \
 	entity e = e_; \
 	e.warpzone_oldorigin = e.origin; \
 	e.warpzone_oldvelocity = e.velocity; \
 	e.warpzone_oldangles = e.angles; \
-	} MACRO_END
+	MACRO_END
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
+#ifdef SVQC
+	player.lastteleport_origin = player.origin;
+	player.lastteleporttime = time;
+#endif
 	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
+	player.angles = to_angles;
 #ifdef SVQC
 	player.oldorigin = to; // for DP's unsticking
 	player.fixangle = true;
+	if (IS_BOT_CLIENT(player))
+	{
+		// FIXME find a way to smooth view's angles change for bots too
+		player.v_angle = player.angles;
+		bot_aim_reset(player);
+	}
 #endif
-	player.angles = to_angles;
 	player.velocity = to_velocity;
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
@@ -57,9 +74,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 bool WarpZone_Teleported_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
-	WriteCoord(MSG_ENTITY, this.angles.x);
-	WriteCoord(MSG_ENTITY, this.angles.y);
-	WriteCoord(MSG_ENTITY, this.angles.z);
+	WriteVector(MSG_ENTITY, this.angles);
 	return true;
 }
 #endif
@@ -114,7 +129,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		}
 		else
 		{
-			LOG_INFO("would have to put player in solid, won't do that\n");
+			LOG_INFO("would have to put player in solid, won't do that");
 			setorigin(player, o0 - player.view_ofs);
 			return 0;
 		}
@@ -175,11 +190,7 @@ void WarpZone_Touch(entity this, entity toucher)
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
-	if((toucher.move_movetype == MOVETYPE_NONE && toucher.move_movetype == MOVETYPE_NONE) || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity
-#ifdef CSQC
-	|| tag_networkentity
-#endif
-	)
+	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
 	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))
@@ -208,19 +219,8 @@ void WarpZone_Touch(entity this, entity toucher)
 	if(WarpZone_Teleport(this, toucher, f, 0))
 	{
 #ifdef SVQC
-		string save1, save2;
-
-		save1 = this.target; this.target = string_null;
-		save2 = this.target3; this.target3 = string_null;
-		SUB_UseTargets(this, toucher, toucher); // use toucher too?
-		if (!this.target) this.target = save1;
-		if (!this.target3) this.target3 = save2;
-
-		save1 = this.target; this.target = string_null;
-		save2 = this.target2; this.target2 = string_null;
-		SUB_UseTargets(this.enemy, toucher, toucher); // use toucher too?
-		if (!this.target) this.target = save1;
-		if (!this.target2) this.target2 = save2;
+		SUB_UseTargets_SkipTargets(this, toucher, toucher, BIT(1) | BIT(3)); // use toucher too?
+		SUB_UseTargets_SkipTargets(this.enemy, toucher, toucher, BIT(1) | BIT(2)); // use toucher too?
 #endif
 	}
 	else
@@ -348,13 +348,13 @@ float WarpZone_CheckProjectileImpact(entity player)
 		return 0;
 
 #ifdef WARPZONELIB_REMOVEHACK
-	LOG_INFO("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
+	LOG_INFO("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now");
 #else
-	LOG_INFO("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
+	LOG_INFO("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again");
 #endif
-	LOG_INFO("Entity type: ", player.classname, "\n");
-	LOG_INFO("Origin: ", vtos(player.origin), "\n");
-	LOG_INFO("Velocity: ", vtos(player.velocity), "\n");
+	LOG_INFO("Entity type: ", player.classname);
+	LOG_INFO("Origin: ", vtos(player.origin));
+	LOG_INFO("Velocity: ", vtos(player.velocity));
 
 #ifdef WARPZONELIB_REMOVEHACK
 	return 0;
@@ -364,19 +364,8 @@ float WarpZone_CheckProjectileImpact(entity player)
 	player.velocity = player.warpzone_oldvelocity;
 	if(WarpZone_Teleport(wz, player, 0, 1))
 	{
-		string save1, save2;
-
-		save1 = wz.target; wz.target = string_null;
-		save2 = wz.target3; wz.target3 = string_null;
-		SUB_UseTargets(wz, player, player);
-		if (!wz.target) wz.target = save1;
-		if (!wz.target3) wz.target3 = save2;
-
-		save1 = wz.enemy.target; wz.enemy.target = string_null;
-		save2 = wz.enemy.target2; wz.enemy.target2 = string_null;
-		SUB_UseTargets(wz.enemy, player, player);
-		if (!wz.enemy.target) wz.enemy.target = save1;
-		if (!wz.enemy.target2) wz.enemy.target2 = save2;
+		SUB_UseTargets_SkipTargets(wz, player, player, BIT(1) | BIT(3));
+		SUB_UseTargets_SkipTargets(wz.enemy, player, player, BIT(1) | BIT(2));
 	}
 	else
 	{
@@ -583,7 +572,7 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		point = point * (1 / (3 * area));
 		if(vdist(norm, <, 0.99))
 		{
-			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.\n");
+			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.");
 			area = 0; // no autofixing in this case
 		}
 		norm = normalize(norm);
@@ -597,18 +586,19 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		if(area > 0)
 		{
 			org = org - ((org - point) * norm) * norm; // project to plane
-			makevectors(ang);
-			if(norm * v_forward < 0)
+			vector forward, right, up;
+			MAKE_VECTORS(ang, forward, right, up);
+			if(norm * forward < 0)
 			{
-				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.\n");
+				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.");
 				norm = -1 * norm;
 			}
-			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
+			ang = vectoangles2(norm, up); // keep rotation, but turn exactly against plane
 			ang.x = -ang.x;
-			if(norm * v_forward < 0.99)
-				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been turned to match plane orientation (", vtos(this.aiment.angles), " -> ", vtos(ang), "\n");
+			if(norm * forward < 0.99)
+				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been turned to match plane orientation (", vtos(this.aiment.angles), " -> ", vtos(ang));
 			if(vdist(org - this.aiment.origin, >, 0.5))
-				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been moved to match the plane (", vtos(this.aiment.origin), " -> ", vtos(org), ").\n");
+				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been moved to match the plane (", vtos(this.aiment.origin), " -> ", vtos(org), ").");
 		}
 	}
 	else if(area > 0)
@@ -642,7 +632,8 @@ void WarpZone_InitStep_FindTarget(entity this)
 	// this way only one of the two ents needs to target
 	if(this.target != "")
 	{
-		this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
+		if(!autocvar_sv_warpzone_allow_selftarget)
+			this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
 
 		e2 = NULL;
 		for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
@@ -811,7 +802,7 @@ void WarpZone_StartFrame()
 			WarpZone_StoreProjectileData(it);
 		});
 	}
-		
+
 
 	FOREACH_CLIENT(true,
 	{

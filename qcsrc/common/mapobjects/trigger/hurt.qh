@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef SVQC
+const int HURT_SLOW = BIT(4);
+
+bool tracebox_hits_trigger_hurt(vector start, vector e_min, vector e_max, vector end);
+#endif

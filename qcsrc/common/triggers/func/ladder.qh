@@ -1,4 +1,0 @@
-#pragma once
-
-.float ladder_time;
-.entity ladder_entity;

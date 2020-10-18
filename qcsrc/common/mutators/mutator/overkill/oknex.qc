@@ -1,0 +1,363 @@
+#include "oknex.qh"
+
+#ifdef SVQC
+
+.float oknex_lasthit;
+#endif
+
+#if defined(GAMEQC)
+
+METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepent))
+{
+	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
+	float charge = wepent.oknex_charge;
+	float animlimit = WEP_CVAR(oknex, charge_animlimit);
+	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
+	vector g;
+	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
+	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
+	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
+	if (charge > animlimit)
+	{
+		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
+	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
+	return g;
+}
+#endif
+
+#ifdef SVQC
+REGISTER_MUTATOR(oknex_charge, true);
+
+MUTATOR_HOOKFUNCTION(oknex_charge, GetPressedKeys)
+{
+	entity player = M_ARGV(0, entity);
+
+	// WEAPONTODO
+	if(!WEP_CVAR(oknex, charge) || !WEP_CVAR(oknex, charge_velocity_rate))
+		return;
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+
+		if (player.(weaponentity).m_weapon == WEP_OVERKILL_NEX && WEP_CVAR(oknex, charge) && WEP_CVAR(oknex, charge_velocity_rate) && vdist(vec2(player.velocity), >, WEP_CVAR(oknex, charge_minspeed)))
+		{
+			float xyspeed = vlen(vec2(player.velocity));
+			// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
+				xyspeed = min(xyspeed, WEP_CVAR(oknex, charge_maxspeed));
+			float f = (xyspeed - WEP_CVAR(oknex, charge_minspeed)) / (WEP_CVAR(oknex, charge_maxspeed) - WEP_CVAR(oknex, charge_minspeed));
+			// add the extra charge
+			player.(weaponentity).oknex_charge = min(1, player.(weaponentity).oknex_charge + WEP_CVAR(oknex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
+		}
+	}
+}
+
+void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float issecondary)
+{
+	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
+
+	mydmg = WEP_CVAR_BOTH(oknex, !issecondary, damage);
+	myforce = WEP_CVAR_BOTH(oknex, !issecondary, force);
+	mymindist = WEP_CVAR_BOTH(oknex, !issecondary, damagefalloff_mindist);
+	mymaxdist = WEP_CVAR_BOTH(oknex, !issecondary, damagefalloff_maxdist);
+	myhalflife = WEP_CVAR_BOTH(oknex, !issecondary, damagefalloff_halflife);
+	myforcehalflife = WEP_CVAR_BOTH(oknex, !issecondary, damagefalloff_forcehalflife);
+	myammo = WEP_CVAR_BOTH(oknex, !issecondary, ammo);
+
+	float flying;
+	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
+
+	if (WEP_CVAR(oknex, charge))
+	{
+		charge = WEP_CVAR(oknex, charge_mindmg) / mydmg + (1 - WEP_CVAR(oknex, charge_mindmg) / mydmg) * actor.(weaponentity).oknex_charge;
+		actor.(weaponentity).oknex_charge *= WEP_CVAR(oknex, charge_shot_multiplier); // do this AFTER setting mydmg/myforce
+		// O RLY? -- divVerent
+		// YA RLY -- FruitieX
+	}
+	else
+	{
+		charge = 1;
+	}
+	mydmg *= charge;
+	myforce *= charge;
+
+	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, thiswep.m_id);
+	if(charge > WEP_CVAR(oknex, charge_animlimit) && WEP_CVAR(oknex, charge_animlimit)) // if the OverkillNex is overcharged, we play an extra sound
+	{
+		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(oknex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(oknex, charge_animlimit)), ATTN_NORM);
+	}
+
+	yoda = 0;
+	damage_goodhits = 0;
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, true, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, thiswep.m_id);
+
+	if(yoda && flying)
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && actor.oknex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	actor.oknex_lasthit = damage_goodhits;
+
+	//beam and muzzle flash done on client
+	SendCSQCVortexBeamParticle(charge);
+
+	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
+}
+
+.float oknex_chargepool_pauseregen_finished;
+
+METHOD(OverkillNex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
+{
+	if(bot_aim(actor, weaponentity, 1000000, 0, 1, false))
+		PHYS_INPUT_BUTTON_ATCK(actor) = true;
+	else
+	{
+		if(WEP_CVAR(oknex, charge))
+			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+	}
+}
+
+METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+	if (WEP_CVAR(oknex, charge) && actor.(weaponentity).oknex_charge < WEP_CVAR(oknex, charge_limit))
+	{
+		actor.(weaponentity).oknex_charge = min(1, actor.(weaponentity).oknex_charge + WEP_CVAR(oknex, charge_rate) * frametime / W_TICSPERFRAME);
+	}
+
+	if (WEP_CVAR_SEC(oknex, chargepool))
+		if (actor.(weaponentity).oknex_chargepool_ammo < 1)
+		{
+			if (actor.oknex_chargepool_pauseregen_finished < time)
+				actor.(weaponentity).oknex_chargepool_ammo = min(1, actor.(weaponentity).oknex_chargepool_ammo + WEP_CVAR_SEC(oknex, chargepool_regen) * frametime / W_TICSPERFRAME);
+			actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(oknex, chargepool_pause_regen));
+		}
+
+	if ((WEP_CVAR_SEC(oknex, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
+	{
+		// Secondary uses it's own refire timer if refire_type is 1.
+		actor.jump_interval = time + WEP_CVAR_SEC(oknex, refire) * W_WeaponRateFactor(actor);
+		BLASTER_SECONDARY_ATTACK(oknex, actor, weaponentity);
+		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
+			(actor.(weaponentity).wframe == WFRAME_FIRE2))
+		{
+			// Set secondary fire animation.
+			actor.(weaponentity).wframe = WFRAME_FIRE2;
+			FOREACH_CLIENT(true, LAMBDA(
+				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
+				{
+					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, autocvar_g_weaponratefactor, true);
+				}
+			));
+			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
+		}
+	}
+
+	if (autocvar_g_balance_oknex_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR_PRI(oknex, ammo))
+	{
+		// Rorced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		return;
+	}
+	if (fire & 1) // Primary attack
+	{
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(oknex, refire)))
+		{
+			return;
+		}
+		W_OverkillNex_Attack(thiswep, actor, weaponentity, 0);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(oknex, animtime), w_ready);
+		return;
+	}
+	if ((fire & 2) && (WEP_CVAR(oknex, secondary) == 2) && (WEP_CVAR_SEC(oknex, refire_type) == 0))
+	{
+		// Secondary attack
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(oknex, refire)))
+		{
+			return;
+		}
+		BLASTER_SECONDARY_ATTACK(oknex, actor, weaponentity);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(oknex, animtime), w_ready);
+		return;
+	}
+	//if ((WEP_CVAR(oknex, charge) && (WEP_CVAR(oknex, secondary) == 1)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+	//{
+	//	if(WEP_CVAR(oknex, charge))
+	//	{
+	//		actor.(weaponentity).oknex_charge_rottime = time + WEP_CVAR(oknex, charge_rot_pause);
+	//		float dt = frametime / W_TICSPERFRAME;
+	//
+	//		if(actor.(weaponentity).oknex_charge < 1)
+	//		{
+	//			if(WEP_CVAR_SEC(oknex, chargepool))
+	//			{
+	//				if(WEP_CVAR_SEC(oknex, ammo))
+	//				{
+	//					// always deplete if secondary is held
+	//					actor.(weaponentity).oknex_chargepool_ammo = max(0, actor.(weaponentity).oknex_chargepool_ammo - WEP_CVAR_SEC(oknex, ammo) * dt);
+
+	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
+	//					actor.oknex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(oknex, chargepool_pause_regen);
+	//					dt = min(dt, actor.(weaponentity).oknex_chargepool_ammo);
+	//					dt = max(0, dt);
+
+	//					actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
+	//				}
+	//			}
+
+	//			else if(WEP_CVAR_SEC(oknex, ammo))
+	//			{
+	//				if(fire & 2) // only eat ammo when the button is pressed
+	//				{
+	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
+	//					if(!(actor.items & IT_UNLIMITED_AMMO))
+	//					{
+	//						// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	//						if(autocvar_g_balance_vortex_reload_ammo)
+	//						{
+	//							dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(oknex, ammo)) / WEP_CVAR_SEC(oknex, ammo));
+	//							dt = max(0, dt);
+	//							if(dt > 0)
+	//							{
+	//								actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(oknex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(oknex, ammo) * dt);
+	//							}
+	//							actor.(weaponentity).(weapon_load[WEP_OVERKILL_NEX.m_id]) = actor.(weaponentity).clip_load;
+	//						}
+	//						else
+	//						{
+	//							dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(oknex, ammo)) / WEP_CVAR_SEC(oknex, ammo));
+	//							dt = max(0, dt);
+	//							if(dt > 0)
+	//							{
+	//								actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(oknex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(oknex, ammo) * dt);
+	//							}
+	//						}
+	//					}
+	//					actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
+	//				}
+	//			}
+
+	//			else
+	//			{
+	//				dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
+	//				actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
+	//			}
+	//		}
+	//	}
+	//	else if(WEP_CVAR(oknex, secondary))
+	//	{
+	//		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(oknex, refire)))
+	//		{
+	//			W_OverkillNex_Attack(thiswep, actor, weaponentity, 1);
+	//			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(oknex, animtime), w_ready);
+	//		}
+	//	}
+	//}
+}
+
+METHOD(OverkillNex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
+{
+	actor.oknex_lasthit = 0;
+}
+
+METHOD(OverkillNex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
+{
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
+	ammo_amount += (autocvar_g_balance_oknex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(oknex, ammo));
+	return ammo_amount;
+}
+
+METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
+{
+	if (WEP_CVAR(oknex, secondary))
+	{
+		// don't allow charging if we don't have enough ammo
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(oknex, ammo);
+		return ammo_amount;
+	}
+	else
+	{
+		return false; // zoom is not a fire mode
+	}
+}
+
+METHOD(OverkillNex, wr_resetplayer, void(entity thiswep, entity actor))
+{
+	if (WEP_CVAR(oknex, charge)) {
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			actor.(weaponentity).oknex_charge = WEP_CVAR(oknex, charge_start);
+		}
+	}
+	actor.oknex_lasthit = 0;
+}
+
+METHOD(OverkillNex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+	W_Reload(actor, weaponentity, WEP_CVAR_PRI(oknex, ammo), SND_RELOAD);
+}
+
+METHOD(OverkillNex, wr_suicidemessage, Notification(entity thiswep))
+{
+	return WEAPON_THINKING_WITH_PORTALS;
+}
+
+METHOD(OverkillNex, wr_killmessage, Notification(entity thiswep))
+{
+	return WEAPON_OVERKILL_NEX_MURDER;
+}
+
+METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))
+{
+	return PHYS_INPUT_BUTTON_ATCK2(actor) && !WEP_CVAR(oknex, secondary);
+}
+
+#endif
+#ifdef CSQC
+
+METHOD(OverkillNex, wr_impacteffect, void(entity thiswep, entity actor))
+{
+	entity this = actor;
+	vector org2 = w_org + w_backoff * 6;
+	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
+	if(!w_issilent)
+		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+}
+
+METHOD(OverkillNex, wr_init, void(entity thiswep))
+{
+	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
+	{
+		precache_pic("gfx/reticle_nex");
+	}
+}
+
+METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))
+{
+	if(button_zoom || zoomscript_caught || (!WEP_CVAR(oknex, secondary) && button_attack2))
+	{
+		return true;
+	}
+	else
+	{
+		// no weapon specific image for this weapon
+		return false;
+	}
+}
+
+METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(oknex, secondary);
+}
+
+#endif

@@ -19,9 +19,7 @@ void XonoticScreenshotBrowserTab_loadPreviewScreenshot(entity me, string scrImag
 {
 	if (me.currentScrPath == scrImage)
 		return;
-	if (me.currentScrPath)
-		strunzone(me.currentScrPath);
-	me.currentScrPath = strzone(scrImage);
+	strcpy(me.currentScrPath, scrImage);
 	me.screenshotImage.load(me.screenshotImage, me.currentScrPath);
 }
 void XonoticScreenshotBrowserTab_fill(entity me)
@@ -41,6 +39,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 
 	me.gotoRC(me, 0, 3.1);
 		me.TD(me, 1, 1.9, e = makeXonoticCheckBoxEx(2, 1, "cl_autoscreenshot", _("Auto screenshot scoreboard")));
+			e.sendCvars = true;
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = ScreenshotList_Refresh_Click;
 			e.onClickEntity = slist;

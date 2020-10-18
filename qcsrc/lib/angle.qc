@@ -1,4 +1,9 @@
 .vector origin;
+
+// angles of the player's model (as opposed to their view which uses `.vector v_angle;`) in degrees
+// x is pitch: positive means up (unlike .v_angle), usually is 0
+// y is yaw: between -180 and 180, increases when turning left
+// z is roll: positive means tilted clockwise, usually is 0
 .vector angles;
 
 /*

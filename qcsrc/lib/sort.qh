@@ -10,16 +10,14 @@ void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 {
 	#define heapify(_count) \
 		MACRO_BEGIN \
-		{ \
 			for (int start = floor(((_count) - 2) / 2); start >= 0; --start) \
 			{ \
 				siftdown(start, (_count) - 1); \
 			} \
-		} MACRO_END
+		MACRO_END
 
 	#define siftdown(_start, _end) \
 		MACRO_BEGIN \
-		{ \
 			for (int root = (_start); root * 2 + 1 <= (_end); ) \
 			{ \
 				int child = root * 2 + 1; \
@@ -28,7 +26,7 @@ void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 				swap(root, child, pass); \
 				root = child; \
 			} \
-		} MACRO_END
+		MACRO_END
 
 	heapify(n);
 	int end = n - 1;

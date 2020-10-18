@@ -9,12 +9,13 @@ float autocvar_g_buffs_waypoint_distance;
 bool autocvar_g_buffs_pickup_anyway = false;
 float autocvar_g_buffs_pickup_delay = 0.7;
 bool autocvar_g_buffs_randomize;
+bool autocvar_g_buffs_randomize_teamplay = true;
 float autocvar_g_buffs_random_lifetime;
 bool autocvar_g_buffs_random_location;
 int autocvar_g_buffs_random_location_attempts;
 int autocvar_g_buffs_spawn_count;
 bool autocvar_g_buffs_replace_powerups;
-bool autocvar_g_buffs_drop = true;
+bool autocvar_g_buffs_drop = false;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
 float autocvar_g_buffs_resistance_blockpercent;
@@ -81,3 +82,5 @@ const vector BUFF_MAX = ('16 16 60');
 
 // client side options
 .float cvar_cl_buffs_autoreplace;
+
+float buff_Available(entity buff);

@@ -13,7 +13,9 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	string panelname = "weapons";
 	float i;
 
-	DIALOG_HUDPANEL_COMMON();
+	dialog_hudpanel_main_checkbox(me, panelname);
+
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TDempty(me, 0.2);

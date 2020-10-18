@@ -43,6 +43,7 @@ CLASS(Dialog, InputContainer)
 	// to be customized
 	ATTRIB(Dialog, closable, float, 1);
 	ATTRIB(Dialog, title, string, "Form1");
+	ATTRIB(Dialog, name, string, ""); // if set to a string without spaces this dialog can be opened via menu_cmd directmenu
 	ATTRIB(Dialog, color, vector, '1 0.5 1');
 	ATTRIB(Dialog, intendedWidth, float, 0);
 	ATTRIB(Dialog, rows, float, 3);

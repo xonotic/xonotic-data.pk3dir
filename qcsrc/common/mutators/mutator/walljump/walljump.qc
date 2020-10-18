@@ -4,7 +4,7 @@
 #ifdef CSQC
 REGISTER_MUTATOR(walljump, true);
 #elif defined(SVQC)
-REGISTER_MUTATOR(walljump, cvar("g_walljump"));
+REGISTER_MUTATOR(walljump, autocvar_g_walljump);
 #endif
 
 #define PHYS_WALLJUMP(s) 						STAT(WALLJUMP, s)
@@ -23,10 +23,12 @@ vector PlayerTouchWall(entity this)
 
 	float dist = 10, max_normal = 0.2, scaler = 100;
 	vector start = this.origin;
-	TRACE(start + v_forward * scaler)
-	TRACE(start - v_forward * scaler)
-	TRACE(start + v_right * scaler)
-	TRACE(start - v_right * scaler)
+	vector forward, right, _up;
+	MAKE_VECTORS(this.angles, forward, right, _up);
+	TRACE(start + forward * scaler)
+	TRACE(start - forward * scaler)
+	TRACE(start + right * scaler)
+	TRACE(start - right * scaler)
 #undef TRACE
 	return '0 0 0';
 }
@@ -44,7 +46,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 	if(!IS_DEAD(player))
 	{
 		vector plane_normal = PlayerTouchWall(player);
-		
+
 		if(plane_normal != '0 0 0')
 		{
 			float wj_force = PHYS_WALLJUMP_FORCE(player);

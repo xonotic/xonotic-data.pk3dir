@@ -9,9 +9,9 @@
 
 void GenericCommand_macro_help();
 
-float GenericCommand_macro_command(float argc, string command);
+float GenericCommand_macro_command(int argc, string command);
 
-float GenericCommand_macro_usage(float argc);
+float GenericCommand_macro_usage(int argc);
 
 void GenericCommand_macro_write_aliases(float fh);
 

@@ -16,10 +16,10 @@ void XonoticColorpicker_configureXonoticColorpicker(entity me, entity theTextbox
 	me.configureImage(me, me.image);
 }
 
-float XonoticColorpicker_mousePress(entity me, vector coords)
+METHOD(XonoticColorpicker, mousePress, bool(XonoticColorpicker this, vector pos))
 {
-	me.mouseDrag(me, coords);
-	return 1;
+	this.mouseDrag(this, pos);
+	return true;
 }
 
 // must match hslimage.c

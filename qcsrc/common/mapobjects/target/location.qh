@@ -1,0 +1,6 @@
+#pragma once
+
+#ifdef SVQC
+IntrusiveList g_locations;
+STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
+#endif

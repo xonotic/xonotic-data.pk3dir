@@ -1,0 +1,59 @@
+#pragma once
+
+// TODO: find a better location for these?
+int total_players;
+
+// todo: accept the number of teams as a parameter
+void GameRules_teams(bool value);
+
+/**
+ * Used to disable team spawns in team modes
+ */
+void GameRules_spawning_teams(bool value);
+
+/**
+ * Disabling score disables the "score" column on the scoreboard
+ */
+void GameRules_score_enabled(bool value);
+
+void GameRules_limit_score(int limit);
+void GameRules_limit_lead(int limit);
+void GameRules_limit_time(int limit);
+void GameRules_limit_time_qualifying(int limit);
+
+/**
+ * Set any unspecified rules to their defaults
+ */
+void GameRules_limit_fallbacks();
+
+/**
+ * @param teams a bitmask of active teams
+ * @param spprio player score priority (if frags aren't enabled)
+ * @param stprio team score priority (if frags aren't enabled)
+ */
+#define GameRules_scoring(teams, spprio, stprio, fields) MACRO_BEGIN \
+    _GameRules_scoring_begin((teams), (spprio), (stprio)); \
+    noref void(entity, string, float) field = _GameRules_scoring_field; \
+    /* todo: just have the one `field` function */ \
+    noref void(int, string, float) field_team = _GameRules_scoring_field_team; \
+    LAMBDA(fields); \
+    _GameRules_scoring_end(); \
+MACRO_END
+
+void _GameRules_scoring_begin(int teams, float spprio, float stprio);
+void _GameRules_scoring_field(entity i, string label, int scoreflags);
+void _GameRules_scoring_field_team(float i, string label, int scoreflags);
+void _GameRules_scoring_end();
+
+/**
+ * Mark a player as being 'important' (flag carrier, ball carrier, etc)
+ * @param player the entity to mark
+ * @param value VIP status
+ */
+void GameRules_scoring_vip(entity player, bool value);
+bool GameRules_scoring_is_vip(entity player);
+
+#define GameRules_scoring_add(client, fld, value) _GameRules_scoring_add(client, SP_##fld, value)
+float _GameRules_scoring_add(entity client, entity sp, float value);
+#define GameRules_scoring_add_team(client, fld, value) _GameRules_scoring_add_team(client, SP_##fld, ST_##fld, value)
+float _GameRules_scoring_add_team(entity client, entity sp, int st, float value);

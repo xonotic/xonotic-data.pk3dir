@@ -1,7 +1,5 @@
 #include "hellion.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_hellion) { if (!turret_initialize(this, TUR_HELLION)) delete(this); }
@@ -22,5 +20,4 @@ METHOD(Hellion, tr_setup, void(Hellion this, entity it))
     it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 }
 
-#endif
 #endif

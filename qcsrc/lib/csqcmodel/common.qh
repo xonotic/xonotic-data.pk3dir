@@ -53,6 +53,11 @@ IN THE SOFTWARE.\
 .float frame2time;
 .float lerpfrac;
 
+const int ISPLAYER_MODEL = BIT(0); // using a player model
+const int ISPLAYER_CLIENT = BIT(1); // is a client
+const int ISPLAYER_LOCAL = BIT(2); // is the local player
+const int ISPLAYER_PLAYER = BIT(3); // is a player in the match
+
 const int CSQCMODEL_PROPERTY_FRAME = BIT(23);
 const int CSQCMODEL_PROPERTY_TELEPORTED = BIT(22); // the "teleport bit" cancelling interpolation
 const int CSQCMODEL_PROPERTY_MODELINDEX = BIT(21);
@@ -66,15 +71,9 @@ const int CSQCMODEL_PROPERTY_SIZE = BIT(15);
 #define ALLPROPERTIES_COMMON \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME, int, ReadByte, WriteByte, frame) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_MODELINDEX, int, ReadShort, WriteShort, modelindex) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_x) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_y) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_z) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadShort, WriteShort, mins_x) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadShort, WriteShort, mins_y) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadShort, WriteShort, mins_z) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadShort, WriteShort, maxs_x) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadShort, WriteShort, maxs_y) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadShort, WriteShort, maxs_z) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, vector, ReadVector, WriteVector, origin) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, vector, ReadVector, WriteVector, mins) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, vector, ReadVector, WriteVector, maxs) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_PITCHROLL, float, ReadAngle, WriteAngle, angles_x) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_YAW, float, ReadAngle, WriteAngle, angles_y) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_PITCHROLL, float, ReadAngle, WriteAngle, angles_z) \

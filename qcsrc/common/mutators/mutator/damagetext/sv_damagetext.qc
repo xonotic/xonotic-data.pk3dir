@@ -1,22 +1,24 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players");
+AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
 
 REGISTER_MUTATOR(damagetext, true);
 
-#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
-#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
-#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
-#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
+#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0)
+#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1)
+#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2)
+#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
-    const entity attacker = M_ARGV(0, entity);
-    const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
-    const float health = M_ARGV(2, float);
-    const float armor = M_ARGV(3, float);
-    const int deathtype = M_ARGV(5, int);
-    const float potential_damage = M_ARGV(6, float);
-    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+    entity attacker = M_ARGV(0, entity);
+    entity hit = M_ARGV(1, entity); if (hit == attacker) return;
+    float health = M_ARGV(2, float);
+    float armor = M_ARGV(3, float);
+    int deathtype = M_ARGV(5, int);
+    float potential_damage = M_ARGV(6, float);
+    if(DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
+    if(deathtype == DEATH_FIRE.m_id || deathtype == DEATH_BUFF.m_id) return; // TODO: exclude damage over time and thorn effects
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), {
         if (
             (SV_DAMAGETEXT_ALL()) ||
             (SV_DAMAGETEXT_PLAYERS() && it == attacker) ||
@@ -53,5 +55,5 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
                 else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
 			}
         }
-    ));
+    });
 }

@@ -11,3 +11,5 @@ void Portal_ClearWithID(entity own, float id);
 
 vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle);
 void Portal_ClearAll_PortalsOnly(entity own);
+
+void Portal_Think(entity this);

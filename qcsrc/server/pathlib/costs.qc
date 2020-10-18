@@ -28,10 +28,10 @@ float pathlib_g_euclidean_water(entity parent,vector to, float static_cost)
 
 
 /**
-    Manhattan Menas we expect to move up,down left or right
-    No diagonal moves espected. (like moving bewteen city blocks)
+    Manhattan heuristic means we expect to move up, down left or right
+    No diagonal moves expected. (like moving between city blocks)
 **/
-float pathlib_h_manhattan(vector a,vector b)
+float pathlib_h_manhattan(vector a, vector b)
 {
     //h(n) = D * (abs(n.x-goal.x) + abs(n.y-goal.y))
 
@@ -43,33 +43,33 @@ float pathlib_h_manhattan(vector a,vector b)
 }
 
 /**
-    This heuristic consider both stright and disagonal moves
-    to have teh same cost.
+    This heuristic consider both straight and diagonal moves
+    to have the same cost.
 **/
-float pathlib_h_diagonal(vector a,vector b)
+float pathlib_h_diagonal(vector a, vector b)
 {
     //h(n) = D * max(abs(n.x-goal.x), abs(n.y-goal.y))
 
     float hx = fabs(a.x - b.x);
     float hy = fabs(a.y - b.y);
-    float h = pathlib_movecost * max(hx,hy);
+    float h = pathlib_movecost * max(hx, hy);
 
     return h;
 }
 
 /**
-    This heuristic only considers the stright line distance.
-    Will usualy mean a lower H then G meaning A* Will speand more
-    and run slower.
+    This heuristic only considers the straight line distance.
+    Usually means a lower H then G, resulting in A* spreading more
+    (and running slower).
 **/
-float pathlib_h_euclidean(vector a,vector b)
+float pathlib_h_euclidean(vector a, vector b)
 {
     return vlen(a - b);
 }
 
 /**
-    This heuristic consider both stright and disagonal moves,
-    But has a separate cost for diagonal moves.
+    This heuristic consider both straight and diagonal moves,
+    but has a separate cost for diagonal moves.
 **/
 float pathlib_h_diagonal2(vector a,vector b)
 {
@@ -92,10 +92,10 @@ float pathlib_h_diagonal2(vector a,vector b)
 }
 
 /**
-    This heuristic consider both stright and disagonal moves,
+    This heuristic consider both straight and diagonal moves,
     But has a separate cost for diagonal moves.
 **/
-float pathlib_h_diagonal2sdp(vector preprev,vector prev,vector point,vector end)
+float pathlib_h_diagonal2sdp(vector preprev, vector prev, vector point, vector end)
 {
     //h_diagonal(n) = min(abs(n.x-goal.x), abs(n.y-goal.y))
     //h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
@@ -113,13 +113,13 @@ float pathlib_h_diagonal2sdp(vector preprev,vector prev,vector point,vector end)
 
     vector d1 = normalize(preprev - point);
     vector d2 = normalize(prev    - point);
-    float m = vlen(d1-d2);
+    float m = vlen(d1 - d2);
 
     return h * m;
 }
 
 
-float pathlib_h_diagonal3(vector a,vector b)
+float pathlib_h_diagonal3(vector a, vector b)
 {
     float hx = fabs(a.x - b.x);
     float hy = fabs(a.y - b.y);

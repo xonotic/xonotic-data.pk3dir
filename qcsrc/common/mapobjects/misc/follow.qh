@@ -1,0 +1,5 @@
+#pragma once
+
+
+const int FOLLOW_ATTACH = BIT(0);
+const int FOLLOW_LOCAL = BIT(1);

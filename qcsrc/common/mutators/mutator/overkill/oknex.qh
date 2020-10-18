@@ -1,0 +1,78 @@
+#pragma once
+
+CLASS(OverkillNex, Weapon)
+/* spawnfunc */ ATTRIB(OverkillNex, m_canonical_spawnfunc, string, "weapon_oknex");
+/* ammotype  */ ATTRIB(OverkillNex, ammo_type, int, RES_CELLS);
+/* impulse   */ ATTRIB(OverkillNex, impulse, int, 7);
+/* flags     */ ATTRIB(OverkillNex, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
+/* rating    */ ATTRIB(OverkillNex, bot_pickupbasevalue, float, 8000);
+/* color     */ ATTRIB(OverkillNex, wpcolor, vector, '0.5 1 1');
+/* modelname */ ATTRIB(OverkillNex, mdl, string, "ok_sniper");
+#ifdef GAMEQC
+/* model     */ ATTRIB(OverkillNex, m_model, Model, MDL_OK_SNIPER_ITEM);
+#endif
+/* crosshair */ ATTRIB(OverkillNex, w_crosshair, string, "gfx/crosshairnex");
+/* crosshair */ ATTRIB(OverkillNex, w_crosshair_size, float, 0.65);
+/* reticle   */ ATTRIB(OverkillNex, w_reticle, string, "gfx/reticle_nex");
+/* wepimg    */ ATTRIB(OverkillNex, model2, string, "ok_weapon_rail");
+/* refname   */ ATTRIB(OverkillNex, netname, string, "oknex");
+/* wepname   */ ATTRIB(OverkillNex, m_name, string, _("Overkill Nex"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, animtime, float, PRI) \
+		P(class, prefix, chargepool, float, SEC) \
+		P(class, prefix, chargepool_pause_regen, float, SEC) \
+		P(class, prefix, chargepool_regen, float, SEC) \
+		P(class, prefix, charge, float, NONE) \
+		P(class, prefix, charge_animlimit, float, NONE) \
+		P(class, prefix, charge_limit, float, NONE) \
+		P(class, prefix, charge_maxspeed, float, NONE) \
+		P(class, prefix, charge_mindmg, float, NONE) \
+		P(class, prefix, charge_minspeed, float, NONE) \
+		P(class, prefix, charge_rate, float, NONE) \
+		P(class, prefix, charge_rot_pause, float, NONE) \
+		P(class, prefix, charge_rot_rate, float, NONE) \
+		P(class, prefix, charge_shot_multiplier, float, NONE) \
+		P(class, prefix, charge_start, float, NONE) \
+		P(class, prefix, charge_velocity_rate, float, NONE) \
+		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
+		P(class, prefix, damagefalloff_halflife, float, BOTH) \
+		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
+		P(class, prefix, damagefalloff_mindist, float, BOTH) \
+		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, refire, float, PRI) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, ammo, float, SEC) \
+		P(class, prefix, animtime, float, SEC) \
+		P(class, prefix, damage, float, SEC) \
+		P(class, prefix, delay, float, SEC) \
+		P(class, prefix, edgedamage, float, SEC) \
+		P(class, prefix, force, float, SEC) \
+		P(class, prefix, force_zscale, float, SEC) \
+		P(class, prefix, lifetime, float, SEC) \
+		P(class, prefix, radius, float, SEC) \
+		P(class, prefix, refire, float, SEC) \
+		P(class, prefix, refire_type, float, SEC) \
+		P(class, prefix, shotangle, float, SEC) \
+		P(class, prefix, speed, float, SEC) \
+		P(class, prefix, spread, float, SEC) \
+	END()
+    W_PROPS(X, OverkillNex, oknex)
+#undef X
+
+ENDCLASS(OverkillNex)
+REGISTER_WEAPON(OVERKILL_NEX, oknex, NEW(OverkillNex));
+
+
+//SPAWNFUNC_WEAPON(weapon_oknex, WEP_OVERKILL_NEX)

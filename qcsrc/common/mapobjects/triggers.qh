@@ -1,0 +1,57 @@
+#pragma once
+#include "defs.qh"
+
+.bool pushable;
+
+.float antiwall_flag; // Variable to define what to do with func_clientwall
+// 0 == do nothing, 1 == deactivate, 2 == activate
+
+.float height;
+
+.float lip;
+
+// handy fields used by a lot of the codebase, but more importantly used by map objects
+.float cnt;
+.float count;
+
+// used elsewhere (will fix)
+#ifdef SVQC
+.string message2;
+
+void trigger_common_write(entity this, bool withtarget);
+
+string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
+
+void target_voicescript_next(entity pl);
+void target_voicescript_clear(entity pl);
+
+void SUB_DontUseTargets(entity this, entity actor, entity trigger);
+void SUB_UseTargets(entity this, entity actor, entity trigger);
+
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
+
+// allow excluding certain .target* fields without needing to nullify them
+// use BIT(1) through BIT(4)
+void SUB_UseTargets_SkipTargets(entity this, entity actor, entity trigger, int skiptargets);
+
+void generic_setactive(entity this, int act);
+// generic methods for netlinked entities
+void generic_netlinked_reset(entity this);
+void generic_netlinked_setactive(entity this, int act);
+// WARNING: DON'T USE, ONLY TO KEEP COMPATIBILITY BECAUSE OF SWITCH FROM .state TO .alive!!!!
+void generic_netlinked_legacy_use(entity this, entity actor, entity trigger);
+#endif
+
+.float sub_target_used;
+
+.float volume, atten;
+
+.vector dest;
+
+#ifdef CSQC
+void trigger_common_read(entity this, bool withtarget);
+void trigger_remove_generic(entity this);
+
+.string target;
+.string targetname;
+#endif

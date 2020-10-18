@@ -1,0 +1,4 @@
+// generated file; do not modify
+#ifdef SVQC
+    #include <common/mutators/mutator/stale_move_negation/sv_stale_move_negation.qc>
+#endif

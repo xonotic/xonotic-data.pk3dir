@@ -1,4 +1,5 @@
 #include "cl_vehicles.qh"
+
 const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
 const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
@@ -21,7 +22,7 @@ float alarm2time;
 
 void vehicle_alarm(entity e, int ch, Sound s0und)
 {
-    TC(Sound, s0und);
+	TC(Sound, s0und);
 	if(!autocvar_cl_vehicles_alarm)
 		return;
 
@@ -70,9 +71,7 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 
 	if(sf & 2)
 	{
-		axh.origin_x = ReadCoord();
-		axh.origin_y = ReadCoord();
-		axh.origin_z = ReadCoord();
+		axh.origin = ReadVector();
 	}
 
 	if(sf & 4)
@@ -120,7 +119,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 			delete(axh);
 
-		axh              = spawn();
+		axh              = new(AuxiliaryXhair);
 		axh.draw2d       = func_null;
 		axh.drawmask     = MASK_NORMAL;
 		axh.axh_drawflag = DRAWFLAG_NORMAL;
@@ -136,7 +135,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	} else {
-		Vehicle info = Vehicles_from(hud_id);
+		Vehicle info = REGISTRY_GET(Vehicles, hud_id);
     	info.vr_setup(info, NULL);
 	}
 }

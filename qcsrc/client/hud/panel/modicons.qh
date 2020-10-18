@@ -1,2 +1,4 @@
 #pragma once
 #include "../panel.qh"
+
+bool mod_active; // is there any active mod icon?

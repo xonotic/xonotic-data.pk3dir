@@ -61,6 +61,7 @@
 	_("CI_THI^%d seconds"), /* third */ \
 	_("CI_MUL^%d seconds")) /* multi */
 
+// returns 1st, 2nd, 3rd, nth ordinal number from a cardinal number (integer)
 ERASEABLE
 string count_ordinal(int interval)
 {
@@ -68,23 +69,20 @@ string count_ordinal(int interval)
 	// to accomodate all languages unless we do a specific function for each one...
 	// and since that's not technically feasible/practical, this is all we've got folks.
 
-	// Basically, it just allows you to represent a number or count in different ways
-	// depending on the number... like, with count_ordinal you can provide integers
-	// and retrieve 1st, 2nd, 3rd, nth ordinal numbers in a clean and simple way.
-	if (floor((interval % 100) / 10) * 10 != 10)  // examples: 12th, 111th, 213th will not execute this block
+	int last2digits = interval % 100;
+
+	// numbers ending with 11, 12 and 13 don't follow the standard pattern
+	if (last2digits < 4 || last2digits > 20)
 	{
-		// otherwise, check normally for 1st,2nd,3rd insertions
-		switch (interval % 10)
+		switch (last2digits % 10)
 		{
 			case 1: return sprintf(_("%dst"), interval);
 			case 2: return sprintf(_("%dnd"), interval);
 			case 3: return sprintf(_("%drd"), interval);
-			default: return sprintf(_("%dth"), interval);
 		}
 	}
-	else { return sprintf(_("%dth"), interval); }
 
-	return "";
+	return sprintf(_("%dth"), interval);
 }
 
 ERASEABLE

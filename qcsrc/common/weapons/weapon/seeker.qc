@@ -1,96 +1,6 @@
 #include "seeker.qh"
-#ifndef IMPLEMENTATION
-CLASS(Seeker, Weapon)
-/* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(Seeker, impulse, int, 8);
-/* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
-/* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
-#endif
-/* crosshair */ ATTRIB(Seeker, w_crosshair, string, "gfx/crosshairseeker");
-/* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
-/* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
-/* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-    	P(class, prefix, flac_ammo, float, NONE) \
-    	P(class, prefix, flac_animtime, float, NONE) \
-    	P(class, prefix, flac_damage, float, NONE) \
-    	P(class, prefix, flac_edgedamage, float, NONE) \
-    	P(class, prefix, flac_force, float, NONE) \
-    	P(class, prefix, flac_lifetime, float, NONE) \
-    	P(class, prefix, flac_lifetime_rand, float, NONE) \
-    	P(class, prefix, flac_radius, float, NONE) \
-    	P(class, prefix, flac_refire, float, NONE) \
-    	P(class, prefix, flac_speed, float, NONE) \
-    	P(class, prefix, flac_speed_up, float, NONE) \
-    	P(class, prefix, flac_speed_z, float, NONE) \
-    	P(class, prefix, flac_spread, float, NONE) \
-    	P(class, prefix, missile_accel, float, NONE) \
-    	P(class, prefix, missile_ammo, float, NONE) \
-    	P(class, prefix, missile_animtime, float, NONE) \
-    	P(class, prefix, missile_count, float, NONE) \
-    	P(class, prefix, missile_damageforcescale, float, NONE) \
-    	P(class, prefix, missile_damage, float, NONE) \
-    	P(class, prefix, missile_decel, float, NONE) \
-    	P(class, prefix, missile_delay, float, NONE) \
-    	P(class, prefix, missile_edgedamage, float, NONE) \
-    	P(class, prefix, missile_force, float, NONE) \
-    	P(class, prefix, missile_health, float, NONE) \
-    	P(class, prefix, missile_lifetime, float, NONE) \
-    	P(class, prefix, missile_proxy, float, NONE) \
-    	P(class, prefix, missile_proxy_delay, float, NONE) \
-    	P(class, prefix, missile_proxy_maxrange, float, NONE) \
-    	P(class, prefix, missile_radius, float, NONE) \
-    	P(class, prefix, missile_refire, float, NONE) \
-    	P(class, prefix, missile_smart, float, NONE) \
-    	P(class, prefix, missile_smart_mindist, float, NONE) \
-    	P(class, prefix, missile_smart_trace_max, float, NONE) \
-    	P(class, prefix, missile_smart_trace_min, float, NONE) \
-    	P(class, prefix, missile_speed, float, NONE) \
-    	P(class, prefix, missile_speed_max, float, NONE) \
-    	P(class, prefix, missile_speed_up, float, NONE) \
-    	P(class, prefix, missile_speed_z, float, NONE) \
-    	P(class, prefix, missile_spread, float, NONE) \
-    	P(class, prefix, missile_turnrate, float, NONE) \
-    	P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-    	P(class, prefix, tag_ammo, float, NONE) \
-    	P(class, prefix, tag_animtime, float, NONE) \
-    	P(class, prefix, tag_damageforcescale, float, NONE) \
-    	P(class, prefix, tag_health, float, NONE) \
-    	P(class, prefix, tag_lifetime, float, NONE) \
-    	P(class, prefix, tag_refire, float, NONE) \
-    	P(class, prefix, tag_speed, float, NONE) \
-    	P(class, prefix, tag_spread, float, NONE) \
-    	P(class, prefix, tag_tracker_lifetime, float, NONE) \
-		P(class, prefix, type, float, NONE) \
-		P(class, prefix, weaponreplace, string, NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Seeker, seeker)
-#undef X
-ENDCLASS(Seeker)
-REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
-
 
 #ifdef SVQC
-.entity tag_target, wps_tag_tracker;
-.float tag_time;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
@@ -98,7 +8,7 @@ spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 void W_Seeker_Missile_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -212,20 +122,20 @@ void W_Seeker_Missile_Think(entity this)
 
 
 
-void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
 	if(this.realowner == attacker)
-		this.health = this.health - (damage * 0.25);
+		TakeResource(this, RES_HEALTH, (damage * 0.25));
 	else
-		this.health = this.health - damage;
+		TakeResource(this, RES_HEALTH, damage);
 
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode_think);
 }
 
@@ -259,9 +169,9 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, missile_ammo), weaponentity);
 
 	makevectors(actor.v_angle);
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
 	w_shotorg += f_diff;
-	Send_Effect(EFFECT_SEEKER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	//actor.detornator         = false;
 
@@ -279,16 +189,17 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.solid           = SOLID_BBOX;
 	missile.scale           = 2;
 	missile.takedamage      = DAMAGE_YES;
-	missile.health          = WEP_CVAR(seeker, missile_health);
+	missile.weaponentity_fld = weaponentity;
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(seeker, missile_health));
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
 	if(missile.enemy != NULL)
-		missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
+		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	else
-		missile.projectiledeathtype = WEP_SEEKER.m_id;
+		missile.projectiledeathtype = thiswep.m_id;
 
 
 	setorigin(missile, w_shotorg);
@@ -315,7 +226,7 @@ void W_Seeker_Flac_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -355,10 +266,11 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, flac_damage), thiswep.m_id | HITTYPE_SECONDARY);
 	w_shotorg += f_diff;
 
-	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	// uses hagar effects!
+	W_MuzzleFlash(WEP_HAGAR, actor, weaponentity, w_shotorg, w_shotdir);
 
 	missile 				= new(missile);
 	missile.owner 			= missile.realowner = actor;
@@ -370,8 +282,8 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLY);
-	missile.projectiledeathtype = WEP_SEEKER.m_id;
-	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -404,7 +316,7 @@ entity W_Seeker_Tagged_Info(entity isowner, .entity weaponentity, entity istarge
 	return NULL;
 }
 
-void W_Seeker_Attack(entity actor, .entity weaponentity)
+void W_Seeker_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity closest_target = NULL;
 
@@ -426,18 +338,16 @@ void W_Seeker_Attack(entity actor, .entity weaponentity)
 			closest_target = NULL;
 	}
 
-	W_Seeker_Fire_Missile(WEP_SEEKER, actor, weaponentity, '0 0 0', closest_target);
+	W_Seeker_Fire_Missile(thiswep, actor, weaponentity, '0 0 0', closest_target);
 }
 
 void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seeker_Attack
 {
-	float c;
-	entity oldenemy;
 	this.cnt = this.cnt - 1;
 
 	Weapon thiswep = WEP_SEEKER;
 	.entity weaponentity = this.weaponentity_fld;
-	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && this.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER))
+	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != thiswep))
 	{
 		delete(this);
 		return;
@@ -447,24 +357,23 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	entity own = this.realowner;
 
-	oldenemy = own.enemy;
+	entity oldenemy = own.enemy;
 	own.enemy = this.enemy;
 
-	c = own.cnt % 4;
-	switch(c)
+	switch(own.cnt % 4)
 	{
 		case 0:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
 			break;
 		case 1:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '+1.25 -3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 -3.75 0', own.enemy); // TODO
 			break;
 		case 2:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '-1.25 +3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 +3.75 0', own.enemy); // TODO
 			break;
 		case 3:
 		default:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '+1.25 +3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 +3.75 0', own.enemy); // TODO
 			break;
 	}
 
@@ -502,12 +411,12 @@ void W_Seeker_Tag_Explode(entity this)
 	delete(this);
 }
 
-void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
-	this.health = this.health - damage;
-	if(this.health <= 0)
+	TakeResource(this, RES_HEALTH, damage);
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_Seeker_Tag_Explode(this);
 }
 
@@ -580,7 +489,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, tag_ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count), thiswep.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY);
 
 	entity missile          = new(seeker_tag);
 	missile.weaponentity_fld = weaponentity;
@@ -595,7 +504,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage       = DAMAGE_YES;
 	missile.event_damage     = W_Seeker_Tag_Damage;
-	missile.health           = WEP_CVAR(seeker, tag_health);
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(seeker, tag_health));
 	missile.damageforcescale = WEP_CVAR(seeker, tag_damageforcescale);
 
 	setorigin(missile, w_shotorg);
@@ -622,10 +531,12 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 METHOD(Seeker, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(seeker, type) == 1)
+    {
         if(W_Seeker_Tagged_Info(actor, weaponentity, actor.enemy) != NULL)
             PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
         else
             PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+    }
     else
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 }
@@ -639,7 +550,7 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, missile_refire)))
             {
-                W_Seeker_Attack(actor, weaponentity);
+                W_Seeker_Attack(thiswep, actor, weaponentity);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
             }
         }
@@ -678,13 +589,13 @@ METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapone
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, missile_ammo);
     }
     else
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     return ammo_amount;
 }
@@ -693,13 +604,13 @@ METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     else
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, flac_ammo);
     }
     return ammo_amount;
 }
@@ -762,5 +673,4 @@ METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

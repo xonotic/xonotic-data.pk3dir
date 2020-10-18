@@ -57,7 +57,7 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 	v = explosion_calcpush(explosion_f * speedfactor, m, target_v, 1, 0);
 	// the factor we then get is:
 	//   1
-	LOG_INFOF("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f\n",
+	LOG_INFOF("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f",
 		m,
 		target_v, target_v + v,
 		target_v * target_v, m * explosion_f * speedfactor * explosion_f * speedfactor, target_v * target_v + m * explosion_f * speedfactor * explosion_f * speedfactor,
@@ -189,7 +189,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	float sigma;
 	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
-	spread *= spreadfactor; //g_weaponspreadfactor;
+	spread *= spreadfactor; //autocvar_g_weaponspreadfactor;
 	if(spread <= 0)
 		return forward;
 

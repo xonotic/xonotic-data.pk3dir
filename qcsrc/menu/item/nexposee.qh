@@ -5,7 +5,7 @@ CLASS(Nexposee, Container)
 	METHOD(Nexposee, draw, void(entity));
 	METHOD(Nexposee, keyDown, float(entity, float, float, float));
 	METHOD(Nexposee, keyUp, float(entity, float, float, float));
-	METHOD(Nexposee, mousePress, float(entity, vector));
+	METHOD(Nexposee, mousePress, bool(Nexposee this, vector pos));
 	METHOD(Nexposee, mouseMove, float(entity, vector));
 	METHOD(Nexposee, mouseRelease, float(entity, vector));
 	METHOD(Nexposee, mouseDrag, float(entity, vector));

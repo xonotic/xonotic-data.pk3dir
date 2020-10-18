@@ -2,9 +2,10 @@
 
 #include <common/command/_mod.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
-#define COMMON_COMMANDS_from(i) _COMMON_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(COMMON_COMMANDS)
 REGISTRY_SORT(COMMON_COMMANDS)
+
+REGISTRY_DEFINE_GET(COMMON_COMMANDS, NULL)
 
 #define COMMON_COMMAND(id, description) \
 	CLASS(commoncommand_##id, Command) \
@@ -15,7 +16,7 @@ REGISTRY_SORT(COMMON_COMMANDS)
 	METHOD(commoncommand_##id, m_invokecmd, void(commoncommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(COMMON_COMMANDS_aliases) {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd"))));
+	FOREACH(COMMON_COMMANDS, true, { localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd")); });
 }
 
 #include "vote.qh"
@@ -53,7 +54,7 @@ float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not 
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
 .vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 
-// allow functions to be used in other code like g_world.qc and teamplay.qc
+// allow functions to be used in other code like world.qc and teamplay.qc
 void timeout_handler_think(entity this);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
@@ -81,7 +82,7 @@ string GetClientErrorString_color(float clienterror, string original_input, stri
 // is this entity number even in the possible range of entities?
 float VerifyClientNumber(float tmp_number);
 
-entity GetIndexedEntity(float argc, float start_index);
+entity GetIndexedEntity(int argc, float start_index);
 
 // find a player which matches the input string, and return their entity
 entity GetFilteredEntity(string input);
@@ -105,33 +106,33 @@ void timeout_handler_think(entity this);
 //  Common commands used in both sv_cmd.qc and cmd.qc
 // ===================================================
 
-void CommonCommand_cvar_changes(float request, entity caller);
+void CommonCommand_cvar_changes(int request, entity caller);
 
-void CommonCommand_cvar_purechanges(float request, entity caller);
+void CommonCommand_cvar_purechanges(int request, entity caller);
 
-void CommonCommand_editmob(float request, entity caller, float argc);
+void CommonCommand_editmob(int request, entity caller, int argc);
 
-void CommonCommand_info(float request, entity caller, float argc);
+void CommonCommand_info(int request, entity caller, int argc);
 
-void CommonCommand_ladder(float request, entity caller);
+void CommonCommand_ladder(int request, entity caller);
 
-void CommonCommand_lsmaps(float request, entity caller);
+void CommonCommand_lsmaps(int request, entity caller);
 
-void CommonCommand_printmaplist(float request, entity caller);
+void CommonCommand_printmaplist(int request, entity caller);
 
-void CommonCommand_rankings(float request, entity caller);
+void CommonCommand_rankings(int request, entity caller);
 
-void CommonCommand_records(float request, entity caller);
+void CommonCommand_records(int request, entity caller);
 
-void CommonCommand_teamstatus(float request, entity caller);
+void CommonCommand_teamstatus(int request, entity caller);
 
-void CommonCommand_time(float request, entity caller);
+void CommonCommand_time(int request, entity caller);
 
-void CommonCommand_timein(float request, entity caller);
+void CommonCommand_timein(int request, entity caller);
 
-void CommonCommand_timeout(float request, entity caller);
+void CommonCommand_timeout(int request, entity caller);
 
-void CommonCommand_who(float request, entity caller, float argc);
+void CommonCommand_who(int request, entity caller, int argc);
 
 
 // ==================================
@@ -157,30 +158,30 @@ COMMON_COMMAND(who, "Display detailed client information about all players") { C
 
 void CommonCommand_macro_help(entity caller)
 {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(print_to(caller, sprintf("  ^2%s^7: %s", it.m_name, it.m_description))));
+	FOREACH(COMMON_COMMANDS, true, { print_to(caller, sprintf("  ^2%s^7: %s", it.m_name, it.m_description)); });
 }
 
-float CommonCommand_macro_command(float argc, entity caller, string command)
+float CommonCommand_macro_command(int argc, entity caller, string command)
 {
 	string c = strtolower(argv(0));
-	FOREACH(COMMON_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(COMMON_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_COMMAND, caller, argc, command);
 		return true;
-	));
+	});
 	return false;
 }
 
-float CommonCommand_macro_usage(float argc, entity caller)
+float CommonCommand_macro_usage(int argc, entity caller)
 {
 	string c = strtolower(argv(1));
-	FOREACH(COMMON_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(COMMON_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_USAGE, caller, argc, "");
 		return true;
-	));
+	});
 	return false;
 }
 
 void CommonCommand_macro_write_aliases(float fh)
 {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_svcmd", it.m_name, it.m_description)));
+	FOREACH(COMMON_COMMANDS, true, { CMD_Write_Alias("qc_cmd_svcmd", it.m_name, it.m_description); });
 }

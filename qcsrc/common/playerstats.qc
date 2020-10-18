@@ -1,14 +1,18 @@
 #include "playerstats.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
-    #include "../server/anticheat.qh"
-    #include "../server/defs.qh"
-    #include "../server/scores.qh"
-    #include "../server/weapons/accuracy.qh"
+	#include <common/constants.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
+	#include <server/anticheat.qh>
+	#include <server/client.qh>
+	#include <server/intermission.qh>
+	#include <server/scores.qh>
+	#include <server/weapons/accuracy.qh>
+	#include <server/world.qh>
 #endif
 
 #ifdef SVQC
@@ -24,7 +28,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	// set up player identification
 	string s = "";
 
-	if((e.crypto_idfp != "") && (e.cvar_cl_allow_uidtracking == 1))
+	if((e.crypto_idfp != "") && (CS(e).cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
@@ -55,7 +59,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_GameReport_AddTeam(float t)
+void PlayerStats_GameReport_AddTeam(int t)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -93,7 +97,6 @@ void PlayerStats_GameReport_AddEvent(string event_id)
 	}
 }
 
-// referred to by PS_GR_P_ADDVAL and PS_GR_T_ADDVAL
 float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
 	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
@@ -108,7 +111,8 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 void PlayerStats_GameReport_Accuracy(entity p)
 {
 	#define ACCMAC(suffix, field) \
-		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
+		PlayerStats_GameReport_Event_Player(p, \
+			sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
@@ -126,38 +130,40 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	// add global info!
 	if(p.alivetime)
 	{
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
 		p.alivetime = 0;
 	}
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
-		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p, false));
+	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p.netname, p.team, false));
 
 	if(teamplay)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
 	if(stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_JOINS, 1);
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_GameReport_Accuracy(p);
 	anticheat_report_to_playerstats(p);
 
 	if(IS_REAL_CLIENT(p))
 	{
-		if(p.latency_cnt)
+		if(CS(p).latency_cnt)
 		{
-			float latency = (p.latency_sum / p.latency_cnt);
-			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
+			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
+			if(latency)
+				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
+
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
 	}
 
-	strunzone(p.playerstats_id);
-	p.playerstats_id = string_null;
+	strfree(p.playerstats_id);
 }
 
-void PlayerStats_GameReport(float finished)
+void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -167,16 +173,16 @@ void PlayerStats_GameReport(float finished)
 
 	FOREACH_CLIENT(true, {
 		// add personal score rank
-		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
 		// scoreboard data
 		if(it.scoreboard_pos)
 		{
 			// scoreboard is valid!
-			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
+			PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 			// add scoreboard position
-			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
+			PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
 
 			// add scoreboard data
 			PlayerScore_PlayerStats(it);
@@ -184,8 +190,8 @@ void PlayerStats_GameReport(float finished)
 			// if the match ended normally, add winning info
 			if(finished)
 			{
-				PS_GR_P_ADDVAL(it, PLAYERSTATS_WINS, it.winning);
-				PS_GR_P_ADDVAL(it, PLAYERSTATS_MATCHES, 1);
+				PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_WINS, it.winning);
+				PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_MATCHES, 1);
 			}
 		}
 
@@ -258,6 +264,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 }
 
 // this... is a hack, a temporary one until we get a proper duel gametype
+// TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
 	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)
@@ -291,7 +298,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * G: game type
 		 * O: mod name (icon request) as in server browser
 		 * M: map name
-		 * I: match ID (see "matchid" in g_world.qc)
+		 * I: match ID (see "matchid" in world.qc)
 		 * S: "hostname" of the server
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server
@@ -375,6 +382,10 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 					url_fputs(fh, sprintf("t %s\n", tt));
 				}
 
+				// elo ranking enabled
+				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_ranked", p));
+				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
+
 				// output player events
 				for(e = PS_GR_OUT_EVL; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
 				{
@@ -397,9 +408,9 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			LOG_TRACE("Got response from player stats server:");
-			while((s = url_fgets(fh))) { LOG_TRACE("  ", s); }
-			LOG_TRACE("End of response.");
+			LOG_DEBUG("Got response from player stats server:");
+			while((s = url_fgets(fh))) { LOG_DEBUG("  ", s); }
+			LOG_DEBUG("End of response.");
 			url_fclose(fh);
 			break;
 		}
@@ -407,7 +418,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			LOG_TRACE("Player stats written");
+			LOG_DEBUG("Player stats written");
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -420,7 +431,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("Player stats writing failed: ", ftos(status), "\n");
+			LOG_INFO("Player stats writing failed: ", ftos(status));
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -434,13 +445,13 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
-	PlayerScore_Add(joiningplayer, SP_ELO, -1);
+	GameRules_scoring_add(joiningplayer, ELO, -1);
 	// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
 		if (joiningplayer.crypto_idfp == "") {
-			PlayerScore_Add(joiningplayer, SP_ELO, -1);
+			GameRules_scoring_add(joiningplayer, ELO, -1);
 		} else {
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
@@ -448,7 +459,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			// now request the information
 			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
-			LOG_TRACE("Retrieving playerstats from URL: ", uri);
+			LOG_DEBUG("Retrieving playerstats from URL: ", uri);
 			url_single_fopen(
 				uri,
 				FILE_APPEND,
@@ -472,7 +483,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	else
 	{
 		// server has this disabled, kill the DB and set status to idle
-		PlayerScore_Add(joiningplayer, SP_ELO, -1);
+		GameRules_scoring_add(joiningplayer, ELO, -1);
 		if(PS_B_IN_DB >= 0)
 		{
 			db_close(PS_B_IN_DB);
@@ -483,11 +494,26 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	}
 }
 
+SHUTDOWN(PlayerStats_PlayerBasic_Shutdown)
+{
+	if(PS_B_IN_DB >= 0)
+	{
+		db_close(PS_B_IN_DB);
+		PS_B_IN_DB = -1;
+	}
+
+	if(PS_GR_OUT_DB >= 0)
+	{
+		db_close(PS_GR_OUT_DB);
+		PS_GR_OUT_DB = -1;
+	}
+}
+
 void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
 {
 	// determine whether we should retrieve playerbasic information again
 
-	LOG_TRACEF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f",
+	LOG_DEBUGF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f",
 		joiningplayer.netname,
 		time
 	);
@@ -510,7 +536,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			LOG_TRACE("-- Sending data to player stats server");
+			LOG_DEBUG("-- Sending data to player stats server");
 			/*url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -568,12 +594,12 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                         gt = data;
                         break;
                     case "e":
-                        LOG_TRACE("G: ", gt);
-                        LOG_TRACE("e: ", data);
+                        //LOG_TRACE("G: ", gt);
+                        //LOG_TRACE("e: ", data);
                         if (gt == PlayerStats_GetGametype()) {
                             handled = true;
                             float e = stof(data);
-                            PlayerScore_Add(p, SP_ELO, +1 + e);
+                            GameRules_scoring_add(p, ELO, +1 + e);
                         }
                         if (gt == "") {
                             // PlayerInfo_AddItem(p, value, data);
@@ -590,18 +616,18 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			LOG_INFO("Player stats synchronized with server\n");
+			LOG_INFO("Player stats synchronized with server");
 			return;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("Receiving player stats failed: ", ftos(status));
 			break;
 		}
 	}
-	PlayerScore_Add(p, SP_ELO, -1);
+	GameRules_scoring_add(p, ELO, -1);
 }
 #endif // SVQC
 
@@ -613,7 +639,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	float i = 0;
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
-		LOG_INFO(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
+		LOG_INFOF("%d:%s:%s", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e)));
 		++i;
 	}
 #endif
@@ -637,7 +663,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 
 	// now actually set the event data
 	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
-	LOG_TRACE("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB");
+	LOG_DEBUG("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB");
 }
 
 void PlayerStats_PlayerDetail()
@@ -650,7 +676,7 @@ void PlayerStats_PlayerDetail()
 			PS_D_IN_DB = db_create();
 
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
-		LOG_TRACE("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri);
+		LOG_DEBUG("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri);
 		url_single_fopen(
 			autocvar_g_playerstats_playerdetail_uri,
 			FILE_APPEND,
@@ -679,7 +705,7 @@ void PlayerStats_PlayerDetail_CheckUpdate()
 	float gamecount = cvar("cl_matchcount");
 
 	#if 0
-	LOG_INFOF("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
+	LOG_INFOF("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d",
 		time,
 		PS_D_NEXTUPDATETIME,
 		PS_D_LASTGAMECOUNT,
@@ -705,7 +731,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			LOG_TRACE("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...");
+			LOG_DEBUG("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...");
 			url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -782,7 +808,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 							"PlayerStats_PlayerDetail_Handler(): ERROR: "
 							"Key went unhandled? Is our version outdated?\n"
 							"PlayerStats_PlayerDetail_Handler(): "
-							"Key '%s', Event '%s', Data '%s'\n",
+							"Key '%s', Event '%s', Data '%s'",
 							key,
 							event,
 							data
@@ -792,13 +818,13 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				}
 
 				#if 0
-				LOG_INFO(sprintf(
+				LOG_INFOF(
 					"PlayerStats_PlayerDetail_Handler(): "
-					"Key '%s', Event '%s', Data '%s'\n",
+					"Key '%s', Event '%s', Data '%s'",
 					key,
 					event,
 					data
-				));
+				);
 				#endif
 			}
 			//print("PlayerStats_PlayerDetail_Handler(): End of response.\n");
@@ -811,14 +837,14 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.");
 			break;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status));
 			PlayerStats_PlayerDetail_Status = PS_D_STATUS_ERROR;
 			if(PS_D_IN_DB >= 0)
 			{

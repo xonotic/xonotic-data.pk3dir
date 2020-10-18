@@ -20,7 +20,7 @@ string weaponarenastring_cvar;
 string WeaponArenaString()
 {
 	string s;
-	float n, i;
+	float n;
 	s = cvar_string("g_weaponarena");
 	if(s == "0")
 		return "";
@@ -30,81 +30,81 @@ string WeaponArenaString()
 		return _("Most Weapons Arena");
 	if(s == weaponarenastring_cvar)
 		return weaponarenastring;
-	if(weaponarenastring)
-		strunzone(weaponarenastring);
-	if(weaponarenastring_cvar)
-		strunzone(weaponarenastring_cvar);
 
-	weaponarenastring_cvar = strzone(s);
+	strcpy(weaponarenastring_cvar, s);
 
 	n = tokenize_console(s);
 	s = "";
-	for(i = 0; i < n; ++i)
+	for(int j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			if(argv(i) == it.netname)
-				s = strcat(s, " & ", it.m_name);
-		));
+		Weapon wep = Weapon_from_name(argv(j));
+		if(wep != WEP_Null)
+		{
+			s = cons_mid(s, " & ", wep.m_name);
+		}
 	}
-	s = sprintf(_("%s Arena"), substring(s, 3, strlen(s) - 3));
+	s = sprintf(_("%s Arena"), s);
 
-	weaponarenastring = strzone(s);
+	strcpy(weaponarenastring, s);
 
 	return weaponarenastring;
 }
 
 string XonoticMutatorsDialog_toString(entity me)
 {
-	string s;
-	s = "";
+	string s = "";
 	if(cvar("g_dodging"))
-		s = strcat(s, ", ", _("Dodging"));
+		s = cons_mid(s, ", ", _("Dodging"));
 	if(cvar("g_instagib"))
-		s = strcat(s, ", ", _("InstaGib"));
+		s = cons_mid(s, ", ", _("InstaGib"));
 	if(cvar("g_new_toys"))
-		s = strcat(s, ", ", _("New Toys"));
+		s = cons_mid(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
-		s = strcat(s, ", ", _("NIX"));
+		s = cons_mid(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
-		s = strcat(s, ", ", _("Rocket Flying"));
+		s = cons_mid(s, ", ", _("Rocket Flying"));
 	if(cvar("g_invincible_projectiles"))
-		s = strcat(s, ", ", _("Invincible Projectiles"));
+		s = cons_mid(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
-		s = strcat(s, ", ", WeaponArenaString());
+		s = cons_mid(s, ", ", WeaponArenaString());
 	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
-		s = strcat(s, ", ", _("No start weapons"));
+		s = cons_mid(s, ", ", _("No start weapons"));
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
-		s = strcat(s, ", ", _("Low gravity"));
+		s = cons_mid(s, ", ", _("Low gravity"));
 	if(cvar("g_cloaked"))
-		s = strcat(s, ", ", _("Cloaked"));
+		s = cons_mid(s, ", ", _("Cloaked"));
 	if(cvar("g_grappling_hook"))
-		s = strcat(s, ", ", _("Hook"));
+		s = cons_mid(s, ", ", _("Hook"));
 	if(cvar("g_midair"))
-		s = strcat(s, ", ", _("Midair"));
+		s = cons_mid(s, ", ", _("Midair"));
+	if(cvar("g_melee_only"))
+		s = cons_mid(s, ", ", _("Melee only"));
 	if(cvar("g_vampire"))
-		s = strcat(s, ", ", _("Vampire"));
+		s = cons_mid(s, ", ", _("Vampire"));
 	if(cvar("g_pinata"))
-		s = strcat(s, ", ", _("Piñata"));
+		s = cons_mid(s, ", ", _("Piñata"));
 	if(cvar("g_weapon_stay"))
-		s = strcat(s, ", ", _("Weapons stay"));
+		s = cons_mid(s, ", ", _("Weapons stay"));
 	if(cvar("g_bloodloss") > 0)
-		s = strcat(s, ", ", _("Blood loss"));
+		s = cons_mid(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
-		s = strcat(s, ", ", _("Jet pack"));
+		s = cons_mid(s, ", ", _("Jetpack"));
 	if(cvar("g_buffs") > 0)
-		s = strcat(s, ", ", _("Buffs"));
+		s = cons_mid(s, ", ", _("Buffs"));
 	if(cvar("g_overkill"))
-		s = strcat(s, ", ", _("Overkill"));
+		s = cons_mid(s, ", ", _("Overkill"));
 	if(cvar("g_powerups") == 0)
-		s = strcat(s, ", ", _("No powerups"));
+		s = cons_mid(s, ", ", _("No powerups"));
 	if(cvar("g_powerups") > 0)
-		s = strcat(s, ", ", _("Powerups"));
+		s = cons_mid(s, ", ", _("Powerups"));
 	if(cvar("g_touchexplode") > 0)
-		s = strcat(s, ", ", _("Touch explode"));
+		s = cons_mid(s, ", ", _("Touch explode"));
+	if(cvar("g_walljump"))
+		s = cons_mid(s, ", ", _("Wall jumping"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else
-		return substring(s, 2, strlen(s) - 2);
+		return s;
 }
 
 float checkCompatibility_pinata(entity me)
@@ -112,6 +112,10 @@ float checkCompatibility_pinata(entity me)
 	if(cvar("g_instagib"))
 		return 0;
 	if(cvar("g_nix"))
+		return 0;
+	if(cvar("g_overkill"))
+		return 0;
+	if(cvar("g_melee_only"))
 		return 0;
 	if(cvar_string("g_weaponarena") != "0")
 		return 0;
@@ -157,21 +161,24 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_dodging", _("Dodging"),
-			_("Enable dodging")));
+			_("Enable dodging (quick acceleration in a given direction). Double-tap a directional key to dodge")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_touchexplode", _("Touch explode")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_touchexplode", _("Touch explode"),
+			_("An explosion occurs when two players collide")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_cloaked", _("Cloaked"),
 			_("All players are almost invisible")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_buffs", _("Buffs")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_buffs", _("Buffs"),
+			_("Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps that support it")));
+			e.cvarOffValue = "-1"; // TODO: make this a radio button?
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_midair", _("Midair"),
-			_("Only possible to inflict damage on your enemy while he's airborne")));
+			_("Only possible to inflict damage on your enemy while they're airborne")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_vampire", _("Vampire"),
@@ -180,7 +187,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider_T(10, 50, 1, "g_bloodloss",
-			_("Amount of health below which your player gets stunned because of blood loss"));
+			_("Amount of health below which players start bleeding out (health rots and they can't jump)"));
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
@@ -189,7 +196,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider_T(80, 400, 8, "sv_gravity",
-			_("Make things fall to the ground slower, lower value means lower gravity"));
+			_("Make things fall to the ground slower (percentage of normal gravity)"));
 			s.valueDigits = 0;
 			s.valueDisplayMultiplier = 0.125; // show gravity in percent
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(800, 1, s, _("Low gravity")));
@@ -201,23 +208,26 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling hook"),
-			_("Players spawn with the grappling hook")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling Hook"),
+			_("Players spawn with the grappling hook. Press the 'hook' key to use it")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jet pack"),
-			_("Players spawn with the jetpack")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jetpack"),
+			_("Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key to use it")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_invincible_projectiles", _("Invincible Projectiles"),
+			_("Projectiles can't be destroyed. However, you can still explode Electro orbs with the Electro primary fire")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
+			_("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
 			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_rocket_flying", _("Rocket Flying"),
+			_("Devastator rockets can be detonated instantly (otherwise, there's a short delay). This allows players to fire and detonate a Devastator rocket while in the air for a strong mid-air boost even while moving fast")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -233,32 +243,38 @@ void XonoticMutatorsDialog_fill(entity me)
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
+	string weaponarena_tooltip = strzone(_("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups"));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:"),
-			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
+		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon arenas:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Custom weapons"), weaponarena_tooltip));
 			e.cvarValueIsAnotherCvar = true;
 			e.cvarOffValue = "0";
+
+		me.TDempty(me, 0.1); // fix initial position
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
-		w = Weapons_from(i);
-		if(w.spawnflags & WEP_FLAG_HIDDEN)
+		w = REGISTRY_GET(Weapons, i);
+		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
 			continue;
-		if((j & 1) == 0)
+		if ((j % 3) == 0)
+		{
 			me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
+			me.TDempty(me, 0.4);
+		}
+		me.TD(me, 1, 1.2, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
 			setDependentWeird(e, checkCompatibility_weaponarena_weapon);
 		++j;
 	}
+
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"),
-			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"),
-			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));

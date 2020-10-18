@@ -28,15 +28,17 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint) { }
 void navigation_markroutes_inverted(entity fixed_source_waypoint) { }
 void navigation_routerating(entity this, entity e, float f, float rangebias) { }
 
-bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode) { return false; }
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode) { return false; }
 
-void waypoint_remove(entity e) { }
+void waypoint_remove_fromeditor(entity pl) { }
+void waypoint_remove(entity wp) { }
 void waypoint_saveall() { }
 void waypoint_schedulerelinkall() { }
 void waypoint_schedulerelink(entity wp) { }
 void waypoint_spawnforitem(entity e) { }
 void waypoint_spawnforitem_force(entity e, vector org) { }
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken) { }
-void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken) { }
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent) { }
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent) { }
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp) { }
 entity waypoint_spawn(vector m1, vector m2, float f) { return NULL; }
 #endif

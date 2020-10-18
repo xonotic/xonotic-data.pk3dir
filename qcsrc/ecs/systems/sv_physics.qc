@@ -3,9 +3,8 @@
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
-	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
-	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
-	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+	Physics_UpdateStats(this);
+	PM_ClientMovement_UpdateStatus(this);
 }
 
 bool sys_phys_override(entity this, float dt)
@@ -23,21 +22,18 @@ void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
-	if (sv_maxidle > 0) {
+	if (autocvar_sv_maxidle > 0) {
 		if (buttons != CS(this).buttons_old
 		    || CS(this).movement != CS(this).movement_old
-		    || this.v_angle != this.v_angle_old) { CS(this).parm_idlesince = time; }
+		    || this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
 	PM_check_punch(this, dt);
-
-	CS(this).buttons_old = PHYS_INPUT_BUTTON_MASK(this);
 }
 
 void sys_phys_ai(entity this)
 {
 	if (!IS_BOT_CLIENT(this)) { return; }
-	if (playerdemo_read(this)) { return; }
 	bot_think(this);
 }
 
@@ -58,7 +54,7 @@ void sys_phys_pregame_hold(entity this)
 void sys_phys_spectator_control(entity this)
 {
 	float maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
-	if (!this.spectatorspeed) { this.spectatorspeed = maxspeed_mod; }
+	if (!STAT(SPECTATORSPEED, this)) { STAT(SPECTATORSPEED, this) = maxspeed_mod; }
 	if ((CS(this).impulse >= 1 && CS(this).impulse <= 19)
 	    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
 	    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
@@ -68,16 +64,18 @@ void sys_phys_spectator_control(entity this)
 			    || CS(this).impulse == 15
 			    || CS(this).impulse == 18
 			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
-			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (CS(this).impulse == 11) {
-				this.spectatorspeed = maxspeed_mod;
+			   ) {
+				STAT(SPECTATORSPEED, this) = bound(autocvar_sv_spectator_speed_multiplier_min, STAT(SPECTATORSPEED, this) + 0.5, autocvar_sv_spectator_speed_multiplier_max);
+			} else if (CS(this).impulse == 11) {
+				STAT(SPECTATORSPEED, this) = maxspeed_mod;
 			} else if (CS(this).impulse == 12
 			    || CS(this).impulse == 16
 			    || CS(this).impulse == 19
 			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 			          ) {
-				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
+				STAT(SPECTATORSPEED, this) = bound(autocvar_sv_spectator_speed_multiplier_min, STAT(SPECTATORSPEED, this) - 0.5, autocvar_sv_spectator_speed_multiplier_max);
 			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
-				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
+				STAT(SPECTATORSPEED, this) = 1 + 0.5 * (CS(this).impulse - 1);
 			}
 		}  // otherwise just clear
 		CS(this).impulse = 0;
@@ -86,16 +84,6 @@ void sys_phys_spectator_control(entity this)
 
 void sys_phys_fixspeed(entity this, float maxspeed_mod)
 {
-	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
-	if (this.speed != spd) {
-		this.speed = spd;
-		string temps = ftos(spd);
-		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
-	}
-
 	if (this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min) {
 		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
 		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));

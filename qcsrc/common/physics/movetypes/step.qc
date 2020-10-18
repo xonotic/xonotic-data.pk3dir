@@ -1,4 +1,5 @@
 #include "step.qh"
+
 void _Movetype_Physics_Step(entity this, float dt) // SV_Physics_Step
 {
 	if(IS_ONGROUND(this))
@@ -7,14 +8,14 @@ void _Movetype_Physics_Step(entity this, float dt) // SV_Physics_Step
 		{
 			UNSET_ONGROUND(this);
 			_Movetype_CheckVelocity(this);
-			_Movetype_FlyMove(this, dt, true, '0 0 0', 0);
+			_Movetype_FlyMove(this, dt, true, false, 0);
 			_Movetype_LinkEdict(this, true);
 		}
 	}
 	else
 	{
 		_Movetype_CheckVelocity(this);
-		_Movetype_FlyMove(this, dt, true, '0 0 0', 0);
+		_Movetype_FlyMove(this, dt, true, false, 0);
 		_Movetype_LinkEdict(this, true);
 
 		// TODO? movetypesteplandevent

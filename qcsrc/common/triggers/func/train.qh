@@ -1,5 +1,0 @@
-#pragma once
-
-#ifdef CSQC
-.float dmgtime;
-#endif

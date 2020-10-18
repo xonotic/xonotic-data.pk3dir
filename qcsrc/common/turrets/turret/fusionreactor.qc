@@ -1,6 +1,5 @@
 #include "fusionreactor.qh"
 
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 bool turret_fusionreactor_firecheck(entity this)
 {
@@ -52,5 +51,4 @@ METHOD(FusionReactor, tr_setup, void(FusionReactor this, entity it))
     it.turret_firecheckfunc = turret_fusionreactor_firecheck;
 }
 
-#endif
 #endif

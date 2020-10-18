@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include <client/hud/crosshair.qh>
 #include <client/hud/hud.qh>
 #include <client/hud/hud_config.qh>
 #include <client/hud/panel.qh>

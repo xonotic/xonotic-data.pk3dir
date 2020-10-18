@@ -1,13 +1,15 @@
 #include "anticheat.qh"
 
-#include "antilag.qh"
-#include "autocvars.qh"
-#include "defs.qh"
-#include "miscfunctions.qh"
-
-#include "command/common.qh"
 #include <common/playerstats.qh>
 #include <common/state.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/antilag.qh>
+#include <server/autocvars.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/gamelog.qh>
+#include <server/main.qh>
 
 .float anticheat_jointime;
 
@@ -202,9 +204,10 @@ void anticheat_report_to_eventlog(entity this) {
 }
 
 void anticheat_report_to_playerstats(entity this) {
-	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, "_time"), servertime - CS(this).anticheat_jointime);
+	PlayerStats_GameReport_Event_Player(this,
+		strcat(PLAYERSTATS_ANTICHEAT, "_time"), servertime - CS(this).anticheat_jointime);
 #define ANTICHEAT_REPORT_ONE(name, f, tmin, mi, ma) \
-	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, name), f)
+	PlayerStats_GameReport_Event_Player(this, strcat(PLAYERSTATS_ANTICHEAT, name), f)
 	ANTICHEATS(ANTICHEAT_REPORT_ONE);
 #undef ANTICHEAT_REPORT_ONE
 }

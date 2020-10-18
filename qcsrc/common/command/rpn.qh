@@ -11,4 +11,4 @@ int rpn_error;
 int rpn_sp;
 string rpn_stack[MAX_RPN_STACK];
 
-void GenericCommand_rpn(float request, float argc, string command);
+void GenericCommand_rpn(int request, int argc, string command);

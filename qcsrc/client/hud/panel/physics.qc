@@ -1,10 +1,30 @@
 #include "physics.qh"
 
-#include <client/main.qh>
-#include <common/mapinfo.qh>
+#include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // Physics (#15)
+
+void HUD_Physics_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_physics_speed_unit_show");
+	HUD_Write_Cvar("hud_panel_physics_speed_max");
+	HUD_Write_Cvar("hud_panel_physics_speed_vertical");
+	HUD_Write_Cvar("hud_panel_physics_topspeed");
+	HUD_Write_Cvar("hud_panel_physics_topspeed_time");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_max");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_vertical");
+	HUD_Write_Cvar("hud_panel_physics_flip");
+	HUD_Write_Cvar("hud_panel_physics_baralign");
+	HUD_Write_Cvar("hud_panel_physics_progressbar");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_mode");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_scale");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_nonlinear");
+	HUD_Write_Cvar("hud_panel_physics_text");
+	HUD_Write_Cvar("hud_panel_physics_text_scale");
+}
 
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
@@ -15,7 +35,7 @@ void HUD_Physics()
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional)) return;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -85,10 +105,10 @@ void HUD_Physics()
 	const int acc_decimals = 2;
 	if(time > physics_update_time)
 	{
+		discrete_acceleration = acceleration;
 		// workaround for ftos_decimals returning a negative 0
 		if(discrete_acceleration > -1 / (10 ** acc_decimals) && discrete_acceleration < 0)
 			discrete_acceleration = 0;
-		discrete_acceleration = acceleration;
 		discrete_speed = speed;
 		physics_update_time += autocvar_hud_panel_physics_update_interval;
 		if(physics_update_time < time)

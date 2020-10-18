@@ -1,0 +1,4 @@
+#pragma once
+
+entity eliminatedPlayers;
+void EliminatedPlayers_Init(float(entity) isEliminated_func);

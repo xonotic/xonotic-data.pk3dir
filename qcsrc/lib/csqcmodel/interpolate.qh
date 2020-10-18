@@ -45,6 +45,3 @@ void InterpolateOrigin_Reset(entity this);
 
 // call this BEFORE drawing
 void InterpolateOrigin_Do(entity this);
-
-// in case we interpolate that:
-.vector v_angle;

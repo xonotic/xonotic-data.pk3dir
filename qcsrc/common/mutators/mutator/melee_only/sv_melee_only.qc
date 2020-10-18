@@ -1,6 +1,9 @@
 #include "sv_melee_only.qh"
 
-REGISTER_MUTATOR(melee_only, cvar("g_melee_only") && !cvar("g_instagib") && !cvar("g_overkill") && !g_nexball);
+#include "../overkill/sv_overkill.qh"
+
+string autocvar_g_melee_only;
+REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !g_nexball);
 
 MUTATOR_HOOKFUNCTION(melee_only, SetStartItems, CBC_ORDER_LAST)
 {
@@ -14,16 +17,21 @@ MUTATOR_HOOKFUNCTION(melee_only, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
+MUTATOR_HOOKFUNCTION(melee_only, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 {
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
+MUTATOR_HOOKFUNCTION(melee_only, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	switch (item.itemdef)
+	switch (definition)
 	{
 		case ITEM_HealthSmall:
 		case ITEM_ArmorSmall:

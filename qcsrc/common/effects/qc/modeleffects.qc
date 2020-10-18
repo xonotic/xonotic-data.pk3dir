@@ -1,7 +1,5 @@
 #include "modeleffects.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_MODELEFFECT)
 
 #ifdef SVQC
@@ -25,26 +23,18 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, this.modelindex);
 	WriteByte(MSG_ENTITY, this.skin);
 	WriteByte(MSG_ENTITY, this.frame);
-	WriteCoord(MSG_ENTITY, this.origin.x);
-	WriteCoord(MSG_ENTITY, this.origin.y);
-	WriteCoord(MSG_ENTITY, this.origin.z);
+	WriteVector(MSG_ENTITY, this.origin);
 	if(f & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.velocity.x);
-		WriteCoord(MSG_ENTITY, this.velocity.y);
-		WriteCoord(MSG_ENTITY, this.velocity.z);
+		WriteVector(MSG_ENTITY, this.velocity);
 	}
 	if(f & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.angles.x);
-		WriteCoord(MSG_ENTITY, this.angles.y);
-		WriteCoord(MSG_ENTITY, this.angles.z);
+		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.avelocity.x);
-		WriteCoord(MSG_ENTITY, this.avelocity.y);
-		WriteCoord(MSG_ENTITY, this.avelocity.z);
+		WriteAngleVector(MSG_ENTITY, this.avelocity);
 	}
 	WriteShort(MSG_ENTITY, this.scale * 256.0);
 	WriteShort(MSG_ENTITY, this.scale2 * 256.0);
@@ -86,10 +76,10 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 #ifdef CSQC
 
 entityclass(ModelEffect);
-class(ModelEffect) .float frame1time;
-class(ModelEffect) .float lifetime, fadetime;
-class(ModelEffect) .float teleport_time;
-class(ModelEffect) .float scale1, scale2;
+classfield(ModelEffect) .float frame1time;
+classfield(ModelEffect) .float lifetime, fadetime;
+classfield(ModelEffect) .float teleport_time;
+classfield(ModelEffect) .float scale1, scale2;
 
 .float cnt;
 .float scale;
@@ -126,27 +116,19 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.skin = ReadByte();
 	e.frame = ReadByte();
 	e.frame1time = time;
-	e.origin_x = ReadCoord();
-	e.origin_y = ReadCoord();
-	e.origin_z = ReadCoord();
+	e.origin = ReadVector();
 	setorigin(e, e.origin);
 	if(f & 1)
 	{
-		e.velocity_x = ReadCoord();
-		e.velocity_y = ReadCoord();
-		e.velocity_z = ReadCoord();
+		e.velocity = ReadVector();
 	}
 	if(f & 2)
 	{
-		e.angles_x = ReadAngle();
-		e.angles_y = ReadAngle();
-		e.angles_z = ReadAngle();
+		e.angles = ReadAngleVector();
 	}
 	if(f & 4)
 	{
-		e.avelocity_x = ReadAngle();
-		e.avelocity_y = ReadAngle();
-		e.avelocity_z = ReadAngle();
+		e.avelocity = ReadAngleVector();
 	}
 	e.scale1 = ReadShort() / 256.0;
 	e.scale2 = ReadShort() / 256.0;
@@ -161,6 +143,4 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	if (!isnew) delete(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
 	return true;
 }
-#endif
-
 #endif

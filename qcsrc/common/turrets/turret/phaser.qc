@@ -1,7 +1,5 @@
 #include "phaser.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) delete(this); }
@@ -44,5 +42,4 @@ bool turret_phaser_firecheck(entity this)
     return turret_firecheck(this);
 }
 
-#endif
 #endif

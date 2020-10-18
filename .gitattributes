@@ -2,42 +2,42 @@
 *.inc linguist-language=C
 
 * -crlf
-*.0 -diff -crlf
+*.0 -crlf
 *.1 crlf=input
 *.3 crlf=input
-*.7z -diff -crlf
+*.7z -crlf
 *.ac crlf=input
-*.a -diff -crlf
+*.a -crlf
 *.afm crlf=input
 *.aft crlf=input
-*.ai -diff -crlf
+*.ai -crlf
 *.aliases crlf=input
 all crlf=input
 *.am crlf=input
 *.animinfo crlf=input
-*.aps -diff -crlf
-*.asc -diff -crlf
+*.aps -crlf
+*.asc -crlf
 *.ase -crlf
 *.bat -crlf
 *.bgs crlf=input
-*.blend1 -diff -crlf
-*.blend -diff -crlf
-blind_id -diff -crlf
-*.bmp -diff -crlf
+*.blend1 -crlf
+*.blend -crlf
+blind_id -crlf
+*.bmp -crlf
 branch-manager crlf=input
 *.brand crlf=input
 BSDmakefile crlf=input
 bsp2ent crlf=input
-*.bsp -diff -crlf
+*.bsp -crlf
 *.cache crlf=input
 *.cbp -crlf
-*.cbp -diff -crlf
+*.cbp -crlf
 *.c crlf=input
 *.cfg crlf=input
 *.cg crlf=input
 ChangeLog crlf=input
 CHANGES crlf=input
-cjpeg -diff -crlf
+cjpeg -crlf
 COMPILING crlf=input
 compress-texture crlf=input
 *.conf crlf=input
@@ -46,48 +46,48 @@ COPYING crlf=input
 *.cpp crlf=input
 create crlf=input
 *.cron crlf=input
-crypto-keygen-standalone -diff -crlf
+crypto-keygen-standalone -crlf
 *.css crlf=input
 *.cvswrappers crlf=input
 *.d0ir crlf=input
-*.d0pk -diff -crlf
+*.d0pk -crlf
 *.db crlf=input
 *.db.* crlf=input
 *.def2ent crlf=input
 *.default crlf=input
 *.def crlf=input
-*.dem -diff -crlf
+*.dem -crlf
 *.dev -crlf
-dir -diff -crlf
+dir -crlf
 *.directory crlf=input
-djpeg -diff -crlf
-*.dll -diff -crlf
-DOCS -diff -crlf
+djpeg -crlf
+*.dll -crlf
+DOCS -crlf
 *.dot crlf=input
 DoxyConfig crlf=input
 doxyfile crlf=input
 Doxyfile crlf=input
 *.doxygen crlf=input
-*.dpm -diff -crlf
+*.dpm -crlf
 *.dsp -crlf
 *.dsw -crlf
 *.dtd crlf=input
-*.dylib -diff -crlf
-empty -diff -crlf
+*.dylib -crlf
+empty -crlf
 *.EncoderPlugin crlf=input
 *.ent crlf=input
 etc_svc_git-daemon_run crlf=input
-*.flac -diff -crlf
-*.flp -diff -crlf
+*.flac -crlf
+*.flp -crlf
 *.form crlf=input
 *.framegroups crlf=input
-*.fteqccfail -diff -crlf
+*.fteqccfail -crlf
 *.game crlf=input
 *.gdb crlf=input
 gendox crlf=input
 gendoxfunctions crlf=input
 genDoxyfile crlf=input
-*.gif -diff -crlf
+*.gif -crlf
 *.gitattributes crlf=input
 git-branch-manager crlf=input
 git-filter-index crlf=input
@@ -112,30 +112,30 @@ GPL crlf=input
 *.htaccess crlf=input
 *.html crlf=input
 *.html-part crlf=input
-*.icns -diff -crlf
-*.ico -diff -crlf
+*.icns -crlf
+*.ico -crlf
 *.idl crlf=input
 *.idsoftware crlf=input
 *.inc crlf=input
 *.in crlf=input
-*.info-1 -diff -crlf
-*.info-2 -diff -crlf
-*.info -diff -crlf
+*.info-1 -crlf
+*.info-2 -crlf
+*.info -crlf
 *.inl crlf=input
 *.iOS crlf=input
-*.iqm -diff -crlf
+*.iqm -crlf
 *.java crlf=input
 *.jhm crlf=input
 *.jnlp crlf=input
-jpegtran -diff -crlf
-*.jpg -diff -crlf
+jpegtran -crlf
+*.jpg -crlf
 *.jsmooth crlf=input
 *.la crlf=input
 LGPL crlf=input
 LICENSE crlf=input
-*.lmp -diff -crlf
+*.lmp -crlf
 *.loaders crlf=input
-*.lso -diff -crlf
+*.lso -crlf
 *.m4 crlf=input
 makefile crlf=input
 Makefile crlf=input
@@ -143,81 +143,81 @@ makespr32 crlf=input
 *.map -crlf filter=mapclean
 *.mapinfo crlf=input
 *.m crlf=input
-*.md3 -diff -crlf
+*.md3 -crlf
 *.md5anim -crlf
 *.md5mesh -crlf
-*.mdl -diff -crlf
+*.mdl -crlf
 *.med crlf=input
 *.mf crlf=input
-*.mid -diff -crlf
+*.mid -crlf
 *.mk crlf=input
-*.mkdir -diff -crlf
-*.mmpz -diff -crlf
+*.mkdir -crlf
+*.mmpz -crlf
 *.modules crlf=input
-*.mp3 -diff -crlf
+*.mp3 -crlf
 *.nib -crlf
 *.obj -crlf
-OFFSETS -diff -crlf
-*.ogg -diff -crlf
+OFFSETS -crlf
+*.ogg -crlf
 *.options crlf=input
-*.otf -diff -crlf
+*.otf -crlf
 pangorc crlf=input
 *.part crlf=input
 *.patch crlf=input
 *.patchsets crlf=input
 *.pbxproj crlf=input
 *.pc crlf=input
-*.pfb -diff -crlf
-*.pfm -diff -crlf
+*.pfb -crlf
+*.pfm -crlf
 *.php crlf=input
-*.pk3 -diff -crlf
+*.pk3 -crlf
 PkgInfo crlf=input
 *.pl crlf=input
 *.plist crlf=input
 *.pm crlf=input
-*.png -diff -crlf
+*.png -crlf
 *.po crlf=input
-POSITIONS -diff -crlf
+POSITIONS -crlf
 *.pot crlf=input
 *.proj -crlf
 *.properties crlf=input
-*.psd -diff -crlf
+*.psd -crlf
 *.py crlf=input
 *.q3map1 crlf=input
 *.qc crlf=input
 *.qdt crlf=input
 *.qh crlf=input
-*.rar -diff -crlf
+*.rar -crlf
 *.rb crlf=input
 *.rc2 crlf=input
 *.rc -crlf
-rdjpgcom -diff -crlf
+rdjpgcom -crlf
 *.readme crlf=input
 README crlf=input
 *.rtlights crlf=input
 SCHEMA crlf=input
 *.scm crlf=input
 sdl-config crlf=input
-SDL -diff -crlf
-*.sfd -diff -crlf
+SDL -crlf
+*.sfd -crlf
 *.shader crlf=input
 *.sh crlf=input
 *.skin crlf=input
 *.sln -crlf
 *.sounds crlf=input
-*.sp2 -diff -crlf
-*.spr32 -diff -crlf
-*.spr -diff -crlf
+*.sp2 -crlf
+*.spr32 -crlf
+*.spr -crlf
 *.src crlf=input
 *.strings crlf=input
 strip crlf=input
-*.svg -diff -crlf
-*.TAB -diff -crlf
-*.tga -diff -crlf
-TMAP -diff -crlf
+*.svg -crlf
+*.TAB -crlf
+*.tga -crlf
+TMAP -crlf
 todo crlf=input
 TODO crlf=input
-*.ttf -diff -crlf
+*.ttf -crlf
 *.txt crlf=input
 *.txt.* crlf=input
 update-shaderlists crlf=input
@@ -226,12 +226,12 @@ update-shaderlists crlf=input
 *.vcxproj crlf=input
 versionbuilder crlf=input
 *.vhost crlf=input
-*.wav -diff -crlf
+*.wav -crlf
 *.waypoints crlf=input
 *.width crlf=input
 *.workspace -crlf
-wrjpgcom -diff -crlf
-*.xcf -diff -crlf
+wrjpgcom -crlf
+*.xcf -crlf
 *.xlink crlf=input
 *.xml crlf=input
 xonotic-map-compiler-autobuild crlf=input
@@ -239,7 +239,7 @@ xonotic-map-compiler crlf=input
 xonotic-map-screenshot crlf=input
 xonotic-osx-sdl crlf=input
 *.xpm crlf=input
-*.xrns -diff -crlf
-*.zip -diff -crlf
+*.xrns -crlf
+*.zip -crlf
 zipdiff crlf=input
-*.zym -diff -crlf
+*.zym -crlf

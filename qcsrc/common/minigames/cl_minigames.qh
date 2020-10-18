@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cl_minigames_hud.qh"
+
 // Get a square in the center of the avaliable area
 // \note macro to pass by reference pos and mySize
 #define minigame_hud_fitsqare(pos, mySize) \
@@ -92,12 +94,6 @@ void minigame_cmd_workaround(float dummy, string...cmdargc);
 // (ie: it's their turn and they should get back to the minigame)
 void minigame_prompt();
 
-float HUD_MinigameMenu_IsOpened();
-void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
-
-// Adds a game-specific entry to the menu
-void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_arg);
-
 
 #define FOREACH_MINIGAME_ENTITY(entityvar) \
 	entityvar=NULL; \
@@ -105,9 +101,10 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 
 
 REGISTRY(Minigames, BITS(4))
-#define Minigames_from(i) _Minigames_from(i, NULL)
 REGISTER_REGISTRY(Minigames)
 REGISTRY_CHECK(Minigames)
+
+REGISTRY_DEFINE_GET(Minigames, NULL)
 #define REGISTER_MINIGAME(name,nicename) \
     REGISTER(Minigames, MINIGAME_##name, m_id, new_pure(minigame_descriptor)); \
     void name##_hud_board(vector, vector); \

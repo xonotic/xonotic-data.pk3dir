@@ -1,3 +1,6 @@
 #pragma once
 
 #include "buffs.qh"
+
+float cvar_cl_buffs_autoreplace;
+REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");

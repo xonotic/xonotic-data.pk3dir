@@ -10,7 +10,9 @@ void XonoticHUDAmmoDialog_fill(entity me)
 	entity e;
 	string panelname = "ammo";
 
-	DIALOG_HUDPANEL_COMMON();
+	dialog_hudpanel_main_checkbox(me, panelname);
+
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Ammunition display:")));

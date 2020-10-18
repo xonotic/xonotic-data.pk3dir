@@ -1,0 +1,24 @@
+#pragma once
+
+.float modelscale;
+
+#ifdef CSQC
+entityclass(Wall);
+classfield(Wall) .float lip;
+classfield(Wall) .float bgmscriptangular;
+classfield(Wall) .int lodmodelindex0, lodmodelindex1, lodmodelindex2;
+classfield(Wall) .float loddistance1, loddistance2;
+classfield(Wall) .vector saved;
+
+void Ent_Wall_Draw(entity this);
+
+void Ent_Wall_Remove(entity this);
+#endif
+
+// Needed for interactive clientwalls
+.bool inactive; // Clientwall disappears when inactive
+.float alpha_max, alpha_min;
+// If fade_start > fade_end, fadeout will be inverted
+// fade_vertical_offset is a vertival offset for player position
+.float fade_start, fade_end, fade_vertical_offset;
+.float default_solid;

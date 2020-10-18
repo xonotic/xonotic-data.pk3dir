@@ -26,7 +26,6 @@ void XonoticLanguageList_configureXonoticLanguageList(entity me)
 
 void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	string s, p;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if(isFocused)
@@ -35,17 +34,31 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
 
-	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
+	string p = me.languageParameter(me, i, LANGPARM_PERCENTAGE);
+	float alpha_factor = 1;
+	if (p != "")
+	{
+		float percent = stof(p);
+		if (percent >= 90)
+			alpha_factor = 1;
+		else if (percent >= 50)
+			alpha_factor = 0.65;
+		else
+			alpha_factor = 0.3;
+	}
+	else
+		p = "\xE2\x9C\x94"; // Unicode Character 'HEAVY CHECK MARK' (U+2714)
+
+	string s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 
 	vector save_fontscale = draw_fontscale;
 	float f = draw_CondensedFontFactor(s, false, me.realFontSize, 1);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, fs, SKINCOLOR_TEXT * alpha_factor, SKINALPHA_TEXT, 0);
 	draw_fontscale = save_fontscale;
 
-	p = me.languageParameter(me, i, LANGPARM_PERCENTAGE);
 	if(p != "")
 	{
 		vector save_fontscale = draw_fontscale;
@@ -53,7 +66,8 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 		draw_fontscale.x *= f;
 		vector fs = me.realFontSize;
 		fs.x *= f;
-		draw_Text(me.realUpperMargin * eY + (me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, fs))) * eX, p, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+		float x_ofs = me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, fs));
+		draw_Text(me.realUpperMargin * eY + x_ofs * eX, p, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT * alpha_factor, 0);
 		draw_fontscale = save_fontscale;
 	}
 }

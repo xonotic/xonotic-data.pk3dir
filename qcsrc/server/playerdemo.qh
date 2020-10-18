@@ -1,9 +1,0 @@
-#pragma once
-
-void playerdemo_init(entity this);
-void playerdemo_shutdown(entity this);
-void playerdemo_write(entity this);
-float playerdemo_read(entity this);
-
-void playerdemo_open_read(entity this, string f);
-void playerdemo_open_write(entity this, string f);

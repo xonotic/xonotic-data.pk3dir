@@ -1,28 +1,34 @@
 #include "sv_instagib.qh"
 
+#include <server/client.qh>
+#include <common/items/_mod.qh>
+#include "../random_items/sv_random_items.qh"
+
+bool autocvar_g_instagib_damagedbycontents = true;
+bool autocvar_g_instagib_blaster_keepdamage = false;
+bool autocvar_g_instagib_blaster_keepforce = false;
+bool autocvar_g_instagib_mirrordamage;
+bool autocvar_g_instagib_friendlypush = true;
 //int autocvar_g_instagib_ammo_drop;
 bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
-int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
-#include <server/client.qh>
-
-#include <common/items/_mod.qh>
-
-REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
-
-spawnfunc(item_minst_cells)
+IntrusiveList g_instagib_items;
+STATIC_INIT(instagib)
 {
-	if (!g_instagib) { delete(this); return; }
-	StartItem(this, ITEM_VaporizerCells);
+	g_instagib_items = IL_NEW();
+	IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
+	IL_PUSH(g_instagib_items, ITEM_ExtraLife);
+	IL_PUSH(g_instagib_items, ITEM_Invisibility);
+	IL_PUSH(g_instagib_items, ITEM_Speed);
 }
 
 void instagib_invisibility(entity this)
 {
-	this.strength_finished = autocvar_g_balance_powerup_strength_time;
+	this.strength_finished = autocvar_g_instagib_invisibility_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
@@ -33,8 +39,28 @@ void instagib_extralife(entity this)
 
 void instagib_speed(entity this)
 {
-	this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	this.invincible_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
+}
+
+/// \brief Returns a random classname of the instagib item.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \return Random classname of the instagib item.
+string RandomItems_GetRandomInstagibItemClassName(string prefix)
+{
+	RandomSelection_Init();
+	IL_EACH(g_instagib_items, Item_IsDefinitionAllowed(it),
+	{
+		string cvar_name = sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	return RandomSelection_chosen_string;
 }
 
 .float instagib_nextthink;
@@ -55,7 +81,7 @@ void instagib_ammocheck(entity this)
 
 	if(IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
-	else if (this.ammo_cells > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
 	else if(autocvar_g_rm && autocvar_g_rm_laser)
 	{
@@ -67,62 +93,63 @@ void instagib_ammocheck(entity this)
 	}
 	else
 	{
+		float hp = GetResource(this, RES_HEALTH);
 		this.instagib_needammo = true;
-		if (this.health <= 5)
+		if (hp <= 5)
 		{
-			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
-		else if (this.health <= 10)
+		else if (hp <= 10)
 		{
-			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_1);
 		}
-		else if (this.health <= 20)
+		else if (hp <= 20)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_2);
 		}
-		else if (this.health <= 30)
+		else if (hp <= 30)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_3);
 		}
-		else if (this.health <= 40)
+		else if (hp <= 40)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_4);
 		}
-		else if (this.health <= 50)
+		else if (hp <= 50)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_5);
 		}
-		else if (this.health <= 60)
+		else if (hp <= 60)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_6);
 		}
-		else if (this.health <= 70)
+		else if (hp <= 70)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_7);
 		}
-		else if (this.health <= 80)
+		else if (hp <= 80)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_8);
 		}
-		else if (this.health <= 90)
+		else if (hp <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 	}
 	this.instagib_nextthink = time + 1;
@@ -130,7 +157,14 @@ void instagib_ammocheck(entity this)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(instagib_stop_countdown(it)));
+	FOREACH_CLIENT(IS_PLAYER(it), { instagib_stop_countdown(it); });
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
+{
+	M_ARGV(1, string) = RandomItems_GetRandomInstagibItemClassName(
+		M_ARGV(0, string));
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
@@ -145,7 +179,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 	entity mon = M_ARGV(0, entity);
 
 	// always refill ammo
-	if(mon.monsterid == MON_MAGE.monsterid)
+	if(mon.monsterdef == MON_MAGE)
 		mon.skin = 1;
 }
 
@@ -162,6 +196,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	instagib_stop_countdown(player);
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
+{
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
@@ -193,21 +232,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(player, player.strength_finished, SND_POWEROFF);
-		if (time > player.strength_finished)
+		play_countdown(player, STAT(STRENGTH_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(STRENGTH_FINISHED, player))
 		{
-			player.alpha = default_player_alpha;
-			player.exteriorweaponentity.alpha = default_weapon_alpha;
+			if(!player.vehicle) // already reset upon exit
+			{
+				player.alpha = default_player_alpha;
+				player.exteriorweaponentity.alpha = default_weapon_alpha;
+			}
 			player.items &= ~ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
 	else
 	{
-		if (time < player.strength_finished)
+		if (time < STAT(STRENGTH_FINISHED, player))
 		{
-			player.alpha = autocvar_g_instagib_invis_alpha;
-			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			if(!player.vehicle) // incase the player is given powerups while inside a vehicle
+			{
+				player.alpha = autocvar_g_instagib_invis_alpha;
+				player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			}
 			player.items |= ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
@@ -216,8 +261,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(player, player.invincible_finished, SND_POWEROFF);
-		if (time > player.invincible_finished)
+		play_countdown(player, STAT(INVINCIBLE_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
@@ -225,7 +270,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < player.invincible_finished)
+		if (time < STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
@@ -234,14 +279,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 }
 
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.items & ITEM_Speed.m_itemid)
-		player.stat_sv_maxspeed = player.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_instagib_speed_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
@@ -289,13 +333,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 			if(!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
 				frag_force = '0 0 0';
 
-			if(frag_target.armorvalue)
+			float armor = GetResource(frag_target, RES_ARMOR);
+			if(armor)
 			{
-				frag_target.armorvalue -= 1;
+				armor -= 1;
+				SetResource(frag_target, RES_ARMOR, armor);
 				frag_damage = 0;
 				frag_target.damage_dealt += 1;
 				frag_attacker.damage_dealt += 1;
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			}
 		}
 
@@ -312,7 +358,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
@@ -325,10 +370,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	if(frag_mirrordamage > 0)
 	{
 		// just lose extra LIVES, don't kill the player for mirror damage
-		if(frag_attacker.armorvalue > 0)
+		float armor = GetResource(frag_attacker, RES_ARMOR);
+		if(armor > 0)
 		{
-			frag_attacker.armorvalue -= 1;
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_attacker.armorvalue);
+			armor -= 1;
+			SetResource(frag_attacker, RES_ARMOR, armor);
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			frag_attacker.damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
@@ -343,7 +390,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	M_ARGV(6, vector) = frag_force;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 {
 	start_health       = warmup_start_health       = 100;
 	start_armorvalue   = warmup_start_armorvalue   = 0;
@@ -367,13 +414,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 
 void replace_with_insta_cells(entity item)
 {
-	entity e = spawn();
+	entity e = new(item_vaporizer_cells);
 	setorigin(e, item.origin);
-	e.noalign = item.noalign;
+	e.noalign = Item_ShouldKeepPosition(item);
 	e.cnt = item.cnt;
 	e.team = item.team;
 	e.spawnfunc_checked = true;
-	spawnfunc_item_minst_cells(e);
+	spawnfunc_item_vaporizer_cells(e);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -413,9 +460,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
+	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
 	{
-		item.ammo_cells = autocvar_g_instagib_ammo_drop;
+		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
 	}
 
@@ -428,10 +475,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 	if(item.flags & FL_POWERUP)
 		return false;
 
-	if(item.ammo_cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
-		item.ammo_cells = autocvar_g_instagib_ammo_drop;
+	float cells = GetResource(item, RES_CELLS);
+	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
+		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 
-	if(item.ammo_cells && !item.weapon)
+	if(cells && !item.weapon)
 		return false;
 
 	return true;
@@ -464,27 +512,28 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
-	if(item.ammo_cells)
+	if(GetResource(item, RES_CELLS))
 	{
 		// play some cool sounds ;)
+		float hp = GetResource(toucher, RES_HEALTH);
 		if (IS_CLIENT(toucher))
 		{
-			if(toucher.health <= 5)
+			if(hp <= 5)
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_LASTSECOND);
-			else if(toucher.health < 50)
+			else if(hp < 50)
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_NARROWLY);
 		}
 
-		if(toucher.health < 100)
-			toucher.health = 100;
+		if(hp < 100)
+			SetResource(toucher, RES_HEALTH, 100);
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
 	if(item.itemdef == ITEM_ExtraLife)
 	{
-		toucher.armorvalue = bound(toucher.armorvalue, 999, toucher.armorvalue + autocvar_g_instagib_extralives);
-		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
@@ -496,18 +545,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega"))
 		return;
 
 	entity e = spawn();
 
 	float r = random();
 	if (r < 0.3)
+	{
+		e.classname = "item_invisibility";
 		setthink(e, instagib_invisibility);
+	}
 	else if (r < 0.6)
+	{
+		e.classname = "item_extralife";
 		setthink(e, instagib_extralife);
+	}
 	else
+	{
+		e.classname = "item_speed";
 		setthink(e, instagib_speed);
+	}
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = ent.spawnflags;

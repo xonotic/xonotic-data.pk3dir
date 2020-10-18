@@ -1,1 +1,2 @@
 // generated file; do not modify
+#include <menu/mutators/events.qc>

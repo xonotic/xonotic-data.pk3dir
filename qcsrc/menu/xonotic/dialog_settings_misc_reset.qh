@@ -8,5 +8,4 @@ CLASS(XonoticResetDialog, XonoticDialog)
 	ATTRIB(XonoticResetDialog, intendedWidth, float, 0.5);
 	ATTRIB(XonoticResetDialog, rows, float, 4);
 	ATTRIB(XonoticResetDialog, columns, float, 2);
-	ATTRIB(XonoticResetDialog, name, string, "Factory reset");
 ENDCLASS(XonoticResetDialog)

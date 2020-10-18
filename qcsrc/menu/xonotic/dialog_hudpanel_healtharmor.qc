@@ -9,7 +9,9 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 	entity e;
 	string panelname = "healtharmor";
 
-	DIALOG_HUDPANEL_COMMON();
+	dialog_hudpanel_main_checkbox(me, panelname);
+
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_combined", _("Combine health and armor")));

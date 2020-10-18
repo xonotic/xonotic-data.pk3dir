@@ -1,0 +1,18 @@
+// generated file; do not modify
+#include <common/mapobjects/func/bobbing.qh>
+#include <common/mapobjects/func/breakable.qh>
+#include <common/mapobjects/func/button.qh>
+#include <common/mapobjects/func/conveyor.qh>
+#include <common/mapobjects/func/door.qh>
+#include <common/mapobjects/func/door_rotating.qh>
+#include <common/mapobjects/func/door_secret.qh>
+#include <common/mapobjects/func/fourier.qh>
+#include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/func/pendulum.qh>
+#include <common/mapobjects/func/plat.qh>
+#include <common/mapobjects/func/pointparticles.qh>
+#include <common/mapobjects/func/rainsnow.qh>
+#include <common/mapobjects/func/rotating.qh>
+#include <common/mapobjects/func/stardust.qh>
+#include <common/mapobjects/func/train.qh>
+#include <common/mapobjects/func/vectormamamam.qh>

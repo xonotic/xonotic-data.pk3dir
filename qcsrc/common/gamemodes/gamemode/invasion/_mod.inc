@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/invasion/invasion.qc>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/invasion/sv_invasion.qc>
+#endif

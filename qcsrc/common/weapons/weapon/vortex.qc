@@ -1,71 +1,4 @@
 #include "vortex.qh"
-#ifndef IMPLEMENTATION
-CLASS(Vortex, Weapon)
-/* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
-/* impulse   */ ATTRIB(Vortex, impulse, int, 7);
-/* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
-/* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
-/* modelname */ ATTRIB(Vortex, mdl, string, "nex");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
-#endif
-/* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");
-/* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
-/* reticle   */ ATTRIB(Vortex, w_reticle, string, "gfx/reticle_nex");
-/* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
-/* refname   */ ATTRIB(Vortex, netname, string, "vortex");
-/* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, chargepool, float, SEC) \
-		P(class, prefix, chargepool_pause_regen, float, SEC) \
-		P(class, prefix, chargepool_regen, float, SEC) \
-		P(class, prefix, charge, float, NONE) \
-		P(class, prefix, charge_animlimit, float, NONE) \
-		P(class, prefix, charge_limit, float, NONE) \
-		P(class, prefix, charge_maxspeed, float, NONE) \
-		P(class, prefix, charge_mindmg, float, NONE) \
-		P(class, prefix, charge_minspeed, float, NONE) \
-		P(class, prefix, charge_rate, float, NONE) \
-		P(class, prefix, charge_rot_pause, float, NONE) \
-		P(class, prefix, charge_rot_rate, float, NONE) \
-		P(class, prefix, charge_shot_multiplier, float, NONE) \
-		P(class, prefix, charge_start, float, NONE) \
-		P(class, prefix, charge_velocity_rate, float, NONE) \
-		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
-		P(class, prefix, damagefalloff_halflife, float, BOTH) \
-		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
-		P(class, prefix, damagefalloff_mindist, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Vortex, vortex)
-#undef X
-
-ENDCLASS(Vortex)
-REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
-
-
-#ifdef SVQC
-
-.float vortex_lasthit;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 
 //REGISTER_STAT(WEP_CVAR_vortex_charge, bool, WEP_CVAR(vortex, charge))
 //REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
@@ -84,16 +17,21 @@ METHOD(Vortex, wr_glow, vector(Vortex this, entity actor, entity wepent))
 	if (!WEP_CVAR(vortex, charge)) return '0 0 0';
 	float charge = wepent.vortex_charge;
 	float animlimit = WEP_CVAR(vortex, charge_animlimit);
+	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
 	vector g;
-	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
-	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
-	g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, charge / animlimit);
+	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
+	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
+	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
 	if (charge > animlimit)
 	{
-		g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (charge - animlimit) / (1 - animlimit);
-		g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (charge - animlimit) / (1 - animlimit);
-		g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (charge - animlimit) / (1 - animlimit);
+		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
 	return g;
 }
 #endif
@@ -105,41 +43,36 @@ void SendCSQCVortexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg.x);
-	WriteCoord(MSG_BROADCAST, w_shotorg.y);
-	WriteCoord(MSG_BROADCAST, w_shotorg.z);
-	WriteCoord(MSG_BROADCAST, v.x);
-	WriteCoord(MSG_BROADCAST, v.y);
-	WriteCoord(MSG_BROADCAST, v.z);
+	WriteVector(MSG_BROADCAST, w_shotorg);
+	WriteVector(MSG_BROADCAST, v);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 #elif defined(CSQC)
 NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 {
-	vector shotorg, endpos;
 	float charge;
-	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
-	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
+	vector shotorg = ReadVector();
+	vector endpos = ReadVector();
 	charge = ReadByte() / 255.0;
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
+	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
 
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
 	if(!MUTATOR_CALLHOOK(Particles_VortexBeam, shotorg, endpos))
-	if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
-	else
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	{
+		if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		else
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	}
 	return true;
 }
 #endif
 
 #ifdef SVQC
-spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
-spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
 REGISTER_MUTATOR(vortex_charge, true);
 
@@ -179,6 +112,10 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	myforcehalflife = WEP_CVAR_BOTH(vortex, !issecondary, damagefalloff_forcehalflife);
 	myammo = WEP_CVAR_BOTH(vortex, !issecondary, ammo);
 
+	float dtype = thiswep.m_id;
+	if(WEP_CVAR_BOTH(vortex, !issecondary, armorpierce))
+		dtype |= HITTYPE_ARMORPIERCE;
+
 	float flying;
 	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 
@@ -194,7 +131,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
+	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, dtype);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
 		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
@@ -202,7 +139,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, false, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -214,13 +151,21 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	actor.vortex_lasthit = damage_goodhits;
 
-	//beam and muzzle flash done on client
+	//beam done on client
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
 	SendCSQCVortexBeamParticle(charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
 }
 
 .float vortex_chargepool_pauseregen_finished;
+
+void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
+{
+    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
+        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt / W_TICSPERFRAME);
+}
 
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -234,11 +179,8 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
-        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
-
-    if(weaponslot(weaponentity) == 0)
-        actor.vortex_charge = actor.(weaponentity).vortex_charge;
+    if(!WEP_CVAR(vortex, charge_always))
+        W_Vortex_Charge(actor, weaponentity, frametime);
 
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)
@@ -247,9 +189,6 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                 actor.(weaponentity).vortex_chargepool_ammo = min(1, actor.(weaponentity).vortex_chargepool_ammo + WEP_CVAR_SEC(vortex, chargepool_regen) * frametime / W_TICSPERFRAME);
             actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(vortex, chargepool_pause_regen));
         }
-
-    if(weaponslot(weaponentity) == 0)
-        actor.vortex_chargepool_ammo = actor.(weaponentity).vortex_chargepool_ammo;
 
     if(autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
@@ -277,11 +216,11 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                         if(WEP_CVAR_SEC(vortex, ammo))
                         {
                             // always deplete if secondary is held
-                            actor.vortex_chargepool_ammo = max(0, actor.vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
+                            actor.(weaponentity).vortex_chargepool_ammo = max(0, actor.(weaponentity).vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
 
                             dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
                             actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
-                            dt = min(dt, actor.vortex_chargepool_ammo);
+                            dt = min(dt, actor.(weaponentity).vortex_chargepool_ammo);
                             dt = max(0, dt);
 
                             actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
@@ -293,7 +232,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                         if(fire & 2) // only eat ammo when the button is pressed
                         {
                             dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
-                            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+                            if(!(actor.items & IT_UNLIMITED_AMMO))
                             {
                                 // if this weapon is reloadable, decrease its load. Else decrease the player's ammo
                                 if(autocvar_g_balance_vortex_reload_ammo)
@@ -304,15 +243,15 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                                     {
                                         actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
                                     }
-                                    actor.(weaponentity).(weapon_load[WEP_VORTEX.m_id]) = actor.(weaponentity).clip_load;
+                                    actor.(weaponentity).(weapon_load[thiswep.m_id]) = actor.(weaponentity).clip_load;
                                 }
                                 else
                                 {
-                                    dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+                                    dt = min(dt, (GetResource(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
                                     dt = max(0, dt);
                                     if(dt > 0)
                                     {
-                                        actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(vortex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(vortex, ammo) * dt);
+                                        SetResource(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResource(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
                                     }
                                 }
                             }
@@ -344,8 +283,8 @@ METHOD(Vortex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Vortex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
-    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(vortex, ammo);
+    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
     return ammo_amount;
 }
 METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -353,8 +292,8 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     if(WEP_CVAR(vortex, secondary))
     {
         // don't allow charging if we don't have enough ammo
-        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
+        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vortex, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
         return ammo_amount;
     }
     else
@@ -365,10 +304,6 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
 METHOD(Vortex, wr_resetplayer, void(entity thiswep, entity actor))
 {
     if (WEP_CVAR(vortex, charge)) {
-        if (WEP_CVAR_SEC(vortex, chargepool)) {
-            actor.vortex_chargepool_ammo = 1;
-        }
-        actor.vortex_charge = WEP_CVAR(vortex, charge_start);
         for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
         {
             .entity weaponentity = weaponentities[slot];
@@ -427,6 +362,9 @@ METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
         return false;
     }
 }
+METHOD(Vortex, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(vortex, secondary);
+}
 
-#endif
 #endif

@@ -1,9 +1,10 @@
 #include "campaign_file.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include "campaign_common.qh"
+	#include <common/util.qh>
+	#include <common/campaign_common.qh>
 #endif
 
 // CampaignFileLoad(offset, n)
@@ -52,16 +53,14 @@ float CampaignFile_Load(int offset, float n)
 		a = ""; \
 	else \
 		++i
-// What you're seeing here is what people will do when your compiler supports
-// C-style macros but no line continuations.
 
 				i = -1; // starts at -1 so I don't need postincrement; that is, i points to BEFORE the current arg!
 				CAMPAIGN_GETARG; campaign_gametype[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_mapname[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_bots[campaign_entries] = stof(a);
 				CAMPAIGN_GETARG; campaign_botskill[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_fraglimit[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_timelimit[campaign_entries] = stof(a);
+				CAMPAIGN_GETARG; campaign_fraglimit[campaign_entries] = strzone(a);
+				CAMPAIGN_GETARG; campaign_timelimit[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_mutators[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_shortdesc[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_longdesc[campaign_entries] = strzone(strreplace("\\n", "\n", a));
@@ -88,16 +87,17 @@ void CampaignFile_Unload()
 {
 	if(campaign_title)
 	{
-		strunzone(campaign_title);
+		strfree(campaign_title);
 		for(int i = 0; i < campaign_entries; ++i)
 		{
-			strunzone(campaign_gametype[i]);
-			strunzone(campaign_mapname[i]);
-			strunzone(campaign_mutators[i]);
-			strunzone(campaign_shortdesc[i]);
-			strunzone(campaign_longdesc[i]);
+			strfree(campaign_gametype[i]);
+			strfree(campaign_mapname[i]);
+			strfree(campaign_fraglimit[i]);
+			strfree(campaign_timelimit[i]);
+			strfree(campaign_mutators[i]);
+			strfree(campaign_shortdesc[i]);
+			strfree(campaign_longdesc[i]);
 		}
 		campaign_entries = 0;
-		campaign_title = string_null;
 	}
 }

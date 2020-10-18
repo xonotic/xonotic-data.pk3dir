@@ -6,8 +6,8 @@
 	#include "self.qh"
 
 	entityclass(Defer);
-	class(Defer).entity owner;
-	class(Defer).void(entity) defer_func;
+	classfield(Defer).entity owner;
+	classfield(Defer).void(entity) defer_func;
 
 	/** Remove entity */
 	void SUB_Remove(entity this)
