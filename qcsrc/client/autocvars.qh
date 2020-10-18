@@ -240,8 +240,8 @@ float autocvar_hud_panel_centerprint_fade_subsequent_passone = 3;
 float autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha = 0.5;
 float autocvar_hud_panel_centerprint_fade_subsequent_passtwo = 10;
 float autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha = 0.5;
-float autocvar_hud_panel_centerprint_fade_subsequent_minfontsize = 0.75;
-float autocvar_hud_panel_centerprint_fade_minfontsize = 0;
+//float autocvar_hud_panel_centerprint_fade_subsequent_minfontsize = 0.75; // z411 disable zoom
+//float autocvar_hud_panel_centerprint_fade_minfontsize = 0; // z411 disable zoom
 bool autocvar_hud_panel_centerprint_flip;
 float autocvar_hud_panel_centerprint_fontscale;
 float autocvar_hud_panel_centerprint_fontscale_bold = 1.4;

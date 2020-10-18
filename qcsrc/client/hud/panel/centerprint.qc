@@ -374,7 +374,7 @@ void HUD_CenterPrint()
 			a = 1;
 
 		// set the size from fading in/out before subsequent fading
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+		//sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
 
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
@@ -387,7 +387,8 @@ void HUD_CenterPrint()
 		a *= panel_fg_alpha;
 
 		// finally set the size based on the new alpha from subsequent fading
-		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
+		//sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
+		sz = 1; // z411 disable ugly zoom shit
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
