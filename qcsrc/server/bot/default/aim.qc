@@ -1,17 +1,13 @@
 #include "aim.qh"
 
-#include <server/defs.qh>
-
-#include "cvars.qh"
-
-#include "bot.qh"
-
 #include <common/physics/player.qh>
 #include <common/state.qh>
-
-#include "../../weapons/weaponsystem.qh"
-
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
 #include <server/mutators/_mod.qh>
+#include <server/weapons/weaponsystem.qh>
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,

@@ -14,11 +14,10 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
-int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
 IntrusiveList g_instagib_items;
-STATIC_INIT()
+STATIC_INIT(instagib)
 {
 	g_instagib_items = IL_NEW();
 	IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
@@ -82,7 +81,7 @@ void instagib_ammocheck(entity this)
 
 	if(IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
-	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
 	else if(autocvar_g_rm && autocvar_g_rm_laser)
 	{
@@ -180,7 +179,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 	entity mon = M_ARGV(0, entity);
 
 	// always refill ammo
-	if(mon.monsterid == MON_MAGE.monsterid)
+	if(mon.monsterdef == MON_MAGE)
 		mon.skin = 1;
 }
 
@@ -233,21 +232,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(player, player.strength_finished, SND_POWEROFF);
-		if (time > player.strength_finished)
+		play_countdown(player, STAT(STRENGTH_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(STRENGTH_FINISHED, player))
 		{
-			player.alpha = default_player_alpha;
-			player.exteriorweaponentity.alpha = default_weapon_alpha;
+			if(!player.vehicle) // already reset upon exit
+			{
+				player.alpha = default_player_alpha;
+				player.exteriorweaponentity.alpha = default_weapon_alpha;
+			}
 			player.items &= ~ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
 	else
 	{
-		if (time < player.strength_finished)
+		if (time < STAT(STRENGTH_FINISHED, player))
 		{
-			player.alpha = autocvar_g_instagib_invis_alpha;
-			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			if(!player.vehicle) // incase the player is given powerups while inside a vehicle
+			{
+				player.alpha = autocvar_g_instagib_invis_alpha;
+				player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			}
 			player.items |= ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
@@ -256,8 +261,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(player, player.invincible_finished, SND_POWEROFF);
-		if (time > player.invincible_finished)
+		play_countdown(player, STAT(INVINCIBLE_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
@@ -265,7 +270,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < player.invincible_finished)
+		if (time < STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
@@ -353,7 +358,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_damage <= 0 && GetResource(frag_target, RES_HEALTH) > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
@@ -386,7 +390,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	M_ARGV(6, vector) = frag_force;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 {
 	start_health       = warmup_start_health       = 100;
 	start_armorvalue   = warmup_start_armorvalue   = 0;
@@ -529,7 +533,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	if(item.itemdef == ITEM_ExtraLife)
 	{
 		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
-		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 

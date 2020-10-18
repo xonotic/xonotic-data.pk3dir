@@ -12,6 +12,7 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weapon
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
+        monster_makevectors(actor, actor.enemy);
         W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(actor, w_shotdir);
@@ -36,7 +37,8 @@ CLASS(OffhandMageTeleport, OffhandWeapon)
         player.OffhandMageTeleport_key_pressed = key_pressed;
     }
 ENDCLASS(OffhandMageTeleport)
-OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
+STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
 
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;
@@ -199,7 +201,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 {
 	makevectors(this.angles);
 
-	entity missile = spawn();
+	entity missile = new(M_Mage_Attack_Spike);
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
@@ -386,7 +388,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 	return false;
 }
 
-spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE.monsterid); }
+spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE); }
 
 #endif // SVQC
 

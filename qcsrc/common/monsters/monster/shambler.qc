@@ -116,8 +116,6 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 
 void M_Shambler_Attack_Lightning(entity this)
 {
-	monster_makevectors(this, this.enemy);
-
 	entity gren = new(grenade);
 	gren.owner = gren.realowner = this;
 	gren.bot_dodge = true;
@@ -199,7 +197,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ, .entity weapo
 	return false;
 }
 
-spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER); }
 #endif // SVQC
 
 #ifdef SVQC

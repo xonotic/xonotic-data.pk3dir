@@ -1,7 +1,7 @@
 #include "breakable.qh"
 #ifdef SVQC
 
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <common/csqcmodel_settings.qh>
 #include <lib/csqcmodel/sv_model.qh>
@@ -50,7 +50,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 //
 void LaunchDebris (entity this, string debrisname, vector force)
 {
-	entity dbr = spawn();
+	entity dbr = new(debris);
 	vector org = this.absmin
 	           + '1 0 0' * random() * (this.absmax.x - this.absmin.x)
 	           + '0 1 0' * random() * (this.absmax.y - this.absmin.y)
@@ -187,7 +187,7 @@ void func_breakable_init_for_player(entity this, entity player)
 	if (this.noise1 && this.state == STATE_ALIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM, 0);
 	}
 }
 
@@ -343,7 +343,7 @@ spawnfunc(func_breakable)
 		this.dmg_force = 200;
 
 	this.mdl = this.model;
-	SetBrushEntityModel(this);
+	SetBrushEntityModel(this, true);
 
 	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_breakable_destroy;

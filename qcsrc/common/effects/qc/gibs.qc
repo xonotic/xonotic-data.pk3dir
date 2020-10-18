@@ -168,7 +168,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	entity gib;
 
 	// TODO remove some gibs according to cl_nogibs
-	gib = RubbleNew("gib");
+	gib = RubbleNew(new(gib));
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;

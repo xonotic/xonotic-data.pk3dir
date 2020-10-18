@@ -38,11 +38,8 @@ void RubbleLimit(string cname, int limit, void(entity) deleteproc)
 	}
 }
 
-entity RubbleNew(string cname)
+entity RubbleNew(entity e)
 {
-	// spawn a new entity and return it
-	entity e = spawn();
-	e.classname = cname;
 	e.creationtime = time;
 	IL_PUSH(g_rubble, e);
 	return e;

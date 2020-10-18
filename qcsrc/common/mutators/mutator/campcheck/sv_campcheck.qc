@@ -4,6 +4,7 @@ string autocvar_g_campcheck;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
+bool autocvar_g_campcheck_typecheck;
 
 REGISTER_MUTATOR(campcheck, expr_evaluate(autocvar_g_campcheck));
 
@@ -24,9 +25,7 @@ MUTATOR_HOOKFUNCTION(campcheck, Damage_Calculate)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	if(IS_PLAYER(frag_target))
-	if(IS_PLAYER(frag_attacker))
-	if(frag_attacker != frag_target)
+	if(frag_attacker != frag_target && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 	{
 		frag_target.campcheck_traveled_distance = autocvar_g_campcheck_distance;
 		frag_attacker.campcheck_traveled_distance = autocvar_g_campcheck_distance;
@@ -40,11 +39,9 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 
 	if(autocvar_g_campcheck_interval)
 	if(!game_stopped && !warmup_stage && time >= game_starttime)
-	if(IS_PLAYER(player))
-	if(!IS_DEAD(player))
-	if(!STAT(FROZEN, player))
-	if(!PHYS_INPUT_BUTTON_CHAT(player))
-	if(IS_REAL_CLIENT(player)) // bots may camp, but that's no reason to constantly kill them
+	if(IS_PLAYER(player) && !IS_DEAD(player) && !STAT(FROZEN, player))
+	if(autocvar_g_campcheck_typecheck || !PHYS_INPUT_BUTTON_CHAT(player))
+	if(IS_REAL_CLIENT(player)) // only apply to real clients (bots may "camp" due to missing waypoints in the map, but that's no reason to constantly kill them, clones can't move)
 	if(!weaponLocked(player))
 	{
 		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)

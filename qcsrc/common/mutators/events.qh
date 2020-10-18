@@ -112,3 +112,11 @@ MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
     /**/          o(string, MUTATOR_ARGV_1_string) \
     /**/
 MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
+
+/** decides whether a player can crouch or not */
+#define EV_PlayerCanCrouch(i, o) \
+    /** player */      i(entity, MUTATOR_ARGV_0_entity) \
+    /** do_crouch */   i(bool, MUTATOR_ARGV_1_bool) \
+    /**/               o(bool, MUTATOR_ARGV_1_bool) \
+    /**/
+MUTATOR_HOOKABLE(PlayerCanCrouch, EV_PlayerCanCrouch);

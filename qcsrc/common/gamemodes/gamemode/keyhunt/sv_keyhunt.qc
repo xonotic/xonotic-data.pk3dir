@@ -1,5 +1,11 @@
 #include "sv_keyhunt.qh"
 
+#include <server/command/vote.qh>
+#include <server/gamelog.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <common/mapobjects/triggers.qh>
+
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
 float autocvar_g_balance_keyhunt_delay_damage_return;
@@ -23,6 +29,7 @@ float autocvar_g_balance_keyhunt_throwvelocity;
 int autocvar_g_keyhunt_teams_override;
 
 // #define KH_PLAYER_USE_ATTACHMENT
+// TODO? no model exists for this
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
@@ -61,8 +68,6 @@ int kh_Team_ByID(int t)
 	return 0;
 }
 
-//entity kh_worldkeylist;
-.entity kh_worldkeynext;
 entity kh_controller;
 //bool kh_tracking_enabled;
 int kh_teams;
@@ -542,7 +547,12 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 		midpoint += thisorigin;
 
 		if(!first)
-			te_lightning2(NULL, lastorigin, thisorigin);
+		{
+			// TODO: this effect has been replaced due to a possible crash it causes
+			// see https://gitlab.com/xonotic/darkplaces/issues/123
+			//te_lightning2(NULL, lastorigin, thisorigin);
+			Send_Effect(EFFECT_TR_NEXUIZPLASMA, lastorigin, thisorigin, 1);
+		}
 		lastorigin = thisorigin;
 		if(first)
 			firstorigin = thisorigin;
@@ -550,7 +560,8 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 	}
 	if(NumTeams(kh_teams) > 2)
 	{
-		te_lightning2(NULL, lastorigin, firstorigin);
+		//te_lightning2(NULL, lastorigin, firstorigin); // TODO see above
+		Send_Effect(EFFECT_TR_NEXUIZPLASMA, lastorigin, firstorigin, 1);
 	}
 	midpoint = midpoint * (1 / NumTeams(kh_teams));
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(winner_team) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
@@ -706,12 +717,10 @@ void key_reset(entity this)
 	kh_Key_Remove(this);
 }
 
-const string STR_ITEM_KH_KEY = "item_kh_key";
 void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
-	entity key = spawn();
+	entity key = new(item_kh_key);
 	key.count = i;
-	key.classname = STR_ITEM_KH_KEY;
 	settouch(key, kh_Key_Touch);
 	setthink(key, kh_Key_Think);
 	key.nextthink = time;
@@ -972,7 +981,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_teams = BITS(bound(2, kh_teams, 4));
 
 	// make a KH entity for controlling the game
-	kh_controller = spawn();
+	kh_controller = new(kh_controller);
 	setthink(kh_controller, kh_Controller_Think);
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
@@ -1038,7 +1047,7 @@ void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingsca
 			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 	}
 
-	havocbot_goalrating_items(this, 1, this.origin, 10000);
+	havocbot_goalrating_items(this, 80000, this.origin, 10000);
 }
 
 void havocbot_role_kh_carrier(entity this)
@@ -1291,6 +1300,13 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 		bot.havocbot_role = havocbot_role_kh_freelancer;
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(kh, LogDeath_AppendItemCodes)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.kh_next)
+		M_ARGV(1, string) = strcat(M_ARGV(1, string), "K"); // item codes
 }
 
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)

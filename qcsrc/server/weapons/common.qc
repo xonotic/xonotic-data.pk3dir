@@ -1,17 +1,21 @@
 #include "common.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/t_items.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
 #include <common/deathtypes/all.qh>
+#include <common/items/_mod.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/state.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-#include <common/items/_mod.qh>
+#include <server/command/common.qh>
+#include <server/damage.qh>
+#include <server/hook.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/csqcprojectile.qh>
 
 bool W_DualWielding(entity player)
 {
@@ -30,7 +34,7 @@ void W_GiveWeapon(entity e, int wep)
 {
 	if (!wep) return;
 
-	STAT(WEAPONS, e) |= WepSet_FromWeapon(Weapons_from(wep));
+	STAT(WEAPONS, e) |= WepSet_FromWeapon(REGISTRY_GET(Weapons, wep));
 
 	if (IS_PLAYER(e)) {
 	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);
@@ -110,4 +114,64 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 	// because recursive calls to RadiusDamage are not allowed
 	this.nextthink = time;
 	setthink(this, explode);
+}
+
+void adaptor_think2use_hittype_splash(entity this) // for timed projectile detonation
+{
+	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+		this.projectiledeathtype |= HITTYPE_SPLASH;
+	adaptor_think2use(this);
+}
+
+bool SUB_NoImpactCheck(entity this, entity toucher)
+{
+	// zero hitcontents = this is not the real impact, but either the
+	// mirror-impact of something hitting the projectile instead of the
+	// projectile hitting the something, or a touchareagrid one. Neither of
+	// these stop the projectile from moving, so...
+	if(trace_dphitcontents == 0)
+	{
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
+		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
+	}
+    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+        return true;
+    if (toucher == NULL && this.size != '0 0 0')
+    {
+        vector tic;
+        tic = this.velocity * sys_frametime;
+        tic = tic + normalize(tic) * vlen(this.maxs - this.mins);
+        traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
+        if (trace_fraction >= 1)
+        {
+            LOG_TRACE("Odd... did not hit...?");
+        }
+        else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+        {
+            LOG_TRACE("Detected and prevented the sky-grapple bug.");
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
+{
+	// owner check
+	if(toucher && toucher == this.owner)
+		return true;
+	if(SUB_NoImpactCheck(this, toucher))
+	{
+		if(this.classname == "nade")
+			return false; // no checks here
+		else if(this.classname == "grapplinghook")
+			RemoveHook(this);
+		else
+			delete(this);
+		return true;
+	}
+	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
+		UpdateCSQCProjectile(this);
+	return false;
 }

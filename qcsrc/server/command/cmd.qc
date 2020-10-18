@@ -1,49 +1,38 @@
 #include "cmd.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-
-#include "common.qh"
-#include "vote.qh"
-
-#include "../bot/api.qh"
-
-#include "../campaign.qh"
-#include "../cheats.qh"
-#include "../client.qh"
-#include "../clientkill.qh"
-#include "../player.qh"
-#include "../ipban.qh"
-#include "../mapvoting.qh"
-#include "../scores.qh"
-#include "../teamplay.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
-#ifdef SVQC
-	#include <common/vehicles/all.qh>
-#endif
-
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/minigames/sv_minigames.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/mapobjects/triggers.qh>
-
-#include <common/minigames/sv_minigames.qh>
-
-#include <common/monsters/_mod.qh>
-#include <common/monsters/sv_spawn.qh>
-#include <common/monsters/sv_monsters.qh>
-
+#include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/vote.qh>
+#include <server/ipban.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -90,7 +79,7 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2autoswitch^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd autoswitch selection\n");
@@ -133,7 +122,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2clientversion^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd clientversion version\n");
@@ -158,7 +147,7 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2mv_getpicture^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd mv_getpicture mapid\n");
@@ -184,10 +173,11 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			{
 				if (argv(1) == "spawn")
 				{
+					string s = argv(2);
 					if (!IS_PLAYER(caller))
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
-						waypoint_spawn_fromeditor(caller);
+						waypoint_spawn_fromeditor(caller, (s == "crosshair"), (s == "jump"), (s == "crouch"), (s == "support"));
 					return;
 				}
 				else if (argv(1) == "remove")
@@ -196,6 +186,17 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
 						waypoint_remove_fromeditor(caller);
+					return;
+				}
+				else if (argv(1) == "hardwire")
+				{
+					string s = argv(2);
+					waypoint_start_hardwiredlink(caller, (s == "crosshair"));
+					return;
+				}
+				else if (argv(1) == "lock")
+				{
+					waypoint_lock(caller);
 					return;
 				}
 				else if (argv(1) == "unreachable")
@@ -236,17 +237,32 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
-			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall,\n");
-			sprint(caller, "   symorigin get|set\n");
-			sprint(caller, "   symorigin get|set p1 p2 ... pX\n");
-			sprint(caller, "   symaxis get|set p1 p2\n");
-			sprint(caller, "    where p1 p2 ... pX are positions \"x y z\" (z can be omitted)\n");
-			sprint(caller, " symorigin and symaxis commands are useful to determine origin/axis of symmetry"
-							" on maps without ctf flags or where flags aren't perfectly symmetrical\n");
+			sprint(caller, "  Where 'action' can be:\n");
+			sprint(caller, "   ^5spawn^7: spawns a waypoint at player's position\n");
+			sprint(caller, "   ^5remove^7: removes player's nearest waypoint\n");
+			sprint(caller, "   ^5unreachable^7: reveals waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
+			sprint(caller, "   ^5saveall^7: saves all waypoints and links to file\n");
+			sprint(caller, "   ^5relinkall^7: relinks all waypoints as if they were respawned\n");
+			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position\n");
+			sprint(caller, "   ^7 in general useful to create special and hardwired links with ease from existing waypoints\n");
+			sprint(caller, "   ^7 in particular it's the only way to create custom jumppad waypoints (spawn another waypoint to create destination))\n");
+			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint (place it at least 60 qu before jump start, spawn another waypoint to create destination)\n");
+			sprint(caller, "   ^5spawn crouch^7: spawns a crouch waypoint (it links only to very close waypoints)\n");
+			sprint(caller, "   ^5spawn support^7: spawns a support waypoint (spawn another waypoint to create destination from which all incoming links are removed)\n");
+			sprint(caller, "   ^7 useful to replace links to problematic jumppad/teleport waypoints\n");
+			sprint(caller, "   ^5hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
+			sprint(caller, "   ^5hardwire crosshair^7: marks the waypoint at crosshair instead of the nearest waypoint\n");
+			sprint(caller, "   ^5lock^7: locks link display of the aimed waypoint (unlocks if no waypoint is found at crosshair's position)\n");
+			sprint(caller, "   ^5symorigin get|set\n");
+			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
+			sprint(caller, "   ^5symaxis get|set p1 p2\n");
+			sprint(caller, "   ^7 where p1 p2 ... pX are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical"
+								" so you can determine origin/axis of symmetry of maps without ctf flags or where flags aren't perfectly symmetrical\n");
+			sprint(caller, "  See 'wpeditor_menu' for a selectable list of various commands and useful settings to edit waypoints.\n");
 			return;
 		}
 	}
@@ -258,10 +274,13 @@ void ClientCommand_join(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!game_stopped)
-			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
-			if (joinAllowed(caller))
-				Join(caller);
+			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
+			{
+				if (joinAllowed(caller))
+					Join(caller);
+				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
+					CS(caller).autojoin_checked = -1;
+			}
 
 			return;  // never fall through to usage
 		}
@@ -328,7 +347,7 @@ void ClientCommand_physics(entity caller, int request, int argc)
 
 			if (Physics_Valid(command) || command == "default")
 			{
-				stuffcmd(caller, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+				stuffcmd(caller, strcat("\nseta cl_physics ", command, "\n"));
 				sprint(caller, strcat("^2Physics set successfully changed to ^3", command, "\n"));
 				return;
 			}
@@ -354,9 +373,9 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 		{
 			if (IS_CLIENT(caller))
 			{
-				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || sv_ready_restart_repeatable)
+					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
 						if (time < game_starttime) // game is already restarting
 							return;
@@ -364,13 +383,13 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 						{
 							caller.ready = false;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -531,7 +550,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			return;
 		}
 		default:
-			sprint(caller, "Incorrect parameters for ^2selectteam^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selectteam team\n");
@@ -556,7 +575,7 @@ void ClientCommand_selfstuff(entity caller, int request, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2selfstuff^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selfstuff <command>\n");
@@ -590,7 +609,7 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2sentcvar^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar>\n");
@@ -608,15 +627,25 @@ void ClientCommand_spectate(entity caller, int request)
 		{
 			if (!intermission_running && IS_CLIENT(caller))
 			{
-				if((IS_SPEC(caller) || IS_OBSERVER(caller)) && argv(1) != "")
+				if(argv(1) != "")
 				{
-					entity client = GetFilteredEntity(argv(1));
-					int spec_accepted = VerifyClientEntity(client, false, false);
-					if(spec_accepted > 0 && IS_PLAYER(client))
+					if(IS_SPEC(caller) || IS_OBSERVER(caller))
 					{
-						if(Spectate(caller, client))
-							return; // fall back to regular handling
+						entity client = GetFilteredEntity(argv(1));
+						int spec_accepted = VerifyClientEntity(client, false, false);
+						if(spec_accepted > 0 && IS_PLAYER(client))
+						{
+							bool caller_is_observer = (IS_OBSERVER(caller));
+							Spectate(caller, client);
+							if (caller_is_observer)
+								TRANSMUTE(Spectator, caller);
+						}
+						else
+							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
+					else
+						sprint(caller, "cmd spectate client only works when you are spectator/observer\n");
+					return;
 				}
 
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
@@ -633,7 +662,7 @@ void ClientCommand_spectate(entity caller, int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate <client>\n");
+			sprint(caller, "\nUsage:^3 cmd spectate [client]\n");
 			sprint(caller, "  Where 'client' can be the player to spectate.\n");
 			return;
 		}
@@ -654,7 +683,7 @@ void ClientCommand_suggestmap(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2suggestmap^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd suggestmap map\n");
@@ -711,7 +740,7 @@ void ClientCommand_tell(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2tell^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd tell client <message>\n");
@@ -735,6 +764,18 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
+				if (IS_DEAD(caller))
+				{
+					// don't warn the caller when trying to taunt while dead, just don't play any sounds!
+					// we still allow them to see warnings if it's invalid, so a dead player can find out the sounds in peace
+					return;
+				}
+				if (IS_SPEC(caller) || IS_OBSERVER(caller))
+				{
+					// observers/spectators have no player model of their own to play taunts from
+					// again, allow them to see warnings
+					return;
+				}
 				string msg = "";
 				if (argc >= 3)
 					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
@@ -745,7 +786,7 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2voice^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd voice messagetype <soundname>\n");
@@ -883,6 +924,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "color": case "topcolor": case "bottomcolor": if(teamplay) return; else break; // handled by engine in host_cmd.c
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:

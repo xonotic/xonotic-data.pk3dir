@@ -56,8 +56,14 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, wpcolor, vector, '0 0 0');
     /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
     ATTRIB(Weapon, mdl, string, "");
+#ifdef GAMEQC
     /** M: model MDL_id_ITEM */
     ATTRIB(Weapon, m_model, entity);
+    /** M: flash model MDL_id_MUZZLEFLASH */
+    ATTRIB(Weapon, m_muzzlemodel, entity, MDL_Null);
+    /** M: flash effect EFFECT_id_MUZZLEFLASH */
+    ATTRIB(Weapon, m_muzzleeffect, entity);
+#endif
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
     ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
     /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
@@ -129,6 +135,13 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon) \
     spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
 
+#define SPAWNFUNC_WEAPON_COND(name, cond, wep1, wep2) \
+    spawnfunc(name) \
+    { \
+        entity wep = (cond) ? wep1 : wep2; \
+        weapon_defaultspawnfunc(this, wep); \
+    }
+
 #else
 
 #define SPAWNFUNC_WEAPON(name, weapon)
@@ -198,6 +211,8 @@ const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
 const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
 const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
+const int WEP_FLAG_NOTRUEAIM      =  BIT(15); // weapon doesn't aim directly at targets
+const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not a true weapon), hidden from most weapon lists
 
 // variables:
 string weaponorder_byid;
@@ -213,6 +228,8 @@ string W_FixWeaponOrder_ForceComplete(string order);
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
 
 string GetAmmoPicture(int ammotype);
+
+string GetAmmoName(int ammotype);
 
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i);

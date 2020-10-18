@@ -18,6 +18,7 @@
 #define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
 #define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
 #define PHYS_DODGING_AIR_MAXSPEED			autocvar_sv_dodging_air_maxspeed
+#define PHYS_DODGING_CLIENTSELECT			autocvar_sv_dodging_clientselect
 
 // we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
 #if 0
@@ -37,16 +38,24 @@
 #define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
 #define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
 #define PHYS_DODGING_AIR_MAXSPEED 			STAT(DODGING_AIR_MAXSPEED, this)
+#define PHYS_DODGING_CLIENTSELECT 			STAT(DODGING_CLIENTSELECT, this)
 #endif
 
 #ifdef CSQC
+	float cvar_cl_dodging_timeout;
+	bool cvar_cl_dodging;
+	bool autocvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+	#define PHYS_DODGING_ENABLED(s)				autocvar_cl_dodging
 #elif defined(SVQC)
+	.float cvar_cl_dodging_timeout;
+	.bool cvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
+	#define PHYS_DODGING_ENABLED(s)				CS(s).cvar_cl_dodging
 #endif
 
 #ifdef SVQC
@@ -55,8 +64,6 @@ bool autocvar_sv_dodging_sound;
 
 #include <common/animdecide.qh>
 #include <common/physics/player.qh>
-
-.float cvar_cl_dodging_timeout;
 
 REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 {
@@ -113,20 +120,20 @@ REGISTER_MUTATOR(dodging, true);
 		return true;
 
 // returns true if the player is close to a wall
-bool is_close_to_wall(entity this, float threshold)
+bool is_close_to_wall(entity this, float threshold, vector forward, vector right)
 {
-	X(v_right);
-	X(-v_right);
-	X(v_forward);
-	X(-v_forward);
+	X(right);
+	X(-right);
+	X(forward);
+	X(-forward);
 
 	return false;
 }
 
-bool is_close_to_ground(entity this, float threshold)
+bool is_close_to_ground(entity this, float threshold, vector up)
 {
 	if (IS_ONGROUND(this)) return true;
-	X(-v_up); // necessary for dodging down a slope using doubletap (using `+dodge` works anyway)
+	X(-up); // necessary for dodging down a slope using doubletap (using `+dodge` works anyway)
 
 	return false;
 }
@@ -180,10 +187,11 @@ bool PM_dodging_checkpressedkeys(entity this)
 	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
 		return false;
 
-	makevectors(this.angles);
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
 
-	bool can_dodge = (is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) && (PHYS_DODGING_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_MAXSPEED)));
-	bool can_wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
+	bool can_dodge = (is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD, up) && (PHYS_DODGING_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_MAXSPEED)));
+	bool can_wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD, forward, right));
 	bool can_air_dodge = (PHYS_DODGING_AIR && (PHYS_DODGING_AIR_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_AIR_MAXSPEED)));
 	if (!can_dodge && !can_wall_dodge && !can_air_dodge) return false;
 
@@ -213,7 +221,8 @@ void PM_dodging(entity this)
 	if (!this.dodging_action) return;
 
 	// when swimming or dead, no dodging allowed..
-	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this))
+	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
+	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this) || (PHYS_DODGING_CLIENTSELECT && !PHYS_DODGING_ENABLED(this) && !frozen_dodging))
 	{
 		this.dodging_action = 0;
 		this.dodging_direction.x = 0;
@@ -221,11 +230,11 @@ void PM_dodging(entity this)
 		return;
 	}
 
-	// make sure v_up, v_right and v_forward are sane
+	vector forward, right, up;
 	if(PHYS_DODGING_AIR)
-		makevectors(this.v_angle);
+		MAKE_VECTORS(this.v_angle, forward, right, up);
 	else
-		makevectors(this.angles);
+		MAKE_VECTORS(this.angles, forward, right, up);
 
 	// fraction of the force to apply each frame
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
@@ -237,15 +246,15 @@ void PM_dodging(entity this)
 
 	float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining);
 	this.dodging_force_remaining -= velocity_increase;
-	this.velocity += this.dodging_direction.x * velocity_increase * v_forward
-	               + this.dodging_direction.y * velocity_increase * v_right;
+	this.velocity += this.dodging_direction.x * velocity_increase * forward
+	               + this.dodging_direction.y * velocity_increase * right;
 
 	// the up part of the dodge is a single shot action
 	if (this.dodging_single_action == 1)
 	{
 		UNSET_ONGROUND(this);
 
-		this.velocity += PHYS_DODGING_UP_SPEED * v_up;
+		this.velocity += PHYS_DODGING_UP_SPEED * up;
 
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
@@ -298,6 +307,7 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 #ifdef SVQC
 
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
+REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {

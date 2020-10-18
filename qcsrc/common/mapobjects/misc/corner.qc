@@ -10,12 +10,26 @@ bool corner_send(entity this, entity to, int sf)
 
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteString(MSG_ENTITY, this.target);
-	WriteString(MSG_ENTITY, this.target2);
-	WriteString(MSG_ENTITY, this.target3);
-	WriteString(MSG_ENTITY, this.target4);
-	WriteString(MSG_ENTITY, this.targetname);
-	WriteByte(MSG_ENTITY, this.target_random);
+	sf = 0;
+	sf = BITSET(sf, BIT(0), this.target_random);
+
+	sf = BITSET(sf, BIT(1), this.target && this.target != "");
+	sf = BITSET(sf, BIT(2), this.target2 && this.target2 != "");
+	sf = BITSET(sf, BIT(3), this.target3 && this.target3 != "");
+	sf = BITSET(sf, BIT(4), this.target4 && this.target4 != "");
+	sf = BITSET(sf, BIT(5), this.targetname && this.targetname != "");
+
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & BIT(1))
+		WriteString(MSG_ENTITY, this.target);
+	if(sf & BIT(2))
+		WriteString(MSG_ENTITY, this.target2);
+	if(sf & BIT(3))
+		WriteString(MSG_ENTITY, this.target3);
+	if(sf & BIT(4))
+		WriteString(MSG_ENTITY, this.target4);
+	if(sf & BIT(5))
+		WriteString(MSG_ENTITY, this.targetname);
 
 	WriteByte(MSG_ENTITY, this.wait);
 
@@ -54,12 +68,14 @@ NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
 	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
-	this.target = strzone(ReadString());
-	this.target2 = strzone(ReadString());
-	this.target3 = strzone(ReadString());
-	this.target4 = strzone(ReadString());
-	this.targetname = strzone(ReadString());
-	this.target_random = ReadByte();
+	int targbits = ReadByte();
+	this.target_random = (targbits & BIT(0));
+
+	this.target = ((targbits & BIT(1)) ? strzone(ReadString()) : string_null);
+	this.target2 = ((targbits & BIT(2)) ? strzone(ReadString()) : string_null);
+	this.target3 = ((targbits & BIT(3)) ? strzone(ReadString()) : string_null);
+	this.target4 = ((targbits & BIT(4)) ? strzone(ReadString()) : string_null);
+	this.targetname = ((targbits & BIT(5)) ? strzone(ReadString()) : string_null);
 
 	this.wait = ReadByte();
 

@@ -2,16 +2,17 @@
 #include <client/announcer.qh>
 #include <client/bgmscript.qh>
 #include <client/csqcmodel_hooks.qh>
+#include <client/draw.qh>
 #include <client/main.qh>
 #include <client/mapvoting.qh>
-#include <client/miscfunctions.qh>
 #include <client/player_skeleton.qh>
 #include <client/resources.qh>
 #include <client/shownames.qh>
 #include <client/teamradar.qh>
 #include <client/view.qh>
 
-#include <client/commands/_mod.qh>
+#include <client/command/_mod.qh>
 #include <client/hud/_mod.qh>
+#include <client/items/_mod.qh>
 #include <client/mutators/_mod.qh>
 #include <client/weapons/_mod.qh>

@@ -2,8 +2,29 @@
 
 #include "sound.qh"
 
+#ifdef SVQC
+void soundat(entity e, vector o, float chan, string samp, float vol, float _atten);
+
+void stopsoundto(float _dest, entity e, float chan);
+
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten, float _pitch);
+
+bool sound_allowed(int dest, entity e);
+
+float spamsound(entity e, float chan, Sound samp, float vol, float _atten);
+
+void play2(entity e, string filename);
+
+void play2all(string samp);
+
+void play2team(float t, string filename);
+
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten, float _pitch);
+
+void stopsound(entity e, float chan);
+#endif
+
 REGISTRY(Sounds, BITS(9))
-#define Sounds_from(i) _Sounds_from(i, SND_Null)
 REGISTER_REGISTRY(Sounds)
 
 #define SOUND(name, path) \
@@ -18,5 +39,6 @@ PRECACHE(Sounds) {
 }
 
 SOUND(Null, "misc/null");
+REGISTRY_DEFINE_GET(Sounds, SND_Null)
 #include "all.inc"
 #include "all.qc"

@@ -154,27 +154,46 @@ void W_Electro_Bolt_Think(entity this)
 		{
 			if(e.classname == "electro_orb")
 			{
-				// change owner to whoever caused the combo explosion
-				e.realowner = this.realowner;
-				e.takedamage = DAMAGE_NO;
-				e.classname = "electro_orb_chain";
+				bool explode;
+				if (this.owner == e.owner)
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_own);
+				}
+				else if (SAME_TEAM(this.owner, e.owner))
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_teammate);
+				}
+				else
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_enemy);
+				}
 
-				// now set the next one to trigger as well
-				setthink(e, W_Electro_ExplodeCombo);
+				if (explode)
+				{
+					// change owner to whoever caused the combo explosion
+					e.realowner = this.realowner;
+					e.takedamage = DAMAGE_NO;
+					e.classname = "electro_orb_chain";
 
-				// delay combo chains, looks cooler
-				e.nextthink =
+					// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
+					// This allows to avoid the delay on the first explosion which looks better
+					// (the bolt and orb should explode together because they interacted together)
+					// while keeping the chaining delay.
+					setthink(e, W_Electro_ExplodeCombo);
+					e.nextthink =
 					(
 						time
 						+
-						(WEP_CVAR(electro, combo_speed) ?
-							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
+						(WEP_CVAR_PRI(electro, midaircombo_speed) ?
+							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed))
 							:
 							0
 						)
 					);
 
-				++found;
+
+					++found;
+				}
 			}
 			e = e.chain;
 		}
@@ -208,7 +227,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		thiswep.m_id
 	);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	proj = new(electro_bolt);
 	proj.owner = proj.realowner = actor;
@@ -359,7 +378,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = actor;

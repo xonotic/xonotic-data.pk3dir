@@ -239,7 +239,6 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_LOCAL, islocalplayer);
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_PLAYER, (psf & ISPLAYER_PLAYER));
 
-	this.classname = "csqcmodel";
 	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
 	this.iflags |= IFLAG_ANGLES; // interpolate angles too
 	this.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
@@ -276,6 +275,9 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 		this.iflags |= IFLAG_TELEPORTED;
 		this.csqcmodel_teleported = 1;
 	}
+
+	if(sf & BIT(3))
+		this.alpha = this.m_alpha;
 
 	if(sf & BIT(14))
 		viewloc_SetTags(this);

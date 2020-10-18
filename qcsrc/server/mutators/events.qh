@@ -90,6 +90,17 @@ MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
     /**/
 MUTATOR_HOOKABLE(PlayerDied, EV_PlayerDied);
 
+/** called when showing an obituary for the player. return true to show nothing (workarounds may be needed) */
+#define EV_ClientObituary(i, o) \
+    /** inflictor       */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker        */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** target          */ i(entity, MUTATOR_ARGV_2_entity) \
+    /** deathtype       */ i(float,  MUTATOR_ARGV_3_float) \
+    /** wep entity      */ i(entity, MUTATOR_ARGV_4_entity) \
+    /** anonymous killer*/ o(bool,   MUTATOR_ARGV_5_bool) \
+    /**/
+MUTATOR_HOOKABLE(ClientObituary, EV_ClientObituary);
+
 /** allows overriding the frag centerprint messages */
 #define EV_FragCenterMessage(i, o) \
     /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -306,6 +317,7 @@ MUTATOR_HOOKABLE(PlayerPreThink, EV_PlayerPreThink);
 MUTATOR_HOOKABLE(GetPressedKeys, EV_GetPressedKeys);
 
 /** is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client */
+// NOTE: requesting cvar values (get_cvars_f 0) is deprecated
 #define EV_GetCvars(i, o) \
     /**/ i(float, get_cvars_f) \
     /**/ i(string, get_cvars_s) \
@@ -1222,3 +1234,18 @@ MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
     /**/                            o(int, MUTATOR_ARGV_0_int) \
     /**/
 MUTATOR_HOOKABLE(GetPlayerLimit, EV_GetPlayerLimit);
+
+/** include special item codes for a death to the game log */
+#define EV_LogDeath_AppendItemCodes(i, o) \
+    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
+    /** item codes */     i(string, MUTATOR_ARGV_1_string) \
+    /**/                  o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(LogDeath_AppendItemCodes, EV_LogDeath_AppendItemCodes);
+
+/** Allows disabling or enabling rocket jumping independently of balance, use the parameter to force a preferred setting */
+#define EV_AllowRocketJumping(i, o) \
+    /** allow_rocketjump */         i(bool, MUTATOR_ARGV_0_bool) \
+    /**/                            o(bool, MUTATOR_ARGV_0_bool) \
+    /**/
+MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);

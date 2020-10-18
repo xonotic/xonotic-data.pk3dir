@@ -29,7 +29,7 @@ test_sv_game:
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
     - make
-    - EXPECT=6e591fe90a6b90e62fdfd531636dd6eb
+    - EXPECT=040aeef53953a85c5891c0c39cf9860f
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
@@ -56,6 +56,9 @@ test_sv_unit:
       done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
 
+# NOTE: The generated docs are incomplete - they don't contain code behind SVQC CSQC MENUQC GAMEQC ifdefs.
+# With them added to PREDEFINED, it would take over half an hour to generate the docs and even then
+# they might not be complete. Doxygen doesn't handle #elif and might not understand some QC definitions.
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy
   script:

@@ -213,10 +213,10 @@ void Ent_WaypointSprite(entity this, bool isnew)
 float spritelookupblinkvalue(entity this, string s)
 {
     if (s == WP_Weapon.netname) {
-        if (Weapons_from(this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
+        if (REGISTRY_GET(Weapons, this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypointblink;
     if(s == WP_FlagReturn.netname) return 2;
 
     return 1;
@@ -224,8 +224,8 @@ float spritelookupblinkvalue(entity this, string s)
 
 vector spritelookupcolor(entity this, string s, vector def)
 {
-    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return Weapons_from(this.wp_extra).wpcolor;
-    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items_from(this.wp_extra).m_color;
+    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).wpcolor;
+    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
         return M_ARGV(2, vector);
@@ -238,8 +238,8 @@ string spritelookuptext(entity this, string s)
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
+    if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_name;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypoint;
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -257,9 +257,9 @@ string spritelookuptext(entity this, string s)
 string spritelookupicon(entity this, string s)
 {
     // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
-    if (s == WP_Vehicle.netname) return Vehicles_from(this.wp_extra).m_icon;
+    if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).model2;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_icon;
+    if (s == WP_Vehicle.netname) return REGISTRY_GET(Vehicles, this.wp_extra).m_icon;
     //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -296,7 +296,7 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
     v4 = Rotate(v4, rot) + org;
 
     // draw them
-    R_BeginPolygon(pic, f);
+    R_BeginPolygon(pic, f, true);
     R_PolygonVertex(v1, '0 0 0', rgb, a);
     R_PolygonVertex(v2, '1 0 0', rgb, a);
     R_PolygonVertex(v3, '1 1 0', rgb, a);
@@ -306,7 +306,7 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
 void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, float f)
 {
-    R_BeginPolygon(pic, f);
+    R_BeginPolygon(pic, f, true);
     R_PolygonVertex(o, '0 0 0', rgb, a);
     R_PolygonVertex(o + ri, '1 0 0', rgb, a);
     R_PolygonVertex(o + up + ri, '1 1 0', rgb, a);
@@ -354,7 +354,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
     vector borderX = eX * (size+borderDiag);
     vector borderY = eY * (size+borderDiag+border);
 
-    R_BeginPolygon("", DRAWFLAG_NORMAL);
+    R_BeginPolygon("", DRAWFLAG_NORMAL, true);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
     R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
     R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
@@ -362,7 +362,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
     R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
-    R_BeginPolygon("", DRAWFLAG_ADDITIVE);
+    R_BeginPolygon("", DRAWFLAG_ADDITIVE, true);
     R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
@@ -485,7 +485,7 @@ void Draw_WaypointSprite(entity this)
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (this.hideflags & 1 && autocvar_cl_hidewaypoints)
+    if ((this.hideflags & 1) && autocvar_cl_hidewaypoints)
         return; // fixed waypoint
 
     InterpolateOrigin_Do(this);
@@ -536,10 +536,12 @@ void Draw_WaypointSprite(entity this)
     float dist = vlen(this.origin - view_origin);
     float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
-    if (this.maxdistance > waypointsprite_normdistance)
-        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
-    else if (this.maxdistance > 0)
-        a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+    if(this.maxdistance > 0)
+    {
+        // restrict maximum normal distance to the waypoint's maximum distance to prevent exploiting cvars
+        float maxnormdistance = bound(0, waypointsprite_normdistance, this.maxdistance - 1);
+        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1) ** waypointsprite_distancealphaexponent);
+    }
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')

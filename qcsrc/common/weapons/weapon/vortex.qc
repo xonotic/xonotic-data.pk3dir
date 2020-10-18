@@ -51,11 +51,11 @@ void SendCSQCVortexBeamParticle(float charge) {
 NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 {
 	float charge;
-    vector shotorg = ReadVector();
-    vector endpos = ReadVector();
+	vector shotorg = ReadVector();
+	vector endpos = ReadVector();
 	charge = ReadByte() / 255.0;
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
+	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
 
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
@@ -112,9 +112,9 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	myforcehalflife = WEP_CVAR_BOTH(vortex, !issecondary, damagefalloff_forcehalflife);
 	myammo = WEP_CVAR_BOTH(vortex, !issecondary, ammo);
 
-    float dtype = thiswep.m_id;
-    if(WEP_CVAR_BOTH(vortex, !issecondary, armorpierce))
-        dtype |= HITTYPE_ARMORPIERCE;
+	float dtype = thiswep.m_id;
+	if(WEP_CVAR_BOTH(vortex, !issecondary, armorpierce))
+		dtype |= HITTYPE_ARMORPIERCE;
 
 	float flying;
 	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
@@ -139,7 +139,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, false, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -151,13 +151,21 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	actor.vortex_lasthit = damage_goodhits;
 
-	//beam and muzzle flash done on client
+	//beam done on client
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
 	SendCSQCVortexBeamParticle(charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
 }
 
 .float vortex_chargepool_pauseregen_finished;
+
+void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
+{
+    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
+        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt / W_TICSPERFRAME);
+}
 
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -171,8 +179,8 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
-        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
+    if(!WEP_CVAR(vortex, charge_always))
+        W_Vortex_Charge(actor, weaponentity, frametime);
 
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)
@@ -224,7 +232,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                         if(fire & 2) // only eat ammo when the button is pressed
                         {
                             dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
-                            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+                            if(!(actor.items & IT_UNLIMITED_AMMO))
                             {
                                 // if this weapon is reloadable, decrease its load. Else decrease the player's ammo
                                 if(autocvar_g_balance_vortex_reload_ammo)

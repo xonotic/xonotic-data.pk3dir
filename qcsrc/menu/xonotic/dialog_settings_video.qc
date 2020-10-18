@@ -62,7 +62,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate")));
 
 	me.TR(me);
-		if(cvar("developer"))
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "v_flipped", _("Flip view horizontally"),
 				_("Poor man's left handed mode")));
@@ -102,6 +102,8 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+	if(cvar_type("gl_vbo") & CVAR_TYPEFLAG_ENGINE)
+	{
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -114,6 +116,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "1", _("Vertices and Triangles"),
 			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
+	}
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));
@@ -125,16 +128,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Brightness of white")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "v_gamma",
 			_("Inverse gamma correction value, a brightness effect that does not affect white or black")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Contrast boost:")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1.0, 5.0, 0.1, "v_contrastboost",
 			_("By how much to multiply the contrast in dark areas")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
 			setDependent(e, "vid_gl20", 1, 1);
@@ -155,14 +158,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "gl_finish", _("Wait for GPU to finish each frame"),
 			_("Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines")));
 	me.TR(me);
+	if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+	{
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 			e.applyButton = videoApplyButton;
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "v_glslgamma", _("Use GLSL to handle color control"),
-			_("Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot")));
-			setDependent(e, "vid_gl20", 1, 1);
-	if(cvar("developer"))
+	}
+	if(cvar("developer") > 0)
 	{
 		me.TR(me);
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
