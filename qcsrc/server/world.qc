@@ -964,7 +964,7 @@ spawnfunc(worldspawn)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		string s = "csprogs-" WATERMARK ".txt";
+		string s = "csprogs-" WATERMARK ".dat";
 		// remove automatically managed files from the list to prevent duplicates
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
