@@ -690,12 +690,7 @@ spawnfunc(target_position)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
-	this.classname = "jumppad";
-	int mytm = ReadByte();
-	if(mytm)
-	{
-		this.team = mytm - 1;
-	}
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();
@@ -719,7 +714,6 @@ void target_push_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
-	this.classname = "push_target";
 	this.cnt = ReadByte();
 	this.targetname = strzone(ReadString());
 	this.origin = ReadVector();

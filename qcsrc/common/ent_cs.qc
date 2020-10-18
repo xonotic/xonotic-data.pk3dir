@@ -274,7 +274,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		{
 			if (!this)
 				// initial = temp
-				e = new_pure(entcs_receiver);
+				e = new_pure(ENT_CLIENT_ENTCS);
 			else
 				// initial = linked
 				e = this;
@@ -310,7 +310,6 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		if (isnew)
 		{
 			make_pure(this);
-			this.classname = "entcs_receiver";
 			this.entremove = Ent_RemoveEntCS;
 		}
 		return ReadEntcs(this);

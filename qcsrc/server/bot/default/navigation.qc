@@ -222,7 +222,7 @@ bool navigation_check_submerged_state(entity ent, vector pos)
 
 bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector end, vector end2, int movemode)
 {
-	IL_EACH(g_ladders, it.classname == "func_ladder",
+	IL_EACH(g_ladders, true,
 	{
 		if(it.bot_pickup)
 		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
