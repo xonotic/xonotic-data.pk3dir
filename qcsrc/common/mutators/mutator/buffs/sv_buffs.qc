@@ -44,7 +44,7 @@ bool buffs_BuffModel_Customize(entity this, entity client)
 
 void buffs_BuffModel_Spawn(entity player)
 {
-	player.buff_model = spawn();
+	player.buff_model = new(buff_model);
 	setmodel(player.buff_model, MDL_BUFF);
 	setsize(player.buff_model, '0 0 -40', '0 0 40');
 	setattachment(player.buff_model, player, "");
@@ -504,7 +504,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		entity dmgent = spawn();
+		entity dmgent = new(dmgent);
 
 		dmgent.dmg = frag_damage * autocvar_g_buffs_vengeance_damage_multiplier;
 		dmgent.enemy = frag_attacker;

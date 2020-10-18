@@ -217,7 +217,7 @@ void Monster_Delay_Action(entity this)
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
 {
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
-	entity e = spawn();
+	entity e = new(Monster_Delay);
 
 	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;

@@ -294,7 +294,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
 		if(!pseudoprojectile)
-			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+			pseudoprojectile = new(pseudoprojectile); // we need this so the sound uses the "entchannel4" volume
 
 		msg_entity = it;
 		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation

@@ -202,7 +202,6 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 	InterpolateOrigin_Undo(this);
 
 	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
-	this.classname = "radarlink";
 	if (isnew) IL_PUSH(g_radarlinks, this);
 
 	if(sendflags & 1)
