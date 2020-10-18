@@ -8,27 +8,22 @@ bool DoesQ3ARemoveThisEntity(entity this);
 
 .int fragsfilter_cnt;
 
-// The ammo spawnfunc knows which weapon will use the ammo so it can look up the type
-// and calculate the amount required for the number of shots in the count field.
-#define _SPAWNFUNC_Q3AMMO(ammo_classname, xonwep) \
-	if(this.count && xonwep.ammo_type) \
-		SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionPrimary(xonwep.netname)); \
-	spawnfunc_body(GetAmmoItem(xonwep.ammo_type));
-
+/* We tell the ammo spawnfunc which weapon will use the ammo so it can
+ * calculate the amount required for the number of shots in the count field,
+ * and so the type can be looked up rather than specified in quake3.qc
+ */
 // Ammo only, unconditional
 #define SPAWNFUNC_Q3AMMO(ammo_classname, xonwep) \
 	spawnfunc(ammo_classname) \
 	{ \
-		_SPAWNFUNC_Q3AMMO(ammo_classname, xonwep) \
+		if(this.count && xonwep.ammo_type) \
+			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionPrimary(xonwep.netname)); \
+	SPAWNFUNC_BODY(GetAmmoItem(xonwep.ammo_type)) \
 	}
 
 // Ammo only, conditional
 #define SPAWNFUNC_Q3AMMO_COND(ammo_classname, cond, xonwep1, xonwep0) \
-	spawnfunc(ammo_classname) \
-	{ \
-		entity xonwep = (cond) ? xonwep1 : xonwep0; \
-		_SPAWNFUNC_Q3AMMO(ammo_classname, xonwep) \
-	}
+	SPAWNFUNC_Q3AMMO(ammo_classname, (cond ? xonwep1 : xonwep0))
 
 // Weapon & ammo, unconditional
 #define SPAWNFUNC_Q3(weapon_classname, ammo_classname, xonwep) \
