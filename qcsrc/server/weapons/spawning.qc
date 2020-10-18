@@ -111,8 +111,8 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
 	{
 		int ammo = 0;
-		if (this.count > 0)
-			ammo = this.count * GetAmmoConsumptionPrimary(wpn.netname);
+		if (q3compat && this.count > 0)
+			ammo = this.count * GetAmmoConsumptionQ3(wpn.netname);
 			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 		else
 		{

@@ -229,10 +229,6 @@ string GetAmmoName(int ammotype);
 
 entity GetAmmoItem(int ammotype);
 
-#ifdef SVQC
-int GetAmmoConsumptionPrimary(string netname);
-#endif
-
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i);
 int GetAmmoStat(int ammotype);

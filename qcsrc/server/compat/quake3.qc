@@ -333,3 +333,19 @@ bool DoesQ3ARemoveThisEntity(entity this)
 
 	return false;
 }
+
+int GetAmmoConsumptionQ3(string netname)
+// Returns ammo consumed per shot by the primary/default fire mode
+// Returns 0 if the netname has no ammo cvar
+{
+	switch (netname)
+	{
+		case "arc":	   return autocvar_g_balance_arc_beam_ammo;
+		case "devastator": return autocvar_g_balance_devastator_ammo;
+		case "machinegun": return autocvar_g_balance_machinegun_sustained_ammo;
+		case "minelayer":  return autocvar_g_balance_minelayer_ammo;
+		case "seeker":	   return autocvar_g_balance_seeker_tag_ammo;
+		default:	   return cvar(strcat("g_balance_", netname, "_primary_ammo"));
+	}
+}
+

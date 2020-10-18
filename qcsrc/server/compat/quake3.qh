@@ -5,6 +5,7 @@ int q3compat = 0;
 #define Q3COMPAT_DEFI BIT(1)
 
 bool DoesQ3ARemoveThisEntity(entity this);
+int GetAmmoConsumptionQ3(string netname);
 
 .int fragsfilter_cnt;
 
@@ -17,7 +18,7 @@ bool DoesQ3ARemoveThisEntity(entity this);
 	spawnfunc(ammo_classname) \
 	{ \
 		if(this.count && xonwep.ammo_type) \
-			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionPrimary(xonwep.netname)); \
+			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionQ3(xonwep.netname)); \
 	SPAWNFUNC_BODY(GetAmmoItem(xonwep.ammo_type)) \
 	}
 
