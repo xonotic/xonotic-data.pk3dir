@@ -167,8 +167,8 @@ void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
-	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
-	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	PlayerScore_Sort(score_dummyfield, 0, false, false);
+	PlayerScore_Sort(scoreboard_pos, 1, true, true);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
 	FOREACH_CLIENT(true, {
