@@ -675,6 +675,8 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 				tracebox(this.origin + '0 0 1', this.mins, this.maxs, this.origin - '0 0 4', MOVE_NORMAL, this);
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
+				// predicted clients handle smoothing in the prediction code
+				this.origin = CSQCModel_ApplyStairSmoothing(this, onground, this.origin);
 			}
 			animdecide_load_if_needed(this);
 			animdecide_setimplicitstate(this, onground);
