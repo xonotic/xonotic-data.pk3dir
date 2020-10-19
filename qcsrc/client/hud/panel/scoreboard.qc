@@ -1326,10 +1326,10 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 		if (!q) ++disownedcnt;
 	});
 
-	int n = Items_COUNT - disownedcnt;
+	int n = REGISTRY_COUNT(Items) - disownedcnt;
 	if (n <= 0) return pos;
 
-	int rows = (autocvar_hud_panel_scoreboard_accuracy_doublerows && n >= floor(Items_COUNT / 2)) ? 2 : 1;
+	int rows = (autocvar_hud_panel_scoreboard_accuracy_doublerows && n >= floor(REGISTRY_COUNT(Items) / 2)) ? 2 : 1;
 	int columnns = ceil(n / rows);
 
 	float height = 40;
