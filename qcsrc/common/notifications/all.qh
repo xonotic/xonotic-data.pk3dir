@@ -767,8 +767,8 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	return it;
 }
 
-#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position) \
-	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, defaultvalue, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position, queuetime) \
+	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, defaultvalue, sound, channel, volume, position, queuetime)
 
 #define MSG_ANNCE_NOTIF(name, defaultvalue, sound, channel, volume, position, queuetime) \
 	NOTIF_ADD_AUTOCVAR(ANNCE_##name, defaultvalue) \

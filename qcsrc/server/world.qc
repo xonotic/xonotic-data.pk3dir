@@ -1619,6 +1619,11 @@ void NextLevel()
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_Null); // kill all centerprints now
+	
+	// send winner notification
+	if(teamplay) {
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_WINS));
+	}
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1760,7 +1765,6 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
@@ -1793,7 +1797,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	{
-		float fragsleft;
 		if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
 		{
 			fragsleft = 1;

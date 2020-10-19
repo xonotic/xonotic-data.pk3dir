@@ -16,6 +16,9 @@ string modname;
 
 string gamemode_name;
 
+int fragsleft;
+int fragsleft_last;
+
 string clientstuff;
 
 string matchid;

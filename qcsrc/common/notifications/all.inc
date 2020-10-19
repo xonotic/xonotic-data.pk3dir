@@ -94,12 +94,12 @@
 #define N__ALWAYS 2
 #define ANNCE_DEFTIME 2
 
-#define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position) \
+#define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position, queuetime) \
     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, defaultvalue) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position, queuetime) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position, queuetime) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position, queuetime) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position, queuetime)
 
 // MSG_ANNCE_NOTIFICATIONS
     MSG_ANNCE_NOTIF(ACHIEVEMENT_AIRSHOT,        N_GNTLOFF, "airshot",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
@@ -221,14 +221,9 @@
 	MSG_ANNCE_NOTIF(LEAD_LOST,                  N__ALWAYS, "leadlost",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 	MSG_ANNCE_NOTIF(LEAD_TIED,                  N__ALWAYS, "leadtied",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 	
-	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_RED,         N__ALWAYS, "round_win_red",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_BLUE,        N__ALWAYS, "round_win_blue",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_YELLOW,      N__ALWAYS, "round_win_yellow",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_PINK,        N__ALWAYS, "round_win_pink",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_RED,      N__ALWAYS, "scores_red",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_BLUE,     N__ALWAYS, "scores_blue",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_YELLOW,   N__ALWAYS, "scores_yellow",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
-	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_PINK,     N__ALWAYS, "scores_pink",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+	MULTITEAM_ANNCE(ROUND_TEAM_WIN, 			N__ALWAYS, "round_win_%s", 		CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+	MULTITEAM_ANNCE(ROUND_TEAM_SCORES, 			N__ALWAYS, "scores_%s",			CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+	MULTITEAM_ANNCE(WINS,			 			N__ALWAYS, "wins_%s", 			CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 	MSG_ANNCE_NOTIF(ROUND_OVER,                 N__ALWAYS, "round_over",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 	MSG_ANNCE_NOTIF(ROUND_TIED,                 N__ALWAYS, "round_tied",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 	MSG_ANNCE_NOTIF(ALONE,                      N__ALWAYS, "alone",             CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
