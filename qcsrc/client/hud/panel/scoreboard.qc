@@ -1151,7 +1151,7 @@ bool Scoreboard_WouldDraw()
 	{
 		return true;
 	}
-	else if (scoreboard_showscores_force)
+	else if (scoreboard_showscores_force || MUTATOR_CALLHOOK(DrawScoreboard_Force))
 		return true;
 	return false;
 }
