@@ -233,7 +233,7 @@ void Item_RespawnCountdown(entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		this.item_respawncounter = floor((time - timeout_total_time) - (this.scheduledrespawntime - ITEM_RESPAWN_TICKS)) + 1;
+		this.item_respawncounter = floor((time - game_starttime) - (this.scheduledrespawntime - ITEM_RESPAWN_TICKS)) + 1;
 		//this.item_respawncounter += 1;
 		//LOG_INFOF("Respawncounter: %d", this.item_respawncounter);
 		if(this.item_respawncounter < 1) return;
@@ -290,10 +290,10 @@ void Item_RespawnThink(entity this)
 	if(this.origin != this.oldorigin)
 		ItemUpdate(this);
 	
-	if(!game_timeout && time - timeout_total_time >= this.wait)
+	if(!game_timeout && time - game_starttime >= this.wait)
 		Item_Respawn(this);
 	
-	//LOG_INFOF("time until respawn %d", (this.wait) - (time - timeout_total_time));
+	//LOG_INFOF("time until respawn %d", (this.wait) - (time - game_starttime));
 }
 
 void Item_ScheduleRespawnIn(entity e, float t)
@@ -305,7 +305,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		//e.nextthink = time - timeout_total_time + max(0, t - ITEM_RESPAWN_TICKS);
 		//e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.nextthink = time;
-		e.scheduledrespawntime = time - timeout_total_time + t;
+		e.scheduledrespawntime = time - game_starttime + t;
 		e.item_respawncounter = 0;
 		
 		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
@@ -319,8 +319,8 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	{
 		setthink(e, Item_RespawnThink);
 		e.nextthink = time;
-		e.scheduledrespawntime = time - timeout_total_time + t;
-		e.wait = time - timeout_total_time + t;
+		e.scheduledrespawntime = time - game_starttime + t;
+		e.wait = time - game_starttime + t;
 
 		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
@@ -492,6 +492,15 @@ bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 	return true;
 }
 
+void Item_NotifyWeapon(entity player, int wep)
+{
+	if(IS_REAL_CLIENT(player)) {
+		msg_entity = player;
+		WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
+		WriteByte(MSG_ONE, wep);
+	}
+}
+
 bool Item_GiveTo(entity item, entity player)
 {
 	// if nothing happens to player, just return without taking the item
@@ -526,23 +535,31 @@ bool Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
-		WepSet w;
+		WepSet w, wp;
 		w = STAT(WEAPONS, item);
-		w &= ~STAT(WEAPONS, player);
+		wp = w & ~STAT(WEAPONS, player);
 
 		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
 			FOREACH(Weapons, it != WEP_Null, {
-				if(w & (it.m_wepset))
+				Weapon wep = it;
+				
+				if(w & (wep.m_wepset)) {
+					// z411 Seriously find a better way to do this
+					Item_NotifyWeapon(player, wep.m_id);
+					FOREACH_CLIENT(IS_SPEC(it) && it.enemy == player, { Item_NotifyWeapon(it, wep.m_id); });
+				}
+				
+				if(wp & (wep.m_wepset))
 				{
 					for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 					{
 						.entity weaponentity = weaponentities[slot];
 						if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
-							W_DropEvent(wr_pickup, player, it.m_id, item, weaponentity);
+							W_DropEvent(wr_pickup, player, wep.m_id, item, weaponentity);
 					}
-					W_GiveWeapon(player, it.m_id);
+					W_GiveWeapon(player, wep.m_id);
 				}
 			});
 		}

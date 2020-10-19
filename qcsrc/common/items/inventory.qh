@@ -14,6 +14,7 @@ ENDCLASS(Inventory)
 .Inventory inventory;
 
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
+REGISTER_NET_TEMP(TE_CSQC_WEAPONPICKUP)
 
 const int Inventory_groups_minor = 8; // must be a multiple of 8 (one byte) to optimize bandwidth usage
 const int Inventory_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(Items) / Inventory_groups_minor)
@@ -37,15 +38,21 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
+#include <client/miscfunctions.qh>
+#include <client/hud/hud.qh>
+
 //Inventory g_inventory;
 Inventory inventoryslots[255];
+float last_pickup_timer;
+entity last_pickup_item;
+int last_pickup_times;
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     //g_inventory = this;
 	
-	float entnum = ReadByte();
-	inventoryslots[entnum-1] = this;
+	float entnum = ReadByte() - 1;
+	inventoryslots[entnum] = this;
 	
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
@@ -61,10 +68,30 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             .int fld = inv_items[it.m_id];
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
+			
+			if(entnum == current_player) {
+				if(last_pickup_item != it) last_pickup_times = 0;
+				last_pickup_timer = timer;
+				last_pickup_item = it;
+				last_pickup_times++;
+			}
+			
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
     return true;
+}
+
+NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
+{
+	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
+	
+	if(last_pickup_item != it) last_pickup_times = 0;
+	last_pickup_timer = timer;
+	last_pickup_item = it;
+	last_pickup_times++;
+	
+	return true;
 }
 #endif
 

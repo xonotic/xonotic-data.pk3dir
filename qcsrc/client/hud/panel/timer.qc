@@ -37,7 +37,6 @@ void HUD_Timer()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	string timer;
 	string timer_sub = "";
 	bool game_timeout;
 	float timelimit, timeleft, minutesLeft, overtimes, timeout_last;
@@ -72,35 +71,35 @@ void HUD_Timer()
 		timer_color = '1 0 0'; //red
 
 	if (intermission_time) {
-		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
+		timer = max(0, floor(intermission_time - STAT(GAMESTARTTIME)));
 		timer_sub = "Intermission";
 	//} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
 	} else if (game_timeout) {
 		if(autocvar_hud_panel_timer_increment)
-			timer = seconds_tostring(max(0, floor(timeout_last - STAT(GAMESTARTTIME))));
+			timer = max(0, floor(timeout_last - STAT(GAMESTARTTIME)));
 		else
-			timer = seconds_tostring(ceil(max(0, timelimit * 60 + STAT(GAMESTARTTIME) - timeout_last)));
+			timer = ceil(max(0, timelimit * 60 + STAT(GAMESTARTTIME) - timeout_last));
 		timer_sub = "Timeout";
 	} else if (autocvar_hud_panel_timer_increment || timelimit == 0) {
 		// Time elapsed timer
 		if((warmup_stage && warmup_timeleft <= 0) || time < STAT(GAMESTARTTIME))
-			timer = seconds_tostring(0);
+			timer = 0;
 		else
-			timer = seconds_tostring(floor(time - STAT(GAMESTARTTIME)));
+			timer = floor(time - STAT(GAMESTARTTIME));
 	} else {
 		// Time left timer
 		if(warmup_stage) {
 			if(warmup_timeleft <= 0)
-				timer = seconds_tostring(floor(timelimit * 60));
+				timer = floor(timelimit * 60);
 			else
-				timer = seconds_tostring(warmup_timeleft);
+				timer = warmup_timeleft;
 		} else {
 			if (time < STAT(GAMESTARTTIME))
-				timer = seconds_tostring(floor(timelimit * 60));
+				timer = floor(timelimit * 60);
 			//else if (overtimes > 0)
-			//	timer = seconds_tostring(floor(time - STAT(OVERTIMESTARTTIME)));
+			//	timer = floor(time - STAT(OVERTIMESTARTTIME));
 			else
-				timer = seconds_tostring(timeleft);
+				timer = timeleft;
 		}
 	}
 	
@@ -111,7 +110,7 @@ void HUD_Timer()
 	else if (overtimes > 1)
 		timer_sub = sprintf("Overtime #%d", overtimes);
 	
-	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, seconds_tostring(timer), mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	if(timer_sub != "") {
 		pos.y += mySize.y;
