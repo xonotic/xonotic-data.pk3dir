@@ -1,6 +1,10 @@
 #include "sv_keyhunt.qh"
 
+#include <server/command/vote.qh>
 #include <server/gamelog.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <common/mapobjects/triggers.qh>
 
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
@@ -713,12 +717,10 @@ void key_reset(entity this)
 	kh_Key_Remove(this);
 }
 
-const string STR_ITEM_KH_KEY = "item_kh_key";
 void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
-	entity key = spawn();
+	entity key = new(item_kh_key);
 	key.count = i;
-	key.classname = STR_ITEM_KH_KEY;
 	settouch(key, kh_Key_Touch);
 	setthink(key, kh_Key_Think);
 	key.nextthink = time;
@@ -979,7 +981,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_teams = BITS(bound(2, kh_teams, 4));
 
 	// make a KH entity for controlling the game
-	kh_controller = spawn();
+	kh_controller = new(kh_controller);
 	setthink(kh_controller, kh_Controller_Think);
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 

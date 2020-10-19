@@ -31,9 +31,7 @@ float plat_send(entity this, entity to, float sf)
 
 		WriteVector(MSG_ENTITY, this.size);
 
-		WriteAngle(MSG_ENTITY, this.mangle_x);
-		WriteAngle(MSG_ENTITY, this.mangle_y);
-		WriteAngle(MSG_ENTITY, this.mangle_z);
+		WriteAngleVector(MSG_ENTITY, this.mangle);
 
 		WriteShort(MSG_ENTITY, this.speed);
 		WriteShort(MSG_ENTITY, this.height);
@@ -152,9 +150,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		this.size = ReadVector();
 
-		this.mangle_x = ReadAngle();
-		this.mangle_y = ReadAngle();
-		this.mangle_z = ReadAngle();
+		this.mangle = ReadAngleVector();
 
 		this.speed = ReadShort();
 		this.height = ReadShort();

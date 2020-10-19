@@ -1,9 +1,10 @@
 #include "campaign_file.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include "campaign_common.qh"
+	#include <common/util.qh>
+	#include <common/campaign_common.qh>
 #endif
 
 // CampaignFileLoad(offset, n)

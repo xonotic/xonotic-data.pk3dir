@@ -136,4 +136,4 @@ string GetTeamScoreString(float tm, float shortString);
  * strict: return a strict ordering
  * nospectators: exclude spectators
  */
-entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators);
+entity PlayerScore_Sort(.float field, int teams, bool strict, bool nospectators);

@@ -1,9 +1,5 @@
 #include "nmm.qh"
 
-#ifdef CSQC
-#include <client/miscfunctions.qh>
-#endif
-
 REGISTER_MINIGAME(nmm, _("Nine Men's Morris"));
 
 const int NMM_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -227,10 +223,10 @@ int nmm_server_event(entity minigame, string event, ...)
 		entity e;
 		for ( int i = 0; i < 7; i++ )
 		{
-			e = msle_spawn(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 1;
 			e.minigame_flags = NMM_PIECE_HOME;
-			e = msle_spawn(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 2;
 			e.minigame_flags = NMM_PIECE_HOME;
 		}

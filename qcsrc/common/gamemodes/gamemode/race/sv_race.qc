@@ -1,7 +1,12 @@
 #include "sv_race.qh"
 
+#include <server/client.qh>
+#include <server/world.qh>
 #include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/race.qh>
+#include <common/ent_cs.qh>
+#include <common/mapobjects/triggers.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;
@@ -203,7 +208,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	Score_NicePrint(NULL);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place, 0, 1, 0);
+	PlayerScore_Sort(race_place, 0, true, false);
 
 	FOREACH_CLIENT(true, {
 		if(it.race_place)
@@ -445,6 +450,7 @@ void race_Initialize()
 	race_ScoreRules();
 	if(g_race_qualifying == 2)
 		warmup_stage = 0;
+	radar_showenemies = true;
 }
 
 void rc_SetLimits()

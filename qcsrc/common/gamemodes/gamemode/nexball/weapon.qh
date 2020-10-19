@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/weapons/_all.qh>
+
 CLASS(BallStealer, PortoLaunch)
 /* flags     */ ATTRIB(BallStealer, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NOTRUEAIM);
 /* impulse   */ ATTRIB(BallStealer, impulse, int, 0);

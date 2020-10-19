@@ -1,23 +1,29 @@
 #include "weaponsystem.qh"
 
-#include "selection.qh"
-
-#include "../command/common.qh"
-#include <server/mutators/_mod.qh>
-#include "../round_handler.qh"
-#include <server/cheats.qh>
-#include <server/resources.qh>
-#include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
-#include <common/util.qh>
-#include <common/weapons/_all.qh>
 #include <common/state.qh>
-#include <lib/csqcmodel/sv_model.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/hook.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/selection.qh>
+#include <server/world.qh>
 
 .int state;
 
@@ -26,8 +32,8 @@
 float W_WeaponRateFactor(entity this)
 {
 	float t = 1;
-	if(g_weaponratefactor > 0)
-		t = 1.0 / g_weaponratefactor;
+	if(autocvar_g_weaponratefactor > 0)
+		t = 1.0 / autocvar_g_weaponratefactor;
 
 	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
 	t = M_ARGV(0, float);
@@ -37,7 +43,7 @@ float W_WeaponRateFactor(entity this)
 
 float W_WeaponSpeedFactor(entity this)
 {
-	float t = 1.0 * g_weaponspeedfactor;
+	float t = 1.0 * autocvar_g_weaponspeedfactor;
 
 	MUTATOR_CALLHOOK(WeaponSpeedFactor, t, this);
 	t = M_ARGV(0, float);
@@ -404,7 +410,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, fr, g_weaponratefactor, restartanim);
+				wframe_send(it, this, fr, autocvar_g_weaponratefactor, restartanim);
 		});
 	}
 

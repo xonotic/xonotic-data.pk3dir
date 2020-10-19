@@ -1,16 +1,14 @@
 #include "shownames.qh"
 
-#include "autocvars.qh"
-#include "miscfunctions.qh"
-#include "resources.qh"
-#include "hud/_mod.qh"
-
-#include <common/ent_cs.qh>
+#include <client/autocvars.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/resources.qh>
+#include <client/view.qh>
 #include <common/constants.qh>
+#include <common/ent_cs.qh>
 #include <common/net_linked.qh>
-#include <common/mapinfo.qh>
 #include <common/teams.qh>
-
 #include <lib/csqcmodel/cl_model.qh>
 
 // this.isactive = player is in range and coordinates/status (health and armor) are up to date
@@ -126,7 +124,8 @@ void Draw_ShowNames(entity this)
 		if (f < 0) f = 0;
 		a *= f;
 	}
-	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
+	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
+	a = M_ARGV(1, float);
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)
@@ -155,7 +154,7 @@ void Draw_ShowNames(entity this)
 		myPos.y += (mySize.y / resize - mySize.y);
 		// this is where the origin of the string
 		float namewidth = mySize.x;
-		if (autocvar_hud_shownames_status && this.sameteam)
+		if (autocvar_hud_shownames_status && this.sameteam && !this.csqcmodel_isdead)
 		{
 			vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
@@ -176,7 +175,7 @@ void Draw_ShowNames(entity this)
 		}
 		string s = entcs_GetName(this.sv_entnum - 1);
 		if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
-			s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
+			s = playername(s, entcs_GetTeam(this.sv_entnum - 1), true);
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);

@@ -3,6 +3,8 @@
 #include <common/mutators/mutator/instagib/items.qh>
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
 
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
@@ -353,6 +355,7 @@ void lms_extralife(entity this)
 
 MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 {
+	if (MUTATOR_RETURNVALUE) return false;
 	if (!autocvar_g_powerups) return false;
 	if (!autocvar_g_lms_extra_lives) return false;
 
@@ -374,6 +377,8 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 {
+	if(MUTATOR_RETURNVALUE) return false;
+
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 

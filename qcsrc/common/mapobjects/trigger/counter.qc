@@ -1,9 +1,11 @@
 #include "counter.qh"
-#ifdef SVQC
-void counter_reset(entity this);
 
+#ifdef SVQC
 void counter_use(entity this, entity actor, entity trigger)
 {
+	if(this.active != ACTIVE_ACTIVE)
+		return;
+
 	entity store = this;
 	if(this.spawnflags & COUNTER_PER_PLAYER)
 	{
@@ -66,6 +68,7 @@ void counter_reset(entity this)
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.counter_cnt = 0;
+	this.active = ACTIVE_ACTIVE;
 }
 
 /*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage COUNTER_FIRE_AT_COUNT
@@ -86,5 +89,6 @@ spawnfunc(trigger_counter)
 	this.counter_cnt = 0;
 	this.use = counter_use;
 	this.reset = counter_reset;
+	this.active = ACTIVE_ACTIVE;
 }
 #endif

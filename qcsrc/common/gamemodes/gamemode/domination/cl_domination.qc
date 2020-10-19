@@ -1,6 +1,12 @@
 #include "cl_domination.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+
+void HUD_Mod_Dom_Export(int fh)
+{
+	HUD_Write_Cvar("hud_panel_modicons_dom_layout");
+}
 
 int autocvar_hud_panel_modicons_dom_layout;
 

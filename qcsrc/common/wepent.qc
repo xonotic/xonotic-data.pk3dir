@@ -36,10 +36,10 @@ MACRO_END
     \
     PROP(false, porto_v_angle_held, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.porto_v_angle_held); if(this.porto_v_angle_held) { \
-		 WriteAngle(chan, this.owner.porto_v_angle.x); WriteAngle(chan, this.owner.porto_v_angle.y); \
+		 WriteAngleVector2D(chan, this.owner.porto_v_angle); \
 		} }, \
 	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
-		(viewmodels[this.m_wepent_slot]).angles_held = vec2(ReadAngle(), ReadAngle()); } \
+		(viewmodels[this.m_wepent_slot]).angles_held = ReadAngleVector2D(); } \
 		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
     \
     PROP(false, tuba_instrument, WEPENT_SET_NORMAL, \
@@ -191,8 +191,6 @@ MACRO_END
 
 	NET_HANDLE(ENT_CLIENT_WEPENT, bool isnew)
 	{
-		if (isnew)
-			this.classname = "wepent_receiver";
 		return ReadWepent(this);
 	}
 

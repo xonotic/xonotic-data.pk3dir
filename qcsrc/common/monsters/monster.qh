@@ -17,6 +17,7 @@ const int MON_FLAG_HIDDEN = BIT(16);
 
 // entity properties of monsterinfo:
 .bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
+.entity monsterdef;
 
 // animations
 .vector anim_blockend;
@@ -58,7 +59,7 @@ ENDCLASS(Monster)
 
 #ifdef SVQC
 #include "sv_monsters.qh"
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/tracing.qh>

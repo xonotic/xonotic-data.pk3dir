@@ -16,6 +16,7 @@
 #include <client/hud/panel/radar.qh>
 #include <client/hud/panel/score.qh>
 #include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/strafehud.qh>
 #include <client/hud/panel/timer.qh>
 #include <client/hud/panel/vote.qh>
 #include <client/hud/panel/weapons.qh>

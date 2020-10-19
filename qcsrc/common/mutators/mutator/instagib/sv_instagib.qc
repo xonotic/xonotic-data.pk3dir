@@ -179,7 +179,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 	entity mon = M_ARGV(0, entity);
 
 	// always refill ammo
-	if(mon.monsterid == MON_MAGE.monsterid)
+	if(mon.monsterdef == MON_MAGE)
 		mon.skin = 1;
 }
 
@@ -509,6 +509,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 {
+	if(MUTATOR_RETURNVALUE) return false;
+
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
@@ -542,6 +544,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 {
+	if (MUTATOR_RETURNVALUE) return false;
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
