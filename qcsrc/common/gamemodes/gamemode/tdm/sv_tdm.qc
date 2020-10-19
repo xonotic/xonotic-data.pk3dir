@@ -14,7 +14,6 @@ spawnfunc(tdm_team)
 {
 	if(!g_tdm || !this.cnt) { delete(this); return; }
 
-	this.classname = "tdm_team";
 	this.team = this.cnt + 1;
 }
 

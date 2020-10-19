@@ -590,7 +590,7 @@ spawnfunc(__init_dedicated_server)
 
 	delete_fn = remove_unsafely;
 
-	entity e = spawn();
+	entity e = new(GotoFirstMap);
 	setthink(e, GotoFirstMap);
 	e.nextthink = time; // this is usually 1 at this point
 
@@ -964,7 +964,7 @@ spawnfunc(worldspawn)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		string s = "csprogs-" WATERMARK ".txt";
+		string s = "csprogs-" WATERMARK ".dat";
 		// remove automatically managed files from the list to prevent duplicates
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
@@ -1828,7 +1828,7 @@ void readplayerstartcvars()
 	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
-		random_start_ammo = spawn();
+		random_start_ammo = new(random_start_ammo);
 	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");

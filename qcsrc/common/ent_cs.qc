@@ -279,7 +279,7 @@ ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NO
 		{
 			if (!this)
 				// initial = temp
-				e = new_pure(entcs_receiver);
+				e = new_pure(ENT_CLIENT_ENTCS);
 			else
 				// initial = linked
 				e = this;
@@ -315,7 +315,6 @@ ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NO
 		if (isnew)
 		{
 			make_pure(this);
-			this.classname = "entcs_receiver";
 			this.entremove = Ent_RemoveEntCS;
 		}
 		return ReadEntcs(this);

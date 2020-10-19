@@ -1201,7 +1201,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		this.move_time = time;
 		loopsound(this, CH_SHOTS_SINGLE, SND_ARC_LOOP, VOL_BASE, ATTEN_NORM);
 
-		flash = spawn();
+		flash = new(arc_flash);
 		flash.owner = this;
 		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
 		//flash.drawmask = MASK_NORMAL;

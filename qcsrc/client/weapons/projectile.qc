@@ -491,7 +491,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	if (!(this.count & 0x80))
 		InterpolateOrigin_Note(this);
 
-	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
 	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;
