@@ -253,11 +253,9 @@ string unquote(string s)
 	return "";
 }
 
-float MapInfo_Get_ByID(float i)
+bool MapInfo_Get_ByID(int i)
 {
-	if(MapInfo_Get_ByName(MapInfo_BSPName_ByID(i), 0, NULL))
-		return 1;
-	return 0;
+	return MapInfo_Get_ByName(MapInfo_BSPName_ByID(i), 0, NULL) ? true : false;
 }
 
 string _MapInfo_Map_worldspawn_music;

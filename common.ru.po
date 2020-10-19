@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-18 07:23+0200\n"
-"PO-Revision-Date: 2020-10-18 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-10-18 10:02+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -1052,23 +1052,23 @@ msgstr "Вы мертвы, нажмите ^2%s^7 для возрождения"
 
 #: qcsrc/client/hud/panel/strafehud.qc:908
 msgid "qu"
-msgstr ""
+msgstr "юнит"
 
 #: qcsrc/client/hud/panel/strafehud.qc:909
 msgid "m"
-msgstr ""
+msgstr "м"
 
 #: qcsrc/client/hud/panel/strafehud.qc:910
 msgid "km"
-msgstr ""
+msgstr "км"
 
 #: qcsrc/client/hud/panel/strafehud.qc:911
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:912
 msgid "nmi"
-msgstr ""
+msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:72
 msgid "WARMUP"
@@ -6273,90 +6273,90 @@ msgstr "Таблица Очков"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
-msgstr ""
+msgstr "Режим HUD'a распрыжки:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "View angle centered"
-msgstr ""
+msgstr "Угол обзора по центру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Velocity angle centered"
-msgstr ""
+msgstr "Угол скорости по центру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr ""
+msgstr "Стиль HUD'a распрыжки:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
-msgstr ""
+msgstr "без стиля"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "progress bar"
-msgstr ""
+msgstr "полоса прогресса"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
-msgstr ""
+msgstr "градиент"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
 msgid "Demo mode"
-msgstr ""
+msgstr "Режим демо"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
 msgid "Range:"
-msgstr ""
+msgstr "Диапазон:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
 msgid "Center panel"
-msgstr ""
+msgstr "Центральная панель"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "Сбросить цвета"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
-msgstr ""
+msgstr "Полоса стрейфа:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
 msgid "Angle indicator:"
-msgstr ""
+msgstr "Угловой индикатор:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:85
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:93
 msgid "Neutral:"
-msgstr ""
+msgstr "Нейтрально:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:87
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:95
 msgid "Good:"
-msgstr ""
+msgstr "Хорошо:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:89
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:97
 msgid "Overturn:"
-msgstr ""
+msgstr "Переповорот:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "Switch indicators:"
-msgstr ""
+msgstr "Индикаторы переключения:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Direction caps:"
-msgstr ""
+msgstr "Колпачки направлений:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Active:"
-msgstr ""
+msgstr "Активный:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:134
 msgid "Inactive:"
-msgstr ""
+msgstr "Неактивный:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr ""
+msgstr "Панель HUD'a распрыжки"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
