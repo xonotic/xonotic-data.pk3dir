@@ -2260,12 +2260,13 @@ bool PlayerThink(entity this)
 		return false;
 	}
 
-	if (timeout_status == TIMEOUT_ACTIVE) {
+	if (game_timeout) {
         // don't allow the player to turn around while game is paused
 		// FIXME turn this into CSQC stuff
 		this.v_angle = this.lastV_angle;
 		this.angles = this.lastV_angle;
 		this.fixangle = true;
+		return false;
 	}
 
 	if (frametime) player_powerups(this);

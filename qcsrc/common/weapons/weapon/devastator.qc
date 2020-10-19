@@ -207,6 +207,7 @@ void W_Devastator_Think(entity this)
 	vector desireddir, olddir, newdir, desiredorigin, goal;
 	float velspeed, f;
 	this.nextthink = time;
+	if(game_timeout) { set_movetype(this, MOVETYPE_NONE); this.disableclientprediction = 2; return; } else { set_movetype(this, MOVETYPE_FLY); this.disableclientprediction = 0; }
 	if(time > this.cnt)
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
