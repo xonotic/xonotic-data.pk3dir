@@ -1,6 +1,7 @@
 #include "sv_nix.qh"
 
 #include <server/weapons/selection.qh>
+#include <server/world.qh>
 
 //string autocvar_g_nix;
 int autocvar_g_balance_nix_ammo_cells;

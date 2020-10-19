@@ -1,10 +1,9 @@
 #include "announcer.qh"
 
+#include <client/hud/panel/centerprint.qh>
 #include <client/mutators/_mod.qh>
-
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
-#include "hud/panel/centerprint.qh"
 
 bool announcer_1min;
 bool announcer_5min;

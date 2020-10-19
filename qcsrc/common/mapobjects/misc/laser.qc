@@ -1,7 +1,6 @@
 #include "laser.qh"
 #if defined(CSQC)
 	#include <lib/csqcmodel/interpolate.qh>
-	#include <client/main.qh>
 	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)

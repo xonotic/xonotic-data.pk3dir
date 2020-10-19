@@ -124,7 +124,7 @@ void ps_setup_pieces(entity minigame)
 			continue;
 		if(i == floor(PS_NUM_CNT * 0.5) && t == floor(PS_LET_CNT * 0.5))
 			continue; // middle piece is empty
-		entity piece = msle_spawn(minigame,"minigame_board_piece");
+		entity piece = msle_spawn(minigame,new(minigame_board_piece));
 		piece.team = 1; // init default team?
 		piece.netname = strzone(minigame_tile_buildname(t,i));
 		minigame_server_sendflags(piece,MINIG_SF_ALL);

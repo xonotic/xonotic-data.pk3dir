@@ -1,6 +1,7 @@
 #include "expandnode.qh"
-#include "pathlib.qh"
-#include "utility.qh"
+
+#include <server/pathlib/pathlib.qh>
+#include <server/pathlib/utility.qh>
 
 /*
 vector plib_points2[8];

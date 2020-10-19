@@ -1,33 +1,6 @@
 #pragma once
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include <common/weapons/_all.qh>
-    #include <common/stats.qh>
-    #include <server/items/items.qh>
-    #include <server/miscfunctions.qh>
-    #include <lib/warpzone/common.qh>
-    #include <common/constants.qh>
-    #include <common/teams.qh>
-    #include <common/util.qh>
-    #include <common/weapons/_all.qh>
-    #include "weapons/accuracy.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "weapons/selection.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include <common/notifications/all.qh>
-    #include <common/deathtypes/all.qh>
-    #include <server/mutators/_mod.qh>
-    #include <common/turrets/sv_turrets.qh>
-    #include <common/vehicles/all.qh>
-    #include <lib/csqcmodel/sv_model.qh>
-    #include <common/playerstats.qh>
-    #include "hook.qh"
-    #include "scores.qh"
-    #include "spawnpoints.qh"
-#endif
+#include <common/weapons/_all.qh>
 
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 

@@ -831,7 +831,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
     if(!instance.gun1)
     {
         // for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-        instance.vehicle_shieldent = spawn();
+        instance.vehicle_shieldent = new(vehicle_shieldent);
         instance.vehicle_shieldent.effects = EF_LOWPRECISION;
         setmodel(instance.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
         setattachment(instance.vehicle_shieldent, instance, "");
@@ -885,7 +885,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         // Raygun beam
         if(instance.gun3.enemy == NULL)
         {
-            instance.gun3.enemy = spawn();
+            instance.gun3.enemy = new(bumble_raygun);
             Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);
             instance.gun3.enemy.SendFlags = BRG_SETUP;
             instance.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;

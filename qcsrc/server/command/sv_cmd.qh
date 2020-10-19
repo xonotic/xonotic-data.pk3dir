@@ -7,8 +7,6 @@
 bool shuffleteams_on_reset_map;
 void shuffleteams();
 
-string GotoMap(string m);
-
 void race_deleteTime(string map, float pos);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file

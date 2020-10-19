@@ -83,7 +83,7 @@ void ttt_move(entity minigame, entity player, string pos )
 		if ( ttt_valid_tile(pos) )
 		if ( !ttt_find_piece(minigame,pos) )
 		{
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.team = player.team;
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);

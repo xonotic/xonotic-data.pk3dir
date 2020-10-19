@@ -28,7 +28,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 			FOREACH_CLIENT(true, LAMBDA(
 				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
 				{
-					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, g_weaponratefactor, true);
+					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, autocvar_g_weaponratefactor, true);
 				}
 			));
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);

@@ -1,11 +1,13 @@
 #include "sv_turrets.qh"
+
 #ifdef SVQC
+#include <common/mapobjects/defs.qh>
 #include <server/autocvars.qh>
 #include <server/bot/api.qh>
 #include <server/damage.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/weaponsystem.qh>
-#include <common/mapobjects/defs.qh>
+#include <server/world.qh>
 
 // Generic aiming
 vector turret_aim_generic(entity this)

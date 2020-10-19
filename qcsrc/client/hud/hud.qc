@@ -1,24 +1,24 @@
 #include "hud.qh"
 
+#include <client/draw.qh>
+#include <client/hud/hud_config.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
-#include <client/miscfunctions.qh>
+#include <client/mapvoting.qh>
+#include <client/teamradar.qh>
 #include <client/view.qh>
-#include "panel/scoreboard.qh"
-#include "hud_config.qh"
-#include "../mapvoting.qh"
-#include "../teamradar.qh"
-#include <common/minigames/cl_minigames.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
-#include <common/vehicles/all.qh>
-#include <common/vehicles/vehicle/bumblebee.qh>
+#include <common/minigames/cl_minigames.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
-#include <lib/csqcmodel/cl_player.qh>
+#include <common/vehicles/all.qh>
+#include <common/vehicles/vehicle/bumblebee.qh>
 #include <lib/csqcmodel/cl_model.qh>
-#include <common/gamemodes/_mod.qh>
+#include <lib/csqcmodel/cl_player.qh>
 
 
 /*
@@ -77,6 +77,46 @@ void LoadMenuSkinValues()
 		}
 		fclose(fh);
 	}
+}
+
+void HUD_Scale_Disable()
+{
+	hud_scale = '1 1 0';
+	hud_shift = '0 0 0';
+	drawfontscale = hud_scale;
+}
+
+void HUD_Scale_Enable()
+{
+	hud_scale = hud_scale_current;
+	hud_shift = hud_shift_current;
+	drawfontscale = hud_scale;
+}
+
+vector HUD_Scale(vector v)
+{
+	v.x = HUD_ScaleX(v.x);
+	v.y = HUD_ScaleY(v.y);
+	return v;
+}
+
+vector HUD_Shift(vector v)
+{
+	v.x = HUD_ShiftX(v.x);
+	v.y = HUD_ShiftY(v.y);
+	return v;
+}
+
+vector HUD_GetFontsize(string cvarname)
+{
+	vector v;
+	v = stov(cvar_string(cvarname));
+	if(v.x == 0)
+		v = '8 8 0';
+	if(v.y == 0)
+		v.y = v.x;
+	v.z = 0;
+	return v;
 }
 
 vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink)

@@ -1,4 +1,5 @@
 #include "subs.qh"
+
 void SUB_NullThink(entity this) { }
 
 void SUB_CalcMoveDone(entity this);

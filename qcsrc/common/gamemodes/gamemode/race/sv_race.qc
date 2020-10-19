@@ -3,6 +3,7 @@
 #include <server/client.qh>
 #include <server/world.qh>
 #include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/race.qh>
 #include <common/ent_cs.qh>
 #include <common/mapobjects/triggers.qh>
@@ -207,7 +208,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	Score_NicePrint(NULL);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place, 0, 1, 0);
+	PlayerScore_Sort(race_place, 0, true, false);
 
 	FOREACH_CLIENT(true, {
 		if(it.race_place)

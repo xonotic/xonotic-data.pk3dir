@@ -1,21 +1,17 @@
 #include "teamplay.qh"
 
-#include "client.qh"
-#include <server/gamelog.qh>
-#include <server/damage.qh>
-#include "race.qh"
-#include "scores.qh"
-#include "scores_rules.qh"
-
-#include "bot/api.qh"
-
-#include "command/vote.qh"
-
-#include <server/mutators/_mod.qh>
-
-#include "../common/deathtypes/all.qh"
+#include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
-#include "../common/teams.qh"
+#include <common/teams.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
 
 /// \brief Describes a state of team balance entity.
 enum
