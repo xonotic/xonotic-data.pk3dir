@@ -1115,8 +1115,13 @@ vector Scoreboard_Duel_DrawPickup(vector pos, bool skinned, string icon, vector 
 		tmp_in.x += tmp_sz2.x + hud_fontsize.x * 0.25;
 	else
 		tmp_in.x -= hud_fontsize.x * 0.25 + hud_fontsize.x;
+	
 	tmp_in.y += (tmp_sz2.y - hud_fontsize.y) / 2;
-	drawstring(tmp_in, ftos(number), hud_fontsize, (number ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(tmp_in,
+		((number == -1) ? "?" : ftos(number)),
+		hud_fontsize, ((number > 0) ? '1 1 1' : '0.5 0.5 0.5'),
+		panel_fg_alpha,
+		DRAWFLAG_NORMAL);
 	
 	pos.y += sz.y * 1.1;
 	return pos;
@@ -1311,12 +1316,16 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	drawstring(tmp + eX * ((column_width - stringwidth("items", false, hud_fontsize)) / 2),
 		"items", hud_fontsize, '0.5 0.5 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	tmp.y += hud_fontsize.y * 1.25;
-
+	
+	float inv_num = -1;
 	FOREACH(Items,
 		it.m_id == ITEM_ArmorMega.m_id ||
 		it.m_id == ITEM_HealthMega.m_id ||
 		it.m_id == ITEM_ArmorBig.m_id, {
-		tmp = Scoreboard_Duel_DrawPickup(tmp, true, it.m_icon, icon_sz, inventoryslots[pl.sv_entnum].inv_items[it.m_id], invert);
+		// If the match isn't over, Only show pickups if we're spectating or they're our own
+		if(intermission || warmup_stage || spectatee_status || pl.sv_entnum == current_player)
+			inv_num = inventoryslots[pl.sv_entnum].inv_items[it.m_id];
+		tmp = Scoreboard_Duel_DrawPickup(tmp, true, it.m_icon, icon_sz, inv_num, invert);
 		
 		if(it.m_id == REGISTRY_MAX(Items))
         	break;
