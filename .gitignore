@@ -1,5 +1,7 @@
 /*.dat
 /*.lno
 
+*.bak
+*.orig
 .DS_Store
 .idea/
