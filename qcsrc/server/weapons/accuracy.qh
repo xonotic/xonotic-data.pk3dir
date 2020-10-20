@@ -9,6 +9,7 @@ REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
 REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 
 .entity accuracy;
+.entity roundaccuracy;
 .float accuracy_frags[REGISTRY_MAX(Weapons)];
 
 .float accuracy_hit[REGISTRY_MAX(Weapons)];
@@ -26,6 +27,7 @@ void accuracy_resend(entity e);
 
 // update accuracy stats
 void accuracy_add(entity e, Weapon w, float fired, float hit);
+void roundaccuracy_clear(entity this);
 
 // helper
 bool accuracy_isgooddamage(entity attacker, entity targ);

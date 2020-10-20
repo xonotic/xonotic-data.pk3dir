@@ -61,6 +61,7 @@ bool accuracy_send(entity this, entity to, int sf)
 void accuracy_init(entity e)
 {
 	entity a = CS(e).accuracy = new_pure(accuracy);
+	e.roundaccuracy = new_pure(accuracy);
 	a.owner = e;
 	if(!g_duel) // z411
 		a.drawonlytoclient = e;
@@ -70,6 +71,7 @@ void accuracy_init(entity e)
 void accuracy_free(entity e)
 {
 	delete(CS(e).accuracy);
+	delete(e.roundaccuracy);
 }
 
 // force a resend of a player's accuracy stats
@@ -82,26 +84,49 @@ void accuracy_resend(entity e)
 //.float hit_time;
 .float fired_time;
 
+void roundaccuracy_clear(entity this)
+{
+	if (IS_INDEPENDENT_PLAYER(this)) return;
+	entity ra = this.roundaccuracy;
+	
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
+		ra.accuracy_frags[w] = 0;
+		ra.accuracy_hit[w] = 0;
+		ra.accuracy_fired[w] = 0;
+		ra.accuracy_cnt_hit[w] = 0;
+		ra.accuracy_cnt_fired[w] = 0;
+	}
+}
+
 void accuracy_add(entity this, Weapon w, int fired, int hit)
 {
 	if (IS_INDEPENDENT_PLAYER(this)) return;
 	entity a = CS(this).accuracy;
+	entity ra = this.roundaccuracy;
 	if (!a) return;
 	if (!hit && !fired) return;
 	if (w == WEP_Null) return;
 	int wepid = w.m_id;
 	wepid -= WEP_FIRST;
 	int b = accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid]);
-	if (hit)    a.accuracy_hit  [wepid] += hit;
-	if (fired)  a.accuracy_fired[wepid] += fired;
+	if (hit) {
+		a.accuracy_hit[wepid] += hit;
+		ra.accuracy_hit[wepid] += hit;
+	}
+	if (fired) {
+		a.accuracy_fired[wepid] += fired;
+		ra.accuracy_fired[wepid] += fired;
+	}
 
     if (hit && STAT(HIT_TIME, a) != time) { // only run this once per frame
         a.accuracy_cnt_hit[wepid] += 1;
+		ra.accuracy_cnt_hit[wepid] += 1;
         STAT(HIT_TIME, a) = time;
     }
 
     if (fired && a.fired_time != time) { // only run this once per frame
         a.accuracy_cnt_fired[wepid] += 1;
+		ra.accuracy_cnt_fired[wepid] += 1;
         a.fired_time = time;
     }
 

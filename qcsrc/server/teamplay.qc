@@ -101,6 +101,16 @@ void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
 	team_ent.m_num_players_alive = number;
 }
 
+int Team_GetNumberOfPlayers(entity team_ent)
+{
+	return team_ent.m_num_players;
+}
+
+void Team_SetNumberOfPlayers(entity team_ent, int number)
+{
+	team_ent.m_num_players = number;
+}
+
 int Team_GetNumberOfAliveTeams()
 {
 	int result = 0;

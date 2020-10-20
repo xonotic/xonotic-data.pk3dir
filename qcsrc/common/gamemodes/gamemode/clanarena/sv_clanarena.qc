@@ -9,15 +9,22 @@ void CA_count_alive_players()
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+		Team_SetNumberOfPlayers(Team_GetTeamFromIndex(i), 0);
 	}
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
+		entity team_ = Entity_GetTeam(it);
+		
+		int num_total = Team_GetNumberOfPlayers(team_);
+		++num_total;
+		Team_SetNumberOfPlayers(team_, num_total);
+		
 		if (IS_DEAD(it))
 		{
 			continue;
 		}
-		entity team_ = Entity_GetTeam(it);
+		
 		int num_alive = Team_GetNumberOfAlivePlayers(team_);
 		++num_alive;
 		Team_SetNumberOfAlivePlayers(team_, num_alive);
@@ -101,6 +108,7 @@ float CA_CheckWinner()
 	}
 
 	int winner_team = CA_GetWinnerTeam();
+	bool perfect = false;
 	if(winner_team > 0)
 	{
 		entity last_pl = ca_LastPlayer(winner_team);
@@ -112,6 +120,10 @@ float CA_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		if(fragsleft > 1) Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
+		
+		entity tm = Team_GetTeam(winner_team);
+		
+		if(Team_GetNumberOfAlivePlayers(tm) == Team_GetNumberOfPlayers(tm)) perfect = true;
 	}
 	else if(winner_team == -1)
 	{
@@ -125,7 +137,25 @@ float CA_CheckWinner()
 		game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_Clear(it);
+		
+		if(it.team == winner_team)
+		{
+			// Give perfect medal if everyone in the winner team is alive
+			if(perfect) {
+				Give_Medal(it, PERFECT);
+			}
+			
+			// Give accuracy medal for each weapon above 50%
+			entity ra = it.roundaccuracy;
+			for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
+				if(ra.accuracy_fired[w] && (ra.accuracy_hit[w] / ra.accuracy_fired[w]) > 0.5) {
+					Give_Medal(it, ACCURACY);
+				}
+			}
+		}
+	});
 
 	return 1;
 }

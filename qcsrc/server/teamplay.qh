@@ -39,11 +39,13 @@ void Team_SetTeamScore(entity team_ent, float score);
 /// \param[in] team_ent Team entity.
 /// \return Number of alive players in a team.
 int Team_GetNumberOfAlivePlayers(entity team_ent);
+int Team_GetNumberOfPlayers(entity team_ent);
 
 /// \brief Sets the number of alive players in a team.
 /// \param[in,out] team_ent Team entity.
 /// \param[in] number Number of players to set.
 void Team_SetNumberOfAlivePlayers(entity team_ent, int number);
+void Team_SetNumberOfPlayers(entity team_ent, int number);
 
 /// \brief Returns the number of alive teams.
 /// \return Number of alive teams.
