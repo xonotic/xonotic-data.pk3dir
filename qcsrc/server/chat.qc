@@ -111,11 +111,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				//msgin = strreplace("/me", "", msgin);
 				//msgin = substring(msgin, 3, strlen(msgin));
 				//msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
-				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
+				msgstr = strcat("\{1}\{13}^4* ", "^5", msgin);
 			}
 			else
-				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
+				msgstr = strcat("\{1}\{13}", colorstr, "(Team) ", namestr, colorstr, ": ^5", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^5", msgin);
 		}
 		else
 		{
