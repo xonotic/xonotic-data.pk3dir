@@ -53,7 +53,7 @@ NET_HANDLE(attackertext, bool isNew)
 	
 	string s = entcs_GetName(server_entity_index - 1);
 	if ((autocvar_cl_attackertext_decolorize == 1 && teamplay) || autocvar_cl_attackertext_decolorize == 2)
-		s = playername(s, entcs_GetTeam(server_entity_index - 1));
+		s = playername(s, entcs_GetTeam(server_entity_index - 1), true);
 
 	last_attack_time = time;
 	strfree(last_attack_name);

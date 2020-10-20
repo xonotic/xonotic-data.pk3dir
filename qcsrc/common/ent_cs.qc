@@ -1,8 +1,13 @@
 #include "ent_cs.qh"
-#include <common/gamemodes/_mod.qh>
-#include <common/resources.qh>
-#ifdef SVQC
-#include <server/resources.qh>
+
+#if defined(CSQC)
+	#include <common/gamemodes/_mod.qh>
+	#include <common/resources.qh>
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include <common/gamemodes/_mod.qh>
+	#include <common/resources.qh>
+	#include <server/resources.qh>
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
@@ -273,7 +278,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		{
 			if (!this)
 				// initial = temp
-				e = new_pure(entcs_receiver);
+				e = new_pure(ENT_CLIENT_ENTCS);
 			else
 				// initial = linked
 				e = this;
@@ -309,7 +314,6 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		if (isnew)
 		{
 			make_pure(this);
-			this.classname = "entcs_receiver";
 			this.entremove = Ent_RemoveEntCS;
 		}
 		return ReadEntcs(this);

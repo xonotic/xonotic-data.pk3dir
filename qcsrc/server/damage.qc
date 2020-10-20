@@ -1,41 +1,42 @@
 #include "damage.qh"
 
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include "bot/api.qh"
-#include "hook.qh"
-#include <server/client.qh>
-#include <server/gamelog.qh>
-#include <server/items/items.qh>
-#include <server/mutators/_mod.qh>
-#include <server/main.qh>
-#include "teamplay.qh"
-#include "scores.qh"
-#include "spawnpoints.qh"
-#include "../common/state.qh"
-#include "../common/physics/player.qh"
-#include "resources.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/items/_mod.qh"
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/mutators/mutator/instagib/sv_instagib.qh"
-#include "../common/mutators/mutator/buffs/buffs.qh"
-#include "weapons/accuracy.qh"
-#include "weapons/csqcprojectile.qh"
-#include "weapons/selection.qh"
-#include "../common/constants.qh"
-#include "../common/deathtypes/all.qh"
-#include <common/mapobjects/defs.qh>
-#include <common/mapobjects/triggers.qh>
-#include "../common/notifications/all.qh"
-#include "../common/physics/movetypes/movetypes.qh"
-#include "../common/playerstats.qh"
-#include "../common/teams.qh"
-#include "../common/util.qh"
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/notifications/all.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-#include "../lib/csqcmodel/sv_model.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <server/gamelog.qh>
+#include <server/hook.qh>
+#include <server/items/items.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/scores.qh>
+#include <server/spawnpoints.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/csqcprojectile.qh>
+#include <server/weapons/selection.qh>
+#include <server/world.qh>
 
 void UpdateFrags(entity player, int f)
 {
@@ -330,7 +331,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker_name);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), playername(targ, true), playername(attacker, true), deathlocation, CS(targ).killcount);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL),
+				playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true),
+				deathlocation, CS(targ).killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -436,8 +439,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
-			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ, true), playername(attacker, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, playername(targ, true), playername(attacker, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
+			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, targ.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -454,7 +457,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			case DEATH_HURTTRIGGER:
 			{
 				Obituary_SpecialDeath(targ, false, deathtype,
-					playername(targ, true),
+					playername(targ.netname, targ.team, true),
 					inflictor.message,
 					deathlocation,
 					CS(targ).killcount,
@@ -466,7 +469,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			case DEATH_CUSTOM:
 			{
 				Obituary_SpecialDeath(targ, false, deathtype,
-					playername(targ, true),
+					playername(targ.netname, targ.team, true),
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
 					CS(targ).killcount,
@@ -477,7 +480,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, playername(targ, true), deathlocation, "", CS(targ).killcount, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, playername(targ.netname, targ.team, true), deathlocation, "", CS(targ).killcount, 0, 0);
 				break;
 			}
 		}
@@ -710,11 +713,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if (!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			complainteamdamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
+			damage *= autocvar_g_weapondamagefactor;
+			mirrordamage *= autocvar_g_weapondamagefactor;
+			complainteamdamage *= autocvar_g_weapondamagefactor;
+			force = force * autocvar_g_weaponforcefactor;
+			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
 		// should this be changed at all? If so, in what way?

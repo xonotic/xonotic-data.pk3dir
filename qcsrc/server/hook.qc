@@ -1,29 +1,30 @@
 #include "hook.qh"
 
-#include <server/bot/api.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/damage.qh>
-#include <server/miscfunctions.qh>
+#include <common/constants.qh>
 #include <common/effects/all.qh>
-#include "weapons/common.qh"
-#include "weapons/csqcprojectile.qh"
-#include "weapons/weaponsystem.qh"
-#include "weapons/selection.qh"
-#include "weapons/tracing.qh"
-#include "player.qh"
-#include "command/common.qh"
-#include "command/vote.qh"
-#include "round_handler.qh"
-#include "../common/state.qh"
-#include "../common/physics/player.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/constants.qh"
-#include "../common/util.qh"
 #include <common/net_linked.qh>
+#include <common/physics/player.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-#include "../lib/warpzone/common.qh"
-#include "../lib/warpzone/server.qh"
+#include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/server.qh>
+#include <server/bot/api.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/csqcprojectile.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 /*============================================
 
@@ -414,7 +415,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
 }
 
-void GrappleHookInit()
+// NOTE: using PRECACHE here to make sure it's called after everything else
+PRECACHE(GrappleHookInit)
 {
 	if(g_grappling_hook)
 	{

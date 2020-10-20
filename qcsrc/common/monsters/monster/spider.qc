@@ -1,5 +1,9 @@
 #include "spider.qh"
 
+#if defined(SVQC)
+	#include <common/mutators/base.qh>
+#endif
+
 #ifdef SVQC
 
 .float spider_slowness; // effect time of slowness inflicted by spiders
@@ -124,8 +128,6 @@ void M_Spider_Attack_Web_Touch(entity this, entity toucher)
 
 	M_Spider_Attack_Web_Explode(this);
 }
-
-void adaptor_think2use_hittype_splash(entity this);
 
 void M_Spider_Attack_Web(entity this)
 {

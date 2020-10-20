@@ -1,33 +1,32 @@
 #include "main.qh"
 
+#include <client/command/cl_cmd.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
-#include <common/ent_cs.qh>
-#include "miscfunctions.qh"
+#include <client/mapvoting.qh>
+#include <client/mutators/_mod.qh>
+#include <client/shownames.qh>
+#include <client/view.qh>
+#include <client/weapons/projectile.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.inc>
+#include <common/effects/all.qh>
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
-#include <common/effects/all.qh>
-#include <common/effects/all.inc>
-#include "hud/_mod.qh"
-#include "command/cl_cmd.qh"
-#include "mapvoting.qh"
-#include <client/mutators/_mod.qh>
-#include "hud/panel/centerprint.qh"
-#include "hud/panel/scoreboard.qh"
-#include "hud/panel/quickmenu.qh"
-#include "shownames.qh"
-#include "view.qh"
-#include "weapons/projectile.qh"
-#include <common/deathtypes/all.qh>
-#include <common/items/_mod.qh>
+#include <common/ent_cs.qh>
 #include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
+#include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
-#include <common/teams.qh>
-#include <common/mapobjects/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -47,7 +46,7 @@ void CSQC_Init()
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_INFOF("^4CSQC Build information: ^1%s", WATERMARK);
+	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
 
 	{
@@ -189,6 +188,128 @@ void Shutdown()
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 
 	ReplicateVars(true); // destroy
+}
+
+void AuditLists()
+{
+	entity e;
+	entity prev;
+
+	prev = players;
+	for(e = prev.sort_next; e; prev = e, e = e.sort_next)
+	{
+		if(prev != e.sort_prev)
+			error(strcat("sort list chain error\nplease submit the output of 'prvm_edicts client' to the developers"));
+	}
+
+	prev = teams;
+	for(e = prev.sort_next; e; prev = e, e = e.sort_next)
+	{
+		if(prev != e.sort_prev)
+			error(strcat("sort list chain error\nplease submit the output of 'prvm_edicts client' to the developers"));
+	}
+}
+
+float RegisterPlayer(entity player)
+{
+	entity pl;
+	AuditLists();
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+		if(pl == player)
+			error("Player already registered!");
+	player.sort_next = players.sort_next;
+	player.sort_prev = players;
+	if(players.sort_next)
+		players.sort_next.sort_prev = player;
+	players.sort_next = player;
+	AuditLists();
+	return true;
+}
+
+void RemovePlayer(entity player)
+{
+	entity pl, parent;
+	AuditLists();
+	parent = players;
+	for(pl = players.sort_next; pl && pl != player; pl = pl.sort_next)
+		parent = pl;
+
+	if(!pl)
+	{
+		error("Trying to remove a player which is not in the playerlist!");
+		return;
+	}
+	parent.sort_next = player.sort_next;
+	if(player.sort_next)
+		player.sort_next.sort_prev = parent;
+	AuditLists();
+}
+
+void MoveToLast(entity e)
+{
+	AuditLists();
+	entity ent = e.sort_next;
+	while(ent)
+	{
+		SORT_SWAP(ent, e);
+		ent = e.sort_next;
+	}
+	AuditLists();
+}
+
+float RegisterTeam(entity Team)
+{
+	assert_once(Team.team, eprint(Team));
+	entity tm;
+	AuditLists();
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm == Team)
+			error("Team already registered!");
+	Team.sort_next = teams.sort_next;
+	Team.sort_prev = teams;
+	if(teams.sort_next)
+		teams.sort_next.sort_prev = Team;
+	teams.sort_next = Team;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		++team_count;
+	AuditLists();
+	return true;
+}
+
+void RemoveTeam(entity Team)
+{
+	entity tm, parent;
+	AuditLists();
+	parent = teams;
+	for(tm = teams.sort_next; tm && tm != Team; tm = tm.sort_next)
+		parent = tm;
+
+	if(!tm)
+	{
+		LOG_INFO(_("Trying to remove a team which is not in the teamlist!"));
+		return;
+	}
+	parent.sort_next = Team.sort_next;
+	if(Team.sort_next)
+		Team.sort_next.sort_prev = parent;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		--team_count;
+	AuditLists();
+}
+
+entity GetTeam(int Team, bool add)
+{
+	TC(int, Team); TC(bool, add);
+	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
+	if(teamslots[num])
+		return teamslots[num];
+	if (!add)
+		return NULL;
+	entity tm = new_pure(team);
+	tm.team = Team;
+	teamslots[num] = tm;
+	RegisterTeam(tm);
+	return tm;
 }
 
 .float has_team;
@@ -554,7 +675,6 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
-			LOG_INFOF("%d", f);
 			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
@@ -640,7 +760,6 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
-	
 	return true;
 }
 
@@ -1246,4 +1365,27 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 		return sprintf("%s (%s)", cmd_name, keys);
 	else
 		return keys;
+}
+
+/** engine callback */
+void URI_Get_Callback(int id, int status, string data)
+{
+	TC(int, id); TC(int, status);
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
+	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <server/miscfunctions.qh>
+#include <common/weapons/all.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
 

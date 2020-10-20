@@ -51,7 +51,8 @@ string(string, string...) strcat1n = #115;
 #define _LOG_HEADER(level) "^9[::^7"PROGNAME"^9::"level"^9] ", __SOURCELOC__
 #define _LOG(f, level, s) \
 	MACRO_BEGIN \
-		f(strcat1n(_LOG_HEADER(level), "\n^7", s, "\n")); \
+		if (autocvar_developer > 0) f(strcat1n(_LOG_HEADER(level), "\n")); \
+		f(strcat1n("^7", s, "\n")); \
 	MACRO_END
 
 #define  LOG_FATAL(...) _LOG_FATAL(strcat1n(__VA_ARGS__))
@@ -70,7 +71,7 @@ string(string, string...) strcat1n = #115;
 #define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
 #define _LOG_INFO(s) \
 	MACRO_BEGIN \
-		dprint(_LOG_HEADER("^5INFO")); \
+		if (autocvar_developer > 1) dprint(_LOG_HEADER("^5INFO")); \
 		string __s = s; \
 		print("\n^7", __s); \
 		/* TODO: unconditionally add a newline when possible */ \

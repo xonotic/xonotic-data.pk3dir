@@ -1,9 +1,7 @@
 #include "infomessages.qh"
 
 #include <client/autocvars.qh>
-#include <client/main.qh>
-#include <client/miscfunctions.qh>
-
+#include <client/draw.qh>
 #include <common/ent_cs.qh>
 
 // Info messages (#14)

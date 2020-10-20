@@ -6,15 +6,14 @@
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
     ATTRIBARRAY(Inventory, inv_items, int, REGISTRY_MAX(Items));
-    /** Previous state */
-    ATTRIB(Inventory, inventory, Inventory);
 ENDCLASS(Inventory)
 
 /** Player inventory */
 .Inventory inventory;
+/** Player inventory storage (holds previous state) */
+.Inventory inventory_store;
 
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
-REGISTER_NET_TEMP(TE_CSQC_WEAPONPICKUP)
 
 const int Inventory_groups_minor = 8; // must be a multiple of 8 (one byte) to optimize bandwidth usage
 const int Inventory_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(Items) / Inventory_groups_minor)
@@ -38,7 +37,6 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
-#include <client/miscfunctions.qh>
 #include <client/hud/hud.qh>
 
 //Inventory g_inventory;
@@ -97,7 +95,7 @@ NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
 
 #ifdef SVQC
 int minorBitsArr[Inventory_groups_major];
-void Inventory_Write(Inventory data)
+void Inventory_Write(Inventory data, Inventory store)
 {
     if (!data) {
         WriteShort(MSG_ENTITY, 0);
@@ -111,12 +109,12 @@ void Inventory_Write(Inventory data)
     int majorBits = 0;
     FOREACH(Items, true, {
         .int fld = inv_items[it.m_id];
-        const bool changed = data.inventory.(fld) != data.(fld);
+        const bool changed = store.(fld) != data.(fld);
+        store.(fld) = data.(fld);
         if (changed) {
 			int maj = G_MAJOR(it.m_id);
 			majorBits = BITSET(majorBits, BIT(maj), true);
 			minorBitsArr[maj] = BITSET(minorBitsArr[maj], BIT(G_MINOR(it.m_id)), true);
-			data.inventory.(fld) = data.(fld); // z411 fix
         }
     });
 
@@ -150,10 +148,10 @@ bool Inventory_Send(Inventory this, Client to, int sf)
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     TC(PlayerState, this.owner);
 	
-	// z411 send entity number
-	WriteByte(MSG_ENTITY, etof(this.owner.m_client));
+    // z411 send entity number
+    WriteByte(MSG_ENTITY, etof(this.owner.m_client));
     
-	Inventory_Write(this);
+    Inventory_Write(this, to.inventory_store);
     return true;
 }
 
@@ -165,18 +163,17 @@ bool Inventory_customize(entity this, entity client)
 
 void Inventory_new(PlayerState this)
 {
-    Inventory inv = NEW(Inventory), bak = NEW(Inventory);
-    inv.inventory = bak;
-	if(!g_duel)
-		setcefc(inv, Inventory_customize);
+    Inventory inv = NEW(Inventory);
+    if(!g_duel) setcefc(inv, Inventory_customize);
     Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 
+void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
+void InventoryStorage_detach(entity e) { delete(e.inventory_store); }
+
 void Inventory_ClearAll() {
-	LOG_INFO("Clearing inventory");
-	
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		entity store = PS(it);		
 		FOREACH(Items, true, {
@@ -185,5 +182,4 @@ void Inventory_ClearAll() {
         Inventory_update(store);
 	});
 }
-
 #endif

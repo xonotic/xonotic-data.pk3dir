@@ -1,19 +1,19 @@
 #include "quake3.qh"
 
-#include <server/client.qh>
-#include <common/weapons/_all.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/notifications/all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/resources.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
-#include <common/mapobjects/triggers.qh>
-#include <common/mapobjects/trigger/counter.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/notifications/all.qh>
-#include <common/weapons/_all.qh>
+#include <server/world.qh>
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons

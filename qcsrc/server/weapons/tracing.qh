@@ -2,7 +2,6 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 
 vector w_shotorg;
 vector w_shotdir;
@@ -82,3 +81,18 @@ entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end);
 void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag);
 void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect);
+
+void crosshair_trace(entity pl);
+
+void crosshair_trace_plusvisibletriggers(entity pl);
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl);
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz);
+
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+void WarpZone_crosshair_trace(entity pl);
+
+void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+IntrusiveList g_ctrace_changed;
+STATIC_INIT(g_ctrace_changed) { g_ctrace_changed = IL_NEW(); }

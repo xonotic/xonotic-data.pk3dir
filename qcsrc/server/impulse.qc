@@ -1,26 +1,22 @@
 #include "impulse.qh"
-#include "round_handler.qh"
-
-#include "weapons/throwing.qh"
-#include "command/common.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "clientkill.qh"
-#include "damage.qh"
-#include "weapons/selection.qh"
-#include "weapons/tracing.qh"
-#include "weapons/weaponsystem.qh"
 
 #include <common/gamemodes/_mod.qh>
-
+#include <common/minigames/sv_minigames.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/state.qh>
-
-#include "../common/minigames/sv_minigames.qh"
-
+#include <common/vehicles/sv_vehicles.qh>
 #include <common/weapons/_all.qh>
-#include "../common/vehicles/sv_vehicles.qh"
-
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/throwing.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
 
 .entity vehicle;
 
@@ -55,21 +51,26 @@
 
 // weapon switching impulses
 
+void weapon_group_handle(entity this, int number, int imp)
+{
+	if (IS_DEAD(this))
+	{
+		this.impulse = imp;
+		return;
+	}
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeaponOnImpulse(this, number, weaponentity);
+		if(autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
+}
+
 #define X(i) \
 	IMPULSE(weapon_group_##i) \
 	{ \
-		if (IS_DEAD(this)) \
-		{ \
-			this.impulse = IMP_weapon_group_##i.impulse; \
-			return; \
-		} \
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
-		{ \
-			.entity weaponentity = weaponentities[slot]; \
-			W_NextWeaponOnImpulse(this, i, weaponentity); \
-			if(autocvar_g_weaponswitch_debug != 1) \
-				break; \
-		} \
+		weapon_group_handle(this, i, IMP_weapon_group_##i.impulse); \
 	}
 X(1)
 X(2)
@@ -85,25 +86,30 @@ X(0)
 
 // custom order weapon cycling
 
+void weapon_priority_handle(entity this, int dir, int number, int imp)
+{
+	if (this.vehicle) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = imp;
+		return;
+	}
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[number], dir, weaponentity);
+		if(autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
+}
+
 #define X(i, dir) \
 	IMPULSE(weapon_priority_##i##_##dir) \
 	{ \
-		if (this.vehicle) return; \
-		if (IS_DEAD(this)) \
-		{ \
-			this.impulse = IMP_weapon_priority_##i##_##dir.impulse; \
-			return; \
-		} \
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
-		{ \
-			.entity weaponentity = weaponentities[slot]; \
-			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[i], dir, weaponentity); \
-			if(autocvar_g_weaponswitch_debug != 1) \
-				break; \
-		} \
+		weapon_priority_handle(this, dir, i, IMP_weapon_priority_##i##_##dir.impulse); \
 	}
 X(0, prev)
 X(1, prev)
@@ -141,22 +147,27 @@ X(9, next)
 
 // direct weapons
 
+void weapon_byid_handle(entity this, int number, int imp)
+{
+	if (this.vehicle) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = imp;
+		return;
+	}
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + number), weaponentity);
+		if(autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
+}
+
 #define X(i) \
 	IMPULSE(weapon_byid_##i) \
 	{ \
-		if (this.vehicle) return; \
-		if (IS_DEAD(this)) \
-		{ \
-			this.impulse = IMP_weapon_byid_##i.impulse; \
-			return; \
-		} \
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
-		{ \
-			.entity weaponentity = weaponentities[slot]; \
-			W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + i), weaponentity); \
-			if(autocvar_g_weaponswitch_debug != 1) \
-				break; \
-		} \
+		weapon_byid_handle(this, i, IMP_weapon_byid_##i.impulse); \
 	}
 X(0)
 X(1)

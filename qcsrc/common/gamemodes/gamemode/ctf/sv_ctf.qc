@@ -7,6 +7,7 @@
 #include <server/command/vote.qh>
 #include <server/client.qh>
 #include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/damage.qh>
 #include <server/world.qh>
 #include <server/items/items.qh>
@@ -2739,7 +2740,6 @@ spawnfunc(ctf_team)
 {
 	if(!g_ctf) { delete(this); return; }
 
-	this.classname = "ctf_team";
 	this.team = this.cnt + 1;
 }
 

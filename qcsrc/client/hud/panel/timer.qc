@@ -1,7 +1,7 @@
 #include "timer.qh"
 
 #include <client/autocvars.qh>
-#include <client/miscfunctions.qh>
+#include <client/hud/hud.qh>
 #include <client/view.qh>
 
 // Timer (#5)

@@ -1,8 +1,8 @@
 #include "path_waypoint.qh"
-#include "../bot/api.qh"
 
-#include "pathlib.qh"
-#include "main.qh"
+#include <server/bot/api.qh>
+#include <server/pathlib/main.qh>
+#include <server/pathlib/pathlib.qh>
 
 var float pathlib_wpp_open(entity wp, entity child, float cost);
 
