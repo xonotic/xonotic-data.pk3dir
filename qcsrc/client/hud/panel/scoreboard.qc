@@ -100,6 +100,8 @@ bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
 float autocvar_hud_panel_scoreboard_minwidth = 0.4;
 
+int average_ping[NUM_TEAMS];
+
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
 string Label_getInfo(string label, int mode)
@@ -620,6 +622,16 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
+vector getPingColor(float f)
+{
+	if(f < 80) {
+		// 20-80 range is green
+		return '0 1 0' + '1 0 1' * max(0, min(60, f-20)) / 60;
+	} else {
+		// 80-300 range is red
+		return '1 1 1' - '0 1 1' * max(0, min(220, f-80)) / 220;
+	}
+}
 string Scoreboard_GetField(entity pl, PlayerScoreField field)
 {
 	float tmp, num, denom;
@@ -641,14 +653,10 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
-			if(f < 80) {
-				tmp = max(0, min(60, f-20)) / 60; // 20-80 range is green
-				sbt_field_rgb = '0 1 0' + '1 0 1' * tmp;
-			} else {
-				tmp = max(0, min(220, f-80)) / 220; // 80-300 range is red
-				sbt_field_rgb = '1 1 1' - '0 1 1' * tmp;
-			}
+			sbt_field_rgb = getPingColor(f);
+			
 			return ftos(f);
+			//return ftos(pl.team);
 
 		case SP_PL:
 			if (!pl.gotscores)
@@ -820,10 +828,13 @@ void Scoreboard_initFieldSizes()
 	}
 }
 
-vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
+vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, int team)
 {
 	int i;
+	string title_str;
+	vector title_rgb;
 	vector column_dim = eY * panel_size.y;
+	
 	if(other_players)
 		column_dim.y -= 1.25 * hud_fontsize.y;
 	vector text_offset = eY * (1.25 - 1) / 2 * hud_fontsize.y;
@@ -832,11 +843,20 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 	{
 		if(sbt_field[i] == SP_SEPARATOR)
 			break;
+		
+		if(sbt_field[i] == SP_PING && teamplay) {
+			title_str = sprintf("(%d)", average_ping[Team_TeamToIndex(team) - 1]);
+			title_rgb = getPingColor(average_ping[Team_TeamToIndex(team) - 1]);
+		} else {
+			title_str = sbt_field_title[i];
+			title_rgb = rgb * 1.5;
+		}
+		
 		column_dim.x = sbt_field_size[i] + hud_fontsize.x;
 		if (sbt_highlight)
 			if (i % 2)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_offset, title_str, hud_fontsize, title_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		pos.x += column_dim.x;
 	}
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -1405,12 +1425,14 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 
 	// print header row and highlight columns
-	pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size));
+	pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size), tm.team);
 
 	// fill the table and draw the rows
 	bool is_self = false;
 	bool self_shown = false;
 	int i = 0;
+	int with_ping = 0;
+	if(Team_IsValidTeam(tm.team)) average_ping[Team_TeamToIndex(tm.team) - 1] = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != tm.team)
@@ -1432,11 +1454,17 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 		}
 		is_self = (pl.sv_entnum == current_player);
 		Scoreboard_DrawItem(pos, rgb, pl, is_self, i);
+		
+		if(Team_IsValidTeam(tm.team) && pl.ping) {
+			average_ping[Team_TeamToIndex(tm.team) - 1] += pl.ping;
+			++with_ping;
+		}
 		if(is_self)
 			self_shown = true;
 		pos.y += 1.25 * hud_fontsize.y;
 		++i;
 	}
+	if(with_ping) average_ping[Team_TeamToIndex(tm.team) - 1] /= with_ping;
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
