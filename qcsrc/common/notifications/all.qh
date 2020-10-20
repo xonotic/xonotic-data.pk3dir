@@ -455,7 +455,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS,        "join_key",      getcommandkey(_("jump"), "+jump")) \
 	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
 	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
-	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
+	ARG_CASE(ARG_CS,        "frag_pos",      notif_arg_frag_pos(f2)) \
 	ARG_CASE(ARG_CS,        "spree_cen",     (autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
 	ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
 	ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
@@ -483,6 +483,61 @@ MACRO_END
 	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
 
 #ifdef CSQC
+string notif_arg_frag_pos(int score)
+{
+	entity pl;
+	int place = 1;
+	string str, color, tail;
+	bool tied = false;
+	
+	for(pl = players.sort_next; pl; pl = pl.sort_next) {
+		if(pl.team == NUM_SPECTATOR) continue;
+		if(pl.(scores(SP_SCORE)) == score) break;
+		++place;
+	}
+	
+	entity prev = pl.sort_prev;
+	entity next = pl.sort_next;
+	if(prev && prev.(scores(SP_SCORE)) == score)
+		tied = true;
+	if(next && next.(scores(SP_SCORE)) == score)
+		tied = true;
+	
+	switch(place) {
+		case 1:
+			color = "^4";
+			break;
+		case 2:
+			color = "^1";
+			break;
+		case 3:
+			color = "^3";
+			break;
+		default:
+			color = "";
+	}
+	
+	switch(place % 10) {
+		case 1:
+			tail = "st";
+			break;
+		case 2:
+			tail = "nd";
+			break;
+		case 3:
+			tail = "rd";
+			break;
+		default:
+			tail = "th";
+	}
+	
+	str = strcat(color, ftos(place), tail);
+	if(tied)
+		return strcat("Tied for ", str);
+	else
+		return str;
+}
+
 string notif_arg_frag_ping(bool newline, float fping)
 {
 	string s = newline ? "\n" : " ";
