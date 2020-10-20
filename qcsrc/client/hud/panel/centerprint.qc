@@ -357,10 +357,10 @@ void HUD_CenterPrint()
 		all_messages_expired = false;
 
 		// fade
-		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
-			a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
-		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
-			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		//if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
+		//	a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
+			a = 1;
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 
