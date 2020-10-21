@@ -439,7 +439,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
-			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, targ.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
+			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
