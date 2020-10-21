@@ -11,7 +11,7 @@ void CA_count_alive_players()
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 		Team_SetNumberOfPlayers(Team_GetTeamFromIndex(i), 0);
 	}
-	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
+	FOREACH_CLIENT(Entity_HasValidTeam(it),
 	{
 		++total_players;
 		entity team_ = Entity_GetTeam(it);
@@ -20,7 +20,7 @@ void CA_count_alive_players()
 		++num_total;
 		Team_SetNumberOfPlayers(team_, num_total);
 		
-		if (IS_DEAD(it))
+		if (IS_DEAD(it) || !IS_PLAYER(it))
 		{
 			continue;
 		}
