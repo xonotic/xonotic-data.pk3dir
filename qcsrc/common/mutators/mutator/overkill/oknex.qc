@@ -267,7 +267,7 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 
 METHOD(OverkillNex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	actor.oknex_lasthit = 0;
+	//actor.oknex_lasthit = 0;
 }
 
 METHOD(OverkillNex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

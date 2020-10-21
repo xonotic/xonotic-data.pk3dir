@@ -351,7 +351,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    actor.vaporizer_lasthit = 0;
+    //actor.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
