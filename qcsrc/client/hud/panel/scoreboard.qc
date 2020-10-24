@@ -1387,7 +1387,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	FOREACH(Items, true, {
+	IL_EACH(default_order_items, true, {
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;

@@ -12,6 +12,17 @@ REGISTRY_DEPENDS(Items, Models)
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
 
+#ifdef CSQC
+IntrusiveList default_order_items;
+STATIC_INIT(default_order_items)
+{
+	default_order_items = IL_NEW();
+	FOREACH(Items, true, {
+		IL_PUSH(default_order_items, it);
+	});
+}
+#endif
+
 REGISTRY_SORT(Items)
 REGISTRY_CHECK(Items)
 
