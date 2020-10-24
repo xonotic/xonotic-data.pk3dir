@@ -84,6 +84,9 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay = 2;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
 
+bool autocvar_hud_panel_scoreboard_itemstats_doublerows = false;
+bool autocvar_hud_panel_scoreboard_itemstats_filter = true;
+
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
 float autocvar_hud_panel_scoreboard_maxheight = 0.6;
@@ -1313,24 +1316,50 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	return initial_pos + (end_pos - initial_pos) * scoreboard_acc_fade_alpha;
 }
 
+.bool uninteresting;
+STATIC_INIT(default_order_items_label)
+{
+	IL_EACH(default_order_items, true, {
+		switch(it.netname)
+		{
+			case "bullets":
+			case "cells":
+			case "plasma":
+			case "rockets":
+			case "shells":
+			case "vaporizer_cells":
+			case "fuel":
+			case "armor_small":
+			case "armor_medium":
+			case "health_small":
+			case "health_medium":
+				it.uninteresting = true;
+		}
+	});
+}
+
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
 	float scoreboard_acc_fade_alpha_save = scoreboard_acc_fade_alpha; // debug
 	scoreboard_acc_fade_alpha = 1; // debug: make Item Stats always visible
 
 	float initial_posx = pos.x;
-	int disownedcnt = 0;
-	FOREACH(Items, true, {
+	int disowned_cnt = 0;
+	int uninteresting_cnt = 0;
+	IL_EACH(default_order_items, true, {
 		int q = g_inventory.inv_items[it.m_id];
 		//q = 1; // debug: display all items
-		if (!q) ++disownedcnt;
+		if (autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting)
+			++uninteresting_cnt;
+		else if (!q)
+			++disowned_cnt;
 	});
-
-	int n = REGISTRY_COUNT(Items) - disownedcnt;
+	int items_cnt = REGISTRY_COUNT(Items) - uninteresting_cnt;
+	int n = items_cnt - disowned_cnt;
 	if (n <= 0) return pos;
 
-	int rows = (autocvar_hud_panel_scoreboard_accuracy_doublerows && n >= floor(REGISTRY_COUNT(Items) / 2)) ? 2 : 1;
-	int columnns = ceil(n / rows);
+	int rows = (autocvar_hud_panel_scoreboard_itemstats_doublerows && n >= floor(REGISTRY_COUNT(Items) / 2)) ? 2 : 1;
+	int columnns = max(6, ceil(n / rows));
 
 	float height = 40;
 	float fontsize = height * 1/3;
@@ -1387,7 +1416,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	IL_EACH(default_order_items, true, {
+	IL_EACH(default_order_items, !(autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting), {
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
