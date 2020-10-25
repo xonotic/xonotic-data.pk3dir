@@ -1076,7 +1076,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg();
 
-	vector end_pos = panel_pos + eY * (panel_size.y + 0.5* hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
@@ -1222,7 +1222,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	HUD_Panel_DrawBg();
 	panel_bg_alpha = panel_bg_alpha_save;
 
-	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
@@ -1368,7 +1368,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	float fontsize = height * 1/3;
 	float item_height = height * 2/3;
 
-	drawstring(pos, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -1382,7 +1382,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	HUD_Panel_DrawBg();
 	panel_bg_alpha = panel_bg_alpha_save;
 
-	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
@@ -1493,7 +1493,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg();
 
-	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
@@ -1579,7 +1579,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	HUD_Panel_DrawBg();
 
-	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
