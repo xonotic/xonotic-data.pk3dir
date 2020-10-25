@@ -84,8 +84,11 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay = 2;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
 
+bool autocvar_hud_panel_scoreboard_itemstats = true;
 bool autocvar_hud_panel_scoreboard_itemstats_doublerows = false;
 bool autocvar_hud_panel_scoreboard_itemstats_filter = true;
+float autocvar_hud_panel_scoreboard_itemstats_showdelay = 2.2; // slightly more delayed than accuracy
+float autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos = 0.75;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
@@ -1664,6 +1667,42 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 	return true;
 }
 
+bool have_item_stats;
+bool Scoreboard_ItemStats_WouldDraw(float ypos)
+{
+	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
+		return false;
+	if (!autocvar_hud_panel_scoreboard_itemstats || warmup_stage || ypos > 0.91 * vid_conheight)
+		return false;
+
+	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay
+		&& ypos > autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos * vid_conheight
+		&& !intermission)
+	{
+		return false;
+	}
+
+	if (!have_item_stats)
+	{
+		IL_EACH(default_order_items, true, {
+			if (!(autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting))
+			{
+				int q = g_inventory.inv_items[it.m_id];
+				//q = 1; // debug: display all items
+				if (q)
+				{
+					have_item_stats = true;
+					break;
+				}
+			}
+		});
+		if (!have_item_stats)
+			return false;
+	}
+
+	return true;
+}
+
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -1946,7 +1985,8 @@ void Scoreboard_Draw()
 
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
-	pos = Scoreboard_ItemStats_Draw(pos, panel_bg_color, bg_size);
+	if (Scoreboard_ItemStats_WouldDraw(pos.y))
+		pos = Scoreboard_ItemStats_Draw(pos, panel_bg_color, bg_size);
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
