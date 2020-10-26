@@ -61,5 +61,12 @@ bool autocvar_bot_wander_enable;
 bool autocvar_bot_typefrag;
 bool autocvar_g_debug_bot_commands;
 int autocvar_g_waypointeditor_auto;
+#define autocvar_skill cvar("skill")
 float autocvar_skill_auto;
 bool autocvar_waypoint_benchmark;
+int autocvar_bot_number;
+float autocvar_bot_ai_strategyinterval;
+float autocvar_bot_ai_strategyinterval_movingtarget;
+int autocvar_bot_vs_human;
+int autocvar_minplayers;
+int autocvar_minplayers_per_team;

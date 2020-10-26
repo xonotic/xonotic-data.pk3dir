@@ -9,5 +9,7 @@ float autocvar_cl_casings_ticrate = 0.1;
 #endif
 
 #ifdef SVQC
+int autocvar_g_casings;
+
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
 #endif

@@ -5,6 +5,7 @@
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
 #include <server/bot/api.qh>
+#include <server/client.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
 #include <server/weapons/common.qh>
