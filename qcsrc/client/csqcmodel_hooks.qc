@@ -1,6 +1,5 @@
 #include "csqcmodel_hooks.qh"
 
-#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
 #include <client/player_skeleton.qh>
 #include <client/weapons/projectile.qh>

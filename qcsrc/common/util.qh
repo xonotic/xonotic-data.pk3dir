@@ -197,6 +197,8 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 #ifdef GAMEQC
 	#ifdef CSQC
+		bool autocvar_cl_gentle;
+		int autocvar_cl_gentle_messages;
 		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
 	#else
 		#define GENTLE autocvar_sv_gentle

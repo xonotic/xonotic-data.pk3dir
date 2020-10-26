@@ -3,7 +3,6 @@
 #define WEAPONS_ALL_C
 
 #if defined(CSQC)
-	#include <client/autocvars.qh>
 	#include <client/main.qh>
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>

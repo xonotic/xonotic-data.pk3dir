@@ -1,5 +1,15 @@
 #pragma once
 
+bool autocvar_cl_vehicles_alarm = false;
+bool autocvar_cl_vehicles_hud_tactical = true;
+float autocvar_cl_vehicles_hudscale = 0.5;
+float autocvar_cl_vehicles_notify_time = 15;
+float autocvar_cl_vehicles_crosshair_size = 0.5;
+bool autocvar_cl_vehicles_crosshair_colorize = true;
+bool autocvar__vehicles_shownchasemessage;
+vector autocvar_hud_progressbar_vehicles_ammo1_color;
+vector autocvar_hud_progressbar_vehicles_ammo2_color;
+
 vector vehicleHud_Size;
 vector vehicleHud_Pos;
 

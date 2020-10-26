@@ -1,6 +1,5 @@
 #include "projectile.qh"
 
-#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
 #include <common/constants.qh>
 #include <common/effects/all.qh>

@@ -1,6 +1,5 @@
 #include "quickmenu.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>

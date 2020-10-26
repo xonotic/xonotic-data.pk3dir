@@ -1,5 +1,11 @@
 #pragma once
 
+bool autocvar__hud_configure;
+bool autocvar_hud_configure_checkcollisions;
+bool autocvar_hud_configure_grid;
+float autocvar_hud_configure_grid_alpha;
+bool autocvar_hud_configure_teamcolorforced;
+
 const int S_MOUSE1 = 1;
 const int S_MOUSE2 = 2;
 const int S_MOUSE3 = 4;

@@ -1,8 +1,8 @@
 #include "hud_config.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
+#include <client/hud/panel/chat.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/view.qh>
 
