@@ -262,7 +262,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	notif_anonymous = M_ARGV(5, bool);
 
 	if(notif_anonymous)
-		attacker_name = "Anonymous player";
+		attacker_name = "???";
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(
@@ -332,7 +332,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker_name);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL),
-				playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true),
+				playername(targ.netname, targ.team, true), playername(attacker_name, attacker.team, true),
 				deathlocation, CS(targ).killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
@@ -439,8 +439,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
-			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker.netname, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
+			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker_name, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker_name, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
 
