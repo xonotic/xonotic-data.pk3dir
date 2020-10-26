@@ -491,17 +491,20 @@ string notif_arg_frag_pos(int score)
 	bool tied = false;
 	
 	for(pl = players.sort_next; pl; pl = pl.sort_next) {
-		if(pl.team == NUM_SPECTATOR) continue;
+		if(pl.team != NUM_SPECTATOR) continue;
 		if(pl.(scores(SP_SCORE)) == score) break;
 		++place;
 	}
 	
 	entity prev = pl.sort_prev;
 	entity next = pl.sort_next;
-	if(prev && prev.(scores(SP_SCORE)) == score)
+	if(prev && prev.(scores(SP_SCORE)) == score) {
 		tied = true;
-	if(next && next.(scores(SP_SCORE)) == score)
+		--place; // We're tied always for the best place
+	}
+	if(next && next.(scores(SP_SCORE)) == score) {
 		tied = true;
+	}
 	
 	switch(place) {
 		case 1:
