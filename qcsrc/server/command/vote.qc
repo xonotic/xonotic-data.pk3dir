@@ -778,6 +778,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 		case "restart":
 		case "shuffleteams":
+		case "allready":
 		case "endmatch":
 		{
 			// add a delay so that vote result can be seen and announcer can be heard
