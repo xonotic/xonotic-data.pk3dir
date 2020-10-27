@@ -1168,7 +1168,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 {
 	if (frametime)
 	{
-		if (scoreboard_fade_alpha == 1)
+		if (scoreboard_fade_alpha < 1)
 			scoreboard_acc_fade_alpha = min(1, scoreboard_acc_fade_alpha + frametime * 10);
 		else
 			scoreboard_acc_fade_alpha = 1; // sync fading with the scoreboard
@@ -1343,10 +1343,15 @@ STATIC_INIT(default_order_items_label)
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
-	float scoreboard_acc_fade_alpha_save = scoreboard_acc_fade_alpha; // debug
-	scoreboard_acc_fade_alpha = 1; // debug: make Item Stats always visible
+	if (frametime)
+	{
+		if (scoreboard_fade_alpha < 1)
+			scoreboard_itemstats_fade_alpha = min(1, scoreboard_itemstats_fade_alpha + frametime * 10);
+		else
+			scoreboard_itemstats_fade_alpha = 1; // sync fading with the scoreboard
+	}
+	vector initial_pos = pos;
 
-	float initial_posx = pos.x;
 	int disowned_cnt = 0;
 	int uninteresting_cnt = 0;
 	IL_EACH(default_order_items, true, {
@@ -1368,7 +1373,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	float fontsize = height * 1/3;
 	float item_height = height * 2/3;
 
-	drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -1378,7 +1383,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	panel_size.y += panel_bg_padding * 2;
 
 	float panel_bg_alpha_save = panel_bg_alpha;
-	panel_bg_alpha *= scoreboard_acc_fade_alpha;
+	panel_bg_alpha *= scoreboard_itemstats_fade_alpha;
 	HUD_Panel_DrawBg();
 	panel_bg_alpha = panel_bg_alpha_save;
 
@@ -1398,18 +1403,18 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	float item_width = tmp.x / columnns / rows;
 
 	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
 	if(sbt_highlight)
 	{
 		// column highlighting
 		for (int i = 0; i < columnns; ++i)
 			if ((i % 2) == 0)
-				drawfill(pos + '1 0 0' * item_width * rows * i, '0 1 0' * height * rows + '1 0 0' * item_width * rows, '0 0 0', panel_bg_alpha * 0.2, DRAWFLAG_NORMAL);
+				drawfill(pos + '1 0 0' * item_width * rows * i, '0 1 0' * height * rows + '1 0 0' * item_width * rows, '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + '0 1 0' * item_height + '0 1 0' * height * i, '1 0 0' * panel_size.x + '0 1 0' * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + '0 1 0' * item_height + '0 1 0' * height * i, '1 0 0' * panel_size.x + '0 1 0' * fontsize, rgb, sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if (rows == 2)
@@ -1423,10 +1428,10 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
-		drawpic_aspect_skin(tmpos, it.m_icon, '1 0 0' * item_width + '0 1 0' * item_height, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, it.m_icon, '1 0 0' * item_width + '0 1 0' * item_height, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		string s = ftos(n);
 		float padding = (item_width - stringwidth(s, false, '1 0 0' * fontsize)) / 2; // center
-		drawstring(tmpos + '1 0 0' * padding + '0 1 0' * item_height, s, '1 1 0' * fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(tmpos + '1 0 0' * padding + '0 1 0' * item_height, s, '1 1 0' * fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		tmpos.x += item_width * rows;
 		pos.x += item_width * rows;
 		if (rows == 2 && column == columnns - 1) {
@@ -1436,14 +1441,12 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 		++column;
 	});
-	pos.y += height;
-	pos.y += 1.25 * hud_fontsize.y;
-	pos.x = initial_posx;
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 
-	scoreboard_acc_fade_alpha = scoreboard_acc_fade_alpha_save; // debug
-	return pos;
+	if (scoreboard_itemstats_fade_alpha == 1)
+		return end_pos;
+	return initial_pos + (end_pos - initial_pos) * scoreboard_itemstats_fade_alpha;
 }
 
 vector MapStats_DrawKeyValue(vector pos, string key, string value) {
@@ -1738,6 +1741,7 @@ void Scoreboard_Draw()
 		if (!scoreboard_fade_alpha)
 		{
 			scoreboard_acc_fade_alpha = 0;
+			scoreboard_itemstats_fade_alpha = 0;
 			return;
 		}
 	}
