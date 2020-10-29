@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Aodren Le Gloanec <aodren.legloanec@gmail.com>, 2020
+# Gwlanbzh <aodren.legloanec@gmail.com>, 2020
 # Calinou, 2013-2014
 # Calinou <calinou9999@gmail.com>, 2012
 # Hugo Locurcio, 2014
