@@ -7,6 +7,7 @@
 # Calinou, 2013-2014
 # Calinou <calinou9999@gmail.com>, 2012
 # Hugo Locurcio, 2014
+# Gwlanbzh <aodren.legloanec@gmail.com>, 2020
 # Hugo Locurcio, 2013-2014
 # Maxime Paradis <taximus.micro@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
@@ -19,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-18 07:23+0200\n"
-"PO-Revision-Date: 2020-10-18 15:22+0000\n"
+"PO-Revision-Date: 2020-10-29 16:58+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -1068,11 +1069,11 @@ msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:911
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:912
 msgid "nmi"
-msgstr ""
+msgstr "M"
 
 #: qcsrc/client/hud/panel/timer.qc:72
 msgid "WARMUP"
@@ -6350,19 +6351,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
-msgstr ""
+msgstr "pas de style"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "progress bar"
-msgstr ""
+msgstr "barre de progression"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
-msgstr ""
+msgstr "gradient"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
 msgid "Demo mode"
-msgstr ""
+msgstr "Mode démo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
 msgid "Range:"
@@ -6374,7 +6375,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "Réinitialiser les couleurs"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
@@ -6382,22 +6383,22 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
 msgid "Angle indicator:"
-msgstr ""
+msgstr "Indicateur d'angle :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:85
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:93
 msgid "Neutral:"
-msgstr ""
+msgstr "Neutre :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:87
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:95
 msgid "Good:"
-msgstr ""
+msgstr "Bon :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:89
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:97
 msgid "Overturn:"
-msgstr ""
+msgstr "Excessif :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "Switch indicators:"
