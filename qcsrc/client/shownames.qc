@@ -128,7 +128,7 @@ void Draw_ShowNames(entity this)
 	float dist = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
 	if (autocvar_hud_shownames_maxdistance)
 	{
-		float max_dist = max(autocvar_hud_shownames_maxdistance, max_shot_distance);
+		float max_dist = min(autocvar_hud_shownames_maxdistance, max_shot_distance);
 		if (vdist(this.origin - view_origin, >=, max_dist))
 			return;
 		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
