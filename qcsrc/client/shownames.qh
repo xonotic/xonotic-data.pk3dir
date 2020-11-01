@@ -1,5 +1,25 @@
 #pragma once
 
+bool autocvar_hud_shownames;
+bool autocvar_hud_shownames_enemies;
+float autocvar_hud_shownames_crosshairdistance;
+float autocvar_hud_shownames_crosshairdistance_time;
+float autocvar_hud_shownames_crosshairdistance_antioverlap;
+bool autocvar_hud_shownames_self;
+bool autocvar_hud_shownames_status;
+float autocvar_hud_shownames_statusbar_height;
+float autocvar_hud_shownames_statusbar_highlight = 1;
+float autocvar_hud_shownames_aspect;
+float autocvar_hud_shownames_fontsize;
+int autocvar_hud_shownames_decolorize;
+float autocvar_hud_shownames_alpha;
+bool autocvar_hud_shownames_resize;
+float autocvar_hud_shownames_mindistance;
+float autocvar_hud_shownames_maxdistance;
+bool autocvar_hud_shownames_antioverlap;
+float autocvar_hud_shownames_antioverlap_distance;
+float autocvar_hud_shownames_offset;
+
 entityclass(ShowNames);
 classfield(ShowNames) .float healthvalue;
 classfield(ShowNames) .float armorvalue;

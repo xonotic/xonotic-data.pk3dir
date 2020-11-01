@@ -557,9 +557,14 @@ void W_Arc_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 }
 void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	// TODO: spamming this without checking any refires is asking for trouble!
+	// calculate a rough shot origin to show the effect from TODO: move this to the client side!
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
+	w_shotdir = v_forward;
+	vector md = actor.(weaponentity).movedir;
+	vector vecs = ((md.x > 0) ? md : '0 0 0');
+	vector dv = v_forward * vecs.x + v_right * -vecs.y + v_up * vecs.z;
+	w_shotorg = actor.origin + actor.view_ofs + dv;
+	//W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id);
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )

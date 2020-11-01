@@ -14,6 +14,7 @@
 #include <server/command/getreplies.qh>
 #include <server/intermission.qh>
 #include <server/main.qh>
+#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/race.qh>
 #include <server/weapons/selection.qh>

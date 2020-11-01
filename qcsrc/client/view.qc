@@ -1,7 +1,6 @@
 #include "view.qh"
 
 #include <client/announcer.qh>
-#include <client/autocvars.qh>
 #include <client/csqcmodel_hooks.qh>
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>

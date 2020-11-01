@@ -18,6 +18,7 @@
 #include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>

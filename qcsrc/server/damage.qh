@@ -2,6 +2,34 @@
 
 #include <common/weapons/_all.qh>
 
+bool autocvar_g_throughfloor_debug;
+float autocvar_g_throughfloor_damage;
+float autocvar_g_throughfloor_force;
+float autocvar_g_throughfloor_damage_max_stddev;
+float autocvar_g_throughfloor_force_max_stddev;
+float autocvar_g_throughfloor_min_steps_player;
+float autocvar_g_throughfloor_max_steps_player;
+float autocvar_g_throughfloor_min_steps_other;
+float autocvar_g_throughfloor_max_steps_other;
+float autocvar_g_mirrordamage;
+bool autocvar_g_mirrordamage_virtual;
+bool autocvar_g_mirrordamage_onlyweapons;
+float autocvar_g_maxpushtime;
+float autocvar_g_balance_damagepush_speedfactor;
+int autocvar_g_balance_firetransfer_damage;
+int autocvar_g_balance_firetransfer_time;
+float autocvar_g_balance_armor_blockpercent;
+float autocvar_g_teamdamage_resetspeed;
+float autocvar_g_teamdamage_threshold;
+float autocvar_g_balance_selfdamagepercent;
+float autocvar_g_friendlyfire;
+float autocvar_g_friendlyfire_virtual;
+float autocvar_g_friendlyfire_virtual_force;
+float autocvar_g_frozen_revive_falldamage;
+int autocvar_g_frozen_revive_falldamage_health;
+bool autocvar_g_frozen_damage_trigger;
+float autocvar_g_frozen_force;
+
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
 .bool(entity targ, entity inflictor, float amount, float limit) event_heal;
