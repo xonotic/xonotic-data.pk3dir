@@ -1,25 +1,5 @@
 #include "cl_vehicles.qh"
 
-const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
-const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
-const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
-const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal.tga";
-const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
-const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
-const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
-
-entity dropmark;
-
-const int MAX_AXH = 4;
-entity AuxiliaryXhair[MAX_AXH];
-
-.string axh_image;
-.float  axh_fadetime;
-.int    axh_drawflag;
-
-float alarm1time;
-float alarm2time;
-
 void vehicle_alarm(entity e, int ch, Sound s0und)
 {
 	TC(Sound, s0und);
