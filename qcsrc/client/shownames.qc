@@ -1,17 +1,13 @@
 #include "shownames.qh"
 
-#include "autocvars.qh"
 #include <client/draw.qh>
-#include "main.qh"
-#include "resources.qh"
+#include <client/hud/_mod.qh>
+#include <client/resources.qh>
 #include <client/view.qh>
-#include "hud/_mod.qh"
-
-#include <common/ent_cs.qh>
 #include <common/constants.qh>
+#include <common/ent_cs.qh>
 #include <common/net_linked.qh>
 #include <common/teams.qh>
-
 #include <lib/csqcmodel/cl_model.qh>
 
 // this.isactive = player is in range and coordinates/status (health and armor) are up to date

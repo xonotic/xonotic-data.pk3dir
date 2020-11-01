@@ -117,7 +117,11 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
-		if (e.classname == "") e.classname = "net_linked";
+		if (e.classname == "")
+		{
+		    LOG_WARN("Net_LinkEntity called on an entity without a classname, assigning default");
+		    e.classname = "net_linked";
+		}
 
 		if (e.model == "" || e.modelindex == 0)
 		{

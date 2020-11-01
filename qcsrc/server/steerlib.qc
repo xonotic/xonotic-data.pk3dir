@@ -1,9 +1,6 @@
 #include "steerlib.qh"
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "pathlib/utility.qh"
-#endif
+
+#include <server/pathlib/utility.qh>
 
 /**
     Uniform pull towards a point

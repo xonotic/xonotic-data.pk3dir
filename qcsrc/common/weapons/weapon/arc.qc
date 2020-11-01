@@ -1,8 +1,8 @@
 #include "arc.qh"
 
 #ifdef SVQC
-#include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
 #include <common/gamemodes/gamemode/onslaught/sv_generator.qh>
+#include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {
@@ -1240,7 +1240,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		this.move_time = time;
 		loopsound(this, CH_SHOTS_SINGLE, SND_ARC_LOOP, VOL_BASE, ATTEN_NORM);
 
-		flash = spawn();
+		flash = new(arc_flash);
 		flash.owner = this;
 		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
 		//flash.drawmask = MASK_NORMAL;

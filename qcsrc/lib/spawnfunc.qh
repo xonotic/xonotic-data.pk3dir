@@ -277,6 +277,7 @@ noref bool __spawnfunc_first;
 		if (!this.sourceLoc) { \
 			this.sourceLoc = __FILE__":"STR(__LINE__); \
 		} \
+		this.classname = #id; \
 		if (!this.spawnfunc_checked) { \
 			_checkWhitelisted(this, #id); \
 			this.spawnfunc_checked = true; \

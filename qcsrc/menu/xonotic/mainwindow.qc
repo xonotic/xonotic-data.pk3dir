@@ -25,6 +25,7 @@
 #include "dialog_hudpanel_centerprint.qh"
 #include "dialog_hudpanel_itemstime.qh"
 #include "dialog_hudpanel_quickmenu.qh"
+#include "dialog_hudpanel_strafehud.qh"
 
 #include "dialog_settings_input_userbind.qh"
 #include "dialog_settings_bindings_reset.qh"
@@ -187,6 +188,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	i = NEW(XonoticHUDQuickMenuDialog);
+	i.configureDialog(i);
+	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticHUDStrafeHUDDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

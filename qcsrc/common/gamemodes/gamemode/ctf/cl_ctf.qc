@@ -2,6 +2,7 @@
 
 #include <common/mutators/base.qh>
 #include <client/draw.qh>
+#include <client/hud/_mod.qh>
 #include <client/hud/panel/modicons.qh>
 
 // CTF HUD modicon section

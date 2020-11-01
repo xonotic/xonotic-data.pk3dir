@@ -1,5 +1,10 @@
 #pragma once
 
+int autocvar_g_projectiles_damage;
+bool autocvar_g_projectiles_keep_owner;
+float autocvar_sv_strengthsound_antispam_refire_threshold;
+float autocvar_sv_strengthsound_antispam_time;
+
 bool W_DualWielding(entity player);
 void W_GiveWeapon (entity e, float wep);
 .float prevstrengthsound;

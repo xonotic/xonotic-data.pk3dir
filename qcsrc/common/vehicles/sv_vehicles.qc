@@ -1,15 +1,15 @@
 #include "sv_vehicles.qh"
 
-#include <server/bot/api.qh>
-#include <server/damage.qh>
-#include <server/world.qh>
-#include <server/items/items.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
-#include <server/main.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
 #include <server/weapons/common.qh>
+#include <server/world.qh>
 
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
@@ -262,10 +262,8 @@ entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {
-	TC(Sound, _mzlsound);
-	entity proj;
-
-	proj = spawn();
+    TC(Sound, _mzlsound);
+	entity proj = new(vehicles_projectile);
 
 	PROJECTILE_MAKETRIGGER(proj);
 	setorigin(proj, _org);
@@ -335,7 +333,7 @@ void vehicles_gib_think(entity this)
 
 entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
 {
-	entity _gib = spawn();
+	entity _gib = new(vehicle_gib);
 	_setmodel(_gib, _template.model);
 	vector org = gettaginfo(this, gettagindex(this, _tag));
 	setorigin(_gib, org);
@@ -380,8 +378,8 @@ bool vehicle_addplayerslot(	entity _owner,
 	_slot.vehicle_enter = _enterfunc;
 	STAT(HUD, _slot) = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
-	_slot.vehicle_viewport = spawn();
-	_slot.vehicle_hudmodel = spawn();
+	_slot.vehicle_viewport = new(vehicle_viewport);
+	_slot.vehicle_hudmodel = new(vehicle_hudmodel);
 	_slot.vehicle_hudmodel.viewmodelforclient = _slot;
 	_slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
@@ -694,7 +692,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	{
 		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == NULL)
 		{
-			this.vehicle_shieldent = spawn();
+			this.vehicle_shieldent = new(vehicle_shieldent);
 			this.vehicle_shieldent.effects = EF_LOWPRECISION;
 
 			setmodel(this.vehicle_shieldent, MDL_VEH_SHIELD);

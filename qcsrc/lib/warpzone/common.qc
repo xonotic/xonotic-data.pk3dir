@@ -778,8 +778,7 @@ void WarpZone_RefSys_Copy(entity me, entity from)
 }
 entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 {
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	WarpZone_RefSys_Copy(e, me);
 	return e;
 }

@@ -25,7 +25,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1.2;
 		}
 
-		entity missile = spawn();
+		entity missile = new(WyvernAttack);
 		missile.owner = missile.realowner = actor;
 		missile.solid = SOLID_TRIGGER;
 		set_movetype(missile, MOVETYPE_FLYMISSILE);

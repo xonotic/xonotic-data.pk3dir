@@ -1,4 +1,5 @@
 #include "cl_vehicles.qh"
+
 const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
 const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
@@ -118,7 +119,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 			delete(axh);
 
-		axh              = spawn();
+		axh              = new(AuxiliaryXhair);
 		axh.draw2d       = func_null;
 		axh.drawmask     = MASK_NORMAL;
 		axh.axh_drawflag = DRAWFLAG_NORMAL;

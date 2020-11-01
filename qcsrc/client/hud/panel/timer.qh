@@ -1,2 +1,6 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_timer;
+bool autocvar_hud_panel_timer_dynamichud        = true;
+bool autocvar_hud_panel_timer_increment;

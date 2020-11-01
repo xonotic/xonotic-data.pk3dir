@@ -151,7 +151,7 @@ int MapInfo_ForbiddenFlags(); // retrieves current flags from cvars
 int MapInfo_RequiredFlags(); // retrieves current flags from cvars
 
 // load info about the i-th map into the MapInfo_Map_* globals
-float MapInfo_Get_ByID(float i); // 1 on success, 0 on failure
+bool MapInfo_Get_ByID(int i); // 1 on success, 0 on failure
 string MapInfo_BSPName_ByID(float i);
 
 // load info about a map by name into the MapInfo_Map_* globals

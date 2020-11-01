@@ -28,8 +28,6 @@ void teleport_dest_link(entity this)
 
 spawnfunc(info_teleport_destination)
 {
-	this.classname = "info_teleport_destination";
-
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 

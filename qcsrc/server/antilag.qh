@@ -1,5 +1,8 @@
 #pragma once
 
+int autocvar_g_antilag;
+float autocvar_g_antilag_nudge;
+
 void antilag_record(entity e, entity store, float t);
 vector antilag_takebackorigin(entity e, entity store, float t);
 void antilag_takeback(entity e, entity store, float t);
