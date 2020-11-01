@@ -31,7 +31,7 @@ void instagib_invisibility(entity this);
 void instagib_extralife(entity this);
 void instagib_speed(entity this);
 
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
+REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !MapInfo_LoadedGametype.m_weaponarena)
 {
 	MUTATOR_ONADD
 	{
