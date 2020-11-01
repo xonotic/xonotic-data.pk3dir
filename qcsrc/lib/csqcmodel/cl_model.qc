@@ -176,6 +176,8 @@ void CSQCModel_InterpolateAnimation_Do(entity this)
 #endif
 }
 
+.int cliententnum;
+
 void CSQCModel_Draw(entity this)
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
@@ -193,7 +195,7 @@ void CSQCModel_Draw(entity this)
 
 	if(isplayer)
 	{
-		if(islocalplayer)
+		if(this.cliententnum + 1 == player_localentnum)
 			this.renderflags |= RF_EXTERNALMODEL;
 		else
 			this.renderflags &= ~RF_EXTERNALMODEL;
@@ -214,7 +216,6 @@ void CSQCModel_Draw(entity this)
 }
 
 entity CSQCModel_players[255]; // 255 is engine limit on maxclients
-.int cliententnum;
 
 void CSQCModel_remove(entity this)
 {
@@ -304,7 +305,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	setorigin(this, this.origin);
 
 	// set obvious render flags
-	if(islocalplayer)
+	if(this.cliententnum + 1 == player_localentnum)
 		this.renderflags |= RF_EXTERNALMODEL;
 	else
 		this.renderflags &= ~RF_EXTERNALMODEL;
