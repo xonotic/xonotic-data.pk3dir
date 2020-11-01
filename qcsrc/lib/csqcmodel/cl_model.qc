@@ -195,7 +195,7 @@ void CSQCModel_Draw(entity this)
 
 	if(isplayer)
 	{
-		if(this.cliententnum + 1 == player_localentnum)
+		if(this.cliententnum >= 0 && this.cliententnum + 1 == player_localentnum)
 			this.renderflags |= RF_EXTERNALMODEL;
 		else
 			this.renderflags &= ~RF_EXTERNALMODEL;
@@ -235,7 +235,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	if(isplayer)
 		this.cliententnum = ReadByte() - 1;
 	else
-		this.cliententnum = 0;
+		this.cliententnum = -1; // may cause crashes if used incorrectly
 
 	if (isnew && isplayer)
 	{
@@ -243,6 +243,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 		this.entremove = CSQCModel_remove;
 	}
 
+	this.isplayermodel = 0;
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_CLIENT, isplayer);
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_LOCAL, islocalplayer);
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_PLAYER, (psf & ISPLAYER_PLAYER));
@@ -305,7 +306,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	setorigin(this, this.origin);
 
 	// set obvious render flags
-	if(this.cliententnum + 1 == player_localentnum)
+	if(this.cliententnum >= 0 && this.cliententnum + 1 == player_localentnum)
 		this.renderflags |= RF_EXTERNALMODEL;
 	else
 		this.renderflags &= ~RF_EXTERNALMODEL;
