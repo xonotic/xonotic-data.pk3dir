@@ -37,6 +37,7 @@
 #include <server/hook.qh>
 #include <server/intermission.qh>
 #include <server/ipban.qh>
+#include <server/items/items.qh>
 #include <server/main.qh>
 #include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>

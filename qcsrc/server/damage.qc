@@ -36,6 +36,7 @@
 #include <server/weapons/accuracy.qh>
 #include <server/weapons/csqcprojectile.qh>
 #include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
 void UpdateFrags(entity player, int f)

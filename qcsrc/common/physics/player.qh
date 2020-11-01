@@ -5,6 +5,50 @@
 #ifdef SVQC
 // TODO: get rid of this random dumb include!
 	#include <common/state.qh>
+
+float autocvar_sv_airaccel_qw;
+float autocvar_sv_airstrafeaccel_qw;
+float autocvar_sv_airspeedlimit_nonqw;
+float autocvar_sv_airaccel_qw_stretchfactor;
+float autocvar_sv_maxairstrafespeed;
+float autocvar_sv_airstrafeaccelerate;
+float autocvar_sv_warsowbunny_turnaccel;
+float autocvar_sv_airaccel_sideways_friction;
+float autocvar_sv_aircontrol;
+float autocvar_sv_aircontrol_power;
+float autocvar_sv_aircontrol_backwards;
+float autocvar_sv_aircontrol_sidewards;
+float autocvar_sv_aircontrol_penalty;
+float autocvar_sv_warsowbunny_airforwardaccel;
+float autocvar_sv_warsowbunny_topspeed;
+float autocvar_sv_warsowbunny_accel;
+float autocvar_sv_warsowbunny_backtosideratio;
+float autocvar_sv_friction;
+float autocvar_sv_accelerate;
+float autocvar_sv_stopspeed;
+float autocvar_sv_airaccelerate;
+float autocvar_sv_airstopaccelerate;
+float autocvar_sv_track_canjump;
+string autocvar_g_physics_clientselect_options;
+string autocvar_g_physics_clientselect_default;
+bool autocvar_g_jump_grunt;
+bool autocvar_g_physics_clientselect;
+float autocvar_g_maxspeed;
+float autocvar_g_movement_highspeed = 1;
+bool autocvar_g_movement_highspeed_q3_compat = 0;
+//float autocvar_g_nick_flood_penalty;
+int autocvar_g_nick_flood_penalty_red;
+int autocvar_g_nick_flood_penalty_yellow;
+//float autocvar_g_nick_flood_timeout;
+bool autocvar_speedmeter;
+string autocvar_sv_jumpspeedcap_max;
+float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
+string autocvar_sv_jumpspeedcap_min;
+float autocvar_sv_jumpvelocity;
+float autocvar_sv_jumpvelocity_crouch;
+float autocvar_sv_maxairspeed;
+float autocvar_sv_maxspeed;
+bool autocvar_g_footsteps;
 #endif
 
 .entity conveyor;

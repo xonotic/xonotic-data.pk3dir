@@ -1,6 +1,9 @@
 #pragma once
 #include "../panel.qh"
 
+bool autocvar_cl_deathscoreboard;
+string autocvar_scoreboard_columns;
+
 bool scoreboard_showscores;
 
 bool scoreboard_active;

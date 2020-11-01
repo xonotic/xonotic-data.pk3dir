@@ -1,6 +1,12 @@
 #pragma once
 #include "defs.qh"
 
+#ifdef SVQC
+bool autocvar_g_telefrags;
+bool autocvar_g_telefrags_avoid;
+bool autocvar_g_telefrags_teamplay;
+#endif
+
 IntrusiveList g_teleporters;
 STATIC_INIT(g_teleporters) { g_teleporters = IL_NEW(); }
 

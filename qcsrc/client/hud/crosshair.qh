@@ -1,5 +1,63 @@
 #pragma once
 
+bool autocvar_cl_reticle = 1;
+float autocvar_cl_reticle_normal_alpha = 1;
+bool autocvar_cl_reticle_weapon = 1;
+float autocvar_cl_reticle_weapon_alpha = 1;
+bool autocvar_cl_reticle_stretch;
+string autocvar_crosshair;
+string autocvar_crosshair_2d = "54";
+float autocvar_crosshair_alpha;
+string autocvar_crosshair_color;
+int autocvar_crosshair_color_special;
+float autocvar_crosshair_color_special_rainbow_brightness = 2;
+float autocvar_crosshair_color_special_rainbow_delay = 0.1;
+bool autocvar_crosshair_dot;
+float autocvar_crosshair_dot_alpha;
+string autocvar_crosshair_dot_color;
+bool autocvar_crosshair_dot_color_custom = 1;
+float autocvar_crosshair_dot_size;
+bool autocvar_crosshair_effect_scalefade;
+float autocvar_crosshair_effect_time = 0.2;
+bool autocvar_crosshair_enabled = 1;
+bool autocvar_crosshair_hitindication;
+string autocvar_crosshair_hitindication_color;
+string autocvar_crosshair_hitindication_per_weapon_color;
+float autocvar_crosshair_hitindication_speed;
+bool autocvar_crosshair_hittest;
+bool autocvar_crosshair_hittest_blur_teammate = 0;
+bool autocvar_crosshair_hittest_blur_wall = 1;
+//float autocvar_crosshair_hittest_scale = 1.25;
+bool autocvar_crosshair_hittest_showimpact;
+bool autocvar_crosshair_per_weapon;
+float autocvar_crosshair_pickup;
+float autocvar_crosshair_pickup_speed;
+bool autocvar_crosshair_ring;
+bool autocvar_crosshair_ring_inner;
+bool autocvar_crosshair_ring_minelayer;
+float autocvar_crosshair_ring_minelayer_alpha;
+bool autocvar_crosshair_ring_hagar;
+float autocvar_crosshair_ring_hagar_alpha;
+bool autocvar_crosshair_ring_vortex = 1;
+float autocvar_crosshair_ring_vortex_alpha = 0.15;
+float autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate = 0.05;
+float autocvar_crosshair_ring_vortex_currentcharge_scale = 30;
+float autocvar_crosshair_ring_vortex_inner_alpha = 0.15;
+float autocvar_crosshair_ring_vortex_inner_color_blue = 0;
+float autocvar_crosshair_ring_vortex_inner_color_green = 0;
+float autocvar_crosshair_ring_vortex_inner_color_red = 0.8;
+bool autocvar_crosshair_ring_arc = 1;
+vector autocvar_crosshair_ring_arc_hot_color = '1 0 0';
+float autocvar_crosshair_ring_arc_cold_alpha = 0.2;
+float autocvar_crosshair_ring_arc_hot_alpha = 0.5;
+float autocvar_crosshair_ring_size;
+bool autocvar_crosshair_ring_reload;
+float autocvar_crosshair_ring_reload_alpha;
+float autocvar_crosshair_ring_reload_size;
+float autocvar_crosshair_size;
+bool autocvar_crosshair_chase = true;
+float autocvar_crosshair_chase_playeralpha = 0.25;
+
 float vortex_charge_movingavg; // WEAPONTODO
 
 vector crosshair_getcolor(entity this, float health_stat);

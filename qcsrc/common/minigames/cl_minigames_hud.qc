@@ -1,7 +1,7 @@
 #include "cl_minigames_hud.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
+#include <client/hud/_mod.qh>
 #include <client/hud/hud_config.qh>
 #include <client/mapvoting.qh>
 #include <common/ent_cs.qh>

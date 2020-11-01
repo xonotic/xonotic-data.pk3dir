@@ -12,7 +12,6 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 #include <server/antilag.qh>
-#include <server/autocvars.qh>
 #include <server/bot/default/aim.qh>
 #include <server/bot/default/cvars.qh>
 #include <server/bot/default/havocbot/havocbot.qh>

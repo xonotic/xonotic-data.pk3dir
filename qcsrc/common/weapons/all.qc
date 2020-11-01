@@ -3,7 +3,6 @@
 #define WEAPONS_ALL_C
 
 #if defined(CSQC)
-	#include <client/autocvars.qh>
 	#include <client/main.qh>
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>
@@ -38,7 +37,6 @@
 	#include <lib/warpzone/common.qh>
 	#include <lib/warpzone/server.qh>
 	#include <lib/warpzone/util_server.qh>
-	#include <server/autocvars.qh>
 	#include <server/command/_mod.qh>
 	#include <server/hook.qh>
 	#include <server/items/spawning.qh>
