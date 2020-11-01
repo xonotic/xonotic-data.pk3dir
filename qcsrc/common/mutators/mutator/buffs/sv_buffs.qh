@@ -1,8 +1,10 @@
 #pragma once
 
+#include <common/mutators/base.qh>
+
 #include "buffs.qh"
 
-void buffs_DelayedInit(entity this);
+void buffs_Initialize();
 
 AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
 
@@ -10,8 +12,7 @@ REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 {
 	MUTATOR_ONADD
 	{
-		if(autocvar_g_buffs > 0)
-			InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
+		buffs_Initialize();
 	}
 }
 

@@ -1027,3 +1027,10 @@ void buffs_DelayedInit(entity this)
 		}
 	}
 }
+
+void buffs_Initialize()
+{
+	// if buffs are above 0, allow random spawning
+	if(autocvar_g_buffs > 0 && autocvar_g_buffs_spawn_count > 0)
+		InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
+}
