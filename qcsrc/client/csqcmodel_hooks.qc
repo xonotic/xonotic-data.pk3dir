@@ -618,7 +618,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null" || this.alpha < 0)
+	if(!this.modelindex || this.model == "null")
 	{
 		this.drawmask = 0;
 		if(this.snd_looping > 0)
