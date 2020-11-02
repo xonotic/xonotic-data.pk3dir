@@ -238,6 +238,31 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	return v;
 }
 
+// simplified copy of CSQCPlayer_ApplySmoothing for use on player models
+.float stairsmooth_offset;
+.float stairsmooth_prevtime;
+.float stairsmooth_drawtime; // holds the previous draw time
+vector CSQCModel_ApplyStairSmoothing(entity this, bool isonground, vector v)
+{
+	float smoothtime = bound(0, time - this.stairsmooth_prevtime, 0.1);
+	this.stairsmooth_prevtime = max(this.stairsmooth_prevtime, this.stairsmooth_drawtime); // stairsmooth_drawtime is the previous frame's time at this point
+
+	if(this.csqcmodel_teleported || !isonground || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
+		this.stairsmooth_offset = v.z;
+	else
+	{
+		if(this.stairsmooth_offset < v.z)
+			v.z = this.stairsmooth_offset = bound(v.z - PHYS_STEPHEIGHT(this), this.stairsmooth_offset + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(this.stairsmooth_offset > v.z)
+			v.z = this.stairsmooth_offset = bound(v.z, this.stairsmooth_offset - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+	}
+
+	this.stairsmooth_prevtime = time;
+	this.stairsmooth_drawtime = drawtime;
+
+	return v;
+}
+
 bool autocvar_v_deathtilt;
 float autocvar_v_deathtiltangle;
 void CSQCPlayer_ApplyDeathTilt(entity this)
@@ -281,7 +306,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(this.csqcmodel_isdead)
+	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this))
 		return v;
 
 	// bounded XY speed, used by several effects below
@@ -574,6 +599,8 @@ void CSQCPlayer_SetCamera()
 		}
 
 		// relink
+		e.stairsmooth_drawtime = drawtime; // since drawtime is a frame old at this point, copy it now to avoid using a drawtime 2 frames old!
+		e.origin = CSQCModel_ApplyStairSmoothing(e, (e.pmove_flags & PMF_ONGROUND), e.origin);
 		setorigin(e, e.origin);
 	}
 

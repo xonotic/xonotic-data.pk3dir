@@ -8,10 +8,6 @@
 #include <common/sounds/sound.qh>
 #include <common/weapons/all.qh>
 
-#ifdef CSQC
-#include <client/autocvars.qh>
-#endif
-
 // Operator for bold notifications
 #define BOLD_OPERATOR "^BOLD"
 

@@ -3,6 +3,7 @@
 #include <common/mapinfo.qh>
 #include <common/util.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/mapvoting.qh>

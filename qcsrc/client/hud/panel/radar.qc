@@ -1,6 +1,5 @@
 #include "radar.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/mapvoting.qh>
 #include <client/resources.qh>

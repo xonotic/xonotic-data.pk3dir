@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Iso Lee, 2016
 # Jisoo Lim <liminj0719@gmail.com>, 2017
-# Kyf Lee <coughingmouse@gmail.com>, 2016
-# Kyf Lee <coughingmouse@gmail.com>, 2016-2017
-# Kyf Lee <coughingmouse@gmail.com>, 2016-2017
-# Kyf Lee <coughingmouse@gmail.com>, 2016
+# Iso Lee, 2016
+# Iso Lee, 2016-2017
+# Iso Lee, 2016-2017
+# Iso Lee, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
