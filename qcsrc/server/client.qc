@@ -1069,12 +1069,12 @@ string getwelcomemessage(entity this)
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
-	string s = strcat(versionmessage, "^8\n^8\nhost is ^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname), "^8\n");
+	string s = strcat(versionmessage, "^8\n^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
 
-	s = strcat(s, "^8\nmatch type is ^1", gamemode_name, "^8\n");
+	s = strcat(s, "^8\n^1", gamemode_name);
 
 	if(modifications != "")
-		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
+		s = strcat(s, "^7 | ^3", modifications);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1083,7 +1083,7 @@ string getwelcomemessage(entity this)
 	}
 
 	if (cache_mutatormsg != "") {
-		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
+		s = strcat(s, "\n^8tips: ^7", cache_mutatormsg);
 	}
 
 	string mutator_msg = "";
@@ -1094,7 +1094,7 @@ string getwelcomemessage(entity this)
 
 	string motd = autocvar_sv_motd;
 	if (motd != "") {
-		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
+		s = strcat(s, "\n\n^7", strreplace("\\n", "\n", motd));
 	}
 	return s;
 }
