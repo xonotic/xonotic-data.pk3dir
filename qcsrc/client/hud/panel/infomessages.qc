@@ -89,11 +89,11 @@ void HUD_InfoMessages()
 	{
 		if(spectatee_status)
 		{
-			if(spectatee_status == -1)
+			/*if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
-			InfoMessage(s);
+			InfoMessage(s);*/
 
 			if(autocvar_hud_panel_infomessages_group0)
 			{

@@ -15,6 +15,7 @@
 #include <client/hud/panel/racetimer.qh>
 #include <client/hud/panel/radar.qh>
 #include <client/hud/panel/score.qh>
+#include <client/hud/panel/spect.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/hud/panel/strafehud.qh>
 #include <client/hud/panel/timer.qh>

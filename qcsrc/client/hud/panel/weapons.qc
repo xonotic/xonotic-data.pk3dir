@@ -119,6 +119,8 @@ string cl_weaponpriority_old;
 bool weapons_orderbyimpulse_old;
 void HUD_Weapons()
 {
+	if(spectatee_status && teamplay) return; // z411
+	
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	int i;

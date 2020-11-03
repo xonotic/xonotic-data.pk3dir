@@ -15,7 +15,7 @@ void HUD_Score_Export(int fh)
 }
 
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
-{
+{	
 	float score;
 	entity tm = NULL, pl;
 	int SCOREPANEL_MAX_ENTRIES = 6;
@@ -78,9 +78,6 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		return;
 	}
 	
-	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
-		Scoreboard_UpdatePlayerTeams();
-		
 	/*
 	if (team_count)
 	{
@@ -131,7 +128,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			score_color = Team_ColorRGB(tm.team) * 0.8;
 			
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			draw_beginBoldFont();
 			drawstring(pos + eX * (name_size + spacing_size), ftos(tm.(teamscores(ts_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+			
 			pos.y += fontsize.y;
 			++i;
 		}
@@ -198,6 +199,11 @@ void HUD_Score()
 		if(!autocvar_hud_panel_score) return;
 		if(MUTATOR_CALLHOOK(HUD_Score_show)) return;
 	}
+	
+	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
+		Scoreboard_UpdatePlayerTeams();
+	
+	if(spectatee_status) return;
 
 	HUD_Panel_LoadCvars();
 	vector pos, mySize;
