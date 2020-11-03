@@ -1068,10 +1068,11 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	string versionmessage = GetClientVersionMessage(this);
-	string s = strcat(versionmessage, "^8\n^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
+	//string versionmessage = GetClientVersionMessage(this);
+	//string s = strcat(versionmessage, "^8\n^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
+	string s = (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
 
-	s = strcat(s, "^8\n^1", gamemode_name);
+	s = strcat(s, "^8\n^7", gamemode_name);
 
 	if(modifications != "")
 		s = strcat(s, "^7 | ^3", modifications);
