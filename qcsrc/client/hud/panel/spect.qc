@@ -18,7 +18,7 @@ void HUD_SpectHUD_drawCurrentName(vector pos)
 	if(!current_player) return;
 	
 	string s = entcs_GetName(current_player);
-	pos.x -= stringwidth(s, false, hud_fontsize * 2) / 2;
+	pos.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
 	drawcolorcodedstring(pos, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 	
@@ -113,7 +113,7 @@ void HUD_SpectHUD_drawTeamScore(vector pos, entity tm, vector rgb, bool invert)
 
 void HUD_SpectHUD()
 {
-	if(!spectatee_status || !teamplay) return;
+	if(!spectatee_status) return;
 	
 	vector pos, rgb;
 	float ammo_y, timer_width;
@@ -122,13 +122,19 @@ void HUD_SpectHUD()
 	// Set main vars
 	HUD_Panel_LoadCvars();
 	HUD_Scale_Enable();
-	
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
+	
+	// Spectator name
+	ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
+	pos = panel_pos + vec2((vid_conwidth - 1) / 2, (ammo_y - (hud_fontsize.y * 2)));
+	HUD_SpectHUD_drawCurrentName(pos);
+	
+	if(!teamplay) return;
+	
+	// Set vars
 	teamscore_fontsize = hud_fontsize * 3;
 	teamname_fontsize = hud_fontsize * 2;
-	
 	teamscore_size = vec2(teamscore_fontsize.x * 1.5, teamscore_fontsize.y * 1.25);
-	ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
 	timer_width = stov(cvar_string("hud_panel_timer_size")).x * vid_conwidth;
 	
 	// Team 1
@@ -150,8 +156,4 @@ void HUD_SpectHUD()
 	
 	pos = panel_pos + vec2(vid_conwidth - 1, (vid_conheight - 1) / 4 + hud_fontsize.y);
 	HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, true);
-	
-	// Spectator name
-	pos = panel_pos + vec2((vid_conwidth - 1) / 2, (ammo_y - (hud_fontsize.y * 2)));
-	HUD_SpectHUD_drawCurrentName(pos);
 }

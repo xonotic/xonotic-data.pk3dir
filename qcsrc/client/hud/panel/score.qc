@@ -203,7 +203,7 @@ void HUD_Score()
 	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
 		Scoreboard_UpdatePlayerTeams();
 	
-	if(spectatee_status) return;
+	if(spectatee_status && teamplay) return;
 
 	HUD_Panel_LoadCvars();
 	vector pos, mySize;
