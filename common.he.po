@@ -5,6 +5,7 @@
 # Translators:
 # nad le <nadavlevi726@gmail.com>, 2018
 # Omer I.S., 2020
+# Omer I.S., 2020
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2020
 # Tal Leibman <leibman2@gmail.com>, 2019
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-18 07:23+0200\n"
-"PO-Revision-Date: 2020-11-02 11:52+0000\n"
+"PO-Revision-Date: 2020-11-03 20:32+0000\n"
 "Last-Translator: Omer I.S.\n"
 "Language-Team: Hebrew (http://www.transifex.com/team-xonotic/xonotic/"
 "language/he/)\n"
@@ -1096,7 +1097,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/weapons.qc:639
 msgid "Unavailable"
-msgstr "לא זמין"
+msgstr "לא זמין/ה"
 
 #: qcsrc/client/main.qc:286
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -5781,7 +5782,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
-msgstr "גודל צ'אט:"
+msgstr "גודל צ׳אט:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
@@ -8709,7 +8710,7 @@ msgstr "נקה"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:53
 msgid "Reset all"
-msgstr "אפס הכל"
+msgstr "לאפס הכול"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:58
 msgid "Mouse"
@@ -8789,7 +8790,7 @@ msgstr "JPJUMP^הכל"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:120
 msgid "Use joystick input"
-msgstr "התשתמש בקלט מג'ויסטיק"
+msgstr "שימוש בקלט מג'ויסטיק"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
@@ -8801,7 +8802,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr "בטל"
+msgstr "ביטול"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
