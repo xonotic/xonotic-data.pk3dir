@@ -2,6 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
+#include <common/gamemodes/gamemode/cts/cts.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
