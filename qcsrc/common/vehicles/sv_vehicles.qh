@@ -92,10 +92,6 @@ const int VHEF_NORMAL = 0;  /// User pressed exit key
 const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehicle is dying
 const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
 
-float  force_fromtag_power;
-float  force_fromtag_normpower;
-vector force_fromtag_origin;
-
 float vehicles_exit_running;
 
 // macros
@@ -111,7 +107,6 @@ void vehicles_exit(entity vehic, int eject);
 bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
-float vehicle_altitude(entity this, float amax);
 void vehicles_enter(entity pl, entity veh);
 
 IntrusiveList g_vehicle_returners;

@@ -1,17 +1,18 @@
 #include "playerstats.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
-    #include <server/client.qh>
-    #include "../server/anticheat.qh"
-    #include <common/stats.qh>
-    #include <server/intermission.qh>
-    #include "../server/scores.qh"
+	#include <common/constants.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
+	#include <server/anticheat.qh>
+	#include <server/client.qh>
+	#include <server/intermission.qh>
+	#include <server/scores.qh>
+	#include <server/weapons/accuracy.qh>
 	#include <server/world.qh>
-    #include "../server/weapons/accuracy.qh"
 #endif
 
 #ifdef SVQC
@@ -166,8 +167,8 @@ void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
-	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
-	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	PlayerScore_Sort(score_dummyfield, 0, false, false);
+	PlayerScore_Sort(scoreboard_pos, 1, true, true);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
 	FOREACH_CLIENT(true, {

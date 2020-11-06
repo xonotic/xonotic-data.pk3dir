@@ -1,8 +1,6 @@
 #include "physics.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // Physics (#15)

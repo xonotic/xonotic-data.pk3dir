@@ -201,7 +201,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 {
 	makevectors(this.angles);
 
-	entity missile = spawn();
+	entity missile = new(M_Mage_Attack_Spike);
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;

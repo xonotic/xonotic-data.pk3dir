@@ -239,7 +239,6 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_LOCAL, islocalplayer);
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_PLAYER, (psf & ISPLAYER_PLAYER));
 
-	this.classname = "csqcmodel";
 	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
 	this.iflags |= IFLAG_ANGLES; // interpolate angles too
 	this.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically

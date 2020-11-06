@@ -144,7 +144,7 @@ NET_HANDLE(casings, bool isNew)
     ang_z = ReadByte() * 360 / 256;
     return = true;
 
-    Casing casing = RubbleNew("casing");
+    Casing casing = RubbleNew(new(casing));
     casing.silent = (_state & 0x80);
     casing.state = (_state & 0x7F);
     casing.origin = org;

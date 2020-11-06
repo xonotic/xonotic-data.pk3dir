@@ -5,6 +5,7 @@
 #include <common/weapons/_all.qh>
 #include <common/physics/player.qh>
 
+bool autocvar_g_waypoints_for_items;
 bool bot_waypoints_for_items;
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);

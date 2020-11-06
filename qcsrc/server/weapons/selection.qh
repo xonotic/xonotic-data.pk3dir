@@ -3,6 +3,10 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
+int autocvar_g_showweaponspawns;
+bool autocvar_g_weaponswitch_debug;
+bool autocvar_g_weaponswitch_debug_alternate;
+
 .int selectweapon; // last selected weapon of the player
 
 .WepSet dual_weapons;

@@ -1,12 +1,11 @@
 #include "ipban.qh"
 
-#include <common/weapons/_all.qh>
+#include <common/constants.qh>
 #include <common/stats.qh>
-#include "autocvars.qh"
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/banning.qh>
 #include <server/main.qh>
-#include "command/banning.qh"
-#include "../common/constants.qh"
-#include "../common/util.qh"
 
 /*
  * Protocol of online ban list:

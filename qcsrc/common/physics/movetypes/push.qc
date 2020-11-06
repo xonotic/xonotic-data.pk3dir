@@ -1,4 +1,5 @@
 #include "push.qh"
+
 void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 {
 	if(this.velocity == '0 0 0' && this.avelocity == '0 0 0')

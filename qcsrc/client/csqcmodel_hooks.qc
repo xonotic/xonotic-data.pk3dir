@@ -1,19 +1,17 @@
 #include "csqcmodel_hooks.qh"
-#include "autocvars.qh"
-#include "main.qh"
+
 #include <client/mutators/_mod.qh>
-#include <client/main.qh>
-#include "player_skeleton.qh"
-#include "weapons/projectile.qh"
+#include <client/player_skeleton.qh>
+#include <client/weapons/projectile.qh>
 #include <common/animdecide.qh>
+#include <common/effects/all.inc>
+#include <common/effects/all.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <common/viewloc.qh>
-#include <common/effects/all.qh>
-#include <common/effects/all.inc>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -424,7 +422,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		}
 
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
-		if(this.tag_entity.classname == "csqcmodel")
+		if(this.tag_entity.classname == "ENT_CLIENT_MODEL")
 		{
 			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.isplayermodel & ISPLAYER_CLIENT));
 		}
@@ -620,7 +618,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null" || this.alpha < 0)
+	if(!this.modelindex || this.model == "null")
 	{
 		this.drawmask = 0;
 		if(this.snd_looping > 0)
@@ -676,6 +674,8 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 				tracebox(this.origin + '0 0 1', this.mins, this.maxs, this.origin - '0 0 4', MOVE_NORMAL, this);
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
+				// predicted clients handle smoothing in the prediction code
+				this.origin = CSQCModel_ApplyStairSmoothing(this, onground, this.origin);
 			}
 			animdecide_load_if_needed(this);
 			animdecide_setimplicitstate(this, onground);

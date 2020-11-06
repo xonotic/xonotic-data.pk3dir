@@ -1,88 +1,81 @@
 #include "client.qh"
 
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/chat.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include "anticheat.qh"
-#include "impulse.qh"
-#include "player.qh"
-#include "ipban.qh"
-#include "portals.qh"
-#include "teamplay.qh"
-#include "spawnpoints.qh"
-#include "resources.qh"
-#include "damage.qh"
-#include "handicap.qh"
-#include "hook.qh"
-#include <server/intermission.qh>
-#include "command/common.qh"
-#include "command/vote.qh"
-#include "clientkill.qh"
-#include "cheats.qh"
-#include "world.qh"
+#include <common/effects/qc/globalsound.qh>
+#include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
+#include <common/items/_mod.qh>
+#include <common/items/inventory.qh>
+#include <common/mapobjects/func/conveyor.qh>
+#include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/target/spawnpoint.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/trigger/secret.qh>
+#include <common/mapobjects/trigger/swamp.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/minigames/sv_minigames.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+#include <common/net_linked.qh>
+#include <common/net_notice.qh>
+#include <common/notifications/all.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/viewloc.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/weapon/vortex.qh>
+#include <common/wepent.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/server.qh>
+#include <server/anticheat.qh>
+#include <server/antilag.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/cheats.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/compat/quake3.qh>
+#include <server/damage.qh>
 #include <server/gamelog.qh>
-#include "race.qh"
+#include <server/handicap.qh>
+#include <server/hook.qh>
+#include <server/impulse.qh>
+#include <server/intermission.qh>
+#include <server/ipban.qh>
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
-#include "antilag.qh"
-#include "campaign.qh"
-#include "command/common.qh"
-#include "scores_rules.qh"
-#include "weapons/common.qh"
-
-#include "bot/api.qh"
-
-#include "../common/ent_cs.qh"
-#include "../common/wepent.qh"
-#include <common/state.qh>
-
-#include "compat/quake3.qh"
-
-#include <common/effects/qc/globalsound.qh>
-
-#include "../common/mapobjects/func/conveyor.qh"
-#include <common/mapobjects/func/ladder.qh>
-#include "../common/mapobjects/teleporters.qh"
-#include "../common/mapobjects/target/spawnpoint.qh"
-#include <common/mapobjects/trigger/counter.qh>
-#include <common/mapobjects/trigger/swamp.qh>
-
-#include "../common/vehicles/all.qh"
-
-#include "weapons/hitplot.qh"
-#include "weapons/selection.qh"
-#include "weapons/weaponsystem.qh"
-
-#include "../common/net_notice.qh"
-#include "../common/net_linked.qh"
-#include "../common/physics/player.qh"
-
-#include <common/vehicles/sv_vehicles.qh>
-
-#include "../common/items/_mod.qh"
-
-#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
-
-#include "../common/mutators/mutator/waypoints/all.qh"
-#include "../common/mutators/mutator/instagib/sv_instagib.qh"
-#include <common/gamemodes/_mod.qh>
-
-#include "../common/mapobjects/subs.qh"
-#include "../common/mapobjects/triggers.qh"
-#include "../common/mapobjects/trigger/secret.qh"
-
-#include "../common/minigames/sv_minigames.qh"
-
-#include "../common/items/inventory.qh"
-
-#include "../common/monsters/sv_monsters.qh"
-
-#include "../lib/warpzone/server.qh"
-
-#include <common/mutators/mutator/overkill/oknex.qh>
-
-#include <common/weapons/weapon/vortex.qh>
+#include <server/player.qh>
+#include <server/portals.qh>
+#include <server/race.qh>
+#include <server/resources.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/spawnpoints.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/hitplot.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {

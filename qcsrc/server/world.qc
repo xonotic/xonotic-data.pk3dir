@@ -1,52 +1,53 @@
 #include "world.qh"
 
-#include "anticheat.qh"
-#include "antilag.qh"
-#include "bot/api.qh"
-#include "campaign.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "command/common.qh"
-#include "command/getreplies.qh"
-#include "command/sv_cmd.qh"
-#include "command/vote.qh"
-#include "hook.qh"
-#include <server/gamelog.qh>
-#include <server/damage.qh>
-#include "ipban.qh"
-#include <server/intermission.qh>
-#include <server/main.qh>
-#include "mapvoting.qh"
-#include <server/mutators/_mod.qh>
-#include "race.qh"
-#include "scores.qh"
-#include "scores_rules.qh"
-#include "spawnpoints.qh"
-#include "teamplay.qh"
-#include "weapons/weaponstats.qh"
-#include <server/weapons/common.qh>
-#include "../common/constants.qh"
-#include <common/net_linked.qh>
-#include "../common/deathtypes/all.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
-#include "../common/gamemodes/sv_rules.qh"
-#include "../common/mapinfo.qh"
-#include "../common/monsters/_mod.qh"
-#include "../common/monsters/sv_monsters.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/notifications/all.qh"
-#include "../common/physics/player.qh"
-#include "../common/playerstats.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
-#include <common/mapobjects/triggers.qh>
+#include <common/gamemodes/sv_rules.qh>
+#include <common/items/_mod.qh>
+#include <common/mapinfo.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/hurt.qh>
-#include "../common/mapobjects/trigger/secret.qh"
-#include "../common/mapobjects/target/music.qh"
-#include "../common/util.qh"
-#include "../common/items/_mod.qh"
+#include <common/mapobjects/trigger/secret.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/net_linked.qh>
+#include <common/notifications/all.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-#include "../common/state.qh"
+#include <server/anticheat.qh>
+#include <server/antilag.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/sv_cmd.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/hook.qh>
+#include <server/intermission.qh>
+#include <server/ipban.qh>
+#include <server/items/items.qh>
+#include <server/main.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/spawnpoints.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/weaponstats.qh>
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -590,7 +591,7 @@ spawnfunc(__init_dedicated_server)
 
 	delete_fn = remove_unsafely;
 
-	entity e = spawn();
+	entity e = new(GotoFirstMap);
 	setthink(e, GotoFirstMap);
 	e.nextthink = time; // this is usually 1 at this point
 
@@ -964,7 +965,7 @@ spawnfunc(worldspawn)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		string s = "csprogs-" WATERMARK ".txt";
+		string s = "csprogs-" WATERMARK ".dat";
 		// remove automatically managed files from the list to prevent duplicates
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
@@ -1828,7 +1829,7 @@ void readplayerstartcvars()
 	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
-		random_start_ammo = spawn();
+		random_start_ammo = new(random_start_ammo);
 	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");

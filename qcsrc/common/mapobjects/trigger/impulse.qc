@@ -222,7 +222,6 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	trigger_common_read(this, true);
 	return = true;
 
-	this.classname = "trigger_impulse";
 	this.solid = SOLID_TRIGGER;
 	this.entremove = trigger_remove_generic;
 	this.move_time = time;
