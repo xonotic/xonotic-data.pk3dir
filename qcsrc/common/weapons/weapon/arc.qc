@@ -687,7 +687,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
-        	if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
+            if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
             if(!(actor.items & IT_UNLIMITED_AMMO))
             {
                 W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
