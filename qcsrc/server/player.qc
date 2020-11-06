@@ -551,6 +551,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
+		// don't play teleportation sounds
+		this.teleportable = TELEPORT_SIMPLE;
 
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 
