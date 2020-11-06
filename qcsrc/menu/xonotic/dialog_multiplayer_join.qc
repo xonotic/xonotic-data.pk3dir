@@ -36,7 +36,7 @@ void XonoticServerListTab_fill(entity me)
 			slist.controlledTextbox = e;
 
 	me.gotoRC(me, 0.5, 2.6);
-		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
+		me.TD(me, 1, 0.75, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
 			e.onClickEntity = slist;
 			e.onClick = ServerList_Categories_Click;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty")),
@@ -44,11 +44,16 @@ void XonoticServerListTab_fill(entity me)
 			slist.filterShowEmpty = e.checked;
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowEmpty_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "menu_slist_showfull", ZCTX(_("SRVS^Full")),
+		me.TD(me, 1, 0.5, e = makeXonoticCheckBox_T(0, "menu_slist_showfull", ZCTX(_("SRVS^Full")),
 			_("Show full servers that have no slots available")));
 			slist.filterShowFull = e.checked;
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowFull_Click;
+		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "menu_slist_showlaggy", ZCTX(_("SRVS^Laggy")),
+			_("Show high latency servers")));
+			slist.filterShowLaggy = e.checked;
+			e.onClickEntity = slist;
+			e.onClick = ServerList_ShowLaggy_Click;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "net_slist_pause", _("Pause"),
 			_("Pause updating the server list to prevent servers from \"jumping around\"")));
 		me.TD(me, 1, 1, e = makeXonoticButton_T(_("Refresh"), '0 0 0', _("Reload the server list")));
