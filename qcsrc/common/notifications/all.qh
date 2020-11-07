@@ -491,7 +491,7 @@ string notif_arg_frag_pos(int score)
 	bool tied = false;
 	
 	for(pl = players.sort_next; pl; pl = pl.sort_next) {
-		if(pl.team != NUM_SPECTATOR) continue;
+		if(pl.team == NUM_SPECTATOR) continue;
 		if(pl.(scores(SP_SCORE)) == score) break;
 		++place;
 	}
