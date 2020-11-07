@@ -140,19 +140,16 @@ float CA_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		nades_Clear(it);
 		
-		if(it.team == winner_team)
-		{
-			// Give perfect medal if everyone in the winner team is alive
-			if(perfect) {
-				Give_Medal(it, PERFECT);
-			}
-			
-			// Give accuracy medal for each weapon above 50%
-			entity ra = it.roundaccuracy;
-			for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
-				if(ra.accuracy_fired[w] && (ra.accuracy_hit[w] / ra.accuracy_fired[w]) > 0.5) {
-					Give_Medal(it, ACCURACY);
-				}
+		// Give perfect medal if everyone in the winner team is alive
+		if(perfect) {
+			Give_Medal(it, PERFECT);
+		}
+		
+		// Give accuracy medal for each weapon above 50%
+		entity ra = it.roundaccuracy;
+		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
+			if(ra.accuracy_fired[w] > 1 && (ra.accuracy_hit[w] / ra.accuracy_fired[w]) > 0.5) {
+				Give_Medal(it, ACCURACY);
 			}
 		}
 	});
