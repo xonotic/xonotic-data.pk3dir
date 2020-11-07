@@ -844,9 +844,12 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, int tea
 		if(sbt_field[i] == SP_SEPARATOR)
 			break;
 		
+		vector text_offset_center = '0 0 0';
+		
 		if(sbt_field[i] == SP_PING && teamplay) {
 			title_str = sprintf("(%d)", average_ping[Team_TeamToIndex(team) - 1]);
 			title_rgb = getPingColor(average_ping[Team_TeamToIndex(team) - 1]);
+			text_offset_center.x = sbt_field_size[i] - stringwidth(title_str, false, hud_fontsize);
 		} else {
 			title_str = sbt_field_title[i];
 			title_rgb = rgb * 1.5;
@@ -856,7 +859,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, int tea
 		if (sbt_highlight)
 			if (i % 2)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + text_offset, title_str, hud_fontsize, title_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_offset + text_offset_center, title_str, hud_fontsize, title_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		pos.x += column_dim.x;
 	}
 	if(sbt_field[i] == SP_SEPARATOR)
