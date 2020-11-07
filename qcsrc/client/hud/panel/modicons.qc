@@ -32,8 +32,6 @@ void HUD_ModIcons()
 		if(!HUD_ModIcons_GameType) return;
 	}
 	
-	if(spectatee_status && teamplay) return; // z411
-	
 	if(mod_active || autocvar__hud_configure)
 		mod_alpha = min(mod_alpha + frametime * 2, 1);
 	else

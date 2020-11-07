@@ -100,7 +100,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	}*/
 	
 	
-	// Basic team stats
+	// z411 Basic team stats
 	if (team_count)
 	{
 		i = 0;
@@ -123,9 +123,33 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			
-			s = Team_CustomName(tm.team);
-			//s = textShortenToWidth(Team_ColorName(tm.team), name_size, fontsize, stringwidth_colors);
 			score_color = Team_ColorRGB(tm.team) * 0.8;
+			
+			// TODO secondary scores test, remove
+			if(gametype.m_modscores)
+			{
+				string icon;
+				if(tm.team == NUM_TEAM_1)
+					icon = "gfx/hud/luma/player_red";
+				else if(tm.team == NUM_TEAM_2)
+					icon = "gfx/hud/luma/player_blue";
+				else
+					icon = "gfx/hud/luma/player_neutral";
+				
+				vector icon_sz = draw_getimagesize(icon);
+				vector icon_sz_new = vec2(fontsize.y*(icon_sz.x/icon_sz.y), fontsize.y);
+				
+				s = ftos(gametype.m_modscores(tm.team));
+				float s_width = stringwidth(s, false, fontsize) + icon_sz_new.x;
+				
+				//drawfill(pos, eX * s_width + eY * fontsize.y, score_color, panel_fg_alpha * 0.3, DRAWFLAG_NORMAL);
+				drawpic(pos, icon, icon_sz_new, '1 1 1', panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
+				drawstring(pos + eX * icon_sz_new.x, s, fontsize, '1 1 1', panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
+				
+				s = textShortenToWidth(Team_CustomName(tm.team), name_size - s_width, fontsize, stringwidth_colors);
+			} else
+				s = textShortenToWidth(Team_CustomName(tm.team), name_size, fontsize, stringwidth_colors);
+			// TODO end
 			
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			

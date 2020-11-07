@@ -1,6 +1,6 @@
 #include "cl_clanarena.qh"
 
-#include <client/draw.qh>
+/*#include <client/draw.qh>
 
 void HUD_Mod_CA_Export(int fh)
 {
@@ -78,4 +78,19 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	mod_active = 1; // required in each mod function that always shows something
 
 	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);
+}
+*/
+// Clan Arena and Freeze Tag scores
+int HUD_Scores_CA(int team)
+{
+	switch(team)
+	{
+		case NUM_TEAM_1: return STAT(REDALIVE);
+		case NUM_TEAM_2: return STAT(BLUEALIVE);
+		case NUM_TEAM_3: return STAT(YELLOWALIVE);
+		default:
+		case NUM_TEAM_4: return STAT(PINKALIVE);
+	}
+	
+	return 0;
 }
