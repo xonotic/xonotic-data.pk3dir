@@ -630,7 +630,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(SAME_TEAM(attacker, targ))
+			else if(!STAT(FROZEN, targ) && SAME_TEAM(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -806,7 +806,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim, attacker))
 			{
-				if(DIFF_TEAM(victim, attacker) && !STAT(FROZEN, victim))
+				if (DIFF_TEAM(victim, attacker))
 				{
 					if(damage > 0)
 					{
@@ -829,11 +829,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if(IS_PLAYER(attacker))
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
 				{
-					// if enemy gets frozen in this frame and receives other damage don't
-					// play the typehitsound e.g. when hit by multiple bullets of the shotgun
-					if (deathtype != DEATH_FIRE.m_id && (!STAT(FROZEN, victim) || time > victim.freeze_time))
+					if (deathtype != DEATH_FIRE.m_id)
 					{
 						attacker.typehitsound += 1;
 					}
