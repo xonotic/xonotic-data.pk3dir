@@ -306,7 +306,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this))
+	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this) || !(this.isplayermodel & ISPLAYER_PLAYER))
 		return v;
 
 	// bounded XY speed, used by several effects below
