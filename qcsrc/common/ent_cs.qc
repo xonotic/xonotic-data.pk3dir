@@ -161,6 +161,11 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
 	{ ent.sv_solid = ReadByte(); })
 
+// z411 weapon
+ENTCS_PROP(ACTIVEWEPID, false, activewepid, activewepid, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.activewepid); },
+	{ ent.activewepid = ReadByte(); })
+
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0;

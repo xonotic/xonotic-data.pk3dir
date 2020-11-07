@@ -548,6 +548,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				this.m_weapon = newwep;
 				this.weaponname = newwep.mdl;
 				this.bulletcounter = 0;
+				actor.activewepid = newwep.m_id; // z411
 				newwep.wr_setup(newwep, actor, weaponentity);
 				this.state = WS_RAISE;
 

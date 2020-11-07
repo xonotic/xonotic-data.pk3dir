@@ -27,8 +27,8 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 	vector tmp_over;
 	vector line_sz = vec2((vid_conwidth - 1) / 7, hud_fontsize.y * 1.5);
 	vector line_sz_sub = vec2((vid_conwidth - 1) / 7, hud_fontsize.y);
-	vector total_sz = vec2(line_sz.x, line_sz.y + line_sz_sub.y);
-	string tmp_str;
+	
+	string playername;
 	float a = panel_fg_alpha * 0.8;
 	entity pl;
 	
@@ -44,33 +44,73 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		
 		float health = 0;
 		float armor = 0;
+		string icon = "";
+		vector icon_size = '0 0 0';
+		vector icon_rgb = '1 1 1';
 		
+		// Position and size calculation vectors
 		tmp_over = pos;
-		tmp_str = textShortenToWidth(entcs_GetName(pl.sv_entnum), line_sz.x * 0.8, hud_fontsize, stringwidth_colors);
+		vector total_sz = vec2(line_sz.x, line_sz.y + line_sz_sub.y);
 		
-		entity entcs = entcs_receiver(pl.sv_entnum);
-		if(entcs.m_entcs_private) {
-			health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * line_sz.x;
-			armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * line_sz_sub.x;
+		if(pl.eliminated) {
+			// z411 TODO : Unhardcode luma
+			icon = "gfx/hud/luma/notify_death.tga";
+			icon_rgb = rgb;
+		} else {
+			entity entcs = entcs_receiver(pl.sv_entnum);
+			if(entcs.m_entcs_private) {
+				health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * line_sz.x;
+				armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * line_sz_sub.x;
+					
+				Weapon wep = REGISTRY_GET(Weapons, entcs.activewepid);
+				icon = strcat("gfx/hud/luma/", wep.model2);
+			} else {
+				if(tm.team == NUM_TEAM_1)
+					icon = "gfx/hud/luma/player_red";
+				else if(tm.team == NUM_TEAM_2)
+					icon = "gfx/hud/luma/player_blue";
+				else
+					icon = "gfx/hud/luma/player_neutral";
+			}
 		}
+		
+		// Draw weapon
+		if(icon != "")  {
+			vector tmp_sz = draw_getimagesize(icon);
+			icon_size = vec2(total_sz.y*(tmp_sz.x/tmp_sz.y), total_sz.y);
+			total_sz.x += icon_size.x;
+				
+			if(invert) {
+				pos.x -= icon_size.x;
+				tmp_over.x -= icon_size.x;
+			}
+			drawpic(pos, icon, icon_size, icon_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos.x += icon_size.x;
+		}
+		
+		// Get player's name
+		playername = textShortenToWidth(entcs_GetName(pl.sv_entnum), line_sz.x * 0.8, hud_fontsize, stringwidth_colors);
 		
 		// Draw health and name
 		drawfill(pos, line_sz, rgb * 0.7, a * 0.3, DRAWFLAG_NORMAL);
 		if(health)
 			drawfill(pos, vec2(health, line_sz.y), rgb * 0.7, a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + eY * ((line_sz.y - hud_fontsize.y) / 2) + eX * (hud_fontsize.x * 0.5), tmp_str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eY * ((line_sz.y - hud_fontsize.y) / 2) + eX * (hud_fontsize.x * 0.5), playername, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += line_sz.y;
 		
 		// Draw armor
 		if(armor)
 			drawfill(pos, vec2(armor, line_sz_sub.y), rgb, a, DRAWFLAG_NORMAL);
-		pos.y += line_sz_sub.y * 2;
 		
 		// Highlight current player
 		if(pl.sv_entnum == current_player)
 			drawfill(tmp_over, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
 		if(pl.eliminated)
-			drawfill(tmp_over, total_sz, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+			drawfill(tmp_over, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
+		
+		if(!invert)
+			pos.x -= icon_size.x;
+		pos.y += line_sz_sub.y * 2;
 	}
 }
 
