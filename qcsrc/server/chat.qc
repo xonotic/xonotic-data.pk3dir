@@ -63,7 +63,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string namestr = "";
 	if (source) {
-		namestr = playername(source.netname, source.team, (autocvar_g_chat_teamcolors && IS_PLAYER(source)));
+		namestr = playername(source.netname, source.team, (autocvar_g_chat_teamcolors));
 		
 		if (IS_DEAD(source) || source.frags == FRAGS_PLAYER_OUT_OF_GAME)
 			namestr = strcat("(DEAD) ", namestr);
