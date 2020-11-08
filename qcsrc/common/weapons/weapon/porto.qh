@@ -50,4 +50,5 @@ void Porto_Draw(entity this);
 .float porto_forbidden;
 
 void W_Porto_Fail(entity this, float failhard);
+void W_Porto_Remove (entity p);
 #endif

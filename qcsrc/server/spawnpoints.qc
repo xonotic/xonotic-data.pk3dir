@@ -1,20 +1,23 @@
 #include "spawnpoints.qh"
 
-#include <server/mutators/_mod.qh>
-#include "g_world.qh"
-#include "miscfunctions.qh"
-#include "race.qh"
-#include "defs.qh"
-#include "../common/constants.qh"
-#include <common/net_linked.qh>
-#include "../common/teams.qh"
+#include <common/constants.qh>
 #include <common/gamemodes/_mod.qh>
-#include "../common/mapobjects/subs.qh"
-#include "../common/mapobjects/target/spawnpoint.qh"
-#include "../common/util.qh"
-#include "../lib/warpzone/common.qh"
-#include "../lib/warpzone/util_server.qh"
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/target/spawnpoint.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/net_linked.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
+#include <server/command/vote.qh>
+#include <server/intermission.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
 #include <server/utils.qh>
+#include <server/world.qh>
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {
@@ -162,7 +165,6 @@ spawnfunc(info_player_start)
 
 spawnfunc(info_player_deathmatch)
 {
-	this.classname = "info_player_deathmatch";
 	IL_PUSH(g_spawnpoints, this);
 	relocate_spawnpoint(this);
 }

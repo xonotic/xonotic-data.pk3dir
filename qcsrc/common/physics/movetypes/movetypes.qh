@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef SVQC
+// undefined on client, engine cvar
+bool autocvar_physics_ode;
+#endif
+
 // water levels
 const int WATERLEVEL_NONE = 0;
 const int WATERLEVEL_WETFEET = 1;
@@ -25,6 +30,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define GAMEPLAYFIX_NOAIRBORNCORPSE(s) 		STAT(GAMEPLAYFIX_NOAIRBORNCORPSE)
 #define NOAIRBORNCORPSE_ALLOWSUSPENDED(s) 	STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED)
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
+#define GAMEPLAYFIX_DELAYPROJECTILES(s) 	STAT(GAMEPLAYFIX_DELAYPROJECTILES)
 
 
 #define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT)
@@ -135,8 +141,6 @@ const int MOVETYPE_FOLLOW           = 12;
 const int MOVETYPE_PHYSICS          = 32;
 const int MOVETYPE_FLY_WORLDONLY    = 33;
 
-const int FL_ITEM                   = 256;
-const int FL_ONGROUND				= 512;
 #elif defined(SVQC)
 const int MOVETYPE_ANGLENOCLIP      = 1;
 const int MOVETYPE_ANGLECLIP        = 2;
@@ -144,8 +148,6 @@ const int MOVETYPE_ANGLECLIP        = 2;
 
 const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
 const int MOVETYPE_QCENTITY = 151; // QC-driven entity physics, some think functions!
-
-const int FL_ONSLICK = BIT(20);
 
 const int MOVETYPE_FAKEPUSH         = 13;
 

@@ -1,7 +1,9 @@
 #pragma once
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+
+bool autocvar_g_weapon_throwable;
 
 .float savenextthink;
 void thrown_wep_think(entity this);

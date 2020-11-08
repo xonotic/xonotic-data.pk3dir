@@ -3,7 +3,8 @@
 #include "pickup.qh"
 #include <common/items/all.qh>
 #ifdef SVQC
-    #include <common/t_items.qh>
+    #include <common/stats.qh>
+    #include <server/items/items.qh>
     #include <server/resources.qh>
 #endif
 

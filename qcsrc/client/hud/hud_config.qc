@@ -1,10 +1,9 @@
 #include "hud_config.qh"
 
-#include "hud.qh"
-#include "panel/scoreboard.qh"
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/hud/hud.qh>
+#include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/view.qh>
 
 // Save the config

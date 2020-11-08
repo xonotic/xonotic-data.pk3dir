@@ -1,12 +1,10 @@
 #include "ammo.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/items/items.qh>
 #include <client/view.qh>
-#include <common/t_items.qh>
-#include <common/wepent.qh>
 #include <common/mutators/mutator/nades/nades.qh>
+#include <common/wepent.qh>
 
 // Ammo (#1)
 

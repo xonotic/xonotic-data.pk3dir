@@ -1,5 +1,7 @@
 #include "cl_clanarena.qh"
 
+#include <client/draw.qh>
+
 void HUD_Mod_CA_Export(int fh)
 {
 	HUD_Write_Cvar("hud_panel_modicons_ca_layout");

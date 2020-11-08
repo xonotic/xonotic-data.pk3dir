@@ -1,5 +1,14 @@
 #pragma once
 
+#ifdef CSQC
+float autocvar_cl_effects_lightningarc_branchfactor_add;
+float autocvar_cl_effects_lightningarc_branchfactor_start;
+float autocvar_cl_effects_lightningarc_drift_end;
+float autocvar_cl_effects_lightningarc_drift_start;
+float autocvar_cl_effects_lightningarc_segmentlength;
+bool autocvar_cl_effects_lightningarc_simple;
+#endif
+
 #ifdef SVQC
 void te_csqc_lightningarc(vector from, vector to);
 #endif

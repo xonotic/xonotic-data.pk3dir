@@ -17,10 +17,10 @@
 
 #include "xonotic/util.qh"
 
-#include "../common/items/_mod.qh"
+#include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
-#include "../common/mapinfo.qh"
-#include "../common/mutators/base.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 
 int mouseButtonsPressed;
 vector menuMousePos;
@@ -69,7 +69,7 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-		LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
+		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -708,7 +708,9 @@ void m_draw(float width, float height)
 		menuNotTheFirstFrame = true;
 		if (Menu_Active && !cvar("menu_video_played"))
         {
-            localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
+            localcmd("cd loop $menu_cdtrack\n");
+            // TODO: use this when we have a welcome sound
+            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
             menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
         }
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!

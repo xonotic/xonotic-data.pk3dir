@@ -1,20 +1,13 @@
 #include "projectile.qh"
 
-#include "../autocvars.qh"
-#include "../defs.qh"
-#include "../main.qh"
 #include <client/mutators/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/effects/effect.qh>
 #include <common/effects/all.qh>
+#include <common/effects/effect.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
-
-#include <common/mutators/mutator/nades/nades.qh>
-
 #include <lib/csqcmodel/interpolate.qh>
-
 #include <lib/warpzone/anglestransform.qh>
 
 .float alpha;
@@ -309,7 +302,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(GRENADE_BOUNCING)   this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(MINE)               this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(BLASTER)            this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
 			HANDLE(HLAC)               this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(PORTO_RED)          this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
 			HANDLE(PORTO_BLUE)         this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
@@ -440,6 +433,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
+			case PROJECTILE_ARC_BOLT:
+				set_movetype(this, MOVETYPE_BOUNCE);
+				settouch(this, func_null);
+				break;
 			case PROJECTILE_RAPTORBOMB:
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
@@ -497,7 +494,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	if (!(this.count & 0x80))
 		InterpolateOrigin_Note(this);
 
-	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
 	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;

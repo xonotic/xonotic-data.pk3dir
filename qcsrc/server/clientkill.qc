@@ -1,13 +1,18 @@
 #include "clientkill.qh"
 
-#include <server/defs.qh>
-
-#include "g_damage.qh"
-#include "teamplay.qh"
-
-#include <common/vehicles/sv_vehicles.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/deathtypes/all.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include <common/stats.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/teamplay.qh>
 
 void ClientKill_Now_TeamChange(entity this)
 {
@@ -125,7 +130,7 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		{
 			float starttime = max(time, clientkilltime);
 
-			this.killindicator = spawn();
+			this.killindicator = new(killindicator);
 			this.killindicator.owner = this;
 			this.killindicator.scale = 0.5;
 			setattachment(this.killindicator, this, "");
@@ -139,7 +144,7 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 
 			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST) && !it.killindicator,
 			{
-				it.killindicator = spawn();
+				it.killindicator = new(killindicator);
 				it.killindicator.owner = it;
 				it.killindicator.scale = 0.5;
 				setattachment(it.killindicator, it, "");
@@ -183,7 +188,7 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 
 void ClientKill_Silent(entity this, float _delay)
 {
-	this.killindicator = spawn();
+	this.killindicator = new(killindicator);
 	this.killindicator.owner = this;
 	setthink(this.killindicator, KillIndicator_Think);
 	this.killindicator.nextthink = time + (this.lip) * 0.05;

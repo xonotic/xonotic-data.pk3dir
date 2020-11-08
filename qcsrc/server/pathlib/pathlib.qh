@@ -105,3 +105,6 @@ var bool  pathlib_makenode(entity parent,vector start, vector to, vector goal,fl
 var bool  buildpath_nodefilter(vector n,vector c,vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
+
+IntrusiveList g_pathlib_nodes;
+STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }

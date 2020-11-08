@@ -3,6 +3,23 @@
 #include <common/constants.qh>
 #include <common/weapons/_all.qh>
 
+bool autocvar_cl_db_saveasdump;
+bool autocvar_cl_spawn_event_particles;
+bool autocvar_cl_spawn_event_sound = 1;
+// float autocvar_cl_spawn_point_model;
+bool autocvar_cl_spawn_point_particles;
+float autocvar_cl_spawn_point_dist_max = 1200;
+bool autocvar_cl_unpress_zoom_on_spawn = true;
+bool autocvar_cl_unpress_zoom_on_death = true;
+bool autocvar_cl_unpress_zoom_on_weapon_switch = true;
+bool autocvar_cl_unpress_attack_on_weapon_switch = false;
+bool autocvar_hud_showbinds;
+bool autocvar_hud_showbinds_limit;
+bool autocvar__hud_showbinds_reload;
+bool autocvar_developer_csqcentities;
+bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
+bool autocvar_cl_race_cptimes_showself = false;
+
 // Map coordinate base calculations need these
 vector mi_center;
 vector mi_scale;
@@ -22,6 +39,24 @@ void PostInit();
 void Ent_Remove(entity this);
 
 void Gamemode_Init();
+
+entity players;
+entity teams;
+float team_count; // real teams
+
+void AuditLists();
+
+float RegisterPlayer(entity player);
+
+void RemovePlayer(entity player);
+
+void MoveToLast(entity e);
+
+float RegisterTeam(entity Team);
+
+void RemoveTeam(entity Team);
+
+entity GetTeam(int Team, bool add);
 
 bool SetTeam(entity pl, int Team);
 
@@ -57,6 +92,7 @@ STATIC_INIT(main)
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
+.float renderflags; // engine field
 
 bool button_zoom;
 bool spectatorbutton_zoom;
@@ -114,3 +150,35 @@ int framecount;
 
 float GetSpeedUnitFactor(int speed_unit);
 string GetSpeedUnit(int speed_unit);
+
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
+
+.int team;
+.int team_size;
+
+int binddb;
+
+// Spectating
+// -1 - observing
+// 0 - playing
+// >0 - id of spectated player
+float spectatee_status;
+float spectatee_status_changed_time;
+
+#define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
+
+// short mapname
+string shortmapname;
+
+// database for misc stuff
+int tempdb;
+int ClientProgsDB;
+vector hook_shotorigin[4]; // WEAPONTODO
+vector lightning_shotorigin[4]; // TODO: unused
+
+float serverprevtime, serverdeltatime;
+
+float ticrate;
+
+int serverflags;

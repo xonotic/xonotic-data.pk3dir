@@ -1,8 +1,28 @@
 #pragma once
 
+float autocvar_g_spawnshieldtime;
+float autocvar_g_spawnshield_blockdamage;
+bool autocvar_sv_precacheplayermodels;
+bool autocvar_sv_defaultcharacter;
+bool autocvar_sv_defaultcharacterskin;
+int autocvar_sv_defaultplayerskin_blue;
+int autocvar_sv_defaultplayerskin_pink;
+int autocvar_sv_defaultplayerskin_red;
+int autocvar_sv_defaultplayerskin_yellow;
+string autocvar_sv_defaultplayercolors;
+string autocvar_sv_defaultplayermodel;
+string autocvar_sv_defaultplayermodel_blue;
+string autocvar_sv_defaultplayermodel_pink;
+string autocvar_sv_defaultplayermodel_red;
+string autocvar_sv_defaultplayermodel_yellow;
+int autocvar_sv_defaultplayerskin;
+float autocvar_sv_gibhealth;
+
 .entity pusher;
 .float pushltime;
 .bool istypefrag;
+
+.float death_time;
 
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
@@ -15,19 +35,11 @@ void player_anim(entity this);
 
 void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
-// g_<gametype>_str:
-// If 0, default is used.
-// If <0, 0 is used.
-// Otherwise, g_str (default value) is used.
-// For consistency, negative values there are mapped to zero too.
-#define GAMETYPE_DEFAULTED_SETTING(str) \
-	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
-	(gametype_setting_tmp < 0) ? 0 \
-	: (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
-	: gametype_setting_tmp)
-
-void calculate_player_respawn_time(entity this);
-
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit);
+
+void precache_all_playermodels(string pattern);
+
+IntrusiveList g_clones;
+STATIC_INIT(g_clones) { g_clones = IL_NEW(); }

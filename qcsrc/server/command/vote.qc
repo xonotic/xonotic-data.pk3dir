@@ -1,30 +1,28 @@
 #include "vote.qh"
 
-#include <server/defs.qh>
-#include <server/gamelog.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-#include "vote.qh"
-
-#include "common.qh"
-
-#include "../g_damage.qh"
-#include "../g_world.qh"
-#include "../teamplay.qh"
-#include "../race.qh"
-#include "../round_handler.qh"
-#include "../scores.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/command/banning.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -117,7 +115,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller.netname, vote_caller.team, false);
 	return vote_caller_name;
 }
 

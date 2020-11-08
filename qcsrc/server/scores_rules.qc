@@ -1,11 +1,11 @@
 #include "scores_rules.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "client.qh"
-#include "scores.qh"
 #include <common/gamemodes/rules.qh>
-#include "teamplay.qh"
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
 
 int ScoreRules_teams;
 

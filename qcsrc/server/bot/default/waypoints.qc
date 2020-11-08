@@ -1,25 +1,23 @@
 #include "waypoints.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "cvars.qh"
-
-#include "bot.qh"
-#include "navigation.qh"
-
-#include <common/state.qh>
-
-#include "../../antilag.qh"
-
 #include <common/constants.qh>
 #include <common/debug.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
-
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/antilag.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/items/items.qh>
+#include <server/spawnpoints.qh>
+#include <server/weapons/tracing.qh>
 
 .entity spawnpointmodel;
 void waypoint_unreachable(entity pl)

@@ -1,5 +1,7 @@
 #include "sv_spawner.qh"
-#include "sv_spawn.qh"
+
+#include <common/monsters/sv_monsters.qh>
+#include <common/monsters/sv_spawn.qh>
 
 void spawner_use(entity this, entity actor, entity trigger)
 {

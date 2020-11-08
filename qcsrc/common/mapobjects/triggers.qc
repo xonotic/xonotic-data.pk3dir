@@ -1,5 +1,37 @@
 #include "triggers.qh"
 
+bool isPushable(entity e)
+{
+	if(e.pushable)
+		return true;
+#ifdef SVQC
+	if(IS_VEHICLE(e))
+		return false;
+	if(e.iscreature)
+		return true;
+	if (Item_IsLoot(e))
+	{
+		return true;
+	}
+	switch(e.classname)
+	{
+		case "body":
+			return true;
+		case "bullet": // antilagged bullets can't hit this either
+			return false;
+	}
+	if (e.projectiledeathtype)
+		return true;
+#endif
+#ifdef CSQC
+	if(e.flags & FL_PROJECTILE)
+		return true;
+	if(e.isplayermodel)
+		return true;
+#endif
+	return false;
+}
+
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);

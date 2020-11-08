@@ -1,14 +1,13 @@
 #include "models.qh"
 
 #ifdef SVQC
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/net_linked.qh>
-#include "subs.qh"
-#include "triggers.qh"
-#include "bgmscript.qh"
-
 #include <common/constants.qh>
+#include <common/mapobjects/bgmscript.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/net_linked.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <lib/csqcmodel/sv_model.qh>
 
 void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)

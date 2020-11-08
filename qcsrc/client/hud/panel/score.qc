@@ -1,9 +1,7 @@
 #include "score.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include "scoreboard.qh"
+#include <client/draw.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
 

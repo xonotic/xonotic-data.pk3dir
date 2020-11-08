@@ -1,7 +1,7 @@
 #include "breakable.qh"
 #ifdef SVQC
 
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <common/csqcmodel_settings.qh>
 #include <lib/csqcmodel/sv_model.qh>
@@ -50,7 +50,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 //
 void LaunchDebris (entity this, string debrisname, vector force)
 {
-	entity dbr = spawn();
+	entity dbr = new(debris);
 	vector org = this.absmin
 	           + '1 0 0' * random() * (this.absmax.x - this.absmin.x)
 	           + '0 1 0' * random() * (this.absmax.y - this.absmin.y)

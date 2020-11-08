@@ -37,6 +37,7 @@
 #include <menu/xonotic/dialog_hudpanel_racetimer.qc>
 #include <menu/xonotic/dialog_hudpanel_radar.qc>
 #include <menu/xonotic/dialog_hudpanel_score.qc>
+#include <menu/xonotic/dialog_hudpanel_strafehud.qc>
 #include <menu/xonotic/dialog_hudpanel_timer.qc>
 #include <menu/xonotic/dialog_hudpanel_vote.qc>
 #include <menu/xonotic/dialog_hudpanel_weapons.qc>

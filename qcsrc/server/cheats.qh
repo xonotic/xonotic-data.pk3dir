@@ -2,7 +2,10 @@
 
 #include <common/impulses/all.qh>
 
-//float autocvar_sv_cheats; // must... declare... global
+int autocvar_sv_cheats;
+float autocvar_g_grab_range;
+int autocvar_g_max_info_autoscreenshot;
+int autocvar_sv_clones;
 
 float cheatcount_total;
 .float cheatcount;
@@ -13,6 +16,13 @@ float CheatCommand(entity this, int argc);
 float CheatFrame(entity this);
 
 const float CHRAME_DRAG = 8;
+
+// speedrun: when 1, player auto teleports back when capture timeout happens
+.bool speedrunning;
+
+.entity personal;
+
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
 bool drag_undraggable(entity draggee, entity dragger);
 

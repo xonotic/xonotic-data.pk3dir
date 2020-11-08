@@ -1,37 +1,43 @@
-#include "g_damage.qh"
+#include "damage.qh"
 
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include "bot/api.qh"
-#include "g_hook.qh"
-#include <server/gamelog.qh>
-#include <server/mutators/_mod.qh>
-#include "teamplay.qh"
-#include "scores.qh"
-#include "spawnpoints.qh"
-#include "../common/state.qh"
-#include "../common/physics/player.qh"
-#include "../common/t_items.qh"
-#include "resources.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/items/_mod.qh"
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/mutators/mutator/instagib/sv_instagib.qh"
-#include "../common/mutators/mutator/buffs/buffs.qh"
-#include "weapons/accuracy.qh"
-#include "weapons/csqcprojectile.qh"
-#include "weapons/selection.qh"
-#include "../common/constants.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/notifications/all.qh"
-#include "../common/physics/movetypes/movetypes.qh"
-#include "../common/playerstats.qh"
-#include "../common/teams.qh"
-#include "../common/util.qh"
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/notifications/all.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-#include "../lib/csqcmodel/sv_model.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <server/gamelog.qh>
+#include <server/hook.qh>
+#include <server/items/items.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/scores.qh>
+#include <server/spawnpoints.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/csqcprojectile.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 void UpdateFrags(entity player, int f)
 {
@@ -624,7 +630,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(SAME_TEAM(attacker, targ))
+			else if(!STAT(FROZEN, targ) && SAME_TEAM(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -682,11 +688,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if (!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			complainteamdamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
+			damage *= autocvar_g_weapondamagefactor;
+			mirrordamage *= autocvar_g_weapondamagefactor;
+			complainteamdamage *= autocvar_g_weapondamagefactor;
+			force = force * autocvar_g_weaponforcefactor;
+			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
 		// should this be changed at all? If so, in what way?
@@ -800,7 +806,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim, attacker))
 			{
-				if(DIFF_TEAM(victim, attacker) && !STAT(FROZEN, victim))
+				if (DIFF_TEAM(victim, attacker))
 				{
 					if(damage > 0)
 					{
@@ -823,11 +829,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if(IS_PLAYER(attacker))
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
 				{
-					// if enemy gets frozen in this frame and receives other damage don't
-					// play the typehitsound e.g. when hit by multiple bullets of the shotgun
-					if (deathtype != DEATH_FIRE.m_id && (!STAT(FROZEN, victim) || time > victim.freeze_time))
+					if (deathtype != DEATH_FIRE.m_id)
 					{
 						attacker.typehitsound += 1;
 					}

@@ -1,2 +1,45 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_racetimer;
+bool autocvar_hud_panel_racetimer_dynamichud    = true;
+
+// QUALIFYING
+float race_checkpoint;
+float race_time;
+float race_laptime;
+float race_checkpointtime;
+float race_previousbesttime;
+float race_mypreviousbesttime;
+string race_previousbestname;
+float race_nextcheckpoint;
+float race_nextbesttime;
+float race_mybesttime;
+string race_nextbestname;
+float race_penaltyaccumulator; // qualifying: total penalty time in tenths
+float race_penaltyeventtime; // time when the player got the penalty
+float race_penaltytime; // duration of penalty time, in tenths
+string race_penaltyreason; // reason for penalty
+float race_server_record; // server record
+float race_speedaward;
+string race_speedaward_holder;
+string race_speedaward_unit;
+float race_speedaward_alltimebest;
+string race_speedaward_alltimebest_holder;
+string race_speedaward_alltimebest_unit;
+
+// RACE
+float race_mycheckpoint;
+float race_mycheckpointtime;
+float race_mycheckpointdelta;
+float race_mycheckpointlapsdelta;
+string race_mycheckpointenemy;
+float race_othercheckpoint;
+float race_othercheckpointtime;
+float race_othercheckpointdelta;
+float race_othercheckpointlapsdelta;
+string race_othercheckpointenemy;
+float scoreboard_showscores_force;
+float race_status;
+string race_status_name;
+float race_myrank;

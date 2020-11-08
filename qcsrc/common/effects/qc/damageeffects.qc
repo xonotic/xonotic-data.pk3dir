@@ -54,6 +54,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 .float cnt;
 .int state;
 
+.bool silent;
+
 void DamageEffect_Think(entity this)
 {
 	// if particle distribution is enabled, slow ticrate by total number of damages

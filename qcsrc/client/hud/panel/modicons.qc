@@ -1,12 +1,11 @@
 #include "modicons.qh"
 
-#include <client/miscfunctions.qh>
-#include <client/autocvars.qh>
-#include <common/mapinfo.qh>
+#include <client/draw.qh>
 #include <common/ent_cs.qh>
-#include <common/scores.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/gamemode/ctf/cl_ctf.qh>
+#include <common/mapinfo.qh>
+#include <common/scores.qh>
 
 // Mod icons (#10)
 

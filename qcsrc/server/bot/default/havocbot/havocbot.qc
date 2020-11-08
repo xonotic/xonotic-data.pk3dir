@@ -1,30 +1,34 @@
 #include "havocbot.qh"
 
-#include "roles.qh"
-
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "../cvars.qh"
-
-#include "../aim.qh"
-#include "../bot.qh"
-#include "../navigation.qh"
-#include "../scripting.qh"
-#include "../waypoints.qh"
-
 #include <common/constants.qh>
 #include <common/impulses/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/hurt.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
-#include <common/items/_mod.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-
-#include <common/mapobjects/func/ladder.qh>
-#include <common/mapobjects/teleporters.qh>
-#include <common/mapobjects/trigger/jumppads.qh>
-
 #include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/aim.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/roles.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/bot/default/scripting.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 void havocbot_ai(entity this)
 {

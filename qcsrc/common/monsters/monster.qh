@@ -61,7 +61,7 @@ ENDCLASS(Monster)
 
 #ifdef SVQC
 #include "sv_monsters.qh"
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/tracing.qh>

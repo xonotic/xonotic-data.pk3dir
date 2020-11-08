@@ -3,7 +3,9 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <lib/warpzone/util_server.qh>
-    #include <server/defs.qh>
+	#include <common/mapobjects/triggers.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC)
@@ -140,13 +142,11 @@ void viewloc_link(entity this)
 
 spawnfunc(target_viewlocation_start)
 {
-	this.classname = "target_viewlocation_start";
 	this.cnt = 1;
 	viewloc_link(this);
 }
 spawnfunc(target_viewlocation_end)
 {
-	this.classname = "target_viewlocation_end";
 	this.cnt = 2;
 	viewloc_link(this);
 }
@@ -187,7 +187,6 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 	setthink(this, trigger_viewloc_updatelink);
 	this.nextthink = time + 1; // we need to delay this or else
 
-	this.classname = "trigger_viewlocation";
 	this.drawmask = MASK_NORMAL; // not so concerned, but better keep it alive
 }
 

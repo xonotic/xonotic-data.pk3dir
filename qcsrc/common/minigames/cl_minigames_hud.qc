@@ -1,14 +1,13 @@
 #include "cl_minigames_hud.qh"
 
-#include <client/autocvars.qh>
-#include <common/ent_cs.qh>
-
-#include "minigames.qh"
-
-.vector colormod;
-
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
 #include <client/hud/hud_config.qh>
 #include <client/mapvoting.qh>
+#include <common/ent_cs.qh>
+#include <common/minigames/minigames.qh>
+
+.vector colormod;
 
 void HUD_MinigameBoard_Export(int fh)
 {
@@ -182,9 +181,8 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 }
 
 // Minigame menu options: create entry
-entity HUD_MinigameMenu_SpawnEntry(string s, vector offset, vector fontsize, vector color,void(entity, entity, entity) click)
+entity HUD_MinigameMenu_SpawnEntry(entity entry, string s, vector offset, vector fontsize, vector color,void(entity, entity, entity) click)
 {
-	entity entry = spawn();
 	entry.message = s;
 	entry.origin = offset;
 	entry.size = fontsize;
@@ -200,7 +198,7 @@ entity HUD_MinigameMenu_SpawnSubEntry(string s, void(entity, entity, entity) cli
 {
 	vector item_fontsize = hud_fontsize*1.25;
 	vector item_offset = '1 0 0' * item_fontsize_x;
-	entity item = HUD_MinigameMenu_SpawnEntry(
+	entity item = HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_subentry),
 				s,item_offset,item_fontsize,'0.8 0.8 0.8', click );
 	item.owner = parent;
 	return item;
@@ -406,9 +404,8 @@ void HUD_MinigameMenu_CurrentButton()
 				HUD_MinigameMenu_EraseEntry(e);
 				break;
 			}
-		entity currb = HUD_MinigameMenu_SpawnEntry(
+		entity currb = HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_current),
 			_("Current Game"), '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
-		currb.classname = "hud_minigamemenu_current";
 		currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
 		HUD_MinigameMenu_InsertEntry(currb,HUD_MinigameMenu_last_entry);
 		HUD_MinigameMenu_Click(currb);
@@ -431,9 +428,8 @@ void HUD_MinigameMenu_CurrentButton()
 		for ( e = HUD_MinigameMenu_last_entry; e != NULL; e = e.list_prev )
 			if ( e.classname == "hud_minigamemenu_exit" )
 				return;
-		entity exit = HUD_MinigameMenu_SpawnEntry(
+		entity exit = HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_exit),
 			_("Exit Menu"),'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_Close);
-		exit.classname = "hud_minigamemenu_exit";
 		HUD_MinigameMenu_InsertEntry ( exit, HUD_MinigameMenu_last_entry );
 	}
 }
@@ -443,10 +439,10 @@ void HUD_MinigameMenu_Open()
 {
 	if ( !mv_active && !HUD_MinigameMenu_IsOpened() )
 	{
-		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnEntry(
+		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_entry),
 			_("Create"), '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCreate),
 			HUD_MinigameMenu_last_entry );
-		HUD_MinigameMenu_InsertEntry ( HUD_MinigameMenu_SpawnEntry(
+		HUD_MinigameMenu_InsertEntry ( HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_entry),
 			_("Join"),'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickJoin),
 			HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();

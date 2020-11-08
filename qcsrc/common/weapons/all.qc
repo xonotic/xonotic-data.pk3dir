@@ -3,55 +3,49 @@
 #define WEAPONS_ALL_C
 
 #if defined(CSQC)
-	#include <client/defs.qh>
-	#include "../constants.qh"
-	#include "../stats.qh"
+	#include <client/main.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/physics/movetypes/movetypes.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/calculations.qc>
+	#include <common/weapons/weapon/_mod.inc>
+	#include <lib/csqcmodel/cl_model.qh>
+	#include <lib/csqcmodel/interpolate.qh>
+	#include <lib/warpzone/anglestransform.qh>
+	#include <lib/warpzone/client.qh>
+	#include <lib/warpzone/common.qh>
+#elif defined(MENUQC)
+	#include <common/weapons/weapon/_mod.inc>
+#elif defined(SVQC)
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/items/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/monsters/_mod.qh>
+	#include <common/notifications/all.qh>
+	#include <common/stats.qh>
+	#include <common/teams.qh>
+	#include <common/util.qh>
+	#include <common/weapons/calculations.qc>
+	#include <common/weapons/config.qc>
+	#include <common/weapons/config.qh>
+	#include <common/weapons/weapon/_mod.inc>
+	#include <lib/csqcmodel/sv_model.qh>
 	#include <lib/warpzone/anglestransform.qh>
 	#include <lib/warpzone/common.qh>
-	#include <lib/warpzone/client.qh>
-	#include "../util.qh"
-	#include <client/autocvars.qh>
-	#include "../deathtypes/all.qh"
-	#include <lib/csqcmodel/interpolate.qh>
-	#include "../physics/movetypes/movetypes.qh"
-	#include <client/main.qh>
-	#include <lib/csqcmodel/cl_model.qh>
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include <common/items/_mod.qh>
-    #include <lib/warpzone/anglestransform.qh>
-    #include <lib/warpzone/common.qh>
-    #include <lib/warpzone/util_server.qh>
-    #include <lib/warpzone/server.qh>
-    #include "../constants.qh"
-    #include "../stats.qh"
-    #include "../teams.qh"
-    #include <common/util.qh>
-    #include "../monsters/_mod.qh"
-    #include "config.qh"
-    #include <server/weapons/csqcprojectile.qh>
-    #include <server/weapons/tracing.qh>
-    #include "../t_items.qh"
-    #include <server/autocvars.qh>
-    #include <server/constants.qh>
-    #include <server/defs.qh>
-    #include "../notifications/all.qh"
-    #include "../deathtypes/all.qh"
-    #include <server/mutators/_mod.qh>
-    #include "../mapinfo.qh"
-    #include <server/command/_mod.qh>
-    #include <lib/csqcmodel/sv_model.qh>
-    #include <server/portals.qh>
-    #include <server/g_hook.qh>
+	#include <lib/warpzone/server.qh>
+	#include <lib/warpzone/util_server.qh>
+	#include <server/command/_mod.qh>
+	#include <server/hook.qh>
+	#include <server/items/spawning.qh>
+	#include <server/mutators/_mod.qh>
+	#include <server/portals.qh>
+	#include <server/weapons/common.qh>
+	#include <server/weapons/csqcprojectile.qh>
+	#include <server/weapons/tracing.qh>
 #endif
-#ifdef GAMEQC
-	#include "calculations.qc"
-#endif
-#ifdef SVQC
-	#include "config.qc"
-#endif
-
-#include "weapon/_mod.inc"
 
 
 // WEAPON PLUGIN SYSTEM
@@ -161,12 +155,9 @@ float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 	Weapon e2 = REGISTRY_GET(Weapons, sj);
 	int d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
 	if (d != 0) return -d;  // high impulse first!
-	return strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
-		sprintf(" %d ", si), 0)
-	       -
-	       strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
-		sprintf(" %d ", sj), 0)
-	;  // low char index first!
+	string s = strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " ");
+	return strstrofs(s, sprintf(" %d ", si), 0)
+		- strstrofs(s, sprintf(" %d ", sj), 0); // low char index first!
 }
 string W_FixWeaponOrder_BuildImpulseList(string o)
 {
@@ -477,7 +468,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			int idx = 0;
 			// v_ model attached to invisible h_ model
 			if (this.weaponchild
-			    && ((idx = gettagindex(this.weaponchild, "shell")) || (idx = gettagindex(this.weaponchild, "tag_shell"))))
+				&& ((idx = gettagindex(this.weaponchild, "shell")) || (idx = gettagindex(this.weaponchild, "tag_shell"))))
 			{
 				this.spawnorigin = gettaginfo(this.weaponchild, idx);
 			}
@@ -543,12 +534,10 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	int compressed_shotorg = compressShotOrigin(this.movedir);
 	// make them match perfectly
 #ifdef SVQC
-    // null during init
-    if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
-	this.movedir = decompressShotOrigin(compressed_shotorg);
-#else
-	this.movedir = decompressShotOrigin(compressed_shotorg);
+	// null during init
+	if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
 #endif
+	this.movedir = decompressShotOrigin(compressed_shotorg);
 
 	this.spawnorigin += this.view_ofs;  // offset the casings origin by the same amount
 
@@ -567,9 +556,9 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	int fr = ReadByte();
+	WFRAME fr = ReadByte();
 	float t = ReadFloat();
-    int slot = ReadByte();
+	int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
 	if(fr == WFRAME_IDLE)
@@ -598,9 +587,9 @@ NET_HANDLE(wframe, bool isNew)
 		case WS_DROP:
 			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_drop;
 			break;
-        default:
-            wepent.weapon_switchdelay = 0;
-            break;
+		default:
+			wepent.weapon_switchdelay = 0;
+			break;
 	}
 	return true;
 }
@@ -778,11 +767,11 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 {
 	return = true;
 	int weapon_id = ReadByte();
-    int slot = ReadByte();
-    vector sv_shotorg = ReadVector();
+	int slot = ReadByte();
+	vector sv_shotorg = ReadVector();
 
 	Weapon thiswep = REGISTRY_GET(Weapons, weapon_id);
-    vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
 	vector forward, right, up;
 	MAKE_VECTORS(viewangles, forward, right, up);
 
@@ -793,7 +782,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 		pointparticles(thiswep.m_muzzleeffect, sv_shotorg, forward * 1000, 1);
 		return;
 	}
-    if(!autocvar_r_drawviewmodel) return;
+	if(!autocvar_r_drawviewmodel) return;
 
 	entity wepent = viewmodels[slot];
 	// get the local player entity to calculate shot origin

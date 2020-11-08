@@ -1,9 +1,25 @@
 #pragma once
 
-// ================================================
-//  Declarations for the vote system/vote commands
-//  Last updated: December 14th, 2011
-// ================================================
+bool autocvar_sv_vote_call;
+bool autocvar_sv_vote_change;
+string autocvar_sv_vote_commands;
+int autocvar_sv_vote_limit;
+float autocvar_sv_vote_majority_factor;
+float autocvar_sv_vote_majority_factor_of_voted;
+bool autocvar_sv_vote_master;
+bool autocvar_sv_vote_master_callable;
+string autocvar_sv_vote_master_commands;
+string autocvar_sv_vote_master_password;
+int autocvar_sv_vote_master_playerlimit;
+bool autocvar_sv_vote_no_stops_vote;
+int autocvar_sv_vote_nospectators;
+//string autocvar_sv_vote_only_commands;
+bool autocvar_sv_vote_override_mostrecent;
+bool autocvar_sv_vote_singlecount;
+float autocvar_sv_vote_stop;
+float autocvar_sv_vote_timeout;
+float autocvar_sv_vote_wait;
+bool autocvar_sv_vote_gamestart;
 
 // definitions for command selection between progs
 const float VC_ASGNMNT_BOTH = 1;
@@ -38,7 +54,7 @@ string vote_called_display; // visual string of command sent by client
 string vote_parsed_command; // command which is fixed after being parsed
 string vote_parsed_display; // visual string which is fixed after being parsed
 
-// allow functions to be used in other code like g_world.qc and teamplay.qc
+// allow functions to be used in other code like world.qc and teamplay.qc
 void VoteThink();
 void VoteReset();
 void VoteCommand(int request, entity caller, int argc, string vote_command);
@@ -50,8 +66,14 @@ float readycount;                  // amount of players who are ready
 float readyrestart_happened;       // keeps track of whether a restart has already happened
 float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was already executed
 .float ready;                      // flag for if a player is ready
+.int team_saved;                   // team number to restore upon map reset
+.void(entity this) reset;	       // if set, an entity is reset using this
+.void(entity this) reset2;         // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 void reset_map(float dorespawn);
 void ReadyCount();
 void ReadyRestart_force();
 void VoteCount(float first_count);
 void Nagger_Init();
+
+IntrusiveList g_saved_team;
+STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }

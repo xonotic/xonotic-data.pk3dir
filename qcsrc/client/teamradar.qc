@@ -1,11 +1,9 @@
 #include "teamradar.qh"
 
-#include "autocvars.qh"
-#include "hud/_mod.qh"
-
+#include <client/hud/_mod.qh>
+#include <client/view.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
-
-#include "../lib/csqcmodel/interpolate.qh"
+#include <lib/csqcmodel/interpolate.qh>
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
@@ -204,7 +202,6 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 	InterpolateOrigin_Undo(this);
 
 	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
-	this.classname = "radarlink";
 	if (isnew) IL_PUSH(g_radarlinks, this);
 
 	if(sendflags & 1)

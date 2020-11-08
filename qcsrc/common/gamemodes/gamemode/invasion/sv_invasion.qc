@@ -1,8 +1,12 @@
 #include "sv_invasion.qh"
 
+#include <common/mapobjects/triggers.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <server/bot/api.qh>
+#include <server/world.qh>
+#include <server/teamplay.qh>
 
 IntrusiveList g_invasion_roundends;
 IntrusiveList g_invasion_waves;
@@ -70,7 +74,6 @@ spawnfunc(invasion_spawnpoint)
 {
 	if(!g_invasion) { delete(this); return; }
 
-	this.classname = "invasion_spawnpoint";
 	IL_PUSH(g_invasion_spawns, this);
 }
 

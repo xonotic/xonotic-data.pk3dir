@@ -23,6 +23,9 @@ const string STR_OBSERVER = "observer";
 #define IS_TURRET(v) (v.turret_flags & TUR_FLAG_ISTURRET)
 
 #define IS_MOVABLE(v) ((IS_PLAYER(v) || IS_MONSTER(v)) && !STAT(FROZEN, v))
+#define IS_DEAD(s) ((s).deadflag != DEAD_NO)
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // NOTE: FOR_EACH_CLIENTSLOT deprecated! Use the following instead: FOREACH_CLIENTSLOT(true, { code; });
 // NOTE: FOR_EACH_CLIENT deprecated! Use the following instead: FOREACH_CLIENT(true, { code; });

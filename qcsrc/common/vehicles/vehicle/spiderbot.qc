@@ -1,5 +1,9 @@
 #include "spiderbot.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
 #ifdef GAMEQC
 
 const int SBRM_FIRST = 1;
@@ -402,7 +406,7 @@ void spiderbot_blowup(entity this)
 		return;
 	}
 
-	entity h = spawn(), g1 = spawn(), g2 = spawn(), b = spawn();
+	entity h = new(spiderbot_top), g1 = new(spiderbot_gun), g2 = new(spiderbot_gun), b = new(spiderbot_body);
 
 	setmodel(b, MDL_VEH_SPIDERBOT_BODY);
 	setmodel(h, MDL_VEH_SPIDERBOT_TOP);
@@ -563,8 +567,8 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
     if(!instance.gun1)
     {
         instance.vehicles_impulse = spiderbot_impulse;
-        instance.gun1 = spawn();
-        instance.gun2 = spawn();
+        instance.gun1 = new(spiderbot_gun);
+        instance.gun2 = new(spiderbot_gun);
         setmodel(instance.gun1, MDL_VEH_SPIDERBOT_GUN);
         setmodel(instance.gun2, MDL_VEH_SPIDERBOT_GUN);
         setattachment(instance.gun1, instance.tur_head, "tag_hardpoint01");

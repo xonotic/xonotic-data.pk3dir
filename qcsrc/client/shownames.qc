@@ -1,15 +1,13 @@
 #include "shownames.qh"
 
-#include "autocvars.qh"
-#include "miscfunctions.qh"
-#include "resources.qh"
-#include "hud/_mod.qh"
-
-#include <common/ent_cs.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/resources.qh>
+#include <client/view.qh>
 #include <common/constants.qh>
+#include <common/ent_cs.qh>
 #include <common/net_linked.qh>
 #include <common/teams.qh>
-
 #include <lib/csqcmodel/cl_model.qh>
 
 // this.isactive = player is in range and coordinates/status (health and armor) are up to date
@@ -127,20 +125,33 @@ void Draw_ShowNames(entity this)
 	}
 	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
 	a = M_ARGV(1, float);
-	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
-	float dist = vlen(this.origin - view_origin);
+	float dist = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
 	if (autocvar_hud_shownames_maxdistance)
 	{
-		if (dist >= autocvar_hud_shownames_maxdistance) return;
-		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-		a *= (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		float max_dist = min(autocvar_hud_shownames_maxdistance, max_shot_distance);
+		if (vdist(this.origin - view_origin, >=, max_dist))
+			return;
+		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
+		{
+			float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
+			if (dist == -1)
+				dist = vlen(this.origin - view_origin);
+			a *= (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		}
 	}
+	else if (vdist(this.origin - view_origin, >=, max_shot_distance))
+		return;
 	if (!a) return;
 	float resize = 1;
 	if (autocvar_hud_shownames_resize)  // limit resize so its never smaller than 0.5... gets unreadable
 	{
-		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-		resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
+		{
+			float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
+			if (dist == -1)
+				dist = vlen(this.origin - view_origin);
+			resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		}
 	}
 	// draw the sprite image
 	if (o.z >= 0)
@@ -155,7 +166,7 @@ void Draw_ShowNames(entity this)
 		myPos.y += (mySize.y / resize - mySize.y);
 		// this is where the origin of the string
 		float namewidth = mySize.x;
-		if (autocvar_hud_shownames_status && this.sameteam)
+		if (autocvar_hud_shownames_status && this.sameteam && !this.csqcmodel_isdead)
 		{
 			vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
@@ -176,7 +187,7 @@ void Draw_ShowNames(entity this)
 		}
 		string s = entcs_GetName(this.sv_entnum - 1);
 		if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
-			s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
+			s = playername(s, entcs_GetTeam(this.sv_entnum - 1), true);
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);

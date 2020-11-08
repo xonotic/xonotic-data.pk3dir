@@ -1,12 +1,11 @@
 #include "mapinfo.qh"
 #if defined(CSQC)
-    #include "../client/defs.qh"
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include <common/monsters/_mod.qh>
+	#include <common/util.qh>
+	#include <common/monsters/_mod.qh>
 #endif
 
 #ifdef MENUQC
@@ -254,11 +253,9 @@ string unquote(string s)
 	return "";
 }
 
-float MapInfo_Get_ByID(float i)
+bool MapInfo_Get_ByID(int i)
 {
-	if(MapInfo_Get_ByName(MapInfo_BSPName_ByID(i), 0, NULL))
-		return 1;
-	return 0;
+	return MapInfo_Get_ByName(MapInfo_BSPName_ByID(i), 0, NULL) ? true : false;
 }
 
 string _MapInfo_Map_worldspawn_music;
@@ -1140,7 +1137,7 @@ int MapInfo_CurrentFeatures()
 {
 	int req = 0;
     // TODO: find a better way to check if weapons are required on the map
-	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") 
+	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || !cvar("g_melee_only") 
 		|| cvar("g_race") || cvar("g_cts") || cvar("g_nexball") || cvar("g_ca") || cvar("g_freezetag") || cvar("g_lms")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;

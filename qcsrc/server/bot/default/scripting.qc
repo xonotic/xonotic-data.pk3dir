@@ -1,14 +1,15 @@
 #include "scripting.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "cvars.qh"
-
-#include <common/state.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/physics/player.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-
-#include "bot.qh"
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 
 .int state;
 

@@ -1,25 +1,32 @@
 #include "sv_monsters.qh"
 
-#include <lib/warpzone/common.qh>
-#include "../constants.qh"
-#include "../teams.qh"
-#include "../util.qh"
-#include "all.qh"
-#include "../physics/movelib.qh"
-#include "../weapons/_mod.qh"
-#include <server/autocvars.qh>
-#include <server/defs.qh>
-#include "../deathtypes/all.qh"
-#include <server/mutators/_mod.qh>
-#include <server/steerlib.qh>
-#include "../turrets/sv_turrets.qh"
-#include "../turrets/util.qh"
-#include "../vehicles/all.qh"
-#include <server/campaign.qh>
-#include <server/command/_mod.qh>
-#include "../mapobjects/triggers.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/all.qh>
+#include <common/mutators/mutator/nades/nades.qh>
+#include <common/physics/movelib.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/turrets/sv_turrets.qh>
+#include <common/turrets/util.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/_mod.qh>
 #include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/_mod.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
 #include <server/round_handler.qh>
+#include <server/steerlib.qh>
 #include <server/weapons/_mod.qh>
 
 void monsters_setstatus(entity this)
@@ -236,7 +243,7 @@ void Monster_Delay_Action(entity this)
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
 {
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
-	entity e = spawn();
+	entity e = new(Monster_Delay);
 
 	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;
@@ -1139,7 +1146,7 @@ void Monster_Anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, (IS_ONGROUND(this)));

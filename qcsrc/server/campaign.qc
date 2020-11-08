@@ -1,12 +1,12 @@
 #include "campaign.qh"
 
-#include "defs.qh"
-
-#include "cheats.qh"
-#include "miscfunctions.qh"
-#include "g_world.qh"
-
-#include "../common/campaign_common.qh"
+#include <common/campaign_common.qh>
+#include <common/mapinfo.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/cheats.qh>
+#include <server/intermission.qh>
+#include <server/world.qh>
 
 // campaign cvars:
 //   _campaign_index: index of CURRENT map

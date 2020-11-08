@@ -1,8 +1,12 @@
 #pragma once
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <common/weapons/_all.qh>
 #include <common/physics/player.qh>
+
+bool autocvar_g_waypoints_for_items;
+bool bot_waypoints_for_items;
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);
 const int WAYPOINTFLAG_ITEM = BIT(22);
@@ -95,6 +99,11 @@ float havocbot_symmetry_origin_order;
 .float ignoregoaltime;
 .entity ignoregoal;
 
+bool bots_would_leave;
+
+int player_count;
+int currentbots;
+
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
@@ -136,3 +145,13 @@ void waypoint_lock(entity pl);
 
 void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx);
 void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx);
+
+IntrusiveList g_waypoints;
+IntrusiveList g_bot_targets;
+IntrusiveList g_bot_dodge;
+STATIC_INIT(botapi)
+{
+	g_waypoints = IL_NEW();
+	g_bot_targets = IL_NEW();
+	g_bot_dodge = IL_NEW();
+}

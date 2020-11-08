@@ -1,6 +1,13 @@
 #pragma once
 
-#include <server/miscfunctions.qh>
+#include "all.qh"
+
+bool autocvar_g_turrets;
+float autocvar_g_turrets_aimidle_delay;
+bool autocvar_g_turrets_nofire;
+bool autocvar_g_turrets_reloadcvars;
+float autocvar_g_turrets_targetscan_maxdelay;
+float autocvar_g_turrets_targetscan_mindelay;
 
 entity turret_projectile(entity actor, Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim);
 void turret_projectile_explode(entity this);
@@ -103,3 +110,6 @@ vector tvt_thadv; // turret head angle diff vector, updated by a successful call
 vector tvt_tadv; // turret angle diff vector, updated by a successful call to turret_validate_target
 float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
+
+IntrusiveList g_turrets;
+STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }

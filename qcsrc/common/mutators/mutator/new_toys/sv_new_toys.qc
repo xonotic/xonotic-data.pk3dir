@@ -1,6 +1,7 @@
 #include "sv_new_toys.qh"
 
 #include "../random_items/sv_random_items.qh"
+#include <server/weapons/spawning.qh>
 
 /*
 

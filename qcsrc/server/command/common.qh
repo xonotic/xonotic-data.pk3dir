@@ -1,5 +1,13 @@
 #pragma once
 
+string autocvar_sv_adminnick;
+bool autocvar_sv_status_privacy;
+bool autocvar_sv_timeout;
+float autocvar_sv_timeout_leadtime;
+float autocvar_sv_timeout_length;
+int autocvar_sv_timeout_number;
+float autocvar_sv_timeout_resumetime;
+
 #include <common/command/_mod.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
 REGISTER_REGISTRY(COMMON_COMMANDS)
@@ -54,7 +62,7 @@ float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not 
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
 .vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 
-// allow functions to be used in other code like g_world.qc and teamplay.qc
+// allow functions to be used in other code like world.qc and teamplay.qc
 void timeout_handler_think(entity this);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
