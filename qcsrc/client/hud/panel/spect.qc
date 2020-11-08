@@ -15,8 +15,6 @@ void HUD_SpectHUD_Export(int fh)
 
 void HUD_SpectHUD_drawCurrentName(vector pos)
 {
-	if(!current_player) return;
-	
 	string s = entcs_GetName(current_player);
 	pos.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
 	drawcolorcodedstring(pos, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -103,7 +101,7 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 			drawfill(pos, vec2(armor, line_sz_sub.y), rgb, a, DRAWFLAG_NORMAL);
 		
 		// Highlight current player
-		if(pl.sv_entnum == current_player)
+		if(pl.sv_entnum == current_player && spectatee_status != -1)
 			drawfill(tmp_over, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
 		if(pl.eliminated)
 			drawfill(tmp_over, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
@@ -165,9 +163,11 @@ void HUD_SpectHUD()
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	
 	// Spectator name
-	ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
-	pos = panel_pos + vec2((vid_conwidth - 1) / 2, (ammo_y - (hud_fontsize.y * 2)));
-	HUD_SpectHUD_drawCurrentName(pos);
+	if(spectatee_status != -1) {
+		ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, (ammo_y - (hud_fontsize.y * 2)));
+		HUD_SpectHUD_drawCurrentName(pos);
+	}
 	
 	if(!teamplay) return;
 	
