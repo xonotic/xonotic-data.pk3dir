@@ -8,6 +8,9 @@
 
 void ctf_Initialize();
 
+int autocvar_captureleadlimit_override;
+int autocvar_capturelimit_override;
+
 REGISTER_MUTATOR(ctf, false)
 {
     MUTATOR_STATIC();

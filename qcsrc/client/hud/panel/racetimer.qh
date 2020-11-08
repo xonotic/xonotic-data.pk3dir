@@ -1,6 +1,9 @@
 #pragma once
 #include "../panel.qh"
 
+bool autocvar_hud_panel_racetimer;
+bool autocvar_hud_panel_racetimer_dynamichud    = true;
+
 // QUALIFYING
 float race_checkpoint;
 float race_time;

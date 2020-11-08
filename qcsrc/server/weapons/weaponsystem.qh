@@ -2,6 +2,12 @@
 
 #include <common/weapons/all.qh>
 
+float autocvar_g_weaponspreadfactor;
+float autocvar_g_weaponforcefactor;
+float autocvar_g_weapondamagefactor;
+float autocvar_g_weaponratefactor;
+float autocvar_g_weaponspeedfactor;
+
 #define INDEPENDENT_ATTACK_FINISHED 1
 
 // there is 2 weapon tics that can run in one server frame

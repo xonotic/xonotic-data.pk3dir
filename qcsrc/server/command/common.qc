@@ -1,20 +1,20 @@
 #include "common.qh"
 
-#include <server/chat.qh>
-#include <server/client.qh>
-#include <server/mutators/_mod.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/world.qh>
-
 #include <common/command/_mod.qh>
-#include "common.qh"
-
-#include "../scores.qh"
-
+#include <common/deathtypes/all.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/mutators/_mod.qh>
+#include <server/scores.qh>
+#include <server/world.qh>
 
 
 // ====================================================
@@ -753,7 +753,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 					timeout_time = autocvar_sv_timeout_length;
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
-					timeout_handler = spawn();
+					timeout_handler = new(timeout_handler);
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 

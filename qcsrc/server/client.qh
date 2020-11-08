@@ -5,6 +5,54 @@
 #include <common/replicate.qh>
 #include <common/sounds/all.qh>
 
+bool autocvar__notarget;
+int autocvar_g_balance_armor_start;
+float autocvar_g_balance_pause_armor_rot_spawn;
+float autocvar_g_balance_pause_fuel_rot_spawn;
+float autocvar_g_balance_pause_health_regen_spawn;
+float autocvar_g_balance_pause_health_rot_spawn;
+bool autocvar_g_botclip_collisions;
+bool autocvar_g_fullbrightplayers;
+bool autocvar_g_playerclip_collisions;
+float autocvar_g_player_alpha;
+float autocvar_g_player_brightness;
+float autocvar_g_player_damageforcescale = 2;
+float autocvar_g_respawn_delay_small;
+int autocvar_g_respawn_delay_small_count;
+float autocvar_g_respawn_delay_large;
+int autocvar_g_respawn_delay_large_count;
+float autocvar_g_respawn_delay_max;
+bool autocvar_g_respawn_delay_forced;
+bool autocvar_g_respawn_ghosts;
+float autocvar_g_respawn_ghosts_alpha = 1;
+float autocvar_g_respawn_ghosts_fadetime = 1.5;
+float autocvar_g_respawn_ghosts_time = 4.5;
+float autocvar_g_respawn_ghosts_speed;
+int autocvar_g_respawn_waves;
+bool autocvar_g_nodepthtestplayers;
+string autocvar_g_mutatormsg;
+float autocvar_sv_foginterval;
+float autocvar_sv_maxidle;
+bool autocvar_sv_maxidle_spectatorsareidle;
+int autocvar_sv_maxidle_slots;
+bool autocvar_sv_maxidle_slots_countbots;
+bool autocvar_g_forced_respawn;
+int autocvar_g_maxplayers;
+float autocvar_g_maxplayers_spectator_blocktime;
+string autocvar_g_xonoticversion;
+float autocvar_gameversion;
+float autocvar_gameversion_min;
+float autocvar_gameversion_max;
+string autocvar_hostname;
+int autocvar_spawn_debug;
+string autocvar_sv_motd;
+int autocvar_sv_name_maxlength = 64;
+bool autocvar_sv_servermodelsonly;
+int autocvar_sv_spectate;
+bool autocvar_sv_teamnagger;
+float autocvar_sv_player_scale;
+bool autocvar_sv_showspectators;
+
 // WEAPONTODO
 .string weaponorder_byimpulse;
 

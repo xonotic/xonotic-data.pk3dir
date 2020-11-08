@@ -1,22 +1,22 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include "constants.qh"
 	#include <client/mutators/_mod.qh>
-    #include "mapinfo.qh"
-    #include "notifications/all.qh"
-	#include "scores.qh"
-    #include <common/deathtypes/all.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
 	#include <common/gamemodes/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+	#include <common/scores.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
-	#include <server/mutators/_mod.qh>
-    #include "notifications/all.qh"
-    #include <common/deathtypes/all.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
 	#include <common/gamemodes/_mod.qh>
-	#include "scores.qh"
-    #include "mapinfo.qh"
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+	#include <common/scores.qh>
+	#include <server/mutators/_mod.qh>
 #endif
 
 #ifdef SVQC

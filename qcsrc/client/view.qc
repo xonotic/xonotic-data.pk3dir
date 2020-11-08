@@ -1,47 +1,39 @@
 #include "view.qh"
 
-#include "autocvars.qh"
+#include <client/announcer.qh>
+#include <client/csqcmodel_hooks.qh>
 #include <client/draw.qh>
-#include "announcer.qh"
-#include "hud/_mod.qh"
-#include "main.qh"
-#include "mapvoting.qh"
-#include "shownames.qh"
-#include "hud/panel/scoreboard.qh"
-#include "hud/panel/quickmenu.qh"
-
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
-
-#include <common/animdecide.qh>
-#include <common/deathtypes/all.qh>
-#include <common/ent_cs.qh>
+#include <client/shownames.qh>
 #include <common/anim.qh>
+#include <common/animdecide.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
-#include <common/net_notice.qh>
+#include <common/deathtypes/all.qh>
 #include <common/debug.qh>
-#include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
-#include <common/physics/player.qh>
-#include <common/stats.qh>
+#include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
-#include <common/teams.qh>
-#include <common/wepent.qh>
-
-#include <common/weapons/weapon/tuba.qh>
-
-#include <common/vehicles/all.qh>
-#include <common/weapons/_all.qh>
-#include <common/mutators/mutator/waypoints/all.qh>
-#include <common/viewloc.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
-
-#include <lib/csqcmodel/cl_player.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+#include <common/net_linked.qh>
+#include <common/net_notice.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/vehicles/all.qh>
+#include <common/viewloc.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/weapon/tuba.qh>
+#include <common/wepent.qh>
 #include <lib/csqcmodel/cl_model.qh>
-#include "csqcmodel_hooks.qh"
-
+#include <lib/csqcmodel/cl_player.qh>
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
@@ -399,7 +391,8 @@ void fpscounter_update()
 	if(!STAT(SHOWFPS))
 		return;
 
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
+
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
@@ -415,7 +408,7 @@ void fpscounter_update()
 
 STATIC_INIT(fpscounter_init)
 {
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
@@ -951,9 +944,11 @@ void HUD_Draw(entity this)
 	else if(STAT(FROZEN))
 	{
 		vector col = '0.25 0.90 1';
-		if(STAT(REVIVE_PROGRESS))
-			col += vec3(STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS));
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
+		float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
+		if(col_fade)
+			col += vec3(col_fade, -col_fade, -col_fade);
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
 	}
 
 	HUD_Scale_Enable();

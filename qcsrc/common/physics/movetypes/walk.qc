@@ -1,4 +1,5 @@
 #include "walk.qh"
+
 void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 {
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move

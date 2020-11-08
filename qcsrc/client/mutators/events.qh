@@ -121,6 +121,9 @@ MUTATOR_HOOKABLE(HUD_Powerups_add, EV_NO_ARGS);
 /** return true to show the physics HUD panel when optional mode is enabled */
 MUTATOR_HOOKABLE(HUD_Physics_showoptional, EV_NO_ARGS);
 
+/** return true to show the strafehud when optional mode is enabled */
+MUTATOR_HOOKABLE(HUD_StrafeHUD_showoptional, EV_NO_ARGS);
+
 /** return true to hide the score HUD panel */
 MUTATOR_HOOKABLE(HUD_Score_show, EV_NO_ARGS);
 
@@ -168,6 +171,9 @@ MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
 
 /** Return true to not draw scoreboard */
 MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
+
+/** Return true to force showing of the scoreboard */
+MUTATOR_HOOKABLE(DrawScoreboard_Force, EV_NO_ARGS);
 
 /** Return true to not draw scoreboard while dead */
 MUTATOR_HOOKABLE(DrawDeathScoreboard, EV_NO_ARGS);

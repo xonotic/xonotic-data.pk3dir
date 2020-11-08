@@ -1,11 +1,13 @@
 #include "animdecide.qh"
 
-#include <common/monsters/_mod.qh>
-
-#if defined(SVQC)
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
-    #include <common/stats.qh>
+#if defined(CSQC)
+	#include <common/monsters/_mod.qh>
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include <common/monsters/_mod.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
 #endif
 
 bool monsters_animoverride(entity this)
