@@ -2010,7 +2010,7 @@ float LostMovetypeFollow(entity ent)
 string playername(string thename, int teamid, bool team_colorize)
 {
 	TC(int, teamid);
-	bool do_colorize = (teamplay && team_colorize);
+	bool do_colorize = (teamplay && team_colorize && Team_IsValidTeam(teamid));
 #ifdef SVQC
 	if(do_colorize && !intermission_running)
 #else
