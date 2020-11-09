@@ -16,7 +16,6 @@
 	#include <lib/warpzone/server.qh>
 	#include <lib/warpzone/util_server.qh>
 	#include <server/anticheat.qh>
-	#include <server/autocvars.qh>
 	#include <server/weapons/csqcprojectile.qh>
 #endif
 

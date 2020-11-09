@@ -1,6 +1,5 @@
 #include "csqcmodel_hooks.qh"
 
-#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
 #include <client/player_skeleton.qh>
 #include <client/weapons/projectile.qh>
@@ -619,7 +618,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null" || this.alpha < 0)
+	if(!this.modelindex || this.model == "null")
 	{
 		this.drawmask = 0;
 		if(this.snd_looping > 0)

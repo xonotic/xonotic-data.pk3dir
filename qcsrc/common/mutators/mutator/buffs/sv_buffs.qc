@@ -1,21 +1,9 @@
 #include "sv_buffs.qh"
 
 #include <common/mapobjects/target/music.qh>
+#include <common/mutators/mutator/instagib/_mod.qh>
 #include <common/gamemodes/_mod.qh>
 #include <server/items/items.qh>
-
-void buffs_DelayedInit(entity this);
-
-AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
-
-REGISTER_MUTATOR(buffs, autocvar_g_buffs)
-{
-	MUTATOR_ONADD
-	{
-		if(autocvar_g_buffs > 0)
-			InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
-	}
-}
 
 bool buffs_BuffModel_Customize(entity this, entity client)
 {
@@ -443,25 +431,6 @@ void buff_Vengeance_DelayedDamage(entity this)
 	return;
 }
 
-// note: only really useful in teamplay
-void buff_Medic_Heal(entity this)
-{
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
-	{
-		if (DIFF_TEAM(it, this))
-		{
-			continue;
-		}
-		float hp = GetResource(it, RES_HEALTH);
-		if(hp >= autocvar_g_balance_health_regenstable)
-		{
-			continue;
-		}
-		Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-		SetResource(it, RES_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
-	});
-}
-
 float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
 {
 	return offset_y + (intersect_y - offset_y) * logn(((damg - offset_x) * ((base - 1) / intersect_x)) + 1, base);
@@ -557,30 +526,26 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier), btime, DEATH_BUFF.m_id);
 	}
 
-	// this... is ridiculous (TODO: fix!)
-	if(STAT(BUFFS, frag_attacker) & BUFF_VAMPIRE.m_itemid)
-	if(!frag_target.vehicle)
-	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(!IS_DEAD(frag_target))
-	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))
-	if(frag_attacker != frag_target)
-	if(!STAT(FROZEN, frag_target))
-	if(frag_target.takedamage)
-	if(DIFF_TEAM(frag_attacker, frag_target))
-	{
-		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
-			GetResource(frag_target, RES_HEALTH));
-		GiveResourceWithLimit(frag_attacker, RES_HEALTH, amount, g_pickup_healthsmall_max);
-		if (GetResource(frag_target, RES_ARMOR))
-		{
-			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
-				GetResource(frag_target, RES_ARMOR));
-			GiveResourceWithLimit(frag_attacker, RES_ARMOR, amount, g_pickup_armorsmall_max);
-		}
-	}
-
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(6, vector) = frag_force;
+}
+
+MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	if(!(STAT(BUFFS, frag_attacker) & BUFF_VAMPIRE.m_itemid))
+		return;
+	float health_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+
+	if(time >= frag_target.spawnshieldtime &&
+		frag_target != frag_attacker &&
+		IS_PLAYER(frag_attacker) &&
+		!IS_DEAD(frag_target) && !STAT(FROZEN, frag_target))
+	{
+		GiveResource(frag_attacker, RES_HEALTH,
+			autocvar_g_buffs_vampire_damage_steal * health_take);
+	}
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
@@ -903,13 +868,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if((STAT(BUFFS, player) & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
 		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
 
-	if(STAT(BUFFS, player) & BUFF_MEDIC.m_itemid)
-	if(time >= player.buff_medic_healtime)
-	{
-		buff_Medic_Heal(player);
-		player.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
-	}
-
 #define BUFF_ONADD(b) if ( (STAT(BUFFS, player) & (b).m_itemid) && !(player.oldbuffs & (b).m_itemid))
 #define BUFF_ONREM(b) if (!(STAT(BUFFS, player) & (b).m_itemid) &&  (player.oldbuffs & (b).m_itemid))
 
@@ -1068,4 +1026,11 @@ void buffs_DelayedInit(entity this)
 			buff_Init(e);
 		}
 	}
+}
+
+void buffs_Initialize()
+{
+	// if buffs are above 0, allow random spawning
+	if(autocvar_g_buffs > 0 && autocvar_g_buffs_spawn_count > 0)
+		InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }

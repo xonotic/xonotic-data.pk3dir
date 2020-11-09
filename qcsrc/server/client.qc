@@ -21,6 +21,7 @@
 #include <common/minigames/sv_minigames.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
@@ -42,6 +43,7 @@
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
@@ -71,6 +73,7 @@
 #include <server/weapons/common.qh>
 #include <server/weapons/hitplot.qh>
 #include <server/weapons/selection.qh>
+#include <server/weapons/tracing.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 

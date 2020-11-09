@@ -1,6 +1,5 @@
 #include "shownames.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/resources.qh>
@@ -126,20 +125,33 @@ void Draw_ShowNames(entity this)
 	}
 	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
 	a = M_ARGV(1, float);
-	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
-	float dist = vlen(this.origin - view_origin);
+	float dist = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
 	if (autocvar_hud_shownames_maxdistance)
 	{
-		if (dist >= autocvar_hud_shownames_maxdistance) return;
-		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-		a *= (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		float max_dist = min(autocvar_hud_shownames_maxdistance, max_shot_distance);
+		if (vdist(this.origin - view_origin, >=, max_dist))
+			return;
+		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
+		{
+			float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
+			if (dist == -1)
+				dist = vlen(this.origin - view_origin);
+			a *= (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		}
 	}
+	else if (vdist(this.origin - view_origin, >=, max_shot_distance))
+		return;
 	if (!a) return;
 	float resize = 1;
 	if (autocvar_hud_shownames_resize)  // limit resize so its never smaller than 0.5... gets unreadable
 	{
-		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-		resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
+		{
+			float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
+			if (dist == -1)
+				dist = vlen(this.origin - view_origin);
+			resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		}
 	}
 	// draw the sprite image
 	if (o.z >= 0)

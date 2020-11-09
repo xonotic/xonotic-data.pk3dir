@@ -8,6 +8,8 @@ bool autocvar_teamplay_lockonrestart;
 bool autocvar_g_balance_teams;
 bool autocvar_g_balance_teams_prevent_imbalance;
 
+string autocvar_g_forced_team_otherwise;
+
 bool lockteams;
 
 // ========================== Global teams API ================================

@@ -4,6 +4,8 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/teams.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/vote.qh>
 #include <server/damage.qh>

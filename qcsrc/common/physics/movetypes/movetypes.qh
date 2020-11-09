@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef SVQC
+// undefined on client, engine cvar
+bool autocvar_physics_ode;
+#endif
+
 // water levels
 const int WATERLEVEL_NONE = 0;
 const int WATERLEVEL_WETFEET = 1;

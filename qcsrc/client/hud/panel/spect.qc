@@ -1,6 +1,5 @@
 #include "spect.qh"
 
-#include <client/autocvars.qh>
 #include <client/hud/hud.qh>
 #include <client/view.qh>
 

@@ -1,7 +1,6 @@
 #include "timer.qh"
 
-#include <client/autocvars.qh>
-#include <client/hud/hud.qh>
+#include <client/draw.qh>
 #include <client/view.qh>
 
 // Timer (#5)
