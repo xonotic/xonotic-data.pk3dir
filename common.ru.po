@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-08 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-11-09 02:50+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -52,8 +52,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
-"^1Многострочное сообщение в течение %s , которое\n"
-"^1отображается дольше, чем обычное"
+"^1Многострочное сообщение в течение %s,\n"
+"^1оно отображается дольше, чем обычное"
 
 #: qcsrc/client/hud/panel/centerprint.qc:177
 #, c-format
@@ -257,11 +257,11 @@ msgstr "QMCMD^Отправить публичное сообщение"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^:-) / nice one"
-msgstr "QMCMD^:-) / прекрасно"
+msgstr "QMCMD^:-) / хорош"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^nice one"
-msgstr "QMCMD^отлично"
+msgstr "QMCMD^хорош"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^good game"
@@ -1875,11 +1875,11 @@ msgstr "Бонус"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
-msgstr "Цифры урона"
+msgstr "Числа урона"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
-msgstr "Показывать цифры урона"
+msgstr "Показывать значение урона в числах"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
@@ -1900,7 +1900,7 @@ msgstr "Цвет:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Draw damage numbers for friendly fire"
-msgstr "Показывать цифры урона для дружественного огня"
+msgstr "Показывать числа урона для дружественного огня"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -1994,7 +1994,7 @@ msgstr "Заморожен!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Оживление"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -3067,7 +3067,7 @@ msgid ""
 "and will be lost."
 msgstr ""
 "^BG%s^BG установил новый рекорд в ^F2%s^BG, но, к сожалению, у него нет UID, "
-"поэтому рекорд не будет сохранен."
+"поэтому рекорд не будет сохранён."
 
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
@@ -4007,7 +4007,7 @@ msgstr "^K3Вы были оживлены ^BG%s"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGВы были автоматически оживлены после %s секунд"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -4588,22 +4588,22 @@ msgstr "%s^K1 получил первое очко! %s^BG"
 #: qcsrc/common/notifications/all.qh:602
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ", прервав серию из %d убийств подряд"
+msgstr ", прервав серию из %d убийств"
 
 #: qcsrc/common/notifications/all.qh:603
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ", прервав серию из %d очков подряд"
+msgstr ", прервав серию из %d очков"
 
 #: qcsrc/common/notifications/all.qh:617
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr ", прервав серию из %d убийств подряд"
+msgstr ", прервав серию из %d убийств"
 
 #: qcsrc/common/notifications/all.qh:618
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ", прервав серию из %d очков подряд"
+msgstr ", прервав серию из %d очков"
 
 #: qcsrc/common/notifications/all.qh:643
 #, c-format
@@ -5477,22 +5477,22 @@ msgstr "%d секунд"
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr "%dй"
+msgstr "%d"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr "%dй"
+msgstr "%d"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr "%dй"
+msgstr "%d"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr "%dй"
+msgstr "%d"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
@@ -5956,12 +5956,12 @@ msgstr "Сочетать здоровье и броню"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Enable status bar"
-msgstr "Включить полосу состояния"
+msgstr "Включить шкалу состояния"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:19
 msgid "Status bar alignment:"
-msgstr "Выравнивание полосы состояния:"
+msgstr "Выравнивание шкалы состояния:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:39
@@ -6095,7 +6095,7 @@ msgstr "Только в Race/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
-msgstr "Полоса состояния"
+msgstr "Шкала состояния"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:67
@@ -6264,7 +6264,7 @@ msgstr "Отключено"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:22
 msgid "And me"
-msgstr "И мне"
+msgstr "Включая мой"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:23
 msgid "Pure"
@@ -6272,7 +6272,7 @@ msgstr "Чистый"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr "Таблица Очков"
+msgstr "Таблица очков"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
@@ -6320,7 +6320,7 @@ msgstr "Сбросить цвета"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
-msgstr "Полоса стрейфа:"
+msgstr "Шкала стрейфа:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
 msgid "Angle indicator:"
@@ -6455,11 +6455,11 @@ msgstr "Показывать патроны"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
 msgid "Ammo bar alpha:"
-msgstr "Прозрачность полосы патронов:"
+msgstr "Прозрачность шкалы патронов:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
 msgid "Ammo bar color:"
-msgstr "Цвет полосы патронов:"
+msgstr "Цвет шкалы патронов:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
@@ -6496,7 +6496,7 @@ msgstr "Сохранить текущую тему"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
-msgstr "Фон по умолчанию:"
+msgstr "Общие настройки фона панелей:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
 #: qcsrc/menu/xonotic/util.qc:767
@@ -6516,7 +6516,7 @@ msgstr "Цвет команды:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
 #: qcsrc/menu/xonotic/util.qc:809
 msgid "Test team color in configure mode"
-msgstr "Проверить цвет команды в режиме настройки"
+msgstr "Применить цвет команды для проверки"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
 #: qcsrc/menu/xonotic/util.qc:812
@@ -7166,11 +7166,11 @@ msgstr "Показывать полные серверы, не имеющие с
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "SRVS^Лагающие"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
-msgstr ""
+msgstr "Показывать серверы с высоким пингом"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:57
 msgid "Pause"
@@ -7356,7 +7356,7 @@ msgstr "Вы точно хотите отсоединиться сейчас?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
-msgstr "Проигрывание демки отсоединит вас от текущего матча."
+msgstr "Тест производительности демки отсоединит вас от текущего матча."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
@@ -7424,11 +7424,11 @@ msgstr "Сбросить"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:142
 msgid "Previous"
-msgstr "Следующий"
+msgstr "Предыдущий"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:145
 msgid "Next"
-msgstr "Предыдущий"
+msgstr "Следующий"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:150
 msgid "Slide show"
@@ -8178,7 +8178,7 @@ msgid ""
 "Enable faster but uglier dynamic lights by rendering bright coronas instead "
 "of real dynamic lights"
 msgstr ""
-"Включить быстрое, но некрасивое динамическое освещение отрисовкой ярких "
+"Включить быстрое, но некрасивое динамическое освещение с отрисовкой ярких "
 "корон вместо реального динамического освещения"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
@@ -10123,7 +10123,7 @@ msgstr "Убийства/смерти:"
 #: qcsrc/menu/xonotic/statslist.qc:173
 #, c-format
 msgid "Kill ratio:"
-msgstr "Частота убийств:"
+msgstr "Отношение убийств:"
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
