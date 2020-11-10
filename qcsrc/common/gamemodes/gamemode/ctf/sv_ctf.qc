@@ -610,6 +610,13 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	new_time = TIME_ENCODE(time - enemy_flag.ctf_pickuptime);
 	if(!old_time || new_time < old_time)
 		GameRules_scoring_add(player, CTF_CAPTIME, new_time - old_time);
+	
+	// announcer
+	WinningConditionHelper(NULL);
+	if (Score_NewLeader())
+		AnnounceNewLeader();
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(player.team, ANNCE_TEAM_SCORES));
 
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
@@ -719,11 +726,15 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	if(!flag.team)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PICKUP_NEUTRAL);
 	else if(CTF_DIFFTEAM(player, flag))
+	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_PICKUP));
+		Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_CTF_PICKUP);
+	}
 	else
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_RETURN : CENTER_CTF_PICKUP_RETURN_ENEMY), Team_ColorCode(flag.team));
 
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_ANNCE, ANNCE_CTF_PICKUP_TEAM);
 
 	if(!flag.team)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player && DIFF_TEAM(it, player), { Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL, Team_ColorCode(player.team), player.netname); });
@@ -732,10 +743,13 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(CTF_SAMETEAM(flag, it))
 			{
-				if(SAME_TEAM(player, it))
+				if(SAME_TEAM(player, it)) {
 					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
-				else
+					Send_Notification(NOTIF_ONE, it, MSG_ANNCE, ANNCE_CTF_PICKUP_TEAM);
+				} else {
 					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
+					Send_Notification(NOTIF_ONE, it, MSG_ANNCE, ANNCE_CTF_PICKUP_ENEMY);
+				}
 			}
 		});
 
