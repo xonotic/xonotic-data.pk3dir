@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-09 02:50+0000\n"
+"PO-Revision-Date: 2020-11-09 09:51+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -625,7 +625,7 @@ msgstr "SCO^эло"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^fastest"
-msgstr "SCO^быстрейший"
+msgstr "SCO^рекорд"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "Time of fastest lap (Race/CTS)"
@@ -803,11 +803,11 @@ msgstr "SCO^возвраты"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of revivals"
-msgstr "Количество возрождений"
+msgstr "Число оживлений"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^revivals"
-msgstr "SCO^возрождения"
+msgstr "SCO^оживления"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of rounds won"
@@ -1028,7 +1028,7 @@ msgstr "Награда за скорость: %d%s ^7(%s^7)"
 #: qcsrc/client/hud/panel/scoreboard.qc:1826
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr "Быстрейший за всё время: %d%s ^7(%s^7)"
+msgstr "Рекорд скорости: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1842
 #, c-format
@@ -1210,7 +1210,7 @@ msgstr "Прогресс захвата"
 
 #: qcsrc/client/view.qc:970
 msgid "Revival progress"
-msgstr "Прогресс возрождения"
+msgstr "Прогресс оживления"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
@@ -3738,7 +3738,7 @@ msgstr "^K1%sВас фрагнул игрок ^BG%s^K1, пока вы писал
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr "^BGНажмите ^F2%s^BG снова для броска гранаты!"
+msgstr "^BGНажмите ^F2%s^BG повторно для броска гранаты!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
@@ -6031,7 +6031,7 @@ msgstr "Уменьшенная"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr "Соотношение текста и иконок:"
+msgstr "Отношение текста и иконок:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
@@ -6047,7 +6047,7 @@ msgstr "Динамический размер"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr "Панель таймеров для предметов"
+msgstr "Панель таймеров предметов"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -8201,7 +8201,7 @@ msgstr "Включить рисование теней динамическог�
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Realtime world lighting"
-msgstr "Дин. освещение мира в реальном времени"
+msgstr "Освещение мира в реальном времени"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
 msgid ""
@@ -8979,7 +8979,7 @@ msgstr "Нажатие кнопки \"открыть консоль\" также
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
-msgstr "Использовать клавишу для открытия консоли и для её закрытия"
+msgstr "Использовать клавишу открытия консоли и для её закрытия"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
@@ -8987,11 +8987,11 @@ msgstr "Автоматически повторять прыжки при уде
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
-msgstr "Реактивный ранец при прыжке:"
+msgstr "Реактивный ранец по прыжку:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
-msgstr "JPJUMP^Отключены"
+msgstr "JPJUMP^Отключён"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
@@ -9602,7 +9602,7 @@ msgstr "Победитель"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr "автовыбор 'лучшей' команды"
+msgstr "автовыбор «лучшей» команды"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
