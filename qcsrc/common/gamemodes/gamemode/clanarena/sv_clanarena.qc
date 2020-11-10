@@ -141,7 +141,7 @@ float CA_CheckWinner()
 		nades_Clear(it);
 		
 		// Give perfect medal if everyone in the winner team is alive
-		if(perfect) {
+		if(perfect && it.team == winner_team) {
 			Give_Medal(it, PERFECT);
 		}
 		
