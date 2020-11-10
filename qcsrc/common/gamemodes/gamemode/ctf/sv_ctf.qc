@@ -2246,10 +2246,25 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
+	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
-		GameRules_scoring_add_team(frag_attacker, SCORE, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
-		GameRules_scoring_add(frag_attacker, CTF_FCKILLS, 1);
+		if(frag_target.flagcarried) {
+			// Killing an enemy flag carrier
+			GameRules_scoring_add_team(frag_attacker, SCORE, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
+			GameRules_scoring_add(frag_attacker, CTF_FCKILLS, 1);
+			Give_Medal(frag_attacker, DEFENSE);
+		} else {
+			entity tmp_entity;
+			for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+			if(tmp_entity.ctf_status == FLAG_BASE && CTF_SAMETEAM(tmp_entity, frag_attacker))
+			{
+				if(CTF_IS_NEAR(frag_target, tmp_entity, '1 1 1' * 1500))
+				{
+					Give_Medal(frag_attacker, DEFENSE);
+				}
+				break;
+			}
+		}
 	}
 
 	if(frag_target.flagcarried)
@@ -2258,6 +2273,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 		ctf_Handle_Throw(frag_target, NULL, DROP_NORMAL);
 		tmp_entity.ctf_dropper = NULL;
 	}
+	
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GiveFragsForKill)
