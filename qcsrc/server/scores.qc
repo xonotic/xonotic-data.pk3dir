@@ -412,6 +412,24 @@ float PlayerScore_Compare(entity t1, entity t2, bool strict)
 	return result.x;
 }
 
+bool Score_NewLeader()
+{
+	if(teamplay) {
+		if (WinningConditionHelper_winnerteam != WinningConditionHelper_winnerteam_last && (WinningConditionHelper_secondteam || WinningConditionHelper_equality))
+		{
+			WinningConditionHelper_winnerteam_last = WinningConditionHelper_winnerteam;
+			return true;
+		}
+	} else {
+		if (WinningConditionHelper_winner != WinningConditionHelper_winner_last && (WinningConditionHelper_second || WinningConditionHelper_equality))
+		{
+			WinningConditionHelper_winner_last = WinningConditionHelper_winner;
+			return true;
+		}
+	}
+	return false;
+}
+
 void WinningConditionHelper(entity this)
 {
 	float c;

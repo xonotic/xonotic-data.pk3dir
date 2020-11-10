@@ -6,6 +6,12 @@ MUTATOR_HOOKFUNCTION(dm, Scores_CountFragsRemaining)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(dm, Scores_AnnounceLeads)
+{
+	// enable leads announcer
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(dm, FragCenterMessage)
 {
 	// Use normal notifications in warmup

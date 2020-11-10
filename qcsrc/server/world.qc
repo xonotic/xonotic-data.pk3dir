@@ -1307,7 +1307,7 @@ void NextLevel()
 	
 	// send winner notification
 	if(teamplay) {
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_WINS));
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_WINS));
 	}
 
 	if(autocvar_sv_eventlog)
@@ -1445,6 +1445,27 @@ void ClearWinners()
 	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
 }
 
+void AnnounceNewLeader()
+{
+	if(teamplay) {
+		if (WinningConditionHelper_equality)
+			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TEAM_LEADS_TIED);
+		else
+			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
+	} else {
+		if (WinningConditionHelper_equality)
+		{
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
+		}
+		else
+		{
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
+		}
+	}
+}
+
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
@@ -1509,21 +1530,10 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		}
 	}
 	
-	// z411
-	if (WinningConditionHelper_winner != WinningConditionHelper_winner_last && (WinningConditionHelper_second || WinningConditionHelper_equality))
-	{
-		if (WinningConditionHelper_equality)
-		{
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
-		}
-		else
-		{
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
-		}
-		
-		WinningConditionHelper_winner_last = WinningConditionHelper_winner;
+	// z411 - lead announcer
+	if(MUTATOR_CALLHOOK(Scores_AnnounceLeads)) {
+		if (Score_NewLeader())
+			AnnounceNewLeader();
 	}
 	
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
@@ -2304,7 +2314,7 @@ void RunThink(entity this)
 bool autocvar_sv_freezenonclients;
 void Physics_Frame()
 {
-	if(autocvar_sv_freezenonclients)
+	if(autocvar_sv_freezenonclients || game_timeout)
 		return;
 
 	IL_EACH(g_moveables, true,

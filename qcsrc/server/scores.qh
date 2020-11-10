@@ -108,6 +108,7 @@ void WinningConditionHelper(entity this);
 float WinningConditionHelper_topscore;      ///< highest score
 float WinningConditionHelper_secondscore;   ///< second highest score
 float WinningConditionHelper_winnerteam;    ///< the color of the winning team, or -1 if none
+float WinningConditionHelper_winnerteam_last;
 float WinningConditionHelper_secondteam;    ///< the color of the second team, or -1 if none
 float WinningConditionHelper_equality;      ///< we have no winner
 entity WinningConditionHelper_winner;       ///< the winning player, or NULL if none
@@ -142,3 +143,6 @@ string GetTeamScoreString(float tm, float shortString);
  * nospectators: exclude spectators
  */
 entity PlayerScore_Sort(.float field, int teams, bool strict, bool nospectators);
+
+// z411
+bool Score_NewLeader();
