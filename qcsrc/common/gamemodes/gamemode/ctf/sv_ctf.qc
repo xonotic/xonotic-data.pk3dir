@@ -611,6 +611,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	if(!old_time || new_time < old_time)
 		GameRules_scoring_add(player, CTF_CAPTIME, new_time - old_time);
 	
+	Give_Medal(player, CAPTURE);
+	
 	// announcer
 	WinningConditionHelper(NULL);
 	if (Score_NewLeader())
@@ -2268,6 +2270,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 			// Killing an enemy flag carrier
 			GameRules_scoring_add_team(frag_attacker, SCORE, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
 			GameRules_scoring_add(frag_attacker, CTF_FCKILLS, 1);
+		} else if(frag_attacker.flagcarried) {
 			Give_Medal(frag_attacker, DEFENSE);
 		} else {
 			entity tmp_entity;

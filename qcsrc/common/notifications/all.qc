@@ -1236,7 +1236,12 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif, float f1)
 		case MSG_MEDAL:
 		{
 			centerprint_Medal(notif.nent_icon, f1);
-			Local_Notification_sound(notif.nent_msgannce.nent_channel, notif.nent_msgannce.nent_snd, notif.nent_msgannce.nent_vol, notif.nent_msgannce.nent_position);
+			if(notif.nent_msgannce)
+				Local_Notification_sound(
+					notif.nent_msgannce.nent_channel,
+					notif.nent_msgannce.nent_snd,
+					notif.nent_msgannce.nent_vol,
+					notif.nent_msgannce.nent_position);
 			break;
 		}
 	}
@@ -1480,7 +1485,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 			Local_Notification_Queue_Add(
 				net_type,
 				notif,
-				MSG_MEDAL_TIME,
+				(notif.nent_msgannce ? MSG_MEDAL_TIME : 0),
 				f1);
 			break;
 		}

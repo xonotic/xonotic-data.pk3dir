@@ -1524,6 +1524,7 @@ vector Scoreboard_MedalStats_Draw(vector pos)
 	
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/accuracy", 		height, pl.(scores(SP_MEDAL_ACCURACY)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/assist", 		height, pl.(scores(SP_MEDAL_ASSIST)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/capture", 		height, pl.(scores(SP_MEDAL_CAPTURE)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/defense", 		height, pl.(scores(SP_MEDAL_DEFENSE)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/perfect", 		height, pl.(scores(SP_MEDAL_PERFECT)));
 	
