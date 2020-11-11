@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-08 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-11-08 10:53+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -2010,7 +2010,7 @@ msgstr "Gelé !"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Dégel"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -2813,7 +2813,7 @@ msgstr "^BG%s^K3 a été dégelé par l'explosion de sa Grenade"
 #: qcsrc/common/notifications/all.inc:360
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr "^BG%s^K3 a été automatiquement dégelé après %s secondes"
+msgstr "^BG%s^K3 a été dégelé automatiquement après %s secondes"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
@@ -4062,7 +4062,7 @@ msgstr "^K3Vous avez été dégelé par ^BG%s"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGVous avez été dégelé automatiquement après %s secondes"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -7231,11 +7231,11 @@ msgstr "Afficher les serveurs pleins, sans place disponible"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "Lent"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
-msgstr ""
+msgstr "Afficher les serveurs à latence élevée"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:57
 msgid "Pause"
