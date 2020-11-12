@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-11 04:48+0000\n"
+"PO-Revision-Date: 2020-11-11 13:09+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -8227,11 +8227,11 @@ msgstr "Мягкие тени"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Fade corona according to visibility"
-msgstr "Прятать корону в соответствии с её видимостью"
+msgstr "Прятать короны в соответствии с их видимостью"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
 msgid "Fade coronas according to visibility"
-msgstr "Прятать короны в соответствии с их видимостью"
+msgstr "Постепенно скрывать короны в соответствии с их видимостью"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
 msgid "Bloom"
