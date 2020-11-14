@@ -382,7 +382,6 @@ void update_mousepos()
 	mousepos.y = bound(0, mousepos.y, vid_conheight);
 }
 
-float showfps_prevfps;
 float showfps_prevfps_time;
 int showfps_framecounter;
 
@@ -396,13 +395,13 @@ void fpscounter_update()
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
-		showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+		float fps = showfps_framecounter / (currentTime - showfps_prevfps_time);
 		showfps_framecounter = 0;
 		showfps_prevfps_time = currentTime;
 
 		int channel = MSG_C2S;
 		WriteHeader(channel, fpsreport);
-		WriteShort(channel, bound(0, rint(showfps_prevfps), 65535)); // prevent insane fps values
+		WriteShort(channel, bound(0, rint(fps), 65535)); // prevent insane fps values
 	}
 }
 
