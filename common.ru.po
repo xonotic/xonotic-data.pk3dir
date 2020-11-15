@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-11 13:09+0000\n"
+"PO-Revision-Date: 2020-11-14 21:44+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -839,7 +839,7 @@ msgstr "Количество убийств за вычетом смертей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^sum"
-msgstr "SCO^сум"
+msgstr "SCO^сумма"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of domination points taken (Domination)"
@@ -3216,7 +3216,7 @@ msgstr "^BG%s%s^K1 подошёл слишком близко сфере Эле�
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr "^BG%s^K1 доигрался с зарядами Электро %s%s"
+msgstr "^BG%s^K1 доигрался с зарядами Электро%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
@@ -7497,7 +7497,7 @@ msgstr "Пора саночки возить…"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:17
 msgid "I got some more fragging to do!"
-msgstr "Остались здесь ещё дела!"
+msgstr "Фраги сами себя не сделают!"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
@@ -8774,7 +8774,7 @@ msgstr "Угол обзора в градусах"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:75
 msgid "ZOOM^Zoom factor:"
-msgstr "Кратность увеличения:"
+msgstr "Кратность увеличителя:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "How big the zoom factor is when the zoom button is pressed"
@@ -8782,11 +8782,13 @@ msgstr "Множитель приближения при нажатии кноп
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "ZOOM^Zoom speed:"
-msgstr "Скорость увеличения:"
+msgstr "Скорость увеличителя:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr "Скорость увеличения; отключите, чтобы прицеливаться мгновенно"
+msgstr ""
+"Скорость приближения при включении увеличителя; отключите, чтобы "
+"прицеливаться мгновенно"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Instant"
@@ -8801,12 +8803,12 @@ msgid ""
 "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no "
 "sensitivity change)"
 msgstr ""
-"Как увеличительный прицел влияет на чувствительность: от 0 (низкая "
+"Как увеличительный прицел влияет на чувствительность мыши: от 0 (низкая "
 "чувствительность) до 1 (не меняется)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
 msgid "Velocity zoom"
-msgstr "Скорость увеличения"
+msgstr "Быстрота увеличения"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Forward movement only"
