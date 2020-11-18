@@ -1633,6 +1633,21 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
+	if (autocvar_chase_active)
+	{
+		// in first person view if r_drawviewmodel is off weapon isn't visible
+		// and server doesn't throw any casing
+		// switching to 3rd person view r_drawviewmodel is set to -1 to let know the server casings
+		// can be thrown for self since own weapon model is visible
+		if (autocvar_r_drawviewmodel == 0 && STAT(HEALTH) > 0)
+			cvar_set("r_drawviewmodel", "-1");
+	}
+	else
+	{
+		if (autocvar_r_drawviewmodel < 0)
+			cvar_set("r_drawviewmodel", "0");
+	}
+
 	WaypointSprite_Load();
 
 	CSQCPlayer_SetCamera();
