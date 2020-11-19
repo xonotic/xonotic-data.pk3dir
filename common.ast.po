@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-17 00:53+0000\n"
+"PO-Revision-Date: 2020-11-18 21:41+0000\n"
 "Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
@@ -250,11 +250,11 @@ msgstr "Unviar un mensaxe públicu a"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^:-) / nice one"
-msgstr "QMCMD^bona xugada :-)"
+msgstr "bona xugada :-)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^nice one"
-msgstr "QMCMD^bona xugada"
+msgstr "bona xugada"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^good game"
@@ -270,7 +270,7 @@ msgstr "hola, bona suerte y pasá-ylo podre"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:791
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Unviar n'inglés"
+msgstr "Unviar n'inglés"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 #: qcsrc/client/hud/panel/quickmenu.qc:812
@@ -765,7 +765,7 @@ msgstr "La perda de paquetes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^pl"
-msgstr "Perda paqts"
+msgstr "Perda pqts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of players pushed into void"
@@ -1062,7 +1062,7 @@ msgstr "¿Permitir a los sirvidores qu'atroxen y amuesen el to nome?"
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Configurar la interfaz"
 
 #: qcsrc/client/hud/panel/vote.qc:129
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
@@ -1236,7 +1236,7 @@ msgstr "Clasificación del tiempu de captura"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
-msgstr ""
+msgstr "Captura la bandera"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid ""
@@ -1792,7 +1792,7 @@ msgstr "Melecina"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
-msgstr ""
+msgstr "Golpetazu"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:63
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
@@ -2139,6 +2139,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"^BG%s^BG capturó bandera del ^TC^TT^BG en ^F2%s^BG segundos, nun pudiendo "
+"superar el récor anterior que fizo ^BG%s^BG de ^F1%s^BG segundos"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
@@ -2221,7 +2223,7 @@ msgstr "^BG%s^BG consiguió la bandera"
 #: qcsrc/common/notifications/all.inc:256
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr "^BG%s^BG devolvió la bandera del ^TC^TT"
+msgstr "^BG%s^BG devolvió la bandera ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:258
 #: qcsrc/common/notifications/all.inc:544
@@ -2453,7 +2455,7 @@ msgstr "^BG%s^K1 tuvo nel agua munchu tiempu%s%s"
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr ""
+msgstr "^BG%s^K1 tocó'l suelu con muncha fuercia%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
@@ -2595,7 +2597,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 cambió al %s%s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
@@ -4082,7 +4084,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Nivel %s: "
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
@@ -4189,7 +4191,7 @@ msgstr "^BGCreóse un portal d'^K1entrada"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^F3Out^BG-portal created"
-msgstr "^BGCreóse un portal de ^K1salida"
+msgstr "^BGCreóse un portal de ^F3salida"
 
 #: qcsrc/common/notifications/all.inc:742
 msgid "^F1Portal creation failed"
@@ -4445,12 +4447,12 @@ msgstr "¡ARMAGUEDON! "
 #: qcsrc/common/notifications/all.qh:464
 #, c-format
 msgid "%s(^F1Bot^BG)"
-msgstr ""
+msgstr "%s(^F1Robó^BG)"
 
 #: qcsrc/common/notifications/all.qh:466
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr ""
+msgstr "%s(Ping ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
@@ -6079,7 +6081,7 @@ msgstr "Panel de físiques"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "Pandel de poderes"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
@@ -6301,7 +6303,7 @@ msgstr "Panel del temporizador"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr ""
+msgstr "Tresparencia dempués de votar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -6309,7 +6311,7 @@ msgstr "Panel de votaciones"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 msgid "Fade out after:"
-msgstr ""
+msgstr "Esvanecer dempués de:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:167
@@ -6321,31 +6323,31 @@ msgstr "Enxamás"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:26
 #, c-format
 msgid "%ds"
-msgstr ""
+msgstr "%ds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:30
 msgid "Fade effect:"
-msgstr ""
+msgstr "Efeutu d'esvanecimientu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "EF^None"
-msgstr ""
+msgstr "Nengún"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
-msgstr ""
+msgstr "Tresparencia"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "Slide"
-msgstr ""
+msgstr "Eslizamientu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
 msgid "EF^Both"
-msgstr ""
+msgstr "Dambos"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Weapon icons:"
-msgstr ""
+msgstr "Iconos d'armes:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Show only owned weapons"
@@ -6369,7 +6371,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Weapon ID scale:"
-msgstr ""
+msgstr "Escala de les IDs d'arma:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
@@ -6884,7 +6886,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Powerups"
-msgstr ""
+msgstr "Poderes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:101
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:167
@@ -8461,11 +8463,11 @@ msgstr "Axustes de los moos de xuegu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Display capture times in Capture The Flag"
-msgstr ""
+msgstr "Amosar los tiempos de les captures en Captura la bandera"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 msgid "Display name of flag stealer in Capture The Flag"
-msgstr ""
+msgstr "Amosar el nome de los lladrones de banderes en Captura la bandera"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
@@ -8576,7 +8578,7 @@ msgstr "Namás nos duelos"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Body fading:"
-msgstr ""
+msgstr "Esvanecimientu de cuerpos:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Gibs:"
@@ -8736,7 +8738,7 @@ msgstr "Fai usu de la llista d'al llau al cambiar d'arma cola rueda del mur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
 msgid "Cycle through only usable weapon selections"
-msgstr ""
+msgstr "Percorrer namás les armes que puen usase"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
 msgid "Auto switch weapons on pickup"
@@ -8817,7 +8819,7 @@ msgstr "El multiplicador de la velocidá del mur"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Mira adondada"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
@@ -8926,7 +8928,7 @@ msgstr "Puertu UDP del veceru:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Force client to use chosen port unless it is set to 0"
-msgstr ""
+msgstr "Forcia al veceru a usar el puertu escoyíu a nun ser que s'afite a 0"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Bandwidth:"
@@ -8934,7 +8936,7 @@ msgstr "Anchor de banda:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Specify your network speed"
-msgstr ""
+msgstr "Especifica la velocidá de la rede"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "56k"
@@ -8942,7 +8944,7 @@ msgstr "56k"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
 msgid "ISDN"
-msgstr ""
+msgstr "ISDN"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Slow ADSL"
@@ -8962,7 +8964,7 @@ msgstr "Descargues:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:47
 msgid "Maximum number of concurrent HTTP/FTP downloads"
-msgstr ""
+msgstr "El númberu máximu de descargues HTTP/FTP al empar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Download speed:"
@@ -8974,11 +8976,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Show netgraph"
-msgstr ""
+msgstr "Amosar el gráficu de rede"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
 msgid "Show a graph of packet sizes and other information"
-msgstr ""
+msgstr "Amuesa un gráficu colos tamaños de los paquetes y otra información"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Client-side movement prediction"
@@ -8986,11 +8988,11 @@ msgstr "Predicción del movimientu de llau del sirividor"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid "Movement error compensation"
-msgstr ""
+msgstr "Compensación de fallos nel movimientu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "Use encryption (AES) when available"
-msgstr ""
+msgstr "Usa'l cifráu (AES) cuando tea disponible"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Framerate"
@@ -8998,7 +9000,7 @@ msgstr "Tasa de cuadros"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
 msgid "Maximum:"
-msgstr ""
+msgstr "Máximu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:90
 msgid "MAXFPS^Unlimited"
@@ -9010,7 +9012,7 @@ msgstr "Oxetivu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:95
 msgid "TRGT^Disabled"
-msgstr ""
+msgstr "Desactívase"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:106
 msgid "Idle limit:"
@@ -9030,11 +9032,11 @@ msgstr "Amosar los cuadros per segundu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:120
 msgid "Show your rendered frames per second"
-msgstr ""
+msgstr "Amuesa los cuadros per segundu renderizaos"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:125
 msgid "Menu tooltips:"
-msgstr ""
+msgstr "Descripciones emerxentes:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:127
 msgid ""
@@ -9044,15 +9046,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:128
 msgid "TLTIP^Disabled"
-msgstr ""
+msgstr "Desactívense"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "TLTIP^Standard"
-msgstr ""
+msgstr "Estándar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
 msgid "TLTIP^Advanced"
-msgstr ""
+msgstr "Avanzaes"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Show current date and time"
@@ -9072,7 +9074,7 @@ msgstr "Axustes avanzaos..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:142
 msgid "Advanced settings where you can tweak every single variable of the game"
-msgstr ""
+msgstr "Equí pues afinar cauna de les variables del xuegu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
@@ -9714,7 +9716,7 @@ msgstr "espectador"
 
 #: qcsrc/menu/xonotic/playermodel.qc:161
 msgid "<no model found>"
-msgstr ""
+msgstr "<nun s'alcontró'l modelu>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"

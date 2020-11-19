@@ -1,4 +1,4 @@
-ast   "Asturian" "Asturianu" 70%
+ast   "Asturian" "Asturianu" 72%
 de    "German" "Deutsch" 100%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
