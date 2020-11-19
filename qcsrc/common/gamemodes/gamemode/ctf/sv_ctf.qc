@@ -633,7 +633,10 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 
 		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
-			{ GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
+		{
+			GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist));
+			Give_Medal(enemy_flag.ctf_dropper, ASSIST);
+		}
 	}
 
 	flag.enemy = toucher;
