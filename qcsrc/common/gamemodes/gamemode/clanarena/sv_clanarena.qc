@@ -112,7 +112,7 @@ float CA_CheckWinner()
 	if(winner_team > 0)
 	{
 		entity last_pl = ca_LastPlayer(winner_team);
-		if(last_pl) {
+		if(last_pl && Team_GetNumberOfPlayers(tm) >= 3) {
 			Give_Medal(last_pl, DEFENSE);
 		}
 		
@@ -123,7 +123,9 @@ float CA_CheckWinner()
 		
 		entity tm = Team_GetTeam(winner_team);
 		
-		if(Team_GetNumberOfAlivePlayers(tm) == Team_GetNumberOfPlayers(tm)) perfect = true;
+		if (Team_GetNumberOfPlayers(tm) >= 3 &&
+			Team_GetNumberOfAlivePlayers(tm) == Team_GetNumberOfPlayers(tm))
+				perfect = true;
 	}
 	else if(winner_team == -1)
 	{
