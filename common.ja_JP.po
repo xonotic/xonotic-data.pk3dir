@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-08 06:23+0000\n"
+"POT-Creation-Date: 2020-11-22 07:23+0100\n"
+"PO-Revision-Date: 2020-11-22 06:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -522,7 +522,7 @@ msgstr "中間 %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "ペナルティ: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1170
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1173
 msgid "missing a checkpoint"
 msgstr "必要: 1通過点"
 
@@ -1117,31 +1117,31 @@ msgstr "ない"
 msgid "Unavailable"
 msgstr "無利用"
 
-#: qcsrc/client/main.qc:286
+#: qcsrc/client/main.qc:289
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "チームリストにないチームを削除しようとしています!"
 
-#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr "ミリ秒"
 
-#: qcsrc/client/main.qc:1074 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr "時速キロ"
 
-#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr "時速マイル"
 
-#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr "ノット"
 
-#: qcsrc/client/main.qc:1323
+#: qcsrc/client/main.qc:1326
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s （割り当てられていない）"
@@ -1184,15 +1184,15 @@ msgstr "^1ERROR:^7 pak index が見つかりませんでした。"
 msgid "Requesting preview..."
 msgstr "プレビューをリクエスト中..."
 
-#: qcsrc/client/view.qc:960
+#: qcsrc/client/view.qc:959
 msgid "Nade timer"
 msgstr "手榴弾タイマー"
 
-#: qcsrc/client/view.qc:965
+#: qcsrc/client/view.qc:964
 msgid "Capture progress"
 msgstr "取れ進歩"
 
-#: qcsrc/client/view.qc:970
+#: qcsrc/client/view.qc:969
 msgid "Revival progress"
 msgstr "蘇生中"
 
@@ -6447,7 +6447,7 @@ msgstr "HUDスキン"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
@@ -7110,7 +7110,7 @@ msgstr "NIXの追加の武器として常にブラスターを運ぶ"
 msgid "Mutators"
 msgstr "ミューテーター"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:39
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
 msgstr "カテゴリー"
 
@@ -7138,29 +7138,29 @@ msgstr ""
 msgid "Show high latency servers"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:57
-msgid "Pause"
-msgstr "一時停止"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:58
-msgid ""
-"Pause updating the server list to prevent servers from \"jumping around\""
-msgstr "スキップしないようにサーバーリストの更新を一時停止する"
-
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
 msgid "Reload the server list"
 msgstr "サーバーリストを更新する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:73
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
+msgid "Pause"
+msgstr "一時停止"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
+msgid ""
+"Pause updating the server list to prevent servers from \"jumping around\""
+msgstr "スキップしないようにサーバーリストの更新を一時停止する"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
 msgid "Address:"
 msgstr "アドレス:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Info..."
 msgstr "情報..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
 msgid "Show more information about the currently highlighted server"
 msgstr "現在強調表示されているサーバーに関する詳細情報を表示する"
 
@@ -8302,43 +8302,26 @@ msgid "Smooth effects of crosshairs"
 msgstr "十字線の滑らかなエフェクト"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
-msgid "Hit testing:"
-msgstr "照準テスト:"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
-msgid ""
-"None: do not do hit tests for the crosshair; TrueAim: blur the crosshair "
-"when there's an obstacle between your gun and the target; Enemies: also "
-"enlarge the crosshair when you would hit an enemy"
+msgid "Perform hit tests for the crosshair"
 msgstr ""
-"なし: 十字線のヒットテストを行いません。真の照準: 銃とターゲットの間に障害物"
-"があるときに十字線をぼかす。敵：敵に当たったときに十字線を拡大する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
-msgid "HTTST^Disabled"
-msgstr "無効"
+msgid "Blur if obstructed by an obstacle"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
-msgid "HTTST^TrueAim"
-msgstr "真の照準"
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
+msgid "Blur if obstructed by a teammate"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
-msgid "HTTST^Enemies"
-msgstr "敵"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
-msgid "Blur crosshair if the shot is obstructed"
-msgstr "ショットが遮られている場合は十字線をぼかす"
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
+msgid "Shrink if obstructed by a teammate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
-msgid "Enlarge crosshair if targeting an enemy"
-msgstr "敵を狙った場合は十字線を拡大する"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when hitting an enemy"
 msgstr "敵に当たったときに十字線をアニメーション化する"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when picking up an item"
 msgstr "アイテムを拾うときに十字線をアニメーション化する"
 
