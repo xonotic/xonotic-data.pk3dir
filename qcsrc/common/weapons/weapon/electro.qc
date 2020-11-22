@@ -1,6 +1,7 @@
 #include "electro.qh"
 
 #ifdef SVQC
+#include <common/effects/qc/_mod.qh>
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -295,6 +296,13 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	IL_PUSH(g_projectiles, newproj);
 	IL_PUSH(g_bot_dodge, newproj);
 
+	// check if limits are enabled (we can tell by checking if the original orb is listed) and push it to the list if so
+	if(IL_CONTAINS(g_rubble, this))
+	{
+		newproj.creationtime = this.creationtime;
+		IL_PUSH(g_rubble, newproj);
+	}
+
 	delete(this);
 
 	if(to)
@@ -412,6 +420,12 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
+
+	if(WEP_CVAR_SEC(electro, limit) > 0)
+	{
+		RubbleNew(proj);
+		RubbleLimit("electro_orb", WEP_CVAR_SEC(electro, limit), adaptor_think2use_hittype_splash);
+	}
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 

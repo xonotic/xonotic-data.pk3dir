@@ -507,9 +507,12 @@ string gettooltip()
 		string s;
 		if (menuTooltipItem.cvarName)
 		{
-			if (getCvarsMulti(menuTooltipItem)) s =
-				    strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
-			else s = strcat("[", menuTooltipItem.cvarName, "]");
+			string cvar_list = getCvarsMulti(menuTooltipItem);
+			if (cvar_list)
+				cvar_list = strcat(menuTooltipItem.cvarName, " ", cvar_list);
+			else
+				cvar_list = menuTooltipItem.cvarName;
+			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.cvarName), "\"]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{
@@ -708,7 +711,9 @@ void m_draw(float width, float height)
 		menuNotTheFirstFrame = true;
 		if (Menu_Active && !cvar("menu_video_played"))
         {
-            localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
+            localcmd("cd loop $menu_cdtrack\n");
+            // TODO: use this when we have a welcome sound
+            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
             menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
         }
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!

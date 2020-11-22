@@ -8,7 +8,6 @@
 	#include <common/stats.qh>
 	#include <common/util.qh>
 	#include <common/weapons/_all.qh>
-	#include <server/autocvars.qh>
 	#include <server/weapons/common.qh>
 #endif
 
