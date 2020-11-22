@@ -167,6 +167,9 @@ void Shutdown()
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
 
+	if (autocvar_r_drawviewmodel < 0)
+		cvar_set("r_drawviewmodel", "0");
+
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
 	if (!isdemo())

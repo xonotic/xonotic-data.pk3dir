@@ -306,7 +306,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this))
+	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this) || !(this.isplayermodel & ISPLAYER_PLAYER))
 		return v;
 
 	// bounded XY speed, used by several effects below
@@ -434,6 +434,7 @@ float autocvar_chase_back;
 float autocvar_chase_up;
 bool autocvar_chase_overhead;
 float autocvar_chase_pitchangle;
+bool autocvar_chase_front;
 vector CSQCPlayer_ApplyChase(entity this, vector v)
 {
 	vector forward;
@@ -479,6 +480,8 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 	{
 		makevectors(view_angles);
 		forward = v_forward;
+		if(autocvar_chase_front)
+			forward = normalize(forward * -1);
 		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
 		float cdist = -autocvar_chase_back - 8;
 		chase_dest.x = v.x + forward.x * cdist;
@@ -488,6 +491,14 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 		v.x = 1 * trace_endpos.x + 8 * forward.x + 4 * trace_plane_normal.x;
 		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
 		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
+
+		if(autocvar_chase_front)
+		{
+			// now flip the view so the player is looking at themselves
+			vector newang = vectoangles(forward);
+			view_angles.x = view_angles.x * -1; // inverse up-down looking direction
+			view_angles.y = newang.y;
+		}
 	}
 
 #if 0

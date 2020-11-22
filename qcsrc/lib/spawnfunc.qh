@@ -283,6 +283,9 @@ noref bool __spawnfunc_first;
 			this.spawnfunc_checked = true; \
 			if (this) { \
 				/* not worldspawn, delay spawn */ \
+				/* clear some dangerous fields (TODO: properly support these in the map!) */ \
+				this.think = func_null; \
+				this.nextthink = 0; \
 				__spawnfunc_defer(this, __spawnfunc_##id); \
 			} else { \
 				/* world might not be "worldspawn" */ \

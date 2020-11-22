@@ -382,7 +382,6 @@ void update_mousepos()
 	mousepos.y = bound(0, mousepos.y, vid_conheight);
 }
 
-float showfps_prevfps;
 float showfps_prevfps_time;
 int showfps_framecounter;
 
@@ -396,13 +395,13 @@ void fpscounter_update()
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
-		showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+		float fps = showfps_framecounter / (currentTime - showfps_prevfps_time);
 		showfps_framecounter = 0;
 		showfps_prevfps_time = currentTime;
 
 		int channel = MSG_C2S;
 		WriteHeader(channel, fpsreport);
-		WriteShort(channel, bound(0, rint(showfps_prevfps), 65535)); // prevent insane fps values
+		WriteShort(channel, bound(0, rint(fps), 65535)); // prevent insane fps values
 	}
 }
 
@@ -1633,6 +1632,21 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_height = vf_size.y;
 
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
+	if (autocvar_chase_active)
+	{
+		// in first person view if r_drawviewmodel is off weapon isn't visible
+		// and server doesn't throw any casing
+		// switching to 3rd person view r_drawviewmodel is set to -1 to let know the server casings
+		// can be thrown for self since own weapon model is visible
+		if (autocvar_r_drawviewmodel == 0 && STAT(HEALTH) > 0)
+			cvar_set("r_drawviewmodel", "-1");
+	}
+	else
+	{
+		if (autocvar_r_drawviewmodel < 0)
+			cvar_set("r_drawviewmodel", "0");
+	}
 
 	WaypointSprite_Load();
 
