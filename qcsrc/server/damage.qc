@@ -169,7 +169,7 @@ void Obituary_SpecialDeath(
 		);
 	}
 	
-	if(deathtype != DEATH_TELEFRAG.m_id) {
+	if(deathtype == DEATH_TELEFRAG.m_id) {
 		Give_Medal(attacker, TELEFRAG);
 	}
 }
