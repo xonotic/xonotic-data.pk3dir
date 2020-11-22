@@ -1519,8 +1519,10 @@ vector Scoreboard_MedalStats_Draw(vector pos)
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/humiliation",	height, pl.(scores(SP_MEDAL_HUMILIATION)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/impressive",		height, pl.(scores(SP_MEDAL_IMPRESSIVE)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/yoda", 			height, pl.(scores(SP_MEDAL_YODA)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/telefrag",		height, pl.(scores(SP_MEDAL_TELEFRAG)));
 	
-	pos.x += hud_fontsize.x;
+	if(total_medals)
+		pos.x += hud_fontsize.x;
 	
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/accuracy", 		height, pl.(scores(SP_MEDAL_ACCURACY)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/assist", 		height, pl.(scores(SP_MEDAL_ASSIST)));

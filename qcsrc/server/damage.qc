@@ -126,6 +126,7 @@ void LogDeath(string mode, int deathtype, entity killer, entity killed)
 
 void Obituary_SpecialDeath(
 	entity notif_target,
+	entity attacker,
 	float murder,
 	int deathtype,
 	string s1, string s2, string s3,
@@ -166,6 +167,10 @@ void Obituary_SpecialDeath(
 			s1, s2, s3, "",
 			f1, f2, f3, 0
 		);
+	}
+	
+	if(deathtype != DEATH_TELEFRAG.m_id) {
+		Give_Medal(attacker, TELEFRAG);
 	}
 }
 
@@ -287,7 +292,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 		{
 			if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
+				Obituary_SpecialDeath(targ, NULL, false, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
 			}
 			else
 			{
@@ -295,13 +300,13 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				{
 					case DEATH_MIRRORDAMAGE:
 					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, NULL, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					}
 
 					default:
 					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, NULL, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					}
 				}
@@ -441,7 +446,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
 			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker_name, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker_name, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
+				Obituary_SpecialDeath(targ, attacker, true, deathtype, playername(targ.netname, targ.team, true), playername(attacker_name, attacker.team, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -457,7 +462,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			// and there will be a REAL DEATH_VOID implementation which mappers will use.
 			case DEATH_HURTTRIGGER:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype,
+				Obituary_SpecialDeath(targ, NULL, false, deathtype,
 					playername(targ.netname, targ.team, true),
 					inflictor.message,
 					deathlocation,
@@ -469,7 +474,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			case DEATH_CUSTOM:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype,
+				Obituary_SpecialDeath(targ, NULL, false, deathtype,
 					playername(targ.netname, targ.team, true),
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
@@ -481,7 +486,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, playername(targ.netname, targ.team, true), deathlocation, "", CS(targ).killcount, 0, 0);
+				Obituary_SpecialDeath(targ, NULL, false, deathtype, playername(targ.netname, targ.team, true), deathlocation, "", CS(targ).killcount, 0, 0);
 				break;
 			}
 		}

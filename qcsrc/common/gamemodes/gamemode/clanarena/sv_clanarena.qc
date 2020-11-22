@@ -111,7 +111,9 @@ float CA_CheckWinner()
 	bool perfect = false;
 	if(winner_team > 0)
 	{
+		entity tm = Team_GetTeam(winner_team);
 		entity last_pl = ca_LastPlayer(winner_team);
+		
 		if(last_pl && Team_GetNumberOfPlayers(tm) >= 3) {
 			Give_Medal(last_pl, DEFENSE);
 		}
@@ -120,8 +122,6 @@ float CA_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		if(fragsleft > 1) Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
-		
-		entity tm = Team_GetTeam(winner_team);
 		
 		if (Team_GetNumberOfPlayers(tm) >= 3 &&
 			Team_GetNumberOfAlivePlayers(tm) == Team_GetNumberOfPlayers(tm))

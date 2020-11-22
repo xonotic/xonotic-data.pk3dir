@@ -90,6 +90,7 @@ void LogDeath(string mode, int deathtype, entity killer, entity killed);
 
 void Obituary_SpecialDeath(
 	entity notif_target,
+	entity attacker,
 	float murder,
 	int deathtype,
 	string s1, string s2, string s3,
