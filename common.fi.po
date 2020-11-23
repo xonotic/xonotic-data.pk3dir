@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Dr Jaska <drjaska83@gmail.com>, 2020
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
 # Oi Suomi On! <oisuomion@protonmail.com>, 2020
@@ -10,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-08 06:23+0000\n"
+"POT-Creation-Date: 2020-11-22 07:23+0100\n"
+"PO-Revision-Date: 2020-11-22 06:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
@@ -261,11 +262,11 @@ msgstr "QMCMD^hyvä peli"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:789
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^moro / onnea matkaan"
+msgstr "QMCMD^hei / onnea matkaan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:789
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^moro / onnea matkaan ja pidähän hauskaa"
+msgstr "QMCMD^hei / onnea matkaan ja pidäthän hauskaa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:791
 msgid "QMCMD^Send in English"
@@ -286,7 +287,7 @@ msgstr "QMCMD^vapauta esine %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^free item, icon"
-msgstr "QMCMD^vapauta esine, kuvake"
+msgstr "QMCMD^vapaa esine, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^took item (l:%l^7)"
@@ -346,11 +347,11 @@ msgstr "QMCMD^kuljeskelee, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^hyökkää (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^hyökkäämässä (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^attacking, icon"
-msgstr "QMCMD^hyökkää, kuvake"
+msgstr "QMCMD^hyökkäämässä, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
@@ -401,11 +402,11 @@ msgstr "QMCMD^Katso/HUD-asetukset"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^3rd person view"
-msgstr "QMCMD^näkymä 3:ssa persoonassa"
+msgstr "QMCMD^näkymä kolmannessa persoonassa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^Player models like mine"
-msgstr "QMCMD^Pelaajamallit jotka vastaavat omaani"
+msgstr "QMCMD^Pelaajamallit, jotka vastaavat omaani"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Names above players"
@@ -413,7 +414,7 @@ msgstr "QMCMD^Nimet pelaajien yläpuolella"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^Crosshair per weapon"
-msgstr "QMCMD^Tähtäin tietyn aseen suhteen"
+msgstr "QMCMD^Asekohtainen tähtäin"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 msgid "QMCMD^FPS"
@@ -522,7 +523,7 @@ msgstr "Välimuoto %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "RANGAISTUS: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1170
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1173
 msgid "missing a checkpoint"
 msgstr "tarkastuspiste sivuutettu"
 
@@ -1041,23 +1042,23 @@ msgstr "Olet kuollut, paina ^2%s^7 virotaksesi uudelleen"
 
 #: qcsrc/client/hud/panel/strafehud.qc:908
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:909
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: qcsrc/client/hud/panel/strafehud.qc:910
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:911
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:912
 msgid "nmi"
-msgstr ""
+msgstr "mpk"
 
 #: qcsrc/client/hud/panel/timer.qc:71
 msgid "WARMUP"
@@ -1121,31 +1122,31 @@ msgstr "Ei ole"
 msgid "Unavailable"
 msgstr "Ei saatavissa"
 
-#: qcsrc/client/main.qc:286
+#: qcsrc/client/main.qc:289
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Koetetaan poistaa joukkuetta joka ei ole joukkuelistassa!"
 
-#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1074 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr "knots"
 
-#: qcsrc/client/main.qc:1323
+#: qcsrc/client/main.qc:1326
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ei sidottu)"
@@ -1189,15 +1190,15 @@ msgstr "^1Virhe:^7 Ei löytynyt: pak index."
 msgid "Requesting preview..."
 msgstr "Pyydetään esikatselua..."
 
-#: qcsrc/client/view.qc:960
+#: qcsrc/client/view.qc:959
 msgid "Nade timer"
 msgstr "Naattiajastin"
 
-#: qcsrc/client/view.qc:965
+#: qcsrc/client/view.qc:964
 msgid "Capture progress"
 msgstr "Kaappauksen edistyminen"
 
-#: qcsrc/client/view.qc:970
+#: qcsrc/client/view.qc:969
 msgid "Revival progress"
 msgstr "Elpymisen edistyminen"
 
@@ -1990,7 +1991,7 @@ msgstr "Jäässä!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Elvyttämässä"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -4027,7 +4028,7 @@ msgstr "^K3Sinut elvytettiin ^BG%s :n toimesta"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGSinut automaattisesti elvytettiin %ssekunnin jälkeen"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -6302,27 +6303,27 @@ msgstr "Tulospaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
-msgstr ""
+msgstr "StrafeHUD-tila:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "View angle centered"
-msgstr ""
+msgstr "Katselukulma keskitetty"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Velocity angle centered"
-msgstr ""
+msgstr "Nopeuskulma keskitetty"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr ""
+msgstr "StrafeHUD-tyyli:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
-msgstr ""
+msgstr "ei muotoilua"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "progress bar"
-msgstr ""
+msgstr "edistymispalkki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
@@ -6330,7 +6331,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
 msgid "Demo mode"
-msgstr ""
+msgstr "Demo-tila"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
 msgid "Range:"
@@ -6338,54 +6339,54 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
 msgid "Center panel"
-msgstr ""
+msgstr "Keskipaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "Nollaa värit"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
-msgstr ""
+msgstr "Strafe-palkki:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
 msgid "Angle indicator:"
-msgstr ""
+msgstr "Kulman ilmaisin:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:85
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:93
 msgid "Neutral:"
-msgstr ""
+msgstr "Neutraali:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:87
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:95
 msgid "Good:"
-msgstr ""
+msgstr "Hyvä:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:89
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:97
 msgid "Overturn:"
-msgstr ""
+msgstr "Ylikääntyminen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "Switch indicators:"
-msgstr ""
+msgstr "Vaihdon ilmaisin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Direction caps:"
-msgstr ""
+msgstr "Suuntarajat:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Active:"
-msgstr ""
+msgstr "Aktiivinen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:134
 msgid "Inactive:"
-msgstr ""
+msgstr "Epäaktiivinen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr ""
+msgstr "StrafeHUD-paneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
@@ -6497,7 +6498,7 @@ msgstr "HUD-päällysteskinit"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
@@ -7175,7 +7176,7 @@ msgstr "Läjäytin aina kannossa lisäaseen ominaisuudessa Nix:issä"
 msgid "Mutators"
 msgstr "Muokatut pelitilat"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:39
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
 msgstr "SRVS^Osa-alueet"
 
@@ -7197,37 +7198,37 @@ msgstr "Näytä täydet palvelimet joissa ei ole pelaajapaikkoja jäljellä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "SRVS^Laginen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
-msgstr ""
+msgstr "Näytä korkean viiveen palvelimet"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:57
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
+msgid "Reload the server list"
+msgstr "Lataa palvelinluettelo uudestaan"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid "Pause"
 msgstr "Keskeytä"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:58
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
 "Tauota palvelinluettelon päivittäminen estääksesi palvelimien \"sinne-tänne "
 "hyppelyn\""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
-msgid "Reload the server list"
-msgstr "Lataa palvelinluettelo uudestaan"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:73
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
 msgid "Address:"
 msgstr "Osoite:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Info..."
 msgstr "Tietoa..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
 msgid "Show more information about the currently highlighted server"
 msgstr "Näytä lisätietoja tämänhetkisestä korostetusta palvelimesta"
 
@@ -8378,44 +8379,26 @@ msgid "Smooth effects of crosshairs"
 msgstr "Pehmennä tähtäimen efektejä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
-msgid "Hit testing:"
-msgstr "Osumatesti:"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
-msgid ""
-"None: do not do hit tests for the crosshair; TrueAim: blur the crosshair "
-"when there's an obstacle between your gun and the target; Enemies: also "
-"enlarge the crosshair when you would hit an enemy"
+msgid "Perform hit tests for the crosshair"
 msgstr ""
-"Ei mitään: älä tee muutoksia tähtäimeen. TosiTähtäys: sumenna tähtäintä kun "
-"aseen ja kohteen välissä on este. Viholliset: isonna tähtäintä silloin kun "
-"voisit ampua osuman"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
-msgid "HTTST^Disabled"
-msgstr "HTTST^Pois päältä"
+msgid "Blur if obstructed by an obstacle"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
-msgid "HTTST^TrueAim"
-msgstr "HTTST^TrueAim"
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
+msgid "Blur if obstructed by a teammate"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
-msgid "HTTST^Enemies"
-msgstr "HTTST^Viholliset"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
-msgid "Blur crosshair if the shot is obstructed"
-msgstr "Sumenna tähtäin jos aseen ja kohteen välissä on este"
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
+msgid "Shrink if obstructed by a teammate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
-msgid "Enlarge crosshair if targeting an enemy"
-msgstr "Suurenna tähtäintä mikäli tähtäät vihollista kohti"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when hitting an enemy"
 msgstr "Elollista tähtäin kun ammut osuman viholliseen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when picking up an item"
 msgstr "Elollista tähtäin poimiessasi esineen"
 
@@ -8732,7 +8715,7 @@ msgstr "Vain ei-joukkuepelimuodoissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr ""
+msgstr "Vain Kaksintaistelussa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Body fading:"

@@ -507,9 +507,12 @@ string gettooltip()
 		string s;
 		if (menuTooltipItem.cvarName)
 		{
-			if (getCvarsMulti(menuTooltipItem)) s =
-				    strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
-			else s = strcat("[", menuTooltipItem.cvarName, "]");
+			string cvar_list = getCvarsMulti(menuTooltipItem);
+			if (cvar_list)
+				cvar_list = strcat(menuTooltipItem.cvarName, " ", cvar_list);
+			else
+				cvar_list = menuTooltipItem.cvarName;
+			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.cvarName), "\"]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{

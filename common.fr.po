@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-08 07:23+0100\n"
-"PO-Revision-Date: 2020-11-08 10:53+0000\n"
+"POT-Creation-Date: 2020-11-22 07:23+0100\n"
+"PO-Revision-Date: 2020-11-22 09:54+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -532,7 +532,7 @@ msgstr "Intermédiaire %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "PÉNALITÉ : %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1170
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1173
 msgid "missing a checkpoint"
 msgstr "raté un point de contrôle"
 
@@ -1137,31 +1137,31 @@ msgstr "Manquant"
 msgid "Unavailable"
 msgstr "Indisponible"
 
-#: qcsrc/client/main.qc:286
+#: qcsrc/client/main.qc:289
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Vous essayez de supprimer une équipe qui n'est pas dans la liste !"
 
-#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1074 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr "nœuds"
 
-#: qcsrc/client/main.qc:1323
+#: qcsrc/client/main.qc:1326
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (non assigné)"
@@ -1205,15 +1205,15 @@ msgstr "^1Erreur :^7 Impossible de trouver l'index du pak."
 msgid "Requesting preview..."
 msgstr "Demande d'aperçu…"
 
-#: qcsrc/client/view.qc:960
+#: qcsrc/client/view.qc:959
 msgid "Nade timer"
 msgstr "Minuteur de grenade"
 
-#: qcsrc/client/view.qc:965
+#: qcsrc/client/view.qc:964
 msgid "Capture progress"
 msgstr "Capture en cours"
 
-#: qcsrc/client/view.qc:970
+#: qcsrc/client/view.qc:969
 msgid "Revival progress"
 msgstr "Dégel en cours"
 
@@ -6534,7 +6534,7 @@ msgstr "Thèmes de l'ATH"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
@@ -7209,7 +7209,7 @@ msgstr "Toujours porter le blaster en tant qu'arme additionnelle en mode Nix"
 msgid "Mutators"
 msgstr "Mutateurs"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:39
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
 msgstr "Catégories"
 
@@ -7237,31 +7237,31 @@ msgstr "Lent"
 msgid "Show high latency servers"
 msgstr "Afficher les serveurs à latence élevée"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:57
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
+msgid "Reload the server list"
+msgstr "Recharger la liste des serveurs"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid "Pause"
 msgstr "Pause"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:58
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
 "Ne pas mettre à jour la liste des serveurs pour éviter de « glisser » sur un "
 "autre serveur"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
-msgid "Reload the server list"
-msgstr "Recharger la liste des serveurs"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:73
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
 msgid "Address:"
 msgstr "Adresse :"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Info..."
 msgstr "Informations…"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
 msgid "Show more information about the currently highlighted server"
 msgstr "Afficher plus d'informations sur le serveur sélectionné"
 
@@ -8416,44 +8416,26 @@ msgid "Smooth effects of crosshairs"
 msgstr "Adoucir les effets de réticule"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
-msgid "Hit testing:"
-msgstr "Détection de visée :"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
-msgid ""
-"None: do not do hit tests for the crosshair; TrueAim: blur the crosshair "
-"when there's an obstacle between your gun and the target; Enemies: also "
-"enlarge the crosshair when you would hit an enemy"
-msgstr ""
-"Aucune : ne pas tester le réticule ; TrueAim : flouter le réticule lorsqu'il "
-"y a un obstacle entre votre fusil et la cible ; Ennemis : élargir en plus le "
-"réticule lorsqu'un ennemi est dans votre ligne de mire"
+msgid "Perform hit tests for the crosshair"
+msgstr "Vérifier la ligne de visée du réticule"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
-msgid "HTTST^Disabled"
-msgstr "Aucune"
+msgid "Blur if obstructed by an obstacle"
+msgstr "Flouter si bloqué par un obstacle"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
-msgid "HTTST^TrueAim"
-msgstr "TrueAim"
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
+msgid "Blur if obstructed by a teammate"
+msgstr "Flouter si bloqué par un coéquipier"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
-msgid "HTTST^Enemies"
-msgstr "Ennemis"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
-msgid "Blur crosshair if the shot is obstructed"
-msgstr "Flouter le réticule si la ligne de tir est obstruée"
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
+msgid "Shrink if obstructed by a teammate"
+msgstr "Rétrécir si bloqué par un coéquipier"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
-msgid "Enlarge crosshair if targeting an enemy"
-msgstr "Agrandir le réticule en pointant un ennemi"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when hitting an enemy"
 msgstr "Animer le réticule en touchant un ennemi"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when picking up an item"
 msgstr "Animer le réticule en prenant un objet"
 

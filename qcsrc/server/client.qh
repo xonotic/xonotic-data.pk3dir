@@ -214,6 +214,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
     ATTRIB(Client, autoswitch, bool, this.autoswitch);
     ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
+    ATTRIB(Client, cvar_r_drawviewmodel, bool, this.cvar_r_drawviewmodel);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
     ATTRIB(Client, cvar_cl_dodging, float, this.cvar_cl_dodging);
     ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
