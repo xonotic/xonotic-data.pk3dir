@@ -6,6 +6,7 @@
 # nad le <nadavlevi726@gmail.com>, 2018
 # Omer I.S., 2020
 # Omeritzics Games <omeritzicschwartz@gmail.com>, 2020
+# Omeritzics Games <omeritzicschwartz@gmail.com>, 2020
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2020
 # Tal Leibman <leibman2@gmail.com>, 2019
 msgid ""
