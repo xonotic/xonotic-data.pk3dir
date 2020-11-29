@@ -1323,20 +1323,12 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 STATIC_INIT(default_order_items_label)
 {
 	IL_EACH(default_order_items, true, {
-		switch(it.netname)
+		if(!(it.instanceOfPowerup
+			|| it == ITEM_HealthMega || it == ITEM_HealthBig
+			|| it == ITEM_ArmorMega || it == ITEM_ArmorBig
+			))
 		{
-			case "bullets":
-			case "cells":
-			case "plasma":
-			case "rockets":
-			case "shells":
-			case "vaporizer_cells":
-			case "fuel":
-			case "armor_small":
-			case "armor_medium":
-			case "health_small":
-			case "health_medium":
-				it.uninteresting = true;
+			it.uninteresting = true;
 		}
 	});
 }
