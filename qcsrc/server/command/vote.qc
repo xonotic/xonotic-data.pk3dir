@@ -349,6 +349,18 @@ void reset_map(bool dorespawn)
 		shuffleteams();
 		shuffleteams_on_reset_map = false;
 	}
+
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		entity store = PS(it);
+		if (store)
+		{
+			for (int j = 0; j < REGISTRY_COUNT(Items); j++)
+				store.inventory.inv_items[j] = 0;
+			Inventory_update(store);
+		}
+	});
+
 	MUTATOR_CALLHOOK(reset_map_global);
 
 	FOREACH_ENTITY_FLOAT_ORDERED(pure_data, false,
