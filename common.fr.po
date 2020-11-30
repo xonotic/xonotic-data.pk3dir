@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 07:23+0100\n"
-"PO-Revision-Date: 2020-11-22 09:54+0000\n"
+"PO-Revision-Date: 2020-11-29 12:40+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -1073,7 +1073,7 @@ msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:912
 msgid "nmi"
-msgstr "nmi"
+msgstr "M"
 
 #: qcsrc/client/hud/panel/timer.qc:71
 msgid "WARMUP"
@@ -8417,7 +8417,7 @@ msgstr "Adoucir les effets de réticule"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Perform hit tests for the crosshair"
-msgstr "Vérifier la ligne de visée du réticule"
+msgstr "Tester la ligne de tir du réticule"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "Blur if obstructed by an obstacle"

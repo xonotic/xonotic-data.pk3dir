@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 07:23+0100\n"
-"PO-Revision-Date: 2020-11-28 00:12+0000\n"
+"PO-Revision-Date: 2020-11-29 22:30+0000\n"
 "Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
@@ -2597,7 +2597,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr "^BG%s^K1 cambió al %s%s"
+msgstr "^BG%1$s^K1 cambió al %3$s%2$s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
