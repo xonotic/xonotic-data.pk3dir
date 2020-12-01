@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 07:23+0100\n"
-"PO-Revision-Date: 2020-11-22 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-11-24 15:49+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -249,7 +249,7 @@ msgstr "QMCMD^公開メッセージを送信する:"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^:-) / nice one"
-msgstr "QMCMD^(^‿^) / ナイス"
+msgstr "QMCMD^ ^‿^ ) / ナイス"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^nice one"
@@ -1037,23 +1037,23 @@ msgstr "あなたは死んだ、^2%s ^7を押して再び現れてください"
 
 #: qcsrc/client/hud/panel/strafehud.qc:908
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:909
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: qcsrc/client/hud/panel/strafehud.qc:910
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:911
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:912
 msgid "nmi"
-msgstr ""
+msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:71
 msgid "WARMUP"
@@ -1976,7 +1976,7 @@ msgstr "冷凍した!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "復活中"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -3982,7 +3982,7 @@ msgstr "^K3あなたは ^BG%s によって復活された"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGあなたは%s秒後に自動的に復活しました"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -6252,90 +6252,90 @@ msgstr "得点パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
-msgstr ""
+msgstr "StrafeHUDのモード:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "View angle centered"
-msgstr ""
+msgstr "視野の中心角"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Velocity angle centered"
-msgstr ""
+msgstr "速度の中心角"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr ""
+msgstr "ストラフHUDのスタイル:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
-msgstr ""
+msgstr "スタイルなし"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "progress bar"
-msgstr ""
+msgstr "進歩バー"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
-msgstr ""
+msgstr "勾配"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
 msgid "Demo mode"
-msgstr ""
+msgstr "デモモード"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
 msgid "Range:"
-msgstr ""
+msgstr "範囲:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
 msgid "Center panel"
-msgstr ""
+msgstr "中央パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "色をリセットする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
-msgstr ""
+msgstr "ストラフバー:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
 msgid "Angle indicator:"
-msgstr ""
+msgstr "角度インジケーター:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:85
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:93
 msgid "Neutral:"
-msgstr ""
+msgstr "中性:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:87
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:95
 msgid "Good:"
-msgstr ""
+msgstr "良い:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:89
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:97
 msgid "Overturn:"
-msgstr ""
+msgstr "過剰:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "Switch indicators:"
-msgstr ""
+msgstr "インジケーターを変更する:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Direction caps:"
-msgstr ""
+msgstr "方向の制限:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Active:"
-msgstr ""
+msgstr "活動:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:134
 msgid "Inactive:"
-msgstr ""
+msgstr "非活動:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr ""
+msgstr "ストラフHUDパネル:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
@@ -7132,11 +7132,11 @@ msgstr "使用可能なスロットがないサーバー全体を表示する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "遅い"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
-msgstr ""
+msgstr "高遅延サーバーを表示する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
 msgid "Reload the server list"
@@ -8303,19 +8303,19 @@ msgstr "十字線の滑らかなエフェクト"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Perform hit tests for the crosshair"
-msgstr ""
+msgstr "十字線の照準テストを実行する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "Blur if obstructed by an obstacle"
-msgstr ""
+msgstr "障害物で遮られた場合はぼやける"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid "Blur if obstructed by a teammate"
-msgstr ""
+msgstr "チームメイトで遮られた場合はぼやける"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
 msgid "Shrink if obstructed by a teammate"
-msgstr ""
+msgstr "チームメイトで遮られた場合は縮小する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Animate crosshair when hitting an enemy"
@@ -9034,7 +9034,7 @@ msgstr "ダウンロード速度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Local latency:"
-msgstr "ローカルレイテンシ:"
+msgstr "ローカル遅延:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Show netgraph"
