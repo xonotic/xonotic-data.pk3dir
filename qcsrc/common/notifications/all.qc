@@ -1637,7 +1637,7 @@ void Send_Notification(
 			}
 			default:
 			{
-				FOREACH_CLIENT(IS_REAL_CLIENT(it) && Notification_ShouldSend(broadcast, it, client), {
+				FOREACH_CLIENT(Notification_ShouldSend(broadcast, it, client), {
 					RECURSE_FROM_CHOICE(it, continue);
 				});
 				break;
