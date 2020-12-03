@@ -1667,7 +1667,7 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 {
 	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
 		return false;
-	if (!autocvar_hud_panel_scoreboard_itemstats || warmup_stage || ypos > 0.91 * vid_conheight)
+	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)
 		return false;
 
 	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay

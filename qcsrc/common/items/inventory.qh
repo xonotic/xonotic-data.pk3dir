@@ -38,10 +38,17 @@ STATIC_INIT(Inventory)
 
 #ifdef CSQC
 Inventory g_inventory;
+void Inventory_remove(entity this)
+{
+    if(g_inventory == this)
+        g_inventory = NULL;
+}
+
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     g_inventory = this;
+    this.entremove = Inventory_remove;
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
@@ -137,5 +144,13 @@ void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
-void InventoryStorage_detach(entity e) { delete(e.inventory_store); }
+void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
+void InventoryStorage_clear(entity e)
+{
+    // we don't need to network the changes, that is done when the inventory is detached
+    FOREACH(Items, true, {
+        .int fld = inv_items[it.m_id];
+        e.inventory_store.(fld) = 0;
+    });
+}
 #endif
