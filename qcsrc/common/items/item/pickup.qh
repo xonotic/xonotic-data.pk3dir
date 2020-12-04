@@ -34,7 +34,7 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_itemid, int, 0);
 #ifdef SVQC
     ATTRIB(Pickup, m_mins, vector, '-16 -16 0');
-    ATTRIB(Pickup, m_maxs, vector, '16 16 32');
+    ATTRIB(Pickup, m_maxs, vector, '16 16 48');
     ATTRIB(Pickup, m_botvalue, int, 0);
     ATTRIB(Pickup, m_itemflags, int, 0);
     float generic_pickupevalfunc(entity player, entity item);

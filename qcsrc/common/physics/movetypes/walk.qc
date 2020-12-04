@@ -1,11 +1,12 @@
 #include "walk.qh"
+
 void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 {
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
+	if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 1)
 		_Movetype_CheckStuck(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));
@@ -143,7 +144,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			_Movetype_WallFriction(this, move_stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || IS_ONGROUND(this))
+	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) 
+				|| !oldonground || IS_ONGROUND(this) || (GAMEPLAYFIX_STEPDOWN_MAXSPEED(this) && vdist(start_velocity, >=, GAMEPLAYFIX_STEPDOWN_MAXSPEED(this)) && !IS_ONSLICK(this)))
 	{
 		return;
 	}

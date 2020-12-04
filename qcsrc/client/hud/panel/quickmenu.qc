@@ -1,14 +1,18 @@
 #include "quickmenu.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include <common/ent_cs.qh>
-#include <common/minigames/cl_minigames.qh>
+#include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
+#include <common/ent_cs.qh>
+#include <common/minigames/cl_minigames.qh>
 
 // QuickMenu (#23)
+
+void HUD_QuickMenu_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_quickmenu_align");
+}
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
@@ -854,11 +858,16 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
+	if(spectatee_status != 0)
+	{
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Spectate a player")), "Spectate a player", "spectate \"%s^7\"", 0, 1)
+	}
+
 	if(target_submenu != "" && !target_submenu_found)
 	{
 		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_INFOF("^3Warning: submenu title must be in English", target_submenu);
+			LOG_INFO("^3Warning: submenu title must be in English");
 		QuickMenu_Buffer_Size = 0;
 	}
 }

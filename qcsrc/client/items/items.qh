@@ -1,0 +1,19 @@
+#pragma once
+
+const int AMMO_COUNT = 4; // amount of ammo types to show in the ammo panel
+
+.float onground_time;
+
+bool   autocvar_cl_items_nofade;
+float  autocvar_cl_animate_items = 1;
+float  autocvar_cl_ghost_items = 0.45;
+vector autocvar_cl_ghost_items_color = '-1 -1 -1';
+vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
+float  autocvar_cl_weapon_stay_alpha = 0.75;
+float  autocvar_cl_simple_items = 0;
+string autocvar_cl_simpleitems_postfix = "_simple";
+.float  spawntime;
+.float  gravity;
+.vector colormod;
+
+void ItemDraw(entity this);

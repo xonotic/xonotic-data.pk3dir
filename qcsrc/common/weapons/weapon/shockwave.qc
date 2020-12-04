@@ -479,7 +479,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			//  BLAST CONE CALCULATION
 			// ========================
 
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
@@ -712,14 +712,14 @@ void Draw_Shockwave(entity this)
 		if(counter >= 1)
 		{
 			// draw from shot origin to min spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
@@ -734,14 +734,14 @@ void Draw_Shockwave(entity this)
 		if((counter + 1) == divisions)
 		{
 			// draw from shot origin to min spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
@@ -759,8 +759,7 @@ NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
 
 void Net_ReadShockwaveParticle()
 {
-	entity shockwave;
-	shockwave = spawn();
+	entity shockwave = new(shockwave_cone);
 	shockwave.draw = Draw_Shockwave;
 	IL_PUSH(g_drawables, shockwave);
 

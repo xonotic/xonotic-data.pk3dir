@@ -1,5 +1,8 @@
 #include "sv_nix.qh"
 
+#include <server/weapons/selection.qh>
+#include <server/world.qh>
+
 //string autocvar_g_nix;
 int autocvar_g_balance_nix_ammo_cells;
 int autocvar_g_balance_nix_ammo_plasma;
@@ -36,7 +39,7 @@ float nix_nextweapon;
 
 bool NIX_CanChooseWeapon(int wpn);
 
-REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
+REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MapInfo_LoadedGametype.m_weaponarena)
 {
 	MUTATOR_ONADD
 	{
@@ -80,7 +83,7 @@ REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED
 
 bool NIX_CanChooseWeapon(int wpn)
 {
-	entity e = Weapons_from(wpn);
+	entity e = REGISTRY_GET(Weapons, wpn);
 	if (e == WEP_Null) return false; // skip dummies
 	if(g_weaponarena)
 	{
@@ -125,12 +128,12 @@ void NIX_GiveCurrentWeapon(entity this)
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		// Weapon w = Weapons_from(nix_weapon);
+		// Weapon w = REGISTRY_GET(Weapons, nix_weapon);
 		// w.wr_init(w); // forget it, too slow
 	}
 
 	// get weapon info
-	entity wpn = Weapons_from(nix_weapon);
+	entity wpn = REGISTRY_GET(Weapons, nix_weapon);
 
 	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{

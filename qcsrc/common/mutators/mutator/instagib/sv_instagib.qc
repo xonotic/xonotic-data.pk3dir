@@ -14,7 +14,6 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
-int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
 IntrusiveList g_instagib_items;
@@ -180,7 +179,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 	entity mon = M_ARGV(0, entity);
 
 	// always refill ammo
-	if(mon.monsterid == MON_MAGE.monsterid)
+	if(mon.monsterdef == MON_MAGE)
 		mon.skin = 1;
 }
 
@@ -233,21 +232,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(player, player.strength_finished, SND_POWEROFF);
-		if (time > player.strength_finished)
+		play_countdown(player, STAT(STRENGTH_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(STRENGTH_FINISHED, player))
 		{
-			player.alpha = default_player_alpha;
-			player.exteriorweaponentity.alpha = default_weapon_alpha;
+			if(!player.vehicle) // already reset upon exit
+			{
+				player.alpha = default_player_alpha;
+				player.exteriorweaponentity.alpha = default_weapon_alpha;
+			}
 			player.items &= ~ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
 	else
 	{
-		if (time < player.strength_finished)
+		if (time < STAT(STRENGTH_FINISHED, player))
 		{
-			player.alpha = autocvar_g_instagib_invis_alpha;
-			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			if(!player.vehicle) // incase the player is given powerups while inside a vehicle
+			{
+				player.alpha = autocvar_g_instagib_invis_alpha;
+				player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			}
 			player.items |= ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
@@ -256,8 +261,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(player, player.invincible_finished, SND_POWEROFF);
-		if (time > player.invincible_finished)
+		play_countdown(player, STAT(INVINCIBLE_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
@@ -265,7 +270,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < player.invincible_finished)
+		if (time < STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
@@ -504,6 +509,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 {
+	if(MUTATOR_RETURNVALUE) return false;
+
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
@@ -537,6 +544,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 {
+	if (MUTATOR_RETURNVALUE) return false;
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here

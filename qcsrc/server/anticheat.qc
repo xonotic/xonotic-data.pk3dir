@@ -1,13 +1,14 @@
 #include "anticheat.qh"
 
-#include "antilag.qh"
-#include "autocvars.qh"
-#include "defs.qh"
-#include "miscfunctions.qh"
-
-#include "command/common.qh"
 #include <common/playerstats.qh>
 #include <common/state.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/antilag.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/gamelog.qh>
+#include <server/main.qh>
 
 .float anticheat_jointime;
 

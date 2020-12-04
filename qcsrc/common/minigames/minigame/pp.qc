@@ -125,7 +125,7 @@ void pp_move(entity minigame, entity player, string pos )
 				delete(existing);
 			}
 
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.cnt = 1;
 			piece.team = player.team; // temporary
 			piece.netname = strzone(pos);
@@ -157,7 +157,7 @@ void pp_setup_pieces(entity minigame)
 
 		if(t1_true || t2_true)
 		{
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.team = ((t1_true) ? 1 : 2);
 			piece.netname = strzone(minigame_tile_buildname(i,t));
 			minigame_server_sendflags(piece,MINIG_SF_ALL);

@@ -1,9 +1,7 @@
 #include "bgmscript.qh"
 
-#include <common/util.qh>
-#include <client/autocvars.qh>
-#include <client/defs.qh>
 #include <client/main.qh>
+#include <common/util.qh>
 
 #define CONSTANT_SPEED_DECAY
 

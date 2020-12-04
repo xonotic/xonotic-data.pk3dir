@@ -1,6 +1,7 @@
 #include "electro.qh"
 
 #ifdef SVQC
+#include <common/effects/qc/_mod.qh>
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -154,27 +155,46 @@ void W_Electro_Bolt_Think(entity this)
 		{
 			if(e.classname == "electro_orb")
 			{
-				// change owner to whoever caused the combo explosion
-				e.realowner = this.realowner;
-				e.takedamage = DAMAGE_NO;
-				e.classname = "electro_orb_chain";
+				bool explode;
+				if (this.owner == e.owner)
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_own);
+				}
+				else if (SAME_TEAM(this.owner, e.owner))
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_teammate);
+				}
+				else
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_enemy);
+				}
 
-				// now set the next one to trigger as well
-				setthink(e, W_Electro_ExplodeCombo);
+				if (explode)
+				{
+					// change owner to whoever caused the combo explosion
+					e.realowner = this.realowner;
+					e.takedamage = DAMAGE_NO;
+					e.classname = "electro_orb_chain";
 
-				// delay combo chains, looks cooler
-				e.nextthink =
+					// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
+					// This allows to avoid the delay on the first explosion which looks better
+					// (the bolt and orb should explode together because they interacted together)
+					// while keeping the chaining delay.
+					setthink(e, W_Electro_ExplodeCombo);
+					e.nextthink =
 					(
 						time
 						+
-						(WEP_CVAR(electro, combo_speed) ?
-							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
+						(WEP_CVAR_PRI(electro, midaircombo_speed) ?
+							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed))
 							:
 							0
 						)
 					);
 
-				++found;
+
+					++found;
+				}
 			}
 			e = e.chain;
 		}
@@ -208,7 +228,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		thiswep.m_id
 	);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	proj = new(electro_bolt);
 	proj.owner = proj.realowner = actor;
@@ -275,6 +295,13 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.flags = this.flags;
 	IL_PUSH(g_projectiles, newproj);
 	IL_PUSH(g_bot_dodge, newproj);
+
+	// check if limits are enabled (we can tell by checking if the original orb is listed) and push it to the list if so
+	if(IL_CONTAINS(g_rubble, this))
+	{
+		newproj.creationtime = this.creationtime;
+		IL_PUSH(g_rubble, newproj);
+	}
 
 	delete(this);
 
@@ -359,7 +386,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = actor;
@@ -393,6 +420,12 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
+
+	if(WEP_CVAR_SEC(electro, limit) > 0)
+	{
+		RubbleNew(proj);
+		RubbleLimit("electro_orb", WEP_CVAR_SEC(electro, limit), adaptor_think2use_hittype_splash);
+	}
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 

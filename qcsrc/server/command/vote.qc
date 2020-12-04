@@ -1,29 +1,28 @@
 #include "vote.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-#include "vote.qh"
-
-#include "common.qh"
-
-#include "../g_damage.qh"
-#include "../g_world.qh"
-#include "../teamplay.qh"
-#include "../race.qh"
-#include "../round_handler.qh"
-#include "../scores.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/command/banning.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -116,7 +115,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller.netname, vote_caller.team, false);
 	return vote_caller_name;
 }
 
@@ -476,7 +475,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
@@ -542,11 +541,21 @@ float VoteCommand_checknasty(string vote_command)
 	return true;
 }
 
+// NOTE: requires input to be surrounded by spaces
+string VoteCommand_checkreplacements(string input)
+{
+	string output = input;
+	// allow gotomap replacements
+	output = strreplace(" map ", " gotomap ", output);
+	output = strreplace(" chmap ", " gotomap ", output);
+	return output;
+}
+
 float VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = strcat(" ", list, " ");
+	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
 
-	if (strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0) return true;
+	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
 
 	return false;
 }
@@ -825,7 +834,7 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				print_to(caller, "^1Only connected clients can vote.");
 			}
-			else if (timeout_status)
+			else if (timeout_status && vote_command != "timein")
 			{
 				print_to(caller, "^1You can not call a vote while a timeout is active.");
 			}

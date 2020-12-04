@@ -1,23 +1,4 @@
 #include "cl_vehicles.qh"
-const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
-const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
-const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
-const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal.tga";
-const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
-const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
-const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
-
-entity dropmark;
-
-const int MAX_AXH = 4;
-entity AuxiliaryXhair[MAX_AXH];
-
-.string axh_image;
-.float  axh_fadetime;
-.int    axh_drawflag;
-
-float alarm1time;
-float alarm2time;
 
 void vehicle_alarm(entity e, int ch, Sound s0und)
 {
@@ -118,7 +99,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 			delete(axh);
 
-		axh              = spawn();
+		axh              = new(AuxiliaryXhair);
 		axh.draw2d       = func_null;
 		axh.drawmask     = MASK_NORMAL;
 		axh.axh_drawflag = DRAWFLAG_NORMAL;
@@ -134,7 +115,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	} else {
-		Vehicle info = Vehicles_from(hud_id);
+		Vehicle info = REGISTRY_GET(Vehicles, hud_id);
     	info.vr_setup(info, NULL);
 	}
 }

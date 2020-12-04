@@ -1,15 +1,19 @@
 #include "quake3.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <server/items.qh>
-#include <server/resources.qh>
-#include <common/t_items.qh>
-#include <common/mapobjects/triggers.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
 #include <common/notifications/all.qh>
+#include <common/stats.qh>
 #include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/resources.qh>
+#include <server/world.qh>
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
@@ -100,24 +104,34 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 4))
 	{
-		SetResource(actor, RES_SHELLS, start_ammo_shells);
-		SetResource(actor, RES_BULLETS, start_ammo_nails);
-		SetResource(actor, RES_ROCKETS, start_ammo_rockets);
-		SetResource(actor, RES_CELLS, start_ammo_cells);
-		SetResource(actor, RES_PLASMA, start_ammo_plasma);
-		SetResource(actor, RES_FUEL, start_ammo_fuel);
-
-		STAT(WEAPONS, actor) = start_weapons;
-		if (this.spawnflags & 32)
+		if(this.spawnflags & 32) // spawn with only melee
 		{
-			// TODO
+			SetResource(actor, RES_SHELLS, 0);
+			SetResource(actor, RES_BULLETS, 0);
+			SetResource(actor, RES_ROCKETS, 0);
+			SetResource(actor, RES_CELLS, 0);
+			SetResource(actor, RES_PLASMA, 0);
+			SetResource(actor, RES_FUEL, 0);
+
+			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
+		}
+		else
+		{
+			SetResource(actor, RES_SHELLS, start_ammo_shells);
+			SetResource(actor, RES_BULLETS, start_ammo_nails);
+			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
+			SetResource(actor, RES_CELLS, start_ammo_cells);
+			SetResource(actor, RES_PLASMA, start_ammo_plasma);
+			SetResource(actor, RES_FUEL, start_ammo_fuel);
+
+			STAT(WEAPONS, actor) = start_weapons;
 		}
 	}
 
 	if (!(this.spawnflags & 8))
 	{
-		actor.strength_finished = 0;
-		actor.invincible_finished = 0;
+		STAT(STRENGTH_FINISHED, actor) = 0;
+		STAT(INVINCIBLE_FINISHED, actor) = 0;
 		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
 		{
 			int buffid = buff_FirstFromFlags(STAT(BUFFS, actor)).m_id;
@@ -172,6 +186,10 @@ void target_give_init(entity this)
 		else if (it.classname == "weapon_mortar") {
 			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
+		}
+		else if (it.classname == "weapon_shotgun") {
+			SetResourceExplicit(this, RES_SHELLS, GetResource(this, RES_SHELLS) + it.count * WEP_CVAR_PRI(shotgun, ammo)); // WEAPONTODO
+			this.netname = cons(this.netname, "shotgun");
 		}
 		else if (it.classname == "item_armor_mega")
 			SetResourceExplicit(this, RES_ARMOR, 100);
@@ -233,9 +251,9 @@ spawnfunc(target_fragsFilter)
 //spawnfunc(item_doubler)        /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
-//spawnfunc(item_health_large) /* handled in t_items.qc */
-//spawnfunc(item_health_small) /* handled in t_items.qc */
-//spawnfunc(item_health_mega)  /* handled in t_items.qc */
+//spawnfunc(item_health_large) /* handled in items.qc */
+//spawnfunc(item_health_small) /* handled in items.qc */
+//spawnfunc(item_health_mega)  /* handled in items.qc */
 //spawnfunc(item_invis)        /* handled by buffs mutator */
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 
@@ -280,11 +298,13 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_ctf && ctf_oneflag)
+			gametypename = "oneflag";
 		if(g_duel)
 			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
-		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// we do not have the other types (obelisk, harvester, teamtournament)
 		if(strstrofs(this.gametype, gametypename, 0) < 0)
 			return true;
 	}

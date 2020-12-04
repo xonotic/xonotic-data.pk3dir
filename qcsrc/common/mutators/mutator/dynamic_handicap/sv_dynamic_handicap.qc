@@ -8,7 +8,7 @@
 //======================= Global variables ====================================
 
 int autocvar_g_dynamic_handicap; ///< Whether to enable dynamic handicap.
-/// \brief The scale of the handicap. Larget values mean more penalties for
+/// \brief The scale of the handicap. Larger values mean more penalties for
 /// strong players and more buffs for weak players.
 float autocvar_g_dynamic_handicap_scale;
 /// \brief The exponent used to calculate handicap. 1 means linear scale. Values

@@ -41,6 +41,8 @@ string XonoticStatsList_convertDate(string input)
 		default: return input; // failed, why?
 	}
 
+	// without no-c-format this string looks messed up in Transifex since only %d is a valid c placeholder
+	/* xgettext:no-c-format */
 	string date = ZCTX(_("DATE^%m %d, %Y"));
 	date = strreplace("%Y", substring(input, 0, 4), date);
 	date = strreplace("%d", ftos(stof(substring(input, 8, 2))), date); // ftos-stof removes leading 0

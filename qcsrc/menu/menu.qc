@@ -13,14 +13,14 @@
 #include "xonotic/serverlist.qh"
 #include "xonotic/slider_resolution.qh"
 
-.string cvarName;
+.string controlledCvar;
 
 #include "xonotic/util.qh"
 
-#include "../common/items/_mod.qh"
+#include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
-#include "../common/mapinfo.qh"
-#include "../common/mutators/base.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 
 int mouseButtonsPressed;
 vector menuMousePos;
@@ -69,7 +69,7 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-		LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
+		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -481,7 +481,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		{
 			it = it.itemFromPoint(it, pos);
 			if (it.tooltip) best = it;
-			else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+			else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 			it = NULL;
 		}
 		else if (it.instanceOfModalController)
@@ -494,7 +494,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		}
 		if (!it) break;
 		if (it.tooltip) best = it;
-		else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+		else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
@@ -505,11 +505,14 @@ string gettooltip()
 	if (menu_tooltips == 2)
 	{
 		string s;
-		if (menuTooltipItem.cvarName)
+		if (menuTooltipItem.controlledCvar)
 		{
-			if (getCvarsMulti(menuTooltipItem)) s =
-				    strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
-			else s = strcat("[", menuTooltipItem.cvarName, "]");
+			string cvar_list = getCvarsMulti(menuTooltipItem);
+			if (cvar_list)
+				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
+			else
+				cvar_list = menuTooltipItem.controlledCvar;
+			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{
@@ -708,7 +711,9 @@ void m_draw(float width, float height)
 		menuNotTheFirstFrame = true;
 		if (Menu_Active && !cvar("menu_video_played"))
         {
-            localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
+            localcmd("cd loop $menu_cdtrack\n");
+            // TODO: use this when we have a welcome sound
+            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
             menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
         }
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!

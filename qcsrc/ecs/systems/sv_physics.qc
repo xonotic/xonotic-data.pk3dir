@@ -1,5 +1,9 @@
 #include "physics.qh"
 
+float autocvar_sv_spectator_speed_multiplier;
+float autocvar_sv_spectator_speed_multiplier_min = 1;
+float autocvar_sv_spectator_speed_multiplier_max = 5;
+
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
@@ -22,7 +26,7 @@ void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
-	if (sv_maxidle > 0) {
+	if (autocvar_sv_maxidle > 0) {
 		if (buttons != CS(this).buttons_old
 		    || CS(this).movement != CS(this).movement_old
 		    || this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }
@@ -84,16 +88,6 @@ void sys_phys_spectator_control(entity this)
 
 void sys_phys_fixspeed(entity this, float maxspeed_mod)
 {
-	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
-	if (this.speed != spd) {
-		this.speed = spd; // TODO: send this as a stat and set the below cvars on the client?
-		string temps = ftos(spd);
-		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
-	}
-
 	if (this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min) {
 		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
 		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));

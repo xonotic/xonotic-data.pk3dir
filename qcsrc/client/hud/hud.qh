@@ -3,6 +3,24 @@
 #include <common/weapons/_all.qh>
 #include <common/scores.qh>
 
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
+
+void HUD_Scale_Disable();
+void HUD_Scale_Enable();
+
+#define HUD_ScaleX(f) (f * hud_scale.x)
+#define HUD_ScaleY(f) (f * hud_scale.y)
+#define HUD_ShiftX(f) (f + hud_shift.x + hud_shift.z * (f - hud_scale_center.x))
+#define HUD_ShiftY(f) (f + hud_shift.y + hud_shift.z * (f - hud_scale_center.y))
+vector HUD_Scale(vector v);
+vector HUD_Shift(vector v);
+
+vector HUD_GetFontsize(string cvarname);
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();
@@ -11,18 +29,24 @@ bool HUD_WouldShowCursor();
 bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
-#define hud_panels_from(i) _hud_panels_from(i, NULL)
 REGISTER_REGISTRY(hud_panels)
 
-#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
+REGISTRY_DEFINE_GET(hud_panels, NULL)
+
+#define _REGISTER_HUD_PANEL(id, draw_func, export_func, configflags, showflags) \
 	void draw_func(); \
+	void export_func(int fh); \
 	REGISTER(hud_panels, HUD_PANEL, id, m_id, new_pure(hud_panel)) { \
 		this.panel_id = this.m_id; \
 		this.panel_draw = draw_func; \
+		this.panel_export = export_func; \
 		this.panel_name = strzone(strtolower(#id)); \
 		this.panel_configflags = configflags; \
 		this.panel_showflags = showflags; \
 	}
+
+#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
+	_REGISTER_HUD_PANEL(id, draw_func, draw_func##_Export, configflags, showflags)
 
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
@@ -38,7 +62,7 @@ REGISTER_REGISTRY(hud_panels)
 		); \
 MACRO_END
 
-int panel_order[hud_panels_MAX];
+int panel_order[REGISTRY_MAX(hud_panels)];
 string hud_panelorder_prev;
 
 bool hud_draw_maximized;
@@ -53,7 +77,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect);
-vector HUD_Get_Num_Color (float hp, float maxvalue);
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink);
 void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha);
 void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp);
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag);
@@ -84,7 +108,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
-int weapon_accuracy[Weapons_MAX];
+int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;
 int complain_weapon_type;
@@ -149,6 +173,7 @@ float panel_bg_padding;
 string panel_bg_padding_str;
 
 classfield(HUDPanel) .void() panel_draw;
+classfield(HUDPanel) .void(int fh) panel_export;
 
 // chat panel can be reduced / moved while the mapvote is active
 // let know the mapvote panel about chat pos and size
@@ -156,6 +181,26 @@ float chat_posy;
 float chat_sizey;
 
 float current_player;
+
+float autocvar__menu_alpha; // updated by the menu VM, useful to tell when the menu is being drawn
+
+string autocvar__hud_panelorder;
+
+bool autocvar_hud_cursormode = true;
+string autocvar_hud_dock;
+float autocvar_hud_dock_alpha;
+string autocvar_hud_dock_color;
+bool autocvar_hud_dock_color_team;
+string autocvar_hud_panel_bg;
+float autocvar_hud_panel_bg_alpha;
+float autocvar_hud_panel_bg_border;
+vector autocvar_hud_panel_bg_color;
+float autocvar_hud_panel_bg_color_team;
+float autocvar_hud_panel_bg_padding;
+float autocvar_hud_panel_fg_alpha;
+string autocvar_hud_skin;
+float autocvar_hud_progressbar_alpha;
+float autocvar_hud_panel_update_interval;
 
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
@@ -228,6 +273,7 @@ REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       PANEL_CONFIG_NO         
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // QUICKMENU
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
+REGISTER_HUD_PANEL(STRAFEHUD,       HUD_StrafeHUD,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // STRAFEHUD
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:

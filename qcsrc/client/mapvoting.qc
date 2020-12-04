@@ -1,13 +1,18 @@
 #include "mapvoting.qh"
 
-#include "autocvars.qh"
-#include "miscfunctions.qh"
-#include "defs.qh"
-#include "hud/_mod.qh"
-#include "hud/panel/scoreboard.qh"
-
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/mapinfo.qh>
+#include <common/util.qh>
 
+// MapVote (#21)
+
+void MapVote_Draw_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_mapvote_highlight_border");
+}
 
 int mv_num_maps;
 
@@ -40,6 +45,19 @@ vector gtv_text_size_small;
 const int NUM_SSDIRS = 4;
 string ssdirs[NUM_SSDIRS];
 int n_ssdirs;
+
+bool PreviewExists(string name)
+{
+	if(autocvar_cl_readpicture_force)
+		return false;
+
+	if (fexists(strcat(name, ".tga"))) return true;
+	if (fexists(strcat(name, ".png"))) return true;
+	if (fexists(strcat(name, ".jpg"))) return true;
+	if (fexists(strcat(name, ".pcx"))) return true;
+
+	return false;
+}
 
 string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
 {
@@ -629,7 +647,7 @@ void GameTypeVote_ReadOption(int i)
 	}
 	else
 	{
-		Gametype type = MapInfo_Type_FromString(gt);
+		Gametype type = MapInfo_Type_FromString(gt, false);
 		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}

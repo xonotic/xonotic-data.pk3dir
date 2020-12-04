@@ -17,7 +17,7 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
         if(time >= frag_target.spawnshieldtime &&
            frag_target != frag_attacker &&
            IS_PLAYER(frag_attacker) &&
-           !IS_DEAD(frag_target))
+           !IS_DEAD(frag_target) && !STAT(FROZEN, frag_target))
 	{
 		GiveResource(frag_attacker, RES_HEALTH,
 			autocvar_g_vampire_factor * damage_take);

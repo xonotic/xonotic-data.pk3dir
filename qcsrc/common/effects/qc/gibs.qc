@@ -168,12 +168,14 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	entity gib;
 
 	// TODO remove some gibs according to cl_nogibs
-	gib = RubbleNew("gib");
+	gib = RubbleNew(new(gib));
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
 	gib.cnt = specnum;
 	gib.silent = issilent;
+	gib.colormap = 4; // red
+	gib.colormap |= BIT(10); // RENDER_COLORMAPPED
 	Gib_setmodel(gib, mdlname, specnum);
 
 	setsize (gib, '-8 -8 -8', '8 8 8');

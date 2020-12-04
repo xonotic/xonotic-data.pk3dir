@@ -1,0 +1,37 @@
+#pragma once
+
+float autocvar_g_balance_grapplehook_airfriction;
+float autocvar_g_balance_grapplehook_force_rubber;
+float autocvar_g_balance_grapplehook_force_rubber_overstretch;
+float autocvar_g_balance_grapplehook_health;
+float autocvar_g_balance_grapplehook_length_min;
+float autocvar_g_balance_grapplehook_speed_fly;
+float autocvar_g_balance_grapplehook_speed_pull;
+float autocvar_g_balance_grapplehook_stretch;
+float autocvar_g_balance_grapplehook_damagedbycontents;
+float autocvar_g_balance_grapplehook_refire;
+int autocvar_g_balance_grapplehook_pull_frozen;
+float autocvar_g_balance_grapplehook_nade_time;
+bool autocvar_g_balance_grapplehook_gravity;
+bool autocvar_g_balance_grapplehook_crouchslide;
+
+// Wazat's grappling hook
+.entity hook;
+void GrapplingHookThink(entity this);
+void RemoveGrapplingHooks(entity pl);
+void RemoveHook(entity this);
+// (note: you can change the hook impulse #'s to whatever you please)
+.float hook_time;
+
+.float hook_length;
+
+const float HOOK_FIRING = BIT(0);
+const float HOOK_REMOVING = BIT(1);
+const float HOOK_PULLING = BIT(2);
+const float HOOK_RELEASING = BIT(3);
+const float HOOK_WAITING_FOR_RELEASE = BIT(4);
+.float hook_state;
+.int state;
+
+vector hook_shotorigin[4];
+

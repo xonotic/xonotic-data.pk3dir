@@ -308,7 +308,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), thiswep.m_id);
-	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.weaponentity_fld = weaponentity;
@@ -350,13 +350,6 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
-
-	// muzzle flash for 1st person view
-	entity flash = spawn();
-	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
-	SUB_SetFade(flash, time, 0.1);
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -401,7 +394,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         });
         float desirabledamage;
         desirabledamage = enemydamage;
-        if(time > actor.invincible_finished && time > actor.spawnshieldtime)
+        if(time > STAT(INVINCIBLE_FINISHED, actor) && time > actor.spawnshieldtime)
             desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;

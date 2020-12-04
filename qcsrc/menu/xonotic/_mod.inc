@@ -20,7 +20,6 @@
 #include <menu/xonotic/dialog.qc>
 #include <menu/xonotic/dialog_credits.qc>
 #include <menu/xonotic/dialog_disconnect.qc>
-#include <menu/xonotic/dialog_termsofservice.qc>
 #include <menu/xonotic/dialog_firstrun.qc>
 #include <menu/xonotic/dialog_hudpanel_ammo.qc>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qc>
@@ -38,6 +37,7 @@
 #include <menu/xonotic/dialog_hudpanel_racetimer.qc>
 #include <menu/xonotic/dialog_hudpanel_radar.qc>
 #include <menu/xonotic/dialog_hudpanel_score.qc>
+#include <menu/xonotic/dialog_hudpanel_strafehud.qc>
 #include <menu/xonotic/dialog_hudpanel_timer.qc>
 #include <menu/xonotic/dialog_hudpanel_vote.qc>
 #include <menu/xonotic/dialog_hudpanel_weapons.qc>
@@ -84,6 +84,7 @@
 #include <menu/xonotic/dialog_singleplayer.qc>
 #include <menu/xonotic/dialog_singleplayer_winner.qc>
 #include <menu/xonotic/dialog_teamselect.qc>
+#include <menu/xonotic/dialog_termsofservice.qc>
 #include <menu/xonotic/dialog_uid2name.qc>
 #include <menu/xonotic/gametypelist.qc>
 #include <menu/xonotic/hudskinlist.qc>

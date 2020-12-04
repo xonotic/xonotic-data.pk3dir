@@ -2,7 +2,7 @@
 
 #ifdef SVQC
     // For FL_POWERUP
-    #include <server/constants.qh>
+    #include <common/constants.qh>
 #endif
 
 #include "pickup.qh"
@@ -23,6 +23,10 @@ SOUND(Strength, Item_Sound("powerup"));
 #endif
 
 #ifdef SVQC
+float autocvar_g_balance_powerup_strength_damage;
+float autocvar_g_balance_powerup_strength_force;
+float autocvar_g_balance_powerup_strength_selfdamage;
+float autocvar_g_balance_powerup_strength_selfforce;
 float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(Pickup this, entity item)
 {
@@ -45,7 +49,9 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
+#ifdef GAMEQC
     this.m_itemid           =   IT_STRENGTH;
+#endif
 #ifdef SVQC
     this.m_iteminit         =   powerup_strength_init;
 #endif
@@ -59,6 +65,8 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
 #ifdef SVQC
+float autocvar_g_balance_powerup_invincible_takedamage;
+float autocvar_g_balance_powerup_invincible_takeforce = 0.33;
 float autocvar_g_balance_powerup_invincible_time;
 void powerup_shield_init(Pickup this, entity item)
 {
@@ -81,7 +89,9 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_color            =   '1 0 1';
     this.m_waypoint         =   _("Shield");
     this.m_waypointblink    =   2;
+#ifdef GAMEQC
     this.m_itemid           =   IT_INVINCIBLE;
+#endif
 #ifdef SVQC
     this.m_iteminit         =   powerup_shield_init;
 #endif

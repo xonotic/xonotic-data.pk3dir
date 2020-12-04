@@ -1,7 +1,7 @@
 #include "announcer.qh"
 
+#include <client/hud/panel/centerprint.qh>
 #include <client/mutators/_mod.qh>
-
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 
@@ -84,7 +84,7 @@ void Announcer_Gamestart()
 	{
 		if(announcer_countdown)
 		{
-			centerprint_kill(ORDINAL(CPID_ROUND));
+			centerprint_Kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
 				delete(announcer_countdown);

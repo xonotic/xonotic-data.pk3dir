@@ -1,3 +1,5 @@
+#if ENABLE_EFFECTINFO
+
 #include "effectinfo.qh"
 #define EFFECTINFO_PARSER(on, MY) \
     on(type,                                        MY(type) \
@@ -311,10 +313,10 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt", fa
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]");
-            LOG_INFO("  Where 'filename' is the file to write (default is effectinfo_dump.txt),");
-            LOG_INFO("  if supplied with '-' output to console as well as default,");
-            LOG_INFO("  if left blank, it will only write to default.");
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]");
+            LOG_HELP("  Where 'filename' is the file to write (default is effectinfo_dump.txt),");
+            LOG_HELP("  if supplied with '-' output to console as well as default,");
+            LOG_HELP("  if left blank, it will only write to default.");
             return;
         }
     }
@@ -322,8 +324,9 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt", fa
 
 
 REGISTRY(EffectInfos, BITS(9))
-#define EffectInfos_from(i) _EffectInfos_from(i, NULL)
 REGISTER_REGISTRY(EffectInfos)
+
+REGISTRY_DEFINE_GET(EffectInfos, NULL)
 #define EFFECTINFO(name) \
     ACCUMULATE void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { } \
     REGISTER(EffectInfos, EFFECTINFO, name, m_id, NEW(EffectInfoGroup)) { \
@@ -339,3 +342,5 @@ REGISTER_REGISTRY(EffectInfos)
 #undef MY
 #undef DEF
 #undef SUB
+
+#endif

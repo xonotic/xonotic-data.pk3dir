@@ -2,43 +2,6 @@
 
 #ifdef SVQC
 
-void W_MachineGun_MuzzleFlash_Think(entity this)
-{
-	this.frame += 2;
-	this.scale *= 0.5;
-	this.alpha -= 0.25;
-	this.nextthink = time + 0.05;
-
-	if(this.alpha <= 0)
-	{
-		setthink(this, SUB_Remove);
-		this.nextthink = time;
-		this.realowner.muzzle_flash = NULL;
-		return;
-	}
-
-}
-
-void W_MachineGun_MuzzleFlash(entity actor, .entity weaponentity)
-{
-	entity wepent = actor.(weaponentity);
-
-	if(wepent.muzzle_flash == NULL)
-		wepent.muzzle_flash = spawn();
-
-	// muzzle flash for 1st person view
-	setmodel(wepent.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
-
-	wepent.muzzle_flash.scale = 0.75;
-	setthink(wepent.muzzle_flash, W_MachineGun_MuzzleFlash_Think);
-	wepent.muzzle_flash.nextthink = time + 0.02;
-	wepent.muzzle_flash.frame = 2;
-	wepent.muzzle_flash.alpha = 0.75;
-	wepent.muzzle_flash.angles_z = random() * 180;
-	wepent.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	wepent.muzzle_flash.owner = wepent.muzzle_flash.realowner = wepent;
-}
-
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
 	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, ((actor.(weaponentity).misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)), deathtype);
@@ -51,14 +14,11 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(machinegun, first_refire) * W_WeaponRateFactor(actor);
 
 	if(actor.(weaponentity).misc_bulletcounter == 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage), WEP_CVAR(machinegun, first_force), deathtype, EFFECT_BULLET);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage), 0, WEP_CVAR(machinegun, first_force), deathtype, EFFECT_BULLET);
 	else
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, EFFECT_BULLET);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), 0, WEP_CVAR(machinegun, sustained_force), deathtype, EFFECT_BULLET);
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	W_MachineGun_MuzzleFlash(actor, weaponentity);
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	// casing code
 	if(autocvar_g_casings >= 2)
@@ -127,14 +87,11 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(machinegun, spread_max));
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), 0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	W_MachineGun_MuzzleFlash(actor, weaponentity);
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	if(autocvar_g_casings >= 2) // casing code
 	{
@@ -155,12 +112,9 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), 0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	W_MachineGun_MuzzleFlash(actor, weaponentity);
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	if(autocvar_g_casings >= 2) // casing code
 	{
