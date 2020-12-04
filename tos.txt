@@ -1,9 +1,9 @@
-^9Definitions^0
+Definitions
 Service: the XonStat player statistics system and the Xonotic forums provided by Team Xonotic
 You: the user of the service
 We: the past and present contributors to Xonotic
 
-^9Terms^0
+Terms
 By accessing the services at https://stats.xonotic.org and https://forums.xonotic.org, you are agreeing to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
 
 By using our services, you agree to allow user identifiable information to be presented within the system for the purpose of:
@@ -20,7 +20,7 @@ We reserve the right to:
 - Discontinue, interrupt, or change the service without any advance notice or consent.
 - Release full or partial versions of the underlying dataset, provided it has been anonymized.
 
-^9Privacy Policy^0
+Privacy Policy
 Your privacy is important to us. It is Team Xonotic’s policy to respect your privacy regarding any information we collect from you across our web properties https://stats.xonotic.org and https://forums.xonotic.org, along with any other sites we own and operate.
 
 We only collect information when we truly need it to provide a service to you and the community at large. We collect it by fair and lawful means, with your knowledge and consent via configurable, in-game options (cl_allow_uidtracking and cl_allow_uid2name for XonStat) or via signup forms (for the forums). We also let you know why we’re collecting it and how it will be used. You are free to refuse our request for your personal information by not opting in to either of these services.

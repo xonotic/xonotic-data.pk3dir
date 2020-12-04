@@ -26,7 +26,7 @@ void DontAccept_Clicked(entity btn, entity me)
 void XonoticToSDialog_loadXonoticToS(entity me)
 {
     string ToSText = "";
-    int fh = fopen("TermsOfService", FILE_READ);
+    int fh = fopen("tos.txt", FILE_READ);
     if (fh >= 0)
     {
         for (string line; (line = fgets(fh)); ) {
@@ -46,7 +46,7 @@ void XonoticToSDialog_loadXonoticToS(entity me)
 
 bool XonoticToSDialog_shouldShow()
 {
-    return (fexists("TermsOfService") && !autocvar__termsofservice_accepted);
+    return (fexists("tos.txt") && !autocvar__termsofservice_accepted);
 }
 
 void XonoticToSDialog_fill(entity me)
@@ -67,7 +67,7 @@ void XonoticToSDialog_fill(entity me)
         me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Accept"), '0 0 0'));
             e.onClick = Close_Clicked;
             e.onClickEntity = me;
-        me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Don't accept & quit"), '0 0 0'));
+        me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Don't accept (quit the game)"), '0 0 0'));
             e.onClick = DontAccept_Clicked;
             e.onClickEntity = me;
 }
