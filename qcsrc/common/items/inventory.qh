@@ -143,14 +143,16 @@ void Inventory_new(PlayerState this)
 void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 
-void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
-void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
-void InventoryStorage_clear(entity e)
+void Inventory_clear(entity store)
 {
-    // we don't need to network the changes, that is done when the inventory is detached
+    // NOTE: you will need to perform Inventory_update after this to update the storage entity
+    // (unless store is the storage entity)
     FOREACH(Items, true, {
         .int fld = inv_items[it.m_id];
-        e.inventory_store.(fld) = 0;
+        store.(fld) = 0;
     });
 }
+
+void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
+void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
 #endif

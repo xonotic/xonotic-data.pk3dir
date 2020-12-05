@@ -355,8 +355,7 @@ void reset_map(bool dorespawn)
 		entity store = PS(it);
 		if (store)
 		{
-			for (int j = 0; j < REGISTRY_COUNT(Items); j++)
-				store.inventory.inv_items[j] = 0;
+			Inventory_clear(store.inventory);
 			Inventory_update(store);
 		}
 	});
