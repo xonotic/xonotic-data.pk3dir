@@ -107,7 +107,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!CS(ent).cvar_cl_noantilag)
+	if (!CS_CVAR(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{

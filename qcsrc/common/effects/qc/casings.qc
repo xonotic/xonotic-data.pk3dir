@@ -27,9 +27,9 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	org = casingowner.origin + casingowner.view_ofs + org.x * v_forward - org.y * v_right + org.z * v_up;
 
 	FOREACH_CLIENT(true, {
-		if (!(CS(it).cvar_cl_casings))
+		if (!(CS_CVAR(it).cvar_cl_casings))
 			continue;
-		if (it == casingowner && !(CS(it).cvar_r_drawviewmodel))
+		if (it == casingowner && !(CS_CVAR(it).cvar_r_drawviewmodel))
 			continue;
 
 		msg_entity = it;

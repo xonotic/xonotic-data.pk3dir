@@ -481,7 +481,7 @@ bool Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS(player).autoswitch)
+	if(CS_CVAR(player).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -570,7 +570,7 @@ bool Item_GiveTo(entity item, entity player)
 		return false;
 
 	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS(player).cvar_cl_cts_noautoswitch)
+	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS_CVAR(player).cvar_cl_cts_noautoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1429,7 +1429,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS(e).autoswitch)
+	if(CS_CVAR(e).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

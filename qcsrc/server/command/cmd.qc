@@ -73,8 +73,8 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		{
 			if (argv(1) != "")
 			{
-				CS(caller).autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (CS(caller).autoswitch ? "on" : "off"), ".\n"));
+				CS_CVAR(caller).autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -355,7 +355,7 @@ void ClientCommand_physics(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, strcat("Current physics set: ^3", CS(caller).cvar_cl_physics, "\n"));
+			sprint(caller, strcat("Current physics set: ^3", CS_CVAR(caller).cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd physics <physics>\n");
@@ -603,7 +603,7 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, CS(caller), 1);
+				GetCvars(caller, CS_CVAR(caller), 1);
 
 				return;
 			}

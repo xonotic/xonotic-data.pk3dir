@@ -136,7 +136,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+	if(CS_CVAR(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p.netname, p.team, false));
 
 	if(teamplay)
@@ -157,7 +157,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
 
-		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));
 	}
 
 	strfree(p.playerstats_id);
