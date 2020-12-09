@@ -1606,7 +1606,7 @@ void Send_Notification(
 
 		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN \
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
-				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
+				switch (CS_CVAR(ent).msg_choice_choices[net_name.nent_choice_idx]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \
