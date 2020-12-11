@@ -1167,7 +1167,6 @@ float average_accuracy;
 vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 {
 	scoreboard_acc_fade_alpha = min(scoreboard_fade_alpha, scoreboard_acc_fade_alpha + frametime * 10);
-	vector initial_pos = pos;
 
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
@@ -1308,9 +1307,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 
-	if (scoreboard_acc_fade_alpha == 1)
-		return end_pos;
-	return initial_pos + (end_pos - initial_pos) * scoreboard_acc_fade_alpha;
+	return end_pos;
 }
 
 .bool uninteresting;
@@ -1330,7 +1327,6 @@ STATIC_INIT(default_order_items_label)
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
 	scoreboard_itemstats_fade_alpha = min(scoreboard_fade_alpha, scoreboard_itemstats_fade_alpha + frametime * 10);
-	vector initial_pos = pos;
 
 	int disowned_cnt = 0;
 	int uninteresting_cnt = 0;
@@ -1424,9 +1420,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 
-	if (scoreboard_itemstats_fade_alpha == 1)
-		return end_pos;
-	return initial_pos + (end_pos - initial_pos) * scoreboard_itemstats_fade_alpha;
+	return end_pos;
 }
 
 vector MapStats_DrawKeyValue(vector pos, string key, string value) {
@@ -1756,6 +1750,7 @@ void Scoreboard_Draw()
 
 	Scoreboard_UpdatePlayerTeams();
 
+	float initial_pos_y = panel_pos.y;
 	vector pos = panel_pos;
 	entity pl, tm;
 	string str;
@@ -2047,5 +2042,14 @@ void Scoreboard_Draw()
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	scoreboard_bottom = pos.y + 2 * hud_fontsize.y;
+	pos.y += 2 * hud_fontsize.y;
+	if (scoreboard_fade_alpha < 1)
+		scoreboard_bottom = initial_pos_y + (pos.y - initial_pos_y) * scoreboard_fade_alpha;
+	else if (pos.y != scoreboard_bottom)
+	{
+		if (pos.y > scoreboard_bottom)
+			scoreboard_bottom = min(pos.y, scoreboard_bottom + frametime * 10 * (pos.y - initial_pos_y));
+		else
+			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - initial_pos_y));
+	}
 }
