@@ -13,7 +13,7 @@
 #include "xonotic/serverlist.qh"
 #include "xonotic/slider_resolution.qh"
 
-.string cvarName;
+.string controlledCvar;
 
 #include "xonotic/util.qh"
 
@@ -481,7 +481,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		{
 			it = it.itemFromPoint(it, pos);
 			if (it.tooltip) best = it;
-			else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+			else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 			it = NULL;
 		}
 		else if (it.instanceOfModalController)
@@ -494,7 +494,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		}
 		if (!it) break;
 		if (it.tooltip) best = it;
-		else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+		else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
@@ -505,14 +505,14 @@ string gettooltip()
 	if (menu_tooltips == 2)
 	{
 		string s;
-		if (menuTooltipItem.cvarName)
+		if (menuTooltipItem.controlledCvar)
 		{
 			string cvar_list = getCvarsMulti(menuTooltipItem);
 			if (cvar_list)
-				cvar_list = strcat(menuTooltipItem.cvarName, " ", cvar_list);
+				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
 			else
-				cvar_list = menuTooltipItem.cvarName;
-			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.cvarName), "\"]");
+				cvar_list = menuTooltipItem.controlledCvar;
+			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{

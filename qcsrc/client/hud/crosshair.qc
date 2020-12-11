@@ -218,6 +218,12 @@ void HUD_Crosshair(entity this)
 	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
 		csqcplayer.alpha = csqcplayer.m_alpha;
 
+	if (autocvar_chase_active > 0 && autocvar_chase_front)
+	{
+		csqcplayer.alpha = csqcplayer.m_alpha;
+		return;
+	}
+
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview

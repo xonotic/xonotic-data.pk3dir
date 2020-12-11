@@ -434,7 +434,6 @@ float autocvar_chase_back;
 float autocvar_chase_up;
 bool autocvar_chase_overhead;
 float autocvar_chase_pitchangle;
-bool autocvar_chase_front;
 vector CSQCPlayer_ApplyChase(entity this, vector v)
 {
 	vector forward;

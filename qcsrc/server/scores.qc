@@ -763,7 +763,7 @@ entity PlayerScore_Sort(.float field, int teams, bool strict, bool nospectators)
 		pbest.chain = NULL;
 
 		++i;
-		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, false))
+		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, strict))
 			j = i;
 
 		pbest.(field) = j;
