@@ -1166,13 +1166,7 @@ bool Scoreboard_WouldDraw()
 float average_accuracy;
 vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 {
-	if (frametime)
-	{
-		if (scoreboard_fade_alpha < 1)
-			scoreboard_acc_fade_alpha = min(1, scoreboard_acc_fade_alpha + frametime * 10);
-		else
-			scoreboard_acc_fade_alpha = 1; // sync fading with the scoreboard
-	}
+	scoreboard_acc_fade_alpha = min(scoreboard_fade_alpha, scoreboard_acc_fade_alpha + frametime * 10);
 	vector initial_pos = pos;
 
 	WepSet weapons_stat = WepSet_GetFromStat();
@@ -1335,13 +1329,7 @@ STATIC_INIT(default_order_items_label)
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
-	if (frametime)
-	{
-		if (scoreboard_fade_alpha < 1)
-			scoreboard_itemstats_fade_alpha = min(1, scoreboard_itemstats_fade_alpha + frametime * 10);
-		else
-			scoreboard_itemstats_fade_alpha = 1; // sync fading with the scoreboard
-	}
+	scoreboard_itemstats_fade_alpha = min(scoreboard_fade_alpha, scoreboard_itemstats_fade_alpha + frametime * 10);
 	vector initial_pos = pos;
 
 	int disowned_cnt = 0;
