@@ -23,6 +23,10 @@ SOUND(Strength, Item_Sound("powerup"));
 #endif
 
 #ifdef SVQC
+float autocvar_g_balance_powerup_strength_damage;
+float autocvar_g_balance_powerup_strength_force;
+float autocvar_g_balance_powerup_strength_selfdamage;
+float autocvar_g_balance_powerup_strength_selfforce;
 float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(Pickup this, entity item)
 {
@@ -61,6 +65,8 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
 #ifdef SVQC
+float autocvar_g_balance_powerup_invincible_takedamage;
+float autocvar_g_balance_powerup_invincible_takeforce = 0.33;
 float autocvar_g_balance_powerup_invincible_time;
 void powerup_shield_init(Pickup this, entity item)
 {

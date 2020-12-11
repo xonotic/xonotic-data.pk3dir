@@ -155,6 +155,7 @@ bool racer_frame(entity this, float dt)
 	entity vehic = player.vehicle;
 	return = true;
 
+#ifdef SVQC
 	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
@@ -162,6 +163,7 @@ bool racer_frame(entity this, float dt)
 		set_movetype(vehic, MOVETYPE_NONE);
 		return;
 	}
+#endif
 
 	vehicles_frame(vehic, player);
 
@@ -171,15 +173,19 @@ bool racer_frame(entity this, float dt)
 	else if (!vehic.racer_air_finished)
 		vehic.racer_air_finished = time + autocvar_g_vehicle_racer_water_time;
 
+#ifdef SVQC
 	if(IS_DEAD(vehic))
 	{
 		PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
 		return;
 	}
+#endif
 
 	racer_align4point(vehic, player, dt);
 
+#ifdef SVQC
 	PHYS_INPUT_BUTTON_ZOOM(player) = PHYS_INPUT_BUTTON_CROUCH(player) = false;
+#endif
 
 	vehic.angles_x *= -1;
 
@@ -203,17 +209,17 @@ bool racer_frame(entity this, float dt)
 	vector df = vehic.velocity * -autocvar_g_vehicle_racer_friction;
 	//vehic.velocity_z = ftmp;
 
-	if(CS(player).movement)
+	if(PHYS_CS(player).movement)
 	{
 		if(cont & DPCONTENTS_LIQUIDSMASK)
 		{
-			if(CS(player).movement_x) { df += v_forward * ((CS(player).movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
-			if(CS(player).movement_y) { df += v_right * ((CS(player).movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
+			if(PHYS_CS(player).movement_x) { df += v_forward * ((PHYS_CS(player).movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
+			if(PHYS_CS(player).movement_y) { df += v_right * ((PHYS_CS(player).movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
 		}
 		else
 		{
-			if(CS(player).movement_x) { df += v_forward * ((CS(player).movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
-			if(CS(player).movement_y) { df += v_right * ((CS(player).movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
+			if(PHYS_CS(player).movement_x) { df += v_forward * ((PHYS_CS(player).movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
+			if(PHYS_CS(player).movement_y) { df += v_right * ((PHYS_CS(player).movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
 		}
 
 #ifdef SVQC
@@ -291,7 +297,7 @@ bool racer_frame(entity this, float dt)
 		dforce = autocvar_g_vehicle_racer_water_downforce;
 
 	df -= v_up * (vlen(vehic.velocity) * dforce);
-	CS(player).movement = vehic.velocity += df * dt;
+	PHYS_CS(player).movement = vehic.velocity += df * dt;
 
 #ifdef SVQC
 
@@ -375,10 +381,14 @@ bool racer_frame(entity this, float dt)
 #endif
 
 	setorigin(player, vehic.origin + '0 0 32');
+#ifdef SVQC
 	player.oldorigin = player.origin; // negate fall damage
+#endif
 	player.velocity = vehic.velocity;
 }
+#endif
 
+#ifdef SVQC
 void racer_think(entity this)
 {
 	float dt = autocvar_g_vehicle_racer_thinkrate;

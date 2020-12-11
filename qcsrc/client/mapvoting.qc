@@ -1,6 +1,5 @@
 #include "mapvoting.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/scoreboard.qh>

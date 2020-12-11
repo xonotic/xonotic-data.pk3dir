@@ -2,6 +2,8 @@
 
 #include <common/mapobjects/bgmscript.qh>
 
+float autocvar_bgmvolume;
+
 classfield(BGMScript) .float just_toggled;
 
 float bgmtime;

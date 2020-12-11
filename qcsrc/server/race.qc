@@ -424,8 +424,6 @@ void race_deleteTime(string map, float pos)
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
-	float snew, l;
-
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
 
@@ -449,9 +447,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				GameRules_scoring_add(e, RACE_FASTEST, t - s);
 
 			s = GameRules_scoring_add(e, RACE_TIME, 0);
-			snew = TIME_ENCODE(time - game_starttime);
+			float snew = TIME_ENCODE(time - game_starttime);
 			GameRules_scoring_add(e, RACE_TIME, snew - s);
-			l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
+			float l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
 
 			if(autocvar_fraglimit)
 				if(l >= autocvar_fraglimit)
@@ -1041,7 +1039,7 @@ spawnfunc(trigger_race_checkpoint)
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-spawnfunc(target_checkpoint) // defrag entity
+void target_checkpoint_setup(entity this)
 {
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
@@ -1086,8 +1084,15 @@ spawnfunc(target_checkpoint) // defrag entity
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-spawnfunc(target_startTimer) { spawnfunc_target_checkpoint(this); }
-spawnfunc(target_stopTimer) { spawnfunc_target_checkpoint(this); }
+spawnfunc(target_checkpoint)
+{
+	// xonotic defrag entity
+	target_checkpoint_setup(this);
+}
+
+// compatibility entity names
+spawnfunc(target_startTimer) { target_checkpoint_setup(this); }
+spawnfunc(target_stopTimer) { target_checkpoint_setup(this); }
 
 void race_AbandonRaceCheck(entity p)
 {

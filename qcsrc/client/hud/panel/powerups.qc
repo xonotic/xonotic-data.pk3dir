@@ -1,6 +1,5 @@
 #include "powerups.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <common/items/_mod.qh>
 #include <common/util.qh>

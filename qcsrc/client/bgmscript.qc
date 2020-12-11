@@ -1,6 +1,5 @@
 #include "bgmscript.qh"
 
-#include <client/autocvars.qh>
 #include <client/main.qh>
 #include <common/util.qh>
 

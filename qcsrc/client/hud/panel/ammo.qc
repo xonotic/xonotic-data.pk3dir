@@ -1,6 +1,5 @@
 #include "ammo.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/items/items.qh>
 #include <client/view.qh>

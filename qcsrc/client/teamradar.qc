@@ -1,7 +1,7 @@
 #include "teamradar.qh"
 
-#include <client/autocvars.qh>
 #include <client/hud/_mod.qh>
+#include <client/view.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <lib/csqcmodel/interpolate.qh>
 

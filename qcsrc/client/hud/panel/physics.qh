@@ -1,2 +1,27 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_physics;
+float autocvar_hud_panel_physics_acceleration_movingaverage = 1;
+float autocvar_hud_panel_physics_acceleration_progressbar_mode;
+float autocvar_hud_panel_physics_acceleration_progressbar_scale;
+float autocvar_hud_panel_physics_acceleration_progressbar_nonlinear;
+float autocvar_hud_panel_physics_acceleration_max;
+float autocvar_hud_panel_physics_update_interval;
+int autocvar_hud_panel_physics_progressbar;
+bool autocvar_hud_panel_physics_acceleration_vertical;
+int autocvar_hud_panel_physics_baralign;
+bool autocvar_hud_panel_physics_flip;
+bool autocvar_hud_panel_physics_dynamichud      = true;
+float autocvar_hud_panel_physics_speed_max;
+int autocvar_hud_panel_physics_speed_unit;
+bool autocvar_hud_panel_physics_speed_unit_show;
+bool autocvar_hud_panel_physics_speed_vertical;
+int autocvar_hud_panel_physics_text;
+float autocvar_hud_panel_physics_text_scale;
+bool autocvar_hud_panel_physics_topspeed;
+float autocvar_hud_panel_physics_topspeed_time;
+
+vector autocvar_hud_progressbar_acceleration_color;
+vector autocvar_hud_progressbar_acceleration_neg_color;
+vector autocvar_hud_progressbar_speed_color;

@@ -5,3 +5,4 @@
 #include <common/effects/qc/globalsound.qc>
 #include <common/effects/qc/lightningarc.qc>
 #include <common/effects/qc/modeleffects.qc>
+#include <common/effects/qc/rubble.qc>

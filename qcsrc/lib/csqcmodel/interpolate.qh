@@ -21,6 +21,8 @@
  */
 #pragma once
 
+float autocvar_cl_lerpexcess; // TODO: int?
+
 .int iflags;
 const int IFLAG_VELOCITY = BIT(0);
 const int IFLAG_ANGLES = BIT(1);

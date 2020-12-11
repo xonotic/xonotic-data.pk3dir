@@ -19,9 +19,9 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 	if(!autocvar_g_physics_clientselect)
 		return defaultval;
 
-	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
+	if(IS_REAL_CLIENT(this) && Physics_Valid(CS_CVAR(this).cvar_cl_physics))
 	{
-		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
+		string s = strcat("g_physics_", CS_CVAR(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
@@ -457,7 +457,7 @@ void CheckWaterJump(entity this)
 
 
 #ifdef SVQC
-	#define JETPACK_JUMP(s)	CS(s).cvar_cl_jetpack_jump
+	#define JETPACK_JUMP(s)	CS_CVAR(s).cvar_cl_jetpack_jump
 #elif defined(CSQC)
 	float autocvar_cl_jetpack_jump;
 	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump

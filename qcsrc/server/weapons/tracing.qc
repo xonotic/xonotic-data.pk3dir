@@ -72,10 +72,18 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
-	// TODO this is broken - see 637056bea7bf7f5c9c0fc6113e94731a2767476 for an attempted fix
-	// which fixes issue #1957 but causes #2129
 	vector dv = right * -vecs.y + up * vecs.z;
-	w_shotorg = ent.origin + ent.view_ofs + dv;
+	w_shotorg = ent.origin + ent.view_ofs;
+	if(antilag)
+	{
+		if(CS(ent).antilag_debug)
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, CS(ent).antilag_debug);
+		else
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+	}
+	else
+		tracebox(w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos;
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
@@ -99,7 +107,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!CS(ent).cvar_cl_noantilag)
+	if (!CS_CVAR(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{

@@ -12,19 +12,24 @@ REGISTER_NET_TEMP(casings)
 
 #if defined(SVQC)
 .bool cvar_cl_casings;
+.int cvar_r_drawviewmodel;
 #elif defined(CSQC)
 bool cvar_cl_casings;
+int cvar_r_drawviewmodel;
 #endif
 REPLICATE(cvar_cl_casings, bool, "cl_casings");
+REPLICATE(cvar_r_drawviewmodel, int, "r_drawviewmodel");
 
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
-	entity wep = casingowner.(weaponentity);
-	vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
+	vector org = casingowner.(weaponentity).spawnorigin;
+	org = casingowner.origin + casingowner.view_ofs + org.x * v_forward - org.y * v_right + org.z * v_up;
 
 	FOREACH_CLIENT(true, {
-		if (!(CS(it).cvar_cl_casings))
+		if (!(CS_CVAR(it).cvar_cl_casings))
+			continue;
+		if (it == casingowner && !(CS_CVAR(it).cvar_r_drawviewmodel))
 			continue;
 
 		msg_entity = it;

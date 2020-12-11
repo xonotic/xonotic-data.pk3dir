@@ -42,6 +42,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, health, float, SEC) \
 		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, limit, float, SEC) \
 		P(class, prefix, midaircombo_enemy, bool, PRI) \
 		P(class, prefix, midaircombo_explode, float, PRI) \
 		P(class, prefix, midaircombo_interval, float, PRI) \

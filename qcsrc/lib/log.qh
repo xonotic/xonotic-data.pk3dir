@@ -71,9 +71,9 @@ string(string, string...) strcat1n = #115;
 #define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
 #define _LOG_INFO(s) \
 	MACRO_BEGIN \
-		if (autocvar_developer > 1) dprint(_LOG_HEADER("^5INFO")); \
+		if (autocvar_developer > 1) dprint(strcat1n(_LOG_HEADER("^5INFO"), "\n")); \
 		string __s = s; \
-		print("\n^7", __s); \
+		print("^7", __s); \
 		/* TODO: unconditionally add a newline when possible */ \
 		if (str2chr(__s, strlen(__s) - 1) != '\n') { print("\n"); } \
 	MACRO_END

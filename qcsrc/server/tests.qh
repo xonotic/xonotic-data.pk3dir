@@ -5,8 +5,8 @@
 #include <common/physics/player.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-#include <server/autocvars.qh>
 #include <server/client.qh>
 #include <server/command/_mod.qh>
+#include <server/player.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/selection.qh>

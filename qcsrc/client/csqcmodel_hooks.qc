@@ -1,6 +1,5 @@
 #include "csqcmodel_hooks.qh"
 
-#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
 #include <client/player_skeleton.qh>
 #include <client/weapons/projectile.qh>
@@ -619,7 +618,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null" || this.alpha < 0)
+	if(!this.modelindex || this.model == "null")
 	{
 		this.drawmask = 0;
 		if(this.snd_looping > 0)
@@ -675,6 +674,8 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 				tracebox(this.origin + '0 0 1', this.mins, this.maxs, this.origin - '0 0 4', MOVE_NORMAL, this);
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
+				// predicted clients handle smoothing in the prediction code
+				this.origin = CSQCModel_ApplyStairSmoothing(this, onground, this.origin);
 			}
 			animdecide_load_if_needed(this);
 			animdecide_setimplicitstate(this, onground);

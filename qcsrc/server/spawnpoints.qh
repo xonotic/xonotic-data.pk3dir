@@ -1,5 +1,11 @@
 #pragma once
 
+bool autocvar_g_spawn_alloweffects;
+float autocvar_g_spawn_furthest;
+bool autocvar_g_spawn_useallspawns;
+bool autocvar_g_spawnpoints_auto_move_out_of_solid;
+float autocvar_r_showbboxes; // engine cvar
+
 // spawnpoint prios
 const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
 const int SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;

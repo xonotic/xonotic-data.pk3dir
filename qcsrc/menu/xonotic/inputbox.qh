@@ -26,7 +26,7 @@ CLASS(XonoticInputBox, InputBox)
 	ATTRIB(XonoticInputBox, cb_colorF, vector, SKINCOLOR_CLEARBUTTON_F);
 	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C);
 
-	ATTRIB(XonoticInputBox, cvarName, string);
+	ATTRIB(XonoticInputBox, controlledCvar, string);
 	METHOD(XonoticInputBox, loadCvars, void(entity));
 	METHOD(XonoticInputBox, saveCvars, void(entity));
 	ATTRIB(XonoticInputBox, sendCvars, float, 0);

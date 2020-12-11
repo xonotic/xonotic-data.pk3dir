@@ -1,5 +1,21 @@
 #pragma once
 
+float autocvar_g_balance_contents_damagerate;
+float autocvar_g_balance_contents_drowndelay;
+int autocvar_g_balance_contents_playerdamage_drowning;
+int autocvar_g_balance_contents_playerdamage_lava;
+int autocvar_g_balance_contents_playerdamage_lava_burn; // 10 is a nice value
+float autocvar_g_balance_contents_playerdamage_lava_burn_time = 2.5; // note: damage is total across this time (not by dps)
+int autocvar_g_balance_contents_playerdamage_slime;
+int autocvar_g_balance_contents_projectiledamage;
+float autocvar_g_balance_falldamage_deadminspeed;
+float autocvar_g_balance_falldamage_factor;
+int autocvar_g_balance_falldamage_maxdamage;
+float autocvar_g_balance_falldamage_minspeed;
+bool autocvar_g_balance_falldamage_onlyvertical;
+#define autocvar_slowmo cvar("slowmo")
+float autocvar_sys_ticrate;
+
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 

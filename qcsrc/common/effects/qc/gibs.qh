@@ -1,5 +1,25 @@
 #pragma once
 
+#ifdef GAMEQC
+int autocvar_ekg;
+#endif
+
+#ifdef CSQC
+int autocvar_cl_gentle_gibs;
+float autocvar_cl_gibs_damageforcescale = 3.5;
+float autocvar_cl_gibs_lifetime = 14;
+int autocvar_cl_gibs_maxcount = 100;
+bool autocvar_cl_gibs_sloppy = 1;
+float autocvar_cl_gibs_ticrate = 0.1;
+float autocvar_cl_gibs_velocity_random = 1;
+float autocvar_cl_gibs_velocity_scale = 1;
+float autocvar_cl_gibs_avelocity_scale = 1;
+float autocvar_cl_gibs_velocity_up;
+bool autocvar_cl_nogibs;
+bool autocvar_cl_particlegibs;
+float autocvar_cl_particles_quality;
+#endif
+
 #ifdef SVQC
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker);
 void Violence_GibSplash(entity source, float type, float amount, entity attacker);

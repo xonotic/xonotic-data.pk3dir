@@ -1,9 +1,15 @@
 #pragma once
 
-// ====================================
-//  Declarations for kick/ban commands
-//  Last updated: December 29th, 2011
-// =====================================
+float autocvar_g_ban_default_bantime;
+float autocvar_g_ban_default_masksize;
+float autocvar_g_ban_sync_interval;
+float autocvar_g_ban_sync_timeout;
+string autocvar_g_ban_sync_trusted_servers;
+bool autocvar_g_ban_sync_trusted_servers_verify;
+string autocvar_g_ban_sync_uri;
+bool autocvar_g_ban_telluser = true;
+string autocvar_g_banned_list;
+bool autocvar_g_banned_list_idmode;
 
 #define GET_BAN_ARG(v, d) if (argc > reason_arg) { if ((v = stof(argv(reason_arg))) != 0) ++reason_arg; else v = d; } else { v = d; }
 #define GET_BAN_REASON(v, d) if (argc > reason_arg) v = substring(command, argv_start_index(reason_arg), strlen(command) - argv_start_index(reason_arg)); else v = d;

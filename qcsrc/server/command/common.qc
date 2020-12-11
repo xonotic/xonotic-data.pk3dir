@@ -8,6 +8,7 @@
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/client.qh>
 #include <server/command/common.qh>

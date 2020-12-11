@@ -1,2 +1,11 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_notify;
+bool autocvar_hud_panel_notify_dynamichud       = true;
+float autocvar_hud_panel_notify_fadetime;
+float autocvar_hud_panel_notify_flip;
+float autocvar_hud_panel_notify_fontsize;
+float autocvar_hud_panel_notify_time;
+float autocvar_hud_panel_notify_icon_aspect;
+

@@ -11,7 +11,7 @@ CLASS(XonoticColorButton, RadioButton)
 	ATTRIB(XonoticColorButton, useDownAsChecked, float, 1);
 
 	ATTRIB(XonoticColorButton, cvarPart, float, 0);
-	ATTRIB(XonoticColorButton, cvarName, string);
+	ATTRIB(XonoticColorButton, controlledCvar, string);
 	ATTRIB(XonoticColorButton, cvarValueFloat, float, 0);
 	METHOD(XonoticColorButton, loadCvars, void(entity));
 	METHOD(XonoticColorButton, saveCvars, void(entity));

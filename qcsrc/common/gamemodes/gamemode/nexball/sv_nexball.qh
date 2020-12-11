@@ -1,5 +1,25 @@
 #pragma once
 
+#include "weapon.qh"
+
+void nb_Initialize();
+
+REGISTER_MUTATOR(nb, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		nb_Initialize();
+		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		WEP_NEXBALL.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+	}
+	return 0;
+}
+
 //EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
 const float BALL_EFFECTMASK = 1229;
 const vector BALL_MINS = '-16 -16 -16'; // The model is 24*24*24

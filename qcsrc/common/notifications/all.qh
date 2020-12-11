@@ -8,10 +8,6 @@
 #include <common/sounds/sound.qh>
 #include <common/weapons/all.qh>
 
-#ifdef CSQC
-#include <client/autocvars.qh>
-#endif
-
 // Operator for bold notifications
 #define BOLD_OPERATOR "^BOLD"
 
@@ -314,7 +310,7 @@ float autocvar_notification_lifetime_mapload = 10;
 #endif
 
 #ifdef SVQC
-void Notification_GetCvars(entity this);
+void Notification_GetCvars(entity this, entity store);
 float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
 float autocvar_notification_item_centerprinttime = 1.5;

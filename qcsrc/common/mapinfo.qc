@@ -1137,7 +1137,7 @@ int MapInfo_CurrentFeatures()
 {
 	int req = 0;
     // TODO: find a better way to check if weapons are required on the map
-	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") 
+	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || !cvar("g_melee_only") 
 		|| cvar("g_race") || cvar("g_cts") || cvar("g_nexball") || cvar("g_ca") || cvar("g_freezetag") || cvar("g_lms")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;

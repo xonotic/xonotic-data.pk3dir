@@ -1,4 +1,16 @@
 #pragma once
 #include "../panel.qh"
 
+bool autocvar_hud_panel_powerups;
+int autocvar_hud_panel_powerups_baralign;
+bool autocvar_hud_panel_powerups_dynamichud     = true;
+bool autocvar_hud_panel_powerups_hide_ondeath     = false;
+int autocvar_hud_panel_powerups_iconalign;
+bool autocvar_hud_panel_powerups_progressbar;
+bool autocvar_hud_panel_powerups_text;
+
+vector autocvar_hud_progressbar_shield_color;
+vector autocvar_hud_progressbar_strength_color;
+vector autocvar_hud_progressbar_superweapons_color;
+
 void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime);

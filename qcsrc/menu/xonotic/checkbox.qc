@@ -47,7 +47,7 @@ void XonoticCheckBox_configureXonoticCheckBox(entity me, float theYesValue, floa
 	me.yesValue = theYesValue;
 	me.noValue = theNoValue;
 	me.checked = 0;
-	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.controlledCvar = (theCvar) ? theCvar : string_null;
 	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
@@ -66,22 +66,22 @@ void XonoticCheckBox_loadCvars(entity me)
 {
 	float m, d;
 
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
 	m = (me.yesValue + me.noValue) * 0.5;
-	d = (cvar(me.cvarName) - m) / (me.yesValue - m);
+	d = (cvar(me.controlledCvar) - m) / (me.yesValue - m);
 	me.checked = (d > 0);
 }
 void XonoticCheckBox_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
 	if(me.checked)
-		cvar_set(me.cvarName, ftos_mindecimals(me.yesValue));
+		cvar_set(me.controlledCvar, ftos_mindecimals(me.yesValue));
 	else
-		cvar_set(me.cvarName, ftos_mindecimals(me.noValue));
+		cvar_set(me.controlledCvar, ftos_mindecimals(me.noValue));
 
-	CheckSendCvars(me, me.cvarName);
+	CheckSendCvars(me, me.controlledCvar);
 }

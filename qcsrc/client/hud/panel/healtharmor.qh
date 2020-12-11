@@ -1,2 +1,25 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_healtharmor;
+int autocvar_hud_panel_healtharmor_baralign;
+bool autocvar_hud_panel_healtharmor_combined;
+bool autocvar_hud_panel_healtharmor_dynamichud  = true;
+bool autocvar_hud_panel_healtharmor_flip;
+bool autocvar_hud_panel_healtharmor_hide_ondeath  = false;
+int autocvar_hud_panel_healtharmor_iconalign;
+int autocvar_hud_panel_healtharmor_maxarmor;
+int autocvar_hud_panel_healtharmor_maxhealth;
+bool autocvar_hud_panel_healtharmor_progressbar;
+string autocvar_hud_panel_healtharmor_progressbar_armor;
+string autocvar_hud_panel_healtharmor_progressbar_health;
+bool autocvar_hud_panel_healtharmor_progressbar_gfx;
+float autocvar_hud_panel_healtharmor_progressbar_gfx_damage;
+float autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth;
+float autocvar_hud_panel_healtharmor_progressbar_gfx_smooth;
+int autocvar_hud_panel_healtharmor_text;
+
+vector autocvar_hud_progressbar_armor_color;
+vector autocvar_hud_progressbar_fuel_color;
+vector autocvar_hud_progressbar_health_color;
+vector autocvar_hud_progressbar_oxygen_color = '0.1 1 1';

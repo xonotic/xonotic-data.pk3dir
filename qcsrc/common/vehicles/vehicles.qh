@@ -1,1 +1,13 @@
 #pragma once
+
+#ifdef GAMEQC
+float force_fromtag_power;
+float force_fromtag_normpower;
+vector force_fromtag_origin;
+
+float vehicle_altitude(entity this, float amax);
+
+vector vehicles_force_fromtag_hover(entity this, string tag_name, float spring_length, float max_power);
+
+vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_length, float max_power);
+#endif

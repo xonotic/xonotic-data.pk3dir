@@ -20,9 +20,12 @@ REGISTER_MUTATOR(ka, false)
 	return false;
 }
 
+const int KA_BALL_COUNT = 1;
 
-entity ka_ball;
 entity ka_Handler;
+
+IntrusiveList g_kaballs;
+STATIC_INIT(g_kaballs) { g_kaballs = IL_NEW(); }
 
 void(entity this) havocbot_role_ka_carrier;
 void(entity this) havocbot_role_ka_collector;

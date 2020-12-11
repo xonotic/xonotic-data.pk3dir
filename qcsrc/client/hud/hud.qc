@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/hud_config.qh>
+#include <client/hud/panel/chat.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
 #include <client/mapvoting.qh>

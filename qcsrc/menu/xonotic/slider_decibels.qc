@@ -43,10 +43,10 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 {
 	float v;
 
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
-	v = cvar(me.cvarName);
+	v = cvar(me.controlledCvar);
 
 	// snapping
 	if(v > fromDecibelOfSquare(me.valueMax - 0.5 * me.valueStep, me.valueMin))
@@ -56,13 +56,13 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 }
 void XonoticDecibelsSlider_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
 	if(me.value > me.valueMax - 0.5 * me.valueStep)
-		cvar_set(me.cvarName, ftos(fromDecibelOfSquare(me.valueMax, me.valueMin)));
+		cvar_set(me.controlledCvar, ftos(fromDecibelOfSquare(me.valueMax, me.valueMin)));
 	else
-		cvar_set(me.cvarName, ftos(fromDecibelOfSquare(me.value, me.valueMin)));
+		cvar_set(me.controlledCvar, ftos(fromDecibelOfSquare(me.value, me.valueMin)));
 }
 
 float autocvar_menu_snd_sliderscale;

@@ -1,5 +1,15 @@
 #pragma once
 
+#ifdef CSQC
+float autocvar_cl_casings_bronze_time;
+int autocvar_cl_casings_maxcount = 100;
+float autocvar_cl_casings_shell_time;
+bool autocvar_cl_casings_sloppy = 1;
+float autocvar_cl_casings_ticrate = 0.1;
+#endif
+
 #ifdef SVQC
+int autocvar_g_casings;
+
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
 #endif

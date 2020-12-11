@@ -1,5 +1,23 @@
 #pragma once
 
+float autocvar_g_spawnshieldtime;
+float autocvar_g_spawnshield_blockdamage;
+bool autocvar_sv_precacheplayermodels;
+bool autocvar_sv_defaultcharacter;
+bool autocvar_sv_defaultcharacterskin;
+int autocvar_sv_defaultplayerskin_blue;
+int autocvar_sv_defaultplayerskin_pink;
+int autocvar_sv_defaultplayerskin_red;
+int autocvar_sv_defaultplayerskin_yellow;
+string autocvar_sv_defaultplayercolors;
+string autocvar_sv_defaultplayermodel;
+string autocvar_sv_defaultplayermodel_blue;
+string autocvar_sv_defaultplayermodel_pink;
+string autocvar_sv_defaultplayermodel_red;
+string autocvar_sv_defaultplayermodel_yellow;
+int autocvar_sv_defaultplayerskin;
+float autocvar_sv_gibhealth;
+
 .entity pusher;
 .float pushltime;
 .bool istypefrag;

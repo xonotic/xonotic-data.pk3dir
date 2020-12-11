@@ -341,6 +341,10 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		if(!me.filterShowEmpty)
 			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
 
+		// show laggy button
+		if(!me.filterShowLaggy && autocvar_menu_slist_maxping > 0)
+			sethostcachemasknumber(++m, SLIST_FIELD_PING, autocvar_menu_slist_maxping, SLIST_TEST_LESSEQUAL);
+
 		// gametype filtering
 		if(typestr != "")
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
@@ -673,6 +677,15 @@ void ServerList_ShowEmpty_Click(entity box, entity me)
 void ServerList_ShowFull_Click(entity box, entity me)
 {
 	box.setChecked(box, me.filterShowFull = !me.filterShowFull);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
+
+	me.ipAddressBox.setText(me.ipAddressBox, "");
+	me.ipAddressBox.cursorPos = 0;
+	me.ipAddressBoxFocused = -1;
+}
+void ServerList_ShowLaggy_Click(entity box, entity me)
+{
+	box.setChecked(box, me.filterShowLaggy = !me.filterShowLaggy);
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");

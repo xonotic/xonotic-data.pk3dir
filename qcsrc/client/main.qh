@@ -3,6 +3,23 @@
 #include <common/constants.qh>
 #include <common/weapons/_all.qh>
 
+bool autocvar_cl_db_saveasdump;
+bool autocvar_cl_spawn_event_particles;
+bool autocvar_cl_spawn_event_sound = 1;
+// float autocvar_cl_spawn_point_model;
+bool autocvar_cl_spawn_point_particles;
+float autocvar_cl_spawn_point_dist_max = 1200;
+bool autocvar_cl_unpress_zoom_on_spawn = true;
+bool autocvar_cl_unpress_zoom_on_death = true;
+bool autocvar_cl_unpress_zoom_on_weapon_switch = true;
+bool autocvar_cl_unpress_attack_on_weapon_switch = false;
+bool autocvar_hud_showbinds;
+bool autocvar_hud_showbinds_limit;
+bool autocvar__hud_showbinds_reload;
+bool autocvar_developer_csqcentities;
+bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
+bool autocvar_cl_race_cptimes_showself = false;
+
 // Map coordinate base calculations need these
 vector mi_center;
 vector mi_scale;

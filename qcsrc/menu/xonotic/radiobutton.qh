@@ -12,7 +12,7 @@ CLASS(XonoticRadioButton, RadioButton)
 	ATTRIB(XonoticRadioButton, colorF, vector, SKINCOLOR_RADIOBUTTON_F);
 	ATTRIB(XonoticRadioButton, colorD, vector, SKINCOLOR_RADIOBUTTON_D);
 
-	ATTRIB(XonoticRadioButton, cvarName, string);
+	ATTRIB(XonoticRadioButton, controlledCvar, string);
 	ATTRIB(XonoticRadioButton, cvarValue, string);
 	ATTRIB(XonoticRadioButton, cvarOffValue, string);
 	ATTRIB(XonoticRadioButton, cvarValueIsAnotherCvar, float, 0);

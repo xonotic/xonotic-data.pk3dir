@@ -1,2 +1,8 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_infomessages;
+bool autocvar_hud_panel_infomessages_dynamichud = false;
+bool autocvar_hud_panel_infomessages_flip;
+
+bool autocvar_cl_showspectators;

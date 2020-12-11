@@ -172,6 +172,9 @@ MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
 /** Return true to not draw scoreboard */
 MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 
+/** Return true to force showing of the scoreboard */
+MUTATOR_HOOKABLE(DrawScoreboard_Force, EV_NO_ARGS);
+
 /** Return true to not draw scoreboard while dead */
 MUTATOR_HOOKABLE(DrawDeathScoreboard, EV_NO_ARGS);
 

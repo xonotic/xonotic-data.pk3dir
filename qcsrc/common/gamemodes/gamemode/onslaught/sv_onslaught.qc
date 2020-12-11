@@ -3,6 +3,7 @@
 #include "sv_generator.qh"
 
 #include <server/bot/api.qh>
+#include <server/campaign.qh>
 #include <server/command/vote.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>

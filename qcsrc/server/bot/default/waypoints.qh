@@ -1,7 +1,11 @@
 #pragma once
-/*
- * Globals and Fields
- */
+
+bool autocvar_g_waypointeditor;
+bool autocvar_g_waypointeditor_symmetrical;
+bool autocvar_g_waypointeditor_symmetrical_allowload = true;
+vector autocvar_g_waypointeditor_symmetrical_origin;
+int autocvar_g_waypointeditor_symmetrical_order;
+vector autocvar_g_waypointeditor_symmetrical_axis;
 
 // increase by 0.01 when changes require only waypoint relinking
 // increase by 1 when changes require to manually edit waypoints

@@ -1,5 +1,19 @@
 #pragma once
 
+float autocvar_g_chat_flood_burst;
+float autocvar_g_chat_flood_burst_team;
+float autocvar_g_chat_flood_burst_tell;
+float autocvar_g_chat_flood_lmax;
+float autocvar_g_chat_flood_lmax_team;
+float autocvar_g_chat_flood_lmax_tell;
+bool autocvar_g_chat_flood_notify_flooder;
+float autocvar_g_chat_flood_spl;
+float autocvar_g_chat_flood_spl_team;
+float autocvar_g_chat_flood_spl_tell;
+int autocvar_g_chat_nospectators;
+bool autocvar_g_chat_teamcolors;
+bool autocvar_g_chat_tellprivacy;
+
 const float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
 float nearest_length[NUM_NEAREST_ENTITIES];

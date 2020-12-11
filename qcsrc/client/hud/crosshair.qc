@@ -1,6 +1,5 @@
 #include "crosshair.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/view.qh>
@@ -218,6 +217,12 @@ void HUD_Crosshair(entity this)
 	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
 	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
 		csqcplayer.alpha = csqcplayer.m_alpha;
+
+	if (autocvar_chase_active > 0 && autocvar_chase_front)
+	{
+		csqcplayer.alpha = csqcplayer.m_alpha;
+		return;
+	}
 
 	float f, i, j;
 	vector v;

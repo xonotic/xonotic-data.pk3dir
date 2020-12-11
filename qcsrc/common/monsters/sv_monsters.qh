@@ -2,6 +2,34 @@
 
 #include "all.qh"
 
+float autocvar_g_monsters;
+bool autocvar_g_monsters_edit;
+bool autocvar_g_monsters_sounds;
+float autocvar_g_monsters_think_delay;
+int autocvar_g_monsters_max;
+int autocvar_g_monsters_max_perplayer;
+float autocvar_g_monsters_damageforcescale = 0.8;
+float autocvar_g_monsters_target_range;
+bool autocvar_g_monsters_target_infront;
+float autocvar_g_monsters_target_infront_range = 0.3;
+float autocvar_g_monsters_attack_range;
+int autocvar_g_monsters_score_kill;
+int autocvar_g_monsters_score_spawned;
+bool autocvar_g_monsters_typefrag;
+bool autocvar_g_monsters_owners;
+float autocvar_g_monsters_miniboss_chance;
+float autocvar_g_monsters_miniboss_healthboost;
+float autocvar_g_monsters_drop_time;
+float autocvar_g_monsters_spawnshieldtime;
+bool autocvar_g_monsters_quake_resize = true;
+bool autocvar_g_monsters_teams;
+float autocvar_g_monsters_respawn_delay;
+bool autocvar_g_monsters_respawn;
+float autocvar_g_monsters_armor_blockpercent;
+float autocvar_g_monsters_healthbars;
+bool autocvar_g_monsters_lineofsight = true;
+//bool autocvar_g_monsters_ignoretraces = true;
+
 // stats networking
 int monsters_total;
 int monsters_killed;

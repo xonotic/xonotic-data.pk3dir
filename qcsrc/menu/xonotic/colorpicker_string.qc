@@ -13,41 +13,41 @@ entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar)
 void XonoticColorpickerString_configureXonoticColorpickerString(entity me, string theCvar, string theDefaultCvar)
 {
 	me.configureImage(me, me.image);
-	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.controlledCvar = (theCvar) ? theCvar : string_null;
 	me.loadCvars(me);
 }
 
 void XonoticColorpickerString_loadCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
-	if(substring(me.cvarName, -1, 1) == "_")
+	if(substring(me.controlledCvar, -1, 1) == "_")
 	{
 		me.prevcoords = color_hslimage(
-			eX * cvar(strcat(me.cvarName, "red")) +
-			eY * cvar(strcat(me.cvarName, "green")) +
-			eZ * cvar(strcat(me.cvarName, "blue")),
+			eX * cvar(strcat(me.controlledCvar, "red")) +
+			eY * cvar(strcat(me.controlledCvar, "green")) +
+			eZ * cvar(strcat(me.controlledCvar, "blue")),
 			me.imagemargin);
 	}
 	else
-		me.prevcoords = color_hslimage(stov(cvar_string(me.cvarName)), me.imagemargin);
+		me.prevcoords = color_hslimage(stov(cvar_string(me.controlledCvar)), me.imagemargin);
 }
 
 void XonoticColorpickerString_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
-	if(substring(me.cvarName, -1, 1) == "_")
+	if(substring(me.controlledCvar, -1, 1) == "_")
 	{
 		vector v = hslimage_color(me.prevcoords, me.imagemargin);
-		cvar_set(strcat(me.cvarName, "red"), ftos(v.x));
-		cvar_set(strcat(me.cvarName, "green"), ftos(v.y));
-		cvar_set(strcat(me.cvarName, "blue"), ftos(v.z));
+		cvar_set(strcat(me.controlledCvar, "red"), ftos(v.x));
+		cvar_set(strcat(me.controlledCvar, "green"), ftos(v.y));
+		cvar_set(strcat(me.controlledCvar, "blue"), ftos(v.z));
 	}
 	else
-		cvar_set(me.cvarName, sprintf("%v", hslimage_color(me.prevcoords, me.imagemargin)));
+		cvar_set(me.controlledCvar, sprintf("%v", hslimage_color(me.prevcoords, me.imagemargin)));
 }
 
 METHOD(XonoticColorpickerString, mousePress, bool(XonoticColorpickerString this, vector pos))

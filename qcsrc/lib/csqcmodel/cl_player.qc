@@ -238,6 +238,31 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	return v;
 }
 
+// simplified copy of CSQCPlayer_ApplySmoothing for use on player models
+.float stairsmooth_offset;
+.float stairsmooth_prevtime;
+.float stairsmooth_drawtime; // holds the previous draw time
+vector CSQCModel_ApplyStairSmoothing(entity this, bool isonground, vector v)
+{
+	float smoothtime = bound(0, time - this.stairsmooth_prevtime, 0.1);
+	this.stairsmooth_prevtime = max(this.stairsmooth_prevtime, this.stairsmooth_drawtime); // stairsmooth_drawtime is the previous frame's time at this point
+
+	if(this.csqcmodel_teleported || !isonground || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
+		this.stairsmooth_offset = v.z;
+	else
+	{
+		if(this.stairsmooth_offset < v.z)
+			v.z = this.stairsmooth_offset = bound(v.z - PHYS_STEPHEIGHT(this), this.stairsmooth_offset + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(this.stairsmooth_offset > v.z)
+			v.z = this.stairsmooth_offset = bound(v.z, this.stairsmooth_offset - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+	}
+
+	this.stairsmooth_prevtime = time;
+	this.stairsmooth_drawtime = drawtime;
+
+	return v;
+}
+
 bool autocvar_v_deathtilt;
 float autocvar_v_deathtiltangle;
 void CSQCPlayer_ApplyDeathTilt(entity this)
@@ -281,7 +306,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(this.csqcmodel_isdead)
+	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this) || !(this.isplayermodel & ISPLAYER_PLAYER))
 		return v;
 
 	// bounded XY speed, used by several effects below
@@ -454,6 +479,8 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 	{
 		makevectors(view_angles);
 		forward = v_forward;
+		if(autocvar_chase_front)
+			forward = normalize(forward * -1);
 		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
 		float cdist = -autocvar_chase_back - 8;
 		chase_dest.x = v.x + forward.x * cdist;
@@ -463,6 +490,14 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 		v.x = 1 * trace_endpos.x + 8 * forward.x + 4 * trace_plane_normal.x;
 		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
 		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
+
+		if(autocvar_chase_front)
+		{
+			// now flip the view so the player is looking at themselves
+			vector newang = vectoangles(forward);
+			view_angles.x = view_angles.x * -1; // inverse up-down looking direction
+			view_angles.y = newang.y;
+		}
 	}
 
 #if 0
@@ -574,6 +609,8 @@ void CSQCPlayer_SetCamera()
 		}
 
 		// relink
+		e.stairsmooth_drawtime = drawtime; // since drawtime is a frame old at this point, copy it now to avoid using a drawtime 2 frames old!
+		e.origin = CSQCModel_ApplyStairSmoothing(e, (e.pmove_flags & PMF_ONGROUND), e.origin);
 		setorigin(e, e.origin);
 	}
 

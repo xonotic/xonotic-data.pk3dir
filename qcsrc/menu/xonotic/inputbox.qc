@@ -15,7 +15,7 @@ void XonoticInputBox_configureXonoticInputBox(entity me, float doEditColorCodes,
 {
 	me.configureInputBox(me, "", 0, me.fontSize, me.image);
 	me.editColorCodes = doEditColorCodes;
-	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.controlledCvar = (theCvar) ? theCvar : string_null;
 	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
 	me.cursorPos = strlen(me.text);
@@ -39,16 +39,16 @@ void XonoticInputBox_setText(entity me, string val)
 }
 void XonoticInputBox_loadCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
-	SUPER(XonoticInputBox).setText(me, cvar_string(me.cvarName));
+	SUPER(XonoticInputBox).setText(me, cvar_string(me.controlledCvar));
 }
 void XonoticInputBox_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
-	cvar_set(me.cvarName, me.text);
-	CheckSendCvars(me, me.cvarName);
+	cvar_set(me.controlledCvar, me.text);
+	CheckSendCvars(me, me.controlledCvar);
 }
 float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 {
@@ -56,7 +56,7 @@ float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 	r = 0;
 	if(key == K_ENTER || key == K_KP_ENTER)
 	{
-		if(me.cvarName)
+		if(me.controlledCvar)
 		{
 			me.saveCvars(me);
 			r = 1;

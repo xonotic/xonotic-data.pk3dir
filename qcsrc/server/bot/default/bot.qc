@@ -12,7 +12,6 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 #include <server/antilag.qh>
-#include <server/autocvars.qh>
 #include <server/bot/default/aim.qh>
 #include <server/bot/default/cvars.qh>
 #include <server/bot/default/havocbot/havocbot.qh>
@@ -36,8 +35,8 @@ STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
-	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
-	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+	CS_CVAR(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS_CVAR(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 entity bot_spawn()

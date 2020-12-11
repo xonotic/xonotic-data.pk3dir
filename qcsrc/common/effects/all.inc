@@ -13,7 +13,7 @@ EFFECT(0, SMOKE_SMALL,              "smoke_small")
 EFFECT(0, SMOKE_LARGE,              "smoke_large")
 
 
-EFFECT(0, ARC_MUZZLEFLASH,          "arc_muzzleflash")
+EFFECT(0, ARC_MUZZLEFLASH,          "electro_muzzleflash")
 
 EFFECT(0, BLASTER_IMPACT,           "laser_impact")
 EFFECT(0, BLASTER_MUZZLEFLASH,      "laser_muzzleflash")
@@ -25,7 +25,8 @@ EFFECT(0, ARC_BEAM,                 "arc_beam")
 EFFECT(0, ARC_BEAM_HEAL,            "arc_beam_heal")
 EFFECT(0, ARC_BEAM_HEAL_IMPACT,     "arc_beam_healimpact")
 EFFECT(0, ARC_BEAM_HEAL_IMPACT2,    "healray_impact")
-EFFECT(0, ARC_BOLT_EXPLODE,         "arc_bolt_explode")
+// TODO: effect needs updating
+//EFFECT(0, ARC_BOLT_EXPLODE,         "arc_bolt_explode")
 EFFECT(0, ARC_OVERHEAT,             "arc_overheat")
 EFFECT(0, ARC_OVERHEAT_FIRE,        "arc_overheat_fire")
 EFFECT(0, ARC_SMOKE,                "arc_smoke")

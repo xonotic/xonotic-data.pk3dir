@@ -2,7 +2,10 @@
 
 #include <common/impulses/all.qh>
 
-//float autocvar_sv_cheats; // must... declare... global
+int autocvar_sv_cheats;
+float autocvar_g_grab_range;
+int autocvar_g_max_info_autoscreenshot;
+int autocvar_sv_clones;
 
 float cheatcount_total;
 .float cheatcount;

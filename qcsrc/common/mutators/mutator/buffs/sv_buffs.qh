@@ -1,8 +1,20 @@
 #pragma once
 
+#include <common/mutators/base.qh>
+
 #include "buffs.qh"
 
-#include "../instagib/_mod.qh"
+void buffs_Initialize();
+
+AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
+
+REGISTER_MUTATOR(buffs, autocvar_g_buffs)
+{
+	MUTATOR_ONADD
+	{
+		buffs_Initialize();
+	}
+}
 
 bool  autocvar_g_buffs_effects;
 float autocvar_g_buffs_waypoint_distance;
@@ -24,9 +36,6 @@ float autocvar_g_buffs_medic_survive_health;
 float autocvar_g_buffs_medic_rot;
 float autocvar_g_buffs_medic_max;
 float autocvar_g_buffs_medic_regen;
-float autocvar_g_buffs_medic_heal_amount = 15;
-float autocvar_g_buffs_medic_heal_delay = 1;
-float autocvar_g_buffs_medic_heal_range = 400;
 float autocvar_g_buffs_vengeance_damage_multiplier;
 float autocvar_g_buffs_bash_force;
 float autocvar_g_buffs_bash_force_self;
@@ -58,8 +67,6 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 .int buff_ammo_prev_clipload;
 // invisible
 .float buff_invisible_prev_alpha;
-// medic
-.float buff_medic_healtime;
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;

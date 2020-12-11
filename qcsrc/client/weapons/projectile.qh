@@ -2,6 +2,8 @@
 
 #include <common/sounds/sound.qh>
 
+bool autocvar_cl_projectiles_sloppy;
+
 entityclass(Projectile);
 classfield(Projectile).int traileffect;
 

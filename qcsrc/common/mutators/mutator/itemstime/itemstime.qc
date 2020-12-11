@@ -39,6 +39,7 @@ STATIC_INIT(ItemsTime_Init) {
 int autocvar_hud_panel_itemstime = 2;
 float autocvar_hud_panel_itemstime_dynamicsize = 1;
 float autocvar_hud_panel_itemstime_ratio = 2;
+//bool autocvar_hud_panel_itemstime_dynamichud    = true;
 int autocvar_hud_panel_itemstime_iconalign;
 bool autocvar_hud_panel_itemstime_progressbar = 0;
 float autocvar_hud_panel_itemstime_progressbar_maxtime = 30;

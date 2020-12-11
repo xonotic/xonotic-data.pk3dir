@@ -17,7 +17,7 @@ CLASS(XonoticTextSlider, TextSlider)
 	ATTRIB(XonoticTextSlider, colorD, vector, SKINCOLOR_SLIDER_D);
 	ATTRIB(XonoticTextSlider, color2, vector, SKINCOLOR_SLIDER_S);
 
-	ATTRIB(XonoticTextSlider, cvarName, string);
+	ATTRIB(XonoticTextSlider, controlledCvar, string);
 	METHOD(XonoticTextSlider, loadCvars, void(entity));
 	METHOD(XonoticTextSlider, saveCvars, void(entity));
 	ATTRIB(XonoticTextSlider, sendCvars, float, 0);

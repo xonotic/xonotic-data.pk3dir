@@ -5,7 +5,6 @@
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>
 #include <server/antilag.qh>
-#include <server/autocvars.qh>
 #include <server/client.qh>
 #include <server/command/common.qh>
 #include <server/gamelog.qh>

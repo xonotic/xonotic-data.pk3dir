@@ -16,7 +16,7 @@ CLASS(XonoticSlider, Slider)
 	ATTRIB(XonoticSlider, colorD, vector, SKINCOLOR_SLIDER_D);
 	ATTRIB(XonoticSlider, color2, vector, SKINCOLOR_SLIDER_S);
 
-	ATTRIB(XonoticSlider, cvarName, string);
+	ATTRIB(XonoticSlider, controlledCvar, string);
 	METHOD(XonoticSlider, loadCvars, void(entity));
 	METHOD(XonoticSlider, saveCvars, void(entity));
 	ATTRIB(XonoticSlider, sendCvars, float, 0);

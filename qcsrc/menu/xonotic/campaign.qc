@@ -70,12 +70,12 @@ void XonoticCampaignList_loadCvars(entity me)
 {
 	// read campaign cvars
 	strcpy(campaign_name, cvar_string("g_campaign_name"));
-	strcpy(me.cvarName, strcat("g_campaign", campaign_name, "_index"));
-	registercvar(me.cvarName, "", 0); // saved by server QC anyway
+	strcpy(me.controlledCvar, strcat("g_campaign", campaign_name, "_index"));
+	registercvar(me.controlledCvar, "", 0); // saved by server QC anyway
 	CampaignFile_Unload();
 	CampaignFile_Load(0, CAMPAIGN_MAX_ENTRIES);
-	me.campaignIndex = bound(0, cvar(me.cvarName), campaign_entries);
-	cvar_set(me.cvarName, ftos(me.campaignIndex));
+	me.campaignIndex = bound(0, cvar(me.controlledCvar), campaign_entries);
+	cvar_set(me.controlledCvar, ftos(me.campaignIndex));
 	if(me.columnNameSize)
 		rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 	me.nItems = min(me.campaignIndex + 2, campaign_entries);
@@ -91,7 +91,7 @@ void XonoticCampaignList_saveCvars(entity me)
 	// write campaign cvars
 	// no reason to do this!
 	// cvar_set("g_campaign_name", campaign_name);
-	// cvar_set(me.cvarName, ftos(me.campaignIndex)); // NOTE: only server QC does that!
+	// cvar_set(me.controlledCvar, ftos(me.campaignIndex)); // NOTE: only server QC does that!
 }
 
 void XonoticCampaignList_campaignGo(entity me, float step)
@@ -155,7 +155,7 @@ void XonoticCampaignList_draw(entity me)
 	if(me.buttonPrev)
 		me.buttonPrev.disabled = !me.hasPrevCampaign;
 
-	if(cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
+	if(cvar(me.controlledCvar) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
 	SUPER(XonoticCampaignList).draw(me);
 }

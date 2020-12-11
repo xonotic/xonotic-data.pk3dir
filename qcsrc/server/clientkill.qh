@@ -1,3 +1,7 @@
+#pragma once
+
+float autocvar_g_balance_kill_delay;
+float autocvar_g_balance_kill_antispam;
 
 // set when showing a kill countdown
 .entity killindicator;

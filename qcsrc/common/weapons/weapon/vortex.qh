@@ -67,6 +67,10 @@ REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
 SPAWNFUNC_WEAPON(weapon_vortex, WEP_VORTEX)
 SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
 
+#ifdef CSQC
+bool autocvar_cl_particles_oldvortexbeam;
+#endif
+
 #ifdef SVQC
 .float vortex_charge_rottime;
 

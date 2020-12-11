@@ -3,7 +3,7 @@
 #include "../overkill/sv_overkill.qh"
 
 string autocvar_g_melee_only;
-REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !g_nexball);
+REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MapInfo_LoadedGametype.m_weaponarena);
 
 MUTATOR_HOOKFUNCTION(melee_only, SetStartItems, CBC_ORDER_LAST)
 {

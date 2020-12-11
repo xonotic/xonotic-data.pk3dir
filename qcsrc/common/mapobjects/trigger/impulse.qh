@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef SVQC
+float autocvar_g_triggerimpulse_accel_multiplier;
+float autocvar_g_triggerimpulse_accel_power;
+float autocvar_g_triggerimpulse_directional_multiplier;
+float autocvar_g_triggerimpulse_radial_multiplier;
+#endif
+
 // tZorks trigger impulse / gravity
 .float radius;
 .int falloff;

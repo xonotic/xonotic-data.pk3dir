@@ -174,6 +174,8 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	gib.solid = SOLID_CORPSE;
 	gib.cnt = specnum;
 	gib.silent = issilent;
+	gib.colormap = 4; // red
+	gib.colormap |= BIT(10); // RENDER_COLORMAPPED
 	Gib_setmodel(gib, mdlname, specnum);
 
 	setsize (gib, '-8 -8 -8', '8 8 8');

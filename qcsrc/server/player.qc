@@ -244,7 +244,12 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 		}
 
-		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		if (STAT(FROZEN, this))
+		{
+			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
+				damage = 0;
+		}
+		else if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
@@ -339,7 +344,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > this.pain_finished)		//Don't switch pain sequences like crazy
+			if (time > this.pain_finished && !STAT(FROZEN, this)) // Don't switch pain sequences like crazy
 			{
 				this.pain_finished = time + 0.5;	//Supajoe
 
@@ -385,8 +390,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 
 			float realdmg = damage - excess;
-			if (this != attacker && realdmg)
-			if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
+			if (this != attacker && realdmg && !STAT(FROZEN, this)
+				&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 			{
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
@@ -413,7 +418,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && this != attacker)
-	if(DIFF_TEAM(this, attacker))
+	if (DIFF_TEAM(this, attacker) && (!STAT(FROZEN, this) || this.freeze_time > time))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.(weaponentity).m_weapon;
@@ -422,8 +427,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResource(this, RES_HEALTH), 0);
-	da = da - max(GetResource(this, RES_ARMOR), 0);
+	dh -= max(GetResource(this, RES_HEALTH), 0); // health difference
+	da -= max(GetResource(this, RES_ARMOR), 0); // armor difference
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -551,6 +556,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
+		// don't play teleportation sounds
+		this.teleportable = TELEPORT_SIMPLE;
 
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 

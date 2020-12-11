@@ -1,10 +1,6 @@
 #pragma once
 
 #ifdef SVQC
-	#include <server/autocvars.qh>
-#endif
-
-#ifdef SVQC
 float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity); // returns the number of traces done, for benchmarking
 
 void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity);
@@ -197,8 +193,11 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 #ifdef GAMEQC
 	#ifdef CSQC
+		bool autocvar_cl_gentle;
+		int autocvar_cl_gentle_messages;
 		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
 	#else
+		int autocvar_sv_gentle;
 		#define GENTLE autocvar_sv_gentle
 	#endif
 	#define normal_or_gentle(normal, gentle) ((GENTLE && (gentle != "")) ? gentle : normal)

@@ -1,6 +1,5 @@
 #include "score.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <common/ent_cs.qh>
