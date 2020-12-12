@@ -317,6 +317,10 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		}
 	}
 
+	// don't let the engine increase player's glowmod
+	if (autocvar_r_hdr_glowintensity > 1)
+		this.glowmod /= autocvar_r_hdr_glowintensity;
+
 	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (this.csqcmodel_isdead ? "DEAD" : "ALIVE"), this.colormap, vtos(this.glowmod));
 }
 
