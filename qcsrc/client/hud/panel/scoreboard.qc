@@ -1,7 +1,7 @@
 #include "scoreboard.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
+#include <client/hud/panel/chat.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/hud/panel/weapons.qh>
@@ -1151,7 +1151,7 @@ bool Scoreboard_WouldDraw()
 	{
 		return true;
 	}
-	else if (scoreboard_showscores_force)
+	else if (scoreboard_showscores_force || MUTATOR_CALLHOOK(DrawScoreboard_Force))
 		return true;
 	return false;
 }

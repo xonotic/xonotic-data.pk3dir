@@ -1,5 +1,8 @@
 #pragma once
 
+bool autocvar_sv_minigames;
+bool autocvar_sv_minigames_observer;
+
 /// Create a new minigame session
 /// \return minigame session entity
 entity start_minigame(entity player, string minigame );

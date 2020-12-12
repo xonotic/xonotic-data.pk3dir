@@ -1,5 +1,30 @@
 #pragma once
 
+#define autocvar_g_maplist cvar_string("g_maplist")
+bool autocvar_g_maplist_check_waypoints;
+int autocvar_g_maplist_index;
+string autocvar_g_maplist_mostrecent;
+int autocvar_g_maplist_mostrecent_count;
+bool autocvar_g_maplist_selectrandom;
+float autocvar_g_maplist_shuffle;
+#define autocvar_g_maplist_votable cvar("g_maplist_votable")
+bool autocvar_g_maplist_votable_abstain;
+float autocvar_g_maplist_votable_keeptwotime;
+bool autocvar_g_maplist_votable_nodetail;
+string autocvar_g_maplist_votable_screenshot_dir;
+bool autocvar_g_maplist_votable_suggestions;
+bool autocvar_g_maplist_votable_suggestions_override_mostrecent;
+float autocvar_g_maplist_votable_timeout;
+bool autocvar_g_maplist_ignore_sizes;
+bool autocvar_g_maplist_sizes_count_maxplayers = true;
+bool autocvar_g_maplist_sizes_count_bots = true;
+int autocvar_rescan_pending;
+bool autocvar_sv_vote_gametype;
+float autocvar_sv_vote_gametype_timeout;
+string autocvar_sv_vote_gametype_options;
+float autocvar_sv_vote_gametype_keeptwotime;
+bool autocvar_sv_vote_gametype_default_current;
+
 // definitions for functions used outside mapvoting.qc
 void MapVote_Start();
 void MapVote_Spawn();

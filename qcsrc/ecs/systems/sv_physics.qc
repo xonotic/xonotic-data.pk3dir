@@ -1,5 +1,9 @@
 #include "physics.qh"
 
+float autocvar_sv_spectator_speed_multiplier;
+float autocvar_sv_spectator_speed_multiplier_min = 1;
+float autocvar_sv_spectator_speed_multiplier_max = 5;
+
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);

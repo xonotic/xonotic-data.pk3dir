@@ -11,7 +11,7 @@
 .entity ballcarried;
 
 int autocvar_g_nexball_goalleadlimit;
-#define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
+float autocvar_g_nexball_goallimit;
 
 bool autocvar_g_nexball_basketball_jumppad = true;
 float autocvar_g_nexball_basketball_bouncefactor;
@@ -940,36 +940,25 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 	M_ARGV(2, int) &= ~0x80;
 }
 
-REGISTER_MUTATOR(nb, false)
+void nb_Initialize()
 {
-    MUTATOR_STATIC();
-	MUTATOR_ONADD
-	{
-		g_nexball_meter_period = autocvar_g_nexball_meter_period;
-		if(g_nexball_meter_period <= 0)
-			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
-		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
+	g_nexball_meter_period = autocvar_g_nexball_meter_period;
+	if(g_nexball_meter_period <= 0)
+		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
+	g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 
-		// General settings
-		/*
-		CVTOV(g_nexball_football_boost_forward);   //100
-		CVTOV(g_nexball_football_boost_up);		//200
-		CVTOV(g_nexball_delay_idle);			   //10
-		CVTOV(g_nexball_football_physics);		 //0
-		*/
-		radar_showenemies = autocvar_g_nexball_radar_showallplayers;
+	// General settings
+	/*
+	CVTOV(g_nexball_football_boost_forward);   //100
+	CVTOV(g_nexball_football_boost_up);		//200
+	CVTOV(g_nexball_delay_idle);			   //10
+	CVTOV(g_nexball_football_physics);		 //0
+	*/
+	radar_showenemies = autocvar_g_nexball_radar_showallplayers;
 
-		InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
-		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	GameRules_teams(true);
+	GameRules_limit_score(autocvar_g_nexball_goallimit);
+	GameRules_limit_lead(autocvar_g_nexball_goalleadlimit);
 
-		GameRules_teams(true);
-		GameRules_limit_score(autocvar_g_nexball_goallimit);
-		GameRules_limit_lead(autocvar_g_nexball_goalleadlimit);
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		WEP_NEXBALL.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-	}
-	return 0;
+	InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
 }

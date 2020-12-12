@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef SVQC
+bool autocvar_sv_doors_always_open;
+#endif
 
 const int DOOR_START_OPEN = BIT(0);
 const int DOOR_DONT_LINK = BIT(2);

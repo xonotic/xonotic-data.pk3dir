@@ -381,6 +381,7 @@ ENUMCLASS_END(WFRAME)
 .WFRAME wframe;
 
 #ifdef SVQC
+    string autocvar_g_shootfromfixedorigin;
     #define G_SHOOTFROMFIXEDORIGIN autocvar_g_shootfromfixedorigin
 #elif defined(CSQC)
     string autocvar_cl_shootfromfixedorigin;

@@ -27,6 +27,8 @@ classfield(WaypointSprite) .float build_started;
 classfield(WaypointSprite) .float build_starthealth;
 classfield(WaypointSprite) .float build_finished;
 
+bool autocvar_cl_hidewaypoints;
+
 float autocvar_g_waypointsprite_alpha;
 float autocvar_g_waypointsprite_crosshairfadealpha;
 float autocvar_g_waypointsprite_crosshairfadedistance;

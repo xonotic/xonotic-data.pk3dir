@@ -14,6 +14,7 @@
 #include <server/command/getreplies.qh>
 #include <server/intermission.qh>
 #include <server/main.qh>
+#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/race.qh>
 #include <server/weapons/selection.qh>
@@ -378,7 +379,7 @@ void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float 
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
 	string o = W_FixWeaponOrder_ForceComplete(wo);
-	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
+	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
@@ -399,7 +400,7 @@ void GetCvars(entity this, entity store, int f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 
-	Notification_GetCvars(this);
+	Notification_GetCvars(this, store);
 
 	ReplicateVars(this, store, s, f);
 

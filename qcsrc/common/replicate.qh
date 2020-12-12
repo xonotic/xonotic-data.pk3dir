@@ -32,7 +32,7 @@
 	.float cvar_cl_autoscreenshot;
 	.float cvar_cl_jetpack_jump;
 	.float cvar_cl_movement_track_canjump;
-	//.float cvar_cl_newusekeysupported;
+	.float cvar_cl_newusekeysupported;
 	.float cvar_cl_cts_noautoswitch;
 	.bool cvar_cl_weapon_switch_reload;
 	.bool cvar_cl_weapon_switch_fallback_to_impulse;

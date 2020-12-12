@@ -8,6 +8,7 @@ CLASS(Racer, Vehicle)
 /* maxs       */ ATTRIB(Racer, m_maxs, vector, '120 120 40' * 0.5);
 /* view offset*/ ATTRIB(Racer, view_ofs, vector, '0 0 50');
 /* view dist  */ ATTRIB(Racer, height, float, 200);
+#ifdef GAMEQC
 /* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
 /* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
 /* head_model */ ATTRIB(Racer, head_model, string, "null");
@@ -15,6 +16,7 @@ CLASS(Racer, Vehicle)
 /* tags       */ ATTRIB(Racer, tag_head, string, "");
 /* tags       */ ATTRIB(Racer, tag_hud, string, "");
 /* tags       */ ATTRIB(Racer, tag_view, string, "tag_viewport");
+#endif
 /* netname    */ ATTRIB(Racer, netname, string, "racer");
 /* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
 /* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");

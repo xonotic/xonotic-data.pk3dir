@@ -1,5 +1,22 @@
 #pragma once
 
+bool autocvar_cl_respawn_ghosts_keepcolors;
+int autocvar_cl_playerdetailreduction;
+int autocvar_cl_modeldetailreduction;
+float autocvar_cl_loddistance1 = 768;
+float autocvar_cl_loddistance2 = 2048;
+bool autocvar_cl_forceplayermodels;
+bool autocvar_cl_forceplayercolors;
+string autocvar_cl_forcemyplayermodel;
+int autocvar_cl_forcemyplayerskin;
+int autocvar_cl_forcemyplayercolors;
+int autocvar__cl_color;
+int autocvar__cl_playerskin;
+string autocvar__cl_playermodel;
+float autocvar_cl_deathglow;
+float autocvar_cl_deathglow_min = 0.5;
+float autocvar_cl_jetpack_attenuation = 2;
+
 // FEATURE: EF_NODRAW workalike
 const int EF_BRIGHTFIELD       = BIT(0);
 const int EF_BRIGHTLIGHT       = BIT(2);
