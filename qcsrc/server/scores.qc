@@ -533,7 +533,8 @@ void WinningConditionHelper(entity this)
 			else
 				WinningConditionHelper_topscore = -999999999;
 		}
-		WinningConditionHelper_equality = 0;
+		if(player_count == 0) // special case: empty servers DO end the match at a 0:0 tie
+			WinningConditionHelper_equality = 0;
 	}
 
 	if(WinningConditionHelper_secondscore == 0)
