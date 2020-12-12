@@ -1688,7 +1688,7 @@ void Scoreboard_Draw()
 
 		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
-			if (scoreboard_fade_alpha < 1)
+			if (scoreboard_fade_alpha == 0)
 				scoreboard_time = time;
 			if(hud_configure_menu_open == 1)
 				scoreboard_fade_alpha = 1;
