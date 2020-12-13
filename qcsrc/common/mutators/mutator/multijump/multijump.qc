@@ -32,7 +32,7 @@ int autocvar_cl_multijump = -1;
 #elif defined(SVQC)
 .int cvar_cl_multijump;
 
-	#define PHYS_MULTIJUMP_CLIENT(s)	CS(s).cvar_cl_multijump
+	#define PHYS_MULTIJUMP_CLIENT(s)	CS_CVAR(s).cvar_cl_multijump
 #endif
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)

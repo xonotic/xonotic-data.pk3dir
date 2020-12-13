@@ -76,7 +76,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 	if (STAT(BUFFS, view))
 	{
-		return CS(view).cvar_cl_buffs_autoreplace == false || STAT(BUFFS, view) != STAT(BUFFS, this.owner);
+		return CS_CVAR(view).cvar_cl_buffs_autoreplace == false || STAT(BUFFS, view) != STAT(BUFFS, this.owner);
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -174,7 +174,7 @@ void buff_Touch(entity this, entity toucher)
 
 	if (STAT(BUFFS, toucher))
 	{
-		if (CS(toucher).cvar_cl_buffs_autoreplace && STAT(BUFFS, toucher) != STAT(BUFFS, this))
+		if (CS_CVAR(toucher).cvar_cl_buffs_autoreplace && STAT(BUFFS, toucher) != STAT(BUFFS, this))
 		{
 			// TODO: lost-gained notification for this case
 			int buffid = buff_FirstFromFlags(STAT(BUFFS, toucher)).m_id;

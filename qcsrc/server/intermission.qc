@@ -424,8 +424,8 @@ void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && CS(this).cvar_cl_autoscreenshot);
-	float client_screenshot = (CS(this).cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && CS_CVAR(this).cvar_cl_autoscreenshot);
+	float client_screenshot = (CS_CVAR(this).cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )

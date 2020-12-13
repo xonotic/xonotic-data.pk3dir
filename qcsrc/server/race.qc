@@ -424,8 +424,6 @@ void race_deleteTime(string map, float pos)
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
-	float snew, l;
-
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
 
@@ -449,9 +447,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				GameRules_scoring_add(e, RACE_FASTEST, t - s);
 
 			s = GameRules_scoring_add(e, RACE_TIME, 0);
-			snew = TIME_ENCODE(time - game_starttime);
+			float snew = TIME_ENCODE(time - game_starttime);
 			GameRules_scoring_add(e, RACE_TIME, snew - s);
-			l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
+			float l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
 
 			if(autocvar_fraglimit)
 				if(l >= autocvar_fraglimit)
