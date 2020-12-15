@@ -809,22 +809,22 @@ void HitSound()
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
 		{
-			// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
-			float a = autocvar_cl_hitsound_max_pitch;
-			float b = autocvar_cl_hitsound_min_pitch;
-			float c = autocvar_cl_hitsound_nom_damage;
-			float d = unaccounted_damage;
-			float pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
-
-			// if sound variation is disabled, set pitch_shift to 1
-			if (autocvar_cl_hitsound == 1)
-				pitch_shift = 1;
-
-			// if pitch shift is reversed, mirror in (max-min)/2 + min
-			if (autocvar_cl_hitsound == 3)
+			float pitch_shift = 1;
+			if (autocvar_cl_hitsound == 2 || autocvar_cl_hitsound == 3)
 			{
-				float mirror_value = (a-b)/2 + b;
-				pitch_shift = mirror_value + (mirror_value - pitch_shift);
+				// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+				float a = autocvar_cl_hitsound_max_pitch;
+				float b = autocvar_cl_hitsound_min_pitch;
+				float c = autocvar_cl_hitsound_nom_damage;
+				float d = unaccounted_damage;
+				pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
+
+				// if pitch shift is reversed, mirror in (max-min)/2 + min
+				if (autocvar_cl_hitsound == 3)
+				{
+					float mirror_value = (a-b)/2 + b;
+					pitch_shift = mirror_value + (mirror_value - pitch_shift);
+				}
 			}
 
 			//LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift));
