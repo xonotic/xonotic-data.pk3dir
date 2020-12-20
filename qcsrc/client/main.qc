@@ -851,7 +851,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
-// The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
+// The parameter isnew reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
 	this.sourceLoc = __FILE__":"STR(__LINE__);
@@ -895,7 +895,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+			LOG_INFOF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
@@ -903,7 +903,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	time = savetime;
 	if (!done)
 	{
-		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		LOG_FATALF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
