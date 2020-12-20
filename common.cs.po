@@ -6,6 +6,7 @@
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
 # Jan Kocka <kockahonza@gmail.com>, 2019
+# Jiří Vrána <jirkacz199@gmail.com>, 2020
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # NONE <nechtom@gmail.com>, 2015
 # Tomáš Volavka <czheron@gmail.com>, 2015,2018
@@ -15,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 07:23+0100\n"
-"PO-Revision-Date: 2020-11-22 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-12-18 20:00+0000\n"
+"Last-Translator: Jiří Vrána <jirkacz199@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -229,7 +230,7 @@ msgstr "Hráč %d"
 #: qcsrc/client/hud/panel/quickmenu.qc:597
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Podmenu%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:602
 #, c-format
@@ -288,7 +289,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^předmět zdarma, ikona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^took item (l:%l^7)"
@@ -622,7 +623,7 @@ msgstr "SCO^nejrychlejší"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Čas nejrychlejšího kola (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "Number of faults committed"
@@ -634,7 +635,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Počet zabitých vlajkonošů"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "SCO^fckills"
@@ -650,7 +651,7 @@ msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Počet zabití mínus sebevraždy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^frags"
@@ -674,13 +675,13 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^z/s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Poměr zabití ku smrtem"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^kdr"
@@ -692,15 +693,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of kills"
-msgstr ""
+msgstr "Počet zabití"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^kills"
-msgstr ""
+msgstr "SCO^zabití"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Počet dokončených kol (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^laps"
@@ -770,7 +771,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Počet hráčů žďuchnutých do temnoty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^pushes"
@@ -786,7 +787,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Počet vrácených vlajek"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^returns"
@@ -794,11 +795,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of revivals"
-msgstr ""
+msgstr "Počet oživení"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^oživení"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of rounds won"
@@ -826,7 +827,7 @@ msgstr "SCO^sebevraždy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Počet zabití mínus smrti"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^sum"
@@ -846,7 +847,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "SCO^teamkilly"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of ticks (Domination)"

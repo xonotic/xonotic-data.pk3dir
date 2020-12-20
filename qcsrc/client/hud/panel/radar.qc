@@ -173,6 +173,24 @@ void HUD_Radar_Mouse()
 	}
 }
 
+float HUD_Radar_GetZoomFactor(int zoommode)
+{
+	switch(zoommode)
+	{
+		case 1: return 1 - current_zoomfraction;
+		case 2: return 0;
+		case 3: return 1;
+	}
+	return current_zoomfraction;
+}
+
+float HUD_Radar_GetAngle(int rotation)
+{
+	if (rotation)
+		return 90 * rotation;
+	return view_angles.y - 90;
+}
+
 void HUD_Radar()
 {
 	if (!autocvar__hud_configure)
@@ -198,7 +216,7 @@ void HUD_Radar()
 
 	HUD_Panel_LoadCvars();
 
-	float f = 0;
+	float zoom_factor = 0;
 
 	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
@@ -216,61 +234,14 @@ void HUD_Radar()
 			radar_panel_modified = true;
 		strcpy(panel.current_panel_bg, panel_bg);
 
-		switch(hud_panel_radar_maximized_zoommode)
-		{
-			default:
-			case 0:
-				f = current_zoomfraction;
-				break;
-			case 1:
-				f = 1 - current_zoomfraction;
-				break;
-			case 2:
-				f = 0;
-				break;
-			case 3:
-				f = 1;
-				break;
-		}
-
-		switch(hud_panel_radar_maximized_rotation)
-		{
-			case 0:
-				teamradar_angle = view_angles.y - 90;
-				break;
-			default:
-				teamradar_angle = 90 * hud_panel_radar_maximized_rotation;
-				break;
-		}
+		zoom_factor = HUD_Radar_GetZoomFactor(hud_panel_radar_maximized_zoommode);
+		teamradar_angle = HUD_Radar_GetAngle(hud_panel_radar_maximized_rotation);
 	}
+
 	if (!hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
-		switch(hud_panel_radar_zoommode)
-		{
-			default:
-			case 0:
-				f = current_zoomfraction;
-				break;
-			case 1:
-				f = 1 - current_zoomfraction;
-				break;
-			case 2:
-				f = 0;
-				break;
-			case 3:
-				f = 1;
-				break;
-		}
-
-		switch(hud_panel_radar_rotation)
-		{
-			case 0:
-				teamradar_angle = view_angles.y - 90;
-				break;
-			default:
-				teamradar_angle = 90 * hud_panel_radar_rotation;
-				break;
-		}
+		zoom_factor = HUD_Radar_GetZoomFactor(hud_panel_radar_zoommode);
+		teamradar_angle = HUD_Radar_GetAngle(hud_panel_radar_rotation);
 	}
 
 	vector pos, mySize;
@@ -332,19 +303,10 @@ void HUD_Radar()
 	if(bigsize > normalsize)
 		normalsize = bigsize;
 
-	teamradar_size =
-		  f * bigsize
-		+ (1 - f) * normalsize;
-	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
-		  f * mi_center
-		+ (1 - f) * view_origin);
+	teamradar_size = zoom_factor * bigsize + (1 - zoom_factor) * normalsize;
+	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(zoom_factor * mi_center + (1 - zoom_factor) * view_origin);
 
-	drawsetcliparea(
-		pos.x,
-		pos.y,
-		mySize.x,
-		mySize.y
-	);
+	drawsetcliparea(pos.x, pos.y, mySize.x, mySize.y);
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
