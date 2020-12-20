@@ -206,6 +206,7 @@ float current_alpha(entity damage_text) {
 
 NET_HANDLE(damagetext, bool isNew)
 {
+    make_pure(this);
     int server_entity_index = ReadByte();
     int deathtype = ReadInt24_t();
     int flags = ReadByte();
@@ -222,6 +223,7 @@ NET_HANDLE(damagetext, bool isNew)
     else potential_damage = ReadShort();
 
     return = true;
+    if (!isNew) return;
     if (autocvar_cl_damagetext == 0) return;
     if (friendlyfire) {
         if (autocvar_cl_damagetext_friendlyfire == 0) return;
