@@ -2,6 +2,7 @@ workflow:
   rules:
     - if: '$CI_COMMIT_MESSAGE == "Transifex autosync"'
       when: never
+    - when: always
 
 before_script:
   - ln -s $PWD data/xonotic-data.pk3dir
