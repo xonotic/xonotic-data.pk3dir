@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-20 07:23+0100\n"
-"PO-Revision-Date: 2020-12-20 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-12-20 23:14+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2Удачно экспортировано в %s! (Примечание: записано в data/data/)"
+msgstr "^2Успешно экспортировано в %s! (Примечание: записано в data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -5831,6 +5831,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"По умолчанию статистика игрока включена, вы можете изменить это в меню "
+"Профиля"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Save settings"
@@ -7828,23 +7830,23 @@ msgstr "Играть звук оповещения, когда выстрел д
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr ""
+msgstr "SND^Одинаковый тон"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
-msgstr ""
+msgstr "Уменьшать высоту тона звука при большем уроне"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
-msgstr ""
+msgstr "Уменьшать тон"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
-msgstr ""
+msgstr "Увеличивать высоту тона звука при большем уроне"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
-msgstr ""
+msgstr "Увеличивать тон"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
