@@ -307,6 +307,10 @@ void URI_Get_Callback(float id, float status, string data)
 	{
 		UpdateNotification_URI_Get_Callback(id, status, data);
 	}
+	else if (id == URI_GET_TOS)
+	{
+		TOS_URI_Get_Callback(id, status, data);
+	}
 	else
 	{
 		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
@@ -457,6 +461,23 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	}
 }
 
+void TOS_URI_Get_Callback(float id, float status, string data)
+{
+	if(_Nex_ExtResponseSystem_TOS)
+	{
+		LOG_TRACE("error: TOS_URI_Get_Callback has been called before");
+		return;
+	}
+	if(status != 0)
+	{
+		LOG_TRACEF("error receiving tos: status is %d", status);
+		return;
+	}
+
+	_Nex_ExtResponseSystem_TOS = strzone(data);
+	LOG_INFO("Data: ", _Nex_ExtResponseSystem_TOS);
+}
+
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
 
 void updateCheck()
@@ -473,6 +494,15 @@ void updateCheck()
 		startcnt = floor((floor(startcnt / 10) + random()) * 10);
 		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
 		uri_get(uri, URI_GET_UPDATENOTIFICATION);
+	}
+
+	// Terms of Service updater, re-using the existing external response system!
+	if(_Nex_ExtResponseSystem_Queried == 1)
+	{
+		_Nex_ExtResponseSystem_Queried = 2;
+
+		string tosurl = "http://update.xonotic.org/tos.txt";
+		uri_get(tosurl, URI_GET_TOS);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)

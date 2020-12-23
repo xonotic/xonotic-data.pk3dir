@@ -6,6 +6,7 @@
 #include "textbox.qh"
 #include "textlabel.qh"
 #include "button.qh"
+#include "util.qh"
 
 void Close_Clicked(entity btn, entity me)
 {
@@ -41,12 +42,13 @@ void XonoticToSDialog_loadXonoticToS(entity me)
         }
         fclose(fh);
     }
+    LOG_INFO("Test: ", _Nex_ExtResponseSystem_TOS, ": ", ftos(XonoticToSDialog_shouldShow()));
     me.textBox.setText(me.textBox, ToSText);
 }
 
 bool XonoticToSDialog_shouldShow()
 {
-    return (fexists("tos.txt") && !autocvar__termsofservice_accepted);
+    return (_Nex_ExtResponseSystem_TOS && !autocvar__termsofservice_accepted);
 }
 
 void XonoticToSDialog_fill(entity me)

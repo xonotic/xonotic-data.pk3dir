@@ -27,6 +27,8 @@ float updateCompression();
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 
+void TOS_URI_Get_Callback(float id, float status, string data);
+
 // game type list box stuff (does not NEED to contain all game types, other
 // types stay available via console)
 entity GameType_GetID(int cnt);
@@ -47,5 +49,6 @@ string _Nex_ExtResponseSystem_PromotedServers;
 float _Nex_ExtResponseSystem_PromotedServersNeedsRefresh;
 string _Nex_ExtResponseSystem_RecommendedServers;
 float _Nex_ExtResponseSystem_RecommendedServersNeedsRefresh;
+string _Nex_ExtResponseSystem_TOS;
 
 void CheckSendCvars(entity me, string cvarnamestring);
