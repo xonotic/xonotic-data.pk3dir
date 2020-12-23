@@ -293,11 +293,11 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			pic = "gfx/hud/default/progressbar_vertical";
 		}
 
-        if (baralign == 1) // bottom align
+		if (baralign == 1) // bottom align
 			theOrigin.y += (1 - length_ratio) * theSize.y;
-        else if (baralign == 2) // center align
-            theOrigin.y += 0.5 * (1 - length_ratio) * theSize.y;
-        else if (baralign == 3) // center align, positive values down, negative up
+		else if (baralign == 2) // center align
+			theOrigin.y += 0.5 * (1 - length_ratio) * theSize.y;
+		else if (baralign == 3) // center align, positive values down, negative up
 		{
 			theSize.y *= 0.5;
 			if (length_ratio > 0)
@@ -337,9 +337,9 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 
 		if (baralign == 1) // right align
 			theOrigin.x += (1 - length_ratio) * theSize.x;
-        else if (baralign == 2) // center align
-            theOrigin.x += 0.5 * (1 - length_ratio) * theSize.x;
-        else if (baralign == 3) // center align, positive values on the right, negative on the left
+		else if (baralign == 2) // center align
+			theOrigin.x += 0.5 * (1 - length_ratio) * theSize.x;
+		else if (baralign == 3) // center align, positive values on the right, negative on the left
 		{
 			theSize.x *= 0.5;
 			if (length_ratio > 0)
