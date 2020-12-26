@@ -7,7 +7,6 @@ COMPONENT(phys);
 .float com_phys_vel_max;
 .float com_phys_vel_max_air;
 .float com_phys_vel_max_air_strafe;
-.vector com_phys_acc;
 .float com_phys_acc_rate;
 .float com_phys_acc_rate_air;
 .float com_phys_acc_rate_air_strafe;

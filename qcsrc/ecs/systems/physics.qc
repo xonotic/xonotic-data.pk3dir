@@ -427,7 +427,6 @@ void sys_phys_simulate_simple(entity this, float dt)
 	vector g = '0 0 0';
 	if (this.com_phys_gravity_factor && !g) g = '0 0 -1' * PHYS_GRAVITY(NULL);
 
-	vector acc = this.com_phys_acc;
 	vector vel = this.com_phys_vel;
 	vector pos = this.com_phys_pos;
 
@@ -500,7 +499,6 @@ void sys_phys_simulate_simple(entity this, float dt)
 		ClipVelocity(vel, trace_plane_normal, vel, 1);
 	}
 
-	this.com_phys_acc = acc;
 	this.com_phys_vel = vel;
 	this.com_phys_pos = pos;
 	setorigin(this, this.com_phys_pos);
