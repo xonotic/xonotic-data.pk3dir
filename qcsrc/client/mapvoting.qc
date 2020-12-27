@@ -808,7 +808,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		return false;
 	}
 
-	// at this point bInputType can be 0 or 1 (key pressed or released)
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
 	if (key_pressed)
