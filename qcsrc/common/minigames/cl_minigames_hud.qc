@@ -619,6 +619,13 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		return true;
 	}
 
+	if(bInputType == 2)
+	{
+		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
+			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
+		return false;
+	}
+
 	if(bInputType == 0) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
@@ -659,8 +666,6 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		if ( device && active_minigame.minigame_event(
 				active_minigame,strcat(device,"_",action),nPrimary) )
 			return true;
-
-		/// TODO: bInputType == 2?
 	}
 
 	if ( bInputType == 0 )
