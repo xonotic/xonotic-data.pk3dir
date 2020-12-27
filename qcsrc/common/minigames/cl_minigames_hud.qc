@@ -626,14 +626,17 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		return false;
 	}
 
-	if(bInputType == 0) {
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(key_pressed) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
 		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
-	else if(bInputType == 1) {
+	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
@@ -651,10 +654,10 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			return false;
 	}
 
-	if ( active_minigame && ( bInputType == 0 || bInputType == 1 ) )
+	if ( active_minigame )
 	{
 		string device = "";
-		string action = bInputType == 0 ? "pressed" : "released";
+		string action = key_pressed ? "pressed" : "released";
 		if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
 		{
 			if ( HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
@@ -668,7 +671,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			return true;
 	}
 
-	if ( bInputType == 0 )
+	if ( key_pressed )
 	{
 		if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
 			HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
