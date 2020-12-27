@@ -138,7 +138,6 @@ void HUD_MinigameMenu_InsertEntry(entity newentry, entity prev)
 	else
 		HUD_MinigameMenu_last_entry = newentry;
 	prev.list_next = newentry;
-
 }
 
 
@@ -618,103 +617,99 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
 			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
 		return true;
-
 	}
-	else
+
+	if(bInputType == 0) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
+	}
+	else if(bInputType == 1) {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+
+	// allow some binds
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+	int i;
+	for (i = 0; i < keys; ++i)
 	{
-		if(bInputType == 0) {
-			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
-			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
-			if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
-			if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
-			if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
-		}
-		else if(bInputType == 1) {
-			if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-			if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-			if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-			if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
-			if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
-		}
+		if(nPrimary == stof(argv(i)))
+			return false;
+	}
 
-		// allow some binds
-		string con_keys = findkeysforcommand("toggleconsole", 0);
-		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		int i;
-		for (i = 0; i < keys; ++i)
+	if ( active_minigame && ( bInputType == 0 || bInputType == 1 ) )
+	{
+		string device = "";
+		string action = bInputType == 0 ? "pressed" : "released";
+		if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
 		{
-			if(nPrimary == stof(argv(i)))
-				return false;
+			if ( HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
+				device = "mouse";
 		}
+		else
+			device = "key";
 
-		if ( active_minigame && ( bInputType == 0 || bInputType == 1 ) )
+		if ( device && active_minigame.minigame_event(
+				active_minigame,strcat(device,"_",action),nPrimary) )
+			return true;
+
+		/// TODO: bInputType == 2?
+	}
+
+	if ( bInputType == 0 )
+	{
+		if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
+			HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
 		{
-			string device = "";
-			string action = bInputType == 0 ? "pressed" : "released";
-			if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
-			{
-				if ( HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
-					device = "mouse";
-			}
+			HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+			return true;
+		}
+		if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
+		{
+			if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
+				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
 			else
-				device = "key";
-
-			if ( device && active_minigame.minigame_event(
-					active_minigame,strcat(device,"_",action),nPrimary) )
-				return true;
-
-			/// TODO: bInputType == 2?
+				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
+			return true;
 		}
-
-		if ( bInputType == 0 )
+		else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
 		{
-			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
-				HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
-			{
-				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
-				return true;
-			}
-			if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
-			{
-				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
-				else
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
-				return true;
-			}
-			else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
-			{
-				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
-				else
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
-				return true;
-			}
-			else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
-			{
+			if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
+				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
+			else
 				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
-				return true;
-			}
-			else if ( nPrimary == K_END || nPrimary == K_KP_END )
-			{
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
-				return true;
-			}
-			else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
-			{
-				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
-				return true;
-			}
-			else if ( nPrimary == K_ESCAPE )
-			{
-				HUD_MinigameMenu_Close(NULL, NULL, NULL);
-				return true;
-			}
+			return true;
+		}
+		else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
+		{
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+			return true;
+		}
+		else if ( nPrimary == K_END || nPrimary == K_KP_END )
+		{
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+			return true;
+		}
+		else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
+		{
+			HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+			return true;
+		}
+		else if ( nPrimary == K_ESCAPE )
+		{
+			HUD_MinigameMenu_Close(NULL, NULL, NULL);
+			return true;
 		}
 	}
 
 	return false;
-
 }
 
 void HUD_Minigame_Mouse()
