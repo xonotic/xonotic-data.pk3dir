@@ -339,7 +339,6 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
-vector prev_mousepos;
 // draws map vote or gametype vote
 void MapVote_Draw()
 {
@@ -356,15 +355,6 @@ void MapVote_Draw()
 		return;
 
 	HUD_Panel_LoadCvars();
-
-	if (!autocvar_hud_cursormode)
-	{
-		if (mousepos.x != prev_mousepos.x || mousepos.y != prev_mousepos.y)
-		{
-			mv_selection_keyboard = 0;
-			prev_mousepos = mousepos;
-		}
-	}
 
 	center = (vid_conwidth - 1)/2;
 	xmin = vid_conwidth * 0.08;
@@ -813,7 +803,10 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 
 	if (bInputType == 2)
+	{
+		mv_selection_keyboard = 0;
 		return false;
+	}
 
 	// at this point bInputType can be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
