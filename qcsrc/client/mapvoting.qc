@@ -899,6 +899,9 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			imp = min(mv_selection + 1, mv_num_maps);
 	}
 
+	if (nPrimary == K_MOUSE2)
+		return true; // do nothing
+
 	if (imp)
 	{
 		if (!key_pressed)
