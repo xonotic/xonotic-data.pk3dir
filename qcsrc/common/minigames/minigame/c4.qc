@@ -446,6 +446,11 @@ int c4_client_event(entity minigame, string event, ...)
 						else
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_relative_tile(c4_curr_pos,-1,0,C4_NUM_CNT,C4_LET_CNT)));
 						return true;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						return true;
 					/*case K_UPARROW:
 					case K_KP_UPARROW:
 						if (event == "key_released")
