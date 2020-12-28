@@ -671,12 +671,16 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			return true;
 	}
 
-	if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
-		HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
+	if ( nPrimary == K_MOUSE2 )
+	{
+		return true;
+	}
+	if ( nPrimary == K_MOUSE1 )
 	{
 		if (!key_pressed)
 			return true;
-		HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		if (HUD_MinigameMenu_activeitem && HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)))
+			HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
 		return true;
 	}
 	if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
