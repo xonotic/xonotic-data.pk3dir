@@ -1211,31 +1211,6 @@ void bd_set_curr_pos(string s)
 	bd_curr_pos = s;
 }
 
-bool bd_normal_move(entity minigame, int themove)
-{
-	switch ( themove )
-	{
-		case K_RIGHTARROW:
-		case K_KP_RIGHTARROW:
-			bd_make_move(minigame, "r");
-			return true;
-		case K_LEFTARROW:
-		case K_KP_LEFTARROW:
-			bd_make_move(minigame, "l");
-			return true;
-		case K_UPARROW:
-		case K_KP_UPARROW:
-			bd_make_move(minigame, "u");
-			return true;
-		case K_DOWNARROW:
-		case K_KP_DOWNARROW:
-			bd_make_move(minigame, "d");
-			return true;
-	}
-
-	return false;
-}
-
 bool bd_change_dozer_angle(entity minigame)
 {
 	entity dozer = bd_find_piece(minigame, bd_curr_pos, false);
@@ -1256,54 +1231,6 @@ bool bd_change_dozer_angle(entity minigame)
 	return true;
 }
 
-bool bd_editor_move(entity minigame, int themove)
-{
-	switch ( themove )
-	{
-		case K_RIGHTARROW:
-		case K_KP_RIGHTARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("a3");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,1,0,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_LEFTARROW:
-		case K_KP_LEFTARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("c3");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,-1,0,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_UPARROW:
-		case K_KP_UPARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("a1");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,1,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_DOWNARROW:
-		case K_KP_DOWNARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("a3");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,-1,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_ENTER:
-		case K_KP_ENTER:
-			bd_editor_make_move(minigame, "");
-			return true;
-		case K_SPACE:
-			if(bd_change_dozer_angle(minigame))
-				return true;
-			bd_curr_tile += 1;
-			if(bd_curr_tile > BD_TILE_LAST)
-				bd_curr_tile = 1;
-			return true;
-	}
-
-	return false;
-}
-
 // Required function, handle client events
 int bd_client_event(entity minigame, string event, ...)
 {
@@ -1322,17 +1249,95 @@ int bd_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
 			if(minigame.minigame_flags & BD_TURN_MOVE)
 			{
-				if(bd_normal_move(minigame, ...(0,int)))
-					return true;
+				switch ( ...(0,int) )
+				{
+					case K_RIGHTARROW:
+					case K_KP_RIGHTARROW:
+						if (event == "key_released")
+							return true;
+						bd_make_move(minigame, "r");
+						return true;
+					case K_LEFTARROW:
+					case K_KP_LEFTARROW:
+						if (event == "key_released")
+							return true;
+						bd_make_move(minigame, "l");
+						return true;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+						if (event == "key_released")
+							return true;
+						bd_make_move(minigame, "u");
+						return true;
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						if (event == "key_released")
+							return true;
+						bd_make_move(minigame, "d");
+						return true;
+				}
 			}
 
 			if(minigame.minigame_flags & BD_TURN_EDIT)
 			{
-				if(bd_editor_move(minigame, ...(0,int)))
-					return true;
+				switch ( ...(0,int) )
+				{
+					case K_RIGHTARROW:
+					case K_KP_RIGHTARROW:
+						if (event == "key_released")
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("a3");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,1,0,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_LEFTARROW:
+					case K_KP_LEFTARROW:
+						if (event == "key_released")
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("c3");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,-1,0,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+						if (event == "key_released")
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("a1");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,1,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						if (event == "key_released")
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("a3");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,-1,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_ENTER:
+					case K_KP_ENTER:
+						if (event == "key_released")
+							return true;
+						bd_editor_make_move(minigame, "");
+						return true;
+					case K_SPACE:
+						if (event == "key_released")
+							return true;
+						if(bd_change_dozer_angle(minigame))
+							return true;
+						bd_curr_tile += 1;
+						if(bd_curr_tile > BD_TILE_LAST)
+							bd_curr_tile = 1;
+						return true;
+				}
 			}
 
 			return false;

@@ -671,50 +671,61 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			return true;
 	}
 
-	if ( key_pressed )
+	if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
+		HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
 	{
-		if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
-			HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
-		{
-			HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		if (!key_pressed)
 			return true;
-		}
-		if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
-		{
-			if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
-			else
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
+		HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		return true;
+	}
+	if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
+	{
+		if (!key_pressed)
 			return true;
-		}
-		else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
-		{
-			if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
-			else
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
+		else
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
+		return true;
+	}
+	else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
+	{
+		if (!key_pressed)
 			return true;
-		}
-		else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
-		{
+		if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
+		else
 			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		return true;
+	}
+	else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
+	{
+		if (!key_pressed)
 			return true;
-		}
-		else if ( nPrimary == K_END || nPrimary == K_KP_END )
-		{
-			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		return true;
+	}
+	else if ( nPrimary == K_END || nPrimary == K_KP_END )
+	{
+		if (!key_pressed)
 			return true;
-		}
-		else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
-		{
-			HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		return true;
+	}
+	else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
+	{
+		if (!key_pressed)
 			return true;
-		}
-		else if ( nPrimary == K_ESCAPE )
-		{
-			HUD_MinigameMenu_Close(NULL, NULL, NULL);
+		HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		return true;
+	}
+	else if ( nPrimary == K_ESCAPE )
+	{
+		if (!key_pressed)
 			return true;
-		}
+		HUD_MinigameMenu_Close(NULL, NULL, NULL);
+		return true;
 	}
 
 	return false;

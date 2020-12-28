@@ -422,6 +422,7 @@ int c4_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
 			if((minigame.minigame_flags & C4_TURN_TEAM) == minigame_self.team)
 			{
@@ -429,6 +430,8 @@ int c4_client_event(entity minigame, string event, ...)
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event == "key_released")
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, "a3"));
 						else
@@ -436,6 +439,8 @@ int c4_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event == "key_released")
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, "c3"));
 						else
@@ -443,6 +448,8 @@ int c4_client_event(entity minigame, string event, ...)
 						return true;
 					/*case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event == "key_released")
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos("a1");
 						else
@@ -450,6 +457,8 @@ int c4_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event == "key_released")
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos("a3");
 						else
@@ -458,6 +467,8 @@ int c4_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event == "key_released")
+							return true;
 						c4_make_move(minigame);
 						return true;
 				}

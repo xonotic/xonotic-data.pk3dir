@@ -620,24 +620,6 @@ int pong_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
-			switch ( ...(0,int) )
-			{
-				case K_UPARROW:
-				case K_KP_UPARROW:
-				case K_LEFTARROW:
-				case K_KP_LEFTARROW:
-					//minigame_cmd("+moved");
-					pong_keys_pressed |= PONG_KEY_DECREASE;
-					return true;
-				case K_DOWNARROW:
-				case K_KP_DOWNARROW:
-				case K_RIGHTARROW:
-				case K_KP_RIGHTARROW:
-					//minigame_cmd("+movei");
-					pong_keys_pressed |= PONG_KEY_INCREASE;
-					return true;
-			}
-			return false;
 		case "key_released":
 			switch ( ...(0,int) )
 			{
@@ -645,15 +627,31 @@ int pong_client_event(entity minigame, string event, ...)
 				case K_KP_UPARROW:
 				case K_LEFTARROW:
 				case K_KP_LEFTARROW:
-					//minigame_cmd("-moved");
-					pong_keys_pressed &= ~PONG_KEY_DECREASE;
+					if (event == "key_pressed")
+					{
+						//minigame_cmd("+moved");
+						pong_keys_pressed |= PONG_KEY_DECREASE;
+					}
+					else
+					{
+						//minigame_cmd("-moved");
+						pong_keys_pressed &= ~PONG_KEY_DECREASE;
+					}
 					return true;
 				case K_DOWNARROW:
 				case K_KP_DOWNARROW:
 				case K_RIGHTARROW:
 				case K_KP_RIGHTARROW:
-					//minigame_cmd("-movei");
-					pong_keys_pressed &= ~PONG_KEY_INCREASE;
+					if (event == "key_pressed")
+					{
+						//minigame_cmd("+movei");
+						pong_keys_pressed |= PONG_KEY_INCREASE;
+					}
+					else
+					{
+						//minigame_cmd("-movei");
+						pong_keys_pressed &= ~PONG_KEY_INCREASE;
+					}
 					return true;
 			}
 			return false;

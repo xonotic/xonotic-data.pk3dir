@@ -632,12 +632,14 @@ int nmm_client_event(entity minigame, string event, ...)
 		nmm_kill_tiles(minigame);
 		strfree(minigame.message);
 	}
-	else if ( event == "key_pressed" && (minigame.minigame_flags&NMM_TURN_TEAM) == minigame_self.team )
+	else if ( (event == "key_pressed" || event == "key_released") && (minigame.minigame_flags&NMM_TURN_TEAM) == minigame_self.team )
 	{
 		switch ( ...(0,int) )
 		{
 			case K_RIGHTARROW:
 			case K_KP_RIGHTARROW:
+				if (event == "key_released")
+					return true;
 				if ( ! nmm_currtile )
 					nmm_currtile = nmm_find_tile(active_minigame,"a7");
 				else
@@ -653,6 +655,8 @@ int nmm_client_event(entity minigame, string event, ...)
 				return 1;
 			case K_LEFTARROW:
 			case K_KP_LEFTARROW:
+				if (event == "key_released")
+					return true;
 				if ( ! nmm_currtile )
 					nmm_currtile = nmm_find_tile(active_minigame,"g7");
 				else
@@ -668,6 +672,8 @@ int nmm_client_event(entity minigame, string event, ...)
 				return 1;
 			case K_UPARROW:
 			case K_KP_UPARROW:
+				if (event == "key_released")
+					return true;
 				if ( ! nmm_currtile )
 					nmm_currtile = nmm_find_tile(active_minigame,"a1");
 				else
@@ -683,6 +689,8 @@ int nmm_client_event(entity minigame, string event, ...)
 				return 1;
 			case K_DOWNARROW:
 			case K_KP_DOWNARROW:
+				if (event == "key_released")
+					return true;
 				if ( ! nmm_currtile )
 					nmm_currtile = nmm_find_tile(active_minigame,"a7");
 				else
@@ -699,6 +707,8 @@ int nmm_client_event(entity minigame, string event, ...)
 			case K_ENTER:
 			case K_KP_ENTER:
 			case K_SPACE:
+				if (event == "key_released")
+					return true;
 				nmm_make_move(minigame);
 				return 1;
 		}
