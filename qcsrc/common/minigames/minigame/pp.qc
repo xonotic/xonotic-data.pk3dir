@@ -555,6 +555,7 @@ int pp_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				pp_client_event(minigame, "mouse_moved");
 				pp_make_move(minigame);
 				return true;
 			}

@@ -600,6 +600,7 @@ int ps_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				ps_client_event(minigame, "mouse_moved");
 				ps_make_move(minigame);
 				return true;
 			}

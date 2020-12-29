@@ -1350,12 +1350,14 @@ int bd_client_event(entity minigame, string event, ...)
 			{
 				if(...(0,int) == K_MOUSE1)
 				{
+					bd_client_event(minigame, "mouse_moved");
 					bd_editor_make_move(minigame, "");
 					return true;
 				}
 
 				if(...(0,int) == K_MOUSE2)
 				{
+					bd_client_event(minigame, "mouse_moved");
 					bd_editor_fill(minigame);
 					return true;
 				}

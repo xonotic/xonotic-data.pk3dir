@@ -721,6 +721,7 @@ int nmm_client_event(entity minigame, string event, ...)
 	}
 	else if ( event == "mouse_pressed" && ...(0,int) == K_MOUSE1 )
 	{
+		nmm_client_event(minigame, "mouse_moved");
 		nmm_make_move(minigame);
 		return 1;
 	}

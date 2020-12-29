@@ -625,6 +625,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				ttt_client_event(minigame, "mouse_moved");
 				ttt_make_move(minigame);
 				return true;
 			}

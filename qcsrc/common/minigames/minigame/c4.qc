@@ -487,6 +487,7 @@ int c4_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				c4_client_event(minigame, "mouse_moved");
 				c4_make_move(minigame);
 				return true;
 			}
