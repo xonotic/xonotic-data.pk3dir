@@ -393,6 +393,8 @@ MUTATOR_HOOKFUNCTION(minigames, HUD_Command)
 
 	if(argv(1) == "minigame")
 	{
+		if (isdemo())
+			return true; // minigames can't function properly in demo mode
 		if (HUD_MinigameMenu_IsOpened())
 			HUD_MinigameMenu_Close(NULL, NULL, NULL);
 		else
