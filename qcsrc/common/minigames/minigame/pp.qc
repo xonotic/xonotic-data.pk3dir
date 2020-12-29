@@ -497,13 +497,15 @@ int pp_client_event(entity minigame, string event, ...)
 		case "key_pressed":
 		case "key_released":
 		{
-			if((minigame.minigame_flags & PP_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & PP_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & PP_TURN_WIN) && !(minigame.minigame_flags & PP_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
-						if (event == "key_released")
+						if (event_blocked)
 							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a3");
@@ -512,7 +514,7 @@ int pp_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
-						if (event == "key_released")
+						if (event_blocked)
 							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("c3");
@@ -521,7 +523,7 @@ int pp_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
-						if (event == "key_released")
+						if (event_blocked)
 							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a1");
@@ -530,7 +532,7 @@ int pp_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
-						if (event == "key_released")
+						if (event_blocked)
 							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a3");
@@ -540,7 +542,7 @@ int pp_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
-						if (event == "key_released")
+						if (event_blocked)
 							return true;
 						pp_make_move(minigame);
 						return true;
