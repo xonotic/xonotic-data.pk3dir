@@ -770,9 +770,11 @@ int MapVote_MoveUp(int pos)
 		imp = pos - mv_columns;
 		if ( imp < 0 )
 		{
-			imp = floor(mv_num_maps/mv_columns)*mv_columns + pos % mv_columns;
-			if ( imp >= mv_num_maps )
-				imp -= mv_columns;
+			int mv_rows = ceil(mv_num_maps / mv_columns);
+			if (imp == -mv_columns) // pos == 0
+				imp = mv_columns * mv_rows - 1;
+			else
+				imp = imp + mv_columns * mv_rows - 1;
 		}
 	}
 	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
@@ -789,7 +791,12 @@ int MapVote_MoveDown(int pos)
 	{
 		imp = pos + mv_columns;
 		if ( imp >= mv_num_maps )
-			imp = imp % mv_columns;
+		{
+			if ((imp % mv_columns) == mv_columns - 1)
+				imp = 0;
+			else
+				imp = imp % mv_columns + 1;
+		}
 	}
 	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
 		imp = MapVote_MoveDown(imp);
