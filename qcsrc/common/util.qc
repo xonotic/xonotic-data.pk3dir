@@ -922,11 +922,7 @@ string find_last_color_code(string s)
 
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	float cantake;
-	float take;
-	string s;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -934,26 +930,26 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
-	if(cantake > 0 && cantake < strlen(s))
+	int take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	if(take_until > 0 && take_until < strlen(s))
 	{
-		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
-			--take;
+		int last_word = take_until - 1;
+		while(last_word > 0 && substring(s, last_word, 1) != " ")
+			--last_word;
 
 		int skip = 0;
-		if(take != 0)
+		if(last_word != 0)
 		{
-			cantake = take;
+			take_until = last_word;
 			skip = 1;
 		}
 
-		getWrappedLine_remaining = substring(s, cantake + skip, strlen(s) - cantake);
+		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
 		if(getWrappedLine_remaining == "")
 			getWrappedLine_remaining = string_null;
 		else if (tw("^7", theFontSize) == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-		return substring(s, 0, cantake);
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
 	}
 	else
 	{
@@ -964,11 +960,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 {
-	float cantake;
-	float take;
-	string s;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -976,26 +968,26 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	cantake = textLengthUpToLength(s, w, tw);
-	if(cantake > 0 && cantake < strlen(s))
+	int take_until = textLengthUpToLength(s, w, tw);
+	if(take_until > 0 && take_until < strlen(s))
 	{
-		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
-			--take;
+		int last_word = take_until - 1;
+		while(last_word > 0 && substring(s, last_word, 1) != " ")
+			--last_word;
 
 		int skip = 0;
-		if(take != 0)
+		if(last_word != 0)
 		{
-			cantake = take;
+			take_until = last_word;
 			skip = 1;
 		}
 
-		getWrappedLine_remaining = substring(s, cantake + skip, strlen(s) - cantake);
+		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
 		if(getWrappedLine_remaining == "")
 			getWrappedLine_remaining = string_null;
 		else if (tw("^7") == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-		return substring(s, 0, cantake);
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
 	}
 	else
 	{
