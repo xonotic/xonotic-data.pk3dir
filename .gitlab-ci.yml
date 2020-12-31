@@ -16,7 +16,7 @@ report_cloc:
     - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
   rules:
     - changes:
-      - qcsrc/*
+      - qcsrc/**/*
   stage: test
   script:
     - cloc --force-lang-def=qcsrc/tools/cloc.txt --sql 1 --sql-project xonotic qcsrc | sqlite3 code.db
@@ -25,7 +25,7 @@ report_cloc:
 test_compilation_units:
   rules:
     - changes:
-      - qcsrc/*
+      - qcsrc/**/*
   stage: test
   script:
     - ./qcsrc/tools/compilationunits.sh
