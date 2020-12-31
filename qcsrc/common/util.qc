@@ -940,24 +940,20 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 		take = cantake - 1;
 		while(take > 0 && substring(s, take, 1) != " ")
 			--take;
-		if(take == 0)
+
+		int skip = 0;
+		if(take != 0)
 		{
-			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-			return substring(s, 0, cantake);
+			cantake = take;
+			skip = 1;
 		}
-		else
-		{
-			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
-			return substring(s, 0, take);
-		}
+
+		getWrappedLine_remaining = substring(s, cantake + skip, strlen(s) - cantake);
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7", theFontSize) == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
+		return substring(s, 0, cantake);
 	}
 	else
 	{
@@ -986,24 +982,20 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 		take = cantake - 1;
 		while(take > 0 && substring(s, take, 1) != " ")
 			--take;
-		if(take == 0)
+
+		int skip = 0;
+		if(take != 0)
 		{
-			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-			return substring(s, 0, cantake);
+			cantake = take;
+			skip = 1;
 		}
-		else
-		{
-			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
-			return substring(s, 0, take);
-		}
+
+		getWrappedLine_remaining = substring(s, cantake + skip, strlen(s) - cantake);
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7") == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
+		return substring(s, 0, cantake);
 	}
 	else
 	{
