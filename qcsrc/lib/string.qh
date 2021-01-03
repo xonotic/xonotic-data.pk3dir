@@ -312,7 +312,10 @@ bool isInvisibleString(string s)
 			case 192:          // charmap space
 				if (!utf8) break;
 				return false;
-			case 0xE000 + 192: // utf8 charmap space
+			case 0xE000: // invisible char of the utf8 quake charmap
+			case 0xE00A: // invisible char of the utf8 quake charmap
+			case 0xE0A0: // invisible char of the utf8 quake charmap
+			case 0xE020: // invisible char of the utf8 quake charmap
 			case 0x00A0: // NO-BREAK SPACE
 			//case 0x1680: // OGHAM SPACE MARK
 			case 0x180E: // MONGOLIAN VOWEL SEPARATOR
