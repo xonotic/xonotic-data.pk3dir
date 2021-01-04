@@ -8,15 +8,15 @@
 # Ḷḷumex03, 2014
 # Ḷḷumex03, 2014
 # Ḷḷumex03, 2014-2015
-# Tornes Ḷḷume <tornes.llume@openmailbox.org>, 2015-2017,2020
+# Tornes Ḷḷume <tornes.llume@openmailbox.org>, 2015-2017,2020-2021
 # Ximielga <dorian@openmailbox.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-20 07:23+0100\n"
-"PO-Revision-Date: 2020-12-20 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-01-04 03:37+0000\n"
+"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -5770,6 +5770,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"Les estadístiques de xugador actívense por defeutu, pues camudar esto "
+"dempués nel menú Perfil"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Save settings"
