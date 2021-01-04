@@ -770,14 +770,6 @@ int cvar_settemp_restore()
 	return j;
 }
 
-bool isCaretEscaped(string theText, float pos)
-{
-	int i = 0;
-	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
-		++i;
-	return (i & 1);
-}
-
 int skipIncompleteTag(string theText, float pos, int len)
 {
 	int tag_start = -1;

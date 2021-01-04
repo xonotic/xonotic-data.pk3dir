@@ -58,57 +58,29 @@ vector color_hslimage(vector v, vector margin)
 
 float XonoticColorpicker_mouseDrag(entity me, vector coords)
 {
-	float i, carets;
+	int i;
 	for (;;)
 	{
 		i = me.controlledTextbox.cursorPos;
-		if(i >= 2)
+
+		int res = checkColorCode(me.controlledTextbox.text, i);
+		if (res)
 		{
-			if(substring(me.controlledTextbox.text, i-2, 1) == "^")
-			{
-				carets = 1;
-				while (i - 2 - carets >= 0 && substring(me.controlledTextbox.text, i - 2 - carets, 1) == "^")
-					++carets;
-				if (carets & 1)
-					if(IS_DIGIT(substring(me.controlledTextbox.text, i-1, 1)))
-					{
-						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-						continue;
-					}
-			}
+			int tag_length = floor(res / 10);
+			int ofs = res % 10;
+			for (int j = tag_length - ofs; j > 0; j--)
+				me.controlledTextbox.keyDown(me.controlledTextbox, K_RIGHTARROW, 8, 0);
+			for (int j = tag_length; j > 0; j--)
+				me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+			continue;
 		}
 
-		if(i >= 5)
-		{
-			if(substring(me.controlledTextbox.text, i-5, 2) == "^x")
-			{
-				carets = 1;
-				while (i - 5 - carets >= 0 && substring(me.controlledTextbox.text, i - 5 - carets, 1) == "^")
-					++carets;
-				if (carets & 1)
-					if(IS_HEXDIGIT(substring(me.controlledTextbox.text, i - 3, 1)))
-						if(IS_HEXDIGIT(substring(me.controlledTextbox.text, i - 2, 1)))
-							if(IS_HEXDIGIT(substring(me.controlledTextbox.text, i - 1, 1)))
-							{
-								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-								continue;
-							}
-			}
-		}
 		break;
 	}
 
 	if(substring(me.controlledTextbox.text, i-1, 1) == "^")
 	{
-		carets = 1;
-		while (i - 1 - carets >= 0 && substring(me.controlledTextbox.text, i - 1 - carets, 1) == "^")
-			++carets;
-		if (carets & 1)
+		if(!isCaretEscaped(me.controlledTextbox.text, i-1))
 			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
 	}
 
