@@ -210,75 +210,47 @@
 		draw_SetClipRect(eX * me.keepspaceLeft, eX * (1 - me.keepspaceLeft - me.keepspaceRight) + eY);
 		if (me.editColorCodes)
 		{
-			string ch, ch2;
-			float i, n;
-			vector theColor;
-			float theAlpha;  // float theVariableAlpha;
-			vector p;
-			vector theTempColor;
-			float component;
+			vector p = me.realOrigin - eX * me.scrollPos;
+			vector theColor = '1 1 1';
+			float theAlpha = 1;
 
-			p = me.realOrigin - eX * me.scrollPos;
-			theColor = '1 1 1';
-			theAlpha = 1;  // theVariableAlpha = 1; // changes when ^ax found
-
-			n = strlen(me.text);
-			for (i = 0; i < n; ++i)
+			for (int i = 0, n = strlen(me.text); i < n; ++i)
 			{
-				ch = substring(me.text, i, 1);
+				string ch = substring(me.text, i, 1);
 				if (ch == "^")
 				{
 					float w;
-					ch2 = substring(me.text, i + 1, 1);
+					string ch2 = substring(me.text, i + 1, 1);
 					w = draw_TextWidth(strcat(ch, ch2), 0, me.realFontSize);
 					if (ch2 == "^")
 					{
 						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
 						draw_Text(p + eX * 0.25 * w, "^", me.realFontSize, theColor, theAlpha, 0);
 					}
-					else if (ch2 == "0" || stof(ch2))  // digit?
+					else if (IS_DIGIT(ch2))
 					{
+						theAlpha = 1;
 						switch (stof(ch2))
 						{
-							case 0: theColor = '0 0 0';
-								theAlpha = 1;
-								break;
-							case 1: theColor = '1 0 0';
-								theAlpha = 1;
-								break;
-							case 2: theColor = '0 1 0';
-								theAlpha = 1;
-								break;
-							case 3: theColor = '1 1 0';
-								theAlpha = 1;
-								break;
-							case 4: theColor = '0 0 1';
-								theAlpha = 1;
-								break;
-							case 5: theColor = '0 1 1';
-								theAlpha = 1;
-								break;
-							case 6: theColor = '1 0 1';
-								theAlpha = 1;
-								break;
-							case 7: theColor = '1 1 1';
-								theAlpha = 1;
-								break;
-							case 8: theColor = '1 1 1';
-								theAlpha = 0.5;
-								break;
-							case 9: theColor = '0.5 0.5 0.5';
-								theAlpha = 1;
-								break;
+							case 0: theColor = '0 0 0'; break;
+							case 1: theColor = '1 0 0'; break;
+							case 2: theColor = '0 1 0'; break;
+							case 3: theColor = '1 1 0'; break;
+							case 4: theColor = '0 0 1'; break;
+							case 5: theColor = '0 1 1'; break;
+							case 6: theColor = '1 0 1'; break;
+							case 7: theColor = '1 1 1'; break;
+							case 8: theColor = '1 1 1'; theAlpha = 0.5; break;
+							case 9: theColor = '0.5 0.5 0.5'; break;
 						}
 						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
 						draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 					}
 					else if (ch2 == "x")  // ^x found
 					{
+						vector theTempColor;
 						theColor = '1 1 1';
-
-						component = HEXDIGIT_TO_DEC(substring(me.text, i + 2, 1));
+						float component = HEXDIGIT_TO_DEC(substring(me.text, i + 2, 1));
 						if (component >= 0)  // ^xr found
 						{
 							theTempColor.x = component / 15;
@@ -296,7 +268,7 @@
 									w = draw_TextWidth(substring(me.text, i, 5), 0, me.realFontSize);
 
 									draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
-									draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);  // theVariableAlpha instead of 1 using alpha tags ^ax
+									draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);
 									i += 3;
 								}
 								else
@@ -334,7 +306,7 @@
 					++i;
 					continue;
 				}
-				draw_Text(p, ch, me.realFontSize, theColor, theAlpha, 0);  // TODO theVariableAlpha
+				draw_Text(p, ch, me.realFontSize, theColor, theAlpha, 0);
 				p += eX * draw_TextWidth(ch, 0, me.realFontSize);
 			}
 		}
