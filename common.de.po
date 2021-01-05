@@ -15,7 +15,7 @@
 # Larson März <larson@protonmail.ch>, 2016
 # Larson März <larson@protonmail.ch>, 2016
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
-# Mirio <opivy@hotmail.de>, 2014-2017,2019-2020
+# Mirio <opivy@hotmail.de>, 2014-2017,2019-2021
 # Robert Katzinsky <hbmctextures.unknown@gmail.com>, 2020
 # divVerent <divVerent@xonotic.org>, 2011
 # Sless <sless@gmx.net>, 2014
@@ -28,8 +28,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-20 07:23+0100\n"
-"PO-Revision-Date: 2020-12-20 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-01-04 14:47+0000\n"
+"Last-Translator: Mirio <opivy@hotmail.de>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -5897,6 +5897,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"Spielerstatistiken sind standardmäßig eingeschaltet. Du kannst dies im "
+"Profil-Menü ändern"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Save settings"
@@ -7913,23 +7915,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr ""
+msgstr "SND^Konstant"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
-msgstr ""
+msgstr "Verringern der Tonhöhe bei mehr Schaden"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
-msgstr ""
+msgstr "Abnehmend"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
-msgstr ""
+msgstr "Erhöhen der Tonhöhe bei mehr Schaden"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
-msgstr ""
+msgstr "Ansteigend"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
