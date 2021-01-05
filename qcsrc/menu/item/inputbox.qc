@@ -222,9 +222,12 @@
 					float w;
 					string ch2 = substring(me.text, i + 1, 1);
 					w = draw_TextWidth(strcat(ch, ch2), 0, me.realFontSize);
+					float fill_alpha = 0.4;
 					if (ch2 == "^")
 					{
-						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+						if (me.cursorPos > i && me.cursorPos <= i + 2)
+							fill_alpha = 0.6;
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 						draw_Text(p + eX * 0.25 * w, "^", me.realFontSize, theColor, theAlpha, 0);
 					}
 					else if (IS_DIGIT(ch2))
@@ -243,7 +246,9 @@
 							case 8: theColor = '1 1 1'; theAlpha = 0.5; break;
 							case 9: theColor = '0.5 0.5 0.5'; break;
 						}
-						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+						if (me.cursorPos > i && me.cursorPos <= i + 2)
+							fill_alpha = 0.6;
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 						draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 					}
 					else if (ch2 == "x")  // ^x found
@@ -267,7 +272,9 @@
 									theColor = theTempColor;
 									w = draw_TextWidth(substring(me.text, i, 5), 0, me.realFontSize);
 
-									draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+									if (me.cursorPos > i && me.cursorPos <= i + 5)
+										fill_alpha = 0.8;
+									draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 									draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);
 									i += 3;
 								}
@@ -275,7 +282,7 @@
 								{
 									// blue missing
 									w = draw_TextWidth(substring(me.text, i, 4), 0, me.realFontSize);
-									draw_Fill(p, eX * w + eY * me.realFontSize.y, eZ, 0.5);
+									draw_Fill(p, eX * w + eY * me.realFontSize.y, eZ, fill_alpha);
 									draw_Text(p, substring(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
 									i += 2;
 								}
@@ -284,7 +291,7 @@
 							{
 								// green missing
 								w = draw_TextWidth(substring(me.text, i, 3), 0, me.realFontSize);
-								draw_Fill(p, eX * w + eY * me.realFontSize.y, eY, 0.5);
+								draw_Fill(p, eX * w + eY * me.realFontSize.y, eY, fill_alpha);
 								draw_Text(p, substring(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
 								i += 1;
 							}
@@ -293,13 +300,13 @@
 						{
 							// red missing
 							// w = draw_TextWidth(substring(me.text, i, 2), 0) * me.realFontSize_x;
-							draw_Fill(p, eX * w + eY * me.realFontSize.y, eX, 0.5);
+							draw_Fill(p, eX * w + eY * me.realFontSize.y, eX, fill_alpha);
 							draw_Text(p, substring(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
 						}
 					}
 					else
 					{
-						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 						draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 					}
 					p += w * eX;
@@ -315,17 +322,20 @@
 			draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
 		}
 
-		if (!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5) draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
+		if (!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
+			draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
 		draw_ClearClip();
 
-		if (me.enableClearButton)
-			if (me.text != "")
-			{
-				if (me.focused && me.cb_pressed) draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, me.cb_colorC, 1);
-				else if (me.focused && me.cb_focused) draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, me.cb_colorF, 1);
-				else draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, me.cb_color, 1);
-			}
+		if (me.enableClearButton && me.text != "")
+		{
+			if (me.focused && me.cb_pressed)
+				draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, me.cb_colorC, 1);
+			else if (me.focused && me.cb_focused)
+				draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, me.cb_colorF, 1);
+			else
+				draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, me.cb_color, 1);
+		}
 
 		// skipping SUPER(InputBox).draw(me);
 		MenuItem_draw(me);
