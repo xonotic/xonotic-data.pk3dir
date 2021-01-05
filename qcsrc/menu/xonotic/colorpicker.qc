@@ -62,20 +62,17 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 	for (;;)
 	{
 		i = me.controlledTextbox.cursorPos;
+		string theText = me.controlledTextbox.text;
+		vector res = checkColorCode(theText, strlen(theText), i, true);
+		if (!res.x)
+			break;
 
-		int res = checkColorCode(me.controlledTextbox.text, i);
-		if (res)
-		{
-			int tag_length = floor(res / 10);
-			int ofs = res % 10;
-			for (int j = tag_length - ofs; j > 0; j--)
-				me.controlledTextbox.keyDown(me.controlledTextbox, K_RIGHTARROW, 8, 0);
-			for (int j = tag_length; j > 0; j--)
-				me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-			continue;
-		}
-
-		break;
+		int cc_len = res.x;
+		int ofs = res.y;
+		for (int j = cc_len - ofs; j > 0; j--)
+			me.controlledTextbox.keyDown(me.controlledTextbox, K_RIGHTARROW, 8, 0);
+		for (int j = cc_len; j > 0; j--)
+			me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
 	}
 
 	if(substring(me.controlledTextbox.text, i-1, 1) == "^")

@@ -462,29 +462,33 @@ bool isValidColorCodeValue(string theText, int cc_len, int tag_start)
 }
 
 // it returns 0 if pos is NOT in the middle or at the end of a color code
-// otherwise it returns a 2-digit number with cc_len as the first digit
-// and the offset from '^' position to pos as the second digit
+// otherwise it returns a vector with color code length as the first component
+// and the offset from '^' position to pos as the second component
 // e.g.:
-// "a^2xy" | returns 0 if pos == 0 or 1 or 4
-//    ^^   | returns 21 or 22 if pos == 2 or 3
+// "j^2kl" | returns 0 if pos == 0 or 1 or 4
+//    ^^   | returns '2 1' or '2 2' if pos == 2 or 3
 ERASEABLE
-int checkColorCode(string theText, int pos)
+vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_end)
 {
-	int text_len = strlen(theText);
+	if (text_len == 0)
+		text_len = strlen(theText);
 	string tag_type = "^";
 	int cc_len = 2;
 	int tag_len = 1;
 
 	LABEL(check_color_tag)
 
-	for (int ofs = cc_len; ofs >= 1; ofs--)
+	int ofs = cc_len;
+	if (!check_at_the_end)
+		ofs--;
+	for (; ofs >= 1; ofs--)
 	{
 		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))
 			continue;
 		if(substring(theText, pos - ofs, tag_len) == tag_type)
 		{
 			if (!isCaretEscaped(theText, pos - ofs) && isValidColorCodeValue(theText, cc_len, pos - ofs))
-				return cc_len * 10 + ofs;
+				return eX * cc_len + eY * ofs;
 		}
 	}
 	if (cc_len == 2)
@@ -494,5 +498,5 @@ int checkColorCode(string theText, int pos)
 		tag_len = 2;
 		goto check_color_tag;
 	}
-	return 0;
+	return '0 0 0';
 }

@@ -770,49 +770,6 @@ int cvar_settemp_restore()
 	return j;
 }
 
-int skipIncompleteTag(string theText, float pos, int len)
-{
-	int tag_start = -1;
-
-	if(substring(theText, pos - 1, 1) == "^")
-	{
-		if(isCaretEscaped(theText, pos - 1) || pos >= len)
-			return 0;
-
-		int ch = str2chr(theText, pos);
-		if(ch >= '0' && ch <= '9')
-			return 1; // ^[0-9] color code found
-		else if (ch == 'x')
-			tag_start = pos - 1; // ^x tag found
-		else
-			return 0;
-	}
-	else
-	{
-		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
-		{
-			if(substring(theText, pos - i, 2) == "^x")
-			{
-				tag_start = pos - i; // ^x tag found
-				break;
-			}
-		}
-	}
-
-	if(tag_start >= 0)
-	{
-		if(tag_start + 5 < len)
-		if(IS_HEXDIGIT(substring(theText, tag_start + 2, 1)))
-		if(IS_HEXDIGIT(substring(theText, tag_start + 3, 1)))
-		if(IS_HEXDIGIT(substring(theText, tag_start + 4, 1)))
-		{
-			if(!isCaretEscaped(theText, tag_start))
-				return 5 - (pos - tag_start); // ^xRGB color code found
-		}
-	}
-	return 0;
-}
-
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
 	// STOP.
@@ -834,7 +791,11 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	{
 		middle = floor((left + right) / 2);
 		if(colors)
-			ofs = skipIncompleteTag(theText, middle, len);
+		{
+			vector res = checkColorCode(theText, len, middle, false);
+			ofs = (res.x) ? res.x - res.y : 0;
+		}
+
 		if(w(substring(theText, 0, middle + ofs), theSize) <= maxWidth)
 			left = middle + ofs;
 		else
@@ -866,7 +827,11 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	{
 		middle = floor((left + right) / 2);
 		if(colors)
-			ofs = skipIncompleteTag(theText, middle, len);
+		{
+			vector res = checkColorCode(theText, len, middle, true);
+			ofs = (!res.x) ? 0 : res.x - res.y;
+		}
+
 		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
 			left = middle + ofs;
 		else
