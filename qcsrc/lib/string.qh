@@ -436,3 +436,67 @@ const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 
 const string DIGITS = "0123456789";
 #define IS_DIGIT(d) (strstrofs(DIGITS, (d), 0) >= 0)
+
+// returns true if the caret at position pos is escaped
+ERASEABLE
+bool isCaretEscaped(string theText, float pos)
+{
+	// count all the previous carets
+	int carets = 0;
+	while(pos - carets >= 1 && substring(theText, pos - carets - 1, 1) == "^")
+		++carets;
+	// if number of previous carets is odd then this carets is escaped
+	return (carets & 1);
+}
+
+ERASEABLE
+bool isValidColorCodeValue(string theText, int cc_len, int tag_start)
+{
+	if (cc_len == 2)
+		return IS_DIGIT(substring(theText, tag_start + 1, 1));
+	if (cc_len == 5)
+		return (IS_HEXDIGIT(substring(theText, tag_start + 2, 1))
+			&& IS_HEXDIGIT(substring(theText, tag_start + 3, 1))
+			&& IS_HEXDIGIT(substring(theText, tag_start + 4, 1)));
+	return false;
+}
+
+// it returns 0 if pos is NOT in the middle or at the end of a color code
+// otherwise it returns a vector with color code length as the first component
+// and the offset from '^' position to pos as the second component
+// e.g.:
+// "j^2kl" | returns 0 if pos == 0 or 1 or 4
+//    ^^   | returns '2 1' or '2 2' if pos == 2 or 3
+ERASEABLE
+vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_end)
+{
+	if (text_len == 0)
+		text_len = strlen(theText);
+	string tag_type = "^";
+	int cc_len = 2;
+	int tag_len = 1;
+
+	LABEL(check_color_tag)
+
+	int ofs = cc_len;
+	if (!check_at_the_end)
+		ofs--;
+	for (; ofs >= 1; ofs--)
+	{
+		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))
+			continue;
+		if(substring(theText, pos - ofs, tag_len) == tag_type)
+		{
+			if (!isCaretEscaped(theText, pos - ofs) && isValidColorCodeValue(theText, cc_len, pos - ofs))
+				return eX * cc_len + eY * ofs;
+		}
+	}
+	if (cc_len == 2)
+	{
+		tag_type = "^x";
+		cc_len = 5;
+		tag_len = 2;
+		goto check_color_tag;
+	}
+	return '0 0 0';
+}
