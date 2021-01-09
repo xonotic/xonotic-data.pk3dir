@@ -93,6 +93,9 @@ bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
 float autocvar_hud_panel_scoreboard_minwidth = 0.4;
+bool autocvar_hud_panel_scoreboard_playerid = false;
+string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
+string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
 
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
@@ -571,6 +574,13 @@ LABEL(found)
 	sbt_field[sbt_num_fields] = SP_END;
 }
 
+string Scoreboard_AddPlayerId(string pl_name, entity pl)
+{
+	string pref = autocvar_hud_panel_scoreboard_playerid_prefix;
+	string suf = autocvar_hud_panel_scoreboard_playerid_suffix;
+	return strcat(pref, itos(pl.sv_entnum + 1), suf, pl_name);
+}
+
 // MOVEUP::
 vector sbt_field_rgb;
 string sbt_field_icon0;
@@ -639,7 +649,10 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			return str;
 
 		case SP_NAME:
-			return Scoreboard_GetName(pl);
+			str = Scoreboard_GetName(pl);
+			if (autocvar_hud_panel_scoreboard_playerid)
+				str = Scoreboard_AddPlayerId(str, pl);
+			return str;
 
 		case SP_FRAGS:
 			f = pl.(scores(SP_KILLS));
@@ -987,7 +1000,10 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
 			field = Scoreboard_GetField(pl, SP_SCORE);
 
-		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
+		string str = entcs_GetName(pl.sv_entnum);
+		if (autocvar_hud_panel_scoreboard_playerid)
+			str = Scoreboard_AddPlayerId(str, pl);
+		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		float column_width = stringwidth(str, true, hud_fontsize);
 		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 		{
