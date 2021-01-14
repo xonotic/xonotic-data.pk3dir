@@ -180,7 +180,6 @@ CLASS(Client, Object)
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
     ATTRIB(Client, just_joined, bool, this.just_joined);
     ATTRIB(Client, race_completed, bool, this.race_completed);
-    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, latency_sum, float, this.latency_sum);
     ATTRIB(Client, latency_cnt, int, this.latency_cnt);
     ATTRIB(Client, latency_time, float, this.latency_time);
@@ -200,6 +199,9 @@ CLASS(Client, Object)
 
     // networked cvars
 
+// not currently handled by ClientState
+#if 0
+    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, cvar_cl_allow_uid2name, int, this.cvar_cl_allow_uid2name);
     ATTRIB(Client, cvar_cl_allow_uidtracking, int, this.cvar_cl_allow_uidtracking);
     ATTRIB(Client, cvar_cl_autotaunt, float, this.cvar_cl_autotaunt);
@@ -223,6 +225,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
     ATTRIB(Client, autoswitch, bool, this.autoswitch);
     ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
+    ATTRIB(Client, cvar_r_drawviewmodel, bool, this.cvar_r_drawviewmodel);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
     ATTRIB(Client, cvar_cl_dodging, float, this.cvar_cl_dodging);
     ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
@@ -233,6 +236,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
     ATTRIB(Client, cvar_cl_weapon_switch_reload, bool, this.cvar_cl_weapon_switch_reload);
     ATTRIB(Client, cvar_cl_weapon_switch_fallback_to_impulse, bool, this.cvar_cl_weapon_switch_fallback_to_impulse);
+#endif
 
     METHOD(Client, m_unwind, bool(Client this));
 

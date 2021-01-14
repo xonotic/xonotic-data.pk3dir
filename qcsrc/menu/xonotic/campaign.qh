@@ -33,7 +33,7 @@ CLASS(XonoticCampaignList, XonoticListBox)
 	ATTRIB(XonoticCampaignList, emptyLineHeight, float, 0.5);
 
 	ATTRIB(XonoticCampaignList, campaignIndex, float, 0);
-	ATTRIB(XonoticCampaignList, cvarName, string);
+	ATTRIB(XonoticCampaignList, controlledCvar, string);
 	METHOD(XonoticCampaignList, loadCvars, void(entity));
 	METHOD(XonoticCampaignList, saveCvars, void(entity));
 	ATTRIB(XonoticCampaignList, hasNextCampaign, bool, false);

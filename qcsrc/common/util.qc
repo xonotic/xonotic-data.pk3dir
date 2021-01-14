@@ -770,57 +770,6 @@ int cvar_settemp_restore()
 	return j;
 }
 
-bool isCaretEscaped(string theText, float pos)
-{
-	int i = 0;
-	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
-		++i;
-	return (i & 1);
-}
-
-int skipIncompleteTag(string theText, float pos, int len)
-{
-	int tag_start = -1;
-
-	if(substring(theText, pos - 1, 1) == "^")
-	{
-		if(isCaretEscaped(theText, pos - 1) || pos >= len)
-			return 0;
-
-		int ch = str2chr(theText, pos);
-		if(ch >= '0' && ch <= '9')
-			return 1; // ^[0-9] color code found
-		else if (ch == 'x')
-			tag_start = pos - 1; // ^x tag found
-		else
-			return 0;
-	}
-	else
-	{
-		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
-		{
-			if(substring(theText, pos - i, 2) == "^x")
-			{
-				tag_start = pos - i; // ^x tag found
-				break;
-			}
-		}
-	}
-
-	if(tag_start >= 0)
-	{
-		if(tag_start + 5 < len)
-		if(IS_HEXDIGIT(substring(theText, tag_start + 2, 1)))
-		if(IS_HEXDIGIT(substring(theText, tag_start + 3, 1)))
-		if(IS_HEXDIGIT(substring(theText, tag_start + 4, 1)))
-		{
-			if(!isCaretEscaped(theText, tag_start))
-				return 5 - (pos - tag_start); // ^xRGB color code found
-		}
-	}
-	return 0;
-}
-
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
 	// STOP.
@@ -842,7 +791,11 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	{
 		middle = floor((left + right) / 2);
 		if(colors)
-			ofs = skipIncompleteTag(theText, middle, len);
+		{
+			vector res = checkColorCode(theText, len, middle, false);
+			ofs = (res.x) ? res.x - res.y : 0;
+		}
+
 		if(w(substring(theText, 0, middle + ofs), theSize) <= maxWidth)
 			left = middle + ofs;
 		else
@@ -874,7 +827,11 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	{
 		middle = floor((left + right) / 2);
 		if(colors)
-			ofs = skipIncompleteTag(theText, middle, len);
+		{
+			vector res = checkColorCode(theText, len, middle, true);
+			ofs = (!res.x) ? 0 : res.x - res.y;
+		}
+
 		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
 			left = middle + ofs;
 		else
@@ -922,11 +879,7 @@ string find_last_color_code(string s)
 
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	float cantake;
-	float take;
-	string s;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -934,30 +887,26 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
-	if(cantake > 0 && cantake < strlen(s))
+	int take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	if(take_until > 0 && take_until < strlen(s))
 	{
-		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
-			--take;
-		if(take == 0)
+		int last_word = take_until - 1;
+		while(last_word > 0 && substring(s, last_word, 1) != " ")
+			--last_word;
+
+		int skip = 0;
+		if(last_word != 0)
 		{
-			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-			return substring(s, 0, cantake);
+			take_until = last_word;
+			skip = 1;
 		}
-		else
-		{
-			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
-			return substring(s, 0, take);
-		}
+
+		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7", theFontSize) == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
 	}
 	else
 	{
@@ -968,11 +917,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 {
-	float cantake;
-	float take;
-	string s;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -980,30 +925,26 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	cantake = textLengthUpToLength(s, w, tw);
-	if(cantake > 0 && cantake < strlen(s))
+	int take_until = textLengthUpToLength(s, w, tw);
+	if(take_until > 0 && take_until < strlen(s))
 	{
-		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
-			--take;
-		if(take == 0)
+		int last_word = take_until - 1;
+		while(last_word > 0 && substring(s, last_word, 1) != " ")
+			--last_word;
+
+		int skip = 0;
+		if(last_word != 0)
 		{
-			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-			return substring(s, 0, cantake);
+			take_until = last_word;
+			skip = 1;
 		}
-		else
-		{
-			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
-			return substring(s, 0, take);
-		}
+
+		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7") == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
 	}
 	else
 	{

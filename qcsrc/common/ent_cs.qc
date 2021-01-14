@@ -230,11 +230,14 @@ ENTCS_PROP(ACTIVEWEPID, false, activewepid, activewepid, ENTCS_SET_NORMAL,
 		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
+		// NOTE: the following code block has been disabled as a workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/1824
+#if 0
 		if (!IS_REAL_CLIENT(player)) return;
 		FOREACH_CLIENT(true, {
 			assert(CS(it).entcs);
 			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
 		});
+#endif
 	}
 
 	void entcs_detach(entity player)

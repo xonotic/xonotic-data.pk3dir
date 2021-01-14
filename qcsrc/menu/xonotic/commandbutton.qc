@@ -1,13 +1,13 @@
 #include "commandbutton.qh"
 
-entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, float theFlags, string theTooltip)
+entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, int theFlags, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticCommandButton);
 	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags, theTooltip);
 	return me;
 }
-entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float theFlags)
+entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, int theFlags)
 {
 	return makeXonoticCommandButton_T(theText, theColor, theCommand, theFlags, string_null);
 }
@@ -23,7 +23,7 @@ void XonoticCommandButton_Click(entity me, entity other)
 		m_goto(string_null);
 }
 
-void XonoticCommandButton_configureXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags, string theTooltip)
+void XonoticCommandButton_configureXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, int theFlags, string theTooltip)
 {
 	me.configureXonoticButton(me, theText, theColor, theTooltip);
 	me.onClickCommand = theCommand;

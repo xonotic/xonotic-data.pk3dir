@@ -559,7 +559,8 @@ void WinningConditionHelper(entity this)
 			else
 				WinningConditionHelper_topscore = -999999999;
 		}
-		WinningConditionHelper_equality = 0;
+		if(player_count == 0) // special case: empty servers DO end the match at a 0:0 tie
+			WinningConditionHelper_equality = 0;
 	}
 
 	if(WinningConditionHelper_secondscore == 0)
@@ -789,7 +790,7 @@ entity PlayerScore_Sort(.float field, int teams, bool strict, bool nospectators)
 		pbest.chain = NULL;
 
 		++i;
-		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, false))
+		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, strict))
 			j = i;
 
 		pbest.(field) = j;

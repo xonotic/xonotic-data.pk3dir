@@ -45,6 +45,11 @@ float QuickMenu_TimeOut;
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
+void QuickMenu_TimeOut_Set()
+{
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+}
+
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
@@ -186,7 +191,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 	hudShiftState = 0;
 
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -366,7 +371,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 		QuickMenu_Close();
 		return false;
 	}
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -391,7 +396,7 @@ bool QuickMenu_ActionForNumber(int num)
 	{
 		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
-		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+		QuickMenu_TimeOut_Set();
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -487,6 +492,7 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	return true;
 }
 
+int entry_num_prev = 0;
 void QuickMenu_Mouse()
 {
 	if(mv_active) return;
@@ -516,6 +522,11 @@ void QuickMenu_Mouse()
 	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
 		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
+		if (entry_num != entry_num_prev)
+		{
+			QuickMenu_TimeOut_Set();
+			entry_num_prev = entry_num;
+		}
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))

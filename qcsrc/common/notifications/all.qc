@@ -793,12 +793,12 @@ void Create_Notification_Entity_Medal(entity notif,
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars(entity this)
+void Notification_GetCvars(entity this, entity store)
 {
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		GetCvars_handleFloat(
 			this,
-			CS(this),
+			store,
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],
@@ -1735,7 +1735,7 @@ void Send_Notification(
 
 		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN \
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
-				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
+				switch (CS_CVAR(ent).msg_choice_choices[net_name.nent_choice_idx]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \
@@ -1766,7 +1766,7 @@ void Send_Notification(
 			}
 			default:
 			{
-				FOREACH_CLIENT(IS_REAL_CLIENT(it) && Notification_ShouldSend(broadcast, it, client), {
+				FOREACH_CLIENT(Notification_ShouldSend(broadcast, it, client), {
 					RECURSE_FROM_CHOICE(it, continue);
 				});
 				break;
