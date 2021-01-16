@@ -1083,6 +1083,7 @@ NET_HANDLE(TE_CSQC_CHATSOUND, bool isNew)
 {
 	string snd = ReadString();
 	snd = strcat("chat/", snd, ".ogg");
+	LOG_INFOF("Client got chat sound %s", snd);
 	
 	precache_sound(snd);
 	_sound(NULL, CH_INFO, snd, VOL_BASE, ATTN_NONE);
