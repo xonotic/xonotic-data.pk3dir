@@ -116,14 +116,14 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
 		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
-		this.com_phys_gravity = '0 0 -1' * PHYS_GRAVITY(this) * dt;
+		this.com_phys_gravity = -PHYS_GRAVITY(this) * dt;
 		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
 		this.com_phys_ladder = true;
 		this.com_phys_friction_air = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_friction_air = false;
 		this.com_phys_ladder = false;
-		this.com_phys_gravity = '0 0 0';
+		this.com_phys_gravity = 0;
 	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
 		PM_jetpack(this, maxspeed_mod, dt);
 	} else if (IS_ONGROUND(this) && (!IS_ONSLICK(this) || !PHYS_SLICK_APPLYGRAVITY(this))) {
@@ -134,14 +134,14 @@ void sys_phys_update(entity this, float dt)
 			}
 		}
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
-		this.com_phys_gravity = '0 0 -1' * PHYS_GRAVITY(this) * dt;
+		this.com_phys_gravity = -PHYS_GRAVITY(this) * dt;
 		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
 		this.com_phys_ground = true;
 		this.com_phys_vel_2d = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_vel_2d = false;
 		this.com_phys_ground = false;
-		this.com_phys_gravity = '0 0 0';
+		this.com_phys_gravity = 0;
 	} else {
 		this.com_phys_acc_rate_air = PHYS_AIRACCELERATE(this) * min(maxspeed_mod, 1);
 		this.com_phys_acc_rate_air_stop = PHYS_AIRSTOPACCELERATE(this) * maxspeed_mod;
@@ -181,10 +181,10 @@ void sys_phys_simulate(entity this, float dt)
 		UNSET_ONGROUND(this);
 
 		if (this.com_phys_friction_air) {
-			const vector g = -this.com_phys_gravity;
-			this.velocity_z += g.z / 2;
+			const float grav = -this.com_phys_gravity;
+			this.velocity_z += grav / 2;
 			this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
-			this.velocity_z += g.z / 2;
+			this.velocity_z += grav / 2;
 		}
 	}
 
@@ -427,7 +427,6 @@ void sys_phys_simulate_simple(entity this, float dt)
 	vector g = '0 0 0';
 	if (this.com_phys_gravity_factor && !g) g = '0 0 -1' * PHYS_GRAVITY(NULL);
 
-	vector acc = this.com_phys_acc;
 	vector vel = this.com_phys_vel;
 	vector pos = this.com_phys_pos;
 
@@ -500,7 +499,6 @@ void sys_phys_simulate_simple(entity this, float dt)
 		ClipVelocity(vel, trace_plane_normal, vel, 1);
 	}
 
-	this.com_phys_acc = acc;
 	this.com_phys_vel = vel;
 	this.com_phys_pos = pos;
 	setorigin(this, this.com_phys_pos);
