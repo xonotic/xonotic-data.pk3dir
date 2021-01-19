@@ -512,9 +512,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
-	if(bInputType == 2)
-		return false;
-
 	if(!autocvar__hud_configure)
 		return false;
 
@@ -524,6 +521,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		mousepos.y = nSecondary;
 		return true;
 	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
 
 	// block any input while a menu dialog is fading
 	// don't block mousepos read as it leads to cursor jumps in the interaction with the menu
@@ -546,12 +549,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			hit_con_bind = true;
 	}
 
-	if(bInputType == 0) {
+	if(key_pressed) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 	}
-	else if(bInputType == 1) {
+	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
@@ -559,7 +562,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_CTRL)
 	{
-		if (bInputType == 1) //ctrl has been released
+		if (!key_pressed) //ctrl has been released
 		{
 			if (tab_panel)
 			{
@@ -575,35 +578,35 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE1);
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		hud_configure_menu_open = 1;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		if (!hud_configure_menu_open)
 			HUD_Configure_Exit_Force();
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		// FIXME minor bug: if a panel is highlighted, has the same pos_x and
@@ -692,7 +695,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == K_SPACE && hudShiftState & S_CTRL) // enable/disable highlighted panel or dock
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (highlightedPanel)
@@ -705,7 +708,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'c' && hudShiftState & S_CTRL) // copy highlighted panel size
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (highlightedPanel)
@@ -717,7 +720,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'v' && hudShiftState & S_CTRL) // past copied size on the highlighted panel
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (panel_size_copied == '0 0 0' || !highlightedPanel)
@@ -746,7 +749,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 		//restore previous values
 		if (highlightedPanel_backup)
@@ -760,13 +763,13 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 		localcmd("hud save myconfig\n");
 	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 		{
 			pressed_key_time = 0;
 			return true;
