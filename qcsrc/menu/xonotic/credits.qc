@@ -6,7 +6,6 @@
 		PERSON(Ant "Antibody" Zucaro) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
-		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Zac "Mario" Jardine) \
