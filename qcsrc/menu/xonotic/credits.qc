@@ -23,6 +23,7 @@
 		PERSON(Nitroxis) \
 		PERSON(packer) \
 		PERSON(Severin "sev" Meyer) \
+		PERSON(SpiKe) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
