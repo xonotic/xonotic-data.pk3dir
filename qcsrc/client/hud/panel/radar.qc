@@ -62,8 +62,7 @@ void HUD_Radar_Hide_Maximized()
 float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
-	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
-		autocvar__hud_configure || mv_active)
+	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse || autocvar__hud_configure || mv_active)
 		return false;
 
 	if(bInputType == 3)
@@ -73,21 +72,27 @@ float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
+	if (bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE1);
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
-	else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+	else if (nPrimary == K_ESCAPE && key_pressed)
 	{
 		HUD_Radar_Hide_Maximized();
 	}
@@ -106,21 +111,18 @@ float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if ( STAT(HEALTH) <= 0 )
 		{
 			// Show scoreboard
-			if ( bInputType < 2 )
+			con_keys = findkeysforcommand("+showscores", 0);
+			keys = tokenize(con_keys);
+			for (i = 0; i < keys; ++i)
 			{
-				con_keys = findkeysforcommand("+showscores", 0);
-				keys = tokenize(con_keys);
-				for (i = 0; i < keys; ++i)
+				if ( nPrimary == stof(argv(i)) )
 				{
-					if ( nPrimary == stof(argv(i)) )
-					{
-						hud_panel_radar_temp_hidden = bInputType == 0;
-						return false;
-					}
+					hud_panel_radar_temp_hidden = key_pressed;
+					return false;
 				}
 			}
 		}
-		else if ( bInputType == 0 )
+		else if (key_pressed)
 			HUD_Radar_Hide_Maximized();
 
 		return false;
