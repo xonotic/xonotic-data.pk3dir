@@ -86,6 +86,7 @@
 		PERSON(unfa) \
 	NL() \
 	FUNCTION(_("Game Code")) \
+		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(martin-t) \
 		PERSON(Mattia "Melanosuchus" Basaglia) \
