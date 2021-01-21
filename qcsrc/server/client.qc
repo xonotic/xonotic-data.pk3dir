@@ -199,19 +199,19 @@ string CheckPlayerModel(string plyermodel) {
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
 	// only in right path
-	if( substring(plyermodel,0,14) != "models/player/")
+	if(substring(plyermodel, 0, 14) != "models/player/")
 		return FallbackPlayerModel;
 	// only good file extensions
-	if(substring(plyermodel,-4,4) != ".zym")
-	if(substring(plyermodel,-4,4) != ".dpm")
-	if(substring(plyermodel,-4,4) != ".iqm")
-	if(substring(plyermodel,-4,4) != ".md3")
-	if(substring(plyermodel,-4,4) != ".psk")
+	if(substring(plyermodel, -4, 4) != ".iqm"
+		&& substring(plyermodel, -4, 4) != ".zym"
+		&& substring(plyermodel, -4, 4) != ".dpm"
+		&& substring(plyermodel, -4, 4) != ".md3"
+		&& substring(plyermodel, -4, 4) != ".psk")
+	{
 		return FallbackPlayerModel;
+	}
 	// forbid the LOD models
-	if(substring(plyermodel, -9,5) == "_lod1")
-		return FallbackPlayerModel;
-	if(substring(plyermodel, -9,5) == "_lod2")
+	if(substring(plyermodel, -9, 5) == "_lod1" || substring(plyermodel, -9, 5) == "_lod2")
 		return FallbackPlayerModel;
 	if(plyermodel != strtolower(plyermodel))
 		return FallbackPlayerModel;
@@ -2298,6 +2298,7 @@ bool PlayerThink(entity this)
 }
 
 .bool would_spectate;
+// merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
 	bool is_spec = IS_SPEC(this);
@@ -2354,7 +2355,7 @@ void ObserverOrSpectatorThink(entity this)
 			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS_CVAR(this).cvar_cl_clippedspectating : !CS_CVAR(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
-	} else {
+	} else { // jump pressed
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
