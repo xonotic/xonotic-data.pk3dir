@@ -211,11 +211,19 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			it.m_set(this, player);
 			this.SendFlags |= BIT(it.m_id);
 		});
+
 		if (intermission_running)
 		{
 			// health is set to special values after the game ends, ignore any change
 			this.SendFlags &= ~BIT(ENTCS_PROP_HEALTH_id);
 		}
+
+		// always send origin of players even if they stand still otherwise
+		// if a teammate isn't in my pvs and his health (or view angle or name
+		// etc...) changes then his tag disappears
+		if (IS_PLAYER(this.owner))
+			this.SendFlags |= BIT(ENTCS_PROP_ORIGIN_id);
+
 		setorigin(this, this.origin); // relink
 	}
 
