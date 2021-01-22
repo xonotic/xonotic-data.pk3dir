@@ -159,12 +159,23 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 
 #ifdef SVQC
 
-	int ENTCS_PUBLICMASK = 0;
+	int ENTCS_PUBLICMASK = 0, ENTCS_PRIVATEMASK = 0;
 	STATIC_INIT(ENTCS_PUBLICMASK)
 	{
-		FOREACH(EntCSProps, it.m_public,
+		FOREACH(EntCSProps, true,
 		{
-			ENTCS_PUBLICMASK |= BIT(it.m_id);
+			if (it.m_public)
+				ENTCS_PUBLICMASK |= BIT(it.m_id);
+			else
+				ENTCS_PRIVATEMASK |= BIT(it.m_id);
+		});
+	}
+
+	void entcs_update_players(entity player)
+	{
+		FOREACH_CLIENT(it != player && IS_PLAYER(it),
+		{
+			CS(it).entcs.SendFlags |= ENTCS_PRIVATEMASK;
 		});
 	}
 
