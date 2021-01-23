@@ -7,6 +7,7 @@
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
+# Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
@@ -25,8 +26,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-20 07:23+0100\n"
-"PO-Revision-Date: 2020-12-20 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-01-22 18:37+0000\n"
+"Last-Translator: Jakub Niklas <Kuba.mpcs@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -4327,7 +4328,7 @@ msgstr "(obok %s)"
 
 #: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
 msgid "primary"
-msgstr "podstadowy"
+msgstr "podstawowy"
 
 #: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
 msgid "secondary"
