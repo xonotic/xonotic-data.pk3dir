@@ -73,6 +73,8 @@ void Draw_ShowNames(entity this)
 			overlap = 0;
 	}
 
+	// o.z is < 0 when o is behind me
+	#define OFF_SCREEN(o) (o.z < 0 || o.x < 0 || o.y < 0 || o.x > vid_conwidth || o.y > vid_conheight)
 	if (overlap == -1 && autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
@@ -82,7 +84,7 @@ void Draw_ShowNames(entity this)
 			if (!(entcs && entcs.has_sv_origin))
 				continue;
 			vector eo = project_3d_to_2d(it.origin);
-			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
+			if (OFF_SCREEN(eo)) continue;
 			eo.z = 0;
 			if (vdist((vec2(o) - eo), <, autocvar_hud_shownames_antioverlap_distance)
 				&& vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
@@ -92,18 +94,17 @@ void Draw_ShowNames(entity this)
 			}
 		});
 	}
-	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (!this.fadedelay) this.fadedelay = time + SHOWNAMES_FADEDELAY;
 	if (this.csqcmodel_isdead) // dead player, fade out slowly
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
 	}
-	else if (!onscreen || (!this.sameteam && !hit)) // out of view, fade out
+	else if (!this.sameteam && !hit) // view blocked, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 		this.fadedelay = 0; // reset fade in delay, enemy has left the view
 	}
-	else if (overlap > 0) // tag overlap detected, fade out
+	else if (OFF_SCREEN(o) || overlap > 0) // out of view or tag overlap detected, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 	}
