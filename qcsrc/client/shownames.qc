@@ -112,7 +112,7 @@ void Draw_ShowNames(entity this)
 	{
 		this.alpha = min(1, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
-	else if (time > this.fadedelay)  // fade in for enemies
+	else if (time > this.fadedelay || this.alpha > 0)  // fade in for enemies
 	{
 		this.alpha = min(1, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
