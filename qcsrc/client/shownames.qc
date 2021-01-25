@@ -55,7 +55,7 @@ void Draw_ShowNames(entity this)
 	}
 	else
 	{
-		traceline(view_origin, this.origin, MOVE_NORMAL, this);
+		traceline(view_origin, this.origin, MOVE_NOMONSTERS, this);
 		hit = !(trace_fraction < 1 && (trace_networkentity != this.sv_entnum && trace_ent.entnum != this.sv_entnum));
 	}
 	// handle tag fading
@@ -81,9 +81,9 @@ void Draw_ShowNames(entity this)
 		entity entcs = NULL;
 		LL_EACH(shownames_ent, it != this, {
 			entcs = entcs_receiver(i);
-			if (!(entcs && entcs.has_sv_origin))
+			if (!(entcs && entcs.has_origin))
 				continue;
-			vector eo = project_3d_to_2d(it.origin);
+			vector eo = project_3d_to_2d(it.origin + eZ * autocvar_hud_shownames_offset);
 			if (OFF_SCREEN(eo)) continue;
 			eo.z = 0;
 			if (vdist((vec2(o) - eo), <, autocvar_hud_shownames_antioverlap_distance)
