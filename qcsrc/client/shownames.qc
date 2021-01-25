@@ -31,6 +31,10 @@ STATIC_INIT(shownames_ent)
 	}
 }
 
+// used by the antioverlap code
+.vector box_ofs;
+.vector box_org;
+
 const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity this)
@@ -86,7 +90,7 @@ void Draw_ShowNames(entity this)
 			vector eo = project_3d_to_2d(it.origin + eZ * autocvar_hud_shownames_offset);
 			if (OFF_SCREEN(eo)) continue;
 			eo.z = 0;
-			if (vdist((vec2(o) - eo), <, autocvar_hud_shownames_antioverlap_distance)
+			if (boxesoverlap(this.box_org - this.box_ofs, this.box_org + this.box_ofs, it.box_org - it.box_ofs, it.box_org + it.box_ofs)
 				&& vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
 			{
 				overlap = 1;
@@ -154,23 +158,30 @@ void Draw_ShowNames(entity this)
 			resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
 		}
 	}
-	// draw the sprite image
+
 	if (o.z >= 0)
 	{
 		o.z = 0;
 		vector mySize = (vec2(autocvar_hud_shownames_aspect, 1)) * autocvar_hud_shownames_fontsize;
 		vector myPos = o - vec2(0.5 * mySize.x, mySize.y);
-		// size scaling
 		mySize.x *= resize;
 		mySize.y *= resize;
 		myPos.x += 0.5 * (mySize.x / resize - mySize.x);
 		myPos.y += (mySize.y / resize - mySize.y);
-		// this is where the origin of the string
+
+		this.box_org = myPos + mySize / 2;
+		this.box_ofs = mySize / 2;
+
 		float namewidth = mySize.x;
 		if (autocvar_hud_shownames_status && this.sameteam && !this.csqcmodel_isdead)
 		{
 			vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
+
+			this.box_ofs.x = max(mySize.x / 2, sz.x); // sz.x is already half as wide
+			this.box_ofs.y += sz.y / 2;
+			this.box_org.y = myPos.y + (mySize.y + sz.y) / 2;
+
 			if (autocvar_hud_shownames_statusbar_highlight)
 				drawfill(pos + eX * 0.25 * mySize.x, sz, '0.7 0.7 0.7', a / 2, DRAWFLAG_NORMAL);
 			if (this.healthvalue > 0)
