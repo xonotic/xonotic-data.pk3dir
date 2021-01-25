@@ -108,9 +108,17 @@ void Draw_ShowNames(entity this)
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 		this.fadedelay = 0; // reset fade in delay, enemy has left the view
 	}
-	else if (OFF_SCREEN(o) || overlap > 0) // out of view or tag overlap detected, fade out
+	else if (OFF_SCREEN(o)) // out of view, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
+	}
+	else if (overlap > 0) // tag overlap detected, fade out
+	{
+		float minalpha = autocvar_hud_shownames_antioverlap_minalpha;
+		if (this.alpha >= minalpha)
+			this.alpha = max(minalpha, this.alpha - SHOWNAMES_FADESPEED * frametime);
+		else
+			this.alpha = min(minalpha, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
 	else if (this.sameteam)  // fade in for team mates
 	{
