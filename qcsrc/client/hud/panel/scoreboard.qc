@@ -30,6 +30,7 @@ void Scoreboard_Draw_Export(int fh)
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight");
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha");
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_eliminated");
 	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
@@ -52,6 +53,7 @@ float sbt_fg_alpha_self;
 bool sbt_highlight;
 float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
+float sbt_highlight_alpha_eliminated;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -74,6 +76,7 @@ float autocvar_hud_panel_scoreboard_table_fg_alpha_self = 1;
 bool autocvar_hud_panel_scoreboard_table_highlight = true;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
+float autocvar_hud_panel_scoreboard_table_highlight_alpha_eliminated = 0.6;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 float autocvar_hud_panel_scoreboard_namesize = 15;
 float autocvar_hud_panel_scoreboard_team_size_position = 0;
@@ -97,6 +100,9 @@ bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
 float autocvar_hud_panel_scoreboard_minwidth = 0.4;
+bool autocvar_hud_panel_scoreboard_playerid = false;
+string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
+string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
 
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
@@ -575,6 +581,13 @@ LABEL(found)
 	sbt_field[sbt_num_fields] = SP_END;
 }
 
+string Scoreboard_AddPlayerId(string pl_name, entity pl)
+{
+	string pref = autocvar_hud_panel_scoreboard_playerid_prefix;
+	string suf = autocvar_hud_panel_scoreboard_playerid_suffix;
+	return strcat(pref, itos(pl.sv_entnum + 1), suf, pl_name);
+}
+
 // MOVEUP::
 vector sbt_field_rgb;
 string sbt_field_icon0;
@@ -643,7 +656,10 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			return str;
 
 		case SP_NAME:
-			return Scoreboard_GetName(pl);
+			str = Scoreboard_GetName(pl);
+			if (autocvar_hud_panel_scoreboard_playerid)
+				str = Scoreboard_AddPlayerId(str, pl);
+			return str;
 
 		case SP_FRAGS:
 			f = pl.(scores(SP_KILLS));
@@ -940,7 +956,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	}
 
 	if(pl.eliminated)
-		drawfill(h_pos, h_size, '0 0 0', 0.5 * panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawfill(h_pos, h_size, '0 0 0', sbt_highlight_alpha_eliminated, DRAWFLAG_NORMAL);
 }
 
 vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ignored_pl, entity pl, int pl_number)
@@ -991,7 +1007,10 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
 			field = Scoreboard_GetField(pl, SP_SCORE);
 
-		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
+		string str = entcs_GetName(pl.sv_entnum);
+		if (autocvar_hud_panel_scoreboard_playerid)
+			str = Scoreboard_AddPlayerId(str, pl);
+		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		float column_width = stringwidth(str, true, hud_fontsize);
 		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 		{
@@ -1040,7 +1059,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		{
 			h_size.x = column_width + hud_fontsize.x * 0.25;
 			h_size.y = hud_fontsize.y;
-			drawfill(pos - hud_fontsize.x * 0.25 * eX, h_size, '0 0 0', 0.5 * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos - hud_fontsize.x * 0.25 * eX, h_size, '0 0 0', sbt_highlight_alpha_eliminated, DRAWFLAG_NORMAL);
 		}
 		pos.x += column_width;
 		pos.x += hud_fontsize.x;
@@ -1736,6 +1755,7 @@ void Scoreboard_Draw()
 	sbt_highlight = autocvar_hud_panel_scoreboard_table_highlight;
 	sbt_highlight_alpha = autocvar_hud_panel_scoreboard_table_highlight_alpha * panel_fg_alpha;
 	sbt_highlight_alpha_self = autocvar_hud_panel_scoreboard_table_highlight_alpha_self * panel_fg_alpha;
+	sbt_highlight_alpha_eliminated = autocvar_hud_panel_scoreboard_table_highlight_alpha_eliminated * panel_fg_alpha;
 	sbt_fg_alpha = autocvar_hud_panel_scoreboard_table_fg_alpha * panel_fg_alpha;
 	sbt_fg_alpha_self = autocvar_hud_panel_scoreboard_table_fg_alpha_self * panel_fg_alpha;
 

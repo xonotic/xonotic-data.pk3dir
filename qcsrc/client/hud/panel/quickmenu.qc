@@ -45,6 +45,11 @@ float QuickMenu_TimeOut;
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
+void QuickMenu_TimeOut_Set()
+{
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+}
+
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
@@ -186,7 +191,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 	hudShiftState = 0;
 
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -366,7 +371,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 		QuickMenu_Close();
 		return false;
 	}
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -391,7 +396,7 @@ bool QuickMenu_ActionForNumber(int num)
 	{
 		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
-		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+		QuickMenu_TimeOut_Set();
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -419,9 +424,6 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
-	// we only care for keyboard events
-	if(bInputType == 2)
-		return false;
 
 	if(!QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return false;
@@ -432,6 +434,12 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		mousepos.y = nSecondary;
 		return true;
 	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
 
 	// allow console bind to work
 	string con_keys = findkeysforcommand("toggleconsole", 0);
@@ -444,12 +452,14 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			hit_con_bind = true;
 	}
 
-	if(bInputType == 0) {
+	if(key_pressed)
+	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 	}
-	else if(bInputType == 1) {
+	else
+	{
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
@@ -457,28 +467,28 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_ESCAPE)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		QuickMenu_Close();
 	}
 	else if(nPrimary >= '0' && nPrimary <= '9')
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE1);
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(hit_con_bind)
@@ -487,6 +497,7 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	return true;
 }
 
+int entry_num_prev = 0;
 void QuickMenu_Mouse()
 {
 	if(mv_active) return;
@@ -516,6 +527,11 @@ void QuickMenu_Mouse()
 	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
 		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
+		if (entry_num != entry_num_prev)
+		{
+			QuickMenu_TimeOut_Set();
+			entry_num_prev = entry_num;
+		}
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))

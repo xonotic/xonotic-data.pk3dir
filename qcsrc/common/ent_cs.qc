@@ -21,13 +21,13 @@ STATIC_INIT(EntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
 // these entcs_props ids need to be referenced directly
 int ENTCS_PROP_ENTNUM_id = 0;
 int ENTCS_PROP_ORIGIN_id = 0;
+int ENTCS_PROP_HEALTH_id = 0;
 STATIC_INIT(EntCSProps_setglobalids)
 {
 	FOREACH(EntCSProps, true, {
-		if (it.registered_id == "ENTCS_PROP_ENTNUM")
-			ENTCS_PROP_ENTNUM_id = it.m_id;
-		if (it.registered_id == "ENTCS_PROP_ORIGIN")
-			ENTCS_PROP_ORIGIN_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_ENTNUM") ENTCS_PROP_ENTNUM_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_ORIGIN") ENTCS_PROP_ORIGIN_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_HEALTH") ENTCS_PROP_HEALTH_id = it.m_id;
 	});
 }
 
@@ -211,6 +211,11 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			it.m_set(this, player);
 			this.SendFlags |= BIT(it.m_id);
 		});
+		if (intermission_running)
+		{
+			// health is set to special values after the game ends, ignore any change
+			this.SendFlags &= ~BIT(ENTCS_PROP_HEALTH_id);
+		}
 		setorigin(this, this.origin); // relink
 	}
 
@@ -221,11 +226,14 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
+		// NOTE: the following code block has been disabled as a workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/1824
+#if 0
 		if (!IS_REAL_CLIENT(player)) return;
 		FOREACH_CLIENT(true, {
 			assert(CS(it).entcs);
 			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
 		});
+#endif
 	}
 
 	void entcs_detach(entity player)

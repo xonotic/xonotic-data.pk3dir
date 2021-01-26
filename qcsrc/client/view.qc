@@ -382,7 +382,6 @@ void update_mousepos()
 	mousepos.y = bound(0, mousepos.y, vid_conheight);
 }
 
-float showfps_prevfps;
 float showfps_prevfps_time;
 int showfps_framecounter;
 
@@ -396,13 +395,13 @@ void fpscounter_update()
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
-		showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+		float fps = showfps_framecounter / (currentTime - showfps_prevfps_time);
 		showfps_framecounter = 0;
 		showfps_prevfps_time = currentTime;
 
 		int channel = MSG_C2S;
 		WriteHeader(channel, fpsreport);
-		WriteShort(channel, bound(0, rint(showfps_prevfps), 65535)); // prevent insane fps values
+		WriteShort(channel, bound(0, rint(fps), 65535)); // prevent insane fps values
 	}
 }
 
@@ -810,22 +809,22 @@ void HitSound()
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
 		{
-			// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
-			float a = autocvar_cl_hitsound_max_pitch;
-			float b = autocvar_cl_hitsound_min_pitch;
-			float c = autocvar_cl_hitsound_nom_damage;
-			float d = unaccounted_damage;
-			float pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
-
-			// if sound variation is disabled, set pitch_shift to 1
-			if (autocvar_cl_hitsound == 1)
-				pitch_shift = 1;
-
-			// if pitch shift is reversed, mirror in (max-min)/2 + min
-			if (autocvar_cl_hitsound == 3)
+			float pitch_shift = 1;
+			if (autocvar_cl_hitsound == 2 || autocvar_cl_hitsound == 3)
 			{
-				float mirror_value = (a-b)/2 + b;
-				pitch_shift = mirror_value + (mirror_value - pitch_shift);
+				// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+				float a = autocvar_cl_hitsound_max_pitch;
+				float b = autocvar_cl_hitsound_min_pitch;
+				float c = autocvar_cl_hitsound_nom_damage;
+				float d = unaccounted_damage;
+				pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
+
+				// if pitch shift is reversed, mirror in (max-min)/2 + min
+				if (autocvar_cl_hitsound == 3)
+				{
+					float mirror_value = (a-b)/2 + b;
+					pitch_shift = mirror_value + (mirror_value - pitch_shift);
+				}
 			}
 
 			//LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift));
@@ -944,9 +943,11 @@ void HUD_Draw(entity this)
 	else if(STAT(FROZEN))
 	{
 		vector col = '0.25 0.90 1';
-		if(STAT(REVIVE_PROGRESS))
-			col += vec3(STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS));
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
+		float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
+		if(col_fade)
+			col += vec3(col_fade, -col_fade, -col_fade);
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
 	}
 
 	HUD_Scale_Enable();
@@ -1631,6 +1632,21 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_height = vf_size.y;
 
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
+	if (autocvar_chase_active)
+	{
+		// in first person view if r_drawviewmodel is off weapon isn't visible
+		// and server doesn't throw any casing
+		// switching to 3rd person view r_drawviewmodel is set to -1 to let know the server casings
+		// can be thrown for self since own weapon model is visible
+		if (autocvar_r_drawviewmodel == 0 && STAT(HEALTH) > 0)
+			cvar_set("r_drawviewmodel", "-1");
+	}
+	else
+	{
+		if (autocvar_r_drawviewmodel < 0)
+			cvar_set("r_drawviewmodel", "0");
+	}
 
 	WaypointSprite_Load();
 

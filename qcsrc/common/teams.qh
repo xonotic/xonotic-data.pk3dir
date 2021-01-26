@@ -3,19 +3,19 @@
 const int NUM_TEAMS = 4; ///< Number of teams in the game.
 
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
-const int NUM_TEAM_1 = 1;  // red
+const int NUM_TEAM_1 = 1; // red
 const int NUM_TEAM_2 = 2; // blue
 const int NUM_TEAM_3 = 3; // yellow
 const int NUM_TEAM_4 = 4; // pink
 const int NUM_SPECTATOR = 5;
 #else
 #ifdef CSQC
-const int NUM_TEAM_1 = 4;  // red
+const int NUM_TEAM_1 = 4; // red
 const int NUM_TEAM_2 = 13; // blue
 const int NUM_TEAM_3 = 12; // yellow
 const int NUM_TEAM_4 = 9; // pink
 #else
-const int NUM_TEAM_1 = 5;  // red
+const int NUM_TEAM_1 = 5; // red
 const int NUM_TEAM_2 = 14; // blue
 const int NUM_TEAM_3 = 13; // yellow
 const int NUM_TEAM_4 = 10; // pink
@@ -83,7 +83,7 @@ vector Team_ColorRGB(int teamid)
 		case NUM_TEAM_4: return '1 0.0625 1'; // 0xFF0FFF
 	}
 
-    return '0 0 0';
+	return '0 0 0';
 }
 
 string Team_ColorName(int teamid)
@@ -96,7 +96,7 @@ string Team_ColorName(int teamid)
 		case NUM_TEAM_4: return NAME_TEAM_4;
 	}
 
-    return NAME_NEUTRAL;
+	return NAME_NEUTRAL;
 }
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
@@ -110,7 +110,7 @@ string Static_Team_ColorName(int teamid)
 		case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
 
-    return NAME_NEUTRAL;
+	return NAME_NEUTRAL;
 }
 
 float Team_ColorToTeam(string team_color)

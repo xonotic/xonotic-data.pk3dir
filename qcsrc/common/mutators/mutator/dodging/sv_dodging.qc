@@ -53,9 +53,9 @@
 	.float cvar_cl_dodging_timeout;
 	.bool cvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
-	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
+	#define PHYS_DODGING_TIMEOUT(s) 			CS_CVAR(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
-	#define PHYS_DODGING_ENABLED(s)				CS(s).cvar_cl_dodging
+	#define PHYS_DODGING_ENABLED(s)				CS_CVAR(s).cvar_cl_dodging
 #endif
 
 #ifdef SVQC

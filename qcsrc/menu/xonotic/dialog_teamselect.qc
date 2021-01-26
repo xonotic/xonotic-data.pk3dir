@@ -5,7 +5,7 @@
 entity makeTeamButton_T(string theName, vector theColor, string commandtheName, string theTooltip)
 {
 	entity b;
-	b = makeXonoticBigCommandButton_T(theName, theColor, commandtheName, 1, theTooltip);
+	b = makeXonoticBigCommandButton_T(theName, theColor, commandtheName, COMMANDBUTTON_CLOSE, theTooltip);
 	return b;
 }
 entity makeTeamButton(string theName, vector theColor, string commandtheName)
@@ -40,5 +40,5 @@ void XonoticTeamSelectDialog_fill(entity me)
 		me.TD(me, 2, 1, e = me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", 1));
+		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
 }
