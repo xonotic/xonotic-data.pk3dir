@@ -9,6 +9,7 @@ bool scoreboard_showscores;
 bool scoreboard_active;
 float scoreboard_fade_alpha;
 float scoreboard_acc_fade_alpha;
+float scoreboard_itemstats_fade_alpha;
 
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();
