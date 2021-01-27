@@ -2498,7 +2498,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if (frametime && IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this) && time >= game_starttime)
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
