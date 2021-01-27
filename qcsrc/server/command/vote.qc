@@ -3,6 +3,7 @@
 #include <common/command/_mod.qh>
 #include <common/constants.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/items/inventory.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
@@ -349,6 +350,17 @@ void reset_map(bool dorespawn)
 		shuffleteams();
 		shuffleteams_on_reset_map = false;
 	}
+
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		entity store = PS(it);
+		if (store)
+		{
+			Inventory_clear(store.inventory);
+			Inventory_update(store);
+		}
+	});
+
 	MUTATOR_CALLHOOK(reset_map_global);
 
 	FOREACH_ENTITY_FLOAT_ORDERED(pure_data, false,
