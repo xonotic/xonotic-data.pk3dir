@@ -1444,6 +1444,19 @@ void play_countdown(entity this, float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+void player_powerups_remove_all(entity this)
+{
+	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	{
+		if (time > game_starttime + 1)
+			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+		this.items &= ~ITEM_Strength.m_itemid;
+		this.items &= ~ITEM_Shield.m_itemid;
+		this.items -= (this.items & IT_SUPERWEAPON);
+	}
+}
+
 void player_powerups(entity this)
 {
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
@@ -1454,16 +1467,7 @@ void player_powerups(entity this)
 	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if (IS_DEAD(this))
-	{
-		if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
-		{
-			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-			this.items &= ~ITEM_Strength.m_itemid;
-			this.items &= ~ITEM_Shield.m_itemid;
-			this.items -= (this.items & IT_SUPERWEAPON);
-		}
-	}
+		player_powerups_remove_all(this);
 
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;

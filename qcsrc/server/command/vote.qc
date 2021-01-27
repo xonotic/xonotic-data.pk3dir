@@ -353,6 +353,9 @@ void reset_map(bool dorespawn)
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
+		if (STAT(FROZEN, it))
+			Unfreeze(it, false);
+		player_powerups_remove_all(it);
 		entity store = PS(it);
 		if (store)
 		{
@@ -381,8 +384,6 @@ void reset_map(bool dorespawn)
 		if (it.reset2) it.reset2(it);
 	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it, false); });
-
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
 	if (dorespawn)
@@ -399,7 +400,6 @@ void reset_map(bool dorespawn)
 					restart_mapalreadyrestarted to 1 after the countdown ended or when
 					sv_ready_restart_after_countdown is not used and countdown is still running
 					*/
-					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
 					// PlayerScore_Clear(it);
 					CS(it).killcount = 0;
 					// stop the player from moving so that he stands still once he gets respawned
