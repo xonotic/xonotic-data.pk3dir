@@ -384,10 +384,18 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_Add_Score(frag_target, frag_attacker);
 			freezetag_count_alive_players();
 			freezetag_LastPlayerForTeam_Notify(frag_target);
+			frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		}
 		else
+		{
+			float t = frag_target.freezetag_frozen_timeout;
+			float t2 = frag_target.freezetag_frozen_time;
 			Unfreeze(frag_target, false); // remove ice
-		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
+			// keep timeout value so it can be restored when player will be refrozen on respawn
+			// NOTE this can't be exactly -2 since game starts from time 2
+			frag_target.freezetag_frozen_timeout = -t;
+			frag_target.freezetag_frozen_time = t2;
+		}
 		return true;
 	}
 
@@ -418,9 +426,16 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return true; // do nothing, round is starting right now
 
-	if(player.freezetag_frozen_timeout == -2) // player was dead
+	if(player.freezetag_frozen_timeout <= -2) // player was dead
 	{
+		float t = player.freezetag_frozen_timeout;
+		float t2 = player.freezetag_frozen_time;
 		freezetag_Freeze(player, NULL);
+		if (t < -2)
+		{
+			player.freezetag_frozen_timeout = -t;
+			player.freezetag_frozen_time = t2;
+		}
 		return true;
 	}
 
