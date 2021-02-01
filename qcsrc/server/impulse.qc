@@ -1,27 +1,22 @@
 #include "impulse.qh"
-#include "round_handler.qh"
-
-#include "weapons/throwing.qh"
-#include "command/common.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "clientkill.qh"
-#include "damage.qh"
-#include <server/mutators/_mod.qh>
-#include "weapons/selection.qh"
-#include "weapons/tracing.qh"
-#include "weapons/weaponsystem.qh"
 
 #include <common/gamemodes/_mod.qh>
-
-#include <common/state.qh>
-
 #include <common/minigames/sv_minigames.qh>
-
-#include <common/weapons/_all.qh>
-#include <common/vehicles/sv_vehicles.qh>
-
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/state.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/weapons/_all.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/throwing.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
 
 .entity vehicle;
 
@@ -102,7 +97,7 @@ void weapon_priority_handle(entity this, int dir, int number, int imp)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[number], dir, weaponentity);
+		W_CycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriorities[number], dir, weaponentity);
 		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}

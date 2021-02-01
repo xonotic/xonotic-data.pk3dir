@@ -2318,7 +2318,7 @@ MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
 
 	entity player = M_ARGV(0, entity);
 
-	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
+	if(CS_CVAR(player).cvar_cl_allow_uidtracking == 1 && CS_CVAR(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));
@@ -2740,7 +2740,6 @@ spawnfunc(ctf_team)
 {
 	if(!g_ctf) { delete(this); return; }
 
-	this.classname = "ctf_team";
 	this.team = this.cnt + 1;
 }
 

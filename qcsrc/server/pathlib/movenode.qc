@@ -1,10 +1,10 @@
 #include "movenode.qh"
 
 #include <common/mapobjects/triggers.qh>
-#include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include "pathlib.qh"
-#include "utility.qh"
+#include <common/weapons/_all.qh>
+#include <server/pathlib/pathlib.qh>
+#include <server/pathlib/utility.qh>
 
 .vector	pos1, pos2;
 

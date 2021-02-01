@@ -1,13 +1,13 @@
 #include "hitplot.qh"
 
-#include <server/client.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/world.qh>
-#include "../antilag.qh"
-#include <common/weapons/_all.qh>
 #include <common/state.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
+#include <server/antilag.qh>
+#include <server/client.qh>
+#include <server/world.qh>
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {

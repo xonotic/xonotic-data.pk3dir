@@ -21,6 +21,7 @@ const int GAMETYPE_FLAG_USEPOINTS       = BIT(1); // gametype has point-based sc
 const int GAMETYPE_FLAG_PREFERRED       = BIT(2); // preferred (when available) in random selections
 const int GAMETYPE_FLAG_PRIORITY        = BIT(3); // priority selection when preferred gametype isn't available in random selections
 const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); // don't display a score limit needed for winning the match in the scoreboard
+const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); // gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
 
 int MAPINFO_TYPE_ALL;
 .int m_flags;
@@ -41,6 +42,8 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, frags, bool, true);
     /** should this gametype display a score limit in the scoreboard? */
     ATTRIB(Gametype, m_hidelimits, bool, false);
+    /** does this gametype enforce its own weapon arena? */
+    ATTRIB(Gametype, m_weaponarena, bool, false);
     /** game type defaults */
     ATTRIB(Gametype, model2, string);
     /** game type description */
@@ -107,6 +110,7 @@ CLASS(Gametype, Object)
         this.frags = (gflags & GAMETYPE_FLAG_USEPOINTS);
         this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
         this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
+        this.m_weaponarena = (gflags & GAMETYPE_FLAG_WEAPONARENA);
 
         // same as `1 << m_id`
         MAPINFO_TYPE_ALL |= this.items = this.m_flags = (MAPINFO_TYPE_ALL + 1);
@@ -151,7 +155,7 @@ int MapInfo_ForbiddenFlags(); // retrieves current flags from cvars
 int MapInfo_RequiredFlags(); // retrieves current flags from cvars
 
 // load info about the i-th map into the MapInfo_Map_* globals
-float MapInfo_Get_ByID(float i); // 1 on success, 0 on failure
+bool MapInfo_Get_ByID(int i); // 1 on success, 0 on failure
 string MapInfo_BSPName_ByID(float i);
 
 // load info about a map by name into the MapInfo_Map_* globals

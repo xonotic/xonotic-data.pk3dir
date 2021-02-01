@@ -1,5 +1,12 @@
 #pragma once
 
+bool autocvar__campaign_testrun;
+int autocvar__campaign_index;
+string autocvar__campaign_name;
+bool autocvar_g_campaign;
+float autocvar_g_campaign_forceteam;
+int autocvar_g_campaign_skill;
+
 // this must be included BEFORE campaign_common.h to make this a memory saving
 #define CAMPAIGN_MAX_ENTRIES 2
 

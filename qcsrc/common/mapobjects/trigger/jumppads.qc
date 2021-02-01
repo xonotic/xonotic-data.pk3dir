@@ -2,7 +2,6 @@
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
-#include <server/main.qh>
 
 void trigger_push_use(entity this, entity actor, entity trigger)
 {
@@ -193,7 +192,9 @@ bool jumppad_push(entity this, entity targ)
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		targ.oldvelocity = targ.velocity;
 
-		if(this.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
+		// prevent sound spam when a player hits the jumppad more than once
+		// or when a dead player gets stuck in the jumppad for some reason
+		if(this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
@@ -691,12 +692,7 @@ spawnfunc(target_position)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
-	this.classname = "jumppad";
-	int mytm = ReadByte();
-	if(mytm)
-	{
-		this.team = mytm - 1;
-	}
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();
@@ -720,7 +716,6 @@ void target_push_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
-	this.classname = "push_target";
 	this.cnt = ReadByte();
 	this.targetname = strzone(ReadString());
 	this.origin = ReadVector();

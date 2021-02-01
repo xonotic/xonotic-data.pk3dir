@@ -1,8 +1,6 @@
 #include "weapons.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>
 

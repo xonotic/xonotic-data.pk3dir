@@ -1,9 +1,25 @@
 #pragma once
 
-// ================================================
-//  Declarations for the vote system/vote commands
-//  Last updated: December 14th, 2011
-// ================================================
+bool autocvar_sv_vote_call;
+bool autocvar_sv_vote_change;
+string autocvar_sv_vote_commands;
+int autocvar_sv_vote_limit;
+float autocvar_sv_vote_majority_factor;
+float autocvar_sv_vote_majority_factor_of_voted;
+bool autocvar_sv_vote_master;
+bool autocvar_sv_vote_master_callable;
+string autocvar_sv_vote_master_commands;
+string autocvar_sv_vote_master_password;
+int autocvar_sv_vote_master_playerlimit;
+bool autocvar_sv_vote_no_stops_vote;
+int autocvar_sv_vote_nospectators;
+//string autocvar_sv_vote_only_commands;
+bool autocvar_sv_vote_override_mostrecent;
+bool autocvar_sv_vote_singlecount;
+float autocvar_sv_vote_stop;
+float autocvar_sv_vote_timeout;
+float autocvar_sv_vote_wait;
+bool autocvar_sv_vote_gamestart;
 
 // definitions for command selection between progs
 const float VC_ASGNMNT_BOTH = 1;

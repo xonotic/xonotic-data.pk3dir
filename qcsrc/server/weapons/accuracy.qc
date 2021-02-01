@@ -1,14 +1,14 @@
 #include "accuracy.qh"
 
-#include <server/client.qh>
-#include <server/mutators/_mod.qh>
-#include <server/damage.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
-#include <server/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
 #include <server/world.qh>
 
 int accuracy_byte(float n, float d)
@@ -27,7 +27,7 @@ bool accuracy_send(entity this, entity to, int sf)
 	a = CS(a).accuracy;
 
 	if (to != a.owner)
-		if (!autocvar_sv_accuracy_data_share && !CS(a.owner).cvar_cl_accuracy_data_share)
+		if (!autocvar_sv_accuracy_data_share && !CS_CVAR(a.owner).cvar_cl_accuracy_data_share)
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);

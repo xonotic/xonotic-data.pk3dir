@@ -8,6 +8,7 @@ CLASS(Spiderbot, Vehicle)
 /* maxs       */ ATTRIB(Spiderbot, m_maxs, vector, '75 75 125');
 /* view offset*/ ATTRIB(Spiderbot, view_ofs, vector, '0 0 70');
 /* view dist  */ ATTRIB(Spiderbot, height, float, 170);
+#ifdef GAMEQC
 /* model	  */ ATTRIB(Spiderbot, mdl, string, "models/vehicles/spiderbot.dpm");
 /* model	  */ ATTRIB(Spiderbot, model, string, "models/vehicles/spiderbot.dpm");
 /* head_model */ ATTRIB(Spiderbot, head_model, string, "models/vehicles/spiderbot_top.dpm");
@@ -15,6 +16,7 @@ CLASS(Spiderbot, Vehicle)
 /* tags       */ ATTRIB(Spiderbot, tag_head, string, "tag_head");
 /* tags       */ ATTRIB(Spiderbot, tag_hud, string, "tag_hud");
 /* tags       */ ATTRIB(Spiderbot, tag_view, string, "");
+#endif
 /* netname    */ ATTRIB(Spiderbot, netname, string, "spiderbot");
 /* fullname   */ ATTRIB(Spiderbot, vehicle_name, string, _("Spiderbot"));
 /* icon       */ ATTRIB(Spiderbot, m_icon, string, "vehicle_spider");

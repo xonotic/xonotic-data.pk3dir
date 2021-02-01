@@ -3,6 +3,7 @@
 #include <common/mapinfo.qh>
 #include <common/util.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/mapvoting.qh>
@@ -423,8 +424,8 @@ void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && CS(this).cvar_cl_autoscreenshot);
-	float client_screenshot = (CS(this).cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && CS_CVAR(this).cvar_cl_autoscreenshot);
+	float client_screenshot = (CS_CVAR(this).cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
@@ -449,11 +450,10 @@ void FixIntermissionClient(entity e)
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		SetResourceExplicit(e, RES_HEALTH, -2342);
-		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
+		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-		    .entity weaponentity = weaponentities[slot];
+			.entity weaponentity = weaponentities[slot];
 			if(e.(weaponentity))
 			{
 				e.(weaponentity).effects = EF_NODRAW;

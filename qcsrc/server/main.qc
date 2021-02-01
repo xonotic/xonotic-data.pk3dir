@@ -1,37 +1,30 @@
 #include "main.qh"
 
-#include "anticheat.qh"
-#include "hook.qh"
-#include "damage.qh"
-#include "world.qh"
-#include "spawnpoints.qh"
-#include <server/ipban.qh>
-#include <server/gamelog.qh>
-
-#include "bot/api.qh"
-
-#include "command/common.qh"
-
-#include <server/mutators/_mod.qh>
-#include "weapons/csqcprojectile.qh"
-#include <server/weapons/common.qh>
-#include <server/compat/quake3.qh>
-
-#include <common/constants.qh>
 #include <common/command/generic.qh>
+#include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
-#include <common/util.qh>
-
-#include <common/vehicles/all.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
-
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/server.qh>
+#include <server/anticheat.qh>
+#include <server/bot/api.qh>
+#include <server/command/common.qh>
+#include <server/compat/quake3.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/hook.qh>
+#include <server/ipban.qh>
+#include <server/mutators/_mod.qh>
+#include <server/spawnpoints.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/csqcprojectile.qh>
+#include <server/world.qh>
 
 void CreatureFrame_hotliquids(entity this)
 {

@@ -2,66 +2,16 @@
 
 #include "strafehud.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/hud/panel/racetimer.qh>
-#include <client/main.qh>
 #include <client/resources.qh>
+#include <client/view.qh>
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <lib/csqcmodel/cl_player.qh>
-
-AUTOCVAR_SAVE(hud_panel_strafehud, int, 3, "enable this panel, 1 = show if not observing, 2 = show always, 3 = show only in race/cts if not observing");
-AUTOCVAR_SAVE(hud_panel_strafehud_dynamichud, bool, true, "apply the dynamic hud effects to this panel");
-AUTOCVAR_SAVE(_hud_panel_strafehud_demo, bool, false, "strafehud changes angle during configure");
-AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at \"0\" = view angle, \"1\" = velocity angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 0, "the angle range up to 360 degrees displayed on the strafehud, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating at once)");
-AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 1, "\"0\" = no styling, \"1\" = progress bar style for the strafe bar, \"2\" = gradient for the strafe bar");
-AUTOCVAR_SAVE(hud_panel_strafehud_unit, int, 1, "speed unit (1 = qu/s, 2 = m/s, 3 = km/h, 4 = mph, 5 = knots), length unit (1 = qu, 2 = m, 3 = km, 4 = mi, 5 = nmi)");
-AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_color, vector, '1 1 1', "color of the strafe meter neutral zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_alpha, float, 0.3, "opacity of the strafe meter neutral zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_color, vector, '0 1 0', "color of the strafe meter acceleration zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_alpha, float, 0.3, "opacity of the strafe meter acceleration zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_color, vector, '1 0 1', "color of the strafe meter overturn zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_alpha, float, 0.3, "opacity of the strafe meter overturn zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_alpha, float, 0.8, "opacity of the indicator showing the player's current angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_height, float, 1.5, "height of the indicator showing the player's current angle (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_width, float, 0.005, "width of the indicator showing the player's current angle (relative to the panel width)");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_neutral_color, vector, '1 1 0', "color of the indicator showing the player's current angle if the player's angle is within the neutral zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_accel_color, vector, '0 1 1', "color of the indicator showing the player's current angle if the player's angle is within the acceleration zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_overturn_color, vector, '1 0 1', "color of the indicator showing the player's current angle if the player's angle is within the overturn zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_minspeed, float, -1, "minimum speed in qu/s at which switch indicators which are used to aid changing strafe direction will be shown (uses physics maxspeed + antiflicker speed if negative)");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_active_color, vector, '0 1 0', "color of the switch indicator on the current side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_active_alpha, float, 1, "opacity of the switch indicator on the current side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_inactive_color, vector, '1 1 0', "color of the switch indicator on the opposite side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_inactive_alpha, float, 1, "opacity of the switch indicator on the opposite side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_width, float, 0.0075, "width of the strafe angle indicators (relative to the strafe bar width)");
-AUTOCVAR_SAVE(hud_panel_strafehud_direction_color, vector, '0 0.5 1', "color of the direction caps which indicate the direction the player is currently strafing towards");
-AUTOCVAR_SAVE(hud_panel_strafehud_direction_alpha, float, 1, "opacity of the direction caps which indicate the direction the player is currently strafing towards");
-AUTOCVAR_SAVE(hud_panel_strafehud_direction_width, float, 0.25, "stroke width of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_direction_length, float, 0.02, "length of the horizontal component of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel width)");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_range, float, 0, "range of the slick detector in qu, \"0\" to disable");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_granularity, int, 2, "value from 0 to 4 which defines how exact the search for slick should be, higher values may yield better results but require more computation");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_color, vector, '0 1 1', "color of the slick detector indicator");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_alpha, float, 0.5, "opacity of the slick detector indicator");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_height, float, 0.125, "height of the slick detector indicator (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_fade, float, 0, "fade time (in seconds) of the start speed text or \"0\" to disable");
-AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_color, vector, '1 0.75 0', "color of the start speed text");
-AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_size, float, 1.5, "size of the start speed text (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_fade, float, 0, "fade time (in seconds) of the jump height text or \"0\" to disable");
-AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_min, float, 50, "minimum jump height to display in the selected unit");
-AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_color, vector, '0 1 0.75', "color of the jump height text");
-AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_size, float, 1.5, "size of the jump height text (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_timeout_air, float, 0.1, "time (in seconds) after take off before changing to air strafe physics when not jumping (visually more consistent hud while on slick downwards ramps)");
-AUTOCVAR_SAVE(hud_panel_strafehud_timeout_ground, float, 0.03333333, "time (in seconds) after landing before changing to non-air strafe physics (visually more consistent hud while strafe turning when touching the floor after every hop)");
-AUTOCVAR_SAVE(hud_panel_strafehud_timeout_turn, float, 0.1, "time (in seconds) after releasing the strafe keys before changing mode (visually more consistent hud while switching between left/right strafe turning)");
-AUTOCVAR_SAVE(hud_panel_strafehud_timeout_direction, float, 0.5, "time (in seconds) it takes until direction changes (forward or backward movement) are applied (set to zero if you intend to sideways strafe)");
-AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_angle, float, 0.01, "how many degrees from 0° to 180° the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
-AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_speed, float, 0.0001, "how many qu/s the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 
 AUTOCVAR_SAVE(hud_panel_strafehud_pos, string, "0.320000 0.570000", "position of this base of the panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_size, string, "0.360000 0.020000", "size of this panel");

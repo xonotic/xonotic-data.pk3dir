@@ -1,8 +1,7 @@
 #include "items.qh"
 
-#include <common/items/_mod.qh>
-
 #include <client/main.qh>
+#include <common/items/_mod.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/weapons/_all.qh>
 #include <lib/csqcmodel/cl_model.qh>

@@ -1,17 +1,18 @@
 #include "playerstats.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
-    #include <server/client.qh>
-    #include "../server/anticheat.qh"
-    #include <common/stats.qh>
-    #include <server/intermission.qh>
-    #include "../server/scores.qh"
+	#include <common/constants.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
+	#include <server/anticheat.qh>
+	#include <server/client.qh>
+	#include <server/intermission.qh>
+	#include <server/scores.qh>
+	#include <server/weapons/accuracy.qh>
 	#include <server/world.qh>
-    #include "../server/weapons/accuracy.qh"
 #endif
 
 #ifdef SVQC
@@ -27,7 +28,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	// set up player identification
 	string s = "";
 
-	if((e.crypto_idfp != "") && (CS(e).cvar_cl_allow_uidtracking == 1))
+	if((e.crypto_idfp != "") && (CS_CVAR(e).cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
@@ -135,7 +136,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+	if(CS_CVAR(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p.netname, p.team, false));
 
 	if(teamplay)
@@ -156,7 +157,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
 
-		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));
 	}
 
 	strfree(p.playerstats_id);
@@ -166,8 +167,8 @@ void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
-	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
-	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	PlayerScore_Sort(score_dummyfield, 0, false, false);
+	PlayerScore_Sort(scoreboard_pos, 1, true, true);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
 	FOREACH_CLIENT(true, {

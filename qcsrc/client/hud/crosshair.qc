@@ -1,21 +1,18 @@
 #include "crosshair.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/view.qh>
-
-#include <lib/csqcmodel/cl_player.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
-#include <common/vehicles/all.qh>
-#include <common/viewloc.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
-#include <common/wepent.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/vehicles/all.qh>
+#include <common/viewloc.qh>
+#include <common/wepent.qh>
+#include <lib/csqcmodel/cl_player.qh>
 
 float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
@@ -220,6 +217,12 @@ void HUD_Crosshair(entity this)
 	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
 	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
 		csqcplayer.alpha = csqcplayer.m_alpha;
+
+	if (autocvar_chase_active > 0 && autocvar_chase_front)
+	{
+		csqcplayer.alpha = csqcplayer.m_alpha;
+		return;
+	}
 
 	float f, i, j;
 	vector v;

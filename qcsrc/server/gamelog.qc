@@ -1,6 +1,5 @@
 #include "gamelog.qh"
 
-#include <server/autocvars.qh>
 #include <server/main.qh>
 
 string GameLog_ProcessIP(string s)

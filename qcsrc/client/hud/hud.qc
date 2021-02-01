@@ -1,24 +1,25 @@
 #include "hud.qh"
 
 #include <client/draw.qh>
+#include <client/hud/hud_config.qh>
+#include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
+#include <client/mapvoting.qh>
+#include <client/teamradar.qh>
 #include <client/view.qh>
-#include "panel/scoreboard.qh"
-#include "hud_config.qh"
-#include "../mapvoting.qh"
-#include "../teamradar.qh"
-#include <common/minigames/cl_minigames.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
-#include <common/vehicles/all.qh>
-#include <common/vehicles/vehicle/bumblebee.qh>
+#include <common/minigames/cl_minigames.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
-#include <lib/csqcmodel/cl_player.qh>
+#include <common/vehicles/all.qh>
+#include <common/vehicles/vehicle/bumblebee.qh>
 #include <lib/csqcmodel/cl_model.qh>
-#include <common/gamemodes/_mod.qh>
+#include <lib/csqcmodel/cl_player.qh>
 
 
 /*
@@ -292,11 +293,11 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			pic = "gfx/hud/default/progressbar_vertical";
 		}
 
-        if (baralign == 1) // bottom align
+		if (baralign == 1) // bottom align
 			theOrigin.y += (1 - length_ratio) * theSize.y;
-        else if (baralign == 2) // center align
-            theOrigin.y += 0.5 * (1 - length_ratio) * theSize.y;
-        else if (baralign == 3) // center align, positive values down, negative up
+		else if (baralign == 2) // center align
+			theOrigin.y += 0.5 * (1 - length_ratio) * theSize.y;
+		else if (baralign == 3) // center align, positive values down, negative up
 		{
 			theSize.y *= 0.5;
 			if (length_ratio > 0)
@@ -336,9 +337,9 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 
 		if (baralign == 1) // right align
 			theOrigin.x += (1 - length_ratio) * theSize.x;
-        else if (baralign == 2) // center align
-            theOrigin.x += 0.5 * (1 - length_ratio) * theSize.x;
-        else if (baralign == 3) // center align, positive values on the right, negative on the left
+		else if (baralign == 2) // center align
+			theOrigin.x += 0.5 * (1 - length_ratio) * theSize.x;
+		else if (baralign == 3) // center align, positive values on the right, negative on the left
 		{
 			theSize.x *= 0.5;
 			if (length_ratio > 0)

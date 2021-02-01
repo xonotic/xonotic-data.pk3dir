@@ -1,34 +1,34 @@
 #include "race.qh"
 
-#include <common/weapons/_all.qh>
+#include <common/deathtypes/all.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/rules.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/net_linked.qh>
+#include <common/notifications/all.qh>
+#include <common/state.qh>
 #include <common/stats.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/weapon/porto.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
+#include <server/bot/api.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/getreplies.qh>
 #include <server/damage.qh>
 #include <server/gamelog.qh>
 #include <server/intermission.qh>
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
-#include <server/world.qh>
+#include <server/portals.qh>
+#include <server/scores.qh>
+#include <server/spawnpoints.qh>
 #include <server/weapons/common.qh>
-#include "client.qh"
-#include "cheats.qh"
-#include "portals.qh"
-#include "scores.qh"
-#include "spawnpoints.qh"
-#include "bot/api.qh"
-#include "command/getreplies.qh"
-#include <common/deathtypes/all.qh>
-#include <common/notifications/all.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/rules.qh>
-#include <common/net_linked.qh>
-#include <common/state.qh>
-#include <common/weapons/weapon/porto.qh>
-#include <common/mapobjects/subs.qh>
-#include <common/mapobjects/triggers.qh>
-#include <lib/warpzone/util_server.qh>
-#include <lib/warpzone/common.qh>
-#include <common/vehicles/sv_vehicles.qh>
-#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <server/world.qh>
 
 string uid2name(string myuid)
 {
@@ -424,8 +424,6 @@ void race_deleteTime(string map, float pos)
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
-	float snew, l;
-
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
 
@@ -449,9 +447,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				GameRules_scoring_add(e, RACE_FASTEST, t - s);
 
 			s = GameRules_scoring_add(e, RACE_TIME, 0);
-			snew = TIME_ENCODE(time - game_starttime);
+			float snew = TIME_ENCODE(time - game_starttime);
 			GameRules_scoring_add(e, RACE_TIME, snew - s);
-			l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
+			float l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
 
 			if(autocvar_fraglimit)
 				if(l >= autocvar_fraglimit)
@@ -1041,7 +1039,7 @@ spawnfunc(trigger_race_checkpoint)
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-spawnfunc(target_checkpoint) // defrag entity
+void target_checkpoint_setup(entity this)
 {
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
@@ -1086,8 +1084,15 @@ spawnfunc(target_checkpoint) // defrag entity
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-spawnfunc(target_startTimer) { spawnfunc_target_checkpoint(this); }
-spawnfunc(target_stopTimer) { spawnfunc_target_checkpoint(this); }
+spawnfunc(target_checkpoint)
+{
+	// xonotic defrag entity
+	target_checkpoint_setup(this);
+}
+
+// compatibility entity names
+spawnfunc(target_startTimer) { target_checkpoint_setup(this); }
+spawnfunc(target_stopTimer) { target_checkpoint_setup(this); }
 
 void race_AbandonRaceCheck(entity p)
 {

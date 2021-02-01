@@ -1,88 +1,81 @@
 #include "client.qh"
 
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/chat.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include "anticheat.qh"
-#include "impulse.qh"
-#include "player.qh"
-#include "ipban.qh"
-#include "portals.qh"
-#include "teamplay.qh"
-#include "spawnpoints.qh"
-#include "resources.qh"
-#include "damage.qh"
-#include "handicap.qh"
-#include "hook.qh"
-#include <server/intermission.qh>
-#include "command/common.qh"
-#include "command/vote.qh"
-#include "clientkill.qh"
-#include "cheats.qh"
-#include "world.qh"
-#include <server/gamelog.qh>
-#include "race.qh"
-#include <server/main.qh>
-#include <server/mutators/_mod.qh>
-#include "antilag.qh"
-#include "campaign.qh"
-#include "command/common.qh"
-#include "scores_rules.qh"
-#include "weapons/common.qh"
-
-#include "bot/api.qh"
-
-#include <common/ent_cs.qh>
-#include <common/wepent.qh>
-#include <common/state.qh>
-
-#include "compat/quake3.qh"
-
 #include <common/effects/qc/globalsound.qh>
-
+#include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
+#include <common/items/_mod.qh>
+#include <common/items/inventory.qh>
 #include <common/mapobjects/func/conveyor.qh>
 #include <common/mapobjects/func/ladder.qh>
-#include <common/mapobjects/teleporters.qh>
-#include <common/mapobjects/target/spawnpoint.qh>
-#include <common/mapobjects/trigger/counter.qh>
-#include <common/mapobjects/trigger/swamp.qh>
-
-#include <common/vehicles/all.qh>
-
-#include "weapons/hitplot.qh"
-#include "weapons/selection.qh"
-#include "weapons/weaponsystem.qh"
-
-#include <common/net_notice.qh>
-#include <common/net_linked.qh>
-#include <common/physics/player.qh>
-
-#include <common/vehicles/sv_vehicles.qh>
-
-#include <common/items/_mod.qh>
-
-#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
-
-#include <common/mutators/mutator/waypoints/all.qh>
-#include <common/mutators/mutator/instagib/sv_instagib.qh>
-#include <common/gamemodes/_mod.qh>
-
 #include <common/mapobjects/subs.qh>
-#include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/target/spawnpoint.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/trigger/secret.qh>
-
+#include <common/mapobjects/trigger/swamp.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/minigames/sv_minigames.qh>
-
-#include <common/items/inventory.qh>
-
 #include <common/monsters/sv_monsters.qh>
-
-#include <lib/warpzone/server.qh>
-
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
-
+#include <common/mutators/mutator/waypoints/all.qh>
+#include <common/net_linked.qh>
+#include <common/net_notice.qh>
+#include <common/notifications/all.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/viewloc.qh>
+#include <common/weapons/_all.qh>
 #include <common/weapons/weapon/vortex.qh>
+#include <common/wepent.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/server.qh>
+#include <server/anticheat.qh>
+#include <server/antilag.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/cheats.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/compat/quake3.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/handicap.qh>
+#include <server/hook.qh>
+#include <server/impulse.qh>
+#include <server/intermission.qh>
+#include <server/ipban.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/portals.qh>
+#include <server/race.qh>
+#include <server/resources.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/spawnpoints.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/hitplot.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -206,19 +199,19 @@ string CheckPlayerModel(string plyermodel) {
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
 	// only in right path
-	if( substring(plyermodel,0,14) != "models/player/")
+	if(substring(plyermodel, 0, 14) != "models/player/")
 		return FallbackPlayerModel;
 	// only good file extensions
-	if(substring(plyermodel,-4,4) != ".zym")
-	if(substring(plyermodel,-4,4) != ".dpm")
-	if(substring(plyermodel,-4,4) != ".iqm")
-	if(substring(plyermodel,-4,4) != ".md3")
-	if(substring(plyermodel,-4,4) != ".psk")
+	if(substring(plyermodel, -4, 4) != ".iqm"
+		&& substring(plyermodel, -4, 4) != ".zym"
+		&& substring(plyermodel, -4, 4) != ".dpm"
+		&& substring(plyermodel, -4, 4) != ".md3"
+		&& substring(plyermodel, -4, 4) != ".psk")
+	{
 		return FallbackPlayerModel;
+	}
 	// forbid the LOD models
-	if(substring(plyermodel, -9,5) == "_lod1")
-		return FallbackPlayerModel;
-	if(substring(plyermodel, -9,5) == "_lod2")
+	if(substring(plyermodel, -9, 5) == "_lod1" || substring(plyermodel, -9, 5) == "_lod2")
 		return FallbackPlayerModel;
 	if(plyermodel != strtolower(plyermodel))
 		return FallbackPlayerModel;
@@ -792,7 +785,7 @@ void PutPlayerInServer(entity this)
 
 	if (CS(this).impulse) ImpulseCommands(this);
 
-	W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
+	W_ResetGunAlign(this, CS_CVAR(this).cvar_cl_gunalign);
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
@@ -1227,7 +1220,7 @@ void ClientDisconnect(entity this)
 	MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
-	strfree(CS(this).weaponorder_byimpulse);
+	strfree(CS_CVAR(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1451,6 +1444,19 @@ void play_countdown(entity this, float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+void player_powerups_remove_all(entity this)
+{
+	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	{
+		if (time > game_starttime + 1)
+			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+		this.items &= ~ITEM_Strength.m_itemid;
+		this.items &= ~ITEM_Shield.m_itemid;
+		this.items -= (this.items & IT_SUPERWEAPON);
+	}
+}
+
 void player_powerups(entity this)
 {
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
@@ -1461,16 +1467,7 @@ void player_powerups(entity this)
 	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if (IS_DEAD(this))
-	{
-		if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
-		{
-			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-			this.items &= ~ITEM_Strength.m_itemid;
-			this.items &= ~ITEM_Shield.m_itemid;
-			this.items -= (this.items & IT_SUPERWEAPON);
-		}
-	}
+		player_powerups_remove_all(this);
 
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
@@ -2267,7 +2264,7 @@ bool PlayerThink(entity this)
 	bool dualwielding = W_DualWielding(this);
 	if(this.dualwielding_prev != dualwielding)
 	{
-		W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
+		W_ResetGunAlign(this, CS_CVAR(this).cvar_cl_gunalign);
 		this.dualwielding_prev = dualwielding;
 	}
 
@@ -2305,6 +2302,7 @@ bool PlayerThink(entity this)
 }
 
 .bool would_spectate;
+// merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
 	bool is_spec = IS_SPEC(this);
@@ -2358,10 +2356,10 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS_CVAR(this).cvar_cl_clippedspectating : !CS_CVAR(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
-	} else {
+	} else { // jump pressed
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
@@ -2437,8 +2435,8 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
-	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
-	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS(this).cvar_cl_movement_track_canjump;
+	STAT(GUNALIGN, this) = CS_CVAR(this).cvar_cl_gunalign; // TODO
+	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS_CVAR(this).cvar_cl_movement_track_canjump;
 
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
@@ -2480,19 +2478,19 @@ void PlayerPreThink (entity this)
 	}
 
 	// version nagging
-	if (CS(this).version_nagtime && CS(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
+	if (CS(this).version_nagtime && CS_CVAR(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
         CS(this).version_nagtime = 0;
-        if (strstrofs(CS(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
+        if (strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git client
         } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git server
-            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
+            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
         } else {
-            int r = vercmp(CS(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
+            int r = vercmp(CS_CVAR(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
             if (r < 0) { // old client
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
             } else if (r > 0) { // old server
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
             }
         }
     }
@@ -2504,7 +2502,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if (frametime && IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this) && time >= game_starttime)
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
@@ -2556,7 +2554,7 @@ void PlayerPreThink (entity this)
 		this.last_vehiclecheck = time + 1;
 	}
 
-	if(!CS(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
+	if(!CS_CVAR(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 			PlayerUseKey(this);

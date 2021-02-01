@@ -1,54 +1,42 @@
 #include "bot.qh"
 
-#include "cvars.qh"
-
-#include "aim.qh"
-#include "navigation.qh"
-#include "scripting.qh"
-#include "waypoints.qh"
-
-#include "havocbot/havocbot.qh"
-#include "havocbot/scripting.qh"
-
-#include "../../teamplay.qh"
-
-#include "../../antilag.qh"
-#include "../../autocvars.qh"
-#include "../../campaign.qh"
-#include "../../client.qh"
-#include <common/stats.qh>
-#include <server/world.qh>
-#include <server/damage.qh>
-#include "../../race.qh"
-#include <server/items/items.qh>
-
-#include <server/mutators/_mod.qh>
-
-#include "../../weapons/accuracy.qh"
-
-#include <common/physics/player.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-
-#include <server/scores_rules.qh>
-
 #include <common/weapons/_all.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
-
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/antilag.qh>
+#include <server/bot/default/aim.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/havocbot.qh>
+#include <server/bot/default/havocbot/scripting.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/bot/default/scripting.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
-	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
-	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+	CS_CVAR(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS_CVAR(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 entity bot_spawn()

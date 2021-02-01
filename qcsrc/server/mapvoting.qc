@@ -1,20 +1,19 @@
 #include "mapvoting.qh"
 
-#include <server/client.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/gamelog.qh>
-#include <server/intermission.qh>
-#include "world.qh"
-#include "command/cmd.qh"
-#include "command/getreplies.qh"
 #include <common/constants.qh>
-#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
 #include <common/playerstats.qh>
 #include <common/state.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
-
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/command/cmd.qh>
+#include <server/command/getreplies.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/world.qh>
 
 // definitions
 
@@ -407,7 +406,7 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 
 void MapVote_Spawn()
 {
-	Net_LinkEntity(mapvote_ent = spawn(), false, 0, MapVote_SendEntity);
+	Net_LinkEntity(mapvote_ent = new(mapvote_ent), false, 0, MapVote_SendEntity);
 }
 
 void MapVote_TouchMask()
@@ -592,11 +591,18 @@ void MapVote_Tick()
 		return;
 
 	int totalvotes = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+	FOREACH_CLIENT(true, {
+		if(!IS_REAL_CLIENT(it))
+		{
+			// apply the same special health value to bots too for consistency's sake
+			if(GetResource(it, RES_HEALTH) != 2342)
+				SetResourceExplicit(it, RES_HEALTH, 2342);
+			continue;
+		}
 		// hide scoreboard again
 		if(GetResource(it, RES_HEALTH) != 2342)
 		{
-			SetResourceExplicit(it, RES_HEALTH, 2342);
+			SetResourceExplicit(it, RES_HEALTH, 2342); // health in the voting phase
 			CS(it).impulse = 0;
 
 			msg_entity = it;

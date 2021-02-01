@@ -1,17 +1,31 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /Transifex autosync/
+      when: never
+    - when: always
+
 before_script:
   - ln -s $PWD data/xonotic-data.pk3dir
 
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
+  - git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
   - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
   - cd ..
 
 report_cloc:
+  before_script:
+    - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
+  rules:
+    - changes:
+      - qcsrc/**/*
   stage: test
   script:
     - cloc --force-lang-def=qcsrc/tools/cloc.txt --sql 1 --sql-project xonotic qcsrc | sqlite3 code.db
     - sqlite3 code.db 'select file,nCode from t where nCode > 1000 order by nBlank+nComment+nCode desc'
 
 test_compilation_units:
+  rules:
+    - changes:
+      - qcsrc/**/*
   stage: test
   script:
     - ./qcsrc/tools/compilationunits.sh
@@ -29,7 +43,7 @@ test_sv_game:
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
     - make
-    - EXPECT=040aeef53953a85c5891c0c39cf9860f
+    - EXPECT=92bbad07902d2d045c65e54579993365
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
@@ -60,6 +74,8 @@ test_sv_unit:
 # With them added to PREDEFINED, it would take over half an hour to generate the docs and even then
 # they might not be complete. Doxygen doesn't handle #elif and might not understand some QC definitions.
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
+  before_script:
+    - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
   stage: deploy
   script:
     - cd qcsrc && doxygen

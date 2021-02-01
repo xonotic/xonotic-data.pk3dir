@@ -48,3 +48,8 @@ MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardAccuracy)
 {
 	return ISGAMETYPE(NEXBALL); // accuracy is not a factor in this gamemode
 }
+
+MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardItemStats)
+{
+	return ISGAMETYPE(NEXBALL); // hide the item stats panel
+}
