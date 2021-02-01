@@ -5,7 +5,7 @@
 # Translators:
 # Antonio <piuntn@gmail.com>, 2013-2020
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
-# Costa <yesbubu@hotmail.it>, 2014
+# Costa <yesbubu@hotmail.it>, 2014,2021
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
 # Antonio <piuntn@gmail.com>, 2013
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-01-31 08:32+0000\n"
+"Last-Translator: Costa <yesbubu@hotmail.it>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -977,7 +977,7 @@ msgstr "Statistiche precisione (media %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1371
 msgid "Item stats"
-msgstr ""
+msgstr "Statistiche oggetti"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1482
 msgid "Map stats:"
