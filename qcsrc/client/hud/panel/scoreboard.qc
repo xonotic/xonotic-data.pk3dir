@@ -880,7 +880,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	vector pos = item_pos;
 	// put a "self indicator" beside the self row, unicode U+25C0 (black left-pointing triangle)
 	if (is_self)
-		drawstring(pos+eX*(panel_size.x+.5*hud_fontsize.x)+eY, "\xE2\x97\x80", vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * (panel_size.x + 0.5 * hud_fontsize.x) + eY, "\xE2\x97\x80", hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
