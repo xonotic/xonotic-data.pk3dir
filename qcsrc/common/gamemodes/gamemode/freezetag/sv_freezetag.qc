@@ -553,10 +553,23 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if (!n) // no teammate nearby
 	{
 		float clearspeed = autocvar_g_freezetag_revive_clearspeed;
-		if (autocvar_g_freezetag_revive_time_to_score > 0)
-			clearspeed = 0; // prevent stacking points by entering and exiting the revival zone many times
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
-			STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * clearspeed * (1 - base_progress), 1);
+		{
+			if (autocvar_g_freezetag_revive_time_to_score > 0)
+			{
+				if (STAT(REVIVE_PROGRESS, player) > base_progress)
+				{
+					// reduce auto-revival time based on manual revival progress
+					base_progress = STAT(REVIVE_PROGRESS, player);
+					player.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime * (1 - STAT(REVIVE_PROGRESS, player));
+				}
+				// don't clear revive progress, it would allow stacking points
+				// by entering and exiting the revival zone many times
+				STAT(REVIVE_PROGRESS, player) = base_progress;
+			}
+			else
+				STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * clearspeed * (1 - base_progress), 1);
+		}
 		else if (!STAT(FROZEN, player))
 			STAT(REVIVE_PROGRESS, player) = base_progress; // thawing nobody
 	}
@@ -583,7 +596,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			for(entity it = reviving_players_first; it; it = it.chain)
 			{
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
-				GameRules_scoring_add(it, SCORE, +1);
+				if (autocvar_g_freezetag_revive_time_to_score <= 0)
+					GameRules_scoring_add(it, SCORE, +1);
 				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
 			}
 
