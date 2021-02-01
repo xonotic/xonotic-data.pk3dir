@@ -569,6 +569,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			float frozen_time = time - player.freezetag_frozen_time;
 			Unfreeze(player, false);
 			SetResourceExplicit(player, RES_HEALTH, ((warmup_stage) ? warmup_start_health : start_health));
+			player.spawnshieldtime = time + autocvar_g_freezetag_revive_spawnshield;
 			freezetag_count_alive_players();
 
 			if(n == -1)
