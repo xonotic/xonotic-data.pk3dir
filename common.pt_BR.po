@@ -4,7 +4,7 @@
 #
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
-# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015,2018-2020
+# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015,2018-2021
 # Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-02-01 11:08+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -977,7 +977,7 @@ msgstr "Estatísticas de precisão (média %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1371
 msgid "Item stats"
-msgstr ""
+msgstr "Estatísticas de item"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1482
 msgid "Map stats:"
