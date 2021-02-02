@@ -77,7 +77,7 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
 
         strafekeys = fabs(wishangle) == 90;
 
-        if(strafekeys && !swimming)
+        if(strafekeys && !onground && !swimming)
         {
             maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no modifiers here because they don't affect air strafing
         }
