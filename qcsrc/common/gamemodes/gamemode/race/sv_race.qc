@@ -128,26 +128,16 @@ MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
 		race_PreparePlayer(player); // nice try
 }
 
-MUTATOR_HOOKFUNCTION(rc, PlayerPreThink)
+MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	if(!IS_PLAYER(player))
-		return;
-
-	// we need to perform this in PlayerPreThink as PlayerPhysics may not be called (vehicle support)
-	float dt = frametime;
 	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
-}
-
-MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
-{
-	entity player = M_ARGV(0, entity);
-	//float dt = M_ARGV(1, float);
 
 #ifdef SVQC
 	if(IS_PLAYER(player))

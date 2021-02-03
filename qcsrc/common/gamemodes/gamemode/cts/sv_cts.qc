@@ -71,26 +71,16 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerPreThink)
+MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	if(!IS_PLAYER(player))
-		return;
-
-	// we need to perform this in PlayerPreThink as PlayerPhysics may not be called (vehicle support)
-	float dt = frametime;
 	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
-}
-
-MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
-{
-	entity player = M_ARGV(0, entity);
-	//float dt = M_ARGV(1, float);
 
 	if(IS_PLAYER(player))
 	{
