@@ -6,7 +6,7 @@
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
 # Jan Kocka <kockahonza@gmail.com>, 2019
-# Jiří Vrána <jirkacz199@gmail.com>, 2020
+# Jiří Vrána <jirkacz199@gmail.com>, 2020-2021
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # no lol <kitfildom@xn--snek-k853c.ml>, 2021
 # NONE <nechtom@gmail.com>, 2015
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-02-02 10:04+0000\n"
+"Last-Translator: Jiří Vrána <jirkacz199@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -1131,7 +1131,7 @@ msgstr "mph"
 
 #: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
-msgstr ""
+msgstr "uzly"
 
 #: qcsrc/client/main.qc:1326
 #, c-format
@@ -1149,7 +1149,7 @@ msgstr " (%d hlasů)"
 
 #: qcsrc/client/mapvoting.qc:292
 msgid "Don't care"
-msgstr ""
+msgstr "Nezájem"
 
 #: qcsrc/client/mapvoting.qc:383
 msgid "Decide the gametype"
@@ -1182,7 +1182,7 @@ msgstr ""
 
 #: qcsrc/client/view.qc:964
 msgid "Capture progress"
-msgstr ""
+msgstr "Proces zabírání"
 
 #: qcsrc/client/view.qc:969
 msgid "Revival progress"
@@ -1218,11 +1218,11 @@ msgstr "Limit bodů:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
-msgstr ""
+msgstr "Klanová Aréna"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Zabij všechny nepřátele, abys vyhrál kolo"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
@@ -1243,7 +1243,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
-msgstr ""
+msgstr "Zaber vlajku"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid ""
