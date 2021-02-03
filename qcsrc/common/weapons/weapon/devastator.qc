@@ -1,5 +1,7 @@
 #include "devastator.qh"
 
+//LegendGuard sets new functions for homing missile 02-02-2021
+
 #ifdef SVQC
 
 .entity lastrocket;
@@ -276,6 +278,85 @@ void W_Devastator_Think(entity this)
 		UpdateCSQCProjectile(this);
 }
 
+/********************************************************************************/
+//LegendGuard puts homing missile part to test 02-02-2021
+entity RockFindTarget(entity this)
+{
+	entity head, selected;
+	float dist;
+	
+    dist = 100000;
+	selected = world;
+	head = findradius(this.origin, 100000);
+	while(head)
+	{
+		if((head.health > 1) && (head != this) && (head != this.realowner))
+		{
+			traceline(this.origin, head.origin, true, this); //before true
+			if ((trace_fraction >= 1) && (vlen(head.origin - this.origin) < dist))
+			{
+				selected = head;
+				dist = vlen(head.origin - this.origin);
+				//sprint(this, sprintf("^6dist variable is: ^4%d\n", dist));
+			}
+		}
+		head = head.chain;
+	}
+	
+	if (selected != world)
+	{
+		sprint(this.realowner, "^6Missile IS homing\n"); //prints that the rocket is homing somebody
+		if (selected.classname == "player") //tells you the rocket it is homing a player
+		{
+			sprint(this.realowner, selected.netname);
+			sprint(selected, this.realowner.netname);
+			sprint(selected, " ^4sended a rocket after you!\n"); //Change what it says...
+		}
+		else
+			sprint(this.realowner, selected.classname); //if not a player, tell what classname 
+		sprint(this.realowner, "\n");
+	}
+	return selected;
+}
+
+void RockThink(entity this)
+{
+	vector dir, vtemp;
+		// laser guided, or remote detonation
+	this.nextthink = time;
+	if(time > this.cnt)
+	{
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		W_Devastator_Explode(this, NULL);
+		return;
+	}
+
+	.entity weaponentity = this.weaponentity_fld;
+	
+	// TODO: try to not follow the owner and health items, only follow the other player
+	if (!(this.enemy) || (this.enemy == world) || (this.enemy.health > 1))
+		this.enemy = RockFindTarget(this.enemy); //find a enemy to kill
+
+	if (this.enemy != world) 
+	{
+		vtemp = this.enemy.origin + '0 0 10';
+		dir = normalize(vtemp - this.origin);
+		this.velocity = dir * 600;
+		this.angles = vectoangles(this.velocity);
+	}
+
+	this.nextthink = time;
+	setthink(this, RockThink);
+
+	if(this.rl_detonate_later)
+		W_Devastator_RemoteExplode(this, weaponentity);
+
+	if(this.csqcprojectile_clientanimate == 0)
+		UpdateCSQCProjectile(this);
+}
+/********************************************************************************/
+
+
 void W_Devastator_Touch(entity this, entity toucher)
 {
 	if(WarpZone_Projectile_Touch(this, toucher))
@@ -319,7 +400,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	else
 		missile.spawnshieldtime = -1; // NOTE: proximity based when rocket jumping
 	missile.pushltime = time + WEP_CVAR(devastator, guidedelay);
-	missile.classname = "rocket";
+	//missile.classname = "rocket"; //LegendGuard disables this classname to test homing missile 02-02-2021
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR(devastator, damage) * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
 
@@ -340,8 +421,18 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	missile.angles = vectoangles(missile.velocity);
 
 	settouch(missile, W_Devastator_Touch);
-	setthink(missile, W_Devastator_Think);
+	//setthink(missile, W_Devastator_Think); //LegendGuard disables for homing missile test 02-02-2021
+
 	missile.nextthink = time;
+	setthink(missile, RockThink);			//LegendGuard sets new variable for homing missile test 02-02-2021
+	//missile.enemy = world;				//LegendGuard sets new variable enemy for homing missile test 02-02-2021
+	
+	if(missile.enemy != NULL)
+		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
+	else
+		missile.projectiledeathtype = thiswep.m_id;
+
+
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
 	missile.rl_detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
@@ -359,6 +450,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 		getthink(missile)(missile);
 	}
 }
+
 
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
