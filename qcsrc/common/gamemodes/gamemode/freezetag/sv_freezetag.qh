@@ -38,7 +38,7 @@ float freezetag_teams;
 bool autocvar_g_freezetag_revive_auto = 1;
 int autocvar_g_freezetag_revive_auto_progress = 1;
 int autocvar_g_freezetag_revive_auto_reducible;
-float autocvar_g_freezetag_revive_auto_reducible_forcefactor;
+float autocvar_g_freezetag_revive_auto_reducible_forcefactor = 0.01;
 float autocvar_g_freezetag_revive_auto_reducible_maxforce;
 float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
