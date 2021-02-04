@@ -493,7 +493,20 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 			&& frag_target.freezetag_frozen_timeout > time)
 		{
 			if (fabs(autocvar_g_freezetag_revive_auto_reducible) == 1)
-				t = vlen(frag_force) * autocvar_g_freezetag_revive_auto_reducible_forcefactor;
+			{
+				float maxforce = autocvar_g_freezetag_revive_auto_reducible_maxforce;
+				t = vlen(frag_force);
+				// limit hit force considered at once, e.g when you have the Strength
+				// powerup but also with weapons that fire multiple projectiles at once (crylink)
+				if (frag_target.freezetag_frozen_force + t > maxforce)
+				{
+					t = max(0, maxforce - frag_target.freezetag_frozen_force);
+					frag_target.freezetag_frozen_force = maxforce;
+				}
+				else
+					frag_target.freezetag_frozen_force += t;
+				t *= autocvar_g_freezetag_revive_auto_reducible_forcefactor;
+			}
 			frag_target.freezetag_frozen_timeout -= t;
 			if (frag_target.freezetag_frozen_timeout < time)
 				frag_target.freezetag_frozen_timeout = time;
@@ -523,6 +536,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
+
+	player.freezetag_frozen_force = 0;
 
 	if (!(frametime && IS_PLAYER(player)))
 		return true;
