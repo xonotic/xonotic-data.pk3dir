@@ -486,40 +486,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 				return;
 			}
-			float selection;
-			switch (argv(1))
-			{
-				case "red":
-				{
-					selection = NUM_TEAM_1;
-					break;
-				}
-				case "blue":
-				{
-					selection = NUM_TEAM_2;
-					break;
-				}
-				case "yellow":
-				{
-					selection = NUM_TEAM_3;
-					break;
-				}
-				case "pink":
-				{
-					selection = NUM_TEAM_4;
-					break;
-				}
-				case "auto":
-				{
-					selection = (-1);
-					break;
-				}
-				default:
-				{
-					return;
-				}
-			}
-			if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
+
+			float team_num = Team_ColorToTeam(argv(1));
+			if (team_num == -1) // invalid
+				return;
+			if (caller.team == team_num && team_num && !IS_DEAD(caller))
 			{
 				sprint(caller, "^7You already are on that team.\n");
 				return;
@@ -529,12 +500,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 				return;
 			}
-			if ((selection != -1) && autocvar_g_balance_teams &&
-				autocvar_g_balance_teams_prevent_imbalance)
+			if (team_num && autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
 				TeamBalance_GetTeamCounts(balance, caller);
-				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
+				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
 					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
@@ -543,7 +513,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				}
 				TeamBalance_Destroy(balance);
 			}
-			ClientKill_TeamChange(caller, selection);
+			if (team_num)
+				ClientKill_TeamChange(caller, team_num);
+			else // auto
+				ClientKill_TeamChange(caller, -1);
+
 			if (!IS_PLAYER(caller))
 			{
 				caller.team_selected = true; // avoids asking again for team selection on join
