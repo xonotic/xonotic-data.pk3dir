@@ -5,12 +5,13 @@
 #ifdef SVQC
 
 .entity lastrocket;
-float autocvar_devastator_homing_missile_speed = 500;
-float autocvar_devastator_homing_missile_speed_accel = 1.025;
-float autocvar_devastator_homing_missile_speed_accel2 = 1.05;
-float autocvar_devastator_homing_missile_speed_decel = 0.9;
-float autocvar_devastator_homing_missile_speed_max = 1000;
-float autocvar_devastator_homing_missile_speed_turnrate = 0.25;
+float autocvar_g_balance_devastator_homing_missile_speed = 500;
+float autocvar_g_balance_devastator_homing_missile_speed_accel = 1.025;
+float autocvar_g_balance_devastator_homing_missile_speed_accel2 = 1.05;
+float autocvar_g_balance_devastator_homing_missile_speed_decel = 0.9;
+float autocvar_g_balance_devastator_homing_missile_speed_max = 1000;
+float autocvar_g_balance_devastator_homing_missile_speed_turnrate = 0.25;
+bool autocvar_g_balance_devastator_homing_missile_active;
 
 
 void W_Devastator_Unregister(entity this)
@@ -287,7 +288,7 @@ void W_Devastator_Think(entity this)
 }
 
 /***************************************/
-//LegendGuard writes homing missile part to test 02-02-2021
+//LegendGuard writes homming missile part to test 02-02-2021
 //LegendGuard deletes the old code and is declared as FAILED EXPERIMENT 05-02-2021
 //LegendGuard adds a copy from hk_weapon.qc functions and the EXPERIMENT of homing missile of this weapon worked successfully 07-02-2021
 bool validate_target(entity this, entity proj, entity targ);
@@ -371,12 +372,12 @@ void Homing_Missile_Think(entity this)
         float ad = vlen(vectoangles(normalize(this.enemy.origin - this.origin)) - this.angles);
 
         // To close to something, Slow down!
-        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > (autocvar_devastator_homing_missile_speed)) )
-            myspeed = max(myspeed * (autocvar_devastator_homing_missile_speed_decel), (autocvar_devastator_homing_missile_speed));
+        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > (autocvar_g_balance_devastator_homing_missile_speed)) )
+            myspeed = max(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_decel), (autocvar_g_balance_devastator_homing_missile_speed));
 
         // Failry clear, accelerate.
-        if ( (ff > 0.7) && (myspeed < (autocvar_devastator_homing_missile_speed_max)) )
-            myspeed = min(myspeed * (autocvar_devastator_homing_missile_speed_accel), (autocvar_devastator_homing_missile_speed_max));
+        if ( (ff > 0.7) && (myspeed < (autocvar_g_balance_devastator_homing_missile_speed_max)) )
+            myspeed = min(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_accel), (autocvar_g_balance_devastator_homing_missile_speed_max));
 
         // Setup trace pitch
         pt_seek = 1 - ff;
@@ -432,14 +433,14 @@ void Homing_Missile_Think(entity this)
     {
         // Got a clear path to target, speed up fast (if not at full speed) and go straight for it.
         myspeed = vlen(this.velocity);
-        if (myspeed < (autocvar_devastator_homing_missile_speed_max))
-            myspeed = min(myspeed * (autocvar_devastator_homing_missile_speed_accel2),(autocvar_devastator_homing_missile_speed_max));
+        if (myspeed < (autocvar_g_balance_devastator_homing_missile_speed_max))
+            myspeed = min(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_accel2),(autocvar_g_balance_devastator_homing_missile_speed_max));
 
         wishdir = ve;
     }
 
-    if ((myspeed > (autocvar_devastator_homing_missile_speed)) && (this.cnt > time))
-        myspeed = min(myspeed * (autocvar_devastator_homing_missile_speed_accel2),(autocvar_devastator_homing_missile_speed_max));
+    if ((myspeed > (autocvar_g_balance_devastator_homing_missile_speed)) && (this.cnt > time))
+        myspeed = min(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_accel2),(autocvar_g_balance_devastator_homing_missile_speed_max));
 
     // Ranoutagazfish?
     if (this.cnt < time)
@@ -452,7 +453,7 @@ void Homing_Missile_Think(entity this)
 
     // Calculate new heading
     olddir = normalize(this.velocity);
-    newdir = normalize(olddir + wishdir * (autocvar_devastator_homing_missile_speed_turnrate));
+    newdir = normalize(olddir + wishdir * (autocvar_g_balance_devastator_homing_missile_speed_turnrate));
 
     // Set heading & speed
     this.velocity = newdir * myspeed;
@@ -567,9 +568,13 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	missile.angles = vectoangles(missile.velocity);
 
 	settouch(missile, W_Devastator_Touch);
-	//setthink(missile, W_Devastator_Think); //LegendGuard disables for homing test 02-02-2021
+	
 	missile.nextthink = time;
-	setthink(missile, Homing_Missile_Think); //LegendGuard sets setthink to call homing think function for homing missile test 02-02-2021
+	if(autocvar_g_balance_devastator_homing_missile_active != 0)
+		setthink(missile, Homing_Missile_Think); //LegendGuard sets setthink to call homing think function for homing missile test 02-02-2021
+	else
+		setthink(missile, W_Devastator_Think); //allows to activate the original devastator functions
+
 	if(missile.enemy != NULL)
 		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	else
