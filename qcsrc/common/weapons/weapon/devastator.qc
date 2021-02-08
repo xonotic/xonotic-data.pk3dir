@@ -1,18 +1,8 @@
 #include "devastator.qh"
 
-//LegendGuard sets new cvar variables for homing missile 07-02-2021
-
 #ifdef SVQC
 
 .entity lastrocket;
-float autocvar_g_balance_devastator_homing_missile_speed = 500;
-float autocvar_g_balance_devastator_homing_missile_speed_accel = 1.025;
-float autocvar_g_balance_devastator_homing_missile_speed_accel2 = 1.05;
-float autocvar_g_balance_devastator_homing_missile_speed_decel = 0.9;
-float autocvar_g_balance_devastator_homing_missile_speed_max = 1000;
-float autocvar_g_balance_devastator_homing_missile_speed_turnrate = 0.25;
-bool autocvar_g_balance_devastator_homing_missile_active;
-
 
 void W_Devastator_Unregister(entity this)
 {
@@ -289,12 +279,48 @@ void W_Devastator_Think(entity this)
 
 /***************************************/
 //LegendGuard writes homming missile part to test 02-02-2021
-//LegendGuard deletes the old code and is declared as FAILED EXPERIMENT 05-02-2021
 //LegendGuard adds a copy from hk_weapon.qc functions and the EXPERIMENT of homing missile of this weapon worked successfully 07-02-2021
-bool validate_target(entity this, entity proj, entity targ);
+bool validate_target(entity this, entity proj, entity targ)
+{
+    if (!targ)
+        return false;
+
+    // we know for sure pure entities are bad targets
+    if(is_pure(targ))
+        return false;
+
+    // If only this was used more..
+    if (targ.flags & FL_NOTARGET)
+        return false;
+
+    // Cant touch this
+    if ((targ.takedamage == DAMAGE_NO) || (GetResource(targ, RES_HEALTH) < 0))
+        return false;
+
+    // player
+    if (IS_PLAYER(targ))
+    {
+        if (this.target_select_playerbias < 0)
+            return false;
+
+        if (IS_DEAD(targ))
+            return false;
+    }
+
+    // Missile
+    if ((targ.flags & FL_PROJECTILE) && (this.target_select_missilebias < 0))
+        return false;
+
+    // Team check
+    if (SAME_TEAM(this, targ) || SAME_TEAM(this, targ.owner))
+        return false;
+
+    return true;
+}
+
 void Homing_Missile_Think(entity this)
 {
-	    vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
+	vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
     float  fu, fd, ff, fl, fr, fe;  // Fraction to solid
     vector olddir,wishdir,newdir;   // Final direction
     float lt_for;   // Length of Trace FORwrad
@@ -372,12 +398,12 @@ void Homing_Missile_Think(entity this)
         float ad = vlen(vectoangles(normalize(this.enemy.origin - this.origin)) - this.angles);
 
         // To close to something, Slow down!
-        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > (autocvar_g_balance_devastator_homing_missile_speed)) )
-            myspeed = max(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_decel), (autocvar_g_balance_devastator_homing_missile_speed));
+        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > WEP_CVAR(devastator, homing_missile_speed)) )
+            myspeed = max(myspeed * WEP_CVAR(devastator, homing_missile_speed_decel), WEP_CVAR(devastator, homing_missile_speed));
 
         // Failry clear, accelerate.
-        if ( (ff > 0.7) && (myspeed < (autocvar_g_balance_devastator_homing_missile_speed_max)) )
-            myspeed = min(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_accel), (autocvar_g_balance_devastator_homing_missile_speed_max));
+        if ( (ff > 0.7) && (myspeed < WEP_CVAR(devastator, homing_missile_speed_max)) )
+            myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel), WEP_CVAR(devastator, homing_missile_speed_max));
 
         // Setup trace pitch
         pt_seek = 1 - ff;
@@ -433,14 +459,14 @@ void Homing_Missile_Think(entity this)
     {
         // Got a clear path to target, speed up fast (if not at full speed) and go straight for it.
         myspeed = vlen(this.velocity);
-        if (myspeed < (autocvar_g_balance_devastator_homing_missile_speed_max))
-            myspeed = min(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_accel2),(autocvar_g_balance_devastator_homing_missile_speed_max));
+        if (myspeed < WEP_CVAR(devastator, homing_missile_speed_max))
+            myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel2), WEP_CVAR(devastator, homing_missile_speed_max));
 
         wishdir = ve;
     }
 
-    if ((myspeed > (autocvar_g_balance_devastator_homing_missile_speed)) && (this.cnt > time))
-        myspeed = min(myspeed * (autocvar_g_balance_devastator_homing_missile_speed_accel2),(autocvar_g_balance_devastator_homing_missile_speed_max));
+    if ((myspeed > WEP_CVAR(devastator, homing_missile_speed)) && (this.cnt > time))
+        myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel2), WEP_CVAR(devastator, homing_missile_speed_max));
 
     // Ranoutagazfish?
     if (this.cnt < time)
@@ -453,7 +479,7 @@ void Homing_Missile_Think(entity this)
 
     // Calculate new heading
     olddir = normalize(this.velocity);
-    newdir = normalize(olddir + wishdir * (autocvar_g_balance_devastator_homing_missile_speed_turnrate));
+    newdir = normalize(olddir + wishdir * WEP_CVAR(devastator, homing_missile_speed_turnrate));
 
     // Set heading & speed
     this.velocity = newdir * myspeed;
@@ -463,46 +489,7 @@ void Homing_Missile_Think(entity this)
 
     UpdateCSQCProjectile(this);
 }
-
-bool validate_target(entity this, entity proj, entity targ)
-{
-    if (!targ)
-        return false;
-
-    // we know for sure pure entities are bad targets
-    if(is_pure(targ))
-        return false;
-
-    // If only this was used more..
-    if (targ.flags & FL_NOTARGET)
-        return false;
-
-    // Cant touch this
-    if ((targ.takedamage == DAMAGE_NO) || (GetResource(targ, RES_HEALTH) < 0))
-        return false;
-
-    // player
-    if (IS_PLAYER(targ))
-    {
-        if (this.target_select_playerbias < 0)
-            return false;
-
-        if (IS_DEAD(targ))
-            return false;
-    }
-
-    // Missile
-    if ((targ.flags & FL_PROJECTILE) && (this.target_select_missilebias < 0))
-        return false;
-
-    // Team check
-    if ((targ.team == this.team) || (this.team == targ.owner.team))
-        return false;
-
-    return true;
-}
 /********************************/
-
 
 void W_Devastator_Touch(entity this, entity toucher)
 {
@@ -570,10 +557,10 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	settouch(missile, W_Devastator_Touch);
 	
 	missile.nextthink = time;
-	if(autocvar_g_balance_devastator_homing_missile_active != 0)
-		setthink(missile, Homing_Missile_Think); //LegendGuard sets setthink to call homing think function for homing missile test 02-02-2021
+	if(WEP_CVAR(devastator, homing_missile_active) != 0)
+		setthink(missile, Homing_Missile_Think);
 	else
-		setthink(missile, W_Devastator_Think); //allows to activate the original devastator functions
+		setthink(missile, W_Devastator_Think);
 
 	if(missile.enemy != NULL)
 		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
