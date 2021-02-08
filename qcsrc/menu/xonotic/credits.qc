@@ -12,6 +12,7 @@
 	NL() \
 	TITLE(_("Extended Team")) \
 		PERSON(Antonio "terencehill" Piu) \
+		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Freddy) \
 		PERSON(Halogene) \
