@@ -4,7 +4,7 @@ CLASS(Devastator, Weapon)
 /* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");
 /* ammotype  */ ATTRIB(Devastator, ammo_type, int, RES_ROCKETS);
 /* impulse   */ ATTRIB(Devastator, impulse, int, 9);
-/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Devastator, mdl, string, "rl");
@@ -34,6 +34,13 @@ CLASS(Devastator, Weapon)
         P(class, prefix, guiderate, float, NONE) \
         P(class, prefix, guidestop, float, NONE) \
         P(class, prefix, health, float, NONE) \
+        P(class, prefix, homing_missile_active, bool, NONE) \
+        P(class, prefix, homing_missile_speed, float, NONE) \
+        P(class, prefix, homing_missile_speed_accel, float, NONE) \
+        P(class, prefix, homing_missile_speed_accel2, float, NONE) \
+        P(class, prefix, homing_missile_speed_decel, float, NONE) \
+        P(class, prefix, homing_missile_speed_max, float, NONE) \
+        P(class, prefix, homing_missile_speed_turnrate, float, NONE) \
         P(class, prefix, lifetime, float, NONE) \
         P(class, prefix, radius, float, NONE) \
         P(class, prefix, refire, float, NONE) \
