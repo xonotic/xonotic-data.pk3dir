@@ -463,7 +463,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob command [arguments]"));
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob <command> [<arguments>]"));
 			print_to(caller, "  Where 'command' can be butcher spawn skin movetarget kill name");
 			print_to(caller, "  spawn, skin, movetarget and name require 'arguments'");
 			print_to(caller, "  spawn also takes arguments list and random");
@@ -831,7 +831,7 @@ void CommonCommand_who(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [separator]"));
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [<separator>]"));
 			print_to(caller, "  Where 'separator' is the optional string to separate the values with, default is a space.");
 			return;
 		}

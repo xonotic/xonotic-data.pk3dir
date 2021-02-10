@@ -213,7 +213,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get <bufhandle> <string_index>");
 			return;
 		}
 	}
@@ -358,7 +358,7 @@ GENERIC_COMMAND(findent, "Search through entities for matching classname", false
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find classname");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find <classname>");
 			LOG_HELP("  Where 'classname' is the classname to search for.");
 			return;
 		}

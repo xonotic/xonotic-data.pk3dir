@@ -654,7 +654,7 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 cl_cmd weapon_find weapon");
+			LOG_HELP("Usage:^3 cl_cmd weapon_find <weapon>");
 			LOG_HELP("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}

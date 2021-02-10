@@ -897,7 +897,7 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call command"));
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call <command>"));
 			print_to(caller, "  Where 'command' is the command to request a vote upon.");
 			print_to(caller, strcat("Examples: ", GetCommandPrefix(caller), " vote call gotomap dance"));
 			print_to(caller, strcat("          ", GetCommandPrefix(caller), " vote call endmatch"));
@@ -1013,9 +1013,9 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [action [command | password]]"));
-			print_to(caller, "  If action is left blank, it calls a vote for you to become master.");
-			print_to(caller, "  Otherwise the actions are either 'do' a command or 'login' as master.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [<action> [<command> | <password>]]"));
+			print_to(caller, "  If 'action' is left blank, it calls a vote for you to become master.");
+			print_to(caller, "  Otherwise it can be either 'do' (to run 'command') or 'login' as master.");
 			return;
 		}
 	}
@@ -1189,8 +1189,8 @@ void VoteCommand_macro_help(entity caller, int argc)
 		VOTE_COMMANDS(0, caller, 0, "");
 #undef VOTE_COMMAND
 
-		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
-		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help COMMAND"));
+		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote <command>^7, where possible commands are listed above.\n"));
+		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help <command>"));
 		print_to(caller, strcat("\n^7You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 	}
 	else  // usage for individual command
