@@ -84,7 +84,7 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd autoswitch <selection>\n");
-			sprint(caller, "  Where 'selection' controls if autoswitch is on or off.\n");
+			sprint(caller, "  Where <selection> controls if autoswitch is on or off.\n");
 			return;
 		}
 	}
@@ -127,7 +127,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd clientversion <version>\n");
-			sprint(caller, "  Where 'version' is the game version reported by caller.\n");
+			sprint(caller, "  Where <version> is the game version reported by caller.\n");
 			return;
 		}
 	}
@@ -152,7 +152,7 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd mv_getpicture <mapid>\n");
-			sprint(caller, "  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			sprint(caller, "  Where <mapid> is the id number of the map to request an image of on the map vote selection menu.\n");
 			return;
 		}
 	}
@@ -242,7 +242,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor <action>\n");
-			sprint(caller, "  Where 'action' can be:\n");
+			sprint(caller, "  Where <action> can be:\n");
 			sprint(caller, "   ^2spawn^7: spawns a waypoint at player's position\n");
 			sprint(caller, "   ^2remove^7: removes player's nearest waypoint\n");
 			sprint(caller, "   ^2unreachable^7: reveals waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
@@ -429,7 +429,7 @@ void ClientCommand_say(entity caller, int request, int argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd say <message>\n");
-			sprint(caller, "  Where 'message' is the string of text to say.\n");
+			sprint(caller, "  Where <message> is the string of text to say.\n");
 			return;
 		}
 	}
@@ -450,7 +450,7 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd say_team <message>\n");
-			sprint(caller, "  Where 'message' is the string of text to say.\n");
+			sprint(caller, "  Where <message> is the string of text to say.\n");
 			return;
 		}
 	}
@@ -529,8 +529,8 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selectteam <team>\n");
-			sprint(caller, "  Where 'team' is the prefered team to try and join.\n");
-			sprint(caller, "  Full list of options here: \"red, blue, yellow, pink, auto\"\n");
+			sprint(caller, "  Where <team> is the prefered team to try and join.\n");
+			sprint(caller, "  Full list of options here: red, blue, yellow, pink, auto.\n");
 			return;
 		}
 	}
@@ -554,7 +554,7 @@ void ClientCommand_selfstuff(entity caller, int request, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selfstuff <command>\n");
-			sprint(caller, "  Where 'command' is the string to be stuffed to your client.\n");
+			sprint(caller, "  Where <command> is the string to be stuffed to your client.\n");
 			return;
 		}
 	}
@@ -588,7 +588,7 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar>\n");
-			sprint(caller, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
+			sprint(caller, "  Where <cvar> is the cvar plus arguments to send to the server.\n");
 			return;
 		}
 	}
@@ -638,7 +638,7 @@ void ClientCommand_spectate(entity caller, int request)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd spectate [<client>]\n");
-			sprint(caller, "  Where 'client' can be the player to spectate.\n");
+			sprint(caller, "  Where <client> can be the player to spectate.\n");
 			return;
 		}
 	}
@@ -662,7 +662,7 @@ void ClientCommand_suggestmap(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd suggestmap <map>\n");
-			sprint(caller, "  Where 'map' is the name of the map to suggest.\n");
+			sprint(caller, "  Where <map> is the name of the map to suggest.\n");
 			return;
 		}
 	}
@@ -719,7 +719,7 @@ void ClientCommand_tell(entity caller, int request, int argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd tell <client> <message>\n");
-			sprint(caller, "  Where 'client' is the entity number or name of the player to send 'message' to.\n");
+			sprint(caller, "  Where <client> is the entity number or name of the player to send <message> to.\n");
 			return;
 		}
 	}
@@ -765,9 +765,9 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd voice <voicetype> [<message>]\n");
-			sprint(caller, "  'voicetype' is the type of voice message, it can be one of these:\n");
+			sprint(caller, "  <voicetype> is the type of voice message, it can be one of these:\n");
 			sprint(caller, sprintf("   %s\n", allvoicesamples));
-			sprint(caller, "  and 'message' is the text message to send.\n");
+			sprint(caller, "  and <message> is the text message to send.\n");
 			return;
 		}
 	}

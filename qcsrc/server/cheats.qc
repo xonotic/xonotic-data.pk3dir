@@ -310,8 +310,8 @@ float CheatCommand(entity this, int argc)
 				break;
 			}
 			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd pointparticles <effectname> <position> <velocity> <countmultiplier>\n");
-			sprint(this, "  Where 'position' is a number from 0 to 1 representing distance on the crosshair line,\n");
-			sprint(this, "  and 'velocity' is a vector \"x y z\"\n");
+			sprint(this, "  Where <position> is a number from 0 to 1 representing distance on the crosshair line,\n");
+			sprint(this, "  and <velocity> is a vector \"x y z\"\n");
 			break;
 		case "trailparticles":
 			IS_CHEAT(this, 0, argc, 0);
@@ -372,7 +372,7 @@ float CheatCommand(entity this, int argc)
 			else
 			{
 				sprint(this, "Usage:^3 sv_cheats 1; restart; cmd make <modelname> <mode>\n");
-				sprint(this, "  where 'mode' can be 0, 1 or 2\n");
+				sprint(this, "  where <mode> can be 0, 1 or 2\n");
 			}
 			break;
 		case "penalty":

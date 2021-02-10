@@ -90,7 +90,7 @@ void GenericCommand_addtolist(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " addtolist <cvar> <value>");
-			LOG_HELP("  Where 'cvar' is the cvar to add 'value' to.");
+			LOG_HELP("  Where <cvar> is the cvar to add <value> to.");
 			LOG_HELP("See also: ^2removefromlist^7");
 			return;
 		}
@@ -304,9 +304,9 @@ void GenericCommand_maplist(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist <action> [<map>]");
-			LOG_HELP("  Where 'action' is the command to complete,");
-			LOG_HELP("  and 'map' is what it acts upon (for the 'add' and 'remove' actions).");
-			LOG_HELP("  Full list of commands here: \"add, cleanup, remove, shuffle.\"");
+			LOG_HELP("  Where <action> is the command to complete,");
+			LOG_HELP("  and <map> is what it acts upon (for the 'add' and 'remove' actions).");
+			LOG_HELP("  Full list of commands here: add, cleanup, remove, shuffle.");
 			return;
 		}
 	}
@@ -326,7 +326,7 @@ void GenericCommand_nextframe(int request, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " nextframe <command>");
-			LOG_HELP("  Where 'command' will be executed next frame of this VM");
+			LOG_HELP("  Where <command> will be executed next frame of this VM");
 			return;
 		}
 	}
@@ -360,7 +360,7 @@ void GenericCommand_removefromlist(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist <cvar> <value>");
-			LOG_HELP("  Where 'cvar' is the cvar to remove 'value' from.");
+			LOG_HELP("  Where <cvar> is the cvar to remove <value> from.");
 			LOG_HELP("See also: ^2addtolist^7");
 			return;
 		}
@@ -448,7 +448,7 @@ void GenericCommand_settemp(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " settemp <cvar> \"<arguments>\"");
-			LOG_HELP("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.");
+			LOG_HELP("  Where <cvar> is the cvar you want to temporarily set with <arguments>.");
 			LOG_HELP("See also: ^2settemp_restore^7");
 			return;
 		}

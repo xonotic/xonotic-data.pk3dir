@@ -898,7 +898,7 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 		case CMD_REQUEST_USAGE:
 		{
 			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call <command>"));
-			print_to(caller, "  Where 'command' is the command to request a vote upon.");
+			print_to(caller, "  Where <command> is the command to request a vote upon.");
 			print_to(caller, strcat("Examples: ", GetCommandPrefix(caller), " vote call gotomap dance"));
 			print_to(caller, strcat("          ", GetCommandPrefix(caller), " vote call endmatch"));
 			return;
@@ -1014,8 +1014,8 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 		case CMD_REQUEST_USAGE:
 		{
 			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [<action> [<command> | <password>]]"));
-			print_to(caller, "  If 'action' is left blank, it calls a vote for you to become master.");
-			print_to(caller, "  Otherwise it can be either 'do' (to run 'command') or 'login' as master.");
+			print_to(caller, "  If <action> is left blank, it calls a vote for you to become master.");
+			print_to(caller, "  Otherwise it can be either 'do' (to run <command>) or 'login' as master.");
 			return;
 		}
 	}

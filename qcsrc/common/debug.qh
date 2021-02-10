@@ -359,7 +359,7 @@ GENERIC_COMMAND(findent, "Search through entities for matching classname", false
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find <classname>");
-			LOG_HELP("  Where 'classname' is the classname to search for.");
+			LOG_HELP("  Where <classname> is the classname to search for.");
 			return;
 		}
 	}
@@ -381,7 +381,8 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat \"x y z\"");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat <position>");
+			LOG_HELP("  Where <position> is a vector \"x y z\"");
 			return;
 		}
 	}
