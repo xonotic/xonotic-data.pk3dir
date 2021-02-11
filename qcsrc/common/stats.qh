@@ -138,6 +138,10 @@ REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
 REGISTER_STAT(VEIL_ORB, float)
 REGISTER_STAT(VEIL_ORB_ALPHA, float)
+REGISTER_STAT(ARMORIZING_ORB, float) //LegendGuard registers new STAT 11-02-2021
+REGISTER_STAT(ARMORIZING_ORB_ALPHA, float)
+REGISTER_STAT(DARK_ORB, float) //LegendGuard registers new STAT 08-02-2021
+REGISTER_STAT(DARK_ORB_ALPHA, float)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 5;
