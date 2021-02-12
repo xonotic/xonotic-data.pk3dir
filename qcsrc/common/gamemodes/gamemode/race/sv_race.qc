@@ -348,7 +348,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 			speedaward_uid = player.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
-		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
+		if (speedaward_speed > speedaward_lastsent && (time - speedaward_lastupdate > 1 || intermission_running))
 		{
 			string rr = RACE_RECORD;
 			race_send_speedaward(MSG_ALL);

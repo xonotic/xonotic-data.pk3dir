@@ -1707,6 +1707,13 @@ void SetZoomState(entity this, float newzoom)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
+	if (game_stopped)
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+		return;
+	}
+
 	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
@@ -2761,12 +2768,12 @@ void PlayerPostThink (entity this)
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
+		GetPressedKeys(this);
 		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;
 		}
-		GetPressedKeys(this);
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{
