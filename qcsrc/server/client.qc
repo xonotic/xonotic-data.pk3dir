@@ -209,19 +209,19 @@ string CheckPlayerModel(string plyermodel) {
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
 	// only in right path
-	if( substring(plyermodel,0,14) != "models/player/")
+	if(substring(plyermodel, 0, 14) != "models/player/")
 		return FallbackPlayerModel;
 	// only good file extensions
-	if(substring(plyermodel,-4,4) != ".zym")
-	if(substring(plyermodel,-4,4) != ".dpm")
-	if(substring(plyermodel,-4,4) != ".iqm")
-	if(substring(plyermodel,-4,4) != ".md3")
-	if(substring(plyermodel,-4,4) != ".psk")
+	if(substring(plyermodel, -4, 4) != ".iqm"
+		&& substring(plyermodel, -4, 4) != ".zym"
+		&& substring(plyermodel, -4, 4) != ".dpm"
+		&& substring(plyermodel, -4, 4) != ".md3"
+		&& substring(plyermodel, -4, 4) != ".psk")
+	{
 		return FallbackPlayerModel;
+	}
 	// forbid the LOD models
-	if(substring(plyermodel, -9,5) == "_lod1")
-		return FallbackPlayerModel;
-	if(substring(plyermodel, -9,5) == "_lod2")
+	if(substring(plyermodel, -9, 5) == "_lod1" || substring(plyermodel, -9, 5) == "_lod2")
 		return FallbackPlayerModel;
 	if(plyermodel != strtolower(plyermodel))
 		return FallbackPlayerModel;
@@ -1468,6 +1468,19 @@ void play_countdown(entity this, float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+void player_powerups_remove_all(entity this)
+{
+	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	{
+		if (time > game_starttime + 1)
+			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+		this.items &= ~ITEM_Strength.m_itemid;
+		this.items &= ~ITEM_Shield.m_itemid;
+		this.items -= (this.items & IT_SUPERWEAPON);
+	}
+}
+
 void player_powerups(entity this)
 {
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
@@ -1478,16 +1491,7 @@ void player_powerups(entity this)
 	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if (IS_DEAD(this))
-	{
-		if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
-		{
-			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-			this.items &= ~ITEM_Strength.m_itemid;
-			this.items &= ~ITEM_Shield.m_itemid;
-			this.items -= (this.items & IT_SUPERWEAPON);
-		}
-	}
+		player_powerups_remove_all(this);
 
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
@@ -1727,6 +1731,13 @@ void SetZoomState(entity this, float newzoom)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
+	if (game_stopped)
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+		return;
+	}
+
 	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
@@ -2328,6 +2339,7 @@ bool PlayerThink(entity this)
 }
 
 .bool would_spectate;
+// merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
 	bool is_spec = IS_SPEC(this);
@@ -2384,7 +2396,7 @@ void ObserverOrSpectatorThink(entity this)
 			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS_CVAR(this).cvar_cl_clippedspectating : !CS_CVAR(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
-	} else {
+	} else { // jump pressed
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
@@ -2527,7 +2539,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if (frametime && IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this) && time >= game_starttime)
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
@@ -2786,12 +2798,12 @@ void PlayerPostThink (entity this)
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
+		GetPressedKeys(this);
 		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;
 		}
-		GetPressedKeys(this);
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{

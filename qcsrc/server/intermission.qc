@@ -450,11 +450,10 @@ void FixIntermissionClient(entity e)
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		SetResourceExplicit(e, RES_HEALTH, -2342);
-		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
+		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-		    .entity weaponentity = weaponentities[slot];
+			.entity weaponentity = weaponentities[slot];
 			if(e.(weaponentity))
 			{
 				e.(weaponentity).effects = EF_NODRAW;

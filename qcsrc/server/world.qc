@@ -1276,7 +1276,7 @@ only called if a time or frag limit has expired
 void NextLevel()
 {
 	game_stopped = true;
-	intermission_running = 1; // game over
+	intermission_running = true; // game over
 
 	// enforce a wait time before allowing changelevel
 	if(player_count > 0)

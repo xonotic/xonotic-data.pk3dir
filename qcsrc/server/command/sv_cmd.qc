@@ -955,7 +955,7 @@ void GameCommand_animbench(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]");
+			LOG_HELP("Usage:^3 sv_cmd animbench <model> <frame1> <frame2>");
 			LOG_HELP("See also: ^2bbox, trace^7");
 			return;
 		}

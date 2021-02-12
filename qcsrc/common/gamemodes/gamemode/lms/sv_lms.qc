@@ -174,6 +174,13 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
+	float tl = GameRules_scoring_add(frag_target, LMS_LIVES, 0);
+	if (tl <= 0)
+	{
+		frag_target.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		frag_target.respawn_time = time + 2;
+	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 }
 
