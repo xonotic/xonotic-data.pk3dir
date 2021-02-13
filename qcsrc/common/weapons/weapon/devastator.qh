@@ -34,6 +34,13 @@ CLASS(Devastator, Weapon)
         P(class, prefix, guiderate, float, NONE) \
         P(class, prefix, guidestop, float, NONE) \
         P(class, prefix, health, float, NONE) \
+        P(class, prefix, homing_missile_active, bool, NONE) \
+        P(class, prefix, homing_missile_speed, float, NONE) \
+        P(class, prefix, homing_missile_speed_accel, float, NONE) \
+        P(class, prefix, homing_missile_speed_accel2, float, NONE) \
+        P(class, prefix, homing_missile_speed_decel, float, NONE) \
+        P(class, prefix, homing_missile_speed_max, float, NONE) \
+        P(class, prefix, homing_missile_speed_turnrate, float, NONE) \
         P(class, prefix, lifetime, float, NONE) \
         P(class, prefix, radius, float, NONE) \
         P(class, prefix, refire, float, NONE) \

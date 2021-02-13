@@ -61,6 +61,18 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
 		return true;
 	}
+	if (STAT(ARMORIZING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 11-02-2021
+	{
+		M_ARGV(0, vector) = NADE_TYPE_ARMORIZE.m_color;
+		M_ARGV(1, float) = STAT(ARMORIZING_ORB_ALPHA);
+		return true;
+	}
+	if (STAT(DARK_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 08-02-2021
+	{
+		M_ARGV(0, vector) = NADE_TYPE_DARK.m_color;
+		M_ARGV(1, float) = STAT(DARK_ORB_ALPHA);
+		return true;
+	}
 	return false;
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
@@ -702,7 +714,143 @@ void nade_veil_boom(entity this)
 	settouch(orb, nade_veil_touch);
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
+/**************LEGENDGUARD NEW NADES: ARMORIZE AND DARK NADES functions "cl_nade_type 10" and "cl_nade_type 11" *** //more ideas: BLOCKING NADE ***********************/
+void nade_armorize_touch(entity this, entity toucher)
+{
+	float maxarmor;
+	float maxhealth;
+	float armor_factor;
+	float health_foemantain;
+	float health_maintaining = 1;
+	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	if(!IS_DEAD(toucher))
+	if(!STAT(FROZEN, toucher))
+	{
+		armor_factor = autocvar_g_nades_armorize_rate*frametime/2;
+		health_foemantain = autocvar_g_nades_armorize_rate*frametime/2;
+		if ( toucher != this.realowner )
+		{
+			if ( SAME_TEAM(toucher,this) )
+			{
+				armor_factor *= autocvar_g_nades_armorize_friend;
+			}
+			else
+			{
+				//maintain foe health and reduce armor
+				armor_factor *= autocvar_g_nades_armorize_foe;
+				if (autocvar_g_nades_armorize_friend > 1 || autocvar_g_nades_armorize_friend < 1)
+					health_foemantain *= health_maintaining;
+				else
+					health_foemantain *= autocvar_g_nades_armorize_friend;
+			}
+		}
+		if ( armor_factor > 0 )
+		{
+			maxarmor = 200;
+			float ar = GetResource(toucher, RES_ARMOR);
+			if (ar < maxarmor)
+			{
+				if (this.nade_show_particles)
+				{
+					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
+				}
+				GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
+			}
+		}
+		else if ( armor_factor < 0 )
+		{
+			//Foe should drop only armor points
+			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
+			float hp = GetResource(toucher, RES_HEALTH);
+			if (hp < maxhealth)
+			{
+				if ((GetResource(toucher, RES_ARMOR) <= 0) && (GetResource(toucher, RES_HEALTH) <= 9999))
+					return;
+				else
+					GiveResourceWithLimit(toucher, RES_HEALTH, health_foemantain/1.3, maxhealth);
+					Damage(toucher,this,this.realowner,-armor_factor,DEATH_NADE_HEAL.m_id,DMG_NOWEP,toucher.origin,'0 0 0');
+			}
+		}
+	}
 
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	{
+		entity show_green = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		STAT(ARMORIZING_ORB, show_green) = time+0.1;
+		STAT(ARMORIZING_ORB_ALPHA, show_green) = 0.75 * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_armorize_boom(entity this)
+{
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_armorize_time, autocvar_g_nades_nade_radius);
+
+	settouch(orb, nade_armorize_touch);
+	orb.colormod = '0.33 1 0.66';
+}
+/***********************************************************************************/
+//remember to put an image in gfx/hud/luma and gfx/hud/default per each nade_blabla.tga
+//dark nade does damage like a normal nade but the damage is minor
+void dark_damage(entity this, float radius, float damage)
+{
+	entity e;
+
+	if ( damage < 0 )
+		return;
+
+	for(e = WarpZone_FindRadius(this.origin, radius, true); e; e = e.chain)
+		if(!IS_DEAD(e))
+		if(e.takedamage == DAMAGE_AIM)
+		if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this) || !IS_MONSTER(e))
+		if(!STAT(FROZEN, e))
+		{
+			RadiusDamage(this, this.realowner, damage, 0,
+				radius, this, NULL, 0, this.projectiledeathtype, DMG_NOWEP, this.enemy);
+			Damage_DamageInfo(this.origin, damage, 0,
+				radius, '1 1 1' * 0, this.projectiledeathtype, 0, this);
+		}
+}
+
+void DarkBlinking(entity e);
+//copy of the special.qc function contents for DarkBlinking
+void nade_dark_touch(entity this, entity toucher)
+{
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	{
+		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+
+		float tint_alpha = 0.55;
+		if(SAME_TEAM(toucher, this.realowner) || SAME_TEAM(toucher, this))
+		{
+			tint_alpha = 0.25;
+			if(!STAT(DARK_ORB, show_tint))
+			{
+				toucher.nade_veil_prevalpha = toucher.alpha;
+				toucher.alpha = 1;
+			}
+		}
+		else
+		{
+			tint_alpha = 0.25;
+			if(!STAT(DARK_ORB, show_tint))
+			{
+				DarkBlinking(toucher);
+				dark_damage(this, autocvar_g_nades_dark_radius, autocvar_g_nades_dark_damage);
+			}
+		}
+		STAT(DARK_ORB, show_tint) = time + 0.1;
+		STAT(DARK_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_dark_boom(entity this)
+{	
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_dark_time, autocvar_g_nades_dark_radius);
+
+	settouch(orb, nade_dark_touch);
+	orb.colormod = NADE_TYPE_DARK.m_color;
+}
+/***********************************************************************************/
 void nade_boom(entity this)
 {
 	entity expef = NULL;
@@ -747,6 +895,16 @@ void nade_boom(entity this)
 			nade_blast = false;
 			expef = EFFECT_SPAWN_NEUTRAL;
 			break;
+		
+		case NADE_TYPE_ARMORIZE: //LegendGuard adds nade case 11-02-2021
+			nade_blast = false;
+			expef = EFFECT_SPAWN_NEUTRAL;
+			break;
+
+		case NADE_TYPE_DARK: //LegendGuard adds nade case 08-02-2021
+			nade_blast = false;
+			expef = EFFECT_EXPLOSION_MEDIUM;
+			break;
 
 		default:
 		case NADE_TYPE_NORMAL:
@@ -780,6 +938,8 @@ void nade_boom(entity this)
 		case NADE_TYPE_MONSTER: nade_monster_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
+		case NADE_TYPE_ARMORIZE: nade_armorize_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
+		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -1333,6 +1493,15 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			else
 				player.alpha = player.nade_veil_prevalpha;
 		}
+		//LegendGuard adds nade if STAT DARK_ORB 08-02-2021
+		if(STAT(DARK_ORB, player) && STAT(DARK_ORB, player) <= time)
+		{
+			STAT(DARK_ORB, player) = 0;
+			if(player.vehicle)
+				player.vehicle.alpha = player.vehicle.nade_dark_prevalpha;
+			else
+				player.alpha = player.nade_dark_prevalpha;
+		}
 	}
 
 	if (frametime && IS_PLAYER(player))
@@ -1401,6 +1570,12 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 	{
 		mon.alpha = mon.nade_veil_prevalpha;
 		STAT(VEIL_ORB, mon) = 0;
+	}
+	//LegendGuard adds nade if STAT ORB 08-02-2021
+	if (STAT(DARK_ORB, mon) && STAT(DARK_ORB, mon) <= time)
+	{
+		mon.alpha = mon.nade_dark_prevalpha;
+		STAT(DARK_ORB, mon) = 0;
 	}
 }
 
@@ -1539,6 +1714,10 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
+	STAT(ARMORIZING_ORB, client) = STAT(ARMORIZING_ORB, spectatee); //LegendGuard adds nade STAT client 11-02-2021
+	STAT(ARMORIZING_ORB_ALPHA, client) = STAT(ARMORIZING_ORB_ALPHA, spectatee);
+	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021
+	STAT(DARK_ORB_ALPHA, client) = STAT(DARK_ORB_ALPHA, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)

@@ -37,23 +37,6 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
-<<<<<<< HEAD
-#include <client/hud/hud.qh>
-
-//Inventory g_inventory;
-Inventory inventoryslots[255];
-float last_pickup_timer;
-entity last_pickup_item;
-int last_pickup_times;
-NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
-{
-    make_pure(this);
-    //g_inventory = this;
-	
-	float entnum = ReadByte() - 1;
-	inventoryslots[entnum] = this;
-	
-=======
 Inventory g_inventory;
 void Inventory_remove(entity this)
 {
@@ -66,7 +49,6 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
     make_pure(this);
     g_inventory = this;
     this.entremove = Inventory_remove;
->>>>>>> master
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
@@ -81,30 +63,10 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             .int fld = inv_items[it.m_id];
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
-			
-			if(entnum == current_player) {
-				if(last_pickup_item != it) last_pickup_times = 0;
-				last_pickup_timer = timer;
-				last_pickup_item = it;
-				last_pickup_times++;
-			}
-			
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
     return true;
-}
-
-NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
-{
-	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
-	
-	if(last_pickup_item != it) last_pickup_times = 0;
-	last_pickup_timer = timer;
-	last_pickup_item = it;
-	last_pickup_times++;
-	
-	return true;
 }
 #endif
 
@@ -179,7 +141,7 @@ bool Inventory_customize(entity this, entity client)
 void Inventory_new(PlayerState this)
 {
     Inventory inv = NEW(Inventory);
-    if(!g_duel) setcefc(inv, Inventory_customize);
+    setcefc(inv, Inventory_customize);
     Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory); }
@@ -196,19 +158,5 @@ void Inventory_clear(entity store)
 }
 
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
-<<<<<<< HEAD
-void InventoryStorage_detach(entity e) { delete(e.inventory_store); }
-
-void Inventory_ClearAll() {
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		entity store = PS(it);		
-		FOREACH(Items, true, {
-			store.inventory.inv_items[it.m_id] = 0;
-		});
-        Inventory_update(store);
-	});
-}
-=======
 void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
->>>>>>> master
 #endif

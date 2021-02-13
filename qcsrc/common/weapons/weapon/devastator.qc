@@ -16,15 +16,15 @@ void W_Devastator_Unregister(entity this)
 
 void W_Devastator_Explode(entity this, entity directhitentity)
 {
+	
 	W_Devastator_Unregister(this);
 
 	if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity)) {
-						Give_Medal(this.realowner, AIRSHOT);
-					}
+					if(IsFlying(directhitentity))
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
@@ -207,7 +207,6 @@ void W_Devastator_Think(entity this)
 	vector desireddir, olddir, newdir, desiredorigin, goal;
 	float velspeed, f;
 	this.nextthink = time;
-	if(game_timeout) { set_movetype(this, MOVETYPE_NONE); this.disableclientprediction = 2; return; } else { set_movetype(this, MOVETYPE_FLY); this.disableclientprediction = 0; }
 	if(time > this.cnt)
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -278,6 +277,221 @@ void W_Devastator_Think(entity this)
 		UpdateCSQCProjectile(this);
 }
 
+/***************************************/
+//LegendGuard writes homming missile part to test 02-02-2021
+//LegendGuard adds a copy from hk_weapon.qc functions and the EXPERIMENT of homing missile of this weapon worked successfully 07-02-2021
+bool validate_target(entity this, entity proj, entity targ)
+{
+    if (!targ)
+        return false;
+
+    // we know for sure pure entities are bad targets
+    if(is_pure(targ))
+        return false;
+
+    // If only this was used more..
+    if (targ.flags & FL_NOTARGET)
+        return false;
+
+    // Cant touch this
+    if ((targ.takedamage == DAMAGE_NO) || (GetResource(targ, RES_HEALTH) < 0))
+        return false;
+
+    // player
+    if (IS_PLAYER(targ))
+    {
+        if (this.target_select_playerbias < 0)
+            return false;
+
+        if (IS_DEAD(targ))
+            return false;
+    }
+
+    // Missile
+    if ((targ.flags & FL_PROJECTILE) && (this.target_select_missilebias < 0))
+        return false;
+
+    // Team check
+    if (SAME_TEAM(this, targ) || SAME_TEAM(this, targ.owner))
+        return false;
+
+    return true;
+}
+
+void Homing_Missile_Think(entity this)
+{
+	vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
+    float  fu, fd, ff, fl, fr, fe;  // Fraction to solid
+    vector olddir,wishdir,newdir;   // Final direction
+    float lt_for;   // Length of Trace FORwrad
+    float lt_seek;  // Length of Trace SEEK (left, right, up down)
+    float pt_seek;  // Pitch of Trace SEEK (How mutch to angele left, right up, down trace towards v_forward)
+    float myspeed;
+
+    this.nextthink = time + this.ticrate;
+
+    //if (this.cnt < time)
+    //	W_Devastator_Explode();
+
+    if (IS_DEAD(this.enemy) || IS_SPEC(this.enemy) || IS_OBSERVER(this.enemy))
+        this.enemy = NULL;
+
+    // Pick the closest valid target.
+    if (!this.enemy)
+    {
+        // in this case, the lighter check is to validate it first, and check distance if it is valid
+        IL_EACH(g_damagedbycontents, validate_target(this.owner, this, it),
+        {
+            if(vdist(it.origin, >, 5000))
+                continue;
+
+            if(!this.enemy)
+                this.enemy = it;
+            else if(vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
+                this.enemy = it;
+        });
+    }
+
+    this.angles = vectoangles(this.velocity);
+    this.angles_x = this.angles_x * -1;
+    makevectors(this.angles);
+    this.angles_x = this.angles_x * -1;
+
+    if (this.enemy)
+    {
+        // Close enougth to do decent damage?
+        if(vdist(this.origin - this.enemy.origin, <=, (this.owner.shot_radius * 0.25)))
+        {
+            W_Devastator_Explode(this, NULL);
+            return;
+        }
+
+        // Get data on enemy position
+        vector pre_pos = this.enemy.origin +
+                  this.enemy.velocity *
+                  min((vlen(this.enemy.origin - this.origin) / vlen(this.velocity)),0.5);
+
+        traceline(this.origin, pre_pos,true,this.enemy);
+        ve = normalize(pre_pos - this.origin);
+        fe = trace_fraction;
+
+    }
+    else
+    {
+        ve = '0 0 0';
+        fe = 0;
+    }
+
+    if ((fe != 1) || (this.enemy == NULL) || vdist(this.origin - this.enemy.origin, >, 1000))
+    {
+        myspeed = vlen(this.velocity);
+
+        lt_for  = myspeed * 3;
+        lt_seek = myspeed * 2.95;
+
+        // Trace forward
+        traceline(this.origin, this.origin + v_forward * lt_for,false,this);
+        vf = trace_endpos;
+        ff = trace_fraction;
+
+        // Find angular offset
+        float ad = vlen(vectoangles(normalize(this.enemy.origin - this.origin)) - this.angles);
+
+        // To close to something, Slow down!
+        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > WEP_CVAR(devastator, homing_missile_speed)) )
+            myspeed = max(myspeed * WEP_CVAR(devastator, homing_missile_speed_decel), WEP_CVAR(devastator, homing_missile_speed));
+
+        // Failry clear, accelerate.
+        if ( (ff > 0.7) && (myspeed < WEP_CVAR(devastator, homing_missile_speed_max)) )
+            myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel), WEP_CVAR(devastator, homing_missile_speed_max));
+
+        // Setup trace pitch
+        pt_seek = 1 - ff;
+        pt_seek = bound(0.15,pt_seek,0.8);
+        if (ff < 0.5) pt_seek = 1;
+
+        // Trace left
+        traceline(this.origin, this.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,false,this);
+        vl = trace_endpos;
+        fl = trace_fraction;
+
+        // Trace right
+        traceline(this.origin,  this.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,false,this);
+        vr = trace_endpos;
+        fr = trace_fraction;
+
+        // Trace up
+        traceline(this.origin,  this.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,false,this);
+        vu = trace_endpos;
+        fu = trace_fraction;
+
+        // Trace down
+        traceline(this.origin,  this.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,false,this);
+        vd = trace_endpos;
+        fd = trace_fraction;
+
+        vl = normalize(vl - this.origin);
+        vr = normalize(vr - this.origin);
+        vu = normalize(vu - this.origin);
+        vd = normalize(vd - this.origin);
+
+        // Panic tresh passed, find a single direction and turn as hard as we can
+        if (pt_seek == 1)
+        {
+            wishdir = v_right;
+            if (fl > fr) wishdir = -1 * v_right;
+            if (fu > fl) wishdir = v_up;
+            if (fd > fu) wishdir = -1 * v_up;
+        }
+        else
+        {
+            // Normalize our trace vectors to make a smooth path
+            wishdir = normalize( (vl * fl) + (vr * fr) +  (vu * fu) +  (vd * fd) );
+        }
+
+        if (this.enemy)
+        {
+            if (fe < 0.1) fe = 0.1; // Make sure we always try to move sligtly towards our target
+            wishdir = (wishdir * (1 - fe)) + (ve * fe);
+        }
+    }
+    else
+    {
+        // Got a clear path to target, speed up fast (if not at full speed) and go straight for it.
+        myspeed = vlen(this.velocity);
+        if (myspeed < WEP_CVAR(devastator, homing_missile_speed_max))
+            myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel2), WEP_CVAR(devastator, homing_missile_speed_max));
+
+        wishdir = ve;
+    }
+
+    if ((myspeed > WEP_CVAR(devastator, homing_missile_speed)) && (this.cnt > time))
+        myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel2), WEP_CVAR(devastator, homing_missile_speed_max));
+
+    // Ranoutagazfish?
+    if (this.cnt < time)
+    {
+        this.cnt = time + 0.25;
+        this.nextthink = 0;
+        set_movetype(this, MOVETYPE_BOUNCE);
+        return;
+    }
+
+    // Calculate new heading
+    olddir = normalize(this.velocity);
+    newdir = normalize(olddir + wishdir * WEP_CVAR(devastator, homing_missile_speed_turnrate));
+
+    // Set heading & speed
+    this.velocity = newdir * myspeed;
+
+    // Align model with new heading
+    this.angles = vectoangles(this.velocity);
+
+    UpdateCSQCProjectile(this);
+}
+/********************************/
+
+
 void W_Devastator_Touch(entity this, entity toucher)
 {
 	if(WarpZone_Projectile_Touch(this, toucher))
@@ -342,8 +556,19 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	missile.angles = vectoangles(missile.velocity);
 
 	settouch(missile, W_Devastator_Touch);
-	setthink(missile, W_Devastator_Think);
+	
 	missile.nextthink = time;
+	if(WEP_CVAR(devastator, homing_missile_active) != 0)
+		setthink(missile, Homing_Missile_Think); //LegendGuard sets setthink to call homing think function for homing missile test 02-02-2021
+	else
+		setthink(missile, W_Devastator_Think); //allows to activate the original devastator functions
+
+	if(missile.enemy != NULL)
+		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
+	else
+		missile.projectiledeathtype = thiswep.m_id;
+
+
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
 	missile.rl_detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
@@ -361,6 +586,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 		getthink(missile)(missile);
 	}
 }
+
 
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {

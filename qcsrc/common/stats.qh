@@ -73,13 +73,6 @@ float W_WeaponRateFactor(entity this);
 float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
-float overtime_starttime; // z411 point in time where first overtime started
-
-float checkrules_overtimesadded; // z411 add
-float timeout_last;
-float timeout_total_time;
-bool game_timeout;
-
 bool autocvar_g_allow_oldvortexbeam;
 int autocvar_leadlimit;
 // TODO: world.qh can't be included here due to circular includes!
@@ -90,10 +83,6 @@ int autocvar_leadlimit;
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))
 REGISTER_STAT(GAME_STOPPED, int, game_stopped)
-
-REGISTER_STAT(GAME_TIMEOUT, bool, game_timeout)
-REGISTER_STAT(TIMEOUT_LAST, float, timeout_last)
-
 REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
@@ -124,14 +113,12 @@ REGISTER_STAT(VEHICLESTAT_AMMO2, int)
 REGISTER_STAT(VEHICLESTAT_RELOAD2, int)
 REGISTER_STAT(VEHICLESTAT_W2MODE, int)
 REGISTER_STAT(NADE_TIMER, float)
-//REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
-//REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
+REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
+REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
-REGISTER_STAT(OVERTIMESTARTTIME, float, overtime_starttime)
-REGISTER_STAT(OVERTIMESADDED, float, checkrules_overtimesadded)
-//REGISTER_STAT(MONSTERS_TOTAL, int)
-//REGISTER_STAT(MONSTERS_KILLED, int)
+REGISTER_STAT(MONSTERS_TOTAL, int)
+REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(BUFFS, int)
 REGISTER_STAT(NADE_BONUS, float)
 REGISTER_STAT(NADE_BONUS_TYPE, int)
@@ -151,6 +138,10 @@ REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
 REGISTER_STAT(VEIL_ORB, float)
 REGISTER_STAT(VEIL_ORB_ALPHA, float)
+REGISTER_STAT(ARMORIZING_ORB, float) //LegendGuard registers new STAT 11-02-2021
+REGISTER_STAT(ARMORIZING_ORB_ALPHA, float)
+REGISTER_STAT(DARK_ORB, float) //LegendGuard registers new STAT 08-02-2021
+REGISTER_STAT(DARK_ORB_ALPHA, float)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 5;
