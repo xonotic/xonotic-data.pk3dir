@@ -4,6 +4,9 @@ bool autocvar_g_allow_checkpoints;
 
 float race_teams;
 
+// default to RACE_RECORD, can be overwritten by gamemodes
+string record_type = RACE_RECORD;
+
 // scores
 const float ST_RACE_LAPS = 1;
 

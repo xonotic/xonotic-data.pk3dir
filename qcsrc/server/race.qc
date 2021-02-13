@@ -81,16 +81,12 @@ void race_InitSpectator()
 
 float race_readTime(string map, float pos)
 {
-	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
-
-	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
+	return stof(db_get(ServerProgsDB, strcat(map, record_type, "time", ftos(pos))));
 }
 
 string race_readUID(string map, float pos)
 {
-	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
-
-	return db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)));
+	return db_get(ServerProgsDB, strcat(map, record_type, "crypto_idfp", ftos(pos)));
 }
 
 float race_readPos(string map, float t)
@@ -107,8 +103,6 @@ float race_readPos(string map, float t)
 
 void race_writeTime(string map, float t, string myuid)
 {
-	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
-
 	float newpos;
 	newpos = race_readPos(map, t);
 
@@ -123,8 +117,8 @@ void race_writeTime(string map, float t, string myuid)
 		// player improved his existing record, only have to iterate on ranks between new and old recs
 		for (i = prevpos; i > newpos; --i)
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+			db_put(ServerProgsDB, strcat(map, record_type, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
+			db_put(ServerProgsDB, strcat(map, record_type, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
 		}
 	}
 	else
@@ -134,22 +128,20 @@ void race_writeTime(string map, float t, string myuid)
 		{
 			float other_time = race_readTime(map, i - 1);
 			if (other_time) {
-				db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(other_time));
-				db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+				db_put(ServerProgsDB, strcat(map, record_type, "time", ftos(i)), ftos(other_time));
+				db_put(ServerProgsDB, strcat(map, record_type, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
 			}
 		}
 	}
 
 	// store new time itself
-	db_put(ServerProgsDB, strcat(map, rr, "time", ftos(newpos)), ftos(t));
-	db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(newpos)), myuid);
+	db_put(ServerProgsDB, strcat(map, record_type, "time", ftos(newpos)), ftos(t));
+	db_put(ServerProgsDB, strcat(map, record_type, "crypto_idfp", ftos(newpos)), myuid);
 }
 
 string race_readName(string map, float pos)
 {
-	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
-
-	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
+	return uid2name(db_get(ServerProgsDB, strcat(map, record_type, "crypto_idfp", ftos(pos))));
 }
 
 void race_checkAndWriteName(entity player)
@@ -414,20 +406,18 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 
 void race_deleteTime(string map, float pos)
 {
-	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
-
 	for(int i = pos; i <= RANKINGS_CNT; ++i)
 	{
 		string therank = ftos(i);
 		if (i == RANKINGS_CNT)
 		{
-			db_remove(ServerProgsDB, strcat(map, rr, "time", therank));
-			db_remove(ServerProgsDB, strcat(map, rr, "crypto_idfp", therank));
+			db_remove(ServerProgsDB, strcat(map, record_type, "time", therank));
+			db_remove(ServerProgsDB, strcat(map, record_type, "crypto_idfp", therank));
 		}
 		else
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", therank), ftos(race_readTime(GetMapname(), i+1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", therank), race_readUID(GetMapname(), i+1));
+			db_put(ServerProgsDB, strcat(map, record_type, "time", therank), ftos(race_readTime(GetMapname(), i+1)));
+			db_put(ServerProgsDB, strcat(map, record_type, "crypto_idfp", therank), race_readUID(GetMapname(), i+1));
 		}
 	}
 

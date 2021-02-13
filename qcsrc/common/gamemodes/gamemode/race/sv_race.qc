@@ -238,16 +238,14 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 
-	string rr = RACE_RECORD;
-
 	if(IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
-		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
+		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), record_type, "speed/speed")));
+		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), record_type, "speed/crypto_idfp")));
 		race_send_speedaward_alltimebest(MSG_ONE);
 
 		float i;
@@ -341,7 +339,6 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 		}
 		if (speedaward_speed > speedaward_lastsent && (time - speedaward_lastupdate > 1 || intermission_running))
 		{
-			string rr = RACE_RECORD;
 			race_send_speedaward(MSG_ALL);
 			speedaward_lastsent = speedaward_speed;
 			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
@@ -349,8 +346,8 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 				speedaward_alltimebest = speedaward_speed;
 				speedaward_alltimebest_holder = speedaward_holder;
 				speedaward_alltimebest_uid = speedaward_uid;
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
+				db_put(ServerProgsDB, strcat(GetMapname(), record_type, "speed/speed"), ftos(speedaward_alltimebest));
+				db_put(ServerProgsDB, strcat(GetMapname(), record_type, "speed/crypto_idfp"), speedaward_alltimebest_uid);
 				race_send_speedaward_alltimebest(MSG_ALL);
 			}
 		}
@@ -463,6 +460,8 @@ void rc_SetLimits()
 	timelimit_override = autocvar_timelimit_override;
 
 	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
+
+	record_type = RACE_RECORD;
 
 	if(autocvar_g_campaign)
 	{

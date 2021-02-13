@@ -2834,6 +2834,7 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void ctf_Initialize()
 {
+	record_type = CTF_RECORD;
 	ctf_captimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
