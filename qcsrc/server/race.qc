@@ -30,6 +30,8 @@
 #include <server/weapons/common.qh>
 #include <server/world.qh>
 
+.string stored_netname; // TODO: store this information independently of race-based gamemodes
+
 string uid2name(string myuid)
 {
 	string s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
@@ -148,6 +150,20 @@ string race_readName(string map, float pos)
 	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
 
 	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
+}
+
+void race_checkAndWriteName(entity player)
+{
+	if(CS_CVAR(player).cvar_cl_allow_uidtracking == 1 && CS_CVAR(player).cvar_cl_allow_uid2name == 1)
+	{
+		if (!player.stored_netname)
+			player.stored_netname = strzone(uid2name(player.crypto_idfp));
+		if(player.stored_netname != player.netname)
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
+			strcpy(player.stored_netname, player.netname);
+		}
+	}
 }
 
 

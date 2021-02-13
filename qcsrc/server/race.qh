@@ -2,8 +2,6 @@
 
 bool autocvar_g_allow_checkpoints;
 
-.string stored_netname; // TODO: store this information independently of race-based gamemodes
-
 float race_teams;
 
 // scores
@@ -47,6 +45,7 @@ float race_GetFractionalLapCount(entity e);
 float race_readTime(string map, float pos);
 string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
+void race_checkAndWriteName(entity player);
 void race_ClearRecords();
 void race_SendNextCheckpoint(entity e, float spec);
 void race_PreparePlayer(entity this);
