@@ -32,7 +32,7 @@
 
 // See common.qc for their proper commands
 
-string getrecords(int page)  // 50 records per page
+string getrecords(int page)
 {
 	string s = "";
 

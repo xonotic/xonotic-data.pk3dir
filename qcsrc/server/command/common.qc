@@ -599,8 +599,8 @@ void CommonCommand_records(int request, entity caller)
 		case CMD_REQUEST_USAGE:
 		{
 			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records [<pagenum>]"));
-			print_to(caller, "  Without arguments it prints all records for the current gametype,");
-			print_to(caller, "  otherwise it only prints page <pagenum> (50 records per page),");
+			print_to(caller, "  Without arguments it prints all records (all pages) for the current gametype,");
+			print_to(caller, "  otherwise if there are multiple pages it only prints page <pagenum> (1..10),");
 			return;
 		}
 	}
