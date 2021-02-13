@@ -181,16 +181,6 @@ void Inventory_clear(entity store)
     });
 }
 
-void Inventory_ClearAll() {
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		entity store = PS(it);		
-		FOREACH(Items, true, {
-			store.inventory.inv_items[it.m_id] = 0;
-		});
-        Inventory_update(store);
-	});
-}
-
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
 void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
 #endif
