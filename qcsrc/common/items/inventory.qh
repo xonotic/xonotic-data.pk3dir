@@ -167,9 +167,9 @@ void Inventory_new(PlayerState this)
     if(!g_duel) setcefc(inv, Inventory_customize);
     Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
 }
+
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
-
 
 void Inventory_clear(entity store)
 {

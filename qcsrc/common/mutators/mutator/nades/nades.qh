@@ -68,6 +68,10 @@ float autocvar_g_nades_armorize_time = 5; //LegendGuard adds new nade cvars 11-0
 float autocvar_g_nades_armorize_rate = 30;
 float autocvar_g_nades_armorize_friend = 1;
 float autocvar_g_nades_armorize_foe = -2;
+float autocvar_g_nades_ammo_time = 5; //LegendGuard adds new nade cvars 13-02-2021
+float autocvar_g_nades_ammo_rate = 30;
+float autocvar_g_nades_ammo_friend = 1;
+float autocvar_g_nades_ammo_foe = -2;
 float autocvar_g_nades_dark_damage = 25; //LegendGuard adds new nade cvars 08-02-2021
 float autocvar_g_nades_dark_time = 13;
 float autocvar_g_nades_dark_radius = 700;
@@ -95,8 +99,10 @@ const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
 const int PROJECTILE_NADE_ARMORIZE = 88; //LegendGuard adds new nade MACROS 11-02-2021
 const int PROJECTILE_NADE_ARMORIZE_BURN = 89;
-const int PROJECTILE_NADE_DARK = 90; //LegendGuard adds new nade MACROS 08-02-2021
-const int PROJECTILE_NADE_DARK_BURN = 91;
+const int PROJECTILE_NADE_AMMO = 90; //LegendGuard adds new nade MACROS 13-02-2021
+const int PROJECTILE_NADE_AMMO_BURN = 91;
+const int PROJECTILE_NADE_DARK = 92; //LegendGuard adds new nade MACROS 08-02-2021
+const int PROJECTILE_NADE_DARK_BURN = 93;
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)

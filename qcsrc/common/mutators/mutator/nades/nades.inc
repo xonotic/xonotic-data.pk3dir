@@ -105,11 +105,22 @@ REGISTER_NADE(ARMORIZE) {
 #endif
 }
 
+//LegendGuard writes Ammo nade code 13-02-2021
+REGISTER_NADE(AMMO) {
+    this.m_color = '0.66 0.33 0';
+    this.m_name = _("Ammo grenade");
+    this.m_icon = "nade_ammo";
+#ifdef GAMEQC
+    NADE_PROJECTILE(0, PROJECTILE_NADE_AMMO, EFFECT_NADE_TRAIL_BROWN);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_AMMO_BURN, EFFECT_NADE_TRAIL_BURN_BROWN);
+#endif
+}
+
 //LegendGuard writes Dark nade code 08-02-2021
 REGISTER_NADE(DARK) {
     this.m_color = '0.23 0 0.23';
     this.m_name = _("Dark grenade");
-    this.m_icon = "nade_dark";
+    this.m_icon = "nade_dark";  //nade icon (put texture, please)
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_DARK, EFFECT_NADE_TRAIL_PURPLE);
     NADE_PROJECTILE(1, PROJECTILE_NADE_DARK_BURN, EFFECT_NADE_TRAIL_BURN_PURPLE);

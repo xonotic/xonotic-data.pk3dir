@@ -67,6 +67,12 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		M_ARGV(1, float) = STAT(ARMORIZING_ORB_ALPHA);
 		return true;
 	}
+	if (STAT(AMMUNITIONING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 13-02-2021
+	{
+		M_ARGV(0, vector) = NADE_TYPE_AMMO.m_color;
+		M_ARGV(1, float) = STAT(AMMUNITIONING_ORB_ALPHA);
+		return true;
+	}
 	if (STAT(DARK_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 08-02-2021
 	{
 		M_ARGV(0, vector) = NADE_TYPE_DARK.m_color;
@@ -714,20 +720,17 @@ void nade_veil_boom(entity this)
 	settouch(orb, nade_veil_touch);
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
-/**************LEGENDGUARD NEW NADES: ARMORIZE AND DARK NADES functions "cl_nade_type 10" and "cl_nade_type 11" *** //more ideas: BLOCKING NADE ***********************/
+/**************LEGENDGUARD NEW NADES: ARMORIZE, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: BLOCKING NADE ***********************/
 void nade_armorize_touch(entity this, entity toucher)
 {
-	float maxarmor;
-	float maxhealth;
 	float armor_factor;
-	float health_foemantain;
-	float health_maintaining = 1;
+	float maxarmor = 999;
+	float ar = GetResource(toucher, RES_ARMOR);
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
 	if(!IS_DEAD(toucher))
 	if(!STAT(FROZEN, toucher))
 	{
 		armor_factor = autocvar_g_nades_armorize_rate*frametime/2;
-		health_foemantain = autocvar_g_nades_armorize_rate*frametime/2;
 		if ( toucher != this.realowner )
 		{
 			if ( SAME_TEAM(toucher,this) )
@@ -736,18 +739,11 @@ void nade_armorize_touch(entity this, entity toucher)
 			}
 			else
 			{
-				//maintain foe health and reduce armor
 				armor_factor *= autocvar_g_nades_armorize_foe;
-				if (autocvar_g_nades_armorize_friend > 1 || autocvar_g_nades_armorize_friend < 1)
-					health_foemantain *= health_maintaining;
-				else
-					health_foemantain *= autocvar_g_nades_armorize_friend;
 			}
 		}
 		if ( armor_factor > 0 )
 		{
-			maxarmor = 200;
-			float ar = GetResource(toucher, RES_ARMOR);
 			if (ar < maxarmor)
 			{
 				if (this.nade_show_particles)
@@ -759,17 +755,9 @@ void nade_armorize_touch(entity this, entity toucher)
 		}
 		else if ( armor_factor < 0 )
 		{
-			//Foe should drop only armor points
-			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
-			float hp = GetResource(toucher, RES_HEALTH);
-			if (hp < maxhealth)
-			{
-				if ((GetResource(toucher, RES_ARMOR) <= 0) && (GetResource(toucher, RES_HEALTH) <= 9999))
-					return;
-				else
-					GiveResourceWithLimit(toucher, RES_HEALTH, health_foemantain/1.3, maxhealth);
-					Damage(toucher,this,this.realowner,-armor_factor,DEATH_NADE_HEAL.m_id,DMG_NOWEP,toucher.origin,'0 0 0');
-			}
+			//Foe drops armor points
+			if (ar > 0)
+				SetResource(toucher, RES_ARMOR, ar + armor_factor);
 		}
 	}
 
@@ -787,6 +775,94 @@ void nade_armorize_boom(entity this)
 
 	settouch(orb, nade_armorize_touch);
 	orb.colormod = '0.33 1 0.66';
+}
+/***********************************************************************************/
+//LegendGuard develops ammo nade 13-02-2021
+void nade_ammo_touch(entity this, entity toucher)
+{
+	float maxammo = 999;
+	float ammo_factor;
+	float amshells = GetResource(toucher, RES_SHELLS);
+	float ambullets = GetResource(toucher, RES_BULLETS);
+	float amrockets = GetResource(toucher, RES_ROCKETS);
+	float amcells = GetResource(toucher, RES_CELLS);
+	float amplasma = GetResource(toucher, RES_PLASMA);
+	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	if(!IS_DEAD(toucher))
+	if(!STAT(FROZEN, toucher))
+	{
+		ammo_factor = autocvar_g_nades_ammo_rate*frametime/2;
+		if ( toucher != this.realowner )
+		{
+			if ( SAME_TEAM(toucher,this) )
+			{
+				ammo_factor *= autocvar_g_nades_ammo_friend;
+			}
+			else
+			{
+				ammo_factor *= autocvar_g_nades_ammo_foe;
+			}
+		}
+		if ( ammo_factor > 0 )
+		{
+			if ((amshells < maxammo) && (ambullets < maxammo) && (amrockets < maxammo) && (amcells < maxammo) && (amplasma < maxammo))
+			{
+				if (this.nade_show_particles)
+				{
+					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
+				}
+				GiveResourceWithLimit(toucher, RES_SHELLS, ammo_factor, maxammo);
+				GiveResourceWithLimit(toucher, RES_BULLETS, ammo_factor, maxammo);
+				GiveResourceWithLimit(toucher, RES_ROCKETS, ammo_factor, maxammo);
+				GiveResourceWithLimit(toucher, RES_CELLS, ammo_factor, maxammo);
+				GiveResourceWithLimit(toucher, RES_PLASMA, ammo_factor, maxammo);
+			}
+		}
+		else if ( ammo_factor < 0 )
+		{
+			//Foe drops ammo points
+			if (amshells > 0)
+			{
+				SetResource(toucher, RES_SHELLS, amshells + ammo_factor);
+			}
+			
+			if (ambullets > 0)
+			{
+				SetResource(toucher, RES_BULLETS, ambullets + ammo_factor);
+			}
+
+			if (amrockets > 0)
+			{
+				SetResource(toucher, RES_ROCKETS, amrockets + ammo_factor);
+			}
+
+			if (amcells > 0)
+			{
+				SetResource(toucher, RES_CELLS, amcells + ammo_factor);
+			}
+
+			if (amplasma > 0)
+			{
+				SetResource(toucher, RES_PLASMA, amplasma + ammo_factor);
+			}
+			return;
+		}
+	}
+
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	{
+		entity show_brown = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		STAT(AMMUNITIONING_ORB, show_brown) = time+0.1;
+		STAT(AMMUNITIONING_ORB_ALPHA, show_brown) = 0.75 * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_ammo_boom(entity this)
+{
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_ammo_time, autocvar_g_nades_nade_radius);
+
+	settouch(orb, nade_ammo_touch);
+	orb.colormod = '0.66 0.33 0';
 }
 /***********************************************************************************/
 //remember to put an image in gfx/hud/luma and gfx/hud/default per each nade_blabla.tga
@@ -901,6 +977,11 @@ void nade_boom(entity this)
 			expef = EFFECT_SPAWN_NEUTRAL;
 			break;
 
+		case NADE_TYPE_AMMO: //LegendGuard adds nade case 13-02-2021
+			nade_blast = false;
+			expef = EFFECT_SPAWN_NEUTRAL;
+			break;
+
 		case NADE_TYPE_DARK: //LegendGuard adds nade case 08-02-2021
 			nade_blast = false;
 			expef = EFFECT_EXPLOSION_MEDIUM;
@@ -939,6 +1020,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
 		case NADE_TYPE_ARMORIZE: nade_armorize_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
+		case NADE_TYPE_AMMO: nade_ammo_boom(this); break; //LegendGuard adds the register of new nade 13-02-2021
 		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
 	}
 
@@ -1716,6 +1798,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 	STAT(ARMORIZING_ORB, client) = STAT(ARMORIZING_ORB, spectatee); //LegendGuard adds nade STAT client 11-02-2021
 	STAT(ARMORIZING_ORB_ALPHA, client) = STAT(ARMORIZING_ORB_ALPHA, spectatee);
+	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee); //LegendGuard adds nade STAT client 13-02-2021
+	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
 	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021
 	STAT(DARK_ORB_ALPHA, client) = STAT(DARK_ORB_ALPHA, spectatee);
 }
