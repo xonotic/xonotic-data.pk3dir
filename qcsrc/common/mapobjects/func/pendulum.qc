@@ -63,7 +63,7 @@ spawnfunc(func_pendulum)
 	this.cnt = this.angles_z;
 
 	// wait for targets to spawn
-	controller = new(func_pendulum_controller);
+	controller = new_pure(func_pendulum_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_pendulum_controller_think);

@@ -50,7 +50,7 @@ STATIC_INIT(g_team_entities)
 {
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		g_team_entities[i] = spawn();
+		g_team_entities[i] = new_pure();
 	}
 }
 

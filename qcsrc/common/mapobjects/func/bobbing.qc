@@ -54,7 +54,7 @@ spawnfunc(func_bobbing)
 	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
-    if(this.dmg && (this.message2 == ""))
+	if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
@@ -72,7 +72,7 @@ spawnfunc(func_bobbing)
 		return;
 
 	// wait for targets to spawn
-	controller = new(func_bobbing_controller);
+	controller = new_pure(func_bobbing_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_bobbing_controller_think);
