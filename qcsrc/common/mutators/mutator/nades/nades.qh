@@ -344,7 +344,7 @@ NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
 	if(darkblink)
 		return;
 
-	localcmd("play2 sound/misc/bzzz\n");
+	localcmd("play2 sound/misc/blind\n");
 	darkblink = true;
 	dark_appeartime = time;
 	dark_fadetime = time + 9;
