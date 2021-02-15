@@ -15,4 +15,5 @@
 #include <common/gamemodes/gamemode/nexball/_mod.qh>
 #include <common/gamemodes/gamemode/onslaught/_mod.qh>
 #include <common/gamemodes/gamemode/race/_mod.qh>
+#include <common/gamemodes/gamemode/survival/_mod.qh> //LegendGuard adds _mod.qh from Mario/survival 15-02-2021
 #include <common/gamemodes/gamemode/tdm/_mod.qh>

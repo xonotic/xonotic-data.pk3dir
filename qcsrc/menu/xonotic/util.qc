@@ -683,6 +683,8 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	GAMETYPE(MAPINFO_TYPE_SURVIVAL) \
+	//LegendGuard adds GAMETYPE for menu from Mario/survival 15-02-2021
 	/**/
 
 // hidden gametypes come last so indexing always works correctly

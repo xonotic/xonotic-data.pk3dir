@@ -15,4 +15,5 @@
 #include <common/gamemodes/gamemode/nexball/_mod.inc>
 #include <common/gamemodes/gamemode/onslaught/_mod.inc>
 #include <common/gamemodes/gamemode/race/_mod.inc>
+#include <common/gamemodes/gamemode/survival/_mod.inc> //LegendGuard adds _mod.inc from Mario/survival 15-02-2021
 #include <common/gamemodes/gamemode/tdm/_mod.inc>
