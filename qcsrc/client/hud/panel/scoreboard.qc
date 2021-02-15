@@ -620,7 +620,7 @@ string Scoreboard_GetName(entity pl)
 	{
 		sbt_field_icon0 = "gfx/scoreboard/player_ready";
 	}
-	/*else if(!teamplay)
+	else if(!teamplay)
 	{
 		int f = entcs_GetClientColors(pl.sv_entnum);
 		{
@@ -630,7 +630,7 @@ string Scoreboard_GetName(entity pl)
 			sbt_field_icon2 = "gfx/scoreboard/playercolor_pants";
 			sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
 		}
-	}*/
+	}
 	else
 	{
 		int ccode = entcs_GetCountryCode(pl.sv_entnum);
