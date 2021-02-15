@@ -1,0 +1,3 @@
+#pragma once
+
+void HUD_Mod_TeamKeepaway(vector pos, vector mySize);
