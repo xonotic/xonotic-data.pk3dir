@@ -807,47 +807,32 @@ void nade_ammo_touch(entity this, entity toucher)
 		{
 			if (amshells < maxammo)
 			{
-				if (this.nade_show_particles)
-				{
-					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				}
 				GiveResourceWithLimit(toucher, RES_SHELLS, ammo_factor, maxammo);
 			}
 
 			if (ambullets < maxammo) 
 			{
-				if (this.nade_show_particles)
-				{
-					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				}
 				GiveResourceWithLimit(toucher, RES_BULLETS, ammo_factor, maxammo);
 			}
 
 			if (amrockets < maxammo)
 			{
-				if (this.nade_show_particles)
-				{
-					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				}
 				GiveResourceWithLimit(toucher, RES_ROCKETS, ammo_factor, maxammo);
 			}
 
 			if (amcells < maxammo) 
 			{
-				if (this.nade_show_particles)
-				{
-					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				}
 				GiveResourceWithLimit(toucher, RES_CELLS, ammo_factor, maxammo);
 			}
 
 			if (amplasma < maxammo)
 			{
-				if (this.nade_show_particles)
-				{
-					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				}
 				GiveResourceWithLimit(toucher, RES_PLASMA, ammo_factor, maxammo);
+			}
+			
+			if (this.nade_show_particles)
+			{
+					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
 			}
 		}
 		else if ( ammo_factor < 0 )
