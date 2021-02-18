@@ -899,7 +899,15 @@ void SV_ParseClientCommand(entity this, string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
-		case "color": case "topcolor": case "bottomcolor": if(teamplay) return; else break; // handled by engine in host_cmd.c
+		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
+			if(!IS_CLIENT(this)) // on connection
+			{
+				// since gamecode doesn't have any calls earlier than this, do the connecting message here
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
+			}
+			if(teamplay)
+				return;
+			break;
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:
