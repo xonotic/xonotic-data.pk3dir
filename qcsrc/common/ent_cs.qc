@@ -157,6 +157,12 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
 	{ ent.sv_solid = ReadByte(); })
 
+//LegendGuard adds ENTCS_PROP from TTT 20-02-2021
+// gamemode specific player ttt status (independent of score and frags)
+ENTCS_PROP(TTT_STATUS, true, ttt_status, ttt_status, ENTCS_SET_NORMAL,
+	{ WriteShort(chan, ent.ttt_status); },
+	{ ent.ttt_status = ReadShort(); })
+
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0;

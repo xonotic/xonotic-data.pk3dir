@@ -15,4 +15,5 @@
 #include <common/gamemodes/gamemode/nexball/_mod.inc>
 #include <common/gamemodes/gamemode/onslaught/_mod.inc>
 #include <common/gamemodes/gamemode/race/_mod.inc>
+#include <common/gamemodes/gamemode/ttt/_mod.inc> //LegendGuard adds _mod.inc for Trouble In Terrorist Town 20-02-2021
 #include <common/gamemodes/gamemode/tdm/_mod.inc>

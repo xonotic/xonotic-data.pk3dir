@@ -85,6 +85,10 @@ REGISTER_SP(NEXBALL_FAULTS);
 
 REGISTER_SP(ONS_TAKES);
 REGISTER_SP(ONS_CAPS);
+
+REGISTER_SP(TTT_RESISTS); //LegendGuard adds REGISTER_SP for TTT 20-02-2021 //Innocents as number of suvivals
+REGISTER_SP(TTT_HUNTS); //Traitors as number of hunts
+
 #endif
 
 

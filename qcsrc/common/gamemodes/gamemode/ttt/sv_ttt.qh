@@ -1,0 +1,17 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <common/scores.qh>
+void ttt_Initialize();
+
+REGISTER_MUTATOR(ttt, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		ttt_Initialize();
+	}
+	return false;
+}
+
+.int ttt_validkills; // store the player's valid kills to be given at the end of the match (avoid exposing their score until then)
