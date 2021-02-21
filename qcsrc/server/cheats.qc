@@ -346,7 +346,7 @@ float CheatCommand(entity this, int argc)
 				}
 				else
 				{
-					entity e = spawn();
+					entity e = new(func_breakable);
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
 					SetResourceExplicit(e, RES_HEALTH, 1000);
@@ -357,7 +357,7 @@ float CheatCommand(entity this, int argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					spawnfunc_func_breakable(e);
+					func_breakable_setup(e);
 					// now, is it valid?
 					if(f == 0)
 					{
