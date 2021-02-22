@@ -37,8 +37,10 @@ REGISTER_GAMETYPE(TTT, NEW(TroubleinTerroristTown));
 .int ttt_status;
 const int TTT_STATUS_INNOCENT = 1;
 const int TTT_STATUS_TRAITOR = 2;
+const int TTT_STATUS_DETECTIVE = 3;
 
 // hardcoded player colors for ttt
+const int TTT_COLOR_DETECTIVE = 221; // blue
 const int TTT_COLOR_INNOCENT = 51; // green
 const int TTT_COLOR_TRAITOR = 68; // red
 #endif

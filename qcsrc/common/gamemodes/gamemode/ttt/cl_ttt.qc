@@ -23,6 +23,12 @@ void HUD_Mod_TTT(vector pos, vector mySize)
 		player_color = '0 1 0';
 		//player_icon = "player_neutral";
 	}
+	else if(mystatus == TTT_STATUS_DETECTIVE)
+	{
+		player_text = _("Detective");
+		player_color = '0 0 1';
+		//player_icon = "player_blue";
+	}
 	else
 	{
 		// if the player has no valid status, don't draw anything
@@ -64,21 +70,34 @@ MUTATOR_HOOKFUNCTION(cl_ttt, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 		
 	entity player = M_ARGV(0, entity);
 	entity e = entcs_receiver(player.entnum - 1);
-	int innocent_status = ((e) ? e.ttt_status : 0);
+	int otherplayer_status = ((e) ? e.ttt_status : 0);
 	int mystatus = entcs_receiver(player_localnum).ttt_status;
 
 	int plcolor = TTT_COLOR_INNOCENT; // default to innocent
-	//TODO: add Detective 20-02-2021
-	if((mystatus == TTT_STATUS_TRAITOR || intermission || STAT(GAME_STOPPED)) && innocent_status == TTT_STATUS_TRAITOR)
-		plcolor = TTT_COLOR_TRAITOR;
-		
 
+	if((mystatus == TTT_STATUS_TRAITOR || intermission || STAT(GAME_STOPPED)) && otherplayer_status == TTT_STATUS_TRAITOR)
+	{
+		plcolor = TTT_COLOR_TRAITOR;
+	}
+	
+	//LegendGuard adds INNOCENT part 21-02-2021
+	if((mystatus == TTT_STATUS_INNOCENT || intermission || STAT(GAME_STOPPED)) && otherplayer_status == TTT_STATUS_INNOCENT)
+	{
+		plcolor = TTT_COLOR_INNOCENT;
+	}
+
+	//LegendGuard adds if sentence for Detective model color which will shown for everyone 21-02-2021
+	if (otherplayer_status == TTT_STATUS_DETECTIVE)
+	{
+		plcolor = TTT_COLOR_DETECTIVE;
+	}
+	
 	player.colormap = 1024 + plcolor;
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(cl_ttt, DrawScoreboard_Force)
 {
-	// show the scoreboard when the round ends, so players can see who the hunter was
+	// show the scoreboard when the round ends, so players can see who the traitor was
 	return STAT(GAME_STOPPED);
 }
