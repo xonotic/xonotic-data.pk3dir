@@ -776,10 +776,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     //LegendGuard adds MSG_CENTER_NOTIF for TTT 20-02-2021
     MSG_CENTER_NOTIF(TTT_TRAITOR,                       N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^K1Traitor^BG! Kill all the innocents without raising suspicion!")), "")
     MSG_CENTER_NOTIF(TTT_TRAITOR_WIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Traitors^BG win the round"), "")
-    MSG_CENTER_NOTIF(TTT_INNOCENT,                      N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^F1Innocent^BG! Try to find out who is/are traitors and survive until time is up!")), "")
+    MSG_CENTER_NOTIF(TTT_INNOCENT,                      N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^F1Innocent^BG! Try to find out who are traitors and survive until time is up!")), "")
     MSG_CENTER_NOTIF(TTT_INNOCENT_WIN,                  N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Innocents^BG win the round"), "")
-    MSG_CENTER_NOTIF(TTT_DETECTIVE,                     N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^4Detective^BG! Find out who is/are traitors and protect the innocents!")), "")
-    //TODO: MAKE DETECTIVE WORD BLUE LegendGuard
+    MSG_CENTER_NOTIF(TTT_DETECTIVE,                     N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^4Detective^BG! Find out who are traitors and protect the innocents!")), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
