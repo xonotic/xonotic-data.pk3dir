@@ -4,10 +4,10 @@
 #
 # Translators:
 # Arm Coon <armcoon@gmail.com>, 2016-2017
-# Jeff Huang <s8321414@gmail.com>, 2015
+# 黃柏諺 <s8321414@gmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
-# Jeff Huang <s8321414@gmail.com>, 2015
+# 黃柏諺 <s8321414@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
