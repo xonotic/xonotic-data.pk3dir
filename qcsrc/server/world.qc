@@ -171,6 +171,7 @@ void cvar_changes_init()
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
+#define BADVALUE(p, val) if (k == p && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -500,6 +501,8 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
+		BADVALUE("sys_ticrate", "0.0166667");
+		BADVALUE("sys_ticrate", "0.0333333");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
@@ -529,6 +532,7 @@ void cvar_changes_init()
 #undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
+#undef BADVALUE
 
 		if(pureadding)
 		{
