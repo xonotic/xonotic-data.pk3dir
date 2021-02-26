@@ -91,7 +91,7 @@ MUTATOR_HOOKFUNCTION(cl_ttt, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 	{
 		plcolor = TTT_COLOR_DETECTIVE;
 	}
-	
+
 	player.colormap = 1024 + plcolor;
 	return true;
 }
