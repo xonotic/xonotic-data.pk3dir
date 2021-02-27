@@ -253,6 +253,7 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
+		entcs_update_players(this);
 	}
 
 	entity spot = SelectSpawnPoint(this, true);
