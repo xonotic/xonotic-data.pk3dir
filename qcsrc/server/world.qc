@@ -942,12 +942,18 @@ spawnfunc(worldspawn)
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
+	bool records_available = false;
 	for(int i = 0; i < 10; ++i)
 	{
 		string s = getrecords(i);
-		if (s)
+		if (s != "")
+		{
 			records_reply[i] = strzone(s);
+			records_available = true;
+		}
 	}
+	if (!records_available)
+		records_reply[0] = "No records available for the current game mode.\n";
 	ladder_reply = strzone(getladder());
 	rankings_reply = strzone(getrankings());
 

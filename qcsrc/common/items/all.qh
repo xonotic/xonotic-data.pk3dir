@@ -41,7 +41,7 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_HELPF("Usage:^3 %s dumpitems", GetProgramCommandPrefix());
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpitems");
             return;
         }
     }

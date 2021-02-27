@@ -156,7 +156,7 @@ COMMON_COMMAND(ladder, "Get information about top players if supported") { Commo
 COMMON_COMMAND(lsmaps, "List maps which can be used with the current game mode") { CommonCommand_lsmaps(request, caller); }
 COMMON_COMMAND(printmaplist, "Display full server maplist reply") { CommonCommand_printmaplist(request, caller); }
 COMMON_COMMAND(rankings, "Print information about rankings") { CommonCommand_rankings(request, caller); }
-COMMON_COMMAND(records, "List top 10 records for the current map") { CommonCommand_records(request, caller); }
+COMMON_COMMAND(records, "Print records for the current gametype") { CommonCommand_records(request, caller); }
 COMMON_COMMAND(teamstatus, "Show information about player and team scores") { CommonCommand_teamstatus(request, caller); }
 COMMON_COMMAND(time, "Print different formats/readouts of time") { CommonCommand_time(request, caller); }
 COMMON_COMMAND(timein, "Resume the game from being paused with a timeout") { CommonCommand_timein(request, caller); }

@@ -346,7 +346,7 @@ void bot_cmdhelp(string scmd)
 		switch(ntype)
 		{
 			case BOT_CMD_PARAMETER_FLOAT:
-				stype = "float number";
+				stype = "float";
 				break;
 			case BOT_CMD_PARAMETER_STRING:
 				stype = "string";
@@ -449,17 +449,14 @@ void bot_list_commands()
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
-	LOG_INFO(
-	    "List of all available commands:\n"
-	    "  Command - Parameter Type\n"
-    );
+	LOG_HELP("Bot commands:");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
 		switch(bot_cmd_parm_type[i])
 		{
 			case BOT_CMD_PARAMETER_FLOAT:
-				ptype = "float number";
+				ptype = "float";
 				break;
 			case BOT_CMD_PARAMETER_STRING:
 				ptype = "string";
@@ -471,8 +468,12 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		LOG_INFO("  ", bot_cmd_string[i]," - <", ptype, ">");
+		if (ptype != "none")
+			LOG_HELP("  ^2", bot_cmd_string[i]," ^7<", ptype, ">");
+		else
+			LOG_HELP("  ^2", bot_cmd_string[i]);
 	}
+	LOG_HELP("For help about a specific command, type bot_cmd help <command>");
 }
 
 // Commands code
