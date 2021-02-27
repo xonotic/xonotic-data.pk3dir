@@ -523,12 +523,6 @@ void cvar_changes_init()
 		BADCVAR("g_lms_weaponarena");
 		BADCVAR("g_ctf_stalemate_time");
 
-		if(cvar_string("g_mod_balance") == "Testing")
-		{
-			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
-			BADPREFIX("g_balance_");
-		}
-
 #undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
