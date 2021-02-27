@@ -15,7 +15,7 @@ void W_Devastator_Unregister(entity this)
 }
 
 void W_Devastator_Explode(entity this, entity directhitentity)
-{	
+{
 	W_Devastator_Unregister(this);
 
 	if(directhitentity.takedamage == DAMAGE_AIM)
