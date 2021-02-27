@@ -15,8 +15,7 @@ void W_Devastator_Unregister(entity this)
 }
 
 void W_Devastator_Explode(entity this, entity directhitentity)
-{
-	
+{	
 	W_Devastator_Unregister(this);
 
 	if(directhitentity.takedamage == DAMAGE_AIM)
@@ -398,12 +397,12 @@ void Homing_Missile_Think(entity this)
         float ad = vlen(vectoangles(normalize(this.enemy.origin - this.origin)) - this.angles);
 
         // To close to something, Slow down!
-        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > WEP_CVAR(devastator, homing_missile_speed)) )
-            myspeed = max(myspeed * WEP_CVAR(devastator, homing_missile_speed_decel), WEP_CVAR(devastator, homing_missile_speed));
+        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > WEP_CVAR(devastator, homing_speed)) )
+            myspeed = max(myspeed * WEP_CVAR(devastator, homing_speed_decel), WEP_CVAR(devastator, homing_speed));
 
         // Failry clear, accelerate.
-        if ( (ff > 0.7) && (myspeed < WEP_CVAR(devastator, homing_missile_speed_max)) )
-            myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel), WEP_CVAR(devastator, homing_missile_speed_max));
+        if ( (ff > 0.7) && (myspeed < WEP_CVAR(devastator, homing_speed_max)) )
+            myspeed = min(myspeed * WEP_CVAR(devastator, homing_speed_accel), WEP_CVAR(devastator, homing_speed_max));
 
         // Setup trace pitch
         pt_seek = 1 - ff;
@@ -459,14 +458,14 @@ void Homing_Missile_Think(entity this)
     {
         // Got a clear path to target, speed up fast (if not at full speed) and go straight for it.
         myspeed = vlen(this.velocity);
-        if (myspeed < WEP_CVAR(devastator, homing_missile_speed_max))
-            myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel2), WEP_CVAR(devastator, homing_missile_speed_max));
+        if (myspeed < WEP_CVAR(devastator, homing_speed_max))
+            myspeed = min(myspeed * WEP_CVAR(devastator, homing_speed_accel2), WEP_CVAR(devastator, homing_speed_max));
 
         wishdir = ve;
     }
 
-    if ((myspeed > WEP_CVAR(devastator, homing_missile_speed)) && (this.cnt > time))
-        myspeed = min(myspeed * WEP_CVAR(devastator, homing_missile_speed_accel2), WEP_CVAR(devastator, homing_missile_speed_max));
+    if ((myspeed > WEP_CVAR(devastator, homing_speed)) && (this.cnt > time))
+        myspeed = min(myspeed * WEP_CVAR(devastator, homing_speed_accel2), WEP_CVAR(devastator, homing_speed_max));
 
     // Ranoutagazfish?
     if (this.cnt < time)
@@ -479,7 +478,7 @@ void Homing_Missile_Think(entity this)
 
     // Calculate new heading
     olddir = normalize(this.velocity);
-    newdir = normalize(olddir + wishdir * WEP_CVAR(devastator, homing_missile_speed_turnrate));
+    newdir = normalize(olddir + wishdir * WEP_CVAR(devastator, homing_speed_turnrate));
 
     // Set heading & speed
     this.velocity = newdir * myspeed;
@@ -557,7 +556,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	settouch(missile, W_Devastator_Touch);
 	
 	missile.nextthink = time;
-	if(WEP_CVAR(devastator, homing_missile_active) != 0)
+	if(WEP_CVAR(devastator, homing) != 0)
 		setthink(missile, Homing_Missile_Think);
 	else
 		setthink(missile, W_Devastator_Think);
