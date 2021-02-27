@@ -473,7 +473,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		entity dmgent = new(dmgent);
+		entity dmgent = new_pure(dmgent);
 
 		dmgent.dmg = frag_damage * autocvar_g_buffs_vengeance_damage_multiplier;
 		dmgent.enemy = frag_attacker;

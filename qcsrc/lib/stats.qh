@@ -125,8 +125,8 @@ int g_magic_stats_hole = 0;
 	.int __stat_null;
 	STATIC_INIT(stats)
 	{
-	    STATS = new(stats);
-	    // Prevent engine stats being sent
+		STATS = new_pure(stats);
+		// Prevent engine stats being sent
 		int r = STATS_ENGINE_RESERVE;
 		for (int i = 0, n = 256 - r; i < n; ++i) {
 			#define X(_, name, id) if (i == id) continue;

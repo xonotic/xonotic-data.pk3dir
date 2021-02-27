@@ -401,7 +401,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 	player.superspec_flags = SSF_VERBOSE;
 	player.superspec_itemfilter = "";
 
-	entity _hello = new(superspec_delayed_hello);
+	entity _hello = new_pure(superspec_delayed_hello);
 	_hello.enemy = player;
 	setthink(_hello, superspec_hello);
 	_hello.nextthink = time + 5;

@@ -45,9 +45,11 @@ MUTATOR_HOOKFUNCTION(weaponarena_random, GiveFragsForKill)
 	}
 	else
 	{
+
+		static entity GiveFrags_randomweapons;
 		if(!GiveFrags_randomweapons)
 		{
-			GiveFrags_randomweapons = new(GiveFrags_randomweapons);
+			GiveFrags_randomweapons = new_pure(GiveFrags_randomweapons);
 		}
 
 		if(warmup_stage)

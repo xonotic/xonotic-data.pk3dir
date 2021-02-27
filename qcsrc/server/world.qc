@@ -1833,7 +1833,7 @@ void readplayerstartcvars()
 	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
-		random_start_ammo = new(random_start_ammo);
+		random_start_ammo = new_pure(random_start_ammo);
 	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
