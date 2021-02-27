@@ -14,14 +14,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2020
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-02-26 22:43+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -986,7 +986,7 @@ msgstr "Stats de précision (moyenne %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1371
 msgid "Item stats"
-msgstr ""
+msgstr "Stats objet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1482
 msgid "Map stats:"
