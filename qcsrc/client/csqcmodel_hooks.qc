@@ -299,7 +299,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
-		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true) * 2;
+		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true);
 	else
 		this.glowmod = '1 1 1';
 
@@ -316,6 +316,10 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 				this.glowmod.x = 0.000001;
 		}
 	}
+
+	// don't let the engine increase player's glowmod
+	if (autocvar_r_hdr_glowintensity > 1)
+		this.glowmod /= autocvar_r_hdr_glowintensity;
 
 	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (this.csqcmodel_isdead ? "DEAD" : "ALIVE"), this.colormap, vtos(this.glowmod));
 }
