@@ -12,6 +12,7 @@
 	NL() \
 	TITLE(_("Extended Team")) \
 		PERSON(Antonio "terencehill" Piu) \
+		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Freddy) \
 		PERSON(Halogene) \
@@ -86,6 +87,7 @@
 		PERSON(unfa) \
 	NL() \
 	FUNCTION(_("Game Code")) \
+		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(martin-t) \
 		PERSON(Mattia "Melanosuchus" Basaglia) \

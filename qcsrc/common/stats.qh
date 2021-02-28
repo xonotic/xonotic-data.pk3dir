@@ -140,7 +140,7 @@ REGISTER_STAT(VEIL_ORB, float)
 REGISTER_STAT(VEIL_ORB_ALPHA, float)
 
 #ifdef SVQC
-float autocvar_sv_showfps = 5;
+float autocvar_sv_showfps = 0;
 #endif
 REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 

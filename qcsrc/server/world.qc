@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 65535));
+		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
@@ -171,6 +171,7 @@ void cvar_changes_init()
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
+#define BADVALUE(p, val) if (k == p && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -491,6 +492,7 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
+		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
@@ -500,6 +502,8 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
+		BADVALUE("sys_ticrate", "0.0166667");
+		BADVALUE("sys_ticrate", "0.0333333");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
@@ -520,15 +524,10 @@ void cvar_changes_init()
 		BADCVAR("g_lms_weaponarena");
 		BADCVAR("g_ctf_stalemate_time");
 
-		if(cvar_string("g_mod_balance") == "Testing")
-		{
-			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
-			BADPREFIX("g_balance_");
-		}
-
 #undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
+#undef BADVALUE
 
 		if(pureadding)
 		{
@@ -944,12 +943,18 @@ spawnfunc(worldspawn)
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
+	bool records_available = false;
 	for(int i = 0; i < 10; ++i)
 	{
 		string s = getrecords(i);
-		if (s)
+		if (s != "")
+		{
 			records_reply[i] = strzone(s);
+			records_available = true;
+		}
 	}
+	if (!records_available)
+		records_reply[0] = "No records available for the current game mode.\n";
 	ladder_reply = strzone(getladder());
 	rankings_reply = strzone(getrankings());
 
@@ -1265,7 +1270,7 @@ only called if a time or frag limit has expired
 void NextLevel()
 {
 	game_stopped = true;
-	intermission_running = 1; // game over
+	intermission_running = true; // game over
 
 	// enforce a wait time before allowing changelevel
 	if(player_count > 0)
@@ -1829,7 +1834,7 @@ void readplayerstartcvars()
 	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
-		random_start_ammo = new(random_start_ammo);
+		random_start_ammo = new_pure(random_start_ammo);
 	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
