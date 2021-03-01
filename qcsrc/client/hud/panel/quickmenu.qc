@@ -777,7 +777,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;
-		QUICKMENU_ENTRY(entcs_GetName(pl.sv_entnum), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
+		QUICKMENU_ENTRY(strcat("^7", entcs_GetName(pl.sv_entnum)), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
 	}
 
 	return;
