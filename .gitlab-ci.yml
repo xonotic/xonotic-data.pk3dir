@@ -78,7 +78,7 @@ doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   before_script:
     - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
     - apt-get update
-    - apt-get -y install doxygen
+    - apt-get -y install doxygen graphviz
   stage: deploy
   script:
     - cd qcsrc && doxygen
