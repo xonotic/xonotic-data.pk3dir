@@ -788,15 +788,14 @@ void GameCommand_gettaginfo(int request, int argc)
 				if (i)
 				{
 					v = gettaginfo(tmp_entity, i);
-					LOG_INFOF(
-						"model %s frame %s tag %s index %s parent %s",
+					LOG_HELPF("model %s frame %s tag %s index %s parent %s",
 						tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
 					);
-					LOG_INFOF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
-					LOG_INFOF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
-					LOG_INFOF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
-					LOG_INFOF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
-					LOG_INFOF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
+					LOG_HELPF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
+					LOG_HELPF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
+					LOG_HELPF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
+					LOG_HELPF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
+					LOG_HELPF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
 					if (argc >= 6)
 					{
 						v.y = -v.y;

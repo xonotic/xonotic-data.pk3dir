@@ -1239,7 +1239,7 @@ ERASEABLE
 void write_String_To_File(int fh, string str, bool alsoprint)
 {
 	fputs(fh, str);
-	if (alsoprint) LOG_INFO(str);
+	if (alsoprint) LOG_HELP(str);
 }
 
 string get_model_datafilename(string m, float sk, string fil)

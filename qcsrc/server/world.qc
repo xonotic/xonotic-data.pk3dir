@@ -1191,7 +1191,7 @@ void DumpStats(float final)
 	s = strcat(s, GetGametype(), "_", GetMapname(), ":", ftos(rint(time)));
 
 	if(to_console)
-		LOG_INFO(s);
+		LOG_HELP(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 
@@ -1207,7 +1207,7 @@ void DumpStats(float final)
 
 	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
-		LOG_INFO(s);
+		LOG_HELP(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 	if(to_file)
@@ -1222,7 +1222,7 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, playername(it.netname, it.team, false));
+			LOG_HELP(s, playername(it.netname, it.team, false));
 		if(to_eventlog)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it.netname, it.team, false)));
 		if(to_file)
@@ -1233,7 +1233,7 @@ void DumpStats(float final)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
-			LOG_INFO(s);
+			LOG_HELP(s);
 		if(to_eventlog)
 			GameLogEcho(s);
 		if(to_file)
@@ -1244,7 +1244,7 @@ void DumpStats(float final)
 			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
-				LOG_INFO(s);
+				LOG_HELP(s);
 			if(to_eventlog)
 				GameLogEcho(s);
 			if(to_file)
@@ -1253,7 +1253,7 @@ void DumpStats(float final)
 	}
 
 	if(to_console)
-		LOG_INFO(":end");
+		LOG_HELP(":end");
 	if(to_eventlog)
 		GameLogEcho(":end");
 	if(to_file)
@@ -1966,7 +1966,7 @@ void readplayerstartcvars()
 		random_start_weapons_count = cvar("g_random_start_weapons_count");
 		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
 		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
-		SetResource(random_start_ammo, RES_ROCKETS,cvar("g_random_start_rockets"));
+		SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
 		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
 		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 	}
@@ -2026,16 +2026,11 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
-	SetResource(random_start_ammo, RES_SHELLS,
-		max(0, GetResource(random_start_ammo, RES_SHELLS)));
-	SetResource(random_start_ammo, RES_BULLETS,
-		max(0, GetResource(random_start_ammo, RES_BULLETS)));
-	SetResource(random_start_ammo, RES_ROCKETS,
-		max(0, GetResource(random_start_ammo, RES_ROCKETS)));
-	SetResource(random_start_ammo, RES_CELLS,
-		max(0, GetResource(random_start_ammo, RES_CELLS)));
-	SetResource(random_start_ammo, RES_PLASMA,
-		max(0, GetResource(random_start_ammo, RES_PLASMA)));
+	SetResource(random_start_ammo, RES_SHELLS, max(0, GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS, max(0, GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS, max(0, GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS, max(0, GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA, max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
