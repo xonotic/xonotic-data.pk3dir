@@ -88,6 +88,16 @@ void sys_phys_spectator_control(entity this)
 
 void sys_phys_fixspeed(entity this, float maxspeed_mod)
 {
+	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
+	if (this.speed != spd) {
+		this.speed = spd; // TODO: send this as a stat and set the below cvars on the client?
+		string temps = ftos(spd);
+		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
+	}
+
 	if (this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min) {
 		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
 		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
