@@ -61,12 +61,12 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
 		return true;
 	}
-	if (STAT(ARMORIZING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 11-02-2021
+	/*if (STAT(ARMORIZING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 11-02-2021
 	{
 		M_ARGV(0, vector) = NADE_TYPE_ARMORIZE.m_color;
 		M_ARGV(1, float) = STAT(ARMORIZING_ORB_ALPHA);
 		return true;
-	}
+	}*/
 	if (STAT(AMMUNITIONING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 13-02-2021
 	{
 		M_ARGV(0, vector) = NADE_TYPE_AMMO.m_color;
@@ -585,6 +585,8 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 
 	setthink(orb, nades_orb_think);
 	orb.nextthink = time;
+	
+	LOG_INFOF("orb.nexttime = ^3%f", orb.nextthink);
 
 	return orb;
 }
@@ -720,62 +722,188 @@ void nade_veil_boom(entity this)
 	settouch(orb, nade_veil_touch);
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
-/**************LEGENDGUARD NEW NADES: ARMORIZE, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: BLOCKING NADE ***********************/
-void nade_armorize_touch(entity this, entity toucher)
+/**************LEGENDGUARD NEW NADES: ARMORIZE, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
+//TODO: try to spawn armor shards instead a orb
+//try with this: if not, look crates code and napalm nade code
+void nade_itemdrop_dropitem(entity e, vector org, entity itm)
 {
-	float armor_factor;
-	float maxarmor = 999;
-	float ar = GetResource(toucher, RES_ARMOR);
-	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
-	if(!IS_DEAD(toucher))
-	if(!STAT(FROZEN, toucher))
-	{
-		armor_factor = autocvar_g_nades_armorize_rate*frametime/2;
-		if ( toucher != this.realowner )
-		{
-			if ( SAME_TEAM(toucher,this) )
-			{
-				armor_factor *= autocvar_g_nades_armorize_friend;
-			}
-			else
-			{
-				armor_factor *= autocvar_g_nades_armorize_foe;
-			}
-		}
-		if ( armor_factor > 0 )
-		{
-			if (ar < maxarmor)
-			{
-				if (this.nade_show_particles)
-				{
-					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				}
-				GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
-			}
-		}
-		else if ( armor_factor < 0 )
-		{
-			//Foe drops armor points
-			if (ar > 0)
-				SetResource(toucher, RES_ARMOR, ar + armor_factor);
-		}
-	}
+	Item_SetLoot(e, true);
+	e.reset = SUB_Remove;
+	e.noalign = true;
+	StartItem(e, itm);
+	e.gravity = 1;
+	setorigin(e, org);
+	e.velocity = randomvec() * 175 + '0 0 325';
+	e.item_spawnshieldtime = time + 0.7;
+	SUB_SetFade(e, time + autocvar_g_nades_itemdrop_lifetime, 1);
+}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+void nade_itemdrop_dropping(vector org)
+{
+	//TODO: Do like a machine spouting constantly with limited time 01-03-2021
+	int itemcount = autocvar_g_nades_itemdrop_lifetime;
+	for(int j = 0; j < itemcount; ++j)
 	{
-		entity show_green = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
-		STAT(ARMORIZING_ORB, show_green) = time+0.1;
-		STAT(ARMORIZING_ORB_ALPHA, show_green) = 0.75 * (this.ltime - time) / this.orb_lifetime;
+		entity e = spawn();
+		e.spawnfunc_checked = true;
+		nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_ArmorSmall));
 	}
 }
 
-void nade_armorize_boom(entity this)
+void nade_dropitem_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_armorize_time, autocvar_g_nades_nade_radius);
-
-	settouch(orb, nade_armorize_touch);
-	orb.colormod = '0.33 1 0.66';
+	nade_itemdrop_dropping(this.origin);
 }
+
+/*COMMENTED FUNCTIONS TO DO SOMETHING
+void nade_itemdrop_dropitem(entity e, vector org, entity itm)
+{
+	Item_SetLoot(e, true);
+	e.reset = SUB_Remove;
+	e.noalign = true;
+	StartItem(e, itm);
+	e.gravity = 1;
+	setorigin(e, org);
+	e.velocity = randomvec() * 175 + '0 0 325';
+	e.item_spawnshieldtime = time + 0.7;
+	SUB_SetFade(e, time + autocvar_g_nades_itemdrop_lifetime, 1);
+}
+
+void nade_itemdrop_dropping(vector org)
+{
+	int itemcount = autocvar_g_nades_itemdrop_spawncount;
+	for(int j = 0; j < itemcount; ++j)
+	{
+		entity e = spawn();
+		e.spawnfunc_checked = true;
+		nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_ArmorSmall));
+	}
+}
+
+void dropitem_ball_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time > this.pushltime)
+	{
+		delete(this);
+		return;
+	}
+
+	vector midpoint = ((this.absmin + this.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		this.velocity = this.velocity * 0.5;
+
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ this.velocity_z = 200; }
+	}
+
+	this.angles = vectoangles(this.velocity);
+
+	this.nextthink = time + 0.1;
+}
+
+void nade_dropitem_ball(entity this)
+{
+	entity proj;
+	vector kick;
+
+	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
+
+	proj = new(grenade);
+	proj.bot_dodge = true;
+	set_movetype(proj, MOVETYPE_BOUNCE);
+	setmodel(proj, MDL_Null);
+	proj.scale = 1;//0.5;
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	setorigin(proj, this.origin);
+	setthink(proj, dropitem_ball_think);
+	proj.nextthink = time;
+	proj.effects = EF_LOWPRECISION | EFFECT_EXPLOSION_SMALL;
+
+	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_itemdrop_ball_spread;
+	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_itemdrop_ball_spread;
+	kick.z = (random()/2+0.5) * autocvar_g_nades_itemdrop_ball_spread;
+	proj.velocity = kick;
+
+	proj.pushltime = time + autocvar_g_nades_itemdrop_ball_lifetime;
+
+	proj.angles = vectoangles(proj.velocity);
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+
+	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
+}
+
+
+void dropitem_fountain_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time >= this.ltime)
+	{
+		delete(this);
+		return;
+	}
+
+	vector midpoint = ((this.absmin + this.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		this.velocity = this.velocity * 0.5;
+
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ this.velocity_z = 200; }
+
+		UpdateCSQCProjectile(this);
+	}
+
+	this.nextthink = time + 0.1;
+	if(time >= this.nade_special_time)
+	{
+		this.nade_special_time = time + autocvar_g_nades_itemdrop_fountain_delay;
+		nade_dropitem_ball(this);
+	}
+}
+
+void nade_dropitem_boom(entity this)
+{
+	for (int c = 0; c < autocvar_g_nades_itemdrop_ball_count; c++)
+		nade_dropitem_ball(this);
+
+	entity fountain = new(nade_dropitem_fountain);
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
+	setorigin(fountain, fountain.origin);
+	setthink(fountain, dropitem_fountain_think);
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_itemdrop_fountain_lifetime;
+	fountain.pushltime = fountain.ltime;
+	fountain.team = this.team;
+	set_movetype(fountain, MOVETYPE_TOSS);
+	fountain.bot_dodge = true;
+	fountain.nade_special_time = time;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
+	nade_itemdrop_dropping(this.origin);
+}*/
+
 /***********************************************************************************/
 //LegendGuard develops ammo nade 13-02-2021
 void nade_ammo_touch(entity this, entity toucher)
@@ -884,6 +1012,7 @@ void nade_ammo_boom(entity this)
 /***********************************************************************************/
 //remember to put an image in gfx/hud/luma and gfx/hud/default per each nade_blabla.tga
 //dark nade does damage like a normal nade but the damage is minor
+//TODO: add Dark smoke effect when exploded 28-02-2021
 void dark_damage(entity this, float radius, float damage)
 {
 	entity e;
@@ -989,19 +1118,19 @@ void nade_boom(entity this)
 			expef = EFFECT_SPAWN_NEUTRAL;
 			break;
 		
-		case NADE_TYPE_ARMORIZE: //LegendGuard adds nade case 11-02-2021
+		case NADE_TYPE_ITEMDROP: //LegendGuard adds nade case 11-02-2021
 			nade_blast = false;
-			expef = EFFECT_SPAWN_NEUTRAL;
+			expef = EFFECT_EXPLOSION_SMALL;
 			break;
 
 		case NADE_TYPE_AMMO: //LegendGuard adds nade case 13-02-2021
 			nade_blast = false;
-			expef = EFFECT_SPAWN_NEUTRAL;
+			expef = EFFECT_SPAWN_BROWN;
 			break;
 
 		case NADE_TYPE_DARK: //LegendGuard adds nade case 08-02-2021
 			nade_blast = false;
-			expef = EFFECT_EXPLOSION_MEDIUM;
+			expef = EFFECT_SPAWN_PURPLE;//expef = EFFECT_EXPLOSION_MEDIUM;
 			break;
 
 		default:
@@ -1036,7 +1165,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_MONSTER: nade_monster_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
-		case NADE_TYPE_ARMORIZE: nade_armorize_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
+		case NADE_TYPE_ITEMDROP: nade_dropitem_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
 		case NADE_TYPE_AMMO: nade_ammo_boom(this); break; //LegendGuard adds the register of new nade 13-02-2021
 		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
 	}
@@ -1813,8 +1942,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
-	STAT(ARMORIZING_ORB, client) = STAT(ARMORIZING_ORB, spectatee); //LegendGuard adds nade STAT client 11-02-2021
-	STAT(ARMORIZING_ORB_ALPHA, client) = STAT(ARMORIZING_ORB_ALPHA, spectatee);
+	/*STAT(ARMORIZING_ORB, client) = STAT(ARMORIZING_ORB, spectatee); //LegendGuard adds nade STAT client 11-02-2021
+	STAT(ARMORIZING_ORB_ALPHA, client) = STAT(ARMORIZING_ORB_ALPHA, spectatee);*/
 	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee); //LegendGuard adds nade STAT client 13-02-2021
 	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
 	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021
