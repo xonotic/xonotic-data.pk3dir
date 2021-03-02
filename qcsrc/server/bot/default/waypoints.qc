@@ -88,11 +88,11 @@ void waypoint_unreachable(entity pl)
 			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
 			it.spawnpointmodel.effects |= EF_NODEPTHTEST;
 			_setmodel(it.spawnpointmodel, pl.model);
-			it.spawnpointmodel.frame = pl.frame;
+			it.spawnpointmodel.frame = ANIM_idle.m_id;
 			it.spawnpointmodel.skin = pl.skin;
-			it.spawnpointmodel.colormap = pl.colormap;
-			it.spawnpointmodel.colormod = pl.colormod;
-			it.spawnpointmodel.glowmod = pl.glowmod;
+			it.spawnpointmodel.colormap = 1024 + 68;
+			it.spawnpointmodel.glowmod = '1 0 0';
+			it.spawnpointmodel.angles = it.angles;
 			setsize(it.spawnpointmodel, PL_MIN_CONST, PL_MAX_CONST);
 			j++;
 		}
