@@ -2,7 +2,6 @@
 
 #include <common/anim.qh>
 #include <common/animdecide.qh>
-#include <common/animdecide.qh>
 #include <common/csqcmodel_settings.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>

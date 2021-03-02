@@ -1,5 +1,6 @@
 #include "waypoints.qh"
 
+#include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/debug.qh>
 #include <common/gamemodes/_mod.qh>
