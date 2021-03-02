@@ -2633,15 +2633,6 @@ void PlayerPreThink (entity this)
 	}
 
 	target_voicescript_next(this);
-
-	// WEAPONTODO: Move into weaponsystem somehow
-	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
-	}
 }
 
 void DrownPlayer(entity this)
