@@ -235,7 +235,8 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		if (IS_PLAYER(this.owner))
 			this.SendFlags |= BIT(ENTCS_PROP_ORIGIN_id);
 
-		setorigin(this, this.origin); // relink
+		// not needed, origin is just data to be sent
+		//setorigin(this, this.origin); // relink
 	}
 
 	void entcs_attach(entity player)
@@ -281,11 +282,17 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		entity e = CSQCModel_server2csqc(this.sv_entnum);
 		if (e == NULL)
 		{
+			// player model is NOT in client's PVS
+			InterpolateOrigin_Do(this);
 			this.has_origin = this.has_sv_origin;
 			return;
 		}
 		this.has_origin = true;
+		// when a player model is in client's PVS we use its origin directly
+		// (entcs networked origin is overriden)
 		this.origin = e.origin;
+		InterpolateOrigin_Reset(this);
+		setorigin(this, this.origin);
 		// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
 		if (this.model != e.model)
 		{
