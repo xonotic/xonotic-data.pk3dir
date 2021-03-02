@@ -723,8 +723,8 @@ void nade_veil_boom(entity this)
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
 /**************LEGENDGUARD NEW NADES: ARMORIZE, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
-//TODO: try to spawn armor shards instead a orb
-//try with this: if not, look crates code and napalm nade code
+//TODO: rename in gfx/hud/luma/nade_itemdrop.tga from nade_armorize.tga 02-03-2021
+//TODO: rename itemdrop nade name to emerald nade 02-03-2021
 void nade_itemdrop_dropitem(entity e, vector org, entity itm)
 {
 	Item_SetLoot(e, true);
@@ -740,43 +740,13 @@ void nade_itemdrop_dropitem(entity e, vector org, entity itm)
 
 void nade_itemdrop_dropping(vector org)
 {
-	//TODO: Do like a machine spouting constantly with limited time 01-03-2021
-	int itemcount = autocvar_g_nades_itemdrop_lifetime;
-	for(int j = 0; j < itemcount; ++j)
-	{
-		entity e = spawn();
-		e.spawnfunc_checked = true;
-		nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_ArmorSmall));
-	}
-}
-
-void nade_dropitem_boom(entity this)
-{
-	nade_itemdrop_dropping(this.origin);
-}
-
-/*COMMENTED FUNCTIONS TO DO SOMETHING
-void nade_itemdrop_dropitem(entity e, vector org, entity itm)
-{
-	Item_SetLoot(e, true);
-	e.reset = SUB_Remove;
-	e.noalign = true;
-	StartItem(e, itm);
-	e.gravity = 1;
-	setorigin(e, org);
-	e.velocity = randomvec() * 175 + '0 0 325';
-	e.item_spawnshieldtime = time + 0.7;
-	SUB_SetFade(e, time + autocvar_g_nades_itemdrop_lifetime, 1);
-}
-
-void nade_itemdrop_dropping(vector org)
-{
+	//TODO: Add random item: any ammo type, armor, health, ... 02-03-2012
 	int itemcount = autocvar_g_nades_itemdrop_spawncount;
 	for(int j = 0; j < itemcount; ++j)
 	{
 		entity e = spawn();
 		e.spawnfunc_checked = true;
-		nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_ArmorSmall));
+		nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 	}
 }
 
@@ -806,6 +776,8 @@ void dropitem_ball_think(entity this)
 
 	this.angles = vectoangles(this.velocity);
 
+	nade_itemdrop_dropping(this.origin);
+
 	this.nextthink = time + 0.1;
 }
 
@@ -825,7 +797,7 @@ void nade_dropitem_ball(entity this)
 	setorigin(proj, this.origin);
 	setthink(proj, dropitem_ball_think);
 	proj.nextthink = time;
-	proj.effects = EF_LOWPRECISION | EFFECT_EXPLOSION_SMALL;
+	proj.effects = EF_LOWPRECISION;
 
 	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_itemdrop_ball_spread;
 	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_itemdrop_ball_spread;
@@ -901,8 +873,8 @@ void nade_dropitem_boom(entity this)
 	fountain.nade_special_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
-	nade_itemdrop_dropping(this.origin);
-}*/
+	nade_itemdrop_dropping(fountain.origin);
+}
 
 /***********************************************************************************/
 //LegendGuard develops ammo nade 13-02-2021
