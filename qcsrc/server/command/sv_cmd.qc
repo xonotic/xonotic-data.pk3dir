@@ -715,6 +715,11 @@ void GameCommand_gametype(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_INFOF("This command works only when the server is running.");
+				return;
+			}
 			if (argv(1) != "")
 			{
 				string s = argv(1);
@@ -888,6 +893,11 @@ void GameCommand_gotomap(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_INFOF("This command works only when the server is running.");
+				return;
+			}
 			if (argv(1))
 			{
 				LOG_INFO(GotoMap(argv(1)));

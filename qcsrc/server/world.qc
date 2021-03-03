@@ -100,7 +100,6 @@ void PingPLReport_Spawn()
 }
 
 const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
-float world_initialized;
 
 void SetDefaultAlpha()
 {
