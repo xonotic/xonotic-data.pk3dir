@@ -558,6 +558,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// don't play teleportation sounds
 		this.teleportable = TELEPORT_SIMPLE;
 
+		STAT(STRENGTH_FINISHED, this) = 0;
+		STAT(INVINCIBLE_FINISHED, this) = 0;
+		STAT(SUPERWEAPONS_FINISHED, this) = 0;
+		STAT(AIR_FINISHED, this) = 0;
+
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 
 		this.death_time = time;
