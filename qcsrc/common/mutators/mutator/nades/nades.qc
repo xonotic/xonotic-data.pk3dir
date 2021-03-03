@@ -724,7 +724,7 @@ void nade_veil_boom(entity this)
 }
 /**************LEGENDGUARD NEW NADES: ARMORIZE, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
 //TODO: rename in gfx/hud/luma/nade_itemdrop.tga from nade_armorize.tga 02-03-2021
-//TODO: rename itemdrop nade name to emerald nade 02-03-2021
+//TODO: Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
 void nade_itemdrop_dropitem(entity e, vector org, entity itm)
 {
 	Item_SetLoot(e, true);
@@ -740,13 +740,42 @@ void nade_itemdrop_dropitem(entity e, vector org, entity itm)
 
 void nade_itemdrop_dropping(vector org)
 {
-	//TODO: Add random item: any ammo type, armor, health, ... 02-03-2012
+	//look in qcsrc/server/items/items.qc
+	//ITEM_Shells; ITEM_Bullets; ITEM_Rockets; ITEM_Cells; ITEM_Plasma; ITEM_JetpackFuel;
+	//ITEM_Strength; ITEM_Shield
 	int itemcount = autocvar_g_nades_itemdrop_spawncount;
 	for(int j = 0; j < itemcount; ++j)
 	{
 		entity e = spawn();
 		e.spawnfunc_checked = true;
-		nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+		float a = random();
+		float b = random();
+		float c = random();
+		float d = random();
+		
+		if (a > b)
+		{
+			if (a > 0.5)
+				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+			else
+				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+		}
+		else if (c > d)
+		{
+			if (c > 0.5)
+				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+			else
+				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+		}
+		else if (autocvar_g_nades_itemdrop_powerupjetpackdrop)
+		{
+			if (a < 0.5)
+				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
+			else
+				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
+		}
+		else
+			return;
 	}
 }
 
