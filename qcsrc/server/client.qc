@@ -1715,6 +1715,7 @@ void GetPressedKeys(entity this)
 		return;
 	}
 
+	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
