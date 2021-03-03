@@ -1229,21 +1229,16 @@ void Fire_ApplyDamage(entity e)
 	float t, d, hi, ty;
 	entity o;
 
+	// water, slime and ice stop fire
+	if (STAT(FROZEN, e) || (e.waterlevel && (e.watertype != CONTENT_LAVA)))
+		e.fire_endtime = 0;
+
 	if (!Fire_IsBurning(e))
 		return;
 
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
 	if(IS_NOT_A_CLIENT(o))
 		o = e.fire_owner;
-
-	// water and slime stop fire
-	if(e.waterlevel)
-	if(e.watertype != CONTENT_LAVA)
-		e.fire_endtime = 0;
-
-	// ice stops fire
-	if(STAT(FROZEN, e))
-		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;
