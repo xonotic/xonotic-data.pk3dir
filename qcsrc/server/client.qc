@@ -1201,6 +1201,8 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
+void player_powerups_remove_all(entity this);
+
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1252,6 +1254,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	player_powerups_remove_all(this); // stop powerup sound
 
 	ONREMOVE(this);
 }
@@ -1449,7 +1453,8 @@ void player_powerups_remove_all(entity this)
 {
 	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
 	{
-		if (time > game_starttime + 1)
+		// don't play the poweroff sound when the game restarts or the player disconnects
+		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
 		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
 		this.items &= ~ITEM_Strength.m_itemid;
