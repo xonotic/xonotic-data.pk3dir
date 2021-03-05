@@ -818,8 +818,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 								attacker.damage_dealt += damage;
 						}
 
-						damage_goodhits += 1;
-						damage_gooddamage += damage;
+						impressive_hits += 1;
 
 						if (!DEATH_ISSPECIAL(deathtype))
 						{
@@ -888,9 +887,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	}
 }
 
+// Returns total damage applies to creatures
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
-	// Returns total damage applies to creatures
 {
 	entity	targ;
 	vector	force;
