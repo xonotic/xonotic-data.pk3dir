@@ -1,5 +1,7 @@
 #include "sv_mayhem.qh"
 
+bool autocvar_g_mayhem_regenerate;
+
 MUTATOR_HOOKFUNCTION(mayhem, Scores_CountFragsRemaining)
 {
 	// announce remaining frags
