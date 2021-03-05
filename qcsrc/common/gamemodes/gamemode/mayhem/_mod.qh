@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/mayhem/mayhem.qh>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/mayhem/sv_mayhem.qh>
+#endif
