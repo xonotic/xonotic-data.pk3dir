@@ -53,3 +53,15 @@ MUTATOR_HOOKFUNCTION(mayhem, FilterItem)
 	else 
 		return false;
 }
+
+MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+
+	if (frag_target == frag_attacker)
+		frag_damage = 0;
+
+	M_ARGV(4, float) = frag_damage;
+}
