@@ -1,6 +1,7 @@
 #include "sv_mayhem.qh"
 
-bool autocvar_g_mayhem_regenerate;
+float autocvar_g_mayhem_regenerate;
+string autocvar_g_mayhem_weaponarena;
 
 MUTATOR_HOOKFUNCTION(mayhem, Scores_CountFragsRemaining)
 {
@@ -49,4 +50,6 @@ MUTATOR_HOOKFUNCTION(mayhem, FilterItem)
 
 	if (autocvar_g_pickup_items <= 0)
 		return true;
+	else 
+		return false;
 }
