@@ -17,3 +17,4 @@
 #include <common/gamemodes/gamemode/onslaught/_mod.inc>
 #include <common/gamemodes/gamemode/race/_mod.inc>
 #include <common/gamemodes/gamemode/tdm/_mod.inc>
+#include <common/gamemodes/gamemode/tmayhem/_mod.inc>

@@ -1,6 +1,6 @@
 #include "sv_mayhem.qh"
 
-float autocvar_g_mayhem_regenerate;
+bool autocvar_g_mayhem_regenerate;
 string autocvar_g_mayhem_weaponarena;
 
 MUTATOR_HOOKFUNCTION(mayhem, Scores_CountFragsRemaining)

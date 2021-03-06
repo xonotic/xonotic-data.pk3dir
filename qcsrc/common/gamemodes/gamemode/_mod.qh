@@ -17,3 +17,4 @@
 #include <common/gamemodes/gamemode/onslaught/_mod.qh>
 #include <common/gamemodes/gamemode/race/_mod.qh>
 #include <common/gamemodes/gamemode/tdm/_mod.qh>
+#include <common/gamemodes/gamemode/tmayhem/_mod.qh>
