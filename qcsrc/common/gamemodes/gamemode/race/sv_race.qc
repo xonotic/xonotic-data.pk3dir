@@ -208,7 +208,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	Score_NicePrint(NULL);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place, 0, 1, 0);
+	PlayerScore_Sort(race_place, 0, true, false);
 
 	FOREACH_CLIENT(true, {
 		if(it.race_place)
@@ -328,7 +328,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
+	if(CS_CVAR(player).cvar_cl_allow_uidtracking == 1 && CS_CVAR(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));
@@ -348,7 +348,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 			speedaward_uid = player.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
-		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
+		if (speedaward_speed > speedaward_lastsent && (time - speedaward_lastupdate > 1 || intermission_running))
 		{
 			string rr = RACE_RECORD;
 			race_send_speedaward(MSG_ALL);

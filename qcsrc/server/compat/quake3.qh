@@ -4,6 +4,8 @@ int q3compat = 0;
 #define Q3COMPAT_ARENA BIT(0)
 #define Q3COMPAT_DEFI BIT(1)
 
+bool autocvar_sv_q3compat_changehitbox;
+
 bool DoesQ3ARemoveThisEntity(entity this);
 int GetAmmoConsumptionQ3(string netname);
 

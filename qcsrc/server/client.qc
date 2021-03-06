@@ -21,6 +21,7 @@
 #include <common/minigames/sv_minigames.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
@@ -42,6 +43,7 @@
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
@@ -71,6 +73,7 @@
 #include <server/weapons/common.qh>
 #include <server/weapons/hitplot.qh>
 #include <server/weapons/selection.qh>
+#include <server/weapons/tracing.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
@@ -196,19 +199,19 @@ string CheckPlayerModel(string plyermodel) {
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
 	// only in right path
-	if( substring(plyermodel,0,14) != "models/player/")
+	if(substring(plyermodel, 0, 14) != "models/player/")
 		return FallbackPlayerModel;
 	// only good file extensions
-	if(substring(plyermodel,-4,4) != ".zym")
-	if(substring(plyermodel,-4,4) != ".dpm")
-	if(substring(plyermodel,-4,4) != ".iqm")
-	if(substring(plyermodel,-4,4) != ".md3")
-	if(substring(plyermodel,-4,4) != ".psk")
+	if(substring(plyermodel, -4, 4) != ".iqm"
+		&& substring(plyermodel, -4, 4) != ".zym"
+		&& substring(plyermodel, -4, 4) != ".dpm"
+		&& substring(plyermodel, -4, 4) != ".md3"
+		&& substring(plyermodel, -4, 4) != ".psk")
+	{
 		return FallbackPlayerModel;
+	}
 	// forbid the LOD models
-	if(substring(plyermodel, -9,5) == "_lod1")
-		return FallbackPlayerModel;
-	if(substring(plyermodel, -9,5) == "_lod2")
+	if(substring(plyermodel, -9, 5) == "_lod1" || substring(plyermodel, -9, 5) == "_lod2")
 		return FallbackPlayerModel;
 	if(plyermodel != strtolower(plyermodel))
 		return FallbackPlayerModel;
@@ -250,6 +253,7 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
+		entcs_update_players(this);
 	}
 
 	entity spot = SelectSpawnPoint(this, true);
@@ -781,7 +785,7 @@ void PutPlayerInServer(entity this)
 
 	if (CS(this).impulse) ImpulseCommands(this);
 
-	W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
+	W_ResetGunAlign(this, CS_CVAR(this).cvar_cl_gunalign);
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
@@ -1196,6 +1200,8 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
+void player_powerups_remove_all(entity this);
+
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1216,7 +1222,7 @@ void ClientDisconnect(entity this)
 	MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
-	strfree(CS(this).weaponorder_byimpulse);
+	strfree(CS_CVAR(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1247,6 +1253,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	player_powerups_remove_all(this); // stop powerup sound
 
 	ONREMOVE(this);
 }
@@ -1440,6 +1448,20 @@ void play_countdown(entity this, float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+void player_powerups_remove_all(entity this)
+{
+	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	{
+		// don't play the poweroff sound when the game restarts or the player disconnects
+		if (time > game_starttime + 1 && IS_CLIENT(this))
+			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+		this.items &= ~ITEM_Strength.m_itemid;
+		this.items &= ~ITEM_Shield.m_itemid;
+		this.items -= (this.items & IT_SUPERWEAPON);
+	}
+}
+
 void player_powerups(entity this)
 {
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
@@ -1450,16 +1472,7 @@ void player_powerups(entity this)
 	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if (IS_DEAD(this))
-	{
-		if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
-		{
-			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-			this.items &= ~ITEM_Strength.m_itemid;
-			this.items &= ~ITEM_Shield.m_itemid;
-			this.items -= (this.items & IT_SUPERWEAPON);
-		}
-	}
+		player_powerups_remove_all(this);
 
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
@@ -1699,6 +1712,14 @@ void SetZoomState(entity this, float newzoom)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
+	if (game_stopped)
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+		return;
+	}
+
+	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
@@ -2256,7 +2277,7 @@ bool PlayerThink(entity this)
 	bool dualwielding = W_DualWielding(this);
 	if(this.dualwielding_prev != dualwielding)
 	{
-		W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
+		W_ResetGunAlign(this, CS_CVAR(this).cvar_cl_gunalign);
 		this.dualwielding_prev = dualwielding;
 	}
 
@@ -2294,6 +2315,7 @@ bool PlayerThink(entity this)
 }
 
 .bool would_spectate;
+// merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
 	bool is_spec = IS_SPEC(this);
@@ -2347,10 +2369,10 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS_CVAR(this).cvar_cl_clippedspectating : !CS_CVAR(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
-	} else {
+	} else { // jump pressed
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
@@ -2426,8 +2448,8 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
-	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
-	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS(this).cvar_cl_movement_track_canjump;
+	STAT(GUNALIGN, this) = CS_CVAR(this).cvar_cl_gunalign; // TODO
+	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS_CVAR(this).cvar_cl_movement_track_canjump;
 
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
@@ -2469,19 +2491,19 @@ void PlayerPreThink (entity this)
 	}
 
 	// version nagging
-	if (CS(this).version_nagtime && CS(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
+	if (CS(this).version_nagtime && CS_CVAR(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
         CS(this).version_nagtime = 0;
-        if (strstrofs(CS(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
+        if (strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git client
         } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git server
-            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
+            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
         } else {
-            int r = vercmp(CS(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
+            int r = vercmp(CS_CVAR(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
             if (r < 0) { // old client
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
             } else if (r > 0) { // old server
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
             }
         }
     }
@@ -2493,7 +2515,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if (frametime && IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this) && time >= game_starttime)
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
@@ -2545,7 +2567,7 @@ void PlayerPreThink (entity this)
 		this.last_vehiclecheck = time + 1;
 	}
 
-	if(!CS(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
+	if(!CS_CVAR(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 			PlayerUseKey(this);
@@ -2616,15 +2638,6 @@ void PlayerPreThink (entity this)
 	}
 
 	target_voicescript_next(this);
-
-	// WEAPONTODO: Move into weaponsystem somehow
-	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
-	}
 }
 
 void DrownPlayer(entity this)
@@ -2752,12 +2765,12 @@ void PlayerPostThink (entity this)
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
+		GetPressedKeys(this);
 		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;
 		}
-		GetPressedKeys(this);
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{

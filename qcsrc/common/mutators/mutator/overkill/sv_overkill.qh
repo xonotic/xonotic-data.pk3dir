@@ -8,7 +8,7 @@ bool autocvar_g_overkill_filter_armormega;
 
 .float ok_item;
 
-REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(mutator_instagib) && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
+REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MapInfo_LoadedGametype.m_weaponarena && cvar_string("g_mod_balance") == "Overkill")
 {
 	MUTATOR_ONADD
 	{

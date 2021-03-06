@@ -881,9 +881,13 @@ void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col)
 {
     // no check, as this is never called without doing an actual change (usually only once)
     int i = icon.m_id;
-    e.cnt = (e.cnt & BIT(7)) | (i & BITS(7));
-    e.colormod = col;
-    e.SendFlags |= 32;
+    int new_cnt = (e.cnt & BIT(7)) | (i & BITS(7));
+    if (new_cnt != e.cnt || col != e.colormod)
+    {
+    	e.cnt = new_cnt;
+    	e.colormod = col;
+    	e.SendFlags |= 32;
+    }
 }
 
 void WaypointSprite_Ping(entity e)

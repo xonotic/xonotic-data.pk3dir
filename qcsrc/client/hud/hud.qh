@@ -182,6 +182,26 @@ float chat_sizey;
 
 float current_player;
 
+float autocvar__menu_alpha; // updated by the menu VM, useful to tell when the menu is being drawn
+
+string autocvar__hud_panelorder;
+
+bool autocvar_hud_cursormode = true;
+string autocvar_hud_dock;
+float autocvar_hud_dock_alpha;
+string autocvar_hud_dock_color;
+bool autocvar_hud_dock_color_team;
+string autocvar_hud_panel_bg;
+float autocvar_hud_panel_bg_alpha;
+float autocvar_hud_panel_bg_border;
+vector autocvar_hud_panel_bg_color;
+float autocvar_hud_panel_bg_color_team;
+float autocvar_hud_panel_bg_padding;
+float autocvar_hud_panel_fg_alpha;
+string autocvar_hud_skin;
+float autocvar_hud_progressbar_alpha;
+float autocvar_hud_panel_update_interval;
+
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
 vector autocvar_hud_dynamic_follow_scale_xyz;

@@ -4,6 +4,8 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/teams.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/vote.qh>
 #include <server/damage.qh>
@@ -46,7 +48,7 @@ STATIC_INIT(g_team_entities)
 {
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		g_team_entities[i] = spawn();
+		g_team_entities[i] = new_pure();
 	}
 }
 
@@ -1119,18 +1121,13 @@ void SV_ChangeTeam(entity player, int new_color)
 	{
 		SetPlayerColors(player, new_color);
 	}
-	// TODO: Should we really bother with this?
 	if(!IS_CLIENT(player))
 	{
-		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING,
-			player.netname);
 		return;
 	}
 	if (!teamplay)
 	{
 		return;
 	}
-	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) +
-		1));
+	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
 }

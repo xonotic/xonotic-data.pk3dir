@@ -981,7 +981,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_teams = BITS(bound(2, kh_teams, 4));
 
 	// make a KH entity for controlling the game
-	kh_controller = new(kh_controller);
+	kh_controller = new_pure(kh_controller);
 	setthink(kh_controller, kh_Controller_Think);
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 

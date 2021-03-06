@@ -366,7 +366,7 @@ spawnfunc(func_assault_destructible)
 	else
 		this.team = NUM_TEAM_1;
 
-	spawnfunc_func_breakable(this);
+	func_breakable_setup(this);
 }
 
 spawnfunc(func_assault_wall)

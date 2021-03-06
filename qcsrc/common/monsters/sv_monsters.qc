@@ -6,6 +6,7 @@
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/all.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/physics/movelib.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
@@ -17,9 +18,9 @@
 #include <common/weapons/_mod.qh>
 #include <lib/csqcmodel/sv_model.qh>
 #include <lib/warpzone/common.qh>
-#include <server/autocvars.qh>
 #include <server/campaign.qh>
 #include <server/cheats.qh>
+#include <server/client.qh>
 #include <server/command/_mod.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
@@ -217,7 +218,7 @@ void Monster_Delay_Action(entity this)
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
 {
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
-	entity e = new(Monster_Delay);
+	entity e = new_pure(Monster_Delay);
 
 	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;

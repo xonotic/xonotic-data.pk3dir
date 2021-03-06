@@ -2,7 +2,6 @@
 
 #ifdef SVQC
 #include <common/mapobjects/defs.qh>
-#include <server/autocvars.qh>
 #include <server/bot/api.qh>
 #include <server/damage.qh>
 #include <server/weapons/common.qh>
@@ -1257,7 +1256,7 @@ void turret_findtarget(entity this)
 	entity e = find(NULL, classname, "turret_manager");
 	if(!e)
 	{
-		e = new(turret_manager);
+		e = new_pure(turret_manager);
 		setthink(e, turrets_manager_think);
 		e.nextthink = time + 2;
 	}

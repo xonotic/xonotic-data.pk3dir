@@ -1,6 +1,5 @@
 #include "physics.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
@@ -137,7 +136,7 @@ void HUD_Physics()
 	int speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
 		acceleration_baralign = speed_baralign = 1;
-    else if(autocvar_hud_panel_physics_baralign == 4)
+	else if(autocvar_hud_panel_physics_baralign == 4)
 		acceleration_baralign = speed_baralign = 2;
 	else if (autocvar_hud_panel_physics_flip)
 	{
@@ -205,7 +204,7 @@ void HUD_Physics()
 				// divide by f to make it start from 1
 				f = cos( ((time - top_speed_time) / f) * PI/2 );
 			}
-            else //hide top speed 0, it would be stupid
+			else // hide top speed 0
 				f = 0;
 		}
 		if (f > 0)
@@ -218,19 +217,19 @@ void HUD_Physics()
 				vector peak_size = '0 0 0';
 				if (speed_baralign == 0)
 					peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x;
-                else if (speed_baralign == 1)
+				else if (speed_baralign == 1)
 					peak_offsetX = (1 - min(top_speed, max_speed)/max_speed) * panel_size.x;
-                else // if (speed_baralign == 2)
-                    peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
+				else // if (speed_baralign == 2)
+					peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
 				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
-                peak_size.y = panel_size.y;
-                if (speed_baralign == 2) // draw two peaks, on both sides
-                {
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                }
-                else
-                    drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				peak_size.y = panel_size.y;
+				if (speed_baralign == 2) // draw two peaks, on both sides
+				{
+					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				}
+				else
+					drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed
