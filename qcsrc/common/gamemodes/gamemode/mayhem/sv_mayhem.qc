@@ -2,6 +2,7 @@
 
 bool autocvar_g_mayhem_regenerate;
 string autocvar_g_mayhem_weaponarena;
+bool autocvar_g_mayhem_powerups;
 
 MUTATOR_HOOKFUNCTION(mayhem, Scores_CountFragsRemaining)
 {
@@ -43,15 +44,20 @@ MUTATOR_HOOKFUNCTION(mayhem, SetWeaponArena)
 MUTATOR_HOOKFUNCTION(mayhem, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
-
-	if (autocvar_g_powerups <= 0)
-	if (item.flags & FL_POWERUP)
-		return true;
-
+	if (autocvar_g_powerups == 1){
+		if (item.flags & FL_POWERUP){
+			return false;
+		} 
+	}
+	else if (autocvar_g_powerups == -1){
+		if (item.flags & FL_POWERUP){
+			if (autocvar_g_mayhem_powerups){
+				return false;
+			} 
+		} 
+	}
 	if (autocvar_g_pickup_items <= 0)
 		return true;
-	else 
-		return false;
 }
 
 MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
