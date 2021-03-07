@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
+#include <common/gamemodes/gamemode/tdm/tdm.qh>
 #include <common/mapinfo.qh>
 
 CLASS(tmayhem, Gametype)
