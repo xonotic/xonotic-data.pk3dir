@@ -16,6 +16,9 @@ CLASS(mayhem, Gametype)
         if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)){
 	        return true;
         }
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags)){
+	        return true;
+        }
         return false;		
     }
     ATTRIB(mayhem, m_legacydefaults, string, "30 20 0");
