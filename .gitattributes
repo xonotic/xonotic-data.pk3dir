@@ -240,7 +240,6 @@ xonotic-map-screenshot crlf=input
 xonotic-osx-sdl crlf=input
 *.xpm crlf=input
 *.xrns -crlf
-*.yml crlf=input
 *.zip -crlf
 zipdiff crlf=input
 *.zym -crlf
