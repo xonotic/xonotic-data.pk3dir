@@ -1,5 +1,7 @@
 #pragma once
 
+bool waypointeditor_enabled;
+
 bool autocvar_g_waypointeditor;
 bool autocvar_g_waypointeditor_symmetrical;
 bool autocvar_g_waypointeditor_symmetrical_allowload = true;

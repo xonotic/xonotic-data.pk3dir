@@ -582,9 +582,6 @@ bool WarpZoneLib_BadEntity(entity e)
 		case "weaponentity":
 		case "exteriorweaponentity":
 		case "sprite_waypoint":
-		case "waypoint":
-		case "gibsplash":
-		case "damageinfo":
 		case "spawnfunc":
 		case "weaponchild":
 		case "chatbubbleentity":

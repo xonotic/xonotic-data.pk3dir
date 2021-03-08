@@ -164,7 +164,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!autocvar_g_waypointeditor)
+			if (!waypointeditor_enabled)
 			{
 				sprint(caller, "ERROR: this command works only if the waypoint editor is on\n");
 				return;
