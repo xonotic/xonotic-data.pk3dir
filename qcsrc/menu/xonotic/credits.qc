@@ -6,43 +6,24 @@
 		PERSON(Ant "Antibody" Zucaro) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
-		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
-		PERSON(Samual "Ares" Lenks) \
-		PERSON(TimePath) \
 		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
-		PERSON(AllieWay) \
 		PERSON(Antonio "terencehill" Piu) \
-		PERSON(Archer) \
-		PERSON(BuddyFriendGuy) \
-		PERSON(Debugger) \
-		PERSON(Diomedes) \
+		PERSON(bones_was_here) \
+		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Freddy) \
-		PERSON(GATTS) \
 		PERSON(Halogene) \
-		PERSON(IDWMaster) \
 		PERSON(Jan "zykure" Behrens) \
-		PERSON(JH0nny) \
-		PERSON(Jubilant) \
-		PERSON(Łukasz "kuniu the frogg" Polek) \
-		PERSON(martin-t) \
-		PERSON(Matthias "matthiaskrgr" Krüger) \
-		PERSON(Mattia "Melanosuchus" Basaglia) \
+		PERSON(Morosophos) \
 		PERSON(MrBougo) \
-		PERSON(Nick "bitbomb" Lucca) \
 		PERSON(nilyt/nyov) \
 		PERSON(Nitroxis) \
 		PERSON(packer) \
-		PERSON(Pearce "theShadow" Michal) \
-		PERSON(Rasmus "FruitieX" Eskola) \
-		PERSON(s1lence) \
 		PERSON(Severin "sev" Meyer) \
-		PERSON(Soelen) \
-		PERSON(Sydes) \
-		PERSON(unfa) \
+		PERSON(SpiKe) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
@@ -106,10 +87,14 @@
 		PERSON(unfa) \
 	NL() \
 	FUNCTION(_("Game Code")) \
-		PERSON(Samual "Ares" Lenks) \
-		PERSON(Rudolf "divVerent" Polzer) \
+		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
+		PERSON(martin-t) \
+		PERSON(Mattia "Melanosuchus" Basaglia) \
+		PERSON(Matthias "matthiaskrgr" Krüger) \
 		PERSON(Rasmus "FruitieX" Eskola) \
+		PERSON(Rudolf "divVerent" Polzer) \
+		PERSON(Samual "Ares" Lenks) \
 		PERSON(TimePath) \
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
@@ -126,9 +111,10 @@
 	NL() \
 	TITLE(_("Game Engine")) \
 		FUNCTION("DarkPlaces") \
-			PERSON(Forest "LordHavoc" Hale) \
+			PERSON(Ashley Rose "LadyHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
+			PERSON(David "Cloudwalk" Knapp) \
 			PERSON(Rudolf "divVerent" Polzer) \
 			PERSON(Samual "Ares" Lenks) \
 		NL() \
@@ -144,6 +130,7 @@
 		PERSON(Lyberta) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
+		PERSON(slava) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -317,11 +304,13 @@
 		PERSON(BigMac) \
 		PERSON(Braden "meoblast001" Walters) \
 		PERSON(Brain Younds) \
+		PERSON(BuddyFriendGuy) \
 		PERSON(Chris "amethyst7" Matz) \
 		PERSON(Christian Ice) \
 		PERSON(Clinton "Kaziganthe" Freeman) \
 		PERSON(Dan "Digger" Korostelev) \
 		PERSON(Dan "Wazat" Hale) \
+		PERSON(Diomedes) \
 		PERSON(Dokujisan) \
 		PERSON(Donkey) \
 		PERSON(dstrek) \
@@ -334,13 +323,16 @@
 		PERSON(Florian Paul "lda17h" Schmidt) \
 		PERSON(FrikaC) \
 		PERSON(Garth "Zombie" Hendy) \
+		PERSON(GATTS) \
 		PERSON(Gerd "Elysis" Raudenbusch) \
 		PERSON(Gottfried "Toddd" Hofmann) \
 		PERSON(Henning "Tymo" Janssen) \
 		PERSON(Innovati) \
+		PERSON(JH0nny) \
 		PERSON(Jitspoe) \
 		PERSON(Jody Gallagher) \
 		PERSON(Jope "Sless" Withers) \
+		PERSON(Jubilant) \
 		PERSON(Juergen "LowDragon" Timm) \
 		PERSON(KadaverJack) \
 		PERSON(Kevin "Tyrann" Shanahan) \
@@ -377,10 +369,13 @@
 		PERSON(Robert "ai" Kuroto) \
 		PERSON(Ronan) \
 		PERSON(Sajt) \
+		PERSON(Samual "Ares" Lenks) \
 		PERSON(Saulo "mand1nga" Gil) \
 		PERSON(Shaggy) \
 		PERSON(Shank) \
+		PERSON(s1lence) \
 		PERSON(Simon O’Callaghan) \
+		PERSON(Soelen) \
 		PERSON(SomeGuy) \
 		PERSON(SoulKeeper_p) \
 		PERSON(Spike) \
@@ -388,6 +383,7 @@
 		PERSON(Stephan "esteel" Stahl) \
 		PERSON(Steve Vermeulen) \
 		PERSON(Supajoe) \
+		PERSON(Sydes) \
 		PERSON(Tei) \
 		PERSON(The player with the unnecessarily long name) \
 		PERSON(Tomaz) \
@@ -397,6 +393,7 @@
 		PERSON(William "Willis" Weilep) \
 		PERSON(Yves "EviLair" Allaire) \
 		PERSON(Zenex) \
+		PERSON(... and a goat) \
 		/**/
 
 int credits_get()

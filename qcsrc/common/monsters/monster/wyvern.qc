@@ -18,14 +18,14 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
     TC(WyvernAttack, thiswep);
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
+    	monster_makevectors(actor, actor.enemy);
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
-			monster_makevectors(actor, actor.enemy);
 		}
 
-		entity missile = spawn();
+		entity missile = new(WyvernAttack);
 		missile.owner = missile.realowner = actor;
 		missile.solid = SOLID_TRIGGER;
 		set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -106,7 +106,7 @@ bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	return false;
 }
 
-spawnfunc(monster_wyvern) { Monster_Spawn(this, true, MON_WYVERN.monsterid); }
+spawnfunc(monster_wyvern) { Monster_Spawn(this, true, MON_WYVERN); }
 #endif // SVQC
 
 #ifdef SVQC

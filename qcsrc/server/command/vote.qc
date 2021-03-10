@@ -1,29 +1,29 @@
 #include "vote.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-#include "vote.qh"
-
-#include "common.qh"
-
-#include "../g_damage.qh"
-#include "../g_world.qh"
-#include "../teamplay.qh"
-#include "../race.qh"
-#include "../round_handler.qh"
-#include "../scores.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/items/inventory.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/command/banning.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -116,7 +116,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller.netname, vote_caller.team, false);
 	return vote_caller_name;
 }
 
@@ -350,6 +350,20 @@ void reset_map(bool dorespawn)
 		shuffleteams();
 		shuffleteams_on_reset_map = false;
 	}
+
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		if (STAT(FROZEN, it))
+			Unfreeze(it, false);
+		player_powerups_remove_all(it);
+		entity store = PS(it);
+		if (store)
+		{
+			Inventory_clear(store.inventory);
+			Inventory_update(store);
+		}
+	});
+
 	MUTATOR_CALLHOOK(reset_map_global);
 
 	FOREACH_ENTITY_FLOAT_ORDERED(pure_data, false,
@@ -370,8 +384,6 @@ void reset_map(bool dorespawn)
 		if (it.reset2) it.reset2(it);
 	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it, false); });
-
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
 	if (dorespawn)
@@ -388,7 +400,6 @@ void reset_map(bool dorespawn)
 					restart_mapalreadyrestarted to 1 after the countdown ended or when
 					sv_ready_restart_after_countdown is not used and countdown is still running
 					*/
-					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
 					// PlayerScore_Clear(it);
 					CS(it).killcount = 0;
 					// stop the player from moving so that he stands still once he gets respawned
@@ -440,6 +451,8 @@ void ReadyRestart_force()
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
+	if(warmup_stage)
+		localcmd("\nsv_hook_warmupend\n");
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
@@ -474,8 +487,8 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
-	else localcmd("\nsv_hook_gamerestart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
+	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
@@ -540,11 +553,21 @@ float VoteCommand_checknasty(string vote_command)
 	return true;
 }
 
+// NOTE: requires input to be surrounded by spaces
+string VoteCommand_checkreplacements(string input)
+{
+	string output = input;
+	// allow gotomap replacements
+	output = strreplace(" map ", " gotomap ", output);
+	output = strreplace(" chmap ", " gotomap ", output);
+	return output;
+}
+
 float VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = strcat(" ", list, " ");
+	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
 
-	if (strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0) return true;
+	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
 
 	return false;
 }
@@ -709,11 +732,28 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "nextmap": // TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too), maybe fallback instead of aborting if map name is invalid?
+		// TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too)
+		// maybe fallback instead of aborting if map name is invalid?
+		case "nextmap":
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("nextmap ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
+		case "timelimit": // include restrictions on the maximum votable time limit
+		{
+			float timelimit_vote = stof(argv(startpos + 1));
+			if(timelimit_vote > autocvar_timelimit_max || timelimit_vote < autocvar_timelimit_min)
+			{
+				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
+				return -1;
+			}
+			timelimit_vote = bound(autocvar_timelimit_min, timelimit_vote, autocvar_timelimit_max);
+			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
 			break;
@@ -778,6 +818,11 @@ void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 	}
 }
 
+void print_available_commands_to(entity caller)
+{
+	print_to(caller, strcat("You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
+}
+
 void VoteCommand_call(int request, entity caller, int argc, string vote_command)  // BOTH
 {
 	switch (request)
@@ -789,7 +834,10 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
-			if (!autocvar_sv_vote_call && caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			if (!autocvar_sv_vote_call && caller)
+			{
+				print_to(caller, "^1Vote calling is not allowed.");
+			}
 			else if (!autocvar_sv_vote_gamestart && time < game_starttime)
 			{
 				print_to(caller, "^1Vote calling is not allowed before the match has started.");
@@ -806,7 +854,7 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				print_to(caller, "^1Only connected clients can vote.");
 			}
-			else if (timeout_status)
+			else if (timeout_status && vote_command != "timein")
 			{
 				print_to(caller, "^1You can not call a vote while a timeout is active.");
 			}
@@ -816,12 +864,17 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			}
 			else if (!VoteCommand_checknasty(vote_command))
 			{
-				print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
+				print_to(caller, "^1Syntax error in command.");
 			}
 			else if ((parse_error = VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) <= 0)
 			{
 				if(parse_error == 0)
-					print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
+				{
+					if (vote_called_command == "")
+						VoteCommand_call(CMD_REQUEST_USAGE, caller, argc, vote_command);
+					else
+						print_to(caller, "^1This command is not acceptable or not available.");
+				}
 			}
 			else  // everything went okay, continue with calling the vote
 			{
@@ -857,10 +910,12 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call command"));
-			print_to(caller, "  Where 'command' is the command to request a vote upon.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call <command>"));
+			print_to(caller, "  Where <command> is the command to request a vote upon.");
 			print_to(caller, strcat("Examples: ", GetCommandPrefix(caller), " vote call gotomap dance"));
 			print_to(caller, strcat("          ", GetCommandPrefix(caller), " vote call endmatch"));
+			print_available_commands_to(caller);
+			print_to(caller, "Shortcuts: ^2vcall <command>, vend, vmap, vkick, ...");
 			return;
 		}
 	}
@@ -885,12 +940,17 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 							print_to(caller, "^1You do not have vote master privileges.");
 						else if (!VoteCommand_checknasty(vote_command))
 						{
-							print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
+							print_to(caller, "^1Syntax error in command.");
 						}
 						else if ((parse_error = VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) <= 0)
 						{
 							if(parse_error == 0)
-								print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
+							{
+								if (vote_called_command == "")
+									VoteCommand_master(CMD_REQUEST_USAGE, caller, argc, vote_command);
+								else
+									print_to(caller, "^1This command is not acceptable or not available.");
+							}
 						}
 						else  // everything went okay, proceed with command
 						{
@@ -973,9 +1033,9 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [action [command | password]]"));
-			print_to(caller, "  If action is left blank, it calls a vote for you to become master.");
-			print_to(caller, "  Otherwise the actions are either 'do' a command or 'login' as master.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [<action> [<command> | <password>]]"));
+			print_to(caller, "  If <action> is left blank, it calls a vote for you to become master.");
+			print_to(caller, "  Otherwise it can be either 'do' (to run <command>) or 'login' as master.");
 			return;
 		}
 	}
@@ -1147,11 +1207,11 @@ void VoteCommand_macro_help(entity caller, int argc)
 			{ if (Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 
 		VOTE_COMMANDS(0, caller, 0, "");
-#undef VOTE_COMMAND
+		#undef VOTE_COMMAND
 
-		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
-		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help COMMAND"));
-		print_to(caller, strcat("\n^7You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
+		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote <command>^7, where possible commands are listed above.\n"));
+		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help <command>"));
+		print_available_commands_to(caller);
 	}
 	else  // usage for individual command
 	{
@@ -1159,12 +1219,12 @@ void VoteCommand_macro_help(entity caller, int argc)
 			{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(2))) { function; return; } } }
 
 		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
-#undef VOTE_COMMAND
+		#undef VOTE_COMMAND
 
 		string cvarname = strcat("sv_vote_command_help_", argv(2));
 		if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
 			wordwrap_sprint(caller, cvar_string(cvarname), 1000);
-		else
+		else if (argv(2) != "")
 			print_to(caller, "No documentation exists for this vote");
 	}
 }
@@ -1175,7 +1235,7 @@ float VoteCommand_macro_command(entity caller, int argc, string vote_command)
 		{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(1))) { function; return true; } } }
 
 	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command);
-#undef VOTE_COMMAND
+	#undef VOTE_COMMAND
 
 	return false;
 }

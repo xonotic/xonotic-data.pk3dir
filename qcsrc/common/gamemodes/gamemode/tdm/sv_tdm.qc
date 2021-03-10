@@ -14,7 +14,6 @@ spawnfunc(tdm_team)
 {
 	if(!g_tdm || !this.cnt) { delete(this); return; }
 
-	this.classname = "tdm_team";
 	this.team = this.cnt + 1;
 }
 
@@ -49,6 +48,16 @@ void tdm_DelayedInit(entity this)
 		if(teams & BIT(3))
 			tdm_SpawnTeam("Pink", NUM_TEAM_4);
 	}
+}
+
+void tdm_Initialize()
+{
+	GameRules_teams(true);
+	GameRules_spawning_teams(autocvar_g_tdm_team_spawns);
+	GameRules_limit_score(autocvar_g_tdm_point_limit);
+	GameRules_limit_lead(autocvar_g_tdm_point_leadlimit);
+
+	InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_HOOKFUNCTION(tdm, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)

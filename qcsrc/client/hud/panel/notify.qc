@@ -1,9 +1,18 @@
 #include "notify.qh"
 
-#include <client/autocvars.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // Notifications (#4)
+
+void HUD_Notify_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_notify_flip");
+	HUD_Write_Cvar("hud_panel_notify_fontsize");
+	HUD_Write_Cvar("hud_panel_notify_time");
+	HUD_Write_Cvar("hud_panel_notify_fadetime");
+	HUD_Write_Cvar("hud_panel_notify_icon_aspect");
+}
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
@@ -116,7 +125,7 @@ void HUD_Notify()
 		{
 			attacker = sprintf(_("Player %d"), count + 1);
 			victim = sprintf(_("Player %d"), count + 2);
-			icon = Weapons_from(min(WEP_FIRST + count * 2, WEP_LAST)).model2;
+			icon = REGISTRY_GET(Weapons, min(WEP_FIRST + count * 2, WEP_LAST)).model2;
 			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else

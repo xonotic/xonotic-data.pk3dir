@@ -33,7 +33,6 @@ void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
 }
 
 .vector vorg1, vorg2;
-.float spawn_time;
 void VaporizerBeam_Draw(entity this)
 {
 	//draw either the old v2.3 beam or the new beam
@@ -86,7 +85,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	this.sv_entnum = myowner;
 	this.team = ReadByte() - 1;
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
+	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
@@ -124,21 +123,23 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
-	damage_goodhits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
+	impressive_hits = 0;
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
-	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
+	SendCSQCVaporizerBeamParticle(actor, impressive_hits);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(damage_goodhits && actor.vaporizer_lasthit)
+	if(impressive_hits && actor.vaporizer_lasthit)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
-		damage_goodhits = 0; // only every second time
+		impressive_hits = 0; // only every second time
 	}
 
-	actor.vaporizer_lasthit = damage_goodhits;
+	actor.vaporizer_lasthit = impressive_hits;
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
@@ -187,7 +188,8 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	// uses electro effects
+	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
 
     while(counter < total)
 	{
@@ -239,7 +241,8 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	// uses electro effects
+	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
 
     while(counter < total)
 	{
@@ -281,7 +284,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(GetResource(actor, thiswep.ammo_type) > 0)
+    if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false);
     else
         PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
@@ -314,13 +317,13 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
                     actor.(weaponentity).held_down = true;
                 actor.(weaponentity).jump_interval = time + autocvar_g_rm_laser_refire;
                 actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
-                damage_goodhits = 0;
+                impressive_hits = 0;
                 W_RocketMinsta_Attack2(actor, weaponentity);
             }
             else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).held_down)
             {
                 actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
-                damage_goodhits = 0;
+                impressive_hits = 0;
                 W_RocketMinsta_Attack3(actor, weaponentity);
                 //weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
             }

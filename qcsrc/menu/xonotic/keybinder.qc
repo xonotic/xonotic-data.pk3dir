@@ -14,7 +14,7 @@ string KeyBinds_Functions[MAX_KEYBINDS];
 string KeyBinds_Descriptions[MAX_KEYBINDS];
 int KeyBinds_Count = -1;
 
-void KeyBinds_Read()
+void KeyBinds_BuildList()
 {
 	KeyBinds_Count = 0;
 
@@ -30,7 +30,7 @@ void KeyBinds_Read()
 	#define KEYBIND_HEADER(str) KEYBIND_DEF("", str)
 
 	#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
-	#define KEYBIND_SPECIAL_DEF(key) KEYBIND_DEF(strcat("*", key), "")
+	#define KEYBIND_SPECIAL_DEF(key, desc) KEYBIND_DEF(strcat("*", key), desc)
 
 	KEYBIND_HEADER(_("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
@@ -56,8 +56,6 @@ void KeyBinds_Read()
 	KEYBIND_DEF("reload"                                , _("reload"));
 	KEYBIND_DEF("dropweapon"                            , _("drop weapon / throw nade"));
 
-	int i;
-
 	#define ADD_TO_W_LIST(pred) \
 		FOREACH(Weapons, it != WEP_Null, { \
 			if (it.impulse != imp) continue; \
@@ -68,9 +66,9 @@ void KeyBinds_Read()
 	for(int imp = 1; imp <= 9; ++imp)
 	{
 		string w_list = "";
-		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST(!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK | WEP_FLAG_SUPERWEAPON)));
 		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_FLAG_HIDDEN));
-		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 		if(w_list)
 			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
 		if(imp == 0)
@@ -92,7 +90,7 @@ void KeyBinds_Read()
 	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
 	KEYBIND_EMPTY_LINE();
 
-	KEYBIND_HEADER(_("Communicate"));
+	KEYBIND_HEADER(_("Communication"));
 	KEYBIND_DEF("messagemode"                           , _("public chat"));
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("+con_chat_maximize"                    , _("show chat history"));
@@ -106,29 +104,35 @@ void KeyBinds_Read()
 	// display the hardcoded shortcut to open the console as it works for all
 	// non-English keyboard layouts, unlike default keys (` and ~)
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
-		KEYBIND_SPECIAL_DEF(strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE")));
+		string console_shortcut = strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE"));
+		KEYBIND_SPECIAL_DEF(console_shortcut, _("enter console"));
 	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("Teamplay"));
-	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
-	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
+	KEYBIND_DEF("spec"                                  , _("spectate"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("Misc"));
-	KEYBIND_DEF("kill"                                  , _("respawn"));
+	KEYBIND_DEF("+use"                                  , _("drop key/flag, exit vehicle"));
+	KEYBIND_DEF("kill"                                  , _("suicide / respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
-	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
-	KEYBIND_DEF("+button8"                              , _("drag object"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("User defined"));
 
-	for(i = 1; i <= 32; ++i)
+	for(int i = 1; i <= 32; ++i)
 		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
+
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Development"));
+	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
+	KEYBIND_DEF("+button8"                              , _("drag object (sandbox)"));
+	KEYBIND_DEF("wpeditor_menu"                         , _("waypoint editor menu"));
 
 	#undef KEYBIND_DEF
 }
@@ -176,7 +180,7 @@ void XonoticKeyBinder_loadKeyBinds(entity me)
 	bool force_initial_selection = false;
 	if(KeyBinds_Count < 0) // me.handle not loaded yet?
 		force_initial_selection = true;
-	KeyBinds_Read();
+	KeyBinds_BuildList();
 	me.nItems = KeyBinds_Count;
 	if(force_initial_selection)
 		me.setSelected(me, 0);
@@ -245,8 +249,10 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		{
 			k = stof(argv(j));
 			if(k != -1)
-				//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
+			{
+				// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
 				localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
+			}
 		}
 	}
 	m_play_click_sound(MENU_SOUND_SELECT);
@@ -317,8 +323,10 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	{
 		k = stof(argv(j));
 		if(k != -1)
-			//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
+		{
+			// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
+		}
 	}
 	m_play_click_sound(MENU_SOUND_CLEAR);
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
@@ -383,6 +391,9 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 		case K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
 			break;
+		case K_MOUSE2:
+			KeyBinder_Bind_Edit(me, me);
+			break;
 		default:
 			r = SUPER(XonoticKeyBinder).keyDown(me, key, ascii, shift);
 			break;
@@ -392,9 +403,6 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 
 void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	string s;
-	int j, n;
-	float k;
 	vector theColor;
 	float theAlpha;
 	float extraMargin;
@@ -404,7 +412,6 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 
 	if(func == "")
 	{
-		theAlpha = 1;
 		theColor = SKINCOLOR_KEYGRABBER_TITLES;
 		theAlpha = SKINALPHA_KEYGRABBER_TITLES;
 		extraMargin = 0;
@@ -431,7 +438,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 
 	if(substring(descr, 0, 1) == "$")
 	{
-		s = substring(descr, 1, strlen(descr) - 1);
+		string s = substring(descr, 1, strlen(descr) - 1);
 		descr = cvar_string(strcat(s, "_description"));
 		if(descr == "")
 			descr = s;
@@ -440,7 +447,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 				theAlpha *= SKINALPHA_DISABLED;
 	}
 
-	s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
+	string s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
 	if (func == "")
@@ -451,15 +458,19 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		s = substring(func, 1, -1);
 	else
 	{
-		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-		for(j = 0; j < n; ++j)
+		bool joy_active = cvar("joy_active");
+		int n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
+		for(int j = 0; j < n; ++j)
 		{
-			k = stof(argv(j));
+			float k = stof(argv(j));
 			if(k != -1)
 			{
+				string key = keynumtostring(k);
+				if (!joy_active && startsWith(key, "JOY"))
+					continue;
 				if(s != "")
 					s = strcat(s, ", ");
-				s = strcat(s, translate_key(keynumtostring(k)));
+				s = strcat(s, translate_key(key));
 			}
 		}
 	}

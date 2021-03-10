@@ -80,9 +80,10 @@ vector     pathlib_flynode(entity this, vector start, vector end, float doedge);
 vector     pathlib_walknode(entity this, vector start, vector end, float doedge);
 var vector pathlib_movenode(entity this, vector start, vector end, float doedge);
 
+//float      pathlib_expandnode_starf(entity node, vector start, vector goal);
 float      pathlib_expandnode_star(entity node, vector start, vector goal);
 float      pathlib_expandnode_box(entity node, vector start, vector goal);
-float      pathlib_expandnode_octagon(entity node, vector start, vector goal);
+//float      pathlib_expandnode_octagon(entity node, vector start, vector goal);
 var float  pathlib_expandnode(entity node, vector start, vector goal);
 
 float      pathlib_g_static(entity parent, vector to, float static_cost);
@@ -104,3 +105,6 @@ var bool  pathlib_makenode(entity parent,vector start, vector to, vector goal,fl
 var bool  buildpath_nodefilter(vector n,vector c,vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
+
+IntrusiveList g_pathlib_nodes;
+STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }

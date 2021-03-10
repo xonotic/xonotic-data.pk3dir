@@ -74,9 +74,10 @@ CLASS(DamageText, Object)
         if (this.m_screen_coords) {
             screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
         } else {
-            makevectors(view_angles);
+            vector forward, right, up;
+            MAKE_VECTORS(view_angles, forward, right, up);
             vector world_offset = since_hit * autocvar_cl_damagetext_velocity_world + autocvar_cl_damagetext_offset_world;
-            vector world_pos = this.origin + world_offset.x * v_forward + world_offset.y * v_right + world_offset.z * v_up;
+            vector world_pos = this.origin + world_offset.x * forward + world_offset.y * right + world_offset.z * up;
             screen_pos = project_3d_to_2d(world_pos) + since_hit * autocvar_cl_damagetext_velocity_screen + autocvar_cl_damagetext_offset_screen;
         }
         screen_pos.y += size / 2;
@@ -205,6 +206,7 @@ float current_alpha(entity damage_text) {
 
 NET_HANDLE(damagetext, bool isNew)
 {
+    make_pure(this);
     int server_entity_index = ReadByte();
     int deathtype = ReadInt24_t();
     int flags = ReadByte();
@@ -221,6 +223,7 @@ NET_HANDLE(damagetext, bool isNew)
     else potential_damage = ReadShort();
 
     return = true;
+    if (!isNew) return;
     if (autocvar_cl_damagetext == 0) return;
     if (friendlyfire) {
         if (autocvar_cl_damagetext_friendlyfire == 0) return;
@@ -249,8 +252,6 @@ NET_HANDLE(damagetext, bool isNew)
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
     } else if (autocvar_cl_damagetext_2d && spectatee_status != -1) {
-        // never show 2d damagetext when observing - might be a bug in .has_origin
-
         // screen coords only
         vector screen_pos = vec2(vid_conwidth * autocvar_cl_damagetext_2d_pos.x, vid_conheight * autocvar_cl_damagetext_2d_pos.y);
         IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {

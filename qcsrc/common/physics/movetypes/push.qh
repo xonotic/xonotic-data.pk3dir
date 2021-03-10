@@ -1,0 +1,12 @@
+#pragma once
+
+void _Movetype_Physics_Push(entity this, float dt);
+
+.vector moved_from, moved_fromangles;
+
+IntrusiveList g_pushmove_moved;
+STATIC_INIT(g_pushmove_moved) { g_pushmove_moved = IL_NEW(); }
+
+#ifdef CSQC
+.float ltime;
+#endif

@@ -28,8 +28,10 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	if(!sound_allowed(MSG_BROADCAST, dmgowner))
 		deathtype |= 0x8000;
 
-	e = new(damageinfo);
-	setorigin(e, org);
+	e = new_pure(damageinfo);
+	// origin is just data to be sent
+	//setorigin(e, org);
+	e.origin = org;
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
 	e.dmg_edge = edgedamage;
@@ -53,6 +55,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 
 .float cnt;
 .int state;
+
+.bool silent;
 
 void DamageEffect_Think(entity this)
 {

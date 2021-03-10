@@ -1,9 +1,13 @@
 #include "engineinfo.qh"
 
-#include <client/autocvars.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // Engine info (#13)
+
+void HUD_EngineInfo_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 float prevfps;
 float prevfps_time;
@@ -38,7 +42,7 @@ void HUD_EngineInfo()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
 	if(autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage)
 	{
 		float currentframetime = currentTime - prevfps_time;
@@ -67,7 +71,6 @@ void HUD_EngineInfo()
 		}
 	}
 
-	vector color;
-	color = HUD_Get_Num_Color (prevfps, 100);
+	vector color = HUD_Get_Num_Color(prevfps, 100, true);
 	drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_framecounter_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }

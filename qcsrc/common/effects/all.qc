@@ -4,9 +4,9 @@ REGISTER_NET_TEMP(net_effect)
 #ifdef CSQC
 NET_HANDLE(net_effect, bool isNew)
 {
-	int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
+	int net_name = (REGISTRY_COUNT(Effects) >= 255) ? ReadShort() : ReadByte();
 
-	entity eff = Effects_from(net_name);
+	entity eff = REGISTRY_GET(Effects, net_name);
 
 	vector vel = '0 0 0';
 	int eff_cnt = 1;
@@ -34,7 +34,7 @@ bool Net_Write_Effect(entity this, entity client, int sf)
 	int channel = MSG_ONE;
 	msg_entity = client;
 	WriteHeader(channel, net_effect);
-	(Effects_COUNT >= 255)
+	(REGISTRY_COUNT(Effects) >= 255)
 	? WriteShort(channel, this.m_id)
 	: WriteByte(channel, this.m_id);
 	WriteVector(channel, this.eent_net_location);
@@ -51,7 +51,7 @@ bool Net_Write_Effect(entity this, entity client, int sf)
 	return true;
 }
 
-void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
+void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, entity ignore)
 {
 	if(!eff) { return; }
 	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
@@ -64,8 +64,13 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 	net_eff.eent_net_count = eff_cnt;
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), Net_Write_Effect(net_eff, it, 0));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy && it.enemy == ignore), Net_Write_Effect(net_eff, it, 0));
 	delete(net_eff);
+}
+
+void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
+{
+	Send_Effect_Except(eff, eff_loc, eff_vel, eff_cnt, NULL);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)

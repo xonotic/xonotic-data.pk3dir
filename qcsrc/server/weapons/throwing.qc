@@ -1,19 +1,21 @@
 #include "throwing.qh"
 
-#include "weaponsystem.qh"
-#include "../resources.qh"
-#include "../items.qh"
-#include <server/mutators/_mod.qh>
-#include <common/t_items.qh>
-#include "../g_damage.qh"
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications/all.qh>
 #include <common/mapobjects/subs.qh>
+#include <common/notifications/all.qh>
+#include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
-#include <common/state.qh>
 #include <common/wepent.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 void thrown_wep_think(entity this)
 {
@@ -36,7 +38,7 @@ void thrown_wep_think(entity this)
 // returns amount of ammo used, or -1 for failure, or 0 for no ammo count
 float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
-	Weapon info = Weapons_from(wpn);
+	Weapon info = REGISTRY_GET(Weapons, wpn);
 	int ammotype = info.ammo_type;
 
 	entity wep = spawn();
@@ -51,7 +53,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 
 	W_DropEvent(wr_drop,own,wpn,wep,weaponentity);
 
-	if(WepSet_FromWeapon(Weapons_from(wpn)) & WEPSET_SUPERWEAPONS)
+	if(WepSet_FromWeapon(REGISTRY_GET(Weapons, wpn)) & WEPSET_SUPERWEAPONS)
 	{
 		Item_SetExpiring(wep, true);
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
@@ -67,15 +69,15 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			});
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = own.superweapons_finished;
-				own.superweapons_finished = 0;
+				wep.superweapons_finished = STAT(SUPERWEAPONS_FINISHED, own);
+				STAT(SUPERWEAPONS_FINISHED, own) = 0;
 			}
 			else
 			{
-				float timeleft = own.superweapons_finished - time;
+				float timeleft = STAT(SUPERWEAPONS_FINISHED, own) - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
-				own.superweapons_finished -= weptimeleft;
+				STAT(SUPERWEAPONS_FINISHED, own) -= weptimeleft;
 			}
 		}
 	}
@@ -138,7 +140,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 	if (w == WEP_Null.m_id)
 		return false;
 
-	return (Weapons_from(w)).weaponthrowable;
+	return (REGISTRY_GET(Weapons, w)).weaponthrowable;
 }
 
 // toss current weapon
@@ -147,6 +149,8 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	Weapon w = this.(weaponentity).m_weapon;
 	if (w == WEP_Null)
 		return; // just in case
+	if (time < game_starttime)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this, this.(weaponentity)))
 		return;
 	if(!autocvar_g_weapon_throwable)

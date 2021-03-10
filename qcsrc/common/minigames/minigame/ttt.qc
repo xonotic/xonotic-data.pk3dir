@@ -83,7 +83,7 @@ void ttt_move(entity minigame, entity player, string pos )
 		if ( ttt_valid_tile(pos) )
 		if ( !ttt_find_piece(minigame,pos) )
 		{
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.team = player.team;
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -322,14 +322,14 @@ string ttt_turn_to_string(int turnflags)
 	{
 		// translator-friendly messages composed of 2 existing messages
 		// TODO: proper "you win" banner instead of hijacking the help message
-		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
-			strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
+		if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
+			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
 		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
 	}
 
 	if ( turnflags & TTT_TURN_NEXT )
 	{
-		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
 			return _("Select \"^1Next Match^7\" on the menu to start a new match!");
 		return _("Wait for your opponent to confirm the rematch");
 	}
@@ -565,13 +565,18 @@ int ttt_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if((minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & TTT_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & TTT_TURN_WIN) && !(minigame.minigame_flags & TTT_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
@@ -579,6 +584,8 @@ int ttt_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("c3");
 						else
@@ -586,6 +593,8 @@ int ttt_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a1");
 						else
@@ -593,6 +602,8 @@ int ttt_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
@@ -601,6 +612,8 @@ int ttt_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						ttt_make_move(minigame);
 						return true;
 				}
@@ -612,6 +625,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				ttt_client_event(minigame, "mouse_moved");
 				ttt_make_move(minigame);
 				return true;
 			}

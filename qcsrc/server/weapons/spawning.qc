@@ -1,11 +1,12 @@
 #include "spawning.qh"
 
-#include "weaponsystem.qh"
-#include "../resources.qh"
-#include <server/mutators/_mod.qh>
-#include <common/t_items.qh>
-#include <server/items.qh>
 #include <common/weapons/_all.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 .bool m_isreplaced; ///< Holds whether the weapon has been replaced.
 
@@ -14,7 +15,7 @@ string W_Apply_Weaponreplace(string in)
 	string out = "";
 	FOREACH_WORD(in, true, {
 		string replacement = "";
-		Weapon w = Weapons_fromstr(it);
+		Weapon w = Weapon_from_name(it);
 		if (w)
 		{
             replacement = w.weaponreplace;
@@ -26,22 +27,21 @@ string W_Apply_Weaponreplace(string in)
 	return out;
 }
 
-void weapon_defaultspawnfunc(entity this, Weapon e)
+void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
-	Weapon wpn = e;
-	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+	wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{
-		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
+			//LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
 			return;
 		}
 
-		string s = W_Apply_Weaponreplace(e.netname);
-		MUTATOR_CALLHOOK(SetWeaponreplace, this, e, s);
+		string s = W_Apply_Weaponreplace(wpn.netname);
+		MUTATOR_CALLHOOK(SetWeaponreplace, this, wpn, s);
 		s = M_ARGV(2, string);
 		if (s == "")
 		{
@@ -56,7 +56,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				Weapon wep = Weapons_fromstr(s);
+				Weapon wep = Weapon_from_name(s);
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();
@@ -69,7 +69,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = Weapons_fromstr(s);
+			wpn = Weapon_from_name(s);
 		}
 		if (wpn == WEP_Null)
 		{
@@ -78,6 +78,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			return;
 		}
 	}
+
+	if(!Item_IsLoot(this))
+		weaponsInMapAll |= WepSet_FromWeapon(wpn);
 
 	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
 	{

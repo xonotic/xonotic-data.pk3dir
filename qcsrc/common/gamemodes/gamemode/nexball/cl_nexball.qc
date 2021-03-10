@@ -1,6 +1,7 @@
 #include "cl_nexball.qh"
 
 #include <client/hud/panel/modicons.qh>
+#include <common/mutators/base.qh>
 
 // Nexball HUD mod icon
 void HUD_Mod_NexBall(vector pos, vector mySize)
@@ -41,4 +42,14 @@ MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 	if(autocvar_cl_eventchase_nexball && ISGAMETYPE(NEXBALL) && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 		return true;
 	return false;
+}
+
+MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardAccuracy)
+{
+	return ISGAMETYPE(NEXBALL); // accuracy is not a factor in this gamemode
+}
+
+MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardItemStats)
+{
+	return ISGAMETYPE(NEXBALL); // hide the item stats panel
 }

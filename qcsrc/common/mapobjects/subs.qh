@@ -115,9 +115,7 @@ void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, 
 #ifdef SVQC
 void ApplyMinMaxScaleAngles(entity e);
 
-void SetBrushEntityModel(entity this);
-
-void SetBrushEntityModelNoLOD(entity this);
+void SetBrushEntityModel(entity this, bool with_lod);
 
 int autocvar_loddebug;
 .string lodtarget1;

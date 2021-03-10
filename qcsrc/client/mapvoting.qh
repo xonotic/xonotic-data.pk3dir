@@ -1,7 +1,14 @@
 #pragma once
 
 #include <common/constants.qh>
+
+bool autocvar_cl_readpicture_force;
+float autocvar_hud_panel_mapvote_highlight_border = 1;
+string autocvar_menu_skin; // gamemode icons are controlled by the menu skin
+
 void MapVote_Draw();
+
+bool PreviewExists(string name);
 
 void Cmd_MapVote_MapDownload(int argc);
 

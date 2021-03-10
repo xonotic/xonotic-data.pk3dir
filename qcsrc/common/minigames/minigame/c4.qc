@@ -163,7 +163,7 @@ void c4_move(entity minigame, entity player, string pos )
 		if ( c4_valid_tile(pos) )
 		if ( !c4_find_piece(minigame,pos) )
 		{
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.team = player.team;
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -422,13 +422,18 @@ int c4_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if((minigame.minigame_flags & C4_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & C4_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & C4_TURN_WIN) && !(minigame.minigame_flags & C4_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, "a3"));
 						else
@@ -436,13 +441,22 @@ int c4_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, "c3"));
 						else
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_relative_tile(c4_curr_pos,-1,0,C4_NUM_CNT,C4_LET_CNT)));
 						return true;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						return true;
 					/*case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos("a1");
 						else
@@ -450,6 +464,8 @@ int c4_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos("a3");
 						else
@@ -458,6 +474,8 @@ int c4_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						c4_make_move(minigame);
 						return true;
 				}
@@ -469,6 +487,7 @@ int c4_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				c4_client_event(minigame, "mouse_moved");
 				c4_make_move(minigame);
 				return true;
 			}

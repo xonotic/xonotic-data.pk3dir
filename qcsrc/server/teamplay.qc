@@ -1,19 +1,19 @@
 #include "teamplay.qh"
 
-#include "client.qh"
-#include "race.qh"
-#include "scores.qh"
-#include "scores_rules.qh"
-
-#include "bot/api.qh"
-
-#include "command/vote.qh"
-
-#include <server/mutators/_mod.qh>
-
-#include "../common/deathtypes/all.qh"
+#include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
-#include "../common/teams.qh"
+#include <common/teams.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
 
 /// \brief Describes a state of team balance entity.
 enum
@@ -52,7 +52,7 @@ void Team_InitTeams()
 		return;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		g_team_entities[i] = spawn();
+		g_team_entities[i] = new_pure();
 	}
 }
 
@@ -466,6 +466,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_bots = 0;
 	}
 	setthink(balance, TeamBalance_Destroy);
+	balance.nextthink = time;
 
 	int teams_mask = 0;
 	string teament_name = string_null;
@@ -498,8 +499,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if (AvailableTeams() == 2)
-	if (autocvar_bot_vs_human && for_whom)
+	if (autocvar_bot_vs_human && AvailableTeams() == 2 && for_whom)
 	{
 		if (autocvar_bot_vs_human > 0)
 		{
@@ -1125,18 +1125,13 @@ void SV_ChangeTeam(entity player, int new_color)
 	{
 		SetPlayerColors(player, new_color);
 	}
-	// TODO: Should we really bother with this?
 	if(!IS_CLIENT(player))
 	{
-		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING,
-			player.netname);
 		return;
 	}
 	if (!teamplay)
 	{
 		return;
 	}
-	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) +
-		1));
+	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
 }

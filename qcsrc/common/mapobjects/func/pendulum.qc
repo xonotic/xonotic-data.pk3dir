@@ -28,7 +28,7 @@ spawnfunc(func_pendulum)
 	if (this.noise != "")
 	{
 		precache_sound(this.noise);
-		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE, 0);
 	}
 
 	this.active = ACTIVE_ACTIVE;
@@ -63,7 +63,7 @@ spawnfunc(func_pendulum)
 	this.cnt = this.angles_z;
 
 	// wait for targets to spawn
-	controller = new(func_pendulum_controller);
+	controller = new_pure(func_pendulum_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_pendulum_controller_think);

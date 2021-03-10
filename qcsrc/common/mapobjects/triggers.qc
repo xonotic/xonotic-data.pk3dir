@@ -1,5 +1,37 @@
 #include "triggers.qh"
 
+bool isPushable(entity e)
+{
+	if(e.pushable)
+		return true;
+#ifdef SVQC
+	if(IS_VEHICLE(e))
+		return false;
+	if(e.iscreature)
+		return true;
+	if (Item_IsLoot(e))
+	{
+		return true;
+	}
+	switch(e.classname)
+	{
+		case "body":
+			return true;
+		case "bullet": // antilagged bullets can't hit this either
+			return false;
+	}
+	if (e.projectiledeathtype)
+		return true;
+#endif
+#ifdef CSQC
+	if(e.flags & FL_PROJECTILE)
+		return true;
+	if(e.isplayermodel)
+		return true;
+#endif
+	return false;
+}
+
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
@@ -43,7 +75,7 @@ void generic_netlinked_setactive(entity this, int act)
 
 void generic_netlinked_reset(entity this)
 {
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		if(this.spawnflags & START_ENABLED)
 		{
@@ -235,24 +267,24 @@ match (string)this.target and call their .use function
 ==============================
 */
 
-void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse)
+void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse, int skiptargets)
 {
 //
 // check for a delay
 //
 	if (this.delay)
 	{
-	// create a temp object to fire at a later time
-		entity t = new(DelayedUse);
+		// create a temp object to fire at a later time
+		entity t = new_pure(DelayedUse);
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
 		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;
-		t.target = this.target;
-		t.target2 = this.target2;
-		t.target3 = this.target3;
-		t.target4 = this.target4;
+		if(!(skiptargets & BIT(1))) t.target = this.target;
+		if(!(skiptargets & BIT(2))) t.target2 = this.target2;
+		if(!(skiptargets & BIT(3))) t.target3 = this.target3;
+		if(!(skiptargets & BIT(4))) t.target4 = this.target4;
 		t.antiwall_flag = this.antiwall_flag;
 		return;
 	}
@@ -292,6 +324,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 
 	for(int i = 0; i < 4; ++i)
 	{
+		if(skiptargets & BIT(i + 1))
+			continue;
 		switch(i)
 		{
 			default:
@@ -329,5 +363,6 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 	}
 }
 
-void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false); }
-void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true); }
+void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false, 0); }
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true, 0); }
+void SUB_UseTargets_SkipTargets(entity this, entity actor, entity trigger, int skiptargets) { SUB_UseTargets_Ex(this, actor, trigger, false, skiptargets); }

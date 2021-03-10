@@ -244,10 +244,7 @@ spawnfunc(func_door_secret)
 	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
-	IFTARGETED
-	{
-	}
-	else
+	if(!this.targetname || this.targetname == "")
 		this.spawnflags |= DOOR_SECRET_YES_SHOOT;
 
 	if (this.spawnflags & DOOR_SECRET_YES_SHOOT)

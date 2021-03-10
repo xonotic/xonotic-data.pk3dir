@@ -1,5 +1,7 @@
 #include "sv_sandbox.qh"
 
+#include <server/intermission.qh>
+
 string autocvar_g_sandbox;
 int autocvar_g_sandbox_info;
 bool autocvar_g_sandbox_readonly;

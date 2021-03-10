@@ -1,7 +1,15 @@
 #pragma once
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+
+int autocvar_g_showweaponspawns;
+bool autocvar_g_weaponswitch_debug;
+bool autocvar_g_weaponswitch_debug_alternate;
+
+.int selectweapon; // last selected weapon of the player
+
+.WepSet dual_weapons;
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
@@ -12,7 +20,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 .int weaponcomplainindex;
 float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity);
 
-#define w_getbestweapon(ent,wepent) Weapons_from(W_GetCycleWeapon(ent, CS(ent).cvar_cl_weaponpriority, 0, -1, false, true, wepent))
+#define w_getbestweapon(ent,wepent) REGISTRY_GET(Weapons, W_GetCycleWeapon(ent, CS_CVAR(ent).cvar_cl_weaponpriority, 0, -1, false, true, wepent))
 
 void W_SwitchWeapon_Force(Player this, Weapon w, .entity weaponentity);
 

@@ -47,7 +47,7 @@ void func_rotating_init_for_player(entity this, entity player)
 	if (this.noise && this.noise != "" && this.active == ACTIVE_ACTIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		soundto (MSG_ONE, this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE, 0);
 	}
 }
 
@@ -55,7 +55,7 @@ void func_rotating_init_for_player(entity this, entity player)
 Brush model that spins in place on one axis (default Z).
 speed   : speed to rotate (in degrees per second)
 noise   : path/name of looping .wav file to play.
-dmg     : Do this mutch dmg every .dmgtime intervall when blocked
+dmg     : Do this much damage every .dmgtime interval when blocked
 dmgtime : See above.
 */
 

@@ -1,14 +1,18 @@
 #include "quickmenu.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include <common/ent_cs.qh>
-#include <common/minigames/cl_minigames.qh>
+#include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
+#include <common/ent_cs.qh>
+#include <common/minigames/cl_minigames.qh>
 
 // QuickMenu (#23)
+
+void HUD_QuickMenu_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_quickmenu_align");
+}
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
@@ -40,6 +44,11 @@ float QuickMenu_TimeOut;
 
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
+
+void QuickMenu_TimeOut_Set()
+{
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+}
 
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
@@ -182,7 +191,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 	hudShiftState = 0;
 
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -362,7 +371,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 		QuickMenu_Close();
 		return false;
 	}
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -387,7 +396,7 @@ bool QuickMenu_ActionForNumber(int num)
 	{
 		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
-		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+		QuickMenu_TimeOut_Set();
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -415,9 +424,6 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
-	// we only care for keyboard events
-	if(bInputType == 2)
-		return false;
 
 	if(!QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return false;
@@ -428,6 +434,12 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		mousepos.y = nSecondary;
 		return true;
 	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
 
 	// allow console bind to work
 	string con_keys = findkeysforcommand("toggleconsole", 0);
@@ -440,12 +452,14 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			hit_con_bind = true;
 	}
 
-	if(bInputType == 0) {
+	if(key_pressed)
+	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 	}
-	else if(bInputType == 1) {
+	else
+	{
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
@@ -453,28 +467,28 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_ESCAPE)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		QuickMenu_Close();
 	}
 	else if(nPrimary >= '0' && nPrimary <= '9')
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE1);
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(hit_con_bind)
@@ -483,6 +497,7 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	return true;
 }
 
+int entry_num_prev = 0;
 void QuickMenu_Mouse()
 {
 	if(mv_active) return;
@@ -512,6 +527,11 @@ void QuickMenu_Mouse()
 	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
 		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
+		if (entry_num != entry_num_prev)
+		{
+			QuickMenu_TimeOut_Set();
+			entry_num_prev = entry_num;
+		}
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
@@ -757,7 +777,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;
-		QUICKMENU_ENTRY(entcs_GetName(pl.sv_entnum), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
+		QUICKMENU_ENTRY(strcat("^7", entcs_GetName(pl.sv_entnum)), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
 	}
 
 	return;
@@ -790,7 +810,7 @@ void QuickMenu_Default(string target_submenu)
 	if(teamplay)
 	{
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^strength soon")), "say_team %s", "strength soon", CTX(_("QMCMD^strength soon")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
@@ -827,11 +847,7 @@ void QuickMenu_Default(string target_submenu)
 
 		if(spectatee_status > 0)
 		{
-		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person around player")), "chase_active 1; +use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
-		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Change spectator camera")), "dropweapon")
 		}
 
 		if(spectatee_status == -1)
@@ -839,8 +855,7 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision")), "toggle cl_clippedspectating")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		}
 
@@ -859,11 +874,16 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
+	if(spectatee_status != 0)
+	{
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Spectate a player")), "Spectate a player", "spectate \"%s^7\"", 0, 1)
+	}
+
 	if(target_submenu != "" && !target_submenu_found)
 	{
 		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_INFOF("^3Warning: submenu title must be in English", target_submenu);
+			LOG_INFO("^3Warning: submenu title must be in English");
 		QuickMenu_Buffer_Size = 0;
 	}
 }

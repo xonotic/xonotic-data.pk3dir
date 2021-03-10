@@ -79,8 +79,11 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
-	if(e != this.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
 	{
+		if(e == this.realowner) continue;
+		if(e.takedamage != DAMAGE_AIM) continue;
+		if(IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)) continue;
+
 		p = e.origin;
 		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
 		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
@@ -137,7 +140,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 {
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage), WEP_FIREBALL.m_id);
 
-	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(plasma_prim);
 	proj.owner = proj.realowner = actor;
@@ -165,7 +168,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY;
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
 
@@ -275,7 +278,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 
-	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	proj = new(grenade);
 	proj.owner = proj.realowner = actor;
@@ -297,7 +300,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);
 

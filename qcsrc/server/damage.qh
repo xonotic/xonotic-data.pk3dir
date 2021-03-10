@@ -1,0 +1,163 @@
+#pragma once
+
+#include <common/weapons/_all.qh>
+
+bool autocvar_g_throughfloor_debug;
+float autocvar_g_throughfloor_damage;
+float autocvar_g_throughfloor_force;
+float autocvar_g_throughfloor_damage_max_stddev;
+float autocvar_g_throughfloor_force_max_stddev;
+float autocvar_g_throughfloor_min_steps_player;
+float autocvar_g_throughfloor_max_steps_player;
+float autocvar_g_throughfloor_min_steps_other;
+float autocvar_g_throughfloor_max_steps_other;
+float autocvar_g_mirrordamage;
+bool autocvar_g_mirrordamage_virtual;
+bool autocvar_g_mirrordamage_onlyweapons;
+float autocvar_g_maxpushtime;
+float autocvar_g_balance_damagepush_speedfactor;
+int autocvar_g_balance_firetransfer_damage;
+int autocvar_g_balance_firetransfer_time;
+float autocvar_g_balance_armor_blockpercent;
+float autocvar_g_teamdamage_resetspeed;
+float autocvar_g_teamdamage_threshold;
+float autocvar_g_balance_selfdamagepercent;
+float autocvar_g_friendlyfire;
+float autocvar_g_friendlyfire_virtual;
+float autocvar_g_friendlyfire_virtual_force;
+float autocvar_g_frozen_revive_falldamage;
+int autocvar_g_frozen_revive_falldamage_health;
+bool autocvar_g_frozen_damage_trigger;
+float autocvar_g_frozen_force;
+
+.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
+
+.bool(entity targ, entity inflictor, float amount, float limit) event_heal;
+
+.float dmg;
+.float dmg_edge;
+.float dmg_force;
+.float dmg_radius;
+
+bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf);
+
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
+
+float checkrules_firstblood;
+
+.float damagedbycontents;
+.float damagedbytriggers;
+
+float yoda;
+int impressive_hits;
+
+.float pain_finished; // Added by Supajoe
+
+.float dmg_team;
+.float teamkill_complain;
+.float teamkill_soundtime;
+.entity teamkill_soundsource;
+.entity pusher;
+.bool istypefrag;
+.float taunt_soundtime;
+
+.float spawnshieldtime;
+
+.int totalfrags;
+
+.bool canteamdamage;
+
+.vector death_origin;
+
+.float damage_dealt, typehitsound, killsound;
+
+// used for custom deathtype
+string deathmessage;
+
+float IsFlying(entity a);
+
+void UpdateFrags(entity player, int f);
+
+// NOTE: f=0 means still count as a (positive) kill, but count no frags for it
+void W_SwitchWeapon_Force(Player this, Weapon w, .entity weaponentity);
+void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity weaponentity);
+
+string AppendItemcodes(string s, entity player);
+
+void LogDeath(string mode, int deathtype, entity killer, entity killed);
+
+void Obituary_SpecialDeath(
+	entity notif_target,
+	float murder,
+	int deathtype,
+	string s1, string s2, string s3,
+	float f1, float f2, float f3);
+
+float w_deathtype;
+float Obituary_WeaponDeath(
+	entity notif_target,
+	float murder,
+	int deathtype,
+	string s1, string s2, string s3,
+	float f1, float f2);
+
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity);
+
+// Frozen status effect
+//const int FROZEN_NOT              = 0;
+const int FROZEN_NORMAL             = 1;
+const int FROZEN_TEMP_REVIVING      = 2;
+const int FROZEN_TEMP_DYING         = 3;
+
+.float revival_time; // time at which player was last revived
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
+.entity iceblock;
+.entity frozen_by; // for ice fields
+
+void Ice_Think(entity this);
+
+void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint);
+
+void Unfreeze(entity targ, bool reset_health);
+
+// WEAPONTODO
+#define DMG_NOWEP (weaponentities[0])
+
+// NOTE: the .weaponentity parameter can be set to DMG_NOWEP if the attack wasn't caused by a weapon or player
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+float RadiusDamage_running;
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity);
+	// Returns total damage applies to creatures
+
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
+
+.float damageforcescale;
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
+.float damageextraradius;
+
+// Calls .event_heal on the target so that they can handle healing themselves
+// a limit of RES_LIMIT_NONE should be handled by the entity as its max health (if applicable)
+bool Heal(entity targ, entity inflictor, float amount, float limit);
+
+.float fire_damagepersec;
+.float fire_endtime;
+.float fire_deathtype;
+.entity fire_owner;
+.float fire_hitsound;
+.entity fire_burner;
+
+void fireburner_think(entity this);
+
+float Fire_IsBurning(entity e);
+
+float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
+
+void Fire_ApplyDamage(entity e);
+
+void Fire_ApplyEffect(entity e);
+
+IntrusiveList g_damagedbycontents;
+STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }

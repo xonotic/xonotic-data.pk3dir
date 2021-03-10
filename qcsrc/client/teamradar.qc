@@ -1,11 +1,9 @@
 #include "teamradar.qh"
 
-#include "autocvars.qh"
-#include "hud/_mod.qh"
-
+#include <client/hud/_mod.qh>
+#include <client/view.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
-
-#include "../lib/csqcmodel/interpolate.qh"
+#include <lib/csqcmodel/interpolate.qh>
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
@@ -68,7 +66,7 @@ void draw_teamradar_background(float fg)
 	{
 		fga = 1;
 		fgc = '1 1 1' * fg;
-		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
+		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
 		if(v_flipped)
 		{
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord3), yinvert(mi_pictexcoord3), fgc, fga);
@@ -93,8 +91,8 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-	MAKEVECTORS(makevectors, pangles - '0 1 0' * teamradar_angle, forward, right, up);
+	vector forward, right, up;
+	MAKE_VECTORS(pangles - '0 1 0' * teamradar_angle, forward, right, up);
 	if(v_flipped)
 	{
 		forward.x = -forward.x;
@@ -112,14 +110,14 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	else
 		rgb2 = '1 1 1';
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(coord+forward*3, '0 0 0', rgb2, panel_fg_alpha);
 	R_PolygonVertex(coord+right*4-forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
 	R_PolygonVertex(coord-forward*2, '1 0 0', rgb2, panel_fg_alpha);
 	R_PolygonVertex(coord-right*4-forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
 	R_EndPolygon();
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(coord+forward*2, '0 0 0', rgb, panel_fg_alpha);
 	R_PolygonVertex(coord+right*3-forward*2, '0 1 0', rgb, panel_fg_alpha);
 	R_PolygonVertex(coord-forward, '1 0 0', rgb, panel_fg_alpha);
@@ -164,7 +162,7 @@ void draw_teamradar_link(vector start, vector end, int colors)
 	c0 = colormapPaletteColor(colors & 0x0F, false);
 	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);
 	R_PolygonVertex(start + norm, '0 1 0', c0, panel_fg_alpha);
 	R_PolygonVertex(end + norm, '1 1 0', c1, panel_fg_alpha);
@@ -204,7 +202,6 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 	InterpolateOrigin_Undo(this);
 
 	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
-	this.classname = "radarlink";
 	if (isnew) IL_PUSH(g_radarlinks, this);
 
 	if(sendflags & 1)

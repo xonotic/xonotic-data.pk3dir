@@ -1,6 +1,7 @@
 #include "sv_new_toys.qh"
 
 #include "../random_items/sv_random_items.qh"
+#include <server/weapons/spawning.qh>
 
 /*
 
@@ -28,7 +29,7 @@ Entity:
 -> This will spawn as Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_vortext"
+"classname" "weapon_vortex"
 "new_toys" "vortex rifle"
 }
 -> This will spawn as either Vortex or Rifle in this mutator ONLY, and as Vortex otherwise.

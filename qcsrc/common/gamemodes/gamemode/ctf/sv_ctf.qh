@@ -1,6 +1,9 @@
 #pragma once
 
 #include "ctf.qh"
+#include <common/items/item/pickup.qh>
+#include <common/mutators/base.qh>
+#include <common/gamemodes/sv_rules.qh>
 
 CLASS(Flag, Pickup)
     ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
@@ -8,6 +11,9 @@ CLASS(Flag, Pickup)
 ENDCLASS(Flag)
 Flag CTF_FLAG;
 void ctf_Initialize();
+
+int autocvar_captureleadlimit_override;
+int autocvar_capturelimit_override;
 
 REGISTER_MUTATOR(ctf, false)
 {
@@ -72,6 +78,9 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 .float score_pickup;
 .float score_return;
 .float score_team_capture; // shouldn't be too high
+
+// property set on objects to point to the flag they're carrying (if any)
+.entity flagcarried;
 
 // effects
 .string toucheffect;

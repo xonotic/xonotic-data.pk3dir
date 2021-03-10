@@ -1,10 +1,10 @@
 #include "round_handler.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "campaign.qh"
-#include "command/vote.qh"
-#include "../common/util.qh"
+#include <common/mapobjects/triggers.qh>
+#include <common/util.qh>
+#include <server/campaign.qh>
+#include <server/command/vote.qh>
+#include <server/world.qh>
 
 void round_handler_Think(entity this)
 {
@@ -93,7 +93,7 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 		backtrace("Can't spawn round_handler again!");
 		return;
 	}
-	entity this = round_handler = new(round_handler);
+	entity this = round_handler = new_pure(round_handler);
 
 	setthink(this, round_handler_FirstThink);
 	this.canRoundStart = canRoundStart_func;

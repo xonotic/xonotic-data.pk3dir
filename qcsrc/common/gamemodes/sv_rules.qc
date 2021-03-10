@@ -1,5 +1,6 @@
 #include "sv_rules.qh"
 
+#include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
 
 void GameRules_teams(bool value)

@@ -70,7 +70,6 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
 		{
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			M_ARGV(6, vector) = '0 0 0'; // force
 		}
 
@@ -263,7 +262,10 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
-	start_items |= IT_UNLIMITED_WEAPON_AMMO;
+	// this gives unlimited ammo (the 4 types) but not fuel
+	// using `g_use_ammunition` instead gives also fuel which is unnecessary and distracting in the HUD
+	start_items |= IT_UNLIMITED_AMMO;
+
 	start_weapons = warmup_start_weapons = ok_start_items;
 }
 

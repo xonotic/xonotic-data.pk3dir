@@ -1,11 +1,13 @@
 #include "racetimer.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include <common/mapinfo.qh>
+#include <client/draw.qh>
 
-// Race timer (#6)
+// Race timer (#8)
+
+void HUD_RaceTimer_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)
@@ -98,7 +100,7 @@ void HUD_RaceTimer ()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
+		if(!MUTATOR_CALLHOOK(ShowRaceTimer)) return;
 		if(spectatee_status == -1) return;
 	}
 

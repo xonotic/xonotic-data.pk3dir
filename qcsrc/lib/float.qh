@@ -2,3 +2,5 @@
 
 const float FLOAT_MAX = 340282346638528859811704183484516925440.0f;
 const float FLOAT_EPSILON = 0.00000011920928955078125f;
+/// Always use `isnan` function to compare because `float x = FLOAT_NAN; x == x;` gives true
+const float FLOAT_NAN = 0.0 / 0.0;

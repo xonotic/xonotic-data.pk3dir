@@ -1,9 +1,5 @@
 #include "nmm.qh"
 
-#ifdef CSQC
-#include <client/miscfunctions.qh>
-#endif
-
 REGISTER_MINIGAME(nmm, _("Nine Men's Morris"));
 
 const int NMM_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -227,10 +223,10 @@ int nmm_server_event(entity minigame, string event, ...)
 		entity e;
 		for ( int i = 0; i < 7; i++ )
 		{
-			e = msle_spawn(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 1;
 			e.minigame_flags = NMM_PIECE_HOME;
-			e = msle_spawn(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 2;
 			e.minigame_flags = NMM_PIECE_HOME;
 		}
@@ -636,80 +632,96 @@ int nmm_client_event(entity minigame, string event, ...)
 		nmm_kill_tiles(minigame);
 		strfree(minigame.message);
 	}
-	else if ( event == "key_pressed" && (minigame.minigame_flags&NMM_TURN_TEAM) == minigame_self.team )
+	else if ( (event == "key_pressed" || event == "key_released") )
 	{
-		switch ( ...(0,int) )
+		bool event_blocked = ((event == "key_released")
+			|| ((minigame.minigame_flags & NMM_TURN_TEAM) != minigame_self.team));
+		if (!(minigame.minigame_flags & NMM_TURN_WIN))
 		{
-			case K_RIGHTARROW:
-			case K_KP_RIGHTARROW:
-				if ( ! nmm_currtile )
-					nmm_currtile = nmm_find_tile(active_minigame,"a7");
-				else
-				{
-					string tileid = nmm_currtile.netname;
-					nmm_currtile = NULL;
-					while ( !nmm_currtile )
+			switch ( ...(0,int) )
+			{
+				case K_RIGHTARROW:
+				case K_KP_RIGHTARROW:
+					if (event_blocked)
+						return true;
+					if ( ! nmm_currtile )
+						nmm_currtile = nmm_find_tile(active_minigame,"a7");
+					else
 					{
-						tileid = minigame_relative_tile(tileid,1,0,7,7);
-						nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						string tileid = nmm_currtile.netname;
+						nmm_currtile = NULL;
+						while ( !nmm_currtile )
+						{
+							tileid = minigame_relative_tile(tileid,1,0,7,7);
+							nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						}
 					}
-				}
-				return 1;
-			case K_LEFTARROW:
-			case K_KP_LEFTARROW:
-				if ( ! nmm_currtile )
-					nmm_currtile = nmm_find_tile(active_minigame,"g7");
-				else
-				{
-					string tileid = nmm_currtile.netname;
-					nmm_currtile = NULL;
-					while ( !nmm_currtile )
+					return 1;
+				case K_LEFTARROW:
+				case K_KP_LEFTARROW:
+					if (event_blocked)
+						return true;
+					if ( ! nmm_currtile )
+						nmm_currtile = nmm_find_tile(active_minigame,"g7");
+					else
 					{
-						tileid = minigame_relative_tile(tileid,-1,0,7,7);
-						nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						string tileid = nmm_currtile.netname;
+						nmm_currtile = NULL;
+						while ( !nmm_currtile )
+						{
+							tileid = minigame_relative_tile(tileid,-1,0,7,7);
+							nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						}
 					}
-				}
-				return 1;
-			case K_UPARROW:
-			case K_KP_UPARROW:
-				if ( ! nmm_currtile )
-					nmm_currtile = nmm_find_tile(active_minigame,"a1");
-				else
-				{
-					string tileid = nmm_currtile.netname;
-					nmm_currtile = NULL;
-					while ( !nmm_currtile )
+					return 1;
+				case K_UPARROW:
+				case K_KP_UPARROW:
+					if (event_blocked)
+						return true;
+					if ( ! nmm_currtile )
+						nmm_currtile = nmm_find_tile(active_minigame,"a1");
+					else
 					{
-						tileid = minigame_relative_tile(tileid,0,1,7,7);
-						nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						string tileid = nmm_currtile.netname;
+						nmm_currtile = NULL;
+						while ( !nmm_currtile )
+						{
+							tileid = minigame_relative_tile(tileid,0,1,7,7);
+							nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						}
 					}
-				}
-				return 1;
-			case K_DOWNARROW:
-			case K_KP_DOWNARROW:
-				if ( ! nmm_currtile )
-					nmm_currtile = nmm_find_tile(active_minigame,"a7");
-				else
-				{
-					string tileid = nmm_currtile.netname;
-					nmm_currtile = NULL;
-					while ( !nmm_currtile )
+					return 1;
+				case K_DOWNARROW:
+				case K_KP_DOWNARROW:
+					if (event_blocked)
+						return true;
+					if ( ! nmm_currtile )
+						nmm_currtile = nmm_find_tile(active_minigame,"a7");
+					else
 					{
-						tileid = minigame_relative_tile(tileid,0,-1,7,7);
-						nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						string tileid = nmm_currtile.netname;
+						nmm_currtile = NULL;
+						while ( !nmm_currtile )
+						{
+							tileid = minigame_relative_tile(tileid,0,-1,7,7);
+							nmm_currtile = nmm_find_tile(active_minigame,tileid);
+						}
 					}
-				}
-				return 1;
-			case K_ENTER:
-			case K_KP_ENTER:
-			case K_SPACE:
-				nmm_make_move(minigame);
-				return 1;
+					return 1;
+				case K_ENTER:
+				case K_KP_ENTER:
+				case K_SPACE:
+					if (event_blocked)
+						return true;
+					nmm_make_move(minigame);
+					return 1;
+			}
 		}
 		return 0;
 	}
 	else if ( event == "mouse_pressed" && ...(0,int) == K_MOUSE1 )
 	{
+		nmm_client_event(minigame, "mouse_moved");
 		nmm_make_move(minigame);
 		return 1;
 	}
