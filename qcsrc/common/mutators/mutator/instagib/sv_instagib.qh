@@ -51,5 +51,6 @@ REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !MapInfo_LoadedGametyp
 		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		IL_DELETE(g_instagib_items);
 	}
 }

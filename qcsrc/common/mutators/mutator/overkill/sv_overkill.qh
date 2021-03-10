@@ -45,5 +45,6 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(m
 		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		IL_DELETE(g_overkill_items);
 	}
 }
