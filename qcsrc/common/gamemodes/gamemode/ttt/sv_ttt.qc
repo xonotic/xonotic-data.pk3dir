@@ -6,14 +6,20 @@ float autocvar_g_ttt_innocent_count = 0.625;
 float autocvar_g_ttt_traitor_count = 0.25;
 float autocvar_g_ttt_round_timelimit = 180;
 float autocvar_g_ttt_warmup = 10;
-bool autocvar_g_ttt_punish_teamkill = 0; //false by default
+bool autocvar_g_ttt_punish_teamkill = false;
 bool autocvar_g_ttt_reward_innocent = true;
 float autocvar_g_ttt_max_karma_points = 1000; //LegendGuard sets Karma points 21-02-2021
 float autocvar_g_ttt_min_karma_points = 400;
 
-//TODO: add Detective and corpse function if a player is DEAD
+// 27-02-2021
+//Ideas: skills/items per each player-type: (these skills/items should be used once)
+// Innocents: Shield and Strength; Traitors: Shield and Strength; Detectives: skill to detect any player to see what player-type is
 
-//TODO: Problems: Detective is a created team, this team is added inside Innocents team
+//TODO: Add force to spec, kick and ban for low karma points 27-02-2021
+
+// Detective is a created team, this team is added inside Innocents team
+
+//TODO: 
 // detective shouldn't be attacked by innocent bots.
 // detective should detect the point of the corpses (new function).
 
@@ -68,11 +74,13 @@ void ttt_UpdateScores(bool timed_out)
 				}
 				else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
 					dropclient(it); //PrintToChatAll("GET OUT!!");
+					//Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
+
 			}
 			if(it.ttt_status == TTT_STATUS_INNOCENT)
 			{
 				GameRules_scoring_add(it, TTT_RESISTS, 1);
-				float increasekarma = 35; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
+				float increasekarma = 25; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
 				//PrintToChatAll(sprintf("^2INNOCENT ^7increasekarma: ^2%f", increasekarma));
 				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
 				it.karmapoints = it.karmapoints + increasekarma;
@@ -90,7 +98,7 @@ void ttt_UpdateScores(bool timed_out)
 			else if(it.ttt_status == TTT_STATUS_TRAITOR)
 			{
 				GameRules_scoring_add(it, TTT_HUNTS, 1);
-				float increasekarma = 35; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
+				float increasekarma = 25; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
 				//PrintToChatAll(sprintf("^1TRAITOR ^7increasekarma: ^2%f", increasekarma));
 				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
 				it.karmapoints = it.karmapoints + increasekarma;
@@ -221,7 +229,10 @@ void ttt_RoundStart()
 		if (total_innocents <= 1)
 		{
 			if (total_traitors <= 1)
+			{
+				total_traitors++;
 				it.ttt_status = TTT_STATUS_TRAITOR;
+			}
 		}
 		else if (total_innocents == 3) // test this? && total_traitors >= 1)
 		{
@@ -375,7 +386,7 @@ void ttt_Initialize() // run at the start of a match, initiates game mode
 
 MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 {
-	// LegendGuard has an IDEA: To adjust the grade of severity of karma, 
+	// LegendGuard's IDEA: To adjust the grade of severity of karma, 
 	// we could add if sentence per weapons and adjust each weapon attack
 	// its own grade. Instead doing random decrease grade 22-02-2021
 	
@@ -457,6 +468,15 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
 		if(player.ttt_status == TTT_STATUS_DETECTIVE)// && game_stopped)
 			plcolor = TTT_COLOR_DETECTIVE;
 		setcolor(player, plcolor);
+	}
+
+	//CORPSE FEATURE 10-03-2021
+	if (IS_DEAD(player))
+	{
+		player.event_damage = func_null;
+		//player.health = 0;
+		player.solid = SOLID_SLIDEBOX;
+		set_movetype(player, MOVETYPE_STEP);
 	}
 }
 
@@ -557,11 +577,7 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
-	//float is_player = (IS_PLAYER(frag_target) || frag_target.classname == "body" || IS_MONSTER(frag_target));
 
-	// Corpse should stay in the round 23-02-2021
-	// issues: when use DAMAGE_NO, makes unmovable and if shotgun shots, corpse crushes and disappears
-	// try to do something for corpse, outside this mutator, try in the event where updates
 	ttt_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 	{
@@ -569,17 +585,10 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
 		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
 		frag_target.respawn_time = time + 2;
 	}
-	frag_target.respawn_flags |= RESPAWN_SILENT;
-	//CORPSE TEST 24-02-2021
-	//frag_target.respawn_flags |= RESPAWN_DENY;
-	//frag_target.deadflag = DEAD_NO;
-	//frag_target.solid = SOLID_SLIDEBOX;
-	//frag_target.solid = SOLID_CORPSE;
-	//set_movetype(frag_target, MOVETYPE_NONE);
-	//frag_target.takedamage = DAMAGE_NO; //it works but it doesn't move... and can be crushed to disappear
-	frag_target.damagedbycontents = false;
-	//LOG_DEBUG("CORPSE CLASSNAME: %s", frag_target.classname);
-	//PrintToChatAll(sprintf("^1fragtarget_classname: ^3%s",frag_target.classname));
+	frag_target.respawn_flags |= RESPAWN_DENY;
+	frag_target.event_damage = func_null;
+	frag_target.health = 0;
+	
 	if (!warmup_stage)
 	{
 		eliminatedPlayers.SendFlags |= 1;
