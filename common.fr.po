@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-28 07:23+0100\n"
-"PO-Revision-Date: 2021-02-28 10:44+0000\n"
+"PO-Revision-Date: 2021-03-10 11:28+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -5577,6 +5577,8 @@ msgstr "%02d:%02d:%02d"
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
 msgstr ""
+"Utilisation : ^3 menu_cmd <command> [<item>], où les commandes possibles "
+"sont :"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  <sync> reloads all cvars on the current menu page"
@@ -5587,12 +5589,16 @@ msgid ""
 "  <directmenu> shows the menu window named <item> (or the menu window "
 "containing an item named <item>)"
 msgstr ""
+"  <directmenu> affiche la fenêtre de menu nommée <item> (ou la fenêtre de "
+"menu contenant un élément nommé <item>)"
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid ""
 "   if <item> is not specified it shows the list of available items in the "
 "console"
 msgstr ""
+"   si <item> n'est pas spécifié cela affiche la liste des éléments "
+"disponibles dans la console"
 
 #: qcsrc/menu/command/menu_cmd.qc:52
 msgid "  <dumptree> dumps the state of the menu as a tree to the console"
