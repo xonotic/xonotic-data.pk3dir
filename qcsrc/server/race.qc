@@ -286,7 +286,7 @@ void race_send_rankings_cnt(float msg)
 	WriteByte(msg, m);
 }
 
-void race_SendRankings(float pos, float prevpos, float del, float msg)
+void race_SendRanking(float pos, float prevpos, float del, float msg)
 {
 	WriteHeader(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SERVER_RANKINGS);
@@ -344,7 +344,7 @@ void race_SendAll(entity player, bool only_rankings)
 	int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
 	race_send_rankings_cnt(MSG_ONE);
 	for (int i = 1; i <= m; ++i)
-		race_SendRankings(i, 0, 0, MSG_ONE);
+		race_SendRanking(i, 0, 0, MSG_ONE);
 }
 
 void race_SendStatus(float id, entity e)
@@ -427,7 +427,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		race_send_recordtime(MSG_ALL);
 	}
 
-	race_SendRankings(newpos, player_prevpos, 0, MSG_ALL);
+	race_SendRanking(newpos, player_prevpos, 0, MSG_ALL);
 	strcpy(rankings_reply, getrankings());
 
 	if(newpos == player_prevpos)
@@ -470,7 +470,7 @@ void race_deleteTime(string map, float pos)
 		}
 	}
 
-	race_SendRankings(pos, 0, 1, MSG_ALL);
+	race_SendRanking(pos, 0, 1, MSG_ALL);
 	if(pos == 1)
 		race_send_recordtime(MSG_ALL);
 
