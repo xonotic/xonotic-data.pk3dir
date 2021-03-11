@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-02-01 11:08+0000\n"
+"POT-Creation-Date: 2021-02-28 07:23+0100\n"
+"PO-Revision-Date: 2021-02-28 16:40+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -4819,20 +4819,14 @@ msgid "Walker"
 msgstr "Walker"
 
 #: qcsrc/common/util.qc:1333
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:176
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:186
 msgid "Male"
 msgstr "Masculino"
 
 #: qcsrc/common/util.qc:1334
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:175
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:185
 msgid "Female"
 msgstr "Feminino"
 
 #: qcsrc/common/util.qc:1335
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:187
 msgid "Undisclosed"
 msgstr "Não revelado"
 
@@ -5552,26 +5546,34 @@ msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
-msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr "Uso: comando menu_cmd..., onde os possíveis comandos são:"
+msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
+msgstr "Uso:^3 menu_cmd <command>[<item>], em que os possíveis comandos são:"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
-msgid "  sync - reloads all cvars on the current menu page"
-msgstr " sync - recarrega todas as cvars no menu atual"
+msgid "  <sync> reloads all cvars on the current menu page"
+msgstr "<sync> recarrega todas as cvars na página do menu atual"
 
 #: qcsrc/menu/command/menu_cmd.qc:50
-msgid "  directmenu ITEM - select a menu item as main item"
-msgstr " directmenu ITEM - seleciona um item do menu como principal"
+msgid ""
+"  <directmenu> shows the menu window named <item> (or the menu window "
+"containing an item named <item>)"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:51
-msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr "  dumptree - despeja o estado do menu como uma árvore ao console"
+msgid ""
+"   if <item> is not specified it shows the list of available items in the "
+"console"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:80
-msgid "Available options:"
-msgstr "Opções disponíveis:"
+#: qcsrc/menu/command/menu_cmd.qc:52
+msgid "  <dumptree> dumps the state of the menu as a tree to the console"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:129
+#: qcsrc/menu/command/menu_cmd.qc:81
+msgid "Available items:"
+msgstr "Itens disponíveis:"
+
+#: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
 "Comando inválido. Digite menu_cmd help para obter uma lista de comandos "
@@ -5597,171 +5599,171 @@ msgstr "Equipe Principal"
 msgid "Extended Team"
 msgstr "Equipe Estendida"
 
-#: qcsrc/menu/xonotic/credits.qc:28
+#: qcsrc/menu/xonotic/credits.qc:29
 msgid "Website"
 msgstr "Site"
 
-#: qcsrc/menu/xonotic/credits.qc:33
+#: qcsrc/menu/xonotic/credits.qc:34
 msgid "Stats"
 msgstr "Estatísticas"
 
-#: qcsrc/menu/xonotic/credits.qc:37
+#: qcsrc/menu/xonotic/credits.qc:38
 msgid "Art"
 msgstr "Arte"
 
-#: qcsrc/menu/xonotic/credits.qc:45
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Animation"
 msgstr "Animação"
 
-#: qcsrc/menu/xonotic/credits.qc:49
+#: qcsrc/menu/xonotic/credits.qc:50
 msgid "Level Design"
 msgstr "Design de Mapas"
 
-#: qcsrc/menu/xonotic/credits.qc:72
+#: qcsrc/menu/xonotic/credits.qc:73
 msgid "Music / Sound FX"
 msgstr "Música / Efeitos de Som"
 
-#: qcsrc/menu/xonotic/credits.qc:88
+#: qcsrc/menu/xonotic/credits.qc:89
 msgid "Game Code"
 msgstr "Codificação de Jogo"
 
-#: qcsrc/menu/xonotic/credits.qc:100
+#: qcsrc/menu/xonotic/credits.qc:101
 msgid "Marketing / PR"
 msgstr "Marketing / Relações Públicas"
 
-#: qcsrc/menu/xonotic/credits.qc:106
+#: qcsrc/menu/xonotic/credits.qc:107
 msgid "Legal"
 msgstr "Assuntos Legais"
 
-#: qcsrc/menu/xonotic/credits.qc:111
+#: qcsrc/menu/xonotic/credits.qc:112
 msgid "Game Engine"
 msgstr "Motor de Jogo"
 
-#: qcsrc/menu/xonotic/credits.qc:115
+#: qcsrc/menu/xonotic/credits.qc:116
 msgid "Engine Additions"
 msgstr "Adições ao Motor"
 
-#: qcsrc/menu/xonotic/credits.qc:121
+#: qcsrc/menu/xonotic/credits.qc:122
 msgid "Compiler"
 msgstr "Compilador"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:128
 msgid "Other Active Contributors"
 msgstr "Outros Contribuidores Ativos"
 
-#: qcsrc/menu/xonotic/credits.qc:135
+#: qcsrc/menu/xonotic/credits.qc:136
 msgid "Translators"
 msgstr "Tradutores"
 
-#: qcsrc/menu/xonotic/credits.qc:137
+#: qcsrc/menu/xonotic/credits.qc:138
 msgid "Asturian"
 msgstr "Asturiano"
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:143
 msgid "Belarusian"
 msgstr "Bielorrusso"
 
-#: qcsrc/menu/xonotic/credits.qc:145
+#: qcsrc/menu/xonotic/credits.qc:146
 msgid "Bulgarian"
 msgstr "Búlgaro"
 
-#: qcsrc/menu/xonotic/credits.qc:152
+#: qcsrc/menu/xonotic/credits.qc:153
 msgid "Chinese (China)"
 msgstr "Chinês (China)"
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Chinese (Taiwan)"
 msgstr "Chinês (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:163
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Cornish"
 msgstr "Córnico"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:167
 msgid "Czech"
 msgstr "Tcheco"
 
-#: qcsrc/menu/xonotic/credits.qc:171
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Dutch"
 msgstr "Holandês"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "English (Australia)"
 msgstr "Inglês (Austrália)"
 
-#: qcsrc/menu/xonotic/credits.qc:183
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Finnish"
 msgstr "Finlandês"
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "French"
 msgstr "Francês"
 
-#: qcsrc/menu/xonotic/credits.qc:196
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "German"
 msgstr "Alemão"
 
-#: qcsrc/menu/xonotic/credits.qc:207
+#: qcsrc/menu/xonotic/credits.qc:208
 msgid "Greek"
 msgstr "Grego"
 
-#: qcsrc/menu/xonotic/credits.qc:213
+#: qcsrc/menu/xonotic/credits.qc:214
 msgid "Hungarian"
 msgstr "Húngaro"
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "Irish"
 msgstr "Irlandês"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:221
 msgid "Italian"
 msgstr "Italiano"
 
-#: qcsrc/menu/xonotic/credits.qc:226
+#: qcsrc/menu/xonotic/credits.qc:227
 msgid "Kazakh"
 msgstr "Cazaque"
 
-#: qcsrc/menu/xonotic/credits.qc:229
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Korean"
 msgstr "Coreano"
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Polish"
 msgstr "Polônes"
 
-#: qcsrc/menu/xonotic/credits.qc:241
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Portuguese"
 msgstr "Português"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:248
 msgid "Romanian"
 msgstr "Romeno"
 
-#: qcsrc/menu/xonotic/credits.qc:254
+#: qcsrc/menu/xonotic/credits.qc:255
 msgid "Russian"
 msgstr "Russo"
 
-#: qcsrc/menu/xonotic/credits.qc:265
+#: qcsrc/menu/xonotic/credits.qc:266
 msgid "Scottish Gaelic"
 msgstr "Gaélico Escocês"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:269
 msgid "Serbian"
 msgstr "Sérvio"
 
-#: qcsrc/menu/xonotic/credits.qc:274
+#: qcsrc/menu/xonotic/credits.qc:275
 msgid "Spanish"
 msgstr "Espanhol"
 
-#: qcsrc/menu/xonotic/credits.qc:285
+#: qcsrc/menu/xonotic/credits.qc:286
 msgid "Swedish"
 msgstr "Sueco"
 
-#: qcsrc/menu/xonotic/credits.qc:289
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Ukrainian"
 msgstr "Ucraniano"
 
-#: qcsrc/menu/xonotic/credits.qc:296
+#: qcsrc/menu/xonotic/credits.qc:297
 msgid "Past Contributors"
 msgstr "Colaboradores Passados"
 
@@ -7527,21 +7529,9 @@ msgstr ""
 "Permitir que as estatísticas de jogador classifiquem você no placar de "
 "líderes"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
-msgid "Country"
-msgstr "Idioma"
-
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
 msgstr "Selecione um idioma..."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
-msgid "Gender:"
-msgstr "Gênero:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:179
-msgid "Gender"
-msgstr "Gênero"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"

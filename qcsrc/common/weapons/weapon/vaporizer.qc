@@ -123,23 +123,23 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
-	damage_goodhits = 0;
+	impressive_hits = 0;
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
 	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
-	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
+	SendCSQCVaporizerBeamParticle(actor, impressive_hits);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(damage_goodhits && actor.vaporizer_lasthit)
+	if(impressive_hits && actor.vaporizer_lasthit)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
-		damage_goodhits = 0; // only every second time
+		impressive_hits = 0; // only every second time
 	}
 
-	actor.vaporizer_lasthit = damage_goodhits;
+	actor.vaporizer_lasthit = impressive_hits;
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
@@ -317,13 +317,13 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
                     actor.(weaponentity).held_down = true;
                 actor.(weaponentity).jump_interval = time + autocvar_g_rm_laser_refire;
                 actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
-                damage_goodhits = 0;
+                impressive_hits = 0;
                 W_RocketMinsta_Attack2(actor, weaponentity);
             }
             else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).held_down)
             {
                 actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
-                damage_goodhits = 0;
+                impressive_hits = 0;
                 W_RocketMinsta_Attack3(actor, weaponentity);
                 //weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
             }

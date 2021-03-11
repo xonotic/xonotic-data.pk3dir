@@ -818,6 +818,11 @@ void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 	}
 }
 
+void print_available_commands_to(entity caller)
+{
+	print_to(caller, strcat("You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
+}
+
 void VoteCommand_call(int request, entity caller, int argc, string vote_command)  // BOTH
 {
 	switch (request)
@@ -829,7 +834,10 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
-			if (!autocvar_sv_vote_call && caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			if (!autocvar_sv_vote_call && caller)
+			{
+				print_to(caller, "^1Vote calling is not allowed.");
+			}
 			else if (!autocvar_sv_vote_gamestart && time < game_starttime)
 			{
 				print_to(caller, "^1Vote calling is not allowed before the match has started.");
@@ -856,12 +864,17 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			}
 			else if (!VoteCommand_checknasty(vote_command))
 			{
-				print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
+				print_to(caller, "^1Syntax error in command.");
 			}
 			else if ((parse_error = VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) <= 0)
 			{
 				if(parse_error == 0)
-					print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
+				{
+					if (vote_called_command == "")
+						VoteCommand_call(CMD_REQUEST_USAGE, caller, argc, vote_command);
+					else
+						print_to(caller, "^1This command is not acceptable or not available.");
+				}
 			}
 			else  // everything went okay, continue with calling the vote
 			{
@@ -897,10 +910,12 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call command"));
-			print_to(caller, "  Where 'command' is the command to request a vote upon.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote call <command>"));
+			print_to(caller, "  Where <command> is the command to request a vote upon.");
 			print_to(caller, strcat("Examples: ", GetCommandPrefix(caller), " vote call gotomap dance"));
 			print_to(caller, strcat("          ", GetCommandPrefix(caller), " vote call endmatch"));
+			print_available_commands_to(caller);
+			print_to(caller, "Shortcuts: ^2vcall <command>, vend, vmap, vkick, ...");
 			return;
 		}
 	}
@@ -925,12 +940,17 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 							print_to(caller, "^1You do not have vote master privileges.");
 						else if (!VoteCommand_checknasty(vote_command))
 						{
-							print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
+							print_to(caller, "^1Syntax error in command.");
 						}
 						else if ((parse_error = VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) <= 0)
 						{
 							if(parse_error == 0)
-								print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
+							{
+								if (vote_called_command == "")
+									VoteCommand_master(CMD_REQUEST_USAGE, caller, argc, vote_command);
+								else
+									print_to(caller, "^1This command is not acceptable or not available.");
+							}
 						}
 						else  // everything went okay, proceed with command
 						{
@@ -1013,9 +1033,9 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [action [command | password]]"));
-			print_to(caller, "  If action is left blank, it calls a vote for you to become master.");
-			print_to(caller, "  Otherwise the actions are either 'do' a command or 'login' as master.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " vote master [<action> [<command> | <password>]]"));
+			print_to(caller, "  If <action> is left blank, it calls a vote for you to become master.");
+			print_to(caller, "  Otherwise it can be either 'do' (to run <command>) or 'login' as master.");
 			return;
 		}
 	}
@@ -1187,11 +1207,11 @@ void VoteCommand_macro_help(entity caller, int argc)
 			{ if (Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 
 		VOTE_COMMANDS(0, caller, 0, "");
-#undef VOTE_COMMAND
+		#undef VOTE_COMMAND
 
-		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
-		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help COMMAND"));
-		print_to(caller, strcat("\n^7You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
+		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote <command>^7, where possible commands are listed above.\n"));
+		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help <command>"));
+		print_available_commands_to(caller);
 	}
 	else  // usage for individual command
 	{
@@ -1199,12 +1219,12 @@ void VoteCommand_macro_help(entity caller, int argc)
 			{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(2))) { function; return; } } }
 
 		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
-#undef VOTE_COMMAND
+		#undef VOTE_COMMAND
 
 		string cvarname = strcat("sv_vote_command_help_", argv(2));
 		if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
 			wordwrap_sprint(caller, cvar_string(cvarname), 1000);
-		else
+		else if (argv(2) != "")
 			print_to(caller, "No documentation exists for this vote");
 	}
 }
@@ -1215,7 +1235,7 @@ float VoteCommand_macro_command(entity caller, int argc, string vote_command)
 		{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(1))) { function; return true; } } }
 
 	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command);
-#undef VOTE_COMMAND
+	#undef VOTE_COMMAND
 
 	return false;
 }

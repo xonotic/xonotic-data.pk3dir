@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
+"POT-Creation-Date: 2021-02-28 07:23+0100\n"
+"PO-Revision-Date: 2021-02-28 06:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -4764,20 +4764,14 @@ msgid "Walker"
 msgstr "ウォーカー"
 
 #: qcsrc/common/util.qc:1333
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:176
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:186
 msgid "Male"
 msgstr "男性"
 
 #: qcsrc/common/util.qc:1334
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:175
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:185
 msgid "Female"
 msgstr "女性"
 
 #: qcsrc/common/util.qc:1335
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:187
 msgid "Undisclosed"
 msgstr "未知"
 
@@ -5497,26 +5491,34 @@ msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
-msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr "使用法: menu_cmd コマンド...、可能なコマンドは次:"
+msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:49
-msgid "  sync - reloads all cvars on the current menu page"
-msgstr "  sync - 現在のメニューページの全ての cvar をリロードする"
+msgid "  <sync> reloads all cvars on the current menu page"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:50
-msgid "  directmenu ITEM - select a menu item as main item"
-msgstr "  directmenu ITEM - メニューアイテムをメインアイテムとして選択する"
+msgid ""
+"  <directmenu> shows the menu window named <item> (or the menu window "
+"containing an item named <item>)"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:51
-msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr "  dumptree - メニューの状態をツリー状としてコンソールにダンプする"
+msgid ""
+"   if <item> is not specified it shows the list of available items in the "
+"console"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:80
-msgid "Available options:"
-msgstr "利用可能なオプション:"
+#: qcsrc/menu/command/menu_cmd.qc:52
+msgid "  <dumptree> dumps the state of the menu as a tree to the console"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:129
+#: qcsrc/menu/command/menu_cmd.qc:81
+msgid "Available items:"
+msgstr ""
+
+#: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
 "INVALID COMMAND - サポートされているコマンドのリストについては menu_cmd help "
@@ -5542,171 +5544,171 @@ msgstr "メインチーム"
 msgid "Extended Team"
 msgstr "拡張チーム"
 
-#: qcsrc/menu/xonotic/credits.qc:28
+#: qcsrc/menu/xonotic/credits.qc:29
 msgid "Website"
 msgstr "ウェブサイト"
 
-#: qcsrc/menu/xonotic/credits.qc:33
+#: qcsrc/menu/xonotic/credits.qc:34
 msgid "Stats"
 msgstr "状態"
 
-#: qcsrc/menu/xonotic/credits.qc:37
+#: qcsrc/menu/xonotic/credits.qc:38
 msgid "Art"
 msgstr "アート"
 
-#: qcsrc/menu/xonotic/credits.qc:45
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Animation"
 msgstr "アニメーション"
 
-#: qcsrc/menu/xonotic/credits.qc:49
+#: qcsrc/menu/xonotic/credits.qc:50
 msgid "Level Design"
 msgstr "レベルの設計"
 
-#: qcsrc/menu/xonotic/credits.qc:72
+#: qcsrc/menu/xonotic/credits.qc:73
 msgid "Music / Sound FX"
 msgstr "音楽 / サウンドFX"
 
-#: qcsrc/menu/xonotic/credits.qc:88
+#: qcsrc/menu/xonotic/credits.qc:89
 msgid "Game Code"
 msgstr "ゲームコード"
 
-#: qcsrc/menu/xonotic/credits.qc:100
+#: qcsrc/menu/xonotic/credits.qc:101
 msgid "Marketing / PR"
 msgstr "マーケティング / PR"
 
-#: qcsrc/menu/xonotic/credits.qc:106
+#: qcsrc/menu/xonotic/credits.qc:107
 msgid "Legal"
 msgstr "法的"
 
-#: qcsrc/menu/xonotic/credits.qc:111
+#: qcsrc/menu/xonotic/credits.qc:112
 msgid "Game Engine"
 msgstr "ゲームエンジン"
 
-#: qcsrc/menu/xonotic/credits.qc:115
+#: qcsrc/menu/xonotic/credits.qc:116
 msgid "Engine Additions"
 msgstr "エンジンの追加"
 
-#: qcsrc/menu/xonotic/credits.qc:121
+#: qcsrc/menu/xonotic/credits.qc:122
 msgid "Compiler"
 msgstr "コンパイラ"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:128
 msgid "Other Active Contributors"
 msgstr "他の活発な貢献者"
 
-#: qcsrc/menu/xonotic/credits.qc:135
+#: qcsrc/menu/xonotic/credits.qc:136
 msgid "Translators"
 msgstr "翻訳者"
 
-#: qcsrc/menu/xonotic/credits.qc:137
+#: qcsrc/menu/xonotic/credits.qc:138
 msgid "Asturian"
 msgstr "アストゥリアス語"
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:143
 msgid "Belarusian"
 msgstr "ベラルーシ語"
 
-#: qcsrc/menu/xonotic/credits.qc:145
+#: qcsrc/menu/xonotic/credits.qc:146
 msgid "Bulgarian"
 msgstr "ブルガリア語"
 
-#: qcsrc/menu/xonotic/credits.qc:152
+#: qcsrc/menu/xonotic/credits.qc:153
 msgid "Chinese (China)"
 msgstr "中国語 (中国)"
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Chinese (Taiwan)"
 msgstr "中国語 (台湾)"
 
-#: qcsrc/menu/xonotic/credits.qc:163
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Cornish"
 msgstr "コーニッシュ語"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:167
 msgid "Czech"
 msgstr "チェコ語"
 
-#: qcsrc/menu/xonotic/credits.qc:171
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Dutch"
 msgstr "オランダ語"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "English (Australia)"
 msgstr "英語 (オーストラリア)"
 
-#: qcsrc/menu/xonotic/credits.qc:183
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Finnish"
 msgstr "フィンランド語"
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "French"
 msgstr "フランス語"
 
-#: qcsrc/menu/xonotic/credits.qc:196
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "German"
 msgstr "ドイツ語"
 
-#: qcsrc/menu/xonotic/credits.qc:207
+#: qcsrc/menu/xonotic/credits.qc:208
 msgid "Greek"
 msgstr "ギリシャ語"
 
-#: qcsrc/menu/xonotic/credits.qc:213
+#: qcsrc/menu/xonotic/credits.qc:214
 msgid "Hungarian"
 msgstr "ハンガリー語"
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "Irish"
 msgstr "アイリッシュ語"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:221
 msgid "Italian"
 msgstr "イタリア語"
 
-#: qcsrc/menu/xonotic/credits.qc:226
+#: qcsrc/menu/xonotic/credits.qc:227
 msgid "Kazakh"
 msgstr "カザフスタン語"
 
-#: qcsrc/menu/xonotic/credits.qc:229
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Korean"
 msgstr "韓国語"
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Polish"
 msgstr "ポーランド語"
 
-#: qcsrc/menu/xonotic/credits.qc:241
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Portuguese"
 msgstr "ポルトガル語"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:248
 msgid "Romanian"
 msgstr "ルーマニア語"
 
-#: qcsrc/menu/xonotic/credits.qc:254
+#: qcsrc/menu/xonotic/credits.qc:255
 msgid "Russian"
 msgstr "ロシア語"
 
-#: qcsrc/menu/xonotic/credits.qc:265
+#: qcsrc/menu/xonotic/credits.qc:266
 msgid "Scottish Gaelic"
 msgstr "スコットランドゲール語"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:269
 msgid "Serbian"
 msgstr "セルビア語"
 
-#: qcsrc/menu/xonotic/credits.qc:274
+#: qcsrc/menu/xonotic/credits.qc:275
 msgid "Spanish"
 msgstr "スペイン語"
 
-#: qcsrc/menu/xonotic/credits.qc:285
+#: qcsrc/menu/xonotic/credits.qc:286
 msgid "Swedish"
 msgstr "スウェーデン語"
 
-#: qcsrc/menu/xonotic/credits.qc:289
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Ukrainian"
 msgstr "ウクライナ語"
 
-#: qcsrc/menu/xonotic/credits.qc:296
+#: qcsrc/menu/xonotic/credits.qc:297
 msgid "Past Contributors"
 msgstr "以前の貢献者"
 
@@ -7448,21 +7450,9 @@ msgstr "選手の統計であなたのニックネームを使用できるよう
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr "選手の統計が得点表であなたをランク付けできるように許可する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
-msgid "Country"
-msgstr "国"
-
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
 msgstr "言語を選択する..."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
-msgid "Gender:"
-msgstr "性別:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:179
-msgid "Gender"
-msgstr "性別"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
