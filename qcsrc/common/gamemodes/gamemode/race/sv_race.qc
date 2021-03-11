@@ -238,24 +238,7 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 
-	if(IS_REAL_CLIENT(player))
-	{
-		msg_entity = player;
-		race_send_recordtime(MSG_ONE);
-		race_send_speedaward(MSG_ONE);
-
-		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), record_type, "speed/speed")));
-		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), record_type, "speed/crypto_idfp")));
-		race_send_speedaward_alltimebest(MSG_ONE);
-
-		float i;
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, false);
 }
 
 MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
@@ -327,31 +310,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 	entity player = M_ARGV(0, entity);
 
 	race_checkAndWriteName(player);
-
-	if (!IS_OBSERVER(player))
-	{
-		if(vdist(player.velocity - player.velocity_z * '0 0 1', >, speedaward_speed))
-		{
-			speedaward_speed = vlen(player.velocity - player.velocity_z * '0 0 1');
-			speedaward_holder = player.netname;
-			speedaward_uid = player.crypto_idfp;
-			speedaward_lastupdate = time;
-		}
-		if (speedaward_speed > speedaward_lastsent && (time - speedaward_lastupdate > 1 || intermission_running))
-		{
-			race_send_speedaward(MSG_ALL);
-			speedaward_lastsent = speedaward_speed;
-			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
-			{
-				speedaward_alltimebest = speedaward_speed;
-				speedaward_alltimebest_holder = speedaward_holder;
-				speedaward_alltimebest_uid = speedaward_uid;
-				db_put(ServerProgsDB, strcat(GetMapname(), record_type, "speed/speed"), ftos(speedaward_alltimebest));
-				db_put(ServerProgsDB, strcat(GetMapname(), record_type, "speed/crypto_idfp"), speedaward_alltimebest_uid);
-				race_send_speedaward_alltimebest(MSG_ALL);
-			}
-		}
-	}
+	race_SpeedAwardFrame(player);
 }
 
 MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)

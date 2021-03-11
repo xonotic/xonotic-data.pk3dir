@@ -260,7 +260,6 @@ void race_send_recordtime(float msg)
 	WriteInt24_t(msg, race_readTime(GetMapname(), 1));
 }
 
-
 void race_send_speedaward(float msg)
 {
 	// send the best speed of the round
@@ -296,6 +295,56 @@ void race_SendRankings(float pos, float prevpos, float del, float msg)
 	WriteShort(msg, del);
 	WriteString(msg, race_readName(GetMapname(), pos));
 	WriteInt24_t(msg, race_readTime(GetMapname(), pos));
+}
+
+void race_SpeedAwardFrame(entity player)
+{
+	if (IS_OBSERVER(player))
+		return;
+
+	if(vdist(player.velocity - player.velocity_z * '0 0 1', >, speedaward_speed))
+	{
+		speedaward_speed = vlen(player.velocity - player.velocity_z * '0 0 1');
+		speedaward_holder = player.netname;
+		speedaward_uid = player.crypto_idfp;
+		speedaward_lastupdate = time;
+	}
+	if (speedaward_speed > speedaward_lastsent && (time - speedaward_lastupdate > 1 || intermission_running))
+	{
+		race_send_speedaward(MSG_ALL);
+		speedaward_lastsent = speedaward_speed;
+		if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
+		{
+			speedaward_alltimebest = speedaward_speed;
+			speedaward_alltimebest_holder = speedaward_holder;
+			speedaward_alltimebest_uid = speedaward_uid;
+			db_put(ServerProgsDB, strcat(GetMapname(), record_type, "speed/speed"), ftos(speedaward_alltimebest));
+			db_put(ServerProgsDB, strcat(GetMapname(), record_type, "speed/crypto_idfp"), speedaward_alltimebest_uid);
+			race_send_speedaward_alltimebest(MSG_ALL);
+		}
+	}
+}
+
+void race_SendAll(entity player, bool only_rankings)
+{
+	if(!IS_REAL_CLIENT(player))
+		return;
+
+	msg_entity = player;
+	if (!only_rankings)
+	{
+		race_send_recordtime(MSG_ONE);
+		race_send_speedaward(MSG_ONE);
+
+		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), record_type, "speed/speed")));
+		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), record_type, "speed/crypto_idfp")));
+		race_send_speedaward_alltimebest(MSG_ONE);
+	}
+
+	int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
+	race_send_rankings_cnt(MSG_ONE);
+	for (int i = 1; i <= m; ++i)
+		race_SendRankings(i, 0, 0, MSG_ONE);
 }
 
 void race_SendStatus(float id, entity e)

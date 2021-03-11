@@ -2300,15 +2300,7 @@ MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
 
 	entity player = M_ARGV(0, entity);
 
-	if(IS_REAL_CLIENT(player))
-	{
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (int i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, true);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
