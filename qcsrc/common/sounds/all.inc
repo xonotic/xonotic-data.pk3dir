@@ -111,8 +111,8 @@ SOUND(WEAPONPICKUP_NEW_TOYS, W_Sound("weaponpickup_new_toys"));
 SOUND(WEAPON_SWITCH, W_Sound("weapon_switch"));
 
 SOUND(CTF_CAPTURE_NEUTRAL, "ctf/capture");
-SOUND(CTF_CAPTURE_RED, "ctf/red_capture");
-SOUND(CTF_CAPTURE_BLUE, "ctf/blue_capture");
+SOUND(CTF_CAPTURE_RED, "ctf/red_capture_clean");
+SOUND(CTF_CAPTURE_BLUE, "ctf/blue_capture_clean");
 SOUND(CTF_CAPTURE_YELLOW, "ctf/yellow_capture");
 SOUND(CTF_CAPTURE_PINK, "ctf/pink_capture");
 Sound SND_CTF_CAPTURE(int teamid) {
@@ -126,8 +126,8 @@ Sound SND_CTF_CAPTURE(int teamid) {
 }
 
 SOUND(CTF_DROPPED_NEUTRAL,  "ctf/neutral_dropped");
-SOUND(CTF_DROPPED_RED,      "ctf/red_dropped");
-SOUND(CTF_DROPPED_BLUE,     "ctf/blue_dropped");
+SOUND(CTF_DROPPED_RED,      "ctf/red_dropped_clean");
+SOUND(CTF_DROPPED_BLUE,     "ctf/blue_dropped_clean");
 SOUND(CTF_DROPPED_YELLOW,   "ctf/yellow_dropped");
 SOUND(CTF_DROPPED_PINK,     "ctf/pink_dropped");
 Sound SND_CTF_DROPPED(int teamid) {
@@ -144,8 +144,8 @@ SOUND(CTF_PASS, "ctf/pass");
 SOUND(CTF_RESPAWN, "ctf/flag_respawn");
 
 SOUND(CTF_RETURNED_NEUTRAL,  "ctf/return");
-SOUND(CTF_RETURNED_RED,      "ctf/red_returned");
-SOUND(CTF_RETURNED_BLUE,     "ctf/blue_returned");
+SOUND(CTF_RETURNED_RED,      "ctf/red_returned_clean");
+SOUND(CTF_RETURNED_BLUE,     "ctf/blue_returned_clean");
 SOUND(CTF_RETURNED_YELLOW,   "ctf/yellow_returned");
 SOUND(CTF_RETURNED_PINK,     "ctf/pink_returned");
 Sound SND_CTF_RETURNED(int teamid) {
@@ -159,8 +159,8 @@ Sound SND_CTF_RETURNED(int teamid) {
 }
 
 SOUND(CTF_TAKEN_NEUTRAL,  "ctf/neutral_taken");
-SOUND(CTF_TAKEN_RED,      "ctf/red_taken");
-SOUND(CTF_TAKEN_BLUE,     "ctf/blue_taken");
+SOUND(CTF_TAKEN_RED,      "ctf/red_taken_clean");
+SOUND(CTF_TAKEN_BLUE,     "ctf/blue_taken_clean");
 SOUND(CTF_TAKEN_YELLOW,   "ctf/yellow_taken");
 SOUND(CTF_TAKEN_PINK,     "ctf/pink_taken");
 Sound SND_CTF_TAKEN(int teamid) {
