@@ -10,6 +10,8 @@ bool autocvar_g_ttt_punish_teamkill = false;
 bool autocvar_g_ttt_reward_innocent = true;
 float autocvar_g_ttt_max_karma_points = 1000; //LegendGuard sets Karma points 21-02-2021
 float autocvar_g_ttt_min_karma_points = 400;
+int autocvar_g_ttt_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
+float autocvar_g_ttt_karma_bantime = 1800; //karma ban seconds
 
 // 27-02-2021
 //Ideas: skills/items per each player-type: (these skills/items should be used once)
@@ -42,6 +44,49 @@ void ttt_FakeTimeLimit(entity e, float t)
 
 void nades_Clear(entity player);
 
+void karma_Control(entity it)
+{
+	float masksize = autocvar_g_ban_default_masksize;
+	float bantime = autocvar_g_ttt_karma_bantime;
+	if(it.karmapoints >= autocvar_g_ttt_max_karma_points)
+	{
+		//Resets karmapoints to maintain the maximum
+		//PrintToChatAll("^3REWARD ^1MAXIMUM RESET");
+		GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
+		it.karmapoints = autocvar_g_ttt_max_karma_points;
+	}
+	else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
+	{
+		switch (autocvar_g_ttt_karma_bankick_tool)
+		{
+			case 0:
+			{	
+				//TODO: force to spec 
+				return;
+			}
+			case 1:
+			{
+				//kick
+				dropclient(it);
+				return;
+			}
+			case 2:
+			{
+				//ban and kick
+				//GET_BAN_ARG(masksize, autocvar_g_ban_default_masksize);
+				Ban_KickBanClient(it, bantime, masksize, "Too low karma");
+				return;
+			}
+			default:
+			{
+				//TODO: force to spec
+				return;
+			}
+		}
+	}
+}
+
+
 void ttt_UpdateScores(bool timed_out)
 {
 	// give players their hard-earned kills now that the round is over
@@ -65,17 +110,7 @@ void ttt_UpdateScores(bool timed_out)
 				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
 				it.karmapoints = it.karmapoints + increasekarma;
 				//PrintToChatAll(sprintf("^2REWARD ^7it.karmapoints: ^1%f", it.karmapoints));
-				if(it.karmapoints >= autocvar_g_ttt_max_karma_points)
-				{
-					//Resets karmapoints to maintain the maximum
-					//PrintToChatAll("^3REWARD ^1MAXIMUM RESET");
-					GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-					it.karmapoints = autocvar_g_ttt_max_karma_points;
-				}
-				else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
-					dropclient(it); //PrintToChatAll("GET OUT!!");
-					//Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
-
+				karma_Control(it);
 			}
 			if(it.ttt_status == TTT_STATUS_INNOCENT)
 			{
@@ -85,15 +120,7 @@ void ttt_UpdateScores(bool timed_out)
 				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
 				it.karmapoints = it.karmapoints + increasekarma;
 				//PrintToChatAll(sprintf("^2INNOCENT ^7it.karmapoints: ^1%f", it.karmapoints));
-				if(it.karmapoints >= autocvar_g_ttt_max_karma_points)
-				{
-					//Resets karmapoints to maintain the maximum
-					//PrintToChatAll("^3INNOCENT ^1MAXIMUM RESET");
-					GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-					it.karmapoints = autocvar_g_ttt_max_karma_points;
-				}
-				else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
-					dropclient(it); //PrintToChatAll("GET OUT!!");
+				karma_Control(it);
 			}
 			else if(it.ttt_status == TTT_STATUS_TRAITOR)
 			{
@@ -103,15 +130,7 @@ void ttt_UpdateScores(bool timed_out)
 				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
 				it.karmapoints = it.karmapoints + increasekarma;
 				//PrintToChatAll(sprintf("^1TRAITOR ^7it.karmapoints: ^1%f", it.karmapoints));
-				if(it.karmapoints >= autocvar_g_ttt_max_karma_points)
-				{
-					//RESETS KARMAPOINTS TO MAINTAIN THE MAXIMUM
-					//PrintToChatAll("^3TRAITOR ^1MAXIMUM RESET");
-					GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-					it.karmapoints = autocvar_g_ttt_max_karma_points;
-				}
-				else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
-					dropclient(it); //PrintToChatAll("GET OUT!!");
+				karma_Control(it);
 			}
 		}
 	});
@@ -293,15 +312,7 @@ void ttt_RoundStart()
 			GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
 			it.karmapoints = autocvar_g_ttt_max_karma_points;
 		}
-		else if(it.karmapoints >= autocvar_g_ttt_max_karma_points)
-		{
-			//Resets karmapoints to maintain the maximum
-			//PrintToChatAll("^1MAXIMUM RESET");
-			GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-			it.karmapoints = autocvar_g_ttt_max_karma_points;
-		}
-		else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
-			dropclient(it); //PrintToChatAll("GET OUT!!");
+		karma_Control(it);
 		//PrintToChatAll(sprintf("it.karmapoints ^6end: ^3%f",it.karmapoints));
 
 		if(it.ttt_status == TTT_STATUS_INNOCENT)
@@ -408,8 +419,7 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 			frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
 			//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 			GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-			if(frag_attacker.karmapoints <= autocvar_g_ttt_min_karma_points)
-				dropclient(frag_attacker); //PrintToChatAll("GET OUT!!");
+			karma_Control(frag_attacker);
 			//BASIC MATH THEORY: example: 1000 * 0.3 * (0.1 + 0.4) * 0.25 // karma points reduce when player attacked to other player
 		}
 
@@ -424,8 +434,7 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-				if(frag_attacker.karmapoints <= autocvar_g_ttt_min_karma_points)
-					dropclient(frag_attacker); //PrintToChatAll("GET OUT!!");
+				karma_Control(frag_attacker);
 			}
 		}
 
@@ -439,8 +448,7 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				GameRules_scoring_add(frag_attacker, TTT_KARMA, decreasekarma);
 				frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
 				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-				if(frag_attacker.karmapoints <= autocvar_g_ttt_min_karma_points)
-					dropclient(frag_attacker); //PrintToChatAll(" GET OUT!!");
+				karma_Control(frag_attacker);
 			}
 		}
 		//if ttt_status is 1, means innocent, 2 means traitor, 3 means detective, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
