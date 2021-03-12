@@ -755,6 +755,9 @@ spawnfunc(worldspawn)
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
+	// default to RACE_RECORD, can be overwritten by gamemodes
+	record_type = RACE_RECORD;
+
 	// needs to be done so early because of the constants they create
 	static_init();
 
