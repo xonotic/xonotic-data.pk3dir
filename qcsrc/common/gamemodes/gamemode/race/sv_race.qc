@@ -53,20 +53,18 @@ void havocbot_role_race(entity this)
 
 void race_ScoreRules()
 {
-    GameRules_score_enabled(false);
+	GameRules_score_enabled(false);
 	GameRules_scoring(race_teams, 0, 0, {
-        if (race_teams) {
-            field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else if (g_race_qualifying) {
-            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else {
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        }
+		if (race_teams)
+			field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+		else if (g_race_qualifying)
+			field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		if (race_teams || !g_race_qualifying)
+		{
+			field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+			field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+			field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+		}
 	});
 }
 
@@ -139,7 +137,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
 
-#ifdef SVQC
 	if(IS_PLAYER(player))
 	{
 		if (player.race_penalty)
@@ -152,7 +149,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 			player.disableclientprediction = 2;
 		}
 	}
-#endif
 
 	// force kbd movement for fairness
 	float wishspeed;
@@ -441,8 +437,8 @@ void rc_SetLimits()
 	}
 	else
 		g_race_qualifying = 0;
-    GameRules_limit_score(fraglimit_override);
-    GameRules_limit_lead(leadlimit_override);
-    GameRules_limit_time(timelimit_override);
-    GameRules_limit_time_qualifying(qualifying_override);
+	GameRules_limit_score(fraglimit_override);
+	GameRules_limit_lead(leadlimit_override);
+	GameRules_limit_time(timelimit_override);
+	GameRules_limit_time_qualifying(qualifying_override);
 }
