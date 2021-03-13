@@ -454,7 +454,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_point_limit");
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
-		BADCVAR("g_mayhem_regenerate");
 		BADCVAR("g_mayhem_powerups");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maxplayers");
