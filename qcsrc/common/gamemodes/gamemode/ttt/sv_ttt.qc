@@ -61,7 +61,8 @@ void karma_Control(entity it)
 		{
 			case 0:
 			{	
-				//TODO: force to spec 
+				//force to spec
+				PutObserverInServer(it);
 				return;
 			}
 			case 1:
@@ -73,13 +74,13 @@ void karma_Control(entity it)
 			case 2:
 			{
 				//ban and kick
-				//GET_BAN_ARG(masksize, autocvar_g_ban_default_masksize);
 				Ban_KickBanClient(it, bantime, masksize, "Too low karma");
 				return;
 			}
 			default:
 			{
-				//TODO: force to spec
+				//force to spec
+				PutObserverInServer(it);
 				return;
 			}
 		}
@@ -205,7 +206,6 @@ float ttt_CheckWinner()
 		if(IS_PLAYER(it))
 		{
 			it.respawn_flags = RESPAWN_SILENT; //CSQC print output respawn lib.qh error fix
-			it.damagedbycontents = true;
 			nades_Clear(it);
 		}
 		ttt_FakeTimeLimit(it, -1);
@@ -282,6 +282,11 @@ void ttt_RoundStart()
 	{
 		if(total_traitors >= traitor_count)
 			break;
+		if(total_traitors >= 3)
+		{
+			total_traitors++;
+			it.ttt_status = TTT_STATUS_TRAITOR;
+		}
 		total_traitors++;
 		it.ttt_status = TTT_STATUS_TRAITOR;
 	});
@@ -301,6 +306,7 @@ void ttt_RoundStart()
 		else
 			it.ttt_status = TTT_STATUS_DETECTIVE;
 	});*/
+
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -327,8 +333,10 @@ void ttt_RoundStart()
 		}
 		else if(it.ttt_status == TTT_STATUS_DETECTIVE)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE); //Detective notification should be sent to all players to see who is
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE);
 			PrintToChatAll(sprintf("%s is ^4Detective^7!", it.netname));
+			//see the possibilities in qcsrc/server/chat.qc and qcrsc/server/chat.qh
+			//Say(it, false, it, sprintf("%s is ^4Detective^7!", it.netname), true);
 		}
 
 		ttt_FakeTimeLimit(it, round_handler_GetEndTime());
@@ -436,6 +444,26 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 				karma_Control(frag_attacker);
 			}
+
+			//TODO: Try to make detective skill 12-03-2021
+			if(IS_DEAD(frag_target))
+			{
+				if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+				{
+					PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
+					PrintToChat(frag_attacker, "^5Type^3: ^2Innocent");
+				}
+				else if (frag_target.ttt_status == TTT_STATUS_TRAITOR)
+				{
+					PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
+					PrintToChat(frag_attacker, "^5Type^3: ^1Traitor");
+				}
+				else if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
+				{
+					PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
+					PrintToChat(frag_attacker, "^5Type^3: ^4Detective");
+				}
+			}
 		}
 
 		if (frag_attacker.ttt_status == TTT_STATUS_INNOCENT)
@@ -455,7 +483,30 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_attacker.ttt_status is ^3%s^7",ftos(frag_attacker.ttt_status)));
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_target.ttt_status is ^3%s^7",ftos(frag_target.ttt_status)));
 	}
-	//TODO: LegendGuard, try to do a "find out" if a traitor can see who fragged to who if possible 21-02-2021
+
+	//TODO: DETECTIVE SKILL TO RESEARCH CORPSES
+	if (frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
+	{
+		if(IS_DEAD(frag_target))
+		{
+			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+			{
+				PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
+				PrintToChat(frag_attacker, "^5Type^3: ^2Innocent");
+			}
+			else if (frag_target.ttt_status == TTT_STATUS_TRAITOR)
+			{
+				PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
+				PrintToChat(frag_attacker, "^5Type^3: ^1Traitor");
+			}
+			else if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
+			{
+				PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
+				PrintToChat(frag_attacker, "^5Type^3: ^4Detective");
+			}
+		}
+	}
+	//TODO: try to do a "find out" if a detective can see who fragged to who if possible 21-02-2021
 	M_ARGV(5, bool) = true; // anonymous attacker
 }
 
@@ -483,7 +534,7 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
 	{
 		player.event_damage = func_null;
 		//player.health = 0;
-		player.solid = SOLID_SLIDEBOX;
+		player.solid = SOLID_CORPSE;
 		set_movetype(player, MOVETYPE_STEP);
 	}
 }
@@ -539,7 +590,6 @@ MUTATOR_HOOKFUNCTION(ttt, reset_map_players)
 			TRANSMUTE(Player, it);
 			it.caplayer = 1;
 			it.respawn_flags = RESPAWN_SILENT; //CSQC print output respawn lib.qh error fix
-			it.damagedbycontents = true;
 			PutClientInServer(it);
 		}
 	});
@@ -732,5 +782,11 @@ MUTATOR_HOOKFUNCTION(ttt, BotShouldAttack)
 	if(targ.ttt_status == bot.ttt_status)
 	{
 		return true;
+	}
+	
+	if(targ.ttt_status == TTT_STATUS_DETECTIVE)
+	{
+		if(bot.ttt_status == TTT_STATUS_INNOCENT)
+			return false;
 	}
 }
