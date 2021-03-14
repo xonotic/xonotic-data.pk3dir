@@ -45,6 +45,8 @@ string modname;
 
 string gamemode_name;
 
+string record_type;
+
 string clientstuff;
 
 string matchid;
