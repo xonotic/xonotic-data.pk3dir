@@ -14,6 +14,8 @@ bool lockteams;
 
 // ========================== Global teams API ================================
 
+void Team_InitTeams();
+
 /// \brief Returns the global team entity at the given index.
 /// \param[in] index Index of the team.
 /// \return Global team entity at the given index.

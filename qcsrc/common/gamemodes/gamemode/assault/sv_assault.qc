@@ -11,16 +11,6 @@
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
-IntrusiveList g_assault_destructibles;
-IntrusiveList g_assault_objectivedecreasers;
-IntrusiveList g_assault_objectives;
-STATIC_INIT(g_assault)
-{
-	g_assault_destructibles = IL_NEW();
-	g_assault_objectivedecreasers = IL_NEW();
-	g_assault_objectives = IL_NEW();
-}
-
 // random functions
 void assault_objective_use(entity this, entity actor, entity trigger)
 {
