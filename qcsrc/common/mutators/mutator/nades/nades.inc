@@ -94,14 +94,14 @@ REGISTER_NADE(VEIL) {
 #endif
 }
 
-//LegendGuard writes Itemdrop nade code 01-03-2021
-REGISTER_NADE(ITEMDROP) {
+//LegendGuard writes Emerald nade code 01-03-2021
+REGISTER_NADE(EMERALD) {
     this.m_color = '0.33 1 0.66';
-    this.m_name = _("Itemdrop grenade");
-    this.m_icon = "nade_itemdrop";
+    this.m_name = _("Emerald grenade");
+    this.m_icon = "nade_emerald";
 #ifdef GAMEQC
-    NADE_PROJECTILE(0, PROJECTILE_NADE_ITEMDROP, EFFECT_NADE_TRAIL_GREEN);
-    NADE_PROJECTILE(1, PROJECTILE_NADE_ITEMDROP_BURN, EFFECT_NADE_TRAIL_BURN_GREEN);
+    NADE_PROJECTILE(0, PROJECTILE_NADE_EMERALD, EFFECT_NADE_TRAIL_GREEN);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_EMERALD_BURN, EFFECT_NADE_TRAIL_BURN_GREEN);
 #endif
 }
 

@@ -585,8 +585,6 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 
 	setthink(orb, nades_orb_think);
 	orb.nextthink = time;
-	
-	LOG_INFOF("orb.nexttime = ^3%f", orb.nextthink);
 
 	return orb;
 }
@@ -722,10 +720,10 @@ void nade_veil_boom(entity this)
 	settouch(orb, nade_veil_touch);
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
-/**************LEGENDGUARD NEW NADES: ARMORIZE, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
-//TODO: rename in gfx/hud/luma/nade_itemdrop.tga from nade_armorize.tga 02-03-2021
-//TODO: Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
-void nade_itemdrop_dropitem(entity e, vector org, entity itm)
+/**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
+//TODO: rename in gfx/hud/luma/nade_emerald.tga from nade_armorize.tga 02-03-2021
+// Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
+void nade_emerald_dropitem(entity e, vector org, entity itm)
 {
 	Item_SetLoot(e, true);
 	e.reset = SUB_Remove;
@@ -735,15 +733,15 @@ void nade_itemdrop_dropitem(entity e, vector org, entity itm)
 	setorigin(e, org);
 	e.velocity = randomvec() * 175 + '0 0 325';
 	e.item_spawnshieldtime = time + 0.7;
-	SUB_SetFade(e, time + autocvar_g_nades_itemdrop_lifetime, 1);
+	SUB_SetFade(e, time + autocvar_g_nades_emerald_lifetime, 1);
 }
 
-void nade_itemdrop_dropping(vector org)
+void nade_emerald_dropping(vector org)
 {
 	//look in qcsrc/server/items/items.qc
 	//ITEM_Shells; ITEM_Bullets; ITEM_Rockets; ITEM_Cells; ITEM_Plasma; ITEM_JetpackFuel;
 	//ITEM_Strength; ITEM_Shield
-	int itemcount = autocvar_g_nades_itemdrop_spawncount;
+	int itemcount = autocvar_g_nades_emerald_spawncount;
 	for(int j = 0; j < itemcount; ++j)
 	{
 		entity e = spawn();
@@ -756,30 +754,30 @@ void nade_itemdrop_dropping(vector org)
 		if (a > b)
 		{
 			if (a > 0.5)
-				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
-				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
 		}
 		else if (c > d)
 		{
 			if (c > 0.5)
-				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
 			else
-				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
 		}
-		else if (autocvar_g_nades_itemdrop_powerupjetpackdrop)
+		else if (autocvar_g_nades_emerald_powerupjetpackdrop)
 		{
 			if (a < 0.5)
-				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
 			else
-				nade_itemdrop_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
 		}
 		else
 			return;
 	}
 }
 
-void dropitem_ball_think(entity this)
+void emerald_ball_think(entity this)
 {
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -805,12 +803,12 @@ void dropitem_ball_think(entity this)
 
 	this.angles = vectoangles(this.velocity);
 
-	nade_itemdrop_dropping(this.origin);
+	nade_emerald_dropping(this.origin);
 
 	this.nextthink = time + 0.1;
 }
 
-void nade_dropitem_ball(entity this)
+void nade_emerald_ball(entity this)
 {
 	entity proj;
 	vector kick;
@@ -824,16 +822,16 @@ void nade_dropitem_ball(entity this)
 	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, this.origin);
-	setthink(proj, dropitem_ball_think);
+	setthink(proj, emerald_ball_think);
 	proj.nextthink = time;
 	proj.effects = EF_LOWPRECISION;
 
-	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_itemdrop_ball_spread;
-	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_itemdrop_ball_spread;
-	kick.z = (random()/2+0.5) * autocvar_g_nades_itemdrop_ball_spread;
+	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
+	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
+	kick.z = (random()/2+0.5) * autocvar_g_nades_emerald_ball_spread;
 	proj.velocity = kick;
 
-	proj.pushltime = time + autocvar_g_nades_itemdrop_ball_lifetime;
+	proj.pushltime = time + autocvar_g_nades_emerald_ball_lifetime;
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
@@ -845,7 +843,7 @@ void nade_dropitem_ball(entity this)
 }
 
 
-void dropitem_fountain_think(entity this)
+void emerald_fountain_think(entity this)
 {
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -874,17 +872,17 @@ void dropitem_fountain_think(entity this)
 	this.nextthink = time + 0.1;
 	if(time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + autocvar_g_nades_itemdrop_fountain_delay;
-		nade_dropitem_ball(this);
+		this.nade_special_time = time + autocvar_g_nades_emerald_fountain_delay;
+		nade_emerald_ball(this);
 	}
 }
 
-void nade_dropitem_boom(entity this)
+void nade_emerald_boom(entity this)
 {
-	for (int c = 0; c < autocvar_g_nades_itemdrop_ball_count; c++)
-		nade_dropitem_ball(this);
+	for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
+		nade_emerald_ball(this);
 
-	entity fountain = new(nade_dropitem_fountain);
+	entity fountain = new(nade_emerald_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
@@ -892,17 +890,31 @@ void nade_dropitem_boom(entity this)
 	IL_PUSH(g_projectiles, fountain);
 	IL_PUSH(g_bot_dodge, fountain);
 	setorigin(fountain, fountain.origin);
-	setthink(fountain, dropitem_fountain_think);
+	setthink(fountain, emerald_fountain_think);
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_itemdrop_fountain_lifetime;
+	fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
 	fountain.pushltime = fountain.ltime;
 	fountain.team = this.team;
+	
+	//nade model maintaining
+	setmodel(fountain, MDL_PROJECTILE_GRENADE);
+	entity timer = new(nade_timer);
+	setmodel(timer, MDL_NADE_TIMER);
+	setattachment(timer, fountain, "");
+	timer.colormap = this.colormap;
+	timer.glowmod = this.glowmod;
+	setthink(timer, nade_timer_think);
+	timer.nextthink = time;
+	timer.wait = fountain.ltime;
+	timer.owner = fountain;
+	timer.skin = 10;
+	
 	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.bot_dodge = true;
 	fountain.nade_special_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
-	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
-	nade_itemdrop_dropping(fountain.origin);
+	CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
+	nade_emerald_dropping(fountain.origin);
 }
 
 /***********************************************************************************/
@@ -1048,7 +1060,7 @@ void nade_dark_touch(entity this, entity toucher)
 			tint_alpha = 0.25;
 			if(!STAT(DARK_ORB, show_tint))
 			{
-				toucher.nade_veil_prevalpha = toucher.alpha;
+				toucher.nade_dark_prevalpha = toucher.alpha;
 				toucher.alpha = 1;
 			}
 		}
@@ -1061,6 +1073,16 @@ void nade_dark_touch(entity this, entity toucher)
 				dark_damage(this, autocvar_g_nades_dark_radius, autocvar_g_nades_dark_damage);
 			}
 		}
+
+		if(time >= this.nade_special_time)
+		{
+			this.nade_special_time = time + 0.7;
+			Send_Effect(EFFECT_SMOKE_SMALL, this.origin, '0 0 0', 1);
+			//EFFECT_SMOKE_LARGE is like a small white smoke
+			//Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
+		}
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin, randomvec(), 1);
+
 		STAT(DARK_ORB, show_tint) = time + 0.1;
 		STAT(DARK_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -1119,7 +1141,7 @@ void nade_boom(entity this)
 			expef = EFFECT_SPAWN_NEUTRAL;
 			break;
 		
-		case NADE_TYPE_ITEMDROP: //LegendGuard adds nade case 11-02-2021
+		case NADE_TYPE_EMERALD: //LegendGuard adds nade case 11-02-2021
 			nade_blast = false;
 			expef = EFFECT_EXPLOSION_SMALL;
 			break;
@@ -1166,7 +1188,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_MONSTER: nade_monster_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
-		case NADE_TYPE_ITEMDROP: nade_dropitem_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
+		case NADE_TYPE_EMERALD: nade_emerald_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
 		case NADE_TYPE_AMMO: nade_ammo_boom(this); break; //LegendGuard adds the register of new nade 13-02-2021
 		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
 	}
