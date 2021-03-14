@@ -721,7 +721,7 @@ void nade_veil_boom(entity this)
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
 /**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
-//TODO: rename in gfx/hud/luma/nade_emerald.tga from nade_armorize.tga 02-03-2021
+// All nade icons are in these directories, samples: gfx/hud/luma/nade_emerald.tga 02-03-2021
 // Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
 void nade_emerald_dropitem(entity e, vector org, entity itm)
 {
@@ -734,46 +734,87 @@ void nade_emerald_dropitem(entity e, vector org, entity itm)
 	e.velocity = randomvec() * 175 + '0 0 325';
 	e.item_spawnshieldtime = time + 0.7;
 	SUB_SetFade(e, time + autocvar_g_nades_emerald_lifetime, 1);
+	Send_Effect(EFFECT_SMOKE_LARGE, e.origin, '0 0 0', 1);
+	//EFFECT_SMOKE_LARGE is like a small white smoke
+	//See effect MACROS in qcsrc/common/effects/all.inc
+}
+
+void nade_emerald_randomitem(entity e, vector org)
+{
+	float a = random();
+	float b = random();
+	float c = random();
+	float d = random();
+	
+	if (a > b)
+	{
+		if (a > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+	}
+	else if (c > d)
+	{
+		if (c > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+	}
+	else if (autocvar_g_nades_emerald_powerupjetpack_randomdrop)
+	{
+		if (a < 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
+	}
+	else
+		return;
+}
+
+void nade_emerald_allammoitemdrop(entity e, vector org)
+{
+	float wa = random();
+	float wb = random();
+	
+	if (wa > wb)
+	{
+		if (wa > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+	}
+	else
+		return;
 }
 
 void nade_emerald_dropping(vector org)
 {
-	//look in qcsrc/server/items/items.qc
+	//look item MACROS in qcsrc/server/items/items.qc
 	//ITEM_Shells; ITEM_Bullets; ITEM_Rockets; ITEM_Cells; ITEM_Plasma; ITEM_JetpackFuel;
-	//ITEM_Strength; ITEM_Shield
+	//ITEM_Strength; ITEM_Shield;
 	int itemcount = autocvar_g_nades_emerald_spawncount;
 	for(int j = 0; j < itemcount; ++j)
 	{
-		entity e = spawn();
+		entity e = spawn();		
 		e.spawnfunc_checked = true;
-		float a = random();
-		float b = random();
-		float c = random();
-		float d = random();
+		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
 		
-		if (a > b)
+		switch (autocvar_g_nades_emerald_dropitemselect)
 		{
-			if (a > 0.5)
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
-			else
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+			case 0: nade_emerald_randomitem(e, org); return;
+			case 1: nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;
+			case 2: nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;
+			case 3: nade_emerald_allammoitemdrop(e, org); return;
+			case 4: nade_emerald_dropitem(e, org, ITEM_Shells); return;
+			case 5: nade_emerald_dropitem(e, org, ITEM_Bullets); return;
+			case 6: nade_emerald_dropitem(e, org, ITEM_Rockets); return;
+			case 7: nade_emerald_dropitem(e, org, ITEM_Cells); return;
+			case 8: nade_emerald_dropitem(e, org, ITEM_Jetpack); return;
+			case 9: nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;
+			case 10: nade_emerald_dropitem(e, org, ITEM_Shield); return;
+			case 11: nade_emerald_dropitem(e, org, ITEM_Strength); return;
+			default: nade_emerald_randomitem(e, org); return;
 		}
-		else if (c > d)
-		{
-			if (c > 0.5)
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
-			else
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
-		}
-		else if (autocvar_g_nades_emerald_powerupjetpackdrop)
-		{
-			if (a < 0.5)
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
-			else
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
-		}
-		else
-			return;
 	}
 }
 
@@ -854,6 +895,9 @@ void emerald_fountain_think(entity this)
 
 	if(time >= this.ltime)
 	{
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin + '0 0 1', '0 0 0', 1);
+		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+
 		delete(this);
 		return;
 	}
@@ -1046,6 +1090,43 @@ void dark_damage(entity this, float radius, float damage)
 		}
 }
 
+void nade_dark_fountain_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time >= this.ltime)
+	{
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin + '0 0 1', '0 0 0', 1);
+		delete(this);
+		return;
+	}
+
+	this.nextthink = time + 0.1;
+
+	// gaussian
+	float randomr;
+	randomr = random();
+	randomr = exp(-5*randomr*randomr)*autocvar_g_nades_dark_radius;
+	float randomw;
+	randomw = random()*M_PI*2;
+	vector randomp;
+	randomp.x = randomr*cos(randomw);
+	randomp.y = randomr*sin(randomw);
+	randomp.z = 1;
+	Send_Effect(EFFECT_SMOKE_SMALL, this.origin + randomp, '0 0 0', 1);
+
+	if(time >= this.nade_special_time)
+	{
+		this.nade_special_time = time + 0.7;
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin, '0 0 0', 1);
+	}
+}
+
 void DarkBlinking(entity e);
 //copy of the special.qc function contents for DarkBlinking
 void nade_dark_touch(entity this, entity toucher)
@@ -1054,10 +1135,10 @@ void nade_dark_touch(entity this, entity toucher)
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 
-		float tint_alpha = 0.55;
+		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner) || SAME_TEAM(toucher, this))
 		{
-			tint_alpha = 0.25;
+			tint_alpha = 0.45;
 			if(!STAT(DARK_ORB, show_tint))
 			{
 				toucher.nade_dark_prevalpha = toucher.alpha;
@@ -1066,7 +1147,7 @@ void nade_dark_touch(entity this, entity toucher)
 		}
 		else
 		{
-			tint_alpha = 0.25;
+			tint_alpha = 0.45;
 			if(!STAT(DARK_ORB, show_tint))
 			{
 				DarkBlinking(toucher);
@@ -1074,26 +1155,36 @@ void nade_dark_touch(entity this, entity toucher)
 			}
 		}
 
-		if(time >= this.nade_special_time)
-		{
-			this.nade_special_time = time + 0.7;
-			Send_Effect(EFFECT_SMOKE_SMALL, this.origin, '0 0 0', 1);
-			//EFFECT_SMOKE_LARGE is like a small white smoke
-			//Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
-		}
-		Send_Effect(EFFECT_SMOKE_SMALL, this.origin, randomvec(), 1);
-
 		STAT(DARK_ORB, show_tint) = time + 0.1;
 		STAT(DARK_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
 }
 
 void nade_dark_boom(entity this)
-{	
+{
 	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_dark_time, autocvar_g_nades_dark_radius);
+	entity fountain = new(nade_dark_fountain);
+
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
+	setorigin(fountain, fountain.origin);
+	setthink(fountain, nade_dark_fountain_think);
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_dark_time;
+	fountain.pushltime = fountain.wait = fountain.ltime;
+	fountain.team = this.team;
+	fountain.bot_dodge = false;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	fountain.nade_special_time = time + 0.3;
+	fountain.angles = this.angles;
 
 	settouch(orb, nade_dark_touch);
 	orb.colormod = NADE_TYPE_DARK.m_color;
+	//CSQCProjectile(fountain, true, PROJECTILE_NADE_DARK_BURN, true);
 }
 /***********************************************************************************/
 void nade_boom(entity this)
