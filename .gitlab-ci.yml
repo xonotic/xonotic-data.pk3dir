@@ -11,19 +11,6 @@ before_script:
   - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
   - cd ..
 
-report_cloc:
-  before_script:
-    - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
-    - apt-get update
-    - apt-get -y install cloc sqlite3
-  rules:
-    - changes:
-      - qcsrc/**/*
-  stage: test
-  script:
-    - cloc --force-lang-def=qcsrc/tools/cloc.txt --sql 1 --sql-project xonotic qcsrc | sqlite3 code.db
-    - sqlite3 code.db 'select file,nCode from t where nCode > 1000 order by nBlank+nComment+nCode desc'
-
 test_compilation_units:
   rules:
     - changes:
