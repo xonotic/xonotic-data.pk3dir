@@ -721,7 +721,7 @@ void nade_veil_boom(entity this)
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
 /**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
-// All nade icons are in these directories, samples: gfx/hud/luma/nade_emerald.tga 02-03-2021
+// All nade icons are in these directories, samples: gfx/hud/default/nade_emerald.tga and gfx/hud/luma/nade_emerald.tga 02-03-2021
 // Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
 void nade_emerald_dropitem(entity e, vector org, entity itm)
 {
@@ -795,7 +795,7 @@ void nade_emerald_dropping(vector org)
 	int itemcount = autocvar_g_nades_emerald_spawncount;
 	for(int j = 0; j < itemcount; ++j)
 	{
-		entity e = spawn();		
+		entity e = spawn();
 		e.spawnfunc_checked = true;
 		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
 		
