@@ -2347,6 +2347,8 @@ void ObserverOrSpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
+			else
+				this.would_spectate = false; // unable to spectate anyone
 			if (is_spec)
 				CS(this).impulse = 0;
 		} else if (is_spec) {
