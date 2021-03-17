@@ -40,6 +40,7 @@ bool state_strafekeys = false;
 float state_strafekeys_time = 0;
 bool turn = false;
 float turnangle;
+float turnspeed;
 bool fwd = true;
 bool state_fwd = true;
 bool state_fwd_prev = true;
@@ -257,7 +258,7 @@ void HUD_StrafeHUD()
             }
         }
 
-        strafekeys = fabs(wishangle) == 90;
+        strafekeys = fabs(wishangle) > 45;
 
         // determine minimum required angle to display full strafe range
         range_minangle = fabs(wishangle) % 90; // maximum range is 90 degree
@@ -297,7 +298,7 @@ void HUD_StrafeHUD()
         }
         state_strafekeys = strafekeys;
 
-        if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD) || swimming || autocvar__hud_configure)
+        if((!strafekeys && vlen(vec2(movement)) > 0) || swimming || autocvar__hud_configure)
         {
             turn = false;
         }
@@ -316,6 +317,17 @@ void HUD_StrafeHUD()
                 {
                     turn = true; // CPMA turning
                     turnangle = wishangle;
+
+                    // calculate the maximum air strafe speed
+                    if(PHYS_MAXAIRSPEED(strafeplayer) == 0){
+                        maxspeed = turnspeed = 0;
+                    }
+                    else if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) == 0 || PHYS_MAXAIRSPEED(strafeplayer) <= PHYS_MAXAIRSTRAFESPEED(strafeplayer)){
+                        maxspeed = turnspeed = PHYS_MAXAIRSPEED(strafeplayer);
+                    }
+                    else{
+                        maxspeed = turnspeed = PHYS_MAXAIRSPEED(strafeplayer) * pow(fabs(PHYS_MAXAIRSTRAFESPEED(strafeplayer) / PHYS_MAXAIRSPEED(strafeplayer)), 1 - (90 - fabs(wishangle)) / 45); // no modifiers here because they don't affect air strafing
+                    }
                 }
             }
             else if((time - state_strafekeys_time) >= autocvar_hud_panel_strafehud_timeout_turn) // timeout for jumping with strafe keys only
@@ -323,10 +335,10 @@ void HUD_StrafeHUD()
                 turn = false;
             }
         }
-        if(turn)
+        if(turn && (onground || !strafekeys)) // retain last state until strafe turning times out
         {
-            maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no modifiers here because they don't affect air strafing
             wishangle = turnangle;
+            maxspeed = turnspeed;
         }
 
         minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? maxspeed + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
@@ -345,7 +357,7 @@ void HUD_StrafeHUD()
 
                 // determine whether the player is strafing forwards or backwards
                 // if the player isn't strafe turning use forwards/backwards keys to determine direction
-                if(!strafekeys)
+                if(fabs(wishangle) != 90)
                 {
                     if(keys_fwd > 0)
                     {
@@ -379,7 +391,7 @@ void HUD_StrafeHUD()
                 }
                 state_fwd_prev = state_fwd;
 
-                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed || (strafekeys && mode == 0)) // timeout when changing between forwards and backwards movement
+                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed || ((fabs(wishangle) == 90) && mode == 0)) // timeout when changing between forwards and backwards movement
                 {
                     fwd = state_fwd;
                 }
