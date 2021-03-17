@@ -122,8 +122,8 @@ void HUD_StrafeHUD()
         float  maxspeed_water_mod            = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
-        float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
-        float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y + 180;
+        float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
+        float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
         vector movement                      = PHYS_INPUT_MOVEVALUES(strafeplayer);
         int    keys                          = STAT(PRESSED_KEYS);
@@ -339,13 +339,9 @@ void HUD_StrafeHUD()
                 // calculate view angle relative to the players current velocity direction
                 angle = vel_angle - view_angle;
 
-                // if the angle goes above 180° or below -180° wrap it to the opposite side
+                // if the angle goes above 180° or below -180° wrap it to the opposite side since we want the interior angle
                 if (angle > 180) angle -= 360;
                 else if(angle < -180) angle += 360;
-
-                // shift the strafe angle by 180° for hud calculations
-                if(angle < 0) angle += 180;
-                else angle -= 180;
 
                 // determine whether the player is strafing forwards or backwards
                 // if the player isn't strafe turning use forwards/backwards keys to determine direction
