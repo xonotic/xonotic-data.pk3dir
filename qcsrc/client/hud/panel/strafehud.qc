@@ -123,6 +123,7 @@ void HUD_StrafeHUD()
         float  maxspeed_water_mod            = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
+        float  movespeed;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
         float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
@@ -320,14 +321,18 @@ void HUD_StrafeHUD()
 
                     // calculate the maximum air strafe speed
                     if(PHYS_MAXAIRSPEED(strafeplayer) == 0){
-                        maxspeed = turnspeed = 0;
+                        maxspeed = 0;
                     }
                     else if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) == 0 || PHYS_MAXAIRSPEED(strafeplayer) <= PHYS_MAXAIRSTRAFESPEED(strafeplayer)){
-                        maxspeed = turnspeed = PHYS_MAXAIRSPEED(strafeplayer);
+                        maxspeed = PHYS_MAXAIRSPEED(strafeplayer);
                     }
                     else{
-                        maxspeed = turnspeed = PHYS_MAXAIRSPEED(strafeplayer) * pow(fabs(PHYS_MAXAIRSTRAFESPEED(strafeplayer) / PHYS_MAXAIRSPEED(strafeplayer)), 1 - (90 - fabs(wishangle)) / 45); // no modifiers here because they don't affect air strafing
+                        maxspeed = PHYS_MAXAIRSPEED(strafeplayer) * pow(fabs(PHYS_MAXAIRSTRAFESPEED(strafeplayer) / PHYS_MAXAIRSPEED(strafeplayer)), 1 - (90 - fabs(wishangle)) / 45); // no modifiers here because they don't affect air strafing
                     }
+
+                    turnspeed = vlen(vec2(movement));
+                    if(turnspeed == 0) turnspeed = maxspeed;
+                    else turnspeed = min(turnspeed, maxspeed);
                 }
             }
             else if((time - state_strafekeys_time) >= autocvar_hud_panel_strafehud_timeout_turn) // timeout for jumping with strafe keys only
@@ -338,10 +343,15 @@ void HUD_StrafeHUD()
         if(turn && (onground || !strafekeys)) // retain last state until strafe turning times out
         {
             wishangle = turnangle;
-            maxspeed = turnspeed;
+            movespeed = turnspeed;
+        }
+        else{
+            movespeed = vlen(vec2(movement));
+            if(movespeed == 0) movespeed = maxspeed;
+            else movespeed = min(movespeed, maxspeed);
         }
 
-        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? maxspeed + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
+        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? movespeed + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -391,7 +401,7 @@ void HUD_StrafeHUD()
                 }
                 state_fwd_prev = state_fwd;
 
-                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed || ((fabs(wishangle) == 90) && mode == 0)) // timeout when changing between forwards and backwards movement
+                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < movespeed || ((fabs(wishangle) == 90) && mode == 0)) // timeout when changing between forwards and backwards movement
                 {
                     fwd = state_fwd;
                 }
@@ -454,7 +464,7 @@ void HUD_StrafeHUD()
         }
 
         // best angle to strafe at
-        bestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
+        bestangle = (speed > movespeed ? acos(movespeed / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
         odd_bestangle = -bestangle - wishangle;
         bestangle -= wishangle;
 
@@ -727,7 +737,7 @@ void HUD_StrafeHUD()
         }
         draw_endBoldFont();
 
-        if(speed < (maxspeed + antiflicker_speed) && !immobile)
+        if(speed < (movespeed + antiflicker_speed) && !immobile)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
         }
