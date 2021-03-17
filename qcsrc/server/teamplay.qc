@@ -52,7 +52,7 @@ void Team_InitTeams()
 		return;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		g_team_entities[i] = new_pure();
+		g_team_entities[i] = new_pure(team_entity);
 	}
 }
 
