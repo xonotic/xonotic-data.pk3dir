@@ -46,10 +46,10 @@ void GameCommand(string theCommand)
 	if (argv(0) == "help" || argc == 0)
 	{
 		LOG_HELP(_("Usage:^3 menu_cmd <command> [<item>], where possible commands are:"));
-		LOG_HELP(_("  <sync> reloads all cvars on the current menu page"));
-		LOG_HELP(_("  <directmenu> shows the menu window named <item> (or the menu window containing an item named <item>)"));
+		LOG_HELP(_("  'sync' reloads all cvars on the current menu page"));
+		LOG_HELP(_("  'directmenu' shows the menu window named <item> (or the menu window containing an item named <item>)"));
 		LOG_HELP(_("   if <item> is not specified it shows the list of available items in the console"));
-		LOG_HELP(_("  <dumptree> dumps the state of the menu as a tree to the console"));
+		LOG_HELP(_("  'dumptree' dumps the state of the menu as a tree to the console"));
 
 		LOG_HELP("\nGeneric commands shared by all programs:");
 		GenericCommand_macro_help();
