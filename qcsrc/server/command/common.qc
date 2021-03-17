@@ -1,20 +1,20 @@
 #include "common.qh"
 
-#include <server/chat.qh>
-#include <server/client.qh>
-#include <server/mutators/_mod.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/world.qh>
-
 #include <common/command/_mod.qh>
-#include "common.qh"
-
-#include "../scores.qh"
-
+#include <common/deathtypes/all.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/mutators/_mod.qh>
+#include <server/scores.qh>
+#include <server/world.qh>
 
 
 // ====================================================
@@ -463,9 +463,9 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob command [arguments]"));
-			print_to(caller, "  Where 'command' can be butcher spawn skin movetarget kill name");
-			print_to(caller, "  spawn, skin, movetarget and name require 'arguments'");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob <command> [<arguments>]"));
+			print_to(caller, "  Where <command> can be butcher spawn skin movetarget kill name");
+			print_to(caller, "  spawn, skin, movetarget and name require <arguments>");
 			print_to(caller, "  spawn also takes arguments list and random");
 			print_to(caller, "  Monster will follow owner if third argument of spawn command is not defined");
 			return;
@@ -490,8 +490,8 @@ void CommonCommand_info(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info request"));
-			print_to(caller, "  Where 'request' is the suffixed string appended onto the request for cvar.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info <request>"));
+			print_to(caller, "  Where <request> is the suffixed string appended onto the request for cvar.");
 			return;
 		}
 	}
@@ -598,8 +598,9 @@ void CommonCommand_records(int request, entity caller)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records"));
-			print_to(caller, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records [<pagenum>]"));
+			print_to(caller, "  Without arguments it prints all records (all pages) for the current gametype,");
+			print_to(caller, "  otherwise if there are multiple pages it only prints page <pagenum> (1..10),");
 			return;
 		}
 	}
@@ -753,7 +754,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 					timeout_time = autocvar_sv_timeout_length;
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
-					timeout_handler = spawn();
+					timeout_handler = new(timeout_handler);
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
@@ -831,8 +832,8 @@ void CommonCommand_who(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [separator]"));
-			print_to(caller, "  Where 'separator' is the optional string to separate the values with, default is a space.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [<separator>]"));
+			print_to(caller, "  Where <separator> is the optional string to separate the values with, default is a space.");
 			return;
 		}
 	}

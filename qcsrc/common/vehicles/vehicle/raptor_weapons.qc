@@ -62,7 +62,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
         vector forward, right, up;
         MAKE_VECTORS(player.v_angle, forward, right, up);
         for(int i = 0; i < 3; ++i) {
-            entity _flare = spawn();
+            entity _flare = new(RaptorFlare_flare);
             setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
             _flare.effects = EF_LOWPRECISION | EF_FLAME;
             _flare.scale = 0.5;
@@ -125,7 +125,7 @@ void raptor_bomb_burst(entity this)
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
-        bomblet = spawn();
+        bomblet = new(raptor_bomb_bomblet);
         setorigin(bomblet, this.origin);
 
         set_movetype(bomblet, MOVETYPE_TOSS);
@@ -150,10 +150,8 @@ void raptor_bomb_touch(entity this, entity toucher)
 
 void raptor_bombdrop(entity this)
 {
-    entity bomb_1, bomb_2;
-
-    bomb_1 = spawn();
-    bomb_2 = spawn();
+    entity bomb_1 = new(bombmount_left);
+    entity bomb_2 = new(bombmount_right);
 
     vector org = gettaginfo(this, gettagindex(this, "bombmount_left"));
     setorigin(bomb_1, org);
@@ -234,7 +232,7 @@ void RaptorCBShellfragDraw(entity this)
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 {
-    entity sfrag = spawn();
+    entity sfrag = new(RaptorCBShellfrag);
     setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
     setorigin(sfrag, _org);
 

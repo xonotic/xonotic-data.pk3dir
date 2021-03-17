@@ -1,46 +1,42 @@
 #include "player.qh"
 
-#include <common/effects/all.qh>
-#include "bot/api.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "clientkill.qh"
-#include "damage.qh"
-#include <server/mutators/_mod.qh>
-#include "world.qh"
-#include "handicap.qh"
-#include "portals.qh"
-#include "teamplay.qh"
-#include <server/main.qh>
-#include "weapons/common.qh"
-#include "weapons/throwing.qh"
-#include "command/common.qh"
-#include "command/vote.qh"
-#include <common/state.qh>
 #include <common/anim.qh>
 #include <common/animdecide.qh>
 #include <common/csqcmodel_settings.qh>
-#include <common/gamemodes/sv_rules.qh>
 #include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/sv_rules.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
-#include <common/playerstats.qh>
-#include <lib/csqcmodel/sv_model.qh>
-
 #include <common/minigames/sv_minigames.qh>
-
-#include <common/gamemodes/_mod.qh>
-
-#include <common/physics/player.qh>
-#include <common/effects/qc/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
-#include <common/mapobjects/_mod.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
 #include <common/wepent.qh>
-
-#include "weapons/weaponstats.qh"
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/bot/api.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/handicap.qh>
+#include <server/hook.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/portals.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/throwing.qh>
+#include <server/weapons/weaponstats.qh>
 #include <server/weapons/weaponsystem.qh>
-
-#include <common/animdecide.qh>
+#include <server/world.qh>
 
 void Drop_Special_Items(entity player)
 {
@@ -247,7 +243,12 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 		}
 
-		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		if (STAT(FROZEN, this))
+		{
+			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
+				damage = 0;
+		}
+		else if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
@@ -342,7 +343,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > this.pain_finished)		//Don't switch pain sequences like crazy
+			if (time > this.pain_finished && !STAT(FROZEN, this)) // Don't switch pain sequences like crazy
 			{
 				this.pain_finished = time + 0.5;	//Supajoe
 
@@ -388,8 +389,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 
 			float realdmg = damage - excess;
-			if (this != attacker && realdmg)
-			if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
+			if (this != attacker && realdmg && !STAT(FROZEN, this)
+				&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 			{
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
@@ -416,7 +417,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && this != attacker)
-	if(DIFF_TEAM(this, attacker))
+	if (DIFF_TEAM(this, attacker) && (!STAT(FROZEN, this) || this.freeze_time > time))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.(weaponentity).m_weapon;
@@ -425,8 +426,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResource(this, RES_HEALTH), 0);
-	da = da - max(GetResource(this, RES_ARMOR), 0);
+	dh -= max(GetResource(this, RES_HEALTH), 0); // health difference
+	da -= max(GetResource(this, RES_ARMOR), 0); // armor difference
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -554,6 +555,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
+		// don't play teleportation sounds
+		this.teleportable = TELEPORT_SIMPLE;
+
+		STAT(STRENGTH_FINISHED, this) = 0;
+		STAT(INVINCIBLE_FINISHED, this) = 0;
+		STAT(SUPERWEAPONS_FINISHED, this) = 0;
+		STAT(AIR_FINISHED, this) = 0;
 
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 

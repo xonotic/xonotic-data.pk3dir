@@ -19,7 +19,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
             actor.shot_speed = 1;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
-        entity beam = spawn();
+        entity beam = new(PhaserTurret_beam);
         beam.ticrate = 0.1; //autocvar_sys_ticrate;
         setmodel(beam, MDL_TUR_PHASER_BEAM);
         beam.effects = EF_LOWPRECISION;

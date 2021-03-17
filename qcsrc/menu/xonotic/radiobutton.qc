@@ -13,7 +13,7 @@ entity makeXonoticRadioButton(float theGroup, string theCvar, string theValue, s
 }
 void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, string theCvar, string theValue, string theText, string theTooltip)
 {
-	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.controlledCvar = (theCvar) ? theCvar : string_null;
 	me.cvarValue = theValue;
 	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
@@ -31,19 +31,19 @@ void XonoticRadioButton_loadCvars(entity me)
 {
 	if(me.cvarValue)
 	{
-		if(me.cvarName)
+		if(me.controlledCvar)
 		{
 			if(me.cvarValueIsAnotherCvar)
-				me.checked = (cvar_string(me.cvarName) == cvar_string(me.cvarValue));
+				me.checked = (cvar_string(me.controlledCvar) == cvar_string(me.cvarValue));
 			else
-				me.checked = (cvar_string(me.cvarName) == me.cvarValue);
+				me.checked = (cvar_string(me.controlledCvar) == me.cvarValue);
 		}
 	}
 	else
 	{
-		if(me.cvarName)
+		if(me.controlledCvar)
 		{
-			me.checked = boolean(cvar(me.cvarName));
+			me.checked = boolean(cvar(me.controlledCvar));
 		}
 		else
 		{
@@ -58,7 +58,7 @@ void XonoticRadioButton_loadCvars(entity me)
 void XonoticRadioButton_draw(entity me)
 {
 	if (!me.cvarValue)
-		if (!me.cvarName)
+		if (!me.controlledCvar)
 		{
 			// this is the "other" option
 			// always select this if none other is
@@ -78,24 +78,24 @@ void XonoticRadioButton_saveCvars(entity me)
 {
 	if(me.cvarValue)
 	{
-		if(me.cvarName)
+		if(me.controlledCvar)
 		{
 			if(me.checked)
 			{
 				if(me.cvarValueIsAnotherCvar)
-					cvar_set(me.cvarName, cvar_string(me.cvarValue));
+					cvar_set(me.controlledCvar, cvar_string(me.cvarValue));
 				else
-					cvar_set(me.cvarName, me.cvarValue);
+					cvar_set(me.controlledCvar, me.cvarValue);
 			}
 			else if(me.cvarOffValue)
-				cvar_set(me.cvarName, me.cvarOffValue);
+				cvar_set(me.controlledCvar, me.cvarOffValue);
 		}
 	}
 	else
 	{
-		if(me.cvarName)
+		if(me.controlledCvar)
 		{
-			cvar_set(me.cvarName, ftos(me.checked));
+			cvar_set(me.controlledCvar, ftos(me.checked));
 		}
 	}
 }

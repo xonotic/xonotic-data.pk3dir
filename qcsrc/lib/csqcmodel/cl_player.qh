@@ -39,3 +39,4 @@ void CSQCPlayer_SetCamera();
 float CSQCPlayer_PreUpdate(entity this);
 float CSQCPlayer_PostUpdate(entity this);
 float CSQCPlayer_IsLocalPlayer(entity this);
+vector CSQCModel_ApplyStairSmoothing(entity this, bool isonground, vector v);

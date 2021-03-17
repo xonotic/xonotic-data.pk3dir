@@ -265,7 +265,6 @@ void W_Tuba_NoteThink(entity this)
 
 void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 {
-	vector o;
 	float n = W_Tuba_GetNote(actor, hittype);
 
 	hittype = HITTYPE_SOUND;
@@ -303,9 +302,9 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
 	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
-	o = gettaginfo(actor.exteriorweaponentity, 0);
 	if(time > actor.(weaponentity).tuba_smoketime)
 	{
+		vector o = gettaginfo(actor.exteriorweaponentity, 0);
 		Send_Effect(EFFECT_SMOKE_RING, o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 		actor.(weaponentity).tuba_smoketime = time + 0.25;
 	}

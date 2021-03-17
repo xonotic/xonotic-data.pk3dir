@@ -4,6 +4,7 @@
 #include "commandbutton.qh"
 #include "textlabel.qh"
 #include "checkbox.qh"
+#include "radiobutton.qh"
 #include "textslider.qh"
 #include "checkbox_slider_invalid.qh"
 
@@ -143,6 +144,17 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_hitsound", _("Hit indication sound"),
 			_("Play a hit indicator sound when your shot hits an enemy")));
 		e.sendCvars = true;
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8 / 3, e = makeXonoticRadioButton_T(3, "cl_hitsound", "1", ZCTX(_("SND^Fixed")), "-"));
+		e.sendCvars = true;
+		setDependent(e, "cl_hitsound", 1, 3);
+		me.TD(me, 1, 2.8 / 3, e = makeXonoticRadioButton_T(3, "cl_hitsound", "2", _("Decreasing"), _("Decrease pitch with more damage")));
+		e.sendCvars = true;
+		setDependent(e, "cl_hitsound", 1, 3);
+		me.TD(me, 1, 2.8 / 3, e = makeXonoticRadioButton_T(3, "cl_hitsound", "3", _("Increasing"), _("Increase pitch with more damage")));
+		e.sendCvars = true;
+		setDependent(e, "cl_hitsound", 1, 3);
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "con_chatsound", _("Chat message sound")));
 	me.TR(me);

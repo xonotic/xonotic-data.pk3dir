@@ -1,13 +1,12 @@
 #include "player.qh"
-#include "../mapobjects/_mod.qh"
-#include "../viewloc.qh"
+
+#include <common/mapobjects/_mod.qh>
+#include <common/viewloc.qh>
 
 #ifdef SVQC
-
-#include <server/client.qh>
 #include <common/mapobjects/defs.qh>
-#include "../mapobjects/trigger/viewloc.qh"
-#include <server/main.qh>
+#include <common/mapobjects/trigger/viewloc.qh>
+#include <server/client.qh>
 
 // client side physics
 bool Physics_Valid(string thecvar)
@@ -20,9 +19,9 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 	if(!autocvar_g_physics_clientselect)
 		return defaultval;
 
-	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
+	if(IS_REAL_CLIENT(this) && Physics_Valid(CS_CVAR(this).cvar_cl_physics))
 	{
-		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
+		string s = strcat("g_physics_", CS_CVAR(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
@@ -458,7 +457,7 @@ void CheckWaterJump(entity this)
 
 
 #ifdef SVQC
-	#define JETPACK_JUMP(s)	CS(s).cvar_cl_jetpack_jump
+	#define JETPACK_JUMP(s)	CS_CVAR(s).cvar_cl_jetpack_jump
 #elif defined(CSQC)
 	float autocvar_cl_jetpack_jump;
 	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump
