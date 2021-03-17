@@ -840,26 +840,6 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
     size.x = width;
     mirror_size.x = mirror_width;
 
-    // determine whether the gradient starts in the mirrored or the non-mirrored area
-    if(offset == 0 && mirror_offset == 0) gradient_start = width > mirror_width ? 2 : 1;
-    else if(offset == 0) gradient_start = 2;
-    else if(mirror_offset == 0) gradient_start = 1;
-    else gradient_start = 0;
-
-    switch(gradient_start){
-        default:
-        case 0: // no offset required
-            gradient_offset = gradient_mirror_offset = 0;
-            break;
-        case 1: // offset starts in non-mirrored area, mirrored area requires offset
-            gradient_offset = 0;
-            gradient_mirror_offset = original_width - (mirror_width + overflow_mirror_width);
-            break;
-        case 2: // offset starts in mirrored area, non-mirrored area requires offset
-            gradient_offset = original_width - (width + overflow_width);
-            gradient_mirror_offset = 0;
-    }
-
     switch(type)
     {
         default:
@@ -874,6 +854,26 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
             break;
 
         case 2: // gradient style (types: 1 = left, 2 = right, 3 = both)
+            // determine whether the gradient starts in the mirrored or the non-mirrored area
+            if(offset == 0 && mirror_offset == 0) gradient_start = width > mirror_width ? 2 : 1;
+            else if(offset == 0) gradient_start = 2;
+            else if(mirror_offset == 0) gradient_start = 1;
+            else gradient_start = 0;
+
+            switch(gradient_start){
+                default:
+                case 0: // no offset required
+                    gradient_offset = gradient_mirror_offset = 0;
+                    break;
+                case 1: // offset starts in non-mirrored area, mirrored area requires offset
+                    gradient_offset = 0;
+                    gradient_mirror_offset = original_width - (mirror_width + overflow_mirror_width);
+                    break;
+                case 2: // offset starts in mirrored area, non-mirrored area requires offset
+                    gradient_offset = original_width - (width + overflow_width);
+                    gradient_mirror_offset = 0;
+            }
+
             StrafeHUD_drawGradient(color, autocvar_hud_panel_strafehud_bar_neutral_color, mirror_size, original_width, mirror_offset, alpha, gradient_mirror_offset, gradientType);
             StrafeHUD_drawGradient(color, autocvar_hud_panel_strafehud_bar_neutral_color, size, original_width, offset, alpha, gradient_offset, gradientType);
     }
