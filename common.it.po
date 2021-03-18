@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Antonio <piuntn@gmail.com>, 2013-2020
+# Antonio <piuntn@gmail.com>, 2013-2021
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014,2021
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-03-14 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-03-17 14:29+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -8770,10 +8770,12 @@ msgid ""
 "Warning: selecting 'Always' your team's color may be the same as the enemy "
 "team"
 msgstr ""
+"Attenzione: scegliendo 'Sempre' il colore della tua squadra potrebbe essere "
+"lo stesso della squadra avversaria"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Non nei giochi di squadra"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
