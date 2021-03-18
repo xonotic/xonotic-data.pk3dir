@@ -804,7 +804,40 @@ void HUD_StrafeHUD()
 
         if(currentangle_size.x > 0 && currentangle_size.y > 0 && autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0)
         {
-            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            switch(autocvar_hud_panel_strafehud_angle_style)
+            {
+                case 0:
+                    drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    break;
+                case 1:
+                    vector line_size = currentangle_size;
+                    line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, 100)*2-1);
+                    for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
+                    {
+                        if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
+                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    }
+                    break;
+                case 2:
+                default:
+            }
+
+            if(autocvar_hud_panel_strafehud_angle_arrow > 0)
+            {
+                vector arrow_size = currentangle_size;
+                arrow_size.x = max(panel_size.x * autocvar_hud_panel_strafehud_angle_arrow_width, 1);
+                arrow_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_height, 1), 1);
+                vector arrow_fragment = '0 0.25 0';
+
+                for(float i = arrow_size.y; i > 0; i -= arrow_fragment.y)
+                {
+                    arrow_fragment.x = arrow_size.x * (i/arrow_size.y);
+                    if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 + i) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
+                        drawfill(panel_pos + eY * (-(currentangle_size.y - panel_size.y) / 2 + currentangle_size.y + i - arrow_fragment.y) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                }
+            }
         }
     }
 }
