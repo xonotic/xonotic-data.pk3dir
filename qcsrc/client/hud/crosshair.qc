@@ -267,10 +267,20 @@ void HUD_Crosshair(entity this)
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
 			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1)
 			{
-				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
-				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-				if(trace_ent == csqcplayer)
+				bool hit = false;
+				if (pointinsidebox(view_origin, csqcplayer.absmin, csqcplayer.absmax))
+					hit = true;
+				else
+				{
+					WarpZone_TraceLine(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+					if(trace_ent == csqcplayer)
+						hit = true;
+				}
+				if(hit)
+				{
+					float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
 					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
+				}
 				else
 					csqcplayer.alpha = csqcplayer.m_alpha;
 			}
