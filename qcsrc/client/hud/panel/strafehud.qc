@@ -657,93 +657,6 @@ void HUD_StrafeHUD()
             }
         }
 
-        draw_beginBoldFont();
-        // show speed when crossing the start trigger
-        if(autocvar_hud_panel_strafehud_startspeed_fade > 0)
-        {
-            float text_alpha = 0;
-            if((race_nextcheckpoint == 1) || (race_checkpoint == 254 && race_nextcheckpoint == 255)) // check if the start trigger was hit (will also trigger if the finish trigger was hit if those have the same ID)
-            {
-                if(starttime != race_checkpointtime)
-                {
-                    starttime = race_checkpointtime;
-                    startspeed = speed;
-                }
-            }
-            if(startspeed >= 0)
-            {
-                text_alpha = cos(((time - starttime) / autocvar_hud_panel_strafehud_startspeed_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
-                if((time - starttime) > autocvar_hud_panel_strafehud_startspeed_fade)
-                {
-                    startspeed = -1;
-                }
-            }
-            if(startspeed >= 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
-            {
-                vector startspeed_size = panel_size;
-                startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 5);
-                drawstring_aspect(panel_pos + eY * panel_size.y, strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            }
-        }
-        else
-        {
-            starttime = 0;
-            startspeed = -1;
-        }
-
-        // experimental: show height achieved by a single jump (doesn't work in low gravity and may not be 100% accurate)
-        if(autocvar_hud_panel_strafehud_jumpheight_fade > 0)
-        {
-            float text_alpha = 0;
-            float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min, 0);
-            float jumpheight_current = strafeplayer.origin.z;
-            float jumpspeed_current = strafeplayer.velocity.z;
-            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
-            {
-                // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
-                jumprestart = true;
-            }
-            else
-            {
-                if(jumpheight < 0 || jumprestart)
-                {
-                    jumprestart = false;
-                    jumpheight = 0;
-                }
-                else
-                {
-                    jumpheight += jumpheight_current - jumpheight_prev;
-                }
-                if((jumpheight * length_conversion_factor) > jumpheight_min && jumpheight > jumpheight_persistent)
-                {
-                    jumptime = time;
-                    jumpheight_persistent = jumpheight;
-                }
-            }
-            jumpheight_prev = jumpheight_current;
-            jumpspeed_prev = jumpspeed_current;
-            if(jumpheight_persistent > 0)
-            {
-                text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
-                if((time - jumptime) > autocvar_hud_panel_strafehud_jumpheight_fade)
-                {
-                    jumpheight_persistent = -1;
-                }
-            }
-            if(jumpheight_persistent > 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
-            {
-                vector jumpheight_size = panel_size;
-                jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 5);
-                drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            }
-        }
-        else
-        {
-            jumpheight_prev = jumpspeed_prev = 0;
-            jumpheight = jumpheight_persistent = -1;
-        }
-        draw_endBoldFont();
-
         if(speed < (movespeed + antiflicker_speed) && !immobile)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
@@ -839,6 +752,93 @@ void HUD_StrafeHUD()
                 }
             }
         }
+
+        draw_beginBoldFont();
+        // show speed when crossing the start trigger
+        if(autocvar_hud_panel_strafehud_startspeed_fade > 0)
+        {
+            float text_alpha = 0;
+            if((race_nextcheckpoint == 1) || (race_checkpoint == 254 && race_nextcheckpoint == 255)) // check if the start trigger was hit (will also trigger if the finish trigger was hit if those have the same ID)
+            {
+                if(starttime != race_checkpointtime)
+                {
+                    starttime = race_checkpointtime;
+                    startspeed = speed;
+                }
+            }
+            if(startspeed >= 0)
+            {
+                text_alpha = cos(((time - starttime) / autocvar_hud_panel_strafehud_startspeed_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
+                if((time - starttime) > autocvar_hud_panel_strafehud_startspeed_fade)
+                {
+                    startspeed = -1;
+                }
+            }
+            if(startspeed >= 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
+            {
+                vector startspeed_size = panel_size;
+                startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 5);
+                drawstring_aspect(panel_pos + eY * panel_size.y, strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            }
+        }
+        else
+        {
+            starttime = 0;
+            startspeed = -1;
+        }
+
+        // experimental: show height achieved by a single jump (doesn't work in low gravity and may not be 100% accurate)
+        if(autocvar_hud_panel_strafehud_jumpheight_fade > 0)
+        {
+            float text_alpha = 0;
+            float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min, 0);
+            float jumpheight_current = strafeplayer.origin.z;
+            float jumpspeed_current = strafeplayer.velocity.z;
+            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
+            {
+                // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
+                jumprestart = true;
+            }
+            else
+            {
+                if(jumpheight < 0 || jumprestart)
+                {
+                    jumprestart = false;
+                    jumpheight = 0;
+                }
+                else
+                {
+                    jumpheight += jumpheight_current - jumpheight_prev;
+                }
+                if((jumpheight * length_conversion_factor) > jumpheight_min && jumpheight > jumpheight_persistent)
+                {
+                    jumptime = time;
+                    jumpheight_persistent = jumpheight;
+                }
+            }
+            jumpheight_prev = jumpheight_current;
+            jumpspeed_prev = jumpspeed_current;
+            if(jumpheight_persistent > 0)
+            {
+                text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
+                if((time - jumptime) > autocvar_hud_panel_strafehud_jumpheight_fade)
+                {
+                    jumpheight_persistent = -1;
+                }
+            }
+            if(jumpheight_persistent > 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
+            {
+                vector jumpheight_size = panel_size;
+                jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 5);
+                drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            }
+        }
+        else
+        {
+            jumpheight_prev = jumpspeed_prev = 0;
+            jumpheight = jumpheight_persistent = -1;
+        }
+        draw_endBoldFont();
     }
 }
 
