@@ -30,11 +30,18 @@ int autocvar_g_instagib_extralives;
 void instagib_invisibility(entity this);
 void instagib_extralife(entity this);
 void instagib_speed(entity this);
+IntrusiveList g_instagib_items;
 
 REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !MapInfo_LoadedGametype.m_weaponarena)
 {
 	MUTATOR_ONADD
 	{
+		g_instagib_items = IL_NEW();
+		IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
+		IL_PUSH(g_instagib_items, ITEM_ExtraLife);
+		IL_PUSH(g_instagib_items, ITEM_Invisibility);
+		IL_PUSH(g_instagib_items, ITEM_Speed);
+
 		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
@@ -44,5 +51,6 @@ REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !MapInfo_LoadedGametyp
 		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		IL_DELETE(g_instagib_items);
 	}
 }

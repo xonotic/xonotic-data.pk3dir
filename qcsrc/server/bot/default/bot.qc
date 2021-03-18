@@ -749,7 +749,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || autocvar_g_waypointeditor || autocvar_g_waypointeditor_auto)
+	if (currentbots > 0 || waypointeditor_enabled || autocvar_g_waypointeditor_auto)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
@@ -814,7 +814,7 @@ void bot_serverframe()
 		}
 	}
 
-	if (autocvar_g_waypointeditor)
+	if (waypointeditor_enabled)
 		botframe_showwaypointlinks();
 
 	if (autocvar_g_waypointeditor_auto)

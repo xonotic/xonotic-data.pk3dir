@@ -738,6 +738,7 @@ void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islo
 	bool is_playermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
 							(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
+	this.csqcmodel_isdead = false; // workaround for dead players who become a spectator
 
 	// save values set by server
 	if((this.isplayermodel & ISPLAYER_MODEL))

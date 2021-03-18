@@ -280,6 +280,7 @@ void PM_dodging_GetPressedKeys(entity this)
 {
 	PM_dodging_checkpressedkeys(this);
 
+	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = this.pressedkeys;
 	keys = BITSET(keys, KEY_FORWARD, 	PHYS_CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	PHYS_CS(this).movement.x < 0);
@@ -287,7 +288,7 @@ void PM_dodging_GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_LEFT, 		PHYS_CS(this).movement.y < 0);
 
 	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
-	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
+	keys = BITSET(keys, KEY_CROUCH, 	IS_DUCKED(this)); // workaround: player can't un-crouch until their path is clear, so we keep the button held here
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
 	this.pressedkeys = keys;

@@ -14,14 +14,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2020
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2021-03-14 07:23+0100\n"
+"PO-Revision-Date: 2021-03-14 11:01+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -145,7 +145,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Appuyez sur ^3%s^1 pour rejoindre la partie"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
-#: qcsrc/common/notifications/all.qh:426
+#: qcsrc/common/notifications/all.qh:429
 msgid "jump"
 msgstr "sauter"
 
@@ -986,7 +986,7 @@ msgstr "Stats de précision (moyenne %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1371
 msgid "Item stats"
-msgstr ""
+msgstr "Stats objet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1482
 msgid "Map stats:"
@@ -2025,13 +2025,13 @@ msgid "Checkpoint"
 msgstr "Point de contrôle"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
 msgid "Finish"
 msgstr "Arrivée"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
 msgid "Start"
 msgstr "Départ"
 
@@ -2148,7 +2148,7 @@ msgstr "Intrus !"
 msgid "Tagged"
 msgstr "Verrouillé pour cible"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:697
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
 #, c-format
 msgid "%s needing help!"
 msgstr "%s a besoin d'aide !"
@@ -4441,150 +4441,150 @@ msgstr ""
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2Intrus détecté, boucliers désactivés !"
 
-#: qcsrc/common/notifications/all.qh:194
+#: qcsrc/common/notifications/all.qh:196
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
 msgstr ""
 "La commande de vidage des notifications fonctionne uniquement avec cl_cmd et "
 "sv_cmd."
 
-#: qcsrc/common/notifications/all.qh:404 qcsrc/common/notifications/all.qh:405
+#: qcsrc/common/notifications/all.qh:407 qcsrc/common/notifications/all.qh:408
 #, c-format
 msgid " (near %s)"
 msgstr " (près de %s)"
 
-#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
+#: qcsrc/common/notifications/all.qh:415 qcsrc/common/notifications/all.qh:416
 msgid "primary"
 msgstr "primaire"
 
-#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
+#: qcsrc/common/notifications/all.qh:415 qcsrc/common/notifications/all.qh:416
 msgid "secondary"
 msgstr "secondaire"
 
-#: qcsrc/common/notifications/all.qh:415
+#: qcsrc/common/notifications/all.qh:418
 msgid "point"
 msgstr "point"
 
-#: qcsrc/common/notifications/all.qh:415
+#: qcsrc/common/notifications/all.qh:418
 msgid "points"
 msgstr "points"
 
-#: qcsrc/common/notifications/all.qh:424
+#: qcsrc/common/notifications/all.qh:427
 msgid "drop flag"
 msgstr "lâcher le drapeau"
 
-#: qcsrc/common/notifications/all.qh:425
+#: qcsrc/common/notifications/all.qh:428
 msgid "throw nade"
 msgstr "lancer la grenade"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
 msgstr "%s^K1 a fait un TRIPLE FRAG ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
 msgstr "%s^K1 a fait un TRIPLE SCORE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:454
 msgid "TRIPLE FRAG! "
 msgstr "TRIPLE FRAG ! "
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 a marqué CINQ POINTS D'AFFILÉE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
 msgstr "%s^K1 est ENRAGÉ ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:455
 msgid "RAGE! "
 msgstr "RAGE ! "
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 a marqué DIX POINTS D'AFFILÉE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
 msgstr "%s^K1 a commencé un MASSACRE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:456
 msgid "MASSACRE! "
 msgstr "MASSACRE ! "
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
 msgstr "%s^K1 fait du GRABUGE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 a marqué QUINZE POINTS D'AFFILÉE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:457
 msgid "MAYHEM! "
 msgstr "GRABUGE ! "
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
 msgstr "%s^K1 est un FOU FURIEUX ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 a marqué VINGT POINTS D'AFFILÉE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:458
 msgid "BERSERKER! "
 msgstr "FOU FURIEUX ! "
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
 msgstr "%s^K1 fait un CARNAGE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 a marqué VINGT-CINQ POINTS D'AFFILÉE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:459
 msgid "CARNAGE! "
 msgstr "CARNAGE ! "
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 a marqué TRENTE POINTS D'AFFILÉE ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
 msgstr "%s^K1 est en mode ARMAGEDDON ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:460
 msgid "ARMAGEDDON! "
 msgstr "ARMAGEDDON ! "
 
-#: qcsrc/common/notifications/all.qh:464
+#: qcsrc/common/notifications/all.qh:467
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr "%s(^F1Bot^BG)"
 
-#: qcsrc/common/notifications/all.qh:466
+#: qcsrc/common/notifications/all.qh:469
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr "%s(Ping ^F1%d^BG)"
 
-#: qcsrc/common/notifications/all.qh:473
+#: qcsrc/common/notifications/all.qh:476
 #, c-format
 msgid ""
 "\n"
@@ -4593,7 +4593,7 @@ msgstr ""
 "\n"
 "(Santé ^1%d^BG / Armure ^2%d^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:475
+#: qcsrc/common/notifications/all.qh:478
 #, c-format
 msgid ""
 "\n"
@@ -4602,73 +4602,73 @@ msgstr ""
 "\n"
 "(^F4Mort^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:496 qcsrc/common/notifications/all.qh:509
+#: qcsrc/common/notifications/all.qh:499 qcsrc/common/notifications/all.qh:512
 #, c-format
 msgid "%d score spree! "
 msgstr "%d points d'affilée ! "
 
-#: qcsrc/common/notifications/all.qh:508
+#: qcsrc/common/notifications/all.qh:511
 #, c-format
 msgid "%d frag spree! "
 msgstr "%d frags d'affilée ! "
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:524
 msgid "First blood! "
 msgstr "Premier sang ! "
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:524
 msgid "First score! "
 msgstr "Premier point ! "
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:528
 msgid "First casualty! "
 msgstr "Première victime ! "
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:528
 msgid "First victim! "
 msgstr "Première victime ! "
 
-#: qcsrc/common/notifications/all.qh:566
+#: qcsrc/common/notifications/all.qh:569
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
 msgstr "%s^K1 a marqué %d frags d'affilée ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:567
+#: qcsrc/common/notifications/all.qh:570
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
 msgstr "%s^K1 a marqué %d points d'affilée ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:585
+#: qcsrc/common/notifications/all.qh:588
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
 msgstr "%s^K1 a versé le premier sang ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:586
+#: qcsrc/common/notifications/all.qh:589
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
 msgstr "%s^K1 a marqué le premier point ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:602
+#: qcsrc/common/notifications/all.qh:605
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr ", mettant fin à sa série de %d frags"
 
-#: qcsrc/common/notifications/all.qh:603
+#: qcsrc/common/notifications/all.qh:606
 #, c-format
 msgid ", ending their %d score spree"
 msgstr ", mettant fin à sa série de %d points"
 
-#: qcsrc/common/notifications/all.qh:617
+#: qcsrc/common/notifications/all.qh:620
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr ", perdant sa série de %d frags"
 
-#: qcsrc/common/notifications/all.qh:618
+#: qcsrc/common/notifications/all.qh:621
 #, c-format
 msgid ", losing their %d score spree"
 msgstr ", perdant sa série de %d points"
 
-#: qcsrc/common/notifications/all.qh:643
+#: qcsrc/common/notifications/all.qh:646
 #, c-format
 msgid " with %d %s"
 msgstr " avec %d %s"
@@ -4745,7 +4745,7 @@ msgstr "Jaune"
 msgid "GENERATOR^Pink"
 msgstr "Rose"
 
-#: qcsrc/common/turrets/all.qh:95
+#: qcsrc/common/turrets/all.qh:97
 msgid "Turrets dump command only works with sv_cmd."
 msgstr "La commande de vidage des tourelles fonctionne uniquement avec sv_cmd."
 
@@ -4848,20 +4848,14 @@ msgid "Walker"
 msgstr "Walker"
 
 #: qcsrc/common/util.qc:1333
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:176
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:186
 msgid "Male"
 msgstr "Homme"
 
 #: qcsrc/common/util.qc:1334
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:175
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:185
 msgid "Female"
 msgstr "Femme"
 
 #: qcsrc/common/util.qc:1335
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:187
 msgid "Undisclosed"
 msgstr "Non divulgué"
 
@@ -5271,7 +5265,7 @@ msgstr "Flamme de Raptor"
 msgid "Spiderbot"
 msgstr "Spiderbot"
 
-#: qcsrc/common/weapons/all.qh:77
+#: qcsrc/common/weapons/all.qh:79
 msgid "Weapons dump command only works with sv_cmd."
 msgstr "La commande de vidage des armes fonctionne uniquement avec sv_cmd."
 
@@ -5581,28 +5575,41 @@ msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
-msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr "Utilisation : menu_cmd commande…, où les commandes possibles sont :"
+msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
+msgstr ""
+"Utilisation : ^3 menu_cmd <command> [<item>], où les commandes possibles "
+"sont :"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
-msgid "  sync - reloads all cvars on the current menu page"
-msgstr "sync - recharge toutes les cvars sur la page de menu actuelle"
+msgid "  <sync> reloads all cvars on the current menu page"
+msgstr "  <sync> recharge toutes les cvars sur la page de menu actuelle"
 
 #: qcsrc/menu/command/menu_cmd.qc:50
-msgid "  directmenu ITEM - select a menu item as main item"
+msgid ""
+"  <directmenu> shows the menu window named <item> (or the menu window "
+"containing an item named <item>)"
 msgstr ""
-"directmenu OBJET - sélectionne un objet du menu en tant qu'élément principal"
+"  <directmenu> affiche la fenêtre de menu nommée <item> (ou la fenêtre de "
+"menu contenant un élément nommé <item>)"
 
 #: qcsrc/menu/command/menu_cmd.qc:51
-msgid "  dumptree - dump the state of the menu as a tree to the console"
+msgid ""
+"   if <item> is not specified it shows the list of available items in the "
+"console"
 msgstr ""
-"dumptree - décharge l'état du menu sous la forme d'un arbre dans la console"
+"   si <item> n'est pas spécifié cela affiche la liste des éléments "
+"disponibles dans la console"
 
-#: qcsrc/menu/command/menu_cmd.qc:80
-msgid "Available options:"
-msgstr "Options disponibles :"
+#: qcsrc/menu/command/menu_cmd.qc:52
+msgid "  <dumptree> dumps the state of the menu as a tree to the console"
+msgstr ""
+"  <dumptree> vide l'état du menu sous forme d'arborescence dans la console"
 
-#: qcsrc/menu/command/menu_cmd.qc:129
+#: qcsrc/menu/command/menu_cmd.qc:81
+msgid "Available items:"
+msgstr "Objets disponibles :"
+
+#: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
 "Commande invalide. Pour une liste des commandes prises en charge, essayer "
@@ -5628,171 +5635,171 @@ msgstr "Équipe principale"
 msgid "Extended Team"
 msgstr "Équipe étendue"
 
-#: qcsrc/menu/xonotic/credits.qc:28
+#: qcsrc/menu/xonotic/credits.qc:29
 msgid "Website"
 msgstr "Site web"
 
-#: qcsrc/menu/xonotic/credits.qc:33
+#: qcsrc/menu/xonotic/credits.qc:34
 msgid "Stats"
 msgstr "Stats"
 
-#: qcsrc/menu/xonotic/credits.qc:37
+#: qcsrc/menu/xonotic/credits.qc:38
 msgid "Art"
 msgstr "Art"
 
-#: qcsrc/menu/xonotic/credits.qc:45
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Animation"
 msgstr "Animation"
 
-#: qcsrc/menu/xonotic/credits.qc:49
+#: qcsrc/menu/xonotic/credits.qc:50
 msgid "Level Design"
 msgstr "Conception des niveaux"
 
-#: qcsrc/menu/xonotic/credits.qc:72
+#: qcsrc/menu/xonotic/credits.qc:73
 msgid "Music / Sound FX"
 msgstr "Musique / son FX"
 
-#: qcsrc/menu/xonotic/credits.qc:88
+#: qcsrc/menu/xonotic/credits.qc:89
 msgid "Game Code"
 msgstr "Code du jeu"
 
-#: qcsrc/menu/xonotic/credits.qc:100
+#: qcsrc/menu/xonotic/credits.qc:101
 msgid "Marketing / PR"
 msgstr "Marketing / Relations publiques"
 
-#: qcsrc/menu/xonotic/credits.qc:106
+#: qcsrc/menu/xonotic/credits.qc:107
 msgid "Legal"
 msgstr "Juridique"
 
-#: qcsrc/menu/xonotic/credits.qc:111
+#: qcsrc/menu/xonotic/credits.qc:112
 msgid "Game Engine"
 msgstr "Moteur du jeu"
 
-#: qcsrc/menu/xonotic/credits.qc:115
+#: qcsrc/menu/xonotic/credits.qc:116
 msgid "Engine Additions"
 msgstr "Ajouts au moteur"
 
-#: qcsrc/menu/xonotic/credits.qc:121
+#: qcsrc/menu/xonotic/credits.qc:122
 msgid "Compiler"
 msgstr "Compilateur"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:128
 msgid "Other Active Contributors"
 msgstr "Autres contributeurs actifs"
 
-#: qcsrc/menu/xonotic/credits.qc:135
+#: qcsrc/menu/xonotic/credits.qc:136
 msgid "Translators"
 msgstr "Traducteurs"
 
-#: qcsrc/menu/xonotic/credits.qc:137
+#: qcsrc/menu/xonotic/credits.qc:138
 msgid "Asturian"
 msgstr "Asturien"
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:143
 msgid "Belarusian"
 msgstr "Biélorusse"
 
-#: qcsrc/menu/xonotic/credits.qc:145
+#: qcsrc/menu/xonotic/credits.qc:146
 msgid "Bulgarian"
 msgstr "Bulgare"
 
-#: qcsrc/menu/xonotic/credits.qc:152
+#: qcsrc/menu/xonotic/credits.qc:153
 msgid "Chinese (China)"
 msgstr "Chinois (Chine)"
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Chinese (Taiwan)"
 msgstr "Chinois (Taïwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:163
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Cornish"
 msgstr "Cornouaillais"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:167
 msgid "Czech"
 msgstr "Tchèque"
 
-#: qcsrc/menu/xonotic/credits.qc:171
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Dutch"
 msgstr "Néerlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "English (Australia)"
 msgstr "Anglais (Australie)"
 
-#: qcsrc/menu/xonotic/credits.qc:183
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Finnish"
 msgstr "Finlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "French"
 msgstr "Français"
 
-#: qcsrc/menu/xonotic/credits.qc:196
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "German"
 msgstr "Allemand"
 
-#: qcsrc/menu/xonotic/credits.qc:207
+#: qcsrc/menu/xonotic/credits.qc:208
 msgid "Greek"
 msgstr "Grec"
 
-#: qcsrc/menu/xonotic/credits.qc:213
+#: qcsrc/menu/xonotic/credits.qc:214
 msgid "Hungarian"
 msgstr "Hongrois"
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "Irish"
 msgstr "Irlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:221
 msgid "Italian"
 msgstr "Italien"
 
-#: qcsrc/menu/xonotic/credits.qc:226
+#: qcsrc/menu/xonotic/credits.qc:227
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: qcsrc/menu/xonotic/credits.qc:229
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Korean"
 msgstr "Coréen"
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Polish"
 msgstr "Polonais"
 
-#: qcsrc/menu/xonotic/credits.qc:241
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:248
 msgid "Romanian"
 msgstr "Roumain"
 
-#: qcsrc/menu/xonotic/credits.qc:254
+#: qcsrc/menu/xonotic/credits.qc:255
 msgid "Russian"
 msgstr "Russe"
 
-#: qcsrc/menu/xonotic/credits.qc:265
+#: qcsrc/menu/xonotic/credits.qc:266
 msgid "Scottish Gaelic"
 msgstr "Gaélique écossais"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:269
 msgid "Serbian"
 msgstr "Serbe"
 
-#: qcsrc/menu/xonotic/credits.qc:274
+#: qcsrc/menu/xonotic/credits.qc:275
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: qcsrc/menu/xonotic/credits.qc:285
+#: qcsrc/menu/xonotic/credits.qc:286
 msgid "Swedish"
 msgstr "Suédois"
 
-#: qcsrc/menu/xonotic/credits.qc:289
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
-#: qcsrc/menu/xonotic/credits.qc:296
+#: qcsrc/menu/xonotic/credits.qc:297
 msgid "Past Contributors"
 msgstr "Contributeurs passés"
 
@@ -6463,7 +6470,7 @@ msgstr "Fondu après :"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "Never"
 msgstr "Jamais"
 
@@ -7551,21 +7558,9 @@ msgstr "Autoriser les statistiques à utiliser votre pseudonyme"
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr "Autoriser les statistiques à vous intégrer dans les classements"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
-msgid "Country"
-msgstr "Pays"
-
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
 msgstr "Choisir la langue…"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
-msgid "Gender:"
-msgstr "Genre :"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:179
-msgid "Gender"
-msgstr "Genre"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
@@ -7974,7 +7969,7 @@ msgstr "Souvent"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Always"
 msgstr "Toujours"
 
@@ -8781,35 +8776,43 @@ msgstr "Apparence des joueurs semblable à la mienne"
 msgid "Force player colors to mine"
 msgstr "Les joueurs ont tous la même couleur que vous"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
-msgid "In non teamplay modes only"
-msgstr "Dans les modes sans équipe uniquement"
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
+msgid ""
+"Warning: selecting 'Always' your team's color may be the same as the enemy "
+"team"
+msgstr ""
+"Attention : en sélectionnant « Toujours », la couleur de votre équipe peut "
+"être la même que celle de l'équipe ennemie"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
+msgid "Except in team games"
+msgstr "Sauf dans les jeux en équipe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
 msgstr "Seulement en Duel"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
 msgid "Body fading:"
 msgstr "Effacement des corps :"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 msgid "Gibs:"
 msgstr "Effets sanglants :"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:66
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "GIBS^None"
 msgstr "Aucun"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
 msgid "GIBS^Few"
 msgstr "Légers"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
 msgid "GIBS^Many"
 msgstr "Normaux"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
 msgid "GIBS^Lots"
 msgstr "Gores"
 

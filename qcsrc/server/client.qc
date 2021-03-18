@@ -253,6 +253,7 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
+		entcs_update_players(this);
 	}
 
 	entity spot = SelectSpawnPoint(this, true);
@@ -1200,6 +1201,8 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
+void player_powerups_remove_all(entity this);
+
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1251,6 +1254,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	player_powerups_remove_all(this); // stop powerup sound
 
 	ONREMOVE(this);
 }
@@ -1448,7 +1453,8 @@ void player_powerups_remove_all(entity this)
 {
 	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
 	{
-		if (time > game_starttime + 1)
+		// don't play the poweroff sound when the game restarts or the player disconnects
+		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
 		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
 		this.items &= ~ITEM_Strength.m_itemid;
@@ -1707,6 +1713,14 @@ void SetZoomState(entity this, float newzoom)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
+	if (game_stopped)
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+		return;
+	}
+
+	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
@@ -2333,6 +2347,8 @@ void ObserverOrSpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
+			else
+				this.would_spectate = false; // unable to spectate anyone
 			if (is_spec)
 				CS(this).impulse = 0;
 		} else if (is_spec) {
@@ -2356,7 +2372,10 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS_CVAR(this).cvar_cl_clippedspectating : !CS_CVAR(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			bool wouldclip = CS_CVAR(this).cvar_cl_clippedspectating;
+			if (PHYS_INPUT_BUTTON_USE(this))
+				wouldclip = !wouldclip;
+			int preferred_movetype = (wouldclip ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
 	} else { // jump pressed
@@ -2625,15 +2644,6 @@ void PlayerPreThink (entity this)
 	}
 
 	target_voicescript_next(this);
-
-	// WEAPONTODO: Move into weaponsystem somehow
-	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
-	}
 }
 
 void DrownPlayer(entity this)
@@ -2761,12 +2771,12 @@ void PlayerPostThink (entity this)
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
+		GetPressedKeys(this);
 		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;
 		}
-		GetPressedKeys(this);
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{

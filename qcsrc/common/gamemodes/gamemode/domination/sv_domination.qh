@@ -6,6 +6,7 @@ bool autocvar_g_domination_roundbased;
 int autocvar_g_domination_roundbased_point_limit;
 int autocvar_g_domination_point_leadlimit;
 
+IntrusiveList g_dompoints;
 void dom_Initialize();
 
 REGISTER_MUTATOR(dom, false)
@@ -13,6 +14,8 @@ REGISTER_MUTATOR(dom, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
+		g_dompoints = IL_NEW();
+
 		int fraglimit_override = autocvar_g_domination_point_limit;
 		if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
 			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
@@ -47,6 +50,3 @@ float domination_roundbased;
 float domination_teams;
 
 void AnimateDomPoint(entity this);
-
-IntrusiveList g_dompoints;
-STATIC_INIT(g_dompoints) { g_dompoints = IL_NEW(); }

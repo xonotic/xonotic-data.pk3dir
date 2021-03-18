@@ -163,8 +163,6 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
-REGISTER_MUTATOR(nades, autocvar_g_nades);
-
 .float nade_time_primed;
 .float nade_lifetime;
 
@@ -1241,7 +1239,14 @@ CLASS(NadeOffhand, OffhandWeapon)
     }
 ENDCLASS(NadeOffhand)
 NadeOffhand OFFHAND_NADE;
-STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOffhand); }
+REGISTER_MUTATOR(nades, autocvar_g_nades)
+{
+	MUTATOR_ONADD
+	{
+		OFFHAND_NADE = NEW(NadeOffhand);
+	}
+	return 0;
+}
 
 MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {

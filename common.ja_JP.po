@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-31 07:23+0100\n"
-"PO-Revision-Date: 2021-01-31 06:23+0000\n"
+"POT-Creation-Date: 2021-03-14 07:23+0100\n"
+"PO-Revision-Date: 2021-03-14 06:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -136,7 +136,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1参加するために ^3%s ^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
-#: qcsrc/common/notifications/all.qh:426
+#: qcsrc/common/notifications/all.qh:429
 msgid "jump"
 msgstr "ジャンプ"
 
@@ -1991,13 +1991,13 @@ msgid "Checkpoint"
 msgstr "通過点"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
 msgid "Finish"
 msgstr "終了"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
 msgid "Start"
 msgstr "開始"
 
@@ -2114,7 +2114,7 @@ msgstr "侵入者!"
 msgid "Tagged"
 msgstr "タグ付った"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:697
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
 #, c-format
 msgid "%s needing help!"
 msgstr "%s は助けが必要だ!"
@@ -4359,148 +4359,148 @@ msgstr ""
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2侵入者を検出した、シールドを無効中!"
 
-#: qcsrc/common/notifications/all.qh:194
+#: qcsrc/common/notifications/all.qh:196
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
 msgstr "通知ダンプコマンドは cl_cmd および sv_cmd でのみ機能します。"
 
-#: qcsrc/common/notifications/all.qh:404 qcsrc/common/notifications/all.qh:405
+#: qcsrc/common/notifications/all.qh:407 qcsrc/common/notifications/all.qh:408
 #, c-format
 msgid " (near %s)"
 msgstr " ( %s に近い)"
 
-#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
+#: qcsrc/common/notifications/all.qh:415 qcsrc/common/notifications/all.qh:416
 msgid "primary"
 msgstr "一次"
 
-#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
+#: qcsrc/common/notifications/all.qh:415 qcsrc/common/notifications/all.qh:416
 msgid "secondary"
 msgstr "二次"
 
-#: qcsrc/common/notifications/all.qh:415
+#: qcsrc/common/notifications/all.qh:418
 msgid "point"
 msgstr "ポイント"
 
-#: qcsrc/common/notifications/all.qh:415
+#: qcsrc/common/notifications/all.qh:418
 msgid "points"
 msgstr "ポイント"
 
-#: qcsrc/common/notifications/all.qh:424
+#: qcsrc/common/notifications/all.qh:427
 msgid "drop flag"
 msgstr "旗を落とす"
 
-#: qcsrc/common/notifications/all.qh:425
+#: qcsrc/common/notifications/all.qh:428
 msgid "throw nade"
 msgstr "手榴弾を投げる"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
 msgstr "%s^K1 がトリプル削除をした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
 msgstr "%s^K1 がトリプル得点をした！ %s^BG"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:454
 msgid "TRIPLE FRAG! "
 msgstr "トリプル削除! "
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 は5得点を一列にした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
 msgstr "%s^K1 が激怒を解除した! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:455
 msgid "RAGE! "
 msgstr "激怒! "
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 は10得点を一列にした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
 msgstr "%s^K1 が虐殺を開始した! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:456
 msgid "MASSACRE! "
 msgstr "虐殺! "
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
 msgstr "%s^K1 が暴力を実行した! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 は15得点を一列にした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:457
 msgid "MAYHEM! "
 msgstr "暴力! "
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
 msgstr "%s^K1 はバーサーカーだ! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 は20得点を一列にした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:458
 msgid "BERSERKER! "
 msgstr "バーサーカー! "
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
 msgstr "%s^K1 は大虐殺をやった! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 は25得点を一列にした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:459
 msgid "CARNAGE! "
 msgstr "大虐殺! "
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 は30得点を一列にした! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
 msgstr "%s^K1 はアルマゲドンを解放する! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:460
 msgid "ARMAGEDDON! "
 msgstr "アルマゲドン! "
 
-#: qcsrc/common/notifications/all.qh:464
+#: qcsrc/common/notifications/all.qh:467
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr "%s(^F1ボット^BG)"
 
-#: qcsrc/common/notifications/all.qh:466
+#: qcsrc/common/notifications/all.qh:469
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr "%s(PING ^F1%d^BG)"
 
-#: qcsrc/common/notifications/all.qh:473
+#: qcsrc/common/notifications/all.qh:476
 #, c-format
 msgid ""
 "\n"
@@ -4509,7 +4509,7 @@ msgstr ""
 "\n"
 "（健康 ^1%d^BG / 鎧 ^2%d^BG）%s"
 
-#: qcsrc/common/notifications/all.qh:475
+#: qcsrc/common/notifications/all.qh:478
 #, c-format
 msgid ""
 "\n"
@@ -4518,73 +4518,73 @@ msgstr ""
 "\n"
 "( ^F4^死んだBG )%s"
 
-#: qcsrc/common/notifications/all.qh:496 qcsrc/common/notifications/all.qh:509
+#: qcsrc/common/notifications/all.qh:499 qcsrc/common/notifications/all.qh:512
 #, c-format
 msgid "%d score spree! "
 msgstr "連続 %d 得点! "
 
-#: qcsrc/common/notifications/all.qh:508
+#: qcsrc/common/notifications/all.qh:511
 #, c-format
 msgid "%d frag spree! "
 msgstr "連続 %d 削除! "
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:524
 msgid "First blood! "
 msgstr "初殺! "
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:524
 msgid "First score! "
 msgstr "初得点! "
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:528
 msgid "First casualty! "
 msgstr "初敗北! "
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:528
 msgid "First victim! "
 msgstr "初犠牲者! "
 
-#: qcsrc/common/notifications/all.qh:566
+#: qcsrc/common/notifications/all.qh:569
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
 msgstr "%s^K1 には %d の削除が連続している! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:567
+#: qcsrc/common/notifications/all.qh:570
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
 msgstr "%s^K1 が %d 得点を連続して獲得した! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:585
+#: qcsrc/common/notifications/all.qh:588
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
 msgstr "%s^K1 が初殺を引きた! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:586
+#: qcsrc/common/notifications/all.qh:589
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
 msgstr "%s^K1 が初得点を獲得した! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:602
+#: qcsrc/common/notifications/all.qh:605
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr "、連続 %d 削除を終了中"
 
-#: qcsrc/common/notifications/all.qh:603
+#: qcsrc/common/notifications/all.qh:606
 #, c-format
 msgid ", ending their %d score spree"
 msgstr "、連続 %d 得点を終了中"
 
-#: qcsrc/common/notifications/all.qh:617
+#: qcsrc/common/notifications/all.qh:620
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr "、連続 %d 削除を失い中"
 
-#: qcsrc/common/notifications/all.qh:618
+#: qcsrc/common/notifications/all.qh:621
 #, c-format
 msgid ", losing their %d score spree"
 msgstr "、連続 %d 得点を失い中"
 
-#: qcsrc/common/notifications/all.qh:643
+#: qcsrc/common/notifications/all.qh:646
 #, c-format
 msgid " with %d %s"
 msgstr " の %d %s"
@@ -4661,7 +4661,7 @@ msgstr "黄"
 msgid "GENERATOR^Pink"
 msgstr "ピンク"
 
-#: qcsrc/common/turrets/all.qh:95
+#: qcsrc/common/turrets/all.qh:97
 msgid "Turrets dump command only works with sv_cmd."
 msgstr "砲塔ダンプコマンドは sv_cmd でのみ機能します。"
 
@@ -4764,20 +4764,14 @@ msgid "Walker"
 msgstr "ウォーカー"
 
 #: qcsrc/common/util.qc:1333
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:176
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:186
 msgid "Male"
 msgstr "男性"
 
 #: qcsrc/common/util.qc:1334
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:175
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:185
 msgid "Female"
 msgstr "女性"
 
 #: qcsrc/common/util.qc:1335
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:187
 msgid "Undisclosed"
 msgstr "未知"
 
@@ -5187,7 +5181,7 @@ msgstr "ラプターフレア"
 msgid "Spiderbot"
 msgstr "蜘蛛ボット"
 
-#: qcsrc/common/weapons/all.qh:77
+#: qcsrc/common/weapons/all.qh:79
 msgid "Weapons dump command only works with sv_cmd."
 msgstr "武器ダンプコマンドは sv_cmd でのみ機能します。"
 
@@ -5497,26 +5491,34 @@ msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
-msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr "使用法: menu_cmd コマンド...、可能なコマンドは次:"
+msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:49
-msgid "  sync - reloads all cvars on the current menu page"
-msgstr "  sync - 現在のメニューページの全ての cvar をリロードする"
+msgid "  <sync> reloads all cvars on the current menu page"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:50
-msgid "  directmenu ITEM - select a menu item as main item"
-msgstr "  directmenu ITEM - メニューアイテムをメインアイテムとして選択する"
+msgid ""
+"  <directmenu> shows the menu window named <item> (or the menu window "
+"containing an item named <item>)"
+msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:51
-msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr "  dumptree - メニューの状態をツリー状としてコンソールにダンプする"
+msgid ""
+"   if <item> is not specified it shows the list of available items in the "
+"console"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:80
-msgid "Available options:"
-msgstr "利用可能なオプション:"
+#: qcsrc/menu/command/menu_cmd.qc:52
+msgid "  <dumptree> dumps the state of the menu as a tree to the console"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:129
+#: qcsrc/menu/command/menu_cmd.qc:81
+msgid "Available items:"
+msgstr ""
+
+#: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
 "INVALID COMMAND - サポートされているコマンドのリストについては menu_cmd help "
@@ -5542,171 +5544,171 @@ msgstr "メインチーム"
 msgid "Extended Team"
 msgstr "拡張チーム"
 
-#: qcsrc/menu/xonotic/credits.qc:28
+#: qcsrc/menu/xonotic/credits.qc:29
 msgid "Website"
 msgstr "ウェブサイト"
 
-#: qcsrc/menu/xonotic/credits.qc:33
+#: qcsrc/menu/xonotic/credits.qc:34
 msgid "Stats"
 msgstr "状態"
 
-#: qcsrc/menu/xonotic/credits.qc:37
+#: qcsrc/menu/xonotic/credits.qc:38
 msgid "Art"
 msgstr "アート"
 
-#: qcsrc/menu/xonotic/credits.qc:45
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Animation"
 msgstr "アニメーション"
 
-#: qcsrc/menu/xonotic/credits.qc:49
+#: qcsrc/menu/xonotic/credits.qc:50
 msgid "Level Design"
 msgstr "レベルの設計"
 
-#: qcsrc/menu/xonotic/credits.qc:72
+#: qcsrc/menu/xonotic/credits.qc:73
 msgid "Music / Sound FX"
 msgstr "音楽 / サウンドFX"
 
-#: qcsrc/menu/xonotic/credits.qc:88
+#: qcsrc/menu/xonotic/credits.qc:89
 msgid "Game Code"
 msgstr "ゲームコード"
 
-#: qcsrc/menu/xonotic/credits.qc:100
+#: qcsrc/menu/xonotic/credits.qc:101
 msgid "Marketing / PR"
 msgstr "マーケティング / PR"
 
-#: qcsrc/menu/xonotic/credits.qc:106
+#: qcsrc/menu/xonotic/credits.qc:107
 msgid "Legal"
 msgstr "法的"
 
-#: qcsrc/menu/xonotic/credits.qc:111
+#: qcsrc/menu/xonotic/credits.qc:112
 msgid "Game Engine"
 msgstr "ゲームエンジン"
 
-#: qcsrc/menu/xonotic/credits.qc:115
+#: qcsrc/menu/xonotic/credits.qc:116
 msgid "Engine Additions"
 msgstr "エンジンの追加"
 
-#: qcsrc/menu/xonotic/credits.qc:121
+#: qcsrc/menu/xonotic/credits.qc:122
 msgid "Compiler"
 msgstr "コンパイラ"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:128
 msgid "Other Active Contributors"
 msgstr "他の活発な貢献者"
 
-#: qcsrc/menu/xonotic/credits.qc:135
+#: qcsrc/menu/xonotic/credits.qc:136
 msgid "Translators"
 msgstr "翻訳者"
 
-#: qcsrc/menu/xonotic/credits.qc:137
+#: qcsrc/menu/xonotic/credits.qc:138
 msgid "Asturian"
 msgstr "アストゥリアス語"
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:143
 msgid "Belarusian"
 msgstr "ベラルーシ語"
 
-#: qcsrc/menu/xonotic/credits.qc:145
+#: qcsrc/menu/xonotic/credits.qc:146
 msgid "Bulgarian"
 msgstr "ブルガリア語"
 
-#: qcsrc/menu/xonotic/credits.qc:152
+#: qcsrc/menu/xonotic/credits.qc:153
 msgid "Chinese (China)"
 msgstr "中国語 (中国)"
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Chinese (Taiwan)"
 msgstr "中国語 (台湾)"
 
-#: qcsrc/menu/xonotic/credits.qc:163
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Cornish"
 msgstr "コーニッシュ語"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:167
 msgid "Czech"
 msgstr "チェコ語"
 
-#: qcsrc/menu/xonotic/credits.qc:171
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Dutch"
 msgstr "オランダ語"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "English (Australia)"
 msgstr "英語 (オーストラリア)"
 
-#: qcsrc/menu/xonotic/credits.qc:183
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Finnish"
 msgstr "フィンランド語"
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "French"
 msgstr "フランス語"
 
-#: qcsrc/menu/xonotic/credits.qc:196
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "German"
 msgstr "ドイツ語"
 
-#: qcsrc/menu/xonotic/credits.qc:207
+#: qcsrc/menu/xonotic/credits.qc:208
 msgid "Greek"
 msgstr "ギリシャ語"
 
-#: qcsrc/menu/xonotic/credits.qc:213
+#: qcsrc/menu/xonotic/credits.qc:214
 msgid "Hungarian"
 msgstr "ハンガリー語"
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "Irish"
 msgstr "アイリッシュ語"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:221
 msgid "Italian"
 msgstr "イタリア語"
 
-#: qcsrc/menu/xonotic/credits.qc:226
+#: qcsrc/menu/xonotic/credits.qc:227
 msgid "Kazakh"
 msgstr "カザフスタン語"
 
-#: qcsrc/menu/xonotic/credits.qc:229
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Korean"
 msgstr "韓国語"
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Polish"
 msgstr "ポーランド語"
 
-#: qcsrc/menu/xonotic/credits.qc:241
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Portuguese"
 msgstr "ポルトガル語"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:248
 msgid "Romanian"
 msgstr "ルーマニア語"
 
-#: qcsrc/menu/xonotic/credits.qc:254
+#: qcsrc/menu/xonotic/credits.qc:255
 msgid "Russian"
 msgstr "ロシア語"
 
-#: qcsrc/menu/xonotic/credits.qc:265
+#: qcsrc/menu/xonotic/credits.qc:266
 msgid "Scottish Gaelic"
 msgstr "スコットランドゲール語"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:269
 msgid "Serbian"
 msgstr "セルビア語"
 
-#: qcsrc/menu/xonotic/credits.qc:274
+#: qcsrc/menu/xonotic/credits.qc:275
 msgid "Spanish"
 msgstr "スペイン語"
 
-#: qcsrc/menu/xonotic/credits.qc:285
+#: qcsrc/menu/xonotic/credits.qc:286
 msgid "Swedish"
 msgstr "スウェーデン語"
 
-#: qcsrc/menu/xonotic/credits.qc:289
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Ukrainian"
 msgstr "ウクライナ語"
 
-#: qcsrc/menu/xonotic/credits.qc:296
+#: qcsrc/menu/xonotic/credits.qc:297
 msgid "Past Contributors"
 msgstr "以前の貢献者"
 
@@ -6374,7 +6376,7 @@ msgstr "退色後:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "Never"
 msgstr "なし"
 
@@ -7448,21 +7450,9 @@ msgstr "選手の統計であなたのニックネームを使用できるよう
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr "選手の統計が得点表であなたをランク付けできるように許可する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
-msgid "Country"
-msgstr "国"
-
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
 msgstr "言語を選択する..."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
-msgid "Gender:"
-msgstr "性別:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:179
-msgid "Gender"
-msgstr "性別"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
@@ -7871,7 +7861,7 @@ msgstr "しばしば"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Always"
 msgstr "常に"
 
@@ -8661,35 +8651,41 @@ msgstr "プレイヤーのモデルを私のものに強制的する"
 msgid "Force player colors to mine"
 msgstr "プレイヤーの色を私のものに強制的する"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
-msgid "In non teamplay modes only"
-msgstr "非チームプレイモードのみ"
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
+msgid ""
+"Warning: selecting 'Always' your team's color may be the same as the enemy "
+"team"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
+msgid "Except in team games"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
 msgstr "決闘でのみ"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
 msgid "Body fading:"
 msgstr "体フェージング:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 msgid "Gibs:"
 msgstr "内臓:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:66
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "GIBS^None"
 msgstr "なし"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
 msgid "GIBS^Few"
 msgstr "少ない"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
 msgid "GIBS^Many"
 msgstr "多い"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
 msgid "GIBS^Lots"
 msgstr "たくさん"
 
