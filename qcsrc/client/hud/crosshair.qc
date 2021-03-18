@@ -265,7 +265,9 @@ void HUD_Crosshair(entity this)
 		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1)
+			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
+			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1
+				&& my_alpha > autocvar_crosshair_chase_playeralpha)
 			{
 				bool hit = false;
 				if (pointinsidebox(view_origin, csqcplayer.absmin, csqcplayer.absmax))
@@ -276,13 +278,19 @@ void HUD_Crosshair(entity this)
 					if(trace_ent == csqcplayer)
 						hit = true;
 				}
+				float prev_alpha = csqcplayer.alpha;
 				if(hit)
-				{
-					float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
-				}
+					csqcplayer.alpha = max(csqcplayer.alpha - frametime * 5, autocvar_crosshair_chase_playeralpha);
 				else
-					csqcplayer.alpha = csqcplayer.m_alpha;
+					csqcplayer.alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
+
+				if (csqcplayer.alpha != prev_alpha)
+				{
+					FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer,
+					{
+						it.alpha = csqcplayer.alpha;
+					});
+				}
 			}
 			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
 			wcross_origin = project_3d_to_2d(trace_endpos);
