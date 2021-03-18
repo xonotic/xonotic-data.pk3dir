@@ -259,6 +259,8 @@ void HUD_Crosshair(entity this)
 		// TrueAim check
 		float shottype;
 
+		static int crosshair_chase_state = 0;
+
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
@@ -266,9 +268,10 @@ void HUD_Crosshair(entity this)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
 			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1
-				&& my_alpha > autocvar_crosshair_chase_playeralpha)
+			float chase_playeralpha = bound(0.001, autocvar_crosshair_chase_playeralpha, 1);
+			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha)
 			{
+				crosshair_chase_state = 2;
 				bool hit = false;
 				if (pointinsidebox(view_origin, csqcplayer.absmin, csqcplayer.absmax))
 					hit = true;
@@ -280,7 +283,7 @@ void HUD_Crosshair(entity this)
 				}
 				float prev_alpha = csqcplayer.alpha;
 				if(hit)
-					csqcplayer.alpha = max(csqcplayer.alpha - frametime * 5, autocvar_crosshair_chase_playeralpha);
+					csqcplayer.alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
 				else
 					csqcplayer.alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
 
@@ -298,6 +301,16 @@ void HUD_Crosshair(entity this)
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
+		if (crosshair_chase_state == 2) // enabled (this frame)
+			crosshair_chase_state = 1;
+		else if (crosshair_chase_state == 1) // turned off in the previous frame
+		{
+			// reset player alpha only in this frame
+			if (csqcplayer)
+				csqcplayer.alpha = csqcplayer.m_alpha;
+			crosshair_chase_state = 0; // turned off and alpha reset
+		}
+
 		if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;
