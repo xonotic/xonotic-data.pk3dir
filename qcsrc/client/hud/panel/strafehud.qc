@@ -119,7 +119,7 @@ void HUD_StrafeHUD()
         bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         bool   spectating                    = entcs_GetSpecState(strafeplayer.sv_entnum) == ENTCS_SPEC_PURE;
         float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
-        float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) && !swimming ? .5 : 1;
+        float  maxspeed_crouch_mod           = IS_DUCKED(csqcplayer) && !swimming ? .5 : 1;
         float  maxspeed_water_mod            = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
@@ -611,7 +611,7 @@ void HUD_StrafeHUD()
             {
                 float slicksteps = 90 / pow(2, bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4));
 
-                slickdetected = IS_ONSLICK(strafeplayer); // don't need to traceline if already touching slick
+                if(islocal) slickdetected = IS_ONSLICK(strafeplayer); // don't need to traceline if already touching slick
 
                 // traceline into every direction
                 trace_dphitq3surfaceflags = 0;
@@ -794,7 +794,7 @@ void HUD_StrafeHUD()
             float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min, 0);
             float jumpheight_current = strafeplayer.origin.z;
             float jumpspeed_current = strafeplayer.velocity.z;
-            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
+            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || onground || swimming || IS_DEAD(strafeplayer) || spectating)
             {
                 // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
                 jumprestart = true;
