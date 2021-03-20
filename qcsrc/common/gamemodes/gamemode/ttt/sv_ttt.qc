@@ -17,8 +17,6 @@ float autocvar_g_ttt_karma_bantime = 1800; //karma ban seconds
 //Ideas: skills/items per each player-type: (these skills/items should be used once)
 // Innocents: Shield and Strength; Traitors: Shield and Strength; Detectives: skill to detect any player to see what player-type is
 
-//TODO: Add force to spec, kick and ban for low karma points 27-02-2021
-
 // Detective is a created team, this team is added inside Innocents team
 
 //TODO: 
@@ -324,19 +322,20 @@ void ttt_RoundStart()
 		if(it.ttt_status == TTT_STATUS_INNOCENT)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_INNOCENT);
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_INNOCENT);
 			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^2Innocent^7!", it.netname));
 		}
 		else if(it.ttt_status == TTT_STATUS_TRAITOR)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_TRAITOR);
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_TRAITOR);
 			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^1Traitor^7!", it.netname));
 		}
 		else if(it.ttt_status == TTT_STATUS_DETECTIVE)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE);
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_DETECTIVE);
 			PrintToChatAll(sprintf("%s is ^4Detective^7!", it.netname));
-			//see the possibilities in qcsrc/server/chat.qc and qcrsc/server/chat.qh
-			//Say(it, false, it, sprintf("%s is ^4Detective^7!", it.netname), true);
 		}
 
 		ttt_FakeTimeLimit(it, round_handler_GetEndTime());

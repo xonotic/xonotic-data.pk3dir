@@ -440,8 +440,16 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou cannot change to a larger team"), "")
     MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou are not allowed to change teams"), "")
     //LegendGuard adds MSG_INFO_NOTIF for TTT 20-02-2021
+    //LegendGuard adds N_CHATCON option 20-03-2021
+    MSG_INFO_NOTIF(TTT_TRAITOR,                             N_CHATCON,  0, 0, "", "",           "",                     _("^BGYou are ^K1Traitor^BG!"), "")
     MSG_INFO_NOTIF(TTT_TRAITOR_WIN,                         N_CONSOLE,  0, 0, "", "",           "",                     _("^K1Traitors^BG win the round"), "")
+    
+    //LegendGuard adds N_CHATCON option 20-03-2021
+    MSG_INFO_NOTIF(TTT_INNOCENT,                            N_CHATCON,  0, 0, "", "",           "",                     _("^BGYou are ^F1Innocent^BG!"), "")
     MSG_INFO_NOTIF(TTT_INNOCENT_WIN,                        N_CONSOLE,  0, 0, "", "",           "",                     _("^F1Innocents^BG win the round"), "")
+    
+    //LegendGuard adds N_CHATCON option 20-03-2021
+    MSG_INFO_NOTIF(TTT_DETECTIVE,                           N_CHATCON,  0, 0, "", "",           "",                     _("^BGYou are ^4Detective^BG!"), "")
 
     MSG_INFO_NOTIF(VERSION_BETA,                            N_CONSOLE,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "")
     MSG_INFO_NOTIF(VERSION_OLD,                             N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "")
@@ -776,8 +784,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     //LegendGuard adds MSG_CENTER_NOTIF for TTT 20-02-2021
     MSG_CENTER_NOTIF(TTT_TRAITOR,                       N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^K1Traitor^BG! Kill all the innocents without raising suspicion!")), "")
     MSG_CENTER_NOTIF(TTT_TRAITOR_WIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Traitors^BG win the round"), "")
+    
     MSG_CENTER_NOTIF(TTT_INNOCENT,                      N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^F1Innocent^BG! Try to find out who are traitors and survive until time is up!")), "")
     MSG_CENTER_NOTIF(TTT_INNOCENT_WIN,                  N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Innocents^BG win the round"), "")
+    
     MSG_CENTER_NOTIF(TTT_DETECTIVE,                     N_ENABLE,    0, 0, "",               CPID_TTT,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^4Detective^BG! Find out who are traitors and protect the innocents!")), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
