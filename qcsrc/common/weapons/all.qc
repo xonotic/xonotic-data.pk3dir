@@ -3,53 +3,49 @@
 #define WEAPONS_ALL_C
 
 #if defined(CSQC)
-	#include "../constants.qh"
-	#include "../stats.qh"
-	#include <lib/warpzone/anglestransform.qh>
-	#include <lib/warpzone/common.qh>
-	#include <lib/warpzone/client.qh>
-	#include "../util.qh"
-	#include <client/autocvars.qh>
-	#include "../deathtypes/all.qh"
-	#include <lib/csqcmodel/interpolate.qh>
-	#include "../physics/movetypes/movetypes.qh"
 	#include <client/main.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/physics/movetypes/movetypes.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/calculations.qc>
+	#include <common/weapons/weapon/_mod.inc>
 	#include <lib/csqcmodel/cl_model.qh>
+	#include <lib/csqcmodel/interpolate.qh>
+	#include <lib/warpzone/anglestransform.qh>
+	#include <lib/warpzone/client.qh>
+	#include <lib/warpzone/common.qh>
 #elif defined(MENUQC)
+	#include <common/weapons/weapon/_mod.inc>
 #elif defined(SVQC)
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
 	#include <common/items/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/monsters/_mod.qh>
+	#include <common/notifications/all.qh>
+	#include <common/stats.qh>
+	#include <common/teams.qh>
+	#include <common/util.qh>
+	#include <common/weapons/calculations.qc>
+	#include <common/weapons/config.qc>
+	#include <common/weapons/config.qh>
+	#include <common/weapons/weapon/_mod.inc>
+	#include <lib/csqcmodel/sv_model.qh>
 	#include <lib/warpzone/anglestransform.qh>
 	#include <lib/warpzone/common.qh>
-	#include <lib/warpzone/util_server.qh>
 	#include <lib/warpzone/server.qh>
-	#include "../constants.qh"
-	#include "../stats.qh"
-	#include "../teams.qh"
-	#include <common/util.qh>
-	#include "../monsters/_mod.qh"
-	#include "config.qh"
+	#include <lib/warpzone/util_server.qh>
+	#include <server/command/_mod.qh>
+	#include <server/hook.qh>
+	#include <server/items/spawning.qh>
+	#include <server/mutators/_mod.qh>
+	#include <server/portals.qh>
 	#include <server/weapons/common.qh>
 	#include <server/weapons/csqcprojectile.qh>
 	#include <server/weapons/tracing.qh>
-	#include <server/items/spawning.qh>
-	#include <server/autocvars.qh>
-	#include "../notifications/all.qh"
-	#include "../deathtypes/all.qh"
-	#include <server/mutators/_mod.qh>
-	#include "../mapinfo.qh"
-	#include <server/command/_mod.qh>
-	#include <lib/csqcmodel/sv_model.qh>
-	#include <server/portals.qh>
-#include <server/hook.qh>
 #endif
-#ifdef GAMEQC
-	#include "calculations.qc"
-#endif
-#ifdef SVQC
-	#include "config.qc"
-#endif
-
-#include "weapon/_mod.inc"
 
 
 // WEAPON PLUGIN SYSTEM
@@ -658,8 +654,8 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 cl_cmd weapon_find weapon");
-			LOG_HELP("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
+			LOG_HELP("Usage:^3 cl_cmd weapon_find <weapon>");
+			LOG_HELP("  Where <weapon> is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
 	}

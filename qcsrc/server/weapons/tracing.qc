@@ -1,26 +1,22 @@
 #include "tracing.qh"
 
-#include <common/effects/all.qh>
-
-#include "accuracy.qh"
-#include "common.qh"
-#include "hitplot.qh"
-#include "weaponsystem.qh"
-
-#include "../damage.qh"
-#include <server/main.qh>
-#include <server/mutators/_mod.qh>
-#include <server/antilag.qh>
-
 #include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
 #include <common/net_linked.qh>
+#include <common/state.qh>
 #include <common/util.qh>
-
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-#include <common/state.qh>
-
 #include <lib/warpzone/common.qh>
+#include <server/antilag.qh>
+#include <server/damage.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/hitplot.qh>
+#include <server/weapons/weaponsystem.qh>
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
@@ -76,10 +72,18 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
-	// TODO this is broken - see 637056bea7bf7f5c9c0fc6113e94731a2767476 for an attempted fix
-	// which fixes issue #1957 but causes #2129
 	vector dv = right * -vecs.y + up * vecs.z;
-	w_shotorg = ent.origin + ent.view_ofs + dv;
+	w_shotorg = ent.origin + ent.view_ofs;
+	if(antilag)
+	{
+		if(CS(ent).antilag_debug)
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, CS(ent).antilag_debug);
+		else
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+	}
+	else
+		tracebox(w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos;
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
@@ -103,7 +107,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!CS(ent).cvar_cl_noantilag)
+	if (!CS_CVAR(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{
@@ -298,7 +302,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
 		if(!pseudoprojectile)
-			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+			pseudoprojectile = new(pseudoprojectile); // we need this so the sound uses the "entchannel4" volume
 
 		msg_entity = it;
 		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation

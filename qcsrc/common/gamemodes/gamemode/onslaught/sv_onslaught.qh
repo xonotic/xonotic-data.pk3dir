@@ -3,6 +3,7 @@
 #include <common/mutators/base.qh>
 
 float autocvar_g_onslaught_point_limit;
+IntrusiveList g_onsshields;
 void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
@@ -10,6 +11,7 @@ REGISTER_MUTATOR(ons, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
+		g_onsshields = IL_NEW();
 		GameRules_teams(true);
 		GameRules_limit_score(autocvar_g_onslaught_point_limit);
 

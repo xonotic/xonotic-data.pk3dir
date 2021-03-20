@@ -1,15 +1,16 @@
 #include "sv_spawn.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../util.qh"
-    #include "all.qh"
-    #include "sv_monsters.qh"
-    #include <server/autocvars.qh>
-    #include <common/weapons/_all.qh>
-    #include <common/stats.qh>
-    #include <server/weapons/common.qh>
+	#include <common/monsters/all.qh>
+	#include <common/monsters/sv_monsters.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
+	#include <server/weapons/common.qh>
 #endif
+
 entity spawnmonster (entity e, string monster, Monster monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
 {
 	e.spawnflags = MONSTERFLAG_SPAWNED;

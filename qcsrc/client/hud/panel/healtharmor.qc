@@ -1,8 +1,6 @@
 #include "healtharmor.qh"
 
 #include <client/draw.qh>
-#include <client/main.qh>
-
 #include <common/deathtypes/all.qh>
 
 // Health/armor (#3)
@@ -96,11 +94,20 @@ void HUD_HealthArmor()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float air_alpha = 1;
-	if (STAT(AIR_FINISHED) && time > STAT(AIR_FINISHED))
+	float air_alpha;
+	if (!STAT(AIR_FINISHED))
+		air_alpha = 0;
+	else if (time > STAT(AIR_FINISHED))
 	{
 		air_alpha = blink_synced(0.5, 0.5, 7, STAT(AIR_FINISHED), -1);
 		air_time = 10;
+	}
+	else
+	{
+		float fade_time = 10 / 2;
+		float start_alpha = autocvar_hud_panel_healtharmor_oxygenbar_startalpha;
+		float f = (STAT(AIR_FINISHED) - time - fade_time) / fade_time;
+		air_alpha = bound(0, start_alpha + (1 - start_alpha) * (1 - f), 1);
 	}
 
 	int baralign = autocvar_hud_panel_healtharmor_baralign;

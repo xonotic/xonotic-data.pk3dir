@@ -1,5 +1,6 @@
 #include "rpn.qh"
-#include "command.qh"
+
+#include <common/command/command.qh>
 
 
 // ========================================
@@ -569,7 +570,7 @@ LABEL(skip_difference)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " rpn EXPRESSION...");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " rpn <expression>");
 			LOG_HELP("    Operator description (x: string, s: set, f: float):");
 			LOG_HELP("    x pop ----------------------------->     : removes the top");
 			LOG_HELP("    x dup -----------------------------> x x : duplicates the top");

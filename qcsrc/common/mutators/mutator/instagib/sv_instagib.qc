@@ -16,16 +16,6 @@ bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
 float autocvar_g_instagib_speed_highspeed;
 
-IntrusiveList g_instagib_items;
-STATIC_INIT(instagib)
-{
-	g_instagib_items = IL_NEW();
-	IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
-	IL_PUSH(g_instagib_items, ITEM_ExtraLife);
-	IL_PUSH(g_instagib_items, ITEM_Invisibility);
-	IL_PUSH(g_instagib_items, ITEM_Speed);
-}
-
 void instagib_invisibility(entity this)
 {
 	this.strength_finished = autocvar_g_instagib_invisibility_time;
@@ -509,6 +499,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 {
+	if(MUTATOR_RETURNVALUE) return false;
+
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
@@ -542,6 +534,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 {
+	if (MUTATOR_RETURNVALUE) return false;
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here

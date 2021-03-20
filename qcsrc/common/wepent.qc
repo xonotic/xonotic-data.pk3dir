@@ -158,7 +158,7 @@ MACRO_END
 
 	void wepent_link(entity wep)
 	{
-		entity e = new(wepent_sender);
+		entity e = new_pure(wepent_sender);
 		e.owner = wep;
 		setthink(e, wepent_think);
 		e.nextthink = time;
@@ -191,8 +191,6 @@ MACRO_END
 
 	NET_HANDLE(ENT_CLIENT_WEPENT, bool isnew)
 	{
-		if (isnew)
-			this.classname = "wepent_receiver";
 		return ReadWepent(this);
 	}
 

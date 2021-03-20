@@ -2,6 +2,31 @@
 
 #include <common/weapons/_all.qh>
 
+bool autocvar__sv_init;
+bool autocvar_g_use_ammunition;
+bool autocvar_g_jetpack;
+bool autocvar_g_warmup_allguns;
+bool autocvar_g_warmup_allow_timeout;
+#define autocvar_g_weaponarena cvar_string("g_weaponarena")
+string autocvar_quit_and_redirect;
+float autocvar_quit_and_redirect_timer;
+bool autocvar_quit_when_empty;
+string autocvar_sessionid;
+bool autocvar_sv_curl_serverpackages_auto;
+bool autocvar_sv_db_saveasdump;
+bool autocvar_sv_logscores_bots;
+bool autocvar_sv_logscores_console;
+bool autocvar_sv_logscores_file;
+string autocvar_sv_logscores_filename;
+float autocvar_sv_mapchange_delay;
+float autocvar_timelimit_increment;
+float autocvar_timelimit_decrement;
+float autocvar_timelimit_min;
+float autocvar_timelimit_max;
+float autocvar_timelimit_overtime;
+int autocvar_timelimit_overtimes;
+float autocvar_timelimit_suddendeath;
+
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
@@ -10,6 +35,8 @@ float checkrules_overtimesadded; //how many overtimes have been already added
 // flag set on worldspawn so that the code knows if it is dedicated or not
 bool server_is_dedicated;
 
+int world_initialized;
+
 string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
@@ -17,6 +44,8 @@ float cvar_purechanges_count;
 string modname;
 
 string gamemode_name;
+
+string record_type;
 
 string clientstuff;
 

@@ -1,38 +1,29 @@
 #include "items.qh"
 
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/gamemodes/gamemode/cts/cts.qh>
 #include <common/items/_mod.qh>
-
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/notifications/all.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <common/wepent.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
 #include <server/bot/api.qh>
-
 #include <server/command/vote.qh>
-
 #include <server/damage.qh>
-
 #include <server/mutators/_mod.qh>
-
 #include <server/teamplay.qh>
-#include <server/world.qh>
-
 #include <server/weapons/common.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
-
-#include <common/constants.qh>
-#include <common/deathtypes/all.qh>
-#include <common/notifications/all.qh>
-#include <common/mapobjects/subs.qh>
-#include <common/mapobjects/triggers.qh>
-#include <common/util.qh>
-
-#include <common/monsters/_mod.qh>
-
-#include <common/wepent.qh>
-#include <common/weapons/_all.qh>
-
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
-
-#include <lib/warpzone/util_server.qh>
+#include <server/world.qh>
 
 bool ItemSend(entity this, entity to, int sf)
 {
@@ -490,7 +481,7 @@ bool Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS(player).autoswitch)
+	if(CS_CVAR(player).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -579,7 +570,7 @@ bool Item_GiveTo(entity item, entity player)
 		return false;
 
 	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS(player).cvar_cl_cts_noautoswitch)
+	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS_CVAR(player).cvar_cl_cts_noautoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1438,7 +1429,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS(e).autoswitch)
+	if(CS_CVAR(e).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

@@ -1,24 +1,24 @@
 #include "getreplies.qh"
 
-#include <common/weapons/_all.qh>
-#include <common/wepent.qh>
-#include <common/stats.qh>
-#include <server/intermission.qh>
-#include <server/main.qh>
-#include <server/mutators/_mod.qh>
-#include <server/world.qh>
-
 #include <common/command/_mod.qh>
-#include "getreplies.qh"
-
-#include <server/race.qh>
-
 #include <common/constants.qh>
 #include <common/gamemodes/_mod.qh>
-#include <common/net_linked.qh>
-#include <common/util.qh>
-
 #include <common/monsters/_mod.qh>
+#include <common/net_linked.qh>
+#include <common/notifications/all.qh>
+#include <common/playerstats.qh>
+#include <common/stats.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <common/wepent.qh>
+#include <server/command/getreplies.qh>
+#include <server/intermission.qh>
+#include <server/main.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/weapons/selection.qh>
+#include <server/world.qh>
 
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual
@@ -32,7 +32,7 @@
 
 // See common.qc for their proper commands
 
-string getrecords(int page)  // 50 records per page
+string getrecords(int page)
 {
 	string s = "";
 
@@ -40,9 +40,6 @@ string getrecords(int page)  // 50 records per page
 	s = M_ARGV(1, string);
 
 	MapInfo_ClearTemps();
-
-	if (s == "" && page == 0)
-		return "No records are available on this server for the current game mode.\n";
 	return s;
 }
 
@@ -379,7 +376,7 @@ void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float 
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
 	string o = W_FixWeaponOrder_ForceComplete(wo);
-	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
+	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
@@ -400,7 +397,7 @@ void GetCvars(entity this, entity store, int f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 
-	Notification_GetCvars(this);
+	Notification_GetCvars(this, store);
 
 	ReplicateVars(this, store, s, f);
 

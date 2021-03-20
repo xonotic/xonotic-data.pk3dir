@@ -1,28 +1,29 @@
 #include "weaponsystem.qh"
 
-#include "selection.qh"
-
-#include "../command/common.qh"
-#include <server/client.qh>
-#include <server/damage.qh>
-#include <server/world.qh>
-#include <server/items/items.qh>
-#include <server/mutators/_mod.qh>
-#include "../round_handler.qh"
-#include <server/cheats.qh>
-#include <server/resources.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/items/_mod.qh>
-#include <common/net_linked.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
-#include <common/util.qh>
-#include <common/weapons/_all.qh>
 #include <common/state.qh>
-#include <lib/csqcmodel/sv_model.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/hook.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/selection.qh>
+#include <server/world.qh>
 
 .int state;
 
@@ -508,6 +509,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 			this.m_switchweapon = WEP_Null;
 			this.state = WS_CLEAR;
 			this.weaponname = "";
+			this.clip_load = this.clip_size = this.old_clip_load = 0;
 			return;
 		}
 	}
@@ -520,6 +522,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		this.m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;
 		this.weaponname = "";
+		this.clip_load = this.clip_size = this.old_clip_load = 0;
 		return;
 	}
 
@@ -601,7 +604,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	{
 		if (w != WEP_Null && !(STAT(WEAPONS, actor) & WepSet_FromWeapon(w)))
 		{
-			if (this.m_weapon == this.m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+			if (this.m_weapon == this.m_switchweapon)
+				W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w = WEP_Null;
 		}
 
@@ -657,8 +661,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				v_right = ri;
 				v_up = up;
 				Weapon wpn = this.m_weapon;
-				this.weapon_think(wpn, actor, weaponentity,
-					button_atck | (button_atck2 << 1));
+				this.weapon_think(wpn, actor, weaponentity, button_atck | (button_atck2 << 1));
 			}
 			else
 			{

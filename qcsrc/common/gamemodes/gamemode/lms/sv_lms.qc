@@ -174,6 +174,13 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
+	float tl = GameRules_scoring_add(frag_target, LMS_LIVES, 0);
+	if (tl <= 0)
+	{
+		frag_target.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		frag_target.respawn_time = time + 2;
+	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 }
 
@@ -355,6 +362,7 @@ void lms_extralife(entity this)
 
 MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 {
+	if (MUTATOR_RETURNVALUE) return false;
 	if (!autocvar_g_powerups) return false;
 	if (!autocvar_g_lms_extra_lives) return false;
 
@@ -376,6 +384,8 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 {
+	if(MUTATOR_RETURNVALUE) return false;
+
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 

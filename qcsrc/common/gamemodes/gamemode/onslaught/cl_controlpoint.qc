@@ -10,7 +10,7 @@
 .vector cp_origin, cp_bob_origin;
 .float cp_bob_spd;
 
-.vector cp_bob_dmg;
+.float cp_bob_dmg_z;
 
 .vector punchangle;
 
@@ -79,7 +79,7 @@ void cpicon_draw(entity this)
 		this.angles_y = this.angles_y + 45 * frametime;
 	}
 
-	setorigin(this, this.cp_origin + this.cp_bob_origin + this.cp_bob_dmg);
+	setorigin(this, this.cp_origin + this.cp_bob_origin + eZ * this.cp_bob_dmg_z);
 }
 
 void cpicon_damage(entity this, float hp)
@@ -113,7 +113,7 @@ void cpicon_construct(entity this, bool isnew)
 
 	if(this.icon_realmodel == NULL)
 	{
-		this.icon_realmodel = spawn();
+		this.icon_realmodel = new(cpicon_model);
 		setmodel(this.icon_realmodel, MDL_Null);
 		setorigin(this.icon_realmodel, this.origin);
 		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);

@@ -1,22 +1,18 @@
 #include "navigation.qh"
 
-#include <server/bot/api.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include "cvars.qh"
-
-#include "bot.qh"
-#include "waypoints.qh"
-
-#include <server/items/items.qh>
-
-#include <common/items/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/items/_mod.qh>
 #include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
+#include <common/net_linked.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/items/items.qh>
 
 .float speed;
 
@@ -226,7 +222,7 @@ bool navigation_check_submerged_state(entity ent, vector pos)
 
 bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector end, vector end2, int movemode)
 {
-	IL_EACH(g_ladders, it.classname == "func_ladder",
+	IL_EACH(g_ladders, true,
 	{
 		if(it.bot_pickup)
 		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
@@ -927,7 +923,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
+	if (waypointeditor_enabled && !IS_BOT_CLIENT(ent))
 	{
 		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
 		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
@@ -1376,7 +1372,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		if(autocvar_g_waypointeditor && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
+		if(waypointeditor_enabled && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 			e.nearestwaypoint = NULL;
 
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
@@ -1402,7 +1398,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
-			else if(autocvar_g_waypointeditor)
+			else if(waypointeditor_enabled)
 				e.nearestwaypointtimeout = time + 3 + random() * 2;
 		}
 		nwp = e.nearestwaypoint;
@@ -1491,7 +1487,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK))
 	{
 		// often path can be optimized by not adding the nearest waypoint
-		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
+		if (this.goalentity.navigation_dynamicgoal || waypointeditor_enabled)
 		{
 			if (nearest_wp.enemy.wpcost < autocvar_bot_ai_strategyinterval_movingtarget)
 			{

@@ -1,20 +1,21 @@
 #include "throwing.qh"
 
-#include "weaponsystem.qh"
-#include "../resources.qh"
-#include <server/items/spawning.qh>
-#include <server/mutators/_mod.qh>
-#include <server/items/items.qh>
-#include "../damage.qh"
-#include <server/world.qh>
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications/all.qh>
 #include <common/mapobjects/subs.qh>
+#include <common/notifications/all.qh>
+#include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
-#include <common/state.qh>
 #include <common/wepent.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/mutators/_mod.qh>
+#include <server/resources.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 void thrown_wep_think(entity this)
 {
@@ -148,6 +149,8 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	Weapon w = this.(weaponentity).m_weapon;
 	if (w == WEP_Null)
 		return; // just in case
+	if (time < game_starttime)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this, this.(weaponentity)))
 		return;
 	if(!autocvar_g_weapon_throwable)

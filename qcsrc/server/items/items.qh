@@ -2,6 +2,15 @@
 
 #include <common/sounds/sound.qh>
 
+float autocvar_g_balance_superweapons_time;
+bool autocvar_g_fullbrightitems;
+int autocvar_g_powerups;
+float autocvar_g_items_mindist;
+float autocvar_g_items_maxdist;
+int autocvar_g_pickup_items;
+bool autocvar_g_nodepthtestitems;
+#define autocvar_g_weapon_stay cvar("g_weapon_stay")
+
 void StartItem(entity this, entity a);
 .int item_group;
 .int item_group_count;

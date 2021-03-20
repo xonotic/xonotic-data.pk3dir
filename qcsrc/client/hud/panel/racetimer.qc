@@ -1,8 +1,6 @@
 #include "racetimer.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 
 // Race timer (#8)
 

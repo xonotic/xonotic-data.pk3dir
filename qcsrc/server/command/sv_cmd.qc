@@ -1,36 +1,30 @@
 #include "sv_cmd.qh"
-#include "_mod.qh"
-
-#include <common/effects/all.qh>
-
-#include "banning.qh"
-#include "cmd.qh"
-#include "common.qh"
-#include "getreplies.qh"
-#include "radarmap.qh"
-
-#include "../anticheat.qh"
-#include "../campaign.qh"
-#include "../client.qh"
-#include "../player.qh"
-#include "../world.qh"
-#include "../ipban.qh"
-#include "../teamplay.qh"
-#include <server/intermission.qh>
-
-#include "../bot/api.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/effects/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-
-#include <common/monsters/sv_monsters.qh>
+#include <server/anticheat.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/command/_mod.qh>
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/radarmap.qh>
+#include <server/intermission.qh>
+#include <server/ipban.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
@@ -150,9 +144,9 @@ void GameCommand_adminmsg(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd adminmsg clients \"message\" [infobartime]");
-			LOG_HELP("  'clients' is a list (separated by commas) of player entity ID's or nicknames");
-			LOG_HELP("  If infobartime is provided, the message will be sent to infobar.");
+			LOG_HELP("Usage:^3 sv_cmd adminmsg <clients> \"<message>\" [<infobartime>]");
+			LOG_HELP("  <clients> is a list (separated by commas) of player entity ID's or nicknames");
+			LOG_HELP("  If <infobartime> is provided, the message will be sent to infobar.");
 			LOG_HELP("  Otherwise, it will just be sent as a centerprint message.");
 			LOG_HELP("Examples: adminmsg 2,4 \"this infomessage will last for ten seconds\" 10");
 			LOG_HELP("          adminmsg 2,5 \"this message will be a centerprint\"");
@@ -202,8 +196,8 @@ void GameCommand_allspec(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd allspec [reason]");
-			LOG_HELP("  Where 'reason' is an optional argument for explanation of allspec command.");
+			LOG_HELP("Usage:^3 sv_cmd allspec [<reason>]");
+			LOG_HELP("  Where <reason> is an optional argument for explanation of allspec command.");
 			LOG_HELP("See also: ^2moveplayer, shuffleteams^7");
 			return;
 		}
@@ -234,8 +228,8 @@ void GameCommand_anticheat(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd anticheat client");
-			LOG_HELP("  'client' is the entity number or name of the player.");
+			LOG_HELP("Usage:^3 sv_cmd anticheat <client>");
+			LOG_HELP("  <client> is the entity number or name of the player.");
 			return;
 		}
 	}
@@ -436,10 +430,10 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd bot_cmd client command [argument]");
-			LOG_HELP("  'client' can be either the name of the bot or a progressive number (not the entity number!)");
+			LOG_HELP("Usage:^3 sv_cmd bot_cmd <client> <command> [<arguments>]");
+			LOG_HELP("  <client> can be either the name of the bot or a progressive number (not the entity number!)");
 			LOG_HELP("           can also be '*' or 'all' to allow sending the command to all the bots");
-			LOG_HELP("  For full list of commands, see bot_cmd help [command].");
+			LOG_HELP("  For full list of commands, see bot_cmd help [<command>].");
 			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc \"say something\"");
 			LOG_HELP("          sv_cmd bot_cmd 1 presskey jump");
 			LOG_HELP("          sv_cmd bot_cmd * pause");
@@ -465,8 +459,8 @@ void GameCommand_cointoss(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd cointoss [result1 result2]");
-			LOG_HELP("  Where 'result1' and 'result2' are user created options.");
+			LOG_HELP("Usage:^3 sv_cmd cointoss [<result1> <result2>]");
+			LOG_HELP("  Where <result1> and <result2> are user created options.");
 			return;
 		}
 	}
@@ -506,10 +500,10 @@ void GameCommand_database(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd database action filename");
-			LOG_HELP("  Where 'action' is the command to complete,");
-			LOG_HELP("  and 'filename' is what it acts upon.");
-			LOG_HELP("  Full list of commands here: \"save, dump, load.\"");
+			LOG_HELP("Usage:^3 sv_cmd database <action> <filename>");
+			LOG_HELP("  Where <action> is the command to complete,");
+			LOG_HELP("  and <filename> is what it acts upon.");
+			LOG_HELP("  Full list of commands here: save, dump, load.");
 			return;
 		}
 	}
@@ -544,8 +538,8 @@ void GameCommand_defer_clear(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd defer_clear client");
-			LOG_HELP("  'client' is the entity number or name of the player.");
+			LOG_HELP("Usage:^3 sv_cmd defer_clear <client>");
+			LOG_HELP("  <client> is the entity number or name of the player.");
 			LOG_HELP("See also: ^2defer_clear_all^7");
 			return;
 		}
@@ -599,10 +593,10 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd delrec ranking [map]");
-			LOG_HELP("  'ranking' is which ranking level to clear up to, ");
+			LOG_HELP("Usage:^3 sv_cmd delrec <ranking> [<map>]");
+			LOG_HELP("  <ranking> is which ranking level to clear up to, ");
 			LOG_HELP("  it will clear all records up to nth place.");
-			LOG_HELP("  if 'map' is not provided it will use current map.");
+			LOG_HELP("  if <map> is not provided it will use current map.");
 			return;
 		}
 	}
@@ -721,6 +715,11 @@ void GameCommand_gametype(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_INFOF("This command works only when the server is running.");
+				return;
+			}
 			if (argv(1) != "")
 			{
 				string s = argv(1);
@@ -757,8 +756,8 @@ void GameCommand_gametype(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gametype mode");
-			LOG_HELP("  Where 'mode' is the gametype mode to switch to.");
+			LOG_HELP("Usage:^3 sv_cmd gametype <mode>");
+			LOG_HELP("  Where <mode> is the gametype mode to switch to.");
 			LOG_HELP("See also: ^2gotomap^7");
 			return;
 		}
@@ -794,15 +793,14 @@ void GameCommand_gettaginfo(int request, int argc)
 				if (i)
 				{
 					v = gettaginfo(tmp_entity, i);
-					LOG_INFOF(
-						"model %s frame %s tag %s index %s parent %s",
+					LOG_HELPF("model %s frame %s tag %s index %s parent %s",
 						tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
 					);
-					LOG_INFOF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
-					LOG_INFOF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
-					LOG_INFOF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
-					LOG_INFOF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
-					LOG_INFOF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
+					LOG_HELPF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
+					LOG_HELPF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
+					LOG_HELPF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
+					LOG_HELPF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
+					LOG_HELPF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
 					if (argc >= 6)
 					{
 						v.y = -v.y;
@@ -823,7 +821,7 @@ void GameCommand_gettaginfo(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]");
+			LOG_HELP("Usage:^3 sv_cmd gettaginfo <model> <frame> <index> [<command1>] [<command2>]");
 			LOG_HELP("See also: ^2bbox, trace^7");
 			return;
 		}
@@ -882,7 +880,7 @@ void GameCommand_animbench(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]");
+			LOG_HELP("Usage:^3 sv_cmd animbench <model> <frame1> <frame2>");
 			LOG_HELP("See also: ^2bbox, trace^7");
 			return;
 		}
@@ -895,6 +893,11 @@ void GameCommand_gotomap(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_INFOF("This command works only when the server is running.");
+				return;
+			}
 			if (argv(1))
 			{
 				LOG_INFO(GotoMap(argv(1)));
@@ -906,8 +909,8 @@ void GameCommand_gotomap(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gotomap map");
-			LOG_HELP("  Where 'map' is the *.bsp file to change to.");
+			LOG_HELP("Usage:^3 sv_cmd gotomap <map>");
+			LOG_HELP("  Where <map> is the *.bsp file to change to.");
 			LOG_HELP("See also: ^2gametype^7");
 			return;
 		}
@@ -1103,10 +1106,10 @@ void GameCommand_moveplayer(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd moveplayer clients destination");
-			LOG_HELP("  'clients' is a list (separated by commas) of player entity ID's or nicknames");
-			LOG_HELP("  'destination' is what to send the player to, be it team or spectating");
-			LOG_HELP("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"");
+			LOG_HELP("Usage:^3 sv_cmd moveplayer <clients> <destination>");
+			LOG_HELP("  <clients> is a list (separated by commas) of player entity ID's or nicknames");
+			LOG_HELP("  <destination> is what to send the player to, be it team or spectating");
+			LOG_HELP("  Full list of destinations here: spec, spectator, red, blue, yellow, pink, auto.");
 			LOG_HELP("Examples: sv_cmd moveplayer 1,3,5 red");
 			LOG_HELP("          sv_cmd moveplayer 2 spec");
 			LOG_HELP("See also: ^2allspec, shuffleteams^7");
@@ -1228,8 +1231,8 @@ void GameCommand_setbots(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd setbots botnumber");
-			LOG_HELP("  Where 'botnumber' is the amount of bots to set bot_number cvar to.");
+			LOG_HELP("Usage:^3 sv_cmd setbots <botnumber>");
+			LOG_HELP("  Where <botnumber> is the amount of bots to set bot_number cvar to.");
 			LOG_HELP("See also: ^2bot_cmd^7");
 			return;
 		}
@@ -1339,9 +1342,9 @@ void GameCommand_stuffto(int request, int argc)
 				LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_HELP("Usage:^3 sv_cmd stuffto client \"command\"");
-				LOG_HELP("  'client' is the entity number or name of the player,");
-				LOG_HELP("  and 'command' is the command to be sent to that player.");
+				LOG_HELP("Usage:^3 sv_cmd stuffto <client> \"<command>\"");
+				LOG_HELP("  <client> is the entity number or name of the player,");
+				LOG_HELP("  and <command> is the command to be sent to that player.");
 				return;
 			}
 		}
@@ -1512,7 +1515,7 @@ void GameCommand_trace(int request, int argc)
 					}
 				}
 
-					// no default case, just go straight to invalid
+				// no default case, just go straight to invalid
 			}
 		}
 
@@ -1520,10 +1523,10 @@ void GameCommand_trace(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd trace command [startpos endpos] [endpos_height]");
-			LOG_HELP("  Where startpos and endpos are parameters for 'walk' and 'showline' commands,");
-			LOG_HELP("  'endpos_height' is an optional parameter for 'walk' command,");
-			LOG_HELP("  Full list of commands here: \"debug, debug2, walk, showline.\"");
+			LOG_HELP("Usage:^3 sv_cmd trace <command> [<startpos> <endpos>] [<endpos_height>]");
+			LOG_HELP("  Where <startpos> and <endpos> are parameters for the 'walk' and 'showline' commands,");
+			LOG_HELP("  <endpos_height> is an optional parameter for the 'walk' command,");
+			LOG_HELP("  Full list of commands here: debug, debug2, walk, showline.");
 			LOG_HELP("See also: ^2bbox, gettaginfo^7");
 			return;
 		}
@@ -1588,9 +1591,9 @@ void GameCommand_warp(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd warp [level]");
-			LOG_HELP("  'level' is the level to change campaign mode to.");
-			LOG_HELP("  if 'level' is not provided it will change to the next level.");
+			LOG_HELP("Usage:^3 sv_cmd warp [<level>]");
+			LOG_HELP("  <level> is the level to change campaign mode to.");
+			LOG_HELP("  if <level> is not provided it will change to the next level.");
 			return;
 		}
 	}
@@ -1717,8 +1720,8 @@ void GameCommand(string command)
 			LOG_HELP("\nGeneric commands shared by all programs:");
 			GenericCommand_macro_help();
 
-			LOG_HELP("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are listed above.\n"
-				"For help about a specific command, type sv_cmd help COMMAND");
+			LOG_HELP("\nUsage:^3 sv_cmd <command>^7, where possible commands are listed above.\n"
+				"For help about a specific command, type sv_cmd help <command>");
 
 			return;
 		}

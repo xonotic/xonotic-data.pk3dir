@@ -1,32 +1,32 @@
 #include "main.qh"
 
+#include <client/command/cl_cmd.qh>
 #include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
-#include <common/ent_cs.qh>
+#include <client/mapvoting.qh>
+#include <client/mutators/_mod.qh>
+#include <client/shownames.qh>
+#include <client/view.qh>
+#include <client/weapons/projectile.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.inc>
+#include <common/effects/all.qh>
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
-#include <common/effects/all.qh>
-#include <common/effects/all.inc>
-#include "hud/_mod.qh"
-#include "command/cl_cmd.qh"
-#include "mapvoting.qh"
-#include <client/mutators/_mod.qh>
-#include "hud/panel/centerprint.qh"
-#include "hud/panel/scoreboard.qh"
-#include "hud/panel/quickmenu.qh"
-#include "shownames.qh"
-#include "view.qh"
-#include "weapons/projectile.qh"
-#include <common/deathtypes/all.qh>
-#include <common/items/_mod.qh>
+#include <common/ent_cs.qh>
 #include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
+#include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
-#include <common/mapobjects/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -166,6 +166,9 @@ void Shutdown()
 	// unset the event chasecam's chase_active
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
+
+	if (autocvar_r_drawviewmodel < 0)
+		cvar_set("r_drawviewmodel", "0");
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
@@ -848,7 +851,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
-// The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
+// The parameter isnew reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
 	this.sourceLoc = __FILE__":"STR(__LINE__);
@@ -892,7 +895,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+			LOG_INFOF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
@@ -900,7 +903,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	time = savetime;
 	if (!done)
 	{
-		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		LOG_FATALF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
