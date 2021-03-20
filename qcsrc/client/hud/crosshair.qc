@@ -13,6 +13,7 @@
 #include <common/viewloc.qh>
 #include <common/wepent.qh>
 #include <lib/csqcmodel/cl_player.qh>
+#include <lib/warpzone/common.qh>
 
 float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
@@ -212,6 +213,7 @@ LABEL(normalcolor)
 	return wcross_color;
 }
 
+.entity tag_entity;
 void HUD_Crosshair(entity this)
 {
 	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
