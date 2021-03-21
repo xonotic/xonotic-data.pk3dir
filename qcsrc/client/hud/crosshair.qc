@@ -214,6 +214,15 @@ LABEL(normalcolor)
 }
 
 .entity tag_entity;
+void HUD_Crosshair_ApplyPlayerAlpha(float new_alpha)
+{
+	csqcplayer.alpha = new_alpha;
+	FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer,
+	{
+		it.alpha = new_alpha;
+	});
+}
+
 void HUD_Crosshair(entity this)
 {
 	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
@@ -222,7 +231,8 @@ void HUD_Crosshair(entity this)
 
 	if (autocvar_chase_active > 0 && autocvar_chase_front)
 	{
-		csqcplayer.alpha = csqcplayer.m_alpha;
+		if (csqcplayer.alpha != csqcplayer.m_alpha)
+			HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
 		return;
 	}
 
@@ -284,18 +294,14 @@ void HUD_Crosshair(entity this)
 						hit = true;
 				}
 				float prev_alpha = csqcplayer.alpha;
+				float new_alpha;
 				if(hit)
-					csqcplayer.alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
+					new_alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
 				else
-					csqcplayer.alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
+					new_alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
 
-				if (csqcplayer.alpha != prev_alpha)
-				{
-					FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer,
-					{
-						it.alpha = csqcplayer.alpha;
-					});
-				}
+				if (new_alpha != prev_alpha)
+					HUD_Crosshair_ApplyPlayerAlpha(new_alpha);
 			}
 			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
 			wcross_origin = project_3d_to_2d(trace_endpos);
@@ -309,7 +315,7 @@ void HUD_Crosshair(entity this)
 		{
 			// reset player alpha only in this frame
 			if (csqcplayer)
-				csqcplayer.alpha = csqcplayer.m_alpha;
+				HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
 			crosshair_chase_state = 0; // turned off and alpha reset
 		}
 
