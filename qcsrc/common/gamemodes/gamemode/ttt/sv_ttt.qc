@@ -12,6 +12,7 @@ float autocvar_g_ttt_max_karma_points = 1000; //LegendGuard sets Karma points 21
 float autocvar_g_ttt_min_karma_points = 400;
 int autocvar_g_ttt_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
 float autocvar_g_ttt_karma_bantime = 1800; //karma ban seconds
+bool autocvar_g_ttt_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 
 // 27-02-2021
 //Ideas: skills/items per each player-type: (these skills/items should be used once)
@@ -443,26 +444,6 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 				karma_Control(frag_attacker);
 			}
-
-			//TODO: Try to make detective skill 12-03-2021
-			if(IS_DEAD(frag_target))
-			{
-				if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
-				{
-					PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
-					PrintToChat(frag_attacker, "^5Type^3: ^2Innocent");
-				}
-				else if (frag_target.ttt_status == TTT_STATUS_TRAITOR)
-				{
-					PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
-					PrintToChat(frag_attacker, "^5Type^3: ^1Traitor");
-				}
-				else if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
-				{
-					PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
-					PrintToChat(frag_attacker, "^5Type^3: ^4Detective");
-				}
-			}
 		}
 
 		if (frag_attacker.ttt_status == TTT_STATUS_INNOCENT)
@@ -484,29 +465,64 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 	}
 
 	//TODO: DETECTIVE SKILL TO RESEARCH CORPSES
+	//TODO: Try to make detective skill 12-03-2021
 	if (frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
 	{
-		if(IS_DEAD(frag_target))
+		if(!IS_DEAD(frag_target))
 		{
 			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
 			{
-				PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
-				PrintToChat(frag_attacker, "^5Type^3: ^2Innocent");
+				//try to add centerprint message for chat privately if possible
+				centerprint(frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname));
+				centerprint(frag_attacker, "^5Type^3: ^2Innocent");
+				/*Say(other.owner, false, frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname), true);
+				Say(other.owner, false, frag_attacker, "^5Type^3: ^2Innocent", true);*/
 			}
 			else if (frag_target.ttt_status == TTT_STATUS_TRAITOR)
 			{
-				PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
-				PrintToChat(frag_attacker, "^5Type^3: ^1Traitor");
+				centerprint(frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname));
+				centerprint(frag_attacker, "^5Type^3: ^1Traitor");
+				/*Say(other.owner, false, frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname), true);
+				Say(other.owner, false, frag_attacker, "^5Type^3: ^1Traitor", true);*/
 			}
 			else if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
 			{
-				PrintToChat(frag_attacker, strcat("^6Name^3: ", frag_target.netname));
-				PrintToChat(frag_attacker, "^5Type^3: ^4Detective");
+				centerprint(frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname));
+				centerprint(frag_attacker, "^5Type^3: ^4Detective");
+				/*Say(other.owner, false, frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname), true);
+				Say(other.owner, false, frag_attacker, "^5Type^3: ^4Detective", true);*/
 			}
 		}
 	}
 	//TODO: try to do a "find out" if a detective can see who fragged to who if possible 21-02-2021
 	M_ARGV(5, bool) = true; // anonymous attacker
+}
+
+//karma weapon damage, halve the damage attack when player has low karma 20-03-2021
+MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
+{
+	entity attacker = M_ARGV(1, entity);
+	entity target = M_ARGV(2, entity);
+	
+	float damage = M_ARGV(4, float);
+	vector force = M_ARGV(6, vector); //
+
+    if (autocvar_g_ttt_karma_damageactive != false)
+	{
+		if(target == attacker) // damage done to yourself
+		{
+			damage /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+			force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+		}
+		else
+		{
+			damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+			force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+		}
+	}
+
+	M_ARGV(4, float) = damage;
+	M_ARGV(6, vector) = force;
 }
 
 MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
