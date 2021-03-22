@@ -49,7 +49,6 @@ AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_size, float, 1.5, "size of the jump
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_air, float, 0.1, "time (in seconds) after take off before changing to air strafe physics when not jumping (visually more consistent hud while on slick downwards ramps)");
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_ground, float, 0.03333333, "time (in seconds) after landing before changing to non-air strafe physics (visually more consistent hud while strafe turning when touching the floor after every hop)");
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_turn, float, 0.1, "time (in seconds) after releasing the strafe keys before changing mode (visually more consistent hud while switching between left/right strafe turning)");
-AUTOCVAR_SAVE(hud_panel_strafehud_timeout_direction, float, 0.5, "time (in seconds) it takes until direction changes (forward or backward movement) are applied (set to zero if you intend to sideways strafe)");
 AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_angle, float, 0.01, "how many degrees from 0° to 180° the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_speed, float, 0.0001, "how many qu/s the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 
