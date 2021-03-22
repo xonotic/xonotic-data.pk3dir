@@ -702,19 +702,19 @@ void HUD_StrafeHUD()
         {
             switch(autocvar_hud_panel_strafehud_angle_style)
             {
-                case 0:
+                case 1:
                     drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     break;
-                case 1:
+                case 2:
                     vector line_size = currentangle_size;
-                    line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, 100)*2-1);
+                    line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, currentangle_size.y)*2-1);
                     for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
                     {
                         if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
                         drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     }
                     break;
-                case 2:
+                case 0:
                 default:
             }
 
