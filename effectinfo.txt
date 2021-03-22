@@ -1013,6 +1013,13 @@ effect TR_GRENADE
 	trailspacing 16
 	underwater
 	velocityjitter 16 16 16
+effect TR_GRENADE
+	trailspacing 4
+	type smoke
+	tex 64 64
+	color 0xff0000 0xff0000
+	size 2 2
+	alpha 256 256 256
 effect TR_KNIGHTSPIKE
 	type smoke
 	alpha 300 400 600
@@ -1188,7 +1195,7 @@ effect electro_muzzleflash
 	velocitymultiplier 2.500000
 effect TR_NEXUIZPLASMA
 	type static
-	alpha 256 256 968
+	alpha 256 256 512
 	color 0x283880 0x283880
 	lightcolor 1.5 3 6
 	lightradius 90
@@ -1445,40 +1452,81 @@ effect nex_muzzleflash
 	tex 41 41
 	velocityjitter 600 600 600
 	velocitymultiplier 1.500000
+//effect nex_beam
+//	type static
+//	airfriction 5
+//	alpha 64 128 64
+//	color 0x1680A0 0x1680A0
+//	sizeincrease 2
+//	size 4 4
+//	tex 32 32
+//	trailspacing 64
+//effect nex_beam
+//	type static
+//	airfriction 9
+//	alpha 32 64 32
+//	color 0x5080A0 0x5080A0
+//	sizeincrease 8
+//	size 1 1
+//	tex 0 8
+//	trailspacing 12
+//	velocityjitter 64 64 64
+//effect nex_beam
+//	type static
+//	alpha 256 256 1280
+//	color 0x80CDFF 0x80CDFF
+//	size 4 4
+//	trailspacing 12
+//effect nex_beam
+//	type snow
+//	airfriction 5
+//	alpha 64 128 80
+//	color 0x1680A0 0x1680A0
+//	gravity -0.010000
+//	size 1 1
+//	tex 63 63
+//	trailspacing 16
+
+// nex beam: ring smoke
 effect nex_beam
 	type static
-	airfriction 5
-	alpha 64 128 64
-	color 0x1680A0 0x1680A0
-	sizeincrease 2
+	airfriction -4
+	alpha 256 256 512
+	color 0x2680F0 0x2680F0
+	sizeincrease 1
 	size 4 4
 	tex 32 32
-	trailspacing 64
+	trailspacing 5
+// nex beam: drifting smoke
 effect nex_beam
 	type static
-	airfriction 9
-	alpha 32 64 32
+	airfriction 10
+	alpha 256 256 512
 	color 0x5080A0 0x5080A0
-	sizeincrease 8
-	size 1 1
-	tex 0 8
-	trailspacing 12
+	sizeincrease 0
+	size 4 4
+	tex 8 8
+	trailspacing 5
 	velocityjitter 64 64 64
+// nex beam: bright core
 effect nex_beam
 	type static
-	alpha 256 256 1280
+	alpha 512 512 512
 	color 0x80CDFF 0x80CDFF
-	size 4 4
-	trailspacing 12
+	size 2 2
+	tex 48 55
+	trailspacing 1
+//sparks
 effect nex_beam
 	type snow
-	airfriction 5
+	airfriction 1
 	alpha 64 128 80
 	color 0x1680A0 0x1680A0
-	gravity -0.010000
-	size 1 1
+	gravity -0.01
+	size 4 4
 	tex 63 63
-	trailspacing 16
+	trailspacing 999999
+
 effect nex_impact
 	type decal
 	alpha 256 256 0
@@ -1525,11 +1573,11 @@ effect nex_impact
 effect nex_impact
 	type spark
 	airfriction 9
-	alpha 0 128 512
+	alpha 32 128 256
 	bounce 2
 	color 0xD9FDFF 0xD9FDFF
-	count 64
-	size 4 4
+	count 248
+	size 2 8
 	stretchfactor 3
 	tex 41 41
 	velocityjitter 600 600 600
@@ -1537,12 +1585,12 @@ effect nex_impact
 effect nex_impact
 	type spark
 	airfriction 2
-	alpha 255 255 112
+	alpha 128 512 512
 	bounce 1.600000
 	color 0xD9FDFF 0xD9FDFF
-	count 16
+	count 128
 	gravity 1
-	size 2 2
+	size 2 8
 	stretchfactor 0.700000
 	tex 41 41
 	velocityjitter 300 300 600
@@ -1704,20 +1752,20 @@ effect rocketlauncher_muzzleflash
 	velocitymultiplier 0.300000
 effect TR_ROCKET
 	type smoke
-	alpha 200 300 200
-	bounce 1
-	color 0x000000 0x666666
+	alpha 200 200 100
+	bounce 0
+	color 0xFF6666 0xFF6666
 	lightcolor 6 3 1
 	lightradius 150
 	notunderwater
-	originjitter 2 2 2
-	rotate -180 180 -30 30
-	sizeincrease 11
-	size 3 4
+	originjitter 0 0 0 
+	rotate 0 0 0 0
+	sizeincrease 0
+	size 2 2
 	tex 0 8
-	trailspacing 10
-	velocityjitter 3 3 3
-	velocitymultiplier -0.020000
+	trailspacing 2
+	velocityjitter 0 0 0 
+	velocitymultiplier 0
 effect TR_ROCKET
 	type static
 	airfriction 8
@@ -1755,106 +1803,114 @@ effect TR_ROCKET
 	trailspacing 20
 	velocityjitter 100 100 100
 	velocitymultiplier -0.310000
+// rocket explosion (bigger than mortar and hagar)
 effect rocket_explode
-	type decal
-	alpha 256 256 0
-	countabsolute 1
-	lightcolor 8 4 1
-	lightradiusfade 750
-	lightradius 400
-	originjitter 23 23 23
-	size 72 72
-	tex 8 16
+countabsolute 1
+type decal
+tex 8 16
+size 72 72
+alpha 256 256 0
+originjitter 23 23 23
+lightradius 400
+lightradiusfade 750
+lightcolor 8 4 1
+// fire effect
 effect rocket_explode
-	type static
-	airfriction 8
-	alpha 200 256 512
-	bounce 1.500000
-	color 0x8f0d00 0xff5a00
-	count 32
-	liquidfriction 8
-	notunderwater
-	originjitter 8 8 8
-	sizeincrease 45
-	size 33 44
-	tex 48 55
-	velocityjitter 512 512 512
+notunderwater
+count 32
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 33 44
+sizeincrease 45
+alpha 200 256 512
+bounce 1.5
+airfriction 8
+liquidfriction 8
+originjitter 8 8 8
+velocityjitter 512 512 512
+// fire effect 2
 effect rocket_explode
-	type smoke
-	airfriction 19
-	alpha 200 256 612
-	bounce 2.500000
-	color 0xea691b 0xeed05a
-	count 14
-	liquidfriction 19
-	notunderwater
-	originjitter 8 8 8
-	sizeincrease 55
-	size 33 44
-	tex 48 55
-	velocityjitter 912 912 912
+notunderwater
+count 14
+type smoke
+tex 48 55
+color 0xea691b 0xeed05a
+size 33 44
+sizeincrease 55
+alpha 200 256 612
+bounce 2.5
+airfriction 19
+liquidfriction 19
+originjitter 8 8 8
+velocityjitter 912 912 912
+// smoke
 effect rocket_explode
-	type alphastatic
-	airfriction 5
-	alpha 200 450 456
-	bounce 2
-	color 0x000000 0x111111
-	count 32
-	notunderwater
-	sizeincrease 44
-	size 20 40
-	tex 0 8
-	velocityjitter 444 444 444
+type alphastatic
+notunderwater
+tex 0 8
+count 32
+size 20 40
+sizeincrease 44
+alpha 200 450 456
+velocityjitter 444 444 444
+airfriction 5
+color 0x000000 0x111111
+bounce 2
+// underwater bubbles
 effect rocket_explode
-	type bubble
-	alpha 128 256 64
-	bounce 1.500000
-	color 0x404040 0x808080
-	count 32
-	gravity -0.125000
-	liquidfriction 0.250000
-	originjitter 16 16 16
-	size 3 3
-	tex 62 62
-	underwater
-	velocityjitter 144 144 144
+underwater
+count 32
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 3 3
+alpha 128 256 64
+gravity -0.125
+bounce 1.5
+liquidfriction 0.25
+originjitter 16 16 16
+velocityjitter 144 144 144
+// underwatershockwave
 effect rocket_explode
-	type smoke
-	alpha 40 40 300
-	countabsolute 1
-	sizeincrease 1900
-	size 30 30
-	tex 33 33
-	underwater
-	velocitymultiplier 0.300000
+underwater
+type smoke
+countabsolute 1
+tex 33 33
+size 30 30
+sizeincrease 1900
+alpha 40 40 300
+velocitymultiplier 0.3
+// bouncing sparks
 effect rocket_explode
-	type spark
-	airfriction 1
-	alpha 644 956 484
-	bounce 1.600000
-	color 0xffa35b 0xfff2be
-	count 16
-	gravity 1
-	liquidfriction 0.800000
-	notunderwater
-	originjitter 16 16 16
-	size 1 0.100000
-	tex 40 40
-	velocityjitter 424 424 624
-	velocityoffset 0 0 80
+notunderwater
+count 16
+type spark
+tex 40 40
+color 0xffa35b 0xfff2be
+size 1 0.1
+alpha 644 956 484
+gravity 1
+airfriction 1
+bounce 1.6
+liquidfriction 0.8
+velocityoffset 0 0 80
+originjitter 16 16 16
+velocityjitter 424 424 624
+// derbis
 effect rocket_explode
-	type alphastatic
-	airfriction 0.500000
-	alpha 644 956 684
-	bounce 1.600000
-	color 0x6a3d25 0xcac5b4
-	count 12
-	gravity 1.300000
-	notunderwater
-	rotate -180 180 -1000 1000
-	size 2 6
-	tex 66 68
-	velocityjitter 324 324 524
+notunderwater
+count 12
+type alphastatic
+tex 66 68
+color 0x6a3d25 0xcac5b4
+size 2 6
+alpha 644 956 684
+gravity 1.3
+airfriction 0.5
+bounce 1.6
+velocityjitter 324 324 524
+rotate -180 180 -1000 1000
 effect grapple_muzzleflash
 	lightcolor 1 0 0
 	lightradiusfade 800
@@ -5598,16 +5654,16 @@ effect impact_flesh
 	velocitymultiplier 5
 effect tr_hagar
 	type smoke
-	alpha 300 400 780
-	bounce 1
-	color 0x101010 0x000000
-	originjitter 1 1 1
-	sizeincrease 10
-	size 3 2
+	alpha 512 512 1024
+	bounce 0
+	color 0x800000 0x800000
+	originjitter 0 0 0
+	sizeincrease 0
+	size 2 2
 	tex 0 8
-	trailspacing 4
-	velocityjitter 1 1 1
-	velocitymultiplier -0.020000
+	trailspacing 10
+	velocityjitter 0 0 0
+	velocitymultiplier 0
 effect tr_hagar
 	type static
 	airfriction 8
