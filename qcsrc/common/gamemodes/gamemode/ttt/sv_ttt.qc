@@ -124,7 +124,6 @@ void ttt_UpdateScores(bool timed_out)
 			}
 			else if(it.ttt_status == TTT_STATUS_TRAITOR)
 			{
-				GameRules_scoring_add(it, TTT_HUNTS, 1);
 				float increasekarma = 25; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
 				//PrintToChatAll(sprintf("^1TRAITOR ^7increasekarma: ^2%f", increasekarma));
 				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
@@ -275,7 +274,8 @@ void ttt_RoundStart()
 		else
 			it.ttt_status = TTT_STATUS_INNOCENT;
 	});
-	
+
+
 	//traitors TOTAL
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -334,6 +334,8 @@ void ttt_RoundStart()
 		}
 		else if(it.ttt_status == TTT_STATUS_DETECTIVE)
 		{
+			//Gets Shockwave weapon to the player
+			GiveWeapon(it, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_DETECTIVE);
 			PrintToChatAll(sprintf("%s is ^4Detective^7!", it.netname));
@@ -388,7 +390,6 @@ void ttt_Initialize() // run at the start of a match, initiates game mode
 {
 	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
 		field(SP_TTT_RESISTS, "resists", 0);
-		field(SP_TTT_HUNTS, "hunts", SFL_SORT_PRIO_SECONDARY);
 		field(SP_TTT_KARMA, "karma", SFL_SORT_PRIO_SECONDARY); //LegendGuard adds Karma points in the scoreboard 22-02-2021
 	});
 
@@ -464,36 +465,6 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_target.ttt_status is ^3%s^7",ftos(frag_target.ttt_status)));
 	}
 
-	//TODO: DETECTIVE SKILL TO RESEARCH CORPSES
-	//TODO: Try to make detective skill 12-03-2021
-	if (frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
-	{
-		if(!IS_DEAD(frag_target))
-		{
-			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
-			{
-				//try to add centerprint message for chat privately if possible
-				centerprint(frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname));
-				centerprint(frag_attacker, "^5Type^3: ^2Innocent");
-				/*Say(other.owner, false, frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname), true);
-				Say(other.owner, false, frag_attacker, "^5Type^3: ^2Innocent", true);*/
-			}
-			else if (frag_target.ttt_status == TTT_STATUS_TRAITOR)
-			{
-				centerprint(frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname));
-				centerprint(frag_attacker, "^5Type^3: ^1Traitor");
-				/*Say(other.owner, false, frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname), true);
-				Say(other.owner, false, frag_attacker, "^5Type^3: ^1Traitor", true);*/
-			}
-			else if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
-			{
-				centerprint(frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname));
-				centerprint(frag_attacker, "^5Type^3: ^4Detective");
-				/*Say(other.owner, false, frag_attacker, strcat("^6Name^3:^7 ", frag_target.netname), true);
-				Say(other.owner, false, frag_attacker, "^5Type^3: ^4Detective", true);*/
-			}
-		}
-	}
 	//TODO: try to do a "find out" if a detective can see who fragged to who if possible 21-02-2021
 	M_ARGV(5, bool) = true; // anonymous attacker
 }
@@ -505,7 +476,10 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 	entity target = M_ARGV(2, entity);
 	
 	float damage = M_ARGV(4, float);
-	vector force = M_ARGV(6, vector); //
+	vector force = M_ARGV(6, vector);
+	//entity weaponent = M_ARGV(7, entity);
+	// entity 	 i(entity, MUTATOR_ARGV_7_entity)
+	//attacker.(weaponentity);
 
     if (autocvar_g_ttt_karma_damageactive != false)
 	{
@@ -518,6 +492,33 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 		{
 			damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
 			force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+		}
+	}
+	
+	//DETECTIVE CORPSE DETECTION SKILL 21-03-2021
+	if (attacker.ttt_status == TTT_STATUS_DETECTIVE)
+	{
+		if(IS_DEAD(target))
+		{
+			//TODO: Try using shockwave gun as radar gun to check the corpses 22-03-2021
+			damage = 0;
+			force = '0 0 0';
+			if (target.ttt_status == TTT_STATUS_INNOCENT)
+			{
+				//try to add centerprint message for chat privately if possible
+				centerprint(attacker, "^5Role^3: ^2Innocent");
+				centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+			}
+			else if (target.ttt_status == TTT_STATUS_TRAITOR)
+			{
+				centerprint(attacker, "^5Role^3: ^1Traitor");
+				centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+			}
+			else if (target.ttt_status == TTT_STATUS_DETECTIVE)
+			{
+				centerprint(attacker, "^5Role^3: ^4Detective");
+				centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+			}
 		}
 	}
 
