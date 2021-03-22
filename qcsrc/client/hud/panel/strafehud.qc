@@ -977,27 +977,27 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 // length unit conversion (km and miles are only included to match the GetSpeedUnit* functions)
 float GetLengthUnitFactor(int length_unit)
 {
-	switch(length_unit)
-	{
-		default:
-		case 1: return 1.0;
-		case 2: return 0.0254;
-		case 3: return 0.0254 * 0.001;
-		case 4: return 0.0254 * 0.001 * 0.6213711922;
-		case 5: return 0.0254 * 0.001 * 0.5399568035;
-	}
+    switch(length_unit)
+    {
+        default:
+        case 1: return 1.0;
+        case 2: return 0.0254;
+        case 3: return 0.0254 * 0.001;
+        case 4: return 0.0254 * 0.001 * 0.6213711922;
+        case 5: return 0.0254 * 0.001 * 0.5399568035;
+    }
 }
 
 string GetLengthUnit(int length_unit)
 {
-	switch(length_unit)
-	{
-		// translator-friendly strings without the initial space
-		default:
-		case 1: return strcat(" ", _("qu"));
-		case 2: return strcat(" ", _("m"));
-		case 3: return strcat(" ", _("km"));
-		case 4: return strcat(" ", _("mi"));
-		case 5: return strcat(" ", _("nmi"));
-	}
+    switch(length_unit)
+    {
+        // translator-friendly strings without the initial space
+        default:
+        case 1: return strcat(" ", _("qu"));
+        case 2: return strcat(" ", _("m"));
+        case 3: return strcat(" ", _("km"));
+        case 4: return strcat(" ", _("mi"));
+        case 5: return strcat(" ", _("nmi"));
+    }
 }
