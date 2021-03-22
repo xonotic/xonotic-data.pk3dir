@@ -590,15 +590,11 @@ void HUD_StrafeHUD()
 
             if(speed >= minspeed) // only draw indicators if minspeed is reached
             {
-                // draw best angles for acceleration
+                // draw the switch indicator(s)
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
                 float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
-                // both indicators are inactive if no direction can be determined
-                vector switch_color = direction != 0 ? autocvar_hud_panel_strafehud_switch_active_color : autocvar_hud_panel_strafehud_switch_inactive_color;
-                float switch_alpha = direction != 0 ? autocvar_hud_panel_strafehud_switch_active_alpha : autocvar_hud_panel_strafehud_switch_inactive_alpha;
-                // draw the switch indicators
-                HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_inactive_color, autocvar_hud_panel_strafehud_switch_inactive_alpha * panel_fg_alpha, 0, 0);
-                HUD_Panel_DrawStrafeHUD(offset, bestangle_width, switch_color, switch_alpha * panel_fg_alpha, 0, 0);
+                HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0, 0);
+                if(direction == 0) HUD_Panel_DrawStrafeHUD(offset, bestangle_width, autocvar_hud_panel_strafehud_switch_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0, 0);
             }
         }
 

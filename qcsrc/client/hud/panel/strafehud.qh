@@ -27,10 +27,8 @@ AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow, int, 1, "set the angle indicators
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_height, float, 0.5, "height of the arrow (relative to the panel height)");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_width, float, 0.03, "width of the arrow (relative to the panel width)");
 AUTOCVAR_SAVE(hud_panel_strafehud_switch_minspeed, float, -1, "minimum speed in qu/s at which switch indicators which are used to aid changing strafe direction will be shown (uses physics maxspeed + antiflicker speed if negative)");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_active_color, vector, '0 1 0', "color of the switch indicator on the current side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_active_alpha, float, 1, "opacity of the switch indicator on the current side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_inactive_color, vector, '1 1 0', "color of the switch indicator on the opposite side");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_inactive_alpha, float, 1, "opacity of the switch indicator on the opposite side");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_color, vector, '1 1 0', "color of the switch indicator");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_alpha, float, 1, "opacity of the switch indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_switch_width, float, 0.0075, "width of the strafe angle indicators (relative to the strafe bar width)");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_color, vector, '0 0.5 1', "color of the direction caps which indicate the direction the player is currently strafing towards");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_alpha, float, 1, "opacity of the direction caps which indicate the direction the player is currently strafing towards");
