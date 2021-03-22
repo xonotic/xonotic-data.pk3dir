@@ -33,9 +33,6 @@ bool turn = false;
 float turnangle;
 float turnspeed;
 bool fwd = true;
-bool state_fwd = true;
-bool state_fwd_prev = true;
-float state_fwd_time = 0;
 float starttime = 0;
 float startspeed = -1;
 float jumptime = 0;
@@ -361,15 +358,15 @@ void HUD_StrafeHUD()
                 {
                     if(keys_fwd > 0)
                     {
-                        state_fwd = true;
+                        fwd = true;
                     }
                     else if(keys_fwd < 0)
                     {
-                        state_fwd = false;
+                        fwd = false;
                     }
                     else
                     {
-                        state_fwd = fabs(angle) <= 90;
+                        fwd = fabs(angle) <= 90;
                     }
                 }
                 // otherwise determine by examining the strafe angle
@@ -377,23 +374,12 @@ void HUD_StrafeHUD()
                 {
                     if(wishangle < 0) // detect direction using wishangle since the direction is not yet set
                     {
-                        state_fwd = angle <= -wishangle;
+                        fwd = angle <= -wishangle;
                     }
                     else
                     {
-                        state_fwd = angle >= -wishangle;
+                        fwd = angle >= -wishangle;
                     }
-                }
-
-                if(state_fwd_prev != state_fwd)
-                {
-                    state_fwd_time = time;
-                }
-                state_fwd_prev = state_fwd;
-
-                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < movespeed || ((fabs(wishangle) == 90) && mode == 0)) // timeout when changing between forwards and backwards movement
-                {
-                    fwd = state_fwd;
                 }
 
                 // shift the strafe angle by 180° when strafing backwards
