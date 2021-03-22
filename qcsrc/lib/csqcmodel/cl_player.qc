@@ -486,7 +486,16 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 		chase_dest.x = v.x + forward.x * cdist;
 		chase_dest.y = v.y + forward.y * cdist;
 		chase_dest.z = v.z + forward.z * cdist + autocvar_chase_up;
-		traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		if (this.move_movetype == MOVETYPE_NOCLIP)
+		{
+			// as if traceline hasn't hit anything
+			trace_endpos = chase_dest;
+			trace_plane_normal = '0 0 0';
+		}
+		else
+		{
+			traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		}
 		v.x = 1 * trace_endpos.x + 8 * forward.x + 4 * trace_plane_normal.x;
 		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
 		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
