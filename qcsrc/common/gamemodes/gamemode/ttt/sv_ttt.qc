@@ -3,7 +3,7 @@
 //set g_ttt_detective_count 0.125 "number of players who will become detectives, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players"
 //float autocvar_g_ttt_detective_count = 0.125; //I don't think that it won't be used...
 float autocvar_g_ttt_innocent_count = 0.625;
-float autocvar_g_ttt_traitor_count = 0.25;
+//float autocvar_g_ttt_traitor_count = 0.25;
 float autocvar_g_ttt_round_timelimit = 180;
 float autocvar_g_ttt_warmup = 10;
 bool autocvar_g_ttt_punish_teamkill = false;
@@ -17,6 +17,7 @@ bool autocvar_g_ttt_karma_damageactive = true; //LegendGuard sets Karma damage s
 // 27-02-2021
 //Ideas: skills/items per each player-type: (these skills/items should be used once)
 // Innocents: Shield and Strength; Traitors: Shield and Strength; Detectives: skill to detect any player to see what player-type is
+// Add for the corpse a role of who killed 22-03-2021
 
 // Detective is a created team, this team is added inside Innocents team
 
@@ -217,7 +218,6 @@ void ttt_RoundStart()
 	allowed_to_spawn = boolean(warmup_stage);
 	int playercount = 0;
 
-	// Fix number of detectives to 1
 	FOREACH_CLIENT(true,
 	{
 		if(IS_PLAYER(it) && !IS_DEAD(it))
@@ -232,17 +232,18 @@ void ttt_RoundStart()
 	
 	int innocent_count = bound(1, ((autocvar_g_ttt_innocent_count >= 1) ? autocvar_g_ttt_innocent_count : floor(playercount * autocvar_g_ttt_innocent_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_innocents = 0;
-	int traitor_count = bound(1, ((autocvar_g_ttt_traitor_count >= 1) ? autocvar_g_ttt_traitor_count : floor(playercount * autocvar_g_ttt_traitor_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	//int traitor_count = bound(1, ((autocvar_g_ttt_traitor_count >= 1) ? autocvar_g_ttt_traitor_count : floor(playercount * autocvar_g_ttt_traitor_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_traitors = 0;
 	//int detective_count = bound(1, ((autocvar_g_ttt_detective_count >= 1) ? autocvar_g_ttt_detective_count : floor(playercount * autocvar_g_ttt_detective_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_detectives = 0;
+
 	//innocents TOTAL
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
 		if(total_innocents >= innocent_count)
 			break;
+		//LegendGuard fixes the round start again 22-03-2021
 		total_innocents++;
-		//LegendGuard fixes the round start 26-02-2021
 		if (total_innocents <= 1)
 		{
 			if (total_traitors <= 1)
@@ -251,7 +252,7 @@ void ttt_RoundStart()
 				it.ttt_status = TTT_STATUS_TRAITOR;
 			}
 		}
-		else if (total_innocents == 3) // test this? && total_traitors >= 1)
+		else if (total_innocents == 3)
 		{
 			if (total_detectives >= 1)
 				break;
@@ -261,7 +262,7 @@ void ttt_RoundStart()
 				it.ttt_status = TTT_STATUS_DETECTIVE;
 			}
 		}
-		else if (total_innocents >= 5)
+		else if (total_innocents == 5)
 		{
 			if (total_detectives >= 2)
 				break;
@@ -271,41 +272,24 @@ void ttt_RoundStart()
 				it.ttt_status = TTT_STATUS_DETECTIVE;
 			}
 		}
-		else
-			it.ttt_status = TTT_STATUS_INNOCENT;
-	});
-
-
-	//traitors TOTAL
-	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
-	{
-		if(total_traitors >= traitor_count)
-			break;
-		if(total_traitors >= 3)
+		else if (total_innocents >= 7)
 		{
-			total_traitors++;
+			if (total_detectives >= 3)
+				break;
+			else if (total_traitors == 3)
+			{
+				total_traitors++;
+				it.ttt_status = TTT_STATUS_TRAITOR;
+			}
+			else
+			{
+				total_detectives++;
+				it.ttt_status = TTT_STATUS_DETECTIVE;
+			}
+		}
+		else
 			it.ttt_status = TTT_STATUS_TRAITOR;
-		}
-		total_traitors++;
-		it.ttt_status = TTT_STATUS_TRAITOR;
 	});
-
-	//detectives TOTAL //Hey, is necessary? I don't think so...
-	/*FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
-	{
-		if(total_detectives >= detective_count)
-			break;
-		total_detectives++;
-		//ROUND FIX
-		if (total_detectives <= 1)
-		{
-			if (total_traitors <= 1)
-				it.ttt_status = TTT_STATUS_INNOCENT;
-		}
-		else
-			it.ttt_status = TTT_STATUS_DETECTIVE;
-	});*/
-
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -322,12 +306,20 @@ void ttt_RoundStart()
 
 		if(it.ttt_status == TTT_STATUS_INNOCENT)
 		{
+			SetResource(it, RES_SHELLS, 50);
+			SetResource(it, RES_BULLETS, 70);
+			SetResource(it, RES_ROCKETS, 30);
+			SetResource(it, RES_CELLS, 60);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_INNOCENT);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_INNOCENT);
 			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^2Innocent^7!", it.netname));
 		}
 		else if(it.ttt_status == TTT_STATUS_TRAITOR)
 		{
+			SetResource(it, RES_SHELLS, 20);
+			SetResource(it, RES_BULLETS, 60);
+			SetResource(it, RES_ROCKETS, 20);
+			SetResource(it, RES_CELLS, 40);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_TRAITOR);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_TRAITOR);
 			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^1Traitor^7!", it.netname));
@@ -413,6 +405,7 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 	// in ttt, announcing a frag would tell everyone who the traitor is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+
 	if(IS_PLAYER(frag_attacker) && frag_attacker != frag_target)
 	{
 		float frag_deathtype = M_ARGV(3, float);
@@ -429,6 +422,7 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 			//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 			GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 			karma_Control(frag_attacker);
+			frag_target.whokilled = frag_attacker.netname;
 			//BASIC MATH THEORY: example: 1000 * 0.3 * (0.1 + 0.4) * 0.25 // karma points reduce when player attacked to other player
 		}
 
@@ -444,7 +438,11 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 				karma_Control(frag_attacker);
+				frag_target.whokilled = frag_attacker.netname;
 			}
+			else
+				frag_target.whokilled = frag_attacker.netname;
+
 		}
 
 		if (frag_attacker.ttt_status == TTT_STATUS_INNOCENT)
@@ -458,7 +456,19 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
 				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 				karma_Control(frag_attacker);
+				frag_target.whokilled = frag_attacker.netname;
 			}
+			else
+				frag_target.whokilled = frag_attacker.netname;
+
+		}
+		
+		if (frag_attacker.ttt_status == TTT_STATUS_TRAITOR)
+		{
+			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+				frag_target.whokilled = frag_attacker.netname;
+			else
+				frag_target.whokilled = frag_attacker.netname;
 		}
 		//if ttt_status is 1, means innocent, 2 means traitor, 3 means detective, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_attacker.ttt_status is ^3%s^7",ftos(frag_attacker.ttt_status)));
@@ -474,24 +484,29 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 {
 	entity attacker = M_ARGV(1, entity);
 	entity target = M_ARGV(2, entity);
-	
+	float deathtype = M_ARGV(3, float);
 	float damage = M_ARGV(4, float);
 	vector force = M_ARGV(6, vector);
-	//entity weaponent = M_ARGV(7, entity);
-	// entity 	 i(entity, MUTATOR_ARGV_7_entity)
-	//attacker.(weaponentity);
 
     if (autocvar_g_ttt_karma_damageactive != false)
 	{
-		if(target == attacker) // damage done to yourself
+		if (IS_PLAYER(attacker))
 		{
-			damage /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
-			force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
-		}
-		else
-		{
-			damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
-			force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+			if(target == attacker) // damage done to yourself
+			{
+				damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+				force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+			}
+			else if (target != attacker)
+			{
+				damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+				force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+			}
+			else
+			{
+				damage *= autocvar_g_weapondamagefactor;
+				force *= autocvar_g_weaponforcefactor;
+			}
 		}
 	}
 	
@@ -500,24 +515,30 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 	{
 		if(IS_DEAD(target))
 		{
-			//TODO: Try using shockwave gun as radar gun to check the corpses 22-03-2021
-			damage = 0;
-			force = '0 0 0';
-			if (target.ttt_status == TTT_STATUS_INNOCENT)
+			//Shockwave weapon as radar gun to check the corpses 22-03-2021
+			if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE))
 			{
-				//try to add centerprint message for chat privately if possible
-				centerprint(attacker, "^5Role^3: ^2Innocent");
-				centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
-			}
-			else if (target.ttt_status == TTT_STATUS_TRAITOR)
-			{
-				centerprint(attacker, "^5Role^3: ^1Traitor");
-				centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
-			}
-			else if (target.ttt_status == TTT_STATUS_DETECTIVE)
-			{
-				centerprint(attacker, "^5Role^3: ^4Detective");
-				centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+				damage = 0;
+				force = '0 0 0';
+				if (target.ttt_status == TTT_STATUS_INNOCENT)
+				{
+					//try to add centerprint message for chat privately if possible
+					centerprint(attacker, strcat("^1Killed by^3:^7 ", target.whokilled));
+					centerprint(attacker, "^5Role^3: ^2Innocent");
+					centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+				}
+				else if (target.ttt_status == TTT_STATUS_TRAITOR)
+				{
+					centerprint(attacker, strcat("^1Killed by^3:^7 ", target.whokilled));
+					centerprint(attacker, "^5Role^3: ^1Traitor");
+					centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+				}
+				else if (target.ttt_status == TTT_STATUS_DETECTIVE)
+				{
+					centerprint(attacker, strcat("^1Killed by^3:^7 ", target.whokilled));
+					centerprint(attacker, "^5Role^3: ^4Detective");
+					centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+				}
 			}
 		}
 	}
@@ -550,8 +571,8 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
 	{
 		player.event_damage = func_null;
 		//player.health = 0;
-		player.solid = SOLID_CORPSE;
-		set_movetype(player, MOVETYPE_STEP);
+		player.solid = SOLID_CORPSE; //test hooks with SOLID_SLIDEBOX
+		set_movetype(player, MOVETYPE_STEP); //test with MOVETYPE_TOSS or MOVETYPE_BOUNCE (maybe not good)
 	}
 }
 
@@ -671,10 +692,7 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
 	}
 	
 	//if(frag_attacker.ttt_status == frag_target.ttt_status)
-	// killed an ally! punishment is death
-	if(autocvar_g_ttt_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.ttt_status == frag_target.ttt_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't
-		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');	
+	// killed an ally! punishment is sentenced
 	if(frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
 	{
 		if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
