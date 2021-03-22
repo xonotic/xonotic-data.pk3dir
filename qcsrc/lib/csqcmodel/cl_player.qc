@@ -667,7 +667,8 @@ bool CSQCPlayer_PostUpdate(entity this)
 	if (this.entnum != player_localnum + 1) return false;
 	csqcplayer = this;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
-	cvar_settemp("cl_movement_replay", "0");
+	if (cvar("cl_movement_replay"))
+		cvar_settemp("cl_movement_replay", "0");
 	this.entremove = CSQCPlayer_Remove;
 	return true;
 }
