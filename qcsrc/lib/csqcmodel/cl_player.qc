@@ -479,7 +479,7 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 	{
 		makevectors(view_angles);
 		forward = v_forward;
-		if(autocvar_chase_front)
+		if(autocvar_chase_front && spectatee_status != -1)
 			forward = normalize(forward * -1);
 		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
 		float cdist = -autocvar_chase_back - 8;
@@ -491,7 +491,7 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
 		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
 
-		if(autocvar_chase_front)
+		if(autocvar_chase_front && spectatee_status != -1)
 		{
 			// now flip the view so the player is looking at themselves
 			vector newang = vectoangles(forward);
