@@ -448,7 +448,8 @@ void HUD_StrafeHUD()
         // how much is hidden by the current hud angle
         hidden_width = (360 - hudangle) / hudangle * panel_size.x;
         // current angle
-        currentangle_size.x = max(panel_size.x * autocvar_hud_panel_strafehud_angle_width, 1);
+        currentangle_size.x = panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10);
+        currentangle_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10);
         if(mode == 0)
         {
             currentangle_offset = angle/hudangle * panel_size.x;
@@ -457,11 +458,10 @@ void HUD_StrafeHUD()
         {
             currentangle_offset = bound(-hudangle/2, angle, hudangle/2)/hudangle * panel_size.x + panel_size.x/2;
         }
-        currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 2), 1);
         // best strafe acceleration angle
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
-        bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
+        bestangle_width = panel_size.x * autocvar_hud_panel_strafehud_switch_width;
 
         if(((angle > -wishangle && direction < 0) || (angle < -wishangle && direction > 0)) && (direction != 0))
         {
@@ -470,7 +470,7 @@ void HUD_StrafeHUD()
             switch_odd_bestangle_offset = (odd_bestangle+bestangle*2)/hudangle * panel_size.x + panel_size.x/2;
         }
         // direction indicator
-        direction_size_vertical.x = max(panel_size.y * min(autocvar_hud_panel_strafehud_direction_width, .5), 1);
+        direction_size_vertical.x = panel_size.y * min(autocvar_hud_panel_strafehud_direction_width, .5);
         direction_size_vertical.y = panel_size.y;
         direction_size_horizontal.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_direction_length, .5), direction_size_vertical.x);
         direction_size_horizontal.y = direction_size_vertical.x;
@@ -564,7 +564,7 @@ void HUD_StrafeHUD()
                 drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
 
-            if(speed >= minspeed) // only draw indicators if minspeed is reached
+            if(speed >= minspeed && bestangle_width > 0) // only draw indicators if minspeed is reached
             {
                 // draw the switch indicator(s)
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
@@ -680,20 +680,23 @@ void HUD_StrafeHUD()
             }
         }
 
-        if(currentangle_size.x > 0 && currentangle_size.y > 0 && autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0)
+        if(autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0)
         {
             switch(autocvar_hud_panel_strafehud_angle_style)
             {
                 case 1:
-                    drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    if(currentangle_size.x > 0 && currentangle_size.y > 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     break;
                 case 2:
-                    vector line_size = currentangle_size;
-                    line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, currentangle_size.y)*2-1);
-                    for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
+                    if(currentangle_size.x > 0 && currentangle_size.y > 0)
                     {
-                        if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
-                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                        vector line_size = currentangle_size;
+                        line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, currentangle_size.y)*2-1);
+                        for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
+                        {
+                            if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
+                            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                        }
                     }
                     break;
                 case 0:
@@ -703,17 +706,36 @@ void HUD_StrafeHUD()
             if(autocvar_hud_panel_strafehud_angle_arrow > 0)
             {
                 vector arrow_size = currentangle_size;
-                arrow_size.x = max(panel_size.x * autocvar_hud_panel_strafehud_angle_arrow_width, 1);
-                arrow_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_height, 1), 1);
-                vector arrow_fragment = '0 0.25 0';
+                arrow_size.x = panel_size.x * autocvar_hud_panel_strafehud_angle_arrow_width;
+                arrow_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_height, 10);
+                vector arrow_fragment = '0 0.2 0';
 
-                for(float i = arrow_size.y; i > 0; i -= arrow_fragment.y)
+                if(arrow_size.x > 0 && arrow_size.y > 0)
                 {
-                    arrow_fragment.x = arrow_size.x * (i/arrow_size.y);
-                    if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
-                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 + i) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
-                        drawfill(panel_pos + eY * (-(currentangle_size.y - panel_size.y) / 2 + currentangle_size.y + i - arrow_fragment.y) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    // find a suitable fragment size to draw all the parts evenly
+                    float fragment_divisor1 = arrow_size.y / arrow_fragment.y;
+                    float fragment_divisor2 = fragment_divisor1 - floor(fragment_divisor1);
+                    fragment_divisor1 = floor(fragment_divisor1);
+                    if(fragment_divisor1 >= 1)
+                    {
+                        if(fragment_divisor2 < 0.5)
+                            arrow_fragment.y += arrow_fragment.y * fragment_divisor2 / fragment_divisor1;
+                        else
+                            arrow_fragment.y -= arrow_fragment.y * (1 - fragment_divisor2) / (fragment_divisor1 + 1);
+                    }
+                    else
+                    {
+                        arrow_fragment.y = arrow_size.y;
+                    }
+
+                    for(float i = arrow_size.y; i > 0; i -= arrow_fragment.y)
+                    {
+                        arrow_fragment.x = arrow_size.x * (i/arrow_size.y);
+                        if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 + i) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                        if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
+                            drawfill(panel_pos + eY * (-(currentangle_size.y - panel_size.y) / 2 + currentangle_size.y + i - arrow_fragment.y) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    }
                 }
             }
         }
@@ -742,7 +764,7 @@ void HUD_StrafeHUD()
             if(startspeed >= 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
             {
                 vector startspeed_size = panel_size;
-                startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 5);
+                startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 10);
                 drawstring_aspect(panel_pos + eY * panel_size.y, strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
@@ -794,7 +816,7 @@ void HUD_StrafeHUD()
             if(jumpheight_persistent > 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
             {
                 vector jumpheight_size = panel_size;
-                jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 5);
+                jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 10);
                 drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
