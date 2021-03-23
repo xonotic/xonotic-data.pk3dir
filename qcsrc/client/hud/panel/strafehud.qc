@@ -166,6 +166,7 @@ void HUD_StrafeHUD()
         vector direction_size_vertical       = '0 0 0';
         vector direction_size_horizontal     = '0 0 0';
         float  range_minangle;
+        float  arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0); // there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 
         // determine whether the player is pressing forwards or backwards keys
         if(islocal) // if entity is local player
@@ -459,7 +460,7 @@ void HUD_StrafeHUD()
         hidden_width = (360 - hudangle) / hudangle * panel_size.x;
         // current angle
         currentangle_size.x = panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10);
-        currentangle_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10);
+        currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 0);
         if(mode == 0)
         {
             currentangle_offset = angle/hudangle * panel_size.x;
@@ -715,7 +716,6 @@ void HUD_StrafeHUD()
 
             if(autocvar_hud_panel_strafehud_angle_arrow > 0)
             {
-                float arrow_size = panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10); // there's only one size cvar, arrows always have a 45° angle to ensure proper rendering without antialiasing
                 if(arrow_size > 0)
                 {
                     if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
@@ -751,7 +751,7 @@ void HUD_StrafeHUD()
             {
                 vector startspeed_size = panel_size;
                 startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 10);
-                drawstring_aspect(panel_pos + eY * panel_size.y, strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                drawstring_aspect(panel_pos + eY * (panel_size.y + arrow_size + ((currentangle_size.y - panel_size.y) / 2)), strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
         else
@@ -803,7 +803,7 @@ void HUD_StrafeHUD()
             {
                 vector jumpheight_size = panel_size;
                 jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 10);
-                drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                drawstring_aspect(panel_pos - eY * (jumpheight_size.y + arrow_size + ((currentangle_size.y - panel_size.y) / 2)), strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
         else
