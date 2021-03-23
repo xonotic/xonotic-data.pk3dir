@@ -24,8 +24,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud_angle_neutral_color, vector, '1 1 0', "color o
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_accel_color, vector, '0 1 1', "color of the indicator showing the player's current angle if it is within the acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_overturn_color, vector, '1 0 1', "color of the indicator showing the player's current angle if it is within the overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow, int, 1, "set the angle indicator's arrow style: 0 = none, 1 = top, 2 = bottom, 3 = both");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_height, float, 0.5, "height of the arrow (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_width, float, 0.03, "width of the arrow (relative to the panel width)");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_size, float, 0.5, "size of the arrow (relative to the panel height)");
 AUTOCVAR_SAVE(hud_panel_strafehud_switch_minspeed, float, -1, "minimum speed in qu/s at which switch indicator(s) which are used to aid changing strafe direction will be shown (set to -1 for dynamic minspeed)");
 AUTOCVAR_SAVE(hud_panel_strafehud_switch_color, vector, '1 1 0', "color of the switch indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_switch_alpha, float, 1, "opacity of the switch indicator");
@@ -57,3 +56,4 @@ vector StrafeHUD_mixColors(vector, vector, float);
 void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
+void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);

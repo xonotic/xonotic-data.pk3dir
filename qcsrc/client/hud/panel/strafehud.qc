@@ -715,37 +715,13 @@ void HUD_StrafeHUD()
 
             if(autocvar_hud_panel_strafehud_angle_arrow > 0)
             {
-                vector arrow_size = currentangle_size;
-                arrow_size.x = panel_size.x * autocvar_hud_panel_strafehud_angle_arrow_width;
-                arrow_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_height, 10);
-                vector arrow_fragment = '0 0.2 0';
-
-                if(arrow_size.x > 0 && arrow_size.y > 0)
+                float arrow_size = panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10); // there's only one size cvar, arrows always have a 45° angle to ensure proper rendering without antialiasing
+                if(arrow_size > 0)
                 {
-                    // find a suitable fragment size to draw all the parts evenly
-                    float fragment_divisor1 = arrow_size.y / arrow_fragment.y;
-                    float fragment_divisor2 = fragment_divisor1 - floor(fragment_divisor1);
-                    fragment_divisor1 = floor(fragment_divisor1);
-                    if(fragment_divisor1 >= 1)
-                    {
-                        if(fragment_divisor2 < 0.5)
-                            arrow_fragment.y += arrow_fragment.y * fragment_divisor2 / fragment_divisor1;
-                        else
-                            arrow_fragment.y -= arrow_fragment.y * (1 - fragment_divisor2) / (fragment_divisor1 + 1);
-                    }
-                    else
-                    {
-                        arrow_fragment.y = arrow_size.y;
-                    }
-
-                    for(float i = arrow_size.y; i > 0; i -= arrow_fragment.y)
-                    {
-                        arrow_fragment.x = arrow_size.x * (i/arrow_size.y);
-                        if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
-                            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 + i) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                        if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
-                            drawfill(panel_pos + eY * (-(currentangle_size.y - panel_size.y) / 2 + currentangle_size.y + i - arrow_fragment.y) + eX * (currentangle_offset - arrow_fragment.x/2), arrow_fragment, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    }
+                    if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                        StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - currentangle_size.y) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true);
+                    if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
+                        StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - currentangle_size.y) / 2 + currentangle_size.y) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false);
                 }
             }
         }
@@ -976,6 +952,17 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
         ratio = (combine_ratio1 + combine_ratio2) == 0 ? 1 : combine_ratio1/(combine_ratio1 + combine_ratio2);
         if(alpha_ratio > 0) drawfill(panel_pos + eX * (offset + i), gradient_size, StrafeHUD_mixColors(color1, color2, ratio), alpha_ratio, DRAWFLAG_NORMAL);
     }
+}
+
+// draw the strafe arrows (inspired by drawspritearrow() in common/mutators/mutator/waypoints/waypointsprites.qc)
+void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped)
+{
+    if(flipped) origin -= size*eY;
+    R_BeginPolygon("", DRAWFLAG_NORMAL, true);
+    R_PolygonVertex(origin + (flipped ? size*eY : '0 0 0')          , '0 0 0', color, alpha);
+    R_PolygonVertex(origin + (flipped ? '0 0 0' : size*eY) - size*eX, '0 0 0', color, alpha);
+    R_PolygonVertex(origin + (flipped ? '0 0 0' : size*eY) + size*eX, '0 0 0', color, alpha);
+    R_EndPolygon();
 }
 
 // length unit conversion (km and miles are only included to match the GetSpeedUnit* functions)
