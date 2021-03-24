@@ -984,13 +984,13 @@ void GameCommand_moveplayer(int request, int argc)
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
+			if (destination == "spec")
+				destination = "spectator";
 
-			string successful, t;
-			successful = string_null;
-
-			// lets see if the target(s) even actually exist.
 			if ((targets) && (destination))
 			{
+				string successful = string_null;
+				string t;
 				for ( ; targets; )
 				{
 					t = car(targets);
@@ -1007,7 +1007,7 @@ void GameCommand_moveplayer(int request, int argc)
 					}
 
 					// Where are we putting this player?
-					if (destination == "spec" || destination == "spectator")
+					if (destination == "spectator")
 					{
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
@@ -1029,6 +1029,7 @@ void GameCommand_moveplayer(int request, int argc)
 							if (teamplay)
 							{
 								// set up
+								string pl_name = playername(client.netname, client.team, false);
 								int save = Player_GetForcedTeamIndex(client);
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
@@ -1038,7 +1039,7 @@ void GameCommand_moveplayer(int request, int argc)
 								if (team_num == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
 									continue;
 								}
 								else if (team_num == 0)  // auto team
@@ -1072,12 +1073,12 @@ void GameCommand_moveplayer(int request, int argc)
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 								if (MoveToTeam(client, team_id, 6))
 								{
-									successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
+									successful = strcat(successful, (successful ? ", " : ""), pl_name);
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
 								}
 								else
 								{
-									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ")");
+									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", pl_name, ")");
 								}
 								continue;
 							}
