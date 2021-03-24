@@ -17,3 +17,4 @@ REGISTER_MUTATOR(ttt, false)
 .int ttt_validkills; // store the player's valid kills to be given at the end of the match (avoid exposing their score until then)
 .float karmapoints; //LegendGuard adds karma points to store player status 22-02-2021
 .string whokilled; //LegendGuard sets a variable to know who killed who 22-03-2021
+.string killedwithweapon; //LegendGuard sets a variable to know what cause provoked to the victim 23-03-2021

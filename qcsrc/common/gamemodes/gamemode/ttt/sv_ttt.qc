@@ -217,7 +217,7 @@ void ttt_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
 	int playercount = 0;
-
+	
 	FOREACH_CLIENT(true,
 	{
 		if(IS_PLAYER(it) && !IS_DEAD(it))
@@ -391,6 +391,37 @@ void ttt_Initialize() // run at the start of a match, initiates game mode
 	EliminatedPlayers_Init(ttt_isEliminated);
 }
 
+void checkWeaponDeathtype(entity target, float deathtype)
+{
+	switch (deathtype)
+	{
+		case WEP_ARC.m_id: case 276: case 788: target.killedwithweapon = "Impacted by the Arc's electric shock"; return;
+		case WEP_BLASTER.m_id: case 513: target.killedwithweapon = "Blasted by the Blaster"; return;
+		case WEP_CRYLINK.m_id: case 263: case 519: target.killedwithweapon = "Shot by the Crylink"; return;
+		case WEP_DEVASTATOR.m_id: case 522: target.killedwithweapon = "Bombarded by the Devastator"; return;
+		case WEP_ELECTRO.m_id: case 262: case 518: case 1542: target.killedwithweapon = "Electrocuted by the Electro"; return;
+		case WEP_FIREBALL.m_id: case 273: case 529: case 1297: target.killedwithweapon = "Burned by the Fireball"; return;
+		case WEP_HAGAR.m_id: target.killedwithweapon = "Gunned by the Hagar"; return;
+		case WEP_HOOK.m_id: case 1805: target.killedwithweapon = "Caught in Hook gravity bomb"; return;
+		case WEP_MACHINEGUN.m_id: target.killedwithweapon = "Riddled full of holes by the Machine Gun"; return;
+		case WEP_MINE_LAYER.m_id: target.killedwithweapon = "Exploited by the Mine Layer"; return;
+		case WEP_MORTAR.m_id: case 516: case 1284: target.killedwithweapon = "Blew up with the Mortar"; return;
+		case WEP_RIFLE.m_id: target.killedwithweapon = "Sniped by the Rifle"; return;
+		case WEP_SEEKER.m_id: target.killedwithweapon = "Blasted by the Seeker"; return;
+		case WEP_SHOCKWAVE.m_id: target.killedwithweapon = "Gunned down by Shockwave"; return;
+		case WEP_SHOTGUN.m_id: target.killedwithweapon = "Shot by Shotgun"; return;
+		case 258: target.killedwithweapon = "Knocked by the Shotgun"; return;
+		case WEP_TUBA.m_id: target.killedwithweapon = "Ear pain by the @!#%'n Tuba"; return;
+		case WEP_VAPORIZER.m_id: case 257: case 769: target.killedwithweapon = "Sniped by the Vaporizer"; return;
+		case WEP_VORTEX.m_id: target.killedwithweapon = "Sniped by the Vortex"; return;
+		case DEATH_FALL.m_id: target.killedwithweapon = "Fall"; return;
+		case DEATH_FIRE.m_id: target.killedwithweapon = "Burned with the fire"; return;
+		case DEATH_LAVA.m_id: target.killedwithweapon = "Burned in lava"; return;
+		case DEATH_SLIME.m_id: target.killedwithweapon = "Melted in slime"; return;
+		case DEATH_TELEFRAG.m_id: target.killedwithweapon = "Telefragged"; return;
+		default: target.killedwithweapon = "Unknown"; return;
+	}
+}
 
 // ==============
 // Hook Functions
@@ -405,11 +436,14 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 	// in ttt, announcing a frag would tell everyone who the traitor is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-
+	
 	if(IS_PLAYER(frag_attacker) && frag_attacker != frag_target)
 	{
 		float frag_deathtype = M_ARGV(3, float);
 		entity wep_ent = M_ARGV(4, entity);
+		
+		//PrintToChatAll(strcat("deathtype var: ", ftos(frag_deathtype)));
+		checkWeaponDeathtype(frag_target, frag_deathtype);
 		// "team" kill, a point is awarded to the player by default so we must take it away plus an extra one
 		// unless the player is going to be punished for suicide, in which case just remove one
 		if(frag_attacker.ttt_status == frag_target.ttt_status)
@@ -441,8 +475,9 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				frag_target.whokilled = frag_attacker.netname;
 			}
 			else
+			{
 				frag_target.whokilled = frag_attacker.netname;
-
+			}
 		}
 
 		if (frag_attacker.ttt_status == TTT_STATUS_INNOCENT)
@@ -459,16 +494,21 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 				frag_target.whokilled = frag_attacker.netname;
 			}
 			else
+			{
 				frag_target.whokilled = frag_attacker.netname;
-
+			}
 		}
 		
 		if (frag_attacker.ttt_status == TTT_STATUS_TRAITOR)
 		{
 			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+			{
 				frag_target.whokilled = frag_attacker.netname;
+			}
 			else
+			{
 				frag_target.whokilled = frag_attacker.netname;
+			}
 		}
 		//if ttt_status is 1, means innocent, 2 means traitor, 3 means detective, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_attacker.ttt_status is ^3%s^7",ftos(frag_attacker.ttt_status)));
@@ -487,8 +527,9 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 	float deathtype = M_ARGV(3, float);
 	float damage = M_ARGV(4, float);
 	vector force = M_ARGV(6, vector);
+	string corpsemessagestrcat = "";
 
-    if (autocvar_g_ttt_karma_damageactive != false)
+	if (autocvar_g_ttt_karma_damageactive != false)
 	{
 		if (IS_PLAYER(attacker))
 		{
@@ -509,7 +550,7 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 			}
 		}
 	}
-	
+
 	//DETECTIVE CORPSE DETECTION SKILL 21-03-2021
 	if (attacker.ttt_status == TTT_STATUS_DETECTIVE)
 	{
@@ -518,26 +559,35 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 			//Shockwave weapon as radar gun to check the corpses 22-03-2021
 			if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE))
 			{
+				if (target.killedwithweapon == "")
+					target.killedwithweapon = "UNKNOWN CAUSE";
+
+				string killedbyphrase = strcat("^1Killed by^3:^7 ", target.whokilled); 
+				string wepkilledphrase = strcat("^0Death^3:^7 ", target.killedwithweapon);
+				if (target.whokilled == "")
+				{
+					killedbyphrase = "";
+					if (target.killedwithweapon == "")
+						wepkilledphrase = "^0Death^3:^7 UNCLEAR";
+				}
+
 				damage = 0;
 				force = '0 0 0';
 				if (target.ttt_status == TTT_STATUS_INNOCENT)
 				{
 					//try to add centerprint message for chat privately if possible
-					centerprint(attacker, strcat("^1Killed by^3:^7 ", target.whokilled));
-					centerprint(attacker, "^5Role^3: ^2Innocent");
-					centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+					corpsemessagestrcat = strcat("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Innocent\n", killedbyphrase, "\n", wepkilledphrase);
+					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Innocent\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				else if (target.ttt_status == TTT_STATUS_TRAITOR)
 				{
-					centerprint(attacker, strcat("^1Killed by^3:^7 ", target.whokilled));
-					centerprint(attacker, "^5Role^3: ^1Traitor");
-					centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+					corpsemessagestrcat = strcat("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Traitor\n", killedbyphrase, "\n", wepkilledphrase);
+					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Traitor\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				else if (target.ttt_status == TTT_STATUS_DETECTIVE)
 				{
-					centerprint(attacker, strcat("^1Killed by^3:^7 ", target.whokilled));
-					centerprint(attacker, "^5Role^3: ^4Detective");
-					centerprint(attacker, strcat("^6Name^3:^7 ", target.netname));
+					corpsemessagestrcat = strcat("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Detective\n", killedbyphrase, "\n", wepkilledphrase);
+					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Detective\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 			}
 		}
@@ -571,8 +621,8 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
 	{
 		player.event_damage = func_null;
 		//player.health = 0;
-		player.solid = SOLID_CORPSE; //test hooks with SOLID_SLIDEBOX
-		set_movetype(player, MOVETYPE_STEP); //test with MOVETYPE_TOSS or MOVETYPE_BOUNCE (maybe not good)
+		player.solid = SOLID_CORPSE;
+		set_movetype(player, MOVETYPE_STEP); //test with MOVETYPE_TOSS or MOVETYPE_WALK (it's like sliding object) or MOVETYPE_BOUNCE (maybe not good)
 	}
 }
 
@@ -671,7 +721,7 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(3, float);
+	//float frag_deathtype = M_ARGV(3, float);
 
 	ttt_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
