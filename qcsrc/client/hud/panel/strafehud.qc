@@ -168,6 +168,9 @@ void HUD_StrafeHUD()
         float  range_minangle;
         float  arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0); // there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 
+        if(!autocvar_hud_panel_strafehud_uncapped)
+            arrow_size = max(arrow_size, 1);
+
         // determine whether the player is pressing forwards or backwards keys
         if(islocal) // if entity is local player
         {
@@ -459,8 +462,24 @@ void HUD_StrafeHUD()
         // how much is hidden by the current hud angle
         hidden_width = (360 - hudangle) / hudangle * panel_size.x;
         // current angle
-        currentangle_size.x = panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10);
-        currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 0);
+        currentangle_size.x = autocvar_hud_panel_strafehud_angle_width;
+        currentangle_size.y = autocvar_hud_panel_strafehud_angle_height;
+        if(!autocvar_hud_panel_strafehud_uncapped)
+        {
+            currentangle_size.x = min(currentangle_size.x, 10);
+            currentangle_size.y = min(currentangle_size.y, 10);
+        }
+        currentangle_size.x *= panel_size.x;
+        currentangle_size.y *= panel_size.y;
+        if(!autocvar_hud_panel_strafehud_uncapped)
+        {
+            currentangle_size.x = max(currentangle_size.x, 1);
+            currentangle_size.y = max(currentangle_size.y, 1);
+        }
+        else
+        {
+            currentangle_size.y = max(currentangle_size.y, 0);
+        }
         if(mode == 0)
         {
             currentangle_offset = angle/hudangle * panel_size.x;
@@ -473,6 +492,8 @@ void HUD_StrafeHUD()
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
         bestangle_width = panel_size.x * autocvar_hud_panel_strafehud_switch_width;
+        if(!autocvar_hud_panel_strafehud_uncapped)
+            bestangle_width = max(bestangle_width, 1);
 
         if(((angle > -wishangle && direction < 0) || (angle < -wishangle && direction > 0)) && (direction != 0))
         {
@@ -481,7 +502,12 @@ void HUD_StrafeHUD()
             switch_odd_bestangle_offset = (odd_bestangle+bestangle*2)/hudangle * panel_size.x + panel_size.x/2;
         }
         // direction indicator
-        direction_size_vertical.x = panel_size.y * min(autocvar_hud_panel_strafehud_direction_width, .5);
+        direction_size_vertical.x = autocvar_hud_panel_strafehud_direction_width;
+        if(!autocvar_hud_panel_strafehud_uncapped)
+            direction_size_vertical.x = min(direction_size_vertical.x, 1);
+        direction_size_vertical.x *= panel_size.y;
+        if(!autocvar_hud_panel_strafehud_uncapped)
+            direction_size_vertical.x = max(direction_size_vertical.x, 1);
         direction_size_vertical.y = panel_size.y;
         direction_size_horizontal.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_direction_length, .5), direction_size_vertical.x);
         direction_size_horizontal.y = direction_size_vertical.x;
@@ -586,11 +612,18 @@ void HUD_StrafeHUD()
         }
 
         // experimental: slick detector
-        slickdetector_height = panel_size.y * bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 0.5);
+        slickdetector_height = max(autocvar_hud_panel_strafehud_slickdetector_height, 0);
+        if(!autocvar_hud_panel_strafehud_uncapped)
+             slickdetector_height = min(slickdetector_height, 1);
+        slickdetector_height *= panel_size.y;
         if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0) // dunno if slick detection works in spectate
         {
-            float slicksteps = 90 / pow(2, bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4));
+            float slicksteps = max(autocvar_hud_panel_strafehud_slickdetector_granularity, 0);
             bool slickdetected = false;
+
+            if(!autocvar_hud_panel_strafehud_uncapped)
+                slicksteps = min(slicksteps, 4);
+            slicksteps = 90 / pow(2, slicksteps);
 
             if(islocal) slickdetected = IS_ONSLICK(strafeplayer); // don't need to traceline if already touching slick
 
@@ -750,7 +783,12 @@ void HUD_StrafeHUD()
             if(startspeed >= 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
             {
                 vector startspeed_size = panel_size;
-                startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 10);
+                startspeed_size.y = autocvar_hud_panel_strafehud_startspeed_size;
+                if(!autocvar_hud_panel_strafehud_uncapped)
+                    startspeed_size.y = min(startspeed_size.y, 10);
+                startspeed_size.y *= panel_size.y;
+                if(!autocvar_hud_panel_strafehud_uncapped)
+                    startspeed_size.y = max(startspeed_size.y, 1);
                 drawstring_aspect(panel_pos + eY * (panel_size.y + arrow_size + ((currentangle_size.y - panel_size.y) / 2)), strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
@@ -802,7 +840,12 @@ void HUD_StrafeHUD()
             if(jumpheight_persistent > 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
             {
                 vector jumpheight_size = panel_size;
-                jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 10);
+                jumpheight_size.y = autocvar_hud_panel_strafehud_jumpheight_size;
+                if(!autocvar_hud_panel_strafehud_uncapped)
+                    jumpheight_size.y = min(jumpheight_size.y, 10);
+                jumpheight_size.y *= panel_size.y;
+                if(!autocvar_hud_panel_strafehud_uncapped)
+                    jumpheight_size.y = max(jumpheight_size.y, 1);
                 drawstring_aspect(panel_pos - eY * (jumpheight_size.y + arrow_size + ((currentangle_size.y - panel_size.y) / 2)), strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
