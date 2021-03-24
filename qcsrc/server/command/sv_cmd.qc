@@ -1002,7 +1002,7 @@ void GameCommand_moveplayer(int request, int argc)
 
 					if (accepted <= 0)
 					{
-						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : "."));
+						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), ".");
 					}
 					else if (destination == "spectator")
 					{
@@ -1021,17 +1021,18 @@ void GameCommand_moveplayer(int request, int argc)
 					}
 					else
 					{
-						string pl_name = playername(client.netname, client.team, false);
-						if (IS_SPEC(client) || IS_OBSERVER(client))
-						{
-							// well technically we could, but should we allow that? :P
-							LOG_INFO("Can't change teams if the player isn't in the game.");
-							return;
-						}
 						if (!teamplay)
 						{
 							LOG_INFO("Can't change teams when currently not playing a team game.");
 							return;
+						}
+
+						string pl_name = playername(client.netname, client.team, false);
+						if (IS_SPEC(client) || IS_OBSERVER(client))
+						{
+							// well technically we could, but should we allow that? :P
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is not in the game.");
+							continue;
 						}
 
 						// set up
@@ -1044,7 +1045,7 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), (targets ? "^7, skipping to next player.\n" : "^7."));
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), ".");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
