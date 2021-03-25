@@ -395,6 +395,9 @@ void PutObserverInServer(entity this)
 		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		this.frags = FRAGS_SPECTATOR;
 	}
+
+	bot_relinkplayerlist();
+
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
 }
@@ -825,6 +828,8 @@ void PutClientInServer(entity this)
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
+
+	bot_relinkplayerlist();
 }
 
 // TODO do we need all these fields, or should we stop autodetecting runtime

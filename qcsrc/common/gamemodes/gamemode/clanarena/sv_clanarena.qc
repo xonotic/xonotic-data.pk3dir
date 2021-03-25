@@ -224,7 +224,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			PutClientInServer(it);
 		}
 	});
-	bot_relinkplayerlist();
 	return true;
 }
 
@@ -286,11 +285,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
-	{
 		eliminatedPlayers.SendFlags |= 1;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
-	}
 	return true;
 }
 

@@ -95,7 +95,6 @@ void bot_setnameandstuff(entity this);
 void bot_custom_weapon_priority_setup();
 void bot_endgame();
 void bot_relinkplayerlist();
-void bot_clear(entity this);
 void bot_clientdisconnect(entity this);
 void bot_clientconnect(entity this);
 void bot_removefromlargestteam();
