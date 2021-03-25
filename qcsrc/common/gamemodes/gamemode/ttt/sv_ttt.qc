@@ -8,6 +8,7 @@ float autocvar_g_ttt_round_timelimit = 180;
 float autocvar_g_ttt_warmup = 10;
 bool autocvar_g_ttt_punish_teamkill = false;
 bool autocvar_g_ttt_reward_innocent = true;
+bool autocvar_g_ttt_reward_detective = true; //detective reward if investigated corpses
 float autocvar_g_ttt_max_karma_points = 1000; //LegendGuard sets Karma points 21-02-2021
 float autocvar_g_ttt_min_karma_points = 400;
 int autocvar_g_ttt_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
@@ -15,15 +16,13 @@ float autocvar_g_ttt_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_ttt_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 
 // 27-02-2021
-//Ideas: skills/items per each player-type: (these skills/items should be used once)
-// Innocents: Shield and Strength; Traitors: Shield and Strength; Detectives: skill to detect any player to see what player-type is
+// Ideas:
 // Add for the corpse a role of who killed 22-03-2021
 
 // Detective is a created team, this team is added inside Innocents team
 
 //TODO: 
-// detective shouldn't be attacked by innocent bots.
-// detective should detect the point of the corpses (new function).
+// detective shouldn't be attacked by innocent bots
 
 void ttt_FakeTimeLimit(entity e, float t)
 {
@@ -87,6 +86,36 @@ void karma_Control(entity it)
 	}
 }
 
+void karmaLoseDifference(entity attacker, entity target)
+{
+	//BASIC MATH THEORY: example: 1000 * 0.3 * (0.1 + 0.4) * 0.25 // karma points reduce when player attacked to other player
+	if (target.karmapoints < attacker.karmapoints)
+	{	
+		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
+		GameRules_scoring_add(attacker, TTT_KARMA, decreasekarma);
+		attacker.karmapoints = attacker.karmapoints + decreasekarma;
+	}
+	else if (target.karmapoints > attacker.karmapoints)
+	{
+		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
+		GameRules_scoring_add(attacker, TTT_KARMA, decreasekarma);
+		attacker.karmapoints = attacker.karmapoints + decreasekarma;
+	}
+	else
+	{
+		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
+		GameRules_scoring_add(attacker, TTT_KARMA, decreasekarma);
+		attacker.karmapoints = attacker.karmapoints + decreasekarma;
+	}
+}
+
+void karmaWinDifference(entity it)
+{
+	GameRules_scoring_add(it, SCORE, 1); // reward innocents who make it to the end of the round time limit
+	float increasekarma = ( autocvar_g_ttt_min_karma_points * random() * ( 0.1 + random() ) * 0.12 );
+	GameRules_scoring_add(it, TTT_KARMA, increasekarma);
+	it.karmapoints = it.karmapoints + increasekarma;
+}
 
 void ttt_UpdateScores(bool timed_out)
 {
@@ -102,33 +131,36 @@ void ttt_UpdateScores(bool timed_out)
 		// player survived the round
 		if(IS_PLAYER(it) && !IS_DEAD(it)) // LegendGuard adds something for Karma 21-02-2021
 		{
-			//TODO: Detective doesn't need scores, but if investigated a corpse maybe yes 22-02-2021
-			if(autocvar_g_ttt_reward_innocent && timed_out && it.ttt_status == TTT_STATUS_INNOCENT && it.ttt_status == TTT_STATUS_DETECTIVE)
+			if((autocvar_g_ttt_reward_innocent && timed_out && it.ttt_status == TTT_STATUS_INNOCENT) 
+			|| (autocvar_g_ttt_reward_innocent && !timed_out && it.ttt_status == TTT_STATUS_INNOCENT))
 			{
-				GameRules_scoring_add(it, SCORE, 1); // reward innocents who make it to the end of the round time limit
-				float increasekarma = 15; //15 points lol  //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
-				//PrintToChatAll(sprintf("^2REWARD ^7increasekarma: ^2%f", increasekarma));
-				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
-				it.karmapoints = it.karmapoints + increasekarma;
+				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^2REWARD ^7it.karmapoints: ^1%f", it.karmapoints));
 				karma_Control(it);
 			}
+
+			//Detective reward after investigated a corpse
+			if((autocvar_g_ttt_reward_detective && timed_out && it.ttt_status == TTT_STATUS_DETECTIVE) 
+			|| (autocvar_g_ttt_reward_detective && !timed_out && it.ttt_status == TTT_STATUS_DETECTIVE))
+			{
+				if (it.investigated == true)
+				{
+					karmaWinDifference(it);
+					it.investigated = false;
+				}
+				karma_Control(it);
+			}
+
 			if(it.ttt_status == TTT_STATUS_INNOCENT)
 			{
 				GameRules_scoring_add(it, TTT_RESISTS, 1);
-				float increasekarma = 25; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
-				//PrintToChatAll(sprintf("^2INNOCENT ^7increasekarma: ^2%f", increasekarma));
-				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
-				it.karmapoints = it.karmapoints + increasekarma;
+				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^2INNOCENT ^7it.karmapoints: ^1%f", it.karmapoints));
 				karma_Control(it);
 			}
 			else if(it.ttt_status == TTT_STATUS_TRAITOR)
 			{
-				float increasekarma = 25; //autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) );
-				//PrintToChatAll(sprintf("^1TRAITOR ^7increasekarma: ^2%f", increasekarma));
-				GameRules_scoring_add(it, TTT_KARMA, increasekarma);
-				it.karmapoints = it.karmapoints + increasekarma;
+				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^1TRAITOR ^7it.karmapoints: ^1%f", it.karmapoints));
 				karma_Control(it);
 			}
@@ -252,7 +284,7 @@ void ttt_RoundStart()
 				it.ttt_status = TTT_STATUS_TRAITOR;
 			}
 		}
-		else if (total_innocents == 3)
+		else if (total_innocents == 2)
 		{
 			if (total_detectives >= 1)
 				break;
@@ -293,46 +325,42 @@ void ttt_RoundStart()
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		//PrintToChatAll(sprintf("it.karmapoints ^5begin: ^3%f",it.karmapoints));
-		if(it.karmapoints <= 0)
-		{
-			//Resets karmapoints when match starts
-			//PrintToChatAll("^2ZERO RESET");
-			GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-			it.karmapoints = autocvar_g_ttt_max_karma_points;
-		}
 		karma_Control(it);
-		//PrintToChatAll(sprintf("it.karmapoints ^6end: ^3%f",it.karmapoints));
 
 		if(it.ttt_status == TTT_STATUS_INNOCENT)
 		{
+			//Gets Mine Layer weapon to the player
 			SetResource(it, RES_SHELLS, 50);
 			SetResource(it, RES_BULLETS, 70);
 			SetResource(it, RES_ROCKETS, 30);
 			SetResource(it, RES_CELLS, 60);
+			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_INNOCENT);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_INNOCENT);
 			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^2Innocent^7!", it.netname));
 		}
 		else if(it.ttt_status == TTT_STATUS_TRAITOR)
 		{
+			//Gets Mine Layer weapon to the player
 			SetResource(it, RES_SHELLS, 20);
 			SetResource(it, RES_BULLETS, 60);
 			SetResource(it, RES_ROCKETS, 20);
 			SetResource(it, RES_CELLS, 40);
+			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_TRAITOR);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_TRAITOR);
 			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^1Traitor^7!", it.netname));
 		}
 		else if(it.ttt_status == TTT_STATUS_DETECTIVE)
 		{
-			//Gets Shockwave weapon to the player
+			//Gets Shockwave and Mine Layer weapon to the player
+			SetResource(it, RES_ROCKETS, 20);
 			GiveWeapon(it, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
+			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_DETECTIVE);
 			PrintToChatAll(sprintf("%s is ^4Detective^7!", it.netname));
 		}
-
 		ttt_FakeTimeLimit(it, round_handler_GetEndTime());
 	});
 }
@@ -342,10 +370,22 @@ bool ttt_CheckPlayers()
 	static int prev_missing_players;
 	allowed_to_spawn = true;
 	int playercount = 0;
+
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
-	{
+	{	
+		//PrintToChatAll(sprintf("it.karmapoints ^5begin: ^3%f",it.karmapoints));
+		//Karma points start
+		if (it.karmastarted != true)
+		{
+			GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
+			it.karmapoints = autocvar_g_ttt_max_karma_points;
+			it.karmastarted = true;
+		}
+		karma_Control(it);
 		++playercount;
+		//PrintToChatAll(sprintf("it.karmapoints ^6end: ^3%f",it.karmapoints));
 	});
+
 	if (playercount >= 2)
 	{
 		if(prev_missing_players > 0)
@@ -353,6 +393,7 @@ bool ttt_CheckPlayers()
 		prev_missing_players = -1;
 		return true;
 	}
+
 	if(playercount == 0)
 	{
 		if(prev_missing_players > 0)
@@ -360,6 +401,7 @@ bool ttt_CheckPlayers()
 		prev_missing_players = -1;
 		return false;
 	}
+
 	// if we get here, only 1 player is missing
 	if(prev_missing_players != 1)
 	{
@@ -408,7 +450,8 @@ void checkWeaponDeathtype(entity target, float deathtype)
 		case WEP_MORTAR.m_id: case 516: case 1284: target.killedwithweapon = "Blew up with the Mortar"; return;
 		case WEP_RIFLE.m_id: target.killedwithweapon = "Sniped by the Rifle"; return;
 		case WEP_SEEKER.m_id: target.killedwithweapon = "Blasted by the Seeker"; return;
-		case WEP_SHOCKWAVE.m_id: target.killedwithweapon = "Gunned down by Shockwave"; return;
+		case WEP_SHOCKWAVE.m_id: target.killedwithweapon = "Gunned down by the Shockwave"; return;
+		case 275: target.killedwithweapon = "Knocked by the Shockwave"; return;
 		case WEP_SHOTGUN.m_id: target.killedwithweapon = "Shot by Shotgun"; return;
 		case 258: target.killedwithweapon = "Knocked by the Shotgun"; return;
 		case WEP_TUBA.m_id: target.killedwithweapon = "Ear pain by the @!#%'n Tuba"; return;
@@ -417,10 +460,19 @@ void checkWeaponDeathtype(entity target, float deathtype)
 		case DEATH_FALL.m_id: target.killedwithweapon = "Fall"; return;
 		case DEATH_FIRE.m_id: target.killedwithweapon = "Burned with the fire"; return;
 		case DEATH_LAVA.m_id: target.killedwithweapon = "Burned in lava"; return;
+		case DEATH_MIRRORDAMAGE.m_id: target.killedwithweapon = "Suicide"; return;
 		case DEATH_SLIME.m_id: target.killedwithweapon = "Melted in slime"; return;
 		case DEATH_TELEFRAG.m_id: target.killedwithweapon = "Telefragged"; return;
 		default: target.killedwithweapon = "Unknown"; return;
 	}
+}
+
+void ReduceKarmaPointsandFrags(entity frag_attacker, entity frag_target, float frag_deathtype, entity wep_ent)
+{
+	karmaLoseDifference(frag_attacker, frag_target);
+	GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
+	karma_Control(frag_attacker);
+	frag_target.whokilled = frag_attacker.netname;
 }
 
 // ==============
@@ -449,30 +501,17 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 		if(frag_attacker.ttt_status == frag_target.ttt_status)
 		{
 			//PrintToChatAll("^1DEBUG^7: A ^2PLAYER^7 has fragged a ^2PLAYER OF HIS OWN TEAM^7, TOO BAD!");
-			float decreasekarma = -( autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) * 0.25 );
-			//PrintToChatAll(sprintf("decreasekarma: ^1%f", decreasekarma));
-			GameRules_scoring_add(frag_attacker, TTT_KARMA, decreasekarma);
-			frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
+			ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
 			//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
-			GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-			karma_Control(frag_attacker);
-			frag_target.whokilled = frag_attacker.netname;
-			//BASIC MATH THEORY: example: 1000 * 0.3 * (0.1 + 0.4) * 0.25 // karma points reduce when player attacked to other player
 		}
 
 		if(frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
 		{
-			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+			if (frag_target.ttt_status == TTT_STATUS_INNOCENT || frag_target.ttt_status == TTT_STATUS_DETECTIVE)
 			{	
-				//PrintToChatAll("^1DEBUG^7: A ^4Detective^7 fragged an ^2Innocent^7, TOO BAD!");
-				float decreasekarma = -( autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) * 0.25 );
-				//PrintToChatAll(sprintf("decreasekarma: ^1%f", decreasekarma));
-				GameRules_scoring_add(frag_attacker, TTT_KARMA, decreasekarma);
-				frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
+				//PrintToChatAll("^1DEBUG^7: A ^4Detective^7 fragged an ^2Innocent^7/^4Detective^7, TOO BAD!");
+				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
-				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-				karma_Control(frag_attacker);
-				frag_target.whokilled = frag_attacker.netname;
 			}
 			else
 			{
@@ -485,13 +524,7 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 			if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
 			{
 				//PrintToChatAll("^1DEBUG^7: An ^2Innocent^7 fragged a ^4Detective^7, TOO BAD!");
-				float decreasekarma = -( autocvar_g_ttt_max_karma_points * random() * ( 0.1 + random() ) * 0.25 );
-				//PrintToChatAll(sprintf("decreasekarma: ^1%f", decreasekarma));
-				GameRules_scoring_add(frag_attacker, TTT_KARMA, decreasekarma);
-				frag_attacker.karmapoints = frag_attacker.karmapoints + decreasekarma;
-				GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-				karma_Control(frag_attacker);
-				frag_target.whokilled = frag_attacker.netname;
+				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
 			}
 			else
 			{
@@ -562,13 +595,13 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 				if (target.killedwithweapon == "")
 					target.killedwithweapon = "UNKNOWN CAUSE";
 
-				string killedbyphrase = strcat("^1Killed by^3:^7 ", target.whokilled); 
-				string wepkilledphrase = strcat("^0Death^3:^7 ", target.killedwithweapon);
+				string killedbyphrase = strcat("^3Killed by:^7 ", target.whokilled); 
+				string wepkilledphrase = strcat("^3Cause:^7 ", target.killedwithweapon);
 				if (target.whokilled == "")
 				{
 					killedbyphrase = "";
 					if (target.killedwithweapon == "")
-						wepkilledphrase = "^0Death^3:^7 UNCLEAR";
+						wepkilledphrase = "^3Cause:^7 UNCLEAR";
 				}
 
 				damage = 0;
@@ -576,19 +609,20 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 				if (target.ttt_status == TTT_STATUS_INNOCENT)
 				{
 					//try to add centerprint message for chat privately if possible
-					corpsemessagestrcat = strcat("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Innocent\n", killedbyphrase, "\n", wepkilledphrase);
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Innocent\n", killedbyphrase, "\n", wepkilledphrase);
 					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Innocent\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				else if (target.ttt_status == TTT_STATUS_TRAITOR)
 				{
-					corpsemessagestrcat = strcat("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Traitor\n", killedbyphrase, "\n", wepkilledphrase);
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Traitor\n", killedbyphrase, "\n", wepkilledphrase);
 					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Traitor\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				else if (target.ttt_status == TTT_STATUS_DETECTIVE)
 				{
-					corpsemessagestrcat = strcat("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Detective\n", killedbyphrase, "\n", wepkilledphrase);
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Detective\n", killedbyphrase, "\n", wepkilledphrase);
 					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Detective\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
+				attacker.investigated = true;
 			}
 		}
 	}
