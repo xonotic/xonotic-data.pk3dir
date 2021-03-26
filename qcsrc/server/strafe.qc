@@ -15,11 +15,13 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
         bool   strafekeys;
         bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         float  speed                         = vlen(vec2(strafeplayer.velocity));
-        float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) ? .5 : 1;
+        float  crouch_mod                    = IS_DUCKED(strafeplayer) ? .5 : 1;
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
-        float  maxspeed                      = maxspeed_phys * maxspeed_crouch_mod;
-        float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
-        float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y + 180;
+        float  maxspeed                      = maxspeed_phys * crouch_mod;
+        float  maxaccel_phys                 = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
+        float  maxaccel                      = maxaccel_phys * crouch_mod;
+        float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
+        float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
         int    direction;
         int    keys_fwd;
@@ -88,13 +90,9 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
             // calculate view angle relative to the players current velocity direction
             angle = vel_angle - view_angle;
 
-            // if the angle goes above 180° or below -180° wrap it to the opposite side
+            // if the angle goes above 180° or below -180° wrap it to the opposite side since we want the interior angle
             if (angle > 180) angle -= 360;
             else if(angle < -180) angle += 360;
-
-            // shift the strafe angle by 180° for further calculations
-            if(angle < 0) angle += 180;
-            else angle -= 180;
 
             // determine whether the player is strafing forwards or backwards
             // if the player isn't strafe turning use forwards/backwards keys to determine direction
@@ -149,7 +147,8 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
         {
             float efficiency = 0;
             float moveangle = angle + wishangle;
-            float bestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG; // best angle to strafe at
+            float bestangle = (speed > (maxspeed - maxaccel) ? acos((maxspeed - maxaccel) / speed) : 0) * RAD2DEG; // best angle to strafe at
+            float prebestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG;
 
             ++strafeplayer.strafe_efficiency_tics;
             if(fabs(vlen(vec2(movement))) > 0)
@@ -161,13 +160,31 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
                 }
                 else
                 {
-                    if(moveangle >= bestangle)
+                    if(bestangle == 90)
                     {
-                        efficiency = 1 - (moveangle - bestangle) / (90 - bestangle);
+                        efficiency = fabs(moveangle) == bestangle ? 1 : 0;
                     }
-                    else if(moveangle <= -bestangle)
+                    else
                     {
-                        efficiency = 1 - (moveangle + bestangle) / (-90 + bestangle);
+                        if(moveangle >= bestangle)
+                        {
+                            efficiency = 1 - (moveangle - bestangle) / (90 - bestangle);
+                        }
+                        else if(moveangle <= -bestangle)
+                        {
+                            efficiency = 1 + (moveangle + bestangle) / (90 - bestangle);
+                        }
+                        else if(prebestangle != bestangle)
+                        {
+                            if(moveangle < bestangle && moveangle >= prebestangle)
+                            {
+                                efficiency = 1 + (moveangle - bestangle) / (bestangle - prebestangle);
+                            }
+                            else if(moveangle > -bestangle && moveangle <= -prebestangle)
+                            {
+                                efficiency = 1 - (moveangle + bestangle) / (bestangle - prebestangle);
+                            }
+                        }
                     }
                 }
             }
