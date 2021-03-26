@@ -1,30 +1,23 @@
-#include "sv_ttt.qh"
+#include "sv_mmm.qh"
 
-//set g_ttt_detective_count 0.125 "number of players who will become detectives, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players"
-//float autocvar_g_ttt_detective_count = 0.125; //I don't think that it won't be used...
-float autocvar_g_ttt_innocent_count = 0.625;
-//float autocvar_g_ttt_traitor_count = 0.25;
-float autocvar_g_ttt_round_timelimit = 180;
-float autocvar_g_ttt_warmup = 10;
-bool autocvar_g_ttt_punish_teamkill = false;
-bool autocvar_g_ttt_reward_innocent = true;
-bool autocvar_g_ttt_reward_detective = true; //detective reward if investigated corpses
-float autocvar_g_ttt_max_karma_points = 1000; //LegendGuard sets Karma points 21-02-2021
-float autocvar_g_ttt_min_karma_points = 400;
-int autocvar_g_ttt_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
-float autocvar_g_ttt_karma_bantime = 1800; //karma ban seconds
-bool autocvar_g_ttt_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
+//set g_mmm_sleuth_count 0.125 "number of players who will become sleuths, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players"
+//float autocvar_g_mmm_sleuth_count = 0.125; //I don't think that it won't be used...
+float autocvar_g_mmm_civilian_count = 0.625;
+//float autocvar_g_mmm_murderer_count = 0.25;
+float autocvar_g_mmm_round_timelimit = 180;
+float autocvar_g_mmm_warmup = 10;
+bool autocvar_g_mmm_punish_teamkill = false;
+bool autocvar_g_mmm_reward_civilian = true;
+bool autocvar_g_mmm_reward_sleuth = true; //sleuth reward if investigated corpses
+float autocvar_g_mmm_max_karma_points = 1000; //LegendGuard sets Karma points 21-02-2021
+float autocvar_g_mmm_min_karma_points = 400;
+int autocvar_g_mmm_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
+float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
+bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 
-// 27-02-2021
-// Ideas:
-// Add for the corpse a role of who killed 22-03-2021
+// Sleuth is a created team, this team is added inside Civilians team
 
-// Detective is a created team, this team is added inside Innocents team
-
-//TODO: 
-// detective shouldn't be attacked by innocent bots
-
-void ttt_FakeTimeLimit(entity e, float t)
+void mmm_FakeTimeLimit(entity e, float t)
 {
 	if(!IS_REAL_CLIENT(e))
 		return;
@@ -37,7 +30,7 @@ void ttt_FakeTimeLimit(entity e, float t)
 	else
 		WriteCoord(MSG_ONE, (t + 1) / 60);
 #else
-	STAT(TTT_ROUNDTIMER, e) = t;
+	STAT(MMM_ROUNDTIMER, e) = t;
 #endif
 }
 
@@ -46,42 +39,26 @@ void nades_Clear(entity player);
 void karma_Control(entity it)
 {
 	float masksize = autocvar_g_ban_default_masksize;
-	float bantime = autocvar_g_ttt_karma_bantime;
-	if(it.karmapoints >= autocvar_g_ttt_max_karma_points)
+	float bantime = autocvar_g_mmm_karma_bantime;
+	if(it.karmapoints >= autocvar_g_mmm_max_karma_points)
 	{
 		//Resets karmapoints to maintain the maximum
 		//PrintToChatAll("^3REWARD ^1MAXIMUM RESET");
-		GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-		it.karmapoints = autocvar_g_ttt_max_karma_points;
+		GameRules_scoring_add(it, MMM_KARMA, autocvar_g_mmm_max_karma_points - it.karmapoints);
+		it.karmapoints = autocvar_g_mmm_max_karma_points;
 	}
-	else if(it.karmapoints <= autocvar_g_ttt_min_karma_points)
+	else if(it.karmapoints <= autocvar_g_mmm_min_karma_points)
 	{
-		switch (autocvar_g_ttt_karma_bankick_tool)
+		switch (autocvar_g_mmm_karma_bankick_tool)
 		{
-			case 0:
-			{	
-				//force to spec
-				PutObserverInServer(it);
-				return;
-			}
-			case 1:
-			{
-				//kick
-				dropclient(it);
-				return;
-			}
-			case 2:
-			{
-				//ban and kick
-				Ban_KickBanClient(it, bantime, masksize, "Too low karma");
-				return;
-			}
-			default:
-			{
-				//force to spec
-				PutObserverInServer(it);
-				return;
-			}
+			//force to spec
+			case 0: PutObserverInServer(it); return;
+			//kick
+			case 1: dropclient(it); return;
+			//ban and kick
+			case 2: Ban_KickBanClient(it, bantime, masksize, "Too low karma"); return;
+			//force to spec
+			default: PutObserverInServer(it); return;
 		}
 	}
 }
@@ -92,56 +69,56 @@ void karmaLoseDifference(entity attacker, entity target)
 	if (target.karmapoints < attacker.karmapoints)
 	{	
 		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
-		GameRules_scoring_add(attacker, TTT_KARMA, decreasekarma);
+		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
 	}
 	else if (target.karmapoints > attacker.karmapoints)
 	{
 		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
-		GameRules_scoring_add(attacker, TTT_KARMA, decreasekarma);
+		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
 	}
 	else
 	{
 		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
-		GameRules_scoring_add(attacker, TTT_KARMA, decreasekarma);
+		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
 	}
 }
 
 void karmaWinDifference(entity it)
 {
-	GameRules_scoring_add(it, SCORE, 1); // reward innocents who make it to the end of the round time limit
-	float increasekarma = ( autocvar_g_ttt_min_karma_points * random() * ( 0.1 + random() ) * 0.12 );
-	GameRules_scoring_add(it, TTT_KARMA, increasekarma);
+	GameRules_scoring_add(it, SCORE, 1); // reward civilians who make it to the end of the round time limit
+	float increasekarma = ( autocvar_g_mmm_min_karma_points * random() * ( 0.1 + random() ) * 0.12 );
+	GameRules_scoring_add(it, MMM_KARMA, increasekarma);
 	it.karmapoints = it.karmapoints + increasekarma;
 }
 
-void ttt_UpdateScores(bool timed_out)
+void mmm_UpdateScores(bool timed_out)
 {
 	// give players their hard-earned kills now that the round is over
 	FOREACH_CLIENT(true,
 	{
-		it.totalfrags += it.ttt_validkills;
-		if(it.ttt_validkills)
+		it.totalfrags += it.mmm_validkills;
+		if(it.mmm_validkills)
 		{
-			GameRules_scoring_add(it, SCORE, it.ttt_validkills);
+			GameRules_scoring_add(it, SCORE, it.mmm_validkills);
 		}
-		it.ttt_validkills = 0;
+		it.mmm_validkills = 0;
 		// player survived the round
 		if(IS_PLAYER(it) && !IS_DEAD(it)) // LegendGuard adds something for Karma 21-02-2021
 		{
-			if((autocvar_g_ttt_reward_innocent && timed_out && it.ttt_status == TTT_STATUS_INNOCENT) 
-			|| (autocvar_g_ttt_reward_innocent && !timed_out && it.ttt_status == TTT_STATUS_INNOCENT))
+			if((autocvar_g_mmm_reward_civilian && timed_out && it.mmm_status == MMM_STATUS_CIVILIAN) 
+			|| (autocvar_g_mmm_reward_civilian && !timed_out && it.mmm_status == MMM_STATUS_CIVILIAN))
 			{
 				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^2REWARD ^7it.karmapoints: ^1%f", it.karmapoints));
 				karma_Control(it);
 			}
 
-			//Detective reward after investigated a corpse
-			if((autocvar_g_ttt_reward_detective && timed_out && it.ttt_status == TTT_STATUS_DETECTIVE) 
-			|| (autocvar_g_ttt_reward_detective && !timed_out && it.ttt_status == TTT_STATUS_DETECTIVE))
+			//Sleuth reward after investigated a corpse
+			if((autocvar_g_mmm_reward_sleuth && timed_out && it.mmm_status == MMM_STATUS_SLEUTH) 
+			|| (autocvar_g_mmm_reward_sleuth && !timed_out && it.mmm_status == MMM_STATUS_SLEUTH))
 			{
 				if (it.investigated == true)
 				{
@@ -151,74 +128,73 @@ void ttt_UpdateScores(bool timed_out)
 				karma_Control(it);
 			}
 
-			if(it.ttt_status == TTT_STATUS_INNOCENT)
+			if(it.mmm_status == MMM_STATUS_CIVILIAN)
 			{
-				GameRules_scoring_add(it, TTT_RESISTS, 1);
 				karmaWinDifference(it);
-				//PrintToChatAll(sprintf("^2INNOCENT ^7it.karmapoints: ^1%f", it.karmapoints));
+				//PrintToChatAll(sprintf("^2CIVILIAN ^7it.karmapoints: ^1%f", it.karmapoints));
 				karma_Control(it);
 			}
-			else if(it.ttt_status == TTT_STATUS_TRAITOR)
+			else if(it.mmm_status == MMM_STATUS_MURDERER)
 			{
 				karmaWinDifference(it);
-				//PrintToChatAll(sprintf("^1TRAITOR ^7it.karmapoints: ^1%f", it.karmapoints));
+				//PrintToChatAll(sprintf("^1MURDERER ^7it.karmapoints: ^1%f", it.karmapoints));
 				karma_Control(it);
 			}
 		}
 	});
 }
 
-float ttt_CheckWinner()
+float mmm_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		// if the match times out, innocents win too!
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TTT_INNOCENT_WIN);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TTT_INNOCENT_WIN);
+		// if the match times out, civilians win too!
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MMM_CIVILIAN_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MMM_CIVILIAN_WIN);
 		FOREACH_CLIENT(true,
 		{
 			if(IS_PLAYER(it))
 				nades_Clear(it);
-			ttt_FakeTimeLimit(it, -1);
+			mmm_FakeTimeLimit(it, -1);
 		});
 
-		ttt_UpdateScores(true);
+		mmm_UpdateScores(true);
 
 		allowed_to_spawn = false;
 		game_stopped = true;
-		round_handler_Init(5, autocvar_g_ttt_warmup, autocvar_g_ttt_round_timelimit);
+		round_handler_Init(5, autocvar_g_mmm_warmup, autocvar_g_mmm_round_timelimit);
 		return 1;
 	}
 
-	int innocent_count = 0, traitor_count = 0, detective_count = 0;
+	int civilian_count = 0, murderer_count = 0, sleuth_count = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		if(it.ttt_status == TTT_STATUS_INNOCENT)
-			innocent_count++;
-		else if(it.ttt_status == TTT_STATUS_TRAITOR)
-			traitor_count++;
-		else if(it.ttt_status == TTT_STATUS_DETECTIVE) //LegendGuard adds detective_count 20-02-2021 
-			detective_count++;
+		if(it.mmm_status == MMM_STATUS_CIVILIAN)
+			civilian_count++;
+		else if(it.mmm_status == MMM_STATUS_MURDERER)
+			murderer_count++;
+		else if(it.mmm_status == MMM_STATUS_SLEUTH) //LegendGuard adds sleuth_count 20-02-2021 
+			sleuth_count++;
 	});
-	if(innocent_count > 0 && traitor_count > 0)
+	if(civilian_count > 0 && murderer_count > 0)
 	{
 		return 0;
 	}
 
-	if(traitor_count > 0) // traitors win
+	if(murderer_count > 0) // murderers win
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TTT_TRAITOR_WIN);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TTT_TRAITOR_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MMM_MURDERER_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MMM_MURDERER_WIN);
 	}
-	else if(innocent_count > 0) // innocents win
+	else if(civilian_count > 0) // civilians win
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TTT_INNOCENT_WIN);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TTT_INNOCENT_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MMM_CIVILIAN_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MMM_CIVILIAN_WIN);
 	}
-	else if (detective_count > 0 && innocent_count > 0) // detectives are same as innocents win
+	else if (sleuth_count > 0 && civilian_count > 0) // sleuths are same as civilians win
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TTT_INNOCENT_WIN);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TTT_INNOCENT_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MMM_CIVILIAN_WIN);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MMM_CIVILIAN_WIN);
 	}
 	else
 	{
@@ -226,11 +202,11 @@ float ttt_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
-	ttt_UpdateScores(false);
+	mmm_UpdateScores(false);
 
 	allowed_to_spawn = false;
 	game_stopped = true;
-	round_handler_Init(5, autocvar_g_ttt_warmup, autocvar_g_ttt_round_timelimit);
+	round_handler_Init(5, autocvar_g_mmm_warmup, autocvar_g_mmm_round_timelimit);
 
 	FOREACH_CLIENT(true,
 	{
@@ -239,13 +215,13 @@ float ttt_CheckWinner()
 			it.respawn_flags = RESPAWN_SILENT; //CSQC print output respawn lib.qh error fix
 			nades_Clear(it);
 		}
-		ttt_FakeTimeLimit(it, -1);
+		mmm_FakeTimeLimit(it, -1);
 	});
 
 	return 1;
 }
 
-void ttt_RoundStart()
+void mmm_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
 	int playercount = 0;
@@ -255,85 +231,89 @@ void ttt_RoundStart()
 		if(IS_PLAYER(it) && !IS_DEAD(it))
 		{
 			++playercount;
-			it.ttt_status = TTT_STATUS_INNOCENT;
+			it.mmm_status = MMM_STATUS_CIVILIAN;
 		}
 		else
-			it.ttt_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a ttt status, clear it before the round starts!
-		it.ttt_validkills = 0;
+			it.mmm_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a mmm status, clear it before the round starts!
+		it.mmm_validkills = 0;
 	});
 	
-	int innocent_count = bound(1, ((autocvar_g_ttt_innocent_count >= 1) ? autocvar_g_ttt_innocent_count : floor(playercount * autocvar_g_ttt_innocent_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
-	int total_innocents = 0;
-	//int traitor_count = bound(1, ((autocvar_g_ttt_traitor_count >= 1) ? autocvar_g_ttt_traitor_count : floor(playercount * autocvar_g_ttt_traitor_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
-	int total_traitors = 0;
-	//int detective_count = bound(1, ((autocvar_g_ttt_detective_count >= 1) ? autocvar_g_ttt_detective_count : floor(playercount * autocvar_g_ttt_detective_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
-	int total_detectives = 0;
+	int civilian_count = bound(1, ((autocvar_g_mmm_civilian_count >= 1) ? autocvar_g_mmm_civilian_count : floor(playercount * autocvar_g_mmm_civilian_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int total_civilians = 0;
+	//int murderer_count = bound(1, ((autocvar_g_mmm_murderer_count >= 1) ? autocvar_g_mmm_murderer_count : floor(playercount * autocvar_g_mmm_murderer_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int total_murderers = 0;
+	//int sleuth_count = bound(1, ((autocvar_g_mmm_sleuth_count >= 1) ? autocvar_g_mmm_sleuth_count : floor(playercount * autocvar_g_mmm_sleuth_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int total_sleuths = 0;
 
-	//innocents TOTAL
+	//civilians TOTAL
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		if(total_innocents >= innocent_count)
+		if(total_civilians >= civilian_count)
 			break;
 		//LegendGuard fixes the round start again 22-03-2021
-		total_innocents++;
-		if (total_innocents <= 1)
+		total_civilians++;
+		if (total_civilians <= 1)
 		{
-			if (total_traitors <= 1)
+			if (total_murderers <= 1)
 			{
-				total_traitors++;
-				it.ttt_status = TTT_STATUS_TRAITOR;
+				total_murderers++;
+				it.mmm_status = MMM_STATUS_MURDERER;
 			}
 		}
-		else if (total_innocents == 2)
+		else if (total_civilians == 2)
 		{
-			if (total_detectives >= 1)
+			if (total_sleuths >= 1)
 				break;
 			else
 			{
-				total_detectives++;
-				it.ttt_status = TTT_STATUS_DETECTIVE;
+				total_sleuths++;
+				it.mmm_status = MMM_STATUS_SLEUTH;
 			}
 		}
-		else if (total_innocents == 5)
+		else if (total_civilians == 5)
 		{
-			if (total_detectives >= 2)
+			if (total_sleuths >= 2)
 				break;
 			else
 			{
-				total_detectives++;
-				it.ttt_status = TTT_STATUS_DETECTIVE;
+				total_sleuths++;
+				it.mmm_status = MMM_STATUS_SLEUTH;
 			}
 		}
-		else if (total_innocents >= 7)
+		else if (total_civilians >= 7)
 		{
-			if (total_detectives >= 3)
+			if (total_sleuths >= 3)
 				break;
-			else if (total_traitors == 3)
+			else if (total_murderers == 3)
 			{
-				total_traitors++;
-				it.ttt_status = TTT_STATUS_TRAITOR;
+				total_murderers++;
+				it.mmm_status = MMM_STATUS_MURDERER;
 			}
 			else
 			{
-				total_detectives++;
-				it.ttt_status = TTT_STATUS_DETECTIVE;
+				total_sleuths++;
+				it.mmm_status = MMM_STATUS_SLEUTH;
 			}
 		}
 		else
-			it.ttt_status = TTT_STATUS_TRAITOR;
+		{
+			total_murderers++; 
+			it.mmm_status = MMM_STATUS_MURDERER;
+		}
 	});
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		float totalmeankarma = ((autocvar_g_ttt_max_karma_points + autocvar_g_ttt_min_karma_points + it.karmapoints) / 3);
+		float totalmeankarma = ((autocvar_g_mmm_max_karma_points + autocvar_g_mmm_min_karma_points + it.karmapoints) / 3);
 		karma_Control(it);
+		it.activekillerrole = false;
 
-		if(it.ttt_status == TTT_STATUS_INNOCENT)
+		if(it.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			SetResource(it, RES_SHELLS, 50);
-			SetResource(it, RES_BULLETS, 70);
-			SetResource(it, RES_ROCKETS, 30);
-			SetResource(it, RES_CELLS, 60);
+			SetResource(it, RES_SHELLS, 10);
+			SetResource(it, RES_BULLETS, 20);
+			SetResource(it, RES_ROCKETS, 10);
+			SetResource(it, RES_CELLS, 10);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -341,16 +321,16 @@ void ttt_RoundStart()
 			}
 			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_INNOCENT);
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_INNOCENT);
-			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^2Innocent^7!", it.netname));
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_CIVILIAN);
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_MMM_CIVILIAN);
+			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^2Civilian^7!", it.netname));
 		}
-		else if(it.ttt_status == TTT_STATUS_TRAITOR)
+		else if(it.mmm_status == MMM_STATUS_MURDERER)
 		{
-			SetResource(it, RES_SHELLS, 20);
-			SetResource(it, RES_BULLETS, 60);
-			SetResource(it, RES_ROCKETS, 20);
-			SetResource(it, RES_CELLS, 40);
+			SetResource(it, RES_SHELLS, 10);
+			SetResource(it, RES_BULLETS, 20);
+			SetResource(it, RES_ROCKETS, 10);
+			SetResource(it, RES_CELLS, 10);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -358,13 +338,13 @@ void ttt_RoundStart()
 			}
 			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_TRAITOR);
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_TRAITOR);
-			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^1Traitor^7!", it.netname));
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_MURDERER);
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_MMM_MURDERER);
+			//PrintToChatAll(sprintf("^1DEBUG^7: %s is ^1Murderer^7!", it.netname));
 		}
-		else if(it.ttt_status == TTT_STATUS_DETECTIVE)
+		else if(it.mmm_status == MMM_STATUS_SLEUTH)
 		{
-			SetResource(it, RES_ROCKETS, 20);
+			SetResource(it, RES_ROCKETS, 10);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -373,15 +353,15 @@ void ttt_RoundStart()
 			//Gives Shockwave and Mine Layer weapon to the player
 			GiveWeapon(it, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE);
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_DETECTIVE);
-			PrintToChatAll(sprintf("%s is ^4Detective^7!", it.netname));
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_SLEUTH);
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_MMM_SLEUTH);
+			PrintToChatAll(sprintf("%s is ^4Sleuth^7!", it.netname));
 		}
-		ttt_FakeTimeLimit(it, round_handler_GetEndTime());
+		mmm_FakeTimeLimit(it, round_handler_GetEndTime());
 	});
 }
 
-bool ttt_CheckPlayers()
+bool mmm_CheckPlayers()
 {
 	static int prev_missing_players;
 	allowed_to_spawn = true;
@@ -393,8 +373,8 @@ bool ttt_CheckPlayers()
 		//Karma points start
 		if (it.karmastarted != true)
 		{
-			GameRules_scoring_add(it, TTT_KARMA, autocvar_g_ttt_max_karma_points - it.karmapoints);
-			it.karmapoints = autocvar_g_ttt_max_karma_points;
+			GameRules_scoring_add(it, MMM_KARMA, autocvar_g_mmm_max_karma_points - it.karmapoints);
+			it.karmapoints = autocvar_g_mmm_max_karma_points;
 			it.karmastarted = true;
 		}
 		karma_Control(it);
@@ -427,7 +407,7 @@ bool ttt_CheckPlayers()
 	return false;
 }
 
-bool ttt_isEliminated(entity e)
+bool mmm_isEliminated(entity e)
 {
 	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
@@ -436,17 +416,16 @@ bool ttt_isEliminated(entity e)
 	return false;
 }
 
-void ttt_Initialize() // run at the start of a match, initiates game mode
+void mmm_Initialize() // run at the start of a match, initiates game mode
 {
 	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
-		field(SP_TTT_RESISTS, "resists", 0);
-		field(SP_TTT_KARMA, "karma", SFL_SORT_PRIO_SECONDARY); //LegendGuard adds Karma points in the scoreboard 22-02-2021
+		field(SP_MMM_KARMA, "karma", SFL_SORT_PRIO_SECONDARY); //LegendGuard adds Karma points in the scoreboard 22-02-2021
 	});
 
 	allowed_to_spawn = true;
-	round_handler_Spawn(ttt_CheckPlayers, ttt_CheckWinner, ttt_RoundStart);
-	round_handler_Init(5, autocvar_g_ttt_warmup, autocvar_g_ttt_round_timelimit);
-	EliminatedPlayers_Init(ttt_isEliminated);
+	round_handler_Spawn(mmm_CheckPlayers, mmm_CheckWinner, mmm_RoundStart);
+	round_handler_Init(5, autocvar_g_mmm_warmup, autocvar_g_mmm_round_timelimit);
+	EliminatedPlayers_Init(mmm_isEliminated);
 }
 
 void checkWeaponDeathtype(entity target, float deathtype)
@@ -456,16 +435,18 @@ void checkWeaponDeathtype(entity target, float deathtype)
 		case WEP_ARC.m_id: case 276: case 788: target.killedwithweapon = "Impacted by the Arc's electric shock"; return;
 		case WEP_BLASTER.m_id: case 513: target.killedwithweapon = "Blasted by the Blaster"; return;
 		case WEP_CRYLINK.m_id: case 263: case 519: target.killedwithweapon = "Shot by the Crylink"; return;
-		case WEP_DEVASTATOR.m_id: case 522: target.killedwithweapon = "Bombarded by the Devastator"; return;
+		case WEP_DEVASTATOR.m_id: case 522: case 1546: target.killedwithweapon = "Bombarded by the Devastator"; return;
 		case WEP_ELECTRO.m_id: case 262: case 518: case 1542: target.killedwithweapon = "Electrocuted by the Electro"; return;
 		case WEP_FIREBALL.m_id: case 273: case 529: case 1297: target.killedwithweapon = "Burned by the Fireball"; return;
-		case WEP_HAGAR.m_id: target.killedwithweapon = "Gunned by the Hagar"; return;
+		case WEP_HAGAR.m_id: case 265: target.killedwithweapon = "Gunned by the Hagar"; return;
+		case WEP_HLAC.m_id: case 270: case 526: target.killedwithweapon = "Cut down with the HLAC"; return;
 		case WEP_HOOK.m_id: case 1805: target.killedwithweapon = "Caught in Hook gravity bomb"; return;
 		case WEP_MACHINEGUN.m_id: target.activekillerrole = true; target.killedwithweapon = "Riddled full of holes by the Machine Gun"; return;
-		case WEP_MINE_LAYER.m_id: target.killedwithweapon = "Exploited by the Mine Layer"; return;
+		case WEP_MINE_LAYER.m_id: case 517: case 1541: target.killedwithweapon = "Exploited by the Mine Layer"; return;
 		case WEP_MORTAR.m_id: case 516: case 1284: target.killedwithweapon = "Blew up with the Mortar"; return;
-		case WEP_RIFLE.m_id: target.activekillerrole = true; target.killedwithweapon = "Sniped by the Rifle"; return;
-		case WEP_SEEKER.m_id: target.killedwithweapon = "Blasted by the Seeker"; return;
+		case WEP_OVERKILL_NEX.m_id: target.killedwithweapon = "Sniped by the Overkill Nex"; return;
+		case WEP_RIFLE.m_id: case 272: target.activekillerrole = true; target.killedwithweapon = "Sniped by the Rifle"; return;
+		case WEP_SEEKER.m_id: case 274: case 786: target.killedwithweapon = "Blasted by the Seeker"; return;
 		case WEP_SHOCKWAVE.m_id: target.killedwithweapon = "Gunned down by the Shockwave"; return;
 		case 275: target.killedwithweapon = "Knocked by the Shockwave"; return;
 		case WEP_SHOTGUN.m_id: target.activekillerrole = true; target.killedwithweapon = "Shot by Shotgun"; return;
@@ -479,6 +460,10 @@ void checkWeaponDeathtype(entity target, float deathtype)
 		case DEATH_MIRRORDAMAGE.m_id: target.killedwithweapon = "Suicide"; return;
 		case DEATH_SLIME.m_id: target.killedwithweapon = "Melted in slime"; return;
 		case DEATH_TELEFRAG.m_id: target.killedwithweapon = "Telefragged"; return;
+		case DEATH_NADE.m_id: target.killedwithweapon = "Blown up by the nade"; return;
+		case DEATH_NADE_NAPALM.m_id: target.killedwithweapon = "Burned by the Napalm nade"; return;
+		case DEATH_NADE_ICE.m_id: target.killedwithweapon = "Frozen by the Ice nade"; return;
+		case DEATH_NADE_HEAL.m_id: target.killedwithweapon = "Sucked by the Heal nade"; return;
 		default: target.killedwithweapon = "Unknown"; return;
 	}
 }
@@ -486,7 +471,7 @@ void checkWeaponDeathtype(entity target, float deathtype)
 void ReduceKarmaPointsandFrags(entity frag_attacker, entity frag_target, float frag_deathtype, entity wep_ent)
 {
 	karmaLoseDifference(frag_attacker, frag_target);
-	GiveFrags(frag_attacker, frag_target, ((autocvar_g_ttt_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
+	GiveFrags(frag_attacker, frag_target, ((autocvar_g_mmm_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	karma_Control(frag_attacker);
 	frag_target.whokilled = frag_attacker.netname;
 }
@@ -495,13 +480,13 @@ void ReduceKarmaPointsandFrags(entity frag_attacker, entity frag_target, float f
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
+MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 {
 	// LegendGuard's IDEA: To adjust the grade of severity of karma, 
 	// we could add if sentence per weapons and adjust each weapon attack
 	// its own grade. Instead doing random decrease grade 22-02-2021
 	
-	// in ttt, announcing a frag would tell everyone who the traitor is
+	// in mmm, announcing a frag would tell everyone who the murderer is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	
@@ -514,75 +499,80 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 		checkWeaponDeathtype(frag_target, frag_deathtype);
 		// "team" kill, a point is awarded to the player by default so we must take it away plus an extra one
 		// unless the player is going to be punished for suicide, in which case just remove one
-		if(frag_attacker.ttt_status == frag_target.ttt_status)
+		if(frag_attacker.mmm_status == frag_target.mmm_status)
 		{
 			//PrintToChatAll("^1DEBUG^7: A ^2PLAYER^7 has fragged a ^2PLAYER OF HIS OWN TEAM^7, TOO BAD!");
 			ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
-			switch (frag_attacker.ttt_status)
+			switch (frag_attacker.mmm_status)
 			{
-				case TTT_STATUS_INNOCENT: frag_target.killerrole = "\n^3Killer role: ^2Innocent"; return;
-				case TTT_STATUS_TRAITOR: frag_target.killerrole = "\n^3Killer role: ^1Traitor"; return;
-				case TTT_STATUS_DETECTIVE: frag_target.killerrole = "\n^3Killer role: ^4Detective"; return;
+				case MMM_STATUS_CIVILIAN: frag_target.killerrole = "\n^3Killer role: ^2Civilian"; return;
+				case MMM_STATUS_MURDERER: frag_target.killerrole = "\n^3Killer role: ^1Murderer"; return;
+				case MMM_STATUS_SLEUTH: frag_target.killerrole = "\n^3Killer role: ^4Sleuth"; return;
 				default: return;
 			}
 			//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 		}
 
-		if(frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
+		if(frag_attacker.mmm_status == MMM_STATUS_SLEUTH)
 		{
-			if (frag_target.ttt_status == TTT_STATUS_INNOCENT || frag_target.ttt_status == TTT_STATUS_DETECTIVE)
+			if (frag_target.mmm_status == MMM_STATUS_CIVILIAN || frag_target.mmm_status == MMM_STATUS_SLEUTH)
 			{	
-				//PrintToChatAll("^1DEBUG^7: A ^4Detective^7 fragged an ^2Innocent^7/^4Detective^7, TOO BAD!");
+				//PrintToChatAll("^1DEBUG^7: A ^4Sleuth^7 fragged an ^2Civilian^7/^4Sleuth^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
-				frag_target.killerrole = "\n^3Killer role: ^4Detective";
+				frag_target.killerrole = "\n^3Killer role: ^4Sleuth";
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 			}
 			else
 			{
 				frag_target.whokilled = frag_attacker.netname;
-				frag_target.killerrole = "\n^3Killer role: ^4Detective";
+				frag_target.killerrole = "\n^3Killer role: ^4Sleuth";
 			}
 		}
 
-		if (frag_attacker.ttt_status == TTT_STATUS_INNOCENT)
+		if (frag_attacker.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
+			if (frag_target.mmm_status == MMM_STATUS_SLEUTH)
 			{
-				//PrintToChatAll("^1DEBUG^7: An ^2Innocent^7 fragged a ^4Detective^7, TOO BAD!");
+				//PrintToChatAll("^1DEBUG^7: An ^2Civilian^7 fragged a ^4Sleuth^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
-				frag_target.killerrole = "\n^3Killer role: ^2Innocent";
+				frag_target.killerrole = "\n^3Killer role: ^2Civilian";
 			}
 			else
 			{
 				frag_target.whokilled = frag_attacker.netname;
-				frag_target.killerrole = "\n^3Killer role: ^2Innocent";
+				frag_target.killerrole = "\n^3Killer role: ^2Civilian";
 			}
 		}
 		
-		if (frag_attacker.ttt_status == TTT_STATUS_TRAITOR)
+		if (frag_attacker.mmm_status == MMM_STATUS_MURDERER)
 		{
-			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+			if (frag_target.mmm_status == MMM_STATUS_CIVILIAN)
 			{
 				frag_target.whokilled = frag_attacker.netname;
-				frag_target.killerrole = "\n^3Killer role: ^1Traitor";
+				frag_target.killerrole = "\n^3Killer role: ^1Murderer";
 			}
 			else
 			{
 				frag_target.whokilled = frag_attacker.netname;
-				frag_target.killerrole = "\n^3Killer role: ^1Traitor";
+				frag_target.killerrole = "\n^3Killer role: ^1Murderer";
 			}
 		}
-		//if ttt_status is 1, means innocent, 2 means traitor, 3 means detective, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
-		//PrintToChatAll(sprintf("^1DEBUG^7: frag_attacker.ttt_status is ^3%s^7",ftos(frag_attacker.ttt_status)));
-		//PrintToChatAll(sprintf("^1DEBUG^7: frag_target.ttt_status is ^3%s^7",ftos(frag_target.ttt_status)));
+		//if mmm_status is 1, means civilian, 2 means murderer, 3 means sleuth, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
+		//PrintToChatAll(sprintf("^1DEBUG^7: frag_attacker.mmm_status is ^3%s^7",ftos(frag_attacker.mmm_status)));
+		//PrintToChatAll(sprintf("^1DEBUG^7: frag_target.mmm_status is ^3%s^7",ftos(frag_target.mmm_status)));
+	}
+	else
+	{
+		float frag_deathtype = M_ARGV(3, float);
+		checkWeaponDeathtype(frag_target, frag_deathtype);
 	}
 
-	//TODO: try to do a "find out" if a detective can see who fragged to who if possible 21-02-2021
+	//TODO: try to do a "find out" if a sleuth can see who fragged to who if possible 21-02-2021
 	M_ARGV(5, bool) = true; // anonymous attacker
 }
 
 //karma weapon damage, halve the damage attack when player has low karma 20-03-2021
-MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
+MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 {
 	entity attacker = M_ARGV(1, entity);
 	entity target = M_ARGV(2, entity);
@@ -591,19 +581,19 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 	vector force = M_ARGV(6, vector);
 	string corpsemessagestrcat = "";
 
-	if (autocvar_g_ttt_karma_damageactive != false)
+	if (autocvar_g_mmm_karma_damageactive != false)
 	{
 		if (IS_PLAYER(attacker))
 		{
 			if(target == attacker) // damage done to yourself
 			{
-				damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
-				force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+				damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_mmm_max_karma_points);
+				force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_mmm_max_karma_points);
 			}
 			else if (target != attacker)
 			{
-				damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
-				force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_ttt_max_karma_points);
+				damage /= autocvar_g_weapondamagefactor / (attacker.karmapoints / autocvar_g_mmm_max_karma_points);
+				force /= autocvar_g_weaponforcefactor / (attacker.karmapoints / autocvar_g_mmm_max_karma_points);
 			}
 			else
 			{
@@ -613,8 +603,8 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 		}
 	}
 
-	//DETECTIVE CORPSE DETECTION SKILL 21-03-2021
-	if (attacker.ttt_status == TTT_STATUS_DETECTIVE)
+	//SLEUTH CORPSE DETECTION SKILL 21-03-2021
+	if (attacker.mmm_status == MMM_STATUS_SLEUTH)
 	{
 		if(IS_DEAD(target))
 		{
@@ -625,7 +615,10 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 					target.killedwithweapon = "UNKNOWN CAUSE";
 				
 				if (target.activekillerrole != true)
+				{
 					target.killerrole = "";
+					target.activekillerrole = false;
+				}
 
 				string killedbyphrase = strcat("\n^3Killed by:^7 ", target.whokilled, target.killerrole); 
 				string wepkilledphrase = strcat("\n^3Cause:^7 ", target.killedwithweapon);
@@ -633,26 +626,26 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 				{
 					killedbyphrase = "";
 					if (target.killedwithweapon == "")
-						wepkilledphrase = "\n^3Cause:^7 UNCLEAR";
+						wepkilledphrase = "\n^3Cause:^7 UNKNOWN CAUSE";
 				}
 
 				damage = 0;
 				force = '0 0 0';
-				if (target.ttt_status == TTT_STATUS_INNOCENT)
+				if (target.mmm_status == MMM_STATUS_CIVILIAN)
 				{
 					//try to add centerprint message for chat privately if possible
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Innocent", killedbyphrase, wepkilledphrase);
-					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Innocent\n", "^1Killed by^3:^7 ", target.whokilled)));
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
+					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Civilian\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
-				else if (target.ttt_status == TTT_STATUS_TRAITOR)
+				else if (target.mmm_status == MMM_STATUS_MURDERER)
 				{
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Traitor", killedbyphrase, wepkilledphrase);
-					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Traitor\n", "^1Killed by^3:^7 ", target.whokilled)));
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
+					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Murderer\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
-				else if (target.ttt_status == TTT_STATUS_DETECTIVE)
+				else if (target.mmm_status == MMM_STATUS_SLEUTH)
 				{
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Detective", killedbyphrase, wepkilledphrase);
-					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Detective\n", "^1Killed by^3:^7 ", target.whokilled)));
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
+					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Sleuth\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				attacker.investigated = true;
 			}
@@ -663,7 +656,7 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 	M_ARGV(6, vector) = force;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
+MUTATOR_HOOKFUNCTION(mmm, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 	
@@ -671,14 +664,14 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
 	{
 		// update the scoreboard colour display to out the real killer at the end of the round
 		// running this every frame to avoid cheats
-		int plcolor = TTT_COLOR_INNOCENT;
-		if(player.ttt_status == TTT_STATUS_INNOCENT && game_stopped) //Innocent status by default
-			plcolor = TTT_COLOR_INNOCENT;
-		if(player.ttt_status == TTT_STATUS_TRAITOR && game_stopped)
-			plcolor = TTT_COLOR_TRAITOR;
-		//LegendGuard adds for Detective 21-02-2021
-		if(player.ttt_status == TTT_STATUS_DETECTIVE)// && game_stopped)
-			plcolor = TTT_COLOR_DETECTIVE;
+		int plcolor = MMM_COLOR_CIVILIAN;
+		if(player.mmm_status == MMM_STATUS_CIVILIAN && game_stopped) //Civilian status by default
+			plcolor = MMM_COLOR_CIVILIAN;
+		if(player.mmm_status == MMM_STATUS_MURDERER && game_stopped)
+			plcolor = MMM_COLOR_MURDERER;
+		//LegendGuard adds for Sleuth 21-02-2021
+		if(player.mmm_status == MMM_STATUS_SLEUTH)// && game_stopped)
+			plcolor = MMM_COLOR_SLEUTH;
 		setcolor(player, plcolor);
 	}
 
@@ -692,18 +685,18 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerPreThink)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ttt, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(mmm, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.ttt_status = 0;
-	player.ttt_validkills = 0;
+	player.mmm_status = 0;
+	player.mmm_validkills = 0;
 	player.caplayer = 1;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, ForbidSpawn)
+MUTATOR_HOOKFUNCTION(mmm, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -715,7 +708,7 @@ MUTATOR_HOOKFUNCTION(ttt, ForbidSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, PutClientInServer)
+MUTATOR_HOOKFUNCTION(mmm, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -730,12 +723,12 @@ MUTATOR_HOOKFUNCTION(ttt, PutClientInServer)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ttt, reset_map_players)
+MUTATOR_HOOKFUNCTION(mmm, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		it.ttt_status = 0;
-		ttt_FakeTimeLimit(it, -1); // restore original timelimit
+		it.mmm_status = 0;
+		mmm_FakeTimeLimit(it, -1); // restore original timelimit
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 			it.caplayer = 1;
 		if (it.caplayer)
@@ -750,17 +743,17 @@ MUTATOR_HOOKFUNCTION(ttt, reset_map_players)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, reset_map_global)
+MUTATOR_HOOKFUNCTION(mmm, reset_map_global)
 {
 	allowed_to_spawn = true;
 	return true;
 }
 
-entity ttt_LastPlayerForTeam(entity this)
+entity mmm_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if (!IS_DEAD(it) && this.ttt_status == it.ttt_status)
+		if (!IS_DEAD(it) && this.mmm_status == it.mmm_status)
 		{
 			if (!last_pl)
 			{
@@ -773,23 +766,23 @@ entity ttt_LastPlayerForTeam(entity this)
 	return last_pl;
 }
 
-void ttt_LastPlayerForTeam_Notify(entity this)
+void mmm_LastPlayerForTeam_Notify(entity this)
 {
 	if (!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
 	{
-		entity pl = ttt_LastPlayerForTeam(this);
+		entity pl = mmm_LastPlayerForTeam(this);
 		if (pl)
 			Send_Notification(NOTIF_ONE_ONLY, pl, MSG_CENTER, CENTER_ALONE);
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
+MUTATOR_HOOKFUNCTION(mmm, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	//float frag_deathtype = M_ARGV(3, float);
 
-	ttt_LastPlayerForTeam_Notify(frag_target);
+	mmm_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 	{
 		frag_target.respawn_flags = RESPAWN_DENY;
@@ -807,22 +800,22 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
 			bot_clear(frag_target);
 	}
 	
-	//if(frag_attacker.ttt_status == frag_target.ttt_status)
+	//if(frag_attacker.mmm_status == frag_target.mmm_status)
 	// killed an ally! punishment is sentenced
-	if(frag_attacker.ttt_status == TTT_STATUS_DETECTIVE)
+	if(frag_attacker.mmm_status == MMM_STATUS_SLEUTH)
 	{
-		if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
+		if (frag_target.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			//PrintToChatAll("^1DEBUG^7: ^4DETECTIVE ^1DAMAGE/DEAD^7 HAS TAKEN!");
+			//PrintToChatAll("^1DEBUG^7: ^4SLEUTH ^1DAMAGE/DEAD^7 HAS TAKEN!");
 			//30 damage points deal
 			Damage(frag_attacker, frag_attacker, frag_attacker, 30, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 		}
 	}
-	if (frag_attacker.ttt_status == TTT_STATUS_INNOCENT)
+	if (frag_attacker.mmm_status == MMM_STATUS_CIVILIAN)
 	{
-		if (frag_target.ttt_status == TTT_STATUS_DETECTIVE)
+		if (frag_target.mmm_status == MMM_STATUS_SLEUTH)
 		{
-			//PrintToChatAll("^1DEBUG^7: ^2INNOCENT ^1DAMAGE/DEAD^7 HAS TAKEN!");
+			//PrintToChatAll("^1DEBUG^7: ^2CIVILIAN ^1DAMAGE/DEAD^7 HAS TAKEN!");
 			//30 damage points deal
 			Damage(frag_attacker, frag_attacker, frag_attacker, 30, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 		}
@@ -830,22 +823,22 @@ MUTATOR_HOOKFUNCTION(ttt, PlayerDies)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, ClientDisconnect)
+MUTATOR_HOOKFUNCTION(mmm, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
-		ttt_LastPlayerForTeam_Notify(player);
+		mmm_LastPlayerForTeam_Notify(player);
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(mmm, MakePlayerObserver)
 {
 	// LegendGuard, here is where spectators shouldn't talk to any players to say the hints or who is who 21-10-2021
 	entity player = M_ARGV(0, entity);
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
-		ttt_LastPlayerForTeam_Notify(player);
+		mmm_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
@@ -854,44 +847,44 @@ MUTATOR_HOOKFUNCTION(ttt, MakePlayerObserver)
 		eliminatedPlayers.SendFlags |= 1;
 	if (!player.caplayer)
 	{
-		player.ttt_validkills = 0;
-		player.ttt_status = 0;
-		ttt_FakeTimeLimit(player, -1); // restore original timelimit
+		player.mmm_validkills = 0;
+		player.mmm_status = 0;
+		mmm_FakeTimeLimit(player, -1); // restore original timelimit
 		return false;  // allow team reset
 	}
 	return true;  // prevent team reset
 }
 
-MUTATOR_HOOKFUNCTION(ttt, Scores_CountFragsRemaining)
+MUTATOR_HOOKFUNCTION(mmm, Scores_CountFragsRemaining)
 {
 	// announce remaining frags?
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, GiveFragsForKill, CBC_ORDER_FIRST)
+MUTATOR_HOOKFUNCTION(mmm, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	entity frag_attacker = M_ARGV(0, entity);
 	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
-		frag_attacker.ttt_validkills += M_ARGV(2, float);
+		frag_attacker.mmm_validkills += M_ARGV(2, float);
 	M_ARGV(2, float) = 0; // score will be given to the winner when the round ends
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, AddPlayerScore)
+MUTATOR_HOOKFUNCTION(mmm, AddPlayerScore)
 {
 	// add scorefield for scoreboard here
 	entity scorefield = M_ARGV(0, entity);
 	if(scorefield == SP_KILLS || scorefield == SP_DEATHS || scorefield == SP_SUICIDES || scorefield == SP_DMG || scorefield == SP_DMGTAKEN)
-		M_ARGV(1, float) = 0; // don't report that the player has killed or been killed, that would out them as a traitor!
+		M_ARGV(1, float) = 0; // don't report that the player has killed or been killed, that would out them as a murderer!
 }
 
-MUTATOR_HOOKFUNCTION(ttt, CalculateRespawnTime)
+MUTATOR_HOOKFUNCTION(mmm, CalculateRespawnTime)
 {
 	// no respawn calculations needed, player is forced to spectate anyway
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(mmm, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if (IS_PLAYER(it) || it.caplayer == 1)
@@ -901,7 +894,7 @@ MUTATOR_HOOKFUNCTION(ttt, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, ClientCommand_Spectate)
+MUTATOR_HOOKFUNCTION(mmm, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -916,27 +909,27 @@ MUTATOR_HOOKFUNCTION(ttt, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, GetPlayerStatus)
+MUTATOR_HOOKFUNCTION(mmm, GetPlayerStatus)
 {
 	entity player = M_ARGV(0, entity);
 
 	return player.caplayer == 1;
 }
 
-MUTATOR_HOOKFUNCTION(ttt, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(mmm, BotShouldAttack)
 {
-	//TODO: LegendGuard, try bots attack to innocents vs traitors, detectives must be on innocents team 21-02-2021
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if(targ.ttt_status == bot.ttt_status)
+	if(targ.mmm_status == bot.mmm_status)
 	{
 		return true;
 	}
 	
-	if(targ.ttt_status == TTT_STATUS_DETECTIVE)
+	// LegendGuard fixed the problem of Sleuths and Civilians attacking each other 26-03-2021
+	if(bot.mmm_status == MMM_STATUS_SLEUTH)
 	{
-		if(bot.ttt_status == TTT_STATUS_INNOCENT)
-			return false;
+		if(targ.mmm_status == MMM_STATUS_CIVILIAN)
+			return true;
 	}
 }

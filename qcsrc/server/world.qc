@@ -301,8 +301,8 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
-		BADCVAR("g_ttt");
-		BADCVAR("g_ttt_not_dm_maps");
+		BADCVAR("g_mmm");
+		BADCVAR("g_mmm_not_dm_maps");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
@@ -312,7 +312,7 @@ void cvar_changes_init()
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
 		BADCVAR("g_maplist_sizes_count_bots");
-		//LegendGuard adds BADCVAR(g_*) for TTT 20-02-2021
+		//LegendGuard adds BADCVAR(g_*) for MMM 20-02-2021
 
 		// long
 		BADCVAR("hostname");
