@@ -123,9 +123,14 @@ void bot_think(entity this)
 			return;
 		if (IS_DEAD(this))
 		{
-			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
 			if (!navigation_goalrating_timeout(this))
 				navigation_goalrating_timeout_force(this);
+			// jump must not be pressed for at least one frame in order for
+			// PlayerThink to detect the key down event
+			if (this.deadflag == DEAD_DYING)
+				PHYS_INPUT_BUTTON_JUMP(this) = false;
+			else if (this.deadflag == DEAD_DEAD)
+				PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
