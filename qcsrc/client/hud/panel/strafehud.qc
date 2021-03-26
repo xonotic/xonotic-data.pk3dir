@@ -41,6 +41,7 @@ float state_strafekeys_time = 0;
 bool turn = false;
 float turnangle;
 float turnspeed;
+float turnaccel;
 bool fwd = true;
 float starttime = 0;
 float startspeed = -1;
@@ -116,11 +117,13 @@ void HUD_StrafeHUD()
         bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         bool   spectating                    = entcs_GetSpecState(strafeplayer.sv_entnum) == ENTCS_SPEC_PURE;
         float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
-        float  maxspeed_crouch_mod           = IS_DUCKED(csqcplayer) && !swimming ? .5 : 1;
-        float  maxspeed_water_mod            = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
+        float  crouch_mod                    = IS_DUCKED(csqcplayer) && !swimming ? .5 : 1;
+        float  water_mod                     = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
-        float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
+        float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * crouch_mod * water_mod : 320;
         float  movespeed;
+        float  maxaccel_phys                 = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
+        float  maxaccel                      = !autocvar__hud_configure ? maxaccel_phys * crouch_mod * water_mod : 1;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
         float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
@@ -149,6 +152,7 @@ void HUD_StrafeHUD()
         float  currentangle_offset;
         vector currentangle_size             = '0 0 0';
         float  bestangle;
+        float  prebestangle;
         float  odd_bestangle;
         bool   bestangle_anywhere            = false;
         float  bestangle_offset;
@@ -160,6 +164,9 @@ void HUD_StrafeHUD()
         float  accelzone_left_offset;
         float  accelzone_right_offset;
         float  accelzone_width;
+        float  preaccelzone_left_offset;
+        float  preaccelzone_right_offset;
+        float  preaccelzone_width;
         float  overturn_offset;
         float  overturn_width;
         float  slickdetector_height;
@@ -320,7 +327,7 @@ void HUD_StrafeHUD()
                     turn = true; // CPMA turning
                     turnangle = wishangle;
 
-                    // calculate the maximum air strafe speed
+                    // calculate the maximum air strafe speed and acceleration
                     if(PHYS_MAXAIRSPEED(strafeplayer) == 0){
                         maxspeed = 0;
                     }
@@ -330,10 +337,20 @@ void HUD_StrafeHUD()
                     else{
                         maxspeed = PHYS_MAXAIRSPEED(strafeplayer) * pow(fabs(PHYS_MAXAIRSTRAFESPEED(strafeplayer) / PHYS_MAXAIRSPEED(strafeplayer)), 1 - (90 - fabs(wishangle)) / 45); // no modifiers here because they don't affect air strafing
                     }
-
                     turnspeed = vlen(vec2(movement));
                     if(turnspeed == 0) turnspeed = maxspeed;
                     else turnspeed = min(turnspeed, maxspeed);
+
+                    if(PHYS_AIRACCELERATE(strafeplayer) == 0){
+                        maxaccel = 0;
+                    }
+                    else if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) == 0 || PHYS_AIRACCELERATE(strafeplayer) <= PHYS_AIRSTRAFEACCELERATE(strafeplayer)){
+                        maxaccel = PHYS_AIRACCELERATE(strafeplayer);
+                    }
+                    else{
+                        maxaccel = PHYS_AIRACCELERATE(strafeplayer) * pow(fabs(PHYS_AIRSTRAFEACCELERATE(strafeplayer) / PHYS_AIRACCELERATE(strafeplayer)), 1 - (90 - fabs(wishangle)) / 45); // no modifiers here because they don't affect air strafing
+                    }
+                    turnaccel = maxaccel;
                 }
             }
             else if((time - state_strafekeys_time) >= autocvar_hud_panel_strafehud_timeout_turn) // timeout for jumping with strafe keys only
@@ -345,14 +362,30 @@ void HUD_StrafeHUD()
         {
             wishangle = turnangle;
             movespeed = turnspeed;
+            maxaccel = turnaccel;
         }
         else{
             movespeed = vlen(vec2(movement));
             if(movespeed == 0) movespeed = maxspeed;
             else movespeed = min(movespeed, maxspeed);
+
+            if(onground)
+            {
+                if((keys & KEY_JUMP) && ((time - state_onground_time) < autocvar_hud_panel_strafehud_timeout_ground)) // if ground timeout hasn't expired yet use air accelerate
+                {
+                    maxaccel = !autocvar__hud_configure ? PHYS_AIRACCELERATE(strafeplayer) * crouch_mod * water_mod : 1;
+                }
+            }
+            else
+            {
+                if(!(keys & KEY_JUMP) && ((time - state_onground_time) < autocvar_hud_panel_strafehud_timeout_air)) // if air timeout hasn't expired yet use ground accelerate
+                {
+                    maxaccel = !autocvar__hud_configure ? PHYS_ACCELERATE(strafeplayer) * crouch_mod * water_mod : 1;
+                }
+            }
         }
 
-        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? movespeed + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
+        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? (movespeed - maxaccel) + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -454,9 +487,11 @@ void HUD_StrafeHUD()
         }
 
         // best angle to strafe at
-        bestangle = (speed > movespeed ? acos(movespeed / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
+        bestangle = (speed > (movespeed - maxaccel) ? acos((movespeed - maxaccel) / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
+        prebestangle = (speed > movespeed ? acos(movespeed / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
         odd_bestangle = -bestangle - wishangle;
         bestangle -= wishangle;
+        prebestangle -= wishangle;
 
         // various offsets and size calculations of hud indicator elements
         // how much is hidden by the current hud angle
@@ -535,11 +570,15 @@ void HUD_StrafeHUD()
         else
         {
             // calculate various zones of the strafe-o-meter
-            accelzone_width = overturn_offset = (90 - fabs(bestangle + wishangle))/hudangle * panel_size.x;
-            accelzone_right_offset = 0;
+            accelzone_width = (90 - fabs(bestangle + wishangle))/hudangle * panel_size.x;
+            preaccelzone_width = (fabs(bestangle - prebestangle))/hudangle * panel_size.x;
+            overturn_offset = accelzone_width + preaccelzone_width;
+            accelzone_right_offset = preaccelzone_width;
             accelzone_left_offset = overturn_offset + overturn_width;
-            neutral_width = 360/hudangle * panel_size.x - accelzone_width*2 - overturn_width;
-            neutral_offset = direction < 0 ? accelzone_left_offset + accelzone_width : -neutral_width;
+            preaccelzone_right_offset = 0;
+            preaccelzone_left_offset = accelzone_left_offset + accelzone_width;
+            neutral_width = 360/hudangle * panel_size.x - accelzone_width*2 - preaccelzone_width*2 - overturn_width;
+            neutral_offset = direction < 0 ? preaccelzone_left_offset + preaccelzone_width : -neutral_width;
 
             // remove switch indicator width from offset
             if(direction < 0)
@@ -569,13 +608,17 @@ void HUD_StrafeHUD()
             neutral_offset += shift_offset;
             accelzone_left_offset += shift_offset;
             accelzone_right_offset += shift_offset;
+            preaccelzone_left_offset += shift_offset;
+            preaccelzone_right_offset += shift_offset;
             overturn_offset += shift_offset;
 
             // draw left acceleration zone
             HUD_Panel_DrawStrafeHUD(accelzone_left_offset, accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 1);
+            HUD_Panel_DrawStrafeHUD(preaccelzone_left_offset, preaccelzone_width, autocvar_hud_panel_strafehud_bar_preaccel_color, autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 0);
 
             // draw right acceleration zone
             HUD_Panel_DrawStrafeHUD(accelzone_right_offset, accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 2);
+            HUD_Panel_DrawStrafeHUD(preaccelzone_right_offset, preaccelzone_width, autocvar_hud_panel_strafehud_bar_preaccel_color, autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 0);
 
             // draw overturn zone
             HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_bar_overturn_color, autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 3);
@@ -666,7 +709,7 @@ void HUD_StrafeHUD()
             }
         }
 
-        if(speed < (movespeed + antiflicker_speed) && !immobile)
+        if(speed < ((movespeed - maxaccel) + antiflicker_speed) && !immobile)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
         }

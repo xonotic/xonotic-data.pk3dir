@@ -14,6 +14,8 @@ AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_color, vector, '1 1 1', "color of 
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_alpha, float, 0.1, "opacity of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_color, vector, '0 1 0', "color of the strafe meter acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_alpha, float, 0.5, "opacity of the strafe meter acceleration zone");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_color, vector, '1 0.75 0', "color of the strafe meter zone before full acceleration can be achieved");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_alpha, float, 0.5, "opacity of the strafe meter zone before full acceleration can be achieved");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_color, vector, '1 0 1', "color of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_alpha, float, 0.5, "opacity of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_style, int, 0, "set the angle indicator style: 0 = none, 1 = solid line, 2 = dashed line");
