@@ -14,6 +14,7 @@ float autocvar_g_mmm_min_karma_points = 400;
 int autocvar_g_mmm_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
 float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
+float autocvar_g_mmm_karma_severity = 0.25;
 
 // Sleuth is a created team, this team is added inside Civilians team
 
@@ -65,22 +66,27 @@ void karma_Control(entity it)
 
 void karmaLoseDifference(entity attacker, entity target)
 {
+	if (autocvar_g_mmm_karma_severity <= 0)
+		autocvar_g_mmm_karma_severity = 0.1;
+	else if (autocvar_g_mmm_karma_severity > 1)
+		autocvar_g_mmm_karma_severity = 1;
+	
 	//BASIC MATH THEORY: example: 1000 * 0.3 * (0.1 + 0.4) * 0.25 // karma points reduce when player attacked to other player
 	if (target.karmapoints < attacker.karmapoints)
 	{	
-		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
+		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * autocvar_g_mmm_karma_severity );
 		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
 	}
 	else if (target.karmapoints > attacker.karmapoints)
 	{
-		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
+		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * autocvar_g_mmm_karma_severity );
 		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
 	}
 	else
 	{
-		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * 0.25 );
+		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * autocvar_g_mmm_karma_severity );
 		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
 	}
