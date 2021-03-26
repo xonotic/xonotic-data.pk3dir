@@ -700,7 +700,7 @@ void freezetag_Initialize()
 		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
 
 	freezetag_teams = BITS(bound(2, freezetag_teams, 4));
-	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, 0, {
 		field_team(ST_FT_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 		field(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	});
