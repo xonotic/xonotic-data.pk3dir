@@ -325,15 +325,21 @@ void ttt_RoundStart()
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
+		float totalmeankarma = ((autocvar_g_ttt_max_karma_points + autocvar_g_ttt_min_karma_points + it.karmapoints) / 3);
 		karma_Control(it);
 
 		if(it.ttt_status == TTT_STATUS_INNOCENT)
 		{
-			//Gets Mine Layer weapon to the player
 			SetResource(it, RES_SHELLS, 50);
 			SetResource(it, RES_BULLETS, 70);
 			SetResource(it, RES_ROCKETS, 30);
 			SetResource(it, RES_CELLS, 60);
+			if (it.karmapoints <= totalmeankarma)
+			{
+				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
+				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
+			}
+			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_INNOCENT);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_INNOCENT);
@@ -341,11 +347,16 @@ void ttt_RoundStart()
 		}
 		else if(it.ttt_status == TTT_STATUS_TRAITOR)
 		{
-			//Gets Mine Layer weapon to the player
 			SetResource(it, RES_SHELLS, 20);
 			SetResource(it, RES_BULLETS, 60);
 			SetResource(it, RES_ROCKETS, 20);
 			SetResource(it, RES_CELLS, 40);
+			if (it.karmapoints <= totalmeankarma)
+			{
+				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
+				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
+			}
+			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_TRAITOR);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_TTT_TRAITOR);
@@ -353,8 +364,13 @@ void ttt_RoundStart()
 		}
 		else if(it.ttt_status == TTT_STATUS_DETECTIVE)
 		{
-			//Gets Shockwave and Mine Layer weapon to the player
 			SetResource(it, RES_ROCKETS, 20);
+			if (it.karmapoints <= totalmeankarma)
+			{
+				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
+				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
+			}
+			//Gives Shockwave and Mine Layer weapon to the player
 			GiveWeapon(it, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_TTT_DETECTIVE);
@@ -445,14 +461,14 @@ void checkWeaponDeathtype(entity target, float deathtype)
 		case WEP_FIREBALL.m_id: case 273: case 529: case 1297: target.killedwithweapon = "Burned by the Fireball"; return;
 		case WEP_HAGAR.m_id: target.killedwithweapon = "Gunned by the Hagar"; return;
 		case WEP_HOOK.m_id: case 1805: target.killedwithweapon = "Caught in Hook gravity bomb"; return;
-		case WEP_MACHINEGUN.m_id: target.killedwithweapon = "Riddled full of holes by the Machine Gun"; return;
+		case WEP_MACHINEGUN.m_id: target.activekillerrole = true; target.killedwithweapon = "Riddled full of holes by the Machine Gun"; return;
 		case WEP_MINE_LAYER.m_id: target.killedwithweapon = "Exploited by the Mine Layer"; return;
 		case WEP_MORTAR.m_id: case 516: case 1284: target.killedwithweapon = "Blew up with the Mortar"; return;
-		case WEP_RIFLE.m_id: target.killedwithweapon = "Sniped by the Rifle"; return;
+		case WEP_RIFLE.m_id: target.activekillerrole = true; target.killedwithweapon = "Sniped by the Rifle"; return;
 		case WEP_SEEKER.m_id: target.killedwithweapon = "Blasted by the Seeker"; return;
 		case WEP_SHOCKWAVE.m_id: target.killedwithweapon = "Gunned down by the Shockwave"; return;
 		case 275: target.killedwithweapon = "Knocked by the Shockwave"; return;
-		case WEP_SHOTGUN.m_id: target.killedwithweapon = "Shot by Shotgun"; return;
+		case WEP_SHOTGUN.m_id: target.activekillerrole = true; target.killedwithweapon = "Shot by Shotgun"; return;
 		case 258: target.killedwithweapon = "Knocked by the Shotgun"; return;
 		case WEP_TUBA.m_id: target.killedwithweapon = "Ear pain by the @!#%'n Tuba"; return;
 		case WEP_VAPORIZER.m_id: case 257: case 769: target.killedwithweapon = "Sniped by the Vaporizer"; return;
@@ -502,6 +518,13 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 		{
 			//PrintToChatAll("^1DEBUG^7: A ^2PLAYER^7 has fragged a ^2PLAYER OF HIS OWN TEAM^7, TOO BAD!");
 			ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+			switch (frag_attacker.ttt_status)
+			{
+				case TTT_STATUS_INNOCENT: frag_target.killerrole = "\n^3Killer role: ^2Innocent"; return;
+				case TTT_STATUS_TRAITOR: frag_target.killerrole = "\n^3Killer role: ^1Traitor"; return;
+				case TTT_STATUS_DETECTIVE: frag_target.killerrole = "\n^3Killer role: ^4Detective"; return;
+				default: return;
+			}
 			//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 		}
 
@@ -511,11 +534,13 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 			{	
 				//PrintToChatAll("^1DEBUG^7: A ^4Detective^7 fragged an ^2Innocent^7/^4Detective^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+				frag_target.killerrole = "\n^3Killer role: ^4Detective";
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 			}
 			else
 			{
 				frag_target.whokilled = frag_attacker.netname;
+				frag_target.killerrole = "\n^3Killer role: ^4Detective";
 			}
 		}
 
@@ -525,10 +550,12 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 			{
 				//PrintToChatAll("^1DEBUG^7: An ^2Innocent^7 fragged a ^4Detective^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+				frag_target.killerrole = "\n^3Killer role: ^2Innocent";
 			}
 			else
 			{
 				frag_target.whokilled = frag_attacker.netname;
+				frag_target.killerrole = "\n^3Killer role: ^2Innocent";
 			}
 		}
 		
@@ -537,10 +564,12 @@ MUTATOR_HOOKFUNCTION(ttt, ClientObituary)
 			if (frag_target.ttt_status == TTT_STATUS_INNOCENT)
 			{
 				frag_target.whokilled = frag_attacker.netname;
+				frag_target.killerrole = "\n^3Killer role: ^1Traitor";
 			}
 			else
 			{
 				frag_target.whokilled = frag_attacker.netname;
+				frag_target.killerrole = "\n^3Killer role: ^1Traitor";
 			}
 		}
 		//if ttt_status is 1, means innocent, 2 means traitor, 3 means detective, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
@@ -594,14 +623,17 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 			{
 				if (target.killedwithweapon == "")
 					target.killedwithweapon = "UNKNOWN CAUSE";
+				
+				if (target.activekillerrole != true)
+					target.killerrole = "";
 
-				string killedbyphrase = strcat("^3Killed by:^7 ", target.whokilled); 
-				string wepkilledphrase = strcat("^3Cause:^7 ", target.killedwithweapon);
+				string killedbyphrase = strcat("\n^3Killed by:^7 ", target.whokilled, target.killerrole); 
+				string wepkilledphrase = strcat("\n^3Cause:^7 ", target.killedwithweapon);
 				if (target.whokilled == "")
 				{
 					killedbyphrase = "";
 					if (target.killedwithweapon == "")
-						wepkilledphrase = "^3Cause:^7 UNCLEAR";
+						wepkilledphrase = "\n^3Cause:^7 UNCLEAR";
 				}
 
 				damage = 0;
@@ -609,17 +641,17 @@ MUTATOR_HOOKFUNCTION(ttt, Damage_Calculate)
 				if (target.ttt_status == TTT_STATUS_INNOCENT)
 				{
 					//try to add centerprint message for chat privately if possible
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Innocent\n", killedbyphrase, "\n", wepkilledphrase);
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Innocent", killedbyphrase, wepkilledphrase);
 					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Innocent\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				else if (target.ttt_status == TTT_STATUS_TRAITOR)
 				{
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Traitor\n", killedbyphrase, "\n", wepkilledphrase);
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Traitor", killedbyphrase, wepkilledphrase);
 					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Traitor\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				else if (target.ttt_status == TTT_STATUS_DETECTIVE)
 				{
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Detective\n", killedbyphrase, "\n", wepkilledphrase);
+					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Detective", killedbyphrase, wepkilledphrase);
 					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Detective\n", "^1Killed by^3:^7 ", target.whokilled)));
 				}
 				attacker.investigated = true;
