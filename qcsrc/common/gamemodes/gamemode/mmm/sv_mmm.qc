@@ -272,6 +272,16 @@ void mmm_RoundStart()
 		}
 		else if (total_civilians == 5)
 		{
+			if (total_murderers <= 2)
+				break;
+			else
+			{
+				total_murderers++;
+				it.mmm_status = MMM_STATUS_MURDERER;
+			}
+		}
+		else if (total_civilians == 6)
+		{
 			if (total_sleuths >= 2)
 				break;
 			else
@@ -280,11 +290,26 @@ void mmm_RoundStart()
 				it.mmm_status = MMM_STATUS_SLEUTH;
 			}
 		}
-		else if (total_civilians >= 7)
+		else if (total_civilians == 7)
 		{
 			if (total_sleuths >= 3)
 				break;
 			else if (total_murderers == 3)
+			{
+				total_murderers++;
+				it.mmm_status = MMM_STATUS_MURDERER;
+			}
+			else
+			{
+				total_sleuths++;
+				it.mmm_status = MMM_STATUS_SLEUTH;
+			}
+		}
+		else if (total_civilians >= 8)
+		{
+			if (total_sleuths >= 4)
+				break;
+			else if (total_murderers == 4)
 			{
 				total_murderers++;
 				it.mmm_status = MMM_STATUS_MURDERER;
@@ -557,7 +582,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 				frag_target.killerrole = "\n^3Killer role: ^1Murderer";
 			}
 		}
-		//if mmm_status is 1, means civilian, 2 means murderer, 3 means sleuth, TODO: the bots: frag_attacker(1) shouldn't attack to frag_target(3)
+		//if mmm_status is 1, means civilian, 2 means murderer, 3 means sleuth
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_attacker.mmm_status is ^3%s^7",ftos(frag_attacker.mmm_status)));
 		//PrintToChatAll(sprintf("^1DEBUG^7: frag_target.mmm_status is ^3%s^7",ftos(frag_target.mmm_status)));
 	}
