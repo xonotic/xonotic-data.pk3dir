@@ -580,18 +580,6 @@ void HUD_StrafeHUD()
             neutral_width = 360/hudangle * panel_size.x - accelzone_width*2 - preaccelzone_width*2 - overturn_width;
             neutral_offset = direction < 0 ? preaccelzone_left_offset + preaccelzone_width : -neutral_width;
 
-            // remove switch indicator width from offset
-            if(direction < 0)
-            {
-                bestangle_offset -= bestangle_width;
-                switch_odd_bestangle_offset -= bestangle_width;
-            }
-            else
-            {
-                switch_bestangle_offset -= bestangle_width;
-                odd_bestangle_offset -= bestangle_width;
-            }
-
             // shift hud if operating in view angle centered mode
             if(mode == 0)
             {
@@ -649,6 +637,23 @@ void HUD_StrafeHUD()
                 // draw the switch indicator(s)
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
                 float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
+
+                // remove switch indicator width from offset
+                if(direction < 0)
+                {
+                    if(!odd_angles)
+                        offset -= bestangle_width;
+                    else
+                        switch_offset -= bestangle_width;
+                }
+                else
+                {
+                    if(!odd_angles)
+                        switch_offset -= bestangle_width;
+                    else
+                        offset -= bestangle_width;
+                }
+
                 HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0, 0);
                 if(direction == 0) HUD_Panel_DrawStrafeHUD(offset, bestangle_width, autocvar_hud_panel_strafehud_switch_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0, 0);
             }
@@ -772,7 +777,11 @@ void HUD_StrafeHUD()
             switch(autocvar_hud_panel_strafehud_angle_style)
             {
                 case 1:
-                    if(currentangle_size.x > 0 && currentangle_size.y > 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    if(currentangle_size.x > 0 && currentangle_size.y > 0)
+                    {
+                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * ((!odd_angles ? bestangle_offset : odd_bestangle_offset) - currentangle_size.x/2), currentangle_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    }
                     break;
                 case 2:
                     if(currentangle_size.x > 0 && currentangle_size.y > 0)
@@ -782,6 +791,7 @@ void HUD_StrafeHUD()
                         for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
                         {
                             if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
+                            if(autocvar_hud_panel_strafehud_bestangle && direction != 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * ((!odd_angles ? bestangle_offset : odd_bestangle_offset) - line_size.x/2), line_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                             drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                         }
                     }
@@ -795,9 +805,15 @@ void HUD_StrafeHUD()
                 if(arrow_size > 0)
                 {
                     if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                    {
+                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - currentangle_size.y) / 2) + eX * (!odd_angles ? bestangle_offset : odd_bestangle_offset), arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true);
                         StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - currentangle_size.y) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true);
+                    }
                     if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
+                    {
+                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - currentangle_size.y) / 2 + currentangle_size.y) + eX * (!odd_angles ? bestangle_offset : odd_bestangle_offset), arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false);
                         StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - currentangle_size.y) / 2 + currentangle_size.y) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false);
+                    }
                 }
             }
         }
