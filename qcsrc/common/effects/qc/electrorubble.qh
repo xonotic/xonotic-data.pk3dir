@@ -1,0 +1,14 @@
+#pragma once
+
+#ifdef GAMEQC
+entityclass(ElectroRubble);
+classfield(ElectroRubble).float creationtime;
+classfield(ElectroRubble).entity owner;
+
+IntrusiveList g_electrorubble;
+STATIC_INIT(g_electrorubble) { g_electrorubble = IL_NEW(); }
+
+void ElectroRubbleLimit(string cname, int limit, void(entity) deleteproc, entity shooter);
+
+entity ElectroRubbleNew(entity e, float giventime, entity owner);
+#endif

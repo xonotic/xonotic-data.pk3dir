@@ -1,6 +1,7 @@
 // generated file; do not modify
 #include <common/effects/qc/casings.qh>
 #include <common/effects/qc/damageeffects.qh>
+#include <common/effects/qc/electrorubble.qh>
 #include <common/effects/qc/gibs.qh>
 #include <common/effects/qc/globalsound.qh>
 #include <common/effects/qc/lightningarc.qh>
