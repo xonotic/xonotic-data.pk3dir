@@ -66,14 +66,14 @@ void karma_Control(entity it)
 
 void karmaLoseDifference(entity attacker, entity target)
 {
-	if (autocvar_g_mmm_karma_severity <= 0)
+	if (autocvar_g_mmm_karma_severity <= 0.01)
 		autocvar_g_mmm_karma_severity = 0.1;
 	else if (autocvar_g_mmm_karma_severity > 1)
 		autocvar_g_mmm_karma_severity = 1;
 	
 	//BASIC MATH THEORY: example: 1000 * 0.3 * (0.1 + 0.4) * 0.25 // karma points reduce when player attacked to other player
 	if (target.karmapoints < attacker.karmapoints)
-	{	
+	{
 		float decreasekarma = - ( target.karmapoints * random() * ( 0.1 + random() ) * autocvar_g_mmm_karma_severity );
 		GameRules_scoring_add(attacker, MMM_KARMA, decreasekarma);
 		attacker.karmapoints = attacker.karmapoints + decreasekarma;
