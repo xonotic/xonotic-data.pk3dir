@@ -631,12 +631,12 @@ void HUD_StrafeHUD()
             }
         }
 
-        // experimental: slick detector
+        // slick detector
         slickdetector_height = max(autocvar_hud_panel_strafehud_slickdetector_height, 0);
         if(!autocvar_hud_panel_strafehud_uncapped)
              slickdetector_height = min(slickdetector_height, 1);
         slickdetector_height *= panel_size.y;
-        if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0) // dunno if slick detection works in spectate
+        if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0)
         {
             float slicksteps = max(autocvar_hud_panel_strafehud_slickdetector_granularity, 0);
             bool slickdetected = false;
