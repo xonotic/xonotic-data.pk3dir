@@ -604,24 +604,6 @@ void HUD_StrafeHUD()
             // draw neutral zone
             HUD_Panel_DrawStrafeHUD(neutral_offset, neutral_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 0);
 
-            if(direction != 0 && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
-            {
-                bool indicator_direction = direction < 0;
-                // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
-                // if both conditions are true then it's inverted twice hence not inverted at all
-                if(!fwd != odd_angles)
-                {
-                    indicator_direction = !indicator_direction;
-                }
-                // draw the direction indicator caps at the sides of the hud
-                // vertical line
-                if(direction_size_vertical.y > 0) drawfill(panel_pos - eY * direction_size_horizontal.y + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                // top horizontal line
-                drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                // bottom horizontal line
-                drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            }
-
             if(speed >= minspeed && bestangle_width > 0) // only draw indicators if minspeed is reached
             {
                 // draw the switch indicator(s)
@@ -702,6 +684,24 @@ void HUD_StrafeHUD()
                 // bottom horizontal line
                 drawfill(panel_pos + eY * panel_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
+        }
+
+        if(direction != 0 && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
+        {
+            bool indicator_direction = direction < 0;
+            // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
+            // if both conditions are true then it's inverted twice hence not inverted at all
+            if(!fwd != odd_angles)
+            {
+                indicator_direction = !indicator_direction;
+            }
+            // draw the direction indicator caps at the sides of the hud
+            // vertical line
+            if(direction_size_vertical.y > 0) drawfill(panel_pos - eY * direction_size_horizontal.y + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            // top horizontal line
+            drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            // bottom horizontal line
+            drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
 
         if(speed < ((movespeed - maxaccel) + antiflicker_speed) && !immobile)
