@@ -15,6 +15,7 @@ int autocvar_g_mmm_karma_bankick_tool = 0; //LegendGuard sets a ban tool for ser
 float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 float autocvar_g_mmm_karma_severity = 0.25;
+float autocvar_g_mmm_karma_damagepunishmentdeal = 20; //LegendGuard sets Karma punishment damage setting if player kills an ally 28-03-2021
 
 // Sleuth is a created team, this team is added inside Civilians team
 
@@ -66,7 +67,7 @@ void karma_Control(entity it)
 
 void karmaLoseDifference(entity attacker, entity target)
 {
-	if (autocvar_g_mmm_karma_severity <= 0.01)
+	if (autocvar_g_mmm_karma_severity <= 0.09)
 		autocvar_g_mmm_karma_severity = 0.1;
 	else if (autocvar_g_mmm_karma_severity > 1)
 		autocvar_g_mmm_karma_severity = 1;
@@ -119,7 +120,6 @@ void mmm_UpdateScores(bool timed_out)
 			{
 				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^2REWARD ^7it.karmapoints: ^1%f", it.karmapoints));
-				karma_Control(it);
 			}
 
 			//Sleuth reward after investigated a corpse
@@ -131,20 +131,17 @@ void mmm_UpdateScores(bool timed_out)
 					karmaWinDifference(it);
 					it.investigated = false;
 				}
-				karma_Control(it);
 			}
 
 			if(it.mmm_status == MMM_STATUS_CIVILIAN)
 			{
 				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^2CIVILIAN ^7it.karmapoints: ^1%f", it.karmapoints));
-				karma_Control(it);
 			}
 			else if(it.mmm_status == MMM_STATUS_MURDERER)
 			{
 				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^1MURDERER ^7it.karmapoints: ^1%f", it.karmapoints));
-				karma_Control(it);
 			}
 		}
 	});
@@ -386,7 +383,7 @@ void mmm_RoundStart()
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_SLEUTH);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_MMM_SLEUTH);
-			PrintToChatAll(sprintf("%s is ^4Sleuth^7!", it.netname));
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MMM_WHOISSLEUTH, it.netname);
 		}
 		mmm_FakeTimeLimit(it, round_handler_GetEndTime());
 	});
@@ -503,7 +500,6 @@ void ReduceKarmaPointsandFrags(entity frag_attacker, entity frag_target, float f
 {
 	karmaLoseDifference(frag_attacker, frag_target);
 	GiveFrags(frag_attacker, frag_target, ((autocvar_g_mmm_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
-	karma_Control(frag_attacker);
 	frag_target.whokilled = frag_attacker.netname;
 }
 
@@ -838,8 +834,7 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerDies)
 		if (frag_target.mmm_status == MMM_STATUS_CIVILIAN)
 		{
 			//PrintToChatAll("^1DEBUG^7: ^4SLEUTH ^1DAMAGE/DEAD^7 HAS TAKEN!");
-			//30 damage points deal
-			Damage(frag_attacker, frag_attacker, frag_attacker, 30, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
+			Damage(frag_attacker, frag_attacker, frag_attacker, autocvar_g_mmm_karma_damagepunishmentdeal, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 		}
 	}
 	if (frag_attacker.mmm_status == MMM_STATUS_CIVILIAN)
@@ -847,8 +842,15 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerDies)
 		if (frag_target.mmm_status == MMM_STATUS_SLEUTH)
 		{
 			//PrintToChatAll("^1DEBUG^7: ^2CIVILIAN ^1DAMAGE/DEAD^7 HAS TAKEN!");
-			//30 damage points deal
-			Damage(frag_attacker, frag_attacker, frag_attacker, 30, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
+			Damage(frag_attacker, frag_attacker, frag_attacker, autocvar_g_mmm_karma_damagepunishmentdeal, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
+		}
+	}
+	if (frag_attacker.mmm_status == MMM_STATUS_MURDERER)
+	{
+		if (frag_target.mmm_status == MMM_STATUS_MURDERER)
+		{
+			//PrintToChatAll("^1DEBUG^7: ^1MURDERER ^1DAMAGE/DEAD^7 HAS TAKEN!");
+			Damage(frag_attacker, frag_attacker, frag_attacker, autocvar_g_mmm_karma_damagepunishmentdeal, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 		}
 	}
 	return true;
@@ -865,7 +867,6 @@ MUTATOR_HOOKFUNCTION(mmm, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(mmm, MakePlayerObserver)
 {
-	// LegendGuard, here is where spectators shouldn't talk to any players to say the hints or who is who 21-10-2021
 	entity player = M_ARGV(0, entity);
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
