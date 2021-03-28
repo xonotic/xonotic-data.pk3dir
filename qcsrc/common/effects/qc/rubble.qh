@@ -7,8 +7,8 @@ classfield(Rubble).float creationtime;
 IntrusiveList CasingsNGibs;
 STATIC_INIT(CasingsNGibs) { CasingsNGibs = IL_NEW(); }
 
-IntrusiveList ElectroBallLimit;
-STATIC_INIT(ElectroBallLimit) { ElectroBallLimit = IL_NEW(); }
+IntrusiveList LimitedElectroBallRubbleList;
+STATIC_INIT(LimitedElectroBallRubbleList) { LimitedElectroBallRubbleList = IL_NEW(); }
 
 
 void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(entity) deleteproc, entity parent);
