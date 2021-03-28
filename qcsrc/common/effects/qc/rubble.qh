@@ -8,6 +8,9 @@ IntrusiveList g_rubble;
 STATIC_INIT(g_rubble) { g_rubble = IL_NEW(); }
 
 void RubbleLimit(string cname, int limit, void(entity) deleteproc);
+void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(entity) deleteproc, entity parent);
 
+entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, float giventime);
+entity ListNewChildRubble(IntrusiveList list, entity child);
 entity RubbleNew(entity e);
 #endif
