@@ -76,9 +76,6 @@ REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
 
 SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
-IntrusiveList ElectroBallLimit;
-STATIC_INIT(ElectroBallLimit) { ElectroBallLimit = IL_NEW(); }
-
 #ifdef SVQC
 .float electro_count;
 .float electro_secondarytime;

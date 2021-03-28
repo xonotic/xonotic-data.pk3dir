@@ -149,7 +149,7 @@ NET_HANDLE(casings, bool isNew)
     ang_z = ReadByte() * 360 / 256;
     return = true;
 
-    Casing casing = RubbleNew(new(casing));
+    Casing casing = ListNewChildRubble(CasingsNGibs, new(casing));
     casing.silent = (_state & 0x80);
     casing.state = (_state & 0x7F);
     casing.origin = org;
@@ -183,7 +183,7 @@ NET_HANDLE(casings, bool isNew)
 
     setsize(casing, '0 0 -1', '0 0 -1');
 
-    RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
+    LimitedChildrenRubble(CasingsNGibs, "casing", autocvar_cl_casings_maxcount, Casing_Delete, NULL);
 }
 
 #endif
