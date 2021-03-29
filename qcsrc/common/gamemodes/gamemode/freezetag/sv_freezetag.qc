@@ -573,6 +573,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 			if(n == -1)
 			{
+				if(autocvar_sv_eventlog)
+					GameLogEcho(strcat(":ft:autorevival:", ftos(player.playerid)));
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, frozen_time);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, frozen_time);
 				return true;
@@ -590,6 +592,14 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
 			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
+			if(autocvar_sv_eventlog)
+			{
+				string revivers = "";
+				for(entity it = reviving_players_first; it; it = it.chain)
+					revivers = strcat(revivers, ftos(it.playerid), ",");
+				revivers = substring(revivers, 0, strlen(revivers) - 1);
+				GameLogEcho(strcat(":ft:revival:", ftos(player.playerid), ":", revivers));
+			}
 		}
 
 		for(entity it = reviving_players_first; it; it = it.chain)
