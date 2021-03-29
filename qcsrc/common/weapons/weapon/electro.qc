@@ -299,7 +299,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	// check if limits are enabled (we can tell by checking if the original orb is listed) and push it to the list if so
 	if(IL_CONTAINS(LimitedElectroBallRubbleList, this))
 	{
-		ReplaceOldListedChildRubble(LimitedElectroBallRubbleList, newproj, this.creationtime);
+		ReplaceOldListedChildRubble(LimitedElectroBallRubbleList, newproj, this);
 	}
 
 	delete(this);

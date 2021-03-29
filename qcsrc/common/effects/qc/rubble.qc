@@ -33,8 +33,12 @@ void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(ent
 	}
 }
 
-entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, float giventime){
-	child.creationtime = giventime;
+
+// This function doesn't preserve linked list order but it is not needed as creationtime is used instead of list position for comparing ages.
+// IL_Replace or similiar order preserving function did not exist at the time of creating this.
+entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, entity oldChild){
+	child.creationtime = oldChild.creationtime;
+	IL_REMOVE(list, oldChild);
 	IL_PUSH(list, child);
 	return child;
 }

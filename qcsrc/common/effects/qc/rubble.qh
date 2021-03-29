@@ -13,7 +13,7 @@ STATIC_INIT(LimitedElectroBallRubbleList) { LimitedElectroBallRubbleList = IL_NE
 
 void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(entity) deleteproc, entity parent);
 
-entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, float giventime);
+entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, entity oldChild);
 
 entity ListNewChildRubble(IntrusiveList list, entity child);
 

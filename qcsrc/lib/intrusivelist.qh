@@ -2,6 +2,10 @@
 
 #include "iter.qh"
 
+/**
+ * This limitation is only towards maximum amount of creatable lists.
+ * Lists can be given endless amount of entities, only restricted by engine limitations.
+ */
 const int IL_MAX = 128;
 
 ERASEABLE
