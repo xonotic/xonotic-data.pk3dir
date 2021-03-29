@@ -50,7 +50,8 @@ void HUD_Mod_MMM(vector pos, vector mySize)
 		else
 			timer_color = '1 0 0'; //red
 	}
-
+	
+	
 	//drawpic_aspect_skin(pos, player_icon, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	if(!time_text)
 		drawstring_aspect(pos, player_text, vec2(mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -59,6 +60,7 @@ void HUD_Mod_MMM(vector pos, vector mySize)
 		drawstring_aspect(pos, player_text, vec2(0.5 * mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(pos + eX * (0.5 * mySize.x), time_text, vec2(0.5 * mySize.x, mySize.y), timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
+	
 }
 
 REGISTER_MUTATOR(cl_mmm, true);

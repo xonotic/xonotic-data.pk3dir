@@ -16,7 +16,6 @@ float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 float autocvar_g_mmm_karma_severity = 0.25;
 float autocvar_g_mmm_karma_damagepunishmentdeal = 20; //LegendGuard sets Karma punishment damage setting if player kills an ally 28-03-2021
-
 // Sleuth is a created team, this team is added inside Civilians team
 
 void mmm_FakeTimeLimit(entity e, float t)
@@ -99,6 +98,7 @@ void karmaWinDifference(entity it)
 	float increasekarma = ( autocvar_g_mmm_min_karma_points * random() * ( 0.1 + random() ) * 0.12 );
 	GameRules_scoring_add(it, MMM_KARMA, increasekarma);
 	it.karmapoints = it.karmapoints + increasekarma;
+	karma_Control(it);
 }
 
 void mmm_UpdateScores(bool timed_out)
@@ -133,12 +133,7 @@ void mmm_UpdateScores(bool timed_out)
 				}
 			}
 
-			if(it.mmm_status == MMM_STATUS_CIVILIAN)
-			{
-				karmaWinDifference(it);
-				//PrintToChatAll(sprintf("^2CIVILIAN ^7it.karmapoints: ^1%f", it.karmapoints));
-			}
-			else if(it.mmm_status == MMM_STATUS_MURDERER)
+			if(it.mmm_status == MMM_STATUS_MURDERER)
 			{
 				karmaWinDifference(it);
 				//PrintToChatAll(sprintf("^1MURDERER ^7it.karmapoints: ^1%f", it.karmapoints));
@@ -159,6 +154,7 @@ float mmm_CheckWinner()
 			if(IS_PLAYER(it))
 				nades_Clear(it);
 			mmm_FakeTimeLimit(it, -1);
+			karma_Control(it);
 		});
 
 		mmm_UpdateScores(true);
@@ -219,6 +215,7 @@ float mmm_CheckWinner()
 			nades_Clear(it);
 		}
 		mmm_FakeTimeLimit(it, -1);
+		karma_Control(it);
 	});
 
 	return 1;
@@ -228,7 +225,7 @@ void mmm_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
 	int playercount = 0;
-	
+
 	FOREACH_CLIENT(true,
 	{
 		if(IS_PLAYER(it) && !IS_DEAD(it))
@@ -594,7 +591,6 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 		checkWeaponDeathtype(frag_target, frag_deathtype);
 	}
 
-	//TODO: try to do a "find out" if a sleuth can see who fragged to who if possible 21-02-2021
 	M_ARGV(5, bool) = true; // anonymous attacker
 }
 
@@ -896,7 +892,7 @@ MUTATOR_HOOKFUNCTION(mmm, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(mmm, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	entity frag_attacker = M_ARGV(0, entity);
-	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
+	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) 
 		frag_attacker.mmm_validkills += M_ARGV(2, float);
 	M_ARGV(2, float) = 0; // score will be given to the winner when the round ends
 	return true;
