@@ -154,67 +154,67 @@ void Draw_ShowNames(entity this)
 	}
 	else if (vdist(this.origin - view_origin, >=, max_shot_distance))
 		return;
-	if (!a) return;
+	if (!a || o.z < 0) return;
+
+	o.z = 0;
 	float resize = 1;
-	if (autocvar_hud_shownames_resize)  // limit resize so its never smaller than 0.5... gets unreadable
+	if (autocvar_hud_shownames_resize && vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
 	{
-		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
+		// limit resize so its never smaller than 0.5... gets unreadable
+		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
+		if (dist == -1)
+			dist = vlen(this.origin - view_origin);
+		resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+	}
+	vector mySize = (vec2(autocvar_hud_shownames_aspect, 1)) * autocvar_hud_shownames_fontsize;
+	vector myPos = o - vec2(0.5 * mySize.x, mySize.y);
+	mySize.x *= resize;
+	mySize.y *= resize;
+	myPos.x += 0.5 * (mySize.x / resize - mySize.x);
+	myPos.y += (mySize.y / resize - mySize.y);
+
+	this.box_org = myPos + mySize / 2;
+	this.box_ofs = mySize / 2;
+
+	float namewidth = mySize.x;
+	if (autocvar_hud_shownames_status && this.sameteam && !this.csqcmodel_isdead)
+	{
+		vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
+		vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
+
+		this.box_ofs.x = max(mySize.x / 2, sz.x); // sz.x is already half as wide
+		this.box_ofs.y += sz.y / 2;
+		this.box_org.y = myPos.y + (mySize.y + sz.y) / 2;
+		// antioverlap debug code
+		//drawfill(this.box_org - this.box_ofs, this.box_ofs * 2, '1 1 1', a / 2, DRAWFLAG_NORMAL);
+
+		if (autocvar_hud_shownames_statusbar_highlight)
+			drawfill(pos + eX * 0.25 * mySize.x, sz, '0.7 0.7 0.7', a / 2, DRAWFLAG_NORMAL);
+		if (this.healthvalue > 0)
 		{
-			float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-			if (dist == -1)
-				dist = vlen(this.origin - view_origin);
-			resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+			HUD_Panel_DrawProgressBar(pos, sz, "nametag_statusbar",
+				this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
+				DRAWFLAG_NORMAL);
+		}
+		if (GetResource(this, RES_ARMOR) > 0)
+		{
+			HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
+				GetResource(this, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
+				DRAWFLAG_NORMAL);
 		}
 	}
+	// antioverlap debug code
+	//else drawfill(this.box_org - this.box_ofs, this.box_ofs * 2, '1 1 1', a / 2, DRAWFLAG_NORMAL);
 
-	if (o.z >= 0)
-	{
-		o.z = 0;
-		vector mySize = (vec2(autocvar_hud_shownames_aspect, 1)) * autocvar_hud_shownames_fontsize;
-		vector myPos = o - vec2(0.5 * mySize.x, mySize.y);
-		mySize.x *= resize;
-		mySize.y *= resize;
-		myPos.x += 0.5 * (mySize.x / resize - mySize.x);
-		myPos.y += (mySize.y / resize - mySize.y);
-
-		this.box_org = myPos + mySize / 2;
-		this.box_ofs = mySize / 2;
-
-		float namewidth = mySize.x;
-		if (autocvar_hud_shownames_status && this.sameteam && !this.csqcmodel_isdead)
-		{
-			vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
-			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
-
-			this.box_ofs.x = max(mySize.x / 2, sz.x); // sz.x is already half as wide
-			this.box_ofs.y += sz.y / 2;
-			this.box_org.y = myPos.y + (mySize.y + sz.y) / 2;
-
-			if (autocvar_hud_shownames_statusbar_highlight)
-				drawfill(pos + eX * 0.25 * mySize.x, sz, '0.7 0.7 0.7', a / 2, DRAWFLAG_NORMAL);
-			if (this.healthvalue > 0)
-			{
-				HUD_Panel_DrawProgressBar(pos, sz, "nametag_statusbar",
-					this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
-					DRAWFLAG_NORMAL);
-			}
-			if (GetResource(this, RES_ARMOR) > 0)
-			{
-				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
-					GetResource(this, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
-					DRAWFLAG_NORMAL);
-			}
-		}
-		string s = entcs_GetName(this.sv_entnum - 1);
-		if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
-			s = playername(s, entcs_GetTeam(this.sv_entnum - 1), true);
-		drawfontscale = '1 1 0' * resize;
-		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
-		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
-		myPos.x = o.x - (width * resize) / 2;
-		drawcolorcodedstring(myPos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
-		drawfontscale = '1 1 0';
-	}
+	string s = entcs_GetName(this.sv_entnum - 1);
+	if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
+		s = playername(s, entcs_GetTeam(this.sv_entnum - 1), true);
+	drawfontscale = '1 1 0' * resize;
+	s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
+	float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
+	myPos.x = o.x - (width * resize) / 2;
+	drawcolorcodedstring(myPos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
+	drawfontscale = '1 1 0';
 }
 
 void Draw_ShowNames_All()
