@@ -422,6 +422,8 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 	if(WEP_CVAR_SEC(electro, limit) > 0)
 	{
+		if (!LimitedElectroBallRubbleList)
+			LimitedElectroBallRubbleList = IL_NEW();
 		ListNewChildRubble(LimitedElectroBallRubbleList, proj);
 		LimitedChildrenRubble(LimitedElectroBallRubbleList, "electro_orb", WEP_CVAR_SEC(electro, limit), adaptor_think2use_hittype_splash, actor);
 	}
