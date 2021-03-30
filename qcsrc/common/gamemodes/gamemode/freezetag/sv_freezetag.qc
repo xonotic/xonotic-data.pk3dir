@@ -490,9 +490,8 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 	#undef IS_REVIVING
 #endif
 
-// returns true if player is reviving it
-#define IS_REVIVING(player, it, revive_extra_size) \
-	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+#define IN_REVIVING_RANGE(player, it, revive_extra_size) \
+	(it != player && !IS_DEAD(it) && SAME_TEAM(it, player) \
 	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
@@ -515,9 +514,27 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	entity reviving_players_last = NULL;
 	entity reviving_players_first = NULL;
 
+	bool player_is_reviving = false;
 	int n = 0;
 	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		// check if player is reviving anyone
+		if (STAT(FROZEN, it) == FROZEN_NORMAL)
+		{
+			if ((STAT(FROZEN, player) == FROZEN_NORMAL))
+				continue;
+			if (!IN_REVIVING_RANGE(player, it, revive_extra_size))
+				continue;
+			player_is_reviving = true;
+			break;
+		}
+
+		if (!(STAT(FROZEN, player) == FROZEN_NORMAL))
+			continue; // both player and it are NOT frozen
+		if (!IN_REVIVING_RANGE(player, it, revive_extra_size))
+			continue;
+
+		// found a teammate that is reviving player
 		if (autocvar_g_freezetag_revive_time_to_score > 0 && STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
 			it.freezetag_revive_time += frametime / autocvar_g_freezetag_revive_time_to_score;
@@ -538,7 +555,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		reviving_players_last.chain = NULL;
 
 	// allow normal revival during automatic revival
-	// (not allowing it IS_REVIVING should check freezetag_frozen_timeout too)
+	// (if we wouldn't allow it then freezetag_frozen_timeout should be checked too in the previous loop)
+	//if (STAT(FROZEN, player) == FROZEN_NORMAL) // redundant check
 	if (!n && player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 
@@ -557,7 +575,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			clearspeed = 0; // prevent stacking points by entering and exiting the revival zone many times
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
 			STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * clearspeed * (1 - base_progress), 1);
-		else if (!STAT(FROZEN, player))
+		else if (!STAT(FROZEN, player) && !player_is_reviving)
 			STAT(REVIVE_PROGRESS, player) = base_progress; // thawing nobody
 	}
 	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
