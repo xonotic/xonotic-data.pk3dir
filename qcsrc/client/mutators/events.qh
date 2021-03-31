@@ -124,6 +124,9 @@ MUTATOR_HOOKABLE(HUD_Physics_showoptional, EV_NO_ARGS);
 /** return true to show the strafehud when optional mode is enabled */
 MUTATOR_HOOKABLE(HUD_StrafeHUD_showoptional, EV_NO_ARGS);
 
+/** return true to show the compass HUD panel when optional mode is enabled */
+MUTATOR_HOOKABLE(HUD_Compass_showoptional, EV_NO_ARGS);
+
 /** return true to hide the score HUD panel */
 MUTATOR_HOOKABLE(HUD_Score_show, EV_NO_ARGS);
 

@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDCompassDialog, XonoticRootDialog)
+    METHOD(XonoticHUDCompassDialog, fill, void(entity));
+    ATTRIB(XonoticHUDCompassDialog, title, string, _("Compass Panel"));
+    ATTRIB(XonoticHUDCompassDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+    ATTRIB(XonoticHUDCompassDialog, intendedWidth, float, 0.4);
+    ATTRIB(XonoticHUDCompassDialog, rows, float, 26.5);
+    ATTRIB(XonoticHUDCompassDialog, columns, float, 4);
+    ATTRIB(XonoticHUDCompassDialog, name, string, "HUDcompass");
+    ATTRIB(XonoticHUDCompassDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDCompassDialog)
