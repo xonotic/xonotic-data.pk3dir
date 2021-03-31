@@ -3,6 +3,7 @@
 #include "compass.qh"
 
 #include <client/draw.qh>
+#include <client/view.qh>
 #include <common/physics/player.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
