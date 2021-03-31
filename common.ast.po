@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-03-14 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-03-31 02:10+0000\n"
+"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -1247,8 +1247,8 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
-"Alcuentra y lleva la bandera enemiga a la to base pa capturala. Defendi la "
-"to base de los demás equipos"
+"Atopa y lleva la bandera enemiga a la to base pa capturala. Defendi la to "
+"base de los demás equipos"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
@@ -4076,7 +4076,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:715
 msgid "^F4^COUNT^BG left to find some ammo!"
-msgstr "^BG¡Alcuentra munición enantes de ^F4^COUNT^BG!"
+msgstr "^BG¡Atopa munición enantes de ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
@@ -5457,7 +5457,7 @@ msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
-msgstr ""
+msgstr "Usu:^3 menu_cmd <command> [<oxetu>], onde los comandos posibles son:"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  <sync> reloads all cvars on the current menu page"
@@ -5481,7 +5481,7 @@ msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available items:"
-msgstr ""
+msgstr "Oxetos disponibles:"
 
 #: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
@@ -5724,7 +5724,7 @@ msgstr "¿De xuru que quies desconeutate del sirvidor?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr "Quedría desconeutame..."
+msgstr "Quiero desconeutame..."
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
@@ -6576,7 +6576,7 @@ msgstr "Sirvidores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Find servers to play on"
-msgstr "Alcuentra sirvidores nos que xugar"
+msgstr "Atopa sirvidores nos que xugar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Host your own game"
@@ -7299,7 +7299,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:48
 msgid "Reset default menu track"
-msgstr ""
+msgstr "Reafitar la pista del menú"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:54
 msgid "Playlist:"
@@ -8594,7 +8594,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Quitante nes partíes per equipos"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
@@ -9984,7 +9984,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
-msgstr ""
+msgstr "Tiempu en partíes:"
 
 #: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
