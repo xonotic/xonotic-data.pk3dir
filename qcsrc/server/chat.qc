@@ -206,8 +206,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				flood = 1;
 		}
 
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
+		// z411 : Why?
+		//if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
+		//	source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
