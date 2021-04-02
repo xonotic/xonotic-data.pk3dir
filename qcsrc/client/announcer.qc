@@ -70,10 +70,12 @@ void Announcer_Countdown(entity this)
 		// counting down to rounds
 		if(rounds)
 		{
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
-			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
-			if(annce_num != NULL)
-				Local_Notification(MSG_ANNCE, annce_num);
+			if (timeout_status != TIMEOUT_ACTIVE) {
+				Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+				Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
+				if(annce_num != NULL)
+					Local_Notification(MSG_ANNCE, annce_num);
+			}
 			this.nextthink = (roundstarttime - (countdown - 1));
 		}
 		else
