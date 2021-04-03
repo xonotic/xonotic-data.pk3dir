@@ -877,6 +877,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
+			ONREMOVE(this);
 			clearentity(this);
 			isnew = true;
 		}
