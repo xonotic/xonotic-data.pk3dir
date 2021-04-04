@@ -8,8 +8,8 @@
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
 # Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
-# Jakub P. <pedziszewski@gmail.com>, 2015
-# Jakub P. <pedziszewski@gmail.com>, 2015
+# Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
+# Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
 # Karol Kosek, 2020
 # Karol Kosek, 2020

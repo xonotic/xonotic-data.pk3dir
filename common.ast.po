@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-03-31 02:10+0000\n"
+"PO-Revision-Date: 2021-04-03 15:37+0000\n"
 "Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2¡Esportóse con ésitu a %s! (Nota: Guardóse en data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -601,7 +601,7 @@ msgstr "El dañu recibíu en total"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of flag drops"
-msgstr ""
+msgstr "El númberu de banderes soltaes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^drops"
@@ -683,7 +683,7 @@ msgstr "La rellación asesinatos/muertes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^kdr"
-msgstr ""
+msgstr "Rellación A/M"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^kdratio"
@@ -793,11 +793,11 @@ msgstr "Devoluciones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of revivals"
-msgstr ""
+msgstr "El númberu de resurreiciones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^revivals"
-msgstr ""
+msgstr "Resurreiciones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of rounds won"
@@ -861,7 +861,7 @@ msgstr "Tiempu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "El tiempu total en carrerra"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:341
 msgid ""
@@ -1183,7 +1183,7 @@ msgstr ""
 
 #: qcsrc/client/view.qc:969
 msgid "Revival progress"
-msgstr ""
+msgstr "Progresu de la resurreición"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
@@ -1310,6 +1310,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Mata a los enemigos pa conxelalos, quédate al llau de los compañeros pa "
+"resucitalos. Conxela a tolos enemigos pa ganar"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
@@ -1386,11 +1388,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:96
 msgid "Personal best"
-msgstr ""
+msgstr "El meyor t. pers"
 
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:106
 msgid "Server best"
-msgstr ""
+msgstr "El meyor t. del sirv."
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
@@ -1586,7 +1588,7 @@ msgstr "Guardar"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr "Coneuta 4"
+msgstr "Conecta 4"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1965,7 +1967,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Resucitando"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -2736,7 +2738,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr ""
+msgstr "^BG%s^K3 resucitó por cayer"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2746,7 +2748,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:360
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 resucitó automáticamente dempués de %s segundos"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
@@ -2836,17 +2838,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr "^F1%s ^F4nun ^BG ta ^F4disponible ^BGnesti mapa"
+msgstr "^F1%s ^F4nun ^BGta ^F4disponible ^BGnesti mapa"
 
 #: qcsrc/common/notifications/all.inc:382
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr "^BG%s^BG ta coneutándose..."
+msgstr "^BG%s^BG ta conectándose..."
 
 #: qcsrc/common/notifications/all.inc:383
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr "^BG%s^F3 coneutóse"
+msgstr "^BG%s^F3 conectóse"
 
 #: qcsrc/common/notifications/all.inc:384
 #, c-format
@@ -2969,7 +2971,7 @@ msgstr "^BG%s^K1 pañó Fuercia"
 #: qcsrc/common/notifications/all.inc:416
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr "^BG%s^F3 desconeutóse"
+msgstr "^BG%s^F3 desconectóse"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3030,7 +3032,7 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
 msgstr ""
-"^BG%s^BG fizo un récor nuevu de ^F2%s^BG pero desfortunadamente al xugador "
+"^BG%s^BG fizo un récor nuevu de ^F2%s^BG mas desfortunadamente al xugador "
 "fálta-y la UID y el récor va perdese."
 
 #: qcsrc/common/notifications/all.inc:429
@@ -3039,8 +3041,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
 msgstr ""
-"^BG%s^BG fizo un récor nuevu de ^F2%s^BG pero'l xugador ta na anonimidá y el "
-"récor va perdese."
+"^BG%s^BG fizo un récor nuevu de ^F2%s^BG mas el xugador ta nel anonimatu y "
+"el récor va perdese."
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3929,7 +3931,7 @@ msgid ""
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
 "^K1¡Dexa de tar ausente!\n"
-"^BGVamos desconeutate en ^COUNT..."
+"^BGVamos desconectate en ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:661
 #, c-format
@@ -3953,21 +3955,21 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr ""
+msgstr "^K3Resucitesti a ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:668
 msgid "^K3You revived yourself"
-msgstr ""
+msgstr "^K3Resucitesti"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr ""
+msgstr "^BG%s ^K3resucitóte"
 
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGResucitesti automáticamente dempués de %s segundos"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -5708,7 +5710,7 @@ msgstr "namás llectura"
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr "Aceutar"
+msgstr "Aceptar"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
@@ -5720,11 +5722,11 @@ msgstr "Los creitos de Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr "¿De xuru que quies desconeutate del sirvidor?"
+msgstr "¿De xuru que quies desconectate del sirvidor?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr "Quiero desconeutame..."
+msgstr "Quiero desconectame..."
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
@@ -5734,7 +5736,7 @@ msgstr "¡Voi xugar más!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
 msgid "Disconnect"
-msgstr "Desconeutase"
+msgstr "Desconectase"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect from the server you are connected to"
@@ -6668,7 +6670,7 @@ msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
-"El númberu máximu de xugadores o robós que pue coneutase al sirvidor y al "
+"El númberu máximu de xugadores o robós que pue conectase al sirvidor y al "
 "empar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
@@ -7148,7 +7150,7 @@ msgstr "Oficiales"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:129
 msgid "N/A (auth library missing, can't connect)"
-msgstr "N/D (falta la biblioteca d'autenticación, nun pue coneutase)"
+msgstr "N/D (falta la biblioteca d'autenticación, nun pue conectase)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:131
 msgid "N/A (auth library missing)"
@@ -7156,7 +7158,7 @@ msgstr "N/D (falta la biblioteca d'autenticación)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:137
 msgid "Not supported (can't connect)"
-msgstr "Nun se sofita (nun pue coneutase)"
+msgstr "Nun se sofita (nun pue conectase)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:139
 msgid "Not supported (won't encrypt)"
@@ -7180,7 +7182,7 @@ msgstr "Solicitóse (nun va cifrase)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:155
 msgid "Required (can't connect)"
-msgstr "Solicitóse (nun pue coneutase)"
+msgstr "Solicitóse (nun pue conectase)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:157
 msgid "Required (will encrypt)"
@@ -7274,12 +7276,12 @@ msgstr "Reproducir"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
 msgstr ""
-"La reproducción d'una demostración va desconeutate de la partida actual"
+"La reproducción d'una demostración va desconectate de la partida actual"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr "¿De xuru que desees desconeutate agora?"
+msgstr "¿De xuru que desees desconectate agora?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -7443,7 +7445,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:31
 msgid "Set * as child"
-msgstr ""
+msgstr "* como fíu"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:32
 msgid "Attach to *"
@@ -7567,12 +7569,12 @@ msgstr "Controles"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:24
 msgid "User"
-msgstr ""
+msgstr "Llingua y estilu"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:25
 #: qcsrc/menu/xonotic/keybinder.qc:119
 msgid "Misc"
-msgstr "Miscelánea"
+msgstr "Rede y otros axustes"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
 msgid "Settings"
@@ -8871,7 +8873,7 @@ msgstr "Activar l'aceleración del mur integrada"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:86
 msgid "Disable system mouse acceleration"
-msgstr ""
+msgstr "Desactivar el sistema d'aceleración del mur"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:80
 msgid "Make use of DGA mouse input"
@@ -9173,7 +9175,7 @@ msgstr "producise nel menú. Pa un cambéu completu, reanicia la partida"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
-msgstr "Desconeutase agora"
+msgstr "Desconectase agora"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
@@ -9672,7 +9674,7 @@ msgstr "Abrir la consola"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "disconnect"
-msgstr "Desconeutase"
+msgstr "Desconectase"
 
 #: qcsrc/menu/xonotic/keybinder.qc:110
 msgid "quit"
