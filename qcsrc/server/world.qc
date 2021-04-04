@@ -1456,7 +1456,13 @@ void AnnounceNewLeader()
 		if (WinningConditionHelper_equality)
 			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TEAM_LEADS_TIED);
 		else
-			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
+			FOREACH_CLIENT(IS_PLAYER(it), {
+				if(it.team == WinningConditionHelper_winnerteam)
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_TEAM);
+				else
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_ENEMY);
+			});
+			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
 	} else {
 		if (WinningConditionHelper_equality)
 		{
@@ -1468,6 +1474,22 @@ void AnnounceNewLeader()
 			Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
 			Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
 		}
+	}
+}
+
+void AnnounceScores(float tm)
+{
+	WinningConditionHelper(NULL);
+	if (Score_NewLeader()) {
+		AnnounceNewLeader();
+	} else {
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if(it.team == tm)
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_TEAM);
+			else
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_ENEMY);
+		});
+		Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(tm, ANNCE_TEAM_SCORES));
 	}
 }
 

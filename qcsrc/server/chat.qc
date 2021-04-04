@@ -206,8 +206,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				flood = 1;
 		}
 
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
+		// z411 : Why?
+		//if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
+		//	source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
@@ -354,7 +355,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 bool play_chatsound(entity source, string msgin)
 {
-	if(autocvar_sv_chat_sounds && CS(source).cvar_cl_chat_sounds) {
+	if(autocvar_sv_chat_sounds && CS_CVAR(source).cvar_cl_chat_sounds) {
 		var .float flood_sound = floodcontrol_chatsound;
 		
 		if (source.(flood_sound) < time - autocvar_sv_chat_sounds_flood) {
@@ -364,7 +365,7 @@ bool play_chatsound(entity source, string msgin)
 			
 			FOREACH_WORD(autocvar_sv_chat_sounds_list, it == rawmsg, { found = true; });
 			if (found) {
-				FOREACH_CLIENT(IS_REAL_CLIENT(it) && CS(it).cvar_cl_chat_sounds, {
+				FOREACH_CLIENT(IS_REAL_CLIENT(it) && CS_CVAR(it).cvar_cl_chat_sounds, {
 					msg_entity = it;
 					WriteHeader(MSG_ONE, TE_CSQC_CHATSOUND);
 					WriteString(MSG_ONE, rawmsg);

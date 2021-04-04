@@ -18,7 +18,7 @@ MUTATOR_HOOKFUNCTION(attackertext, DrawInfoMessages)
 	if (last_attack_time && last_attack_time > time - fade_start - fade_time) {
 		vector pos = M_ARGV(0, vector);
 		vector mySize = M_ARGV(1, vector);
-		vector fontsize = '0.2 0.2 0' * mySize.y;
+		vector fontsize = '0.3 0.3 0' * mySize.y;
 		int img_curr_group = M_ARGV(2, int);
 		
 		float alpha_ = 0;

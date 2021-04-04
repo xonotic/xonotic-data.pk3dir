@@ -614,11 +614,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	Give_Medal(player, CAPTURE);
 	
 	// announcer
-	WinningConditionHelper(NULL);
-	if (Score_NewLeader())
-		AnnounceNewLeader();
-	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(player.team, ANNCE_TEAM_SCORES));
+	AnnounceScores(player.team);
 
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
@@ -657,6 +653,14 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_RETURN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN), player.netname);
+		
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if(it.team == flag.team)
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_RETURN_TEAM);
+			else
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_RETURN_ENEMY);
+		});
+		Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(flag.team, ANNCE_CTF_RETURN));
 	}
 	_sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -726,7 +730,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_PICKUP), player.netname);
-	Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(flag.team, ANNCE_CTF_SPEC_PICKUP));
+	Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(flag.team, ANNCE_CTF_PICKUP));
 	
 	if(ctf_stalemate)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER);
@@ -735,7 +739,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	else if(CTF_DIFFTEAM(player, flag))
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_PICKUP));
-		Send_Notification(NOTIF_ONE_ONLY, player, MSG_ANNCE, ANNCE_CTF_PICKUP);
+		Send_Notification(NOTIF_ONE_ONLY, player, MSG_ANNCE, ANNCE_CTF_PICKUP_YOU);
 	}
 	else
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_RETURN : CENTER_CTF_PICKUP_RETURN_ENEMY), Team_ColorCode(flag.team));

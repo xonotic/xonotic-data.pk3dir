@@ -26,19 +26,19 @@ void Announcer_Countdown(entity this)
 {
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
+	float game_timeout = STAT(GAME_TIMEOUT);
 	
 	bool rounds;
 	float countdown;
 	
-	// z411 LOG_INFOF("time: %d - starttime: %d - roundstarttime: %d", time, starttime, roundstarttime);
-	
-	if(roundstarttime == -1)
+	if(roundstarttime == -1 || game_timeout)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		delete(this);
 		announcer_countdown = NULL;
 		return;
 	}
+
 	//if(roundstarttime >= starttime)
 	//	starttime = roundstarttime;
 	if(starttime <= time && roundstarttime != starttime) // game start time has passed
@@ -127,8 +127,6 @@ void Announcer_Gamestart()
 
 			// z411 set title
 			if(time < STAT(GAMESTARTTIME) && !warmup_stage) {
-				//if(IS_GAMETYPE(DUEL)) {
-				//if(g_duel) {
 				if(gametype == MAPINFO_TYPE_DUEL) {
 					entity pl1 = players.sort_next;
 					entity pl2 = pl1.sort_next;
