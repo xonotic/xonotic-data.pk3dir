@@ -160,6 +160,7 @@ REGISTER_STAT(AMMUNITIONING_ORB, float) //LegendGuard registers new STAT 11-02-2
 REGISTER_STAT(AMMUNITIONING_ORB_ALPHA, float)
 REGISTER_STAT(DARK_ORB, float) //LegendGuard registers new STAT 08-02-2021
 REGISTER_STAT(DARK_ORB_ALPHA, float)
+REGISTER_STAT(TKA_BALLSTATUS, int) //LegendGuard adds STAT from Mario/team_keepaway 15-02-2021
 
 #ifdef SVQC
 float autocvar_sv_showfps = 5;
