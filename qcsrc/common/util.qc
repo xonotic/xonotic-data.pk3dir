@@ -1922,26 +1922,29 @@ void SetMovetypeFollow(entity ent, entity e)
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
 }
+
 void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
-	ent.aiment = NULL;
+	// FIXME: engine bug?
+	// resetting aiment the engine will set orb's origin close to world's origin
+	//ent.aiment = NULL;
 }
-float LostMovetypeFollow(entity ent)
+
+int LostMovetypeFollow(entity ent)
 {
 /*
 	if(ent.move_movetype != MOVETYPE_FOLLOW)
 		if(ent.aiment)
 			error("???");
 */
-	if(ent.aiment)
-	{
-		if(ent.aiment.classname != ent.aiment_classname)
-			return 1;
-		if(ent.aiment.deadflag != ent.aiment_deadflag)
-			return 1;
-	}
+	// FIXME: engine bug?
+	// when aiment disconnects the engine will set orb's origin close to world's origin
+	if(!ent.aiment)
+		return 2;
+	if(ent.aiment.classname != ent.aiment_classname || ent.aiment.deadflag != ent.aiment_deadflag)
+		return 1;
 	return 0;
 }
 #endif

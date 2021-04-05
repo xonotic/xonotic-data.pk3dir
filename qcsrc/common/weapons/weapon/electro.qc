@@ -248,6 +248,37 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	// proj.com_phys_vel = proj.velocity;
 }
 
+void W_Electro_Orb_Follow_Think(entity this)
+{
+	if (time > this.death_time)
+	{
+		adaptor_think2use_hittype_splash(this);
+		return;
+	}
+	if (this.move_movetype == MOVETYPE_FOLLOW)
+	{
+		int lost = LostMovetypeFollow(this);
+		if (lost == 2)
+		{
+			// FIXME if player disconnected, it isn't possible to drop the orb at player's origin
+			// see comment in LostMovetypeFollow implementation
+			delete(this);
+			return;
+		}
+		if (lost)
+		{
+			// drop the orb at the corpse's location
+			PROJECTILE_MAKETRIGGER(this);
+			set_movetype(this, MOVETYPE_TOSS);
+
+			setthink(this, adaptor_think2use_hittype_splash);
+			this.nextthink = this.death_time;
+			return;
+		}
+	}
+	this.nextthink = time;
+}
+
 void W_Electro_Orb_Stick(entity this, entity to)
 {
 	entity newproj = spawn();
@@ -276,8 +307,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
-	setthink(newproj, getthink(this));
-	newproj.nextthink = this.nextthink;
+	newproj.death_time = this.death_time;
 	newproj.use = this.use;
 	newproj.flags = this.flags;
 	IL_PUSH(g_projectiles, newproj);
@@ -292,7 +322,17 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	delete(this);
 
 	if(to)
+	{
 		SetMovetypeFollow(newproj, to);
+
+		setthink(newproj, W_Electro_Orb_Follow_Think);
+		newproj.nextthink = time;
+	}
+	else
+	{
+		setthink(newproj, adaptor_think2use_hittype_splash);
+		newproj.nextthink = newproj.death_time;
+	}
 }
 
 void W_Electro_Orb_Touch(entity this, entity toucher)
@@ -375,6 +415,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(electro, damage);
 	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);
+	proj.death_time = time + WEP_CVAR_SEC(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	proj.weaponentity_fld = weaponentity;
