@@ -258,9 +258,9 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	newproj.owner = this.owner;
 	newproj.realowner = this.realowner;
-	setsize(newproj, this.mins, this.maxs);
 	setorigin(newproj, this.origin);
 	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
+	setsize(newproj, this.mins, this.maxs);
 	newproj.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newproj.takedamage = this.takedamage;

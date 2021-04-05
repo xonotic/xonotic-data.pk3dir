@@ -18,9 +18,9 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.owner = this.owner;
 	newmine.realowner = this.realowner;
-	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
+	setsize(newmine, '-4 -4 -4', '4 4 4');
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newmine.mine_orientation = -trace_plane_normal;
