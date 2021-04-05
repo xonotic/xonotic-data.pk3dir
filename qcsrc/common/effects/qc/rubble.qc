@@ -15,7 +15,7 @@ void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(ent
 		// compare to all other matching entities
 		IL_EACH(list, it.classname == cname,
 		{
-			if(!parent ||parent == it.owner){
+			if(!parent || parent == it.owner){
 				++c;
 				if(!oldest || oldesttime > it.creationtime)
 				{

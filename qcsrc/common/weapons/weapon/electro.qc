@@ -35,16 +35,10 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 			setthink(e, W_Electro_ExplodeCombo);
 
 			// delay combo chains, looks cooler
-			e.nextthink =
-				(
-					time
-					+
-					(WEP_CVAR(electro, combo_speed) ?
-						(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
-						:
-						0
-					)
-				);
+			float delay = 0;
+			if (WEP_CVAR(electro, combo_speed))
+				delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed);
+			e.nextthink = time + delay;
 		}
 		e = e.chain;
 	}
@@ -181,17 +175,10 @@ void W_Electro_Bolt_Think(entity this)
 					// (the bolt and orb should explode together because they interacted together)
 					// while keeping the chaining delay.
 					setthink(e, W_Electro_ExplodeCombo);
-					e.nextthink =
-					(
-						time
-						+
-						(WEP_CVAR_PRI(electro, midaircombo_speed) ?
-							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed))
-							:
-							0
-						)
-					);
-
+					float delay = 0;
+					if (WEP_CVAR_PRI(electro, midaircombo_speed))
+						delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed);
+					e.nextthink = time + delay;
 
 					++found;
 				}
@@ -346,17 +333,11 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 			this.realowner = inflictor.realowner;
 			this.classname = "electro_orb_chain";
 			setthink(this, W_Electro_ExplodeCombo);
-			this.nextthink = time +
-				(
-					// bound the length, inflictor may be in a galaxy far far away (warpzones)
-					min(
-						WEP_CVAR(electro, combo_radius),
-						vlen(this.origin - inflictor.origin)
-					)
-					/
-					// delay combo chains, looks cooler
-					WEP_CVAR(electro, combo_speed)
-				);
+			// delay combo chains, looks cooler
+			// bound the length, inflictor may be in a galaxy far far away (warpzones)
+			float len = min(WEP_CVAR(electro, combo_radius), vlen(this.origin - inflictor.origin));
+			float delay = len / WEP_CVAR(electro, combo_speed);
+			this.nextthink = time + delay;
 		}
 		else
 		{
