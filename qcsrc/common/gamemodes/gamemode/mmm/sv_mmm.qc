@@ -16,6 +16,7 @@ float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 float autocvar_g_mmm_karma_severity = 0.25;
 float autocvar_g_mmm_karma_damagepunishmentdeal = 20; //LegendGuard sets Karma punishment damage setting if player kills an ally 28-03-2021
+int autocvar_g_mmm_playerammobrcstartquantity = 20;
 // Sleuth is a created team, this team is added inside Civilians team
 
 void mmm_FakeTimeLimit(entity e, float t)
@@ -335,10 +336,9 @@ void mmm_RoundStart()
 
 		if(it.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			SetResource(it, RES_SHELLS, 10);
-			SetResource(it, RES_BULLETS, 20);
-			SetResource(it, RES_ROCKETS, 10);
-			SetResource(it, RES_CELLS, 10);
+			SetResource(it, RES_BULLETS, autocvar_g_mmm_playerammobrcstartquantity);
+			SetResource(it, RES_ROCKETS, autocvar_g_mmm_playerammobrcstartquantity);
+			SetResource(it, RES_CELLS, autocvar_g_mmm_playerammobrcstartquantity);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -352,10 +352,9 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_MURDERER)
 		{
-			SetResource(it, RES_SHELLS, 10);
-			SetResource(it, RES_BULLETS, 20);
-			SetResource(it, RES_ROCKETS, 10);
-			SetResource(it, RES_CELLS, 10);
+			SetResource(it, RES_BULLETS, autocvar_g_mmm_playerammobrcstartquantity);
+			SetResource(it, RES_ROCKETS, autocvar_g_mmm_playerammobrcstartquantity);
+			SetResource(it, RES_CELLS, autocvar_g_mmm_playerammobrcstartquantity);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -626,52 +625,49 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 		}
 	}
 
-	//SLEUTH CORPSE DETECTION SKILL 21-03-2021
-	if (attacker.mmm_status == MMM_STATUS_SLEUTH)
+	//CORPSE DETECTION SKILL 21-03-2021
+	if(IS_DEAD(target))
 	{
-		if(IS_DEAD(target))
+		//Shockwave weapon as radar gun to check the corpses 22-03-2021
+		if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE))
 		{
-			//Shockwave weapon as radar gun to check the corpses 22-03-2021
-			if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE))
+			if (target.killedwithweapon == "")
+				target.killedwithweapon = "UNKNOWN CAUSE";
+			
+			if (target.activekillerrole != true)
 			{
-				if (target.killedwithweapon == "")
-					target.killedwithweapon = "UNKNOWN CAUSE";
-				
-				if (target.activekillerrole != true)
-				{
-					target.killerrole = "";
-					target.activekillerrole = false;
-				}
-
-				string killedbyphrase = strcat("\n^3Killed by:^7 ", target.whokilled, target.killerrole); 
-				string wepkilledphrase = strcat("\n^3Cause:^7 ", target.killedwithweapon);
-				if (target.whokilled == "")
-				{
-					killedbyphrase = "";
-					if (target.killedwithweapon == "")
-						wepkilledphrase = "\n^3Cause:^7 UNKNOWN CAUSE";
-				}
-
-				damage = 0;
-				force = '0 0 0';
-				if (target.mmm_status == MMM_STATUS_CIVILIAN)
-				{
-					//try to add centerprint message for chat privately if possible
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
-					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Civilian\n", "^1Killed by^3:^7 ", target.whokilled)));
-				}
-				else if (target.mmm_status == MMM_STATUS_MURDERER)
-				{
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
-					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Murderer\n", "^1Killed by^3:^7 ", target.whokilled)));
-				}
-				else if (target.mmm_status == MMM_STATUS_SLEUTH)
-				{
-					corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
-					centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Sleuth\n", "^1Killed by^3:^7 ", target.whokilled)));
-				}
-				attacker.investigated = true;
+				target.killerrole = "";
+				target.activekillerrole = false;
 			}
+
+			string killedbyphrase = strcat("\n^3Killed by:^7 ", target.whokilled, target.killerrole); 
+			string wepkilledphrase = strcat("\n^3Cause:^7 ", target.killedwithweapon);
+			if (target.whokilled == "")
+			{
+				killedbyphrase = "";
+				if (target.killedwithweapon == "")
+					wepkilledphrase = "\n^3Cause:^7 UNKNOWN CAUSE";
+			}
+
+			damage = 0;
+			force = '0 0 0';
+			if (target.mmm_status == MMM_STATUS_CIVILIAN)
+			{
+				//try to add centerprint message for chat privately if possible
+				corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
+				centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Civilian\n", "^1Killed by^3:^7 ", target.whokilled)));
+			}
+			else if (target.mmm_status == MMM_STATUS_MURDERER)
+			{
+				corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
+				centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Murderer\n", "^1Killed by^3:^7 ", target.whokilled)));
+			}
+			else if (target.mmm_status == MMM_STATUS_SLEUTH)
+			{
+				corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
+				centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Sleuth\n", "^1Killed by^3:^7 ", target.whokilled)));
+			}
+			attacker.investigated = true;
 		}
 	}
 
