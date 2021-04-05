@@ -49,6 +49,7 @@ void W_Electro_ExplodeCombo(entity this)
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(electro, combo_comboradius), this.realowner);
 
 	this.event_damage = func_null;
+	this.velocity = this.movedir; // particle fx and decals need .velocity
 
 	RadiusDamage(
 		this,
@@ -78,6 +79,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
+	this.velocity = this.movedir; // particle fx and decals need .velocity
 
 	if(this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
 	{
@@ -293,6 +295,8 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
 	setsize(newproj, this.mins, this.maxs);
 	newproj.angles = vectoangles(-trace_plane_normal); // face against the surface
+
+	newproj.movedir = -trace_plane_normal;
 
 	newproj.takedamage = this.takedamage;
 	newproj.damageforcescale = this.damageforcescale;
