@@ -1921,12 +1921,22 @@ void SetMovetypeFollow(entity ent, entity e)
 	ent.v_angle = ent.angles - e.angles; // relative angles
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
+
+	if(IS_PLAYER(ent.aiment))
+	{
+		entity pl = ent.aiment;
+		ent.view_ofs.x = bound(pl.mins.x + 4, ent.view_ofs.x, pl.maxs.x - 4);
+		ent.view_ofs.y = bound(pl.mins.y + 4, ent.view_ofs.y, pl.maxs.y - 4);
+		ent.view_ofs.z = bound(pl.mins.z + 4, ent.view_ofs.z, pl.maxs.z - 4);
+	}
 }
 
 void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
+	if (ent.aiment_classname)
+		strunzone(ent.classname);
 	// FIXME: engine bug?
 	// resetting aiment the engine will set orb's origin close to world's origin
 	//ent.aiment = NULL;
