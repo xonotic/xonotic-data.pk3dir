@@ -6,6 +6,8 @@
 vector teamscore_size;
 vector teamscore_fontsize;
 vector teamname_fontsize;
+bool autocvar_hud_spectatorteamdisplay = true; //LegendGuard adds a bool to enable/disable team display HUD 06-04-2021
+bool autocvar_hud_spectatorplayernamedisplay = true; //LegendGuard adds a bool to enable/disable player name display HUD 06-04-2021
 
 void HUD_SpectHUD_Export(int fh)
 {
@@ -66,6 +68,10 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 					icon = "gfx/hud/luma/player_red";
 				else if(tm.team == NUM_TEAM_2)
 					icon = "gfx/hud/luma/player_blue";
+				else if(tm.team == NUM_TEAM_3)
+					icon = "gfx/hud/luma/player_yellow";
+				else if(tm.team == NUM_TEAM_4)
+					icon = "gfx/hud/luma/player_pink";
 				else
 					icon = "gfx/hud/luma/player_neutral";
 			}
@@ -162,37 +168,63 @@ void HUD_SpectHUD()
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	
 	// Spectator name
-	if(spectatee_status != -1) {
-		ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
-		pos = panel_pos + vec2((vid_conwidth - 1) / 2, (ammo_y - (hud_fontsize.y * 2)));
-		HUD_SpectHUD_drawCurrentName(pos);
+	if (autocvar_hud_spectatorplayernamedisplay)
+	{
+		if(spectatee_status != -1) {
+			ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
+			pos = panel_pos + vec2((vid_conwidth - 1) / 2, (ammo_y - (hud_fontsize.y * 2)));
+			HUD_SpectHUD_drawCurrentName(pos);
+		}
 	}
 	
 	if(!teamplay) return;
-	
-	// Set vars
-	teamscore_fontsize = hud_fontsize * 3;
-	teamname_fontsize = hud_fontsize * 2;
-	teamscore_size = vec2(teamscore_fontsize.x * 1.5, teamscore_fontsize.y * 1.25);
-	timer_width = stov(cvar_string("hud_panel_timer_size")).x * vid_conwidth;
-	
-	// Team 1
-	pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
-	tm = GetTeam(NUM_TEAM_1, false);
-	rgb = Team_ColorRGB(tm.team);
-	pos.x -= (timer_width * 1.3) / 2;
-	HUD_SpectHUD_drawTeamScore(pos, tm, rgb, true);
-	
-	pos = panel_pos + vec2(0, (vid_conheight - 1) / 4 + hud_fontsize.y);
-	HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, false);
-	
-	// Team 2
-	pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
-	tm = GetTeam(NUM_TEAM_2, false);
-	rgb = Team_ColorRGB(tm.team);
-	pos.x += (timer_width * 1.3) / 2;
-	HUD_SpectHUD_drawTeamScore(pos, tm, rgb, false);
-	
-	pos = panel_pos + vec2(vid_conwidth - 1, (vid_conheight - 1) / 4 + hud_fontsize.y);
-	HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, true);
+
+	if (autocvar_hud_spectatorteamdisplay)
+	{
+		// Set vars
+		teamscore_fontsize = hud_fontsize * 3;
+		teamname_fontsize = hud_fontsize * 2;
+		teamscore_size = vec2(teamscore_fontsize.x * 1.5, teamscore_fontsize.y * 1.25);
+		timer_width = stov(cvar_string("hud_panel_timer_size")).x * vid_conwidth;
+		
+		// Team 1
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
+		tm = GetTeam(NUM_TEAM_1, false);
+		rgb = Team_ColorRGB(tm.team);
+		pos.x -= (timer_width * 1.3) / 2;
+		HUD_SpectHUD_drawTeamScore(pos, tm, rgb, true);
+		
+		pos = panel_pos + vec2(0, (vid_conheight - 1) / 4 + hud_fontsize.y);
+		HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, false);
+		
+		// Team 2
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
+		tm = GetTeam(NUM_TEAM_2, false);
+		rgb = Team_ColorRGB(tm.team);
+		pos.x += (timer_width * 1.3) / 2;
+		HUD_SpectHUD_drawTeamScore(pos, tm, rgb, false);
+		
+		pos = panel_pos + vec2(vid_conwidth - 1, (vid_conheight - 1) / 4 + hud_fontsize.y);
+		HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, true);
+
+		// Team 3
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 41);
+		tm = GetTeam(NUM_TEAM_3, false);
+		rgb = Team_ColorRGB(tm.team);
+		pos.x -= (timer_width * 1.3) / 2;
+		HUD_SpectHUD_drawTeamScore(pos, tm, rgb, true);
+		
+		pos = panel_pos + vec2(0, (vid_conheight + 450) / 4 + hud_fontsize.y);
+		HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, false);
+
+		// Team 4
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 41);
+		tm = GetTeam(NUM_TEAM_4, false);
+		rgb = Team_ColorRGB(tm.team);
+		pos.x += (timer_width * 1.3) / 2;
+		HUD_SpectHUD_drawTeamScore(pos, tm, rgb, false);
+		
+		pos = panel_pos + vec2(vid_conwidth - 1, (vid_conheight + 450) / 4 + hud_fontsize.y);
+		HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, true);
+	}
 }
