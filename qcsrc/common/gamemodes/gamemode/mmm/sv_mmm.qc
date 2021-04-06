@@ -16,7 +16,6 @@ float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 float autocvar_g_mmm_karma_severity = 0.25;
 float autocvar_g_mmm_karma_damagepunishmentdeal = 20; //LegendGuard sets Karma punishment damage setting if player kills an ally 28-03-2021
-int autocvar_g_mmm_playerammobrcstartquantity = 20;
 // Sleuth is a created team, this team is added inside Civilians team
 
 void mmm_FakeTimeLimit(entity e, float t)
@@ -336,9 +335,6 @@ void mmm_RoundStart()
 
 		if(it.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			SetResource(it, RES_BULLETS, autocvar_g_mmm_playerammobrcstartquantity);
-			SetResource(it, RES_ROCKETS, autocvar_g_mmm_playerammobrcstartquantity);
-			SetResource(it, RES_CELLS, autocvar_g_mmm_playerammobrcstartquantity);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -352,9 +348,6 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_MURDERER)
 		{
-			SetResource(it, RES_BULLETS, autocvar_g_mmm_playerammobrcstartquantity);
-			SetResource(it, RES_ROCKETS, autocvar_g_mmm_playerammobrcstartquantity);
-			SetResource(it, RES_CELLS, autocvar_g_mmm_playerammobrcstartquantity);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
@@ -368,7 +361,6 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_SLEUTH)
 		{
-			SetResource(it, RES_ROCKETS, 10);
 			if (it.karmapoints <= totalmeankarma)
 			{
 				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
