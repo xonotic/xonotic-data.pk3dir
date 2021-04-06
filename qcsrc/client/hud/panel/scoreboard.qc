@@ -463,9 +463,12 @@ void Cmd_Scoreboard_SetFields(int argc)
 				continue;
 		}
 
+		str = strtolower(str);
+		if(!STAT(SHOWFPS) && str == "fps")
+			continue;
+
 		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
 		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
-		str = strtolower(str);
 
 		PlayerScoreField j;
 		switch(str)
