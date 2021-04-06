@@ -482,9 +482,12 @@ void Cmd_Scoreboard_SetFields(int argc)
 				continue;
 		}
 
+		str = strtolower(str);
+		if(!STAT(SHOWFPS) && str == "fps")
+			continue;
+
 		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
 		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
-		str = strtolower(str);
 
 		PlayerScoreField j;
 		switch(str)
@@ -1264,7 +1267,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
 		drawpic(tmp_in, sbt_field_icon0, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	
+
 	//LegendGuard adds a conditional sentence for country column 05-04-2021
 	// Player country icon/flag
 	if(sbt_field_icon3 != "") {
