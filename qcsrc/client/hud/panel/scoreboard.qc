@@ -613,7 +613,6 @@ vector sbt_field_rgb;
 string sbt_field_icon0;
 string sbt_field_icon1;
 string sbt_field_icon2;
-string sbt_field_icon3; //LegendGuard adds for Country player flags 05-04-2021
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
@@ -643,9 +642,12 @@ string Scoreboard_GetCountrycode(entity pl)
 {
 	int ccode = entcs_GetCountryCode(pl.sv_entnum);
 	if(ccode)
-		sbt_field_icon3 = strcat("gfx/flags/", ftos(ccode));
-
-	return ftos(entcs_GetCountryCode(pl.sv_entnum));
+		sbt_field_icon0 = strcat("gfx/flags/", ftos(ccode));
+	else
+		sbt_field_icon0 = strcat("gfx/flags/", ftos(0)); //if user hasn't assigned country flag
+	
+	return "";
+	//return ftos(entcs_GetCountryCode(pl.sv_entnum)); //returns a number
 }
 
 vector getPingColor(float f)
@@ -667,7 +669,6 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 	sbt_field_icon0 = "";
 	sbt_field_icon1 = "";
 	sbt_field_icon2 = "";
-	sbt_field_icon3 = ""; //LegendGuard adds for Country column 05-04-2021
 	sbt_field_icon0_rgb = '1 1 1';
 	sbt_field_icon1_rgb = '1 1 1';
 	sbt_field_icon2_rgb = '1 1 1';
@@ -701,10 +702,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 		
 		//LegendGuard adds Country REGISTER in the switch 05-04-2021
 		case SP_COUNTRY:
-		{
 			str = Scoreboard_GetCountrycode(pl);
 			return str;
-		}
 
 		case SP_NAME:
 			str = Scoreboard_GetName(pl);
@@ -816,15 +815,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	if(sbt_field_icon2 != "")
 	{
 		sz = draw_getimagesize(sbt_field_icon2);
-		f = sz.x / sz.y;
-		if(sbt_fixcolumnwidth_iconlen < f)
-			sbt_fixcolumnwidth_iconlen = f;
-	}
-
-	//LegendGuard adds conditional for Country column 05-04-2021
-	if(sbt_field_icon3 != "")
-	{
-		sz = draw_getimagesize(sbt_field_icon3);
 		f = sz.x / sz.y;
 		if(sbt_fixcolumnwidth_iconlen < f)
 			sbt_fixcolumnwidth_iconlen = f;
@@ -993,8 +983,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			drawpic(pos - tmp, sbt_field_icon1, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon2 != "")
 			drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
-		if(sbt_field_icon3 != "") //LegendGuard adds conditional for Country column 05-04-2021
-			drawpic(pos - tmp, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -1029,9 +1017,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				drawpic(pos - tmp, sbt_field_icon1, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			if(sbt_field_icon2 != "")
 				drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
-			if(sbt_field_icon3 != "") //LegendGuard adds conditional for Country column 05-04-2021
-				drawpic(pos - tmp, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
-			pos.x -= sbt_field_size[i] + hud_fontsize.x;
 		}
 	}
 
@@ -1260,19 +1245,6 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			tmp_in.x += stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
 		drawpic(tmp_in, sbt_field_icon0, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-
-	//LegendGuard adds a conditional sentence for country column 05-04-2021
-	// Player country icon/flag
-	if(sbt_field_icon3 != "") {
-		vector rsz = draw_getimagesize(sbt_field_icon3);
-		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;
-		if(invert)
-			tmp_in.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen + duel_name_fontsize.x * 0.5;
-		else
-			tmp_in.x += stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
-		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
-		drawpic(tmp_in, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	
 	// Header
