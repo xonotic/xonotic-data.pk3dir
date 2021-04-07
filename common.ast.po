@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-04-03 15:37+0000\n"
+"PO-Revision-Date: 2021-04-06 15:19+0000\n"
 "Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
@@ -8897,7 +8897,7 @@ msgstr "Mochila propulsora al saltar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
-msgstr ""
+msgstr "Non"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
@@ -9389,7 +9389,7 @@ msgstr "El brillu del blancu"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:130
 msgid "Gamma:"
-msgstr ""
+msgstr "Gamma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid ""
@@ -10053,6 +10053,8 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1FALLU: Ríquese la compresión de testures mas nun ta sofitada.\n"
+"^1Espérense problemes visuales."
 
 #: qcsrc/menu/xonotic/util.qc:780
 msgid "Use default"

@@ -6,14 +6,16 @@
 # Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>, 2019
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
+# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 # ibra kap <ibrakap@gmail.com>, 2019
+# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-03-14 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-04-06 08:14+0000\n"
+"Last-Translator: Tan Siret Akıncı <tanakinci2002@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -47,11 +49,11 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:177
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "%szamanında mesaj"
 
 #: qcsrc/client/hud/panel/centerprint.qc:182
 msgid "Generic message"
-msgstr ""
+msgstr "Genel mesaj"
 
 #: qcsrc/client/hud/panel/chat.qc:87
 msgid "^3Player^7: This is the chat area."
@@ -517,7 +519,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "CEZA:%.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1173
 msgid "missing a checkpoint"
