@@ -775,14 +775,15 @@ void PutPlayerInServer(entity this)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
+		entity w_ent = this.(weaponentity);
 		if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
-			this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			w_ent.m_switchweapon = w_getbestweapon(this, weaponentity);
 		else
-			this.(weaponentity).m_switchweapon = WEP_Null;
-		this.(weaponentity).m_weapon = WEP_Null;
-		this.(weaponentity).weaponname = "";
-		this.(weaponentity).m_switchingweapon = WEP_Null;
-		this.(weaponentity).cnt = -1;
+			w_ent.m_switchweapon = WEP_Null;
+		w_ent.m_weapon = WEP_Null;
+		w_ent.weaponname = "";
+		w_ent.m_switchingweapon = WEP_Null;
+		w_ent.cnt = -1;
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
