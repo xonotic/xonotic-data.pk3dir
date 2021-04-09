@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-03-14 06:23+0000\n"
+"POT-Creation-Date: 2021-04-09 14:53+0200\n"
+"PO-Revision-Date: 2021-04-09 12:53+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Danish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/da/)\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Generic message"
 msgstr ""
 
-#: qcsrc/client/hud/panel/chat.qc:87
+#: qcsrc/client/hud/panel/chat.qc:95
 msgid "^3Player^7: This is the chat area."
 msgstr ""
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1173
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1174
 msgid "missing a checkpoint"
 msgstr ""
 
@@ -923,10 +923,10 @@ msgid ""
 "other gamemodes except DM."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:639
-#: qcsrc/client/hud/panel/scoreboard.qc:646
-#: qcsrc/client/hud/panel/scoreboard.qc:701
-#: qcsrc/client/hud/panel/scoreboard.qc:712
+#: qcsrc/client/hud/panel/scoreboard.qc:642
+#: qcsrc/client/hud/panel/scoreboard.qc:649
+#: qcsrc/client/hud/panel/scoreboard.qc:704
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:47
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
@@ -935,82 +935,82 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1223
+#: qcsrc/client/hud/panel/scoreboard.qc:1226
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1371
+#: qcsrc/client/hud/panel/scoreboard.qc:1374
 msgid "Item stats"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1482
+#: qcsrc/client/hud/panel/scoreboard.qc:1485
 msgid "Map stats:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1512
+#: qcsrc/client/hud/panel/scoreboard.qc:1515
 msgid "Monsters killed:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1519
+#: qcsrc/client/hud/panel/scoreboard.qc:1522
 msgid "Secrets found:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1798
+#: qcsrc/client/hud/panel/scoreboard.qc:1801
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1807
-#: qcsrc/client/hud/panel/scoreboard.qc:1814
+#: qcsrc/client/hud/panel/scoreboard.qc:1810
+#: qcsrc/client/hud/panel/scoreboard.qc:1817
 #, c-format
 msgid "^5%s %s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1808
-#: qcsrc/client/hud/panel/scoreboard.qc:1815
-#: qcsrc/client/hud/panel/scoreboard.qc:1834
-#: qcsrc/client/hud/panel/scoreboard.qc:1841
+#: qcsrc/client/hud/panel/scoreboard.qc:1811
+#: qcsrc/client/hud/panel/scoreboard.qc:1818
+#: qcsrc/client/hud/panel/scoreboard.qc:1837
+#: qcsrc/client/hud/panel/scoreboard.qc:1844
 msgid "SCO^points"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1833
-#: qcsrc/client/hud/panel/scoreboard.qc:1840
+#: qcsrc/client/hud/panel/scoreboard.qc:1836
+#: qcsrc/client/hud/panel/scoreboard.qc:1843
 #, c-format
 msgid "^2+%s %s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1851
+#: qcsrc/client/hud/panel/scoreboard.qc:1854
 #, c-format
 msgid "^7Map: ^2%s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1993
+#: qcsrc/client/hud/panel/scoreboard.qc:1996
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1997
+#: qcsrc/client/hud/panel/scoreboard.qc:2000
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2013
+#: qcsrc/client/hud/panel/scoreboard.qc:2016
 #, c-format
 msgid "Spectators"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2040
+#: qcsrc/client/hud/panel/scoreboard.qc:2043
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2050
+#: qcsrc/client/hud/panel/scoreboard.qc:2053
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2059
+#: qcsrc/client/hud/panel/scoreboard.qc:2062
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr ""
@@ -1101,27 +1101,27 @@ msgstr ""
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 
-#: qcsrc/client/main.qc:1075 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr ""
 
-#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr ""
 
-#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1080 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr ""
 
-#: qcsrc/client/main.qc:1326
+#: qcsrc/client/main.qc:1327
 #, c-format
 msgid "%s (not bound)"
 msgstr ""
@@ -1178,10 +1178,6 @@ msgstr ""
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
-
-#: qcsrc/common/command/generic.qc:412
-msgid "Notification restart command only works with cl_cmd and sv_cmd."
 msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
@@ -4253,10 +4249,6 @@ msgstr ""
 msgid "^F2Intruder detected, disabling shields!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:196
-msgid "Notification dump command only works with cl_cmd and sv_cmd."
-msgstr ""
-
 #: qcsrc/common/notifications/all.qh:407 qcsrc/common/notifications/all.qh:408
 #, c-format
 msgid " (near %s)"
@@ -4549,10 +4541,6 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
-msgstr ""
-
-#: qcsrc/common/turrets/all.qh:97
-msgid "Turrets dump command only works with sv_cmd."
 msgstr ""
 
 #: qcsrc/common/turrets/cl_turrets.qc:126
@@ -5071,10 +5059,6 @@ msgstr ""
 msgid "Spiderbot"
 msgstr ""
 
-#: qcsrc/common/weapons/all.qh:79
-msgid "Weapons dump command only works with sv_cmd."
-msgstr ""
-
 #: qcsrc/common/weapons/weapon/arc.qh:20
 msgid "Arc"
 msgstr ""
@@ -5376,38 +5360,6 @@ msgstr ""
 #: qcsrc/lib/string.qh:82
 #, c-format
 msgid "%02d:%02d:%02d"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:48
-msgid "Usage:^3 menu_cmd <command> [<item>], where possible commands are:"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:49
-msgid "  <sync> reloads all cvars on the current menu page"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:50
-msgid ""
-"  <directmenu> shows the menu window named <item> (or the menu window "
-"containing an item named <item>)"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:51
-msgid ""
-"   if <item> is not specified it shows the list of available items in the "
-"console"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:52
-msgid "  <dumptree> dumps the state of the menu as a tree to the console"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:81
-msgid "Available items:"
-msgstr ""
-
-#: qcsrc/menu/command/menu_cmd.qc:130
-msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
 
 #: qcsrc/menu/item/listbox.qc:413
