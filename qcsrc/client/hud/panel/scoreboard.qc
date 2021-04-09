@@ -483,8 +483,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 		}
 
 		str = strtolower(str);
-		if(!STAT(SHOWFPS) && str == "fps")
-			continue;
 
 		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
 		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
@@ -502,7 +500,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 			case "elo": sbt_field[sbt_num_fields] = SP_ELO; break;
 			case "dmg": case "damage": sbt_field[sbt_num_fields] = SP_DMG; break;
 			case "dmgtaken": case "damagetaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
-			case "fps": sbt_field[sbt_num_fields] = SP_FPS; break;
 			default:
 			{
 				FOREACH(Scores, true, {
@@ -517,8 +514,13 @@ LABEL(notfound)
 					j = SP_FRAGS;
 				else
 				{
-					if(!nocomplain)
+					// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
+					if(!nocomplain && str != "fps") // server can disable the fps field
+
 						LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
+					
+					strfree(sbt_field_title[sbt_num_fields]);
+					sbt_field_size[sbt_num_fields] = 0;
 					continue;
 				}
 LABEL(found)
