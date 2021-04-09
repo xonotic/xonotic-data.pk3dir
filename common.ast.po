@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 07:23+0100\n"
-"PO-Revision-Date: 2021-04-06 15:19+0000\n"
+"PO-Revision-Date: 2021-04-08 22:32+0000\n"
 "Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
@@ -951,7 +951,7 @@ msgstr "Estadístiques de la precisión (promediu del %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1371
 msgid "Item stats"
-msgstr ""
+msgstr "Estadístiques d'oxetos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1482
 msgid "Map stats:"
