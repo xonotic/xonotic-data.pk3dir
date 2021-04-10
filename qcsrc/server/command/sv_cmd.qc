@@ -1048,7 +1048,6 @@ void GameCommand_setflag(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
 			entity client;
 			float accepted;
 			
@@ -1062,6 +1061,7 @@ void GameCommand_setflag(int request, int argc)
 			}
 			
 			client.countrycode = stof(argv(2));
+			return;
 		}
 		default:
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
