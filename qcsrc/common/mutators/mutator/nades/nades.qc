@@ -1345,8 +1345,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	{
 		int n = 0;
 
-		entity reviving_players_last = NULL;
-		entity reviving_players_first = NULL;
+		entity revivers_last = NULL;
+		entity revivers_first = NULL;
 
 		if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 			n = -1;
@@ -1357,15 +1357,15 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			FOREACH_CLIENT(IS_PLAYER(it) && IN_REVIVING_RANGE(player, it, revive_extra_size), {
 				if (STAT(FROZEN, it))
 					continue;
-				if (reviving_players_last)
-					reviving_players_last.chain = it;
-				reviving_players_last = it;
-				if (!reviving_players_first)
-					reviving_players_first = it;
+				if (revivers_last)
+					revivers_last.chain = it;
+				revivers_last = it;
+				if (!revivers_first)
+					revivers_first = it;
 				++n;
 			});
-			if (reviving_players_last)
-				reviving_players_last.chain = NULL;
+			if (revivers_last)
+				revivers_last.chain = NULL;
 		}
 
 		if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
@@ -1377,12 +1377,11 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			{
 				Unfreeze(player, false);
 
-				entity first = reviving_players_first;
-				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
-				Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, revivers_first.netname);
+				Send_Notification(NOTIF_ONE, revivers_first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			}
 
-			for(entity it = reviving_players_first; it; it = it.chain)
+			for(entity it = revivers_first; it; it = it.chain)
 				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 		}
 	}
