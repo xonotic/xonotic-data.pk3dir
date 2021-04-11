@@ -1348,9 +1348,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		entity revivers_last = NULL;
 		entity revivers_first = NULL;
 
-		if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
-			n = -1;
-		else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
+		if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 		{
 			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
