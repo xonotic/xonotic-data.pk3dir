@@ -470,17 +470,19 @@ void Cmd_Scoreboard_SetFields(int argc)
 		PlayerScoreField j;
 		switch(str)
 		{
+			// fields without a label (not networked)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
 			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
 			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
-			case "elo": sbt_field[sbt_num_fields] = SP_ELO; break;
-			case "dmg": case "damage": sbt_field[sbt_num_fields] = SP_DMG; break;
-			case "dmgtaken": case "damagetaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
-			default:
+			default: // fields with a label
 			{
+				// map alternative labels
+				if (str == "damage") str = "dmg";
+				if (str == "damagetaken") str = "dmgtaken";
+
 				FOREACH(Scores, true, {
 					if (str == strtolower(scores_label(it))) {
 						j = it;
@@ -527,7 +529,7 @@ LABEL(found)
 	{
 		if(!have_name)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
+			strfree(sbt_field_title[sbt_num_fields]);
 			for(i = sbt_num_fields; i > 0; --i)
 			{
 				sbt_field_title[i] = sbt_field_title[i-1];
@@ -541,7 +543,7 @@ LABEL(found)
 
 			if(!have_separator)
 			{
-				strunzone(sbt_field_title[sbt_num_fields]);
+				strfree(sbt_field_title[sbt_num_fields]);
 				for(i = sbt_num_fields; i > 1; --i)
 				{
 					sbt_field_title[i] = sbt_field_title[i-1];
