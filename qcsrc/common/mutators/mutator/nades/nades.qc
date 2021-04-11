@@ -1348,25 +1348,40 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		entity revivers_last = NULL;
 		entity revivers_first = NULL;
 
-		if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
-		{
-			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-			n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && IN_REVIVING_RANGE(player, it, revive_extra_size), {
-				if (STAT(FROZEN, it))
+		bool player_is_reviving = false;
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+		n = 0;
+		FOREACH_CLIENT(IS_PLAYER(it) && IN_REVIVING_RANGE(player, it, revive_extra_size), {
+			// check if player is reviving anyone
+			if (STAT(FROZEN, it) == FROZEN_TEMP_DYING)
+			{
+				if ((STAT(FROZEN, player) == FROZEN_TEMP_DYING))
 					continue;
-				if (revivers_last)
-					revivers_last.chain = it;
-				revivers_last = it;
-				if (!revivers_first)
-					revivers_first = it;
-				++n;
-			});
-			if (revivers_last)
-				revivers_last.chain = NULL;
-		}
+				if (!IN_REVIVING_RANGE(player, it, revive_extra_size))
+					continue;
+				player_is_reviving = true;
+				break;
+			}
 
-		if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
+			if (!(STAT(FROZEN, player) == FROZEN_TEMP_DYING))
+				continue; // both player and it are NOT frozen
+			if (revivers_last)
+				revivers_last.chain = it;
+			revivers_last = it;
+			if (!revivers_first)
+				revivers_first = it;
+			++n;
+		});
+		if (revivers_last)
+			revivers_last.chain = NULL;
+
+		if (!n) // no teammate nearby
+		{
+			// freezetag already resets revive progress
+			if (!g_freezetag && !STAT(FROZEN, player) && !player_is_reviving)
+				STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
+		}
+		else if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 			// undo what PlayerPreThink did
