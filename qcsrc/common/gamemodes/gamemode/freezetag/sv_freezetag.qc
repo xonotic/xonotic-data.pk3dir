@@ -486,8 +486,8 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 	}
 }
 
-#ifdef IS_REVIVING
-	#undef IS_REVIVING
+#ifdef IN_REVIVING_RANGE
+	#undef IN_REVIVING_RANGE
 #endif
 
 #define IN_REVIVING_RANGE(player, it, revive_extra_size) \

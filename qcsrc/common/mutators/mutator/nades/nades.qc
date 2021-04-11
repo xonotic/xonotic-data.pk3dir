@@ -1258,13 +1258,13 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 	}
 }
 
-#ifdef IS_REVIVING
-	#undef IS_REVIVING
+#ifdef IN_REVIVING_RANGE
+	#undef IN_REVIVING_RANGE
 #endif
 
 // returns true if player is reviving it
-#define IS_REVIVING(player, it, revive_extra_size) \
-	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+#define IN_REVIVING_RANGE(player, it, revive_extra_size) \
+	(it != player && !IS_DEAD(it) && SAME_TEAM(it, player) \
 	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
@@ -1273,7 +1273,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 	if (!IS_PLAYER(player)) { return; }
 
-	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK))))
+		OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
 
 	entity held_nade = player.nade;
 	if (held_nade)
@@ -1344,7 +1345,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	{
 		int n = 0;
 
-		IntrusiveList reviving_players = NULL;
+		entity reviving_players_last = NULL;
+		entity reviving_players_first = NULL;
 
 		if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 			n = -1;
@@ -1352,12 +1354,18 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		{
 			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-				if (!reviving_players)
-					reviving_players = IL_NEW();
-				IL_PUSH(reviving_players, it);
+			FOREACH_CLIENT(IS_PLAYER(it) && IN_REVIVING_RANGE(player, it, revive_extra_size), {
+				if (STAT(FROZEN, it))
+					continue;
+				if (reviving_players_last)
+					reviving_players_last.chain = it;
+				reviving_players_last = it;
+				if (!reviving_players_first)
+					reviving_players_first = it;
 				++n;
 			});
+			if (reviving_players_last)
+				reviving_players_last.chain = NULL;
 		}
 
 		if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
@@ -1369,17 +1377,14 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			{
 				Unfreeze(player, false);
 
-				entity first = IL_FIRST(reviving_players);
+				entity first = reviving_players_first;
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
 				Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			}
 
-			IL_EACH(reviving_players, true, {
+			for(entity it = reviving_players_first; it; it = it.chain)
 				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-			});
 		}
-		if (reviving_players)
-			IL_DELETE(reviving_players);
 	}
 }
 
