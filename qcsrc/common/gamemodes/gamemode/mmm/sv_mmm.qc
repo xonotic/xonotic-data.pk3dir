@@ -646,18 +646,24 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 			if (target.mmm_status == MMM_STATUS_CIVILIAN)
 			{
 				//try to add centerprint message for chat privately if possible
-				corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
-				centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^2Civilian\n", "^1Killed by^3:^7 ", target.whokilled)));
+				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
+				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemessagestrcat);
 			}
 			else if (target.mmm_status == MMM_STATUS_MURDERER)
 			{
-				corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
-				centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^1Murderer\n", "^1Killed by^3:^7 ", target.whokilled)));
+				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
+				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemessagestrcat);
 			}
 			else if (target.mmm_status == MMM_STATUS_SLEUTH)
 			{
-				corpsemessagestrcat = strcat("\n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
-				centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));//("\n^6Name^3:^7 ", target.netname, "\n^5Role^3: ^4Sleuth\n", "^1Killed by^3:^7 ", target.whokilled)));
+				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
+				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemessagestrcat);
 			}
 			attacker.investigated = true;
 		}

@@ -450,7 +450,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     
     //LegendGuard adds N_CHATCON option 20-03-2021
     MSG_INFO_NOTIF(MMM_SLEUTH,                              N_CHATCON,  0, 0, "", "",           "",                     _("^BGYou are ^4Sleuth^BG!"), "")
-    MSG_INFO_NOTIF(MMM_WHOISSLEUTH,                         N_CHATCON,  1, 0, "s1", "s1",       "",                     _("^BG%s is ^4Sleuth^BG!"), "")
+    MSG_INFO_NOTIF(MMM_WHOISSLEUTH,                         N_CHATCON,  1, 0, "s1", "",         "",                     _("^BG%s is ^4Sleuth^BG!"), "")
+    MSG_INFO_NOTIF(MMM_CORPSEDETECTION,                     N_CHATCON,  1, 0, "s1", "",         "",                     _("^BG%s"), "")
 
     MSG_INFO_NOTIF(VERSION_BETA,                            N_CONSOLE,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "")
     MSG_INFO_NOTIF(VERSION_OLD,                             N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "")
@@ -790,6 +791,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(MMM_CIVILIAN_WIN,                  N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Civilians^BG win the round"), "")
     
     MSG_CENTER_NOTIF(MMM_SLEUTH,                        N_ENABLE,    0, 0, "",               CPID_MMM,               "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are ^4Sleuth^BG! Find out who are murderers and protect the civilians!")), "")
+    MSG_CENTER_NOTIF(MMM_CORPSEDETECTION,               N_ENABLE,    1, 0, "s1",             CPID_MMM,               "4 0",  strcat(BOLD_OPERATOR, _("^BG%s")), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
