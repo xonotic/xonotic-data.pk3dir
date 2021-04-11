@@ -1056,18 +1056,20 @@ void GameCommand_setflag(int request, int argc)
 
 			if (accepted <= 0)
 			{
-				LOG_INFO("setflag error");
+				LOG_INFO("^1ERROR^7: Couldn't set country flag");
+				LOG_HELP("Usage:^3 sv_cmd setflag #client_id countrycode[0-249]");
 				return;
 			}
-			
+
 			client.countrycode = stof(argv(2));
+			LOG_INFO("^2SUCCESS^7: Country flag set!");
 			return;
 		}
 		default:
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd setflag client countrycode");
+			LOG_HELP("Usage:^3 sv_cmd setflag #client_id countrycode[0-249]");
 			return;
 		}
 	}
