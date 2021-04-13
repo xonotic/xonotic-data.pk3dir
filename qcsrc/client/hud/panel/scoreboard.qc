@@ -470,7 +470,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 		PlayerScoreField j;
 		switch(str)
 		{
-			// fields without a label (not networked)
+			// fields without a label (not networked via the score system)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
