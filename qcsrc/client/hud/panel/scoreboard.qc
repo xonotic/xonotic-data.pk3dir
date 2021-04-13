@@ -163,6 +163,8 @@ string Label_getInfo(string label, int mode)
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
 
+#define SB_EXTRA_SORTING_FIELDS 5
+PlayerScoreField sb_extra_sorting_field[SB_EXTRA_SORTING_FIELDS];
 void Scoreboard_InitScores()
 {
 	int i, f;
@@ -175,6 +177,13 @@ void Scoreboard_InitScores()
 			ps_primary = it;
 		if(f == SFL_SORT_PRIO_SECONDARY)
 			ps_secondary = it;
+		if(ps_primary == it || ps_secondary == it)
+			continue;
+		if (scores_label(it) == "kills")      sb_extra_sorting_field[0] = it;
+		if (scores_label(it) == "deaths")     sb_extra_sorting_field[1] = it;
+		if (scores_label(it) == "suicides")   sb_extra_sorting_field[2] = it;
+		if (scores_label(it) == "dmg")        sb_extra_sorting_field[3] = it;
+		if (scores_label(it) == "dmgtaken")   sb_extra_sorting_field[4] = it;
 	});
 	if(ps_secondary == NULL)
 		ps_secondary = ps_primary;
@@ -261,18 +270,25 @@ float Scoreboard_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	r = Scoreboard_CompareScore(left.scores(ps_primary), right.scores(ps_primary), scores_flags(ps_primary));
-	if (r >= 0)
-		return r;
+	entity fld = NULL;
+	for (int i = -2; i < SB_EXTRA_SORTING_FIELDS; ++i)
+	{
+		if (i < 0)
+		{
+			if (!fld) fld = ps_primary;
+			else if (ps_secondary == ps_primary) continue;
+			else fld = ps_secondary;
+		}
+		else
+		{
+			fld = sb_extra_sorting_field[i];
+			if (fld == ps_primary || fld == ps_secondary) continue;
+		}
+		if (!fld) continue;
 
-	r = Scoreboard_CompareScore(left.scores(ps_secondary), right.scores(ps_secondary), scores_flags(ps_secondary));
-	if (r >= 0)
-		return r;
-
-	FOREACH(Scores, true, {
-		r = Scoreboard_CompareScore(left.scores(it), right.scores(it), scores_flags(it));
+		r = Scoreboard_CompareScore(left.scores(fld), right.scores(fld), scores_flags(fld));
 		if (r >= 0) return r;
-	});
+	}
 
 	if (left.sv_entnum < right.sv_entnum)
 		return true;
