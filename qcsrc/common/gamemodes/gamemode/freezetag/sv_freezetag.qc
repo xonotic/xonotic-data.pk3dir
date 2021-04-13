@@ -486,8 +486,8 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 	}
 }
 
-#ifdef IS_REVIVING
-	#undef IS_REVIVING
+#ifdef IN_REVIVING_RANGE
+	#undef IN_REVIVING_RANGE
 #endif
 
 #define IN_REVIVING_RANGE(player, it, revive_extra_size) \
@@ -511,8 +511,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if (!(frametime && IS_PLAYER(player)))
 		return true;
 
-	entity reviving_players_last = NULL;
-	entity reviving_players_first = NULL;
+	entity revivers_last = NULL;
+	entity revivers_first = NULL;
 
 	bool player_is_reviving = false;
 	int n = 0;
@@ -544,15 +544,15 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 				it.freezetag_revive_time -= 1;
 			}
 		}
-		if (reviving_players_last)
-			reviving_players_last.chain = it;
-		reviving_players_last = it;
-		if (!reviving_players_first)
-			reviving_players_first = it;
+		if (revivers_last)
+			revivers_last.chain = it;
+		revivers_last = it;
+		if (!revivers_first)
+			revivers_first = it;
 		++n;
 	});
-	if (reviving_players_last)
-		reviving_players_last.chain = NULL;
+	if (revivers_last)
+		revivers_last.chain = NULL;
 
 	// allow normal revival during automatic revival
 	// (if we wouldn't allow it then freezetag_frozen_timeout should be checked too in the previous loop)
@@ -599,28 +599,27 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			for(entity it = reviving_players_first; it; it = it.chain)
+			for(entity it = revivers_first; it; it = it.chain)
 			{
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
 				GameRules_scoring_add(it, SCORE, +1);
 				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
 			}
 
-			entity first = reviving_players_first;
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
-			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, revivers_first.netname);
+			Send_Notification(NOTIF_ONE, revivers_first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, revivers_first.netname);
 			if(autocvar_sv_eventlog)
 			{
 				string revivers = "";
-				for(entity it = reviving_players_first; it; it = it.chain)
+				for(entity it = revivers_first; it; it = it.chain)
 					revivers = strcat(revivers, ftos(it.playerid), ",");
 				revivers = substring(revivers, 0, strlen(revivers) - 1);
 				GameLogEcho(strcat(":ft:revival:", ftos(player.playerid), ":", revivers));
 			}
 		}
 
-		for(entity it = reviving_players_first; it; it = it.chain)
+		for(entity it = revivers_first; it; it = it.chain)
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 	}
 
