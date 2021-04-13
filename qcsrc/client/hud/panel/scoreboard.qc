@@ -473,10 +473,11 @@ void Cmd_Scoreboard_SetFields(int argc)
 			// fields without a label (not networked)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
-			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
-			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
+			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
+			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
+			case "frags": sbt_field[sbt_num_fields] = SP_FRAGS; break;
 			default: // fields with a label
 			{
 				// map alternative labels
@@ -490,20 +491,15 @@ void Cmd_Scoreboard_SetFields(int argc)
 					}
 				});
 
-LABEL(notfound)
-				if(str == "frags")
-					j = SP_FRAGS;
-				else
-				{
-					// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
-					if(!nocomplain && str != "fps") // server can disable the fps field
-						LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
+				// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
+				if(!nocomplain && str != "fps") // server can disable the fps field
+					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 
-					strfree(sbt_field_title[sbt_num_fields]);
-					sbt_field_size[sbt_num_fields] = 0;
-					continue;
-				}
-LABEL(found)
+				strfree(sbt_field_title[sbt_num_fields]);
+				sbt_field_size[sbt_num_fields] = 0;
+				continue;
+
+				LABEL(found)
 				sbt_field[sbt_num_fields] = j;
 				if(j == ps_primary)
 					have_primary = true;
