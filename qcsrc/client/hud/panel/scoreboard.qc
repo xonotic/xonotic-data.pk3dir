@@ -247,14 +247,8 @@ int Scoreboard_CompareScore(int vl, int vr, int f)
 
 float Scoreboard_ComparePlayerScores(entity left, entity right)
 {
-	float vl, vr, r;
-	vl = entcs_GetTeam(left.sv_entnum);
-	vr = entcs_GetTeam(right.sv_entnum);
-
-	if(!left.gotscores)
-		vl = NUM_SPECTATOR;
-	if(!right.gotscores)
-		vr = NUM_SPECTATOR;
+	int vl = (left.gotscores) ? entcs_GetTeam(left.sv_entnum) : NUM_SPECTATOR;
+	int vr = (right.gotscores) ? entcs_GetTeam(right.sv_entnum) : NUM_SPECTATOR;
 
 	if(vl > vr)
 		return true;
@@ -271,6 +265,7 @@ float Scoreboard_ComparePlayerScores(entity left, entity right)
 	}
 
 	entity fld = NULL;
+	int r;
 	for (int i = -2; i < SB_EXTRA_SORTING_FIELDS; ++i)
 	{
 		if (i < 0)
@@ -311,26 +306,29 @@ void Scoreboard_UpdatePlayerPos(entity player)
 
 float Scoreboard_CompareTeamScores(entity left, entity right)
 {
-	int i, r;
-
 	if(left.team == NUM_SPECTATOR)
 		return 1;
 	if(right.team == NUM_SPECTATOR)
 		return 0;
 
-	r = Scoreboard_CompareScore(left.teamscores(ts_primary), right.teamscores(ts_primary), teamscores_flags(ts_primary));
-	if (r >= 0)
-		return r;
-
-	r = Scoreboard_CompareScore(left.teamscores(ts_secondary), right.teamscores(ts_secondary), teamscores_flags(ts_secondary));
-	if (r >= 0)
-		return r;
-
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	int fld_idx = -1;
+	int r;
+	for(int i = -2; i < MAX_TEAMSCORE; ++i)
 	{
-		r = Scoreboard_CompareScore(left.teamscores(i), right.teamscores(i), teamscores_flags(i));
-		if (r >= 0)
-			return r;
+		if (i < 0)
+		{
+			if (fld_idx == -1) fld_idx = ts_primary;
+			else if (ts_secondary == ts_primary) continue;
+			else fld_idx = ts_secondary;
+		}
+		else
+		{
+			fld_idx = i;
+			if (fld_idx == ts_primary || fld_idx == ts_secondary) continue;
+		}
+
+		r = Scoreboard_CompareScore(left.teamscores(fld_idx), right.teamscores(fld_idx), teamscores_flags(fld_idx));
+		if (r >= 0) return r;
 	}
 
 	if (left.team < right.team)
