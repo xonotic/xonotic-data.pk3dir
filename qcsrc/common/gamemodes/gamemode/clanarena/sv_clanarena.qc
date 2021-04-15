@@ -9,22 +9,15 @@ void CA_count_alive_players()
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
-		Team_SetNumberOfPlayers(Team_GetTeamFromIndex(i), 0);
 	}
-	FOREACH_CLIENT(Entity_HasValidTeam(it),
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		entity team_ = Entity_GetTeam(it);
-		
-		int num_total = Team_GetNumberOfPlayers(team_);
-		++num_total;
-		Team_SetNumberOfPlayers(team_, num_total);
-		
-		if (IS_DEAD(it) || !IS_PLAYER(it))
+		if (IS_DEAD(it))
 		{
 			continue;
 		}
-		
+		entity team_ = Entity_GetTeam(it);
 		int num_alive = Team_GetNumberOfAlivePlayers(team_);
 		++num_alive;
 		Team_SetNumberOfAlivePlayers(team_, num_alive);
@@ -69,6 +62,7 @@ int CA_GetWinnerTeam()
 
 void nades_Clear(entity player);
 
+//z411
 entity ca_LastPlayer(float tm)
 {
 	entity last_pl = NULL;
@@ -84,19 +78,16 @@ entity ca_LastPlayer(float tm)
 	return last_pl;
 }
 
-
 float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_OVER);
 		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 		allowed_to_spawn = false;
-		if(autocvar_g_ca_round_stop)
-			game_stopped = true;
+		game_stopped = true;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
 	}
@@ -108,40 +99,36 @@ float CA_CheckWinner()
 	}
 
 	int winner_team = CA_GetWinnerTeam();
-	bool perfect = false;
+    bool perfect = false; //z411
 	if(winner_team > 0)
 	{
-		entity tm = Team_GetTeam(winner_team);
+        //z411
+        entity tm = Team_GetTeam(winner_team);
 		entity last_pl = ca_LastPlayer(winner_team);
 		
 		if(last_pl && Team_GetNumberOfPlayers(tm) >= 3) {
 			Give_Medal(last_pl, DEFENSE);
 		}
-		
+        // ----
+
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		if(fragsleft > 1) Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
-		
-		if (Team_GetNumberOfPlayers(tm) >= 3 &&
-			Team_GetNumberOfAlivePlayers(tm) == Team_GetNumberOfPlayers(tm))
-				perfect = true;
 	}
 	else if(winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_TIED);
 	}
 
 	allowed_to_spawn = false;
-	if(autocvar_g_ca_round_stop)
-		game_stopped = true;
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		nades_Clear(it);
 		
+        //z411
 		// Give perfect medal if everyone in the winner team is alive
 		if(perfect && it.team == winner_team) {
 			Give_Medal(it, PERFECT);
@@ -282,12 +269,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
-{
-	// announce remaining frags
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
@@ -328,10 +309,8 @@ void ca_LastPlayerForTeam_Notify(entity this)
 	if (!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
 	{
 		entity pl = ca_LastPlayerForTeam(this);
-		if (pl) {
+		if (pl)
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
-			Send_Notification(NOTIF_ONE, pl, MSG_ANNCE, ANNCE_ALONE);
-		}
 	}
 }
 
@@ -462,6 +441,12 @@ MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)
 {
 	// no regeneration in CA
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
+{
+	// announce remaining frags
 	return true;
 }
 

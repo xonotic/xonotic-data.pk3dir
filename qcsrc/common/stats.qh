@@ -74,8 +74,6 @@ float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
 
-float overtime_starttime; // z411 point in time where first overtime started
-
 float checkrules_overtimesadded; // z411 add
 float timeout_last;
 float timeout_total_time;
@@ -457,5 +455,3 @@ REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
 #endif
-
-REGISTER_STAT(SURVIVAL_ROUNDTIMER, float) //LegendGuard adds SURVIVAL_ROUNDTIMER from Mario/survival 15-02-2021
