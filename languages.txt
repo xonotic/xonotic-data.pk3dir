@@ -1,4 +1,4 @@
-ast   "Asturian" "Asturianu" 75%
+ast   "Asturian" "Asturianu" 76%
 de    "German" "Deutsch" 100%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
@@ -14,15 +14,15 @@ pt    "Portuguese" "Português" 83%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 73%
 fi    "Finnish" "Suomi" 99%
-tr    "Turkish" "Türkçe" 29%
+tr    "Turkish" "Türkçe" 30%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 46%
 be    "Belarusian" "Беларуская" 53%
 bg    "Bulgarian" "Български" 62%
 ru    "Russian" "Русский" 100%
-sr    "Serbian" "Српски" 62%
+sr    "Serbian" "Српски" 63%
 uk    "Ukrainian" "Українська" 49%
-zh_CN "Chinese (China)" "中文" 56%
+zh_CN "Chinese (China)" "中文" 57%
 zh_TW "Chinese (Taiwan)" "國語" 60%
 ja_JP "Japanese" "日本語" 99%
 ko    "Korean" "한국의" 28%

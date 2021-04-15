@@ -149,6 +149,8 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	Weapon w = this.(weaponentity).m_weapon;
 	if (w == WEP_Null)
 		return; // just in case
+	if (time < game_starttime)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this, this.(weaponentity)))
 		return;
 	if(!autocvar_g_weapon_throwable)

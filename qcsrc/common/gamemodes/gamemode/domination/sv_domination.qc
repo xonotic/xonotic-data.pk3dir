@@ -671,5 +671,7 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 void dom_Initialize()
 {
 	g_domination = true;
+	g_dompoints = IL_NEW();
+
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }

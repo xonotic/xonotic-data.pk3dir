@@ -130,7 +130,7 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 	}
 	if(score)
 		if(teamscores_label(scorefield) != "")
-			s.SendFlags |= (2 ** scorefield);
+			s.SendFlags |= BIT(scorefield);
 	return (s.(teamscores(scorefield)) += score);
 }
 
@@ -382,7 +382,7 @@ float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
 		return oldscore;
 
 	if(scores_label(scorefield) != "")
-		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	s.(scores(scorefield)) = score;
 	return s.(scores(scorefield));
 }

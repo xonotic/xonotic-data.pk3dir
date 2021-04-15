@@ -43,6 +43,7 @@ float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
 
+<<<<<<< HEAD
 float centerprint_medal_expire_time;
 string centerprint_medal_icon;
 float centerprint_medal_times;
@@ -78,6 +79,8 @@ void centerprint_Medal(string icon, float times)
 	centerprint_showing = true;
 }
 
+=======
+>>>>>>> master
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
@@ -224,7 +227,7 @@ void HUD_CenterPrint()
 
 	if ( HUD_Radar_Clickable() )
 	{
-		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
+		if (hud_panel_radar_bottom >= vid_conheight)
 			return;
 
 		panel_pos.x = 0.5 * (vid_conwidth - panel_size.x);
@@ -233,15 +236,16 @@ void HUD_CenterPrint()
 	}
 	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
-		// move the panel below the scoreboard
-		if (scoreboard_bottom >= 0.96 * vid_conheight)
-			return;
 		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom);
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
 			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
 		}
+
+		// move the panel below the scoreboard
+		if (panel_pos.y >= vid_conheight)
+			return;
 	}
 
 	if (autocvar_hud_panel_centerprint_dynamichud)
@@ -357,10 +361,17 @@ void HUD_CenterPrint()
 		all_messages_expired = false;
 
 		// fade
+<<<<<<< HEAD
 		//if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
 		//	a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
 		if(centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
 			a = 1;
+=======
+		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
+			a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
+			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+>>>>>>> master
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 

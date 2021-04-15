@@ -424,9 +424,6 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
-	// we only care for keyboard events
-	if(bInputType == 2)
-		return false;
 
 	if(!QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return false;
@@ -437,6 +434,12 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		mousepos.y = nSecondary;
 		return true;
 	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
 
 	// allow console bind to work
 	string con_keys = findkeysforcommand("toggleconsole", 0);
@@ -449,12 +452,14 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			hit_con_bind = true;
 	}
 
-	if(bInputType == 0) {
+	if(key_pressed)
+	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 	}
-	else if(bInputType == 1) {
+	else
+	{
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
@@ -462,28 +467,28 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_ESCAPE)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		QuickMenu_Close();
 	}
 	else if(nPrimary >= '0' && nPrimary <= '9')
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE1);
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(hit_con_bind)
@@ -772,7 +777,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;
-		QUICKMENU_ENTRY(entcs_GetName(pl.sv_entnum), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
+		QUICKMENU_ENTRY(strcat("^7", entcs_GetName(pl.sv_entnum)), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
 	}
 
 	return;

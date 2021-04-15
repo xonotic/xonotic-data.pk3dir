@@ -166,6 +166,11 @@ MUTATOR_HOOKFUNCTION(cl_race, HUD_Score_show)
 	return spectatee_status == -1 && ISGAMETYPE(RACE); // hide the score panel while observing
 }
 
+MUTATOR_HOOKFUNCTION(cl_race, DrawScoreboardItemStats)
+{
+	return ISGAMETYPE(RACE); // hide the item stats panel
+}
+
 MUTATOR_HOOKFUNCTION(cl_race, ShowRankings)
 {
 	if(ISGAMETYPE(RACE))

@@ -71,26 +71,16 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerPreThink)
+MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	if(!IS_PLAYER(player))
-		return;
-
-	// we need to perform this in PlayerPreThink as PlayerPhysics may not be called (vehicle support)
-	float dt = frametime;
 	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
-}
-
-MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
-{
-	entity player = M_ARGV(0, entity);
-	//float dt = M_ARGV(1, float);
 
 	if(IS_PLAYER(player))
 	{
@@ -189,26 +179,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 
-	if(IS_REAL_CLIENT(player))
-	{
-		string rr = CTS_RECORD;
-
-		msg_entity = player;
-		race_send_recordtime(MSG_ONE);
-		race_send_speedaward(MSG_ONE);
-
-		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
-		race_send_speedaward_alltimebest(MSG_ONE);
-
-		float i;
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, false);
 }
 
 MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
@@ -292,6 +263,7 @@ MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
+<<<<<<< HEAD
 	if(CS_CVAR(player).cvar_cl_allow_uidtracking == 1 && CS_CVAR(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
@@ -328,6 +300,10 @@ MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 			}
 		}
 	}
+=======
+	race_checkAndWriteName(player);
+	race_SpeedAwardFrame(player);
+>>>>>>> master
 }
 
 MUTATOR_HOOKFUNCTION(cts, ForbidThrowCurrentWeapon)
@@ -428,5 +404,6 @@ MUTATOR_HOOKFUNCTION(cts, ForbidDropCurrentWeapon)
 
 void cts_Initialize()
 {
+	record_type = CTS_RECORD;
 	cts_ScoreRules();
 }

@@ -8,7 +8,7 @@
 	bool cvar_cl_allow_uidranking;
 	float cvar_cl_autoscreenshot;
 	float cvar_cl_autotaunt;
-	float cvar_cl_clippedspectating;
+	bool cvar_cl_clippedspectating;
 	int cvar_cl_gunalign;
 	bool cvar_cl_chat_sounds;
 	float cvar_cl_handicap;
@@ -30,7 +30,7 @@
 	.float cvar_cl_handicap;
 	.int cvar_cl_gunalign;
 	.bool cvar_cl_chat_sounds;
-	.float cvar_cl_clippedspectating;
+	.bool cvar_cl_clippedspectating;
 	.float cvar_cl_autoscreenshot;
 	.float cvar_cl_jetpack_jump;
 	.float cvar_cl_movement_track_canjump;
