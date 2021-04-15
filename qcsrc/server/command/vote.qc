@@ -503,7 +503,7 @@ void ReadyRestart()
 	// Otherwise scores could be manipulated during the countdown.
 	if (!sv_ready_restart_after_countdown) {
 		Score_ClearAll();
-		Inventory_ClearAll();
+		//Inventory_ClearAll();
 	}
 	ReadyRestart_force();
 }

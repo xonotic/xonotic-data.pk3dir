@@ -43,7 +43,6 @@ float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
 
-<<<<<<< HEAD
 float centerprint_medal_expire_time;
 string centerprint_medal_icon;
 float centerprint_medal_times;
@@ -79,8 +78,6 @@ void centerprint_Medal(string icon, float times)
 	centerprint_showing = true;
 }
 
-=======
->>>>>>> master
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
@@ -361,17 +358,10 @@ void HUD_CenterPrint()
 		all_messages_expired = false;
 
 		// fade
-<<<<<<< HEAD
 		//if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
 		//	a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
 		if(centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
 			a = 1;
-=======
-		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
-			a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
-		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
-			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
->>>>>>> master
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 

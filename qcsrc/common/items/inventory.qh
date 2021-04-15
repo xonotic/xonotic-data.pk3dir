@@ -47,15 +47,16 @@ int last_pickup_times;
 
 void Inventory_remove(entity this)
 {
-    if(g_inventory == this)
-        g_inventory = NULL;
+    // TODO z411
+    //if(g_inventory == this)
+    //    g_inventory = NULL;
 }
 
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     //g_inventory = this;
-    this.entremove = Inventory_remove;
+    //this.entremove = Inventory_remove;
 	
 	float entnum = ReadByte() - 1;
 	inventoryslots[entnum] = this;
@@ -178,16 +179,28 @@ void Inventory_new(PlayerState this)
 void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 
+void Inventory_clear(entity store)
+{
+    // NOTE: you will need to perform Inventory_update after this to update the storage entity
+    // (unless store is the storage entity)
+    FOREACH(Items, true, {
+        .int fld = inv_items[it.m_id];
+        store.(fld) = 0;
+    });
+}
+
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
-void InventoryStorage_detach(entity e) { delete(e.inventory_store); }
+void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
 
 void Inventory_ClearAll() {
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		entity store = PS(it);		
-		FOREACH(Items, true, {
-			store.inventory.inv_items[it.m_id] = 0;
-		});
-        Inventory_update(store);
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		entity store = PS(it);
+		if (store)
+		{
+			Inventory_clear(store.inventory);
+			Inventory_update(store);
+		}
 	});
 }
 #endif

@@ -303,17 +303,10 @@ void GenericCommand_maplist(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-<<<<<<< HEAD
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist action [map]");
-			LOG_HELP("  Where 'action' is the command to complete,");
-			LOG_HELP("  and 'map' is what it acts upon (if required).");
-			LOG_HELP("  Full list of commands here: \"add, cleanup, remove, shuffle.\"");
-=======
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist <action> [<map>]");
 			LOG_HELP("  Where <action> is the command to complete,");
 			LOG_HELP("  and <map> is what it acts upon (for the 'add' and 'remove' actions).");
 			LOG_HELP("  Full list of commands here: add, cleanup, remove, shuffle.");
->>>>>>> master
 			return;
 		}
 	}
@@ -332,13 +325,8 @@ void GenericCommand_nextframe(int request, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-<<<<<<< HEAD
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " nextframe command...");
-			LOG_HELP("  Where command will be executed next frame of this VM");
-=======
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " nextframe <command>");
 			LOG_HELP("  Where <command> will be executed next frame of this VM");
->>>>>>> master
 			return;
 		}
 	}
@@ -514,11 +502,7 @@ void GenericCommand_runtest(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-<<<<<<< HEAD
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " [function to run]");
-=======
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " <function>");
->>>>>>> master
 			return;
 		}
 	}

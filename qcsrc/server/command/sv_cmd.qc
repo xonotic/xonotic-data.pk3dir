@@ -1710,7 +1710,6 @@ void GameCommand_(int request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
 SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
-SERVER_COMMAND(stop, "Stop") { GameCommand_stop(request, arguments); }
 
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
 SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }

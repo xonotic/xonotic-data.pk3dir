@@ -17,7 +17,7 @@
 		PERSON(Freddy) \
 		PERSON(Halogene) \
 		PERSON(Jan "zykure" Behrens) \
-// 		PERSON(Morosophos) \
+		PERSON(Morosophos) \
 		PERSON(MrBougo) \
 		PERSON(nilyt/nyov) \
 		PERSON(Nitroxis) \

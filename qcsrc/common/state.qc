@@ -5,6 +5,7 @@
 void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 void Inventory_clear(PlayerState this);
+//void Inventory_ClearAll();
 void InventoryStorage_attach(PlayerState this);
 void InventoryStorage_delete(PlayerState this);
 
@@ -23,7 +24,7 @@ void PlayerState_detach(entity this)
     PlayerState ps = PS(this);
 	if (!ps) return;  // initial connect
 	PS(this) = NULL;
-    Inventory_clear(this.inventory_store); // no need to network updates, as there is no inventory attached
+    //Inventory_clear(this.inventory_store); // no need to network updates, as there is no inventory attached
 
 	if (ps.m_client != this) return;  // don't own state, spectator
 	ps.ps_push(ps, this);

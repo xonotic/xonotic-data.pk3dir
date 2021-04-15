@@ -182,11 +182,7 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(!WEP_CVAR(vortex, charge_always))
-<<<<<<< HEAD
-        W_Vortex_Charge(actor, weaponentity, frametime);
-=======
         W_Vortex_Charge(actor, weaponentity, frametime / W_TICSPERFRAME);
->>>>>>> master
 
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)

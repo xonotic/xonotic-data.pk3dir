@@ -1742,6 +1742,7 @@ STATIC_INIT(default_order_items_label)
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
+	Inventory g_inventory = inventoryslots[current_player];
 	scoreboard_itemstats_fade_alpha = min(scoreboard_fade_alpha, scoreboard_itemstats_fade_alpha + frametime * 10);
 
 	int disowned_cnt = 0;
@@ -2064,6 +2065,8 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 bool have_item_stats;
 bool Scoreboard_ItemStats_WouldDraw(float ypos)
 {
+	Inventory g_inventory = inventoryslots[current_player];
+	
 	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
 		return false;
 	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)

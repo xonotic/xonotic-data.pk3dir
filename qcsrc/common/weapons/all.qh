@@ -84,13 +84,8 @@ GENERIC_COMMAND(dumpweapons, "Dump all turrets into " DEFAULT_FILENAME, false) /
         default:
         case CMD_REQUEST_USAGE:
         {
-<<<<<<< HEAD
-            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]");
-            LOG_HELP("  Where 'filename' is the file to write (default is weapons_dump.cfg),");
-=======
             LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [<filename>]");
             LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
->>>>>>> master
             LOG_HELP("  if supplied with '-' output to console as well as default,");
             LOG_HELP("  if left blank, it will only write to default.");
             return;
