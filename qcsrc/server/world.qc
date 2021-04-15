@@ -301,9 +301,6 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
-		BADCVAR("g_tka");
-		BADCVAR("g_tka_on_dm_maps");
-		BADCVAR("g_tka_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
@@ -313,17 +310,12 @@ void cvar_changes_init()
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
 		BADCVAR("g_maplist_sizes_count_bots");
-		//LegendGuard adds BADCVAR(g_*) from Mario/survival 15-02-2021
-		//LegendGuard adds BADCVAR(g_*) from Mario/team_keepaway 15-02-2021
 
 		// long
 		BADCVAR("hostname");
-		BADCVAR("hostname_full");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
-		
-		BADPREFIX("g_teamnames_");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
@@ -367,9 +359,6 @@ void cvar_changes_init()
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_freezetag_point_limit");
-		BADCVAR("g_freezetag_revive_respawn");
-		BADCVAR("g_freezetag_round_stop");
-		BADCVAR("g_freezetag_round_respawn");
 		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
 		BADCVAR("g_casings");
@@ -425,8 +414,6 @@ void cvar_changes_init()
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
-		BADPREFIX("sv_chat_");
-		BADPREFIX("sv_jingle_");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -1034,9 +1021,6 @@ spawnfunc(worldspawn)
 
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
-	
-	if(!warmup_stage)
-		round_handler_Activate(true);
 }
 
 spawnfunc(light)
@@ -1305,8 +1289,6 @@ void NextLevel()
 	*/
 
 	//pos = FindIntermission ();
-	
-	sound(NULL, CH_INFO, SND_ENDMATCH, VOL_BASE, ATTN_NONE);
 
 	VoteReset();
 
@@ -1317,11 +1299,6 @@ void NextLevel()
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_Null); // kill all centerprints now
-	
-	// send winner notification
-	if(teamplay) {
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_WINS));
-	}
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1335,8 +1312,8 @@ void NextLevel()
 	});
 
 	target_music_kill();
-	
-	// z411
+
+    // z411
 	if(autocvar_sv_jingle_end) {
 		int jingles_len = 0;
 		string jingles[32];
@@ -1401,12 +1378,6 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
-	
-	sound(NULL, CH_INFO, SND_OVERTIME, VOL_BASE, ATTN_NONE);
-	if(checkrules_overtimesadded == 1) {
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_OVERTIME);
-		overtime_starttime = time;
-	}
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
@@ -1458,49 +1429,7 @@ void ClearWinners()
 	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
 }
 
-void AnnounceNewLeader()
-{
-	if(teamplay) {
-		if (WinningConditionHelper_equality)
-			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TEAM_LEADS_TIED);
-		else
-			FOREACH_CLIENT(IS_PLAYER(it), {
-				if(it.team == WinningConditionHelper_winnerteam)
-					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_TEAM);
-				else
-					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_ENEMY);
-			});
-			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
-	} else {
-		if (WinningConditionHelper_equality)
-		{
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
-		}
-		else
-		{
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
-			Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
-		}
-	}
-}
-
-void AnnounceScores(float tm)
-{
-	WinningConditionHelper(NULL);
-	if (Score_NewLeader()) {
-		AnnounceNewLeader();
-	} else {
-		FOREACH_CLIENT(IS_PLAYER(it), {
-			if(it.team == tm)
-				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_TEAM);
-			else
-				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_ENEMY);
-		});
-		Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(tm, ANNCE_TEAM_SCORES));
-	}
-}
-
+int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
@@ -1533,6 +1462,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	{
+		float fragsleft;
 		if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
 		{
 			fragsleft = 1;
@@ -1564,13 +1494,13 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			fragsleft_last = fragsleft;
 		}
 	}
-	
-	// z411 - lead announcer
+
+    // z411 - lead announcer
 	if(MUTATOR_CALLHOOK(Scores_AnnounceLeads)) {
 		if (Score_NewLeader())
 			AnnounceNewLeader();
 	}
-	
+
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
 	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 
@@ -1686,8 +1616,8 @@ void CheckRules_World()
 			// again, but this shouldn't hurt
 		return;
 	}
-	
-	// z411 don't check rules if we're in a timeout
+
+    // z411 don't check rules if we're in a timeout
 	if (game_timeout) return;
 
 	float timelimit = autocvar_timelimit * 60;
@@ -1727,8 +1657,6 @@ void CheckRules_World()
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_FRAG);
-			sound(NULL, CH_INFO, SND_OVERTIME, VOL_BASE, ATTN_NONE);
-			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_SUDDENDEATH);
 		}
 	}
 	else
@@ -2344,7 +2272,7 @@ void RunThink(entity this)
 bool autocvar_sv_freezenonclients;
 void Physics_Frame()
 {
-	if(autocvar_sv_freezenonclients || game_timeout)
+	if(autocvar_sv_freezenonclients)
 		return;
 
 	IL_EACH(g_moveables, true,
