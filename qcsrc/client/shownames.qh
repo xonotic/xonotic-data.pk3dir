@@ -17,7 +17,7 @@ bool autocvar_hud_shownames_resize;
 float autocvar_hud_shownames_mindistance;
 float autocvar_hud_shownames_maxdistance;
 bool autocvar_hud_shownames_antioverlap;
-float autocvar_hud_shownames_antioverlap_distance;
+float autocvar_hud_shownames_antioverlap_minalpha = 0.4;
 float autocvar_hud_shownames_offset;
 
 entityclass(ShowNames);

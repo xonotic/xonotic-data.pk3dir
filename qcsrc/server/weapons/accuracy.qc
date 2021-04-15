@@ -84,21 +84,7 @@ void accuracy_resend(entity e)
 //.float hit_time;
 .float fired_time;
 
-void roundaccuracy_clear(entity this)
-{
-	if (IS_INDEPENDENT_PLAYER(this)) return;
-	entity ra = this.roundaccuracy;
-	
-	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
-		ra.accuracy_frags[w] = 0;
-		ra.accuracy_hit[w] = 0;
-		ra.accuracy_fired[w] = 0;
-		ra.accuracy_cnt_hit[w] = 0;
-		ra.accuracy_cnt_fired[w] = 0;
-	}
-}
-
-void accuracy_add(entity this, Weapon w, int fired, int hit)
+void accuracy_add(entity this, Weapon w, float fired, float hit)
 {
 	if (IS_INDEPENDENT_PLAYER(this)) return;
 	entity a = CS(this).accuracy;
@@ -142,8 +128,7 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 {
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
-	if (warmup_stage) return false;
-	if (game_stopped) return false;
+	if (warmup_stage || game_stopped) return false;
 
 	// damage to dead/frozen players is good only if it happens in the frame they get killed / frozen
 	// so that stats for weapons that shoot multiple projectiles per shot are properly counted

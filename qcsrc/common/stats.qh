@@ -163,7 +163,7 @@ REGISTER_STAT(DARK_ORB_ALPHA, float)
 REGISTER_STAT(TKA_BALLSTATUS, int) //LegendGuard adds STAT from Mario/team_keepaway 15-02-2021
 
 #ifdef SVQC
-float autocvar_sv_showfps = 5;
+float autocvar_sv_showfps = 0;
 #endif
 REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 

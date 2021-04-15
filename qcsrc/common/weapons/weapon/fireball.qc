@@ -79,8 +79,11 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
-	if(e != this.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
 	{
+		if(e == this.realowner) continue;
+		if(e.takedamage != DAMAGE_AIM) continue;
+		if(IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)) continue;
+
 		p = e.origin;
 		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
 		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);

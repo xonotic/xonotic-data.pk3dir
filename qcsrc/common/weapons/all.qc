@@ -61,11 +61,11 @@ WepSet _WepSet_FromWeapon(int a)
 				if (a >= 24)
 				{
 					a -= 24;
-					return '0 0 1' * (2 ** a);
+					return '0 0 1' * BIT(a);
 				}
-			return '0 1 0' * (2 ** a);
+			return '0 1 0' * BIT(a);
 		}
-	return '1 0 0' * (2 ** a);
+	return '1 0 0' * BIT(a);
 }
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)
@@ -654,8 +654,8 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 cl_cmd weapon_find weapon");
-			LOG_HELP("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
+			LOG_HELP("Usage:^3 cl_cmd weapon_find <weapon>");
+			LOG_HELP("  Where <weapon> is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
 	}

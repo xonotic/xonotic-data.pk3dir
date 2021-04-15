@@ -1,11 +1,15 @@
 #pragma once
 
 #include "ctf.qh"
-
 #include <common/items/item/pickup.qh>
 #include <common/mutators/base.qh>
 #include <common/gamemodes/sv_rules.qh>
 
+CLASS(Flag, Pickup)
+    ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
+    ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
+ENDCLASS(Flag)
+Flag CTF_FLAG;
 void ctf_Initialize();
 
 int autocvar_captureleadlimit_override;
@@ -31,12 +35,6 @@ void ctf_RespawnFlag(entity flag);
 // score rule declarations
 const int ST_CTF_CAPS = 1;
 
-CLASS(Flag, Pickup)
-    ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
-    ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
-ENDCLASS(Flag)
-Flag CTF_FLAG;
-STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
 void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?

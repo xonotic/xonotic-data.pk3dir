@@ -40,6 +40,8 @@ float checkrules_suddendeathend;
 // flag set on worldspawn so that the code knows if it is dedicated or not
 bool server_is_dedicated;
 
+int world_initialized;
+
 string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
@@ -48,8 +50,7 @@ string modname;
 
 string gamemode_name;
 
-int fragsleft;
-int fragsleft_last;
+string record_type;
 
 string clientstuff;
 

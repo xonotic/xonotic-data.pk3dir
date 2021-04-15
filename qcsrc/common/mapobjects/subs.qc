@@ -232,7 +232,7 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 	{
 		delete(this.move_controller);
 	}
-	controller = new(SUB_CalcMove_controller);
+	controller = new_pure(SUB_CalcMove_controller);
 	controller.owner = this;
 	this.move_controller = controller;
 	controller.platmovetype = this.platmovetype;

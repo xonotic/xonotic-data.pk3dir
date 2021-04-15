@@ -130,7 +130,7 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 	}
 	if(score)
 		if(teamscores_label(scorefield) != "")
-			s.SendFlags |= (2 ** scorefield);
+			s.SendFlags |= BIT(scorefield);
 	return (s.(teamscores(scorefield)) += score);
 }
 
@@ -276,8 +276,8 @@ float PlayerScore_Clear(entity player)
 	sk = CS(player).scorekeeper;
 	FOREACH(Scores, true, {
 		if(sk.(scores(it)) != 0)
-			//if(scores_label(it) != "")
-			sk.SendFlags |= (2 ** (i % 16));
+			if(scores_label(it) != "")
+				sk.SendFlags |= BIT(i % 16);
 		if(i != SP_ELO.m_id)
 			sk.(scores(it)) = 0;
 	});
@@ -294,8 +294,8 @@ void Score_ClearAll()
 		if (!sk) continue;
 		FOREACH(Scores, true, {
 			if(sk.(scores(it)) != 0)
-				//if(scores_label(it) != "")
-				sk.SendFlags |= (2 ** (i % 16));
+				if(scores_label(it) != "")
+					sk.SendFlags |= BIT(i % 16);
 			if(i != SP_ELO.m_id)
 				sk.(scores(it)) = 0;
 		});
@@ -308,8 +308,8 @@ void Score_ClearAll()
 		for(int j = 0; j < MAX_TEAMSCORE; ++j)
 		{
 			if(sk.(teamscores(j)) != 0)
-				//if(teamscores_label(j) != "")
-				sk.SendFlags |= (2 ** j);
+				if(teamscores_label(j) != "")
+					sk.SendFlags |= BIT(j);
 			sk.(teamscores(j)) = 0;
 		}
 	}
@@ -356,8 +356,8 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	{
 		return s.(scores(scorefield));
 	}
-	//if(scores_label(scorefield) != "")
-	s.SendFlags |= (2 ** (scorefield.m_id % 16));
+	if(scores_label(scorefield) != "")
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	if(!warmup_stage)
 		PlayerStats_GameReport_Event_Player(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
 	s.(scores(scorefield)) += score;
@@ -382,7 +382,7 @@ float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
 		return oldscore;
 
 	if(scores_label(scorefield) != "")
-		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	s.(scores(scorefield)) = score;
 	return s.(scores(scorefield));
 }
