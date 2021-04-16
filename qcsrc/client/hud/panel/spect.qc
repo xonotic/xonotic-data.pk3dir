@@ -178,7 +178,7 @@ void HUD_SpectHUD()
 	}
 	
 	if(!teamplay) return;
-
+	
 	if (autocvar_hud_spectatorteamdisplay)
 	{
 		// Set vars

@@ -44,6 +44,7 @@ void accuracy_resend(entity e);
 
 // update accuracy stats
 void accuracy_add(entity e, Weapon w, float fired, float hit);
+void roundaccuracy_clear(entity this);
 
 // helper
 bool accuracy_isgooddamage(entity attacker, entity targ);

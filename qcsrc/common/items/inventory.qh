@@ -39,19 +39,28 @@ STATIC_INIT(Inventory)
 #ifdef CSQC
 #include <client/hud/hud.qh>
 
-Inventory g_inventory;
+//Inventory g_inventory;
 Inventory inventoryslots[255];
 float last_pickup_timer;
 entity last_pickup_item;
 int last_pickup_times;
+
+void Inventory_remove(entity this)
+{
+    // TODO z411
+    //if(g_inventory == this)
+    //    g_inventory = NULL;
+}
+
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
-    g_inventory = this;
+    //g_inventory = this;
+    //this.entremove = Inventory_remove;
 	
 	float entnum = ReadByte() - 1;
 	inventoryslots[entnum] = this;
-	
+
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
@@ -147,7 +156,7 @@ bool Inventory_Send(Inventory this, Client to, int sf)
     TC(Inventory, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     TC(PlayerState, this.owner);
-	
+    
     // z411 send entity number
     WriteByte(MSG_ENTITY, etof(this.owner.m_client));
     
@@ -167,8 +176,7 @@ void Inventory_new(PlayerState this)
     if(!g_duel) setcefc(inv, Inventory_customize);
     Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
 }
-
-void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
+void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 
 void Inventory_clear(entity store)
@@ -183,4 +191,16 @@ void Inventory_clear(entity store)
 
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
 void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
+
+void Inventory_ClearAll() {
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		entity store = PS(it);
+		if (store)
+		{
+			Inventory_clear(store.inventory);
+			Inventory_update(store);
+		}
+	});
+}
 #endif

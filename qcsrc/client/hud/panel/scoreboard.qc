@@ -111,7 +111,6 @@ float autocvar_hud_panel_scoreboard_minwidth = 0.4;
 bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
-
 int average_ping[NUM_TEAMS];
 
 // mode 0: returns translated label
@@ -506,11 +505,11 @@ void Cmd_Scoreboard_SetFields(int argc)
 			// fields without a label (not networked via the score system)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
-			case "cn": sbt_field[sbt_num_fields] = SP_COUNTRY; break; //LegendGuard adds cn label for Country column 05-04-2021
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
 			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
 			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
+			case "cn": sbt_field[sbt_num_fields] = SP_COUNTRY; break; //LegendGuard adds cn label for Country column 05-04-2021
 			case "frags": sbt_field[sbt_num_fields] = SP_FRAGS; break;
 			default: // fields with a label
 			{
@@ -716,7 +715,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			tmp = bound(0, f / 0.2 + tmp / 0.04, 1); // 20% is REALLY BAD pl
 			sbt_field_rgb = '1 0.5 0.5' - '0 0.5 0.5' * tmp;
 			return str;
-		
+
 		//LegendGuard adds Country REGISTER in the switch 05-04-2021
 		case SP_COUNTRY:
 			str = Scoreboard_GetCountrycode(pl);
@@ -778,7 +777,6 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
-
 			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
 			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
 			return ftos(fps);
@@ -845,7 +843,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
 		if(sbt_fixcolumnwidth_iconlen < f)
 			sbt_fixcolumnwidth_iconlen = f;
 	}
-
 
 	if(sbt_fixcolumnwidth_iconlen != 0)
 	{
@@ -1012,7 +1009,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon3 != "") //LegendGuard adds conditional for Country column 05-04-2021
 			drawpic(pos - tmp, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
-
 	}
 
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -1788,6 +1784,7 @@ STATIC_INIT(default_order_items_label)
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
+	Inventory g_inventory = inventoryslots[current_player];
 	scoreboard_itemstats_fade_alpha = min(scoreboard_fade_alpha, scoreboard_itemstats_fade_alpha + frametime * 10);
 
 	int disowned_cnt = 0;
@@ -2110,6 +2107,8 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 bool have_item_stats;
 bool Scoreboard_ItemStats_WouldDraw(float ypos)
 {
+	Inventory g_inventory = inventoryslots[current_player];
+	
 	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
 		return false;
 	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)

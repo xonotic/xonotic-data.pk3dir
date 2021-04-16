@@ -8,6 +8,9 @@ int autocvar_g_freezetag_point_leadlimit;
 bool autocvar_g_freezetag_team_spawns;
 string autocvar_g_freezetag_weaponarena = "most_available";
 
+bool autocvar_g_freezetag_round_respawn;
+bool autocvar_g_freezetag_round_stop;
+
 const int ST_FT_ROUNDS = 1;
 
 void freezetag_Initialize();
@@ -43,3 +46,4 @@ float autocvar_g_freezetag_revive_speed;
 float autocvar_g_freezetag_revive_time_to_score = 1.5;
 bool autocvar_g_freezetag_revive_nade;
 float autocvar_g_freezetag_revive_nade_health;
+bool autocvar_g_freezetag_revive_respawn;

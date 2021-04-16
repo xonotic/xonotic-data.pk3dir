@@ -221,7 +221,7 @@ void VoteCount(float first_count)
 		// z411
 		if(vote_target_type == VOTE_TARGET_TEAM && it.team != vote_caller.team) continue;
 		if(vote_target_type == VOTE_TARGET_SINGLE && it != vote_target) continue;
-
+		
 		++vote_player_count;
 		if (IS_PLAYER(it))   ++vote_real_player_count;
 		switch (it.vote_selection)
@@ -423,6 +423,7 @@ void ReadyRestart_think(entity this)
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
+	Inventory_ClearAll();
 	delete(this);
 }
 
@@ -460,7 +461,10 @@ void ReadyRestart_force()
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { it.ready = false; });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+		it.ready = false;
+		Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_MISSING_READY);
+	});
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
@@ -485,6 +489,7 @@ void ReadyRestart_force()
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
+	round_handler_Activate(true);
 	if (!sv_ready_restart_after_countdown) reset_map(true);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
@@ -496,7 +501,10 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) Score_ClearAll();
+	if (!sv_ready_restart_after_countdown) {
+		Score_ClearAll();
+		//Inventory_ClearAll();
+	}
 	ReadyRestart_force();
 }
 
@@ -698,6 +706,8 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		case MUT_VOTEPARSE_UNACCEPTABLE: { return 0; }
 	}
 
+	vote_target_type = VOTE_TARGET_ALL;
+	
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
 		case "kick":
@@ -716,7 +726,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				if (first_command == "kickban")
 					command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
 
-				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
+				vote_parsed_command = strcat("defer 2 ", first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = sprintf("^1%s #%d ^7%s^1 %s", first_command, etof(victim), victim.netname, reason);
 			}
 			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return 0; }
@@ -730,12 +740,12 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
-			vote_parsed_command = strcat("gotomap ", vote_command);
+			vote_parsed_command = strcat("defer 2 gotomap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
 			break;
 		}
-
+		
 		// z411 team calls
 		case "teamname":
 		{
@@ -780,10 +790,13 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		}
 
 		case "restart":
+		case "shuffleteams":
+		case "allready":
+		case "endmatch":
 		{
 			// add a delay so that vote result can be seen and announcer can be heard
 			// if the vote is accepted
-			vote_parsed_command = strcat("defer 1 ", vote_command);
+			vote_parsed_command = strcat("defer 2 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;

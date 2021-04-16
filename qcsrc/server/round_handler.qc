@@ -44,6 +44,7 @@ void round_handler_Think(entity this)
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;
+				FOREACH_CLIENT(IS_PLAYER(it), { roundaccuracy_clear(it); });
 				if (this.roundStart) this.roundStart();
 				return;
 			}

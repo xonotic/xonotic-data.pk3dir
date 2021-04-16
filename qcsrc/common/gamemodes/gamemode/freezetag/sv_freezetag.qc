@@ -106,7 +106,6 @@ int freezetag_getWinnerTeam()
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
-//z411
 entity freezetag_LastPlayer(float tm)
 {
 	entity last_pl = NULL;
@@ -128,12 +127,15 @@ bool freezetag_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_OVER);
+		
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
 			it.freezetag_revive_time = 0;
 			nades_Clear(it);
 		});
-		game_stopped = true;
+		if(autocvar_g_freezetag_round_stop)
+			game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return true;
 	}
@@ -146,21 +148,21 @@ bool freezetag_CheckWinner()
 	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
-        //z411
-        entity last_pl = freezetag_LastPlayer(winner_team);
+		entity last_pl = freezetag_LastPlayer(winner_team);
 		if(last_pl) {
 			Give_Medal(last_pl, DEFENSE);
 		}
-        // ----
-
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+	
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_SCORES));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_SCORES));
 		TeamScore_AddToTeam(winner_team, ST_FT_ROUNDS, +1);
+		if(fragsleft > 1) AnnounceScores(winner_team);
 	}
 	else if(winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_TIED);
 	}
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -169,7 +171,8 @@ bool freezetag_CheckWinner()
 		nades_Clear(it);
 	});
 
-	game_stopped = true;
+	if(autocvar_g_freezetag_round_stop)
+		game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return true;
 }
@@ -195,8 +198,10 @@ void freezetag_LastPlayerForTeam_Notify(entity this)
 	if(round_handler_IsRoundStarted())
 	{
 		entity pl = freezetag_LastPlayerForTeam(this);
-		if(pl)
+		if(pl) {
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+			Send_Notification(NOTIF_ONE, pl, MSG_ANNCE, ANNCE_ALONE);
+		}
 	}
 }
 
@@ -463,9 +468,14 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		CS(it).killcount = 0;
-		it.freezetag_revive_time = 0;
-		it.freezetag_frozen_timeout = -1;
-		PutClientInServer(it);
+		
+		if(autocvar_g_freezetag_round_respawn) {
+			it.freezetag_frozen_timeout = -1;
+			PutClientInServer(it);
+		} else {
+			ResetPlayerResources(it);
+		}
+		
 		it.freezetag_frozen_timeout = 0;
 	});
 	freezetag_count_alive_players();
@@ -482,6 +492,12 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 {
 	entity targ = M_ARGV(0, entity);
 	targ.freezetag_frozen_time = 0;
+	
+	if(autocvar_g_freezetag_revive_respawn) {
+		targ.freezetag_frozen_timeout = -1;
+		PutClientInServer(targ);
+	}
+	
 	targ.freezetag_frozen_timeout = 0;
 }
 
@@ -633,7 +649,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ONE, revivers_first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, revivers_first.netname);
 			Give_Medal(revivers_first, ASSIST);
-            if(autocvar_sv_eventlog)
+			if(autocvar_sv_eventlog)
 			{
 				string revivers = "";
 				for(entity it = revivers_first; it; it = it.chain)

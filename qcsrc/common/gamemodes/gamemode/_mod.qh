@@ -16,4 +16,3 @@
 #include <common/gamemodes/gamemode/onslaught/_mod.qh>
 #include <common/gamemodes/gamemode/race/_mod.qh>
 #include <common/gamemodes/gamemode/tdm/_mod.qh>
-#include <common/gamemodes/gamemode/tka/_mod.qh> //LegendGuard adds _mod.qh from Mario/team_keepaway 15-02-2021

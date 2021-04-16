@@ -136,7 +136,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
-
+	
 	if(IS_PLAYER(player))
 	{
 		if (player.race_penalty)

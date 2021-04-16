@@ -675,7 +675,6 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_CA) \
 	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
 	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
-	GAMETYPE(MAPINFO_TYPE_TEAMKEEPAWAY) \
 	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
 	GAMETYPE(MAPINFO_TYPE_LMS) \
 	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
@@ -684,7 +683,6 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
-	//LegendGuard adds GAMETYPE for menu from Mario/team_keepaway 15-02-2021
 	/**/
 
 // hidden gametypes come last so indexing always works correctly

@@ -845,7 +845,9 @@ void PutClientInServer(entity this)
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
-
+	// send team names
+	if(teamplay && IS_REAL_CLIENT(this))
+		send_TeamNames(MSG_ONE, this);
 	bot_relinkplayerlist();
 }
 

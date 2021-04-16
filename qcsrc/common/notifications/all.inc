@@ -509,6 +509,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(SPECTATE_WARNING,                        N_CONSOLE,  0, 1, "f1secs", "",     "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "")
 
     MSG_INFO_NOTIF(SUPERWEAPON_PICKUP,                      N_CONSOLE,  1, 0, "s1", "s1",       "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "")
+
     MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou cannot change to a larger team"), "")
     MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou are not allowed to change teams"), "")
 
@@ -838,6 +839,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(SUPERWEAPON_BROKEN,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have broken down"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
+
     MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
     MSG_CENTER_NOTIF(TEAMCHANGE_AUTO,                   N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing team in ^COUNT"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_SPECTATE,               N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Spectating in ^COUNT"), "")

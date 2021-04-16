@@ -166,7 +166,6 @@ ENTCS_PROP(ACTIVEWEPID, false, activewepid, activewepid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.activewepid); },
 	{ ent.activewepid = ReadByte(); })
 
-
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0, ENTCS_PRIVATEMASK = 0;
