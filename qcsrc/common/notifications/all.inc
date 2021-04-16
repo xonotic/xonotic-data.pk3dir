@@ -415,6 +415,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 disconnected"), "")
     MSG_INFO_NOTIF(QUIT_KICK_IDLING,                        N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for idling"), "")
+    MSG_INFO_NOTIF(MOVETOSPEC_IDLING,                       N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was moved to spectator for idling"), "")
     MSG_INFO_NOTIF(QUIT_KICK_SPECTATING,                    N_CONSOLE,  0, 0, "", "",           "",             _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "")
     MSG_INFO_NOTIF(QUIT_KICK_TEAMKILL,                      N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for excessive teamkilling"), "")
     MSG_INFO_NOTIF(QUIT_SPECTATE,                           N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 is now spectating"), "")
@@ -657,6 +658,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(DEATH_TEAMKILL_FRAGGED,            N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate"))
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "")
+    MSG_CENTER_NOTIF(MOVETOSPEC_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", _("^K1Stop idling!\n^BGMoving to spectator in ^COUNT..."), "")
 
     MSG_CENTER_NOTIF(DOOR_LOCKED_NEED,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou need %s^BG!"), "")
     MSG_CENTER_NOTIF(DOOR_LOCKED_ALSONEED,              N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou also need %s^BG!"), "")
