@@ -594,6 +594,7 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 	float damage = M_ARGV(4, float);
 	vector force = M_ARGV(6, vector);
 	string corpsemessagestrcat = "";
+	string corpsemsginfo = "";
 
 	if (autocvar_g_mmm_karma_damageactive != false)
 	{
@@ -632,13 +633,13 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 				target.activekillerrole = false;
 			}
 
-			string killedbyphrase = strcat("\n^3Killed by:^7 ", target.whokilled, target.killerrole); 
-			string wepkilledphrase = strcat("\n^3Cause:^7 ", target.killedwithweapon);
+			string killedbyphrase = strcat("^3Killed by:^7 ", target.whokilled, target.killerrole); 
+			string wepkilledphrase = strcat("^3Cause:^7 ", target.killedwithweapon);
 			if (target.whokilled == "")
 			{
 				killedbyphrase = "";
 				if (target.killedwithweapon == "")
-					wepkilledphrase = "\n^3Cause:^7 UNKNOWN CAUSE";
+					wepkilledphrase = "^3Cause:^7 UNKNOWN CAUSE";
 			}
 
 			damage = 0;
@@ -646,24 +647,27 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 			if (target.mmm_status == MMM_STATUS_CIVILIAN)
 			{
 				//try to add centerprint message for chat privately if possible
-				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
+				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", "\n", killedbyphrase, "\n", wepkilledphrase);
+				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "^3Role: ^2Civilian", killedbyphrase, wepkilledphrase);
 				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
-				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemessagestrcat);
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemsginfo);
 			}
 			else if (target.mmm_status == MMM_STATUS_MURDERER)
 			{
-				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
+				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", "\n", killedbyphrase, "\n", wepkilledphrase);
+				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "^3Role: ^1Murderer", killedbyphrase, wepkilledphrase);
 				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
-				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemessagestrcat);
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemsginfo);
 			}
 			else if (target.mmm_status == MMM_STATUS_SLEUTH)
 			{
-				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
+				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", "\n", killedbyphrase, "\n", wepkilledphrase);
+				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "^3Role: ^4Sleuth", killedbyphrase, wepkilledphrase);
 				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
-				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemessagestrcat);
+				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemsginfo);
 			}
 			attacker.investigated = true;
 		}
@@ -811,11 +815,7 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerDies)
 	frag_target.health = 0;
 	
 	if (!warmup_stage)
-	{
 		eliminatedPlayers.SendFlags |= 1;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
-	}
 	
 	//if(frag_attacker.mmm_status == frag_target.mmm_status)
 	// killed an ally! punishment is sentenced
