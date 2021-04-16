@@ -365,8 +365,6 @@ void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
 
-void checkSpectatorBlock(entity this);
-
 void PlayerUseKey(entity this);
 
 void FixClientCvars(entity e);

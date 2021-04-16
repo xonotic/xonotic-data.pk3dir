@@ -2095,23 +2095,6 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
-/**
- * Checks whether the client is an observer or spectator, if so, he will get kicked after
- * g_maxplayers_spectator_blocktime seconds
- */
-void checkSpectatorBlock(entity this)
-{
-	if(IS_SPEC(this) || IS_OBSERVER(this))
-	if(!this.caplayer)
-	if(IS_REAL_CLIENT(this))
-	{
-		if( time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
-			dropclient(this);
-		}
-	}
-}
-
 void PrintWelcomeMessage(entity this)
 {
 	if(CS(this).motd_actived_time == 0)
@@ -2475,12 +2458,17 @@ void PlayerPreThink (entity this)
 	if (frametime) {
 		// physics frames: update anticheat stuff
 		anticheat_prethink(this);
-	}
 
-	if (blockSpectators && frametime) {
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
-		checkSpectatorBlock(this);
+		if (blockSpectators && IS_REAL_CLIENT(this)
+			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !this.caplayer
+			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+			dropclient(this);
+			return;
+		}
 	}
 
 	zoomstate_set = false;
