@@ -241,13 +241,6 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
-		if (autocvar_sv_maxidle_playertospectator > 0 && CS(this).idlekick_lasttimeleft)
-		{
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_IDLING);
-			CS(this).idlekick_lasttimeleft = 0;
-			CS(this).parm_idlesince = time;
-		}
-
 		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
@@ -2751,7 +2744,6 @@ void PlayerPostThink (entity this)
 					if (this.caplayer)
 						this.caplayer = 0;
 					PutObserverInServer(this);
-					CS(this).parm_idlesince = time;
 				}
 				else
 				{

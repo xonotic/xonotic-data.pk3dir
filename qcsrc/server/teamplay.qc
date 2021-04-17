@@ -214,32 +214,30 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		return false;
 	}
 	LogTeamChange(player.playerid, player.team, type);
-	if (team_index != old_team_index)
+	if (team_index == -1)
+	{
+		if (autocvar_sv_maxidle_playertospectator > 0 && CS(player).idlekick_lasttimeleft)
+		{
+			// centerprint is killed and timestamps are reset here to ensure
+			// it's done even when manually speccing during the countdown
+			Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_IDLING);
+			CS(player).parm_idlesince = time;
+			CS(player).idlekick_lasttimeleft = 0;
+		}
+		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
+		}
+	}
+	else if (team_index != old_team_index)
 	{
 		PlayerScore_Clear(player);
-		if (team_index != -1)
-		{
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(
-				player.team, INFO_JOIN_PLAY_TEAM), player.netname);
-		}
-		else
-		{
-			if (!CS(player).just_joined)
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
-					player.netname);
-			}
-		}
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
 		KillPlayerForTeamChange(player);
 		if (!IS_BOT_CLIENT(player))
 		{
 			TeamBalance_AutoBalanceBots();
 		}
-	}
-	else if (team_index == -1)
-	{
-		if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 	}
 	return true;
 }
