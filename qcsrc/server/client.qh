@@ -46,6 +46,7 @@ float autocvar_gameversion_max;
 string autocvar_hostname;
 int autocvar_spawn_debug;
 string autocvar_sv_motd;
+string autocvar_sv_motd_permanent;
 int autocvar_sv_name_maxlength = 64;
 bool autocvar_sv_servermodelsonly;
 int autocvar_sv_spectate;

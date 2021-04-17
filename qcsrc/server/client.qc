@@ -889,7 +889,8 @@ void ClientInit_misc(entity this)
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 	
 	// z411 send full hostname
-	WriteString(channel, (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
+	WriteString(channel, autocvar_hostname_full);
+	WriteString(channel, autocvar_sv_motd_permanent);
 }
 
 void ClientInit_CheckUpdate(entity this)

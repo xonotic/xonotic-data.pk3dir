@@ -11,7 +11,7 @@ void HUD_InfoMessages_Export(int fh)
 	HUD_Write_Cvar("hud_panel_infomessages_flip");
 }
 
-float autocvar_hud_panel_infomessages_group0 = 1;
+//float autocvar_hud_panel_infomessages_group0 = 1;
 float autocvar_hud_panel_infomessages_group_fadetime = 0.4;
 float autocvar_hud_panel_infomessages_group_time = 6;
 const int IMG_COUNT = 1; // number of InfoMessage Groups
@@ -94,7 +94,7 @@ void HUD_InfoMessages()
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
 			InfoMessage(s);*/
 
-			if(autocvar_hud_panel_infomessages_group0)
+			/*if(autocvar_hud_panel_infomessages_group0)
 			{
 				img_curr_group = 0;
 				switch(img_select(img_curr_group) % 3)
@@ -117,7 +117,7 @@ void HUD_InfoMessages()
 						break;
 				}
 				InfoMessage(s);
-			}
+			}*/
 
 			//bool mutator_returnvalue = MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
 			//pos = M_ARGV(0, vector);
@@ -219,6 +219,9 @@ void HUD_InfoMessages()
 		}
 
 		// z411
+		if (motd_permanent != "")
+			InfoMessage(motd_permanent);
+		
 		MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
 	}
 	else
