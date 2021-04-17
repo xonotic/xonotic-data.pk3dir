@@ -2740,14 +2740,14 @@ void PlayerPostThink (entity this)
 			if (timeleft <= 0) {
 				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
 				{
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					if (this.caplayer)
 						this.caplayer = 0;
 					PutObserverInServer(this);
 				}
 				else
 				{
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
 					dropclient(this);
 				}
 				return;
