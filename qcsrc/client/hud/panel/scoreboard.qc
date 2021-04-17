@@ -510,6 +510,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
 			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
 			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
+			case "cn": sbt_field[sbt_num_fields] = SP_COUNTRY; break; //LegendGuard adds cn label for Country column 05-04-2021
 			case "frags": sbt_field[sbt_num_fields] = SP_FRAGS; break;
 			default: // fields with a label
 			{
@@ -721,6 +722,11 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			str = Scoreboard_GetCountrycode(pl);
 			return str;
 
+		//LegendGuard adds Country REGISTER in the switch 05-04-2021
+		case SP_COUNTRY:
+			str = Scoreboard_GetCountrycode(pl);
+			return str;
+
 		case SP_NAME:
 			str = Scoreboard_GetName(pl);
 			if (autocvar_hud_panel_scoreboard_playerid)
@@ -844,7 +850,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
 		if(sbt_fixcolumnwidth_iconlen < f)
 			sbt_fixcolumnwidth_iconlen = f;
 	}
-
 
 	if(sbt_fixcolumnwidth_iconlen != 0)
 	{
@@ -1011,7 +1016,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon3 != "") //LegendGuard adds conditional for Country column 05-04-2021
 			drawpic(pos - tmp, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
-
 	}
 
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -1288,6 +1292,19 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			tmp_in.x += stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
 		drawpic(tmp_in, sbt_field_icon0, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
+	//LegendGuard adds a conditional sentence for country column 05-04-2021
+	// Player country icon/flag
+	if(sbt_field_icon3 != "") {
+		vector rsz = draw_getimagesize(sbt_field_icon3);
+		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;
+		if(invert)
+			tmp_in.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen + duel_name_fontsize.x * 0.5;
+		else
+			tmp_in.x += stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
+		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
+		drawpic(tmp_in, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	
 	//LegendGuard adds a conditional sentence for country column 05-04-2021

@@ -3,6 +3,8 @@
 #include <client/draw.qh>
 #include <common/items/inventory.qh>
 
+bool autocvar_hud_itempickupdisplay = true; //LegendGuard adds a bool to enable/disable item pickup display HUD 06-04-2021
+
 // Chat (#12)
 
 void HUD_Chat_Export(int fh)
@@ -103,33 +105,36 @@ void HUD_Chat()
 	}
 	
 	// z411 items
-	float stat_last_pickup = STAT(LAST_PICKUP);
-	pos.y += mySize.y;
-	entity it = last_pickup_item;
-	
-	if(stat_last_pickup && stat_last_pickup > time - 3 && it) {
-		float a, y;
-		string str1, str2, icon;
-		vector sz, sz2;
-		vector pickupsize = chatsize * 1.25;
-		vector iconsize = chatsize * 2;
+	if (autocvar_hud_itempickupdisplay)
+	{
+		float stat_last_pickup = STAT(LAST_PICKUP);
+		pos.y += mySize.y;
+		entity it = last_pickup_item;
 		
-		icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
-		sz = draw_getimagesize(icon);
-		sz2 = vec2(iconsize.y*(sz.x/sz.y), iconsize.y);
-		str1 = seconds_tostring(last_pickup_timer);
-		str2 = ((last_pickup_times > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_times) : it.m_name);
-		y = (iconsize.y - pickupsize.y) / 2;
-		
-		if(time < stat_last_pickup + 3 - 0.5)
-			a = 1;
-		else
-			a = (stat_last_pickup + 3 - time) / 0.5;
-		
-		drawstring(pos + eY * y, str1, pickupsize, '1 1 1', a, DRAWFLAG_NORMAL);
-		pos.x += stringwidth(str1, false, pickupsize) + pickupsize.x * 0.25;
-		drawpic(pos, icon, sz2, '1 1 1', a, DRAWFLAG_NORMAL);
-		pos.x += sz2.x + pickupsize.x * 0.25;
-		drawstring(pos + eY * y, str2, pickupsize, '1 1 1', a, DRAWFLAG_NORMAL);
+		if(stat_last_pickup && stat_last_pickup > time - 3 && it) {
+			float a, y;
+			string str1, str2, icon;
+			vector sz, sz2;
+			vector pickupsize = chatsize * 1.25;
+			vector iconsize = chatsize * 2;
+			
+			icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
+			sz = draw_getimagesize(icon);
+			sz2 = vec2(iconsize.y*(sz.x/sz.y), iconsize.y);
+			str1 = seconds_tostring(last_pickup_timer);
+			str2 = ((last_pickup_times > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_times) : it.m_name);
+			y = (iconsize.y - pickupsize.y) / 2;
+			
+			if(time < stat_last_pickup + 3 - 0.5)
+				a = 1;
+			else
+				a = (stat_last_pickup + 3 - time) / 0.5;
+			
+			drawstring(pos + eY * y, str1, pickupsize, '1 1 1', a, DRAWFLAG_NORMAL);
+			pos.x += stringwidth(str1, false, pickupsize) + pickupsize.x * 0.25;
+			drawpic(pos, icon, sz2, '1 1 1', a, DRAWFLAG_NORMAL);
+			pos.x += sz2.x + pickupsize.x * 0.25;
+			drawstring(pos + eY * y, str2, pickupsize, '1 1 1', a, DRAWFLAG_NORMAL);
+		}
 	}
 }
