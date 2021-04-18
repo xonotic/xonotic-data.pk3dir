@@ -216,7 +216,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		else
 			tmp.x += teamscore_size.x;
 	
-		drawfill(tmp, vec2(health, health_sz.y), '1 0 0', 0.7, DRAWFLAG_NORMAL);
+		drawfill(tmp, vec2(health, health_sz.y), autocvar_hud_progressbar_health_color, 0.7, DRAWFLAG_NORMAL);
 	}
 	
 	if(armor) {
@@ -228,7 +228,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		else
 			tmp.x += teamscore_size.x;
 		
-		drawfill(tmp, vec2(armor, armor_sz.y), '0 1 0', 0.7, DRAWFLAG_NORMAL);
+		drawfill(tmp, vec2(armor, armor_sz.y), autocvar_hud_progressbar_armor_color, 0.7, DRAWFLAG_NORMAL);
 	}
 	
 	// Player name
