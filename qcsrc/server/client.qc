@@ -2702,6 +2702,7 @@ void PlayerPostThink (entity this)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
+	if (!intermission_running) // NextLevel() kills all centerprints after setting this true
 	{
 		int totalClients = 0;
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
