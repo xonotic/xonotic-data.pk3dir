@@ -2728,14 +2728,13 @@ void PlayerPostThink (entity this)
 			if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
 				maxidle_time = autocvar_sv_maxidle_playertospectator;
 			float timeleft = ceil(maxidle_time - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, maxidle_time - 1)) { // - 1 to support maxidle_time <= 10
-				if (!CS(this).idlekick_lasttimeleft)
-				{
-					if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
-						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
-					else
-						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
-				}
+			float countdown_time = max(min(10, maxidle_time - 1), ceil(maxidle_time * 0.33)); // - 1 to support maxidle_time <= 10
+			if (timeleft == countdown_time && !CS(this).idlekick_lasttimeleft)
+			{
+				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+				else
+					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
 			if (timeleft <= 0) {
 				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
@@ -2752,8 +2751,8 @@ void PlayerPostThink (entity this)
 				}
 				return;
 			}
-			else if (timeleft <= 10) {
-				if (timeleft != CS(this).idlekick_lasttimeleft)
+			else if (timeleft <= countdown_time) {
+				if (timeleft != CS(this).idlekick_lasttimeleft && timeleft <= 10)
 					Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
 				CS(this).idlekick_lasttimeleft = timeleft;
 			}
