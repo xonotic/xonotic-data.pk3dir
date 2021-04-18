@@ -14,9 +14,18 @@ void HUD_SpectHUD_Export(int fh)
 
 void HUD_SpectHUD_drawCurrentName(vector pos)
 {
+	vector tmp;
+	
+	tmp = pos;
 	string s = entcs_GetName(current_player);
-	pos.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
-	drawcolorcodedstring(pos, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
+	tmp.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
+	drawcolorcodedstring(tmp, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	tmp = pos;
+	s = "Spectating";
+	tmp.x -= stringwidth_colors(s, hud_fontsize) / 2;
+	tmp.y -= hud_fontsize.y;
+	drawcolorcodedstring(tmp, s, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 	
 void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert)
