@@ -648,7 +648,7 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 			{
 				//try to add centerprint message for chat privately if possible
 				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^2Civilian", "\n", killedbyphrase, "\n", wepkilledphrase);
-				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "^7; ^3Role: ^2Civilian", "^7; ", killedbyphrase, "^7; ", wepkilledphrase);
+				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "   ^3Role: ^2Civilian", "   ", killedbyphrase, "   ", wepkilledphrase);
 				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemsginfo);
@@ -656,7 +656,7 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 			else if (target.mmm_status == MMM_STATUS_MURDERER)
 			{
 				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^1Murderer", "\n", killedbyphrase, "\n", wepkilledphrase);
-				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "^7; ^3Role: ^1Murderer", "^7; ", killedbyphrase, "^7; ", wepkilledphrase);
+				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "   ^3Role: ^1Murderer", "   ", killedbyphrase, "   ", wepkilledphrase);
 				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemsginfo);
@@ -664,7 +664,7 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 			else if (target.mmm_status == MMM_STATUS_SLEUTH)
 			{
 				corpsemessagestrcat = strcat("^5DEAD PLAYER DETAILS^7: \n^3Name:^7 ", target.netname, "\n^3Role: ^4Sleuth", "\n", killedbyphrase, "\n", wepkilledphrase);
-				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "^7; ^3Role: ^4Sleuth", "^7; ", killedbyphrase, "^7; ", wepkilledphrase);
+				corpsemsginfo = strcat("^5DEAD PLAYER DETAILS^7: ^3Name:^7 ", target.netname, "   ^3Role: ^4Sleuth", "   ", killedbyphrase, "   ", wepkilledphrase);
 				//centerprint(attacker, strcat(BOLD_OPERATOR, corpsemessagestrcat));
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_MMM_CORPSEDETECTION, corpsemessagestrcat);
 				Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_INFO, INFO_MMM_CORPSEDETECTION, corpsemsginfo);
