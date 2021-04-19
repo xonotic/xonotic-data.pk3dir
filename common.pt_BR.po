@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-18 07:23+0200\n"
-"PO-Revision-Date: 2021-04-18 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-04-18 11:29+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -3026,7 +3026,7 @@ msgstr "^BG%s^F3 foi expulso por inatividade"
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^F3 was moved to spectator for idling"
-msgstr ""
+msgstr "^BG%s^F3 foi movido(a) para os espectadores por inatividade"
 
 #: qcsrc/common/notifications/all.inc:419
 msgid ""
@@ -4007,6 +4007,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectator in ^COUNT..."
 msgstr ""
+"^K1Pare de ficar AFK!\n"
+"^BGIndo para os espectadores em ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:663
 #, c-format
