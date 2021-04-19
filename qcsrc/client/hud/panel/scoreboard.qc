@@ -1065,7 +1065,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	int i = 0;
 	vector h_pos = item_pos;
 	vector h_size = vec2(panel_size.x, hud_fontsize.y * 1.25);
-	vector sz, f_size;
+	vector sz;
 
 	bool complete = (this_team == NUM_SPECTATOR);
 
@@ -1099,7 +1099,17 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			continue;
 		if(pl == ignored_pl)
 			continue;
-
+		
+		string flag_name = "";
+		vector flag_size = '0 0 0';
+		Scoreboard_GetField(pl, SP_COUNTRY);
+		
+		if(sbt_field_icon3 != "") {
+			sz = draw_getimagesize(sbt_field_icon3);
+			flag_name = sbt_field_icon3;
+			flag_size = vec2(hud_fontsize.x * (sz.x / sz.y), hud_fontsize.y);
+		}
+		
 		field = "";
 		if(this_team == NUM_SPECTATOR)
 		{
@@ -1141,13 +1151,9 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			}
 		}
 
-		Scoreboard_GetField(pl, SP_COUNTRY);
-		if(sbt_field_icon3 != "") {
-			sz = draw_getimagesize(sbt_field_icon3);
-			f_size = vec2(hud_fontsize.x * (sz.x / sz.y), hud_fontsize.y);
-
-			drawpic(pos, sbt_field_icon3, f_size, sbt_field_icon1_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
-			pos.x += f_size.x + hud_fontsize.x * 0.5;
+		if(flag_name != "") {
+			drawpic(pos, flag_name, flag_size, sbt_field_icon1_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos.x += flag_size.x + hud_fontsize.x * 0.5;
 		}
 
 		vector name_pos = pos;
