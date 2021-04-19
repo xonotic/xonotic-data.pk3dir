@@ -72,6 +72,49 @@ void BanCommand_banlist(int request)
 	}
 }
 
+void BanCommand_kickkick(int request, int argc, string command)
+{
+		switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2)
+			{
+				entity client = GetIndexedEntity(argc, 1);
+				float accepted = VerifyKickableEntity(client);
+				float reason_arg;
+				string reason;
+
+				if (accepted > 0)
+				{
+					reason_arg = next_token;
+
+					GET_BAN_REASON(reason, "No reason provided");
+
+					Ban_KickClient(client, reason);
+
+					return;
+				}
+				else
+				{
+					LOG_INFO("kick: ", GetClientErrorString(accepted, argv(1)), ".");
+				}
+			}
+		}
+
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd kickkick <client> [<reason>]");
+			LOG_HELP("  <client> is the entity number or name of the player to kick,");
+			LOG_HELP("  and <reason> is the string to label the ban with as reason for kicking.");
+			LOG_HELP("See also: ^2kick^7");
+			return;
+		}
+	}
+}
+
 void BanCommand_kickban(int request, int argc, string command)
 {
 	switch (request)
@@ -267,6 +310,7 @@ void BanCommand_(int request)
 #define BAN_COMMANDS(request, arguments, command) \
 	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
+	BAN_COMMAND("kickkick", BanCommand_kickkick(request, arguments, command), "Disconnect a client") \
 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
 	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \

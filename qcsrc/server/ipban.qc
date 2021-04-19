@@ -579,12 +579,20 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 	return true;
 }
 
+void Ban_KickClient(entity client, string reason)
+{
+	sprint(client, strcat("Kicked: ", reason, "\n"));
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK, client.netname);
+	dropclient(client);
+}
+
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
 {
 	string ip, id;
 	if(!Ban_GetClientIP(client))
 	{
 		sprint(client, strcat("Kickbanned: ", reason, "\n"));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK, client.netname);
 		dropclient(client);
 		return;
 	}
