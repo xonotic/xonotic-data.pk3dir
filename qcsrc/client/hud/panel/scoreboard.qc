@@ -436,9 +436,16 @@ void Cmd_Scoreboard_SetFields(int argc)
 				cvar_set("scoreboard_columns", SCOREBOARD_DEFAULT_COLUMNS);
 			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 		}
-		else if(argv(2) == "all")
+		else if(argv(2) == "all" || argv(2) == "ALL")
 		{
-			string s = "ping pl name |"; // scores without a label
+			string s = "ping pl name |"; // scores without label (not really scores)
+			if(argv(2) == "ALL")
+			{
+				// scores without label
+				s = strcat(s, " ", "sum");
+				s = strcat(s, " ", "kdratio");
+				s = strcat(s, " ", "frags");
+			}
 			FOREACH(Scores, true, {
 				if(it != ps_primary)
 				if(it != ps_secondary)
