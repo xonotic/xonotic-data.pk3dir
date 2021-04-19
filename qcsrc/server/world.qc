@@ -320,6 +320,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
+		BADCVAR("sv_motd_permanent");
 		
 		BADPREFIX("g_teamnames_");
 

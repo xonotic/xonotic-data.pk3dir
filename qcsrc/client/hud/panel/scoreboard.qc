@@ -505,6 +505,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 			// fields without a label (not networked via the score system)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
+			case "cn": sbt_field[sbt_num_fields] = SP_COUNTRY; break; //LegendGuard adds cn label for Country column 05-04-2021
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
 			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
@@ -715,6 +716,11 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			tmp = bound(0, f / 0.2 + tmp / 0.04, 1); // 20% is REALLY BAD pl
 			sbt_field_rgb = '1 0.5 0.5' - '0 0.5 0.5' * tmp;
 			return str;
+		
+		//LegendGuard adds Country REGISTER in the switch 05-04-2021
+		case SP_COUNTRY:
+			str = Scoreboard_GetCountrycode(pl);
+			return str;
 
 		//LegendGuard adds Country REGISTER in the switch 05-04-2021
 		case SP_COUNTRY:
@@ -777,6 +783,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
+
 			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
 			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
 			return ftos(fps);
@@ -1058,6 +1065,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	int i = 0;
 	vector h_pos = item_pos;
 	vector h_size = vec2(panel_size.x, hud_fontsize.y * 1.25);
+	vector sz;
 
 	bool complete = (this_team == NUM_SPECTATOR);
 
@@ -1091,7 +1099,17 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			continue;
 		if(pl == ignored_pl)
 			continue;
-
+		
+		string flag_name = "";
+		vector flag_size = '0 0 0';
+		Scoreboard_GetField(pl, SP_COUNTRY);
+		
+		if(sbt_field_icon3 != "") {
+			sz = draw_getimagesize(sbt_field_icon3);
+			flag_name = sbt_field_icon3;
+			flag_size = vec2(hud_fontsize.x * (sz.x / sz.y), hud_fontsize.y);
+		}
+		
 		field = "";
 		if(this_team == NUM_SPECTATOR)
 		{
@@ -1133,9 +1151,15 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			}
 		}
 
+		if(flag_name != "") {
+			drawpic(pos, flag_name, flag_size, sbt_field_icon1_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos.x += flag_size.x + hud_fontsize.x * 0.5;
+		}
+
 		vector name_pos = pos;
 		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 			name_pos.x += max(fieldsize, min_fieldsize) + 2 * fieldpadding + hud_fontsize.x * 0.25;
+
 		drawcolorcodedstring(name_pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		if(field != "")
 		{
@@ -1264,20 +1288,9 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	tmp_in.y += (duel_score_size.y - duel_name_fontsize.y) / 2;
 	drawcolorcodedstring(tmp_in, tmp_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
-	// Player icon/flag
-	if(sbt_field_icon0 != "") {
-		vector rsz = draw_getimagesize(sbt_field_icon0);
-		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;
-		if(invert)
-			tmp_in.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen + duel_name_fontsize.x * 0.5;
-		else
-			tmp_in.x += stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
-		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
-		drawpic(tmp_in, sbt_field_icon0, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-
 	//LegendGuard adds a conditional sentence for country column 05-04-2021
 	// Player country icon/flag
+	Scoreboard_GetField(pl, SP_COUNTRY);
 	if(sbt_field_icon3 != "") {
 		vector rsz = draw_getimagesize(sbt_field_icon3);
 		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;

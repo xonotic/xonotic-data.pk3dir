@@ -492,6 +492,13 @@ MACRO_END
 	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
 
 #ifdef CSQC
+// z411 TODO : This actually doesn't work very well.
+// This gets run before the client gets score updates so it works
+// fine when you're playing (because frags get updated first)
+// but it breaks a lot when you're spectating because
+// we sometimes get the new frag info at different times
+// (before or after we run this). A suggested fix would
+// be to do this sorting and comparison in the server.
 string notif_arg_frag_pos(int score)
 {
 	entity pl;

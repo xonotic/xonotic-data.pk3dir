@@ -6,8 +6,6 @@
 vector teamscore_size;
 vector teamscore_fontsize;
 vector teamname_fontsize;
-bool autocvar_hud_spectatorteamdisplay = true; //LegendGuard adds a bool to enable/disable team display HUD 06-04-2021
-bool autocvar_hud_spectatorplayernamedisplay = true; //LegendGuard adds a bool to enable/disable player name display HUD 06-04-2021
 
 void HUD_SpectHUD_Export(int fh)
 {
@@ -16,9 +14,18 @@ void HUD_SpectHUD_Export(int fh)
 
 void HUD_SpectHUD_drawCurrentName(vector pos)
 {
+	vector tmp;
+	
+	tmp = pos;
 	string s = entcs_GetName(current_player);
-	pos.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
-	drawcolorcodedstring(pos, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
+	tmp.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
+	drawcolorcodedstring(tmp, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	tmp = pos;
+	s = "Spectating";
+	tmp.x -= stringwidth_colors(s, hud_fontsize) / 2;
+	tmp.y -= hud_fontsize.y;
+	drawcolorcodedstring(tmp, s, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 	
 void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert)
@@ -154,6 +161,90 @@ void HUD_SpectHUD_drawTeamScore(vector pos, entity tm, vector rgb, bool invert)
 	drawcolorcodedstring(tmp, tmp_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
+{
+	if(!pl) return;
+	
+	vector tmp, tmp_in;
+	string tmp_str;
+	vector health_sz = vec2((vid_conwidth - 1) / 6, teamscore_size.y * 0.4);
+	vector armor_sz = vec2(health_sz.x, health_sz.y / 4);
+	
+	float health = 0;
+	float armor = 0;
+	
+	entity entcs = entcs_receiver(pl.sv_entnum);
+	if(entcs.m_entcs_private) {
+		health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * health_sz.x;
+		armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * armor_sz.x;
+	}
+	
+	// Player score
+	tmp_str = ftos(pl.(scores(ps_primary)));
+	
+	if(invert)
+		pos.x -= teamscore_size.x;
+	
+	drawfill(pos, teamscore_size, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+	
+	tmp = pos;
+	tmp.x += (teamscore_size.x - stringwidth(tmp_str, true, teamscore_fontsize)) / 2;
+	tmp.y += (teamscore_size.y - teamscore_fontsize.y) / 2;
+		
+	draw_beginBoldFont();
+	drawstring(tmp, tmp_str, teamscore_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	draw_endBoldFont();
+	
+	// Player health/armor
+	tmp_in = pos;
+	tmp_in.y += ((teamscore_size.y / 2) - health_sz.y) / 2;
+	
+	// Background
+	tmp = tmp_in;
+	if(invert)
+		tmp.x -= health_sz.x;
+	else
+		tmp.x += teamscore_size.x;
+	
+	drawfill(tmp, health_sz, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+	
+	// Bars
+	if(health) {
+		tmp = tmp_in;
+		if(invert)
+			tmp.x -= health;
+		else
+			tmp.x += teamscore_size.x;
+	
+		drawfill(tmp, vec2(health, health_sz.y), autocvar_hud_progressbar_health_color, 0.7, DRAWFLAG_NORMAL);
+	}
+	
+	if(armor) {
+		tmp = tmp_in;
+		tmp.y += health_sz.y - armor_sz.y;
+		
+		if(invert)
+			tmp.x -= armor;
+		else
+			tmp.x += teamscore_size.x;
+		
+		drawfill(tmp, vec2(armor, armor_sz.y), autocvar_hud_progressbar_armor_color, 0.7, DRAWFLAG_NORMAL);
+	}
+	
+	// Player name
+	tmp_str = entcs_GetName(pl.sv_entnum);
+	
+	tmp = pos;
+	if(invert)
+		tmp.x -= stringwidth_colors(tmp_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
+	else
+		tmp.x += teamscore_size.x + teamname_fontsize.x * 0.5;
+	tmp.y += ((teamscore_size.y / 2) - teamname_fontsize.y) / 2;
+	tmp.y += teamscore_size.y / 2;
+	
+	drawcolorcodedstring(tmp, tmp_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 void HUD_SpectHUD()
 {
 	if(!spectatee_status) return;
@@ -177,9 +268,7 @@ void HUD_SpectHUD()
 		}
 	}
 	
-	if(!teamplay) return;
-	
-	if (autocvar_hud_spectatorteamdisplay)
+	if (teamplay && autocvar_hud_spectatorteamdisplay)
 	{
 		// Set vars
 		teamscore_fontsize = hud_fontsize * 3;
@@ -226,5 +315,24 @@ void HUD_SpectHUD()
 		
 		pos = panel_pos + vec2(vid_conwidth - 1, (vid_conheight + 450) / 4 + hud_fontsize.y);
 		HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, true);
+	} else if(gametype == MAPINFO_TYPE_DUEL && autocvar_hud_spectatordueldisplay) {
+		// Set vars
+		teamscore_fontsize = hud_fontsize * 3;
+		teamname_fontsize = hud_fontsize * 1.5;
+		teamscore_size = vec2(teamscore_fontsize.x * 1.5, teamscore_fontsize.y * 1.25);
+		timer_width = stov(cvar_string("hud_panel_timer_size")).x * vid_conwidth;
+		
+		entity pl_left = players.sort_next;
+		entity pl_right = pl_left.sort_next;
+	
+		// Left player
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
+		pos.x -= (timer_width * 1.3) / 2;
+		HUD_SpectHUD_drawDuelScore(pos, pl_left, true);
+		
+		// Right player
+		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
+		pos.x += (timer_width * 1.3) / 2;
+		HUD_SpectHUD_drawDuelScore(pos, pl_right, false);
 	}
 }

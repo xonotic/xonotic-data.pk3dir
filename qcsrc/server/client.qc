@@ -251,6 +251,13 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
+		if (autocvar_sv_maxidle_playertospectator > 0 && CS(this).idlekick_lasttimeleft)
+		{
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_IDLING);
+			CS(this).idlekick_lasttimeleft = 0;
+			CS(this).parm_idlesince = time;
+		}
+
 		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
@@ -889,7 +896,8 @@ void ClientInit_misc(entity this)
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 	
 	// z411 send full hostname
-	WriteString(channel, (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
+	WriteString(channel, autocvar_hostname_full);
+	WriteString(channel, autocvar_sv_motd_permanent);
 }
 
 void ClientInit_CheckUpdate(entity this)
@@ -2115,23 +2123,6 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
-/**
- * Checks whether the client is an observer or spectator, if so, he will get kicked after
- * g_maxplayers_spectator_blocktime seconds
- */
-void checkSpectatorBlock(entity this)
-{
-	if(IS_SPEC(this) || IS_OBSERVER(this))
-	if(!this.caplayer)
-	if(IS_REAL_CLIENT(this))
-	{
-		if( time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
-			dropclient(this);
-		}
-	}
-}
-
 void PrintWelcomeMessage(entity this)
 {
 	if(CS(this).motd_actived_time == 0)
@@ -2496,12 +2487,17 @@ void PlayerPreThink (entity this)
 	if (frametime) {
 		// physics frames: update anticheat stuff
 		anticheat_prethink(this);
-	}
 
-	if (blockSpectators && frametime) {
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
-		checkSpectatorBlock(this);
+		if (blockSpectators && IS_REAL_CLIENT(this)
+			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !this.caplayer
+			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+			dropclient(this);
+			return;
+		}
 	}
 
 	zoomstate_set = false;
@@ -2738,13 +2734,13 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (autocvar_sv_maxidle > 0)
+	if (autocvar_sv_maxidle > 0 || (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0))
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
 	{
 		int totalClients = 0;
-		if(autocvar_sv_maxidle_slots > 0)
+		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 			{
@@ -2752,7 +2748,7 @@ void PlayerPostThink (entity this)
 			});
 		}
 
-		if (autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
+		if (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
@@ -2764,14 +2760,33 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(autocvar_sv_maxidle - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, autocvar_sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
+			float maxidle_time = autocvar_sv_maxidle;
+			if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+				maxidle_time = autocvar_sv_maxidle_playertospectator;
+			float timeleft = ceil(maxidle_time - (time - CS(this).parm_idlesince));
+			if (timeleft == min(10, maxidle_time - 1)) { // - 1 to support maxidle_time <= 10
 				if (!CS(this).idlekick_lasttimeleft)
-					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
+				{
+					if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+					else
+						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
+				}
 			}
 			if (timeleft <= 0) {
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
-				dropclient(this);
+				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+				{
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname);
+					if (this.caplayer)
+						this.caplayer = 0;
+					PutObserverInServer(this);
+					CS(this).parm_idlesince = time;
+				}
+				else
+				{
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
+					dropclient(this);
+				}
 				return;
 			}
 			else if (timeleft <= 10) {

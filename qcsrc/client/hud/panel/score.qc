@@ -185,18 +185,6 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			if (team_count)
 				score_color = Team_ColorRGB(pl.team) * 0.8;
 			
-			entity entcs = entcs_receiver(pl.sv_entnum);
-			if(entcs.m_entcs_private) {
-				// z411 draw health/armor bar
-				vector bar_sz = vec2(mySize.x, fontsize.y);
-				
-				bar_sz.x *= entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth;
-				drawfill(pos, bar_sz, ((team_count) ? score_color : '0.8 0.8 0'), 0.5, DRAWFLAG_NORMAL);
-				
-				bar_sz.x *= GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor;
-				drawfill(pos + eY * (bar_sz.y * 0.7), bar_sz - eY * (bar_sz.y * 0.7), ((team_count) ? score_color : '0 0.8 0.8'), 1, DRAWFLAG_NORMAL);
-			}
-			
 			if (pl == me)
 			{
 				if (i == first_pl)
@@ -226,7 +214,10 @@ void HUD_Score()
 	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
 		Scoreboard_UpdatePlayerTeams();
 	
-	if(spectatee_status && teamplay) return;
+	if(spectatee_status) {
+		if(teamplay && autocvar_hud_spectatorteamdisplay) return;
+		if(gametype == MAPINFO_TYPE_DUEL && autocvar_hud_spectatordueldisplay) return;
+	}
 
 	HUD_Panel_LoadCvars();
 	vector pos, mySize;
