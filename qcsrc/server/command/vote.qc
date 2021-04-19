@@ -726,7 +726,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				if (first_command == "kickban")
 					command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
 
-				vote_parsed_command = strcat("defer 2 ", first_command, " # ", ftos(etof(victim)), " ", command_arguments);
+				vote_parsed_command = strcat("defer 2 \"", first_command, " # ", ftos(etof(victim)), " ", command_arguments, "\"");
 				vote_parsed_display = sprintf("^1%s #%d ^7%s^1 %s", first_command, etof(victim), victim.netname, reason);
 			}
 			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return 0; }
@@ -740,8 +740,8 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
-			vote_parsed_command = strcat("defer 2 gotomap ", vote_command);
-			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+			vote_parsed_command = strcat("defer 2 \"gotomap ", vote_command, "\"");
+			vote_parsed_display = strzone(strcat("^1gotomap ", vote_command));
 
 			break;
 		}
