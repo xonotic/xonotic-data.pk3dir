@@ -3,6 +3,7 @@
 bool autocvar_g_mayhem_regenerate;
 string autocvar_g_mayhem_weaponarena;
 bool autocvar_g_mayhem_powerups;
+bool autocvar_g_mayhem_selfdamage;
 
 MUTATOR_HOOKFUNCTION(mayhem, Scores_CountFragsRemaining)
 {
@@ -67,7 +68,7 @@ MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
 	float frag_deathtype = M_ARGV(3, float);
 	float frag_damage = M_ARGV(4, float);
 
-	if (frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
+	if ((autocvar_g_mayhem_selfdamage == 0 && frag_target == frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 
 	M_ARGV(4, float) = frag_damage;

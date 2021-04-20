@@ -7,6 +7,7 @@ int autocvar_g_tmayhem_teams_override;
 bool autocvar_g_tmayhem_regenerate;
 string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
+bool autocvar_g_tmayhem_selfdamage;
 
 // code from here on is just to support maps that don't have team entities
 void tmayhem_SpawnTeam (string teamname, int teamcolor)
@@ -122,7 +123,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, Damage_Calculate)
 
 	if (IS_PLAYER(frag_target))
 	if (!IS_DEAD(frag_target))
-	if (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
+	if ((autocvar_g_tmayhem_selfdamage == 0 && frag_target == frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 
 	frag_mirrordamage = 0;
