@@ -259,7 +259,7 @@ void HUD_SpectHUD()
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	
 	// Spectator name
-	if (autocvar_hud_spectatorplayernamedisplay)
+	if (autocvar_hud_panel_spect_playername)
 	{
 		if(spectatee_status != -1) {
 			ammo_y = stov(cvar_string("hud_panel_ammo_pos")).y * vid_conheight;
@@ -268,7 +268,9 @@ void HUD_SpectHUD()
 		}
 	}
 	
-	if (teamplay && autocvar_hud_spectatorteamdisplay)
+	// Scores
+	if (!autocvar_hud_panel_spect_scores) return;
+	if (teamplay)
 	{
 		// Set vars
 		teamscore_fontsize = hud_fontsize * 3;
@@ -315,7 +317,7 @@ void HUD_SpectHUD()
 		
 		pos = panel_pos + vec2(vid_conwidth - 1, (vid_conheight + 450) / 4 + hud_fontsize.y);
 		HUD_SpectHUD_drawTeamPlayers(pos, tm, rgb, true);
-	} else if(gametype == MAPINFO_TYPE_DUEL && autocvar_hud_spectatordueldisplay) {
+	} else if(gametype == MAPINFO_TYPE_DUEL) {
 		// Set vars
 		teamscore_fontsize = hud_fontsize * 3;
 		teamname_fontsize = hud_fontsize * 1.5;

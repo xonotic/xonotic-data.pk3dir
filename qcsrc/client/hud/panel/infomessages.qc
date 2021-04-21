@@ -88,11 +88,14 @@ void HUD_InfoMessages()
 	{
 		if(spectatee_status)
 		{
-			/*if(spectatee_status == -1)
-				s = _("^1Observing");
-			else
-				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
-			InfoMessage(s);*/
+			// z411 : Show the observed played if we have the spectator HUD disabled
+			if(!autocvar_hud_panel_spect_playername) {
+				if(spectatee_status == -1)
+					s = _("^1Observing");
+				else
+					s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
+				InfoMessage(s);
+			}
 
 			/*if(autocvar_hud_panel_infomessages_group0)
 			{
@@ -123,11 +126,8 @@ void HUD_InfoMessages()
 			//pos = M_ARGV(0, vector);
 			//img_curr_group = M_ARGV(2, int);
 
-			//if(!mutator_returnvalue)
-			//{
-				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-				InfoMessage(s);
-			//}
+			s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
+			InfoMessage(s);
 		}
 
 		if (time < STAT(GAMESTARTTIME))
