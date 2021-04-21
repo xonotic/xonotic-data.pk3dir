@@ -169,6 +169,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	string tmp_str;
 	vector health_sz = vec2((vid_conwidth - 1) / 6, teamscore_size.y * 0.4);
 	vector armor_sz = vec2(health_sz.x, health_sz.y / 4);
+	vector total_sz = vec2(health_sz.x + teamscore_size.x + (teamscore_size.x * 0.1), teamscore_size.y);
 	
 	float health = 0;
 	float armor = 0;
@@ -179,11 +180,18 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * armor_sz.x;
 	}
 	
-	// Player score
-	tmp_str = ftos(pl.(scores(ps_primary)));
-	
 	if(invert)
 		pos.x -= teamscore_size.x;
+	
+	// Highlight current player
+	tmp = pos;
+	if(invert) tmp.x -= health_sz.x + (teamscore_size.x * 0.1);
+	
+	if(pl.sv_entnum == current_player && spectatee_status != -1)
+		drawfill(tmp, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
+	
+	// Player score
+	tmp_str = ftos(pl.(scores(ps_primary)));
 	
 	drawfill(pos, teamscore_size, '0 0 0', 0.3, DRAWFLAG_NORMAL);
 	
@@ -221,7 +229,8 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	
 	if(armor) {
 		tmp = tmp_in;
-		tmp.y += health_sz.y - armor_sz.y;
+		//tmp.y += health_sz.y - armor_sz.y;
+		tmp.y += health_sz.y;
 		
 		if(invert)
 			tmp.x -= armor;
