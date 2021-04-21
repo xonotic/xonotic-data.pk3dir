@@ -623,7 +623,10 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	}
 	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
-		STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed * (1 - base_progress)), 1);
+		float spd = autocvar_g_freezetag_revive_speed_t2s;
+		if (autocvar_g_freezetag_revive_time_to_score <= 0)
+			spd = autocvar_g_freezetag_revive_speed * (1 - base_progress);
+		STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, spd), 1);
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{

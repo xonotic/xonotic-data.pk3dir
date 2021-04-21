@@ -42,6 +42,7 @@ float autocvar_g_freezetag_revive_auto_reducible_forcefactor = 0.01;
 float autocvar_g_freezetag_revive_auto_reducible_maxforce;
 float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
+float autocvar_g_freezetag_revive_speed_t2s = 0.25;
 float autocvar_g_freezetag_revive_time_to_score = 1.5;
 bool autocvar_g_freezetag_revive_nade;
 float autocvar_g_freezetag_revive_nade_health;
