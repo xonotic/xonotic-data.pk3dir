@@ -46,11 +46,13 @@ string autocvar_g_forced_team_pink;
 
 entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
-STATIC_INIT(g_team_entities)
+void Team_InitTeams()
 {
+	if (g_team_entities[0])
+		return;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		g_team_entities[i] = spawn();
+		g_team_entities[i] = new_pure(team_entity);
 	}
 }
 
@@ -1123,18 +1125,13 @@ void SV_ChangeTeam(entity player, int new_color)
 	{
 		SetPlayerColors(player, new_color);
 	}
-	// TODO: Should we really bother with this?
 	if(!IS_CLIENT(player))
 	{
-		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING,
-			player.netname);
 		return;
 	}
 	if (!teamplay)
 	{
 		return;
 	}
-	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) +
-		1));
+	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
 }

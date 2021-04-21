@@ -300,11 +300,6 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 5)
 			{
-				// arguments:
-				//   effectname
-				//   origin (0..1, on crosshair line)
-				//   velocity
-				//   howmany
 				f = stof(argv(2));
 				crosshair_trace(this);
 				start = (1-f) * this.origin + f * trace_endpos;
@@ -314,7 +309,9 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd pointparticles effectname position(0..1) velocityvector multiplier\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd pointparticles <effectname> <position> <velocity> <countmultiplier>\n");
+			sprint(this, "  Where <position> is a number from 0 to 1 representing distance on the crosshair line,\n");
+			sprint(this, "  and <velocity> is a vector \"x y z\"\n");
 			break;
 		case "trailparticles":
 			IS_CHEAT(this, 0, argc, 0);
@@ -329,14 +326,12 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles effectname\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles <effectname>\n");
 			break;
 		case "make":
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 3)
 			{
-				// arguments:
-				//   modelname mode
 				f = stof(argv(2));
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
@@ -346,7 +341,7 @@ float CheatCommand(entity this, int argc)
 				}
 				else
 				{
-					entity e = spawn();
+					entity e = new(func_breakable);
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
 					SetResourceExplicit(e, RES_HEALTH, 1000);
@@ -357,7 +352,7 @@ float CheatCommand(entity this, int argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					spawnfunc_func_breakable(e);
+					func_breakable_setup(e);
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -375,7 +370,10 @@ float CheatCommand(entity this, int argc)
 				}
 			}
 			else
-				sprint(this, "Usage: sv_cheats 1; restart; cmd make models/... 0/1/2\n");
+			{
+				sprint(this, "Usage:^3 sv_cheats 1; restart; cmd make <modelname> <mode>\n");
+				sprint(this, "  where <mode> can be 0, 1 or 2\n");
+			}
 			break;
 		case "penalty":
 			IS_CHEAT(this, 0, argc, 0);
@@ -385,7 +383,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd penalty <duration> <reason>))\n");
 			break;
 		case "dragbox_spawn": {
 			IS_CHEAT(this, 0, argc, 0);
@@ -510,7 +508,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_setcnt cnt\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_setcnt <cnt>\n");
 			break;
 		case "drag_save":
 			IS_CHEAT(this, 0, argc, 0);
@@ -530,7 +528,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
 			break;
 		case "drag_saveraceent":
 			IS_CHEAT(this, 0, argc, 0);
@@ -599,7 +597,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
 			break;
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);

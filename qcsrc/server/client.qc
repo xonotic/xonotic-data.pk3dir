@@ -241,6 +241,13 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
+		if (autocvar_sv_maxidle_playertospectator > 0 && CS(this).idlekick_lasttimeleft)
+		{
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_IDLING);
+			CS(this).idlekick_lasttimeleft = 0;
+			CS(this).parm_idlesince = time;
+		}
+
 		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
@@ -253,6 +260,7 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
+		entcs_update_players(this);
 	}
 
 	entity spot = SelectSpawnPoint(this, true);
@@ -394,6 +402,9 @@ void PutObserverInServer(entity this)
 		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		this.frags = FRAGS_SPECTATOR;
 	}
+
+	bot_relinkplayerlist();
+
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
 }
@@ -771,14 +782,15 @@ void PutPlayerInServer(entity this)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
+		entity w_ent = this.(weaponentity);
 		if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
-			this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			w_ent.m_switchweapon = w_getbestweapon(this, weaponentity);
 		else
-			this.(weaponentity).m_switchweapon = WEP_Null;
-		this.(weaponentity).m_weapon = WEP_Null;
-		this.(weaponentity).weaponname = "";
-		this.(weaponentity).m_switchingweapon = WEP_Null;
-		this.(weaponentity).cnt = -1;
+			w_ent.m_switchweapon = WEP_Null;
+		w_ent.m_weapon = WEP_Null;
+		w_ent.weaponname = "";
+		w_ent.m_switchingweapon = WEP_Null;
+		w_ent.cnt = -1;
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
@@ -824,6 +836,8 @@ void PutClientInServer(entity this)
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
+
+	bot_relinkplayerlist();
 }
 
 // TODO do we need all these fields, or should we stop autodetecting runtime
@@ -1200,6 +1214,8 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
+void player_powerups_remove_all(entity this);
+
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1251,6 +1267,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	player_powerups_remove_all(this); // stop powerup sound
 
 	ONREMOVE(this);
 }
@@ -1448,7 +1466,8 @@ void player_powerups_remove_all(entity this)
 {
 	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
 	{
-		if (time > game_starttime + 1)
+		// don't play the poweroff sound when the game restarts or the player disconnects
+		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
 		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
 		this.items &= ~ITEM_Strength.m_itemid;
@@ -1707,6 +1726,14 @@ void SetZoomState(entity this, float newzoom)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
+	if (game_stopped)
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+		return;
+	}
+
+	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
@@ -2068,23 +2095,6 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
-/**
- * Checks whether the client is an observer or spectator, if so, he will get kicked after
- * g_maxplayers_spectator_blocktime seconds
- */
-void checkSpectatorBlock(entity this)
-{
-	if(IS_SPEC(this) || IS_OBSERVER(this))
-	if(!this.caplayer)
-	if(IS_REAL_CLIENT(this))
-	{
-		if( time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
-			dropclient(this);
-		}
-	}
-}
-
 void PrintWelcomeMessage(entity this)
 {
 	if(CS(this).motd_actived_time == 0)
@@ -2333,6 +2343,8 @@ void ObserverOrSpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
+			else
+				this.would_spectate = false; // unable to spectate anyone
 			if (is_spec)
 				CS(this).impulse = 0;
 		} else if (is_spec) {
@@ -2356,7 +2368,10 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS_CVAR(this).cvar_cl_clippedspectating : !CS_CVAR(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			bool wouldclip = CS_CVAR(this).cvar_cl_clippedspectating;
+			if (PHYS_INPUT_BUTTON_USE(this))
+				wouldclip = !wouldclip;
+			int preferred_movetype = (wouldclip ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
 	} else { // jump pressed
@@ -2443,12 +2458,17 @@ void PlayerPreThink (entity this)
 	if (frametime) {
 		// physics frames: update anticheat stuff
 		anticheat_prethink(this);
-	}
 
-	if (blockSpectators && frametime) {
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
-		checkSpectatorBlock(this);
+		if (blockSpectators && IS_REAL_CLIENT(this)
+			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !this.caplayer
+			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+			dropclient(this);
+			return;
+		}
 	}
 
 	zoomstate_set = false;
@@ -2625,15 +2645,6 @@ void PlayerPreThink (entity this)
 	}
 
 	target_voicescript_next(this);
-
-	// WEAPONTODO: Move into weaponsystem somehow
-	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
-	}
 }
 
 void DrownPlayer(entity this)
@@ -2694,13 +2705,13 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (autocvar_sv_maxidle > 0)
+	if (autocvar_sv_maxidle > 0 || (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0))
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
 	{
 		int totalClients = 0;
-		if(autocvar_sv_maxidle_slots > 0)
+		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 			{
@@ -2708,7 +2719,7 @@ void PlayerPostThink (entity this)
 			});
 		}
 
-		if (autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
+		if (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
@@ -2720,14 +2731,33 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(autocvar_sv_maxidle - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, autocvar_sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
+			float maxidle_time = autocvar_sv_maxidle;
+			if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+				maxidle_time = autocvar_sv_maxidle_playertospectator;
+			float timeleft = ceil(maxidle_time - (time - CS(this).parm_idlesince));
+			if (timeleft == min(10, maxidle_time - 1)) { // - 1 to support maxidle_time <= 10
 				if (!CS(this).idlekick_lasttimeleft)
-					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
+				{
+					if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+					else
+						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
+				}
 			}
 			if (timeleft <= 0) {
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
-				dropclient(this);
+				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+				{
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname);
+					if (this.caplayer)
+						this.caplayer = 0;
+					PutObserverInServer(this);
+					CS(this).parm_idlesince = time;
+				}
+				else
+				{
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
+					dropclient(this);
+				}
 				return;
 			}
 			else if (timeleft <= 10) {
@@ -2761,12 +2791,12 @@ void PlayerPostThink (entity this)
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
+		GetPressedKeys(this);
 		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;
 		}
-		GetPressedKeys(this);
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{

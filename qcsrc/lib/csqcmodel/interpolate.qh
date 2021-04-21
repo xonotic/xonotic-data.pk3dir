@@ -36,6 +36,10 @@ const int IFLAG_V_ANGLE_X = BIT(8);
 const int IFLAG_ORIGIN = BIT(9);
 const int IFLAG_INTERNALMASK = IFLAG_VALID | IFLAG_PREVALID;
 
+// InterpolateOrigin can interpolate many things, not just origin;
+// set the appropriate flag(s) to this.iflags before
+// InterpolateOrigin_Note(this) and after InterpolateOrigin_Undo(this)
+
 // call this BEFORE reading an entity update
 void InterpolateOrigin_Undo(entity this);
 

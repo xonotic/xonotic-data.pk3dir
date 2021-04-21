@@ -160,7 +160,9 @@ void Create_Notification_Entity_Choice(entity notif,
 
 void Dump_Notifications(int fh, bool alsoprint);
 
-GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt", false)
+#define DEFAULT_FILENAME "notifications_dump.cfg"
+// NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
+GENERIC_COMMAND(dumpnotifs, "Dump all notifications into " DEFAULT_FILENAME, false)
 {
 	switch (request)
 	{
@@ -171,12 +173,12 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 			bool alsoprint = false;
 			if (filename == "")
 			{
-				filename = "notifications_dump.cfg";
+				filename = DEFAULT_FILENAME;
 				alsoprint = false;
 			}
 			else if (filename == "-")
 			{
-				filename = "notifications_dump.cfg";
+				filename = DEFAULT_FILENAME;
 				alsoprint = true;
 			}
 			int fh = fopen(filename, FILE_WRITE);
@@ -191,21 +193,22 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd."));
+			LOG_INFO("Notification dump command only works with cl_cmd and sv_cmd.");
 			#endif
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
-			LOG_HELP("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [<filename>]");
+			LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
 			LOG_HELP("  if supplied with '-' output to console as well as default,");
 			LOG_HELP("  if left blank, it will only write to default.");
 			return;
 		}
 	}
 }
+#undef DEFAULT_FILENAME
 
 #ifdef NOTIFICATIONS_DEBUG
 bool autocvar_notification_debug = false;
