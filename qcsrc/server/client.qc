@@ -896,7 +896,7 @@ void ClientInit_misc(entity this)
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 	
 	// z411 send full hostname
-	WriteString(channel, autocvar_hostname_full);
+	WriteString(channel, (autocvar_hostname_full != "" ? autocvar_hostname_full : autocvar_hostname));
 	WriteString(channel, autocvar_sv_motd_permanent);
 }
 
@@ -1086,7 +1086,7 @@ string getwelcomemessage(entity this)
 
 	//string versionmessage = GetClientVersionMessage(this);
 	//string s = strcat(versionmessage, "^8\n^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
-	string s = (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname);
+	string s = (autocvar_hostname_full != "" ? autocvar_hostname_full : autocvar_hostname);
 
 	s = strcat(s, "^8\n^7", gamemode_name);
 

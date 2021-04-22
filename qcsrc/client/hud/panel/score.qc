@@ -214,10 +214,8 @@ void HUD_Score()
 	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
 		Scoreboard_UpdatePlayerTeams();
 	
-	if(spectatee_status) {
-		if(teamplay && autocvar_hud_spectatorteamdisplay) return;
-		if(gametype == MAPINFO_TYPE_DUEL && autocvar_hud_spectatordueldisplay) return;
-	}
+	// z411 : Don't display if we have the spectator HUD scores enabled
+	if(spectatee_status && autocvar_hud_panel_spect_scores) return;
 
 	HUD_Panel_LoadCvars();
 	vector pos, mySize;

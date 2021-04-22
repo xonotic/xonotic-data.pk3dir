@@ -211,9 +211,8 @@ vector hud_dynamic_shake_realofs;
 float hud_dynamic_shake_factor;
 float hud_dynamic_shake_time;
 
-bool autocvar_hud_spectatordueldisplay = true;
-bool autocvar_hud_spectatorteamdisplay = true; //LegendGuard adds a bool to enable/disable team display HUD 06-04-2021
-bool autocvar_hud_spectatorplayernamedisplay = true; //LegendGuard adds a bool to enable/disable player name display HUD 06-04-2021
+bool autocvar_hud_panel_spect_scores = true; //LegendGuard adds a bool to enable/disable score display HUD 06-04-2021
+bool autocvar_hud_panel_spect_playername = true; //LegendGuard adds a bool to enable/disable player name display HUD 06-04-2021
 
 // shared across viewmodel effects and dynamic hud code
 vector cl_followmodel_ofs;

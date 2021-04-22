@@ -1346,9 +1346,13 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		i++;
 	
 	tmp_str = Scoreboard_GetField(pl, SP_PING);
-	drawstring(tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
+	drawstring(tmp + eX * column_width * i + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
 		tmp_str, hud_fontsize * 1.25, sbt_field_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-	
+
+	tmp_str = Scoreboard_GetField(pl, SP_PL);
+	drawstring(tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 0.75) / 2) + eY * (hud_fontsize.y * 1.25),
+		tmp_str, hud_fontsize * 0.75, sbt_field_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+
 	tmp.x = pos.x + panel_bg_padding;
 	tmp.y += hud_fontsize.y * 2;
 	
@@ -1360,7 +1364,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	FOREACH(Weapons, it != WEP_Null, {
 		WepSet set = it.m_wepset;
-		if (!(weapons_inmap & set))
+		if (!(weapons_inmap & set) && it != WEP_BLASTER && it != WEP_SHOTGUN) // z411 TODO : We'll be hardcoding this for now.
 			continue;
 		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
@@ -1381,19 +1385,19 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		
 		draw_str = ftos(pl.accuracy_frags[i - WEP_FIRST]);
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
 		
 		draw_str = ftos(pl.accuracy_hit[i - WEP_FIRST]);
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 		draw_str = sprintf("%d%%", weapon_acc);
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 		draw_str = strcat(ftos(weapon_cnt_hit), " / ", ftos(weapon_cnt_fired));
-		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth("36 /", false, hud_fontsize),
-			draw_str,hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth(ftos(weapon_cnt_hit), false, hud_fontsize) - eX * hud_fontsize.x * 0.5,
+			draw_str,hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 		// weapon icon
 		if(invert) {
