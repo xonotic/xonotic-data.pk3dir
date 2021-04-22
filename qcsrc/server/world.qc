@@ -382,6 +382,12 @@ void cvar_changes_init()
 		BADCVAR("g_tmayhem_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
+		BADCVAR("g_mayhem_frags2score");
+		BADCVAR("g_mayhem_damage2score");
+		BADCVAR("g_mayhem_damage2score_multiplier");
+		BADCVAR("g_tmayhem_frags2score");
+		BADCVAR("g_tmayhem_damage2score");
+		BADCVAR("g_tmayhem_damage2score_multiplier");
 		BADCVAR("pausable");
 		BADCVAR("sv_announcer");
 		BADCVAR("sv_checkforpacketsduringsleep");

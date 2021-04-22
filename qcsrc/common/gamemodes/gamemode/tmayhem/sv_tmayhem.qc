@@ -8,6 +8,9 @@ bool autocvar_g_tmayhem_regenerate;
 string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
+bool autocvar_g_tmayhem_frags2score;
+bool autocvar_g_tmayhem_damage2score;
+float autocvar_g_tmayhem_damage2score_multiplier;
 
 // code from here on is just to support maps that don't have team entities
 void tmayhem_SpawnTeam (string teamname, int teamcolor)
@@ -130,4 +133,28 @@ MUTATOR_HOOKFUNCTION(tmayhem, Damage_Calculate)
 
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(5, float) = frag_mirrordamage;
+}
+
+MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
+{
+	if(autocvar_g_tmayhem_damage2score){
+		entity frag_attacker = M_ARGV(1, entity);
+		entity frag_target = M_ARGV(2, entity);
+		float frag_damage = M_ARGV(7, float);
+		float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+		float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+
+		float excess = max(0, frag_damage - damage_take - damage_save);
+
+		if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
+			GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_tmayhem_damage2score_multiplier);
+	}
+}
+
+MUTATOR_HOOKFUNCTION(tmayhem, GiveFragsForKill, CBC_ORDER_FIRST)
+{
+	if(!autocvar_g_tmayhem_frags2score){
+		M_ARGV(2, float) = 0;
+		return true;
+	}
 }
