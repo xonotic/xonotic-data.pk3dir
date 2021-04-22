@@ -1360,7 +1360,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	FOREACH(Weapons, it != WEP_Null, {
 		WepSet set = it.m_wepset;
-		if (!(weapons_inmap & set))
+		if (!(weapons_inmap & set) && it != WEP_BLASTER && it != WEP_SHOTGUN) // z411 TODO : We'll be hardcoding this for now.
 			continue;
 		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
