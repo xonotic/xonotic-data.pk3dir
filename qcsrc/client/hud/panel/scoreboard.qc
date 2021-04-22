@@ -1346,9 +1346,13 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		i++;
 	
 	tmp_str = Scoreboard_GetField(pl, SP_PING);
-	drawstring(tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
+	drawstring(tmp + eX * column_width * i + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
 		tmp_str, hud_fontsize * 1.25, sbt_field_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-	
+
+	tmp_str = Scoreboard_GetField(pl, SP_PL);
+	drawstring(tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 0.75) / 2) + eY * (hud_fontsize.y * 1.25),
+		tmp_str, hud_fontsize * 0.75, sbt_field_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+
 	tmp.x = pos.x + panel_bg_padding;
 	tmp.y += hud_fontsize.y * 2;
 	
