@@ -135,7 +135,7 @@ bool Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_cli
 			);
 		case NOTIF_ALL_SPEC:
 			return (
-				(IS_SPEC(to_client))
+				(IS_SPEC(to_client) || IS_OBSERVER(to_client))
 			);
 		case NOTIF_ALL:
 			return true;
