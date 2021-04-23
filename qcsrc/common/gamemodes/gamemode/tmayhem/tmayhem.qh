@@ -1,0 +1,51 @@
+#pragma once
+
+#include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
+#include <common/gamemodes/gamemode/tdm/tdm.qh>
+#include <common/mapinfo.qh>
+
+CLASS(tmayhem, Gametype)
+    INIT(tmayhem)
+    {
+        this.gametype_init(this, _("Team Mayhem"),"tmayhem","g_tmayhem",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("The team with the most frags in total mayhem wins!"));
+    }
+    METHOD(tmayhem, m_parse_mapinfo, bool(string k, string v))
+    {
+        if (!k) {
+            cvar_set("g_tmayhem_teams", cvar_defstring("g_tmayhem_teams"));
+            return true;
+        }
+        switch (k) {
+            case "teams":
+                cvar_set("g_tmayhem_teams", v);
+                return true;
+        }
+        return false;
+    }
+    METHOD(tmayhem, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+    METHOD(tmayhem, m_isForcedSupported, bool(Gametype this))
+    {
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)){
+	        return true;
+        }
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags)){
+	        return true;
+        }
+        return false;		
+    }
+    METHOD(tmayhem, m_setTeams, void(string sa))
+    {
+        cvar_set("g_tmayhem_teams", sa);
+    }
+    METHOD(tmayhem, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Point limit:"),     5,  100,  5, "g_tmayhem_point_limit",         "g_tmayhem_teams_override",         _("The amount of points needed before the match will end"));
+    }
+    ATTRIB(tmayhem, m_legacydefaults, string, "50 20 2 0");
+ENDCLASS(tmayhem)
+REGISTER_GAMETYPE(TEAM_MAYHEM, NEW(tmayhem));
+#define g_tmayhem IS_GAMETYPE(TEAM_MAYHEM)
