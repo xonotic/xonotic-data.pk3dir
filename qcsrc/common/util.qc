@@ -1778,6 +1778,7 @@ Notification Announcer_PickNumber(int type, int num)
 			}
 			break;
 		}
+		case CNT_NORMAL:
 		default:
 		{
 			switch(num)

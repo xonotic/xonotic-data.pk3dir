@@ -62,16 +62,16 @@ void HUD_PressedKeys()
 
 	if(autocvar_hud_panel_pressedkeys_attack)
 	{
-		drawpic_aspect_skin(pos + eX * (3/4 * keysize.x), ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(pos + eX * (7/4 * keysize.x), ((pressedkeys & KEY_ATCK2) ? "key_atck2_inv.tga" : "key_atck2.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos + eX * (3/4 * keysize.x), ((pressedkeys & KEY_ATCK) ? "key_atck_inv" : "key_atck"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos + eX * (7/4 * keysize.x), ((pressedkeys & KEY_ATCK2) ? "key_atck2_inv" : "key_atck2"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += keysize.y;
 	}
 
-	drawpic_aspect_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * (5/4 * keysize.x), ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * (10/4 * keysize.x), ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv" : "key_crouch"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * (5/4 * keysize.x), ((pressedkeys & KEY_FORWARD) ? "key_forward_inv" : "key_forward"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * (10/4 * keysize.x), ((pressedkeys & KEY_JUMP) ? "key_jump_inv" : "key_jump"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += keysize.y;
-	drawpic_aspect_skin(pos + eX * (1/4 * keysize.x), ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * (5/4 * keysize.x), ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * (9/4 * keysize.x), ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * (1/4 * keysize.x), ((pressedkeys & KEY_LEFT) ? "key_left_inv" : "key_left"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * (5/4 * keysize.x), ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv" : "key_backward"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * (9/4 * keysize.x), ((pressedkeys & KEY_RIGHT) ? "key_right_inv" : "key_right"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }

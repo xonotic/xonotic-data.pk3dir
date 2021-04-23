@@ -126,13 +126,13 @@ void CSQC_Init()
 
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
-		minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
+		minimapname = strcat("gfx/", mi_shortname, "_radar");
 		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
 			// but maybe we have a non-clever minimap
-			minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+			minimapname = strcat("gfx/", mi_shortname, "_mini");
 			if (precache_pic(minimapname) == "")
 				minimapname = ""; // FAIL
 			else
