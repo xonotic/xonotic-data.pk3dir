@@ -100,7 +100,6 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 		if (!IS_PLAYER(frag_attacker) && (
 			frag_deathtype == DEATH_DROWN.m_id ||
 			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-			frag_deathtype == DEATH_FIRE.m_id ||
 			frag_deathtype == DEATH_CAMP.m_id ||
 			frag_deathtype == DEATH_LAVA.m_id ||
 			frag_deathtype == DEATH_SLIME.m_id))
