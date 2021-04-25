@@ -79,6 +79,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_tmayhem_start_ammo_fuel");
 }
 
+//this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerRegen)
 {
 	if(autocvar_g_tmayhem_regenerate)
@@ -153,12 +154,12 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 		if (frag_target == frag_attacker && IS_PLAYER(frag_attacker) || SAME_TEAM(frag_target, frag_attacker))
 			GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_damage2score_multiplier);
 		
-		//campcheck deals damage with 8194 ID while DEATH_CAMP has 390 ID and DEATH_SELF_CAMP has 0 ID, idk why
+		//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
 		if (!IS_PLAYER(frag_attacker) && (
 			frag_deathtype == DEATH_DROWN.m_id ||
 			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
 			frag_deathtype == DEATH_FIRE.m_id ||
-			frag_deathtype == 8194.000000 ||
+			frag_deathtype == DEATH_CAMP.m_id ||
 			frag_deathtype == DEATH_LAVA.m_id ||
 			frag_deathtype == DEATH_SLIME.m_id))
 				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_damage2score_multiplier);
