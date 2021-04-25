@@ -82,6 +82,7 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 	if(autocvar_g_mayhem_damage2score){
 		entity frag_attacker = M_ARGV(1, entity);
 		entity frag_target = M_ARGV(2, entity);
+		float frag_deathtype = M_ARGV(6, float);
 		float frag_damage = M_ARGV(7, float);
 		float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
 		float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
@@ -90,6 +91,26 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 
 		if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 			GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_mayhem_damage2score_multiplier);
+			
+		if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
+			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_mayhem_damage2score_multiplier);
+		
+		//campcheck deals damage with 8194 ID while DEATH_CAMP has 390 ID and DEATH_SELF_CAMP has 0 ID, idk why
+		if (!IS_PLAYER(frag_attacker) && (
+			frag_deathtype == DEATH_DROWN.m_id ||
+			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+			frag_deathtype == DEATH_FIRE.m_id ||
+			frag_deathtype == 8194.000000 ||
+			frag_deathtype == DEATH_LAVA.m_id ||
+			frag_deathtype == DEATH_SLIME.m_id))
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_mayhem_damage2score_multiplier);
+				
+		//autocvar_g_mayhem_frags2score is checked to avoid punishing twice for a suicide
+		//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
+		//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
+		//FIXME: ^ , might require fixing hp+a check for suicides as a whole
+		if (frag_deathtype == DEATH_KILL.m_id && !autocvar_g_mayhem_frags2score)
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * autocvar_g_mayhem_damage2score_multiplier);
 	}
 }
 
