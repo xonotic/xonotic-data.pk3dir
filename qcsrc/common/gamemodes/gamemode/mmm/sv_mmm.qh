@@ -21,4 +21,5 @@ REGISTER_MUTATOR(mmm, false)
 .string killedwithweapon; //LegendGuard sets a variable to know what cause provoked to the victim 23-03-2021
 .bool investigated; //LegendGuard sets a bool to make sure if detective investigated already a corpse once 24-03-2021
 .bool karmastarted; //LegendGuard fixes with a bool when round start for karma points
+.bool karmaspectated; //LegendGuard fixes with a bool to someone if spectates and joins in the round 25-04-2021
 .bool activekillerrole; //LegendGuard sets a variable to active killer role 25-03-2021
