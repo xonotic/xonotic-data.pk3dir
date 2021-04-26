@@ -160,7 +160,7 @@ bool Inventory_Send(Inventory this, Client to, int sf)
     // z411 send entity number
     WriteByte(MSG_ENTITY, etof(this.owner.m_client));
     
-    Inventory_Write(this, to.inventory_store);
+    Inventory_Write(this, this.owner.m_client.inventory_store);
     return true;
 }
 

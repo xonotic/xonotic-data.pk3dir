@@ -1,0 +1,17 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+int autocvar_g_tmayhem_point_limit;
+int autocvar_g_tmayhem_point_leadlimit;
+bool autocvar_g_tmayhem_team_spawns;
+void tmayhem_Initialize();
+
+REGISTER_MUTATOR(tmayhem, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		tmayhem_Initialize();
+	}
+	return 0;
+}
