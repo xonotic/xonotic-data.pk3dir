@@ -715,6 +715,7 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerSpawn)
 	//Karma points start
 	if (player.karmastarted != true)
 	{
+		CS(player).scorekeeper.(scores(SP_MMM_KARMA)) = 0; //full karma reset lol
 		player.karmapoints = autocvar_g_mmm_max_karma_points;
 		GameRules_scoring_add(player, MMM_KARMA, player.karmapoints);
 		player.karmastarted = true;
