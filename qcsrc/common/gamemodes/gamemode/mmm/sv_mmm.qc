@@ -18,13 +18,6 @@ float autocvar_g_mmm_karma_severity = 0.25;
 float autocvar_g_mmm_karma_damagepunishmentdeal = 20; //LegendGuard sets Karma punishment damage setting if player kills an ally 28-03-2021
 // Sleuth is a created team, this team is added inside Civilians team
 
-/*scoreboard.qc method
-void KarmaScore_GetField(entity pl, PlayerScoreField field)
-{
-	if (field == SP_MMM_KARMA)
-	float karmap = pl.(scores(SP_MMM_KARMA));
-}*/
-
 void mmm_FakeTimeLimit(entity e, float t)
 {
 	if(!IS_REAL_CLIENT(e))
