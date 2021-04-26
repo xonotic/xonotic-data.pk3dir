@@ -34,6 +34,7 @@ void Scoreboard_Draw_Export(int fh)
 	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
+	HUD_Write_Cvar("hud_panel_scoreboard_spectators_position");
 }
 
 const int MAX_SBT_FIELDS = MAX_SCORE;
@@ -80,6 +81,7 @@ float autocvar_hud_panel_scoreboard_table_highlight_alpha_eliminated = 0.6;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 float autocvar_hud_panel_scoreboard_namesize = 15;
 float autocvar_hud_panel_scoreboard_team_size_position = 0;
+float autocvar_hud_panel_scoreboard_spectators_position = 2;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
@@ -1721,6 +1723,33 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	return true;
 }
 
+vector Scoreboard_Spectators_Draw(vector pos, entity tm, string str, vector hud_fontsize) {
+
+	entity pl;
+
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+	{
+		if(pl.team == NUM_SPECTATOR)
+		{
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				if(tm.team == NUM_SPECTATOR)
+					break;
+			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
+			draw_beginBoldFont();
+			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+			pos.y += 1.25 * hud_fontsize.y;
+
+			pos = Scoreboard_DrawOthers(pos, '0 0 0', pl.team, NULL, pl, 0);
+			pos.y += 1.25 * hud_fontsize.y;
+
+			break;
+		}
+	}
+
+	return pos;
+}
+
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -1794,7 +1823,7 @@ void Scoreboard_Draw()
 
 	float initial_pos_y = panel_pos.y;
 	vector pos = panel_pos;
-	entity pl, tm;
+	entity tm;
 	string str;
 	vector str_pos;
 
@@ -2004,10 +2033,21 @@ void Scoreboard_Draw()
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
 
+	// draw scoreboard spectators before accuracy and item stats
+	if (autocvar_hud_panel_scoreboard_spectators_position == 0) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+	}
+
+	// draw accuracy and item stats 
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 	if (Scoreboard_ItemStats_WouldDraw(pos.y))
 		pos = Scoreboard_ItemStats_Draw(pos, panel_bg_color, bg_size);
+
+	// draw scoreboard spectators after accuracy and item stats and before rankings
+	if (autocvar_hud_panel_scoreboard_spectators_position == 1) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+	}
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
@@ -2022,27 +2062,16 @@ void Scoreboard_Draw()
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
 
+	// draw scoreboard spectators after rankings
+	if (autocvar_hud_panel_scoreboard_spectators_position == 2) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+	}
+
 	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
-	// List spectators
-	for(pl = players.sort_next; pl; pl = pl.sort_next)
-	{
-		if(pl.team == NUM_SPECTATOR)
-		{
-			for(tm = teams.sort_next; tm; tm = tm.sort_next)
-				if(tm.team == NUM_SPECTATOR)
-					break;
-			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
-			draw_beginBoldFont();
-			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			draw_endBoldFont();
-			pos.y += 1.25 * hud_fontsize.y;
-
-			pos = Scoreboard_DrawOthers(pos, '0 0 0', pl.team, NULL, pl, 0);
-			pos.y += 1.25 * hud_fontsize.y;
-
-			break;
-		}
+	// draw scoreboard spectators after mapstats
+	if (autocvar_hud_panel_scoreboard_spectators_position == 3) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
 	}
 
 
