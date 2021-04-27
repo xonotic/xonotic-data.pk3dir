@@ -222,6 +222,17 @@ float mmm_CheckWinner()
 	return 1;
 }
 
+void Karma_WarningCheck(entity it)
+{
+	float totalmeankarma = ((autocvar_g_mmm_max_karma_points + autocvar_g_mmm_min_karma_points + it.karmapoints) / 3);
+	if (it.karmapoints <= totalmeankarma)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_MMM_KARMAWARNING);
+		//centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
+		GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
+	}
+}
+
 void mmm_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
@@ -330,17 +341,12 @@ void mmm_RoundStart()
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		float totalmeankarma = ((autocvar_g_mmm_max_karma_points + autocvar_g_mmm_min_karma_points + it.karmapoints) / 3);
 		karma_Control(it);
 		it.activekillerrole = false;
 
 		if(it.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			if (it.karmapoints <= totalmeankarma)
-			{
-				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
-				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
-			}
+			Karma_WarningCheck(it);
 			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_CIVILIAN);
@@ -349,11 +355,7 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_MURDERER)
 		{
-			if (it.karmapoints <= totalmeankarma)
-			{
-				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
-				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
-			}
+			Karma_WarningCheck(it);
 			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_MURDERER);
@@ -362,11 +364,7 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_SLEUTH)
 		{
-			if (it.karmapoints <= totalmeankarma)
-			{
-				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
-				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
-			}
+			Karma_WarningCheck(it);
 			//Gives Shockwave and Mine Layer weapon to the player
 			GiveWeapon(it, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
@@ -674,7 +672,31 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 MUTATOR_HOOKFUNCTION(mmm, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
-	
+	int playercount = 0;
+	bool playercheck = false;
+
+	if (playercheck != true)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+		{
+			++playercount;
+		});
+		playercheck = true;
+	}
+
+	//if the murderer is still here around, then avoid illogical winning
+	if (playercheck == true)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+		{
+			if (playercount == 3)
+			{
+				if (it.mmm_status == MMM_STATUS_SLEUTH)
+					it.mmm_status = MMM_STATUS_CIVILIAN;
+			}
+		});
+	}
+
 	if(IS_PLAYER(player) || player.caplayer)
 	{
 		if (player.karmaspectated != true)
