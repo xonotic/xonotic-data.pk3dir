@@ -241,6 +241,7 @@ void timeout_handler_think(entity this)
 					round_handler.round_endtime += total_time;
 
 				LOG_INFOF("Timeout lasted %d secs", total_time);
+				timeout_last = 0;
 
 				// unlock the view for players so they can move around again
 				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {

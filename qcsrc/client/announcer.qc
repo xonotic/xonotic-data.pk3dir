@@ -25,7 +25,7 @@ void Announcer_Countdown(entity this)
 {
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
-	float game_timeout = STAT(GAME_TIMEOUT);
+	bool game_timeout = (STAT(TIMEOUT_LAST) > 0);
 	
 	bool rounds;
 	float countdown;

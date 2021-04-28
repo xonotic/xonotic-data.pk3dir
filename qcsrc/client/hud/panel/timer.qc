@@ -37,12 +37,10 @@ void HUD_Timer()
 	}
 
 	string timer_sub = "";
-	bool game_timeout;
 	float timelimit, timeleft, minutesLeft, overtimes, timeout_last;
 
 	timelimit = STAT(TIMELIMIT);
 	overtimes = STAT(OVERTIMESADDED);
-	game_timeout = STAT(GAME_TIMEOUT);
 	timeout_last = STAT(TIMEOUT_LAST);
 
 	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
@@ -73,7 +71,7 @@ void HUD_Timer()
 		timer = max(0, floor(intermission_time - STAT(GAMESTARTTIME)));
 		timer_sub = "Intermission";
 	//} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
-	} else if (game_timeout) {
+	} else if (timeout_last) {
 		if(autocvar_hud_panel_timer_increment)
 			timer = max(0, floor(timeout_last - STAT(GAMESTARTTIME)));
 		else
