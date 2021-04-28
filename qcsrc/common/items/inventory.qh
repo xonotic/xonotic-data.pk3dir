@@ -14,6 +14,7 @@ ENDCLASS(Inventory)
 .Inventory inventory_store;
 
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
+REGISTER_NET_TEMP(TE_CSQC_INVENTORY)
 
 const int Inventory_groups_minor = 8; // must be a multiple of 8 (one byte) to optimize bandwidth usage
 const int Inventory_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(Items) / Inventory_groups_minor)
@@ -52,16 +53,9 @@ void Inventory_remove(entity this)
     //    g_inventory = NULL;
 }
 
-NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
+void Inventory_handle(entity inv, bool mine)
 {
-    make_pure(this);
-    //g_inventory = this;
-    //this.entremove = Inventory_remove;
-	
-	float entnum = ReadByte() - 1;
-	inventoryslots[entnum] = this;
-
-    const int majorBits = Readbits(Inventory_groups_major);
+	const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
             continue;
@@ -73,10 +67,10 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             }
             const GameItem it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
             .int fld = inv_items[it.m_id];
-            int prev = this.(fld);
-            int next = this.(fld) = ReadByte();
+            int prev = inv.(fld);
+            int next = inv.(fld) = ReadByte();
 			
-			if(entnum == current_player) {
+			if(mine) {
 				if(last_pickup_item != it) last_pickup_times = 0;
 				last_pickup_timer = timer;
 				last_pickup_item = it;
@@ -86,6 +80,26 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
+}
+
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
+{
+    make_pure(this);
+    inventoryslots[current_player] = this;
+    //this.entremove = Inventory_remove; // z411 TODO : Must implement this
+
+    Inventory_handle(this, true);
+    return true;
+}
+
+NET_HANDLE(TE_CSQC_INVENTORY, bool isnew)
+{
+	float entnum = ReadByte() - 1;
+	
+	if(!inventoryslots[entnum])
+		inventoryslots[entnum] = NEW(Inventory);
+	
+	Inventory_handle(inventoryslots[entnum], entnum == current_player);
     return true;
 }
 
@@ -104,10 +118,10 @@ NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
 
 #ifdef SVQC
 int minorBitsArr[Inventory_groups_major];
-void Inventory_Write(Inventory data, Inventory store)
+void Inventory_Write(int channel, Inventory data, Inventory store)
 {
     if (!data) {
-        WriteShort(MSG_ENTITY, 0);
+        WriteShort(channel, 0);
         return;
     }
     TC(Inventory, data);
@@ -127,21 +141,21 @@ void Inventory_Write(Inventory data, Inventory store)
         }
     });
 
-	Writebits(MSG_ENTITY, majorBits, Inventory_groups_major);
+	Writebits(channel, majorBits, Inventory_groups_major);
 	for (int i = 0; i < Inventory_groups_major; ++i)
 	{
 		if (!(majorBits & BIT(i)))
 			continue;
 
 		const int minorBits = minorBitsArr[i];
-		Writebits(MSG_ENTITY, minorBits, Inventory_groups_minor);
+		Writebits(channel, minorBits, Inventory_groups_minor);
 		for (int j = 0; j < Inventory_groups_minor; ++j)
 		{
 			if (!(minorBits & BIT(j)))
 				continue;
 
 			const entity it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
-			WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
+			WriteByte(channel, data.inv_items[it.m_id]);
 		}
 	}
 }
@@ -151,16 +165,26 @@ void Inventory_Write(Inventory data, Inventory store)
 #undef G_MINOR
 
 #ifdef SVQC
+bool Inventory_Broadcast(Inventory this)
+{
+	TC(Inventory, this);
+    WriteHeader(MSG_BROADCAST, TE_CSQC_INVENTORY);
+    TC(PlayerState, this.owner);
+    
+    // z411 send entity number
+    WriteByte(MSG_BROADCAST, etof(this.owner.m_client));
+    
+    Inventory_Write(MSG_BROADCAST, this, this.owner.m_client.inventory_store);
+    return true;
+}
+
 bool Inventory_Send(Inventory this, Client to, int sf)
 {
     TC(Inventory, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     TC(PlayerState, this.owner);
     
-    // z411 send entity number
-    WriteByte(MSG_ENTITY, etof(this.owner.m_client));
-    
-    Inventory_Write(this, this.owner.m_client.inventory_store);
+    Inventory_Write(MSG_ENTITY, this, to.inventory_store);
     return true;
 }
 
@@ -173,11 +197,22 @@ bool Inventory_customize(entity this, entity client)
 void Inventory_new(PlayerState this)
 {
     Inventory inv = NEW(Inventory);
-    if(!g_duel) setcefc(inv, Inventory_customize);
-    Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
+    inv.owner = this;
+	this.inventory = inv;
+    
+    if(!g_duel) {
+		setcefc(inv, Inventory_customize);
+		Net_LinkEntity(inv, false, 0, Inventory_Send);
+	}
 }
 void Inventory_delete(entity e) { delete(e.inventory); }
-void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
+void Inventory_update(entity e)
+{
+	if(g_duel)
+		Inventory_Broadcast(e.inventory);
+	else
+		e.inventory.SendFlags = 0xFFFFFF;
+}
 
 void Inventory_clear(entity store)
 {
