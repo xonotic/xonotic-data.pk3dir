@@ -79,6 +79,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_tmayhem_start_ammo_fuel");
 }
 
+//this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerRegen)
 {
 	if(autocvar_g_tmayhem_regenerate)
@@ -140,6 +141,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 	if(autocvar_g_tmayhem_damage2score){
 		entity frag_attacker = M_ARGV(1, entity);
 		entity frag_target = M_ARGV(2, entity);
+		float frag_deathtype = M_ARGV(6, float);
 		float frag_damage = M_ARGV(7, float);
 		float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
 		float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
@@ -148,6 +150,25 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 
 		if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
 			GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_tmayhem_damage2score_multiplier);
+			
+		if (frag_target == frag_attacker && IS_PLAYER(frag_attacker) || SAME_TEAM(frag_target, frag_attacker))
+			GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_damage2score_multiplier);
+		
+		//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
+		if (!IS_PLAYER(frag_attacker) && (
+			frag_deathtype == DEATH_DROWN.m_id ||
+			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+			frag_deathtype == DEATH_CAMP.m_id ||
+			frag_deathtype == DEATH_LAVA.m_id ||
+			frag_deathtype == DEATH_SLIME.m_id))
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_damage2score_multiplier);
+		
+		//autocvar_g_tmayhem_frags2score is checked to avoid punishing twice for a suicide
+		//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
+		//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
+		//FIXME: ^ , might require fixing hp+a check for suicides as a whole
+		if (frag_deathtype == DEATH_KILL.m_id && !autocvar_g_tmayhem_frags2score)
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * autocvar_g_tmayhem_damage2score_multiplier);
 	}
 }
 
