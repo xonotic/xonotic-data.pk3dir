@@ -1,7 +1,7 @@
 #include "sv_mmm.qh"
 
 //set g_mmm_sleuth_count 0.125 "number of players who will become sleuths, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players"
-//float autocvar_g_mmm_sleuth_count = 0.125; //I don't think that it won't be used...
+//float autocvar_g_mmm_sleuth_count = 0.125; //I don't think that it'll be used...
 float autocvar_g_mmm_civilian_count = 0.625;
 //float autocvar_g_mmm_murderer_count = 0.25;
 float autocvar_g_mmm_round_timelimit = 180;
@@ -11,7 +11,7 @@ bool autocvar_g_mmm_reward_civilian = true;
 bool autocvar_g_mmm_reward_sleuth = true; //sleuth reward if investigated corpses
 float autocvar_g_mmm_max_karma_points = 1000; //LegendGuard sets Karma points 21-02-2021
 float autocvar_g_mmm_min_karma_points = 400;
-int autocvar_g_mmm_karma_bankick_tool = 0; //LegendGuard sets a ban tool for server admins 11-03-2021
+int autocvar_g_mmm_karma_bankick_tool = 1; //LegendGuard sets a ban tool for server admins 11-03-2021
 float autocvar_g_mmm_karma_bantime = 1800; //karma ban seconds
 bool autocvar_g_mmm_karma_damageactive = true; //LegendGuard sets Karma damage setting if active 20-03-2021
 float autocvar_g_mmm_karma_severity = 0.25;
@@ -52,13 +52,14 @@ void karma_Control(entity it)
 	{
 		switch (autocvar_g_mmm_karma_bankick_tool)
 		{
+			//do nothing
+			case 0: return;
 			//force to spec
-			case 0: PutObserverInServer(it); return;
+			case 1: PutObserverInServer(it); return;
 			//kick
-			case 1: dropclient(it); return;
+			case 2: dropclient(it); return;
 			//ban and kick
-			case 2: Ban_KickBanClient(it, bantime, masksize, "Too low karma"); return;
-			//force to spec
+			case 3: Ban_KickBanClient(it, bantime, masksize, "Too low karma"); return;
 			default: PutObserverInServer(it); return;
 		}
 	}
@@ -221,6 +222,17 @@ float mmm_CheckWinner()
 	return 1;
 }
 
+void Karma_WarningCheck(entity it)
+{
+	float totalmeankarma = ((autocvar_g_mmm_max_karma_points + autocvar_g_mmm_min_karma_points + it.karmapoints) / 3);
+	if (it.karmapoints <= totalmeankarma)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_MMM_KARMAWARNING);
+		//centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
+		GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
+	}
+}
+
 void mmm_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
@@ -329,17 +341,12 @@ void mmm_RoundStart()
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		float totalmeankarma = ((autocvar_g_mmm_max_karma_points + autocvar_g_mmm_min_karma_points + it.karmapoints) / 3);
 		karma_Control(it);
 		it.activekillerrole = false;
 
 		if(it.mmm_status == MMM_STATUS_CIVILIAN)
 		{
-			if (it.karmapoints <= totalmeankarma)
-			{
-				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
-				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
-			}
+			Karma_WarningCheck(it);
 			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_CIVILIAN);
@@ -348,11 +355,7 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_MURDERER)
 		{
-			if (it.karmapoints <= totalmeankarma)
-			{
-				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
-				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
-			}
+			Karma_WarningCheck(it);
 			//Gives Mine Layer weapon to the player
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_MMM_MURDERER);
@@ -361,11 +364,7 @@ void mmm_RoundStart()
 		}
 		else if(it.mmm_status == MMM_STATUS_SLEUTH)
 		{
-			if (it.karmapoints <= totalmeankarma)
-			{
-				centerprint(it, strcat(BOLD_OPERATOR, "^1KARMA WARNING!\n^3Here, have the Rifle!"));
-				GiveWeapon(it, WEP_RIFLE.m_id, OP_PLUS, 1);
-			}
+			Karma_WarningCheck(it);
 			//Gives Shockwave and Mine Layer weapon to the player
 			GiveWeapon(it, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
 			GiveWeapon(it, WEP_MINE_LAYER.m_id, OP_PLUS, 1);
@@ -384,15 +383,8 @@ bool mmm_CheckPlayers()
 	int playercount = 0;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
-	{	
+	{
 		//PrintToChatAll(sprintf("it.karmapoints ^5begin: ^3%f",it.karmapoints));
-		//Karma points start
-		if (it.karmastarted != true)
-		{
-			GameRules_scoring_add(it, MMM_KARMA, autocvar_g_mmm_max_karma_points - it.karmapoints);
-			it.karmapoints = autocvar_g_mmm_max_karma_points;
-			it.karmastarted = true;
-		}
 		karma_Control(it);
 		++playercount;
 		//PrintToChatAll(sprintf("it.karmapoints ^6end: ^3%f",it.karmapoints));
@@ -680,9 +672,39 @@ MUTATOR_HOOKFUNCTION(mmm, Damage_Calculate)
 MUTATOR_HOOKFUNCTION(mmm, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
-	
+	int playercount = 0;
+	bool playercheck = false;
+
+	if (playercheck != true)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+		{
+			++playercount;
+		});
+		playercheck = true;
+	}
+
+	//if the murderer is still here around, then avoid illogical winning
+	if (playercheck == true)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+		{
+			if (playercount == 3)
+			{
+				if (it.mmm_status == MMM_STATUS_SLEUTH)
+					it.mmm_status = MMM_STATUS_CIVILIAN;
+			}
+		});
+	}
+
 	if(IS_PLAYER(player) || player.caplayer)
 	{
+		if (player.karmaspectated != true)
+		{
+			if (CS(player).scorekeeper.(scores(SP_MMM_KARMA)) <= 0) //wtf? Visualization works 100% correct?
+				GameRules_scoring_add(player, MMM_KARMA, player.karmapoints);
+			player.karmaspectated = true;
+		}
 		// update the scoreboard colour display to out the real killer at the end of the round
 		// running this every frame to avoid cheats
 		int plcolor = MMM_COLOR_CIVILIAN;
@@ -695,6 +717,8 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerPreThink)
 			plcolor = MMM_COLOR_SLEUTH;
 		setcolor(player, plcolor);
 	}
+	if(warmup_stage)
+		player.karmastarted = false;
 
 	//CORPSE FEATURE 10-03-2021
 	if (IS_DEAD(player))
@@ -709,6 +733,15 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerPreThink)
 MUTATOR_HOOKFUNCTION(mmm, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
+	
+	//Karma points start
+	if (player.karmastarted != true)
+	{
+		CS(player).scorekeeper.(scores(SP_MMM_KARMA)) = 0; //full karma reset lol
+		player.karmapoints = autocvar_g_mmm_max_karma_points;
+		GameRules_scoring_add(player, MMM_KARMA, player.karmapoints);
+		player.karmastarted = true;
+	}
 
 	player.mmm_status = 0;
 	player.mmm_validkills = 0;
@@ -861,6 +894,8 @@ MUTATOR_HOOKFUNCTION(mmm, MakePlayerObserver)
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		mmm_LastPlayerForTeam_Notify(player);
+	if (player.karmaspectated == true)
+		player.karmaspectated = false;
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
