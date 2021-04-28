@@ -2137,6 +2137,8 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 		return false;
 	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)
 		return false;
+	if (gametype == MAPINFO_TYPE_DUEL) // z411 : We already show items in our duel scoreboard.
+		return false;
 
 	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay
 		&& ypos > autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos * vid_conheight
