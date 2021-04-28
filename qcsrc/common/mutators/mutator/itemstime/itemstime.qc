@@ -277,7 +277,18 @@ float Item_ItemsTime_GetTime(int item)
         return -1; // don't show others
     }
     else
-        return ItemsTime_time[item];
+	{
+		float game_starttime = STAT(GAMESTARTTIME);
+		float timeout_last = STAT(TIMEOUT_LAST);
+		
+		if(ItemsTime_time[item] > 0 && game_starttime < time)
+			if(timeout_last)
+				return ItemsTime_time[item] + game_starttime - timeout_last + time;
+			else
+				return ItemsTime_time[item] + game_starttime;
+		else
+			return ItemsTime_time[item];
+	}
 }
 
 void HUD_ItemsTime()
