@@ -941,6 +941,12 @@ MUTATOR_HOOKFUNCTION(mmm, CalculateRespawnTime)
 	return true;
 }
 
+//if server admin sets "sv_ready_restart_after_countdown 1", will avoid possible visual failure for karma in the scoreboard
+MUTATOR_HOOKFUNCTION(mmm, ReadLevelCvars)
+{
+	sv_ready_restart_after_countdown = 0;
+}
+
 MUTATOR_HOOKFUNCTION(mmm, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
