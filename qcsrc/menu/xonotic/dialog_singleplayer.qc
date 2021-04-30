@@ -87,6 +87,12 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 		s = MapInfo_BSPName_ByID(m);
 	}
 	while(!fexists(sprintf("maps/%s.waypoints", s)));
+
+	// these commands are also executed when starting a map from Multiplayer / Create
+	// in the menu_loadmap_prepare alias
+	localcmd("disconnect\n");
+	localcmd("g_campaign 0\n");
+
 	MapInfo_LoadMap(s, 1);
 
 	// configure bots
