@@ -88,17 +88,14 @@ void Projectile_Draw(entity this)
 		drawn = (this.iflags & IFLAG_VALID);
 		t = time;
 	}
+	bool is_nade = Projectile_isnade(this.cnt);
 
 	if (!(f & FL_ONGROUND))
 	{
 		rot = '0 0 0';
-		switch (this.cnt)
+		if (is_nade) rot = this.avelocity;
+		else switch (this.cnt)
 		{
-			/*
-			case PROJECTILE_GRENADE:
-			    rot = '-2000 0 0'; // forward
-			    break;
-			*/
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
@@ -108,12 +105,7 @@ void Projectile_Draw(entity this)
 			case PROJECTILE_ROCKET:
 				rot = '0 0 720'; // spinning
 				break;
-			default:
-				break;
 		}
-
-		if (Projectile_isnade(this.cnt))
-			rot = this.avelocity;
 
 		if (rot)
 		{
@@ -129,30 +121,28 @@ void Projectile_Draw(entity this)
 		}
 	}
 
-	vector ang;
-	ang = this.angles;
-	ang.x = -ang.x;
-	makevectors(ang);
-
 	a = 1 - (time - this.fade_time) * this.fade_rate;
 	this.alpha = bound(0, this.alphamod * a, 1);
 	if (this.alpha <= 0)
 		drawn = 0;
 	this.renderflags = 0;
 
+	vector ang = this.angles;
+	ang.x = -ang.x;
 	trailorigin = this.origin;
-	switch (this.cnt)
+	if (is_nade)
+	{
+		makevectors(ang);
+		trailorigin += v_up * 4;
+	}
+	else switch (this.cnt)
 	{
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
+			makevectors(ang);
 			trailorigin += v_right * 1 + v_forward * -10;
 			break;
-		default:
-			break;
 	}
-
-	if (Projectile_isnade(this.cnt))
-		trailorigin += v_up * 4;
 
 	if (drawn)
 		Projectile_DrawTrail(this, trailorigin);
