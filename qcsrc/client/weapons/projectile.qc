@@ -115,7 +115,18 @@ void Projectile_Draw(entity this)
 		if (Projectile_isnade(this.cnt))
 			rot = this.avelocity;
 
-		this.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(this.angles), rot * (t - this.spawntime)));
+		if (rot)
+		{
+			if (!rot.x && !rot.y)
+			{
+				// cheaper z-only rotation formula
+				this.angles.z = (rot.z * (t - this.spawntime)) % 360;
+				if (this.angles.z < 0)
+					this.angles.z += 360;
+			}
+			else
+				this.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(this.angles), rot * (t - this.spawntime)));
+		}
 	}
 
 	vector ang;
