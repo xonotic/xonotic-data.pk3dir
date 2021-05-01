@@ -3,6 +3,10 @@
 #include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
 #include <common/mapinfo.qh>
 
+#ifdef CSQC
+void HUD_Mod_Duel(vector pos, vector mySize);
+void HUD_Mod_Duel_Export(int fh);
+#endif
 CLASS(Duel, Gametype)
     INIT(Duel)
     {
@@ -23,6 +27,10 @@ CLASS(Duel, Gametype)
         }
         return false;
     }
+#ifdef CSQC
+    ATTRIB(Duel, m_modicons, void(vector pos, vector mySize), HUD_Mod_Duel);
+    ATTRIB(Duel, m_modicons_export, void(int fh), HUD_Mod_Duel_Export);
+#endif
 ENDCLASS(Duel)
 REGISTER_GAMETYPE(DUEL, NEW(Duel));
 #define g_duel IS_GAMETYPE(DUEL)
