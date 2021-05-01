@@ -1,0 +1,9 @@
+#pragma once
+
+int autocvar_hud_panel_modicons_duel_enable;
+int autocvar_hud_panel_modicons_duel_borders;
+int autocvar_hud_panel_modicons_duel_spectator_healtharmor_show_status;
+
+void HUD_Mod_Duel(vector myPos, vector mySize);
+void HUD_Mod_Duel_Draw(vector myPos, vector mySize);
+void HUD_Mod_Duel_Export(int fh);
