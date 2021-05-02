@@ -2753,8 +2753,8 @@ void PlayerPostThink (entity this)
 				return;
 			}
 			else if (timeleft <= countdown_time) {
-				if (timeleft != CS(this).idlekick_lasttimeleft && timeleft <= 10)
-					Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
+				if (timeleft != CS(this).idlekick_lasttimeleft)
+					play2(this, SND(TALK2));
 				CS(this).idlekick_lasttimeleft = timeleft;
 			}
 		}
