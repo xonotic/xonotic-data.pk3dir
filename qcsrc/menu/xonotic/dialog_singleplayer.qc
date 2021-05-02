@@ -100,7 +100,10 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	pmin = pstep * ceil(pmin / pstep);
 	pmax = pstep * floor(pmax / pstep);
 	p = pmin + pstep * floor(random() * ((pmax - pmin) / pstep + 1));
-	cvar_set("bot_number", ftos(p - 1));
+
+	// cvar_set doesn't always work starting an InstantAction game while playing the campaign
+	//cvar_set("bot_number", ftos(p - 1));
+	localcmd(strcat("bot_number ", ftos(p - 1), "\n"));
 
 	// make sure we go back to menu
 	cvar_set("lastlevel", "1");
