@@ -5,7 +5,7 @@
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
 # Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015-2018
-# Leca Lam <lalocas@protonmail.com>, 2021
+# lecalam, 2021
 # Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-18 07:23+0200\n"
 "PO-Revision-Date: 2021-04-26 17:25+0000\n"
-"Last-Translator: Leca Lam <lalocas@protonmail.com>\n"
+"Last-Translator: lecalam\n"
 "Language-Team: Portuguese (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
 "Language: pt\n"
