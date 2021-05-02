@@ -149,17 +149,6 @@
     MSG_ANNCE_NOTIF(NUM_GAMESTART_9,            N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
     MSG_ANNCE_NOTIF(NUM_GAMESTART_10,           N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
-    MSG_ANNCE_NOTIF(NUM_IDLE_1,                 N___NEVER, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_2,                 N___NEVER, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_3,                 N___NEVER, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_4,                 N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_5,                 N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_6,                 N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_7,                 N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_8,                 N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_9,                 N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_IDLE_10,                N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-
     MSG_ANNCE_NOTIF(NUM_KILL_1,                 N___NEVER, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
     MSG_ANNCE_NOTIF(NUM_KILL_2,                 N___NEVER, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
     MSG_ANNCE_NOTIF(NUM_KILL_3,                 N___NEVER, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
