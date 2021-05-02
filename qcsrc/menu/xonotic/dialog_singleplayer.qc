@@ -12,28 +12,49 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 
 	cvar_set("timelimit_override", "10");
 
-	if(random() < 0.4) // 40% are DM
+	bool check_probability_distribution = true;
+	float r = 1;
+
+	LABEL(doit);
+	if (!check_probability_distribution)
+		r = random();
+
+	if((r -= 0.30) < 0)
 	{
 		MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
 		pmin = 2;
 		pmax = 8;
 		pstep = 1;
 	}
-	else if(random() < 0.5) // half of the remaining 60%, i.e. 30%, are CTF
+	else if((r -= 0.25) < 0)
 	{
 		MapInfo_SwitchGameType(MAPINFO_TYPE_CTF);
 		pmin = 4;
 		pmax = 12;
 		pstep = 2;
 	}
-	else if(random() < 0.5) // half of the remaining 30%, i.e. 15%, are TDM
+	else if((r -= 0.15) < 0)
 	{
 		MapInfo_SwitchGameType(MAPINFO_TYPE_TEAM_DEATHMATCH);
 		pmin = 4;
 		pmax = 8;
 		pstep = 2;
 	}
-	else if(random() < 0.666) // 2/3 of the remaining 15%, i.e. 10%, are KH
+	else if((r -= 0.10) < 0)
+	{
+		MapInfo_SwitchGameType(MAPINFO_TYPE_CA);
+		pmin = 4;
+		pmax = 8;
+		pstep = 2;
+	}
+	else if((r -= 0.10) < 0)
+	{
+		MapInfo_SwitchGameType(MAPINFO_TYPE_FREEZETAG);
+		pmin = 4;
+		pmax = 8;
+		pstep = 2;
+	}
+	else if((r -= 0.05) < 0)
 	{
 		MapInfo_SwitchGameType(MAPINFO_TYPE_KEYHUNT);
 		pmin = 6;
@@ -41,9 +62,16 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 		pstep = 6; // works both for 2 and 3 teams
 		// TODO find team count of map, set pstep=2 or 3, and use 2v2(v2) games at least
 	}
-	else // somehow distribute the remaining 5%
+	else
 	{
-		float r;
+		r -= 0.05;
+		if (check_probability_distribution)
+		{
+			if(fabs(r) > 0.001)
+				error("Incorrect probability distribution.");
+			check_probability_distribution = false;
+			goto doit;
+		}
 		r = floor(random() * 4);
 		switch(r)
 		{
@@ -73,7 +101,6 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 				pmax = 16;
 				pstep = 2;
 				break;
-			// CA, Freezetag: bot AI does not work, add them once it does
 		}
 	}
 
