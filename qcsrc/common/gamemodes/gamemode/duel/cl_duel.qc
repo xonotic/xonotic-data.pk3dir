@@ -27,17 +27,17 @@ void DrawDuelPlayer(vector elementPos, vector textSize, vector spectatorSize, in
 	vector pos3 = '0 0 0';
 	pos1 = elementPos + eX*border + eY*border;
 	pos2 = elementPos + eY*textSize.y + eX*border - eY*border;
-	pos3 = elementPos + eX*textSize.x;
+	pos3 = elementPos + eX*textSize.x + eY*border;
 
 	vector size1 = '0 0 0';
 	vector size2 = '0 0 0';
 	vector size3 = '0 0 0';
-	size1 = textSize - 2*(eX*border + eY*border);
+	size1 = textSize - 2*eX*border - 3*eY*border;
 	size2 = spectatorSize - 2*eX*border;
 	size3 = vec2(spectatorSize.x - textSize.x, size1.y);
 
 	if (!enablepbar) {
-		size1 = (textSize + eY*spectatorItemCount*spectatorSize.y) - 2*(eX*border + eY*border);
+		size1 = (textSize + eY*spectatorItemCount*spectatorSize.y) - 2*eX*border - 3*eY*border;
 		size3 = vec2(size3.x, size1.y);
 	}
 
@@ -45,19 +45,23 @@ void DrawDuelPlayer(vector elementPos, vector textSize, vector spectatorSize, in
 	getthink(entcs)(entcs);
 
 	if (playerlocation) {
-		pos3 = elementPos;
-		pos1 = elementPos + eX*size3.x;
+		pos3 = elementPos + eY*border;
+		pos1 = elementPos + eX*size3.x + eX*border + eY*border;
 	}
 
 	//Draw player's name
 	drawcolorcodedstring_aspect(pos1, entcs_GetName(playerindex), size1, panel_fg_alpha, DRAWFLAG_NORMAL);
+	//drawfill(pos1, size1, '1 0 0', 0.3, DRAWFLAG_NORMAL);
 	//Draw player's score
 	drawcolorcodedstring_aspect(pos3, itos(sumval), size3, panel_fg_alpha, DRAWFLAG_NORMAL);
+	//drawfill(pos3, size3, '0 1 0', 0.3, DRAWFLAG_NORMAL);
 	
 	if (enablepbar) {
 		//Background for healthbar and armorbar
-		HUD_Panel_DrawProgressBar(pos2, size2, autocvar_hud_panel_healtharmor_progressbar_health, 1, 0, 0, '0 0 0', 0.3, DRAWFLAG_NORMAL);
-		HUD_Panel_DrawProgressBar(pos2 + eY*spectatorSize.y, size2, autocvar_hud_panel_healtharmor_progressbar_armor, 1, 0, 0, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+		drawfill(pos2, size2, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+		drawfill(pos2 + eY*spectatorSize.y, size2, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+		//HUD_Panel_DrawProgressBar(pos2, size2, autocvar_hud_panel_healtharmor_progressbar_health, 1, 0, 0, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+		//HUD_Panel_DrawProgressBar(pos2 + eY*spectatorSize.y, size2, autocvar_hud_panel_healtharmor_progressbar_armor, 1, 0, 0, '0 0 0', 0.3, DRAWFLAG_NORMAL);
 
 		//Draw player's health and armor information
 		HUD_Panel_DrawProgressBar(pos2, size2, autocvar_hud_panel_healtharmor_progressbar_health, entcs.healthvalue /maxhealth, 0, playerlocation, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
