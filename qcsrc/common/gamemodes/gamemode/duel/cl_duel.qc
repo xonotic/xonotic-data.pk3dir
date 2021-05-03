@@ -24,23 +24,35 @@ void DrawDuelPlayer(vector elementPos, vector textSize, vector spectatorSize, in
 
 	vector pos1 = '0 0 0';
 	vector pos2 = '0 0 0';
+	vector pos3 = '0 0 0';
 	pos1 = elementPos + eX*border + eY*border;
 	pos2 = elementPos + eY*textSize.y + eX*border - eY*border;
+	pos3 = elementPos + eX*textSize.x;
 
 	vector size1 = '0 0 0';
 	vector size2 = '0 0 0';
+	vector size3 = '0 0 0';
 	size1 = textSize - 2*(eX*border + eY*border);
 	size2 = spectatorSize - 2*eX*border;
+	size3 = vec2(spectatorSize.x - textSize.x, size1.y);
 
 	if (!enablepbar) {
 		size1 = (textSize + eY*spectatorItemCount*spectatorSize.y) - 2*(eX*border + eY*border);
+		size3 = vec2(size3.x, size1.y);
 	}
 
 	assert(getthink(entcs), eprint(entcs));
 	getthink(entcs)(entcs);
 
+	if (playerlocation) {
+		pos3 = elementPos;
+		pos1 = elementPos + eX*size3.x;
+	}
+
 	//Draw player's name
 	drawcolorcodedstring_aspect(pos1, entcs_GetName(playerindex), size1, panel_fg_alpha, DRAWFLAG_NORMAL);
+	//Draw player's score
+	drawcolorcodedstring_aspect(pos3, itos(sumval), size3, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	if (enablepbar) {
 		//Background for healthbar and armorbar
@@ -78,12 +90,12 @@ void HUD_Mod_Duel_Draw(vector myPos, vector mySize) {
 	}
 
 	vector pos = '0 0 0';
-	vector textSize = vec2(3*mySize.x/8, 2*mySize.y/3);
-	vector spectatorSize = vec2(textSize.x, textSize.y/4);
+	vector textSize = vec2(2*mySize.x/8, 2*mySize.y/3);
+	vector spectatorSize = vec2(3*textSize.x/2, textSize.y/4);
 	vector partSize = vec2(mySize.x/2, mySize.y);
 
 	for (int i = 0; i < 2; i++) {
-		pos.x = myPos.x + 2*partSize.x*i - textSize.x*i; //Start position with central breaks (left to left border, right to right border)
+		pos.x = myPos.x + 2*partSize.x*i - spectatorSize.x*i; //Start position with central breaks (left to left border, right to right border)
 		pos.y = myPos.y;
 
 		if (i == 0) {
