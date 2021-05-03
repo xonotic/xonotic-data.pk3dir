@@ -136,6 +136,18 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	cvar_set("lastlevel", "1");
 }
 
+.entity quitGameButton;
+void XonoticSingleplayerDialog_draw(entity me)
+{
+	entity e = me.quitGameButton;
+	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
+	if(cvar("g_campaign"))
+		e.setText(e, _("Quit campaign"));
+	else
+		e.setText(e, _("Quit current game"));
+	SUPER(XonoticSingleplayerDialog).draw(me);
+}
+
 void XonoticSingleplayerDialog_fill(entity me)
 {
 	entity e, btnPrev, btnNext, lblTitle;
@@ -166,8 +178,11 @@ void XonoticSingleplayerDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-2", ZCTX(_("CSKL^Easy"))));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Medium"))));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "2", ZCTX(_("CSKL^Hard"))));
-		me.TR(me);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Singleplayer!"), '0 0 0'));
+	me.TR(me);
+		me.TDempty(me, me.columns * 1/13);
+		me.TD(me, 1, me.columns * 5/13, me.quitGameButton = makeXonoticCommandButton(string_null, '0 0 0', QUITGAME_CMD, 0));
+		me.TDempty(me, me.columns * 1/13);
+		me.TD(me, 1, me.columns * 5/13, e = makeXonoticButton(_("Play campaign!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
 			e.onClickEntity = me.campaignBox;
 }

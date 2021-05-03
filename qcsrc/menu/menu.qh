@@ -15,6 +15,11 @@ const int GAME_DEVELOPER    = BIT(2);
 bool Menu_Active;
 int gamestatus;
 
+// resets g_campaign and updates menu items to reflect cvar values that may have been restored after leaving the campaign
+// the delay is for allowing listening to the button sound (if enabled), since the disconnect command stops all sounds
+// menu_sync is also useful when quitting Instant Action mode
+const string QUITGAME_CMD = "defer 0.4 disconnect; defer 0.4 wait; defer 0.4 \"g_campaign 0\"; defer 0.4 menu_sync";
+
 const int S_SHIFT = 1;
 const int S_CTRL = 2;
 const int S_ALT = 4;

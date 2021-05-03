@@ -64,6 +64,18 @@ entity makeXonoticServerCreateTab()
 	return me;
 }
 
+.entity quitGameButton;
+void XonoticServerCreateTab_draw(entity me)
+{
+	entity e = me.quitGameButton;
+	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
+	if(cvar("g_campaign"))
+		e.setText(e, _("Quit campaign"));
+	else
+		e.setText(e, _("Quit current game"));
+	SUPER(XonoticServerCreateTab).draw(me);
+}
+
 void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
@@ -200,10 +212,11 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClick = MapList_Remove_All;
 			e.onClickEntity = me.mapListBox;
 
-	// The big button at the bottom
-
+	// bottom row
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Multiplayer!"), '0 0 0'));
+		me.TDempty(me, me.columns * 1/12);
+		me.TD(me, 1, me.columns * 5/12, me.quitGameButton = makeXonoticCommandButton(string_null, '0 0 0', QUITGAME_CMD, 0));
+		me.TD(me, 1, me.columns * 5/12, e = makeXonoticButton(_("Start multiplayer!"), '0 0 0'));
 			e.onClick = MapList_LoadMap;
 			e.onClickEntity = me.mapListBox;
 			me.mapListBox.startButton = e;
