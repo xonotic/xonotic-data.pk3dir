@@ -13,6 +13,7 @@
 #include "slider.qh"
 #include "mainwindow.qh"
 #include "button.qh"
+#include "commandbutton.qh"
 #include "inputbox.qh"
 
 void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip)

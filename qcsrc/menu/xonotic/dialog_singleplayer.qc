@@ -2,6 +2,7 @@
 
 #include <common/gamemodes/_mod.qh>
 #include "bigbutton.qh"
+#include "commandbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"
 #include "campaign.qh"
