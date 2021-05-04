@@ -619,7 +619,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(NADE_BONUS,                        N_ENABLE,    0, 0, "",               CPID_NADES,             "0 0",  _("^F2You got a ^K1BONUS GRENADE^F2!"), "")
 
     MSG_CENTER_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,         N_ENABLE,    0, 1, "death_team",     CPID_Null,              "0 0",  _("^BGYou have been moved into a different team\nYou are now on: %s"), "")
-    MSG_CENTER_NOTIF(DEATH_SELF_BETRAYAL,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Don't shoot your team mates!"), _("^K1Don't go against your team mates!"))
+    MSG_CENTER_NOTIF(DEATH_SELF_BETRAYAL,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You were punished for attacking your team mates!"), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CAMP,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Die camper!"), _("^K1Reconsider your tactics, camper!"))
     MSG_CENTER_NOTIF(DEATH_SELF_CHEAT,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You unfairly eliminated yourself!"), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CUSTOM,                 N_ENABLE,    2, 0, "s2",             CPID_Null,              "0 0",  _("^K1You were %s"), "")
@@ -654,8 +654,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,         N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You couldn't find shelter from a Racer rocket!"), "")
     MSG_CENTER_NOTIF(DEATH_SELF_VOID,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Watch your step!"), "")
 
-    MSG_CENTER_NOTIF(DEATH_TEAMKILL_FRAG,               N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!"))
-    MSG_CENTER_NOTIF(DEATH_TEAMKILL_FRAGGED,            N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate"))
+    MSG_CENTER_NOTIF(DEATH_TEAMKILL_FRAG,               N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1Traitor! You team killed ^BG%s"), _("^K1Traitor! You betrayed team mate ^BG%s"))
+    MSG_CENTER_NOTIF(DEATH_TEAMKILL_FRAGGED,            N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were team killed by ^BG%s"), _("^K1You were betrayed by team mate ^BG%s"))
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "")
     MSG_CENTER_NOTIF(MOVETOSPEC_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", _("^K1Stop idling!\n^BGMoving to spectator in ^COUNT..."), "")
