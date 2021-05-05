@@ -1261,7 +1261,8 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	HUD_Panel_DrawBg();
 	
 	// Stop here if there are no scores available
-	if(pl.team != tm.team) return;
+	if(!pl) return;
+	if(entcs_GetSpecState(pl.sv_entnum) == ENTCS_SPEC_PURE) return;
 	
 	tmp = pos;
 	tmp.x += panel_bg_padding;
