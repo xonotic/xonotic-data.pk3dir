@@ -1249,6 +1249,8 @@ vector Scoreboard_Duel_DrawPickup(vector pos, bool skinned, string icon, vector 
 	return pos;
 }
 
+int left_pl_dmg = 50;
+int right_pl_dmg = 50;
 void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 {
 	vector tmp, tmp_in, tmp_sz, tmp_acc;
@@ -1345,9 +1347,9 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	tmp_str = ftos(pl.(scores(SP_DMG)));
 	drawstring(tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
 		tmp_str, hud_fontsize  * 1.25, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		
+	
 	tmp_acc = tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2);
-		
+	
 	if(invert)
 		i--;
 	else
@@ -1369,6 +1371,9 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	int total_weapons = 0;
 	
 	// Accuracy rows
+	int dmg_percent;
+	vector dmg_color;
+	
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	FOREACH(Weapons, it != WEP_Null, {
 		WepSet set = it.m_wepset;
@@ -1376,7 +1381,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			continue;
 		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
-		
+
 		int weapon_cnt_fired = pl.accuracy_cnt_fired[i - WEP_FIRST];
 		int weapon_cnt_hit   = pl.accuracy_cnt_hit[i - WEP_FIRST];
 		int weapon_acc = 0;
@@ -1384,29 +1389,49 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			weapon_acc = floor((weapon_cnt_hit / weapon_cnt_fired) * 100);
 		average_acc += weapon_acc;
 		
-		string draw_str;
-		
-		// weapon stats
-		int c = (invert ? 4 : 0);
-		
+		// draw row background
 		drawfill(tmp_in + eX * column_width * (invert ? 1 : 0), column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 		
-		draw_str = ftos(pl.accuracy_frags[i - WEP_FIRST]);
-		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
+		if(weapon_cnt_fired) {
+			if(invert) {
+				if(pl.accuracy_hit[i - WEP_FIRST] > left_pl_dmg)
+					left_pl_dmg = pl.accuracy_hit[i - WEP_FIRST];
+				dmg_percent = pl.accuracy_hit[i - WEP_FIRST] / left_pl_dmg;
+			} else {
+				if(pl.accuracy_hit[i - WEP_FIRST] > right_pl_dmg)
+					right_pl_dmg = pl.accuracy_hit[i - WEP_FIRST];
+				dmg_percent = pl.accuracy_hit[i - WEP_FIRST] / right_pl_dmg;
+			}
+			
+			// convert percentage range to 0.4 - 1
+			dmg_percent = dmg_percent * (1 - 0.4) + 0.4;
+			
+			dmg_color.x = dmg_percent;
+			dmg_color.y = dmg_percent;
+			dmg_color.z = dmg_percent;
+			
+			string draw_str;
+			
+			// weapon stats
+			int c = (invert ? 4 : 0);
+			
+			draw_str = ftos(pl.accuracy_frags[i - WEP_FIRST]);
+			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
+				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			draw_str = ftos(pl.accuracy_hit[i - WEP_FIRST]);
+			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
+				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			draw_str = sprintf("%d%%", weapon_acc);
+			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
+				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			draw_str = strcat(ftos(weapon_cnt_hit), " / ", ftos(weapon_cnt_fired));
+			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth(ftos(weapon_cnt_hit), false, hud_fontsize) - eX * hud_fontsize.x * 0.5,
+				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
 		
-		draw_str = ftos(pl.accuracy_hit[i - WEP_FIRST]);
-		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
-			
-		draw_str = sprintf("%d%%", weapon_acc);
-		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
-			
-		draw_str = strcat(ftos(weapon_cnt_hit), " / ", ftos(weapon_cnt_fired));
-		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth(ftos(weapon_cnt_hit), false, hud_fontsize) - eX * hud_fontsize.x * 0.5,
-			draw_str,hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.1 0.1 0.1'), panel_fg_alpha, DRAWFLAG_NORMAL);
-	
 		// weapon icon
 		if(invert) {
 			tmp_in.x = pos.x + panel_size.x - panel_bg_padding - hud_fontsize.x / 2;
