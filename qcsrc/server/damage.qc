@@ -283,7 +283,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					}
-
+					case DEATH_HURTTRIGGER:
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message, deathlocation, CS(targ).killcount, 0, 0);
+						break;
 					default:
 					{
 						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
@@ -818,8 +820,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 								attacker.damage_dealt += damage;
 						}
 
-						damage_goodhits += 1;
-						damage_gooddamage += damage;
+						impressive_hits += 1;
 
 						if (!DEATH_ISSPECIAL(deathtype))
 						{
@@ -888,9 +889,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	}
 }
 
+// Returns total damage applies to creatures
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
-	// Returns total damage applies to creatures
 {
 	entity	targ;
 	vector	force;
@@ -1229,21 +1230,16 @@ void Fire_ApplyDamage(entity e)
 	float t, d, hi, ty;
 	entity o;
 
+	// water, slime and ice stop fire
+	if (STAT(FROZEN, e) || (e.waterlevel && (e.watertype != CONTENT_LAVA)))
+		e.fire_endtime = 0;
+
 	if (!Fire_IsBurning(e))
 		return;
 
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
 	if(IS_NOT_A_CLIENT(o))
 		o = e.fire_owner;
-
-	// water and slime stop fire
-	if(e.waterlevel)
-	if(e.watertype != CONTENT_LAVA)
-		e.fire_endtime = 0;
-
-	// ice stops fire
-	if(STAT(FROZEN, e))
-		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;

@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 65535));
+		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
@@ -100,7 +100,6 @@ void PingPLReport_Spawn()
 }
 
 const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
-float world_initialized;
 
 void SetDefaultAlpha()
 {
@@ -171,6 +170,7 @@ void cvar_changes_init()
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
+#define BADVALUE(p, val) if (k == p && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -348,6 +348,7 @@ void cvar_changes_init()
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_ca_spectate_enemies");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
@@ -491,6 +492,7 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
+		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
@@ -500,6 +502,8 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
+		BADVALUE("sys_ticrate", "0.0166667");
+		BADVALUE("sys_ticrate", "0.0333333");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
@@ -520,15 +524,10 @@ void cvar_changes_init()
 		BADCVAR("g_lms_weaponarena");
 		BADCVAR("g_ctf_stalemate_time");
 
-		if(cvar_string("g_mod_balance") == "Testing")
-		{
-			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
-			BADPREFIX("g_balance_");
-		}
-
 #undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
+#undef BADVALUE
 
 		if(pureadding)
 		{
@@ -757,6 +756,9 @@ spawnfunc(worldspawn)
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
+	// default to RACE_RECORD, can be overwritten by gamemodes
+	record_type = RACE_RECORD;
+
 	// needs to be done so early because of the constants they create
 	static_init();
 
@@ -944,12 +946,18 @@ spawnfunc(worldspawn)
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
+	bool records_available = false;
 	for(int i = 0; i < 10; ++i)
 	{
 		string s = getrecords(i);
-		if (s)
+		if (s != "")
+		{
 			records_reply[i] = strzone(s);
+			records_available = true;
+		}
 	}
+	if (!records_available)
+		records_reply[0] = "No records available for the current game mode.\n";
 	ladder_reply = strzone(getladder());
 	rankings_reply = strzone(getrankings());
 
@@ -1186,7 +1194,7 @@ void DumpStats(float final)
 	s = strcat(s, GetGametype(), "_", GetMapname(), ":", ftos(rint(time)));
 
 	if(to_console)
-		LOG_INFO(s);
+		LOG_HELP(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 
@@ -1202,7 +1210,7 @@ void DumpStats(float final)
 
 	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
-		LOG_INFO(s);
+		LOG_HELP(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 	if(to_file)
@@ -1217,7 +1225,7 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, playername(it.netname, it.team, false));
+			LOG_HELP(s, playername(it.netname, it.team, false));
 		if(to_eventlog)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it.netname, it.team, false)));
 		if(to_file)
@@ -1228,7 +1236,7 @@ void DumpStats(float final)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
-			LOG_INFO(s);
+			LOG_HELP(s);
 		if(to_eventlog)
 			GameLogEcho(s);
 		if(to_file)
@@ -1239,7 +1247,7 @@ void DumpStats(float final)
 			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
-				LOG_INFO(s);
+				LOG_HELP(s);
 			if(to_eventlog)
 				GameLogEcho(s);
 			if(to_file)
@@ -1248,7 +1256,7 @@ void DumpStats(float final)
 	}
 
 	if(to_console)
-		LOG_INFO(":end");
+		LOG_HELP(":end");
 	if(to_eventlog)
 		GameLogEcho(":end");
 	if(to_file)
@@ -1829,7 +1837,7 @@ void readplayerstartcvars()
 	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
-		random_start_ammo = new(random_start_ammo);
+		random_start_ammo = new_pure(random_start_ammo);
 	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
@@ -1961,7 +1969,7 @@ void readplayerstartcvars()
 		random_start_weapons_count = cvar("g_random_start_weapons_count");
 		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
 		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
-		SetResource(random_start_ammo, RES_ROCKETS,cvar("g_random_start_rockets"));
+		SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
 		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
 		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 	}
@@ -2021,16 +2029,11 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
-	SetResource(random_start_ammo, RES_SHELLS,
-		max(0, GetResource(random_start_ammo, RES_SHELLS)));
-	SetResource(random_start_ammo, RES_BULLETS,
-		max(0, GetResource(random_start_ammo, RES_BULLETS)));
-	SetResource(random_start_ammo, RES_ROCKETS,
-		max(0, GetResource(random_start_ammo, RES_ROCKETS)));
-	SetResource(random_start_ammo, RES_CELLS,
-		max(0, GetResource(random_start_ammo, RES_CELLS)));
-	SetResource(random_start_ammo, RES_PLASMA,
-		max(0, GetResource(random_start_ammo, RES_PLASMA)));
+	SetResource(random_start_ammo, RES_SHELLS, max(0, GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS, max(0, GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS, max(0, GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS, max(0, GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA, max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);

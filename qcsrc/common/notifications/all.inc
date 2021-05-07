@@ -295,7 +295,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_ROCKET,             N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VOID,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "")
 
-    MSG_INFO_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,               N_CONSOLE,  2, 1, "s1 s2loc death_team", "",        "",                     _("^BG%s^K1 was moved into the %s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,               N_CONSOLE,  2, 1, "s1 death_team s2loc", "",        "",                     _("^BG%s^K1 was moved into the %s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_BETRAYAL,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_CAMP,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_camping",       _("^BG%s^K1 thought they found a nice camping ground%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_CHEAT,                        N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_selfkill",      _("^BG%s^K1 unfairly eliminated themself%s%s"), "")
@@ -324,7 +324,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_SLIME,                        N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_slime",         _("^BG%s^K1 was slimed%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_SUICIDE,                      N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_selfkill",      _("^BG%s^K1 couldn't take it anymore%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_SWAMP,                        N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_slime",         _("^BG%s^K1 is now preserved for centuries to come%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_TEAMCHANGE,                   N_CONSOLE,  2, 1, "s1 s2loc death_team", "",        "",                     _("^BG%s^K1 switched to the %s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_TEAMCHANGE,                   N_CONSOLE,  2, 1, "s1 death_team s2loc", "",        "",                     _("^BG%s^K1 switched to the %s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_TOUCHEXPLODE,                 N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 died in an accident%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_TURRET,                       N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 ran into a turret%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_TURRET_EWHEEL,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was blasted away by an eWheel turret%s%s"), "")
@@ -347,7 +347,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_VH_SPID_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_DEATH,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  3, 1, "s1 s2 s2loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s^K1%s%s", "")
+    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  3, 1, "s1 s2 s3loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s^K1%s%s", "")
 
     MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
@@ -415,6 +415,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 disconnected"), "")
     MSG_INFO_NOTIF(QUIT_KICK_IDLING,                        N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for idling"), "")
+    MSG_INFO_NOTIF(MOVETOSPEC_IDLING,                       N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was moved to spectator for idling"), "")
     MSG_INFO_NOTIF(QUIT_KICK_SPECTATING,                    N_CONSOLE,  0, 0, "", "",           "",             _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "")
     MSG_INFO_NOTIF(QUIT_KICK_TEAMKILL,                      N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for excessive teamkilling"), "")
     MSG_INFO_NOTIF(QUIT_SPECTATE,                           N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 is now spectating"), "")
@@ -657,6 +658,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(DEATH_TEAMKILL_FRAGGED,            N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate"))
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "")
+    MSG_CENTER_NOTIF(MOVETOSPEC_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", _("^K1Stop idling!\n^BGMoving to spectator in ^COUNT..."), "")
 
     MSG_CENTER_NOTIF(DOOR_LOCKED_NEED,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou need %s^BG!"), "")
     MSG_CENTER_NOTIF(DOOR_LOCKED_ALSONEED,              N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou also need %s^BG!"), "")

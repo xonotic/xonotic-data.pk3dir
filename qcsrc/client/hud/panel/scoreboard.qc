@@ -89,7 +89,8 @@ float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
 
 bool autocvar_hud_panel_scoreboard_itemstats = true;
 bool autocvar_hud_panel_scoreboard_itemstats_doublerows = false;
-bool autocvar_hud_panel_scoreboard_itemstats_filter = true;
+int autocvar_hud_panel_scoreboard_itemstats_filter = 1;
+int autocvar_hud_panel_scoreboard_itemstats_filter_mask = 12;
 float autocvar_hud_panel_scoreboard_itemstats_showdelay = 2.2; // slightly more delayed than accuracy
 float autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos = 0.75;
 
@@ -163,6 +164,8 @@ string Label_getInfo(string label, int mode)
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
 
+#define SB_EXTRA_SORTING_FIELDS 5
+PlayerScoreField sb_extra_sorting_field[SB_EXTRA_SORTING_FIELDS];
 void Scoreboard_InitScores()
 {
 	int i, f;
@@ -175,6 +178,13 @@ void Scoreboard_InitScores()
 			ps_primary = it;
 		if(f == SFL_SORT_PRIO_SECONDARY)
 			ps_secondary = it;
+		if(ps_primary == it || ps_secondary == it)
+			continue;
+		if (scores_label(it) == "kills")      sb_extra_sorting_field[0] = it;
+		if (scores_label(it) == "deaths")     sb_extra_sorting_field[1] = it;
+		if (scores_label(it) == "suicides")   sb_extra_sorting_field[2] = it;
+		if (scores_label(it) == "dmg")        sb_extra_sorting_field[3] = it;
+		if (scores_label(it) == "dmgtaken")   sb_extra_sorting_field[4] = it;
 	});
 	if(ps_secondary == NULL)
 		ps_secondary = ps_primary;
@@ -238,14 +248,8 @@ int Scoreboard_CompareScore(int vl, int vr, int f)
 
 float Scoreboard_ComparePlayerScores(entity left, entity right)
 {
-	float vl, vr, r;
-	vl = entcs_GetTeam(left.sv_entnum);
-	vr = entcs_GetTeam(right.sv_entnum);
-
-	if(!left.gotscores)
-		vl = NUM_SPECTATOR;
-	if(!right.gotscores)
-		vr = NUM_SPECTATOR;
+	int vl = (left.gotscores) ? entcs_GetTeam(left.sv_entnum) : NUM_SPECTATOR;
+	int vr = (right.gotscores) ? entcs_GetTeam(right.sv_entnum) : NUM_SPECTATOR;
 
 	if(vl > vr)
 		return true;
@@ -261,18 +265,26 @@ float Scoreboard_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	r = Scoreboard_CompareScore(left.scores(ps_primary), right.scores(ps_primary), scores_flags(ps_primary));
-	if (r >= 0)
-		return r;
+	entity fld = NULL;
+	int r;
+	for (int i = -2; i < SB_EXTRA_SORTING_FIELDS; ++i)
+	{
+		if (i < 0)
+		{
+			if (!fld) fld = ps_primary;
+			else if (ps_secondary == ps_primary) continue;
+			else fld = ps_secondary;
+		}
+		else
+		{
+			fld = sb_extra_sorting_field[i];
+			if (fld == ps_primary || fld == ps_secondary) continue;
+		}
+		if (!fld) continue;
 
-	r = Scoreboard_CompareScore(left.scores(ps_secondary), right.scores(ps_secondary), scores_flags(ps_secondary));
-	if (r >= 0)
-		return r;
-
-	FOREACH(Scores, true, {
-		r = Scoreboard_CompareScore(left.scores(it), right.scores(it), scores_flags(it));
+		r = Scoreboard_CompareScore(left.scores(fld), right.scores(fld), scores_flags(fld));
 		if (r >= 0) return r;
-	});
+	}
 
 	if (left.sv_entnum < right.sv_entnum)
 		return true;
@@ -295,26 +307,29 @@ void Scoreboard_UpdatePlayerPos(entity player)
 
 float Scoreboard_CompareTeamScores(entity left, entity right)
 {
-	int i, r;
-
 	if(left.team == NUM_SPECTATOR)
 		return 1;
 	if(right.team == NUM_SPECTATOR)
 		return 0;
 
-	r = Scoreboard_CompareScore(left.teamscores(ts_primary), right.teamscores(ts_primary), teamscores_flags(ts_primary));
-	if (r >= 0)
-		return r;
-
-	r = Scoreboard_CompareScore(left.teamscores(ts_secondary), right.teamscores(ts_secondary), teamscores_flags(ts_secondary));
-	if (r >= 0)
-		return r;
-
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	int fld_idx = -1;
+	int r;
+	for(int i = -2; i < MAX_TEAMSCORE; ++i)
 	{
-		r = Scoreboard_CompareScore(left.teamscores(i), right.teamscores(i), teamscores_flags(i));
-		if (r >= 0)
-			return r;
+		if (i < 0)
+		{
+			if (fld_idx == -1) fld_idx = ts_primary;
+			else if (ts_secondary == ts_primary) continue;
+			else fld_idx = ts_secondary;
+		}
+		else
+		{
+			fld_idx = i;
+			if (fld_idx == ts_primary || fld_idx == ts_secondary) continue;
+		}
+
+		r = Scoreboard_CompareScore(left.teamscores(fld_idx), right.teamscores(fld_idx), teamscores_flags(fld_idx));
+		if (r >= 0) return r;
 	}
 
 	if (left.team < right.team)
@@ -422,9 +437,16 @@ void Cmd_Scoreboard_SetFields(int argc)
 				cvar_set("scoreboard_columns", SCOREBOARD_DEFAULT_COLUMNS);
 			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 		}
-		else if(argv(2) == "all")
+		else if(argv(2) == "all" || argv(2) == "ALL")
 		{
-			string s = "ping pl name |"; // scores without a label
+			string s = "ping pl name |"; // scores without label (not really scores)
+			if(argv(2) == "ALL")
+			{
+				// scores without label
+				s = strcat(s, " ", "sum");
+				s = strcat(s, " ", "kdratio");
+				s = strcat(s, " ", "frags");
+			}
 			FOREACH(Scores, true, {
 				if(it != ps_primary)
 				if(it != ps_secondary)
@@ -463,25 +485,27 @@ void Cmd_Scoreboard_SetFields(int argc)
 				continue;
 		}
 
+		str = strtolower(str);
 		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
 		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
-		str = strtolower(str);
 
 		PlayerScoreField j;
 		switch(str)
 		{
+			// fields without a label (not networked via the score system)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
-			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
-			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
-			case "elo": sbt_field[sbt_num_fields] = SP_ELO; break;
-			case "dmg": case "damage": sbt_field[sbt_num_fields] = SP_DMG; break;
-			case "dmgtaken": case "damagetaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
-			case "fps": sbt_field[sbt_num_fields] = SP_FPS; break;
-			default:
+			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
+			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
+			case "frags": sbt_field[sbt_num_fields] = SP_FRAGS; break;
+			default: // fields with a label
 			{
+				// map alternative labels
+				if (str == "damage") str = "dmg";
+				if (str == "damagetaken") str = "dmgtaken";
+
 				FOREACH(Scores, true, {
 					if (str == strtolower(scores_label(it))) {
 						j = it;
@@ -489,16 +513,15 @@ void Cmd_Scoreboard_SetFields(int argc)
 					}
 				});
 
-LABEL(notfound)
-				if(str == "frags")
-					j = SP_FRAGS;
-				else
-				{
-					if(!nocomplain)
-						LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
-					continue;
-				}
-LABEL(found)
+				// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
+				if(!nocomplain && str != "fps") // server can disable the fps field
+					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
+
+				strfree(sbt_field_title[sbt_num_fields]);
+				sbt_field_size[sbt_num_fields] = 0;
+				continue;
+
+				LABEL(found)
 				sbt_field[sbt_num_fields] = j;
 				if(j == ps_primary)
 					have_primary = true;
@@ -524,7 +547,7 @@ LABEL(found)
 	{
 		if(!have_name)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
+			strfree(sbt_field_title[sbt_num_fields]);
 			for(i = sbt_num_fields; i > 0; --i)
 			{
 				sbt_field_title[i] = sbt_field_title[i-1];
@@ -538,7 +561,7 @@ LABEL(found)
 
 			if(!have_separator)
 			{
-				strunzone(sbt_field_title[sbt_num_fields]);
+				strfree(sbt_field_title[sbt_num_fields]);
 				for(i = sbt_num_fields; i > 1; --i)
 				{
 					sbt_field_title[i] = sbt_field_title[i-1];
@@ -1329,18 +1352,31 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	return end_pos;
 }
 
-.bool uninteresting;
-STATIC_INIT(default_order_items_label)
+bool is_item_filtered(entity it)
 {
-	IL_EACH(default_order_items, true, {
-		if(!(it.instanceOfPowerup
-			|| it == ITEM_HealthMega || it == ITEM_HealthBig
-			|| it == ITEM_ArmorMega || it == ITEM_ArmorBig
-			))
+	if (!autocvar_hud_panel_scoreboard_itemstats_filter)
+		return false;
+	int mask = autocvar_hud_panel_scoreboard_itemstats_filter_mask;
+	if (mask <= 0)
+		return false;
+	if (it.instanceOfArmor || it.instanceOfHealth)
+	{
+		int ha_mask = floor(mask) % 10;
+		switch (ha_mask)
 		{
-			it.uninteresting = true;
+			default: return false;
+			case 4: if (it == ITEM_HealthMega || it == ITEM_ArmorMega) return true; // else fallthrough
+			case 3: if (it == ITEM_HealthBig || it == ITEM_ArmorBig) return true; // else fallthrough
+			case 2: if (it == ITEM_HealthMedium || it == ITEM_ArmorMedium) return true; // else fallthrough
+			case 1: if (it == ITEM_HealthSmall || it == ITEM_ArmorSmall) return true; // else fallthrough
 		}
-	});
+	}
+	if (it.instanceOfAmmo)
+	{
+		int ammo_mask = floor(mask / 10) % 10;
+		return (ammo_mask == 1);
+	}
+	return false;
 }
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
@@ -1352,7 +1388,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	IL_EACH(default_order_items, true, {
 		int q = g_inventory.inv_items[it.m_id];
 		//q = 1; // debug: display all items
-		if (autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting)
+		if (is_item_filtered(it))
 			++uninteresting_cnt;
 		else if (!q)
 			++disowned_cnt;
@@ -1419,7 +1455,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	IL_EACH(default_order_items, !(autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting), {
+	IL_EACH(default_order_items, !is_item_filtered(it), {
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
@@ -1681,7 +1717,7 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	if (!have_item_stats)
 	{
 		IL_EACH(default_order_items, true, {
-			if (!(autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting))
+			if (!is_item_filtered(it))
 			{
 				int q = g_inventory.inv_items[it.m_id];
 				//q = 1; // debug: display all items

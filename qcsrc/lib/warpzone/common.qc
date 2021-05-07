@@ -571,13 +571,24 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 	return nearest;
 }
 
+// blacklist of entities that WarpZone_FindRadius doesn't care about
 bool WarpZoneLib_BadEntity(entity e)
 {
 	if (is_pure(e)) return true;
 	string s = e.classname;
 
-	//if (s == "net_linked") return true; // actually some real entities are linked without classname, fail
-	if (s == "") return true;
+	switch(s)
+	{
+		case "weaponentity":
+		case "exteriorweaponentity":
+		case "sprite_waypoint":
+		case "spawnfunc":
+		case "weaponchild":
+		case "chatbubbleentity":
+		//case "net_linked": // actually some real entities are linked without classname, fail
+		case "":
+			return true;
+	}
 
 	if (startsWith(s, "target_")) return true;
 

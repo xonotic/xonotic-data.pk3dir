@@ -43,12 +43,14 @@ void GameCommand(string theCommand)
 	int argc = tokenize_console(theCommand);
 	string ss = strtolower(argv(0));
 
+	// TODO port these commands to the command system
 	if (argv(0) == "help" || argc == 0)
 	{
-		LOG_HELP(_("Usage: menu_cmd command..., where possible commands are:"));
-		LOG_HELP(_("  sync - reloads all cvars on the current menu page"));
-		LOG_HELP(_("  directmenu ITEM - select a menu item as main item"));
-		LOG_HELP(_("  dumptree - dump the state of the menu as a tree to the console"));
+		LOG_HELP("Usage:^3 menu_cmd <command> [<item>], where possible commands are:");
+		LOG_HELP("  'sync' reloads all cvars on the current menu page");
+		LOG_HELP("  'directmenu' shows the menu window named <item> (or the menu window containing an item named <item>)");
+		LOG_HELP("   if <item> is not specified it shows the list of available items in the console");
+		LOG_HELP("  'dumptree' dumps the state of the menu as a tree to the console");
 
 		LOG_HELP("\nGeneric commands shared by all programs:");
 		GenericCommand_macro_help();
@@ -77,7 +79,7 @@ void GameCommand(string theCommand)
 
 		if (argc == 1)
 		{
-			LOG_HELP(_("Available options:"));
+			LOG_HELP("Available items:");
 
 			FOREACH_ENTITY_ORDERED(it.name != "", {
 				if (it.classname == "vtbl") continue;
@@ -126,5 +128,5 @@ void GameCommand(string theCommand)
 	if(MUTATOR_CALLHOOK(Menu_ConsoleCommand, ss, argc, theCommand)) // handled by a mutator
 		return;
 
-	LOG_INFO(_("Invalid command. For a list of supported commands, try menu_cmd help."));
+	LOG_INFO("Invalid command. For a list of supported commands, try menu_cmd help.");
 }

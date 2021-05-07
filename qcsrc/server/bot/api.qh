@@ -73,7 +73,6 @@ void bot_endgame();
 bool bot_fixcount();
 void bot_list_commands();
 void bot_queuecommand(entity bot, string cmdstring);
-void bot_clear(entity this);
 void bot_relinkplayerlist();
 void bot_resetqueues();
 void bot_serverframe();

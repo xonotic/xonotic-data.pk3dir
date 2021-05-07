@@ -2,7 +2,6 @@
 
 #include <common/anim.qh>
 #include <common/animdecide.qh>
-#include <common/animdecide.qh>
 #include <common/csqcmodel_settings.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
@@ -558,6 +557,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.deadflag = DEAD_DYING;
 		// don't play teleportation sounds
 		this.teleportable = TELEPORT_SIMPLE;
+
+		STAT(STRENGTH_FINISHED, this) = 0;
+		STAT(INVINCIBLE_FINISHED, this) = 0;
+		STAT(SUPERWEAPONS_FINISHED, this) = 0;
+		STAT(AIR_FINISHED, this) = 0;
 
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 

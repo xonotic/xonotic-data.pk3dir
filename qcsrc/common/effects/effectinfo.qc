@@ -287,17 +287,19 @@ void effectinfo_dump(int fh, bool alsoprint)
     #undef WRITE
 }
 
-GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt", false)
+#define DEFAULT_FILENAME "effectinfo_dump.txt"
+// NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
+GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo into " DEFAULT_FILENAME, false)
 {
     switch (request) {
         case CMD_REQUEST_COMMAND: {
             string filename = argv(1);
 			bool alsoprint = false;
             if (filename == "") {
-                filename = "effectinfo_dump.txt";
+                filename = DEFAULT_FILENAME;
                 alsoprint = false;
             } else if (filename == "-") {
-                filename = "effectinfo_dump.txt";
+                filename = DEFAULT_FILENAME;
                 alsoprint = true;
             }
             int fh = fopen(filename, FILE_WRITE);
@@ -313,14 +315,15 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt", fa
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]");
-            LOG_HELP("  Where 'filename' is the file to write (default is effectinfo_dump.txt),");
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [<filename>]");
+            LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
             LOG_HELP("  if supplied with '-' output to console as well as default,");
             LOG_HELP("  if left blank, it will only write to default.");
             return;
         }
     }
 }
+#undef DEFAULT_FILENAME
 
 
 REGISTRY(EffectInfos, BITS(9))

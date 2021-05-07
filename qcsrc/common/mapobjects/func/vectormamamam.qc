@@ -89,7 +89,7 @@ void func_vectormamamam_findtarget(entity this)
 
 	this.destvec = this.origin - func_vectormamamam_origin(this, 0);
 
-	entity controller = new(func_vectormamamam_controller);
+	entity controller = new_pure(func_vectormamamam_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_vectormamamam_controller_think);

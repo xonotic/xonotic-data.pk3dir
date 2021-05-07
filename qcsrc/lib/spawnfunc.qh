@@ -251,6 +251,10 @@ void _checkWhitelisted(entity this, string id)
 	}
 }
 
+// this function simply avoids expanding IL_NEW during compilation
+// for each spawning entity
+void g_spawn_queue_spawn() { g_spawn_queue = IL_NEW(); }
+
 noref bool __spawnfunc_first;
 
 #define spawnfunc(id) \
@@ -265,7 +269,7 @@ noref bool __spawnfunc_first;
 		if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = 0; } \
 		else if (__spawnfunc_expecting) { \
 			/* engine call */ \
-			if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
+			if (!g_spawn_queue) g_spawn_queue_spawn(); \
 			__spawnfunc_expecting = 0; \
 			this = __spawnfunc_expect; \
 			__spawnfunc_expect = NULL; \

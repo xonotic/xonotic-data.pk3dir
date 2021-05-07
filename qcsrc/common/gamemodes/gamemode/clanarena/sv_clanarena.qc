@@ -224,7 +224,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			PutClientInServer(it);
 		}
 	});
-	bot_relinkplayerlist();
 	return true;
 }
 
@@ -286,11 +285,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
-	{
 		eliminatedPlayers.SendFlags |= 1;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
-	}
 	return true;
 }
 
@@ -310,7 +305,10 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
+	{
+		entcs_update_players(player);
 		player.caplayer = 0;
+	}
 	if (player.caplayer)
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)

@@ -146,7 +146,7 @@ REGISTER_STAT(DARK_ORB, float) //LegendGuard registers new STAT 08-02-2021
 REGISTER_STAT(DARK_ORB_ALPHA, float)
 
 #ifdef SVQC
-float autocvar_sv_showfps = 5;
+float autocvar_sv_showfps = 0;
 #endif
 REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 
