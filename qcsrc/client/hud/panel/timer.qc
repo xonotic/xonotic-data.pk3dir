@@ -4,6 +4,8 @@
 #include <client/view.qh>
 
 // Timer (#5)
+float last_timeleft;
+bool autocvar_hud_panel_timer_count = true;
 
 void HUD_Timer_Export(int fh)
 {
@@ -45,6 +47,12 @@ void HUD_Timer()
 
 	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	timeleft = ceil(timeleft);
+
+	// countdown sound
+	if(autocvar_hud_panel_timer_count && timeleft > 0 && timeleft != last_timeleft && timeleft <= 10) {
+		sound(NULL, CH_INFO, SND_ENDCOUNT, VOL_BASE, ATTN_NONE);
+		last_timeleft = timeleft;
+	}
 
 	minutesLeft = floor(timeleft / 60);
 

@@ -275,6 +275,7 @@ SOUND(HIT, "misc/hit");
 SOUND(TYPEHIT, "misc/typehit");
 SOUND(KILL, "misc/kill");
 SOUND(DEATH, "misc/death");
+SOUND(ENDCOUNT, "misc/endcount");
 SOUND(ENDMATCH, "misc/endmatch");
 SOUND(OVERTIME, "misc/overtime");
 SOUND(TIMEOUT, "misc/timeout");
