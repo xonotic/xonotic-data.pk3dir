@@ -1430,19 +1430,18 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			draw_str = strcat(ftos(weapon_cnt_hit), " / ", ftos(weapon_cnt_fired));
 			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth(ftos(weapon_cnt_hit), false, hud_fontsize) - eX * hud_fontsize.x * 0.5,
 				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+
+			total_weapons++;
 		}
 		
 		// weapon icon
 		if(invert) {
 			tmp_in.x = pos.x + panel_size.x - panel_bg_padding - hud_fontsize.x / 2;
-			drawpic_aspect_skin(tmp_in, it.model2, vec2(50, hud_fontsize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(tmp_in, it.model2, vec2(50, hud_fontsize.y * 1.15), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		
 		tmp_in.x = pos.x + panel_bg_padding;
 		tmp_in.y += hud_fontsize.y * 1.25;
-		
-		if(weapon_cnt_fired)
-			total_weapons++;
 	});
 	if(total_weapons)
 		average_acc = floor((average_acc / total_weapons) + 0.5);
