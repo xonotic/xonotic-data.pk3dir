@@ -64,6 +64,22 @@ float autocvar_g_nades_entrap_radius = 500;
 float autocvar_g_nades_entrap_time = 10;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
+float autocvar_g_nades_emerald_lifetime = 5; //LegendGuard adds new nade cvars 28-02-2021
+float autocvar_g_nades_emerald_spawncount = 1;
+float autocvar_g_nades_emerald_ball_spread = 0.5;
+float autocvar_g_nades_emerald_ball_lifetime = 1; //if much time, many items will spawn
+float autocvar_g_nades_emerald_fountain_delay = 5;
+float autocvar_g_nades_emerald_ball_count = 3;
+float autocvar_g_nades_emerald_fountain_lifetime = 1; //if much time, fountain will remain
+bool autocvar_g_nades_emerald_powerupjetpack_randomdrop = 0;
+int autocvar_g_nades_emerald_dropitemselect = 0; //admin/user selects which item wants to drop in-game, if not will be random
+float autocvar_g_nades_ammo_time = 5; //LegendGuard adds new nade cvars 13-02-2021
+float autocvar_g_nades_ammo_rate = 30;
+float autocvar_g_nades_ammo_friend = 1;
+float autocvar_g_nades_ammo_foe = -2;
+float autocvar_g_nades_dark_damage = 25; //LegendGuard adds new nade cvars 08-02-2021
+float autocvar_g_nades_dark_time = 13;
+float autocvar_g_nades_dark_radius = 700;
 string autocvar_g_nades_pokenade_monster_type;
 float autocvar_g_nades_pokenade_monster_lifetime;
 #endif
@@ -86,6 +102,12 @@ const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
+const int PROJECTILE_NADE_EMERALD = 88; //LegendGuard adds new nade MACROS 11-02-2021
+const int PROJECTILE_NADE_EMERALD_BURN = 89;
+const int PROJECTILE_NADE_AMMO = 90; //LegendGuard adds new nade MACROS 13-02-2021
+const int PROJECTILE_NADE_AMMO_BURN = 91;
+const int PROJECTILE_NADE_DARK = 92; //LegendGuard adds new nade MACROS 08-02-2021
+const int PROJECTILE_NADE_DARK_BURN = 93;
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
@@ -142,6 +164,7 @@ Nade Nade_FromProjectile(int proj)
 .float toss_time;
 .float nade_show_particles;
 .float nade_veil_prevalpha;
+.float nade_dark_prevalpha; //LegendGuard adds new nade .variable 08-02-2021
 
 bool orb_send(entity this, entity to, int sf);
 
@@ -166,9 +189,174 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
 #endif
 
+REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING); //LegendGuard registers dark blinking nade feature 09-02-2021
+
 #ifdef CSQC
 float cvar_cl_nade_type;
 string cvar_cl_pokenade_type;
+//LegendGuard sets variables for dark nade 09-02-2021
+float autocvar_hud_panel_darkradar_maximised_zoom_scale = 1;
+float dark_appeartime;
+float dark_fadetime;
+/***************************************************************/
+void HUD_DarkBlinking()
+{
+	// vectors for top right, bottom right, bottom and bottom left corners
+	//vector topright = vec2(vid_conwidth, 0);
+	//vector bottom = vec2(vid_conwidth / 2, vid_conheight);
+	vector bottomright = vec2(vid_conwidth, vid_conheight);
+	//vector bottomleft = vec2(0, vid_conheight);
+
+	/*
+	drawfill function parameters (qcsrc/dpdefs/menudefs.qc):
+	float drawfill(vector position, vector size, vector rgb, float alpha, float flag)
+	*/
+	drawfill('0 0 0', bottomright, '0.23 0 0.23', 0.98, DRAWFLAG_NORMAL);
+}
+
+#elif defined(SVQC)
+void DarkBlinking(entity e)
+{
+	if(e == NULL)
+		return;
+
+	int accepted = VerifyClientEntity(e, true, false);
+
+	if(accepted > 0) 
+	{
+		msg_entity = e;
+		WriteHeader(MSG_ONE, TE_CSQC_DARKBLINKING);
+	}
+}
+#endif
+
+#ifdef CSQC
+const int MAX_QUADRATIC2 = 25;
+vector quadratic2_slots[MAX_QUADRATIC2];
+vector quadratic2_dirs[MAX_QUADRATIC2];
+const float QUADRATIC2_SPEED = 150;
+const float QUADRATIC2_TURNSPEED = 0.35;
+const float QUADRATIC2_SIZE = 24;
+const float QUADRATIC2_CHANCE = 0.35;
+float quadratic2_spawntime, quadratic2_fadetime;
+bool quadratic2;
+void HUD_Quadratic2()
+{
+	for(int j = MAX_QUADRATIC2 - 1; j >= 0; --j)
+	{
+		vector slot = quadratic2_slots[j];
+		vector dirs = quadratic2_dirs[j];
+		float oldz = slot.z;
+		if(slot)
+			slot += quadratic2_dirs[j] * QUADRATIC2_SPEED * frametime;
+		slot.z = oldz;
+		//if(slot.z)
+			//slot.z = sin(QUADRATIC2_TURNSPEED * M_PI * time);
+		if(slot.y > vid_conheight || slot.x > vid_conwidth)
+			slot = '0 0 0';
+
+		if(slot == '0 0 0')
+		{
+			if(time > quadratic2_spawntime && random() <= QUADRATIC2_CHANCE) // low chance to spawn!
+			{
+				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
+				slot.y = bound(0, (random() * vid_conheight + 1), vid_conheight);
+				slot.z = 0;
+				dirs = vec2(randomvec());
+				quadratic2_spawntime = time + bound(0.05, random() * 0.5, 0.4); // prevent spawning another one for this amount of time!
+			}
+		}
+		else
+		{
+			vector splash_size = vec2(QUADRATIC2_SIZE, QUADRATIC2_SIZE);
+			if(time > dirs.z)
+			{
+				if(random() <= 0.05)
+					slot.z = -1;
+				else
+					slot.z = floor(random() * 9) + 1;
+				dirs.z = time + QUADRATIC2_TURNSPEED;
+			}
+			string chosen_number = ((slot.z == -1) ? "NOOB" : ftos(rint(slot.z)));
+			draw_beginBoldFont();
+			drawcolorcodedstring(vec2(slot), chosen_number, splash_size, 0.95, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+		}
+
+		quadratic2_slots[j] = slot;
+		quadratic2_dirs[j] = dirs;
+	}
+}
+
+bool darkblink;
+
+STATIC_INIT_LATE(cl_darkblink_override)
+{
+	localcmd("\nalias solve_quadratic2 \"cl_cmd solve_quadratic2 ${* ?}\"\n");
+}
+
+REGISTER_MUTATOR(cl_darkblink, true);
+
+MUTATOR_HOOKFUNCTION(cl_darkblink, DrawScoreboard)
+{
+	return darkblink;
+}
+
+MUTATOR_HOOKFUNCTION(cl_darkblink, HUD_Draw_overlay)
+{
+	if(!darkblink && !quadratic2)
+		return false;
+
+	if(time <= dark_fadetime && autocvar_hud_panel_darkradar_maximised_zoom_scale == 1)
+	{
+		HUD_DarkBlinking();
+		return false;
+	}
+	else
+		darkblink = false;
+
+	if(time <= quadratic2_fadetime)
+	{
+		HUD_Quadratic2();
+		// don't return true, we want regular HUD effects!
+	}
+	else
+		quadratic2 = false;
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(cl_darkblink, CSQC_ConsoleCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return;
+
+	string cmd_name = M_ARGV(0, string);
+	//int cmd_argc = M_ARGV(2, int);
+
+	if(cmd_name == "solve_quadratic2")
+	{
+		quadratic2 = true;
+		quadratic2_fadetime = time + 5;
+		return true;
+	}
+}
+
+NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
+{
+	return = true;
+
+	if(darkblink)
+		return;
+
+	localcmd("play2 sound/misc/blind\n");
+	darkblink = true;
+	dark_appeartime = time;
+	dark_fadetime = time + 9;
+}
+#endif
+/***************************************************************/
+#ifdef CSQC
 bool Projectile_isnade(int proj); // TODO: remove
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator

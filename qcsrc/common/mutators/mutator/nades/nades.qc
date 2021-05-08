@@ -61,6 +61,18 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
 		return true;
 	}
+	if (STAT(AMMUNITIONING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 13-02-2021
+	{
+		M_ARGV(0, vector) = NADE_TYPE_AMMO.m_color;
+		M_ARGV(1, float) = STAT(AMMUNITIONING_ORB_ALPHA);
+		return true;
+	}
+	if (STAT(DARK_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 08-02-2021
+	{
+		M_ARGV(0, vector) = NADE_TYPE_DARK.m_color;
+		M_ARGV(1, float) = STAT(DARK_ORB_ALPHA);
+		return true;
+	}
 	return false;
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
@@ -700,7 +712,472 @@ void nade_veil_boom(entity this)
 	settouch(orb, nade_veil_touch);
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
+/**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
+// All nade icons are in these directories, samples: gfx/hud/default/nade_emerald.tga and gfx/hud/luma/nade_emerald.tga 02-03-2021
+// Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
+void nade_emerald_dropitem(entity e, vector org, entity itm)
+{
+	Item_SetLoot(e, true);
+	e.reset = SUB_Remove;
+	e.noalign = true;
+	StartItem(e, itm);
+	e.gravity = 1;
+	setorigin(e, org);
+	e.velocity = randomvec() * 175 + '0 0 325';
+	e.item_spawnshieldtime = time + 0.7;
+	SUB_SetFade(e, time + autocvar_g_nades_emerald_lifetime, 1);
+	Send_Effect(EFFECT_SMOKE_LARGE, e.origin, '0 0 0', 1);
+	//EFFECT_SMOKE_LARGE is like a small white smoke
+	//See effect MACROS in qcsrc/common/effects/all.inc
+}
 
+void nade_emerald_randomitem(entity e, vector org)
+{
+	float a = random();
+	float b = random();
+	float c = random();
+	float d = random();
+	
+	if (a > b)
+	{
+		if (a > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+	}
+	else if (c > d)
+	{
+		if (c > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+	}
+	else if (autocvar_g_nades_emerald_powerupjetpack_randomdrop)
+	{
+		if (a < 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
+	}
+	else
+		return;
+}
+
+void nade_emerald_allammoitemdrop(entity e, vector org)
+{
+	float wa = random();
+	float wb = random();
+	
+	if (wa > wb)
+	{
+		if (wa > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+		else
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+	}
+	else
+		return;
+}
+
+void nade_emerald_dropping(vector org)
+{
+	//look item MACROS in qcsrc/server/items/items.qc
+	//ITEM_Shells; ITEM_Bullets; ITEM_Rockets; ITEM_Cells; ITEM_Plasma; ITEM_JetpackFuel;
+	//ITEM_Strength; ITEM_Shield;
+	int itemcount = autocvar_g_nades_emerald_spawncount;
+	for(int j = 0; j < itemcount; ++j)
+	{
+		entity e = spawn();
+		e.spawnfunc_checked = true;
+		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
+		
+		switch (autocvar_g_nades_emerald_dropitemselect)
+		{
+			case 0: nade_emerald_randomitem(e, org); return;
+			case 1: nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;
+			case 2: nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;
+			case 3: nade_emerald_allammoitemdrop(e, org); return;
+			case 4: nade_emerald_dropitem(e, org, ITEM_Shells); return;
+			case 5: nade_emerald_dropitem(e, org, ITEM_Bullets); return;
+			case 6: nade_emerald_dropitem(e, org, ITEM_Rockets); return;
+			case 7: nade_emerald_dropitem(e, org, ITEM_Cells); return;
+			case 8: nade_emerald_dropitem(e, org, ITEM_Jetpack); return;
+			case 9: nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;
+			case 10: nade_emerald_dropitem(e, org, ITEM_Shield); return;
+			case 11: nade_emerald_dropitem(e, org, ITEM_Strength); return;
+			default: nade_emerald_randomitem(e, org); return;
+		}
+	}
+}
+
+void emerald_ball_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time > this.pushltime)
+	{
+		delete(this);
+		return;
+	}
+
+	vector midpoint = ((this.absmin + this.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		this.velocity = this.velocity * 0.5;
+
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ this.velocity_z = 200; }
+	}
+
+	this.angles = vectoangles(this.velocity);
+
+	nade_emerald_dropping(this.origin);
+
+	this.nextthink = time + 0.1;
+}
+
+void nade_emerald_ball(entity this)
+{
+	entity proj;
+	vector kick;
+
+	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
+
+	proj = new(grenade);
+	proj.bot_dodge = true;
+	set_movetype(proj, MOVETYPE_BOUNCE);
+	setmodel(proj, MDL_Null);
+	proj.scale = 1;//0.5;
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	setorigin(proj, this.origin);
+	setthink(proj, emerald_ball_think);
+	proj.nextthink = time;
+	proj.effects = EF_LOWPRECISION;
+
+	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
+	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
+	kick.z = (random()/2+0.5) * autocvar_g_nades_emerald_ball_spread;
+	proj.velocity = kick;
+
+	proj.pushltime = time + autocvar_g_nades_emerald_ball_lifetime;
+
+	proj.angles = vectoangles(proj.velocity);
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+
+	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
+}
+
+
+void emerald_fountain_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time >= this.ltime)
+	{
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin + '0 0 1', '0 0 0', 1);
+		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+
+		delete(this);
+		return;
+	}
+
+	vector midpoint = ((this.absmin + this.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		this.velocity = this.velocity * 0.5;
+
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ this.velocity_z = 200; }
+
+		UpdateCSQCProjectile(this);
+	}
+
+	this.nextthink = time + 0.1;
+	if(time >= this.nade_special_time)
+	{
+		this.nade_special_time = time + autocvar_g_nades_emerald_fountain_delay;
+		nade_emerald_ball(this);
+	}
+}
+
+void nade_emerald_boom(entity this)
+{
+	for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
+		nade_emerald_ball(this);
+
+	entity fountain = new(nade_emerald_fountain);
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
+	setorigin(fountain, fountain.origin);
+	setthink(fountain, emerald_fountain_think);
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
+	fountain.pushltime = fountain.ltime;
+	fountain.team = this.team;
+	
+	//nade model maintaining
+	setmodel(fountain, MDL_PROJECTILE_GRENADE);
+	entity timer = new(nade_timer);
+	setmodel(timer, MDL_NADE_TIMER);
+	setattachment(timer, fountain, "");
+	timer.colormap = this.colormap;
+	timer.glowmod = this.glowmod;
+	setthink(timer, nade_timer_think);
+	timer.nextthink = time;
+	timer.wait = fountain.ltime;
+	timer.owner = fountain;
+	timer.skin = 10;
+	
+	set_movetype(fountain, MOVETYPE_TOSS);
+	fountain.bot_dodge = true;
+	fountain.nade_special_time = time;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
+	nade_emerald_dropping(fountain.origin);
+}
+
+/***********************************************************************************/
+//LegendGuard develops ammo nade 13-02-2021
+void nade_ammo_touch(entity this, entity toucher)
+{
+	float maxammo = 999;
+	float ammo_factor;
+	float amshells = GetResource(toucher, RES_SHELLS);
+	float ambullets = GetResource(toucher, RES_BULLETS);
+	float amrockets = GetResource(toucher, RES_ROCKETS);
+	float amcells = GetResource(toucher, RES_CELLS);
+	float amplasma = GetResource(toucher, RES_PLASMA);
+	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	if(!IS_DEAD(toucher))
+	if(!STAT(FROZEN, toucher))
+	{
+		ammo_factor = autocvar_g_nades_ammo_rate*frametime/2;
+		if ( toucher != this.realowner )
+		{
+			if ( SAME_TEAM(toucher,this) )
+			{
+				ammo_factor *= autocvar_g_nades_ammo_friend;
+			}
+			else
+			{
+				ammo_factor *= autocvar_g_nades_ammo_foe;
+			}
+		}
+		if ( ammo_factor > 0 )
+		{
+			if (amshells < maxammo)
+			{
+				GiveResourceWithLimit(toucher, RES_SHELLS, ammo_factor, maxammo);
+			}
+
+			if (ambullets < maxammo) 
+			{
+				GiveResourceWithLimit(toucher, RES_BULLETS, ammo_factor, maxammo);
+			}
+
+			if (amrockets < maxammo)
+			{
+				GiveResourceWithLimit(toucher, RES_ROCKETS, ammo_factor, maxammo);
+			}
+
+			if (amcells < maxammo) 
+			{
+				GiveResourceWithLimit(toucher, RES_CELLS, ammo_factor, maxammo);
+			}
+
+			if (amplasma < maxammo)
+			{
+				GiveResourceWithLimit(toucher, RES_PLASMA, ammo_factor, maxammo);
+			}
+			
+			if (this.nade_show_particles)
+			{
+				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
+			}
+		}
+		else if ( ammo_factor < 0 )
+		{
+			//Foe drops ammo points
+			if (amshells > 0)
+			{
+				SetResource(toucher, RES_SHELLS, amshells + ammo_factor);
+			}
+			
+			if (ambullets > 0)
+			{
+				SetResource(toucher, RES_BULLETS, ambullets + ammo_factor);
+			}
+
+			if (amrockets > 0)
+			{
+				SetResource(toucher, RES_ROCKETS, amrockets + ammo_factor);
+			}
+
+			if (amcells > 0)
+			{
+				SetResource(toucher, RES_CELLS, amcells + ammo_factor);
+			}
+
+			if (amplasma > 0)
+			{
+				SetResource(toucher, RES_PLASMA, amplasma + ammo_factor);
+			}
+			return;
+		}
+	}
+
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	{
+		entity show_brown = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		STAT(AMMUNITIONING_ORB, show_brown) = time+0.1;
+		STAT(AMMUNITIONING_ORB_ALPHA, show_brown) = 0.75 * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_ammo_boom(entity this)
+{
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_ammo_time, autocvar_g_nades_nade_radius);
+
+	settouch(orb, nade_ammo_touch);
+	orb.colormod = '0.66 0.33 0';
+}
+/***********************************************************************************/
+//remember to put an image in gfx/hud/luma and gfx/hud/default per each nade_blabla.tga
+//dark nade does damage like a normal nade but the damage is minor
+//TODO: add Dark smoke effect when exploded 28-02-2021
+void dark_damage(entity this, float radius, float damage)
+{
+	entity e;
+
+	if ( damage < 0 )
+		return;
+
+	for(e = WarpZone_FindRadius(this.origin, radius, true); e; e = e.chain)
+		if(!IS_DEAD(e))
+		if(e.takedamage == DAMAGE_AIM)
+		if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this) || !IS_MONSTER(e))
+		if(!STAT(FROZEN, e))
+		{
+			Damage(this, this, this.realowner, damage, DEATH_NADE.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			Damage_DamageInfo(this.origin, damage, autocvar_g_nades_nade_edgedamage,
+				radius, '1 1 1' * 0, DEATH_NADE.m_id, 0, this);
+		}
+}
+
+void nade_dark_fountain_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time >= this.ltime)
+	{
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin + '0 0 1', '0 0 0', 1);
+		delete(this);
+		return;
+	}
+
+	this.nextthink = time + 0.1;
+
+	// gaussian
+	float randomr;
+	randomr = random();
+	randomr = exp(-5*randomr*randomr)*autocvar_g_nades_dark_radius;
+	float randomw;
+	randomw = random()*M_PI*2;
+	vector randomp;
+	randomp.x = randomr*cos(randomw);
+	randomp.y = randomr*sin(randomw);
+	randomp.z = 1;
+	Send_Effect(EFFECT_SMOKE_SMALL, this.origin + randomp, '0 0 0', 1);
+
+	if(time >= this.nade_special_time)
+	{
+		this.nade_special_time = time + 0.7;
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin, '0 0 0', 1);
+	}
+}
+
+void DarkBlinking(entity e);
+//copy of the special.qc function contents for DarkBlinking
+void nade_dark_touch(entity this, entity toucher)
+{
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	{
+		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+
+		float tint_alpha = 0.75;
+		if(SAME_TEAM(toucher, this.realowner) || SAME_TEAM(toucher, this))
+		{
+			tint_alpha = 0.45;
+			if(!STAT(DARK_ORB, show_tint))
+			{
+				toucher.nade_dark_prevalpha = toucher.alpha;
+				toucher.alpha = 1;
+			}
+		}
+		else
+		{
+			tint_alpha = 0.45;
+			if(!STAT(DARK_ORB, show_tint))
+			{
+				DarkBlinking(toucher);
+				dark_damage(toucher, autocvar_g_nades_dark_radius, autocvar_g_nades_dark_damage);
+			}
+		}
+
+		STAT(DARK_ORB, show_tint) = time + 0.1;
+		STAT(DARK_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_dark_boom(entity this)
+{
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_dark_time, autocvar_g_nades_dark_radius);
+	entity fountain = new(nade_dark_fountain);
+
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
+	setorigin(fountain, fountain.origin);
+	setthink(fountain, nade_dark_fountain_think);
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_dark_time;
+	fountain.pushltime = fountain.wait = fountain.ltime;
+	fountain.team = this.team;
+	fountain.bot_dodge = false;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	fountain.nade_special_time = time + 0.3;
+	fountain.angles = this.angles;
+
+	settouch(orb, nade_dark_touch);
+	orb.colormod = NADE_TYPE_DARK.m_color;
+	//CSQCProjectile(fountain, true, PROJECTILE_NADE_DARK_BURN, true);
+}
+/***********************************************************************************/
 void nade_boom(entity this)
 {
 	entity expef = NULL;
@@ -745,6 +1222,21 @@ void nade_boom(entity this)
 			nade_blast = false;
 			expef = EFFECT_SPAWN_NEUTRAL;
 			break;
+		
+		case NADE_TYPE_EMERALD: //LegendGuard adds nade case 11-02-2021
+			nade_blast = false;
+			expef = EFFECT_EXPLOSION_SMALL;
+			break;
+
+		case NADE_TYPE_AMMO: //LegendGuard adds nade case 13-02-2021
+			nade_blast = false;
+			expef = EFFECT_SPAWN_BROWN;
+			break;
+
+		case NADE_TYPE_DARK: //LegendGuard adds nade case 08-02-2021
+			nade_blast = false;
+			expef = EFFECT_SPAWN_PURPLE;//expef = EFFECT_EXPLOSION_MEDIUM;
+			break;
 
 		default:
 		case NADE_TYPE_NORMAL:
@@ -778,6 +1270,9 @@ void nade_boom(entity this)
 		case NADE_TYPE_MONSTER: nade_monster_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
+		case NADE_TYPE_EMERALD: nade_emerald_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
+		case NADE_TYPE_AMMO: nade_ammo_boom(this); break; //LegendGuard adds the register of new nade 13-02-2021
+		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -1339,6 +1834,15 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			else
 				player.alpha = player.nade_veil_prevalpha;
 		}
+		//LegendGuard adds nade if STAT DARK_ORB 08-02-2021
+		if(STAT(DARK_ORB, player) && STAT(DARK_ORB, player) <= time)
+		{
+			STAT(DARK_ORB, player) = 0;
+			if(player.vehicle)
+				player.vehicle.alpha = player.vehicle.nade_dark_prevalpha;
+			else
+				player.alpha = player.nade_dark_prevalpha;
+		}
 	}
 
 	if (!(frametime && IS_PLAYER(player)))
@@ -1423,6 +1927,12 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 	{
 		mon.alpha = mon.nade_veil_prevalpha;
 		STAT(VEIL_ORB, mon) = 0;
+	}
+	//LegendGuard adds nade if STAT ORB 08-02-2021
+	if (STAT(DARK_ORB, mon) && STAT(DARK_ORB, mon) <= time)
+	{
+		mon.alpha = mon.nade_dark_prevalpha;
+		STAT(DARK_ORB, mon) = 0;
 	}
 }
 
@@ -1561,6 +2071,10 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
+	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee); //LegendGuard adds nade STAT client 13-02-2021
+	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
+	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021
+	STAT(DARK_ORB_ALPHA, client) = STAT(DARK_ORB_ALPHA, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
