@@ -61,12 +61,6 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
 		return true;
 	}
-	/*if (STAT(ARMORIZING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 11-02-2021
-	{
-		M_ARGV(0, vector) = NADE_TYPE_ARMORIZE.m_color;
-		M_ARGV(1, float) = STAT(ARMORIZING_ORB_ALPHA);
-		return true;
-	}*/
 	if (STAT(AMMUNITIONING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 13-02-2021
 	{
 		M_ARGV(0, vector) = NADE_TYPE_AMMO.m_color;
@@ -1081,10 +1075,9 @@ void dark_damage(entity this, float radius, float damage)
 		if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this) || !IS_MONSTER(e))
 		if(!STAT(FROZEN, e))
 		{
-			RadiusDamage(this, this.realowner, damage, 0,
-				radius, this, NULL, 0, this.projectiledeathtype, DMG_NOWEP, this.enemy);
-			Damage_DamageInfo(this.origin, damage, 0,
-				radius, '1 1 1' * 0, this.projectiledeathtype, 0, this);
+			Damage(this, this, this.realowner, damage, DEATH_NADE.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			Damage_DamageInfo(this.origin, damage, autocvar_g_nades_nade_edgedamage,
+				radius, '1 1 1' * 0, DEATH_NADE.m_id, 0, this);
 		}
 }
 
@@ -1149,7 +1142,7 @@ void nade_dark_touch(entity this, entity toucher)
 			if(!STAT(DARK_ORB, show_tint))
 			{
 				DarkBlinking(toucher);
-				dark_damage(this, autocvar_g_nades_dark_radius, autocvar_g_nades_dark_damage);
+				dark_damage(toucher, autocvar_g_nades_dark_radius, autocvar_g_nades_dark_damage);
 			}
 		}
 
@@ -2078,8 +2071,6 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
-	/*STAT(ARMORIZING_ORB, client) = STAT(ARMORIZING_ORB, spectatee); //LegendGuard adds nade STAT client 11-02-2021
-	STAT(ARMORIZING_ORB_ALPHA, client) = STAT(ARMORIZING_ORB_ALPHA, spectatee);*/
 	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee); //LegendGuard adds nade STAT client 13-02-2021
 	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
 	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021
