@@ -1,6 +1,6 @@
 #include "sv_tmayhem.qh"
 
-// TODO? rename to teamdeathmatch
+// TODO? rename to teammayhem? requires checking alias length
 int autocvar_g_tmayhem_teams;
 int autocvar_g_tmayhem_teams_override;
 
@@ -8,9 +8,9 @@ bool autocvar_g_tmayhem_regenerate;
 string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
-bool autocvar_g_tmayhem_frags2score;
-bool autocvar_g_tmayhem_damage2score;
-float autocvar_g_tmayhem_damage2score_multiplier;
+int autocvar_g_tmayhem_scoringmethod;
+
+
 
 // code from here on is just to support maps that don't have team entities
 void tmayhem_SpawnTeam (string teamname, int teamcolor)
@@ -47,6 +47,9 @@ void tmayhem_DelayedInit(entity this)
 
 void tmayhem_Initialize()
 {
+	if(autocvar_g_tmayhem_point_limit != 0 && autocvar_g_tmayhem_fraglimit != 0)
+		tmayhempointmultiplier = autocvar_g_tmayhem_point_limit / autocvar_g_tmayhem_fraglimit;
+
 	GameRules_teams(true);
 	GameRules_spawning_teams(autocvar_g_tmayhem_team_spawns);
 	GameRules_limit_score(autocvar_g_tmayhem_point_limit);
@@ -138,44 +141,112 @@ MUTATOR_HOOKFUNCTION(tmayhem, Damage_Calculate)
 
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 {
-	if(autocvar_g_tmayhem_damage2score){
-		entity frag_attacker = M_ARGV(1, entity);
-		entity frag_target = M_ARGV(2, entity);
-		float frag_deathtype = M_ARGV(6, float);
-		float frag_damage = M_ARGV(7, float);
-		float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-		float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+	switch(autocvar_g_tmayhem_scoringmethod)
+	{
+		//frags only
+		case 2:
+		{
+			return;
+		}
+		
+		//damage only
+		case 3:
+		{
+			entity frag_attacker = M_ARGV(1, entity);
+			entity frag_target = M_ARGV(2, entity);
+			float frag_deathtype = M_ARGV(6, float);
+			float frag_damage = M_ARGV(7, float);
+			float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+			float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
 
-		float excess = max(0, frag_damage - damage_take - damage_save);
+			float excess = max(0, frag_damage - damage_take - damage_save);
 
-		if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
-			GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_tmayhem_damage2score_multiplier);
+			if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
+				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * (1/(start_health + start_armorvalue)));
 			
-		if (frag_target == frag_attacker && IS_PLAYER(frag_attacker) || SAME_TEAM(frag_target, frag_attacker))
-			GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_damage2score_multiplier);
+			if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * (1/(start_health + start_armorvalue)));
 		
-		//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
-		if (!IS_PLAYER(frag_attacker) && (
-			frag_deathtype == DEATH_DROWN.m_id ||
-			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-			frag_deathtype == DEATH_CAMP.m_id ||
-			frag_deathtype == DEATH_LAVA.m_id ||
-			frag_deathtype == DEATH_SLIME.m_id))
-				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_damage2score_multiplier);
+			//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
+			if (!IS_PLAYER(frag_attacker) && (
+				frag_deathtype == DEATH_DROWN.m_id ||
+				frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+				frag_deathtype == DEATH_CAMP.m_id ||
+				frag_deathtype == DEATH_LAVA.m_id ||
+				frag_deathtype == DEATH_SLIME.m_id))
+					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * (1/(start_health + start_armorvalue)));
+				
+			//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
+			//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
+			//FIXME: ^ , might require fixing hp+a check for suicides as a whole
+			if (frag_deathtype == DEATH_KILL.m_id)
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * (1/(start_health + start_armorvalue)));
+			return;
+		}
 		
-		//autocvar_g_tmayhem_frags2score is checked to avoid punishing twice for a suicide
-		//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
-		//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
-		//FIXME: ^ , might require fixing hp+a check for suicides as a whole
-		if (frag_deathtype == DEATH_KILL.m_id && !autocvar_g_tmayhem_frags2score)
-				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * autocvar_g_tmayhem_damage2score_multiplier);
+		//combined damage and frags
+		default:
+		case 1:
+		{
+			entity frag_attacker = M_ARGV(1, entity);
+			entity frag_target = M_ARGV(2, entity);
+			float frag_deathtype = M_ARGV(6, float);
+			float frag_damage = M_ARGV(7, float);
+			float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+			float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+
+			float excess = max(0, frag_damage - damage_take - damage_save);
+
+			if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
+				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * 0.75 * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+			
+			if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+		
+			//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
+			if (!IS_PLAYER(frag_attacker) && (
+				frag_deathtype == DEATH_DROWN.m_id ||
+				frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+				frag_deathtype == DEATH_CAMP.m_id ||
+				frag_deathtype == DEATH_LAVA.m_id ||
+				frag_deathtype == DEATH_SLIME.m_id))
+					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+				
+			//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
+			//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
+			//FIXME: ^ , might require fixing hp+a check for suicides as a whole
+			if (frag_deathtype == DEATH_KILL.m_id)
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * 0.75 * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+			return;
+		}
 	}
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	if(!autocvar_g_tmayhem_frags2score){
-		M_ARGV(2, float) = 0;
-		return true;
+	switch(autocvar_g_tmayhem_scoringmethod)
+	{
+		//frags only
+		case 2:
+		{
+														//fix 999 score from 30 kills for example
+			M_ARGV(2, float) = 1 * tmayhempointmultiplier * 1.0001;
+			return true;
+		}
+		
+		//damage only
+		case 3:
+		{
+			M_ARGV(2, float) = 0;
+			return true;
+		}
+		
+		//combined damage and frags
+		default:
+		case 1:
+		{
+			M_ARGV(2, float) = 0.25 * tmayhempointmultiplier * 1.0001;
+			return true;
+		}
 	}
 }

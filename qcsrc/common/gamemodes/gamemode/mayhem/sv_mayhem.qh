@@ -1,8 +1,18 @@
 #pragma once
 
 #include <common/mutators/base.qh>
+//someone who understands numbers better check if 2 following floats can be ints without imprecision, I'm scared of spaghettimonsters
+float autocvar_g_mayhem_fraglimit;
+float autocvar_g_mayhem_point_limit;
+float mayhempointmultiplier = 1000/30;
+void mayhem_Initialize();
+
 REGISTER_MUTATOR(mayhem, false)
 {
     MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		mayhem_Initialize();
+	}
 	return 0;
 }
