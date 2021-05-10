@@ -210,7 +210,7 @@ vector animfixfps(entity e, vector a, vector b);
 #ifdef GAMEQC
 const int CNT_NORMAL = 1;
 const int CNT_GAMESTART = 2;
-const int CNT_IDLE = 3;
+//const int CNT_IDLE = 3;
 const int CNT_KILL = 4;
 const int CNT_RESPAWN = 5;
 const int CNT_ROUNDSTART = 6;
