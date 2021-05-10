@@ -431,7 +431,14 @@ void IntermissionThink(entity this)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
 	{
 		this.autoscreenshot = -1;
-		if(IS_REAL_CLIENT(this)) { stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
+		if(IS_REAL_CLIENT(this))
+		{
+			string num = strftime(false, "%s");
+			if (num == "")
+				num = strftime_s();
+			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+		}
 		return;
 	}
 
