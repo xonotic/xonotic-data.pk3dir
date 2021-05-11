@@ -2458,9 +2458,8 @@ void PlayerPreThink (entity this)
 			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !this.caplayer
 			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
 		{
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
-			dropclient(this);
-			return;
+			if (dropclient_schedule(this))
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 		}
 	}
 
@@ -2747,8 +2746,8 @@ void PlayerPostThink (entity this)
 				}
 				else
 				{
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
-					dropclient(this);
+					if (dropclient_schedule(this))
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
 				}
 				return;
 			}
