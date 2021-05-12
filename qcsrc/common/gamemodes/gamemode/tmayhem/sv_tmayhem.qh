@@ -3,8 +3,8 @@
 #include <common/mutators/base.qh>
 //someone who understands numbers better check if 2 following floats can be ints without imprecision, I'm scared of spaghettimonsters
 float autocvar_g_tmayhem_fraglimit;
-float autocvar_g_tmayhem_point_limit;
-float autocvar_g_tmayhem_point_leadlimit;
+float autocvar_g_tmayhem_visual_score_limit;
+float autocvar_g_tmayhem_score_leadlimit;
 bool autocvar_g_tmayhem_team_spawns;
 float tmayhempointmultiplier = 1000/50;
 void tmayhem_Initialize();

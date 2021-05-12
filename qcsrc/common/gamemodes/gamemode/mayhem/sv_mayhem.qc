@@ -13,10 +13,10 @@ void mayhem_DelayedInit(entity this)
 
 void mayhem_Initialize()
 {
-	if(autocvar_g_mayhem_point_limit > 0 && autocvar_g_mayhem_fraglimit > 0)
-		mayhempointmultiplier = autocvar_g_mayhem_point_limit / autocvar_g_mayhem_fraglimit;
+	if(autocvar_g_mayhem_visual_score_limit > 0 && autocvar_g_mayhem_fraglimit > 0)
+		mayhempointmultiplier = autocvar_g_mayhem_visual_score_limit / autocvar_g_mayhem_fraglimit;
 
-	GameRules_limit_score(autocvar_g_mayhem_point_limit);
+	GameRules_limit_score(autocvar_g_mayhem_visual_score_limit);
 
 	InitializeEntity(NULL, mayhem_DelayedInit, INITPRIO_GAMETYPE);
 }

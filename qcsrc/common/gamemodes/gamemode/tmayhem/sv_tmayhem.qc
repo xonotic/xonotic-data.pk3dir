@@ -47,13 +47,13 @@ void tmayhem_DelayedInit(entity this)
 
 void tmayhem_Initialize()
 {
-	if(autocvar_g_tmayhem_point_limit != 0 && autocvar_g_tmayhem_fraglimit != 0)
-		tmayhempointmultiplier = autocvar_g_tmayhem_point_limit / autocvar_g_tmayhem_fraglimit;
+	if(autocvar_g_tmayhem_visual_score_limit != 0 && autocvar_g_tmayhem_fraglimit != 0)
+		tmayhempointmultiplier = autocvar_g_tmayhem_visual_score_limit / autocvar_g_tmayhem_fraglimit;
 
 	GameRules_teams(true);
 	GameRules_spawning_teams(autocvar_g_tmayhem_team_spawns);
-	GameRules_limit_score(autocvar_g_tmayhem_point_limit);
-	GameRules_limit_lead(autocvar_g_tmayhem_point_leadlimit);
+	GameRules_limit_score(autocvar_g_tmayhem_visual_score_limit);
+	GameRules_limit_lead(autocvar_g_tmayhem_score_leadlimit);
 
 	InitializeEntity(NULL, tmayhem_DelayedInit, INITPRIO_GAMETYPE);
 }
