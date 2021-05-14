@@ -1,6 +1,8 @@
 #include "notify.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/view.qh>
 
 // Notifications (#4)
 
@@ -62,6 +64,20 @@ void HUD_Notify()
 
 	HUD_Panel_LoadCvars();
 
+	if (scoreboard_fade_alpha)
+	{
+		float minalpha = 1;
+		if (notify_count == 0)
+			minalpha = 0; // hide if empty
+		else if(panel_pos.y < scoreboard_bottom)
+			minalpha = 0.5; // transparent if it may overlap the scoreboard
+		float f = max(minalpha, (1 - scoreboard_fade_alpha));
+		if (f <= 0)
+			return;
+		panel_bg_alpha *= f;
+		panel_fg_alpha *= f;
+	}
+
 	if (autocvar_hud_panel_notify_dynamichud)
 		HUD_Scale_Enable();
 	else
@@ -83,6 +99,8 @@ void HUD_Notify()
 	}
 
 	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	if (intermission) // fade out in half the time
+		fade_start -= (time - intermission_time);
 	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
 	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
