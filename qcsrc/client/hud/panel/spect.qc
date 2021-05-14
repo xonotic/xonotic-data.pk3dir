@@ -337,13 +337,17 @@ void HUD_SpectHUD()
 		entity pl_right = pl_left.sort_next;
 	
 		// Left player
-		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
-		pos.x -= (timer_width * 1.3) / 2;
-		HUD_SpectHUD_drawDuelScore(pos, pl_left, true);
+		if(pl_left && (entcs_GetSpecState(pl_left.sv_entnum) != ENTCS_SPEC_PURE) {
+			pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
+			pos.x -= (timer_width * 1.3) / 2;
+			HUD_SpectHUD_drawDuelScore(pos, pl_left, true);
+		}
 		
 		// Right player
-		pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
-		pos.x += (timer_width * 1.3) / 2;
-		HUD_SpectHUD_drawDuelScore(pos, pl_right, false);
+		if(pl_right && (entcs_GetSpecState(pl_right.sv_entnum) != ENTCS_SPEC_PURE) {
+			pos = panel_pos + vec2((vid_conwidth - 1) / 2, 0);
+			pos.x += (timer_width * 1.3) / 2;
+			HUD_SpectHUD_drawDuelScore(pos, pl_right, false);
+		}
 	}
 }
