@@ -15,13 +15,14 @@
 # Mensious Mensious <ektoras@tutanota.com>, 2018-2019
 # Vindex <kon14.inside@gmail.com>, 2014
 # Yannis Anthymidis, 2011-2012
+# Γιώργος Καρδάμης <kardamisgiorgos@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-18 07:23+0200\n"
-"PO-Revision-Date: 2021-04-18 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-05-14 09:13+0000\n"
+"Last-Translator: Γιώργος Καρδάμης <kardamisgiorgos@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
 "Language: el\n"
@@ -399,7 +400,7 @@ msgstr "QMCMD^πεζμένει σημαία/κλειδί %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "QMCMD^Στείλτε ιδιοτικό μήνυμα σε"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 #: qcsrc/client/hud/panel/quickmenu.qc:863
@@ -413,7 +414,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^Προοπτική 3ου προσώπου"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Player models like mine"
@@ -421,7 +422,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "QMCMD^Ονόματα πάνω από του παίκτες"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^Crosshair per weapon"
@@ -459,11 +460,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^Αύξηση ταχύτητας"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "QMCMD^Μείωση Ταχύτητας"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^Wall collision"
@@ -488,11 +489,11 @@ msgstr "QMCMD^Τέλος match"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "QMCMD^Μείωση χρόνου παιχνιδιού"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "QMCMD^Επέκταση χρόνου παιχνιδιού"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^Shuffle teams"
@@ -690,7 +691,7 @@ msgstr "SCO^k/d"
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Συχνότητα σκοτωμών/θανάτων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^kdr"
@@ -702,7 +703,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of kills"
-msgstr ""
+msgstr "Αριθμός σκοτωμών"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^kills"
@@ -735,7 +736,7 @@ msgstr "SCO^Χαμένοι"
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Player name"
-msgstr ""
+msgstr "Όνομα Παίκτη"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^name"
@@ -812,7 +813,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Αριθμός κερδισμένων γύρων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^rounds won"
@@ -828,7 +829,7 @@ msgstr "Σύνολο score"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of suicides"
-msgstr ""
+msgstr "Αριθμός Αυτοκτόνιων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^suicides"
@@ -881,7 +882,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:356
 msgid "Usage:"
-msgstr ""
+msgstr "Χρήση:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:358
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -962,7 +963,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1386
 msgid "Item stats"
-msgstr ""
+msgstr "Στατιστικά Αντικειμένου"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1497
 msgid "Map stats:"
@@ -974,7 +975,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1534
 msgid "Secrets found:"
-msgstr ""
+msgstr "Μυστικά που βρέθηκαν:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1813
 #, c-format
