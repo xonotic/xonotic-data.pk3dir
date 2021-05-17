@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-16 07:23+0200\n"
-"PO-Revision-Date: 2021-05-16 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-05-16 09:49+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -3038,12 +3038,14 @@ msgstr "^BG%s^F3 s'est déconnecté"
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 a été expulsé après une inactivité de %s secondes"
 
 #: qcsrc/common/notifications/all.inc:407
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
+"^BG%s^F3 a été déplacé vers les^BG spectateurs^F3 après une inactivité de %s "
+"secondes"
 
 #: qcsrc/common/notifications/all.inc:408
 msgid ""
@@ -3061,7 +3063,7 @@ msgstr "^BG%s^F3 a été expulsé pour des meurtres équipe excessifs"
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 est maintenant^BG spectateur"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
@@ -4034,6 +4036,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1Ne restez pas inactif !\n"
+"^BGDéplacement vers les spectateurs dans ^COUNT…"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
