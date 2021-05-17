@@ -1801,12 +1801,14 @@ void Scoreboard_Draw()
 
 	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
 	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.93);
-	panel_pos.x = 0.5 * (vid_conwidth - fixed_scoreboard_width);
+	scoreboard_left = 0.5 * (vid_conwidth - fixed_scoreboard_width);
+	scoreboard_right = scoreboard_left + fixed_scoreboard_width;
+	panel_pos.x = scoreboard_left;
 	panel_size.x = fixed_scoreboard_width;
 
 	Scoreboard_UpdatePlayerTeams();
 
-	float initial_pos_y = panel_pos.y;
+	scoreboard_top = panel_pos.y;
 	vector pos = panel_pos;
 	entity pl, tm;
 	string str;
@@ -2100,12 +2102,12 @@ void Scoreboard_Draw()
 
 	pos.y += 2 * hud_fontsize.y;
 	if (scoreboard_fade_alpha < 1)
-		scoreboard_bottom = initial_pos_y + (pos.y - initial_pos_y) * scoreboard_fade_alpha;
+		scoreboard_bottom = scoreboard_top + (pos.y - scoreboard_top) * scoreboard_fade_alpha;
 	else if (pos.y != scoreboard_bottom)
 	{
 		if (pos.y > scoreboard_bottom)
-			scoreboard_bottom = min(pos.y, scoreboard_bottom + frametime * 10 * (pos.y - initial_pos_y));
+			scoreboard_bottom = min(pos.y, scoreboard_bottom + frametime * 10 * (pos.y - scoreboard_top));
 		else
-			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - initial_pos_y));
+			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - scoreboard_top));
 	}
 }

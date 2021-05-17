@@ -107,7 +107,6 @@ entity highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
-float scoreboard_bottom;
 int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;

@@ -69,8 +69,11 @@ void HUD_Notify()
 		float minalpha = 1;
 		if (notify_count == 0)
 			minalpha = 0; // hide if empty
-		else if(panel_pos.y < scoreboard_bottom)
+		else if (boxesoverlap(panel_pos, panel_pos + panel_size,
+			eX * scoreboard_left + eY * scoreboard_top, eX * scoreboard_right + eY * scoreboard_bottom))
+		{
 			minalpha = 0.5; // transparent if it may overlap the scoreboard
+		}
 		float f = max(minalpha, (1 - scoreboard_fade_alpha));
 		if (f <= 0)
 			return;
