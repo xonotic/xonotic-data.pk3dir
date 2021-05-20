@@ -13,9 +13,7 @@
 #include <common/gamemodes/gamemode/keyhunt/_mod.qh>
 #include <common/gamemodes/gamemode/lms/_mod.qh>
 #include <common/gamemodes/gamemode/mmm/_mod.qh> //LegendGuard adds _mod.qh for Murder in Megaerebus Manor 20-02-2021
-#include <common/gamemodes/gamemode/mayhem/_mod.qh>
 #include <common/gamemodes/gamemode/nexball/_mod.qh>
 #include <common/gamemodes/gamemode/onslaught/_mod.qh>
 #include <common/gamemodes/gamemode/race/_mod.qh>
 #include <common/gamemodes/gamemode/tdm/_mod.qh>
-#include <common/gamemodes/gamemode/tmayhem/_mod.qh>

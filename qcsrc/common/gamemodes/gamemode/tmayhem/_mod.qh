@@ -1,5 +1,0 @@
-// generated file; do not modify
-#include <common/gamemodes/gamemode/tmayhem/tmayhem.qh>
-#ifdef SVQC
-    #include <common/gamemodes/gamemode/tmayhem/sv_tmayhem.qh>
-#endif
