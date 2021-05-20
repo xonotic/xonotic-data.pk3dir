@@ -395,14 +395,14 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_lms_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
+	start_health       = warmup_start_health       = cvar("g_ca_start_health");
+	start_armorvalue   = warmup_start_armorvalue   = cvar("g_ca_start_armor");
+	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_ca_start_ammo_shells");
+	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_ca_start_ammo_nails");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_ca_start_ammo_rockets");
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_ca_start_ammo_cells");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_ca_start_ammo_plasma");
+	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_ca_start_ammo_fuel");
 }
 
 MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)

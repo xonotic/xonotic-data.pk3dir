@@ -34,6 +34,7 @@ void Scoreboard_Draw_Export(int fh)
 	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
+	HUD_Write_Cvar("hud_panel_scoreboard_spectators_position");
 }
 
 const int MAX_SBT_FIELDS = MAX_SCORE;
@@ -88,6 +89,7 @@ float autocvar_hud_panel_scoreboard_table_highlight_alpha_eliminated = 0.6;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 float autocvar_hud_panel_scoreboard_namesize = 15;
 float autocvar_hud_panel_scoreboard_team_size_position = 0;
+float autocvar_hud_panel_scoreboard_spectators_position = 1;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
@@ -97,7 +99,8 @@ float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
 
 bool autocvar_hud_panel_scoreboard_itemstats = true;
 bool autocvar_hud_panel_scoreboard_itemstats_doublerows = false;
-bool autocvar_hud_panel_scoreboard_itemstats_filter = true;
+int autocvar_hud_panel_scoreboard_itemstats_filter = 1;
+int autocvar_hud_panel_scoreboard_itemstats_filter_mask = 12;
 float autocvar_hud_panel_scoreboard_itemstats_showdelay = 2.2; // slightly more delayed than accuracy
 float autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos = 0.75;
 
@@ -1817,18 +1820,31 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	return end_pos;
 }
 
-.bool uninteresting;
-STATIC_INIT(default_order_items_label)
+bool is_item_filtered(entity it)
 {
-	IL_EACH(default_order_items, true, {
-		if(!(it.instanceOfPowerup
-			|| it == ITEM_HealthMega || it == ITEM_HealthBig
-			|| it == ITEM_ArmorMega || it == ITEM_ArmorBig
-			))
+	if (!autocvar_hud_panel_scoreboard_itemstats_filter)
+		return false;
+	int mask = autocvar_hud_panel_scoreboard_itemstats_filter_mask;
+	if (mask <= 0)
+		return false;
+	if (it.instanceOfArmor || it.instanceOfHealth)
+	{
+		int ha_mask = floor(mask) % 10;
+		switch (ha_mask)
 		{
-			it.uninteresting = true;
+			default: return false;
+			case 4: if (it == ITEM_HealthMega || it == ITEM_ArmorMega) return true; // else fallthrough
+			case 3: if (it == ITEM_HealthBig || it == ITEM_ArmorBig) return true; // else fallthrough
+			case 2: if (it == ITEM_HealthMedium || it == ITEM_ArmorMedium) return true; // else fallthrough
+			case 1: if (it == ITEM_HealthSmall || it == ITEM_ArmorSmall) return true; // else fallthrough
 		}
-	});
+	}
+	if (it.instanceOfAmmo)
+	{
+		int ammo_mask = floor(mask / 10) % 10;
+		return (ammo_mask == 1);
+	}
+	return false;
 }
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
@@ -1841,7 +1857,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	IL_EACH(default_order_items, true, {
 		int q = g_inventory.inv_items[it.m_id];
 		//q = 1; // debug: display all items
-		if (autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting)
+		if (is_item_filtered(it))
 			++uninteresting_cnt;
 		else if (!q)
 			++disowned_cnt;
@@ -1908,7 +1924,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	IL_EACH(default_order_items, !(autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting), {
+	IL_EACH(default_order_items, !is_item_filtered(it), {
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
@@ -2175,7 +2191,7 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	if (!have_item_stats)
 	{
 		IL_EACH(default_order_items, true, {
-			if (!(autocvar_hud_panel_scoreboard_itemstats_filter && it.uninteresting))
+			if (!is_item_filtered(it))
 			{
 				int q = g_inventory.inv_items[it.m_id];
 				//q = 1; // debug: display all items
@@ -2191,6 +2207,33 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	}
 
 	return true;
+}
+
+vector Scoreboard_Spectators_Draw(vector pos, entity tm, string str, vector hud_fontsize) {
+
+	entity pl;
+
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+	{
+		if(pl.team == NUM_SPECTATOR)
+		{
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				if(tm.team == NUM_SPECTATOR)
+					break;
+			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
+			draw_beginBoldFont();
+			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+			pos.y += 1.25 * hud_fontsize.y;
+
+			pos = Scoreboard_DrawOthers(pos, '0 0 0', pl.team, NULL, pl, 0);
+			pos.y += 1.25 * hud_fontsize.y;
+
+			break;
+		}
+	}
+
+	return pos;
 }
 
 void Scoreboard_Draw()
@@ -2531,10 +2574,21 @@ void Scoreboard_Draw()
 
 	pos = Scoreboard_MedalStats_Draw(pos);
 	
+	// draw scoreboard spectators before accuracy and item stats
+	if (autocvar_hud_panel_scoreboard_spectators_position == 0) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+	}
+
+	// draw accuracy and item stats 
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 	if (Scoreboard_ItemStats_WouldDraw(pos.y))
 		pos = Scoreboard_ItemStats_Draw(pos, panel_bg_color, bg_size);
+
+	// draw scoreboard spectators after accuracy and item stats and before rankings
+	if (autocvar_hud_panel_scoreboard_spectators_position == 1) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+	}
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
@@ -2548,8 +2602,6 @@ void Scoreboard_Draw()
 		}
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
-
-	//pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
 	// List spectators
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
@@ -2565,11 +2617,20 @@ void Scoreboard_Draw()
 			draw_endBoldFont();
 			pos.y += 1.25 * hud_fontsize.y;
 
-			pos = Scoreboard_DrawOthers(pos, '0 0 0', pl.team, NULL, pl, 0);
-			pos.y += 1.25 * hud_fontsize.y;
-
 			break;
 		}
+	}
+
+	// draw scoreboard spectators after rankings
+	if (autocvar_hud_panel_scoreboard_spectators_position == 2) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+	}
+
+	//pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
+
+	// draw scoreboard spectators after mapstats
+	if (autocvar_hud_panel_scoreboard_spectators_position == 3) {
+		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
 	}
 
 

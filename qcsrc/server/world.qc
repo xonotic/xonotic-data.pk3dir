@@ -429,7 +429,7 @@ void cvar_changes_init()
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
@@ -513,7 +513,6 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_maxidle");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");

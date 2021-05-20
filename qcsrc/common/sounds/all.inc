@@ -283,6 +283,7 @@ SOUND(TIMEOUT, "misc/timeout");
 SOUND(SPAWN, "misc/spawn");
 
 SOUND(TALK, "misc/talk");
+SOUND(TALK2, "misc/talk2");
 
 SOUND(TELEPORT, "misc/teleport");
 
