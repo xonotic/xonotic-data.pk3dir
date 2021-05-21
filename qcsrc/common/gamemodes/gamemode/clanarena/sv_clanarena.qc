@@ -402,11 +402,10 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 		frag_deathtype == DEATH_SLIME.m_id))
 			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
 		
-	//autocvar_g_tmayhem_frags2score is checked to avoid punishing twice for a suicide
 	//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
 	//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
 	//FIXME: ^ , might require fixing hp+a check for suicides as a whole
-	if (frag_deathtype == DEATH_KILL.m_id && !autocvar_g_tmayhem_frags2score)
+	if (frag_deathtype == DEATH_KILL.m_id)
 			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * autocvar_g_ca_damage2score_multiplier);
 }
 
