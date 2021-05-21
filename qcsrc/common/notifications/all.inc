@@ -821,6 +821,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(OVERTIME_CONTROLPOINT,             N_ENABLE,    0, 0, "",               CPID_OVERTIME,          "5 0",  _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators are now decaying.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "")
     MSG_CENTER_NOTIF(OVERTIME_TIME,                     N_ENABLE,    0, 1, "f1time",         CPID_OVERTIME,          "0 0",  _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "")
 
+    //LegendGuard adds piggyback notifications, a feature from SMB mod 21-05-2021
+    MSG_CENTER_NOTIF(PIGGYBACK_CARRYING,                N_ENABLE,    1, 0, "s1",             CPID_PIGGYBACK,         "0 0", "^BGYou are now carrying %s^BG!", "")
+    MSG_CENTER_NOTIF(PIGGYBACK_RIDING,                  N_ENABLE,    1, 0, "s1",             CPID_PIGGYBACK,         "0 0", "^BGYou are now riding %s^BG!", "")
+
     MSG_CENTER_NOTIF(PORTO_CREATED_IN,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1In^BG-portal created"), "")
     MSG_CENTER_NOTIF(PORTO_CREATED_OUT,                 N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F3Out^BG-portal created"), "")
     MSG_CENTER_NOTIF(PORTO_FAILED,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F1Portal creation failed"), "")

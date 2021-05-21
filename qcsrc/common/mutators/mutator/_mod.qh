@@ -12,6 +12,10 @@
 #include <common/mutators/mutator/doublejump/_mod.qh>
 #include <common/mutators/mutator/dynamic_handicap/_mod.qh>
 #include <common/mutators/mutator/globalforces/_mod.qh>
+
+//SMB mod feature Hats:
+#include <common/mutators/mutator/hats/_mod.qh>
+
 #include <common/mutators/mutator/hook/_mod.qh>
 #include <common/mutators/mutator/instagib/_mod.qh>
 #include <common/mutators/mutator/invincibleproj/_mod.qh>
@@ -27,6 +31,10 @@
 #include <common/mutators/mutator/overkill/_mod.qh>
 #include <common/mutators/mutator/physical_items/_mod.qh>
 #include <common/mutators/mutator/pinata/_mod.qh>
+
+//SMB mod feature Player crush:
+#include <common/mutators/mutator/player_crush/_mod.qh>
+
 #include <common/mutators/mutator/random_gravity/_mod.qh>
 #include <common/mutators/mutator/random_items/_mod.qh>
 #include <common/mutators/mutator/rocketflying/_mod.qh>
