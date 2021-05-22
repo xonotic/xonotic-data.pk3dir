@@ -9,6 +9,7 @@
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # Damian Kurek <starfire24680@gmail.com>, 2017-2019
+# Excruciatus X <rndm.usr@disroot.org>, 2021
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
@@ -30,8 +31,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-16 07:23+0200\n"
-"PO-Revision-Date: 2021-05-16 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-05-22 01:09+0000\n"
+"Last-Translator: Excruciatus X <rndm.usr@disroot.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -3046,7 +3047,7 @@ msgstr "^BG%s^F3 se ha desconectado"
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 fue expulsado después de estar inactivo durante %s segundos"
 
 #: qcsrc/common/notifications/all.inc:407
 #, c-format
@@ -3069,7 +3070,7 @@ msgstr "^BG%s^F3 ha sido expulsado por matar a tus propios compañeros"
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 está ahora^BG espectando"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
@@ -5854,6 +5855,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"Estadísticas de jugador están habilitadas por defecto, puedes cambiar esto "
+"en el menú de perfil"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Save settings"
@@ -7862,7 +7865,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
-msgstr ""
+msgstr "Aumentando"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
@@ -8728,7 +8731,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Excepto en juegos de equipo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
