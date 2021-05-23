@@ -83,7 +83,8 @@ int days_up_to_date(int Y, int M, int D)
 
 // Returns the number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
 // This function exists only as a replacement for strftime(false, "%s") which doesn't work
-// on Windows (%s is not supported)
+// on Windows (%s is not supported) and at least in some linux systems doesn't return the
+// correct result
 // NOTE: at the current date, the number (string) returned by both strftime(false, "%s") and
 // strftime_s() is so high that can't be converted to int (with ftos) without precision loss
 ERASEABLE

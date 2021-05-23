@@ -839,9 +839,7 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string num = strftime(false, "%s");
-		if (num == "")
-			num = strftime_s();
+		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
 		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
 		matchid = strzone(s);
 
