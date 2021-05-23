@@ -63,6 +63,7 @@ const int ITS_GLOW              = BIT(6);
 #ifdef SVQC
 .float strength_finished; // NOTE: this field is used only by map entities, it does not directly apply the strength stat
 .float invincible_finished; // ditto
+.float buffs_finished; // ditts
 
 #define spawnfunc_body(item) \
 	if (!Item_IsDefinitionAllowed(item)) \

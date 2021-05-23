@@ -21,6 +21,7 @@
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
@@ -1299,7 +1300,7 @@ void View_PostProcessing()
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = STAT(STRENGTH_FINISHED), invincible_finished = STAT(INVINCIBLE_FINISHED);
+		float sharpen_intensity = 0, strength_finished = StatusEffects_gettime(STATUSEFFECT_Strength, g_statuseffects), invincible_finished = StatusEffects_gettime(STATUSEFFECT_Shield, g_statuseffects);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 

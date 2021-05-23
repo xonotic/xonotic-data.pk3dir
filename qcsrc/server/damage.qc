@@ -9,7 +9,9 @@
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/movetypes/movetypes.qh>
@@ -93,9 +95,9 @@ string AppendItemcodes(string s, entity player)
 		if(w != 0 || slot == 0)
 			s = strcat(s, ftos(w));
 	}
-	if(time < STAT(STRENGTH_FINISHED, player))
+	if(StatusEffects_active(STATUSEFFECT_Strength, player))
 		s = strcat(s, "S");
-	if(time < STAT(INVINCIBLE_FINISHED, player))
+	if(StatusEffects_active(STATUSEFFECT_Shield, player))
 		s = strcat(s, "I");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
@@ -415,7 +417,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			int f3 = 0;
 			if(deathtype == DEATH_BUFF.m_id)
-				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
+				f3 = buff_FirstFromFlags(attacker).m_id;
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
@@ -1101,11 +1103,6 @@ bool Heal(entity targ, entity inflictor, float amount, float limit)
 	return healed;
 }
 
-float Fire_IsBurning(entity e)
-{
-	return (time < e.fire_endtime);
-}
-
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 {
 	float dps;
@@ -1116,23 +1113,14 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(IS_DEAD(e))
 			return -1;
 	}
-	else
-	{
-		if(!e.fire_burner)
-		{
-			// print("adding a fire burner to ", e.classname, "\n");
-			e.fire_burner = new(fireburner);
-			setthink(e.fire_burner, fireburner_think);
-			e.fire_burner.nextthink = time;
-			e.fire_burner.owner = e;
-		}
-	}
 
 	t = max(t, 0.1);
 	dps = d / t;
-	if(Fire_IsBurning(e))
+	if(StatusEffects_active(STATUSEFFECT_Burning, e))
 	{
-		mintime = e.fire_endtime - time;
+		float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
+
+		mintime = fireendtime - time;
 		maxtime = max(mintime, t);
 
 		mindps = e.fire_damagepersec;
@@ -1195,7 +1183,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
 
 			e.fire_damagepersec = totaldamage / totaltime;
-			e.fire_endtime = time + totaltime;
+			StatusEffects_apply(STATUSEFFECT_Burning, e, time + totaltime, 0);
 			if(totaldamage > 1.2 * mindamage)
 			{
 				e.fire_deathtype = dt;
@@ -1215,7 +1203,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	else
 	{
 		e.fire_damagepersec = dps;
-		e.fire_endtime = time + t;
+		StatusEffects_apply(STATUSEFFECT_Burning, e, time + t, 0);
 		e.fire_deathtype = dt;
 		e.fire_owner = o;
 		e.fire_hitsound = false;
@@ -1230,18 +1218,12 @@ void Fire_ApplyDamage(entity e)
 	float t, d, hi, ty;
 	entity o;
 
-	// water, slime and ice stop fire
-	if (STAT(FROZEN, e) || (e.waterlevel && (e.watertype != CONTENT_LAVA)))
-		e.fire_endtime = 0;
-
-	if (!Fire_IsBurning(e))
-		return;
-
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
 	if(IS_NOT_A_CLIENT(o))
 		o = e.fire_owner;
 
-	t = min(frametime, e.fire_endtime - time);
+	float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
+	t = min(frametime, fireendtime - time);
 	d = e.fire_damagepersec * t;
 
 	hi = e.fire_owner.damage_dealt;
@@ -1261,37 +1243,10 @@ void Fire_ApplyDamage(entity e)
 			if(!IS_DEAD(it) && it.takedamage && !IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
 			{
-				t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
+				t = autocvar_g_balance_firetransfer_time * (fireendtime - time);
 				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
 				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
 			}
 		});
 	}
-}
-
-void Fire_ApplyEffect(entity e)
-{
-	if(Fire_IsBurning(e))
-		e.effects |= EF_FLAME;
-	else
-		e.effects &= ~EF_FLAME;
-}
-
-void fireburner_think(entity this)
-{
-	// for players, this is done in the regular loop
-	if(wasfreed(this.owner))
-	{
-		delete(this);
-		return;
-	}
-	Fire_ApplyEffect(this.owner);
-	if(!Fire_IsBurning(this.owner))
-	{
-		this.owner.fire_burner = NULL;
-		delete(this);
-		return;
-	}
-	Fire_ApplyDamage(this.owner);
-	this.nextthink = time;
 }

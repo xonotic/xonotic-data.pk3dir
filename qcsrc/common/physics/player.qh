@@ -82,8 +82,6 @@ bool IsFlying(entity a);
 #define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
 #define PHYS_HEALTH(s)						STAT(HEALTH, s)
 
-#define BUFFS_STAT(s)                       STAT(BUFFS, s)
-
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)
 #define PHYS_AIRACCELERATE(s)               STAT(MOVEVARS_AIRACCELERATE, s)
 #define PHYS_AIRACCEL_QW(s)                 STAT(MOVEVARS_AIRACCEL_QW, s)
