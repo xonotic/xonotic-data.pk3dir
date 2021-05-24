@@ -107,7 +107,6 @@ entity highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
-float scoreboard_bottom;
 int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;
@@ -252,7 +251,7 @@ REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // AMMO
 REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // POWERUPS
 REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // HEALTHARMOR
-REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // NOTIFY
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // NOTIFY
 REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // TIMER
 REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RADAR
 REGISTER_HUD_PANEL(SCORE,           HUD_Score,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // SCORE
