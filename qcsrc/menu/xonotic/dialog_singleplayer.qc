@@ -121,6 +121,8 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	localcmd("disconnect\n");
 	localcmd("g_campaign 0\n");
 
+	makeServerSingleplayer();
+
 	MapInfo_LoadMap(s, 1);
 
 	// configure bots
@@ -142,10 +144,7 @@ void XonoticSingleplayerDialog_draw(entity me)
 {
 	entity e = me.quitGameButton;
 	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
-	if(cvar("g_campaign"))
-		e.setText(e, _("Quit campaign"));
-	else
-		e.setText(e, _("Quit current game"));
+	e.setText(e, quitGameButton_getText(e));
 	SUPER(XonoticSingleplayerDialog).draw(me);
 }
 

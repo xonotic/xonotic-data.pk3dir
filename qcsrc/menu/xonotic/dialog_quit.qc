@@ -14,10 +14,7 @@ void XonoticQuitDialog_draw(entity me)
 {
 	entity e = me.disconnectButton;
 	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
-	if(cvar("g_campaign"))
-		e.setText(e, _("Quit campaign"));
-	else
-		e.setText(e, _("Quit current game"));
+	e.setText(e, quitGameButton_getText(e));
 	SUPER(XonoticQuitDialog).draw(me);
 }
 
