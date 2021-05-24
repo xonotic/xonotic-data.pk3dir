@@ -443,6 +443,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
+		BADCVAR("g_freezetag_revive_spawnshield");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
