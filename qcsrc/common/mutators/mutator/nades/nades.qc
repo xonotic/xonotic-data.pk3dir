@@ -731,6 +731,45 @@ void nade_emerald_dropitem(entity e, vector org, entity itm)
 	//See effect MACROS in qcsrc/common/effects/all.inc
 }
 
+//LegendGuard adds weapon item spawn option for emerald nade 25-05-2021
+void nade_emerald_SpawnWeapon(entity ent, vector org, entity wep)
+{
+	Item_SetLoot(ent, true);
+	ent.pickup_anyway = true;
+	ent.angles = '0 0 0';
+	ent.gravity = 1;
+	setorigin(ent, org);
+	ent.velocity = randomvec() * 150 + '0 0 325';
+	ent.spawnfunc_checked = true;
+	ent.glowmod = weaponentity_glowmod(wep, ent, 0, NULL);
+	weapon_defaultspawnfunc(ent, wep);
+	// fading handled globally
+}
+
+//LegendGuard adds random weapon item spawn function for emerald nade 25-05-2021
+void nade_emerald_randomweapons(entity e, vector org)
+{
+	bool randomweapons_includespecial = true;
+
+	if (random() > 0.5)
+	{
+		RandomSelection_Init();
+		FOREACH(Weapons, it != WEP_Null && (!((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) || randomweapons_includespecial),
+		{
+			if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				continue;
+			float chancewep = 1;
+			if(it == WEP_RACER || it == WEP_RAPTOR || it == WEP_RAPTOR_BOMB || it == WEP_RAPTOR_FLARE || it == WEP_WYVERN_ATTACK || it == WEP_MAGE_SPIKE || it == WEP_SPIDER_ATTACK || it == WEP_EWHEEL || it == WEP_FLAC || it == WEP_HELLION || it == WEP_HK || it == WEP_TUR_MACHINEGUN || it == WEP_TUR_MLRS || it == WEP_PHASER || it == WEP_PLASMA || it == WEP_PLASMA_DUAL || it == WEP_TESLA || it == WEP_WALKER || it == WEP_NEXBALL) //LegendGuard fixes the strange part of the code
+				chancewep = 0;
+			if (W_IsWeaponThrowable(e, it.m_id))
+				RandomSelection_AddEnt(it, chancewep, 1);
+		});
+		nade_emerald_SpawnWeapon(e, org, RandomSelection_chosen_ent);
+	}
+	else
+		return;
+}
+
 void nade_emerald_randomitem(entity e, vector org)
 {
 	float a = random();
@@ -742,25 +781,35 @@ void nade_emerald_randomitem(entity e, vector org)
 	{
 		if (a > 0.5)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
-		else
+		else if (d < 0.2)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
 	}
 	else if (c > d)
 	{
 		if (c > 0.5)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
-		else
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+		else if (b < 0.2)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Cells : ITEM_Shells));
 	}
 	else if (autocvar_g_nades_emerald_powerupjetpack_randomdrop)
 	{
 		if (a < 0.5)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
-		else
+		else if (c < 0.5)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
+		else
+			nade_emerald_randomweapons(e, org);
 	}
 	else
+	{
+		if (a > 0.5)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+		else if (d < 0.2)
+			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Rockets));
+		else
+			nade_emerald_randomweapons(e, org);
 		return;
+	}
 }
 
 void nade_emerald_allammoitemdrop(entity e, vector org)
@@ -805,6 +854,7 @@ void nade_emerald_dropping(vector org)
 			case 9: nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;
 			case 10: nade_emerald_dropitem(e, org, ITEM_Shield); return;
 			case 11: nade_emerald_dropitem(e, org, ITEM_Strength); return;
+			case 12: nade_emerald_randomweapons(e, org); return;
 			default: nade_emerald_randomitem(e, org); return;
 		}
 	}
@@ -972,73 +1022,48 @@ void nade_ammo_touch(entity this, entity toucher)
 		if ( toucher != this.realowner )
 		{
 			if ( SAME_TEAM(toucher,this) )
-			{
 				ammo_factor *= autocvar_g_nades_ammo_friend;
-			}
 			else
-			{
 				ammo_factor *= autocvar_g_nades_ammo_foe;
-			}
 		}
 		if ( ammo_factor > 0 )
 		{
 			if (amshells < maxammo)
-			{
 				GiveResourceWithLimit(toucher, RES_SHELLS, ammo_factor, maxammo);
-			}
 
-			if (ambullets < maxammo) 
-			{
+			if (ambullets < maxammo)
 				GiveResourceWithLimit(toucher, RES_BULLETS, ammo_factor, maxammo);
-			}
 
 			if (amrockets < maxammo)
-			{
 				GiveResourceWithLimit(toucher, RES_ROCKETS, ammo_factor, maxammo);
-			}
 
-			if (amcells < maxammo) 
-			{
+			if (amcells < maxammo)
 				GiveResourceWithLimit(toucher, RES_CELLS, ammo_factor, maxammo);
-			}
 
 			if (amplasma < maxammo)
-			{
 				GiveResourceWithLimit(toucher, RES_PLASMA, ammo_factor, maxammo);
-			}
 			
 			if (this.nade_show_particles)
-			{
 				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-			}
 		}
 		else if ( ammo_factor < 0 )
 		{
 			//Foe drops ammo points
 			if (amshells > 0)
-			{
 				SetResource(toucher, RES_SHELLS, amshells + ammo_factor);
-			}
 			
 			if (ambullets > 0)
-			{
 				SetResource(toucher, RES_BULLETS, ambullets + ammo_factor);
-			}
 
 			if (amrockets > 0)
-			{
 				SetResource(toucher, RES_ROCKETS, amrockets + ammo_factor);
-			}
 
 			if (amcells > 0)
-			{
 				SetResource(toucher, RES_CELLS, amcells + ammo_factor);
-			}
 
 			if (amplasma > 0)
-			{
 				SetResource(toucher, RES_PLASMA, amplasma + ammo_factor);
-			}
+			
 			return;
 		}
 	}
@@ -1061,7 +1086,7 @@ void nade_ammo_boom(entity this)
 /***********************************************************************************/
 //remember to put an image in gfx/hud/luma and gfx/hud/default per each nade_blabla.tga
 //dark nade does damage like a normal nade but the damage is minor
-//TODO: add Dark smoke effect when exploded 28-02-2021
+//add Dark smoke effect when exploded 28-02-2021
 void dark_damage(entity this, float radius, float damage)
 {
 	entity e;
