@@ -749,12 +749,10 @@ void nade_emerald_SpawnWeapon(entity ent, vector org, entity wep)
 //LegendGuard adds random weapon item spawn function for emerald nade 25-05-2021
 void nade_emerald_randomweapons(entity e, vector org)
 {
-	bool randomweapons_includespecial = true;
-
 	if (random() > 0.5)
 	{
 		RandomSelection_Init();
-		FOREACH(Weapons, it != WEP_Null && (!((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) || randomweapons_includespecial),
+		FOREACH(Weapons, it != WEP_Null && (!((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) || autocvar_g_nades_emerald_randomweapons_includespecial),
 		{
 			if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				continue;

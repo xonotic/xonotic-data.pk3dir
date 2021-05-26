@@ -65,6 +65,7 @@ float autocvar_g_nades_entrap_time = 10;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
 float autocvar_g_nades_emerald_lifetime = 5; //LegendGuard adds new nade cvars 28-02-2021
+bool autocvar_g_nades_emerald_randomweapons_includespecial = false;
 float autocvar_g_nades_emerald_spawncount = 1;
 float autocvar_g_nades_emerald_ball_spread = 0.5;
 float autocvar_g_nades_emerald_ball_lifetime = 1; //if much time, many items will spawn
