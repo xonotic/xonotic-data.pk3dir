@@ -31,7 +31,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-16 07:23+0200\n"
-"PO-Revision-Date: 2021-05-22 01:09+0000\n"
+"PO-Revision-Date: 2021-05-25 13:47+0000\n"
 "Last-Translator: Excruciatus X <rndm.usr@disroot.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -3047,7 +3047,7 @@ msgstr "^BG%s^F3 se ha desconectado"
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr "^BG%s^K3 fue expulsado después de estar inactivo durante %s segundos"
+msgstr "^BG%s^K3 fue expulsado después de estar inactivo por %s segundos"
 
 #: qcsrc/common/notifications/all.inc:407
 #, c-format
@@ -7857,7 +7857,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
-msgstr ""
+msgstr "Disminuyendo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
