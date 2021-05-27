@@ -228,8 +228,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	vector v;
-	float dh = max(GetResource(this, RES_HEALTH), 0);
-	float da = max(GetResource(this, RES_ARMOR), 0);
+	float initial_health = max(GetResource(this, RES_HEALTH), 0);
+	float initial_armor = max(GetResource(this, RES_ARMOR), 0);
 	float take = 0, save = 0;
 
 	if (damage)
@@ -320,7 +320,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
-		if (save > 10 && (dh - take) > 0) // don't play armor sound if the attack is fatal
+		if (save > 10 && (initial_health - take) > 0) // don't play armor sound if the attack is fatal
 			sound (this, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
 			sound (this, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
@@ -426,8 +426,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh -= max(GetResource(this, RES_HEALTH), 0); // health difference
-	da -= max(GetResource(this, RES_ARMOR), 0); // armor difference
+	float dh = initial_health - max(GetResource(this, RES_HEALTH), 0); // health difference
+	float da = initial_armor - max(GetResource(this, RES_ARMOR), 0); // armor difference
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -437,8 +437,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if (GetResource(this, RES_HEALTH) < 1)
 	{
-		float defer_ClientKill_Now_TeamChange;
-		defer_ClientKill_Now_TeamChange = false;
+		bool defer_ClientKill_Now_TeamChange = false;
 
 		if(this.alivetime)
 		{

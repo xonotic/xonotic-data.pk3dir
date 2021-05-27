@@ -58,9 +58,8 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void HUD_Notify()
 {
-	if (!autocvar__hud_configure)
-		if (!autocvar_hud_panel_notify)
-			return;
+	if (!autocvar__hud_configure && !autocvar_hud_panel_notify)
+		return;
 
 	HUD_Panel_LoadCvars();
 
@@ -87,9 +86,8 @@ void HUD_Notify()
 		HUD_Scale_Disable();
 	HUD_Panel_DrawBg();
 
-	if (!autocvar__hud_configure)
-		if (notify_count == 0)
-			return;
+	if (!autocvar__hud_configure && notify_count == 0)
+		return;
 
 	vector pos, size;
 	pos  = panel_pos;
