@@ -249,7 +249,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				damage = 0;
 		}
 		else if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+			damage *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
 		{
