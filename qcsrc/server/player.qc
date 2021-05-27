@@ -389,12 +389,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 
 			float realdmg = damage - excess;
-			if (this != attacker && realdmg && !STAT(FROZEN, this)
+			if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
 				&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 			{
-				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
+				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
 				}
+				// don't count DEATH_KILL damage in game modes where suicide is for respawning
+				// TODO mutator hook?
+				if (deathtype != DEATH_KILL.m_id || !(IS_GAMETYPE(RACE) || IS_GAMETYPE(CTS)))
 				if (IS_PLAYER(this)) {
 					GameRules_scoring_add(this, DMGTAKEN, realdmg);
 				}
