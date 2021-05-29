@@ -797,7 +797,7 @@ void nade_emerald_randomitem(entity e, vector org)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
 		else
 		{
-			if(!g_ca || !g_freezetag)
+			if(g_freezetag)
 				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
 				nade_emerald_randomweapons(e, org);
@@ -811,7 +811,7 @@ void nade_emerald_randomitem(entity e, vector org)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Rockets));
 		else
 		{
-			if(!g_ca || !g_freezetag)
+			if(g_freezetag)
 				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
 				nade_emerald_randomweapons(e, org);
@@ -846,24 +846,27 @@ void nade_emerald_dropping(vector org)
 	{
 		entity e = spawn();
 		e.spawnfunc_checked = true;
-		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
 		
-		switch (autocvar_g_nades_emerald_dropitemselect)
+		if(!g_ca)
 		{
-			case 0: nade_emerald_randomitem(e, org); return;
-			case 1: nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;
-			case 2: nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;
-			case 3: nade_emerald_allammoitemdrop(e, org); return;
-			case 4: nade_emerald_dropitem(e, org, ITEM_Shells); return;
-			case 5: nade_emerald_dropitem(e, org, ITEM_Bullets); return;
-			case 6: nade_emerald_dropitem(e, org, ITEM_Rockets); return;
-			case 7: nade_emerald_dropitem(e, org, ITEM_Cells); return;
-			case 8: nade_emerald_dropitem(e, org, ITEM_Jetpack); return;
-			case 9: nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;
-			case 10: nade_emerald_dropitem(e, org, ITEM_Shield); return;
-			case 11: nade_emerald_dropitem(e, org, ITEM_Strength); return;
-			case 12: nade_emerald_randomweapons(e, org); return;
-			default: nade_emerald_randomitem(e, org); return;
+			//int cvar which manages the ONLY dropping per each type of item 14-03-2021
+			switch (autocvar_g_nades_emerald_dropitemselect)
+			{
+				case 0: nade_emerald_randomitem(e, org); return;
+				case 1: nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;
+				case 2: nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;
+				case 3: nade_emerald_allammoitemdrop(e, org); return;
+				case 4: nade_emerald_dropitem(e, org, ITEM_Shells); return;
+				case 5: nade_emerald_dropitem(e, org, ITEM_Bullets); return;
+				case 6: nade_emerald_dropitem(e, org, ITEM_Rockets); return;
+				case 7: nade_emerald_dropitem(e, org, ITEM_Cells); return;
+				case 8: nade_emerald_dropitem(e, org, ITEM_Jetpack); return;
+				case 9: nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;
+				case 10: nade_emerald_dropitem(e, org, ITEM_Shield); return;
+				case 11: nade_emerald_dropitem(e, org, ITEM_Strength); return;
+				case 12: nade_emerald_randomweapons(e, org); return;
+				default: nade_emerald_randomitem(e, org); return;
+			}
 		}
 	}
 }
