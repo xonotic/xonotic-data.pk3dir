@@ -20,7 +20,6 @@
 
 //SMB mods
 #include <server/mute.qc>
-#include <server/modinfo.qc>
 //
 
 #include <server/player.qc>
