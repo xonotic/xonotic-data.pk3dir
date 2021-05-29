@@ -2697,6 +2697,7 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
+	if (server_is_dedicated) // don't kick the local player in hosted matches!
 	if (autocvar_sv_maxidle > 0 || (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0))
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
