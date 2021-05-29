@@ -6,6 +6,7 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
 #include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
@@ -132,8 +133,10 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		StatusEffects_remove(STATUSEFFECT_Strength, actor, STATUSEFFECT_REMOVE_NORMAL);
-		StatusEffects_remove(STATUSEFFECT_Shield, actor, STATUSEFFECT_REMOVE_NORMAL);
+		FOREACH(StatusEffect, it.instanceOfPowerups,
+		{
+			it.m_remove(it, actor, STATUSEFFECT_REMOVE_NORMAL);
+		});
 		entity heldbuff = buff_FirstFromFlags(actor);
 		if(heldbuff) // TODO: make a dropbuffs function to handle this
 		{
@@ -251,12 +254,12 @@ spawnfunc(target_fragsFilter)
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */
 //spawnfunc(item_doubler)        /* handled by buffs mutator */
-//spawnfunc(item_haste)        /* handled by buffs mutator */
+//spawnfunc(item_haste)        /* handled by powerups mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
 //spawnfunc(item_health_large) /* handled in items.qc */
 //spawnfunc(item_health_small) /* handled in items.qc */
 //spawnfunc(item_health_mega)  /* handled in items.qc */
-//spawnfunc(item_invis)        /* handled by buffs mutator */
+//spawnfunc(item_invis)        /* handled by powerups mutator */
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now

@@ -865,12 +865,6 @@ spawnfunc(worldspawn)
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
 
-		// TODO to mutator system
-		if(autocvar_g_powerups == 0)
-			s = strcat(s, ":no_powerups");
-		if(autocvar_g_powerups > 0)
-			s = strcat(s, ":powerups");
-
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}

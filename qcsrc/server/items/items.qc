@@ -9,6 +9,7 @@
 #include <common/monsters/_mod.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
 #include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
@@ -557,6 +558,16 @@ bool Item_GiveTo(entity item, entity player)
 		pickedup = true;
 		StatusEffects_apply(STATUSEFFECT_Shield, player, max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time) + item.invincible_finished, 0);
 	}
+	if (item.speed_finished)
+	{
+		pickedup = true;
+		StatusEffects_apply(STATUSEFFECT_Speed, player, max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time) + item.speed_finished, 0);
+	}
+	if (item.invisibility_finished)
+	{
+		pickedup = true;
+		StatusEffects_apply(STATUSEFFECT_Invisibility, player, max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time) + item.invisibility_finished, 0);
+	}
 	if (item.superweapons_finished)
 	{
 		pickedup = true;
@@ -628,6 +639,8 @@ void Item_Touch(entity this, entity toucher)
 	{
 		this.strength_finished = max(0, this.strength_finished - time);
 		this.invincible_finished = max(0, this.invincible_finished - time);
+		this.speed_finished = max(0, this.speed_finished - time);
+		this.invisibility_finished = max(0, this.invisibility_finished - time);
 		this.superweapons_finished = max(0, this.superweapons_finished - time);
 	}
 	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
@@ -638,6 +651,8 @@ void Item_Touch(entity this, entity toucher)
 			// undo what we did above
 			this.strength_finished += time;
 			this.invincible_finished += time;
+			this.speed_finished += time;
+			this.invisibility_finished += time;
 			this.superweapons_finished += time;
 		}
 		return;
@@ -1200,6 +1215,10 @@ spawnfunc(target_items)
 		this.strength_finished = autocvar_g_balance_powerup_strength_time;
 	if(!this.invincible_finished)
 		this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	if(!this.speed_finished)
+		this.speed_finished = autocvar_g_balance_powerup_speed_time;
+	if(!this.invisibility_finished)
+		this.invisibility_finished = autocvar_g_balance_powerup_invisibility_time;
 	if(!this.superweapons_finished)
 		this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
@@ -1219,6 +1238,8 @@ spawnfunc(target_items)
 			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
 			else if(argv(j) == "invincible")             this.items |= ITEM_Shield.m_itemid;
+			else if(argv(j) == "speed")                  this.items |= ITEM_Speed.m_itemid;
+			else if(argv(j) == "invisibility")           this.items |= ITEM_Invisibility.m_itemid;
 			else if(argv(j) == "superweapons")           this.items |= IT_SUPERWEAPON;
 			else if(argv(j) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
 			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
@@ -1280,6 +1301,8 @@ spawnfunc(target_items)
 		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
 		str = sprintf("%s %s%d %s", str, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
 		str = sprintf("%s %s%d %s", str, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
+		str = sprintf("%s %s%d %s", str, valueprefix, this.invisibility_finished * boolean(this.items & ITEM_Invisibility.m_itemid), "invisibility");
+		str = sprintf("%s %s%d %s", str, valueprefix, this.speed_finished * boolean(this.items & ITEM_Speed.m_itemid), "speed");
 		str = sprintf("%s %s%d %s", str, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
 		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
 		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
@@ -1362,7 +1385,8 @@ bool GiveBuff(entity e, Buff thebuff, int op, int val)
 	}
 	if(new_buff_time <= 0)
 	{
-		StatusEffects_remove(thebuff, e, STATUSEFFECT_REMOVE_TIMEOUT);
+		if(had_buff) // only trigger removal mechanics if there is an effect to remove!
+			StatusEffects_remove(thebuff, e, STATUSEFFECT_REMOVE_NORMAL);
 	}
 	else
 	{
@@ -1436,7 +1460,10 @@ bool GiveStatusEffect(entity e, StatusEffects this, int op, float val)
 			break;
 	}
 	if(new_eff_time <= 0)
-		StatusEffects_remove(this, e, STATUSEFFECT_REMOVE_TIMEOUT);
+	{
+		if(had_eff) // only trigger removal mechanics if there is an effect to remove!
+			StatusEffects_remove(this, e, STATUSEFFECT_REMOVE_NORMAL);
+	}
 	else
 		StatusEffects_apply(this, e, new_eff_time, 0);
 	bool have_eff = StatusEffects_active(this, e);
@@ -1478,6 +1505,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE_WEAPONS(e);
 	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Strength);
 	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Shield);
+	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Speed);
+	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Invisibility);
 	//PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Superweapons);
 	PREGIVE_RESOURCE(e, RES_BULLETS);
 	PREGIVE_RESOURCE(e, RES_CELLS);
@@ -1517,9 +1546,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				continue;
 			case "ALL":
 				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
-				got += GiveStatusEffect(e, STATUSEFFECT_Strength, op, val);
-				got += GiveStatusEffect(e, STATUSEFFECT_Shield, op, val);
-				got += GiveStatusEffect(e, STATUSEFFECT_Superweapons, op, val);
+				FOREACH(StatusEffect, it.instanceOfPowerups, got += GiveStatusEffect(e, it, op, val));
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 			case "all":
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
@@ -1557,7 +1584,14 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveStatusEffect(e, STATUSEFFECT_Strength, op, val);
 				break;
 			case "invincible":
+			case "shield":
 				got += GiveStatusEffect(e, STATUSEFFECT_Shield, op, val);
+				break;
+			case "speed":
+				got += GiveStatusEffect(e, STATUSEFFECT_Speed, op, val);
+				break;
+			case "invisibility":
+				got += GiveStatusEffect(e, STATUSEFFECT_Invisibility, op, val);
 				break;
 			case "superweapons":
 				got += GiveStatusEffect(e, STATUSEFFECT_Superweapons, op, val);
@@ -1613,8 +1647,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 			if(STAT(WEAPONS, e) & (it.m_wepset))
 				it.wr_init(it);
 	});
-	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Strength, 1, SND_POWERUP, SND_POWEROFF);
-	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Shield, 1, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Strength, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Shield, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Speed, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Invisibility, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_RESOURCE(e, RES_BULLETS, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_RESOURCE(e, RES_CELLS, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_RESOURCE(e, RES_PLASMA, 0, SND_ITEMPICKUP, SND_Null);
