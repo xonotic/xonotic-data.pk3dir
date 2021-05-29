@@ -797,7 +797,7 @@ void nade_emerald_randomitem(entity e, vector org)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
 		else
 		{
-			if(g_freezetag)
+			if(IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS))
 				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
 				nade_emerald_randomweapons(e, org);
@@ -811,7 +811,7 @@ void nade_emerald_randomitem(entity e, vector org)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Rockets));
 		else
 		{
-			if(g_freezetag)
+			if(IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS))
 				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
 				nade_emerald_randomweapons(e, org);
@@ -847,7 +847,7 @@ void nade_emerald_dropping(vector org)
 		entity e = spawn();
 		e.spawnfunc_checked = true;
 		
-		if(!g_ca)
+		if(!IS_GAMETYPE(CA))
 		{
 			//int cvar which manages the ONLY dropping per each type of item 14-03-2021
 			switch (autocvar_g_nades_emerald_dropitemselect)
