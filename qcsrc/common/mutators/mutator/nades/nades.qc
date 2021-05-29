@@ -797,7 +797,7 @@ void nade_emerald_randomitem(entity e, vector org)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shield : ITEM_Strength));
 		else
 		{
-			if(!g_ca || !g_freezetag)// || !g_lms)
+			if(!g_ca || !g_freezetag)
 				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
 				nade_emerald_randomweapons(e, org);
@@ -811,7 +811,7 @@ void nade_emerald_randomitem(entity e, vector org)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Rockets));
 		else
 		{
-			if(!g_ca || !g_freezetag)// || !g_lms)
+			if(!g_ca || !g_freezetag)
 				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
 			else
 				nade_emerald_randomweapons(e, org);
