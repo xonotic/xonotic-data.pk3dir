@@ -387,21 +387,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
-
-			float realdmg = damage - excess;
-			if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
-				&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
-			{
-				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id) {
-					GameRules_scoring_add(attacker, DMG, realdmg);
-				}
-				// don't count DEATH_KILL damage in game modes where suicide is for respawning
-				// TODO mutator hook?
-				if (deathtype != DEATH_KILL.m_id || !(IS_GAMETYPE(RACE) || IS_GAMETYPE(CTS)))
-				if (IS_PLAYER(this)) {
-					GameRules_scoring_add(this, DMGTAKEN, realdmg);
-				}
-			}
 		}
 		else
 			this.max_armorvalue += (save + take);
@@ -436,7 +421,22 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
 
+	bool forbid_damage_logging = false;
 	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
+	forbid_damage_logging = M_ARGV(0, bool);
+
+	if ((dh || da) && !forbid_damage_logging)
+	{
+		float realdmg = damage - excess;
+		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
+			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
+		{
+			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
+				GameRules_scoring_add(attacker, DMG, realdmg);
+			if (IS_PLAYER(this))
+				GameRules_scoring_add(this, DMGTAKEN, realdmg);
+		}
+	}
 
 	if (GetResource(this, RES_HEALTH) < 1)
 	{

@@ -458,6 +458,7 @@ MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
     /** location  */ i(vector, MUTATOR_ARGV_4_vector) \
     /** deathtype */ i(int,    MUTATOR_ARGV_5_int) \
     /** potential_damage     */ i(float,    MUTATOR_ARGV_6_float) \
+    /** forbid_damage_logging */ o(bool, MUTATOR_ARGV_0_bool) \
     /**/
 MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 
