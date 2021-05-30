@@ -289,7 +289,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerDamaged)
 {
 	int frag_deathtype = M_ARGV(5, int);
 	if (frag_deathtype == DEATH_KILL.m_id)
-		M_ARGV(0, bool) = true; // forbid_damage_logging
+		return true; // forbid logging damage
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)

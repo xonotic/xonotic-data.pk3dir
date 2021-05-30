@@ -421,11 +421,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
 
-	bool forbid_damage_logging = false;
-	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
-	forbid_damage_logging = M_ARGV(0, bool);
+	bool forbid_logging_damage = MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
-	if ((dh || da) && !forbid_damage_logging)
+	if ((dh || da) && !forbid_logging_damage)
 	{
 		float realdmg = damage - excess;
 		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
