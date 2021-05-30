@@ -208,7 +208,7 @@ void buff_Touch(entity this, entity toucher)
 	|| (STAT(FROZEN, toucher))
 	|| (toucher.vehicle)
 	|| (!this.buffdef) // TODO: error out or maybe reset type if this occurs?
-	|| (time < PS(toucher).buff_shield)
+	|| (time < toucher.buff_shield)
 	)
 	{
 		// can't touch this
@@ -527,8 +527,7 @@ METHOD(Buff, m_remove, void(StatusEffects this, entity actor, int removal_type))
 		}
 		else if(removal_type == STATUSEFFECT_REMOVE_NORMAL && !IS_INDEPENDENT_PLAYER(actor))
 			Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
-		entity store = IS_PLAYER(actor) ? PS(actor) : actor;
-		store.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
+		actor.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
 	}
 	if(IS_PLAYER(actor))
 		actor.effects &= ~EF_NOSHADOW;
@@ -804,7 +803,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
-		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
+		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}

@@ -3,16 +3,15 @@
 MUTATOR_HOOKFUNCTION(powerups, W_PlayStrengthSound)
 {
 	entity player = M_ARGV(0, entity);
-	entity store = IS_PLAYER(player) ? PS(player) : player; // because non-player entities can fire weapons
 
 	if(StatusEffects_active(STATUSEFFECT_Strength, player)
-		&& ((time > store.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-		|| (time > store.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
 			sound(player, CH_TRIGGER, SND_STRENGTH_FIRE, VOL_BASE, ATTEN_NORM);
-			store.prevstrengthsound = time;
+			player.prevstrengthsound = time;
 		}
-	store.prevstrengthsoundattempt = time;
+	player.prevstrengthsoundattempt = time;
 }
 
 MUTATOR_HOOKFUNCTION(powerups, LogDeath_AppendItemCodes)
