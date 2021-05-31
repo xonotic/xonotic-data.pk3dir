@@ -387,18 +387,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
-
-			float realdmg = damage - excess;
-			if (this != attacker && realdmg && !STAT(FROZEN, this)
-				&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
-			{
-				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
-					GameRules_scoring_add(attacker, DMG, realdmg);
-				}
-				if (IS_PLAYER(this)) {
-					GameRules_scoring_add(this, DMGTAKEN, realdmg);
-				}
-			}
 		}
 		else
 			this.max_armorvalue += (save + take);
@@ -433,7 +421,20 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
 
-	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
+	bool forbid_logging_damage = MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
+
+	if ((dh || da) && !forbid_logging_damage)
+	{
+		float realdmg = damage - excess;
+		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
+			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
+		{
+			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
+				GameRules_scoring_add(attacker, DMG, realdmg);
+			if (IS_PLAYER(this))
+				GameRules_scoring_add(this, DMGTAKEN, realdmg);
+		}
+	}
 
 	if (GetResource(this, RES_HEALTH) < 1)
 	{
