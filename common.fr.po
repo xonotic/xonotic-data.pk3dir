@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-30 07:23+0200\n"
-"PO-Revision-Date: 2021-05-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-05-30 08:40+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1344,8 +1344,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
-"Tuez les ennemis pour les geler, tenez-vous à côté des équipiers gelés pour "
-"les dégeler ; gelez tous les ennemis pour gagner"
+"Tuez les ennemis pour les geler, tenez-vous à côté des coéquipiers gelés "
+"pour les dégeler ; gelez tous les ennemis pour gagner"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
@@ -3692,23 +3692,23 @@ msgstr "^BGL'ennemi %s(^BG%s%s)^BG a son drapeau ! Récupérez-le !"
 #: qcsrc/common/notifications/all.inc:565
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BGVotre équipier %s^BGa le drapeau ^TC^TT^BG ! Protégez-le !"
+msgstr "^BGVotre coéquipier %s^BGa le drapeau ^TC^TT^BG ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:566
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
-"^BGVotre équipier %s(^BG%s%s)^BG a le drapeau ^TC^TT^BG ! Protégez-le !"
+"^BGVotre coéquipier %s(^BG%s%s)^BG a le drapeau ^TC^TT^BG ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:567
 #, c-format
 msgid "^BGYour %steam mate^BG got the flag! Protect them!"
-msgstr "^BGVotre équipier %s^BGa le drapeau ! Protégez-le !"
+msgstr "^BGVotre coéquipier %s^BGa le drapeau ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr "^BGVotre équipier %s(^BG%s%s)^BG a le drapeau ! Protégez-le !"
+msgstr "^BGVotre coéquipier %s(^BG%s%s)^BG a le drapeau ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGEnemies can now see you on radar!"
@@ -3815,7 +3815,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:616
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1Vous avez été puni pour avoir attaqué vos coéquipiers !"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Die camper!"
@@ -3852,7 +3852,7 @@ msgstr "^K1Vous êtes devenu un peu trop croustillant !"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1Vous vous êtes tué tout seul !"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -4002,22 +4002,22 @@ msgstr "^K1Attention à la marche !"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1Traitre ! Vous avez trahi votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1Traitre ! Vous avez tué votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1Vous avez été trahi par votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1Vous avez été tué par votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
