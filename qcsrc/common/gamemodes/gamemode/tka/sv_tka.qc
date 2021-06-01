@@ -96,6 +96,7 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 		tka_RespawnBall(this);
 		return;
 	}
+	if(toucher.ballcarried) { return; }
 	if(IS_DEAD(toucher)) { return; }
 	if(STAT(FROZEN, toucher)) { return; }
 	if (!IS_PLAYER(toucher))
@@ -155,21 +156,21 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	WaypointSprite_Kill(this.waypointsprite_attachedforcarrier);
 }
 
-void tka_PlayerReset(entity plyr)
+void tka_PlayerReset(entity player)
 {
-	plyr.ballcarried = NULL;
-	GameRules_scoring_vip(plyr, false);
-	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
+	player.ballcarried = NULL;
+	GameRules_scoring_vip(player, false);
+	WaypointSprite_Kill(player.waypointsprite_attachedforcarrier);
 
 	// reset the player effects
-	plyr.glow_trail = false;
-	plyr.effects &= ~autocvar_g_tka_ballcarrier_effects;
+	player.glow_trail = false;
+	player.effects &= ~autocvar_g_tka_ballcarrier_effects;
 }
 
-void tka_DropEvent(entity plyr) // runs any time that a player is supposed to lose the ball
+void tka_DropEvent(entity player) // runs any time that a player is supposed to lose the ball
 {
 	entity ball;
-	ball = plyr.ballcarried;
+	ball = player.ballcarried;
 
 	if(!ball) { return; }
 
@@ -182,15 +183,15 @@ void tka_DropEvent(entity plyr) // runs any time that a player is supposed to lo
 	ball.nextthink = time + autocvar_g_tkaball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
-	setorigin(ball, plyr.origin + '0 0 10');
+	setorigin(ball, player.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
-	navigation_dynamicgoal_set(ball, plyr);
+	navigation_dynamicgoal_set(ball, player);
 
 	// messages and sounds
-	tka_EventLog("dropped", plyr);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
+	tka_EventLog("dropped", player);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_DROPPED, player.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, player.netname);
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
@@ -198,22 +199,29 @@ void tka_DropEvent(entity plyr) // runs any time that a player is supposed to lo
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 
-	tka_PlayerReset(plyr);
+	tka_PlayerReset(player);
 }
 
 .bool pushable;
 
 MODEL(TKA_BALL, "models/orbs/orbblue.md3");
 
-void tka_RemoveBall()
+void tka_RemoveBall(entity ball)
 {
-	entity plyr = tka_ball.owner;
-	if (plyr) // it was attached
-		tka_PlayerReset(plyr);
+	entity player = ball.owner;
+	if (player) // it was attached
+		tka_PlayerReset(player);
 	else
-		WaypointSprite_DetachCarrier(tka_ball);
-	delete(tka_ball);
-	tka_ball = NULL;
+		WaypointSprite_DetachCarrier(ball);
+	delete(ball);
+}
+
+void tka_RemoveBalls()
+{
+	IL_EACH(g_tkaballs, true,
+	{
+		tka_RemoveBall(it);
+	});
 }
 
 void tka_SpawnBall()
@@ -232,23 +240,32 @@ void tka_SpawnBall()
 	e.pushable = true;
 	settouch(e, tka_TouchEvent);
 	e.owner = NULL;
-	tka_ball = e;
-	navigation_dynamicgoal_init(tka_ball, false);
+	IL_PUSH(g_tkaballs, e);
+	navigation_dynamicgoal_init(e, false);
 
 	InitializeEntity(e, tka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
+}
+
+void tka_SpawnBalls(int ballcount)
+{
+	int realballcount = max(1, ballcount); // never allow less than 1 ball to spawn
+	for(int j = 0; j < realballcount; ++j)
+	{
+		tka_SpawnBall();
+	}
 }
 
 void tka_Handler_CheckBall(entity this)
 {
 	if(time < game_starttime)
 	{
-		if (tka_ball)
-			tka_RemoveBall();
+		if (!IL_EMPTY(g_tkaballs))
+			tka_RemoveBalls();
 	}
 	else
 	{
-		if (!tka_ball)
-			tka_SpawnBall();
+		if (IL_EMPTY(g_tkaballs))
+			tka_SpawnBalls(TKA_BALL_COUNT);
 	}
 
 	this.nextthink = time;
@@ -256,6 +273,7 @@ void tka_Handler_CheckBall(entity this)
 
 void tka_DelayedInit(entity this) // run at the start of a match, initiates game mode
 {
+	g_tkaballs = IL_NEW();
 	tka_Handler = new(tka_Handler);
 	setthink(tka_Handler, tka_Handler_CheckBall);
 	tka_Handler.nextthink = time;
@@ -268,15 +286,21 @@ void tka_DelayedInit(entity this) // run at the start of a match, initiates game
 
 void havocbot_goalrating_tkaball(entity this, float ratingscale, vector org)
 {
-	entity ball_owner = tka_ball.owner;
+	entity ball = NULL, ball_carried = NULL;
 
-	if (ball_owner == this || SAME_TEAM(ball_owner, this)) // TODO: defend ball carrier?
-		return;
+	// stops at last ball, prefers ball without carrier
+	IL_EACH(g_tkaballs, it.owner != this && DIFF_TEAM(ball.owner, this),
+	{
+		if(it.owner)
+			ball_carried = it.owner;
+		else
+			ball = it;
+	});
 
-	if (ball_owner)
-		navigation_routerating(this, ball_owner, ratingscale, 2000);
-	else
-		navigation_routerating(this, tka_ball, ratingscale, 2000);
+	if (ball)
+		navigation_routerating(this, ball, ratingscale, 2000);
+	else if(ball_carried)
+		navigation_routerating(this, ball_carried, ratingscale, 2000);
 }
 
 void havocbot_role_tka_carrier(entity this)
@@ -337,18 +361,24 @@ MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 
 	if(frag_attacker != frag_target && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_attacker, frag_target))
 	{
+		bool team_has_ball = false;
+		IL_EACH(g_tkaballs, it.owner != frag_attacker && SAME_TEAM(it, frag_attacker),
+		{
+			team_has_ball = true;
+			break;
+		});
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
 			GameRules_scoring_add(frag_attacker, TKA_CARRIERKILLS, 1);
 			if(autocvar_g_tka_score_bckill) // add bckills to the score
 				GameRules_scoring_add_team(frag_attacker, SCORE, autocvar_g_tka_score_bckill);
 		}
-		else if(!frag_attacker.ballcarried && !(autocvar_g_tka_score_team && SAME_TEAM(tka_ball.owner, frag_attacker)))
+		else if(!frag_attacker.ballcarried && !(autocvar_g_tka_score_team && team_has_ball))
 		{
 			if(autocvar_g_tka_noncarrier_warn)
 				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN);
 		}
 
-		if(frag_attacker.ballcarried || (autocvar_g_tka_score_team && SAME_TEAM(tka_ball.owner, frag_attacker))) // add to amount of kills while ballcarrier (or if team scoring is enabled)
+		if(frag_attacker.ballcarried || (autocvar_g_tka_score_team && team_has_ball)) // add to amount of kills while ballcarrier (or if team scoring is enabled)
 			GameRules_scoring_add_team(frag_attacker, SCORE, autocvar_g_tka_score_killac);
 	}
 
@@ -378,19 +408,22 @@ MUTATOR_HOOKFUNCTION(tka, PlayerPreThink)
 	if(player.ballcarried)
 		STAT(TKA_BALLSTATUS, player) |= TKA_BALL_CARRYING;
 
-	if(!tka_ball.owner)
-		STAT(TKA_BALLSTATUS, player) |= TKA_BALL_DROPPED;
-	else
+	IL_EACH(g_tkaballs, true,
 	{
-		// TODO: teamless carrier?
-		switch(tka_ball.owner.team)
+		if(!it.owner)
+			STAT(TKA_BALLSTATUS, player) |= TKA_BALL_DROPPED;
+		else
 		{
-			case NUM_TEAM_1: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_RED; break;
-			case NUM_TEAM_2: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_BLUE; break;
-			case NUM_TEAM_3: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_YELLOW; break;
-			case NUM_TEAM_4: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_PINK; break;
+			// TODO: teamless carrier?
+			switch(it.owner.team)
+			{
+				case NUM_TEAM_1: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_RED; break;
+				case NUM_TEAM_2: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_BLUE; break;
+				case NUM_TEAM_3: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_YELLOW; break;
+				case NUM_TEAM_4: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_PINK; break;
+			}
 		}
-	}
+	});
 }
 
 MUTATOR_HOOKFUNCTION(tka, PlayerUseKey)
@@ -486,7 +519,15 @@ MUTATOR_HOOKFUNCTION(tka, BotShouldAttack)
 	entity targ = M_ARGV(1, entity);
 
 	// if neither player has ball then don't attack unless the ball is on the ground
-	if(!targ.ballcarried && !bot.ballcarried && tka_ball.owner && !(autocvar_g_tka_score_team && SAME_TEAM(tka_ball.owner, bot)))
+	bool have_held_ball = false, team_has_ball = false;
+	IL_EACH(g_tkaballs, it.owner,
+	{
+		have_held_ball = true;
+		if(SAME_TEAM(bot, it.owner))
+			team_has_ball = true;
+	});
+
+	if(!targ.ballcarried && !bot.ballcarried && have_held_ball && !(autocvar_g_tka_score_team && team_has_ball))
 		return true;
 }
 

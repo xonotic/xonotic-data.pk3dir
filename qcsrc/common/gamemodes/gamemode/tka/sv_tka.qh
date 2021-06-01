@@ -10,6 +10,7 @@ int tka_teams;
 //int autocvar_g_tka_teams;
 int autocvar_g_tka_teams_override;
 
+IntrusiveList g_tkaballs;
 REGISTER_MUTATOR(tka, false)
 {
     MUTATOR_STATIC();
@@ -35,11 +36,11 @@ REGISTER_MUTATOR(tka, false)
 	return false;
 }
 
+const int TKA_BALL_COUNT = 1;
 
-entity tka_ball;
 entity tka_Handler;
 
 void(entity this) havocbot_role_tka_carrier;
 void(entity this) havocbot_role_tka_collector;
 
-void tka_DropEvent(entity plyr);
+void tka_DropEvent(entity player);

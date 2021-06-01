@@ -51,5 +51,4 @@ void HUD_Mod_TeamKeepaway(vector pos, vector mySize)
 		drawpic_aspect_skin(pos, "tka_taken_yellow", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
 	else if(stat_items & TKA_BALL_TAKEN_PINK)
 		drawpic_aspect_skin(pos, "tka_taken_pink", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
-
 }
