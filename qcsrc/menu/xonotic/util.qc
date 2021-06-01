@@ -835,6 +835,18 @@ string quitGameButton_getText(entity btn)
 		return _("Quit multiplayer");
 }
 
+string quitGameButton_getTooltip(entity btn)
+{
+	if (btn.disabled)
+		return "-";
+	else if(cvar("g_campaign"))
+		return "-";
+	else if (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1")
+		return "-";
+	else
+		return _("Quit multiplayer / Disconnect from the server");
+}
+
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
 {
 	if(startAlpha < targetAlpha)

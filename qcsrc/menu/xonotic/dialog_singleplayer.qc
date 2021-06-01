@@ -145,6 +145,7 @@ void XonoticSingleplayerDialog_draw(entity me)
 	entity e = me.quitGameButton;
 	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
 	e.setText(e, quitGameButton_getText(e));
+	setZonedTooltip(e, quitGameButton_getTooltip(e), string_null);
 	SUPER(XonoticSingleplayerDialog).draw(me);
 }
 

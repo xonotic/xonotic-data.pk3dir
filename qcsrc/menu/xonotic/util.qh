@@ -41,6 +41,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname);
 
 void makeServerSingleplayer();
 string quitGameButton_getText(entity btn);
+string quitGameButton_getTooltip(entity btn);
 
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha);
 
