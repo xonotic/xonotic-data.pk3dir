@@ -372,7 +372,7 @@ MUTATOR_HOOKFUNCTION(tka, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	// clear the item used for the ball in keepaway
-	STAT(TKA_BALLSTATUS, player) &= ~(TKA_BALL_TAKEN_RED | TKA_BALL_TAKEN_BLUE | TKA_BALL_TAKEN_YELLOW | TKA_BALL_TAKEN_PINK | TKA_BALL_CARRYING | TKA_BALL_DROPPED);
+	STAT(TKA_BALLSTATUS, player) = 0;
 
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
 	if(player.ballcarried)
