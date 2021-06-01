@@ -387,26 +387,27 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
+	//non-friendly fire 
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
 		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
 			
+	//friendly fire 
 	if (SAME_TEAM(frag_target, frag_attacker))
 		GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
 		
-	//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+	//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+	//deathtypes:
+	//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+	//camp = campcheck, lava = lava, slime = slime 
+	//team change / rebalance suicides are currently not included
 	if (!IS_PLAYER(frag_attacker) && (
+		frag_deathtype == DEATH_KILL.m_id ||
 		frag_deathtype == DEATH_DROWN.m_id ||
 		frag_deathtype == DEATH_HURTTRIGGER.m_id ||
 		frag_deathtype == DEATH_CAMP.m_id ||
 		frag_deathtype == DEATH_LAVA.m_id ||
 		frag_deathtype == DEATH_SLIME.m_id))
 			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
-		
-	//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
-	//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
-	//FIXME: ^ , might require fixing hp+a check for suicides as a whole
-	if (frag_deathtype == DEATH_KILL.m_id)
-			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * autocvar_g_ca_damage2score_multiplier);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
