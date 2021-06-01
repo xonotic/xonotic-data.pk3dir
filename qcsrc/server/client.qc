@@ -1086,8 +1086,6 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
-bool autocvar_sv_qcphysics = true; // TODO this is for testing - remove when qcphysics work
-
 /**
 =============
 ClientConnect

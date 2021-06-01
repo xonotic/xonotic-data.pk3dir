@@ -388,6 +388,7 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_qcphysics");
 		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
@@ -2211,11 +2212,11 @@ void droptofloor(entity this)
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
-void RunThink(entity this)
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -2231,7 +2232,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -2261,8 +2262,8 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 
