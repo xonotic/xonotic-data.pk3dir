@@ -174,6 +174,13 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
+	float tl = GameRules_scoring_add(frag_target, LMS_LIVES, 0);
+	if (tl <= 0)
+	{
+		frag_target.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		frag_target.respawn_time = time + 2;
+	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 }
 
@@ -185,8 +192,6 @@ void lms_RemovePlayer(entity player)
 	{
 		if (player.lms_spectate_warning < 2)
 		{
-			if(IS_BOT_CLIENT(player))
-				bot_clear(player);
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			int pl_cnt = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
@@ -307,8 +312,6 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 				pl_cnt++;
 			});
-			if(IS_BOT_CLIENT(frag_target))
-				bot_clear(frag_target);
 			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
 		}

@@ -76,7 +76,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 	if (STAT(BUFFS, view))
 	{
-		return CS(view).cvar_cl_buffs_autoreplace == false || STAT(BUFFS, view) != STAT(BUFFS, this.owner);
+		return CS_CVAR(view).cvar_cl_buffs_autoreplace == false || STAT(BUFFS, view) != STAT(BUFFS, this.owner);
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -174,7 +174,7 @@ void buff_Touch(entity this, entity toucher)
 
 	if (STAT(BUFFS, toucher))
 	{
-		if (CS(toucher).cvar_cl_buffs_autoreplace && STAT(BUFFS, toucher) != STAT(BUFFS, this))
+		if (CS_CVAR(toucher).cvar_cl_buffs_autoreplace && STAT(BUFFS, toucher) != STAT(BUFFS, this))
 		{
 			// TODO: lost-gained notification for this case
 			int buffid = buff_FirstFromFlags(STAT(BUFFS, toucher)).m_id;
@@ -473,7 +473,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		entity dmgent = new(dmgent);
+		entity dmgent = new_pure(dmgent);
 
 		dmgent.dmg = frag_damage * autocvar_g_buffs_vengeance_damage_multiplier;
 		dmgent.enemy = frag_attacker;
@@ -532,19 +532,17 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 {
+	// NOTE: vampire PlayerDamage_SplitHealthArmor code is similar
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	if(!(STAT(BUFFS, frag_attacker) & BUFF_VAMPIRE.m_itemid))
 		return;
 	float health_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
 
-	if(time >= frag_target.spawnshieldtime &&
-		frag_target != frag_attacker &&
-		IS_PLAYER(frag_attacker) &&
-		!IS_DEAD(frag_target) && !STAT(FROZEN, frag_target))
+	if (time >= frag_target.spawnshieldtime && frag_target != frag_attacker
+		&& IS_PLAYER(frag_attacker) && !IS_DEAD(frag_target) && !STAT(FROZEN, frag_target))
 	{
-		GiveResource(frag_attacker, RES_HEALTH,
-			autocvar_g_buffs_vampire_damage_steal * health_take);
+		GiveResource(frag_attacker, RES_HEALTH, autocvar_g_buffs_vampire_damage_steal * health_take);
 	}
 }
 

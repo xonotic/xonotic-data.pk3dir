@@ -267,7 +267,8 @@ void ka_Handler_CheckBall(entity this)
 
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	ka_Handler = new(ka_Handler);
+	g_kaballs = IL_NEW();
+	ka_Handler = new_pure(ka_Handler);
 	setthink(ka_Handler, ka_Handler_CheckBall);
 	ka_Handler.nextthink = time;
 }

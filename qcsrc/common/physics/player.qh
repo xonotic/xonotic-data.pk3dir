@@ -327,7 +327,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
 
-	#define PHYS_CL_TRACK_CANJUMP(s)            (CS(s).cvar_cl_movement_track_canjump)
+	#define PHYS_CL_TRACK_CANJUMP(s)            (CS_CVAR(s).cvar_cl_movement_track_canjump)
 
 #endif
 

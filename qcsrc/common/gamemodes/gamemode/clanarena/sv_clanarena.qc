@@ -224,7 +224,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			PutClientInServer(it);
 		}
 	});
-	bot_relinkplayerlist();
 	return true;
 }
 
@@ -286,11 +285,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
-	{
 		eliminatedPlayers.SendFlags |= 1;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
-	}
 	return true;
 }
 
@@ -310,7 +305,10 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
+	{
+		entcs_update_players(player);
 		player.caplayer = 0;
+	}
 	if (player.caplayer)
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
@@ -334,14 +332,14 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_lms_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
+	start_health       = warmup_start_health       = cvar("g_ca_start_health");
+	start_armorvalue   = warmup_start_armorvalue   = cvar("g_ca_start_armor");
+	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_ca_start_ammo_shells");
+	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_ca_start_ammo_nails");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_ca_start_ammo_rockets");
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_ca_start_ammo_cells");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_ca_start_ammo_plasma");
+	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_ca_start_ammo_fuel");
 }
 
 MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)

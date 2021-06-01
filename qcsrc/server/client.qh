@@ -33,7 +33,8 @@ bool autocvar_g_nodepthtestplayers;
 string autocvar_g_mutatormsg;
 float autocvar_sv_foginterval;
 float autocvar_sv_maxidle;
-bool autocvar_sv_maxidle_spectatorsareidle;
+float autocvar_sv_maxidle_playertospectator = 60;
+bool autocvar_sv_maxidle_alsokickspectators;
 int autocvar_sv_maxidle_slots;
 bool autocvar_sv_maxidle_slots_countbots;
 bool autocvar_g_forced_respawn;
@@ -172,7 +173,6 @@ CLASS(Client, Object)
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
     ATTRIB(Client, just_joined, bool, this.just_joined);
     ATTRIB(Client, race_completed, bool, this.race_completed);
-    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, latency_sum, float, this.latency_sum);
     ATTRIB(Client, latency_cnt, int, this.latency_cnt);
     ATTRIB(Client, latency_time, float, this.latency_time);
@@ -192,6 +192,9 @@ CLASS(Client, Object)
 
     // networked cvars
 
+// not currently handled by ClientState
+#if 0
+    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, cvar_cl_allow_uid2name, int, this.cvar_cl_allow_uid2name);
     ATTRIB(Client, cvar_cl_allow_uidtracking, int, this.cvar_cl_allow_uidtracking);
     ATTRIB(Client, cvar_cl_autotaunt, float, this.cvar_cl_autotaunt);
@@ -225,6 +228,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
     ATTRIB(Client, cvar_cl_weapon_switch_reload, bool, this.cvar_cl_weapon_switch_reload);
     ATTRIB(Client, cvar_cl_weapon_switch_fallback_to_impulse, bool, this.cvar_cl_weapon_switch_fallback_to_impulse);
+#endif
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -361,8 +365,6 @@ void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
 
-void checkSpectatorBlock(entity this);
-
 void PlayerUseKey(entity this);
 
 void FixClientCvars(entity e);
@@ -374,6 +376,7 @@ IntrusiveList g_initforplayer;
 STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
 
 void play_countdown(entity this, float finished, Sound samp);
+void player_powerups_remove_all(entity this);
 
 void RotRegen(entity this, float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod);
 

@@ -14,6 +14,8 @@ bool lockteams;
 
 // ========================== Global teams API ================================
 
+void Team_InitTeams();
+
 /// \brief Returns the global team entity at the given index.
 /// \param[in] index Index of the team.
 /// \return Global team entity at the given index.
@@ -321,8 +323,8 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
 int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
 	entity player, bool use_score);
 
-/// \brief Called when the player connects or when they change their color with
-/// the "color" command.
+/// \brief Called when the player changes color with the "color" command.
+/// Note that the "color" command is always called early on player connection
 /// \param[in,out] player Player that requested a new color.
 /// \param[in] new_color Requested color.
 void SV_ChangeTeam(entity player, int new_color);

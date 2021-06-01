@@ -49,8 +49,7 @@ float checkrules_firstblood;
 .float damagedbytriggers;
 
 float yoda;
-float damage_goodhits;
-float damage_gooddamage;
+int impressive_hits;
 
 .float pain_finished; // Added by Supajoe
 

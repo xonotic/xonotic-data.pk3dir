@@ -248,12 +248,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 
 string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	int last_word;
-	string s;
-	int take_until;
-	int skip = 0;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -261,11 +256,12 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	int take_until = textLengthUpToWidth(s, w, theFontSize, tw);
 
 	if ( take_until > strlen(s) )
 		take_until = strlen(s);
 
+	int skip = 0;
 	for ( int i = 0; i < take_until; i++ )
 		if ( substring(s,i,1) == "\n" )
 		{
@@ -278,7 +274,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 	{
 		if ( skip == 0 && take_until < strlen(s) )
 		{
-			last_word = take_until;
+			int last_word = take_until;
 			while(last_word > 0 && substring(s, last_word, 1) != " ")
 				--last_word;
 
@@ -393,6 +389,8 @@ MUTATOR_HOOKFUNCTION(minigames, HUD_Command)
 
 	if(argv(1) == "minigame")
 	{
+		if (isdemo())
+			return true; // minigames can't function properly in demo mode
 		if (HUD_MinigameMenu_IsOpened())
 			HUD_MinigameMenu_Close(NULL, NULL, NULL);
 		else

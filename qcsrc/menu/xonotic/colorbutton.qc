@@ -30,7 +30,7 @@ void XonoticColorButton_configureXonoticColorButton(entity me, float theGroup, f
 			// no change
 			break;
 	}
-	me.cvarName = "_cl_color";
+	me.controlledCvar = "_cl_color";
 	me.cvarValueFloat = theValue;
 	me.cvarPart = theColor;
 	me.loadCvars(me);
@@ -46,28 +46,28 @@ void XonoticColorButton_setChecked(entity me, float val)
 }
 void XonoticColorButton_loadCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
-	if(cvar_string(me.cvarName) == cvar_defstring(me.cvarName))
-		cvar_set(me.cvarName, ftos(16 * floor(random() * 15) + floor(random() * 15)));
+	if(cvar_string(me.controlledCvar) == cvar_defstring(me.controlledCvar))
+		cvar_set(me.controlledCvar, ftos(16 * floor(random() * 15) + floor(random() * 15)));
 
 	if(me.cvarPart == 1)
-		me.checked = (cvar(me.cvarName) & 240) == me.cvarValueFloat * 16;
+		me.checked = (cvar(me.controlledCvar) & 240) == me.cvarValueFloat * 16;
 	else
-		me.checked = (cvar(me.cvarName) & 15) == me.cvarValueFloat;
+		me.checked = (cvar(me.controlledCvar) & 15) == me.cvarValueFloat;
 }
 void XonoticColorButton_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
 	if(me.checked)
 	{
 		if(me.cvarPart == 1)
-			cvar_set(me.cvarName, ftos((cvar(me.cvarName) & 15) + me.cvarValueFloat * 16));
+			cvar_set(me.controlledCvar, ftos((cvar(me.controlledCvar) & 15) + me.cvarValueFloat * 16));
 		else
-			cvar_set(me.cvarName, ftos((cvar(me.cvarName) & 240) + me.cvarValueFloat));
+			cvar_set(me.controlledCvar, ftos((cvar(me.controlledCvar) & 240) + me.cvarValueFloat));
 	}
 }
 void XonoticColorButton_draw(entity me)
