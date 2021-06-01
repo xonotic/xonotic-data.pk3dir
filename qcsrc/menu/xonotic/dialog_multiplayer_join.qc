@@ -22,6 +22,16 @@ void XonoticServerListTab_refresh(entity this, entity slist)
     slist.refreshServerList(slist, clear ? REFRESHSERVERLIST_RESET : REFRESHSERVERLIST_ASK);
 }
 
+.entity quitGameButton;
+void XonoticServerListTab_draw(entity me)
+{
+	entity e = me.quitGameButton;
+	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
+	e.setText(e, quitGameButton_getText(e));
+	setZonedTooltip(e, quitGameButton_getTooltip(e), string_null);
+	SUPER(XonoticServerListTab).draw(me);
+}
+
 void XonoticServerListTab_fill(entity me)
 {
 	entity e, slist;
@@ -89,12 +99,8 @@ void XonoticServerListTab_fill(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		/*
-		me.TD(me, 1, 1, e = makeXonoticCommandButton_T(_("Disconnect"), '0 0 0', "disconnect", 0,
-			_("Disconnect from the server")));
-			slist.disconnectButton = e;
-		*/
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Join!"), '0 0 0'));
+		me.TD(me, 1, me.columns * 0.5, me.quitGameButton = makeXonoticCommandButton(string_null, '0 0 0', QUITGAME_CMD, 0));
+		me.TD(me, 1, me.columns * 0.5, e = makeXonoticButton(_("Join!"), '0 0 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;
