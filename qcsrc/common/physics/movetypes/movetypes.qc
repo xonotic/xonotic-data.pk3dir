@@ -464,7 +464,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 		}
     });
 
-    trace_allsolid = save_trace_allsolid;
+	trace_allsolid = save_trace_allsolid;
 	trace_startsolid = save_trace_startsolid;
 	trace_fraction = save_trace_fraction;
 	trace_inwater = save_trace_inwater;
