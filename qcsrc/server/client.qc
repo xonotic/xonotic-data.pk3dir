@@ -775,14 +775,15 @@ void PutPlayerInServer(entity this)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
+		entity w_ent = this.(weaponentity);
 		if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
-			this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			w_ent.m_switchweapon = w_getbestweapon(this, weaponentity);
 		else
-			this.(weaponentity).m_switchweapon = WEP_Null;
-		this.(weaponentity).m_weapon = WEP_Null;
-		this.(weaponentity).weaponname = "";
-		this.(weaponentity).m_switchingweapon = WEP_Null;
-		this.(weaponentity).cnt = -1;
+			w_ent.m_switchweapon = WEP_Null;
+		w_ent.m_weapon = WEP_Null;
+		w_ent.weaponname = "";
+		w_ent.m_switchingweapon = WEP_Null;
+		w_ent.cnt = -1;
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
@@ -2087,23 +2088,6 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
-/**
- * Checks whether the client is an observer or spectator, if so, he will get kicked after
- * g_maxplayers_spectator_blocktime seconds
- */
-void checkSpectatorBlock(entity this)
-{
-	if(IS_SPEC(this) || IS_OBSERVER(this))
-	if(!this.caplayer)
-	if(IS_REAL_CLIENT(this))
-	{
-		if( time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
-			dropclient(this);
-		}
-	}
-}
-
 void PrintWelcomeMessage(entity this)
 {
 	if(CS(this).motd_actived_time == 0)
@@ -2467,12 +2451,16 @@ void PlayerPreThink (entity this)
 	if (frametime) {
 		// physics frames: update anticheat stuff
 		anticheat_prethink(this);
-	}
 
-	if (blockSpectators && frametime) {
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
-		checkSpectatorBlock(this);
+		if (blockSpectators && IS_REAL_CLIENT(this)
+			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !this.caplayer
+			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
+		{
+			if (dropclient_schedule(this))
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+		}
 	}
 
 	zoomstate_set = false;
@@ -2709,13 +2697,14 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (autocvar_sv_maxidle > 0)
+	if (autocvar_sv_maxidle > 0 || (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0))
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
-	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
+	if (IS_PLAYER(this) || autocvar_sv_maxidle_alsokickspectators)
+	if (!intermission_running) // NextLevel() kills all centerprints after setting this true
 	{
 		int totalClients = 0;
-		if(autocvar_sv_maxidle_slots > 0)
+		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 			{
@@ -2723,7 +2712,7 @@ void PlayerPostThink (entity this)
 			});
 		}
 
-		if (autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
+		if (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
@@ -2735,19 +2724,36 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(autocvar_sv_maxidle - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, autocvar_sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
-				if (!CS(this).idlekick_lasttimeleft)
+			float maxidle_time = autocvar_sv_maxidle;
+			if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+				maxidle_time = autocvar_sv_maxidle_playertospectator;
+			float timeleft = ceil(maxidle_time - (time - CS(this).parm_idlesince));
+			float countdown_time = max(min(10, maxidle_time - 1), ceil(maxidle_time * 0.33)); // - 1 to support maxidle_time <= 10
+			if (timeleft == countdown_time && !CS(this).idlekick_lasttimeleft)
+			{
+				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+				else
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
 			if (timeleft <= 0) {
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
-				dropclient(this);
+				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+				{
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
+					if (this.caplayer)
+						this.caplayer = 0;
+					PutObserverInServer(this);
+				}
+				else
+				{
+					if (dropclient_schedule(this))
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
+				}
 				return;
 			}
-			else if (timeleft <= 10) {
+			else if (timeleft <= countdown_time) {
 				if (timeleft != CS(this).idlekick_lasttimeleft)
-					Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
+					play2(this, SND(TALK2));
 				CS(this).idlekick_lasttimeleft = timeleft;
 			}
 		}

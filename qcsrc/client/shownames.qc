@@ -36,7 +36,7 @@ STATIC_INIT(shownames_ent)
 .vector box_org;
 
 const float SHOWNAMES_FADESPEED = 4;
-const float SHOWNAMES_FADEDELAY = 0.4;
+const float SHOWNAMES_FADEDELAY = 0;
 void Draw_ShowNames(entity this)
 {
 	if (this.sv_entnum == current_player + 1) // self or spectatee

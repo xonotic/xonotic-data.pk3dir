@@ -28,6 +28,8 @@
 
 	float over_ClearButton(entity me, vector pos)
 	{
+		if (me.text == "")
+			return 0;
 		if (pos.x >= 1 + me.cb_offset - me.cb_width)
 			if (pos.x < 1 + me.cb_offset)
 				if (pos.y >= 0)

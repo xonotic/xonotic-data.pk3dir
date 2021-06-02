@@ -715,7 +715,11 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = sprintf("^1%s #%d ^7%s^1 %s", first_command, etof(victim), victim.netname, reason);
 			}
-			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return 0; }
+			else
+			{
+				print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n"));
+				return 0;
+			}
 
 			break;
 		}
@@ -803,7 +807,9 @@ void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 				print_to(caller, "^1You abstained from your vote.");
 				caller.vote_selection = VOTE_SELECT_ABSTAIN;
 				msg_entity = caller;
-				if (!autocvar_sv_vote_singlecount)   VoteCount(false); }
+				if (!autocvar_sv_vote_singlecount)
+					VoteCount(false);
+			}
 
 			return;
 		}

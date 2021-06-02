@@ -18,12 +18,12 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.owner = this.owner;
 	newmine.realowner = this.realowner;
-	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
+	setsize(newmine, '-4 -4 -4', '4 4 4');
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
-	newmine.mine_orientation = -trace_plane_normal;
+	newmine.movedir = -trace_plane_normal;
 
 	newmine.takedamage = this.takedamage;
 	newmine.damageforcescale = this.damageforcescale;
@@ -92,7 +92,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
-		this.velocity = this.mine_orientation; // particle fx and decals need .velocity
+		this.velocity = this.movedir; // particle fx and decals need .velocity
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius),
 						NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, this.weaponentity_fld, NULL);

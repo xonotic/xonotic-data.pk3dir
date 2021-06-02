@@ -126,7 +126,10 @@ REGISTRY_DEFINE_GET(Gametypes, NULL)
 STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
+#ifndef CSQC
+// NOTE: ISGAMETYPE in csqc (temporary hack)
 #define IS_GAMETYPE(NAME) (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
+#endif
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
