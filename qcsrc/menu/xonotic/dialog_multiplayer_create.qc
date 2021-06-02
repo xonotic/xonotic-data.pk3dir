@@ -14,6 +14,7 @@
 #include "mainwindow.qh"
 #include "button.qh"
 #include "commandbutton.qh"
+#include "quitbutton.qh"
 #include "inputbox.qh"
 
 void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip)
@@ -66,14 +67,6 @@ entity makeXonoticServerCreateTab()
 }
 
 .entity quitGameButton;
-void XonoticServerCreateTab_draw(entity me)
-{
-	entity e = me.quitGameButton;
-	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
-	e.setText(e, quitGameButton_getText(e));
-	setZonedTooltip(e, quitGameButton_getTooltip(e), string_null);
-	SUPER(XonoticServerCreateTab).draw(me);
-}
 
 void XonoticServerCreateTab_fill(entity me)
 {
@@ -218,7 +211,7 @@ void XonoticServerCreateTab_fill(entity me)
 	// bottom row
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, me.columns * 1/12);
-		me.TD(me, 1, me.columns * 5/12, me.quitGameButton = makeXonoticCommandButton(string_null, '0 0 0', QUITGAME_CMD, 0));
+		me.TD(me, 1, me.columns * 5/12, me.quitGameButton = makeXonoticQuitButton('0 0 0', 0));
 		me.TD(me, 1, me.columns * 5/12, e = makeXonoticButton(_("Start multiplayer!"), '0 0 0'));
 			e.onClick = MapList_LoadMap;
 			e.onClickEntity = me.mapListBox;

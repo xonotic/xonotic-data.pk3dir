@@ -2,7 +2,6 @@
 
 #include "tab.qh"
 CLASS(XonoticServerCreateTab, XonoticTab)
-	METHOD(XonoticServerCreateTab, draw, void(entity));
 	METHOD(XonoticServerCreateTab, fill, void(entity));
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity));
 	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity));

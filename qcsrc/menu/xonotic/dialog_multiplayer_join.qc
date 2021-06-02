@@ -6,6 +6,7 @@
 #include "inputbox.qh"
 #include "checkbox.qh"
 #include "commandbutton.qh"
+#include "quitbutton.qh"
 #include "button.qh"
 
 entity makeXonoticServerListTab()
@@ -23,14 +24,6 @@ void XonoticServerListTab_refresh(entity this, entity slist)
 }
 
 .entity quitGameButton;
-void XonoticServerListTab_draw(entity me)
-{
-	entity e = me.quitGameButton;
-	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
-	e.setText(e, quitGameButton_getText(e));
-	setZonedTooltip(e, quitGameButton_getTooltip(e), string_null);
-	SUPER(XonoticServerListTab).draw(me);
-}
 
 void XonoticServerListTab_fill(entity me)
 {
@@ -99,7 +92,7 @@ void XonoticServerListTab_fill(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		me.TD(me, 1, me.columns * 0.5, me.quitGameButton = makeXonoticCommandButton(string_null, '0 0 0', QUITGAME_CMD, 0));
+		me.TD(me, 1, me.columns * 0.5, me.quitGameButton = makeXonoticQuitButton('0 0 0', 0));
 		me.TD(me, 1, me.columns * 0.5, e = makeXonoticButton(_("Join!"), '0 0 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;

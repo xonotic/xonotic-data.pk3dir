@@ -823,30 +823,6 @@ void makeServerSingleplayer()
 	localcmd("defer 0.1 \"sv_cmd settemp net_address_ipv6 ::1\"\n");
 }
 
-string quitGameButton_getText(entity btn)
-{
-	if (btn.disabled)
-		return _("Quit current game");
-	else if(cvar("g_campaign"))
-		return _("Quit campaign");
-	else if (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1")
-		return _("Quit singleplayer");
-	else
-		return _("Quit multiplayer");
-}
-
-string quitGameButton_getTooltip(entity btn)
-{
-	if (btn.disabled)
-		return "-";
-	else if(cvar("g_campaign"))
-		return "-";
-	else if (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1")
-		return "-";
-	else
-		return _("Quit multiplayer / Disconnect from the server");
-}
-
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
 {
 	if(startAlpha < targetAlpha)

@@ -96,6 +96,7 @@
 #include <menu/xonotic/playerlist.qh>
 #include <menu/xonotic/playermodel.qh>
 #include <menu/xonotic/playlist.qh>
+#include <menu/xonotic/quitbutton.qh>
 #include <menu/xonotic/radiobutton.qh>
 #include <menu/xonotic/rootdialog.qh>
 #include <menu/xonotic/screenshotimage.qh>

@@ -3,7 +3,6 @@
 #include "dialog.qh"
 CLASS(XonoticQuitDialog, XonoticDialog)
 	METHOD(XonoticQuitDialog, fill, void(entity));
-	METHOD(XonoticQuitDialog, draw, void(entity));
 	ATTRIB(XonoticQuitDialog, title, string, _("Quit"));
 	ATTRIB(XonoticQuitDialog, tooltip, string, _("Quit the game"));
 	ATTRIB(XonoticQuitDialog, color, vector, SKINCOLOR_DIALOG_QUIT);

@@ -3,6 +3,7 @@
 #include <common/gamemodes/_mod.qh>
 #include "bigbutton.qh"
 #include "commandbutton.qh"
+#include "quitbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"
 #include "campaign.qh"
@@ -140,14 +141,6 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 }
 
 .entity quitGameButton;
-void XonoticSingleplayerDialog_draw(entity me)
-{
-	entity e = me.quitGameButton;
-	e.disabled = !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED));
-	e.setText(e, quitGameButton_getText(e));
-	setZonedTooltip(e, quitGameButton_getTooltip(e), string_null);
-	SUPER(XonoticSingleplayerDialog).draw(me);
-}
 
 void XonoticSingleplayerDialog_fill(entity me)
 {
@@ -181,7 +174,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "2", ZCTX(_("CSKL^Hard"))));
 	me.TR(me);
 		me.TDempty(me, me.columns * 1/13);
-		me.TD(me, 1, me.columns * 5/13, me.quitGameButton = makeXonoticCommandButton(string_null, '0 0 0', QUITGAME_CMD, 0));
+		me.TD(me, 1, me.columns * 5/13, me.quitGameButton = makeXonoticQuitButton('0 0 0', 0));
 		me.TDempty(me, me.columns * 1/13);
 		me.TD(me, 1, me.columns * 5/13, e = makeXonoticButton(_("Play campaign!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
