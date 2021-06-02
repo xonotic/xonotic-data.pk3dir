@@ -1,4 +1,5 @@
 #include "commandbutton.qh"
+#include "dialog.qh"
 
 entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, int theFlags, string theTooltip)
 {
