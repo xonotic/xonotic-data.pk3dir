@@ -401,7 +401,7 @@ void fpscounter_update()
 
 		int channel = MSG_C2S;
 		WriteHeader(channel, fpsreport);
-		WriteShort(channel, bound(0, rint(fps), 65535)); // prevent insane fps values
+		WriteShort(channel, bound(0, rint(fps), 32767)); // prevent insane fps values
 	}
 }
 
