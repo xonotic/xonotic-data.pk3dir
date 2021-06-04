@@ -757,7 +757,7 @@ void nade_emerald_randomweapons(entity e, vector org)
 			if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				continue;
 			float chancewep = 1;
-			if(it == WEP_RACER || it == WEP_RAPTOR || it == WEP_RAPTOR_BOMB || it == WEP_RAPTOR_FLARE || it == WEP_WYVERN_ATTACK || it == WEP_MAGE_SPIKE || it == WEP_SPIDER_ATTACK || it == WEP_EWHEEL || it == WEP_FLAC || it == WEP_HELLION || it == WEP_HK || it == WEP_TUR_MACHINEGUN || it == WEP_TUR_MLRS || it == WEP_PHASER || it == WEP_PLASMA || it == WEP_PLASMA_DUAL || it == WEP_TESLA || it == WEP_WALKER || it == WEP_NEXBALL) //LegendGuard fixes the strange part of the code
+			if(it.spawnflags & WEP_FLAG_SPECIALATTACK) //LegendGuard fixes the strange part of the code
 				chancewep = 0;
 			if (W_IsWeaponThrowable(e, it.m_id))
 				RandomSelection_AddEnt(it, chancewep, 1);
