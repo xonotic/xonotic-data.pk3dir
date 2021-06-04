@@ -5,15 +5,15 @@
 # Translators:
 # Antoni Das <Antonidas159@gmail.com>, 2017
 # LegendGuard, 2020
-# LegendGuard, 2020
+# LegendGuard, 2020-2021
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-30 07:23+0200\n"
-"PO-Revision-Date: 2021-05-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-03 22:22+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -966,7 +966,7 @@ msgstr "精度状態（平均 %d%%）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1409
 msgid "Item stats"
-msgstr ""
+msgstr "アイテム状態"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1520
 msgid "Map stats:"
@@ -2986,12 +2986,12 @@ msgstr "^BG%s^F3 切断された"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 は %s 秒間非活動になった後に追い出された"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 は %s 秒間非活動になった後に観客に移動された"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid ""
@@ -3009,7 +3009,7 @@ msgstr "^BG%s^F3 はチームメイトを殺したために追い出された"
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 は現在^BG観戦中です"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3734,7 +3734,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:616
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1あなたはチームメイトを攻撃したことで罰せられた!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Die camper!"
@@ -3771,7 +3771,7 @@ msgstr "^K1あなたは少しカリカリになりすぎた!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1あなたは自分自身を削除した!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -3921,22 +3921,22 @@ msgstr "^K1あなたの足元に気を付けて!"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1裏切り者! あなたはチームメイトを裏切った ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1裏切り者! あなたは ^BG%sをチームキルした"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1あなたはチームメイトに裏切られた ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1あなたは ^BG%s によってチームキルされた!"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -3951,6 +3951,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1非活動になるのはやめて!\n"
+"^BG ^COUNT で観客を移動中..."
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
@@ -5769,6 +5771,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"プレーヤーの統計はデフォルトで有効になって、プロファイル メニューでこれを変更"
+"できます"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Save settings"
@@ -7745,23 +7749,23 @@ msgstr "ショットが敵に当たったときにインパクトインジケー
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr ""
+msgstr "SND^修正した"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
-msgstr ""
+msgstr "多くのダメージでピッチを下げる"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
-msgstr ""
+msgstr "減少中"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
-msgstr ""
+msgstr "多くのダメージでピッチを上げる"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
-msgstr ""
+msgstr "増加中"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
@@ -8612,10 +8616,12 @@ msgid ""
 "Warning: selecting 'Always' your team's color may be the same as the enemy "
 "team"
 msgstr ""
+"警告: 「常に」を選択すると、あなたのチームの色が敵チームと同じになる可能性が"
+"あります"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "チームゲームで除いて"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"

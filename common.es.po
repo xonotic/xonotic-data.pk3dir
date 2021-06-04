@@ -14,7 +14,7 @@
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
 # LegendGuard, 2020
-# LegendGuard, 2020
+# LegendGuard, 2020-2021
 # LegendGuard, 2020
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
@@ -31,8 +31,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-30 07:23+0200\n"
-"PO-Revision-Date: 2021-05-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-03 22:40+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -992,11 +992,11 @@ msgstr "Estadísticas de precisión (promedio %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1409
 msgid "Item stats"
-msgstr ""
+msgstr "Estadísticas del objeto"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1520
 msgid "Map stats:"
-msgstr "Estadistícas de mapa:"
+msgstr "Estadísticas del mapa:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1550
 msgid "Monsters killed:"
@@ -3047,12 +3047,14 @@ msgstr "^BG%s^F3 se ha desconectado"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr "^BG%s^K3 fue expulsado después de estar inactivo por %s segundos"
+msgstr "^BG%s^K3 fue expulsado después de estar inactivo durante %s segundos"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
+"^BG%s^F3 ha sido movido a^BG espectadores^F3 después de estar inactivo "
+"durante  %s segundos"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid ""
@@ -3696,23 +3698,23 @@ msgstr "^BG¡El enemigo %s (^BG%s%s)^BG tiene su bandera! ¡Recupérala!"
 #: qcsrc/common/notifications/all.inc:565
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BG¡Tu %scompañero^BG tiene la bandera ^TC^TT^BG! ¡Protégelo!"
+msgstr "^BG¡Tu compañero %s ^BG tiene la bandera ^TC^TT^BG! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:566
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
-"^BG¡Tu %scompañero (^BG%s%s)^BG tiene la bandera ^TC^TT^BG! ¡Protégelo!"
+"^BG¡Tu compañero %s (^BG%s%s)^BG tiene la bandera ^TC^TT^BG! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:567
 #, c-format
 msgid "^BGYour %steam mate^BG got the flag! Protect them!"
-msgstr "^BG¡Tu %scompañero^BG tiene la bandera! ¡Protégelo!"
+msgstr "^BG¡Tu compañero %s ^BG tiene la bandera! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr "^BG¡Tu %scompañero (^BG%s%s)^BG tiene la bandera! ¡Protégelo!"
+msgstr "^BG¡Tu compañero %s (^BG%s%s)^BG tiene la bandera! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGEnemies can now see you on radar!"
@@ -3816,7 +3818,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:616
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1¡Recibiste el castigo por atacar a tus compañeros de equipo!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Die camper!"
@@ -3853,7 +3855,7 @@ msgstr "^K1¡Te volviste un poco crujiente!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1¡Te eliminaste a ti mismo!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -4003,22 +4005,22 @@ msgstr "^K1¡Cuidado por dónde pisas!"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1¡Traidor! ¡Has traicionado a tu compañero ^BG%s!"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1¡Traidor! ¡Mataste a tu compañero ^BG%s!"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1Fuiste traicionado por tu compañero ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1Fuiste asesinado por tu compañero ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -4033,6 +4035,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1¡Deja de estar inactivo!\n"
+"^BGMoviendo a espectadores en ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
@@ -6186,7 +6190,7 @@ msgstr "Panel de Poderes"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr "Siempre habilitar"
+msgstr "Habilitar siempre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -6267,7 +6271,7 @@ msgstr "Reducido"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr "Siempre ampliado"
+msgstr "Ampliar siempre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
@@ -7169,7 +7173,7 @@ msgstr "Con el blaster"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:294
 msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr "Siempre llevar el blaster como arma adicional en Nix"
+msgstr "Llevar siempre el blaster como arma adicional en Nix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:9
 msgid "Mutators"
@@ -7845,11 +7849,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr ""
+msgstr "SND^Arreglado"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
-msgstr ""
+msgstr "Disminuir el pitch con más daño"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
@@ -7857,7 +7861,7 @@ msgstr "Disminuyendo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
-msgstr ""
+msgstr "Aumentar el pitch con más daño"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
@@ -8724,6 +8728,8 @@ msgid ""
 "Warning: selecting 'Always' your team's color may be the same as the enemy "
 "team"
 msgstr ""
+"Advertencia: seleccionando 'Siempre' el color de su equipo puede ser el "
+"mismo que el del equipo enemigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
