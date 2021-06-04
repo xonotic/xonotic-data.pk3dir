@@ -563,8 +563,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		STAT(SUPERWEAPONS_FINISHED, this) = 0;
 		STAT(AIR_FINISHED, this) = 0;
 
-		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
-
 		this.death_time = time;
 		if (random() < 0.5)
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD1, true);
