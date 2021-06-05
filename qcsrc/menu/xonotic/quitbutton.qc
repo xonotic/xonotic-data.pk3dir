@@ -23,11 +23,11 @@ string quitGameButton_getTooltip(entity me)
 	if (me.disabled)
 		return "-";
 	else if(cvar("g_campaign"))
-		return "-";
+		return _("Quit current campaign level");
 	else if (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1")
-		return "-";
+		return _("Quit current singleplayer match");
 	else
-		return _("Quit multiplayer / Disconnect from the server");
+		return _("Quit current multiplayer match / Disconnect from the server");
 }
 
 entity makeXonoticQuitButton(vector theColor, int theFlags)
