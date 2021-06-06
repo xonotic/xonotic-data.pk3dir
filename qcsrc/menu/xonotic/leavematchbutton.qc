@@ -1,4 +1,4 @@
-#include "quitbutton.qh"
+#include "leavematchbutton.qh"
 
 // resets g_campaign and updates menu items to reflect cvar values that may have been restored after leaving the campaign
 // the delay is for allowing listening to the button sound (if enabled), since the disconnect command stops all sounds

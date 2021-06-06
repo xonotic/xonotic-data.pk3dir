@@ -3,7 +3,7 @@
 #include <common/gamemodes/_mod.qh>
 #include "bigbutton.qh"
 #include "commandbutton.qh"
-#include "quitbutton.qh"
+#include "leavematchbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"
 #include "campaign.qh"

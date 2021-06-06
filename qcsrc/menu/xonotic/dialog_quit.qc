@@ -2,7 +2,7 @@
 
 #include "textlabel.qh"
 #include "commandbutton.qh"
-#include "quitbutton.qh"
+#include "leavematchbutton.qh"
 #include "button.qh"
 
 void XonoticQuitDialog_fill(entity me)
