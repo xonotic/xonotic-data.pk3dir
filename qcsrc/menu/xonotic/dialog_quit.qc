@@ -10,7 +10,7 @@ void XonoticQuitDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 1, me.disconnectButton = makeXonoticLeaveMatchButton('0 0 0', COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, 1, e = makeXonoticLeaveMatchButton('0 0 0', COMMANDBUTTON_CLOSE));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quit Xonotic"), '1 0 0', "echo ]quit; quit", 0));

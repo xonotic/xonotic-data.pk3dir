@@ -10,5 +10,4 @@ CLASS(XonoticQuitDialog, XonoticDialog)
 	ATTRIB(XonoticQuitDialog, rows, float, 3);
 	ATTRIB(XonoticQuitDialog, columns, float, 2);
 	ATTRIB(XonoticQuitDialog, name, string, "Quit");
-	ATTRIB(XonoticQuitDialog, disconnectButton, entity);
 ENDCLASS(XonoticQuitDialog)

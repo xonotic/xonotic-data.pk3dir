@@ -533,7 +533,6 @@ void XonoticServerList_draw(entity me)
 	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
 	me.connectButton.disabled = (me.ipAddressBox.text == "");
-	//me.disconnectButton.disabled = (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)));
 	me.infoButton.disabled = !owned;
 	me.favoriteButton.disabled = (me.ipAddressBox.text == "");
 
