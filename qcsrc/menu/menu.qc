@@ -685,7 +685,7 @@ void m_draw(float width, float height)
 			{
 				// in the case player uses the disconnect command (in the console or with a key)
 				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
-				// see also QUITGAME_CMD
+				// see also LEAVEMATCH_CMD
 				cvar_set("g_campaign", "0");
 				m_sync();
 			}

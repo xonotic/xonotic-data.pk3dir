@@ -66,7 +66,7 @@ entity makeXonoticServerCreateTab()
 	return me;
 }
 
-.entity quitGameButton;
+.entity leaveMatchButton;
 
 void XonoticServerCreateTab_fill(entity me)
 {
@@ -211,7 +211,7 @@ void XonoticServerCreateTab_fill(entity me)
 	// bottom row
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, me.columns * 1/12);
-		me.TD(me, 1, me.columns * 5/12, me.quitGameButton = makeXonoticQuitButton('0 0 0', 0));
+		me.TD(me, 1, me.columns * 5/12, me.leaveMatchButton = makeXonoticLeaveMatchButton('0 0 0', 0));
 		me.TD(me, 1, me.columns * 5/12, e = makeXonoticButton(_("Start multiplayer!"), '0 0 0'));
 			e.onClick = MapList_LoadMap;
 			e.onClickEntity = me.mapListBox;

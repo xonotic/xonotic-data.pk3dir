@@ -140,7 +140,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	cvar_set("lastlevel", "1");
 }
 
-.entity quitGameButton;
+.entity leaveMatchButton;
 
 void XonoticSingleplayerDialog_fill(entity me)
 {
@@ -174,7 +174,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "2", ZCTX(_("CSKL^Hard"))));
 	me.TR(me);
 		me.TDempty(me, me.columns * 1/13);
-		me.TD(me, 1, me.columns * 5/13, me.quitGameButton = makeXonoticQuitButton('0 0 0', 0));
+		me.TD(me, 1, me.columns * 5/13, me.leaveMatchButton = makeXonoticLeaveMatchButton('0 0 0', 0));
 		me.TDempty(me, me.columns * 1/13);
 		me.TD(me, 1, me.columns * 5/13, e = makeXonoticButton(_("Play campaign!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
