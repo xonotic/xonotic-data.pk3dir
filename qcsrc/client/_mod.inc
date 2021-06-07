@@ -7,6 +7,7 @@
 #include <client/mapvoting.qc>
 #include <client/player_skeleton.qc>
 #include <client/resources.qc>
+#include <client/showboxes.qc>
 #include <client/shownames.qc>
 #include <client/teamradar.qc>
 #include <client/view.qc>

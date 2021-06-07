@@ -8,6 +8,7 @@
 #include <client/hud/panel/scoreboard.qh>
 #include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
+#include <client/showboxes.qh>
 #include <client/shownames.qh>
 #include <common/anim.qh>
 #include <common/animdecide.qh>
@@ -1743,6 +1744,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	View_UpdateFov();
 
 	View_DemoCamera();
+
+	draw_bboxes();
 
 	// Draw the Crosshair
 	setproperty(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
