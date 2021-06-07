@@ -137,8 +137,6 @@ const int HOOK_END =      2;
 
 .float ping, ping_packetloss, ping_movementloss;
 
-float g_trueaim_minrange;
-
 int hud;
 float view_quality;
 

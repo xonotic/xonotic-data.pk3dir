@@ -101,6 +101,8 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_resetplayer, void(Weapon this, entity actor)) {}
     /** (CLIENT) impact effect for weapon explosion */
     METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
+    /** (CLIENT) client-side logic run every frame, useful for drawing predicted beams */
+    METHOD(Weapon, wr_clientbeam, void(Weapon this, entity actor, entity wepent, int fire)) {}
     /** (SERVER) called whenever a player dies */
     METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) logic to run when weapon is lost */

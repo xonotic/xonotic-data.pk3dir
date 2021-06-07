@@ -1,2 +1,3 @@
 // generated file; do not modify
 #include <client/weapons/projectile.qh>
+#include <client/weapons/tracing.qh>

@@ -68,22 +68,20 @@ void VaporizerBeam_Draw(entity this)
 		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
 }
 
-NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
+void VaporizerBeam_Fire(entity this, bool isNew, vector org1, vector org2, bool enemy_hit, int owner_id, int shot_team)
 {
-	Net_Accept(vortex_beam);
 	setthink(this, SUB_Remove);
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
 	if (isNew) IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
-	this.vorg1 = ReadVector();
-	this.vorg2 = ReadVector();
-	this.cnt = ReadByte();
-	int myowner = ReadByte();
-	this.owner = playerslots[myowner - 1];
-	this.sv_entnum = myowner;
-	this.team = ReadByte() - 1;
+	this.vorg1 = org1;
+	this.vorg2 = org2;
+	this.cnt = enemy_hit;
+	this.owner = (owner_id) ? playerslots[owner_id - 1] : NULL;
+	this.sv_entnum = owner_id;
+	this.team = shot_team;
 
 	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 
@@ -94,6 +92,19 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 		this.drawmask = MASK_NORMAL;
 		delete(this);
 	}
+}
+
+NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
+{
+	Net_Accept(vortex_beam);
+
+	vector org1 = ReadVector();
+	vector org2 = ReadVector();
+	bool enemy_hit = ReadByte();
+	int myowner = ReadByte();
+	int owner_team = ReadByte() - 1;
+
+	VaporizerBeam_Fire(this, isNew, org1, org2, enemy_hit, myowner, owner_team);
 
 	return true;
 }
@@ -424,6 +435,32 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
         // no weapon specific image for this weapon
         return false;
     }
+}
+.float last_beam;
+METHOD(Vaporizer, wr_clientbeam, void(entity thiswep, entity actor, entity wepent, int fire))
+{
+	if((fire & 1) && time > actor.last_beam)
+	{
+		// for traces we need the CSQC model!
+		entity realplayer = CSQCModel_server2csqc(actor.sv_entnum);
+		if(!realplayer)
+			realplayer = csqcplayer; // fall back to the global
+		int shottype = W_SetupShot_Dir_ProjectileSize_Range(realplayer, wepent, v_forward, '0 0 0', '0 0 0', false, 0, SND_Null, CH_WEAPON_A, 0, max_shot_distance);
+		bool hit = boolean(shottype == SHOTTYPE_HITENEMY || shottype == SHOTTYPE_HITTEAM); // also count team shots
+
+		entity e = new(VaporizerBeam);
+		VaporizerBeam_Fire(e, true, w_shotorg, w_shotend, hit, actor.sv_entnum, myteam);
+
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && !hit)
+		{
+			vector force = w_shotdir * WEP_CVAR_PRI(vaporizer, force);
+			traceline(w_shotend - normalize(force) * 16, w_shotend + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
+			w_backoff = -1 * normalize(force);
+			vector org2 = w_shotend + w_backoff * 6;
+			pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
+		}
+		actor.last_beam = time + WEP_CVAR_PRI(vaporizer, refire);
+	}
 }
 
 #endif

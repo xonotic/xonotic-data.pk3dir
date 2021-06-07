@@ -1,0 +1,16 @@
+#pragma once
+
+#include <common/sounds/sound.qh>
+
+AUTOCVAR_SAVE(cl_clientbeams,                    int,   0,      "Draw a client side beam when firing some weapons. -1: always disabled, 0: disabled unless ping is high, 1: enabled");
+AUTOCVAR_SAVE(cl_clientbeams_minping,            int,   160,    "Minimum ping for the client-side beams to automatically enable");
+
+float g_trueaim_minrange;
+vector w_shotorg;
+vector w_shotdir;
+vector w_shotend;
+
+// TODO: make this a common function!
+int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range);
+
+void HUD_Crosshair_ClientBeam(entity this);

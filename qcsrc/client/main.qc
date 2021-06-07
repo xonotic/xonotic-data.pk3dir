@@ -12,6 +12,7 @@
 #include <client/shownames.qh>
 #include <client/view.qh>
 #include <client/weapons/projectile.qh>
+#include <client/weapons/tracing.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>

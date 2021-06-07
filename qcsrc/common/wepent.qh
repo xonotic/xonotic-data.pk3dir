@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/weapons/weapon.qh>
+
 REGISTER_NET_LINKED(ENT_CLIENT_WEPENT)
 REGISTER_NET_TEMP(CLIENT_WEPENT)
 
@@ -38,6 +40,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 	.float m_alpha;
 
 	.int m_skin;
+
+	.vector movedir;
 
 	// only for Porto
 	.bool angles_held_status;

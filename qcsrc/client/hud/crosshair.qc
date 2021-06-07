@@ -3,6 +3,7 @@
 #include <client/draw.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/view.qh>
+#include <client/weapons/tracing.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -49,23 +50,18 @@ void TrueAim_Init()
 	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
-float EnemyHitCheck()
+int EnemyHitCheck(bool trace_crosshair)
 {
-	float t, n;
-	wcross_origin = project_3d_to_2d(trace_endpos);
-	wcross_origin.z = 0;
-	if(trace_ent)
-		n = trace_ent.entnum;
-	else
-		n = trace_networkentity;
+	if(trace_crosshair)
+		wcross_origin = vec2(project_3d_to_2d(trace_endpos));
+	int n = (trace_ent) ? trace_ent.entnum : trace_networkentity;
 	if(n < 1)
 		return SHOTTYPE_HITWORLD;
 	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
-	t = entcs_GetTeam(n - 1);
-	if(teamplay)
-		if(t == myteam)
-			return SHOTTYPE_HITTEAM;
+	int t = entcs_GetTeam(n - 1);
+	if(teamplay && t == myteam)
+		return SHOTTYPE_HITTEAM;
 	if(t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;
@@ -100,7 +96,7 @@ float TrueAimCheck(entity wepent)
 			if(zoomscript_caught)
 			{
 				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * max_shot_distance, mv, ta);
-				return EnemyHitCheck();
+				return EnemyHitCheck(true);
 			}
 			break;
 		case WEP_DEVASTATOR: // projectile has a size!
@@ -147,7 +143,7 @@ float TrueAimCheck(entity wepent)
 	w_shotorg = trace_endpos - view_forward * nudge;
 
 	tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
-	shottype = EnemyHitCheck();
+	shottype = EnemyHitCheck(true);
 	if(shottype != SHOTTYPE_HITWORLD)
 		return shottype;
 
@@ -235,6 +231,8 @@ void HUD_Crosshair(entity this)
 			HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
 		return;
 	}
+
+	HUD_Crosshair_ClientBeam(this);
 
 	float f, i, j;
 	vector v;
