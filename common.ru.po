@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-06 07:23+0200\n"
-"PO-Revision-Date: 2021-05-30 09:26+0000\n"
+"PO-Revision-Date: 2021-06-06 09:16+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -5651,7 +5651,7 @@ msgstr "Итальянский"
 
 #: qcsrc/menu/xonotic/credits.qc:227
 msgid "Japanese"
-msgstr ""
+msgstr "Японский"
 
 #: qcsrc/menu/xonotic/credits.qc:230
 msgid "Kazakh"
