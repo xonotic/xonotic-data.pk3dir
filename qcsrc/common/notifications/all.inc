@@ -662,6 +662,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     #define MURDER_FRAG             BOLD(_("^K3%sYou fragged ^BG%s"))
     #define MURDER_FRAG2            BOLD(_("^K3%sYou scored against ^BG%s"))
+	#define MURDER_FRAG3            strcat(BOLD_OPERATOR, _("^K3%sYou fragged ^BG%s"), "\n", "%s^BG place with %s")
+	#define MURDER_FRAG4            strcat(BOLD_OPERATOR, _("^K3%sYou fragged ^BG%s"), "\n", "%s^BG with %s")
     #define MURDER_FRAGGED          BOLD(_("^K1%sYou were fragged by ^BG%s"))
     #define MURDER_FRAGGED2         BOLD(_("^K1%sYou were scored against by ^BG%s"))
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                   N_ENABLE,  1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG,                    MURDER_FRAG2                   )
