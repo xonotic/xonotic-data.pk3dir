@@ -1271,7 +1271,7 @@ void nade_boom(entity this)
 
 		case NADE_TYPE_DARK: //LegendGuard adds nade case 08-02-2021
 			nade_blast = false;
-			expef = EFFECT_SPAWN_PURPLE;//expef = EFFECT_EXPLOSION_MEDIUM;
+			expef = EFFECT_EXPLOSION_MEDIUM;
 			break;
 
 		default:
