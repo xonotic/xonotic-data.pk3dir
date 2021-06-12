@@ -1079,6 +1079,7 @@ string getwelcomemessage(entity this)
 
 	//string versionmessage = GetClientVersionMessage(this);
 	//string s = strcat(versionmessage, "^8\n^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
+	//string s = strcat(versionmessage, "^8\n^8\nserver is ^9", autocvar_hostname, "^8\n");
 	string s = (autocvar_hostname_full != "" ? autocvar_hostname_full : autocvar_hostname);
 
 	s = strcat(s, "^8\n^7", gamemode_name);

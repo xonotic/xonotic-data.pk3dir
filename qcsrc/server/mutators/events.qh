@@ -449,6 +449,7 @@ MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 
 /**
  * Called when a player is damaged
+ * Returns true if damage shouldn't be logged
  */
 #define EV_PlayerDamaged(i, o) \
     /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
