@@ -507,12 +507,6 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 {
 	entity targ = M_ARGV(0, entity);
 	targ.freezetag_frozen_time = 0;
-	
-	if(autocvar_g_freezetag_revive_respawn) {
-		targ.freezetag_frozen_timeout = -1;
-		PutClientInServer(targ);
-	}
-	
 	targ.freezetag_frozen_timeout = 0;
 }
 
