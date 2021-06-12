@@ -194,6 +194,7 @@ REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING); //LegendGuard registers dark blinking n
 
 #ifdef CSQC
 #include <client/draw.qh>
+#include <client/hud/hud.qh>
 
 float cvar_cl_nade_type;
 string cvar_cl_pokenade_type;
@@ -218,6 +219,8 @@ void HUD_DarkBlinking()
 }
 
 #elif defined(SVQC)
+#include <server/command/common.qh>
+
 void DarkBlinking(entity e)
 {
 	if(e == NULL)
