@@ -9,6 +9,8 @@ REGISTER_STAT(PLAYER_CRUSH_BOUNCE, float, autocvar_g_player_crush_bounce)
 REGISTER_STAT(PLAYER_CRUSH_BOUNCE_JUMP, float, autocvar_g_player_crush_bounce_jump)
 
 #ifdef GAMEQC
+SOUND(GOOMBA_STOMP, "misc/goomba");
+
 void pc_PlayerTouch(entity this, entity toucher)
 {
 	if(toucher == NULL)
@@ -53,7 +55,10 @@ void pc_PlayerTouch(entity this, entity toucher)
 		vector vdir = normalize(toucher.origin - this.origin);
 
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
+		{
 			Damage (this, toucher, toucher, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			sound(toucher, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
+		}
 #endif
 
 #ifdef GAMEQC
@@ -84,6 +89,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
+			sound(this, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
 	#endif
 #ifdef GAMEQC
 		}
@@ -112,6 +118,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
+			sound(this, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
 	#endif
 #ifdef GAMEQC
 		}
