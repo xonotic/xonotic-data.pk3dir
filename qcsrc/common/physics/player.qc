@@ -450,6 +450,7 @@ void CheckWaterJump(entity this)
 		{	// open at eye level
 			this.velocity_z = 225;
 			this.flags |= FL_WATERJUMP;
+			this.teleport_time = time + 2; // safety net
 			SET_JUMP_HELD(this);
 		}
 	}

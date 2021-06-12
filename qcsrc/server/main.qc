@@ -26,6 +26,40 @@
 #include <server/weapons/csqcprojectile.qh>
 #include <server/world.qh>
 
+void dropclient_do(entity this)
+{
+	if (this.owner)
+		dropclient(this.owner);
+	delete(this);
+}
+/**
+ * Schedules dropclient for a player and returns true;
+ * if dropclient is already scheduled (for that player) it does nothing and returns false.
+ *
+ * NOTE: this function exists only to allow sending a message to the kicked player with
+ * Send_Notification, which doesn't work if called together with dropclient
+ */
+bool dropclient_schedule(entity this)
+{
+	bool scheduled = false;
+	FOREACH_ENTITY_CLASS("dropclient_handler", true,
+	{
+		if(it.owner == this)
+		{
+			scheduled = true;
+			break; // can't use return here, compiler shows a warning
+		}
+	});
+	if (scheduled)
+		return false;
+
+	entity e = new_pure(dropclient_handler);
+	setthink(e, dropclient_do);
+	e.owner = this;
+	e.nextthink = time + 0.1;
+	return true;
+}
+
 void CreatureFrame_hotliquids(entity this)
 {
 	if (this.contents_damagetime >= time)
