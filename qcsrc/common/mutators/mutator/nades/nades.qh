@@ -193,6 +193,9 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING); //LegendGuard registers dark blinking nade feature 09-02-2021
 
 #ifdef CSQC
+#include <client/draw.qh>
+#include <client/hud/hud.qh>
+
 float cvar_cl_nade_type;
 string cvar_cl_pokenade_type;
 //LegendGuard sets variables for dark nade 09-02-2021
