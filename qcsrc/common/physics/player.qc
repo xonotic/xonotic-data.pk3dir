@@ -531,7 +531,7 @@ bool PM_check_specialcommand(entity this, int buttons)
 		c = "x";
 	else if (buttons == 1)
 		c = "1";
-	else if (buttons == 2)
+	else if (buttons == 4)
 		c = " ";
 	else if (buttons == 128)
 		c = "s";
