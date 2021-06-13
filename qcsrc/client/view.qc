@@ -898,7 +898,7 @@ void SpecialCommand()
 			{
 				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
 				slot.y = 1; // start it off 0 so we can use it
-				slot.z = floor(random() * REGISTRY_MAX(Weapons));
+				slot.z = floor(random() * REGISTRY_COUNT(Weapons));
 				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
 				vector newcolor = randomvec() * 2;
 				newcolor.x = bound(0.4, newcolor.x, 1);
