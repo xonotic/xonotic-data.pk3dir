@@ -52,6 +52,7 @@ void multi_trigger(entity this)
 	{	// we can't just delete(this) here, because this is a touch function
 		// called while C code is looping through area links...
 		settouch(this, func_null);
+		this.use = func_null;
 	}
 }
 
@@ -133,6 +134,7 @@ void multi_reset(entity this)
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.team = this.team_saved;
+	this.use = multi_use;
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch
@@ -167,7 +169,7 @@ spawnfunc(trigger_multiple)
 		this.wait = 0;
 	this.use = multi_use;
 
-	if(this.wait == -1 && autocvar_sv_q3defragcompat)
+	if(this.wait == -1 && (q3compat & Q3COMPAT_DEFI))
 		this.wait = 0.1; // compatibility for q3df: "instant" return
 
 	EXACTTRIGGER_INIT;

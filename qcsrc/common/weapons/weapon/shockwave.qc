@@ -3,18 +3,6 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
-// enable when shockwave replaces shotgun
-#if 0
-METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
-{
-	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
-	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
-	{
-		return WEP_MACHINEGUN;
-	}
-	return this;
-}
-#endif
 
 const float MAX_SHOCKWAVE_HITS = 10;
 //#define DEBUG_SHOCKWAVE

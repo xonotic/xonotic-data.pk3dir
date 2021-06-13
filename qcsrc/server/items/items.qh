@@ -29,6 +29,7 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float max_armorvalue;
 .float pickup_anyway;
+.int count;
 
 .float scheduledrespawntime;
 .float respawntime;

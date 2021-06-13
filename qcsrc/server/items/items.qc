@@ -1018,19 +1018,19 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		if(autocvar_spawn_debug >= 2)
 		{
-            // why not flags & fl_item?
-		    FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
-                LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
-                LOG_TRACE(" vs ", it.netname, vtos(it.origin));
-                error("Mapper sucks.");
-            });
+			// why not flags & fl_item?
+			FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
+				LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
+				LOG_TRACE(" vs ", it.netname, vtos(it.origin));
+				error("Mapper sucks.");
+			});
 			this.is_item = true;
 		}
 
 		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
 
-		if (   def.instanceOfPowerup
-			|| def.instanceOfWeaponPickup
+		if (	    def.instanceOfPowerup
+			||  def.instanceOfWeaponPickup
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
@@ -1047,7 +1047,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	this.bot_pickupevalfunc = pickupevalfunc;
 	this.bot_pickupbasevalue = pickupbasevalue;
 	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
-	this.netname = itemname;
+	this.netname = (def.m_weapon) ? def.m_weapon.netname : def.netname;
 	settouch(this, Item_Touch);
 	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
@@ -1103,18 +1103,21 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 void StartItem(entity this, GameItem def)
 {
-    def = def.m_spawnfunc_hookreplace(def, this);
-    if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
-    {
-        delete(this);
-        return;
-    }
-    this.classname = def.m_canonical_spawnfunc;
-    _StartItem(
-    	this,
-    	this.itemdef = def,
-    	def.m_respawntime(), // defaultrespawntime
-    	def.m_respawntimejitter() // defaultrespawntimejitter
+	def = def.m_spawnfunc_hookreplace(def, this);
+
+	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+	{
+		delete(this);
+		return;
+	}
+
+	this.classname = def.m_canonical_spawnfunc;
+
+	_StartItem(
+		this,
+		this.itemdef = def,
+		def.m_respawntime(), // defaultrespawntime
+		def.m_respawntimejitter() // defaultrespawntimejitter
 	);
 }
 

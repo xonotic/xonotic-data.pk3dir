@@ -12,6 +12,8 @@ string autocvar_g_forced_team_otherwise;
 
 bool lockteams;
 
+.int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
 // ========================== Global teams API ================================
 
 void Team_InitTeams();
