@@ -58,6 +58,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 		{
 			Damage (this, toucher, toucher, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			sound(toucher, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
+			sound(this, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
 		}
 #endif
 
@@ -90,6 +91,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 			sound(this, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
+			sound(toucher, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
 	#endif
 #ifdef GAMEQC
 		}
@@ -119,6 +121,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 			sound(this, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
+			sound(toucher, CH_TRIGGER_SINGLE, SND_GOOMBA_STOMP, VOL_BASE, ATTEN_NORM);
 	#endif
 #ifdef GAMEQC
 		}
