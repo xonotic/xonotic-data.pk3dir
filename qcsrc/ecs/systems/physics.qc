@@ -90,8 +90,9 @@ void sys_phys_update(entity this, float dt)
 	if (this.flags & FL_WATERJUMP) {
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (this.waterlevel == WATERLEVEL_NONE) {
+		if (time > this.teleport_time || this.waterlevel == WATERLEVEL_NONE) {
 			this.flags &= ~FL_WATERJUMP;
+			this.teleport_time = 0;
 		}
 	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt)) {
 		// handled
