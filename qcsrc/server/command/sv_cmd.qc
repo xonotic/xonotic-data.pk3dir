@@ -972,6 +972,39 @@ void GameCommand_make_mapinfo(int request)
 	}
 }
 
+void GameCommand_setflag(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity client;
+			float accepted;
+			
+			client = GetFilteredEntity(argv(1));
+			accepted = VerifyClientEntity(client, false, false);
+
+			if (accepted <= 0)
+			{
+				LOG_INFO("^1ERROR^7: Couldn't set country flag");
+				LOG_HELP("Usage:^3 sv_cmd setflag #client_id countrycode[0-249]");
+				return;
+			}
+			
+			client.countrycode = stof(argv(2));
+			LOG_INFO("^2SUCCESS^7: Country flag set!");
+			return;
+		}
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd setflag #client_id countrycode[0-249]");
+			return;
+		}
+	}
+}
+
 void GameCommand_moveplayer(int request, int argc)
 {
 	switch (request)
@@ -1622,6 +1655,8 @@ void GameCommand_(int request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
+
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
 SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }

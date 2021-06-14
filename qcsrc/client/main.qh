@@ -154,8 +154,15 @@ string GetSpeedUnit(int speed_unit);
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server
 
+// z411 accuracy info
+.float accuracy_frags[REGISTRY_MAX(Weapons)];
+.float accuracy_hit[REGISTRY_MAX(Weapons)];
+.float accuracy_cnt_hit[REGISTRY_MAX(Weapons)];
+.float accuracy_cnt_fired[REGISTRY_MAX(Weapons)];
+
 .int team;
 .int team_size;
+.int countrycode;
 
 int binddb;
 

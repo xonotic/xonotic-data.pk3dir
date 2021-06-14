@@ -79,6 +79,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
 		Scoreboard_UpdatePlayerTeams();
+	/*
 	if (team_count)
 	{
 		// show team scores in the first line
@@ -97,45 +98,111 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		first_pl = 1;
 		pos.y += fontsize.y;
 		tm = teams.sort_next;
-	}
-	i = first_pl;
-
-	do
-	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
+	}*/
+	
+	
+	// z411 Basic team stats
+	if (team_count)
 	{
-		if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR)
-			continue;
+		i = 0;
+		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
+			if(tm.team == NUM_SPECTATOR)
+				continue;
+			if(!tm.team)
+				continue;
 
-		if (i == entries-1 && !me_printed && pl != me)
-		if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
-		{
-			for (pl = me.sort_next; pl; pl = pl.sort_next)
-				if (pl.team != NUM_SPECTATOR)
-					break;
-
-			if (pl)
-				rgb = '1 1 0'; //not last but not among the leading players: yellow
-			else
-				rgb = '1 0 0'; //last: red
-			pl = me;
+			/*if (tm.team == myteam)
+				drawfill(pos + eX * score_size * i, vec2(score_size, fontsize.y), '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores(ts_primary))), vec2(score_size, fontsize.y), Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+			++i;*/
+			
+			if (tm.team == myteam)
+			{
+				if (i == 0)
+					rgb = '0 1 0'; //first: green
+				me_printed = true;
+				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+			
+			score_color = Team_ColorRGB(tm.team) * 0.8;
+			
+			// TODO secondary scores test, remove
+			if(gametype.m_modscores)
+			{
+				string icon;
+				if(tm.team == NUM_TEAM_1)
+					icon = "gfx/hud/luma/player_red";
+				else if(tm.team == NUM_TEAM_2)
+					icon = "gfx/hud/luma/player_blue";
+				else
+					icon = "gfx/hud/luma/player_neutral";
+				
+				vector icon_sz = draw_getimagesize(icon);
+				vector icon_sz_new = vec2(fontsize.y*(icon_sz.x/icon_sz.y), fontsize.y);
+				
+				s = ftos(gametype.m_modscores(tm.team));
+				float s_width = stringwidth(s, false, fontsize) + icon_sz_new.x;
+				
+				//drawfill(pos, eX * s_width + eY * fontsize.y, score_color, panel_fg_alpha * 0.3, DRAWFLAG_NORMAL);
+				drawpic(pos, icon, icon_sz_new, '1 1 1', panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
+				drawstring(pos + eX * icon_sz_new.x, s, fontsize, '1 1 1', panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
+				
+				s = textShortenToWidth(Team_CustomName(tm.team), name_size - s_width, fontsize, stringwidth_colors);
+			} else
+				s = textShortenToWidth(Team_CustomName(tm.team), name_size, fontsize, stringwidth_colors);
+			// TODO end
+			
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			draw_beginBoldFont();
+			drawstring(pos + eX * (name_size + spacing_size), ftos(tm.(teamscores(ts_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+			
+			pos.y += fontsize.y;
+			++i;
 		}
-
-		if (pl == me)
+	} else {
+		i = first_pl;
+		
+		do
+		for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 		{
-			if (i == first_pl)
-				rgb = '0 1 0'; //first: green
-			me_printed = true;
-			drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR)
+				continue;
+
+			if (i == entries-1 && !me_printed && pl != me)
+			if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
+			{
+				for (pl = me.sort_next; pl; pl = pl.sort_next)
+					if (pl.team != NUM_SPECTATOR)
+						break;
+
+				if (pl)
+					rgb = '1 1 0'; //not last but not among the leading players: yellow
+				else
+					rgb = '1 0 0'; //last: red
+				pl = me;
+			}
+		
+			if (team_count)
+				score_color = Team_ColorRGB(pl.team) * 0.8;
+			
+			if (pl == me)
+			{
+				if (i == first_pl)
+					rgb = '0 1 0'; //first: green
+				me_printed = true;
+				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+			
+			s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos.y += fontsize.y;
+			++i;
 		}
-		if (team_count)
-			score_color = Team_ColorRGB(pl.team) * 0.8;
-		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
-		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos.y += fontsize.y;
-		++i;
+		while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 	}
-	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 }
 
 void HUD_Score()

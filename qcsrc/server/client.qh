@@ -89,6 +89,7 @@ CLASS(Client, Object)
     ATTRIB(Client, colormap, int, this.colormap);
     ATTRIB(Client, team, int, this.team);
     ATTRIB(Client, clientcolors, int, this.clientcolors);
+	ATTRIB(Client, countrycode, int, this.countrycode);
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
@@ -317,6 +318,7 @@ bool independent_players;
 #define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
 
 .int killcount;
+.int countrycode;
 
 //flood fields
 .float nickspamtime; // time of last nick change

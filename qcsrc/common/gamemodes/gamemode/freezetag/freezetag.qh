@@ -5,10 +5,10 @@
 	#include <common/gamemodes/gamemode/clanarena/cl_clanarena.qh>
 #endif
 
-#ifdef CSQC
-void HUD_Mod_FreezeTag(vector myPos, vector mySize);
-void HUD_Mod_FreezeTag_Export(int fh);
-#endif
+//#ifdef CSQC
+//void HUD_Mod_FreezeTag(vector myPos, vector mySize);
+//void HUD_Mod_FreezeTag_Export(int fh);
+//#endif
 CLASS(FreezeTag, Gametype)
     INIT(FreezeTag)
     {
@@ -43,8 +43,9 @@ CLASS(FreezeTag, Gametype)
         returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of frags needed before the match will end"));
     }
 #ifdef CSQC
-    ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_FreezeTag);
-    ATTRIB(FreezeTag, m_modicons_export, void(int fh), HUD_Mod_FreezeTag_Export);
+    //ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_FreezeTag);
+    //ATTRIB(FreezeTag, m_modicons_export, void(int fh), HUD_Mod_FreezeTag_Export);
+    ATTRIB(FreezeTag, m_modscores, int(int team), HUD_Scores_CA);
 #endif
     ATTRIB(FreezeTag, m_legacydefaults, string, "10 20 0");
 ENDCLASS(FreezeTag)
