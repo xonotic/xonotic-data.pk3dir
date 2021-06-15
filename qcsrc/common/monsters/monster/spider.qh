@@ -33,8 +33,12 @@ REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
 
 CLASS(Webbed, StatusEffects)
     ATTRIB(Webbed, netname, string, "webbed");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
     ATTRIB(Webbed, m_name, string, _("Webbed"));
     ATTRIB(Webbed, m_icon, string, "buff_disability");
+#endif
     ATTRIB(Webbed, m_color, vector, '0.94 0.3 1');
     ATTRIB(Webbed, m_hidden, bool, true);
     ATTRIB(Webbed, m_lifetime, float, 10);

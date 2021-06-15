@@ -77,8 +77,12 @@ BUFF_SPAWNFUNCS(disability, BUFF_DISABILITY)
 // status effect applied to targets by the disability buff
 CLASS(Disabled, StatusEffects)
     ATTRIB(Disabled, netname, string, "disabled");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
     ATTRIB(Disabled, m_name, string, _("Disabled"));
     ATTRIB(Disabled, m_icon, string, "buff_disability");
+#endif
     ATTRIB(Disabled, m_color, vector, '0.94 0.3 1');
     ATTRIB(Disabled, m_hidden, bool, true);
     ATTRIB(Disabled, m_lifetime, float, 10);
