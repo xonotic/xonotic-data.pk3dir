@@ -380,14 +380,35 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(6, float);
 	float frag_damage = M_ARGV(7, float);
 	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
 	float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
+	//non-friendly fire
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
 		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+
+	//friendly fire
+	if (SAME_TEAM(frag_target, frag_attacker))
+		GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
+
+	//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+	//deathtypes:
+	//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+	//camp = campcheck, lava = lava, slime = slime
+	//team change / rebalance suicides are currently not included
+	if (!IS_PLAYER(frag_attacker) && (
+		frag_deathtype == DEATH_KILL.m_id ||
+		frag_deathtype == DEATH_DROWN.m_id ||
+		frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+		frag_deathtype == DEATH_CAMP.m_id ||
+		frag_deathtype == DEATH_LAVA.m_id ||
+		frag_deathtype == DEATH_SLIME.m_id ||
+		frag_deathtype == DEATH_SWAMP.m_id))
+			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)

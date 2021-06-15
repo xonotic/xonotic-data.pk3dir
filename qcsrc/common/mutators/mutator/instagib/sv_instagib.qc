@@ -2,6 +2,7 @@
 
 #include <server/client.qh>
 #include <common/items/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include "../random_items/sv_random_items.qh"
 
 bool autocvar_g_instagib_damagedbycontents = true;
@@ -181,13 +182,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!(player.effects & EF_FULLBRIGHT))
-		player.effects |= EF_FULLBRIGHT;
+	player.effects |= EF_FULLBRIGHT;
 
 	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(player, STAT(STRENGTH_FINISHED, player), SND_POWEROFF);
-		if (time > STAT(STRENGTH_FINISHED, player))
+		play_countdown(player, StatusEffects_gettime(STATUSEFFECT_Strength, player), SND_POWEROFF);
+		if (time > StatusEffects_gettime(STATUSEFFECT_Strength, player))
 		{
 			if(!player.vehicle) // already reset upon exit
 			{
@@ -200,7 +200,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < STAT(STRENGTH_FINISHED, player))
+		if (time < StatusEffects_gettime(STATUSEFFECT_Strength, player))
 		{
 			if(!player.vehicle) // incase the player is given powerups while inside a vehicle
 			{
@@ -215,8 +215,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(player, STAT(INVINCIBLE_FINISHED, player), SND_POWEROFF);
-		if (time > STAT(INVINCIBLE_FINISHED, player))
+		play_countdown(player, StatusEffects_gettime(STATUSEFFECT_Shield, player), SND_POWEROFF);
+		if (time > StatusEffects_gettime(STATUSEFFECT_Shield, player))
 		{
 			player.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
@@ -224,7 +224,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < STAT(INVINCIBLE_FINISHED, player))
+		if (time < StatusEffects_gettime(STATUSEFFECT_Shield, player))
 		{
 			player.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);

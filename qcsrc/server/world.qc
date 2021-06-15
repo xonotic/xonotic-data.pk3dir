@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
+		WriteShort(MSG_BROADCAST, bound(1, rint(CS(e).ping), 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 

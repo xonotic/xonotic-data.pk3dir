@@ -2159,7 +2159,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 	bool b1 = false, b2 = false, b3 = false, b4 = false, b5 = false; // TODO: kill this, we WANT to show the other flags, somehow! (note: also means you don't see if you're FC)
 
 	// initially clear items so they can be set as necessary later.
-	STAT(CTF_FLAGSTATUS, player) &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
+	STAT(OBJECTIVE_STATUS, player) &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
 						   | CTF_BLUE_FLAG_CARRYING		| CTF_BLUE_FLAG_TAKEN		| CTF_BLUE_FLAG_LOST
 						   | CTF_YELLOW_FLAG_CARRYING	| CTF_YELLOW_FLAG_TAKEN 	| CTF_YELLOW_FLAG_LOST
 						   | CTF_PINK_FLAG_CARRYING 	| CTF_PINK_FLAG_TAKEN		| CTF_PINK_FLAG_LOST
@@ -2173,7 +2173,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 		if(flag.team == NUM_TEAM_2 && !b2) { b2 = true; t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_3 && !b3) { b3 = true; t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_4 && !b4) { b4 = true; t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
-		if(flag.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(CTF_FLAGSTATUS, player) |= CTF_FLAG_NEUTRAL; }
+		if(flag.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL; }
 
 		switch(flag.ctf_status)
 		{
@@ -2181,14 +2181,14 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 			case FLAG_CARRY:
 			{
 				if((flag.owner == player) || (flag.pass_sender == player))
-					STAT(CTF_FLAGSTATUS, player) |= t; // carrying: player is currently carrying the flag
+					STAT(OBJECTIVE_STATUS, player) |= t; // carrying: player is currently carrying the flag
 				else
-					STAT(CTF_FLAGSTATUS, player) |= t2; // taken: someone else is carrying the flag
+					STAT(OBJECTIVE_STATUS, player) |= t2; // taken: someone else is carrying the flag
 				break;
 			}
 			case FLAG_DROPPED:
 			{
-				STAT(CTF_FLAGSTATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
+				STAT(OBJECTIVE_STATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
 				break;
 			}
 		}
@@ -2196,10 +2196,10 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 	// item for stopping players from capturing the flag too often
 	if(player.ctf_captureshielded)
-		STAT(CTF_FLAGSTATUS, player) |= CTF_SHIELDED;
+		STAT(OBJECTIVE_STATUS, player) |= CTF_SHIELDED;
 
 	if(ctf_stalemate)
-		STAT(CTF_FLAGSTATUS, player) |= CTF_STALEMATE;
+		STAT(OBJECTIVE_STATUS, player) |= CTF_STALEMATE;
 
 	// update the health of the flag carrier waypointsprite
 	if(player.wps_flagcarrier)
@@ -2524,14 +2524,6 @@ MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ctf, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "ctf_team";
-}
-
-MUTATOR_HOOKFUNCTION(ctf, SpectateCopy)
-{
-	entity spectatee = M_ARGV(0, entity);
-	entity client = M_ARGV(1, entity);
-
-	STAT(CTF_FLAGSTATUS, client) = STAT(CTF_FLAGSTATUS, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GetRecords)
