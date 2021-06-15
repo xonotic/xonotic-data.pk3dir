@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-06 07:23+0200\n"
-"PO-Revision-Date: 2021-06-06 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-15 02:07+0000\n"
+"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -46,7 +46,7 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
-"^1Mensaxe de varies llines en %s que\n"
+"^1Mensaxe de delles llines en %s que\n"
 "^1dura más de lo normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:177
@@ -124,7 +124,7 @@ msgstr "Disparu secundariu"
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Primi ^3%s^1 pa la información del mou de xuegu"
+msgstr "^1Primi ^3%s^1 pa ver la información del mou de xuegu"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/menu/xonotic/keybinder.qc:103
@@ -963,7 +963,7 @@ msgstr "Monstruos mataos:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1557
 msgid "Secrets found:"
-msgstr "Secretos alcontraos:"
+msgstr "Secretos atopaos:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1751
 #, c-format
@@ -1026,7 +1026,7 @@ msgstr "Morriesti, primi ^2%s^7 pa remanecer"
 
 #: qcsrc/client/hud/panel/strafehud.qc:908
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:909
 msgid "m"
@@ -1112,7 +1112,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
@@ -1171,7 +1171,7 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:532
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Solicitando la previsualización..."
 
 #: qcsrc/client/view.qc:959
 msgid "Nade timer"
@@ -1355,11 +1355,12 @@ msgstr "Vides:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
-msgstr "Nexball"
+msgstr "Néxbol"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
 msgstr ""
+"Xuta la pelota hasta la portería enemiga y fai por que nun te metan goles"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goals:"
@@ -2482,7 +2483,7 @@ msgstr "^BG%s^K1 morrió%s%s"
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr "^BG%s^K1 alcontró un sitiu caliente%s%s"
+msgstr "^BG%s^K1 atopó un sitiu caliente%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
@@ -2765,7 +2766,7 @@ msgstr "^BG%s^BG ganó la ronda"
 #: qcsrc/common/notifications/all.inc:359
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGRound tied"
-msgstr ""
+msgstr "^BGLa ronda quedó n'empate"
 
 #: qcsrc/common/notifications/all.inc:360
 #: qcsrc/common/notifications/all.inc:535
@@ -2803,7 +2804,7 @@ msgstr "^BGPañesti l'ameyora %s^BG!"
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr ""
+msgstr "^BGNun tienes ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
@@ -2938,7 +2939,7 @@ msgstr "^BGEl puntu de control del equipu ^TC^TT^BG destruyólu %s"
 
 #: qcsrc/common/notifications/all.inc:402
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^BGDestruyóse'l xenerador del equipu ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:403
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
@@ -3482,7 +3483,7 @@ msgid ""
 "^BGif you think you will succeed."
 msgstr ""
 "^BGAgora yes llibre.\n"
-"^F2Tenta de capturar^BG la bandera de nueves\n"
+"^F2Tenta de volver capturar^BG la bandera\n"
 "^BGsi cuides que vas consiguilo."
 
 #: qcsrc/common/notifications/all.inc:542
@@ -3755,11 +3756,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1¡Suicidéstite!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
-msgstr "^K1¡Precises tener más curiáu!"
+msgstr "^K1¡Has tener más curiáu!"
 
 #: qcsrc/common/notifications/all.inc:624
 msgid "^K1You couldn't stand the heat!"
@@ -3767,7 +3768,7 @@ msgstr "^K1¡Nun pudiesti aguantar la calor!"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You need to watch out for monsters!"
-msgstr "^K1¡Precises tener curiáu colos monstruos!"
+msgstr "^K1¡Has tener curiáu colos monstruos!"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You were killed by a monster!"
@@ -3811,7 +3812,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You need to preserve your health"
-msgstr "^K1Precises caltener la salú"
+msgstr "^K1Tienes de caltener la salú"
 
 #: qcsrc/common/notifications/all.inc:632
 msgid "^K1You became a shooting star!"
@@ -3905,22 +3906,22 @@ msgstr "^K1¡Anda pelo segao!"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1¡Traidor! Traicionesti al compañeru ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1¡Traidor! Matesti al compañeru ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1Traicionóte'l compañeru ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1Matóte'l compañeru ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -3935,6 +3936,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1¡Dexa de tar ausente!\n"
+"^BGVas ser espectador en ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
@@ -4094,7 +4097,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:713
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
-msgstr ""
+msgstr "^F2Vides adicionales que queden: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:715 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -4741,7 +4744,7 @@ msgstr "Nun sé"
 
 #: qcsrc/common/util.qc:1382
 msgid "<KEY NOT FOUND>"
-msgstr "<NUN S'ALCONTRÓ LA TECLA>"
+msgstr "<NUN S'ATOPÓ LA TECLA>"
 
 #: qcsrc/common/util.qc:1383
 msgid "<UNKNOWN KEYNUM>"
@@ -5590,7 +5593,7 @@ msgstr "Italia"
 
 #: qcsrc/menu/xonotic/credits.qc:227
 msgid "Japanese"
-msgstr ""
+msgstr "Xaponés"
 
 #: qcsrc/menu/xonotic/credits.qc:230
 msgid "Kazakh"
@@ -6562,6 +6565,8 @@ msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
+"Xuega en llinia o escontra collacios per LAN, mira les demostraciones o "
+"camuda los axustes de xugador"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
@@ -6746,7 +6751,7 @@ msgstr "Desanicia tolos mapes de la esbilla"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:206
 msgid "Start Multiplayer!"
-msgstr "¡Entamar!"
+msgstr "Entamar una partida"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -6824,7 +6829,7 @@ msgstr "Ensin armes iniciales"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:73
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
 msgid "Low gravity"
-msgstr ""
+msgstr "Poca gravedá"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:171
@@ -6973,7 +6978,7 @@ msgstr "Los xugadores van soltar toles armes que poseyan al morrer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:240
 msgid "Weapons stay after they are picked up"
-msgstr ""
+msgstr "Les armes de la mano nun cambien darréu de pañar una"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:245
 msgid "Regular (no arena)"
@@ -7013,8 +7018,8 @@ msgid ""
 "does not inflict any damage but is good for doing trickjumps."
 msgstr ""
 "Los xugadores namás van recibir una arma que pue matar d'un tiru y nel intre "
-"a los oponentes. Si'l xugador escosa la munición va tener 10 segundos pa "
-"alcontrar dello mas si nun lo fai, va encarar la muerte. El mou de disparu "
+"a los oponentes. Si'l xugador escosa la munición va tener 10 segundos "
+"p'atopar dello mas si nun lo fai, va encarar la muerte. El mou de disparu "
 "secundariu nun fai dañu mas ye bonu pa facer saltos habilidosos."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:289
@@ -7258,7 +7263,7 @@ msgstr "Amestar too"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:44
 msgid "Set as menu track"
-msgstr ""
+msgstr "Afitar como pista del menú"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:48
 msgid "Reset default menu track"
@@ -7547,7 +7552,7 @@ msgstr "Camuda los axustes del xuegu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:30
 msgid "Master:"
-msgstr ""
+msgstr "Volume principal:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:36
 msgid "Music:"
@@ -7591,7 +7596,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:103
 msgid "Mute sounds when not active"
-msgstr ""
+msgstr "Desactivar los soníos al nun tar la ventana activa"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:106
 msgid "Frequency:"
@@ -7701,7 +7706,7 @@ msgstr "Reproduz un soníu d'impautu cuando-y das a un enemigu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr ""
+msgstr "Fixu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
@@ -8027,7 +8032,7 @@ msgstr "Les calcamoníes más lloñe d'esto nun van dibuxase"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
 msgid "Time:"
-msgstr ""
+msgstr "Tiempu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:180
 msgid "Time in seconds before decals fade away"
@@ -8130,7 +8135,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:227
 msgid "Extra postprocessing effects"
-msgstr ""
+msgstr "Efeutos de posprocesamientu adicional"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:228
 msgid ""
@@ -8140,11 +8145,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
 msgid "Motion blur strength - 0.4 recommended"
-msgstr ""
+msgstr "La fuercia del desenfoque pol movimientu. Aconséyase'l valor 0,4"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Motion blur:"
-msgstr ""
+msgstr "Desenfoque pol movimientu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Particles"
@@ -8274,7 +8279,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
-msgstr ""
+msgstr "Puntos de camín"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Display waypoint markers for objectives on the map"
@@ -8286,7 +8291,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
-msgstr ""
+msgstr "Controla la tresparencia de los puntos de camín"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
@@ -8307,7 +8312,7 @@ msgstr "Amosar nomes en cuentes d'iconos"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:100
 msgid "Damage"
-msgstr ""
+msgstr "Dañu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Overlay:"
@@ -8331,7 +8336,7 @@ msgstr "Amosar los nomes enriba de los xugadores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
-msgstr ""
+msgstr "Distancia máxima:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:142
 msgid "Decolorize:"
@@ -8454,7 +8459,7 @@ msgstr "Amosar el nome de los lladrones de banderes en Captura la bandera"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:123
 msgid "Other"
-msgstr ""
+msgstr "Otros axustes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
@@ -9444,7 +9449,7 @@ msgstr "Difícil"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "Start Singleplayer!"
-msgstr "¡Entamar!"
+msgstr "Entamar una partida"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9507,7 +9512,7 @@ msgstr "xuegu n'equipu"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr ""
+msgstr "toos escontra toos"
 
 #: qcsrc/menu/xonotic/keybinder.qc:35
 msgid "Moving"
@@ -9689,7 +9694,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr ""
+msgstr "El sirvidor de Xonotic de %s"
 
 #: qcsrc/menu/xonotic/maplist.qc:301
 msgid ""
@@ -9703,7 +9708,7 @@ msgstr "espectador"
 
 #: qcsrc/menu/xonotic/playermodel.qc:161
 msgid "<no model found>"
-msgstr "<nun s'alcontró'l modelu>"
+msgstr "<nun s'atopó'l modelu>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
@@ -9722,7 +9727,7 @@ msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
 msgstr ""
-"Amiesta'l sirvidor rescampláu a Favoritos p'alcontralu más rápido nel futuru"
+"Amiesta'l sirvidor rescampláu a Favoritos p'atopalu más rápido nel futuru"
 
 #: qcsrc/menu/xonotic/serverlist.qc:746
 msgid "Ping"
