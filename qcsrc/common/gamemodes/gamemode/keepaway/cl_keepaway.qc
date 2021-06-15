@@ -16,8 +16,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 
 	float kaball_alpha = blink(0.85, 0.15, 5);
 
-	int stat_items = STAT(ITEMS);
-	int kaball = (stat_items/IT_KEY1) & 1;
+	int kaball = (STAT(OBJECTIVE_STATUS) & KA_CARRYING);
 
 	if(kaball != kaball_prevstatus)
 	{

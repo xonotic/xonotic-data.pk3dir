@@ -387,12 +387,8 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	// clear the item used for the ball in keepaway
-	player.items &= ~IT_KEY1;
-
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
-	if(player.ballcarried)
-		player.items |= IT_KEY1;
+	STAT(OBJECTIVE_STATUS, player) = BITSET(STAT(OBJECTIVE_STATUS, player), KA_CARRYING, player.ballcarried != NULL);
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
