@@ -12,24 +12,22 @@ REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
 
-REGISTRY(Buffs, BITS(5))
-REGISTER_REGISTRY(Buffs)
-REGISTRY_CHECK(Buffs)
-
 #define REGISTER_BUFF(id) \
-    REGISTER(Buffs, BUFF_##id, m_id, NEW(Buff))
+    REGISTER(StatusEffect, BUFF_##id, m_id, NEW(Buff))
 
-#include <common/items/item/pickup.qh>
-CLASS(Buff, Pickup)
+#include <common/mutators/mutator/status_effects/_mod.qh>
+CLASS(Buff, StatusEffects)
 	/** bit index */
 	ATTRIB(Buff, m_itemid, int, 0);
 	ATTRIB(Buff, netname, string, "buff");
+	ATTRIB(Buff, m_icon, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
 	ATTRIB(Buff, m_name, string, "Buff");
 	ATTRIB(Buff, m_skin, int, 0);
+	ATTRIB(Buff, m_lifetime, float, 60);
 	ATTRIB(Buff, m_sprite, string, "");
 	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_name, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.netname));
+		returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
 	}
 #ifdef SVQC
 	METHOD(Buff, m_time, float(Buff this))
@@ -38,17 +36,18 @@ CLASS(Buff, Pickup)
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
-	FOREACH(Buffs, true, {
+	FOREACH(StatusEffect, it.instanceOfBuff, {
 		it.m_itemid = BIT(it.m_id - 1);
 		it.m_sprite = strzone(strcat("buff-", it.netname));
 	});
 }
 
 #ifdef SVQC
+	.entity buffdef;
 	void buff_Init(entity ent);
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
-		STAT(BUFFS, this) = b.m_itemid; \
+		this.buffdef = b; \
 		this.team = t; \
 		buff_Init(this); \
 	}
@@ -66,10 +65,7 @@ STATIC_INIT(REGISTER_BUFFS) {
 #endif
 
 string Buff_UndeprecateName(string buffname);
-entity buff_FirstFromFlags(int _buffs);
 
-REGISTER_BUFF(Null);
-BUFF_SPAWNFUNCS(random, BUFF_Null)
+BUFF_SPAWNFUNCS(random, NULL)
 
-REGISTRY_DEFINE_GET(Buffs, BUFF_Null)
 #include "all.inc"
