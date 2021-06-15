@@ -131,12 +131,12 @@ void kh_update_state()
 		s |= (32 ** key.count) * f;
 	}
 
-	FOREACH_CLIENT(true, { STAT(KH_KEYS, it) = s; });
+	FOREACH_CLIENT(true, { STAT(OBJECTIVE_STATUS, it) = s; });
 
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			STAT(KH_KEYS, key.owner) |= (32 ** key.count) * 31;
+			STAT(OBJECTIVE_STATUS, key.owner) |= (32 ** key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }
@@ -724,7 +724,6 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	settouch(key, kh_Key_Touch);
 	setthink(key, kh_Key_Think);
 	key.nextthink = time;
-	key.items = IT_KEY1 | IT_KEY2;
 	key.cnt = _angle;
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_Key_Damage;
@@ -1259,14 +1258,6 @@ MUTATOR_HOOKFUNCTION(kh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = kh_teams;
 	return true;
-}
-
-MUTATOR_HOOKFUNCTION(kh, SpectateCopy)
-{
-	entity spectatee = M_ARGV(0, entity);
-	entity client = M_ARGV(1, entity);
-
-	STAT(KH_KEYS, client) = STAT(KH_KEYS, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)

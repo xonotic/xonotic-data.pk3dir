@@ -94,7 +94,7 @@ void ball_restart(entity this)
 
 void nexball_setstatus(entity this)
 {
-	this.items &= ~IT_KEY1;
+	STAT(OBJECTIVE_STATUS, this) &= ~NB_CARRYING;
 	if(this.ballcarried)
 	{
 		if(this.ballcarried.lifetime && (this.ballcarried.lifetime < time))
@@ -105,7 +105,7 @@ void nexball_setstatus(entity this)
 			ResetBall(e);
 		}
 		else
-			this.items |= IT_KEY1;
+			STAT(OBJECTIVE_STATUS, this) |= NB_CARRYING;
 	}
 }
 

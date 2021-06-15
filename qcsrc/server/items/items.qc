@@ -55,8 +55,8 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_MODEL)
 	{
-		WriteShort(MSG_ENTITY, this.fade_end);
-		WriteShort(MSG_ENTITY, this.fade_start);
+		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
+		WriteShort(MSG_ENTITY, bound(0, this.fade_start, 32767));
 
 		if(this.mdl == "")
 			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now");
