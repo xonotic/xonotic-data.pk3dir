@@ -609,9 +609,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		SetResourceExplicit(targ, RES_ARMOR, 0);
+		if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
+		{
+			SetResourceExplicit(targ, RES_ARMOR, 0);
+			SetResourceExplicit(targ, RES_HEALTH, 0.9); // this is < 1
+		}
 		StatusEffects_remove(STATUSEFFECT_SpawnShield, targ, STATUSEFFECT_REMOVE_CLEAR);
-		SetResourceExplicit(targ, RES_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
