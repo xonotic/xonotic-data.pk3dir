@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-06 07:23+0200\n"
-"PO-Revision-Date: 2021-06-06 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-15 20:44+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -1032,12 +1032,12 @@ msgstr "^3%s^1 後に再び現れ中..."
 #: qcsrc/client/hud/panel/scoreboard.qc:2117
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr "あなたは死んだ、再び現れる前に ^3%s ^7待ってください"
+msgstr "死んだ、再び現れる前に ^3%s ^7待ってください"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2126
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr "あなたは死んだ、^2%s ^7を押して再び現れてください"
+msgstr "死んだ、^2%s ^7を押して再び現れてください"
 
 #: qcsrc/client/hud/panel/strafehud.qc:908
 msgid "qu"
@@ -1354,7 +1354,7 @@ msgstr "^1試合はすでに開始しています"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:25
 msgid "^1You have no more lives left"
-msgstr "^1あなたは命を使い果たです"
+msgstr "^1命を使い果たです"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:8
 msgid "Last Man Standing"
@@ -1621,14 +1621,14 @@ msgstr "ドロー"
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:326
 msgid "You lost the game!"
-msgstr "あなたはゲームに負けた!"
+msgstr "ゲームに負けた!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:603
 #: qcsrc/common/minigames/minigame/pp.qc:445
 #: qcsrc/common/minigames/minigame/ttt.qc:327
 msgid "You win!"
-msgstr "あなたが勝つ!"
+msgstr "勝った!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:607
@@ -2245,12 +2245,11 @@ msgstr "^F2硬貨を投げ中... 結果: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:254
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BGあなたは^F1ジェットパックの燃料がありません"
+msgstr "^BG^F1ジェットパックの燃料がありません"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
-msgstr ""
-"^F2あなたはUIDがないし、スーパースペックオプションは保存 / 復元されません"
+msgstr "^F2UIDがないし、スーパースペックオプションは保存 / 復元されません"
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^F1Round already started, you will join the game in the next round"
@@ -2806,37 +2805,37 @@ msgstr "^BG%s^BG は %s^BG バフを失った!"
 #: qcsrc/common/notifications/all.inc:679
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BGあなたは %s^BG バフを落とした!"
+msgstr "^BG %s^BG バフを落とした!"
 
 #: qcsrc/common/notifications/all.inc:367
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr "^BGあなたは %s^BG バフを手に入れた!"
+msgstr "^BG %s^BG バフを手に入れた!"
 
 #: qcsrc/common/notifications/all.inc:369
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr "^BGあなたは ^F1%s がない"
+msgstr "^BG ^F1%s がない"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BGあなたは ^F1%s^BG%s を落とした"
+msgstr "^BG ^F1%s^BG%s を落とした"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr "^BGあなたは ^F1%s を手に入れた"
+msgstr "^BG ^F1%s を手に入れた"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BGあなたは ^F1%s に必要な弾薬が不足しています"
+msgstr "^BG ^F1%s に必要な弾薬が不足しています"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:687
@@ -2998,8 +2997,7 @@ msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
-"^F2あなたは観客であり、観客は現在許可されていないため、サーバーから追い出され"
-"た。"
+"^F2観客であり、観客は現在許可されていないため、サーバーから追い出された。"
 
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
@@ -3067,7 +3065,7 @@ msgstr "^BG%s^BG は %s%s で %s%s^BG 場所の記録を設定した"
 msgid ""
 "^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 "
 "(^F1%s^F4)"
-msgstr "^F4あなたは ^BG%s^F4 から、^F2%s^F4 (^F1%s^F4) のゲームに招待された"
+msgstr "^F4 ^BG%s^F4 から、^F2%s^F4 (^F1%s^F4) のゲームに招待された"
 
 #: qcsrc/common/notifications/all.inc:429
 msgid "^TC^TT ^BGteam scores!"
@@ -3089,11 +3087,11 @@ msgstr "^BG%s^K1 はスーパー武器を拾いた"
 
 #: qcsrc/common/notifications/all.inc:435
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGあなたはより大きなチームに変更することはできません"
+msgstr "^BGより大きなチームに変更することはできません"
 
 #: qcsrc/common/notifications/all.inc:436
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGあなたはチームの変更は許可されていません"
+msgstr "^BGチームの変更は許可されていません"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3119,7 +3117,7 @@ msgid ""
 "the update from ^F3http://www.xonotic.org/^BG!"
 msgstr ""
 "^F4注: ^F1XONOTIC %s^BG は利用できますが、あなたは ^F2XONOTIC %s^BG がまだあ"
-"ります。 ^F3http://www.xonotic.org/ ^BGから更新を入手してください!"
+"ります。 ^F3http://www.xonotic.org/^BG から更新を入手してください!"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -3280,7 +3278,7 @@ msgstr "^BG%s%s^K1 は ^BG%s^K1 の機関銃%s%sによって穴だらけにな�
 #: qcsrc/common/notifications/all.inc:778
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr "^BGあなたは一度に ^F2%s^BG 以上の鉱山を置けません"
+msgstr "^BG一度に ^F2%s^BG 以上の鉱山を置けません"
 
 #: qcsrc/common/notifications/all.inc:473
 #, c-format
@@ -3454,15 +3452,15 @@ msgstr "^BG%s%s^K1 は ^BG%s^K1 のボーテックス%s%sによって気化さ�
 
 #: qcsrc/common/notifications/all.inc:523
 msgid "^F4You are now alone!"
-msgstr "^F4あなたは一人になった!"
+msgstr "^F4一人になった!"
 
 #: qcsrc/common/notifications/all.inc:525
 msgid "^BGYou are attacking!"
-msgstr "^BGあなたは攻撃している!"
+msgstr "^BG攻撃している!"
 
 #: qcsrc/common/notifications/all.inc:526
 msgid "^BGYou are defending!"
-msgstr "^BGあなたは守っている!"
+msgstr "^BG守っている!"
 
 #: qcsrc/common/notifications/all.inc:527
 #, c-format
@@ -3514,11 +3512,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:544
 msgid "^BGYou captured the ^TC^TT^BG flag!"
-msgstr "^BGあなたが ^TC^TT^BG 旗を取れた!"
+msgstr "^BG ^TC^TT^BG 旗を取れた!"
 
 #: qcsrc/common/notifications/all.inc:545
 msgid "^BGYou captured the flag!"
-msgstr "^BGあなたが旗を取れた!"
+msgstr "^BG旗を取れた!"
 
 #: qcsrc/common/notifications/all.inc:546
 #, c-format
@@ -3538,12 +3536,12 @@ msgstr "^BG%s^BG は旗を %s に渡した"
 #: qcsrc/common/notifications/all.inc:549
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
-msgstr "^BGあなたは %s から ^TC^TT^BG 旗を受け取った"
+msgstr "^BG %s から ^TC^TT^BG 旗を受け取った"
 
 #: qcsrc/common/notifications/all.inc:550
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr "^BGあなたは %s から旗を受け取った"
+msgstr "^BG %s から旗を受け取った"
 
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
@@ -3558,20 +3556,20 @@ msgstr "^BG旗を渡すよう %s^BG に要求している"
 #: qcsrc/common/notifications/all.inc:553
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr "^BGあなたは ^TC^TT^BG 旗を %s に渡した"
+msgstr "^BG ^TC^TT^BG 旗を %s に渡した"
 
 #: qcsrc/common/notifications/all.inc:554
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr "^BGあなたは旗を %s に渡した"
+msgstr "^BG旗を %s に渡した"
 
 #: qcsrc/common/notifications/all.inc:555
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr "^BGあなたは ^TC^TT^BG 旗を手に入れた!"
+msgstr "^BG ^TC^TT^BG 旗を手に入れた!"
 
 #: qcsrc/common/notifications/all.inc:556
 msgid "^BGYou got the flag!"
-msgstr "^BGあなたのは旗を手に入れた!"
+msgstr "^BGあなたの旗を手に入れた!"
 
 #: qcsrc/common/notifications/all.inc:557
 #, c-format
@@ -3581,7 +3579,7 @@ msgstr "^BGあなたの%sチーム^BGの旗を手に入れた、返して!"
 #: qcsrc/common/notifications/all.inc:558
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr "^BGあなたは %s敵^BG の旗を手に入れた、返して!"
+msgstr "^BG %s敵^BG の旗を手に入れた、返して!"
 
 #: qcsrc/common/notifications/all.inc:559
 #, c-format
@@ -3632,7 +3630,7 @@ msgstr "^BGあなたの%sチームメイト^BGは旗を手に入れた! 守れ!"
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr "^BGあなたの%sチームメイト (^B%s%sG)^BG は旗を手に入れた! 守れ!"
+msgstr "^BGあなたの%sチームメイト (^BG %s%s)^BG は旗を手に入れた! 守れ!"
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGEnemies can now see you on radar!"
@@ -3640,7 +3638,7 @@ msgstr "^BG敵はレーダーであなたを見ることができる!"
 
 #: qcsrc/common/notifications/all.inc:570
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr "^BGあなたは ^TC^TT^BG 旗を返した!"
+msgstr "^BG ^TC^TT^BG 旗を返した!"
 
 #: qcsrc/common/notifications/all.inc:571
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -3653,51 +3651,51 @@ msgstr "^BG停滞! 旗持ちはレーダーで敵に見られる!"
 #: qcsrc/common/notifications/all.inc:576
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr "^K3%sあなたは ^BG%s を削除した"
+msgstr "^K3%s ^BG%s を削除した"
 
 #: qcsrc/common/notifications/all.inc:577
 #: qcsrc/common/notifications/all.inc:586
 #: qcsrc/common/notifications/all.inc:595
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
-msgstr "^K3%sあなたは ^BG%s に対して得点した"
+msgstr "^K3%s ^BG%s に対して得点した"
 
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr "^K1%sあなたは ^BG%s によって削除された!"
+msgstr "^K1%s ^BG%s によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:579
 #: qcsrc/common/notifications/all.inc:588
 #: qcsrc/common/notifications/all.inc:597
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr "^K1%sあなたは ^BG%s によって対して得点された"
+msgstr "^K1%s ^BG%s によって対して得点された"
 
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr "^K3%sあなたは ^BG%s を燃やした"
+msgstr "^K3%s ^BG%s を燃やした"
 
 #: qcsrc/common/notifications/all.inc:587
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr "^K1%sあなたは ^BG%s によって燃やされた"
+msgstr "^K1%s ^BG%s によって燃やされた"
 
 #: qcsrc/common/notifications/all.inc:594
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr "^K3%sあなたは ^BG%s を凍結した"
+msgstr "^K3%s ^BG%s を凍結した"
 
 #: qcsrc/common/notifications/all.inc:596
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr "^K1%sあなたは ^BG%s によって凍結された"
+msgstr "^K1%s ^BG%s によって凍結された"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr "^K1%sあなたは彼がタイプしている間に ^BG%s を削除した"
+msgstr "^K1%s彼がタイプしている間に ^BG%s を削除した"
 
 #: qcsrc/common/notifications/all.inc:604
 #, c-format
@@ -3707,12 +3705,12 @@ msgstr "^K1%s彼らがタイプしていた間、あなたは ^BG%s^K1 に対し
 #: qcsrc/common/notifications/all.inc:605
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr "^K1%sあなたはタイプしている間に ^BG%s によって削除された"
+msgstr "^K1%sタイプしている間に ^BG%s によって削除された"
 
 #: qcsrc/common/notifications/all.inc:606
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr "^K1%sあなたはタイプしている間、 ^BG%s^K1 によって対して得点した"
+msgstr "^K1%sタイプしている間、 ^BG%s^K1 によって対して得点した"
 
 #: qcsrc/common/notifications/all.inc:612
 #, c-format
@@ -3721,7 +3719,7 @@ msgstr "^BG手榴弾を投げるために ^F2%s^BG をもう一度押して!"
 
 #: qcsrc/common/notifications/all.inc:613
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr "^F2あなたは^K1ボーナス手榴弾^F2を手に入れた!"
+msgstr "^F2^K1ボーナス手榴弾^F2を手に入れた!"
 
 #: qcsrc/common/notifications/all.inc:615
 #, c-format
@@ -3729,12 +3727,12 @@ msgid ""
 "^BGYou have been moved into a different team\n"
 "You are now on: %s"
 msgstr ""
-"^BGあなたは別のチームに移動された\n"
+"^BG別のチームに移動された\n"
 "現在: %s"
 
 #: qcsrc/common/notifications/all.inc:616
 msgid "^K1You were punished for attacking your team mates!"
-msgstr "^K1あなたはチームメイトを攻撃したことで罰せられた!"
+msgstr "^K1チームメイトを攻撃したことで罰せられた!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Die camper!"
@@ -3746,7 +3744,7 @@ msgstr "^K1戦術を再考しろ、キャンパー!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^K1You unfairly eliminated yourself!"
-msgstr "^K1あなたは不当に自分を削除した!"
+msgstr "^K1不当に自分を削除した!"
 
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
@@ -3755,39 +3753,39 @@ msgstr "^K1あなたは %s だった"
 
 #: qcsrc/common/notifications/all.inc:620
 msgid "^K1You couldn't catch your breath!"
-msgstr "^K1あなたは息ができなかった!"
+msgstr "^K1息ができなかった!"
 
 #: qcsrc/common/notifications/all.inc:621
 msgid "^K1You hit the ground with a crunch!"
-msgstr "^K1あなたはクランチで地面を打ちた!"
+msgstr "^K1クランチで地面を打ちた!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1You felt a little too hot!"
-msgstr "^K1あなたは少し暑く感じすぎた!"
+msgstr "^K1少し暑く感じすぎた!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1You got a little bit too crispy!"
-msgstr "^K1あなたは少しカリカリになりすぎた!"
+msgstr "^K1少しカリカリになりすぎた!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr "^K1あなたは自分自身を削除した!"
+msgstr "^K1自分自身を削除した!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
-msgstr "^K1あなたはもっと注意する必要がある!"
+msgstr "^K1もっと注意する必要がある!"
 
 #: qcsrc/common/notifications/all.inc:624
 msgid "^K1You couldn't stand the heat!"
-msgstr "^K1あなたは暑さに耐えられなかった!"
+msgstr "^K1暑さに耐えられなかった!"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You need to watch out for monsters!"
-msgstr "あなたはモンスターに気をつける必要がある!"
+msgstr "^K1モンスターに気をつける必要がある!"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You were killed by a monster!"
-msgstr "^K1あなたはモンスターに殺された!"
+msgstr "^K1モンスターに殺された!"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1Tastes like chicken!"
@@ -3795,7 +3793,7 @@ msgstr "^K1チキンの味!"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You forgot to put the pin back in!"
-msgstr "^K1あなたはピンを戻すのを忘れた!"
+msgstr "^K1ピンを戻すのを忘れた!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1Hanging around a napalm explosion is bad!"
@@ -3803,11 +3801,11 @@ msgstr "^K1ナパーム弾の周りをぶら下がることは悪い!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You felt a little chilly!"
-msgstr "^K1あなたは少し肌寒くなった!"
+msgstr "^K1少し肌寒くなった!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You got a little bit too cold!"
-msgstr "^K1あなたは少し寒くなった!"
+msgstr "^K1少し寒くなった!"
 
 #: qcsrc/common/notifications/all.inc:629
 msgid "^K1Your Healing Nade is a bit defective"
@@ -3815,39 +3813,39 @@ msgstr "^K1あなたの治癒手榴弾は少し欠陥だ"
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1You are respawning for running out of ammo..."
-msgstr "^K1あなたは弾薬が切れたために再び現れている..."
+msgstr "^K1弾薬が切れたために再び現れている..."
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1You were killed for running out of ammo..."
-msgstr "^K1あなたは弾薬が切れたために殺された..."
+msgstr "^K1弾薬が切れたために殺された..."
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You grew too old without taking your medicine"
-msgstr "^K1あなたは薬を飲まずに年を取りすぎた"
+msgstr "^K1薬を飲まずに年を取りすぎた"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You need to preserve your health"
-msgstr "^K1あなたは健康を維持する必要がある"
+msgstr "^K1健康を維持する必要がある"
 
 #: qcsrc/common/notifications/all.inc:632
 msgid "^K1You became a shooting star!"
-msgstr "^K1あなたは流れ星になった!"
+msgstr "^K1流れ星になった!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You melted away in slime!"
-msgstr "^K1あなたはスライムで溶かした!"
+msgstr "^K1スライムで溶かした!"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1You committed suicide!"
-msgstr "^K1あなたは自殺した!"
+msgstr "^K1自殺した!"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1You ended it all!"
-msgstr "^K1あなたは全て終了した!"
+msgstr "^K1全て終了した!"
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1You got stuck in a swamp!"
-msgstr "^K1あなたは沼で立ち往生した!"
+msgstr "^K1沼で立ち往生した!"
 
 #: qcsrc/common/notifications/all.inc:636
 #, c-format
@@ -3856,63 +3854,63 @@ msgstr "^BG現在: %s"
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^K1You died in an accident!"
-msgstr "^K1あなたは事故で死んだ!"
+msgstr "^K1事故で死んだ!"
 
 #: qcsrc/common/notifications/all.inc:638
 msgid "^K1You had an unfortunate run in with a turret!"
-msgstr "^K1あなたは砲塔との不運な出会いがあった!"
+msgstr "^K1砲塔との不運な出会いがあった!"
 
 #: qcsrc/common/notifications/all.inc:638
 msgid "^K1You were fragged by a turret!"
-msgstr "^K1あなたは砲塔によって削除された!"
+msgstr "^K1砲塔によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr "^K1あなたはeWheel砲塔との不運な出会いがあった!"
+msgstr "^K1eWheel砲塔との不運な出会いがあった!"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr "^K1あなたはeWheel砲塔によって削除された!"
+msgstr "^K1eWheel砲塔によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr "^K1あなたはウォーカー砲塔との不運な出会いがあった!"
+msgstr "^K1ウォーカー砲塔との不運な出会いがあった!"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You were fragged by a Walker turret!"
-msgstr "^K1あなたはウォーカー砲塔によって削除された!"
+msgstr "^K1ウォーカー砲塔によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr "^K1あなたはバンブルビーの爆風に巻き込まれた!"
+msgstr "^K1バンブルビーの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:642
 msgid "^K1You were crushed by a vehicle!"
-msgstr "^K1あなたは乗り物に押し潰された!"
+msgstr "^K1乗り物に押し潰された!"
 
 #: qcsrc/common/notifications/all.inc:643
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr "^K1あなたはラプタークラスター爆弾に巻き込まれた!"
+msgstr "^K1ラプタークラスター爆弾に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr "^K1あなたはラプターの爆風に巻き込まれた!"
+msgstr "^K1ラプターの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:645
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr "^K1あなたはスパイダーボットの爆風に巻き込まれた!"
+msgstr "^K1スパイダーボットの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr "^K1あなたはスパイダーボットのロケットで爆破された!"
+msgstr "^K1スパイダーボットのロケットで爆破された!"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr "^K1あなたはレーサーの爆風に巻き込まれた!"
+msgstr "^K1レーサーの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You couldn't find shelter from a Racer rocket!"
-msgstr "^K1あなたはレーサーロケットからの避難所を見つけることができなかった!"
+msgstr "^K1レーサーロケットからの避難所を見つけることができなかった!"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1Watch your step!"
@@ -3921,22 +3919,22 @@ msgstr "^K1あなたの足元に気を付けて!"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr "^K1裏切り者! あなたはチームメイトを裏切った ^BG%s"
+msgstr "^K1裏切り者! チームメイトを裏切った ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr "^K1裏切り者! あなたは ^BG%sをチームキルした"
+msgstr "^K1裏切り者!  ^BG%sをチームキルした"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr "^K1あなたはチームメイトに裏切られた ^BG%s"
+msgstr "^K1チームメイトに裏切られた ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr "^K1あなたは ^BG%s によってチームキルされた!"
+msgstr "^K1 ^BG%s によってチームキルされた!"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -3957,12 +3955,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
 msgid "^BGYou need %s^BG!"
-msgstr "^BGあなたは %s^BG が必要だ!"
+msgstr "^BG %s^BG が必要だ!"
 
 #: qcsrc/common/notifications/all.inc:658
 #, c-format
 msgid "^BGYou also need %s^BG!"
-msgstr "^BGあなたは %s^BG も必要だ!"
+msgstr "^BG %s^BG も必要だ!"
 
 #: qcsrc/common/notifications/all.inc:659
 msgid "^BGDoor unlocked!"
@@ -3976,21 +3974,21 @@ msgstr "^F2奪った余分な命数: ^K1%s"
 #: qcsrc/common/notifications/all.inc:663
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr "^K3あなたは ^BG%s を復活した"
+msgstr "^K3 ^BG%s を復活した"
 
 #: qcsrc/common/notifications/all.inc:664
 msgid "^K3You revived yourself"
-msgstr "^K3あなた自身を復活した"
+msgstr "^K3自分自身を復活した"
 
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3あなたは ^BG%s によって復活された"
+msgstr "^K3 ^BG%s によって復活された"
 
 #: qcsrc/common/notifications/all.inc:666
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr "^BGあなたは%s秒後に自動的に復活しました"
+msgstr "^BG%s秒後に自動的に復活しました"
 
 #: qcsrc/common/notifications/all.inc:668
 msgid "^BGThe generator is under attack!"
@@ -4002,7 +4000,7 @@ msgstr "^TC^TT^BG チームがラウンドに負けた"
 
 #: qcsrc/common/notifications/all.inc:674
 msgid "^K1You froze yourself"
-msgstr "^K1あなたは自分を冷凍した"
+msgstr "^K1自分自身を冷凍した"
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^K1Round already started, you spawn as frozen"
@@ -4015,11 +4013,11 @@ msgstr "^K1 %s が到着した!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGあなたは^F1燃料再生器を手に入れた"
+msgstr "^BG^F1燃料再生器を手に入れた"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^BGYou got the ^F1Jetpack"
-msgstr "^BGあなたは^F1ジェットパックを手に入れた"
+msgstr "^BG^F1ジェットパックを手に入れた"
 
 #: qcsrc/common/notifications/all.inc:690
 msgid ""
@@ -4034,12 +4032,12 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "The player limit reached maximum capacity."
 msgstr ""
-"現在、ゲームに参加できません。\n"
+"^K1現在、ゲームに参加できません。\n"
 "選手の制限が最大容量に達しました。"
 
 #: qcsrc/common/notifications/all.inc:695
 msgid "^BGYou picked up the ball"
-msgstr "^BGあなたはボールを拾いた"
+msgstr "^BGボールを拾いた"
 
 #: qcsrc/common/notifications/all.inc:696
 msgid "^BGKilling people while you don't have the ball gives no points!"
@@ -4079,7 +4077,7 @@ msgstr "^BG周波数範囲をスキャン中..."
 
 #: qcsrc/common/notifications/all.inc:703
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr "^BGあなたは ^TC^TT 鍵で開始ている"
+msgstr "^BG ^TC^TT 鍵で開始ている"
 
 #: qcsrc/common/notifications/all.inc:705
 msgid "^BGYou have no lives left, you must wait until the next match"
@@ -4101,7 +4099,7 @@ msgstr "^BG%s 選手の参加を待ち中..."
 
 #: qcsrc/common/notifications/all.inc:710
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr "^BGあなたは弾薬がいくつか見つかるまで、あなたの武器が格下げされた!"
+msgstr "^BG弾薬がいくつか見つかるまで、あなたの武器が格下げされた!"
 
 #: qcsrc/common/notifications/all.inc:711
 msgid "^F4^COUNT^BG left to find some ammo!"
@@ -4147,11 +4145,11 @@ msgstr "^F2活発な武器: ^F1%s"
 #: qcsrc/common/notifications/all.inc:721
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr "^BGあなたは %s^BG コントロールポイントを取れた"
+msgstr "^BG %s^BG コントロールポイントを取れた"
 
 #: qcsrc/common/notifications/all.inc:722
 msgid "^BGYou captured a control point"
-msgstr "^BGあなたはコントロールポイントを取れた"
+msgstr "^BGコントロールポイントを取れた"
 
 #: qcsrc/common/notifications/all.inc:723
 #, c-format
@@ -4220,7 +4218,7 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
-"^F2残業中!\n"
+"^F4残業中^F2!\n"
 "\n"
 "発電機は現在衰退してる。\n"
 "チームが保持するコントロールポイントが多いほど、\n"
@@ -4265,7 +4263,7 @@ msgstr "^F2「寿」がすり減った"
 
 #: qcsrc/common/notifications/all.inc:746
 msgid "^F2You are on speed"
-msgstr "^F2あなたは「速度」に乗っている"
+msgstr "^F2「速度」に乗っている"
 
 #: qcsrc/common/notifications/all.inc:747
 msgid "^F2Speed has worn off"
@@ -5624,7 +5622,7 @@ msgstr "イタリア語"
 
 #: qcsrc/menu/xonotic/credits.qc:227
 msgid "Japanese"
-msgstr ""
+msgstr "日本語"
 
 #: qcsrc/menu/xonotic/credits.qc:230
 msgid "Kazakh"
@@ -6695,15 +6693,15 @@ msgstr "初心者"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "You will win"
-msgstr "あなたは勝つ"
+msgstr "勝つ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "You can win"
-msgstr "あなたは勝てる"
+msgstr "勝てる"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "You might win"
-msgstr "あなたは勝つかもしれない"
+msgstr "勝つかもしれない"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Advanced"
