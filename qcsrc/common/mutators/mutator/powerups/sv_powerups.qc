@@ -86,14 +86,6 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerPhysics_UpdateStats)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_balance_powerup_speed_highspeed;
 }
 
-MUTATOR_HOOKFUNCTION(powerups, WeaponSpeedFactor)
-{
-	entity player = M_ARGV(1, entity);
-
-	if(StatusEffects_active(STATUSEFFECT_Speed, player))
-		M_ARGV(0, float) *= autocvar_g_balance_powerup_speed_weaponspeed;
-}
-
 MUTATOR_HOOKFUNCTION(powerups, WeaponRateFactor)
 {
 	entity player = M_ARGV(1, entity);

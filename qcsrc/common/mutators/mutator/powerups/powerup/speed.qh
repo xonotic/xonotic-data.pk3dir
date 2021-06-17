@@ -19,7 +19,6 @@ SOUND(Speed, Item_Sound("powerup_shield"));
 float autocvar_g_balance_powerup_speed_attackrate = 0.8;
 float autocvar_g_balance_powerup_speed_highspeed = 1.5;
 float autocvar_g_balance_powerup_speed_time = 30;
-float autocvar_g_balance_powerup_speed_weaponspeed = 1.5;
 void powerup_speed_init(Pickup this, entity item)
 {
     if(!item.speed_finished)
