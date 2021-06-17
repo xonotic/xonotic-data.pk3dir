@@ -177,10 +177,18 @@ MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
 	entity player = M_ARGV(0, entity);
 	player.respawn_flags |= RESPAWN_FORCE;
 
+	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+	if (pl_lives <= 0)
+	{
+		player.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		player.respawn_time = time + 2;
+		return true;
+	}
+
 	if (autocvar_g_lms_dynamic_respawn_delay <= 0)
 		return false;
 
-	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
 	int max_lives = 0;
 	int pl_cnt = 0;
 	FOREACH_CLIENT(it != player && IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
