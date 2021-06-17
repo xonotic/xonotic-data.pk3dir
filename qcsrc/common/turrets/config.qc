@@ -1,9 +1,10 @@
 #include "config.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include <common/turrets/all.qh>
 	#include <common/util.qh>
-	#include "all.qh"
 #endif
 
 // ==========================
@@ -77,7 +78,7 @@ void Dump_Turret_Settings()
 
 	// extra information
 	if (TUR_CONFIG_COUNT <= MAX_CONFIG_SETTINGS - 1)
-		LOG_INFOF("Totals: %d turrets, %d settings", (Turrets_COUNT - 1), totalsettings);
+		LOG_INFOF("Totals: %d turrets, %d settings", (REGISTRY_COUNT(Turrets) - 1), totalsettings);
 
 	// clear queue now that we're finished
 	TUR_CONFIG_COUNT = 0;

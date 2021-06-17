@@ -1,5 +1,7 @@
 #include "sv_sandbox.qh"
 
+#include <server/intermission.qh>
+
 string autocvar_g_sandbox;
 int autocvar_g_sandbox_info;
 bool autocvar_g_sandbox_readonly;
@@ -16,6 +18,7 @@ float autocvar_g_sandbox_object_scale_max;
 float autocvar_g_sandbox_object_material_velocity_min;
 float autocvar_g_sandbox_object_material_velocity_factor;
 
+IntrusiveList g_sandbox_objects;
 float autosave_time;
 void sandbox_Database_Load();
 
@@ -23,6 +26,7 @@ REGISTER_MUTATOR(sandbox, expr_evaluate(autocvar_g_sandbox))
 {
 	MUTATOR_ONADD
 	{
+		g_sandbox_objects = IL_NEW();
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
 			sandbox_Database_Load();

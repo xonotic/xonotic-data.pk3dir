@@ -1,16 +1,20 @@
 #include "common.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-#include "common.qh"
-
-#include "../scores.qh"
-
+#include <common/deathtypes/all.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/mutators/_mod.qh>
+#include <server/scores.qh>
+#include <server/world.qh>
 
 
 // ====================================================
@@ -28,7 +32,7 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return playername(caller, false);
+	if (caller) return playername(caller.netname, caller.team, false);
 	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
@@ -395,7 +399,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}
@@ -416,7 +420,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
-					if (mon.monsterid == MON_MAGE.monsterid) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
+					if (mon.monsterdef == MON_MAGE) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
 
 					mon.skin = stof(argument);
 					print_to(caller, strcat("Monster skin successfully changed to ", ftos(mon.skin)));
@@ -459,9 +463,9 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob command [arguments]"));
-			print_to(caller, "  Where 'command' can be butcher spawn skin movetarget kill name");
-			print_to(caller, "  spawn, skin, movetarget and name require 'arguments'");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob <command> [<arguments>]"));
+			print_to(caller, "  Where <command> can be butcher spawn skin movetarget kill name");
+			print_to(caller, "  spawn, skin, movetarget and name require <arguments>");
 			print_to(caller, "  spawn also takes arguments list and random");
 			print_to(caller, "  Monster will follow owner if third argument of spawn command is not defined");
 			return;
@@ -475,7 +479,7 @@ void CommonCommand_info(int request, entity caller, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
+			string command = cvar_string(strcat("sv_info_", argv(1)));
 
 			if (command) wordwrap_sprint(caller, command, 1000);
 			else print_to(caller, "ERROR: unsupported info command");
@@ -486,8 +490,8 @@ void CommonCommand_info(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info request"));
-			print_to(caller, "  Where 'request' is the suffixed string appended onto the request for cvar.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info <request>"));
+			print_to(caller, "  Where <request> is the suffixed string appended onto the request for cvar.");
 			return;
 		}
 	}
@@ -594,8 +598,9 @@ void CommonCommand_records(int request, entity caller)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records"));
-			print_to(caller, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records [<pagenum>]"));
+			print_to(caller, "  Without arguments it prints all records (all pages) for the current gametype,");
+			print_to(caller, "  otherwise if there are multiple pages it only prints page <pagenum> (1..10),");
 			return;
 		}
 	}
@@ -717,7 +722,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 				{
 					print_to(caller, "^7Error: You can not call a timeout while a vote is active.");
 				}
-				else if (warmup_stage && !g_warmup_allow_timeout)
+				else if (warmup_stage && !autocvar_g_warmup_allow_timeout)
 				{
 					print_to(caller, "^7Error: You can not call a timeout in warmup-stage.");
 				}
@@ -749,7 +754,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 					timeout_time = autocvar_sv_timeout_length;
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
-					timeout_handler = spawn();
+					timeout_handler = new(timeout_handler);
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
@@ -827,8 +832,8 @@ void CommonCommand_who(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [separator]"));
-			print_to(caller, "  Where 'separator' is the optional string to separate the values with, default is a space.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [<separator>]"));
+			print_to(caller, "  Where <separator> is the optional string to separate the values with, default is a space.");
 			return;
 		}
 	}

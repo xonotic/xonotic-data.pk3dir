@@ -8,15 +8,15 @@ MACRO_END
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
 	PROP(false, m_switchweapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_switchweapon.m_id); }, \
-	{ (viewmodels[this.m_wepent_slot]).switchweapon = Weapons_from(ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).switchweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_switchingweapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_switchingweapon.m_id); }, \
-	{ (viewmodels[this.m_wepent_slot]).switchingweapon = Weapons_from(ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).switchingweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_weapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_weapon.m_id); }, \
-	{ (viewmodels[this.m_wepent_slot]).activeweapon = Weapons_from(ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).activeweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \
@@ -36,10 +36,10 @@ MACRO_END
     \
     PROP(false, porto_v_angle_held, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.porto_v_angle_held); if(this.porto_v_angle_held) { \
-		 WriteAngle(chan, this.owner.porto_v_angle.x); WriteAngle(chan, this.owner.porto_v_angle.y); \
+		 WriteAngleVector2D(chan, this.owner.porto_v_angle); \
 		} }, \
 	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
-		(viewmodels[this.m_wepent_slot]).angles_held = vec2(ReadAngle(), ReadAngle()); } \
+		(viewmodels[this.m_wepent_slot]).angles_held = ReadAngleVector2D(); } \
 		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
     \
     PROP(false, tuba_instrument, WEPENT_SET_NORMAL, \
@@ -158,7 +158,7 @@ MACRO_END
 
 	void wepent_link(entity wep)
 	{
-		entity e = new(wepent_sender);
+		entity e = new_pure(wepent_sender);
 		e.owner = wep;
 		setthink(e, wepent_think);
 		e.nextthink = time;
@@ -191,8 +191,6 @@ MACRO_END
 
 	NET_HANDLE(ENT_CLIENT_WEPENT, bool isnew)
 	{
-		if (isnew)
-			this.classname = "wepent_receiver";
 		return ReadWepent(this);
 	}
 

@@ -1,15 +1,16 @@
 #include "roles.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <common/stats.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
+#include <common/weapons/_all.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/havocbot.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/mutators/_mod.qh>
 #include <server/resources.qh>
-#include "havocbot.qh"
-
-#include "../cvars.qh"
-
-#include "../bot.qh"
-#include "../navigation.qh"
 
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius)
 {
@@ -200,10 +201,10 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		t = bound(0, 1 + t, 3);
 		if (skill > 3)
 		{
-			if (time < this.strength_finished - 1) t += 0.5;
-			if (time < it.strength_finished - 1) t -= 0.5;
-			if (time < this.invincible_finished - 1) t += 0.2;
-			if (time < it.invincible_finished - 1) t -= 0.4;
+			if (time < StatusEffects_gettime(STATUSEFFECT_Strength, this) - 1) t += 0.5;
+			if (time < StatusEffects_gettime(STATUSEFFECT_Strength, it) - 1) t -= 0.5;
+			if (time < StatusEffects_gettime(STATUSEFFECT_Shield, this) - 1) t += 0.2;
+			if (time < StatusEffects_gettime(STATUSEFFECT_Shield, it) - 1) t -= 0.4;
 		}
 		t += max(0, 8 - skill) * 0.05; // less skilled bots attack more mindlessly
 		ratingscale *= t;

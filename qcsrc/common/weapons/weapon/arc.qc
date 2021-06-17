@@ -1,8 +1,8 @@
 #include "arc.qh"
 
 #ifdef SVQC
-#include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
 #include <common/gamemodes/gamemode/onslaught/sv_generator.qh>
+#include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {
@@ -40,9 +40,7 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	}
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		WriteAngle(MSG_ENTITY, this.beam_dir.x);
-		WriteAngle(MSG_ENTITY, this.beam_dir.y);
-		WriteAngle(MSG_ENTITY, this.beam_dir.z);
+		WriteAngleVector(MSG_ENTITY, this.beam_dir);
 	}
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
@@ -120,20 +118,28 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	this.use(this, NULL, toucher);
+	if(this.cnt >= WEP_CVAR(arc, bolt_bounce_count) || !WEP_CVAR(arc, bolt_bounce_count) || toucher.takedamage == DAMAGE_AIM) {
+		this.use(this, NULL, toucher);
+	} else {
+		this.cnt++;
+		Send_Effect(EFFECT_BALL_SPARKS, this.origin, this.velocity, 1);
+		this.angles = vectoangles(this.velocity);
+		this.owner = NULL;
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		if(WEP_CVAR(arc, bolt_bounce_explode))
+			RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, toucher);
+		if(this.cnt == 1 && WEP_CVAR(arc, bolt_bounce_lifetime))
+			this.nextthink = time + WEP_CVAR(arc, bolt_bounce_lifetime);
+	}
 }
 
-void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
+void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	entity missile;
+	W_SetupShot(actor, weaponentity, false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(arc, bolt_ammo), weaponentity);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), WEP_ARC.m_id | HITTYPE_SECONDARY);
-
-	Send_Effect(EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	missile = new(missile);
+	entity missile = new(missile);
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	IL_PUSH(g_bot_dodge, missile);
@@ -147,25 +153,38 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	IL_PUSH(g_damagedbycontents, missile);
 
 	settouch(missile, W_Arc_Bolt_Touch);
+	missile.cnt = 0;
 	missile.use = W_Arc_Bolt_Explode_use;
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_ARC.m_id | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	set_movetype(missile, MOVETYPE_FLY);
+	set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
 	W_SetupProjVelocity_PRE(missile, arc, bolt_);
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_ARC_BOLT, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	if(actor.(weaponentity).misc_bulletcounter == 0)
+	{
+		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(arc, bolt_refire2) * W_WeaponRateFactor(actor);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
+	}
+	else
+	{
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), W_Arc_Attack_Bolt);
+	}
 }
 
 void W_Arc_Beam_Think(entity this)
@@ -188,10 +207,13 @@ void W_Arc_Beam_Think(entity this)
 
 	Weapon thiswep = WEP_ARC;
 
+	// TODO: use standard weapon use checks here!
 	if(
 		!IS_PLAYER(own)
 		||
 		IS_DEAD(own)
+		||
+		game_stopped
 		||
 		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
 		||
@@ -556,9 +578,14 @@ void W_Arc_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 }
 void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	// TODO: spamming this without checking any refires is asking for trouble!
+	// calculate a rough shot origin to show the effect from TODO: move this to the client side!
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
+	w_shotdir = v_forward;
+	vector md = actor.(weaponentity).movedir;
+	vector vecs = ((md.x > 0) ? md : '0 0 0');
+	vector dv = v_forward * vecs.x + v_right * -vecs.y + v_up * vecs.z;
+	w_shotorg = actor.origin + actor.view_ofs + dv;
+	//W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id);
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
@@ -583,8 +610,9 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
 	}
 
-	if (  actor.arc_smoke_sound && ( actor.arc_overheat <= time ||
-		!( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) ) ) || actor.(weaponentity).m_switchweapon != thiswep )
+	bool attacking = PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor);
+	bool stop_smoke_sound = actor.arc_overheat <= time || !attacking;
+	if ((actor.arc_smoke_sound && stop_smoke_sound) || actor.(weaponentity).m_switchweapon != thiswep)
 	{
 		actor.arc_smoke_sound = 0;
 		sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -657,10 +685,28 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     }
     else if(fire & 2)
     {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(arc, bolt_refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
-            W_Arc_Attack_Bolt(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
+            if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
+            if(!(actor.items & IT_UNLIMITED_AMMO))
+            {
+                W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+                w_ready(thiswep, actor, weaponentity, fire);
+                return;
+            }
+            float ammo_available = GetResource(actor, thiswep.ammo_type);
+            // We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
+            // Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
+            float burst_fraction = min(1, ammo_available / WEP_CVAR(arc, bolt_ammo));
+            int to_shoot = floor(WEP_CVAR(arc, bolt_count) * burst_fraction);
+
+            // We also don't want to use 3 rounds if there's only 2 left.
+            int to_use = min(WEP_CVAR(arc, bolt_ammo), ammo_available);
+            W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
+
+            // Bursting counts up to 0 from a negative.
+            actor.(weaponentity).misc_bulletcounter = -to_shoot;
+            W_Arc_Attack_Bolt(thiswep, actor, weaponentity, fire);
         }
     }
 
@@ -762,8 +808,8 @@ METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
     {
         vector org2;
         org2 = w_org + w_backoff * 6;
-        pointparticles(EFFECT_ARC_BOLT_EXPLODE, org2, w_backoff * 1000, 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+        pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
+        if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
     }
 }
 
@@ -897,10 +943,7 @@ void Draw_ArcBeam(entity this)
 		MAKE_VECTORS(myviewangle, forward, right, up);
 		entity wepent = viewmodels[this.beam_slot];
 
-		if(autocvar_chase_active)
-			this.beam_usevieworigin = 1;
-		else
-			this.beam_usevieworigin = 2;
+		this.beam_usevieworigin = (autocvar_chase_active) ? 1 : 2;
 
 		// decide upon start position
 		if(this.beam_usevieworigin == 2)
@@ -935,9 +978,7 @@ void Draw_ArcBeam(entity this)
 		if(!v_shot_idx || this.beam_usevieworigin != 2)
 		{
 			this.beam_shotorigin = wepent.movedir;
-			origin_offset =
-			 	 right * -this.beam_shotorigin.y
-				+ up * this.beam_shotorigin.z;
+			origin_offset = right * -this.beam_shotorigin.y + up * this.beam_shotorigin.z;
 		}
 		else
 			this.beam_shotorigin = '0 0 0';
@@ -1204,7 +1245,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		this.move_time = time;
 		loopsound(this, CH_SHOTS_SINGLE, SND_ARC_LOOP, VOL_BASE, ATTEN_NORM);
 
-		flash = spawn();
+		flash = new(arc_flash);
 		flash.owner = this;
 		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
 		//flash.drawmask = MASK_NORMAL;
@@ -1231,10 +1272,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 		if(ReadByte())
 		{
-			if(autocvar_chase_active)
-				{ this.beam_usevieworigin = 1; }
-			else // use view origin
-				{ this.beam_usevieworigin = 2; }
+			this.beam_usevieworigin = (autocvar_chase_active) ? 1 : 2;
 		}
 		else
 		{
@@ -1279,9 +1317,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		this.angles_x = ReadAngle();
-		this.angles_y = ReadAngle();
-		this.angles_z = ReadAngle();
+		this.angles = ReadAngleVector();
 	}
 
 	if(sf & ARC_SF_BEAMTYPE) // beam type

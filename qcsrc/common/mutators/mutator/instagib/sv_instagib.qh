@@ -1,18 +1,47 @@
 #pragma once
 
 #include "items.qh"
+#include <common/gamemodes/_mod.qh>
 
+// TODO: make this its own mutator (somehow)!
+float autocvar_g_rm;
+float autocvar_g_rm_damage;
+float autocvar_g_rm_edgedamage;
+float autocvar_g_rm_force;
+float autocvar_g_rm_radius;
+float autocvar_g_rm_laser;
+float autocvar_g_rm_laser_count;
+float autocvar_g_rm_laser_speed;
+float autocvar_g_rm_laser_spread;
+float autocvar_g_rm_laser_spread_random;
+float autocvar_g_rm_laser_lifetime;
+float autocvar_g_rm_laser_damage;
+float autocvar_g_rm_laser_refire;
+float autocvar_g_rm_laser_rapid;
+float autocvar_g_rm_laser_rapid_refire;
+float autocvar_g_rm_laser_rapid_delay;
+float autocvar_g_rm_laser_radius;
+float autocvar_g_rm_laser_force;
+
+bool autocvar_g_instagib;
 float autocvar_g_instagib_invis_alpha;
 int autocvar_g_instagib_extralives;
 
 void instagib_invisibility(entity this);
 void instagib_extralife(entity this);
 void instagib_speed(entity this);
+IntrusiveList g_instagib_items;
 
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
+REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !MapInfo_LoadedGametype.m_weaponarena)
 {
 	MUTATOR_ONADD
 	{
+		g_instagib_items = IL_NEW();
+		IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
+		IL_PUSH(g_instagib_items, ITEM_ExtraLife);
+		IL_PUSH(g_instagib_items, ITEM_Invisibility);
+		IL_PUSH(g_instagib_items, ITEM_Speed);
+
 		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
@@ -22,5 +51,6 @@ REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
 		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		IL_DELETE(g_instagib_items);
 	}
 }

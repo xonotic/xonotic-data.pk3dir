@@ -2,6 +2,8 @@
 
 #include <common/sounds/sound.qh>
 
+bool autocvar_cl_projectiles_sloppy;
+
 entityclass(Projectile);
 classfield(Projectile).int traileffect;
 
@@ -29,5 +31,3 @@ void Projectile_Draw(entity this);
 void loopsound(entity e, int ch, Sound samp, float vol, float attn);
 
 void Ent_RemoveProjectile(entity this);
-
-const int FL_PROJECTILE = BIT(15);

@@ -10,6 +10,8 @@ CLASS(HLAC, Weapon)
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC
 /* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
+/* flash mdl */ ATTRIB(HLAC, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(HLAC, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);

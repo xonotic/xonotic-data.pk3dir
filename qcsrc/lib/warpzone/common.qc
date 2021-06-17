@@ -1,7 +1,7 @@
 #include "common.qh"
 
 #if defined(CSQC)
-    #include <common/t_items.qh>
+    #include <client/items/items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/weapons/_all.qh>
@@ -571,13 +571,24 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 	return nearest;
 }
 
+// blacklist of entities that WarpZone_FindRadius doesn't care about
 bool WarpZoneLib_BadEntity(entity e)
 {
 	if (is_pure(e)) return true;
 	string s = e.classname;
 
-	//if (s == "net_linked") return true; // actually some real entities are linked without classname, fail
-	if (s == "") return true;
+	switch(s)
+	{
+		case "weaponentity":
+		case "exteriorweaponentity":
+		case "sprite_waypoint":
+		case "spawnfunc":
+		case "weaponchild":
+		case "chatbubbleentity":
+		//case "net_linked": // actually some real entities are linked without classname, fail
+		case "":
+			return true;
+	}
 
 	if (startsWith(s, "target_")) return true;
 
@@ -778,15 +789,19 @@ void WarpZone_RefSys_Copy(entity me, entity from)
 }
 entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 {
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	WarpZone_RefSys_Copy(e, me);
 	return e;
 }
 
 bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 {
-	return !WarpZoneLib_BoxTouchesBrush(toucher.absmin, toucher.absmax, this, toucher);
+	vector emin = toucher.absmin, emax = toucher.absmax;
+	// the engine offsets absolute bounding boxes by a single quake unit
+	// we must undo that here to allow accurate touching
+	emin += '1 1 1';
+	emax -= '1 1 1';
+	return !WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
 }
 
 

@@ -230,6 +230,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, player);
 
+		// NOTE: engine networked
 		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 0);
 		WriteAngle(MSG_ONE, vehic.angles.y);
@@ -340,6 +341,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 		WriteByte(MSG_ONE, 		SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, 	gunner.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte(MSG_ONE, 		SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 	gunner.angles_x + vehic.angles_x); // tilt
 		WriteAngle(MSG_ONE, 	gunner.angles_y + vehic.angles_y); // yaw
@@ -829,7 +831,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
     if(!instance.gun1)
     {
         // for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-        instance.vehicle_shieldent = spawn();
+        instance.vehicle_shieldent = new(vehicle_shieldent);
         instance.vehicle_shieldent.effects = EF_LOWPRECISION;
         setmodel(instance.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
         setattachment(instance.vehicle_shieldent, instance, "");
@@ -883,7 +885,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         // Raygun beam
         if(instance.gun3.enemy == NULL)
         {
-            instance.gun3.enemy = spawn();
+            instance.gun3.enemy = new(bumble_raygun);
             Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);
             instance.gun3.enemy.SendFlags = BRG_SETUP;
             instance.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;

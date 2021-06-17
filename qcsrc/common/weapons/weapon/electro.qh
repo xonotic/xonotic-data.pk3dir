@@ -10,6 +10,8 @@ CLASS(Electro, Weapon)
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);
+/* flash mdl */ ATTRIB(Electro, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Electro, m_muzzleeffect, entity, EFFECT_ELECTRO_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");
 /* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);
@@ -40,6 +42,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, health, float, SEC) \
 		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, limit, float, SEC) \
 		P(class, prefix, midaircombo_enemy, bool, PRI) \
 		P(class, prefix, midaircombo_explode, float, PRI) \
 		P(class, prefix, midaircombo_interval, float, PRI) \
@@ -74,6 +77,7 @@ REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
 SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
 #ifdef SVQC
+IntrusiveList LimitedElectroBallRubbleList;
 .float electro_count;
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo(entity this);

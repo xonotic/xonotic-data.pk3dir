@@ -68,7 +68,7 @@ void trigger_gravity_touch(entity this, entity toucher)
 			else
 				return;
 		}
-		toucher.trigger_gravity_check = spawn();
+		toucher.trigger_gravity_check = new_pure(trigger_gravity_checker);
 		toucher.trigger_gravity_check.enemy = this;
 		toucher.trigger_gravity_check.owner = toucher;
 		toucher.trigger_gravity_check.gravity = toucher.gravity;
@@ -100,7 +100,7 @@ spawnfunc(trigger_gravity)
 
 	this.active = ACTIVE_ACTIVE;
 	this.setactive = generic_setactive;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		// legacy use
 		this.use = trigger_gravity_use;

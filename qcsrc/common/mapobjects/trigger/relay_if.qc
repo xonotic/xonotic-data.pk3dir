@@ -1,7 +1,11 @@
 #include "relay_if.qh"
+
 #ifdef SVQC
 void trigger_relay_if_use(entity this, entity actor, entity trigger)
 {
+	if(this.active != ACTIVE_ACTIVE)
+		return;
+
 	int n = this.count;
 
 	// TODO make this generic AND faster than nextent()ing through all, if somehow possible
@@ -15,6 +19,8 @@ void trigger_relay_if_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_relay_if)
 {
+	this.reset = spawnfunc_trigger_relay_if; // this spawnfunc resets fully
+	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_relay_if_use;
 }
 #endif

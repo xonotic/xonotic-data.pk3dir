@@ -37,7 +37,7 @@ string WeaponArenaString()
 	s = "";
 	for(int j = 0; j < n; ++j)
 	{
-		Weapon wep = Weapons_fromstr(argv(j));
+		Weapon wep = Weapon_from_name(argv(j));
 		if(wep != WEP_Null)
 		{
 			s = cons_mid(s, " & ", wep.m_name);
@@ -165,7 +165,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_touchexplode", _("Touch explode"),
-                        _("An explosion occurs when two players collide")));
+			_("An explosion occurs when two players collide")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_cloaked", _("Cloaked"),
@@ -173,7 +173,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_buffs", _("Buffs"),
-                        _("Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps that support it")));
+			_("Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps that support it")));
 			e.cvarOffValue = "-1"; // TODO: make this a radio button?
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -208,7 +208,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling hook"),
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling Hook"),
 			_("Players spawn with the grappling hook. Press the 'hook' key to use it")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -217,17 +217,17 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_invincible_projectiles", _("Invincible Projectiles"),
-                        _("Projectiles can't be destroyed. However, Electro combos still work")));
+			_("Projectiles can't be destroyed. However, you can still explode Electro orbs with the Electro primary fire")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
-                        _("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
+			_("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
 			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_rocket_flying", _("Rocket Flying"),
-                        _("Devastator rockets can be detonated instantly (otherwise, there's a short delay). This allows players to fire and detonate a Devastator rocket while in the air for a strong mid-air boost even while moving fast")));
+			_("Devastator rockets can be detonated instantly (otherwise, there's a short delay). This allows players to fire and detonate a Devastator rocket while in the air for a strong mid-air boost even while moving fast")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -255,7 +255,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.1); // fix initial position
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
-		w = Weapons_from(i);
+		w = REGISTRY_GET(Weapons, i);
 		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
 			continue;
 		if ((j % 3) == 0)

@@ -1,53 +1,42 @@
 #include "bot.qh"
 
-#include "cvars.qh"
-
-#include "aim.qh"
-#include "navigation.qh"
-#include "scripting.qh"
-#include "waypoints.qh"
-
-#include "havocbot/havocbot.qh"
-#include "havocbot/scripting.qh"
-
-#include "../../teamplay.qh"
-
-#include "../../antilag.qh"
-#include "../../autocvars.qh"
-#include "../../campaign.qh"
-#include "../../client.qh"
-#include "../../constants.qh"
-#include "../../defs.qh"
-#include "../../race.qh"
-#include <common/t_items.qh>
-
-#include <server/mutators/_mod.qh>
-
-#include "../../weapons/accuracy.qh"
-
-#include <common/physics/player.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-
-#include <server/scores_rules.qh>
-
 #include <common/weapons/_all.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
-
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/antilag.qh>
+#include <server/bot/default/aim.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/havocbot.qh>
+#include <server/bot/default/havocbot/scripting.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/bot/default/scripting.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
-	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
-	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+	CS_CVAR(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS_CVAR(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 entity bot_spawn()
@@ -124,16 +113,24 @@ void bot_think(entity this)
 	}
 
 	// if dead, just wait until we can respawn
-	if (IS_DEAD(this))
+	if (IS_DEAD(this) || IS_OBSERVER(this))
 	{
 		if (bot_waypoint_queue_owner == this)
 			bot_waypoint_queue_owner = NULL;
 		this.aistatus = 0;
 		CS(this).movement = '0 0 0';
-		if (this.deadflag == DEAD_DEAD)
+		if (IS_OBSERVER(this))
+			return;
+		if (IS_DEAD(this))
 		{
-			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
-			navigation_goalrating_timeout_force(this);
+			if (!navigation_goalrating_timeout(this))
+				navigation_goalrating_timeout_force(this);
+			// jump must not be pressed for at least one frame in order for
+			// PlayerThink to detect the key down event
+			if (this.deadflag == DEAD_DYING)
+				PHYS_INPUT_BUTTON_JUMP(this) = false;
+			else if (this.deadflag == DEAD_DEAD)
+				PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
@@ -350,14 +347,14 @@ void bot_custom_weapon_priority_setup()
 			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
 			bot_weapons_##dist[0] = -1; \
 			c = 0; \
-			for(i = 0; i < tokens && c < Weapons_COUNT; ++i) { \
+			for(i = 0; i < tokens && c < REGISTRY_COUNT(Weapons); ++i) { \
 				w = stof(argv(i)); \
 				if (w >= WEP_FIRST && w <= WEP_LAST) { \
 					bot_weapons_##dist[c] = w; \
 					++c; \
 				} \
 			} \
-			if (c < Weapons_COUNT) \
+			if (c < REGISTRY_COUNT(Weapons)) \
 				bot_weapons_##dist[c] = -1; \
 		} \
 	MACRO_END
@@ -394,17 +391,19 @@ void bot_relinkplayerlist()
 
 		if(IS_BOT_CLIENT(it))
 		{
-			if(prevbot)
-				prevbot.nextbot = it;
-			else
-				bot_list = it;
-			prevbot = it;
+			if (!IS_OBSERVER(it) && !bot_ispaused(it))
+			{
+				if(prevbot)
+					prevbot.nextbot = it;
+				else
+					bot_list = it;
+				prevbot = it;
+			}
 			++currentbots;
 		}
 	});
 	if(prevbot)
 		prevbot.nextbot = NULL;
-	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -655,39 +654,6 @@ bool bot_fixcount()
 	return true;
 }
 
-void bot_remove_from_bot_list(entity this)
-{
-	entity e = bot_list;
-	entity prev_bot = NULL;
-	while (e)
-	{
-		if(e == this)
-		{
-			if(!prev_bot)
-				bot_list = this.nextbot;
-			else
-				prev_bot.nextbot = this.nextbot;
-			if(bot_strategytoken == this)
-			{
-				bot_strategytoken = this.nextbot;
-				bot_strategytoken_taken = true;
-			}
-			this.nextbot = NULL;
-			break;
-		}
-		prev_bot = e;
-		e = e.nextbot;
-	}
-}
-
-void bot_clear(entity this)
-{
-	bot_remove_from_bot_list(this);
-	if(bot_waypoint_queue_owner == this)
-		bot_waypoint_queue_owner = NULL;
-	this.aistatus &= ~AI_STATUS_STUCK; // otherwise bot_waypoint_queue_owner will be set again to this by navigation_unstuck
-}
-
 void bot_serverframe()
 {
 	if (intermission_running && currentbots > 0)
@@ -760,7 +726,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || autocvar_g_waypointeditor || autocvar_g_waypointeditor_auto)
+	if (currentbots > 0 || waypointeditor_enabled || autocvar_g_waypointeditor_auto)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
@@ -825,7 +791,7 @@ void bot_serverframe()
 		}
 	}
 
-	if (autocvar_g_waypointeditor)
+	if (waypointeditor_enabled)
 		botframe_showwaypointlinks();
 
 	if (autocvar_g_waypointeditor_auto)

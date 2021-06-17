@@ -1,4 +1,5 @@
 #include "all.qh"
+
 #if defined(CSQC)
 	#include <client/announcer.qh>
 #elif defined(MENUQC)
@@ -6,10 +7,9 @@
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
 	#include <common/teams.qh>
-	#include <server/autocvars.qh>
-	#include <server/constants.qh>
-	#include <server/defs.qh>
+	#include <server/command/getreplies.qh>
 	#include <server/mutators/_mod.qh>
+	#include <server/world.qh>
 #endif
 
 // ================================================
@@ -79,6 +79,9 @@ string Notification_CheckArgs(
 
 bool Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_client)
 {
+	if(!IS_REAL_CLIENT(to_client))
+		return false;
+
 	switch (broadcast)
 	{
 		case NOTIF_ONE:
@@ -159,7 +162,7 @@ void Destroy_All_Notifications()
 	#ifdef SVQC
 	Kill_Notification(NOTIF_ALL, NULL, MSG_Null, CPID_Null);
 	#else
-	reset_centerprint_messages();
+	centerprint_KillAll();
 	#endif
 
 	// kill all real notification entities
@@ -759,12 +762,12 @@ void Create_Notification_Entity_Choice(entity notif,
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars(entity this)
+void Notification_GetCvars(entity this, entity store)
 {
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		GetCvars_handleFloat(
 			this,
-			CS(this),
+			store,
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],
@@ -1130,7 +1133,7 @@ void Local_Notification_HUD_Notify_Push(
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 
-void Local_Notification_centerprint_generic(
+void Local_Notification_centerprint_Add(
 	string input, string durcnt,
 	CPID cpid, float f1, float f2)
 {
@@ -1139,7 +1142,7 @@ void Local_Notification_centerprint_generic(
 	for (int sel_num = 0; (durcnt != ""); )
 	{
 		string selected = car(durcnt); durcnt = cdr(durcnt);
-		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic");
+		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_Add");
 		switch (strtolower(selected))
 		{
 			#define ARG_CASE_ARG_CS_SV_HA(selected, result)
@@ -1160,14 +1163,14 @@ void Local_Notification_centerprint_generic(
 			default:
 			{
 				if (/* wtf */ ftos(stof(selected)) != "") { arg_slot[sel_num++] = selected; }
-				else { NOTIF_HIT_UNKNOWN(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic") }
+				else { NOTIF_HIT_UNKNOWN(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_Add") }
 				break;
 			}
 		}
 	}
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
+		"Local_Notification_centerprint_Add('%s^7', '%s', %d, %d, %d, %d);\n",
 		MakeConsoleSafe(input),
 		durcnt,
 		f1, f2,
@@ -1175,7 +1178,7 @@ void Local_Notification_centerprint_generic(
 		stof(arg_slot[1])
 	));
 	#endif
-	centerprint_generic(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
+	centerprint_Add(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 #endif
 
@@ -1289,7 +1292,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		#ifdef CSQC
 		case MSG_CENTER:
 		{
-			Local_Notification_centerprint_generic(
+			Local_Notification_centerprint_Add(
 				Local_Notification_sprintf(
 					notif.nent_string,
 					notif.nent_args,
@@ -1408,11 +1411,9 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
         int _net_name = net_name;
         CPID net_name = ENUMCAST(CPID, _net_name);
         if (net_name == CPID_Null) {
-            // kill all
-            reset_centerprint_messages();
+            centerprint_KillAll();
         } else {
-            // kill group
-            centerprint_generic(ORDINAL(net_name), "", 0, 0);
+            centerprint_Kill(ORDINAL(net_name));// kill group
         }
         return;
     }
@@ -1522,7 +1523,7 @@ void Send_Notification(
 	MSG net_type, Notification net_name,
 	...count)
 {
-    if (broadcast != NOTIF_ALL && broadcast != NOTIF_ALL_EXCEPT && !IS_REAL_CLIENT(client)) return;
+    if (broadcast == NOTIF_ONE_ONLY && !IS_REAL_CLIENT(client)) return;
 	entity notif = net_name;
 	string parms = sprintf("%s, '%s', %s, %s",
 		Get_Notif_BroadcastName(broadcast),
@@ -1605,7 +1606,7 @@ void Send_Notification(
 
 		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN \
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
-				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
+				switch (CS_CVAR(ent).msg_choice_choices[net_name.nent_choice_idx]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \
@@ -1636,7 +1637,7 @@ void Send_Notification(
 			}
 			default:
 			{
-				FOREACH_CLIENT(IS_REAL_CLIENT(it) && Notification_ShouldSend(broadcast, it, client), {
+				FOREACH_CLIENT(Notification_ShouldSend(broadcast, it, client), {
 					RECURSE_FROM_CHOICE(it, continue);
 				});
 				break;

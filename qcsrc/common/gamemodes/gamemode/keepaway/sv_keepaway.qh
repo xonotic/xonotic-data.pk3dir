@@ -4,6 +4,7 @@
 #include <common/scores.qh>
 void ka_Initialize();
 
+IntrusiveList g_kaballs;
 REGISTER_MUTATOR(ka, false)
 {
     MUTATOR_STATIC();
@@ -20,8 +21,8 @@ REGISTER_MUTATOR(ka, false)
 	return false;
 }
 
+const int KA_BALL_COUNT = 1;
 
-entity ka_ball;
 entity ka_Handler;
 
 void(entity this) havocbot_role_ka_carrier;

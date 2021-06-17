@@ -3,21 +3,20 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <lib/warpzone/common.qh>
-    #include <lib/warpzone/util_server.qh>
-    #include <lib/warpzone/server.qh>
-    #include "../constants.qh"
-	#include "../mapobjects/subs.qh"
-    #include "../util.qh"
-    #include <server/weapons/csqcprojectile.qh>
-    #include <server/autocvars.qh>
-    #include <server/constants.qh>
-    #include <server/defs.qh>
-    #include "../deathtypes/all.qh"
-    #include "../turrets/sv_turrets.qh"
-    #include "../vehicles/all.qh"
-    #include "../mapinfo.qh"
-    #include <server/anticheat.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
+	#include <common/mapobjects/subs.qh>
+	#include <common/stats.qh>
+	#include <common/turrets/sv_turrets.qh>
+	#include <common/util.qh>
+	#include <common/vehicles/all.qh>
+	#include <common/weapons/_all.qh>
+	#include <lib/warpzone/common.qh>
+	#include <lib/warpzone/server.qh>
+	#include <lib/warpzone/util_server.qh>
+	#include <server/anticheat.qh>
+	#include <server/weapons/csqcprojectile.qh>
 #endif
 
 #ifdef SVQC
@@ -146,9 +145,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 #ifdef SVQC
 	if(IS_PLAYER(player))
 	{
-		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && !IS_DEAD(player) && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
-				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+		if((tflags & TELEPORT_FLAG_TDEATH) && player.takedamage && !IS_DEAD(player)
+			&& !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH))
+			&& !(round_handler_IsActive() && !round_handler_IsRoundStarted()))
+		{
+			tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+		}
 
 		// player no longer is on ground
 		UNSET_ONGROUND(player);

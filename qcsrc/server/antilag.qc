@@ -1,13 +1,13 @@
 #include "antilag.qh"
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include <server/defs.qh>
-    #include <common/state.qh>
-    #include <common/vehicles/all.qh>
-	#include <lib/warpzone/common.qh>
-    #include "antilag.qh"
-#endif
+
+#include <common/monsters/sv_monsters.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
+#include <server/antilag.qh>
+#include <server/weapons/common.qh>
 
 const int ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_origins[ANTILAG_MAX_ORIGINS];
@@ -151,7 +151,7 @@ void antilag_restore_all(entity ignore)
 float antilag_getlag(entity e)
 {
 	float lag = ((IS_REAL_CLIENT(e)) ? ANTILAG_LATENCY(e) : 0);
-	bool noantilag = ((IS_CLIENT(e)) ? CS(e).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(e)) ? CS_CVAR(e).cvar_cl_noantilag : false);
 	if(autocvar_g_antilag == 0 || noantilag || lag < 0.001)
 		lag = 0;
 
@@ -202,14 +202,14 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
@@ -220,14 +220,14 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);

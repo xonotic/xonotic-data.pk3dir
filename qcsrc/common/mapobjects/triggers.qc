@@ -1,5 +1,37 @@
 #include "triggers.qh"
 
+bool isPushable(entity e)
+{
+	if(e.pushable)
+		return true;
+#ifdef SVQC
+	if(IS_VEHICLE(e))
+		return false;
+	if(e.iscreature)
+		return true;
+	if (Item_IsLoot(e))
+	{
+		return true;
+	}
+	switch(e.classname)
+	{
+		case "body":
+			return true;
+		case "bullet": // antilagged bullets can't hit this either
+			return false;
+	}
+	if (e.projectiledeathtype)
+		return true;
+#endif
+#ifdef CSQC
+	if(e.flags & FL_PROJECTILE)
+		return true;
+	if(e.isplayermodel)
+		return true;
+#endif
+	return false;
+}
+
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
@@ -43,7 +75,7 @@ void generic_netlinked_setactive(entity this, int act)
 
 void generic_netlinked_reset(entity this)
 {
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		if(this.spawnflags & START_ENABLED)
 		{
@@ -242,8 +274,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 //
 	if (this.delay)
 	{
-	// create a temp object to fire at a later time
-		entity t = new(DelayedUse);
+		// create a temp object to fire at a later time
+		entity t = new_pure(DelayedUse);
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
 		t.enemy = actor;

@@ -1,20 +1,18 @@
 #include "navigation.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "cvars.qh"
-
-#include "bot.qh"
-#include "waypoints.qh"
-
-#include <common/t_items.qh>
-
-#include <common/items/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/items/_mod.qh>
 #include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
+#include <common/net_linked.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/items/items.qh>
 
 .float speed;
 
@@ -224,7 +222,7 @@ bool navigation_check_submerged_state(entity ent, vector pos)
 
 bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector end, vector end2, int movemode)
 {
-	IL_EACH(g_ladders, it.classname == "func_ladder",
+	IL_EACH(g_ladders, true,
 	{
 		if(it.bot_pickup)
 		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
@@ -925,7 +923,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
+	if (waypointeditor_enabled && !IS_BOT_CLIENT(ent))
 	{
 		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
 		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
@@ -1374,7 +1372,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		if(autocvar_g_waypointeditor && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
+		if(waypointeditor_enabled && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 			e.nearestwaypoint = NULL;
 
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
@@ -1400,7 +1398,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
-			else if(autocvar_g_waypointeditor)
+			else if(waypointeditor_enabled)
 				e.nearestwaypointtimeout = time + 3 + random() * 2;
 		}
 		nwp = e.nearestwaypoint;
@@ -1459,8 +1457,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		this.wp_goal_prev0 = e;
 	}
 
-	if(g_jetpack)
-	if(e==this.navigation_jetpack_goal)
+	if((this.items & IT_JETPACK) && e == this.navigation_jetpack_goal)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
@@ -1490,7 +1487,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK))
 	{
 		// often path can be optimized by not adding the nearest waypoint
-		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
+		if (this.goalentity.navigation_dynamicgoal || waypointeditor_enabled)
 		{
 			if (nearest_wp.enemy.wpcost < autocvar_bot_ai_strategyinterval_movingtarget)
 			{
@@ -1654,7 +1651,7 @@ int navigation_poptouchedgoals(entity this)
 		if(this.lastteleporttime > 0 && TELEPORT_USED(this, this.goalcurrent))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+			if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 			{
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1696,7 +1693,7 @@ int navigation_poptouchedgoals(entity this)
 		if (tele_ent && TELEPORT_USED(this, tele_ent))
 		{
 			if (this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if (tele_ent.wpflags & WAYPOINTFLAG_PERSONAL && tele_ent.owner == this)
+			if ((tele_ent.wpflags & WAYPOINTFLAG_PERSONAL) && tele_ent.owner == this)
 			{
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1718,7 +1715,7 @@ int navigation_poptouchedgoals(entity this)
 
 	// Loose goal touching check when running
 	// check goalstack01 to make sure waypoint isn't the final goal
-	if(this.aistatus & AI_STATUS_RUNNING && this.goalcurrent.classname == "waypoint" && !(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
+	if((this.aistatus & AI_STATUS_RUNNING) && this.goalcurrent.classname == "waypoint" && !(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
 		&& this.goalstack01 && !wasfreed(this.goalstack01) && vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
 	{
 		vector gco = this.goalcurrent.origin;
@@ -1733,7 +1730,7 @@ int navigation_poptouchedgoals(entity this)
 			{
 				// Detect personal waypoints
 				if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-				if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+				if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 				{
 					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 					this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1756,7 +1753,7 @@ int navigation_poptouchedgoals(entity this)
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
 			gc_max = this.goalcurrent.origin + '1 1 1' * 12 + eZ * (jumpheight_vec.z + STAT(PL_MIN, this).z);
 		}
-		if (time < this.ladder_time)
+		if (this.ladder_entity)
 		{
 			if (!boxesoverlap(this.absmin, this.absmax - eZ * STAT(PL_MAX, this).z, gc_min, gc_max))
 				break;
@@ -1769,7 +1766,7 @@ int navigation_poptouchedgoals(entity this)
 
 		// Detect personal waypoints
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-		if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+		if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 		{
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;

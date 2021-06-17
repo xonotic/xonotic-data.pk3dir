@@ -1,24 +1,22 @@
 #include "tracing.qh"
 
-#include <common/effects/all.qh>
-
-#include "accuracy.qh"
-#include "common.qh"
-#include "hitplot.qh"
-#include "weaponsystem.qh"
-
-#include "../g_damage.qh"
-#include "../antilag.qh"
-
 #include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
 #include <common/net_linked.qh>
+#include <common/state.qh>
 #include <common/util.qh>
-
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-#include <common/state.qh>
-
 #include <lib/warpzone/common.qh>
+#include <server/antilag.qh>
+#include <server/damage.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/hitplot.qh>
+#include <server/weapons/weaponsystem.qh>
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
@@ -74,10 +72,18 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
-	// TODO this is broken - see 637056bea7bf7f5c9c0fc6113e94731a2767476 for an attempted fix
-	// which fixes issue #1957 but causes #2129
 	vector dv = right * -vecs.y + up * vecs.z;
-	w_shotorg = ent.origin + ent.view_ofs + dv;
+	w_shotorg = ent.origin + ent.view_ofs;
+	if(antilag)
+	{
+		if(CS(ent).antilag_debug)
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, CS(ent).antilag_debug);
+		else
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+	}
+	else
+		tracebox(w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos;
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
@@ -101,7 +107,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!CS(ent).cvar_cl_noantilag)
+	if (!CS_CVAR(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{
@@ -195,7 +201,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
 
-	dir = W_CalculateSpread(dir, spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
 
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
@@ -211,7 +217,18 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
-void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
+bool Headshot(entity targ, entity ent, vector start, vector end)
+{
+	if(!IS_PLAYER(targ) || IS_DEAD(targ) || STAT(FROZEN, targ) || !targ.takedamage)
+		return false;
+	vector org = targ.origin; // antilag is already taken into consideration //antilag_takebackorigin(targ, CS(targ), time - ANTILAG_LATENCY(ent));
+	vector headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+	vector headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+
+	return trace_hits_box(start, end, headmins, headmaxs);
+}
+
+void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector dir = normalize(end - start);
 	vector force = dir * bforce;
@@ -220,6 +237,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	end = end + dir;
 
 	float totaldmg = 0;
+	bool headshot = false; // indicates that one of the targets hit was a headshot
 
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
@@ -243,6 +261,9 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		// if it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
 			break;
+
+		if(headshot_notify && !headshot && Headshot(trace_ent, this, start, end))
+			headshot = true;
 
 		// make the entity non-solid so we can hit the next one
 		IL_PUSH(g_railgunhit, trace_ent);
@@ -281,11 +302,11 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
 		if(!pseudoprojectile)
-			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+			pseudoprojectile = new(pseudoprojectile); // we need this so the sound uses the "entchannel4" volume
 
 		msg_entity = it;
 		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
-		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE);
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE, 0);
 	});
 	if(pseudoprojectile)
 		delete(pseudoprojectile);
@@ -313,6 +334,9 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 	IL_CLEAR(g_railgunhit);
 
+	if(headshot)
+		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
+
 	// calculate hits and fired shots for hitscan
 	if(this.(weaponentity))
 		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg));
@@ -330,7 +354,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect, bool do_antilag)
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag)
 {
 	dir = normalize(dir + randomvec() * spread);
 	vector end = start + dir * max_shot_distance;
@@ -353,6 +377,7 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 
 	WarpZone_trace_forent = this;
 
+	bool headshot = false; // indicates that one of the hit targets was a headshot
 	for (;;)
 	{
 		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, NULL, fireBullet_trace_callback);
@@ -400,6 +425,11 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
+			if(headshot_multiplier && Headshot(hit, this, start, end))
+			{
+				damage *= headshot_multiplier;
+				headshot = true;
+			}
 			bool gooddamage = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * damage_fraction, dtype, weaponentity, start, force * dir * damage_fraction);
 			// calculate hits for ballistic weapons
@@ -459,6 +489,9 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
 	}
 
+	if(headshot)
+		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
+
 	if(lag)
 		antilag_restore_all(this);
 
@@ -467,7 +500,48 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 		this.dphitcontentsmask = oldsolid;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect)
 {
-	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, force, dtype, tracer_effect, true);
+	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, headshot_multiplier, force, dtype, tracer_effect, true);
+}
+
+void crosshair_trace(entity pl)
+{
+	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+}
+
+void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, false);
+}
+
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, true);
+}
+
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz)
+{
+	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
+	{
+		if(it.model != "")
+		{
+			it.solid = SOLID_BSP;
+			IL_PUSH(g_ctrace_changed, it);
+		}
+	});
+
+	if (is_wz)
+		WarpZone_crosshair_trace(pl);
+	else
+		crosshair_trace(pl);
+
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
+
+	IL_CLEAR(g_ctrace_changed);
+}
+
+void WarpZone_crosshair_trace(entity pl)
+{
+	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }

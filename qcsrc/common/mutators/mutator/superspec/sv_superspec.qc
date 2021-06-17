@@ -346,7 +346,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followpowerup")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && (STAT(STRENGTH_FINISHED, it) > time || it.invincible_finished > time), { return superspec_Spectate(player, it); });
+		FOREACH_CLIENT(IS_PLAYER(it) && (StatusEffects_active(STATUSEFFECT_Strength, it) || StatusEffects_active(STATUSEFFECT_Shield, it)), { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active powerup\n", 1);
 		return true;
@@ -354,7 +354,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followstrength")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && STAT(STRENGTH_FINISHED, it) > time, { return superspec_Spectate(player, it); });
+		FOREACH_CLIENT(IS_PLAYER(it) && StatusEffects_active(STATUSEFFECT_Strength, it), { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active Strength\n", 1);
 		return true;
@@ -362,7 +362,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followshield")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, { return superspec_Spectate(player, it); });
+		FOREACH_CLIENT(IS_PLAYER(it) && StatusEffects_active(STATUSEFFECT_Shield, it), { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active Shield\n", 1);
 		return true;
@@ -401,7 +401,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 	player.superspec_flags = SSF_VERBOSE;
 	player.superspec_itemfilter = "";
 
-	entity _hello = spawn();
+	entity _hello = new_pure(superspec_delayed_hello);
 	_hello.enemy = player;
 	setthink(_hello, superspec_hello);
 	_hello.nextthink = time + 5;

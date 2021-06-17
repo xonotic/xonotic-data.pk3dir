@@ -1,49 +1,39 @@
 #include "cmd.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-
-#include "common.qh"
-#include "vote.qh"
-
-#include "../bot/api.qh"
-
-#include "../campaign.qh"
-#include "../cheats.qh"
-#include "../client.qh"
-#include "../clientkill.qh"
-#include "../player.qh"
-#include "../ipban.qh"
-#include "../mapvoting.qh"
-#include "../scores.qh"
-#include "../teamplay.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
-#ifdef SVQC
-	#include <common/vehicles/all.qh>
-#endif
-
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/minigames/sv_minigames.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/mapobjects/triggers.qh>
-
-#include <common/minigames/sv_minigames.qh>
-
-#include <common/monsters/_mod.qh>
-#include <common/monsters/sv_spawn.qh>
-#include <common/monsters/sv_monsters.qh>
-
+#include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/vote.qh>
+#include <server/ipban.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -83,18 +73,18 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		{
 			if (argv(1) != "")
 			{
-				CS(caller).autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (CS(caller).autoswitch ? "on" : "off"), ".\n"));
+				CS_CVAR(caller).autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2autoswitch^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd autoswitch selection\n");
-			sprint(caller, "  Where 'selection' controls if autoswitch is on or off.\n");
+			sprint(caller, "\nUsage:^3 cmd autoswitch <selection>\n");
+			sprint(caller, "  Where <selection> controls if autoswitch is on or off.\n");
 			return;
 		}
 	}
@@ -133,11 +123,11 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2clientversion^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd clientversion version\n");
-			sprint(caller, "  Where 'version' is the game version reported by caller.\n");
+			sprint(caller, "\nUsage:^3 cmd clientversion <version>\n");
+			sprint(caller, "  Where <version> is the game version reported by caller.\n");
 			return;
 		}
 	}
@@ -158,11 +148,11 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2mv_getpicture^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd mv_getpicture mapid\n");
-			sprint(caller, "  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			sprint(caller, "\nUsage:^3 cmd mv_getpicture <mapid>\n");
+			sprint(caller, "  Where <mapid> is the id number of the map to request an image of on the map vote selection menu.\n");
 			return;
 		}
 	}
@@ -174,7 +164,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!autocvar_g_waypointeditor)
+			if (!waypointeditor_enabled)
 			{
 				sprint(caller, "ERROR: this command works only if the waypoint editor is on\n");
 				return;
@@ -248,32 +238,32 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
-			sprint(caller, "  Where 'action' can be:\n");
-			sprint(caller, "   ^5spawn^7: spawns a waypoint at player's position\n");
-			sprint(caller, "   ^5remove^7: removes player's nearest waypoint\n");
-			sprint(caller, "   ^5unreachable^7: reveals waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
-			sprint(caller, "   ^5saveall^7: saves all waypoints and links to file\n");
-			sprint(caller, "   ^5relinkall^7: relinks all waypoints as if they were respawned\n");
-			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position\n");
+			sprint(caller, "\nUsage:^3 cmd wpeditor <action>\n");
+			sprint(caller, "  Where <action> can be:\n");
+			sprint(caller, "   ^2spawn^7: spawns a waypoint at player's position\n");
+			sprint(caller, "   ^2remove^7: removes player's nearest waypoint\n");
+			sprint(caller, "   ^2unreachable^7: reveals waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
+			sprint(caller, "   ^2saveall^7: saves all waypoints and links to file\n");
+			sprint(caller, "   ^2relinkall^7: relinks all waypoints as if they were respawned\n");
+			sprint(caller, "   ^2spawn crosshair^7: spawns a waypoint at crosshair's position\n");
 			sprint(caller, "   ^7 in general useful to create special and hardwired links with ease from existing waypoints\n");
 			sprint(caller, "   ^7 in particular it's the only way to create custom jumppad waypoints (spawn another waypoint to create destination))\n");
-			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint (place it at least 60 qu before jump start, spawn another waypoint to create destination)\n");
-			sprint(caller, "   ^5spawn crouch^7: spawns a crouch waypoint (it links only to very close waypoints)\n");
-			sprint(caller, "   ^5spawn support^7: spawns a support waypoint (spawn another waypoint to create destination from which all incoming links are removed)\n");
+			sprint(caller, "   ^2spawn jump^7: spawns a jump waypoint (place it at least 60 qu before jump start, spawn another waypoint to create destination)\n");
+			sprint(caller, "   ^2spawn crouch^7: spawns a crouch waypoint (it links only to very close waypoints)\n");
+			sprint(caller, "   ^2spawn support^7: spawns a support waypoint (spawn another waypoint to create destination from which all incoming links are removed)\n");
 			sprint(caller, "   ^7 useful to replace links to problematic jumppad/teleport waypoints\n");
-			sprint(caller, "   ^5hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
-			sprint(caller, "   ^5hardwire crosshair^7: marks the waypoint at crosshair instead of the nearest waypoint\n");
-			sprint(caller, "   ^5lock^7: locks link display of the aimed waypoint (unlocks if no waypoint is found at crosshair's position)\n");
-			sprint(caller, "   ^5symorigin get|set\n");
-			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
-			sprint(caller, "   ^5symaxis get|set p1 p2\n");
-			sprint(caller, "   ^7 where p1 p2 ... pX are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical"
+			sprint(caller, "   ^2hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
+			sprint(caller, "   ^2hardwire crosshair^7: marks the waypoint at crosshair instead of the nearest waypoint\n");
+			sprint(caller, "   ^2lock^7: locks link display of the aimed waypoint (unlocks if no waypoint is found at crosshair's position)\n");
+			sprint(caller, "   ^2symorigin get|set\n");
+			sprint(caller, "   ^2symorigin get|set <p1> <p2> ... <pX>\n");
+			sprint(caller, "   ^2symaxis get|set <p1> <p2>\n");
+			sprint(caller, "   ^7 where <p1> <p2> ... <pX> are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical"
 								" so you can determine origin/axis of symmetry of maps without ctf flags or where flags aren't perfectly symmetrical\n");
-			sprint(caller, "  See 'wpeditor_menu' for a selectable list of various commands and useful settings to edit waypoints.\n");
+			sprint(caller, "  See ^5wpeditor_menu^7 for a selectable list of various commands and useful settings to edit waypoints.\n");
 			return;
 		}
 	}
@@ -285,10 +275,13 @@ void ClientCommand_join(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!game_stopped)
-			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
-			if (joinAllowed(caller))
-				Join(caller);
+			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
+			{
+				if (joinAllowed(caller))
+					Join(caller);
+				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
+					CS(caller).autojoin_checked = -1;
+			}
 
 			return;  // never fall through to usage
 		}
@@ -362,7 +355,7 @@ void ClientCommand_physics(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, strcat("Current physics set: ^3", CS(caller).cvar_cl_physics, "\n"));
+			sprint(caller, strcat("Current physics set: ^3", CS_CVAR(caller).cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd physics <physics>\n");
@@ -381,9 +374,9 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 		{
 			if (IS_CLIENT(caller))
 			{
-				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || sv_ready_restart_repeatable)
+					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
 						if (time < game_starttime) // game is already restarting
 							return;
@@ -391,13 +384,13 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 						{
 							caller.ready = false;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -436,7 +429,7 @@ void ClientCommand_say(entity caller, int request, int argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd say <message>\n");
-			sprint(caller, "  Where 'message' is the string of text to say.\n");
+			sprint(caller, "  Where <message> is the string of text to say.\n");
 			return;
 		}
 	}
@@ -457,7 +450,7 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd say_team <message>\n");
-			sprint(caller, "  Where 'message' is the string of text to say.\n");
+			sprint(caller, "  Where <message> is the string of text to say.\n");
 			return;
 		}
 	}
@@ -493,40 +486,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 				return;
 			}
-			float selection;
-			switch (argv(1))
-			{
-				case "red":
-				{
-					selection = NUM_TEAM_1;
-					break;
-				}
-				case "blue":
-				{
-					selection = NUM_TEAM_2;
-					break;
-				}
-				case "yellow":
-				{
-					selection = NUM_TEAM_3;
-					break;
-				}
-				case "pink":
-				{
-					selection = NUM_TEAM_4;
-					break;
-				}
-				case "auto":
-				{
-					selection = (-1);
-					break;
-				}
-				default:
-				{
-					return;
-				}
-			}
-			if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
+
+			float team_num = Team_ColorToTeam(argv(1));
+			if (team_num == -1) // invalid
+				return;
+			if (caller.team == team_num && team_num && !IS_DEAD(caller))
 			{
 				sprint(caller, "^7You already are on that team.\n");
 				return;
@@ -536,12 +500,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 				return;
 			}
-			if ((selection != -1) && autocvar_g_balance_teams &&
-				autocvar_g_balance_teams_prevent_imbalance)
+			if (team_num && autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
 				TeamBalance_GetTeamCounts(balance, caller);
-				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
+				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
 					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
@@ -550,7 +513,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				}
 				TeamBalance_Destroy(balance);
 			}
-			ClientKill_TeamChange(caller, selection);
+			if (team_num)
+				ClientKill_TeamChange(caller, team_num);
+			else // auto
+				ClientKill_TeamChange(caller, -1);
+
 			if (!IS_PLAYER(caller))
 			{
 				caller.team_selected = true; // avoids asking again for team selection on join
@@ -558,12 +525,12 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			return;
 		}
 		default:
-			sprint(caller, "Incorrect parameters for ^2selectteam^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd selectteam team\n");
-			sprint(caller, "  Where 'team' is the prefered team to try and join.\n");
-			sprint(caller, "  Full list of options here: \"red, blue, yellow, pink, auto\"\n");
+			sprint(caller, "\nUsage:^3 cmd selectteam <team>\n");
+			sprint(caller, "  Where <team> is the prefered team to try and join.\n");
+			sprint(caller, "  Full list of options here: red, blue, yellow, pink, auto.\n");
 			return;
 		}
 	}
@@ -583,11 +550,11 @@ void ClientCommand_selfstuff(entity caller, int request, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2selfstuff^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selfstuff <command>\n");
-			sprint(caller, "  Where 'command' is the string to be stuffed to your client.\n");
+			sprint(caller, "  Where <command> is the string to be stuffed to your client.\n");
 			return;
 		}
 	}
@@ -610,18 +577,18 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, CS(caller), 1);
+				GetCvars(caller, CS_CVAR(caller), 1);
 
 				return;
 			}
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2sentcvar^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar>\n");
-			sprint(caller, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
+			sprint(caller, "  Where <cvar> is the cvar plus arguments to send to the server.\n");
 			return;
 		}
 	}
@@ -643,13 +610,16 @@ void ClientCommand_spectate(entity caller, int request)
 						int spec_accepted = VerifyClientEntity(client, false, false);
 						if(spec_accepted > 0 && IS_PLAYER(client))
 						{
+							bool caller_is_observer = (IS_OBSERVER(caller));
 							Spectate(caller, client);
+							if (caller_is_observer)
+								TRANSMUTE(Spectator, caller);
 						}
 						else
-							sprint(caller, "can't spectate ", argv(1), "^7\n");
+							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
 					else
-						sprint(caller, "cmd spectate client only works when you are spectator/observer\n");
+						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
 					return;
 				}
 
@@ -667,8 +637,8 @@ void ClientCommand_spectate(entity caller, int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate [client]\n");
-			sprint(caller, "  Where 'client' can be the player to spectate.\n");
+			sprint(caller, "\nUsage:^3 cmd spectate [<client>]\n");
+			sprint(caller, "  Where <client> can be the player to spectate.\n");
 			return;
 		}
 	}
@@ -688,11 +658,11 @@ void ClientCommand_suggestmap(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2suggestmap^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd suggestmap map\n");
-			sprint(caller, "  Where 'map' is the name of the map to suggest.\n");
+			sprint(caller, "\nUsage:^3 cmd suggestmap <map>\n");
+			sprint(caller, "  Where <map> is the name of the map to suggest.\n");
 			return;
 		}
 	}
@@ -745,11 +715,11 @@ void ClientCommand_tell(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2tell^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd tell client <message>\n");
-			sprint(caller, "  Where 'client' is the entity number or name of the player to send 'message' to.\n");
+			sprint(caller, "\nUsage:^3 cmd tell <client> <message>\n");
+			sprint(caller, "  Where <client> is the entity number or name of the player to send <message> to.\n");
 			return;
 		}
 	}
@@ -791,12 +761,13 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2voice^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd voice messagetype <soundname>\n");
-			sprint(caller, "  'messagetype' is the type of broadcast to do, like team only or such,\n");
-			sprint(caller, "  and 'soundname' is the string/filename of the sound/voice message to play.\n");
+			sprint(caller, "\nUsage:^3 cmd voice <voicetype> [<message>]\n");
+			sprint(caller, "  <voicetype> is the type of voice message, it can be one of these:\n");
+			sprint(caller, sprintf("   %s\n", allvoicesamples));
+			sprint(caller, "  and <message> is the text message to send.\n");
 			return;
 		}
 	}
@@ -929,7 +900,15 @@ void SV_ParseClientCommand(entity this, string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
-		case "color": case "topcolor": case "bottomcolor": if(teamplay) return; else break; // handled by engine in host_cmd.c
+		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
+			if(!IS_CLIENT(this)) // on connection
+			{
+				// since gamecode doesn't have any calls earlier than this, do the connecting message here
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
+			}
+			if(teamplay)
+				return;
+			break;
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:
@@ -948,8 +927,8 @@ void SV_ParseClientCommand(entity this, string command)
 			sprint(this, "\nCommon networked commands:\n");
 			CommonCommand_macro_help(this);
 
-			sprint(this, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
-			sprint(this, "For help about a specific command, type cmd help COMMAND\n");
+			sprint(this, "\nUsage:^3 cmd <command>^7, where possible commands are listed above.\n");
+			sprint(this, "For help about a specific command, type cmd help <command>\n");
 			return;
 		}
 		else if (CommonCommand_macro_usage(argc, this))  // Instead of trying to call a command, we're going to see detailed information about it

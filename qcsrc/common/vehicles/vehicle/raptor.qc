@@ -1,5 +1,9 @@
 #include "raptor.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
 #ifdef GAMEQC
 
 #ifdef SVQC
@@ -411,7 +415,7 @@ bool raptor_frame(entity this, float dt)
 		bool incoming = false;
 		IL_EACH(g_projectiles, it.enemy == vehic,
 		{
-			if(MISSILE_IS_TRACKING(it))
+			if(it.missile_flags & MIF_GUIDED_TRACKING)
 			if(vdist(vehic.origin - it.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
 			{
 				incoming = true;
@@ -422,7 +426,7 @@ bool raptor_frame(entity this, float dt)
 		if(incoming)
 		{
 			msg_entity = this;
-			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE);
+			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE, 0);
 		}
 
 		vehic.bomb1.cnt = time + 1;
@@ -776,7 +780,7 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
 
         if(!dropmark)
         {
-            dropmark = spawn();
+            dropmark = new(raptor_dropmark);
             dropmark.owner = player;
             dropmark.gravity = 1;
             dropmark.dphitcontentsmask = DPCONTENTS_SOLID;

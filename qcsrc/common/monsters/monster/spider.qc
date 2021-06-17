@@ -1,5 +1,9 @@
 #include "spider.qh"
 
+#if defined(SVQC)
+	#include <common/mutators/base.qh>
+#endif
+
 #ifdef SVQC
 
 .float spider_slowness; // effect time of slowness inflicted by spiders
@@ -104,7 +108,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, DMG_NOWEP, NULL);
 
-		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterid != MON_SPIDER.monsterid,
+		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterdef != MON_SPIDER,
 		{
 			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 		});
@@ -124,8 +128,6 @@ void M_Spider_Attack_Web_Touch(entity this, entity toucher)
 
 	M_Spider_Attack_Web_Explode(this);
 }
-
-void adaptor_think2use_hittype_splash(entity this);
 
 void M_Spider_Attack_Web(entity this)
 {
@@ -185,7 +187,7 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	return false;
 }
 
-spawnfunc(monster_spider) { Monster_Spawn(this, true, MON_SPIDER.monsterid); }
+spawnfunc(monster_spider) { Monster_Spawn(this, true, MON_SPIDER); }
 #endif // SVQC
 
 #ifdef SVQC

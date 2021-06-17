@@ -1,14 +1,89 @@
 #include "weapons.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>
 
 // Weapons (#0)
 
-entity weaponorder[Weapons_MAX];
+void HUD_Weapons_Export(int fh)
+{
+	HUD_Write_Cvar("hud_panel_weapons_accuracy");
+	HUD_Write_Cvar("hud_panel_weapons_label");
+	HUD_Write_Cvar("hud_panel_weapons_label_scale");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_padding");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_time");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_fadetime");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_outofammo");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_donthave");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_unavailable");
+	HUD_Write_Cvar("hud_panel_weapons_ammo");
+	HUD_Write_Cvar("hud_panel_weapons_ammo_color");
+	HUD_Write_Cvar("hud_panel_weapons_ammo_alpha");
+	HUD_Write_Cvar("hud_panel_weapons_aspect");
+	HUD_Write_Cvar("hud_panel_weapons_timeout");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_effect");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_fadebgmin");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_fadefgmin");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_speed_in");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_speed_out");
+	HUD_Write_Cvar("hud_panel_weapons_onlyowned");
+	HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
+	HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
+	HUD_Write_Cvar("hud_panel_weapons_selection_radius");
+	HUD_Write_Cvar("hud_panel_weapons_selection_speed");
+}
+
+void Accuracy_LoadLevels()
+{
+	if(autocvar_accuracy_color_levels != acc_color_levels)
+	{
+		strcpy(acc_color_levels, autocvar_accuracy_color_levels);
+		acc_levels = tokenize_console(acc_color_levels);
+		if(acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+		if(acc_levels < 2)
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values");
+
+		int i;
+		for(i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i)) / 100.0;
+	}
+}
+
+void Accuracy_LoadColors()
+{
+	if(time > acc_col_loadtime)
+	if(acc_levels >= 2)
+	{
+		int i;
+		for(i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+		acc_col_loadtime = time + 2;
+	}
+}
+
+vector Accuracy_GetColor(float accuracy)
+{
+	float factor;
+	vector color;
+	if(acc_levels < 2)
+		return '0 0 0'; // return black, can't determine the right color
+
+	// find the max level lower than acc
+	int j = acc_levels-1;
+	while(j && accuracy < acc_lev[j])
+		--j;
+
+	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
+	factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+	color = acc_col[j];
+	color = color + factor * (acc_col[j+1] - color);
+	return color;
+}
+
+entity weaponorder[REGISTRY_MAX(Weapons)];
 void weaponorder_swap(int i, int j, entity pass)
 {
 	TC(int, i); TC(int, j);
@@ -32,7 +107,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
 		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) nHidden += 1; \
 	}); \
-	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
+	vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
 	rows = table_size.y; \
 	weapon_size.x = panel_size.x / columns; \
@@ -106,7 +181,7 @@ void HUD_Weapons()
 
 		int weapon_cnt = 0;
 		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, weaponorder[weapon_cnt++] = it);
-		for(i = weapon_cnt; i < Weapons_MAX; ++i)
+		for(i = weapon_cnt; i < REGISTRY_MAX(Weapons); ++i)
 			weaponorder[i] = NULL;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, NULL);
 
@@ -149,8 +224,8 @@ void HUD_Weapons()
 				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
 			});
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((Weapons_COUNT - 1) - nHidden));
-			for(i = 0, j = 0; i <= (Weapons_COUNT - 1) && j < countw; ++i)
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((REGISTRY_COUNT(Weapons) - 1) - nHidden));
+			for(i = 0, j = 0; i <= (REGISTRY_COUNT(Weapons) - 1) && j < countw; ++i)
 			{
 				if(weaponorder[i].spawnflags & WEP_FLAG_MUTATORBLOCKED)
 					continue;
@@ -243,7 +318,7 @@ void HUD_Weapons()
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = (Weapons_COUNT - 1);
+		weapon_count = (REGISTRY_COUNT(Weapons) - 1);
 
 	// animation for fading in/out the panel respectively when not in use
 	if(!autocvar__hud_configure)

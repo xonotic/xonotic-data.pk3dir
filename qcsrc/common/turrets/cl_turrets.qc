@@ -1,4 +1,5 @@
 #include "cl_turrets.qh"
+
 void turret_remove(entity this)
 {
 	delete(this.tur_head);
@@ -87,9 +88,9 @@ void turret_draw2d(entity this)
 		if(hud != HUD_NORMAL)
 		{
 			if((get_turretinfo(this.m_id)).spawnflags & TUR_FLAG_MOVE)
-				txt = "gfx/vehicles/turret_moving.tga";
+				txt = "gfx/vehicles/turret_moving";
 			else
-				txt = "gfx/vehicles/turret_stationary.tga";
+				txt = "gfx/vehicles/turret_stationary";
 
 			vector pz = drawgetimagesize(txt) * autocvar_cl_vehicles_crosshair_size;
 			drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.7, DRAWFLAG_NORMAL);
@@ -376,8 +377,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.angles_x = ReadAngle();
-		this.angles_y = ReadAngle();
+		this.angles = ReadAngleVector2D();
 
 		turret_construct(this, isnew);
 		this.colormap = 1024;

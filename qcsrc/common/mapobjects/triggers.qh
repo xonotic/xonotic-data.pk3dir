@@ -8,12 +8,16 @@
 
 .float height;
 
-#define IFTARGETED if(this.targetname && this.targetname != "")
-
 .float lip;
+
+// handy fields used by a lot of the codebase, but more importantly used by map objects
+.float cnt;
+.float count;
 
 // used elsewhere (will fix)
 #ifdef SVQC
+.string message2;
+
 void trigger_common_write(entity this, bool withtarget);
 
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
@@ -48,7 +52,6 @@ void generic_netlinked_legacy_use(entity this, entity actor, entity trigger);
 void trigger_common_read(entity this, bool withtarget);
 void trigger_remove_generic(entity this);
 
-.float active;
 .string target;
 .string targetname;
 #endif

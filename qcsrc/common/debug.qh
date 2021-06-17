@@ -1,7 +1,9 @@
 #pragma once
 
 #ifdef CSQC
+#include <client/draw.qh>
 #include <client/resources.qh>
+#include <client/view.qh>
 #endif
 
 
@@ -187,7 +189,7 @@ bool autocvar_debugdraw;
 			default:
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
+				LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
 				return;
 			}
 		}
@@ -211,7 +213,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get <bufhandle> <string_index>");
 			return;
 		}
 	}
@@ -230,7 +232,7 @@ GENERIC_COMMAND(version, "Print the current version", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " version");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " version");
 			return;
 		}
 	}
@@ -266,7 +268,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
 			return;
 		}
 	}
@@ -335,7 +337,7 @@ STATIC_INIT(TRACE_ENT)
 #endif
 
 
-GENERIC_COMMAND(find, "Search through entities for matching classname", false)
+GENERIC_COMMAND(findent, "Search through entities for matching classname", false)
 {
 	switch (request)
 	{
@@ -344,22 +346,20 @@ GENERIC_COMMAND(find, "Search through entities for matching classname", false)
 			int entcnt = 0;
 			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
 			{
-				LOG_INFOF("%i (%s)", it, it.classname);
+				LOG_HELPF("%i (%s)", it, it.classname);
 				++entcnt;
 			});
 			if(entcnt)
-				LOG_INFOF("Found %d entities", entcnt);
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2find^7");
-        }
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname");
-			LOG_INFO("  Where 'classname' is the classname to search for.");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find <classname>");
+			LOG_HELP("  Where <classname> is the classname to search for.");
 			return;
 		}
 	}
@@ -372,16 +372,32 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
+			vector org = stov(argv(1));
+			float dist = stof(argv(2));
+			int entcnt = 0;
+			FOREACH_ENTITY_ORDERED(true,
+			{
+				if (dist > 0)
+				{
+					if (!vdist(it.origin - org, <, dist))
+						continue;
+				}
+				else if (it.origin != org)
+					continue;
+				LOG_HELPF("%i (%s)", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2findat^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat <position> [<dist>]");
+			LOG_HELP("  Where <position> is a vector \"x y z\"");
 			return;
 		}
 	}

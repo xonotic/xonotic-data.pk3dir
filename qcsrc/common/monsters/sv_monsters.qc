@@ -1,25 +1,32 @@
 #include "sv_monsters.qh"
 
-#include <lib/warpzone/common.qh>
-#include "../constants.qh"
-#include "../teams.qh"
-#include "../util.qh"
-#include "all.qh"
-#include "../physics/movelib.qh"
-#include "../weapons/_mod.qh"
-#include <server/autocvars.qh>
-#include <server/defs.qh>
-#include "../deathtypes/all.qh"
-#include <server/mutators/_mod.qh>
-#include <server/steerlib.qh>
-#include "../turrets/sv_turrets.qh"
-#include "../turrets/util.qh"
-#include "../vehicles/all.qh"
-#include <server/campaign.qh>
-#include <server/command/_mod.qh>
-#include "../mapobjects/triggers.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/all.qh>
+#include <common/mutators/mutator/nades/nades.qh>
+#include <common/physics/movelib.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/turrets/sv_turrets.qh>
+#include <common/turrets/util.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/_mod.qh>
 #include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/_mod.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
 #include <server/round_handler.qh>
+#include <server/steerlib.qh>
 #include <server/weapons/_mod.qh>
 
 void monsters_setstatus(entity this)
@@ -78,7 +85,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 
 	if((targ == this)
 	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
-	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
+	|| (IS_VEHICLE(targ) && !(this.monsterdef.spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
 	|| (game_stopped)
@@ -128,7 +135,7 @@ entity Monster_FindTarget(entity this)
 	{
 		if(Monster_ValidTarget(this, it))
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			vector targ_center = CENTER_OR_VIEWOFS(it);
 
 			if(closest_target)
@@ -211,7 +218,7 @@ void Monster_Delay_Action(entity this)
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
 {
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
-	entity e = spawn();
+	entity e = new_pure(Monster_Delay);
 
 	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;
@@ -260,7 +267,7 @@ void Monster_Sound_Precache(string f)
 
 void Monster_Sounds_Precache(entity this)
 {
-	string m = (Monsters_from(this.monsterid)).m_model.model_str();
+	string m = this.monsterdef.m_model.model_str();
 	float globhandle, n, i;
 	string f;
 
@@ -465,7 +472,7 @@ void Monster_UpdateModel(entity this)
 	this.anim_die2   = animfixfps(this, '9 1 0.01', '0 0 0');*/
 
 	// then get the real values
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	mon.mr_anim(mon, this);
 }
 
@@ -512,7 +519,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterid); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterdef); }
 
 .vector	pos1, pos2;
 
@@ -878,16 +885,16 @@ void Monster_Dead_Think(entity this)
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
 	this.enemy = actor;
-	Monster_Spawn(this, false, this.monsterid);
+	Monster_Spawn(this, false, this.monsterdef);
 }
 
-bool Monster_Appear_Check(entity this, int monster_id)
+bool Monster_Appear_Check(entity this, Monster monster_id)
 {
 	if(!(this.spawnflags & MONSTERFLAG_APPEAR))
 		return false;
 
 	setthink(this, func_null);
-	this.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
+	this.monsterdef = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	this.nextthink = 0;
 	this.use = Monster_Appear;
 	this.flags = FL_MONSTER; // set so this monster can get butchered
@@ -977,7 +984,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	CSQCModel_UnlinkEntity(this);
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
@@ -1008,7 +1015,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	float take = v.x;
 	//float save = v.y;
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	take = mon.mr_pain(mon, this, take, attacker, deathtype);
 
 	if(take)
@@ -1145,7 +1152,7 @@ void Monster_Anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, (IS_ONGROUND(this)));
@@ -1166,7 +1173,8 @@ void Monster_Frozen_Think(entity this)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
-		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
+		if (this.iceblock)
+			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
 			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
@@ -1235,7 +1243,7 @@ void Monster_Think(entity this)
 		this.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	if(mon.mr_think(mon, this))
 	{
 		Monster_Move(this, this.speed2, this.speed, this.stopspeed);
@@ -1251,7 +1259,7 @@ void Monster_Think(entity this)
 
 bool Monster_Spawn_Setup(entity this)
 {
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	mon.mr_setup(mon, this);
 
 	// ensure some basic needs are met
@@ -1296,7 +1304,7 @@ bool Monster_Spawn_Setup(entity this)
 	if(autocvar_g_monsters_healthbars)
 	{
 		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, this, '0 0 1' * (this.maxs.z + 15), NULL, this.team, this, sprite, true, RADARICON_DANGER);
-		wp.wp_extra = this.monsterid;
+		wp.wp_extra = this.monsterdef.monsterid;
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0 0');
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE))
 		{
@@ -1314,12 +1322,11 @@ bool Monster_Spawn_Setup(entity this)
 	return true;
 }
 
-bool Monster_Spawn(entity this, bool check_appear, int mon_id)
+bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 {
 	// setup the basic required properties for a monster
-	entity mon = Monsters_from(mon_id);
-	if(!mon.monsterid) { return false; } // invalid monster
 
+	if(!mon || mon == MON_Null) { return false; } // invalid monster
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED) && !(this.flags & FL_MONSTER))
@@ -1331,7 +1338,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 			precache_model(this.mdl_dead);
 	}
 
-	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
+	if(check_appear && Monster_Appear_Check(this, mon)) { return true; } // return true so the monster isn't removed
 
 	if(!this.monster_skill)
 		this.monster_skill = cvar("g_monsters_skill");
@@ -1364,7 +1371,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;
-	this.monsterid			= mon_id;
+	this.monsterdef			= mon;
 	this.event_damage		= Monster_Damage;
 	this.event_heal			= Monster_Heal;
 	settouch(this, Monster_Touch);

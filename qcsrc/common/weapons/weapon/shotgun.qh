@@ -10,6 +10,8 @@ CLASS(Shotgun, Weapon)
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Shotgun, m_model, Model, MDL_SHOTGUN_ITEM);
+/* flash mdl */ ATTRIB(Shotgun, m_muzzlemodel, Model, MDL_SHOTGUN_MUZZLEFLASH);
+/* flash eff */ ATTRIB(Shotgun, m_muzzleeffect, entity, EFFECT_SHOTGUN_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);

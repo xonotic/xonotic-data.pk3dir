@@ -1,8 +1,14 @@
 #pragma once
 
+#if defined(SVQC)
+	#include <server/chat.qh>
+#endif
+
 #ifdef SVQC
 	/** Use new sound handling. TODO: use when sounds play correctly on clients */
 	bool autocvar_g_debug_globalsounds = false;
+	bool autocvar_sv_taunt;
+	bool autocvar_sv_autotaunt;
 #endif
 
 // player sounds, voice messages
@@ -11,7 +17,6 @@
 ..string m_playersoundfld;
 
 REGISTRY(PlayerSounds, BITS(8) - 1)
-#define PlayerSounds_from(i) _PlayerSounds_from(i, NULL)
 #define REGISTER_PLAYERSOUND(id) \
 	.string _playersound_##id; \
 	REGISTER(PlayerSounds, playersound, id, m_id, new_pure(PlayerSound)) \
@@ -21,6 +26,8 @@ REGISTRY(PlayerSounds, BITS(8) - 1)
 	}
 REGISTER_REGISTRY(PlayerSounds)
 REGISTRY_SORT(PlayerSounds)
+
+REGISTRY_DEFINE_GET(PlayerSounds, NULL)
 STATIC_INIT(PlayerSounds_renumber)
 {
 	FOREACH(PlayerSounds, true, it.m_id = i);
@@ -84,7 +91,6 @@ REGISTER_VOICEMSG(seenenemy, VOICETYPE_TEAMRADIO, false)
 
 .string m_globalsoundstr;
 REGISTRY(GlobalSounds, BITS(8) - 1)
-#define GlobalSounds_from(i) _GlobalSounds_from(i, NULL)
 #define REGISTER_GLOBALSOUND(id, str) \
 	REGISTER(GlobalSounds, GS, id, m_id, new_pure(GlobalSound)) \
 	{ \
@@ -92,6 +98,8 @@ REGISTRY(GlobalSounds, BITS(8) - 1)
 	}
 REGISTER_REGISTRY(GlobalSounds)
 REGISTRY_SORT(GlobalSounds)
+
+REGISTRY_DEFINE_GET(GlobalSounds, NULL)
 STATIC_INIT(GlobalSounds_renumber)
 {
 	FOREACH(GlobalSounds, true, it.m_id = i);
@@ -120,6 +128,8 @@ void PrecachePlayerSounds(string f);
 entity GetVoiceMessage(string type);
 
 string GlobalSound_sample(string pair, float r);
+
+float GlobalSound_pitch(float _pitch);
 
 #ifdef SVQC
 

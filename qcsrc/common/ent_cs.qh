@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef CSQC
-#include <client/defs.qh>
+#include <client/csqcmodel_hooks.qh>
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
@@ -12,9 +12,6 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 .bool m_entcs_private;
 
 /** True when origin is available */
-// FIXME: it seems sometimes this is false when observing even though observers should be able to know about all players
-// easily reproducible on heart_v2 or The_Yard with bots - might be because they lack waypoints and bots stand still
-// it has happened in matches with players and no bots but much more rarely
 .bool has_origin;
 
 /** True when a recent server sent origin has been received */
@@ -46,6 +43,10 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	.int m_forceupdate;
 
 	void entcs_force_origin(entity player);
+
+	void entcs_update_players(entity player);
+
+	bool radar_showenemies;
 
 #endif
 

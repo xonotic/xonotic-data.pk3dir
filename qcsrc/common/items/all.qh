@@ -4,17 +4,31 @@
 
 #include "item.qh"
 
-// 24 so it matches the limit for the .items field
-REGISTRY(Items, 24)
-#define Items_from(i) _Items_from(i, NULL)
+// NOTE: 24 is the limit for the .items field
+REGISTRY(Items, 32)
 #ifdef GAMEQC
 REGISTRY_DEPENDS(Items, Models)
 #endif
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
 
+#ifdef CSQC
+// Copy Items registry here before it gets sorted alphabetically by REGISTRY_SORT
+// so we can keep items sorted by categories (as they appear in the code)
+IntrusiveList default_order_items;
+STATIC_INIT(default_order_items)
+{
+	default_order_items = IL_NEW();
+	FOREACH(Items, true, {
+		IL_PUSH(default_order_items, it);
+	});
+}
+#endif
+
 REGISTRY_SORT(Items)
 REGISTRY_CHECK(Items)
+
+REGISTRY_DEFINE_GET(Items, NULL)
 STATIC_INIT(Items) { FOREACH(Items, true, it.m_id = i); }
 
 void Dump_Items();
@@ -27,7 +41,7 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_INFOF("Usage:^3 %s dumpitems", GetProgramCommandPrefix());
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpitems");
             return;
         }
     }

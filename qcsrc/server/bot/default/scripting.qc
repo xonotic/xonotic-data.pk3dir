@@ -1,14 +1,15 @@
 #include "scripting.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "cvars.qh"
-
-#include <common/state.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/physics/player.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-
-#include "bot.qh"
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 
 .int state;
 
@@ -345,7 +346,7 @@ void bot_cmdhelp(string scmd)
 		switch(ntype)
 		{
 			case BOT_CMD_PARAMETER_FLOAT:
-				stype = "float number";
+				stype = "float";
 				break;
 			case BOT_CMD_PARAMETER_STRING:
 				stype = "string";
@@ -358,90 +359,85 @@ void bot_cmdhelp(string scmd)
 				break;
 		}
 
-		string prelude = strcat(
-		    "Command: ", bot_cmd_string[i], "\n",
-		    "Parameter: <", stype, ">", "\n",
-		    "Description: "
-        );
+		string desc = "";
 		switch(i)
 		{
 			case BOT_CMD_PAUSE:
-				LOG_INFO(prelude, "Stops the bot completely. Any command other than 'continue' will be ignored.");
+				desc = "Stops the bot completely. Any command other than 'continue' will be ignored.";
 				break;
 			case BOT_CMD_CONTINUE:
-				LOG_INFO(prelude, "Disable paused status");
+				desc = "Disable paused status";
 				break;
 			case BOT_CMD_WAIT:
-				LOG_INFO(prelude, "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
+				desc = "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed";
 				break;
 			case BOT_CMD_WAIT_UNTIL:
-				LOG_INFO(prelude, "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
+				desc = "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed";
 				break;
 			case BOT_CMD_BARRIER:
-				LOG_INFO(prelude, "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
+				desc = "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed";
 				break;
 			case BOT_CMD_TURN:
-				LOG_INFO(prelude, "Look to the right or left N degrees. For turning to the left use positive numbers.");
+				desc = "Look to the right or left N degrees. For turning to the left use positive numbers.";
 				break;
 			case BOT_CMD_MOVETO:
-				LOG_INFO(prelude, "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
+				desc = "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'";
 				break;
 			case BOT_CMD_MOVETOTARGET:
-				LOG_INFO(prelude, "Walk to the specific target on the map");
+				desc = "Walk to the specific target on the map";
 				break;
 			case BOT_CMD_RESETGOAL:
-				LOG_INFO(prelude, "Resets the goal stack");
+				desc = "Resets the goal stack";
 				break;
 			case BOT_CMD_CC:
-				LOG_INFO(prelude, "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
+				desc = "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;";
 				break;
 			case BOT_CMD_IF:
-				LOG_INFO(prelude, "Perform simple conditional execution.\n"
-                    "Syntax: \n"
-                    "        sv_cmd .. if \"condition\"\n"
-                    "        sv_cmd .. 	<instruction if true>\n"
-                    "        sv_cmd .. 	<instruction if true>\n"
-                    "        sv_cmd .. else\n"
-                    "        sv_cmd .. 	<instruction if false>\n"
-                    "        sv_cmd .. 	<instruction if false>\n"
-                    "        sv_cmd .. fi\n"
-                    "Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
-                    "            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
-                    "Fields: health, speed, flagcarrier\n"
-                    "Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;"
-				);
+				desc = "Perform simple conditional execution.\n"
+					"Syntax: \n"
+					"        sv_cmd .. if \"condition\"\n"
+					"        sv_cmd .. 	<instruction if true>\n"
+					"        sv_cmd .. 	<instruction if true>\n"
+					"        sv_cmd .. else\n"
+					"        sv_cmd .. 	<instruction if false>\n"
+					"        sv_cmd .. 	<instruction if false>\n"
+					"        sv_cmd .. fi\n"
+					"Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
+					"            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
+					"Fields: health, speed, flagcarrier\n"
+					"Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;";
 				break;
 			case BOT_CMD_RESETAIM:
-				LOG_INFO(prelude, "Points the aim to the coordinates x,y 0,0");
+				desc = "Points the aim to the coordinates x,y 0,0";
 				break;
 			case BOT_CMD_AIM:
-				LOG_INFO(prelude, "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
+				desc = "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
 					"There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n"
 					"Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n"
-					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds"
-				);
+					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds";
 				break;
 			case BOT_CMD_AIMTARGET:
-				LOG_INFO(prelude, "Points the aim to given target");
+				desc = "Points the aim to given target";
 				break;
 			case BOT_CMD_PRESSKEY:
-				LOG_INFO(prelude, "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use");
-				LOG_INFO("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
-				LOG_INFO("Note: The script will not return the control to the bot ai until all keys are released");
+				desc = "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use"
+					"Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called"
+					"Note: The script will not return the control to the bot ai until all keys are released";
 				break;
 			case BOT_CMD_RELEASEKEY:
-				LOG_INFO(prelude, "Release previoulsy used keys. Use the parameter \"all\" to release all keys");
+				desc = "Release previoulsy used keys. Use the parameter \"all\" to release all keys";
 				break;
 			case BOT_CMD_SOUND:
-				LOG_INFO(prelude, "play sound file at bot location");
+				desc = "play sound file at bot location";
 				break;
 			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
-				LOG_INFO(prelude, "verify the state of the weapon entity");
+				desc = "verify the state of the weapon entity";
 				break;
 			default:
-				LOG_INFO(prelude, "This command has no description yet.");
+				desc = "This command has no description yet.";
 				break;
 		}
+		LOG_HELP("Command: ", bot_cmd_string[i], "\nParameter: <", stype, ">", "\nDescription: ", desc);
 	}
 }
 
@@ -453,17 +449,14 @@ void bot_list_commands()
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
-	LOG_INFO(
-	    "List of all available commands:\n"
-	    "  Command - Parameter Type\n"
-    );
+	LOG_HELP("Bot commands:");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
 		switch(bot_cmd_parm_type[i])
 		{
 			case BOT_CMD_PARAMETER_FLOAT:
-				ptype = "float number";
+				ptype = "float";
 				break;
 			case BOT_CMD_PARAMETER_STRING:
 				ptype = "string";
@@ -475,8 +468,12 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		LOG_INFO("  ", bot_cmd_string[i]," - <", ptype, ">");
+		if (ptype != "none")
+			LOG_HELP("  ^2", bot_cmd_string[i]," ^7<", ptype, ">");
+		else
+			LOG_HELP("  ^2", bot_cmd_string[i]);
 	}
+	LOG_HELP("For help about a specific command, type bot_cmd help <command>");
 }
 
 // Commands code
@@ -496,8 +493,8 @@ float bot_cmd_impulse(entity this)
 
 float bot_cmd_continue(entity this)
 {
-	bot_relinkplayerlist();
 	this.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
+	bot_relinkplayerlist();
 	return CMD_STATUS_FINISHED;
 }
 
@@ -588,10 +585,10 @@ float bot_cmd_select_weapon(entity this)
 		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
 			continue;
 
-		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
+		if(client_hasweapon(this, REGISTRY_GET(Weapons, id), weaponentity, true, false))
 		{
 			success = true;
-			this.(weaponentity).m_switchweapon = Weapons_from(id);
+			this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, id);
 		}
 	}
 
@@ -1003,6 +1000,11 @@ float bot_cmd_releasekey(entity this)
 	return bot_cmd_keypress_handler(this, key,false);
 }
 
+bool bot_ispaused(entity this)
+{
+	return(this.bot_exec_status & BOT_EXEC_STATUS_PAUSED);
+}
+
 float bot_cmd_pause(entity this)
 {
 	PHYS_INPUT_BUTTON_DRAG(this) = false;
@@ -1017,8 +1019,8 @@ float bot_cmd_pause(entity this)
 	CS(this).movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
-	bot_clear(this);
 	this.bot_exec_status |= BOT_EXEC_STATUS_PAUSED;
+	bot_relinkplayerlist();
 	return CMD_STATUS_FINISHED;
 }
 
@@ -1211,12 +1213,12 @@ float bot_execute_commands_once(entity this)
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
-	if(this.bot_cmd_condition_status & CMD_CONDITION_true && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
+	if((this.bot_cmd_condition_status & CMD_CONDITION_true) && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
 	{
 		bot_command_executed(this, true);
 		return -1;
 	}
-	else if(this.bot_cmd_condition_status & CMD_CONDITION_false && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
+	else if((this.bot_cmd_condition_status & CMD_CONDITION_false) && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
 	{
 		bot_command_executed(this, true);
 		return -1;

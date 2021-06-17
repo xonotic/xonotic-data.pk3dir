@@ -1,0 +1,156 @@
+#pragma once
+
+#include <common/weapons/_all.qh>
+
+bool autocvar__sv_init;
+bool autocvar_g_use_ammunition;
+bool autocvar_g_jetpack;
+bool autocvar_g_warmup_allguns;
+bool autocvar_g_warmup_allow_timeout;
+#define autocvar_g_weaponarena cvar_string("g_weaponarena")
+string autocvar_quit_and_redirect;
+float autocvar_quit_and_redirect_timer;
+bool autocvar_quit_when_empty;
+string autocvar_sessionid;
+bool autocvar_sv_curl_serverpackages_auto;
+bool autocvar_sv_db_saveasdump;
+bool autocvar_sv_logscores_bots;
+bool autocvar_sv_logscores_console;
+bool autocvar_sv_logscores_file;
+string autocvar_sv_logscores_filename;
+float autocvar_sv_mapchange_delay;
+float autocvar_timelimit_increment;
+float autocvar_timelimit_decrement;
+float autocvar_timelimit_min;
+float autocvar_timelimit_max;
+float autocvar_timelimit_overtime;
+int autocvar_timelimit_overtimes;
+float autocvar_timelimit_suddendeath;
+
+float checkrules_equality;
+float checkrules_suddendeathwarning;
+float checkrules_suddendeathend;
+float checkrules_overtimesadded; //how many overtimes have been already added
+
+// flag set on worldspawn so that the code knows if it is dedicated or not
+bool server_is_dedicated;
+
+int world_initialized;
+
+string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
+
+string modname;
+
+string gamemode_name;
+
+string record_type;
+
+string clientstuff;
+
+string matchid;
+
+.string fog;
+
+string redirection_target;
+
+string cache_mutatormsg;
+string cache_lastmutatormsg;
+
+float default_player_alpha;
+float default_weapon_alpha;
+
+float g_pickup_shells_max;
+float g_pickup_nails_max;
+float g_pickup_rockets_max;
+float g_pickup_cells_max;
+float g_pickup_plasma_max;
+float g_pickup_fuel_max;
+float g_pickup_weapons_anyway;
+float g_weaponarena;
+WepSet g_weaponarena_weapons;
+float g_weaponarena_random; // TODO
+string g_weaponarena_list;
+
+WepSet start_weapons;
+WepSet start_weapons_default;
+WepSet start_weapons_defaultmask;
+int start_items;
+float start_ammo_shells;
+float start_ammo_nails;
+float start_ammo_rockets;
+float start_ammo_cells;
+float start_ammo_plasma;
+float start_ammo_fuel;
+/// \brief Number of random start weapons to give to players.
+int random_start_weapons_count;
+/// \brief Holds a list of possible random start weapons.
+string autocvar_g_random_start_weapons;
+/// \brief Entity that contains amount of ammo to give with random start
+/// weapons.
+entity random_start_ammo;
+float start_health;
+float start_armorvalue;
+WepSet warmup_start_weapons;
+WepSet warmup_start_weapons_default;
+WepSet warmup_start_weapons_defaultmask;
+#define WARMUP_START_WEAPONS ((autocvar_g_warmup_allguns == 1) ? (warmup_start_weapons & (weaponsInMap | start_weapons)) : warmup_start_weapons)
+float warmup_start_ammo_shells;
+float warmup_start_ammo_nails;
+float warmup_start_ammo_rockets;
+float warmup_start_ammo_cells;
+float warmup_start_ammo_plasma;
+float warmup_start_ammo_fuel;
+float warmup_start_health;
+float warmup_start_armorvalue;
+float g_weapon_stay;
+
+float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
+
+float g_grappling_hook;
+float warmup_stage;
+
+bool sv_ready_restart_after_countdown;
+
+.void(entity this) initialize_entity;
+.int initialize_entity_order;
+.entity initialize_entity_next;
+entity initialize_entity_first;
+
+void InitializeEntitiesRun();
+
+void InitializeEntity(entity e, void(entity this) func, int order);
+
+// database
+float ServerProgsDB;
+float TemporaryDB;
+
+.float winning;
+const int WINNING_NO = 0; // no winner, but time limits may terminate the game
+const int WINNING_YES = 1; // winner found
+const int WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
+const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
+
+float WinningCondition_Scores(float limit, float leadlimit);
+void SetWinners(.float field, float value);
+void ReadyRestart();
+
+void DumpStats(float final);
+
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+
+void CheckRules_World();
+float RedirectionThink();
+
+void readplayerstartcvars();
+
+void readlevelcvars();
+
+.vector dropped_origin;
+void droptofloor(entity this);
+
+IntrusiveList g_moveables;
+STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }

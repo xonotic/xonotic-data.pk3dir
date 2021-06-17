@@ -192,7 +192,9 @@ bool jumppad_push(entity this, entity targ)
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		targ.oldvelocity = targ.velocity;
 
-		if(this.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
+		// prevent sound spam when a player hits the jumppad more than once
+		// or when a dead player gets stuck in the jumppad for some reason
+		if(this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
@@ -571,8 +573,6 @@ float trigger_push_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.height);
 
-	WriteVector(MSG_ENTITY, this.movedir);
-
 	trigger_common_write(this, true);
 
 	return true;
@@ -636,9 +636,7 @@ bool target_push_send(entity this, entity to, float sf)
 	WriteString(MSG_ENTITY, this.targetname);
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngle(MSG_ENTITY, this.angles_x);
-	WriteAngle(MSG_ENTITY, this.angles_y);
-	WriteAngle(MSG_ENTITY, this.angles_z);
+	WriteAngleVector(MSG_ENTITY, this.angles);
 
 	return true;
 }
@@ -694,17 +692,10 @@ spawnfunc(target_position)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
-	this.classname = "jumppad";
-	int mytm = ReadByte();
-	if(mytm)
-	{
-		this.team = mytm - 1;
-	}
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();
-
-	this.movedir = ReadVector();
 
 	trigger_common_read(this, true);
 
@@ -725,14 +716,11 @@ void target_push_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
-	this.classname = "push_target";
 	this.cnt = ReadByte();
 	this.targetname = strzone(ReadString());
 	this.origin = ReadVector();
 
-	this.angles_x = ReadAngle();
-	this.angles_y = ReadAngle();
-	this.angles_z = ReadAngle();
+	this.angles = ReadAngleVector();
 
 	return = true;
 

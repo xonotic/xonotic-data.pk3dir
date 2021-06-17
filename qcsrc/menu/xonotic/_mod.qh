@@ -19,7 +19,7 @@
 #include <menu/xonotic/demolist.qh>
 #include <menu/xonotic/dialog.qh>
 #include <menu/xonotic/dialog_credits.qh>
-#include <menu/xonotic/dialog_disconnect.qc>
+#include <menu/xonotic/dialog_disconnect.qh>
 #include <menu/xonotic/dialog_firstrun.qh>
 #include <menu/xonotic/dialog_hudpanel_ammo.qh>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qh>
@@ -37,6 +37,7 @@
 #include <menu/xonotic/dialog_hudpanel_racetimer.qh>
 #include <menu/xonotic/dialog_hudpanel_radar.qh>
 #include <menu/xonotic/dialog_hudpanel_score.qh>
+#include <menu/xonotic/dialog_hudpanel_strafehud.qh>
 #include <menu/xonotic/dialog_hudpanel_timer.qh>
 #include <menu/xonotic/dialog_hudpanel_vote.qh>
 #include <menu/xonotic/dialog_hudpanel_weapons.qh>

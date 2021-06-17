@@ -1,19 +1,15 @@
 #include "sv_assault.qh"
 
+#include <server/command/vote.qh>
 #include <common/mapobjects/func/breakable.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/turrets/sv_turrets.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/spawnpoints.qh>
 
 .entity sprite;
 #define AS_ROUND_DELAY 5
-
-IntrusiveList g_assault_destructibles;
-IntrusiveList g_assault_objectivedecreasers;
-IntrusiveList g_assault_objectives;
-STATIC_INIT(g_assault)
-{
-	g_assault_destructibles = IL_NEW();
-	g_assault_objectivedecreasers = IL_NEW();
-	g_assault_objectives = IL_NEW();
-}
 
 // random functions
 void assault_objective_use(entity this, entity actor, entity trigger)
@@ -123,7 +119,6 @@ void target_objective_decrease_activate(entity this)
 		spr = WaypointSprite_SpawnFixed(WP_AssaultDefend, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
-		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(it.classname == "func_assault_destructible")
 		{
@@ -306,7 +301,6 @@ spawnfunc(target_objective)
 {
 	if (!g_assault) { delete(this); return; }
 
-	this.classname = "target_objective";
 	IL_PUSH(g_assault_objectives, this);
 	this.use = assault_objective_use;
 	this.reset = assault_objective_reset;
@@ -318,7 +312,6 @@ spawnfunc(target_objective_decrease)
 {
 	if (!g_assault) { delete(this); return; }
 
-	this.classname = "target_objective_decrease";
 	IL_PUSH(g_assault_objectivedecreasers, this);
 
 	if(!this.dmg)
@@ -354,7 +347,6 @@ spawnfunc(func_assault_destructible)
 	if (!g_assault) { delete(this); return; }
 
 	this.spawnflags = 3;
-	this.classname = "func_assault_destructible";
 	this.event_heal = destructible_heal;
 	IL_PUSH(g_assault_destructibles, this);
 
@@ -363,14 +355,13 @@ spawnfunc(func_assault_destructible)
 	else
 		this.team = NUM_TEAM_1;
 
-	spawnfunc_func_breakable(this);
+	func_breakable_setup(this);
 }
 
 spawnfunc(func_assault_wall)
 {
 	if (!g_assault) { delete(this); return; }
 
-	this.classname = "func_assault_wall";
 	this.mdl = this.model;
 	_setmodel(this, this.mdl);
 	this.solid = SOLID_BSP;
@@ -384,7 +375,6 @@ spawnfunc(target_assault_roundend)
 	if (!g_assault) { delete(this); return; }
 
 	this.winning = 0; // round not yet won by attackers
-	this.classname = "target_assault_roundend";
 	this.use = target_assault_roundend_use;
 	this.cnt = 0; // first round
 	this.reset = target_assault_roundend_reset;
@@ -395,7 +385,6 @@ spawnfunc(target_assault_roundstart)
 	if (!g_assault) { delete(this); return; }
 
 	assault_attacker_team = NUM_TEAM_1;
-	this.classname = "target_assault_roundstart";
 	this.use = assault_roundstart_use;
 	this.reset2 = assault_roundstart_use_this;
 	InitializeEntity(this, assault_roundstart_use_this, INITPRIO_FINDTARGET);

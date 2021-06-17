@@ -1,10 +1,6 @@
 #pragma once
 
 #ifdef SVQC
-	#include <server/autocvars.qh>
-#endif
-
-#ifdef SVQC
 float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity); // returns the number of traces done, for benchmarking
 
 void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity);
@@ -197,8 +193,11 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 #ifdef GAMEQC
 	#ifdef CSQC
+		bool autocvar_cl_gentle;
+		int autocvar_cl_gentle_messages;
 		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
 	#else
+		int autocvar_sv_gentle;
 		#define GENTLE autocvar_sv_gentle
 	#endif
 	#define normal_or_gentle(normal, gentle) ((GENTLE && (gentle != "")) ? gentle : normal)
@@ -211,7 +210,7 @@ vector animfixfps(entity e, vector a, vector b);
 #ifdef GAMEQC
 const int CNT_NORMAL = 1;
 const int CNT_GAMESTART = 2;
-const int CNT_IDLE = 3;
+//const int CNT_IDLE = 3;
 const int CNT_KILL = 4;
 const int CNT_RESPAWN = 5;
 const int CNT_ROUNDSTART = 6;
@@ -227,3 +226,31 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 
 // Returns the correct difference between two always increasing numbers
 #define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)
+
+#ifdef SVQC
+void attach_sameorigin(entity e, entity to, string tag);
+void detach_sameorigin(entity e);
+void follow_sameorigin(entity e, entity to);
+
+void SetMovetypeFollow(entity ent, entity e);
+void UnsetMovetypeFollow(entity ent);
+int LostMovetypeFollow(entity ent);
+#endif
+
+#ifdef GAMEQC
+string playername(string thename, int teamid, bool team_colorize);
+
+float trace_hits_box_1d(float end, float thmi, float thma);
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+#endif
+
+float cvar_or(string cv, float v);
+
+float blink_synced(float base, float range, float freq, float start_time, int start_blink);
+
+float blink(float base, float range, float freq);

@@ -8,10 +8,6 @@
 #include <common/sounds/sound.qh>
 #include <common/weapons/all.qh>
 
-#ifdef CSQC
-#include <client/autocvars.qh>
-#endif
-
 // Operator for bold notifications
 #define BOLD_OPERATOR "^BOLD"
 
@@ -40,6 +36,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
+		case MSG_CENTER_KILL: return "MSG_CENTER_KILL";
 	}
 	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";
@@ -164,7 +161,9 @@ void Create_Notification_Entity_Choice(entity notif,
 
 void Dump_Notifications(int fh, bool alsoprint);
 
-GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt", false)
+#define DEFAULT_FILENAME "notifications_dump.cfg"
+// NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
+GENERIC_COMMAND(dumpnotifs, "Dump all notifications into " DEFAULT_FILENAME, false)
 {
 	switch (request)
 	{
@@ -175,12 +174,12 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 			bool alsoprint = false;
 			if (filename == "")
 			{
-				filename = "notifications_dump.cfg";
+				filename = DEFAULT_FILENAME;
 				alsoprint = false;
 			}
 			else if (filename == "-")
 			{
-				filename = "notifications_dump.cfg";
+				filename = DEFAULT_FILENAME;
 				alsoprint = true;
 			}
 			int fh = fopen(filename, FILE_WRITE);
@@ -195,21 +194,22 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd."));
+			LOG_INFO("Notification dump command only works with cl_cmd and sv_cmd.");
 			#endif
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
-			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
-			LOG_INFO("  if supplied with '-' output to console as well as default,");
-			LOG_INFO("  if left blank, it will only write to default.");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [<filename>]");
+			LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
+			LOG_HELP("  if supplied with '-' output to console as well as default,");
+			LOG_HELP("  if left blank, it will only write to default.");
 			return;
 		}
 	}
 }
+#undef DEFAULT_FILENAME
 
 #ifdef NOTIFICATIONS_DEBUG
 bool autocvar_notification_debug = false;
@@ -314,7 +314,7 @@ float autocvar_notification_lifetime_mapload = 10;
 #endif
 
 #ifdef SVQC
-void Notification_GetCvars(entity this);
+void Notification_GetCvars(entity this, entity store);
 float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
 float autocvar_notification_item_centerprinttime = 1.5;
@@ -435,7 +435,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
 	ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
 	ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV,     "item_wepname",  Weapons_from(f1).m_name) \
+	ARG_CASE(ARG_CS_SV,     "item_wepname",  REGISTRY_GET(Weapons, f1).m_name) \
 	ARG_CASE(ARG_CS_SV,     "item_buffname", BUFF_NAME(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f3buffname",    BUFF_NAME(f3)) \
 	ARG_CASE(ARG_CS_SV,     "item_wepammo",  (f2 > 0 ? notif_arg_item_wepammo(f1, f2) : "")) \
@@ -633,7 +633,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 string notif_arg_item_wepammo(float f1, float f2)
 {
 	string ammoitems = "";
-	Weapon wep = Weapons_from(f1);
+	Weapon wep = REGISTRY_GET(Weapons, f1);
 	switch (wep.ammo_type)
 	{
 		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
@@ -701,6 +701,8 @@ string notif_arg_item_wepammo(float f1, float f2)
 REGISTRY(Notifications, BITS(11))
 REGISTER_REGISTRY(Notifications)
 REGISTRY_SORT(Notifications);
+
+REGISTRY_DEFINE_GET(Notifications, NULL)
 STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }
 REGISTRY_CHECK(Notifications)
 
@@ -730,7 +732,7 @@ string Get_Notif_CvarName(Notification notif)
 
 Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
-	Notification it = _Notifications_from(net_name, NULL);
+	Notification it = REGISTRY_GET(Notifications, net_name);
 	if (it.nent_type != net_type) {
 		LOG_WARNF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!",
 			Get_Notif_TypeName(net_type), net_type,

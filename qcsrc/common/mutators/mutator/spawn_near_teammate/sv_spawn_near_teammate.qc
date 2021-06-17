@@ -1,5 +1,7 @@
 #include "sv_spawn_near_teammate.qh"
 
+#include <common/mapobjects/trigger/hurt.qh>
+
 #include <lib/float.qh>
 
 string autocvar_g_spawn_near_teammate;
@@ -27,7 +29,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
 
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS_CVAR(player).cvar_cl_spawn_near_teammate))
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
@@ -77,7 +79,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
 
 	// Note: when entering this, fixangle is already set.
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS_CVAR(player).cvar_cl_spawn_near_teammate))
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;

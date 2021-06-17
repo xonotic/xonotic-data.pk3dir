@@ -1,7 +1,13 @@
 #include "state.qh"
 
+#include <common/mutators/mutator/status_effects/_mod.qh>
+#include <server/command/getreplies.qh>
+
 void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
+void Inventory_clear(PlayerState this);
+void InventoryStorage_attach(PlayerState this);
+void InventoryStorage_delete(PlayerState this);
 
 void PlayerState_attach(entity this)
 {
@@ -18,6 +24,7 @@ void PlayerState_detach(entity this)
     PlayerState ps = PS(this);
 	if (!ps) return;  // initial connect
 	PS(this) = NULL;
+    Inventory_clear(this.inventory_store); // no need to network updates, as there is no inventory attached
 
 	if (ps.m_client != this) return;  // don't own state, spectator
 	ps.ps_push(ps, this);
@@ -27,7 +34,6 @@ void PlayerState_detach(entity this)
 	delete(ps);
 }
 
-void GetCvars(entity this, entity store, int);
 void DecodeLevelParms(entity this);
 void PlayerScore_Attach(entity this);
 void ClientData_Attach(entity this);
@@ -52,6 +58,8 @@ void ClientState_attach(entity this)
 	entcs_attach(this);
 	anticheat_init(this);
 	W_HitPlotOpen(this);
+	InventoryStorage_attach(this);
+	StatusEffectsStorage_attach(this);
 }
 
 void bot_clientdisconnect(entity this);
@@ -64,12 +72,14 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
-    GetCvars(this, CS(this), -1);  // free cvars TODO: is this still needed now that it's stored on the clientstate entity?
+    GetCvars(this, CS_CVAR(this), -1);  // free cvars TODO: is this still needed now that it's stored on the clientstate entity?
     accuracy_free(this); // TODO: needs to be before CS() is deleted!
     PlayerScore_Detach(this); // what ^they^ said
     W_HitPlotClose(this);
     ClientData_Detach(this);
     entcs_detach(this);
+    InventoryStorage_delete(this);
+    StatusEffectsStorage_delete(this);
 	delete(CS(this));
 	this._cs = NULL;
 

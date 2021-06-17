@@ -1,6 +1,7 @@
 #include "electro.qh"
 
 #ifdef SVQC
+#include <common/effects/qc/_mod.qh>
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -34,16 +35,10 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 			setthink(e, W_Electro_ExplodeCombo);
 
 			// delay combo chains, looks cooler
-			e.nextthink =
-				(
-					time
-					+
-					(WEP_CVAR(electro, combo_speed) ?
-						(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
-						:
-						0
-					)
-				);
+			float delay = 0;
+			if (WEP_CVAR(electro, combo_speed))
+				delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed);
+			e.nextthink = time + delay;
 		}
 		e = e.chain;
 	}
@@ -54,6 +49,7 @@ void W_Electro_ExplodeCombo(entity this)
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(electro, combo_comboradius), this.realowner);
 
 	this.event_damage = func_null;
+	this.velocity = this.movedir; // particle fx and decals need .velocity
 
 	RadiusDamage(
 		this,
@@ -83,6 +79,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
+	this.velocity = this.movedir; // particle fx and decals need .velocity
 
 	if(this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
 	{
@@ -180,17 +177,10 @@ void W_Electro_Bolt_Think(entity this)
 					// (the bolt and orb should explode together because they interacted together)
 					// while keeping the chaining delay.
 					setthink(e, W_Electro_ExplodeCombo);
-					e.nextthink =
-					(
-						time
-						+
-						(WEP_CVAR_PRI(electro, midaircombo_speed) ?
-							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed))
-							:
-							0
-						)
-					);
-
+					float delay = 0;
+					if (WEP_CVAR_PRI(electro, midaircombo_speed))
+						delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed);
+					e.nextthink = time + delay;
 
 					++found;
 				}
@@ -227,7 +217,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		thiswep.m_id
 	);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	proj = new(electro_bolt);
 	proj.owner = proj.realowner = actor;
@@ -260,6 +250,37 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	// proj.com_phys_vel = proj.velocity;
 }
 
+void W_Electro_Orb_Follow_Think(entity this)
+{
+	if (time > this.death_time)
+	{
+		adaptor_think2use_hittype_splash(this);
+		return;
+	}
+	if (this.move_movetype == MOVETYPE_FOLLOW)
+	{
+		int lost = LostMovetypeFollow(this);
+		if (lost == 2)
+		{
+			// FIXME if player disconnected, it isn't possible to drop the orb at player's origin
+			// see comment in LostMovetypeFollow implementation
+			delete(this);
+			return;
+		}
+		if (lost)
+		{
+			// drop the orb at the corpse's location
+			PROJECTILE_MAKETRIGGER(this);
+			set_movetype(this, MOVETYPE_TOSS);
+
+			setthink(this, adaptor_think2use_hittype_splash);
+			this.nextthink = this.death_time;
+			return;
+		}
+	}
+	this.nextthink = time;
+}
+
 void W_Electro_Orb_Stick(entity this, entity to)
 {
 	entity newproj = spawn();
@@ -270,10 +291,12 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	newproj.owner = this.owner;
 	newproj.realowner = this.realowner;
-	setsize(newproj, this.mins, this.maxs);
 	setorigin(newproj, this.origin);
 	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
+	setsize(newproj, this.mins, this.maxs);
 	newproj.angles = vectoangles(-trace_plane_normal); // face against the surface
+
+	newproj.movedir = -trace_plane_normal;
 
 	newproj.takedamage = this.takedamage;
 	newproj.damageforcescale = this.damageforcescale;
@@ -288,17 +311,32 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
-	setthink(newproj, getthink(this));
-	newproj.nextthink = this.nextthink;
+	newproj.death_time = this.death_time;
 	newproj.use = this.use;
 	newproj.flags = this.flags;
 	IL_PUSH(g_projectiles, newproj);
 	IL_PUSH(g_bot_dodge, newproj);
 
+	// check if limits are enabled (we can tell by checking if the original orb is listed) and push it to the list if so
+	if(LimitedElectroBallRubbleList && IL_CONTAINS(LimitedElectroBallRubbleList, this))
+	{
+		ReplaceOldListedChildRubble(LimitedElectroBallRubbleList, newproj, this);
+	}
+
 	delete(this);
 
 	if(to)
+	{
 		SetMovetypeFollow(newproj, to);
+
+		setthink(newproj, W_Electro_Orb_Follow_Think);
+		newproj.nextthink = time;
+	}
+	else
+	{
+		setthink(newproj, adaptor_think2use_hittype_splash);
+		newproj.nextthink = newproj.death_time;
+	}
 }
 
 void W_Electro_Orb_Touch(entity this, entity toucher)
@@ -339,17 +377,11 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 			this.realowner = inflictor.realowner;
 			this.classname = "electro_orb_chain";
 			setthink(this, W_Electro_ExplodeCombo);
-			this.nextthink = time +
-				(
-					// bound the length, inflictor may be in a galaxy far far away (warpzones)
-					min(
-						WEP_CVAR(electro, combo_radius),
-						vlen(this.origin - inflictor.origin)
-					)
-					/
-					// delay combo chains, looks cooler
-					WEP_CVAR(electro, combo_speed)
-				);
+			// delay combo chains, looks cooler
+			// bound the length, inflictor may be in a galaxy far far away (warpzones)
+			float len = min(WEP_CVAR(electro, combo_radius), vlen(this.origin - inflictor.origin));
+			float delay = len / WEP_CVAR(electro, combo_speed);
+			this.nextthink = time + delay;
 		}
 		else
 		{
@@ -378,7 +410,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = actor;
@@ -387,6 +419,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(electro, damage);
 	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);
+	proj.death_time = time + WEP_CVAR_SEC(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	proj.weaponentity_fld = weaponentity;
@@ -412,6 +445,14 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
+
+	if(WEP_CVAR_SEC(electro, limit) > 0)
+	{
+		if (!LimitedElectroBallRubbleList)
+			LimitedElectroBallRubbleList = IL_NEW();
+		ListNewChildRubble(LimitedElectroBallRubbleList, proj);
+		LimitedChildrenRubble(LimitedElectroBallRubbleList, "electro_orb", WEP_CVAR_SEC(electro, limit), adaptor_think2use_hittype_splash, actor);
+	}
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 

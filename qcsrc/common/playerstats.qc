@@ -1,14 +1,18 @@
 #include "playerstats.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
-    #include "../server/anticheat.qh"
-    #include "../server/defs.qh"
-    #include "../server/scores.qh"
-    #include "../server/weapons/accuracy.qh"
+	#include <common/constants.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
+	#include <server/anticheat.qh>
+	#include <server/client.qh>
+	#include <server/intermission.qh>
+	#include <server/scores.qh>
+	#include <server/weapons/accuracy.qh>
+	#include <server/world.qh>
 #endif
 
 #ifdef SVQC
@@ -24,7 +28,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	// set up player identification
 	string s = "";
 
-	if((e.crypto_idfp != "") && (CS(e).cvar_cl_allow_uidtracking == 1))
+	if((e.crypto_idfp != "") && (CS_CVAR(e).cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
@@ -132,8 +136,8 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
-		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p, false));
+	if(CS_CVAR(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p.netname, p.team, false));
 
 	if(teamplay)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
@@ -153,7 +157,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
 
-		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));
 	}
 
 	strfree(p.playerstats_id);
@@ -163,8 +167,8 @@ void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
-	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
-	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	PlayerScore_Sort(score_dummyfield, 0, false, false);
+	PlayerScore_Sort(scoreboard_pos, 1, true, true);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
 	FOREACH_CLIENT(true, {
@@ -294,7 +298,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * G: game type
 		 * O: mod name (icon request) as in server browser
 		 * M: map name
-		 * I: match ID (see "matchid" in g_world.qc)
+		 * I: match ID (see "matchid" in world.qc)
 		 * S: "hostname" of the server
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server
@@ -404,9 +408,9 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			LOG_TRACE("Got response from player stats server:");
-			while((s = url_fgets(fh))) { LOG_TRACE("  ", s); }
-			LOG_TRACE("End of response.");
+			LOG_DEBUG("Got response from player stats server:");
+			while((s = url_fgets(fh))) { LOG_DEBUG("  ", s); }
+			LOG_DEBUG("End of response.");
 			url_fclose(fh);
 			break;
 		}
@@ -414,7 +418,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			LOG_TRACE("Player stats written");
+			LOG_DEBUG("Player stats written");
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -455,7 +459,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			// now request the information
 			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
-			LOG_TRACE("Retrieving playerstats from URL: ", uri);
+			LOG_DEBUG("Retrieving playerstats from URL: ", uri);
 			url_single_fopen(
 				uri,
 				FILE_APPEND,
@@ -509,7 +513,7 @@ void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
 {
 	// determine whether we should retrieve playerbasic information again
 
-	LOG_TRACEF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f",
+	LOG_DEBUGF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f",
 		joiningplayer.netname,
 		time
 	);
@@ -532,14 +536,13 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			LOG_TRACE("-- Sending data to player stats server");
+			LOG_DEBUG("-- Sending data to player stats server");
 			/*url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
 			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			*/url_fputs(fh, "\n");
@@ -590,8 +593,8 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                         gt = data;
                         break;
                     case "e":
-                        LOG_TRACE("G: ", gt);
-                        LOG_TRACE("e: ", data);
+                        //LOG_TRACE("G: ", gt);
+                        //LOG_TRACE("e: ", data);
                         if (gt == PlayerStats_GetGametype()) {
                             handled = true;
                             float e = stof(data);
@@ -659,7 +662,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 
 	// now actually set the event data
 	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
-	LOG_TRACE("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB");
+	LOG_DEBUG("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB");
 }
 
 void PlayerStats_PlayerDetail()
@@ -672,7 +675,7 @@ void PlayerStats_PlayerDetail()
 			PS_D_IN_DB = db_create();
 
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
-		LOG_TRACE("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri);
+		LOG_DEBUG("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri);
 		url_single_fopen(
 			autocvar_g_playerstats_playerdetail_uri,
 			FILE_APPEND,
@@ -727,14 +730,13 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			LOG_TRACE("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...");
+			LOG_DEBUG("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...");
 			url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
 			//url_fputs(fh, sprintf("c %s\n", cvar_string("_cl_country"))); // country
-			//url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			url_fputs(fh, "\n");
@@ -940,7 +942,6 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 #ifdef MENUQC
                         url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
                         url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-                        url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
                         url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
                         url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 #endif

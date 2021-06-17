@@ -1,6 +1,12 @@
 #pragma once
 #include "../panel.qh"
 
+//float autocvar_hud_panel_quickmenu;
+float autocvar_hud_panel_quickmenu_align;
+float autocvar_hud_panel_quickmenu_translatecommands;
+string autocvar_hud_panel_quickmenu_file;
+float autocvar_hud_panel_quickmenu_time;
+
 bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 bool QuickMenu_IsOpened();
 void QuickMenu_Mouse();

@@ -1,5 +1,7 @@
 #pragma once
 
+string autocvar_sv_weaponstats_file;
+
 float weaponstats_buffer;
 
 void WeaponStats_Init();

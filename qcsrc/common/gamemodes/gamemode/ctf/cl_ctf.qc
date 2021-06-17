@@ -1,5 +1,8 @@
 #include "cl_ctf.qh"
 
+#include <common/mutators/base.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
 #include <client/hud/panel/modicons.qh>
 
 // CTF HUD modicon section
@@ -25,7 +28,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
     float redflag_statuschange_elapsedtime = 0, blueflag_statuschange_elapsedtime = 0, yellowflag_statuschange_elapsedtime = 0, pinkflag_statuschange_elapsedtime = 0, neutralflag_statuschange_elapsedtime = 0; // time since the status changed
     bool ctf_oneflag; // one-flag CTF mode enabled/disabled
     bool ctf_stalemate; // currently in stalemate
-    int stat_items = STAT(CTF_FLAGSTATUS);
+    int stat_items = STAT(OBJECTIVE_STATUS);
     float fs, fs2, fs3, size1, size2;
     vector e1, e2;
 
@@ -186,4 +189,17 @@ void HUD_Mod_CTF(vector pos, vector mySize)
     X(pink);
     X(neutral);
     #undef X
+}
+
+bool autocvar_hud_panel_scoreboard_ctf_leaderboard = true;
+
+REGISTER_MUTATOR(cl_ctf, true);
+
+MUTATOR_HOOKFUNCTION(cl_ctf, ShowRankings)
+{
+    if(autocvar_hud_panel_scoreboard_ctf_leaderboard && ISGAMETYPE(CTF) && STAT(CTF_SHOWLEADERBOARD))
+    {
+        M_ARGV(0, string) = _("Capture time rankings");
+        return true;
+    }
 }

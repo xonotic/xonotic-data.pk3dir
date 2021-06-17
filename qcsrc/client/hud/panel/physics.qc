@@ -1,13 +1,29 @@
 #include "physics.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include <client/main.qh>
-#include <common/mapinfo.qh>
+#include <client/draw.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // Physics (#15)
+
+void HUD_Physics_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_physics_speed_unit_show");
+	HUD_Write_Cvar("hud_panel_physics_speed_max");
+	HUD_Write_Cvar("hud_panel_physics_speed_vertical");
+	HUD_Write_Cvar("hud_panel_physics_topspeed");
+	HUD_Write_Cvar("hud_panel_physics_topspeed_time");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_max");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_vertical");
+	HUD_Write_Cvar("hud_panel_physics_flip");
+	HUD_Write_Cvar("hud_panel_physics_baralign");
+	HUD_Write_Cvar("hud_panel_physics_progressbar");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_mode");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_scale");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_nonlinear");
+	HUD_Write_Cvar("hud_panel_physics_text");
+	HUD_Write_Cvar("hud_panel_physics_text_scale");
+}
 
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
@@ -18,7 +34,7 @@ void HUD_Physics()
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
+		if(autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional)) return;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -120,7 +136,7 @@ void HUD_Physics()
 	int speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
 		acceleration_baralign = speed_baralign = 1;
-    else if(autocvar_hud_panel_physics_baralign == 4)
+	else if(autocvar_hud_panel_physics_baralign == 4)
 		acceleration_baralign = speed_baralign = 2;
 	else if (autocvar_hud_panel_physics_flip)
 	{
@@ -188,7 +204,7 @@ void HUD_Physics()
 				// divide by f to make it start from 1
 				f = cos( ((time - top_speed_time) / f) * PI/2 );
 			}
-            else //hide top speed 0, it would be stupid
+			else // hide top speed 0
 				f = 0;
 		}
 		if (f > 0)
@@ -201,19 +217,19 @@ void HUD_Physics()
 				vector peak_size = '0 0 0';
 				if (speed_baralign == 0)
 					peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x;
-                else if (speed_baralign == 1)
+				else if (speed_baralign == 1)
 					peak_offsetX = (1 - min(top_speed, max_speed)/max_speed) * panel_size.x;
-                else // if (speed_baralign == 2)
-                    peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
+				else // if (speed_baralign == 2)
+					peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
 				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
-                peak_size.y = panel_size.y;
-                if (speed_baralign == 2) // draw two peaks, on both sides
-                {
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                }
-                else
-                    drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				peak_size.y = panel_size.y;
+				if (speed_baralign == 2) // draw two peaks, on both sides
+				{
+					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				}
+				else
+					drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed

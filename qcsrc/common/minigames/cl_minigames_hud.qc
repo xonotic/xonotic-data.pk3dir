@@ -1,14 +1,33 @@
 #include "cl_minigames_hud.qh"
 
-#include <client/autocvars.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/hud/hud_config.qh>
+#include <client/mapvoting.qh>
 #include <common/ent_cs.qh>
-
-#include "minigames.qh"
+#include <common/minigames/minigames.qh>
 
 .vector colormod;
 
-#include <client/hud/hud_config.qh>
-#include <client/mapvoting.qh>
+void HUD_MinigameBoard_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_MinigameStatus_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_MinigameHelp_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_MinigameMenu_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 // whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)
@@ -119,7 +138,6 @@ void HUD_MinigameMenu_InsertEntry(entity newentry, entity prev)
 	else
 		HUD_MinigameMenu_last_entry = newentry;
 	prev.list_next = newentry;
-
 }
 
 
@@ -162,9 +180,8 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 }
 
 // Minigame menu options: create entry
-entity HUD_MinigameMenu_SpawnEntry(string s, vector offset, vector fontsize, vector color,void(entity, entity, entity) click)
+entity HUD_MinigameMenu_SpawnEntry(entity entry, string s, vector offset, vector fontsize, vector color,void(entity, entity, entity) click)
 {
-	entity entry = spawn();
 	entry.message = s;
 	entry.origin = offset;
 	entry.size = fontsize;
@@ -180,7 +197,7 @@ entity HUD_MinigameMenu_SpawnSubEntry(string s, void(entity, entity, entity) cli
 {
 	vector item_fontsize = hud_fontsize*1.25;
 	vector item_offset = '1 0 0' * item_fontsize_x;
-	entity item = HUD_MinigameMenu_SpawnEntry(
+	entity item = HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_subentry),
 				s,item_offset,item_fontsize,'0.8 0.8 0.8', click );
 	item.owner = parent;
 	return item;
@@ -386,9 +403,8 @@ void HUD_MinigameMenu_CurrentButton()
 				HUD_MinigameMenu_EraseEntry(e);
 				break;
 			}
-		entity currb = HUD_MinigameMenu_SpawnEntry(
+		entity currb = HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_current),
 			_("Current Game"), '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
-		currb.classname = "hud_minigamemenu_current";
 		currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
 		HUD_MinigameMenu_InsertEntry(currb,HUD_MinigameMenu_last_entry);
 		HUD_MinigameMenu_Click(currb);
@@ -411,9 +427,8 @@ void HUD_MinigameMenu_CurrentButton()
 		for ( e = HUD_MinigameMenu_last_entry; e != NULL; e = e.list_prev )
 			if ( e.classname == "hud_minigamemenu_exit" )
 				return;
-		entity exit = HUD_MinigameMenu_SpawnEntry(
+		entity exit = HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_exit),
 			_("Exit Menu"),'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_Close);
-		exit.classname = "hud_minigamemenu_exit";
 		HUD_MinigameMenu_InsertEntry ( exit, HUD_MinigameMenu_last_entry );
 	}
 }
@@ -423,10 +438,10 @@ void HUD_MinigameMenu_Open()
 {
 	if ( !mv_active && !HUD_MinigameMenu_IsOpened() )
 	{
-		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnEntry(
+		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_entry),
 			_("Create"), '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCreate),
 			HUD_MinigameMenu_last_entry );
-		HUD_MinigameMenu_InsertEntry ( HUD_MinigameMenu_SpawnEntry(
+		HUD_MinigameMenu_InsertEntry ( HUD_MinigameMenu_SpawnEntry(new(hud_minigamemenu_entry),
 			_("Join"),'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickJoin),
 			HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();
@@ -602,103 +617,122 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
 			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
 		return true;
-
 	}
-	else
+
+	if(bInputType == 2)
 	{
-		if(bInputType == 0) {
-			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
-			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
-			if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
-			if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
-			if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
-		}
-		else if(bInputType == 1) {
-			if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-			if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-			if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-			if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
-			if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
-		}
+		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
+			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
+		return false;
+	}
 
-		// allow some binds
-		string con_keys = findkeysforcommand("toggleconsole", 0);
-		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		int i;
-		for (i = 0; i < keys; ++i)
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+
+	// allow some binds
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+	int i;
+	for (i = 0; i < keys; ++i)
+	{
+		if(nPrimary == stof(argv(i)))
+			return false;
+	}
+
+	if ( active_minigame )
+	{
+		string device = "";
+		string action = key_pressed ? "pressed" : "released";
+		if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
 		{
-			if(nPrimary == stof(argv(i)))
-				return false;
+			if ( HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
+				device = "mouse";
 		}
+		else
+			device = "key";
 
-		if ( active_minigame && ( bInputType == 0 || bInputType == 1 ) )
-		{
-			string device = "";
-			string action = bInputType == 0 ? "pressed" : "released";
-			if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
-			{
-				if ( HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
-					device = "mouse";
-			}
-			else
-				device = "key";
+		if ( device && active_minigame.minigame_event(
+				active_minigame,strcat(device,"_",action),nPrimary) )
+			return true;
+	}
 
-			if ( device && active_minigame.minigame_event(
-					active_minigame,strcat(device,"_",action),nPrimary) )
-				return true;
-
-			/// TODO: bInputType == 2?
-		}
-
-		if ( bInputType == 0 )
-		{
-			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
-				HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
-			{
-				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
-				return true;
-			}
-			if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
-			{
-				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
-				else
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
-				return true;
-			}
-			else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
-			{
-				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
-				else
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
-				return true;
-			}
-			else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
-			{
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
-				return true;
-			}
-			else if ( nPrimary == K_END || nPrimary == K_KP_END )
-			{
-				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
-				return true;
-			}
-			else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
-			{
-				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
-				return true;
-			}
-			else if ( nPrimary == K_ESCAPE )
-			{
-				HUD_MinigameMenu_Close(NULL, NULL, NULL);
-				return true;
-			}
-		}
+	if ( nPrimary == K_MOUSE2 )
+	{
+		return true;
+	}
+	if ( nPrimary == K_MOUSE1 )
+	{
+		if (!key_pressed)
+			return true;
+		if (HUD_MinigameMenu_activeitem && HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)))
+			HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		return true;
+	}
+	if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
+	{
+		if (!key_pressed)
+			return true;
+		if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
+		else
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
+		return true;
+	}
+	else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
+	{
+		if (!key_pressed)
+			return true;
+		if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
+		else
+			HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		return true;
+	}
+	else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
+	{
+		if (!key_pressed)
+			return true;
+		HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		return true;
+	}
+	else if ( nPrimary == K_END || nPrimary == K_KP_END )
+	{
+		if (!key_pressed)
+			return true;
+		HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		return true;
+	}
+	else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
+	{
+		if (!key_pressed)
+			return true;
+		HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
+		return true;
+	}
+	else if ( nPrimary == K_ESCAPE )
+	{
+		if (!key_pressed)
+			return true;
+		HUD_MinigameMenu_Close(NULL, NULL, NULL);
+		return true;
 	}
 
 	return false;
-
 }
 
 void HUD_Minigame_Mouse()

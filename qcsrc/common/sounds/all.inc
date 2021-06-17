@@ -39,7 +39,7 @@ SOUND(GRENADE_BOUNCE4, W_Sound("grenade_bounce4"));
 SOUND(GRENADE_BOUNCE5, W_Sound("grenade_bounce5"));
 SOUND(GRENADE_BOUNCE6, W_Sound("grenade_bounce6"));
 Sound SND_GRENADE_BOUNCE_RANDOM() {
-    return Sounds_from(SND_GRENADE_BOUNCE1.m_id + rint(random() * 5));
+    return REGISTRY_GET(Sounds, SND_GRENADE_BOUNCE1.m_id + rint(random() * 5));
 }
 SOUND(GRENADE_FIRE, W_Sound("grenade_fire"));
 SOUND(GRENADE_IMPACT, W_Sound("grenade_impact"));
@@ -51,7 +51,7 @@ SOUND(HAGEXP1, W_Sound("hagexp1"));
 SOUND(HAGEXP2, W_Sound("hagexp2"));
 SOUND(HAGEXP3, W_Sound("hagexp3"));
 Sound SND_HAGEXP_RANDOM() {
-    return Sounds_from(SND_HAGEXP1.m_id + rint(random() * 2));
+    return REGISTRY_GET(Sounds, SND_HAGEXP1.m_id + rint(random() * 2));
 }
 
 SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
@@ -74,7 +74,7 @@ SOUND(NEXWHOOSH1, W_Sound("nexwhoosh1"));
 SOUND(NEXWHOOSH2, W_Sound("nexwhoosh2"));
 SOUND(NEXWHOOSH3, W_Sound("nexwhoosh3"));
 Sound SND_NEXWHOOSH_RANDOM() {
-    return Sounds_from(SND_NEXWHOOSH1.m_id + rint(random() * 2));
+    return REGISTRY_GET(Sounds, SND_NEXWHOOSH1.m_id + rint(random() * 2));
 }
 SOUND(RELOAD, W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
 
@@ -82,7 +82,7 @@ SOUND(RIC1, W_Sound("ric1"));
 SOUND(RIC2, W_Sound("ric2"));
 SOUND(RIC3, W_Sound("ric3"));
 Sound SND_RIC_RANDOM() {
-    return Sounds_from(SND_RIC1.m_id + rint(random() * 2));
+    return REGISTRY_GET(Sounds, SND_RIC1.m_id + rint(random() * 2));
 }
 
 SOUND(ROCKET_DET, W_Sound("rocket_det"));
@@ -198,7 +198,8 @@ SOUND(ONS_CONTROLPOINT_BUILT, "onslaught/controlpoint_built");
 SOUND(ONS_CONTROLPOINT_UNDERATTACK, "onslaught/controlpoint_underattack");
 SOUND(ONS_DAMAGEBLOCKEDBYSHIELD, "onslaught/damageblockedbyshield");
 SOUND(ONS_ELECTRICITY_EXPLODE, "onslaught/electricity_explode");
-SOUND(ONS_GENERATOR_ALARM, "kh/alarm"); // FIXME: unique sound
+#define SND_ONS_GENERATOR_ALARM SND_KH_ALARM
+//SOUND(ONS_GENERATOR_ALARM, "kh/alarm"); // FIXME: unique sound
 SOUND(ONS_GENERATOR_DECAY, "onslaught/generator_decay");
 SOUND(ONS_GENERATOR_UNDERATTACK, "onslaught/generator_underattack");
 SOUND(ONS_HIT1, "onslaught/ons_hit1");
@@ -237,7 +238,8 @@ SOUND(VEH_SPIDERBOT_STRAFE, "vehicles/spiderbot_strafe");
 SOUND(VEH_SPIDERBOT_WALK, "vehicles/spiderbot_walk");
 
 SOUND(NADE_BEEP, "overkill/grenadebip");
-SOUND(NADE_BONUS, "kh/alarm"); // FIXME: unique sound
+#define SND_NADE_BONUS SND_KH_ALARM
+//SOUND(NADE_BONUS, "kh/alarm"); // FIXME: unique sound
 
 SOUND(BUFF_LOST, "relics/relic_effect");
 
@@ -265,7 +267,7 @@ SOUND(GIB_SPLAT02, "misc/gib_splat02");
 SOUND(GIB_SPLAT03, "misc/gib_splat03");
 SOUND(GIB_SPLAT04, "misc/gib_splat04");
 Sound SND_GIB_SPLAT_RANDOM() {
-    return Sounds_from(SND_GIB_SPLAT01.m_id + floor(prandom() * 4));
+    return REGISTRY_GET(Sounds, SND_GIB_SPLAT01.m_id + floor(prandom() * 4));
 }
 
 SOUND(HIT, "misc/hit");
@@ -275,6 +277,7 @@ SOUND(KILL, "misc/kill");
 SOUND(SPAWN, "misc/spawn");
 
 SOUND(TALK, "misc/talk");
+SOUND(TALK2, "misc/talk2");
 
 SOUND(TELEPORT, "misc/teleport");
 

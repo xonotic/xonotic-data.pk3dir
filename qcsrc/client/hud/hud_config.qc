@@ -1,15 +1,11 @@
 #include "hud_config.qh"
 
-#include "hud.qh"
-#include "panel/scoreboard.qh"
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/hud/hud.qh>
+#include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/view.qh>
 
-#define HUD_Write(s) fputs(fh, s)
-#define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
-#define HUD_Write_PanelCvar(cvar_suf) str = strcat("hud_panel_", panel.panel_name, cvar_suf), HUD_Write_Cvar(str)
 // Save the config
 void HUD_Panel_ExportCfg(string cfgname)
 {
@@ -63,9 +59,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		// common cvars for all panels
-		for (int i = 0; i < hud_panels_COUNT; ++i)
+		for (int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 		{
-			panel = hud_panels_from(i);
+			panel = REGISTRY_GET(hud_panels, i);
 
 			HUD_Write_PanelCvar("_pos");
 			HUD_Write_PanelCvar("_size");
@@ -75,171 +71,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar("_bg_alpha");
 			HUD_Write_PanelCvar("_bg_border");
 			HUD_Write_PanelCvar("_bg_padding");
-			switch(panel) {
-				case HUD_PANEL_WEAPONS:
-					HUD_Write_Cvar("hud_panel_weapons_accuracy");
-					HUD_Write_Cvar("hud_panel_weapons_label");
-					HUD_Write_Cvar("hud_panel_weapons_label_scale");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble_padding");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble_time");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble_fadetime");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_outofammo");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_donthave");
-					HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_unavailable");
-					HUD_Write_Cvar("hud_panel_weapons_ammo");
-					HUD_Write_Cvar("hud_panel_weapons_ammo_color");
-					HUD_Write_Cvar("hud_panel_weapons_ammo_alpha");
-					HUD_Write_Cvar("hud_panel_weapons_aspect");
-					HUD_Write_Cvar("hud_panel_weapons_timeout");
-					HUD_Write_Cvar("hud_panel_weapons_timeout_effect");
-					HUD_Write_Cvar("hud_panel_weapons_timeout_fadebgmin");
-					HUD_Write_Cvar("hud_panel_weapons_timeout_fadefgmin");
-					HUD_Write_Cvar("hud_panel_weapons_timeout_speed_in");
-					HUD_Write_Cvar("hud_panel_weapons_timeout_speed_out");
-					HUD_Write_Cvar("hud_panel_weapons_onlyowned");
-					HUD_Write_Cvar("hud_panel_weapons_orderbyimpulse");
-					HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
-					HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
-					HUD_Write_Cvar("hud_panel_weapons_selection_radius");
-					HUD_Write_Cvar("hud_panel_weapons_selection_speed");
-					break;
-				case HUD_PANEL_AMMO:
-					HUD_Write_Cvar("hud_panel_ammo_onlycurrent");
-					HUD_Write_Cvar("hud_panel_ammo_noncurrent_alpha");
-					HUD_Write_Cvar("hud_panel_ammo_noncurrent_scale");
-					HUD_Write_Cvar("hud_panel_ammo_iconalign");
-					HUD_Write_Cvar("hud_panel_ammo_progressbar");
-					HUD_Write_Cvar("hud_panel_ammo_progressbar_name");
-					HUD_Write_Cvar("hud_panel_ammo_progressbar_xoffset");
-					HUD_Write_Cvar("hud_panel_ammo_text");
-					break;
-				case HUD_PANEL_POWERUPS:
-					HUD_Write_Cvar("hud_panel_powerups_iconalign");
-					HUD_Write_Cvar("hud_panel_powerups_baralign");
-					HUD_Write_Cvar("hud_panel_powerups_progressbar");
-					HUD_Write_Cvar("hud_panel_powerups_text");
-					break;
-				case HUD_PANEL_HEALTHARMOR:
-					HUD_Write_Cvar("hud_panel_healtharmor_combined");
-					HUD_Write_Cvar("hud_panel_healtharmor_flip");
-					HUD_Write_Cvar("hud_panel_healtharmor_iconalign");
-					HUD_Write_Cvar("hud_panel_healtharmor_baralign");
-					HUD_Write_Cvar("hud_panel_healtharmor_progressbar");
-					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_health");
-					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_armor");
-					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx");
-					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx_smooth");
-					HUD_Write_Cvar("hud_panel_healtharmor_text");
-					break;
-				case HUD_PANEL_NOTIFY:
-					HUD_Write_Cvar("hud_panel_notify_flip");
-					HUD_Write_Cvar("hud_panel_notify_fontsize");
-					HUD_Write_Cvar("hud_panel_notify_time");
-					HUD_Write_Cvar("hud_panel_notify_fadetime");
-					HUD_Write_Cvar("hud_panel_notify_icon_aspect");
-					break;
-				case HUD_PANEL_TIMER:
-					break;
-				case HUD_PANEL_RADAR:
-					HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
-					HUD_Write_Cvar("hud_panel_radar_rotation");
-					HUD_Write_Cvar("hud_panel_radar_zoommode");
-					HUD_Write_Cvar("hud_panel_radar_scale");
-					HUD_Write_Cvar("hud_panel_radar_maximized_scale");
-					HUD_Write_Cvar("hud_panel_radar_maximized_size");
-					HUD_Write_Cvar("hud_panel_radar_maximized_rotation");
-					HUD_Write_Cvar("hud_panel_radar_maximized_zoommode");
-					break;
-				case HUD_PANEL_SCORE:
-					HUD_Write_Cvar("hud_panel_score_rankings");
-					break;
-				case HUD_PANEL_VOTE:
-					HUD_Write_Cvar("hud_panel_vote_alreadyvoted_alpha");
-					break;
-				case HUD_PANEL_MODICONS:
-					HUD_Write_Cvar("hud_panel_modicons_ca_layout");
-					HUD_Write_Cvar("hud_panel_modicons_dom_layout");
-					HUD_Write_Cvar("hud_panel_modicons_freezetag_layout");
-					break;
-				case HUD_PANEL_PRESSEDKEYS:
-					HUD_Write_Cvar("hud_panel_pressedkeys_aspect");
-					HUD_Write_Cvar("hud_panel_pressedkeys_attack");
-					break;
-				case HUD_PANEL_ENGINEINFO:
-					HUD_Write_Cvar("hud_panel_engineinfo_framecounter_time");
-					HUD_Write_Cvar("hud_panel_engineinfo_framecounter_decimals");
-					break;
-				case HUD_PANEL_INFOMESSAGES:
-					HUD_Write_Cvar("hud_panel_infomessages_flip");
-					break;
-				case HUD_PANEL_PHYSICS:
-					HUD_Write_Cvar("hud_panel_physics_speed_unit_show");
-					HUD_Write_Cvar("hud_panel_physics_speed_max");
-					HUD_Write_Cvar("hud_panel_physics_speed_vertical");
-					HUD_Write_Cvar("hud_panel_physics_topspeed");
-					HUD_Write_Cvar("hud_panel_physics_topspeed_time");
-					HUD_Write_Cvar("hud_panel_physics_acceleration_max");
-					HUD_Write_Cvar("hud_panel_physics_acceleration_vertical");
-					HUD_Write_Cvar("hud_panel_physics_flip");
-					HUD_Write_Cvar("hud_panel_physics_baralign");
-					HUD_Write_Cvar("hud_panel_physics_progressbar");
-					HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_mode");
-					HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_scale");
-					HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_nonlinear");
-					HUD_Write_Cvar("hud_panel_physics_text");
-					HUD_Write_Cvar("hud_panel_physics_text_scale");
-					break;
-				case HUD_PANEL_CENTERPRINT:
-					HUD_Write_Cvar("hud_panel_centerprint_align");
-					HUD_Write_Cvar("hud_panel_centerprint_flip");
-					HUD_Write_Cvar("hud_panel_centerprint_fontscale");
-					HUD_Write_Cvar("hud_panel_centerprint_fontscale_bold");
-					HUD_Write_Cvar("hud_panel_centerprint_time");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_in");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_out");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone_minalpha");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo_minalpha");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_minfontsize");
-					HUD_Write_Cvar("hud_panel_centerprint_fade_minfontsize");
-					break;
-				case HUD_PANEL_ITEMSTIME:
-					HUD_Write_Cvar("hud_panel_itemstime_iconalign");
-					HUD_Write_Cvar("hud_panel_itemstime_progressbar");
-					HUD_Write_Cvar("hud_panel_itemstime_progressbar_name");
-					HUD_Write_Cvar("hud_panel_itemstime_progressbar_reduced");
-					HUD_Write_Cvar("hud_panel_itemstime_text");
-					HUD_Write_Cvar("hud_panel_itemstime_ratio");
-					HUD_Write_Cvar("hud_panel_itemstime_dynamicsize");
-					break;
-				case HUD_PANEL_MAPVOTE:
-					HUD_Write_Cvar("hud_panel_mapvote_highlight_border");
-					break;
-				case HUD_PANEL_QUICKMENU:
-					HUD_Write_Cvar("hud_panel_quickmenu_align");
-					break;
-				case HUD_PANEL_SCOREBOARD:
-					HUD_Write_Cvar("hud_panel_scoreboard_fadeinspeed");
-					HUD_Write_Cvar("hud_panel_scoreboard_fadeoutspeed");
-					HUD_Write_Cvar("hud_panel_scoreboard_respawntime_decimals");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_bg_alpha");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_bg_scale");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha_self");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_highlight");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha");
-					HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
-					HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
-					HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
-					HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
-					break;
-			}
+			panel.panel_export(fh);
 			HUD_Write("\n");
 		}
-		MUTATOR_CALLHOOK(HUD_WriteCvars, fh);
 
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
@@ -267,8 +101,8 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	vector myCenter, targCenter;
 	vector myTarget = myPos;
 	int i;
-	for (i = 0; i < hud_panels_COUNT; ++i) {
-		panel = hud_panels_from(i);
+	for (i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
+		panel = REGISTRY_GET(hud_panels, i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
@@ -364,8 +198,8 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	vector dist;
 	float ratio = mySize.x/mySize.y;
 	int i;
-	for (i = 0; i < hud_panels_COUNT; ++i) {
-		panel = hud_panels_from(i);
+	for (i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
+		panel = REGISTRY_GET(hud_panels, i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
@@ -665,21 +499,18 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
-entity tab_panels[hud_panels_MAX];
+entity tab_panels[REGISTRY_MAX(hud_panels)];
 entity tab_panel;
 vector tab_panel_pos;
 float tab_backward;
 void reset_tab_panels()
 {
-	for (int i = 0; i < hud_panels_COUNT; ++i)
+	for (int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 		tab_panels[i] = NULL;
 }
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
-
-	if(bInputType == 2)
-		return false;
 
 	if(!autocvar__hud_configure)
 		return false;
@@ -690,6 +521,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		mousepos.y = nSecondary;
 		return true;
 	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
 
 	// block any input while a menu dialog is fading
 	// don't block mousepos read as it leads to cursor jumps in the interaction with the menu
@@ -712,12 +549,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			hit_con_bind = true;
 	}
 
-	if(bInputType == 0) {
+	if(key_pressed) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 	}
-	else if(bInputType == 1) {
+	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
@@ -725,7 +562,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_CTRL)
 	{
-		if (bInputType == 1) //ctrl has been released
+		if (!key_pressed) //ctrl has been released
 		{
 			if (tab_panel)
 			{
@@ -741,35 +578,35 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE1);
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
-		if(bInputType == 0) // key pressed
+		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
+		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		hud_configure_menu_open = 1;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		if (!hud_configure_menu_open)
 			HUD_Configure_Exit_Force();
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		// FIXME minor bug: if a panel is highlighted, has the same pos_x and
@@ -810,9 +647,9 @@ LABEL(find_tab_panel)
 		k=0;
 		while(++k)
 		{
-			for(i = 0; i < hud_panels_COUNT; ++i)
+			for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			{
-				panel = hud_panels_from(i);
+				panel = REGISTRY_GET(hud_panels, i);
 				if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
 					continue;
 				if (panel == tab_panels[i] || panel == starting_panel)
@@ -858,7 +695,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == K_SPACE && hudShiftState & S_CTRL) // enable/disable highlighted panel or dock
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (highlightedPanel)
@@ -871,7 +708,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'c' && hudShiftState & S_CTRL) // copy highlighted panel size
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (highlightedPanel)
@@ -883,7 +720,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'v' && hudShiftState & S_CTRL) // past copied size on the highlighted panel
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (panel_size_copied == '0 0 0' || !highlightedPanel)
@@ -912,7 +749,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 		//restore previous values
 		if (highlightedPanel_backup)
@@ -926,13 +763,13 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 		localcmd("hud save myconfig\n");
 	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 		{
 			pressed_key_time = 0;
 			return true;
@@ -959,12 +796,12 @@ LABEL(find_tab_panel)
 int HUD_Panel_Check_Mouse_Pos(bool allow_move)
 {
 	int i, j = 0;
-	while(j < hud_panels_COUNT)
+	while(j < REGISTRY_COUNT(hud_panels))
 	{
 		i = panel_order[j];
 		j += 1;
 
-		panel = hud_panels_from(i);
+		panel = REGISTRY_GET(hud_panels, i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		HUD_Panel_UpdatePosSize();
 
@@ -1005,7 +842,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	int i;
 	int place = -1;
 	// find out where in the array our current id is, save into place
-	for(i = 0; i < hud_panels_COUNT; ++i)
+	for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 	{
 		if(panel_order[i] == id)
 		{
@@ -1015,7 +852,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	}
 	// place last if we didn't find a place for it yet (probably new panel, or screwed up cvar)
 	if(place == -1)
-		place = hud_panels_COUNT - 1;
+		place = REGISTRY_COUNT(hud_panels) - 1;
 
 	// move all ids up by one step in the array until "place"
 	for(i = place; i > 0; --i)
@@ -1027,7 +864,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 	// let's save them into the cvar by some strcat trickery
 	string s = "";
-	for(i = 0; i < hud_panels_COUNT; ++i)
+	for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 	{
 		s = strcat(s, ftos(panel_order[i]), " ");
 	}
@@ -1039,12 +876,12 @@ void HUD_Panel_Highlight(float allow_move)
 {
 	int i, j = 0;
 
-	while(j < hud_panels_COUNT)
+	while(j < REGISTRY_COUNT(hud_panels))
 	{
 		i = panel_order[j];
 		j += 1;
 
-		panel = hud_panels_from(i);
+		panel = REGISTRY_GET(hud_panels, i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
 			continue;
 		HUD_Panel_UpdatePosSize();
@@ -1054,7 +891,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// move
 		if(allow_move && mousepos.x > panel_pos.x && mousepos.y > panel_pos.y && mousepos.x < panel_pos.x + panel_size.x && mousepos.y < panel_pos.y + panel_size.y)
 		{
-			highlightedPanel = hud_panels_from(i);
+			highlightedPanel = REGISTRY_GET(hud_panels, i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 1;
 			panel_click_distance = mousepos - panel_pos;
@@ -1063,7 +900,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from topleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			highlightedPanel = hud_panels_from(i);
+			highlightedPanel = REGISTRY_GET(hud_panels, i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 1;
@@ -1074,7 +911,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from topright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			highlightedPanel = hud_panels_from(i);
+			highlightedPanel = REGISTRY_GET(hud_panels, i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 2;
@@ -1086,7 +923,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from bottomleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			highlightedPanel = hud_panels_from(i);
+			highlightedPanel = REGISTRY_GET(hud_panels, i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 3;
@@ -1098,7 +935,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from bottomright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			highlightedPanel = hud_panels_from(i);
+			highlightedPanel = REGISTRY_GET(hud_panels, i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 4;
@@ -1247,8 +1084,8 @@ void HUD_Configure_Frame()
 		if(!hud_configure_prev)
 		{
 			hudShiftState = 0;
-			for(i = hud_panels_COUNT - 1; i >= 0; --i)
-				hud_panels_from(panel_order[i]).update_time = time;
+			for(i = REGISTRY_COUNT(hud_panels) - 1; i >= 0; --i)
+				REGISTRY_GET(hud_panels, panel_order[i]).update_time = time;
 		}
 
 		// NOTE this check is necessary because _menu_alpha isn't updated the frame the menu gets enabled

@@ -1,30 +1,35 @@
 #include "havocbot.qh"
 
-#include "roles.qh"
-
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "../cvars.qh"
-
-#include "../aim.qh"
-#include "../bot.qh"
-#include "../navigation.qh"
-#include "../scripting.qh"
-#include "../waypoints.qh"
-
 #include <common/constants.qh>
 #include <common/impulses/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/hurt.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
-#include <common/items/_mod.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
-
-#include <common/mapobjects/func/ladder.qh>
-#include <common/mapobjects/teleporters.qh>
-#include <common/mapobjects/trigger/jumppads.qh>
-
 #include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/aim.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/roles.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/bot/default/scripting.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 
 void havocbot_ai(entity this)
 {
@@ -39,6 +44,10 @@ void havocbot_ai(entity this)
 	if(bot_execute_commands(this))
 		return;
 
+	// after bot_execute_commands otherwise bots can't be unpaused
+	if (bot_ispaused(this))
+		return;
+
 	if (bot_strategytoken == this && !bot_strategytoken_taken)
 	{
 		if(this.havocbot_blockhead)
@@ -48,7 +57,7 @@ void havocbot_ai(entity this)
 		else
 		{
 			if (!this.jumppadcount && !STAT(FROZEN, this)
-				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
+				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) && !IS_ONGROUND(this)))
 			{
 				// find a new goal
 				this.havocbot_role(this); // little too far down the rabbit hole
@@ -561,8 +570,8 @@ void havocbot_movetogoal(entity this)
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
 		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
-			* ((this.strength_finished > time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
-			* ((this.invincible_finished > time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
+			* ((StatusEffects_active(STATUSEFFECT_Strength, this)) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
+			* ((StatusEffects_active(STATUSEFFECT_Shield, this)) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
 		// save some CPU cycles by checking trigger_hurt after checking
 		// that something can be done to evade it (cheaper checks)
@@ -956,7 +965,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
-					if (this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP && this.goalstack01)
+					if ((this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP) && this.goalstack01)
 					{
 						// oblique warpzones need a jump otherwise bots gets stuck
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
@@ -1174,7 +1183,7 @@ void havocbot_movetogoal(entity this)
 	}
 
 	float ladder_zdir = 0;
-	if(time < this.ladder_time)
+	if(this.ladder_entity)
 	{
 		if(this.goalcurrent.origin.z + this.goalcurrent.mins.z > this.origin.z + this.mins.z)
 		{
@@ -1476,13 +1485,13 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {
-			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
+			for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
+				if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
 				{
 					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
-					this.(weaponentity).m_switchweapon = Weapons_from(w);
+					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 					return;
 				}
 			}
@@ -1490,26 +1499,26 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 
 		// Choose weapons for mid distance
 		if ( distance > bot_distance_close) {
-			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
+			for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
+				if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
 				{
 					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
-					this.(weaponentity).m_switchweapon = Weapons_from(w);
+					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 					return;
 				}
 			}
 		}
 
 		// Choose weapons for close distance
-		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
+		for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
+			if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
 			{
 				if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 					continue;
-				this.(weaponentity).m_switchweapon = Weapons_from(w);
+				this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 				return;
 			}
 		}

@@ -3,6 +3,8 @@
 #include <common/mutators/mutator/instagib/items.qh>
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
 
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
@@ -203,9 +205,7 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 
 	if(warmup_stage)
 		return false;
-	if(player.frags == FRAGS_SPECTATOR)
-		return true;
-	if(GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
+	if(player.frags == FRAGS_SPECTATOR || GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
 		return true;
@@ -221,8 +221,6 @@ void lms_RemovePlayer(entity player)
 	{
 		if (player.lms_spectate_warning < 2)
 		{
-			if(IS_BOT_CLIENT(player))
-				bot_clear(player);
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			int pl_cnt = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
@@ -446,8 +444,6 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 				pl_cnt++;
 			});
-			if(IS_BOT_CLIENT(frag_target))
-				bot_clear(frag_target);
 			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
 		}
@@ -494,6 +490,7 @@ void lms_extralife(entity this)
 
 MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 {
+	if (MUTATOR_RETURNVALUE) return false;
 	if (!autocvar_g_powerups) return false;
 	if (!autocvar_g_lms_extra_lives) return false;
 
@@ -515,6 +512,8 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 {
+	if(MUTATOR_RETURNVALUE) return false;
+
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 

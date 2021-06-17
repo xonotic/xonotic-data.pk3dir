@@ -16,6 +16,13 @@ int MapInfo_Map_flags;
 vector MapInfo_Map_mins; // these are '0 0 0' if not supported!
 vector MapInfo_Map_maxs; // these are '0 0 0' if not specified!
 
+const int GAMETYPE_FLAG_TEAMPLAY        = BIT(0); // teamplay based
+const int GAMETYPE_FLAG_USEPOINTS       = BIT(1); // gametype has point-based scoring
+const int GAMETYPE_FLAG_PREFERRED       = BIT(2); // preferred (when available) in random selections
+const int GAMETYPE_FLAG_PRIORITY        = BIT(3); // priority selection when preferred gametype isn't available in random selections
+const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); // don't display a score limit needed for winning the match in the scoreboard
+const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); // gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
+
 int MAPINFO_TYPE_ALL;
 .int m_flags;
 
@@ -33,13 +40,20 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, team, bool, false);
     /** does this gametype use a point limit? */
     ATTRIB(Gametype, frags, bool, true);
+    /** should this gametype display a score limit in the scoreboard? */
+    ATTRIB(Gametype, m_hidelimits, bool, false);
+    /** does this gametype enforce its own weapon arena? */
+    ATTRIB(Gametype, m_weaponarena, bool, false);
     /** game type defaults */
     ATTRIB(Gametype, model2, string);
     /** game type description */
     ATTRIB(Gametype, gametype_description, string);
+    /** game type priority in random selections */
+    ATTRIB(Gametype, m_priority, int, 0);
 #ifdef CSQC
     ATTRIB(Gametype, m_modicons, void(vector pos, vector mySize));
     ATTRIB(Gametype, m_modicons_reset, void());
+    ATTRIB(Gametype, m_modicons_export, void(int fh));
 #endif
 
     /** DO NOT USE, this is compatibility for legacy maps! */
@@ -84,528 +98,38 @@ CLASS(Gametype, Object)
         returns(this.message, strcat("gametype_", this.mdl));
     }
 
-    METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, bool gteamplay, bool gusepoints, string mutators, string defaults, string gdescription))
+    METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
     {
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
-        this.team = gteamplay;
+        this.team = (gflags & GAMETYPE_FLAG_TEAMPLAY);
         this.m_mutators = cons(sname, mutators);
         this.model2 = defaults;
         this.gametype_description = gdescription;
-        this.frags = gusepoints;
+        this.frags = (gflags & GAMETYPE_FLAG_USEPOINTS);
+        this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
+        this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
+        this.m_weaponarena = (gflags & GAMETYPE_FLAG_WEAPONARENA);
 
         // same as `1 << m_id`
         MAPINFO_TYPE_ALL |= this.items = this.m_flags = (MAPINFO_TYPE_ALL + 1);
     }
 ENDCLASS(Gametype)
 
-REGISTRY(Gametypes, 24)
-#define Gametypes_from(i) _Gametypes_from(i, NULL)
+REGISTRY(Gametypes, 32)
 REGISTER_REGISTRY(Gametypes)
+REGISTRY_SORT(Gametypes);
 REGISTRY_CHECK(Gametypes)
+
+REGISTRY_DEFINE_GET(Gametypes, NULL)
+STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
+#ifndef CSQC
+// NOTE: ISGAMETYPE in csqc (temporary hack)
 #define IS_GAMETYPE(NAME) (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
-
-CLASS(Deathmatch, Gametype)
-    INIT(Deathmatch)
-    {
-        this.gametype_init(this, _("Deathmatch"),"dm","g_dm",false,true,"","timelimit=15 pointlimit=30 leadlimit=0",_("Score as many frags as you can"));
-    }
-    METHOD(Deathmatch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        return true;
-    }
-    ATTRIB(Deathmatch, m_legacydefaults, string, "30 20 0");
-ENDCLASS(Deathmatch)
-REGISTER_GAMETYPE(DEATHMATCH, NEW(Deathmatch));
-
-CLASS(LastManStanding, Gametype)
-    INIT(LastManStanding)
-    {
-        this.gametype_init(this, _("Last Man Standing"),"lms","g_lms",false,true,"","timelimit=20 lives=5 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
-    }
-    METHOD(LastManStanding, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        return true;
-    }
-    METHOD(LastManStanding, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null);
-    }
-    ATTRIB(LastManStanding, m_legacydefaults, string, "9 20 0");
-ENDCLASS(LastManStanding)
-REGISTER_GAMETYPE(LMS, NEW(LastManStanding));
-
-#ifdef CSQC
-void HUD_Mod_Race(vector pos, vector mySize);
 #endif
-CLASS(Race, Gametype)
-    INIT(Race)
-    {
-        this.gametype_init(this, _("Race"),"rc","g_race",false,true,"","timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line"));
-    }
-    METHOD(Race, m_parse_mapinfo, bool(string k, string v))
-    {
-        if (!k) {
-            cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
-            return true;
-        }
-        switch (k) {
-            case "qualifying_timelimit":
-                cvar_set("g_race_qualifying_timelimit", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(Race, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "trigger_race_checkpoint")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(Race, m_isTwoBaseMode, bool())
-    {
-        return true;
-    }
-    METHOD(Race, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Laps:"),            1,   25,  1, "g_race_laps_limit",         string_null,                    string_null);
-    }
-#ifdef CSQC
-    ATTRIB(Race, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
-#endif
-    ATTRIB(Race, m_legacydefaults, string, "20 5 7 15 0");
-ENDCLASS(Race)
-REGISTER_GAMETYPE(RACE, NEW(Race));
-#define g_race IS_GAMETYPE(RACE)
-
-CLASS(RaceCTS, Gametype)
-    INIT(RaceCTS)
-    {
-        this.gametype_init(this, _("Race CTS"),"cts","g_cts",false,false,"cloaked","timelimit=20",_("Race for fastest time."));
-    }
-    METHOD(RaceCTS, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "target_startTimer")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(RaceCTS, m_setTeams, void(string sa))
-    {
-        // this is the skill of the map
-        // not parsed by anything yet
-        // for map databases
-        //  cvar_set("fraglimit", sa);
-    }
-    METHOD(RaceCTS, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
-    }
-#ifdef CSQC
-    ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
-#endif
-    ATTRIB(RaceCTS, m_legacydefaults, string, "20 0 0");
-ENDCLASS(RaceCTS)
-REGISTER_GAMETYPE(CTS, NEW(RaceCTS));
-#define g_cts IS_GAMETYPE(CTS)
-
-CLASS(TeamDeathmatch, Gametype)
-    INIT(TeamDeathmatch)
-    {
-        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",true,true,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
-    }
-    METHOD(TeamDeathmatch, m_parse_mapinfo, bool(string k, string v))
-    {
-        if (!k) {
-            cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
-            return true;
-        }
-        switch (k) {
-            case "teams":
-                cvar_set("g_tdm_teams", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(TeamDeathmatch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        if(spawnpoints >= 8 && diameter > 4096)
-            return true;
-        return false;
-    }
-    METHOD(TeamDeathmatch, m_isForcedSupported, bool(Gametype this))
-    {
-        if(cvar("g_tdm_on_dm_maps"))
-        {
-            // if this is set, all DM maps support TDM too
-            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
-                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
-        }
-        return false;
-    }
-    METHOD(TeamDeathmatch, m_setTeams, void(string sa))
-    {
-        cvar_set("g_tdm_teams", sa);
-    }
-    METHOD(TeamDeathmatch, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end"));
-    }
-    ATTRIB(TeamDeathmatch, m_legacydefaults, string, "50 20 2 0");
-ENDCLASS(TeamDeathmatch)
-REGISTER_GAMETYPE(TEAM_DEATHMATCH, NEW(TeamDeathmatch));
-#define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
-
-#ifdef CSQC
-void HUD_Mod_CTF(vector pos, vector mySize);
-void HUD_Mod_CTF_Reset();
-#endif
-CLASS(CaptureTheFlag, Gametype)
-    INIT(CaptureTheFlag)
-    {
-        this.gametype_init(this, _("Capture the Flag"),"ctf","g_ctf",true,true,"","timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it, defend your base from the other team"));
-    }
-    METHOD(CaptureTheFlag, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "item_flag_team2" || v == "team_CTF_blueflag")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(CaptureTheFlag, m_isTwoBaseMode, bool())
-    {
-        return true;
-    }
-    METHOD(CaptureTheFlag, m_setTeams, void(string sa))
-    {
-        cvar_set("fraglimit", sa);
-    }
-    METHOD(CaptureTheFlag, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end"));
-    }
-#ifdef CSQC
-    ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
-    ATTRIB(CaptureTheFlag, m_modicons_reset, void(), HUD_Mod_CTF_Reset);
-#endif
-    ATTRIB(CaptureTheFlag, m_legacydefaults, string, "300 20 10 0");
-ENDCLASS(CaptureTheFlag)
-REGISTER_GAMETYPE(CTF, NEW(CaptureTheFlag));
-#define g_ctf IS_GAMETYPE(CTF)
-
-#ifdef CSQC
-void HUD_Mod_CA(vector pos, vector mySize);
-#endif
-CLASS(ClanArena, Gametype)
-    INIT(ClanArena)
-    {
-        this.gametype_init(this, _("Clan Arena"),"ca","g_ca",true,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill all enemy teammates to win the round"));
-    }
-    METHOD(ClanArena, m_parse_mapinfo, bool(string k, string v))
-    {
-        if (!k) {
-            cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
-            return true;
-        }
-        switch (k) {
-            case "teams":
-                cvar_set("g_ca_teams", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(ClanArena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        if(spawnpoints >= 8 && diameter > 4096)
-            return true;
-        return false;
-    }
-    METHOD(ClanArena, m_setTeams, void(string sa))
-    {
-        cvar_set("g_ca_teams", sa);
-    }
-    METHOD(ClanArena, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of frags needed before the match will end"));
-    }
-#ifdef CSQC
-    ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
-#endif
-    ATTRIB(ClanArena, m_legacydefaults, string, "10 20 0");
-ENDCLASS(ClanArena)
-REGISTER_GAMETYPE(CA, NEW(ClanArena));
-#define g_ca IS_GAMETYPE(CA)
-
-#ifdef CSQC
-void HUD_Mod_Dom(vector pos, vector mySize);
-#endif
-CLASS(Domination, Gametype)
-    INIT(Domination)
-    {
-        this.gametype_init(this, _("Domination"),"dom","g_domination",true,true,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win"));
-    }
-    METHOD(Domination, m_parse_mapinfo, bool(string k, string v))
-    {
-        if (!k) {
-            cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
-            return true;
-        }
-        switch (k) {
-            case "teams":
-                cvar_set("g_domination_default_teams", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(Domination, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "dom_controlpoint")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(Domination, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end"));
-    }
-#ifdef CSQC
-    ATTRIB(Domination, m_modicons, void(vector pos, vector mySize), HUD_Mod_Dom);
-#endif
-    ATTRIB(Domination, m_legacydefaults, string, "200 20 0");
-ENDCLASS(Domination)
-REGISTER_GAMETYPE(DOMINATION, NEW(Domination));
-
-#ifdef CSQC
-void HUD_Mod_KH(vector pos, vector mySize);
-#endif
-CLASS(KeyHunt, Gametype)
-    INIT(KeyHunt)
-    {
-        this.gametype_init(this, _("Key Hunt"),"kh","g_keyhunt",true,true,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
-    }
-    METHOD(KeyHunt, m_parse_mapinfo, bool(string k, string v))
-    {
-        if (!k) {
-            cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
-            return true;
-        }
-        switch (k) {
-            case "teams":
-                cvar_set("g_keyhunt_teams", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(KeyHunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        if(spawnpoints >= 12 && diameter > 5120)
-            return true;
-        return false;
-    }
-    METHOD(KeyHunt, m_setTeams, void(string sa))
-    {
-        cvar_set("g_keyhunt_teams", sa);
-    }
-    METHOD(KeyHunt, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end"));
-    }
-#ifdef CSQC
-    ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);
-#endif
-    ATTRIB(KeyHunt, m_legacydefaults, string, "1000 20 3 0");
-ENDCLASS(KeyHunt)
-REGISTER_GAMETYPE(KEYHUNT, NEW(KeyHunt));
-
-CLASS(Assault, Gametype)
-    INIT(Assault)
-    {
-        this.gametype_init(this, _("Assault"),"as","g_assault",true,false,"","timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
-    }
-    METHOD(Assault, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "target_assault_roundend")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(Assault, m_isTwoBaseMode, bool())
-    {
-        return true;
-    }
-    METHOD(Assault, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
-    }
-    ATTRIB(Assault, m_legacydefaults, string, "20 0");
-ENDCLASS(Assault)
-REGISTER_GAMETYPE(ASSAULT, NEW(Assault));
-#define g_assault IS_GAMETYPE(ASSAULT)
-
-CLASS(Onslaught, Gametype)
-    INIT(Onslaught)
-    {
-        this.gametype_init(this, _("Onslaught"),"ons","g_onslaught",true,false,"","pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
-    }
-    METHOD(Onslaught, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "onslaught_generator")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(Onslaught, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
-    }
-    ATTRIB(Onslaught, m_legacydefaults, string, "20 0");
-ENDCLASS(Onslaught)
-REGISTER_GAMETYPE(ONSLAUGHT, NEW(Onslaught));
-
-#ifdef CSQC
-void HUD_Mod_NexBall(vector pos, vector mySize);
-#endif
-CLASS(NexBall, Gametype)
-    INIT(NexBall)
-    {
-        this.gametype_init(this, _("Nexball"),"nb","g_nexball",true,true,"","timelimit=20 pointlimit=5 leadlimit=0",_("Shoot and kick the ball into the enemies goal, keep your goal clean"));
-    }
-    METHOD(NexBall, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(NexBall, m_isTwoBaseMode, bool())
-    {
-        return true;
-    }
-    METHOD(NexBall, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Goals:"),           1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end"));
-    }
-#ifdef CSQC
-    ATTRIB(NexBall, m_modicons, void(vector pos, vector mySize), HUD_Mod_NexBall);
-#endif
-    ATTRIB(NexBall, m_legacydefaults, string, "5 20 0");
-ENDCLASS(NexBall)
-REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
-#define g_nexball IS_GAMETYPE(NEXBALL)
-
-CLASS(FreezeTag, Gametype)
-    INIT(FreezeTag)
-    {
-        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",true,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
-    }
-    METHOD(FreezeTag, m_parse_mapinfo, bool(string k, string v))
-    {
-        if (!k) {
-            cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
-            return true;
-        }
-        switch (k) {
-            case "teams":
-                cvar_set("g_freezetag_teams", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(FreezeTag, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        if(spawnpoints >= 8 && diameter > 4096)
-            return true;
-        return false;
-    }
-    METHOD(FreezeTag, m_setTeams, void(string sa))
-    {
-        cvar_set("g_freezetag_teams", sa);
-    }
-    METHOD(FreezeTag, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of frags needed before the match will end"));
-    }
-#ifdef CSQC
-    ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
-#endif
-    ATTRIB(FreezeTag, m_legacydefaults, string, "10 20 0");
-ENDCLASS(FreezeTag)
-REGISTER_GAMETYPE(FREEZETAG, NEW(FreezeTag));
-#define g_freezetag IS_GAMETYPE(FREEZETAG)
-
-#ifdef CSQC
-void HUD_Mod_Keepaway(vector pos, vector mySize);
-#endif
-CLASS(Keepaway, Gametype)
-    INIT(Keepaway)
-    {
-        this.gametype_init(this, _("Keepaway"),"ka","g_keepaway",false,true,"","timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
-    }
-    METHOD(Keepaway, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        return true;
-    }
-#ifdef CSQC
-    ATTRIB(Keepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_Keepaway);
-#endif
-ENDCLASS(Keepaway)
-REGISTER_GAMETYPE(KEEPAWAY, NEW(Keepaway));
-
-CLASS(Invasion, Gametype)
-    INIT(Invasion)
-    {
-        this.gametype_init(this, _("Invasion"),"inv","g_invasion",false,true,"","pointlimit=50 teams=0 type=0",_("Survive against waves of monsters"));
-    }
-    METHOD(Invasion, m_parse_mapinfo, bool(string k, string v))
-    {
-        switch (k) {
-            case "teams":
-                cvar_set("g_invasion_teams", v);
-                return true;
-            case "type":
-                cvar_set("g_invasion_type", v);
-                return true;
-        }
-        return false;
-    }
-    METHOD(Invasion, m_generate_mapinfo, void(Gametype this, string v))
-    {
-        if(v == "invasion_spawnpoint")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
-    }
-    METHOD(Invasion, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
-    {
-        TC(Gametype, this);
-        returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
-    }
-ENDCLASS(Invasion)
-REGISTER_GAMETYPE(INVASION, NEW(Invasion));
-
-CLASS(Duel, Gametype)
-    INIT(Duel)
-    {
-        this.gametype_init(this, _("Duel"),"duel","g_duel",false,true,"","timelimit=10 pointlimit=0 leadlimit=0",_("Fight in a one versus one arena battle to decide the winner"));
-    }
-    METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        return (diameter < 16384);
-    }
-    METHOD(Duel, m_isForcedSupported, bool(Gametype this))
-    {
-        if(!cvar("g_duel_not_dm_maps"))
-        {
-            // if this is set, all DM maps support duel too
-            // TODO: we should really check the size of maps, some DM maps do not work for duel!
-            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
-                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
-        }
-        return false;
-    }
-ENDCLASS(Duel)
-REGISTER_GAMETYPE(DUEL, NEW(Duel));
-#define g_duel IS_GAMETYPE(DUEL)
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
@@ -634,7 +158,7 @@ int MapInfo_ForbiddenFlags(); // retrieves current flags from cvars
 int MapInfo_RequiredFlags(); // retrieves current flags from cvars
 
 // load info about the i-th map into the MapInfo_Map_* globals
-float MapInfo_Get_ByID(float i); // 1 on success, 0 on failure
+bool MapInfo_Get_ByID(int i); // 1 on success, 0 on failure
 string MapInfo_BSPName_ByID(float i);
 
 // load info about a map by name into the MapInfo_Map_* globals
@@ -658,7 +182,7 @@ string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 // gets a gametype from a string
 string _MapInfo_GetDefaultEx(Gametype t);
 float _MapInfo_GetTeamPlayBool(Gametype t);
-Gametype MapInfo_Type_FromString(string t);
+Gametype MapInfo_Type_FromString(string t, bool dowarn);
 string MapInfo_Type_Description(Gametype t);
 string MapInfo_Type_ToString(Gametype t);
 string MapInfo_Type_ToText(Gametype t);
@@ -679,4 +203,4 @@ void MapInfo_ClearTemps(); // call this when done with mapinfo for this frame
 void MapInfo_Shutdown(); // call this in the shutdown handler
 
 #define MAPINFO_SETTEMP_ACL_USER cvar_string("g_mapinfo_settemp_acl")
-#define MAPINFO_SETTEMP_ACL_SYSTEM "-g_mapinfo_* -rcon_* -_* -g_ban* -r_water +*"
+#define MAPINFO_SETTEMP_ACL_SYSTEM "-g_mapinfo_* -rcon_* -_* -g_ban* +*"

@@ -1,20 +1,22 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include "constants.qh"
 	#include <client/mutators/_mod.qh>
-    #include "mapinfo.qh"
-    #include "notifications/all.qh"
-	#include "scores.qh"
-    #include <common/deathtypes/all.qh>
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+	#include <common/scores.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "constants.qh"
+	#include <common/constants.qh>
+	#include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+	#include <common/scores.qh>
 	#include <server/mutators/_mod.qh>
-    #include "notifications/all.qh"
-    #include <common/deathtypes/all.qh>
-	#include "scores.qh"
-    #include "mapinfo.qh"
 #endif
 
 #ifdef SVQC
@@ -508,7 +510,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
-			int wflags = Weapons_from(w).spawnflags;
+			int wflags = REGISTRY_GET(Weapons, w).spawnflags;
 			if(wflags & WEP_FLAG_SPECIALATTACK)
 				continue;
 			for(i = 0; i < n; ++i)
@@ -768,57 +770,6 @@ int cvar_settemp_restore()
 	return j;
 }
 
-bool isCaretEscaped(string theText, float pos)
-{
-	int i = 0;
-	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
-		++i;
-	return (i & 1);
-}
-
-int skipIncompleteTag(string theText, float pos, int len)
-{
-	int tag_start = -1;
-
-	if(substring(theText, pos - 1, 1) == "^")
-	{
-		if(isCaretEscaped(theText, pos - 1) || pos >= len)
-			return 0;
-
-		int ch = str2chr(theText, pos);
-		if(ch >= '0' && ch <= '9')
-			return 1; // ^[0-9] color code found
-		else if (ch == 'x')
-			tag_start = pos - 1; // ^x tag found
-		else
-			return 0;
-	}
-	else
-	{
-		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
-		{
-			if(substring(theText, pos - i, 2) == "^x")
-			{
-				tag_start = pos - i; // ^x tag found
-				break;
-			}
-		}
-	}
-
-	if(tag_start >= 0)
-	{
-		if(tag_start + 5 < len)
-		if(IS_HEXDIGIT(substring(theText, tag_start + 2, 1)))
-		if(IS_HEXDIGIT(substring(theText, tag_start + 3, 1)))
-		if(IS_HEXDIGIT(substring(theText, tag_start + 4, 1)))
-		{
-			if(!isCaretEscaped(theText, tag_start))
-				return 5 - (pos - tag_start); // ^xRGB color code found
-		}
-	}
-	return 0;
-}
-
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
 	// STOP.
@@ -840,7 +791,11 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	{
 		middle = floor((left + right) / 2);
 		if(colors)
-			ofs = skipIncompleteTag(theText, middle, len);
+		{
+			vector res = checkColorCode(theText, len, middle, false);
+			ofs = (res.x) ? res.x - res.y : 0;
+		}
+
 		if(w(substring(theText, 0, middle + ofs), theSize) <= maxWidth)
 			left = middle + ofs;
 		else
@@ -872,7 +827,11 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	{
 		middle = floor((left + right) / 2);
 		if(colors)
-			ofs = skipIncompleteTag(theText, middle, len);
+		{
+			vector res = checkColorCode(theText, len, middle, true);
+			ofs = (!res.x) ? 0 : res.x - res.y;
+		}
+
 		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
 			left = middle + ofs;
 		else
@@ -920,11 +879,7 @@ string find_last_color_code(string s)
 
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	float cantake;
-	float take;
-	string s;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -932,30 +887,26 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
-	if(cantake > 0 && cantake < strlen(s))
+	int take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	if(take_until > 0 && take_until < strlen(s))
 	{
-		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
-			--take;
-		if(take == 0)
+		int last_word = take_until - 1;
+		while(last_word > 0 && substring(s, last_word, 1) != " ")
+			--last_word;
+
+		int skip = 0;
+		if(last_word != 0)
 		{
-			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-			return substring(s, 0, cantake);
+			take_until = last_word;
+			skip = 1;
 		}
-		else
-		{
-			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
-			return substring(s, 0, take);
-		}
+
+		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7", theFontSize) == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
 	}
 	else
 	{
@@ -966,11 +917,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 {
-	float cantake;
-	float take;
-	string s;
-
-	s = getWrappedLine_remaining;
+	string s = getWrappedLine_remaining;
 
 	if(w <= 0)
 	{
@@ -978,30 +925,26 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	cantake = textLengthUpToLength(s, w, tw);
-	if(cantake > 0 && cantake < strlen(s))
+	int take_until = textLengthUpToLength(s, w, tw);
+	if(take_until > 0 && take_until < strlen(s))
 	{
-		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
-			--take;
-		if(take == 0)
+		int last_word = take_until - 1;
+		while(last_word > 0 && substring(s, last_word, 1) != " ")
+			--last_word;
+
+		int skip = 0;
+		if(last_word != 0)
 		{
-			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
-			return substring(s, 0, cantake);
+			take_until = last_word;
+			skip = 1;
 		}
-		else
-		{
-			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
-			if(getWrappedLine_remaining == "")
-				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
-				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
-			return substring(s, 0, take);
-		}
+
+		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7") == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
 	}
 	else
 	{
@@ -1296,7 +1239,7 @@ ERASEABLE
 void write_String_To_File(int fh, string str, bool alsoprint)
 {
 	fputs(fh, str);
-	if (alsoprint) LOG_INFO(str);
+	if (alsoprint) LOG_HELP(str);
 }
 
 string get_model_datafilename(string m, float sk, string fil)
@@ -1767,23 +1710,6 @@ Notification Announcer_PickNumber(int type, int num)
 			}
 			break;
 		}
-		case CNT_IDLE:
-		{
-			switch(num)
-			{
-				case 10: return ANNCE_NUM_IDLE_10;
-				case 9:  return ANNCE_NUM_IDLE_9;
-				case 8:  return ANNCE_NUM_IDLE_8;
-				case 7:  return ANNCE_NUM_IDLE_7;
-				case 6:  return ANNCE_NUM_IDLE_6;
-				case 5:  return ANNCE_NUM_IDLE_5;
-				case 4:  return ANNCE_NUM_IDLE_4;
-				case 3:  return ANNCE_NUM_IDLE_3;
-				case 2:  return ANNCE_NUM_IDLE_2;
-				case 1:  return ANNCE_NUM_IDLE_1;
-			}
-			break;
-		}
 		case CNT_KILL:
 		{
 			switch(num)
@@ -1835,6 +1761,7 @@ Notification Announcer_PickNumber(int type, int num)
 			}
 			break;
 		}
+		case CNT_NORMAL:
 		default:
 		{
 			switch(num)
@@ -1892,3 +1819,229 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 	return CONTENT_EMPTY;
 }
 #endif
+
+#ifdef SVQC
+void attach_sameorigin(entity e, entity to, string tag)
+{
+    vector org, t_forward, t_left, t_up, e_forward, e_up;
+    float tagscale;
+
+    org = e.origin - gettaginfo(to, gettagindex(to, tag));
+    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
+    t_forward = v_forward * tagscale;
+    t_left = v_right * -tagscale;
+    t_up = v_up * tagscale;
+
+    e.origin_x = org * t_forward;
+    e.origin_y = org * t_left;
+    e.origin_z = org * t_up;
+
+    // current forward and up directions
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_FromVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_FromAngles(e.angles);
+    fixedmakevectors(e.angles);
+
+    // untransform forward, up!
+    e_forward.x = v_forward * t_forward;
+    e_forward.y = v_forward * t_left;
+    e_forward.z = v_forward * t_up;
+    e_up.x = v_up * t_forward;
+    e_up.y = v_up * t_left;
+    e_up.z = v_up * t_up;
+
+    e.angles = fixedvectoangles2(e_forward, e_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+
+    setattachment(e, to, tag);
+    setorigin(e, e.origin);
+}
+
+void detach_sameorigin(entity e)
+{
+    vector org;
+    org = gettaginfo(e, 0);
+    e.angles = fixedvectoangles2(v_forward, v_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+    setorigin(e, org);
+    setattachment(e, NULL, "");
+    setorigin(e, e.origin);
+}
+
+void follow_sameorigin(entity e, entity to)
+{
+    set_movetype(e, MOVETYPE_FOLLOW); // make the hole follow
+    e.aiment = to; // make the hole follow bmodel
+    e.punchangle = to.angles; // the original angles of bmodel
+    e.view_ofs = e.origin - to.origin; // relative origin
+    e.v_angle = e.angles - to.angles; // relative angles
+}
+
+#if 0
+// TODO: unused, likely for a reason, possibly needs extensions (allow setting the new movetype as a parameter?)
+void unfollow_sameorigin(entity e)
+{
+    set_movetype(e, MOVETYPE_NONE);
+}
+#endif
+
+.string aiment_classname;
+.float aiment_deadflag;
+void SetMovetypeFollow(entity ent, entity e)
+{
+	// FIXME this may not be warpzone aware
+	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
+	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
+	ent.aiment = e; // make the hole follow bmodel
+	ent.punchangle = e.angles; // the original angles of bmodel
+	ent.view_ofs = ent.origin - e.origin; // relative origin
+	ent.v_angle = ent.angles - e.angles; // relative angles
+	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_deadflag = e.deadflag;
+
+	if(IS_PLAYER(ent.aiment))
+	{
+		entity pl = ent.aiment;
+		ent.view_ofs.x = bound(pl.mins.x + 4, ent.view_ofs.x, pl.maxs.x - 4);
+		ent.view_ofs.y = bound(pl.mins.y + 4, ent.view_ofs.y, pl.maxs.y - 4);
+		ent.view_ofs.z = bound(pl.mins.z + 4, ent.view_ofs.z, pl.maxs.z - 4);
+	}
+}
+
+void UnsetMovetypeFollow(entity ent)
+{
+	set_movetype(ent, MOVETYPE_FLY);
+	PROJECTILE_MAKETRIGGER(ent);
+	if (ent.aiment_classname)
+		strunzone(ent.classname);
+	// FIXME: engine bug?
+	// resetting aiment the engine will set orb's origin close to world's origin
+	//ent.aiment = NULL;
+}
+
+int LostMovetypeFollow(entity ent)
+{
+/*
+	if(ent.move_movetype != MOVETYPE_FOLLOW)
+		if(ent.aiment)
+			error("???");
+*/
+	// FIXME: engine bug?
+	// when aiment disconnects the engine will set orb's origin close to world's origin
+	if(!ent.aiment)
+		return 2;
+	if(ent.aiment.classname != ent.aiment_classname || ent.aiment.deadflag != ent.aiment_deadflag)
+		return 1;
+	return 0;
+}
+#endif
+
+#ifdef GAMEQC
+// decolorizes and team colors the player name when needed
+string playername(string thename, int teamid, bool team_colorize)
+{
+	TC(int, teamid);
+	bool do_colorize = (teamplay && team_colorize);
+#ifdef SVQC
+	if(do_colorize && !intermission_running)
+#else
+	if(do_colorize)
+#endif
+    {
+        string t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return thename;
+}
+
+float trace_hits_box_a0, trace_hits_box_a1;
+
+float trace_hits_box_1d(float end, float thmi, float thma)
+{
+    if (end == 0)
+    {
+        // just check if x is in range
+        if (0 < thmi)
+            return false;
+        if (0 > thma)
+            return false;
+    }
+    else
+    {
+        // do the trace with respect to x
+        // 0 -> end has to stay in thmi -> thma
+        trace_hits_box_a0 = max(trace_hits_box_a0, min(thmi / end, thma / end));
+        trace_hits_box_a1 = min(trace_hits_box_a1, max(thmi / end, thma / end));
+        if (trace_hits_box_a0 > trace_hits_box_a1)
+            return false;
+    }
+    return true;
+}
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma)
+{
+    end -= start;
+    thmi -= start;
+    thma -= start;
+    // now it is a trace from 0 to end
+
+    trace_hits_box_a0 = 0;
+    trace_hits_box_a1 = 1;
+
+    if (!trace_hits_box_1d(end.x, thmi.x, thma.x))
+        return false;
+    if (!trace_hits_box_1d(end.y, thmi.y, thma.y))
+        return false;
+    if (!trace_hits_box_1d(end.z, thmi.z, thma.z))
+        return false;
+
+    return true;
+}
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma)
+{
+    return trace_hits_box(start, end, thmi - ma, thma - mi);
+}
+#endif
+
+ERASEABLE
+float cvar_or(string cv, float v)
+{
+	string s = cvar_string(cv);
+	if(s == "")
+		return v;
+	else
+		return stof(s);
+}
+
+// NOTE base is the central value
+// freq: circle frequency, = 2*pi*frequency in hertz
+// start_pos:
+//  -1 start from the lower value
+//   0 start from the base value
+//   1 start from the higher value
+ERASEABLE
+float blink_synced(float base, float range, float freq, float start_time, int start_pos)
+{
+	// note:
+	//   RMS = sqrt(base^2 + 0.5 * range^2)
+	// thus
+	//   base = sqrt(RMS^2 - 0.5 * range^2)
+	// ensure RMS == 1
+
+	return base + range * sin((time - start_time - (M_PI / 2) * start_pos) * freq);
+}
+
+ERASEABLE
+float blink(float base, float range, float freq)
+{
+	return blink_synced(base, range, freq, 0, 0);
+}

@@ -11,7 +11,7 @@ CLASS(Health, Pickup)
 ENDCLASS(Health)
 
 #ifdef SVQC
-    #include <common/t_items.qh>
+    #include <server/items/items.qh>
 #endif
 
 #ifdef GAMEQC
@@ -42,7 +42,7 @@ REGISTER_ITEM(HealthSmall, Health) {
     this.m_name                 =   _("Small health");
     this.m_icon                 =   "health";
 #ifdef SVQC
-    this.m_itemid               =   IT_5HP;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
     this.m_pickupanyway         =   GET(g_pickup_healthsmall_anyway);
@@ -80,7 +80,7 @@ REGISTER_ITEM(HealthMedium, Health) {
     this.m_name                 =   _("Medium health");
     this.m_icon                 =   "health";
 #ifdef SVQC
-    this.m_itemid               =   IT_25HP;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
     this.m_pickupanyway         =   GET(g_pickup_healthmedium_anyway);
@@ -120,7 +120,7 @@ REGISTER_ITEM(HealthBig, Health) {
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Big health");
 #ifdef SVQC
-    this.m_itemid               =   IT_25HP;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
     this.m_pickupanyway         =   GET(g_pickup_healthbig_anyway);
@@ -162,7 +162,7 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';
-    this.m_itemid               =   IT_HEALTH;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_healthmega_anyway);

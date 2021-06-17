@@ -51,7 +51,8 @@ string(string, string...) strcat1n = #115;
 #define _LOG_HEADER(level) "^9[::^7"PROGNAME"^9::"level"^9] ", __SOURCELOC__
 #define _LOG(f, level, s) \
 	MACRO_BEGIN \
-		f(strcat1n(_LOG_HEADER(level), "\n^7", s, "\n")); \
+		if (autocvar_developer > 0) f(strcat1n(_LOG_HEADER(level), "\n")); \
+		f(strcat1n("^7", s, "\n")); \
 	MACRO_END
 
 #define  LOG_FATAL(...) _LOG_FATAL(strcat1n(__VA_ARGS__))
@@ -70,9 +71,9 @@ string(string, string...) strcat1n = #115;
 #define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
 #define _LOG_INFO(s) \
 	MACRO_BEGIN \
-		dprint(_LOG_HEADER("^5INFO")); \
+		if (autocvar_developer > 1) dprint(strcat1n(_LOG_HEADER("^5INFO"), "\n")); \
 		string __s = s; \
-		print("\n^7", __s); \
+		print("^7", __s); \
 		/* TODO: unconditionally add a newline when possible */ \
 		if (str2chr(__s, strlen(__s) - 1) != '\n') { print("\n"); } \
 	MACRO_END
@@ -90,29 +91,28 @@ string(string, string...) strcat1n = #115;
 		if (autocvar_developer > 1) dprint(msg); \
 	MACRO_END
 
+// simpler version for help messages
+#define  LOG_HELP(...) _LOG_HELP(strcat1n(__VA_ARGS__))
+#define  LOG_HELPF(...) _LOG_HELP(sprintf(__VA_ARGS__))
+#define _LOG_HELP(s) print("^7", s, "\n")
+
 // TODO: this sucks, lets find a better way to do backtraces?
 #define _backtrace() builtin_remove(NULL)
 
 noref int autocvar_developer;
 noref bool autocvar_prvm_backtraceforwarnings;
 
-#ifdef SVQC
-#define bt_cvar_set(cvar, value) builtin_cvar_set(cvar, value)
-#else
-#define bt_cvar_set(cvar, value) cvar_set(cvar, value)
-#endif
-
 #define backtrace(msg) \
 	MACRO_BEGIN \
 		int dev = autocvar_developer; \
 		bool war = autocvar_prvm_backtraceforwarnings; \
-		bt_cvar_set("developer", "1"); \
-		bt_cvar_set("prvm_backtraceforwarnings", "1"); \
+		cvar_set("developer", "1"); \
+		cvar_set("prvm_backtraceforwarnings", "1"); \
 		print("\n--- CUT HERE ---\n", msg); \
 		_backtrace(); \
 		print("\n--- CUT UNTIL HERE ---\n"); \
-		bt_cvar_set("developer", ftos(dev)); \
-		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
+		cvar_set("developer", ftos(dev)); \
+		cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 	MACRO_END
 
 void print_assertfailed_severe(string expr)

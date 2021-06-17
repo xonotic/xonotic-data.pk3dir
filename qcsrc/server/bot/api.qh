@@ -1,8 +1,12 @@
 #pragma once
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <common/weapons/_all.qh>
 #include <common/physics/player.qh>
+
+bool autocvar_g_waypoints_for_items;
+bool bot_waypoints_for_items;
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);
 const int WAYPOINTFLAG_ITEM = BIT(22);
@@ -25,9 +29,9 @@ const int WAYPOINTFLAG_NORELINK__DEPRECATED = BIT(20);
 const int WPFLAGMASK_NORELINK = (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER | WAYPOINTFLAG_JUMP | WAYPOINTFLAG_CUSTOM_JP | WAYPOINTFLAG_SUPPORT);
 
 float bot_custom_weapon;
-float bot_weapons_close[Weapons_MAX];
-float bot_weapons_far[Weapons_MAX];
-float bot_weapons_mid[Weapons_MAX];
+float bot_weapons_close[REGISTRY_MAX(Weapons)];
+float bot_weapons_far[REGISTRY_MAX(Weapons)];
+float bot_weapons_mid[REGISTRY_MAX(Weapons)];
 float skill;
 
 .float bot_tracewalk_time;
@@ -69,7 +73,6 @@ void bot_endgame();
 bool bot_fixcount();
 void bot_list_commands();
 void bot_queuecommand(entity bot, string cmdstring);
-void bot_clear(entity this);
 void bot_relinkplayerlist();
 void bot_resetqueues();
 void bot_serverframe();
@@ -94,6 +97,11 @@ float havocbot_symmetry_origin_order;
 .float goalentity_lock_timeout;
 .float ignoregoaltime;
 .entity ignoregoal;
+
+bool bots_would_leave;
+
+int player_count;
+int currentbots;
 
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
@@ -136,3 +144,13 @@ void waypoint_lock(entity pl);
 
 void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx);
 void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx);
+
+IntrusiveList g_waypoints;
+IntrusiveList g_bot_targets;
+IntrusiveList g_bot_dodge;
+STATIC_INIT(botapi)
+{
+	g_waypoints = IL_NEW();
+	g_bot_targets = IL_NEW();
+	g_bot_dodge = IL_NEW();
+}

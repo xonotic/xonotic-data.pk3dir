@@ -108,6 +108,8 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 	{
 		this.mins = PHYS_PL_MIN(this);
 		this.maxs = PHYS_PL_MAX(this);
+		if (IS_DEAD(this))
+			this.maxs.z = 5;
 		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
@@ -127,7 +129,7 @@ void CSQCPlayer_Physics(entity this)
 {
 	if(!autocvar_cl_movement) { return; }
 
-	_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+	//_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
 	vector oldv_angle = this.v_angle;
 	vector oldangles = this.angles; // we need to save these, as they're abused by other code
@@ -217,7 +219,7 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	float smoothtime = bound(0, time - smooth_prevtime, 0.1);
 	smooth_prevtime = max(smooth_prevtime, drawtime); // drawtime is the previous frame's time at this point
 
-	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0)
+	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
 		stairsmoothz = v.z;
 	else
 	{
@@ -232,6 +234,31 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	v.z += viewheightavg;
 
 	smooth_prevtime = time;
+
+	return v;
+}
+
+// simplified copy of CSQCPlayer_ApplySmoothing for use on player models
+.float stairsmooth_offset;
+.float stairsmooth_prevtime;
+.float stairsmooth_drawtime; // holds the previous draw time
+vector CSQCModel_ApplyStairSmoothing(entity this, bool isonground, vector v)
+{
+	float smoothtime = bound(0, time - this.stairsmooth_prevtime, 0.1);
+	this.stairsmooth_prevtime = max(this.stairsmooth_prevtime, this.stairsmooth_drawtime); // stairsmooth_drawtime is the previous frame's time at this point
+
+	if(this.csqcmodel_teleported || !isonground || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
+		this.stairsmooth_offset = v.z;
+	else
+	{
+		if(this.stairsmooth_offset < v.z)
+			v.z = this.stairsmooth_offset = bound(v.z - PHYS_STEPHEIGHT(this), this.stairsmooth_offset + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(this.stairsmooth_offset > v.z)
+			v.z = this.stairsmooth_offset = bound(v.z, this.stairsmooth_offset - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+	}
+
+	this.stairsmooth_prevtime = time;
+	this.stairsmooth_drawtime = drawtime;
 
 	return v;
 }
@@ -279,7 +306,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(this.csqcmodel_isdead)
+	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this) || !(this.isplayermodel & ISPLAYER_PLAYER))
 		return v;
 
 	// bounded XY speed, used by several effects below
@@ -452,15 +479,34 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 	{
 		makevectors(view_angles);
 		forward = v_forward;
+		if(autocvar_chase_front && spectatee_status != -1)
+			forward = normalize(forward * -1);
 		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
 		float cdist = -autocvar_chase_back - 8;
 		chase_dest.x = v.x + forward.x * cdist;
 		chase_dest.y = v.y + forward.y * cdist;
 		chase_dest.z = v.z + forward.z * cdist + autocvar_chase_up;
-		traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		if (this.move_movetype == MOVETYPE_NOCLIP)
+		{
+			// as if traceline hasn't hit anything
+			trace_endpos = chase_dest;
+			trace_plane_normal = '0 0 0';
+		}
+		else
+		{
+			traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		}
 		v.x = 1 * trace_endpos.x + 8 * forward.x + 4 * trace_plane_normal.x;
 		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
 		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
+
+		if(autocvar_chase_front && spectatee_status != -1)
+		{
+			// now flip the view so the player is looking at themselves
+			vector newang = vectoangles(forward);
+			view_angles.x = view_angles.x * -1; // inverse up-down looking direction
+			view_angles.y = newang.y;
+		}
 	}
 
 #if 0
@@ -567,10 +613,13 @@ void CSQCPlayer_SetCamera()
 #endif
 			CSQCPlayer_SetMinsMaxs(e);
 
-			e.angles_y = input_angles.y;
+			if (!IS_DEAD(e))
+				e.angles.y = input_angles.y;
 		}
 
 		// relink
+		e.stairsmooth_drawtime = drawtime; // since drawtime is a frame old at this point, copy it now to avoid using a drawtime 2 frames old!
+		e.origin = CSQCModel_ApplyStairSmoothing(e, (e.pmove_flags & PMF_ONGROUND), e.origin);
 		setorigin(e, e.origin);
 	}
 
@@ -627,7 +676,8 @@ bool CSQCPlayer_PostUpdate(entity this)
 	if (this.entnum != player_localnum + 1) return false;
 	csqcplayer = this;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
-	cvar_settemp("cl_movement_replay", "0");
+	if (cvar("cl_movement_replay"))
+		cvar_settemp("cl_movement_replay", "0");
 	this.entremove = CSQCPlayer_Remove;
 	return true;
 }

@@ -124,7 +124,7 @@ void ps_setup_pieces(entity minigame)
 			continue;
 		if(i == floor(PS_NUM_CNT * 0.5) && t == floor(PS_LET_CNT * 0.5))
 			continue; // middle piece is empty
-		entity piece = msle_spawn(minigame,"minigame_board_piece");
+		entity piece = msle_spawn(minigame,new(minigame_board_piece));
 		piece.team = 1; // init default team?
 		piece.netname = strzone(minigame_tile_buildname(t,i));
 		minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -541,13 +541,17 @@ int ps_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			//if((minigame.minigame_flags & PS_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = (event == "key_released");
+			if (!(minigame.minigame_flags & PS_TURN_WIN) && !(minigame.minigame_flags & PS_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("a3");
 						else
@@ -555,6 +559,8 @@ int ps_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("c3");
 						else
@@ -562,6 +568,8 @@ int ps_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("a1");
 						else
@@ -569,6 +577,8 @@ int ps_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("a3");
 						else
@@ -577,6 +587,8 @@ int ps_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						ps_make_move(minigame);
 						return true;
 				}
@@ -588,6 +600,7 @@ int ps_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				ps_client_event(minigame, "mouse_moved");
 				ps_make_move(minigame);
 				return true;
 			}

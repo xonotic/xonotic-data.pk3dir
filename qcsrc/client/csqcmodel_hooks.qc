@@ -1,16 +1,17 @@
 #include "csqcmodel_hooks.qh"
-#include "autocvars.qh"
-#include "csqcmodel_hooks.qh"
-#include "miscfunctions.qh"
+
 #include <client/mutators/_mod.qh>
-#include "player_skeleton.qh"
-#include "weapons/projectile.qh"
+#include <client/player_skeleton.qh>
+#include <client/weapons/projectile.qh>
 #include <common/animdecide.qh>
-#include <common/ent_cs.qh>
-#include <common/physics/movetypes/movetypes.qh>
-#include <common/viewloc.qh>
-#include <common/effects/all.qh>
 #include <common/effects/all.inc>
+#include <common/effects/all.qh>
+#include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/mapinfo.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
+#include <common/viewloc.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -109,7 +110,6 @@ string forceplayermodels_goodmodel;
 int forceplayermodels_goodmodelindex;
 
 .vector glowmod;
-.vector old_glowmod;
 
 void CSQCPlayer_ModelAppearance_PreUpdate(entity this)
 {
@@ -135,6 +135,9 @@ void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
 }
 void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 {
+	int cm = this.forceplayermodels_savecolormap;
+	cm = (cm >= 1024) ? cm : (entcs_GetClientColors(cm - 1) + 1024);
+
 	if(MUTATOR_CALLHOOK(ForcePlayermodels_Skip, this, islocalplayer))
 		goto skipforcemodels;
 
@@ -195,9 +198,6 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	// apply it
 	bool isfriend;
-	int cm;
-	cm = this.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (entcs_GetClientColors(cm - 1) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
@@ -229,6 +229,11 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		this.skin = this.forceplayermodels_saveskin;
 	}
 
+	LABEL(skipforcemodels)
+
+	if(MUTATOR_CALLHOOK(ForcePlayercolors_Skip, this, islocalplayer))
+		goto skipforcecolors;
+
 	// forceplayercolors too
 	if(teamplay)
 	{
@@ -239,7 +244,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors == 2 && team_count == 2)
+		if(autocvar_cl_forceplayercolors != 3 && autocvar_cl_forceplayercolors == 2 && team_count == 2)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -278,11 +283,18 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
-		else if(autocvar_cl_forceplayercolors)
+		else if(autocvar_cl_forceplayercolors && (autocvar_cl_forceplayercolors != 3 || ISGAMETYPE(DUEL)))
 			this.colormap = player_localnum + 1;
 	}
 
-	LABEL(skipforcemodels)
+	LABEL(skipforcecolors)
+
+	if((this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST) && !autocvar_cl_respawn_ghosts_keepcolors)
+	{
+		this.glowmod = '0 0 0';
+		this.colormap = 0;
+		return;
+	}
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
@@ -294,16 +306,14 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	{
 		if(this.csqcmodel_isdead)
 		{
-			// Fade out to black now...
-			if(this.old_glowmod == '0 0 0') { this.old_glowmod = this.glowmod; }
-			this.colormap = 0;
-
-			this.glowmod = this.old_glowmod * bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
-			this.glowmod_x = max(this.glowmod.x, 0.0001);
-			this.glowmod_y = max(this.glowmod.y, 0.0001);
-			this.glowmod_z = max(this.glowmod.z, 0.0001);
+			float min_factor = bound(0, autocvar_cl_deathglow_min, 1);
+			if(this.colormap > 0)
+				min_factor /= 2;
+			float glow_fade = bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
+			this.glowmod *= (min_factor + glow_fade * (1 - min_factor));
+			if (this.glowmod == '0 0 0')
+				this.glowmod.x = 0.000001;
 		}
-		else if(this.old_glowmod != '0 0 0') { this.old_glowmod = '0 0 0'; }
 	}
 
 	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (this.csqcmodel_isdead ? "DEAD" : "ALIVE"), this.colormap, vtos(this.glowmod));
@@ -411,7 +421,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		}
 
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
-		if(this.tag_entity.classname == "csqcmodel")
+		if(this.tag_entity.classname == "ENT_CLIENT_MODEL")
 		{
 			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.isplayermodel & ISPLAYER_CLIENT));
 		}
@@ -517,9 +527,15 @@ void CSQCModel_Effects_Apply(entity this)
 	if(eff & EF_FULLBRIGHT)
 		this.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
-		pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	{
+		boxparticles(particleeffectnum(EFFECT_EF_FLAME), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
+		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
 	if(eff & EF_STARDUST)
-		pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	{
+		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
+		//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
 	if(eff & EF_NOSHADOW)
 		this.renderflags |= RF_NOSHADOW;
 	if(eff & EF_NODEPTHTEST)
@@ -601,7 +617,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null" || this.alpha < 0)
+	if(!this.modelindex || this.model == "null")
 	{
 		this.drawmask = 0;
 		if(this.snd_looping > 0)
@@ -657,6 +673,8 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 				tracebox(this.origin + '0 0 1', this.mins, this.maxs, this.origin - '0 0 4', MOVE_NORMAL, this);
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
+				// predicted clients handle smoothing in the prediction code
+				this.origin = CSQCModel_ApplyStairSmoothing(this, onground, this.origin);
 			}
 			animdecide_load_if_needed(this);
 			animdecide_setimplicitstate(this, onground);
@@ -719,6 +737,7 @@ void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islo
 	bool is_playermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
 							(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
+	this.csqcmodel_isdead = false; // workaround for dead players who become a spectator
 
 	// save values set by server
 	if((this.isplayermodel & ISPLAYER_MODEL))

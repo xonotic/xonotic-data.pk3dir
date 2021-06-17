@@ -1,20 +1,13 @@
 #include "projectile.qh"
 
-#include "../autocvars.qh"
-#include "../defs.qh"
-#include "../main.qh"
 #include <client/mutators/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/effects/effect.qh>
 #include <common/effects/all.qh>
+#include <common/effects/effect.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
-
-#include <common/mutators/mutator/nades/nades.qh>
-
 #include <lib/csqcmodel/interpolate.qh>
-
 #include <lib/warpzone/anglestransform.qh>
 
 .float alpha;
@@ -48,7 +41,8 @@ void Projectile_DrawTrail(entity this, vector to)
 	if (this.traileffect)
 	{
 		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
-		boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		entity eff = REGISTRY_GET(Effects, this.traileffect);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 
@@ -94,17 +88,14 @@ void Projectile_Draw(entity this)
 		drawn = (this.iflags & IFLAG_VALID);
 		t = time;
 	}
+	bool is_nade = Projectile_isnade(this.cnt);
 
 	if (!(f & FL_ONGROUND))
 	{
 		rot = '0 0 0';
-		switch (this.cnt)
+		if (is_nade) rot = this.avelocity;
+		else switch (this.cnt)
 		{
-			/*
-			case PROJECTILE_GRENADE:
-			    rot = '-2000 0 0'; // forward
-			    break;
-			*/
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
@@ -114,20 +105,21 @@ void Projectile_Draw(entity this)
 			case PROJECTILE_ROCKET:
 				rot = '0 0 720'; // spinning
 				break;
-			default:
-				break;
 		}
 
-		if (Projectile_isnade(this.cnt))
-			rot = this.avelocity;
-
-		this.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(this.angles), rot * (t - this.spawntime)));
+		if (rot)
+		{
+			if (!rot.x && !rot.y)
+			{
+				// cheaper z-only rotation formula
+				this.angles.z = (rot.z * (t - this.spawntime)) % 360;
+				if (this.angles.z < 0)
+					this.angles.z += 360;
+			}
+			else
+				this.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(this.angles), rot * (t - this.spawntime)));
+		}
 	}
-
-	vector ang;
-	ang = this.angles;
-	ang.x = -ang.x;
-	makevectors(ang);
 
 	a = 1 - (time - this.fade_time) * this.fade_rate;
 	this.alpha = bound(0, this.alphamod * a, 1);
@@ -135,19 +127,22 @@ void Projectile_Draw(entity this)
 		drawn = 0;
 	this.renderflags = 0;
 
+	vector ang = this.angles;
+	ang.x = -ang.x;
 	trailorigin = this.origin;
-	switch (this.cnt)
+	if (is_nade)
+	{
+		makevectors(ang);
+		trailorigin += v_up * 4;
+	}
+	else switch (this.cnt)
 	{
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
+			makevectors(ang);
 			trailorigin += v_right * 1 + v_forward * -10;
 			break;
-		default:
-			break;
 	}
-
-	if (Projectile_isnade(this.cnt))
-		trailorigin += v_up * 4;
 
 	if (drawn)
 		Projectile_DrawTrail(this, trailorigin);
@@ -308,7 +303,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(GRENADE_BOUNCING)   this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(MINE)               this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(BLASTER)            this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
 			HANDLE(HLAC)               this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(PORTO_RED)          this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
 			HANDLE(PORTO_BLUE)         this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
@@ -439,6 +434,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
+			case PROJECTILE_ARC_BOLT:
+				set_movetype(this, MOVETYPE_BOUNCE);
+				settouch(this, func_null);
+				break;
 			case PROJECTILE_RAPTORBOMB:
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
@@ -496,7 +495,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	if (!(this.count & 0x80))
 		InterpolateOrigin_Note(this);
 
-	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
 	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;

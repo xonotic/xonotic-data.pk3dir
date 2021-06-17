@@ -53,9 +53,9 @@
 	.float cvar_cl_dodging_timeout;
 	.bool cvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
-	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
+	#define PHYS_DODGING_TIMEOUT(s) 			CS_CVAR(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
-	#define PHYS_DODGING_ENABLED(s)				CS(s).cvar_cl_dodging
+	#define PHYS_DODGING_ENABLED(s)				CS_CVAR(s).cvar_cl_dodging
 #endif
 
 #ifdef SVQC
@@ -221,7 +221,8 @@ void PM_dodging(entity this)
 	if (!this.dodging_action) return;
 
 	// when swimming or dead, no dodging allowed..
-	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this) || (PHYS_DODGING_CLIENTSELECT && !PHYS_DODGING_ENABLED(this)))
+	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
+	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this) || (PHYS_DODGING_CLIENTSELECT && !PHYS_DODGING_ENABLED(this) && !frozen_dodging))
 	{
 		this.dodging_action = 0;
 		this.dodging_direction.x = 0;
@@ -279,6 +280,7 @@ void PM_dodging_GetPressedKeys(entity this)
 {
 	PM_dodging_checkpressedkeys(this);
 
+	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = this.pressedkeys;
 	keys = BITSET(keys, KEY_FORWARD, 	PHYS_CS(this).movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	PHYS_CS(this).movement.x < 0);
@@ -286,7 +288,7 @@ void PM_dodging_GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_LEFT, 		PHYS_CS(this).movement.y < 0);
 
 	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
-	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
+	keys = BITSET(keys, KEY_CROUCH, 	IS_DUCKED(this)); // workaround: player can't un-crouch until their path is clear, so we keep the button held here
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
 	this.pressedkeys = keys;
