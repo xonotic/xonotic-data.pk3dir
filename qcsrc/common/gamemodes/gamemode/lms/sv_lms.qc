@@ -342,7 +342,8 @@ MUTATOR_HOOKFUNCTION(lms, Damage_Calculate)
 	entity frag_target = M_ARGV(2, entity);
 	float frag_damage = M_ARGV(4, float);
 
-	if (IS_PLAYER(frag_attacker) && !IS_DEAD(frag_target) && frag_attacker != frag_target)
+	if (IS_PLAYER(frag_attacker) && !IS_DEAD(frag_attacker)
+		&& IS_PLAYER(frag_target) && !IS_DEAD(frag_target) && frag_attacker != frag_target)
 	{
 		float vampire_factor = 0;
 
