@@ -19,9 +19,9 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 	if(!autocvar_g_physics_clientselect)
 		return defaultval;
 
-	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
+	if(IS_REAL_CLIENT(this) && Physics_Valid(CS_CVAR(this).cvar_cl_physics))
 	{
-		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
+		string s = strcat("g_physics_", CS_CVAR(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
@@ -450,6 +450,7 @@ void CheckWaterJump(entity this)
 		{	// open at eye level
 			this.velocity_z = 225;
 			this.flags |= FL_WATERJUMP;
+			this.teleport_time = time + 2; // safety net
 			SET_JUMP_HELD(this);
 		}
 	}
@@ -457,7 +458,7 @@ void CheckWaterJump(entity this)
 
 
 #ifdef SVQC
-	#define JETPACK_JUMP(s)	CS(s).cvar_cl_jetpack_jump
+	#define JETPACK_JUMP(s)	CS_CVAR(s).cvar_cl_jetpack_jump
 #elif defined(CSQC)
 	float autocvar_cl_jetpack_jump;
 	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump
@@ -517,8 +518,6 @@ void SpecialCommand(entity this)
 		if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
 			LOG_INFO("A hollow voice says \"Plugh\".");
 	}
-	else
-		STAT(MOVEVARS_SPECIALCOMMAND, this) = true;
 }
 #endif
 
@@ -526,22 +525,18 @@ bool PM_check_specialcommand(entity this, int buttons)
 {
 #ifdef SVQC
 	string c;
-	if (!buttons)
-		c = "x";
-	else if (buttons == 1)
-		c = "1";
-	else if (buttons == 2)
-		c = " ";
-	else if (buttons == 128)
-		c = "s";
-	else if (buttons == 256)
-		c = "w";
-	else if (buttons == 512)
-		c = "a";
-	else if (buttons == 1024)
-		c = "d";
-	else
-		c = "?";
+	switch (buttons)
+	{
+		// buttons mapped in PHYS_INPUT_BUTTON_MASK
+		case 0: c = "x"; break;
+		case BIT(0): c = "1"; break;
+		case BIT(2): c = " "; break;
+		case BIT(7): c = "s"; break;
+		case BIT(8): c = "w"; break;
+		case BIT(9): c = "a"; break;
+		case BIT(10): c = "d"; break;
+		default: c = "?";
+	}
 
 	if (c == substring(specialcommand, CS(this).specialcommand_pos, 1))
 	{

@@ -306,7 +306,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this))
+	if(this.csqcmodel_isdead || PHYS_INVEHICLE(this) || !(this.isplayermodel & ISPLAYER_PLAYER))
 		return v;
 
 	// bounded XY speed, used by several effects below
@@ -479,15 +479,34 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 	{
 		makevectors(view_angles);
 		forward = v_forward;
+		if(autocvar_chase_front && spectatee_status != -1)
+			forward = normalize(forward * -1);
 		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
 		float cdist = -autocvar_chase_back - 8;
 		chase_dest.x = v.x + forward.x * cdist;
 		chase_dest.y = v.y + forward.y * cdist;
 		chase_dest.z = v.z + forward.z * cdist + autocvar_chase_up;
-		traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		if (this.move_movetype == MOVETYPE_NOCLIP)
+		{
+			// as if traceline hasn't hit anything
+			trace_endpos = chase_dest;
+			trace_plane_normal = '0 0 0';
+		}
+		else
+		{
+			traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		}
 		v.x = 1 * trace_endpos.x + 8 * forward.x + 4 * trace_plane_normal.x;
 		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
 		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
+
+		if(autocvar_chase_front && spectatee_status != -1)
+		{
+			// now flip the view so the player is looking at themselves
+			vector newang = vectoangles(forward);
+			view_angles.x = view_angles.x * -1; // inverse up-down looking direction
+			view_angles.y = newang.y;
+		}
 	}
 
 #if 0
@@ -657,7 +676,8 @@ bool CSQCPlayer_PostUpdate(entity this)
 	if (this.entnum != player_localnum + 1) return false;
 	csqcplayer = this;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
-	cvar_settemp("cl_movement_replay", "0");
+	if (cvar("cl_movement_replay"))
+		cvar_settemp("cl_movement_replay", "0");
 	this.entremove = CSQCPlayer_Remove;
 	return true;
 }

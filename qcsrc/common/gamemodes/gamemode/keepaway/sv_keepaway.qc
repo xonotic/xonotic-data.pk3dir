@@ -267,7 +267,8 @@ void ka_Handler_CheckBall(entity this)
 
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	ka_Handler = new(ka_Handler);
+	g_kaballs = IL_NEW();
+	ka_Handler = new_pure(ka_Handler);
 	setthink(ka_Handler, ka_Handler_CheckBall);
 	ka_Handler.nextthink = time;
 }
@@ -386,12 +387,8 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	// clear the item used for the ball in keepaway
-	player.items &= ~IT_KEY1;
-
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
-	if(player.ballcarried)
-		player.items |= IT_KEY1;
+	STAT(OBJECTIVE_STATUS, player) = BITSET(STAT(OBJECTIVE_STATUS, player), KA_CARRYING, player.ballcarried != NULL);
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)

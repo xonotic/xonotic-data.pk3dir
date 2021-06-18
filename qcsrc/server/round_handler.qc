@@ -93,7 +93,7 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 		backtrace("Can't spawn round_handler again!");
 		return;
 	}
-	entity this = round_handler = new(round_handler);
+	entity this = round_handler = new_pure(round_handler);
 
 	setthink(this, round_handler_FirstThink);
 	this.canRoundStart = canRoundStart_func;
