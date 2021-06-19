@@ -1334,30 +1334,8 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	drawstring(tmp_acc - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
 		tmp_str, hud_fontsize * 1.25, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	
-	// Icon column
-	vector icon_sz = vec2(column_width, hud_fontsize.y*1.5);
-	
 	if(!invert)
 		tmp.x += column_width * 4;
-	
-	// Item rows
-	drawstring(tmp + eX * ((column_width - stringwidth("items", false, hud_fontsize)) / 2),
-		"items", hud_fontsize, '0.5 0.5 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	tmp.y += hud_fontsize.y * 1.25;
-	
-	float inv_num = -1;
-	FOREACH(Items,
-		it.m_id == ITEM_ArmorMega.m_id ||
-		it.m_id == ITEM_HealthMega.m_id ||
-		it.m_id == ITEM_ArmorBig.m_id, {
-		// If the match isn't over, Only show pickups if we're spectating or they're our own
-		/*if(intermission || warmup_stage || spectatee_status || pl.sv_entnum == current_player)
-			inv_num = inventoryslots[pl.sv_entnum].inv_items[it.m_id];*/
-		tmp = Scoreboard_Duel_DrawPickup(tmp, true, it.m_icon, icon_sz, inv_num, invert);
-		
-		if(it.m_id == REGISTRY_MAX(Items))
-        	break;
-	});
 }
 
 vector Scoreboard_MakeDuelTable(vector pos, entity tm, vector rgb, vector bg_size)
