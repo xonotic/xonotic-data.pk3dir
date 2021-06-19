@@ -318,7 +318,6 @@ bool independent_players;
 #define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
 
 .int killcount;
-.int countrycode;
 
 //flood fields
 .float nickspamtime; // time of last nick change
