@@ -162,7 +162,6 @@ string GetSpeedUnit(int speed_unit);
 
 .int team;
 .int team_size;
-.int countrycode;
 
 int binddb;
 

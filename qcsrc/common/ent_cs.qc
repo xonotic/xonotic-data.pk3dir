@@ -152,10 +152,6 @@ ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.frags); },
 	{ ent.frags = ReadShort(); })
 
-ENTCS_PROP(COUNTRYCODE, true, countrycode, countrycode, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.countrycode); },
-	{ ent.countrycode = ReadByte(); })
-
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
