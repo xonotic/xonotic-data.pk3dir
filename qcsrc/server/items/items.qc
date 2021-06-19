@@ -950,6 +950,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
+		// enable this to have thrown items burn in lava
+		//this.damagedbycontents = true;
+		//IL_PUSH(g_damagedbycontents, this);
 
 		if (Item_IsExpiring(this))
 		{
