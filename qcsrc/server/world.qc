@@ -891,11 +891,33 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	if(fexists(strcat("scripts/", mapname, ".arena")))
+	if(fexists(_MapInfo_FindArenaFile(mapname, ".arena")))
 		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
 
-	if(fexists(strcat("scripts/", mapname, ".defi")))
+	if(fexists(_MapInfo_FindArenaFile(mapname, ".defi")))
 		cvar_settemp("sv_q3defragcompat", "1");
+
+	// quake 3 music support
+	if(world.music || world.noise)
+	{
+		// prefer .music over .noise
+		string chosen_music;
+		string oldstuff;
+		if(world.music)
+			chosen_music = world.music;
+		else
+			chosen_music = world.noise;
+		if(
+			substring(chosen_music, strlen(chosen_music) - 4, 4) == ".wav"
+			||
+			substring(chosen_music, strlen(chosen_music) - 4, 4) == ".ogg"
+		)
+			oldstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+		else
+			oldstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+
+		strcpy(clientstuff, oldstuff);
+	}
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
