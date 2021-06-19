@@ -717,11 +717,6 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			str = Scoreboard_GetCountrycode(pl);
 			return str;
 
-		//LegendGuard adds Country REGISTER in the switch 05-04-2021
-		case SP_COUNTRY:
-			str = Scoreboard_GetCountrycode(pl);
-			return str;
-
 		case SP_NAME:
 			str = Scoreboard_GetName(pl);
 			if (autocvar_hud_panel_scoreboard_playerid)
@@ -1247,7 +1242,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	
 	//LegendGuard adds a conditional sentence for country column 05-04-2021
 	// Player country icon/flag
-	Scoreboard_GetField(pl, SP_COUNTRY);
+	tmp_str = Scoreboard_GetField(pl, SP_COUNTRY);
 	if(sbt_field_icon3 != "") {
 		vector rsz = draw_getimagesize(sbt_field_icon3);
 		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;
