@@ -133,12 +133,6 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		return ColorTranslateRGB(e ? e.netname : getplayerkeyvalue(i, "name"));
 	}
 
-	int entcs_GetCountryCode(int i)
-	{
-		entity e = entcs_receiver(i);
-		return e.countrycode;
-	}
-
     /**
      * @param i zero indexed player
      */
