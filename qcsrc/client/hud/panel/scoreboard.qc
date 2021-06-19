@@ -103,6 +103,7 @@ int autocvar_hud_panel_scoreboard_itemstats_filter_mask = 12;
 float autocvar_hud_panel_scoreboard_itemstats_showdelay = 2.2; // slightly more delayed than accuracy
 float autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos = 0.75;
 
+bool autocvar_hud_panel_scoreboard_logo = false;
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
 float autocvar_hud_panel_scoreboard_maxheight = 0.6;
@@ -2142,13 +2143,13 @@ void Scoreboard_Draw()
 	drawcolorcodedstring(pos, str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 	
-	vector tmp_old_sz = draw_getimagesize("gfx/logo");
-	float tmp_aspect = tmp_old_sz.x/tmp_old_sz.y;
-	vector tmp_new_sz = vec2(sb_gameinfo_type_fontsize.y * tmp_aspect, sb_gameinfo_type_fontsize.y);
-
-	drawpic(pos + '1 0 0' * (panel_size.x - tmp_new_sz.x), "gfx/logo", tmp_new_sz, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	
-	pos.y += sb_gameinfo_type_fontsize.y;
+	if (autocvar_hud_panel_scoreboard_logo)
+	{
+		vector tmp_old_sz = draw_getimagesize("gfx/logo");
+		float tmp_aspect = tmp_old_sz.x/tmp_old_sz.y;
+		vector tmp_new_sz = vec2(sb_gameinfo_type_fontsize.y * tmp_aspect, sb_gameinfo_type_fontsize.y);
+		drawpic(pos + '1 0 0' * (panel_size.x - tmp_new_sz.x), "gfx/logo", tmp_new_sz, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	// Game Info: Game Detail
 	float tl = STAT(TIMELIMIT);
