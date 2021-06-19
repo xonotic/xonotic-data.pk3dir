@@ -127,7 +127,6 @@ string Label_getInfo(string label, int mode)
 		case "bctime":       if (!mode) return CTX(_("SCO^bctime"));       else LOG_HELP(strcat("^3", "bctime", "             ^7", _("Total amount of time holding the ball in Keepaway")));
 		case "caps":         if (!mode) return CTX(_("SCO^caps"));         else LOG_HELP(strcat("^3", "caps", "               ^7", _("How often a flag (CTF) or a key (KeyHunt) was captured")));
 		case "captime":      if (!mode) return CTX(_("SCO^captime"));      else LOG_HELP(strcat("^3", "captime", "            ^7", _("Time of fastest capture (CTF)")));
-		case "country":      if (!mode) return CTX(_("SCO^country"));      else LOG_HELP(strcat("^3", "country", "            ^7", _("Player country"))); //LegendGuard adds country for Country column 05-04-2021
 		case "deaths":       if (!mode) return CTX(_("SCO^deaths"));       else LOG_HELP(strcat("^3", "deaths", "             ^7", _("Number of deaths")));
 		case "destroyed":    if (!mode) return CTX(_("SCO^destroyed"));    else LOG_HELP(strcat("^3", "destroyed", "          ^7", _("Number of keys destroyed by pushing them into void")));
 		case "dmg":          if (!mode) return CTX(_("SCO^damage"));       else LOG_HELP(strcat("^3", "dmg", "                ^7", _("The total damage done")));
@@ -399,7 +398,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl fps country name |" \
+"ping pl fps name |" \
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
 " -teams,lms/deaths +ft,tdm/deaths" \
 " +tdm/sum" \
@@ -449,7 +448,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 		}
 		else if(argv(2) == "all" || argv(2) == "ALL")
 		{
-			string s = "ping pl country name |"; // scores without label (not really scores)
+			string s = "ping pl name |"; // scores without label (not really scores)
 			if(argv(2) == "ALL")
 			{
 				// scores without label
@@ -513,7 +512,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 			// fields without a label (not networked via the score system)
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
-			case "country": sbt_field[sbt_num_fields] = SP_COUNTRY; break; //LegendGuard adds country label for Country column 05-04-2021
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
 			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
@@ -635,7 +633,6 @@ vector sbt_field_rgb;
 string sbt_field_icon0;
 string sbt_field_icon1;
 string sbt_field_icon2;
-string sbt_field_icon3; //LegendGuard adds for Country player flags 05-04-2021
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
@@ -659,19 +656,6 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
-//LegendGuard adds GetCountrycode function 05-04-2021
-string Scoreboard_GetCountrycode(entity pl)
-{
-	int ccode = entcs_GetCountryCode(pl.sv_entnum);
-	if(ccode)
-		sbt_field_icon3 = strcat("gfx/flags/", ftos(ccode));
-	else
-		sbt_field_icon3 = strcat("gfx/flags/", ftos(0)); //if user hasn't assigned country flag
-	
-	return "";
-	//return ftos(entcs_GetCountryCode(pl.sv_entnum)); //returns a number
-}
-
 string Scoreboard_GetField(entity pl, PlayerScoreField field)
 {
 	float tmp, num, denom;
@@ -681,7 +665,6 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 	sbt_field_icon0 = "";
 	sbt_field_icon1 = "";
 	sbt_field_icon2 = "";
-	sbt_field_icon3 = ""; //LegendGuard adds for Country column 05-04-2021
 	sbt_field_icon0_rgb = '1 1 1';
 	sbt_field_icon1_rgb = '1 1 1';
 	sbt_field_icon2_rgb = '1 1 1';
@@ -710,11 +693,6 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				str = strcat(str, "~", ftos(ceil(tmp * 100)));
 			tmp = bound(0, f / 0.2 + tmp / 0.04, 1); // 20% is REALLY BAD pl
 			sbt_field_rgb = '1 0.5 0.5' - '0 0.5 0.5' * tmp;
-			return str;
-			
-		//LegendGuard adds Country REGISTER in the switch 05-04-2021
-		case SP_COUNTRY:
-			str = Scoreboard_GetCountrycode(pl);
 			return str;
 
 		case SP_NAME:
@@ -826,15 +804,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	if(sbt_field_icon2 != "")
 	{
 		sz = draw_getimagesize(sbt_field_icon2);
-		f = sz.x / sz.y;
-		if(sbt_fixcolumnwidth_iconlen < f)
-			sbt_fixcolumnwidth_iconlen = f;
-	}
-
-	//LegendGuard adds conditional for Country column 05-04-2021
-	if(sbt_field_icon3 != "")
-	{
-		sz = draw_getimagesize(sbt_field_icon3);
 		f = sz.x / sz.y;
 		if(sbt_fixcolumnwidth_iconlen < f)
 			sbt_fixcolumnwidth_iconlen = f;
@@ -988,8 +957,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			drawpic(pos - tmp, sbt_field_icon1, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon2 != "")
 			drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
-		if(sbt_field_icon3 != "") //LegendGuard adds conditional for Country column 05-04-2021
-			drawpic(pos - tmp, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -1024,8 +991,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				drawpic(pos - tmp, sbt_field_icon1, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			if(sbt_field_icon2 != "")
 				drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
-			if(sbt_field_icon3 != "") //LegendGuard adds conditional for Country column 05-04-2021
-				drawpic(pos - tmp, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			pos.x -= sbt_field_size[i] + hud_fontsize.x;
 		}
 	}
@@ -1073,16 +1038,6 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			continue;
 		if(pl == ignored_pl)
 			continue;
-		
-		string flag_name = "";
-		vector flag_size = '0 0 0';
-		Scoreboard_GetField(pl, SP_COUNTRY);
-		
-		if(sbt_field_icon3 != "") {
-			sz = draw_getimagesize(sbt_field_icon3);
-			flag_name = sbt_field_icon3;
-			flag_size = vec2(hud_fontsize.x * (sz.x / sz.y), hud_fontsize.y);
-		}
 
 		field = "";
 		if(this_team == NUM_SPECTATOR)
@@ -1239,20 +1194,6 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		tmp_in.x += duel_score_size.x + duel_name_fontsize.x * 0.5;
 	tmp_in.y += (duel_score_size.y - duel_name_fontsize.y) / 2;
 	drawcolorcodedstring(tmp_in, tmp_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-	
-	//LegendGuard adds a conditional sentence for country column 05-04-2021
-	// Player country icon/flag
-	tmp_str = Scoreboard_GetField(pl, SP_COUNTRY);
-	if(sbt_field_icon3 != "") {
-		vector rsz = draw_getimagesize(sbt_field_icon3);
-		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;
-		if(invert)
-			tmp_in.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen + duel_name_fontsize.x * 0.5;
-		else
-			tmp_in.x += stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
-		tmp_in.y += (duel_name_fontsize.y - hud_fontsize.y) / 2;
-		drawpic(tmp_in, sbt_field_icon3, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
 	
 	// Header
 	float column_width = panel_size.x / 5;
