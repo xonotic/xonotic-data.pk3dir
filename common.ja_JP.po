@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-06 07:23+0200\n"
+"POT-Creation-Date: 2021-06-20 07:23+0200\n"
 "PO-Revision-Date: 2021-06-15 20:44+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
@@ -1188,15 +1188,15 @@ msgstr "^1ERROR:^7 pak index が見つかりませんでした。"
 msgid "Requesting preview..."
 msgstr "プレビューをリクエスト中..."
 
-#: qcsrc/client/view.qc:959
+#: qcsrc/client/view.qc:891
 msgid "Nade timer"
 msgstr "手榴弾タイマー"
 
-#: qcsrc/client/view.qc:964
+#: qcsrc/client/view.qc:896
 msgid "Capture progress"
 msgstr "取れ進歩"
 
-#: qcsrc/client/view.qc:969
+#: qcsrc/client/view.qc:901
 msgid "Revival progress"
 msgstr "蘇生中"
 
@@ -1495,10 +1495,12 @@ msgid "Fuel regen"
 msgstr "燃料再生"
 
 #: qcsrc/common/items/item/powerup.qh:47 qcsrc/common/items/item/powerup.qh:50
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:13
 msgid "Strength"
 msgstr "力"
 
 #: qcsrc/common/items/item/powerup.qh:87 qcsrc/common/items/item/powerup.qh:90
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:20
 msgid "Shield"
 msgstr "寿"
 
@@ -1791,63 +1793,63 @@ msgstr "ゾンビ"
 msgid "Ammo"
 msgstr "弾薬"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:25
+#: qcsrc/common/mutators/mutator/buffs/all.inc:26
 msgid "Resistance"
 msgstr "抵抗"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:34
+#: qcsrc/common/mutators/mutator/buffs/all.inc:36
 #: qcsrc/common/mutators/mutator/instagib/items.qh:130
 #: qcsrc/common/mutators/mutator/instagib/items.qh:133
 msgid "Speed"
 msgstr "速度"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:44
+#: qcsrc/common/mutators/mutator/buffs/all.inc:47
 msgid "Medic"
 msgstr "再生"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:54
+#: qcsrc/common/mutators/mutator/buffs/all.inc:58
 msgid "Bash"
 msgstr "打撃"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:63
+#: qcsrc/common/mutators/mutator/buffs/all.inc:68
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
 msgstr "吸血"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:71
+#: qcsrc/common/mutators/mutator/buffs/all.inc:77
 msgid "Disability"
 msgstr "障害"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:79
+#: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Vengeance"
 msgstr "復讐"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:87
+#: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Jump"
 msgstr "ジャンプ"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:96
+#: qcsrc/common/mutators/mutator/buffs/all.inc:105
 msgid "Invisible"
 msgstr "不可視"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:105
+#: qcsrc/common/mutators/mutator/buffs/all.inc:115
 msgid "Inferno"
 msgstr "焦熱地獄"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:113
+#: qcsrc/common/mutators/mutator/buffs/all.inc:124
 msgid "Swapper"
 msgstr "スワッパー"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:121
+#: qcsrc/common/mutators/mutator/buffs/all.inc:133
 msgid "Magnet"
 msgstr "磁石"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:129
+#: qcsrc/common/mutators/mutator/buffs/all.inc:142
 msgid "Luck"
 msgstr "運"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:137
+#: qcsrc/common/mutators/mutator/buffs/all.inc:151
 msgid "Flight"
 msgstr "飛翔"
 
@@ -1953,6 +1955,14 @@ msgstr "オーバーキルロケット推進チェーンソー"
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
 msgstr "オーバーキルショットガン"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
+msgid "Burning"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
+msgid "Superweapons"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -7144,7 +7154,7 @@ msgid "Join!"
 msgstr "参加!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 msgid "MOD^Default"
 msgstr "MOD^デフォルト"
 
@@ -8601,7 +8611,7 @@ msgid "GHOITEMS^Blue"
 msgstr "青い"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
-#: qcsrc/menu/xonotic/serverlist.qc:750
+#: qcsrc/menu/xonotic/serverlist.qc:752
 msgid "Players"
 msgstr "選手達"
 
@@ -9799,91 +9809,91 @@ msgid ""
 msgstr ""
 "現在ハイライトされているサーバーにブックマークを付けて、未来見つけやすくする"
 
-#: qcsrc/menu/xonotic/serverlist.qc:746
+#: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.qc:747
+#: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Hostname"
 msgstr "ホスト名"
 
-#: qcsrc/menu/xonotic/serverlist.qc:748
+#: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Map"
 msgstr "マップ"
 
-#: qcsrc/menu/xonotic/serverlist.qc:749
+#: qcsrc/menu/xonotic/serverlist.qc:751
 msgid "Type"
 msgstr "種類"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 #, c-format
 msgid "AES level %d"
 msgstr "AESレベル %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
 msgstr "なし"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
 msgstr "暗号化:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 #, c-format
 msgid "mod: %s"
 msgstr "mod: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "modified settings"
 msgstr "変更された設定"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "official settings"
 msgstr "公式設定"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
 msgstr "無効な状態"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
 msgstr "有効な状態"
 
-#: qcsrc/menu/xonotic/serverlist.qh:155
+#: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
 msgstr "好き"
 
-#: qcsrc/menu/xonotic/serverlist.qh:156
+#: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
 msgstr "推奨"
 
-#: qcsrc/menu/xonotic/serverlist.qh:157
+#: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Normal Servers"
 msgstr "通常のサーバー"
 
-#: qcsrc/menu/xonotic/serverlist.qh:158
+#: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Servers"
 msgstr "サーバー"
 
-#: qcsrc/menu/xonotic/serverlist.qh:159
+#: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Competitive Mode"
 msgstr "SLCAT^競争モード"
 
-#: qcsrc/menu/xonotic/serverlist.qh:160
+#: qcsrc/menu/xonotic/serverlist.qh:161
 msgid "SLCAT^Modified Servers"
 msgstr "変更されたサーバー"
 
-#: qcsrc/menu/xonotic/serverlist.qh:161
+#: qcsrc/menu/xonotic/serverlist.qh:162
 msgid "SLCAT^Overkill"
 msgstr "オーバーキル"
 
-#: qcsrc/menu/xonotic/serverlist.qh:162
+#: qcsrc/menu/xonotic/serverlist.qh:163
 msgid "SLCAT^InstaGib"
 msgstr "インスタギブ"
 
-#: qcsrc/menu/xonotic/serverlist.qh:163
+#: qcsrc/menu/xonotic/serverlist.qh:164
 msgid "SLCAT^Defrag Mode"
 msgstr "デフラグモード"
 
