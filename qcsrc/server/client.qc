@@ -6,6 +6,7 @@
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/lms/sv_lms.qh>
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
@@ -2725,6 +2726,7 @@ void PlayerPostThink (entity this)
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					if (this.caplayer)
 						this.caplayer = 0;
+					this.lms_spectate_warning = 2; // TODO: mutator hook for players forcibly moved to spectator?
 					PutObserverInServer(this);
 				}
 				else
