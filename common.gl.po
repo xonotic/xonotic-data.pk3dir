@@ -4,14 +4,14 @@
 #
 # Translators:
 # LegendGuard, 2020
-# LegendGuard, 2020
+# LegendGuard, 2020-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-21 22:39+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Galician (http://www.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -164,7 +164,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2Agardando que outros estean listos para rematar o quecemento..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up..."
@@ -173,7 +173,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Prema ^3 %s ^2 para rematar o quecemento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:194
 msgid "Teamnumbers are unbalanced!"
@@ -1041,7 +1041,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:71
 msgid "WARMUP"
-msgstr ""
+msgstr "QUECEMENTO"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -5870,7 +5870,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Habilitar incluso xogar en quecemento"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"

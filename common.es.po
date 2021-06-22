@@ -31,8 +31,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-21 22:22+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1998,11 +1998,11 @@ msgstr "Escopeta Overkill"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "Ardor"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
 msgid "Superweapons"
-msgstr ""
+msgstr "Superarmas"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -4392,7 +4392,7 @@ msgstr "^BGSolo %s^BG mas para continuar..."
 
 #: qcsrc/common/notifications/all.inc:758
 msgid "^F2Superweapons have broken down"
-msgstr "^F2Superarmas se han descompuesto"
+msgstr "^F2Las superarmas se han descompuesto"
 
 #: qcsrc/common/notifications/all.inc:759
 msgid "^F2Superweapons have been lost"

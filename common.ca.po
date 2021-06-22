@@ -4,15 +4,15 @@
 #
 # Translators:
 # LegendGuard, 2020
-# LegendGuard, 2020
+# LegendGuard, 2020-2021
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-21 22:35+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
 "Language: ca\n"
@@ -970,7 +970,7 @@ msgstr "Estadístiques de precisió (mitjana %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1409
 msgid "Item stats"
-msgstr ""
+msgstr "Estadístiques de l'objecte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1520
 msgid "Map stats:"
@@ -1045,27 +1045,27 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/strafehud.qc:908
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:909
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: qcsrc/client/hud/panel/strafehud.qc:910
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:911
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:912
 msgid "nmi"
-msgstr ""
+msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:71
 msgid "WARMUP"
-msgstr ""
+msgstr "ESCALFAMENT"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1073,7 +1073,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Nom ^7en lloc de \"^1Jugador anònim^7\" en les estadístiques"
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
@@ -1961,7 +1961,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
 msgid "Superweapons"
-msgstr ""
+msgstr "Superarmes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3076,7 +3076,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon"
-msgstr ""
+msgstr "^BG%s^K1 ha agafat una Superarma"
 
 #: qcsrc/common/notifications/all.inc:435
 msgid "^BGYou cannot change to a larger team"
@@ -4231,15 +4231,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:758
 msgid "^F2Superweapons have broken down"
-msgstr ""
+msgstr "^F2Les superarmes s'han trencat"
 
 #: qcsrc/common/notifications/all.inc:759
 msgid "^F2Superweapons have been lost"
-msgstr ""
+msgstr "^F2Les superarmes s'han perdut"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^F2You now have a superweapon"
-msgstr ""
+msgstr "^F2Ara tens una superarma"
 
 #: qcsrc/common/notifications/all.inc:762
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -5433,7 +5433,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:34
 msgid "Stats"
-msgstr ""
+msgstr "Estadístiques"
 
 #: qcsrc/menu/xonotic/credits.qc:38
 msgid "Art"
@@ -5686,6 +5686,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
+"Permetre que les estadístiques de jugador utilitzin el teu sobrenom en stats."
+"xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
@@ -5894,7 +5896,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Habilitar fins i tot jugant en l'escalfament"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -9693,11 +9695,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
-msgstr ""
+msgstr "estadístiques habilitades"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
-msgstr ""
+msgstr "estadístiques deshabilitades"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
