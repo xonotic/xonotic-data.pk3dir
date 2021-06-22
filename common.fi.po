@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-06 07:23+0200\n"
-"PO-Revision-Date: 2021-06-06 05:23+0000\n"
+"POT-Creation-Date: 2021-06-20 07:23+0200\n"
+"PO-Revision-Date: 2021-06-20 05:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
@@ -1194,15 +1194,15 @@ msgstr "^1Virhe:^7 Ei löytynyt: pak index."
 msgid "Requesting preview..."
 msgstr "Pyydetään esikatselua..."
 
-#: qcsrc/client/view.qc:959
+#: qcsrc/client/view.qc:891
 msgid "Nade timer"
 msgstr "Naattiajastin"
 
-#: qcsrc/client/view.qc:964
+#: qcsrc/client/view.qc:896
 msgid "Capture progress"
 msgstr "Kaappauksen edistyminen"
 
-#: qcsrc/client/view.qc:969
+#: qcsrc/client/view.qc:901
 msgid "Revival progress"
 msgstr "Elpymisen edistyminen"
 
@@ -1505,10 +1505,12 @@ msgid "Fuel regen"
 msgstr "Polttoaineen uusvalmistin"
 
 #: qcsrc/common/items/item/powerup.qh:47 qcsrc/common/items/item/powerup.qh:50
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:13
 msgid "Strength"
 msgstr "Voima"
 
 #: qcsrc/common/items/item/powerup.qh:87 qcsrc/common/items/item/powerup.qh:90
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:20
 msgid "Shield"
 msgstr "Suoja"
 
@@ -1804,63 +1806,63 @@ msgstr "Zombie"
 msgid "Ammo"
 msgstr "Ammukset"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:25
+#: qcsrc/common/mutators/mutator/buffs/all.inc:26
 msgid "Resistance"
 msgstr "Vastarinta"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:34
+#: qcsrc/common/mutators/mutator/buffs/all.inc:36
 #: qcsrc/common/mutators/mutator/instagib/items.qh:130
 #: qcsrc/common/mutators/mutator/instagib/items.qh:133
 msgid "Speed"
 msgstr "Nopeus"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:44
+#: qcsrc/common/mutators/mutator/buffs/all.inc:47
 msgid "Medic"
 msgstr "Lääkintämies"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:54
+#: qcsrc/common/mutators/mutator/buffs/all.inc:58
 msgid "Bash"
 msgstr "Murjaisu"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:63
+#: qcsrc/common/mutators/mutator/buffs/all.inc:68
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
 msgstr "Vampyyri"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:71
+#: qcsrc/common/mutators/mutator/buffs/all.inc:77
 msgid "Disability"
 msgstr "Vammaisuus"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:79
+#: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Vengeance"
 msgstr "Kosto"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:87
+#: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Jump"
 msgstr "Hyppy"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:96
+#: qcsrc/common/mutators/mutator/buffs/all.inc:105
 msgid "Invisible"
 msgstr "Näkymätön"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:105
+#: qcsrc/common/mutators/mutator/buffs/all.inc:115
 msgid "Inferno"
 msgstr "Pätsi"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:113
+#: qcsrc/common/mutators/mutator/buffs/all.inc:124
 msgid "Swapper"
 msgstr "Vaihdokki"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:121
+#: qcsrc/common/mutators/mutator/buffs/all.inc:133
 msgid "Magnet"
 msgstr "Magneetti"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:129
+#: qcsrc/common/mutators/mutator/buffs/all.inc:142
 msgid "Luck"
 msgstr "Lykästys"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:137
+#: qcsrc/common/mutators/mutator/buffs/all.inc:151
 msgid "Flight"
 msgstr "Lento"
 
@@ -1966,6 +1968,14 @@ msgstr "Ylimalkaallinen rakettikäyttöinen moottorisaha"
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
 msgstr "Ylimalkaallinen haulikko"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
+msgid "Burning"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
+msgid "Superweapons"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -7210,7 +7220,7 @@ msgid "Join!"
 msgstr "Liity!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 msgid "MOD^Default"
 msgstr "MOD^Vakio"
 
@@ -8677,7 +8687,7 @@ msgid "GHOITEMS^Blue"
 msgstr "GHOITEMS^Sininen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
-#: qcsrc/menu/xonotic/serverlist.qc:750
+#: qcsrc/menu/xonotic/serverlist.qc:752
 msgid "Players"
 msgstr "Pelaajat"
 
@@ -9896,91 +9906,91 @@ msgstr ""
 "Laita kirjanmerkiksi tämänhetkinen korostettu palvelin jotta se on nopeampi "
 "löytää tulevassa"
 
-#: qcsrc/menu/xonotic/serverlist.qc:746
+#: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Ping"
 msgstr "Viive"
 
-#: qcsrc/menu/xonotic/serverlist.qc:747
+#: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Hostname"
 msgstr "Palvelinnimi"
 
-#: qcsrc/menu/xonotic/serverlist.qc:748
+#: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Map"
 msgstr "Kartta"
 
-#: qcsrc/menu/xonotic/serverlist.qc:749
+#: qcsrc/menu/xonotic/serverlist.qc:751
 msgid "Type"
 msgstr "Tyyppi"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 #, c-format
 msgid "AES level %d"
 msgstr "AES taso %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
 msgstr "ENC^ei mikään"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
 msgstr "salaus:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 #, c-format
 msgid "mod: %s"
 msgstr "modi: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "modified settings"
 msgstr "mukautetut asetukset"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "official settings"
 msgstr "viralliset asetukset"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
 msgstr "tilastot pois päältä"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
 msgstr "tilastot päällä"
 
-#: qcsrc/menu/xonotic/serverlist.qh:155
+#: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
 msgstr "SLCAT^Lempparit"
 
-#: qcsrc/menu/xonotic/serverlist.qh:156
+#: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
 msgstr "SLCAT^Suositellut"
 
-#: qcsrc/menu/xonotic/serverlist.qh:157
+#: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Normal Servers"
 msgstr "SLCAT^Tavalliset palvelimet"
 
-#: qcsrc/menu/xonotic/serverlist.qh:158
+#: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Servers"
 msgstr "SLCAT^Palvelimet"
 
-#: qcsrc/menu/xonotic/serverlist.qh:159
+#: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Competitive Mode"
 msgstr "SLCAT^Kilpailullinen tila"
 
-#: qcsrc/menu/xonotic/serverlist.qh:160
+#: qcsrc/menu/xonotic/serverlist.qh:161
 msgid "SLCAT^Modified Servers"
 msgstr "SLCAT^Mukautetut palvelimet"
 
-#: qcsrc/menu/xonotic/serverlist.qh:161
+#: qcsrc/menu/xonotic/serverlist.qh:162
 msgid "SLCAT^Overkill"
 msgstr "SLCAT^Ylimalkaalliset"
 
-#: qcsrc/menu/xonotic/serverlist.qh:162
+#: qcsrc/menu/xonotic/serverlist.qh:163
 msgid "SLCAT^InstaGib"
 msgstr "SLCAT^InstaGib-hetitappo"
 
-#: qcsrc/menu/xonotic/serverlist.qh:163
+#: qcsrc/menu/xonotic/serverlist.qh:164
 msgid "SLCAT^Defrag Mode"
 msgstr "SLCAT^Epäfrägitila"
 
