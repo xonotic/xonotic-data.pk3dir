@@ -28,4 +28,8 @@ entity ka_Handler;
 void(entity this) havocbot_role_ka_carrier;
 void(entity this) havocbot_role_ka_collector;
 
+void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+void ka_TouchEvent(entity this, entity toucher);
+
 void ka_DropEvent(entity plyr);

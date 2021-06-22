@@ -46,7 +46,6 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-void ka_TouchEvent(entity this, entity toucher);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
 	if(game_stopped) return;
@@ -90,6 +89,12 @@ void ka_TimeScoring(entity this)
 	}
 }
 
+void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
+{
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+		ka_RespawnBall(this);
+}
+
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
 	if (!this || game_stopped)
@@ -126,6 +131,9 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	setthink(this, ka_TimeScoring);
 	this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.damagedbycontents = false;
+	IL_REMOVE(g_damagedbycontents, this);
 	navigation_dynamicgoal_unset(this);
 
 	// apply effects to player
@@ -176,6 +184,9 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
+	ball.event_damage = ka_DamageEvent;
+	ball.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, ball);
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, player.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
@@ -225,6 +236,9 @@ void ka_SpawnBall()
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
+	e.event_damage = ka_DamageEvent;
+	e.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, e);
 	e.solid = SOLID_TRIGGER;
 	set_movetype(e, MOVETYPE_BOUNCE);
 	e.glow_color = autocvar_g_keepawayball_trail_color;
