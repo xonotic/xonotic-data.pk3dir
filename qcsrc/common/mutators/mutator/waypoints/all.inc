@@ -48,6 +48,8 @@ REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "kh_pink_carrying", '0 1 1',
 REGISTER_WAYPOINT(KaBall, _("Ball"), "notify_ballpickedup", '0 1 1', 1);
 REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), "keepawayball_carrying", '1 0 0', 1);
 
+REGISTER_WAYPOINT(LmsLeader, _("Leader"), "", '0 1 1', 1);
+
 REGISTER_WAYPOINT(NbBall, _("Ball"), "", '0.91 0.85 0.62', 1);
 REGISTER_WAYPOINT(NbGoal, _("Goal"), "", '1 0.5 0', 1);
 
