@@ -50,7 +50,10 @@ METHOD(StatusEffects, m_remove, void(StatusEffects this, entity actor, int remov
 
 MUTATOR_HOOKFUNCTION(status_effects, SV_StartFrame)
 {
+	if(game_stopped)
+		return;
 	// TODO: explicitly only loop through entities with a valid statuseffects object
+	// NOTE: due to the way vehicles work currently, this does not function correctly! effect does not tick while inside a vehicle
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP || !it.statuseffects) continue;
@@ -95,7 +98,7 @@ MUTATOR_HOOKFUNCTION(status_effects, SpectateCopy)
 	client.statuseffects = spectatee.statuseffects;
 }
 
-MUTATOR_HOOKFUNCTION(status_effects, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(status_effects, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -109,8 +112,4 @@ MUTATOR_HOOKFUNCTION(status_effects, PlayerSpawn)
 		StatusEffects_clearall(player.statuseffects_store);
 		player.statuseffects = NULL;
 	}
-
-	// TODO: special hook for when effects are initialized?
-	if(STAT(WEAPONS, player) & WEPSET_SUPERWEAPONS)
-		StatusEffects_apply(STATUSEFFECT_Superweapons, player, time + autocvar_g_balance_superweapons_time, 0);
 }

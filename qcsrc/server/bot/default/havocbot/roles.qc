@@ -1,6 +1,7 @@
 #include "roles.qh"
 
 #include <common/stats.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <server/bot/default/bot.qh>

@@ -346,6 +346,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followpowerup")
 	{
+		// TODO: somehow cheaply loop through all held powerups
 		FOREACH_CLIENT(IS_PLAYER(it) && (StatusEffects_active(STATUSEFFECT_Strength, it) || StatusEffects_active(STATUSEFFECT_Shield, it)), { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active powerup\n", 1);

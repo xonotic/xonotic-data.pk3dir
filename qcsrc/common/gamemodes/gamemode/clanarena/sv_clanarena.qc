@@ -366,7 +366,7 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if (autocvar_g_powerups <= 0)
-	if (item.flags & FL_POWERUP)
+	if (item.itemdef.instanceOfPowerup)
 		return true;
 
 	if (autocvar_g_pickup_items <= 0)

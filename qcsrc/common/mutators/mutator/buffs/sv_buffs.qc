@@ -1,7 +1,7 @@
 #include "sv_buffs.qh"
 
 #include <common/mapobjects/target/music.qh>
-#include <common/mutators/mutator/instagib/_mod.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/gamemodes/_mod.qh>
 #include <server/items/items.qh>
 
@@ -9,6 +9,10 @@ bool buffs_BuffModel_Customize(entity this, entity client)
 {
 	entity player = WaypointSprite_getviewentity(client);
 	entity myowner = this.owner;
+	entity heldbuff = buff_FirstFromFlags(myowner);
+
+	if(!heldbuff)
+		return false;
 
 	if(myowner.alpha <= 0.5 && DIFF_TEAM(player, myowner) && myowner.alpha != 0)
 		return false;
@@ -25,9 +29,47 @@ bool buffs_BuffModel_Customize(entity this, entity client)
 	else
 	{
 		this.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
-		this.alpha = 1;
+		this.alpha = myowner.alpha;
 	}
 	return true;
+}
+
+void buffs_BuffModel_Think(entity this)
+{
+	this.nextthink = time;
+	entity player = this.owner;
+	if(player.alpha < 0 || player.buff_model != this)
+	{
+		if(player) // remnant from ChatBubbleThink, same question... WHY?!
+			player.buff_model = NULL;
+		delete(this);
+		return;
+	}
+
+	entity heldbuff = buff_FirstFromFlags(player);
+
+	if(!heldbuff)
+	{
+		this.effects = EF_NODRAW;
+		return;
+	}
+
+	this.color = heldbuff.m_color;
+	this.glowmod = heldbuff.m_color;
+	this.skin = heldbuff.m_skin;
+
+	this.effects = player.effects;
+	this.effects |= EF_LOWPRECISION;
+	this.effects = this.effects & EFMASK_CHEAP; // eat performance
+
+	this.alpha = player.alpha;
+}
+
+void buffs_BuffModel_Remove(entity player)
+{
+	if(player.buff_model)
+		delete(player.buff_model);
+	player.buff_model = NULL;
 }
 
 void buffs_BuffModel_Spawn(entity player)
@@ -38,23 +80,22 @@ void buffs_BuffModel_Spawn(entity player)
 	setattachment(player.buff_model, player, "");
 	setorigin(player.buff_model, '0 0 1' * (player.buff_model.maxs.z * 1));
 	player.buff_model.owner = player;
+	player.buff_model.exteriormodeltoclient = player;
 	player.buff_model.scale = 0.7;
 	player.buff_model.pflags = PFLAGS_FULLDYNAMIC;
 	player.buff_model.light_lev = 200;
+	setthink(player.buff_model, buffs_BuffModel_Think);
+	player.buff_model.nextthink = time;
 	setcefc(player.buff_model, buffs_BuffModel_Customize);
 }
 
-void buffs_BuffModel_Remove(entity player)
+void buffs_BuffModel_Update(entity this)
 {
-	if(player.buff_model)
-		delete(player.buff_model);
-	player.buff_model = NULL;
-}
-
-vector buff_GlowColor(entity buff)
-{
-	//if(buff.team) { return Team_ColorRGB(buff.team); }
-	return buff.m_color;
+	if (this.alpha < 0)
+		return;
+	// spawn a buff model entity if needed
+	if (!this.buff_model)
+		buffs_BuffModel_Spawn(this);
 }
 
 void buff_Effect(entity player, string eff)
@@ -167,7 +208,7 @@ void buff_Touch(entity this, entity toucher)
 	|| (STAT(FROZEN, toucher))
 	|| (toucher.vehicle)
 	|| (!this.buffdef) // TODO: error out or maybe reset type if this occurs?
-	|| (time < PS(toucher).buff_shield)
+	|| (time < toucher.buff_shield)
 	)
 	{
 		// can't touch this
@@ -269,7 +310,7 @@ void buff_Think(entity this)
 	{
 		entity buff = this.buffdef;
 		this.color = buff.m_color;
-		this.glowmod = buff_GlowColor(buff);
+		this.glowmod = buff.m_color;
 		this.skin = buff.m_skin;
 
 		setmodel(this, MDL_BUFF);
@@ -413,7 +454,7 @@ void buff_Init(entity this)
 	setcefc(this, buff_Customize);
 	//this.gravity = 100;
 	this.color = buff.m_color;
-	this.glowmod = buff_GlowColor(this);
+	this.glowmod = buff.m_color;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + max(0, game_starttime - time));
 	this.buff_active = !this.buff_activetime;
 	this.pflags = PFLAGS_FULLDYNAMIC;
@@ -467,6 +508,149 @@ float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, flo
 	return offset_y + (intersect_y - offset_y) * logn(((damg - offset_x) * ((base - 1) / intersect_x)) + 1, base);
 }
 
+METHOD(Buff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+{
+    if(IS_PLAYER(actor))
+    	actor.effects |= EF_NOSHADOW; // does not play well with buff icon
+    SUPER(Buff).m_apply(this, actor, eff_time, eff_flags);
+}
+METHOD(Buff, m_remove, void(StatusEffects this, entity actor, int removal_type))
+{
+	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
+	if(wasactive)
+	{
+		int buffid = this.m_id;
+		if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT)
+		{
+			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
+			sound(actor, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+		}
+		else if(removal_type == STATUSEFFECT_REMOVE_NORMAL && !IS_INDEPENDENT_PLAYER(actor))
+			Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
+		actor.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
+	}
+	if(IS_PLAYER(actor))
+		actor.effects &= ~EF_NOSHADOW;
+	SUPER(Buff).m_remove(this, actor, removal_type);
+}
+
+METHOD(Disabled, m_tick, void(StatusEffects this, entity actor))
+{
+	if(time >= actor.disabled_effect_time)
+	{
+		Send_Effect(EFFECT_SMOKING, actor.origin + ((actor.mins + actor.maxs) * 0.5), '0 0 0', 1);
+		actor.disabled_effect_time = time + 0.5;
+	}
+	SUPER(Disabled).m_tick(this, actor);
+}
+METHOD(Disabled, m_remove, void(StatusEffects this, entity actor, int removal_type))
+{
+	actor.disabled_effect_time = 0;
+	SUPER(Disabled).m_remove(this, actor, removal_type);
+}
+
+METHOD(AmmoBuff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+{
+    bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
+    if(!wasactive)
+    {
+        actor.buff_ammo_prev_infitems = (actor.items & IT_UNLIMITED_AMMO);
+        actor.items |= IT_UNLIMITED_AMMO;
+        for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(!actor.(weaponentity))
+				continue;
+			if(actor.(weaponentity).clip_load)
+				actor.(weaponentity).buff_ammo_prev_clipload = actor.(weaponentity).clip_load;
+			if(actor.(weaponentity).clip_size)
+				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = actor.(weaponentity).clip_size;
+		}
+    }
+    SUPER(AmmoBuff).m_apply(this, actor, eff_time, eff_flags);
+}
+METHOD(AmmoBuff, m_remove, void(StatusEffects this, entity actor, int removal_type))
+{
+	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
+	if(wasactive)
+	{
+		actor.items = BITSET(actor.items, IT_UNLIMITED_AMMO, actor.buff_ammo_prev_infitems);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(!actor.(weaponentity))
+				continue;
+			if(actor.(weaponentity).buff_ammo_prev_clipload)
+			{
+				actor.(weaponentity).clip_load = actor.(weaponentity).buff_ammo_prev_clipload;
+				actor.(weaponentity).buff_ammo_prev_clipload = 0;
+			}
+		}
+	}
+	actor.buff_ammo_prev_infitems = 0;
+	SUPER(AmmoBuff).m_remove(this, actor, removal_type);
+}
+METHOD(AmmoBuff, m_tick, void(StatusEffects this, entity actor))
+{
+	if(IS_PLAYER(actor))
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(actor.(weaponentity).clip_size)
+				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = actor.(weaponentity).clip_size;
+		}
+	}
+
+	SUPER(AmmoBuff).m_tick(this, actor);
+}
+
+
+METHOD(FlightBuff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+{
+    bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
+    if(!wasactive)
+    {
+        actor.buff_flight_oldgravity = actor.gravity;
+		if(!actor.gravity)
+			actor.gravity = 1;
+    }
+    SUPER(FlightBuff).m_apply(this, actor, eff_time, eff_flags);
+}
+METHOD(FlightBuff, m_remove, void(StatusEffects this, entity actor, int removal_type))
+{
+	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
+	if(wasactive)
+	{
+		actor.gravity = ((actor.trigger_gravity_check) ? actor.trigger_gravity_check.enemy.gravity : actor.buff_flight_oldgravity);
+	}
+	actor.buff_flight_oldgravity = 0;
+	SUPER(FlightBuff).m_remove(this, actor, removal_type);
+}
+
+METHOD(MagnetBuff, m_tick, void(StatusEffects this, entity actor))
+{
+	if(IS_PLAYER(actor))
+	{
+		vector pickup_size;
+		IL_EACH(g_items, it.itemdef,
+		{
+			if(it.buffdef)
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
+			else
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
+
+			if(boxesoverlap(actor.absmin - pickup_size, actor.absmax + pickup_size, it.absmin, it.absmax))
+			{
+				if(gettouch(it))
+					gettouch(it)(it, actor);
+			}
+		});
+	}
+
+	SUPER(MagnetBuff).m_tick(this, actor);
+}
+
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 {
@@ -483,10 +667,6 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
 		frag_damage = bound(0, frag_damage - reduced, frag_damage);
 	}
-
-	if(StatusEffects_active(BUFF_SPEED, frag_target))
-	if(frag_target != frag_attacker)
-		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
 	if(StatusEffects_active(BUFF_MEDIC, frag_target))
 	if((GetResource(frag_target, RES_HEALTH) - frag_damage) <= 0)
@@ -528,7 +708,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
 	if(frag_target != frag_attacker)
-		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
+		StatusEffects_apply(STATUSEFFECT_Disabled, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
 
 	if(StatusEffects_active(BUFF_INFERNO, frag_target))
 	{
@@ -570,22 +750,11 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 		return;
 	float health_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
 
-	if (time >= frag_target.spawnshieldtime && frag_target != frag_attacker
+	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && frag_target != frag_attacker
 		&& IS_PLAYER(frag_attacker) && !IS_DEAD(frag_target) && !STAT(FROZEN, frag_target))
 	{
 		GiveResource(frag_attacker, RES_HEALTH, autocvar_g_buffs_vampire_damage_steal * health_take);
 	}
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
-
-	buffs_BuffModel_Remove(player);
-	player.oldbuffs = NULL;
-	// reset timers here to prevent them continuing after re-spawn
-	player.buff_disability_time = 0;
-	player.buff_disability_effect_time = 0;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
@@ -593,10 +762,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(StatusEffects_active(BUFF_SPEED, player))
-		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_speed_speed;
-
-	if(time < player.buff_disability_time)
+	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_disability_speed;
 }
 
@@ -613,25 +779,10 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 {
 	entity mon = M_ARGV(0, entity);
 
-	if(time < mon.buff_disability_time)
+	if(StatusEffects_active(STATUSEFFECT_Disabled, mon))
 	{
 		M_ARGV(1, float) *= autocvar_g_buffs_disability_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_buffs_disability_speed; // walk speed
-	}
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
-{
-	entity frag_target = M_ARGV(2, entity);
-
-	entity heldbuff = buff_FirstFromFlags(frag_target);
-	if(heldbuff)
-	{
-		int buffid = heldbuff.m_id;
-		if(!IS_INDEPENDENT_PLAYER(frag_target))
-			Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
-
-		buffs_BuffModel_Remove(frag_target);
 	}
 }
 
@@ -650,7 +801,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
-		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
+		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -739,28 +890,10 @@ bool buffs_RemovePlayer(entity player)
 {
 	buffs_BuffModel_Remove(player);
 
-	// also reset timers here to prevent them continuing after spectating
-	player.buff_disability_time = 0;
-	player.buff_disability_effect_time = 0;
-
 	return false;
 }
 MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { entity player = M_ARGV(0, entity); return buffs_RemovePlayer(player); }
 MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { entity player = M_ARGV(0, entity); return buffs_RemovePlayer(player); }
-
-MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
-{
-	entity wp = M_ARGV(0, entity);
-	entity player = M_ARGV(1, entity);
-
-	entity e = WaypointSprite_getviewentity(player);
-
-	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
-	// but only apply this to real players, not to spectators
-	if((wp.owner.flags & FL_CLIENT) && (e == player) && StatusEffects_active(BUFF_INVISIBLE, wp.owner))
-	if(DIFF_TEAM(wp.owner, e))
-		return true;
-}
 
 MUTATOR_HOOKFUNCTION(buffs, FilterItem)
 {
@@ -769,18 +902,11 @@ MUTATOR_HOOKFUNCTION(buffs, FilterItem)
 
 	entity item = M_ARGV(0, entity);
 
-	if(autocvar_g_buffs_replace_powerups)
+	if(autocvar_g_buffs_replace_powerups && item.itemdef.instanceOfPowerup)
 	{
-		switch(item.classname)
-		{
-			case "item_strength":
-			case "item_shield":
-			{
-				entity e = spawn();
-				buff_SpawnReplacement(e, item);
-				return true;
-			}
-		}
+		entity e = spawn();
+		buff_SpawnReplacement(e, item);
+		return true;
 	}
 
 	return false;
@@ -790,10 +916,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(StatusEffects_active(BUFF_SPEED, player))
-		M_ARGV(0, float) *= autocvar_g_buffs_speed_rate;
-
-	if(time < player.buff_disability_time)
+	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_rate;
 }
 
@@ -801,14 +924,15 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(StatusEffects_active(BUFF_SPEED, player))
-		M_ARGV(0, float) *= autocvar_g_buffs_speed_weaponspeed;
-
-	if(time < player.buff_disability_time)
+	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 
-.bool buff_flight_crouchheld;
+MUTATOR_HOOKFUNCTION(buffs, Freeze)
+{
+	entity targ = M_ARGV(0, entity);
+	buff_RemoveAll(targ, STATUSEFFECT_REMOVE_NORMAL);
+}
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
@@ -816,6 +940,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(game_stopped || IS_DEAD(player) || !IS_PLAYER(player)) return;
 
+	// NOTE: this is kept here to ensure crouches are picked up each player movement frame
 	if(StatusEffects_active(BUFF_FLIGHT, player))
 	{
 		if(!PHYS_INPUT_BUTTON_CROUCH(player))
@@ -827,181 +952,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 	}
 
-	if(time < player.buff_disability_time)
-	if(time >= player.buff_disability_effect_time)
-	{
-		Send_Effect(EFFECT_SMOKING, player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
-		player.buff_disability_effect_time = time + 0.5;
-	}
-
-	// handle buff lost status
-	// 1: notify everyone else
-	// 2: notify carrier as well
-	int buff_lost = 0;
-
-	entity heldbuff = buff_FirstFromFlags(player);
-	float bufftime = StatusEffects_gettime(heldbuff, player);
-	if(heldbuff && bufftime && time >= bufftime)
-		buff_lost = 2;
-
-	if(STAT(FROZEN, player)) { buff_lost = 1; }
-
-	if(buff_lost && heldbuff)
-	{
-		int buffid = heldbuff.m_id;
-		if(buff_lost == 2)
-		{
-			Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
-			sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
-		}
-		else if(!IS_INDEPENDENT_PLAYER(player))
-			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
-		buff_RemoveAll(player, STATUSEFFECT_REMOVE_TIMEOUT); // TODO: remove only the currently active buff?
-		heldbuff = NULL;
-		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
-	}
-
-	if(StatusEffects_active(BUFF_MAGNET, player))
-	{
-		vector pickup_size;
-		IL_EACH(g_items, it.itemdef,
-		{
-			if(it.buffdef)
-				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
-			else
-				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
-
-			if(boxesoverlap(player.absmin - pickup_size, player.absmax + pickup_size, it.absmin, it.absmax))
-			{
-				if(gettouch(it))
-					gettouch(it)(it, player);
-			}
-		});
-	}
-
-	if(StatusEffects_active(BUFF_AMMO, player))
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(player.(weaponentity).clip_size)
-				player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
-		}
-	}
-
-	if(!player.vehicle && StatusEffects_active(BUFF_INVISIBLE, player) && player.oldbuffs == BUFF_INVISIBLE)
-		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
-
-#define BUFF_ONADD(b) if ( (heldbuff == (b)) && (player.oldbuffs != (b)))
-#define BUFF_ONREM(b) if ( (heldbuff != (b)) && (player.oldbuffs == (b)))
-
-	if(heldbuff != player.oldbuffs)
-	{
-		bufftime = heldbuff ? heldbuff.m_time(heldbuff) : 0;
-		if(StatusEffects_gettime(heldbuff, player) <= time) // if the player still has a buff countdown, don't reset it!
-		{
-			player.statuseffects.statuseffect_time[heldbuff.m_id] = (bufftime) ? time + bufftime : 0;
-			StatusEffects_update(player);
-		}
-
-		BUFF_ONADD(BUFF_AMMO)
-		{
-			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_AMMO);
-			player.items |= IT_UNLIMITED_AMMO;
-
-			if(StatusEffects_active(BUFF_AMMO, player))
-			{
-				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-				{
-					.entity weaponentity = weaponentities[slot];
-					if(player.(weaponentity).clip_load)
-						player.(weaponentity).buff_ammo_prev_clipload = player.(weaponentity).clip_load;
-					if(player.(weaponentity).clip_size)
-						player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
-				}
-			}
-		}
-
-		BUFF_ONREM(BUFF_AMMO)
-		{
-			if(player.buff_ammo_prev_infitems)
-				player.items |= IT_UNLIMITED_AMMO;
-			else
-				player.items &= ~IT_UNLIMITED_AMMO;
-
-			if(StatusEffects_active(BUFF_AMMO, player))
-			{
-				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-				{
-					.entity weaponentity = weaponentities[slot];
-					if(player.(weaponentity).buff_ammo_prev_clipload)
-						player.(weaponentity).clip_load = player.(weaponentity).buff_ammo_prev_clipload;
-				}
-			}
-		}
-
-		BUFF_ONADD(BUFF_INVISIBLE)
-		{
-			if(StatusEffects_active(STATUSEFFECT_Strength, player) && MUTATOR_IS_ENABLED(mutator_instagib))
-				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
-			else
-				player.buff_invisible_prev_alpha = player.alpha;
-			if(!player.vehicle)
-				player.alpha = autocvar_g_buffs_invisible_alpha;
-		}
-
-		BUFF_ONREM(BUFF_INVISIBLE)
-		{
-			if(!player.vehicle)
-			{
-				if(StatusEffects_active(STATUSEFFECT_Strength, player) && MUTATOR_IS_ENABLED(mutator_instagib))
-					player.alpha = autocvar_g_instagib_invis_alpha;
-				else
-					player.alpha = player.buff_invisible_prev_alpha;
-			}
-		}
-
-		BUFF_ONADD(BUFF_FLIGHT)
-		{
-			player.buff_flight_oldgravity = player.gravity;
-			if(!player.gravity)
-				player.gravity = 1;
-		}
-
-		BUFF_ONREM(BUFF_FLIGHT)
-			player.gravity = ((player.trigger_gravity_check) ? player.trigger_gravity_check.enemy.gravity : player.buff_flight_oldgravity);
-
-		player.oldbuffs = heldbuff;
-		if(heldbuff)
-		{
-			if(!player.buff_model)
-				buffs_BuffModel_Spawn(player);
-
-			player.buff_model.color = heldbuff.m_color;
-			player.buff_model.glowmod = buff_GlowColor(heldbuff);
-			player.buff_model.skin = heldbuff.m_skin;
-
-			player.effects |= EF_NOSHADOW;
-		}
-		else
-		{
-			buffs_BuffModel_Remove(player);
-
-			player.effects &= ~(EF_NOSHADOW);
-		}
-	}
-
-	if(player.buff_model)
-	{
-		player.buff_model.effects = player.effects;
-		player.buff_model.effects |= EF_LOWPRECISION;
-		player.buff_model.effects = player.buff_model.effects & EFMASK_CHEAP; // eat performance
-
-		player.buff_model.alpha = player.alpha;
-	}
-
-#undef BUFF_ONADD
-#undef BUFF_ONREM
+	if(IS_PLAYER(player))
+		buffs_BuffModel_Update(player);
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
@@ -1014,9 +966,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 		M_ARGV(4, float) = M_ARGV(1, float) = autocvar_g_buffs_medic_max; // limit_mod = max_mod
 		M_ARGV(2, float) = autocvar_g_buffs_medic_regen; // regen_mod
 	}
-
-	if(StatusEffects_active(BUFF_SPEED, player))
-		M_ARGV(2, float) = autocvar_g_buffs_speed_regen; // regen_mod
 }
 
 REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");

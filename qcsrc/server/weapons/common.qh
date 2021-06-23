@@ -7,8 +7,6 @@ float autocvar_sv_strengthsound_antispam_time;
 
 bool W_DualWielding(entity player);
 void W_GiveWeapon (entity e, float wep);
-.float prevstrengthsound;
-.float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
 void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode);

@@ -12,6 +12,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/minigames/sv_minigames.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
@@ -248,7 +249,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
 				damage = 0;
 		}
-		else if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		else if (StatusEffects_active(STATUSEFFECT_SpawnShield, this) && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
@@ -333,7 +334,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	if (time >= this.spawnshieldtime || autocvar_g_spawnshield_blockdamage < 1)
+	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, this) || autocvar_g_spawnshield_blockdamage < 1)
 	{
 		if (!(this.flags & FL_GODMODE))
 		{

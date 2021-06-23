@@ -95,10 +95,6 @@ string AppendItemcodes(string s, entity player)
 		if(w != 0 || slot == 0)
 			s = strcat(s, ftos(w));
 	}
-	if(StatusEffects_active(STATUSEFFECT_Strength, player))
-		s = strcat(s, "S");
-	if(StatusEffects_active(STATUSEFFECT_Shield, player))
-		s = strcat(s, "I");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
 	// TODO: include these codes as a flag on the item itself
@@ -618,7 +614,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			SetResourceExplicit(targ, RES_ARMOR, 0);
 			SetResourceExplicit(targ, RES_HEALTH, 0.9); // this is < 1
 		}
-		targ.spawnshieldtime = 0;
+		StatusEffects_remove(STATUSEFFECT_SpawnShield, targ, STATUSEFFECT_REMOVE_CLEAR);
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -767,34 +763,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			}
 		}
 
-		if(!MUTATOR_IS_ENABLED(mutator_instagib))
-		{
-			// apply strength multiplier
-			if (attacker.items & ITEM_Strength.m_itemid)
-			{
-				if(targ == attacker)
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-					force = force * autocvar_g_balance_powerup_strength_selfforce;
-				}
-				else
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_damage;
-					force = force * autocvar_g_balance_powerup_strength_force;
-				}
-			}
-
-			// apply invincibility multiplier
-			if (targ.items & ITEM_Shield.m_itemid)
-			{
-				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
-				if (targ != attacker)
-				{
-					force = force * autocvar_g_balance_powerup_invincible_takeforce;
-				}
-			}
-		}
-
 		if (targ == attacker)
 			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
@@ -856,7 +824,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	// apply push
 	if (targ.damageforcescale)
 	if (force)
-	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
+	if (!IS_PLAYER(targ) || !StatusEffects_active(STATUSEFFECT_SpawnShield, targ) || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(targ.move_movetype == MOVETYPE_PHYSICS)
