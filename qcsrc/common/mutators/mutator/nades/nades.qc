@@ -1140,7 +1140,7 @@ void nade_prime(entity this)
 	int ntype;
 	string pntype = this.pokenade_type;
 
-	if((this.items & ITEM_Strength.m_itemid) && autocvar_g_nades_bonus_onstrength)
+	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
 		ntype = STAT(NADE_BONUS_TYPE, this);
 	else if (STAT(NADE_BONUS, this) >= 1)
 	{

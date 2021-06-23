@@ -4,6 +4,7 @@
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 
 #include <server/bot/api.qh>
 #include <server/world.qh>
@@ -212,7 +213,7 @@ void invasion_SpawnChosenMonster(Monster mon)
 	if(!monster)
 		return;
 
-	monster.spawnshieldtime = time;
+	StatusEffects_remove(STATUSEFFECT_SpawnShield, monster, STATUSEFFECT_REMOVE_NORMAL);
 
 	if(spawn_point)
 	{

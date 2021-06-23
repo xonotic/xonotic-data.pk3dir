@@ -194,7 +194,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Zombie_Attack;
-    actor.spawnshieldtime = actor.spawn_time;
+    StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.respawntime = 0.2;
     actor.damageforcescale = 0.0001; // no push while spawning
 

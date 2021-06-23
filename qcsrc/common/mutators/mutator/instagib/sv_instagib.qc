@@ -2,6 +2,7 @@
 
 #include <server/client.qh>
 #include <common/items/_mod.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include "../random_items/sv_random_items.qh"
 
@@ -15,11 +16,10 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
-float autocvar_g_instagib_speed_highspeed;
 
 void instagib_invisibility(entity this)
 {
-	this.strength_finished = autocvar_g_instagib_invisibility_time;
+	this.invisibility_finished = autocvar_g_instagib_invisibility_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
@@ -30,7 +30,7 @@ void instagib_extralife(entity this)
 
 void instagib_speed(entity this)
 {
-	this.invincible_finished = autocvar_g_instagib_speed_time;
+	this.speed_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
 }
 
@@ -138,14 +138,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 		mon.skin = 1;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
-{
-	entity targ = M_ARGV(1, entity);
-
-	if (targ.items & ITEM_Invisibility.m_itemid)
-		return true;
-}
-
 MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
@@ -176,70 +168,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerRegen)
 {
 	// no regeneration in instagib
 	return true;
-}
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
-{
-	entity player = M_ARGV(0, entity);
-
-	player.effects |= EF_FULLBRIGHT;
-
-	if (player.items & ITEM_Invisibility.m_itemid)
-	{
-		play_countdown(player, StatusEffects_gettime(STATUSEFFECT_Strength, player), SND_POWEROFF);
-		if (time > StatusEffects_gettime(STATUSEFFECT_Strength, player))
-		{
-			if(!player.vehicle) // already reset upon exit
-			{
-				player.alpha = default_player_alpha;
-				player.exteriorweaponentity.alpha = default_weapon_alpha;
-			}
-			player.items &= ~ITEM_Invisibility.m_itemid;
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
-		}
-	}
-	else
-	{
-		if (time < StatusEffects_gettime(STATUSEFFECT_Strength, player))
-		{
-			if(!player.vehicle) // incase the player is given powerups while inside a vehicle
-			{
-				player.alpha = autocvar_g_instagib_invis_alpha;
-				player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
-			}
-			player.items |= ITEM_Invisibility.m_itemid;
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
-		}
-	}
-
-	if (player.items & ITEM_Speed.m_itemid)
-	{
-		play_countdown(player, StatusEffects_gettime(STATUSEFFECT_Shield, player), SND_POWEROFF);
-		if (time > StatusEffects_gettime(STATUSEFFECT_Shield, player))
-		{
-			player.items &= ~ITEM_Speed.m_itemid;
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
-		}
-	}
-	else
-	{
-		if (time < StatusEffects_gettime(STATUSEFFECT_Shield, player))
-		{
-			player.items |= ITEM_Speed.m_itemid;
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_SPEED);
-		}
-	}
-}
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics_UpdateStats)
-{
-	entity player = M_ARGV(0, entity);
-	// these automatically reset, no need to worry
-
-	if(player.items & ITEM_Speed.m_itemid)
-		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_instagib_speed_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
@@ -426,7 +354,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.flags & FL_POWERUP)
+	if(item.itemdef.instanceOfPowerup)
 		return false;
 
 	float cells = GetResource(item, RES_CELLS);
@@ -437,20 +365,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return false;
 
 	return true;
-}
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
-{
-	entity wp = M_ARGV(0, entity);
-	entity player = M_ARGV(1, entity);
-
-	entity e = WaypointSprite_getviewentity(player);
-
-	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
-	// but only apply this to real players, not to spectators
-	if((wp.owner.flags & FL_CLIENT) && (wp.owner.items & ITEM_Invisibility.m_itemid) && (e == player))
-	if(DIFF_TEAM(wp.owner, e))
-		return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
@@ -502,7 +416,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
 		return;
 
 	entity e = spawn();
