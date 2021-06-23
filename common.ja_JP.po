@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-21 22:20+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -1958,11 +1958,11 @@ msgstr "オーバーキルショットガン"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "燃焼"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
 msgid "Superweapons"
-msgstr ""
+msgstr "スーパー武器"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"

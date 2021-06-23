@@ -3,7 +3,7 @@ de    "German" "Deutsch" 99%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 74%
-es    "Spanish" "Español" 99%
+es    "Spanish" "Español" 100%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 31%
 it    "Italian" "Italiano" 99%
@@ -24,5 +24,5 @@ sr    "Serbian" "Српски" 62%
 uk    "Ukrainian" "Українська" 49%
 zh_CN "Chinese (China)" "中文" 57%
 zh_TW "Chinese (Taiwan)" "國語" 59%
-ja_JP "Japanese" "日本語" 99%
+ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 28%
