@@ -4,6 +4,7 @@
 #
 # Translators:
 # Martin Taibr <taibr.martin@gmail.com>, 2017
+# fasdasd sdasd <transifexalternativeaccount@yopmail.com>, 2021
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
 # Jan Kocka <kockahonza@gmail.com>, 2019
 # Jiří Vrána <jirkacz199@gmail.com>, 2020-2021
@@ -17,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-22 11:22+0000\n"
+"Last-Translator: fasdasd sdasd <transifexalternativeaccount@yopmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -1670,7 +1671,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:680
 msgid "Remove AI player"
-msgstr ""
+msgstr "Odebrat AI hráče"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
@@ -3741,7 +3742,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1Tastes like chicken!"
-msgstr ""
+msgstr "^K1Chutná to jako kuře!"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You forgot to put the pin back in!"
@@ -5465,7 +5466,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:136
 msgid "Translators"
-msgstr ""
+msgstr "Překladači"
 
 #: qcsrc/menu/xonotic/credits.qc:138
 msgid "Asturian"
@@ -5477,7 +5478,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:146
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulharský"
 
 #: qcsrc/menu/xonotic/credits.qc:153
 msgid "Chinese (China)"
@@ -6174,7 +6175,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "Resetovat barvy"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
@@ -6440,7 +6441,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 msgid "Remove"
-msgstr ""
+msgstr "Odebrat"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Move target:"
@@ -7254,7 +7255,7 @@ msgstr "Otevřít v prohlížeči"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:137
 msgid "Reset"
-msgstr ""
+msgstr "Resetovat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:142
 msgid "Previous"
@@ -7282,7 +7283,7 @@ msgstr "Jméno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:79
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:98
 msgid "Glowing color"
@@ -7310,7 +7311,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
-msgstr ""
+msgstr "Vybrat Jazyk..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
@@ -7330,11 +7331,11 @@ msgstr "Opustit hru"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
-msgstr ""
+msgstr "Model:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:21
 msgid "Remove *"
-msgstr ""
+msgstr "Odebrat *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:23
 msgid "Copy *"
@@ -7346,7 +7347,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:26
 msgid "Bone:"
-msgstr ""
+msgstr "Kost:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:31
 msgid "Set * as child"
@@ -7386,7 +7387,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:56
 msgid "Set material:"
-msgstr ""
+msgstr "Nastavit materiál:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:62
 msgid "Set solidity:"
@@ -7418,7 +7419,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:70
 msgid "Set scale:"
-msgstr ""
+msgstr "Nastavit velikost:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:72
 msgid "Set force:"
@@ -7729,11 +7730,11 @@ msgstr "Vývojářské info o zvucích"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
-msgstr ""
+msgstr "Jseš si jistý že chceš přeměnit všechny klávesy?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
-msgstr ""
+msgstr "Resetovat klávesy"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
@@ -8140,7 +8141,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:97
 msgid "Size:"
-msgstr ""
+msgstr "Velikost:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
@@ -9007,7 +9008,7 @@ msgstr "Pokročilé nastavení, kde můžeš měnit každou proměnou ve hře"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
-msgstr ""
+msgstr "Tovární Restart"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
@@ -9638,7 +9639,7 @@ msgstr "<no model found>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "SERVER^Odebrat oblíbení"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"

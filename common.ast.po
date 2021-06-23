@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-22 21:37+0000\n"
+"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -406,7 +406,7 @@ msgstr "Vista en 3ᵉʳ persona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "Igualar los modelos de los xugadores"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^Names above players"
@@ -1950,7 +1950,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
 msgid "Superweapons"
-msgstr ""
+msgstr "Superarmes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -6639,7 +6639,7 @@ msgstr "4 equipos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:117
 msgid "Player slots:"
-msgstr ""
+msgstr "Güecos pa xugadores:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid ""
@@ -7108,7 +7108,7 @@ msgstr "Amuesa más información tocante al sirvidor rescampláu"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:97
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
 msgid "Join!"
-msgstr "¡Xunise!"
+msgstr "Xunise"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
 #: qcsrc/menu/xonotic/serverlist.qc:1041
@@ -7203,7 +7203,7 @@ msgstr "Robós:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:229
 msgid "Free slots:"
-msgstr ""
+msgstr "Güecos llibres"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:235
 msgid "Encryption:"
