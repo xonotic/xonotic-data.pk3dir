@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-22 21:37+0000\n"
+"PO-Revision-Date: 2021-06-23 16:26+0000\n"
 "Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
@@ -165,7 +165,7 @@ msgstr "Preparase"
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sPrimi ^3%s%s namás que puedas"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -1918,7 +1918,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr ""
+msgstr "Granada de velu"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2115,7 +2115,7 @@ msgstr "¡El %s precisa ayuda!"
 
 #: qcsrc/common/net_notice.qc:90
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Avisos del sirvidor:"
 
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -3006,7 +3006,7 @@ msgstr "^F3Espulsóse a ^BG%s^F3 por matar a compañeros munches vegaes"
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^F3Agora ^BG%s^F3 ye ^BG espectador"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3197,7 +3197,7 @@ msgstr "^BG%s%s^K1 averóse muncho a un orbe del Electro de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 xugó coles boles del Electro%s%s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
@@ -3222,7 +3222,7 @@ msgstr "^BG%s^K1 debió usar una arma más pequeña%s%s"
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 escaeció ónde punxo les mines%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
@@ -3425,7 +3425,7 @@ msgstr "^BG%s%s^K1 golpió a ^BG%s^K1 con una Escopeta%s%s"
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s"
-msgstr ""
+msgstr "^K1Agora ^BG%s^K1 quedó pensando colos portales%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3737,7 +3737,7 @@ msgstr "^K1¡Morri, camperu!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Reconsider your tactics, camper!"
-msgstr ""
+msgstr "^K1¡Piensa n'otra táctica, camperu!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^K1You unfairly eliminated yourself!"
@@ -3762,7 +3762,7 @@ msgstr "^K1¡Teníes un pocoñín de calor!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1¡Quedesti un pocoñín turráu!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
@@ -3818,7 +3818,7 @@ msgstr "^K1Morriesti por escosar la munición..."
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You grew too old without taking your medicine"
-msgstr ""
+msgstr "^K1Duresti muncho ensin tomar melecina"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You need to preserve your health"
@@ -5948,11 +5948,11 @@ msgstr "Desactivar"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr ""
+msgstr "Al ser espectador"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Al tar tamién nun calentamientu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -7257,7 +7257,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr "¿De xuru que desees desconectate agora?"
+msgstr "¿De xuru que quies desconectate agora?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -8396,7 +8396,7 @@ msgstr "Pa que l'editor de la interfaz s'amuese, has tar nuna partida primero."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "¿Desees aniciar la partida llocal pa configurar la interfaz?"
+msgstr "¿Quies entamar una partida llocal pa configurar la interfaz?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
@@ -8758,7 +8758,7 @@ msgstr "Soltar los botones d'ataque al cambiar d'arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr ""
+msgstr "Dibuxar el modelu de les armes en 1ᵉʳ persona"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
@@ -8772,7 +8772,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr "Opacidá de los modelos de les armes:"
+msgstr "Opacidá de los modelos:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
