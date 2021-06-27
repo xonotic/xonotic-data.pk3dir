@@ -27,9 +27,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-20 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2021-06-27 07:23+0200\n"
+"PO-Revision-Date: 2021-06-26 23:28+0000\n"
+"Last-Translator: Mirio <opivy@hotmail.de>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -1215,15 +1215,15 @@ msgstr "^1Fehler:^7pak-Index konnte nicht gefunden werden."
 msgid "Requesting preview..."
 msgstr "Vorschau abfragen ..."
 
-#: qcsrc/client/view.qc:891
+#: qcsrc/client/view.qc:892
 msgid "Nade timer"
 msgstr "Granaten-Timer"
 
-#: qcsrc/client/view.qc:896
+#: qcsrc/client/view.qc:897
 msgid "Capture progress"
 msgstr "Eroberungsfortschritt"
 
-#: qcsrc/client/view.qc:901
+#: qcsrc/client/view.qc:902
 msgid "Revival progress"
 msgstr "Wiederbelebungsfortschritt"
 
@@ -1529,16 +1529,6 @@ msgstr "Treibstoff-Regenerator"
 msgid "Fuel regen"
 msgstr "Treibstoff-Regeneration"
 
-#: qcsrc/common/items/item/powerup.qh:47 qcsrc/common/items/item/powerup.qh:50
-#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:13
-msgid "Strength"
-msgstr "Stärke"
-
-#: qcsrc/common/items/item/powerup.qh:87 qcsrc/common/items/item/powerup.qh:90
-#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:20
-msgid "Shield"
-msgstr "Schutzschild"
-
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
@@ -1815,6 +1805,10 @@ msgstr "Spinne"
 msgid "Spider attack"
 msgstr "Spinnenangriff"
 
+#: qcsrc/common/monsters/monster/spider.qh:39
+msgid "Webbed"
+msgstr ""
+
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
@@ -1829,71 +1823,65 @@ msgstr "Lindwurmangriff"
 msgid "Zombie"
 msgstr "Zombie"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:16
+#: qcsrc/common/mutators/mutator/buffs/all.inc:14
 msgid "Ammo"
 msgstr "Munition"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:26
+#: qcsrc/common/mutators/mutator/buffs/all.inc:25
 msgid "Resistance"
 msgstr "Widerstand"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:36
-#: qcsrc/common/mutators/mutator/instagib/items.qh:130
-#: qcsrc/common/mutators/mutator/instagib/items.qh:133
-msgid "Speed"
-msgstr "Geschwindigkeit"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:47
 msgid "Medic"
 msgstr "Sanitäter"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:58
+#: qcsrc/common/mutators/mutator/buffs/all.inc:48
 msgid "Bash"
 msgstr "Schlag"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:68
+#: qcsrc/common/mutators/mutator/buffs/all.inc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
 msgstr "Vampir"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:77
+#: qcsrc/common/mutators/mutator/buffs/all.inc:69
 msgid "Disability"
 msgstr "Behinderung"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:86
+#: qcsrc/common/mutators/mutator/buffs/all.inc:83
+msgid "Disabled"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
 msgstr "Rache"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:95
+#: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Jump"
 msgstr "Sprung"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:105
-msgid "Invisible"
-msgstr "Unsichtbar"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:115
 msgid "Inferno"
 msgstr "Inferno"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:124
+#: qcsrc/common/mutators/mutator/buffs/all.inc:125
 msgid "Swapper"
 msgstr "Tauscher"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:133
+#: qcsrc/common/mutators/mutator/buffs/all.inc:135
 msgid "Magnet"
 msgstr "Magnet"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:142
+#: qcsrc/common/mutators/mutator/buffs/all.inc:145
 msgid "Luck"
 msgstr "Glück"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:151
+#: qcsrc/common/mutators/mutator/buffs/all.inc:155
 msgid "Flight"
 msgstr "Flug"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
 msgid "Buff"
 msgstr "Bonus"
 
@@ -1934,11 +1922,6 @@ msgstr "Vaporisierermunition"
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
 msgid "Extra life"
 msgstr "Extraleben"
-
-#: qcsrc/common/mutators/mutator/instagib/items.qh:93
-#: qcsrc/common/mutators/mutator/instagib/items.qh:96
-msgid "Invisibility"
-msgstr "Unsichtbarkeit"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
@@ -1996,13 +1979,41 @@ msgstr "Overkill-Raketenkettensäge"
 msgid "Overkill Shotgun"
 msgstr "Overkill-Schrotflinte"
 
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:37
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:40
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:56
+msgid "Invisibility"
+msgstr "Unsichtbarkeit"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:36
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:39
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:54
+msgid "Shield"
+msgstr "Schutzschild"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:58
+msgid "Speed"
+msgstr "Geschwindigkeit"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:55
+msgid "Strength"
+msgstr "Stärke"
+
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
+msgstr "Brennend"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
+msgid "Spawn Shield"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/status_effects/status_effect/powerups.qh:27
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Superwaffen"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -5566,7 +5577,7 @@ msgstr "%d."
 msgid "No description"
 msgstr "Keine Beschreibung"
 
-#: qcsrc/lib/spawnfunc.qh:250
+#: qcsrc/lib/spawnfunc.qh:252
 #, c-format
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
