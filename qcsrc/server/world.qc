@@ -353,6 +353,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADCVAR("g_ctf_flagcarrier_auto_helpme_damage");
 		BADPRESUFFIX("g_ctf_flag_", "_model");
 		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
