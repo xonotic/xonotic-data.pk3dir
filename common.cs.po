@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 07:23+0200\n"
-"PO-Revision-Date: 2021-06-22 11:22+0000\n"
-"Last-Translator: fasdasd sdasd <transifexalternativeaccount@yopmail.com>\n"
+"PO-Revision-Date: 2021-06-27 05:24+0000\n"
+"Last-Translator: Tomáš Volavka <czheron@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -1795,7 +1795,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:83
 msgid "Disabled"
-msgstr ""
+msgstr "Zakázané"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"

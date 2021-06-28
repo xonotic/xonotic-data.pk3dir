@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 09:57+0000\n"
+"PO-Revision-Date: 2021-06-27 09:06+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -1799,7 +1799,7 @@ msgstr "Attaque d'araignée"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
-msgstr ""
+msgstr "Pris dans la toile"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -1843,7 +1843,7 @@ msgstr "Handicap"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:83
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
@@ -1945,7 +1945,7 @@ msgstr "Grenade piégée"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr "Grenade de voile"
+msgstr "Grenade dissimulée"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2001,7 +2001,7 @@ msgstr "Enflammé"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Bouclier d'apparition"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"

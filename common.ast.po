@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 07:23+0200\n"
-"PO-Revision-Date: 2021-06-23 16:26+0000\n"
-"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
+"PO-Revision-Date: 2021-06-27 05:24+0000\n"
+"Last-Translator: Ḷḷumex03\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -1799,7 +1799,7 @@ msgstr "Invalidez"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:83
 msgid "Disabled"
-msgstr ""
+msgstr "Deshabilitáu"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"

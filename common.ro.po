@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 07:23+0200\n"
-"PO-Revision-Date: 2021-06-20 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-06-27 05:24+0000\n"
+"Last-Translator: Adrian-Ciprian Tînjală <adrian.tinjala@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ro/)\n"
 "Language: ro\n"
@@ -1807,7 +1807,7 @@ msgstr "Dizabilitate"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:83
 msgid "Disabled"
-msgstr ""
+msgstr "Dezactivat"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
