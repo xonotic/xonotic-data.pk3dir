@@ -13,10 +13,12 @@ void HUD_Chat()
 {
 	if(!autocvar__hud_configure)
 	{
-		if (!autocvar_hud_panel_chat)
+		if (!autocvar_hud_panel_chat && !autocvar__con_chat_maximized)
 		{
-			if (!autocvar_con_chatrect)
+			if (autocvar_con_chatrect)
 				cvar_set("con_chatrect", "0");
+			if (autocvar_con_chat)
+				cvar_set("con_chat", "-1");
 			return;
 		}
 		if(autocvar__con_chat_maximized)
