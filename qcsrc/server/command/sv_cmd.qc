@@ -745,7 +745,7 @@ void GameCommand_gametype(int request, int argc)
 				}
 				else
 				{
-					bprint("Game type switch to ", s, " failed: this type does not exist!\n");
+					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
 				}
 
 				return;
