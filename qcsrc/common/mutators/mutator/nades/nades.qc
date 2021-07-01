@@ -13,6 +13,7 @@ REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 #ifdef GAMEQC
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
+REPLICATE(cvar_cl_tandemnade_type, int, "cl_tandemnade_type");
 
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -174,6 +175,10 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
+//LegendGuard adds include for spawning vehicles 20-06-2021
+#include <common/vehicles/all.qh>
+//LegendGuard adds include for spawning turrets 22-06-2021
+#include <common/turrets/all.qh>
 
 .float nade_time_primed;
 .float nade_lifetime;
@@ -625,7 +630,7 @@ void nade_heal_touch(entity this, entity toucher)
 {
 	float maxhealth;
 	float health_factor;
-	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	if(IS_PLAYER(toucher) || IS_MONSTER(toucher) || IS_VEHICLE(toucher))
 	if(!IS_DEAD(toucher))
 	if(!STAT(FROZEN, toucher))
 	{
@@ -768,6 +773,99 @@ void nade_emerald_randomweapons(entity e, vector org)
 		return;
 }
 
+//LegendGuard adds vehicle spawn option for emerald nade 20-06-2021
+void nade_emerald_SpawnVehicle(entity ent, vector org, entity veh)
+{
+	ent.noalign = true; // don't drop to floor
+	ent.angles = '0 0 0';
+	ent.gravity = 1;
+	setorigin(ent, org);
+	ent.velocity = randomvec() * 150 + '0 0 325';
+	ent.spawnfunc_checked = true;
+	time = 0.5;
+	vehicle_initialize(ent, veh, 1);
+}
+
+//LegendGuard adds random vehicle spawn selection function for emerald nade 20-06-2021
+void nade_emerald_randomvehicles(entity e, vector org)
+{
+	RandomSelection_Init();
+	FOREACH(Vehicles, it != VEH_Null && (!((it.spawnflags & VHF_MULTISLOT))),
+	{
+		if(it.spawnflags & VHF_MULTISLOT || it.classname == "Bumblebee") //No Bumblebee, please
+			continue;
+		float chanceveh = 1;
+		if(it.spawnflags & VHF_MOVE_FLY)
+			chanceveh = 0;
+		RandomSelection_AddEnt(it, chanceveh, 1);
+	});
+	nade_emerald_SpawnVehicle(e, org, RandomSelection_chosen_ent);
+}
+
+//LegendGuard adds turret spawn option for emerald nade 22-06-2021
+//EXPERIMENTAL
+//TODO: turrets must be spawned by owner team, cannot be spawned to attack owner team or both
+void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
+{
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		if (it.turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
+		{
+			//ent = spawn();
+			ent.owner = it.owner;
+			ent.realowner = it.realowner;
+			ent.team = it.team;
+			ent.noalign = true; // don't drop to floor
+			//ent.angles = '0 0 0';
+			//ent.gravity = 1;
+			setorigin(ent, org);
+			//ent.velocity = randomvec() * 150 + '0 0 325';
+			ent.spawnfunc_checked = true;
+			//ent.solid = SOLID_CORPSE;
+			//setthink(ent, turrets_respawn);
+			// fading handled globally
+			//bool turret_initialize(entity this, Turret tur)
+			turret_initialize(ent, tur);
+			it.turspawncount++;
+			//PrintToChatAll(sprintf("^1AFTER^7 it.turspawncount: ^3%f", it.turspawncount));
+			//if (!IS_ONGROUND(ent))
+			//	ent.gravity = 1; setorigin(ent, org);
+		}
+		else
+		{
+			//centerprint(it, strcat(BOLD_OPERATOR, "^1You cannot spawn more turrets!"));
+			PrintToChatAll("^1Someone tried to spawn more turrets than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
+		}
+		//PrintToChatAll(sprintf("^4tur- ^2it.netname: %s", it.netname));
+		//PrintToChatAll(sprintf("^4tur- ^1tur.classname: %s", tur.classname));
+		return;
+	});
+}
+
+//LegendGuard adds random turret spawn function for emerald nade 22-06-2021
+//EXPERIMENTAL
+void nade_emerald_randomturrets(entity e, vector org)
+{
+	/*//taken from: qcsrc/common/turrets/turret.qh
+	const int TSF_SUSPENDED = 1;
+	const int TSF_TERRAINBASE = 2; // currently unused
+	const int TSF_NO_AMMO_REGEN = 4; // disable builtin ammo regeneration
+	const int TSF_NO_PATHBREAK = 8; // don't break path to chase enemies, will still fire at them if possible
+	const int TSL_NO_RESPAWN = 16; // don't re-spawn
+	const int TSL_ROAM = 32; // roam while idle*/
+	RandomSelection_Init();
+	FOREACH(Turrets, it != TUR_Null && (!((it.spawnflags & TSF_SUSPENDED))),
+	{
+		if(it.spawnflags & TSF_SUSPENDED)
+			continue;
+		float chancetur = 1;
+		if(it.spawnflags & TSF_NO_PATHBREAK)
+			chancetur = 0;
+		RandomSelection_AddEnt(it, chancetur, 1);
+	});
+	nade_emerald_SpawnTurret(e, org, RandomSelection_chosen_ent);
+}
+
 void nade_emerald_randomitem(entity e, vector org)
 {
 	float a = random();
@@ -842,31 +940,27 @@ void nade_emerald_dropping(vector org)
 	//ITEM_Shells; ITEM_Bullets; ITEM_Rockets; ITEM_Cells; ITEM_Plasma; ITEM_JetpackFuel;
 	//ITEM_Strength; ITEM_Shield;
 	int itemcount = autocvar_g_nades_emerald_spawncount;
-	for(int j = 0; j < itemcount; ++j)
+	entity e = spawn();
+	e.spawnfunc_checked = true;
+	if(!IS_GAMETYPE(CA))
 	{
-		entity e = spawn();
-		e.spawnfunc_checked = true;
-		
-		if(!IS_GAMETYPE(CA))
+		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
+		switch (autocvar_g_nades_emerald_dropitemselect)
 		{
-			//int cvar which manages the ONLY dropping per each type of item 14-03-2021
-			switch (autocvar_g_nades_emerald_dropitemselect)
-			{
-				case 0: nade_emerald_randomitem(e, org); return;
-				case 1: nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;
-				case 2: nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;
-				case 3: nade_emerald_allammoitemdrop(e, org); return;
-				case 4: nade_emerald_dropitem(e, org, ITEM_Shells); return;
-				case 5: nade_emerald_dropitem(e, org, ITEM_Bullets); return;
-				case 6: nade_emerald_dropitem(e, org, ITEM_Rockets); return;
-				case 7: nade_emerald_dropitem(e, org, ITEM_Cells); return;
-				case 8: nade_emerald_dropitem(e, org, ITEM_Jetpack); return;
-				case 9: nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;
-				case 10: nade_emerald_dropitem(e, org, ITEM_Shield); return;
-				case 11: nade_emerald_dropitem(e, org, ITEM_Strength); return;
-				case 12: nade_emerald_randomweapons(e, org); return;
-				default: nade_emerald_randomitem(e, org); return;
-			}
+			case 0: for(int j = 0; j < itemcount; ++j){	nade_emerald_randomitem(e, org); return;}
+			case 1: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;}
+			case 2: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;}
+			case 3: for(int j = 0; j < itemcount; ++j){	nade_emerald_allammoitemdrop(e, org); return;}
+			case 4: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Shells); return;}
+			case 5: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Bullets); return;}
+			case 6: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Rockets); return;}
+			case 7: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Cells); return;}
+			case 8: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Jetpack); return;}
+			case 9: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;}
+			case 10: for(int j = 0; j < itemcount; ++j){ nade_emerald_dropitem(e, org, ITEM_Shield); return;}
+			case 11: for(int j = 0; j < itemcount; ++j){ nade_emerald_dropitem(e, org, ITEM_Strength); return;}
+			case 12: for(int j = 0; j < itemcount; ++j){ nade_emerald_randomweapons(e, org); return;}
+			default: for(int j = 0; j < itemcount; ++j){ nade_emerald_randomitem(e, org); return;}
 		}
 	}
 }
@@ -936,7 +1030,6 @@ void nade_emerald_ball(entity this)
 	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
 }
 
-
 void emerald_fountain_think(entity this)
 {
 	if(round_handler_IsActive())
@@ -976,42 +1069,73 @@ void emerald_fountain_think(entity this)
 
 void nade_emerald_boom(entity this)
 {
-	for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
-		nade_emerald_ball(this);
+	entity e = spawn();
+	bool spawnlimited = false;
 
-	entity fountain = new(nade_emerald_fountain);
-	fountain.owner = this.owner;
-	fountain.realowner = this.realowner;
-	fountain.origin = this.origin;
-	fountain.flags = FL_PROJECTILE;
-	IL_PUSH(g_projectiles, fountain);
-	IL_PUSH(g_bot_dodge, fountain);
-	setorigin(fountain, fountain.origin);
-	setthink(fountain, emerald_fountain_think);
-	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
-	fountain.pushltime = fountain.ltime;
-	fountain.team = this.team;
-	
-	//nade model maintaining
-	setmodel(fountain, MDL_PROJECTILE_GRENADE);
-	entity timer = new(nade_timer);
-	setmodel(timer, MDL_NADE_TIMER);
-	setattachment(timer, fountain, "");
-	timer.colormap = this.colormap;
-	timer.glowmod = this.glowmod;
-	setthink(timer, nade_timer_think);
-	timer.nextthink = time;
-	timer.wait = fountain.ltime;
-	timer.owner = fountain;
-	timer.skin = 10;
-	
-	set_movetype(fountain, MOVETYPE_TOSS);
-	fountain.bot_dodge = true;
-	fountain.nade_special_time = time;
-	setsize(fountain, '-16 -16 -16', '16 16 16');
-	CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
-	nade_emerald_dropping(fountain.origin);
+	switch (this.tandemnade_type)
+	{
+		case 1:
+		{
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				if (it.vehspawncount < autocvar_g_nades_emerald_vehiclespawnlimit)
+				{
+					spawnlimited = false;
+					//PrintToChatAll(sprintf("^2BEFORE^7 it.vehspawncount: ^3%f", it.vehspawncount));
+					it.vehspawncount++;
+					//PrintToChatAll(sprintf("^1AFTER^7 it.vehspawncount: ^3%f", it.vehspawncount));
+				}
+				else
+					spawnlimited = true;
+			});
+			if(spawnlimited == true)
+				PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
+			else
+				nade_emerald_randomvehicles(e, this.origin);
+
+			return;
+		}
+		case 2: nade_emerald_randomturrets(e, this.origin); return; //EXPERIMENTAL
+		default:
+		{
+			for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
+				nade_emerald_ball(this);
+			
+			entity fountain = new(nade_emerald_fountain);
+			fountain.owner = this.owner;
+			fountain.realowner = this.realowner;
+			fountain.origin = this.origin;
+			fountain.flags = FL_PROJECTILE;
+			IL_PUSH(g_projectiles, fountain);
+			IL_PUSH(g_bot_dodge, fountain);
+			setorigin(fountain, fountain.origin);
+			setthink(fountain, emerald_fountain_think);
+			fountain.nextthink = time;
+			fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
+			fountain.pushltime = fountain.ltime;
+			fountain.team = this.team;
+			
+			//nade model maintaining
+			setmodel(fountain, MDL_PROJECTILE_GRENADE);
+			entity timer = new(nade_timer);
+			setmodel(timer, MDL_NADE_TIMER);
+			setattachment(timer, fountain, "");
+			timer.colormap = this.colormap;
+			timer.glowmod = this.glowmod;
+			setthink(timer, nade_timer_think);
+			timer.nextthink = time;
+			timer.wait = fountain.ltime;
+			timer.owner = fountain;
+			timer.skin = 10;
+			
+			set_movetype(fountain, MOVETYPE_TOSS);
+			fountain.bot_dodge = true;
+			fountain.nade_special_time = time;
+			setsize(fountain, '-16 -16 -16', '16 16 16');
+			CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
+			nade_emerald_dropping(fountain.origin);
+		}
+	}
 }
 
 /***********************************************************************************/
@@ -1319,10 +1443,10 @@ void nade_boom(entity this)
 	delete(this);
 }
 
-void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype, int tntype);
 void nade_pickup(entity this, entity thenade)
 {
-	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, STAT(NADE_BONUS_TYPE, thenade), thenade.pokenade_type);
+	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, STAT(NADE_BONUS_TYPE, thenade), thenade.pokenade_type, thenade.tandemnade_type);
 
 	// set refire so player can't even
 	this.nade_refire = time + autocvar_g_nades_nade_refire;
@@ -1608,12 +1732,13 @@ bool nade_customize(entity this, entity client)
 	return true;
 }
 
-void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype)
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype, int tntype)
 {
 	entity n = new(nade), fn = new(fake_nade);
 
 	STAT(NADE_BONUS_TYPE, n) = max(1, ntype);
 	n.pokenade_type = pntype;
+	n.tandemnade_type = tntype;
 
 	if(REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)) == NADE_TYPE_Null)
 		STAT(NADE_BONUS_TYPE, n) = NADE_TYPE_NORMAL.m_id;
@@ -1669,6 +1794,7 @@ void nade_prime(entity this)
 	this.fake_nade = NULL;
 
 	int ntype;
+	int tntype = this.tandemnade_type;
 	string pntype = this.pokenade_type;
 
 	if((this.items & ITEM_Strength.m_itemid) && autocvar_g_nades_bonus_onstrength)
@@ -1677,15 +1803,17 @@ void nade_prime(entity this)
 	{
 		ntype = STAT(NADE_BONUS_TYPE, this);
 		pntype = this.pokenade_type;
+		tntype = this.tandemnade_type;
 		STAT(NADE_BONUS, this) -= 1;
 	}
 	else
 	{
 		ntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
 		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		tntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_tandemnade_type : autocvar_g_nades_tandemnade_type);
 	}
 
-	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
+	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype, tntype);
 }
 
 bool CanThrowNade(entity this)
@@ -1845,11 +1973,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			{
 				STAT(NADE_BONUS_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
 				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
+				player.tandemnade_type = CS_CVAR(player).cvar_cl_tandemnade_type;
 			}
 			else
 			{
 				STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
 				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
+				player.tandemnade_type = autocvar_g_nades_tandemnade_type;
 			}
 
 			STAT(NADE_BONUS_TYPE, player) = bound(1, STAT(NADE_BONUS_TYPE, player), Nades_COUNT);
@@ -2099,6 +2229,7 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(NADE_TIMER, client) = STAT(NADE_TIMER, spectatee);
 	STAT(NADE_BONUS_TYPE, client) = STAT(NADE_BONUS_TYPE, spectatee);
 	client.pokenade_type = spectatee.pokenade_type;
+	client.tandemnade_type = spectatee.tandemnade_type;
 	STAT(NADE_BONUS, client) = STAT(NADE_BONUS, spectatee);
 	STAT(NADE_BONUS_SCORE, client) = STAT(NADE_BONUS_SCORE, spectatee);
 	STAT(HEALING_ORB, client) = STAT(HEALING_ORB, spectatee);
