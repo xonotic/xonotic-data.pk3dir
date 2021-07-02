@@ -89,6 +89,7 @@ CLASS(Client, Object)
     ATTRIB(Client, colormap, int, this.colormap);
     ATTRIB(Client, team, int, this.team);
     ATTRIB(Client, clientcolors, int, this.clientcolors);
+	ATTRIB(Client, countrycode, int, this.countrycode);
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
