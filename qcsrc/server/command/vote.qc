@@ -536,7 +536,11 @@ void ReadyCount()
 	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
 	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
 
-	if (readycount >= ready_needed_count) ReadyRestart();
+	if (readycount >= ready_needed_count)
+	{
+		warmup_stage = 0;
+		ReadyRestart();
+	}
 }
 
 
