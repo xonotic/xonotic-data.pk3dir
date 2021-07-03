@@ -400,8 +400,8 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			if (restart_mapalreadyrestarted || (time < game_starttime))
-			{
+			//if (restart_mapalreadyrestarted || (time < game_starttime))
+			//{
 				FOREACH_CLIENT(IS_PLAYER(it),
 				{
 					/*
@@ -418,7 +418,7 @@ void reset_map(bool dorespawn)
 					CS(it).movement = '0 0 0';
 					PutClientInServer(it);
 				});
-			}
+			//}
 		}
 	}
 }
@@ -447,9 +447,17 @@ void ReadyRestart_force()
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
-
-	readyrestart_happened = true;
-	game_starttime = time + RESTART_COUNTDOWN;
+	
+	if(!warmup_stage)
+	{
+		readyrestart_happened = true;
+		game_starttime = time + RESTART_COUNTDOWN;
+	}
+	else
+	{
+		readyrestart_happened = false;
+		game_starttime = 0;
+	}
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -462,9 +470,8 @@ void ReadyRestart_force()
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
-	if(warmup_stage)
+	if(!warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
-	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
@@ -476,13 +483,10 @@ void ReadyRestart_force()
 
 	// lock teams with lockonrestart
 	if (autocvar_teamplay_lockonrestart && teamplay)
-	{
-		lockteams = true;
-		bprint("^1The teams are now locked.\n");
-	}
+		lockteams = !warmup_stage;
 
 	// initiate the restart-countdown-announcer entity
-	if (sv_ready_restart_after_countdown)
+	if (sv_ready_restart_after_countdown && !warmup_stage)
 	{
 		entity restart_timer = new_pure(restart_timer);
 		setthink(restart_timer, ReadyRestart_think);
@@ -495,8 +499,8 @@ void ReadyRestart_force()
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	round_handler_Activate(true);
-	if (!sv_ready_restart_after_countdown) reset_map(true);
+	round_handler_Activate(!warmup_stage);
+	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
