@@ -1575,7 +1575,6 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	vector hl_rgb = rgb + '0.5 0.5 0.5';
 
-	pos.y += hud_fontsize.y;
 	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
@@ -1762,6 +1761,8 @@ vector Scoreboard_Spectators_Draw(vector pos) {
 			break;
 		}
 	}
+	if (str != "") // if there's at least one spectator
+		pos.y += 0.5 * hud_fontsize.y;
 
 	return pos;
 }
@@ -2077,6 +2078,8 @@ void Scoreboard_Draw()
 			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_unit, ColorTranslateRGB(race_speedaward_alltimebest_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
 		}
+		if (race_speedaward || race_speedaward_alltimebest)
+			pos.y += 0.25 * hud_fontsize.y;
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
 
@@ -2131,7 +2134,7 @@ void Scoreboard_Draw()
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	pos.y += 2 * hud_fontsize.y;
+	pos.y += hud_fontsize.y;
 	if (scoreboard_fade_alpha < 1)
 		scoreboard_bottom = scoreboard_top + (pos.y - scoreboard_top) * scoreboard_fade_alpha;
 	else if (pos.y != scoreboard_bottom)
