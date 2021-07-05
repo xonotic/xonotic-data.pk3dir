@@ -1602,13 +1602,14 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	vector columnsize = vec2(ranksize + timesize + namesize + hud_fontsize.x, 1.25 * hud_fontsize.y);
 	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
 	columns = min(columns, RANKINGS_RECEIVED_CNT);
+	int rows = ceil(RANKINGS_RECEIVED_CNT / columns);
 
 	// expand name column to fill the entire row
 	float available_space = (panel_size.x - 2 * panel_bg_padding - columnsize.x * columns) / columns;
 	namesize += available_space;
 	columnsize.x += available_space;
 
-	panel_size.y = ceil(RANKINGS_RECEIVED_CNT / columns) * 1.25 * hud_fontsize.y;
+	panel_size.y = rows * 1.25 * hud_fontsize.y;
 	panel_size.y += panel_bg_padding * 2;
 
 	HUD_Panel_DrawBg();
@@ -1654,7 +1655,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 		pos.y += 1.25 * hud_fontsize.y;
 		j++;
-		if(j >= ceil(RANKINGS_RECEIVED_CNT / columns))
+		if(j >= rows)
 		{
 			column++;
 			j = 0;
@@ -1737,9 +1738,10 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	return true;
 }
 
-vector Scoreboard_Spectators_Draw(vector pos, entity tm, string str, vector hud_fontsize) {
+vector Scoreboard_Spectators_Draw(vector pos) {
 
-	entity pl;
+	entity pl, tm;
+	string str = "";
 
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
@@ -2051,10 +2053,10 @@ void Scoreboard_Draw()
 
 	// draw scoreboard spectators before accuracy and item stats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 0) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
-	// draw accuracy and item stats 
+	// draw accuracy and item stats
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 	if (Scoreboard_ItemStats_WouldDraw(pos.y))
@@ -2062,7 +2064,7 @@ void Scoreboard_Draw()
 
 	// draw scoreboard spectators after accuracy and item stats and before rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 1) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
@@ -2080,14 +2082,14 @@ void Scoreboard_Draw()
 
 	// draw scoreboard spectators after rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 2) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
 	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
 	// draw scoreboard spectators after mapstats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 3) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
 
