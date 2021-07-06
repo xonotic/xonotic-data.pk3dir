@@ -1,0 +1,28 @@
+#pragma once
+
+#include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
+#include <common/gamemodes/gamemode/tdm/tdm.qh>
+#include <common/mapinfo.qh>
+
+CLASS(mayhem, Gametype)
+    INIT(mayhem)
+    {
+        this.gametype_init(this, _("Mayhem"),"mayhem","g_mayhem",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PREFERRED,"","timelimit=15 pointlimit=30 leadlimit=0",_("The player with the most frags in total mayhem wins!"));
+    }
+    METHOD(mayhem, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+    METHOD(mayhem, m_isForcedSupported, bool(Gametype this))
+    {
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)){
+	        return true;
+        }
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags)){
+	        return true;
+        }
+        return false;		
+    }
+    ATTRIB(mayhem, m_legacydefaults, string, "30 20 0");
+ENDCLASS(mayhem)
+REGISTER_GAMETYPE(MAYHEM, NEW(mayhem));
