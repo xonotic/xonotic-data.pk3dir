@@ -1561,7 +1561,9 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	return end_pos;
 }
 
-
+int rankings_rows = 0;
+int rankings_columns = 0;
+int rankings_cnt = 0;
 vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector rgb, vector bg_size)
 {
 	int i;
@@ -1599,16 +1601,20 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	float ranksize = 3 * hud_fontsize.x;
 	float timesize = 5 * hud_fontsize.x;
 	vector columnsize = vec2(ranksize + timesize + namesize + hud_fontsize.x, 1.25 * hud_fontsize.y);
-	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
-	columns = min(columns, RANKINGS_RECEIVED_CNT);
-	int rows = ceil(RANKINGS_RECEIVED_CNT / columns);
+	rankings_columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
+	rankings_columns = min(rankings_columns, RANKINGS_RECEIVED_CNT);
+	if (!rankings_cnt)
+	{
+		rankings_cnt = RANKINGS_RECEIVED_CNT;
+		rankings_rows = ceil(rankings_cnt / rankings_columns);
+	}
 
 	// expand name column to fill the entire row
-	float available_space = (panel_size.x - 2 * panel_bg_padding - columnsize.x * columns) / columns;
+	float available_space = (panel_size.x - 2 * panel_bg_padding - columnsize.x * rankings_columns) / rankings_columns;
 	namesize += available_space;
 	columnsize.x += available_space;
 
-	panel_size.y = rows * 1.25 * hud_fontsize.y;
+	panel_size.y = rankings_rows * 1.25 * hud_fontsize.y;
 	panel_size.y += panel_bg_padding * 2;
 
 	HUD_Panel_DrawBg();
@@ -1632,7 +1638,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	string str = "";
 	int column = 0, j = 0;
 	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
-	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
+	for(i = 0; i < rankings_cnt; ++i)
 	{
 		float t;
 		t = grecordtime[i];
@@ -1654,11 +1660,11 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 		pos.y += 1.25 * hud_fontsize.y;
 		j++;
-		if(j >= rows)
+		if(j >= rankings_rows)
 		{
 			column++;
 			j = 0;
-			pos.x += panel_size.x / columns;
+			pos.x += panel_size.x / rankings_columns;
 			pos.y = panel_pos.y;
 		}
 	}
@@ -2083,6 +2089,8 @@ void Scoreboard_Draw()
 			pos.y += 0.25 * hud_fontsize.y;
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
+	else
+		rankings_cnt = 0;
 
 	// draw scoreboard spectators after rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 2) {
@@ -2145,4 +2153,13 @@ void Scoreboard_Draw()
 		else
 			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - scoreboard_top));
 	}
+
+	if (scoreboard_fade_alpha == 1)
+	{
+		if (scoreboard_bottom > 0.95 * vid_conheight)
+			rankings_rows = max(1, rankings_rows - 1);
+		else if (scoreboard_bottom + 1.25 * hud_fontsize.y < 0.95 * vid_conheight)
+			rankings_rows = min(ceil(RANKINGS_RECEIVED_CNT / rankings_columns), rankings_rows + 1);
+	}
+	rankings_cnt = rankings_rows * rankings_columns;
 }
