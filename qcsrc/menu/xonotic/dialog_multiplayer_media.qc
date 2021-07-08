@@ -7,6 +7,8 @@
 #include "dialog_multiplayer_media_demo_timeconfirm.qh"
 #include "dialog_multiplayer_media_demo_startconfirm.qh"
 
+#include <menu/xonotic/guide/tab.qh>
+
 #include "tabcontroller.qh"
 
 entity makeXonoticMediaTab()
@@ -22,6 +24,7 @@ void XonoticMediaTab_fill(entity me)
 	mc = makeXonoticTabController(me.rows - 2);
 
 	me.gotoRC(me, 0.5, 0);
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Guide"), NEW(XonoticGuideTab)));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Screenshots"), makeXonoticScreenshotBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Music Player"), makeXonoticMusicPlayerTab()));

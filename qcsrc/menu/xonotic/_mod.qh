@@ -119,3 +119,5 @@
 #include <menu/xonotic/util.qh>
 #include <menu/xonotic/weaponarenacheckbox.qh>
 #include <menu/xonotic/weaponslist.qh>
+
+#include <menu/xonotic/guide/_mod.qh>
