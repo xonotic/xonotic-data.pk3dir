@@ -2,7 +2,7 @@
 
 CLASS(Electro, Weapon)
 /* spawnfunc */ ATTRIB(Electro, m_canonical_spawnfunc, string, "weapon_electro");
-/* ammotype  */ ATTRIB(Electro, ammo_type, int, RES_CELLS);
+/* ammotype  */ ATTRIB(Electro, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
 /* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);

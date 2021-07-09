@@ -4,7 +4,7 @@
 
 CLASS(OverkillHeavyMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillHeavyMachineGun, m_canonical_spawnfunc, string, "weapon_okhmg");
-/* ammotype  */ ATTRIB(OverkillHeavyMachineGun, ammo_type, int, RES_BULLETS);
+/* ammotype  */ ATTRIB(OverkillHeavyMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillHeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);

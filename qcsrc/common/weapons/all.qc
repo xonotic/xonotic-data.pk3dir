@@ -202,7 +202,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	return result;
 }
 
-string GetAmmoPicture(int ammotype)
+// TODO: registry handles for below functions
+string GetAmmoPicture(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -216,7 +217,7 @@ string GetAmmoPicture(int ammotype)
 	}
 }
 
-string GetAmmoName(int ammotype)
+string GetAmmoName(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -231,21 +232,7 @@ string GetAmmoName(int ammotype)
 }
 
 #ifdef CSQC
-int GetAmmoTypeFromNum(int i)
-{
-	switch (i)
-	{
-		case 0: return RES_SHELLS;
-		case 1: return RES_BULLETS;
-		case 2: return RES_ROCKETS;
-		case 3: return RES_CELLS;
-		case 4: return RES_PLASMA;
-		case 5: return RES_FUEL;
-		default: return RES_NONE;
-	}
-}
-
-int GetAmmoStat(int ammotype)
+int GetAmmoStat(Resource ammotype)
 {
 	switch (ammotype)
 	{

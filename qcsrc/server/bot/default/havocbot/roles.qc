@@ -1,5 +1,6 @@
 #include "roles.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <common/stats.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
@@ -11,7 +12,6 @@
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius)
 {

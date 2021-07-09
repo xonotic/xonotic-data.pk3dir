@@ -4,13 +4,13 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/racetimer.qh>
-#include <client/resources.qh>
 #include <client/view.qh>
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
+#include <common/resources/cl_resources.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // StrafeHUD (#25)

@@ -31,6 +31,7 @@
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/vehicles/all.qh>
@@ -66,7 +67,6 @@
 #include <server/player.qh>
 #include <server/portals.qh>
 #include <server/race.qh>
-#include <server/resources.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
@@ -1556,7 +1556,7 @@ float CalcRot(float current, float stable, float rotfactor, float rotframetime)
 		return max(stable, current + (stable - current) * rotfactor * rotframetime);
 }
 
-void RotRegen(entity this, int res, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod)
+void RotRegen(entity this, Resource res, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod)
 {
 	float old = GetResource(this, res);
 	float current = old;

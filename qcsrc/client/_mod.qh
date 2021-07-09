@@ -6,7 +6,6 @@
 #include <client/main.qh>
 #include <client/mapvoting.qh>
 #include <client/player_skeleton.qh>
-#include <client/resources.qh>
 #include <client/shownames.qh>
 #include <client/teamradar.qh>
 #include <client/view.qh>

@@ -4,6 +4,7 @@
 #include <client/items/items.qh>
 #include <client/view.qh>
 #include <common/mutators/mutator/nades/nades.qh>
+#include <common/resources/resources.qh>
 #include <common/wepent.qh>
 
 // Ammo (#1)
@@ -31,7 +32,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
+void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent, bool isInfinite)
 {
 	TC(bool, isCurrent); TC(bool, isInfinite);
 	if(ammoType == RES_NONE)
@@ -216,16 +217,14 @@ void HUD_Ammo()
 	}
 	else
 	{
-		int ammotype;
 		row = column = 0;
-		for(i = 0; i < AMMO_COUNT; ++i)
+		FOREACH(Resources, it.instanceOfAmmoResource && !it.m_hidden,
 		{
-			ammotype = GetAmmoTypeFromNum(i);
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
 				ammo_size,
-				ammotype,
-				(wep.ammo_type == ammotype),
+				it,
+				(wep.ammo_type == it),
 				infinite_ammo
 			);
 
@@ -235,7 +234,7 @@ void HUD_Ammo()
 				row = 0;
 				column = column + 1;
 			}
-		}
+		});
 	}
 
 	if (draw_nades)

@@ -569,7 +569,7 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	}
 }
 
-void vehicles_regen_resource(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale, int resource)
+void vehicles_regen_resource(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale, Resource resource)
 {
 	float resource_amount = GetResource(this, resource);
 

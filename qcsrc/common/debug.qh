@@ -2,8 +2,8 @@
 
 #ifdef CSQC
 #include <client/draw.qh>
-#include <client/resources.qh>
 #include <client/view.qh>
+#include <common/resources/cl_resources.qh>
 #endif
 
 
