@@ -2300,15 +2300,7 @@ MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
 
 	entity player = M_ARGV(0, entity);
 
-	if(IS_REAL_CLIENT(player))
-	{
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (int i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, true);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
@@ -2318,16 +2310,7 @@ MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
 
 	entity player = M_ARGV(0, entity);
 
-	if(CS_CVAR(player).cvar_cl_allow_uidtracking == 1 && CS_CVAR(player).cvar_cl_allow_uid2name == 1)
-	{
-		if (!player.stored_netname)
-			player.stored_netname = strzone(uid2name(player.crypto_idfp));
-		if(player.stored_netname != player.netname)
-		{
-			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
-			strcpy(player.stored_netname, player.netname);
-		}
-	}
+	race_checkAndWriteName(player);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
@@ -2843,6 +2826,8 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void ctf_Initialize()
 {
+	CTF_FLAG = NEW(Flag);
+	record_type = CTF_RECORD;
 	ctf_captimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;

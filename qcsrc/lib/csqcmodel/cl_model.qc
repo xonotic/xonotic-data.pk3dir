@@ -279,7 +279,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	if(sf & BIT(3))
 		this.alpha = this.m_alpha;
 
-	if(sf & BIT(14))
+	if(sf & BIT(11))
 		viewloc_SetTags(this);
 
 	CSQCModel_InterpolateAnimation_Note(this, sf);

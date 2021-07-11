@@ -348,6 +348,7 @@ void cvar_changes_init()
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_ca_spectate_enemies");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
@@ -407,7 +408,7 @@ void cvar_changes_init()
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
@@ -486,7 +487,6 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_maxidle");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
@@ -754,6 +754,9 @@ spawnfunc(worldspawn)
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
+
+	// default to RACE_RECORD, can be overwritten by gamemodes
+	record_type = RACE_RECORD;
 
 	// needs to be done so early because of the constants they create
 	static_init();

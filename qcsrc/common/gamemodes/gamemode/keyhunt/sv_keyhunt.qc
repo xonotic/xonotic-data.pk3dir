@@ -855,7 +855,7 @@ int kh_GetMissingTeams()
 				++players;
 		});
 		if (!players)
-			missing_teams |= (2 ** i);
+			missing_teams |= BIT(i);
 	}
 	return missing_teams;
 }

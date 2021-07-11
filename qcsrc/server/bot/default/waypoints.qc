@@ -20,6 +20,10 @@
 #include <server/spawnpoints.qh>
 #include <server/weapons/tracing.qh>
 
+STATIC_INIT(waypoints)
+{
+	waypointeditor_enabled = autocvar_g_waypointeditor;
+}
 .entity spawnpointmodel;
 void waypoint_unreachable(entity pl)
 {
@@ -355,7 +359,7 @@ void waypoint_restore_hardwiredlinks(entity wp)
 
 void waypoint_setupmodel(entity wp)
 {
-	if (autocvar_g_waypointeditor)
+	if (waypointeditor_enabled)
 	{
 		// TODO: add some sort of visible box in edit mode for box waypoints
 		vector m1 = wp.mins;
@@ -449,7 +453,11 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	w.wpflags = f;
 	w.solid = SOLID_TRIGGER;
 	w.createdtime = time;
-	setorigin(w, (m1 + m2) * 0.5);
+	w.origin = (m1 + m2) * 0.5;
+	if (waypointeditor_enabled)
+		setorigin(w, w.origin);
+	else // don't link into the world, only bots are aware of waypoints
+		make_pure(w);
 	setsize(w, m1 - w.origin, m2 - w.origin);
 	if (w.size)
 		w.wpisbox = true;
@@ -1287,7 +1295,10 @@ spawnfunc(waypoint)
 {
 	IL_PUSH(g_waypoints, this);
 
-	setorigin(this, this.origin);
+	if (waypointeditor_enabled)
+		setorigin(this, this.origin);
+	else
+		make_pure(this);
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(this);
 	//waypoint_schedulerelink(this);
@@ -1909,7 +1920,7 @@ float waypoint_loadall()
 	waypoint_version_loaded = ver;
 	LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints");
 
-	if (autocvar_g_waypointeditor && autocvar_g_waypointeditor_symmetrical_allowload)
+	if (waypointeditor_enabled && autocvar_g_waypointeditor_symmetrical_allowload)
 	{
 		string sym_str = "";
 		cvar_set("g_waypointeditor_symmetrical", ftos(sym));

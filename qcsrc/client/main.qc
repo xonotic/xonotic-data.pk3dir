@@ -123,13 +123,13 @@ void CSQC_Init()
 
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
-		minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
+		minimapname = strcat("gfx/", mi_shortname, "_radar");
 		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
 			// but maybe we have a non-clever minimap
-			minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+			minimapname = strcat("gfx/", mi_shortname, "_mini");
 			if (precache_pic(minimapname) == "")
 				minimapname = ""; // FAIL
 			else
@@ -877,6 +877,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
+			ONREMOVE(this);
 			clearentity(this);
 			isnew = true;
 		}

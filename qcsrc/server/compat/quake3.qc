@@ -5,6 +5,8 @@
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>
@@ -167,17 +169,17 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		STAT(STRENGTH_FINISHED, actor) = 0;
-		STAT(INVINCIBLE_FINISHED, actor) = 0;
-		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
+		StatusEffects_remove(STATUSEFFECT_Strength, actor, STATUSEFFECT_REMOVE_NORMAL);
+		StatusEffects_remove(STATUSEFFECT_Shield, actor, STATUSEFFECT_REMOVE_NORMAL);
+		entity heldbuff = buff_FirstFromFlags(actor);
+		if(heldbuff) // TODO: make a dropbuffs function to handle this
 		{
-			int buffid = buff_FirstFromFlags(STAT(BUFFS, actor)).m_id;
+			int buffid = heldbuff.m_id;
 			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_BUFF_DROP, buffid);
 			sound(actor, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			if(!IS_INDEPENDENT_PLAYER(actor))
 				Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
-			STAT(BUFFS, actor) = 0;
-			STAT(BUFF_TIME, actor) = 0;
+			buff_RemoveAll(actor, STATUSEFFECT_REMOVE_NORMAL);
 		}
 	}
 
@@ -202,9 +204,9 @@ void target_give_init(entity this)
 	{
 		if (it.classname == "item_buff")
 		{
-			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
+			entity buff = it.buffdef;
 			this.netname = cons(this.netname, buff.netname);
-			STAT(BUFF_TIME, this) += it.count;
+			this.buffs_finished += it.count;
 		}
 		else
 		{
