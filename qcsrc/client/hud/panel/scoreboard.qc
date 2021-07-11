@@ -2154,12 +2154,15 @@ void Scoreboard_Draw()
 			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - scoreboard_top));
 	}
 
-	if (scoreboard_fade_alpha == 1)
+	if (rankings_cnt)
 	{
-		if (scoreboard_bottom > 0.95 * vid_conheight)
-			rankings_rows = max(1, rankings_rows - 1);
-		else if (scoreboard_bottom + 1.25 * hud_fontsize.y < 0.95 * vid_conheight)
-			rankings_rows = min(ceil(RANKINGS_RECEIVED_CNT / rankings_columns), rankings_rows + 1);
+		if (scoreboard_fade_alpha == 1)
+		{
+			if (scoreboard_bottom > 0.95 * vid_conheight)
+				rankings_rows = max(1, rankings_rows - 1);
+			else if (scoreboard_bottom + 1.25 * hud_fontsize.y < 0.95 * vid_conheight)
+				rankings_rows = min(ceil(RANKINGS_RECEIVED_CNT / rankings_columns), rankings_rows + 1);
+		}
+		rankings_cnt = rankings_rows * rankings_columns;
 	}
-	rankings_cnt = rankings_rows * rankings_columns;
 }
