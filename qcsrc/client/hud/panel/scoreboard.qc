@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/chat.qh>
+#include <client/hud/panel/physics.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/hud/panel/weapons.qh>
