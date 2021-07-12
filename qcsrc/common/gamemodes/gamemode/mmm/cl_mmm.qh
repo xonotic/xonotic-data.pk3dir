@@ -1,3 +1,0 @@
-#pragma once
-
-void HUD_Mod_MMM(vector pos, vector mySize);
