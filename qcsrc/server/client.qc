@@ -6,6 +6,7 @@
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/lms/sv_lms.qh>
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
@@ -23,6 +24,7 @@
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
 #include <common/mutators/mutator/nades/nades.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
@@ -345,9 +347,6 @@ void PutObserverInServer(entity this)
 	this.scale = 0;
 	this.fade_time = 0;
 	this.pain_finished = 0;
-	STAT(STRENGTH_FINISHED, this) = 0;
-	STAT(INVINCIBLE_FINISHED, this) = 0;
-	STAT(SUPERWEAPONS_FINISHED, this) = 0;
 	STAT(AIR_FINISHED, this) = 0;
 	//this.dphitcontentsmask = 0;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
@@ -383,7 +382,6 @@ void PutObserverInServer(entity this)
 	this.punchangle = '0 0 0';
 	this.punchvector = '0 0 0';
 	this.oldvelocity = this.velocity;
-	this.fire_endtime = -1;
 	this.event_damage = func_null;
 	this.event_heal = func_null;
 
@@ -609,11 +607,13 @@ void PutPlayerInServer(entity this)
 
 	PS(this).dual_weapons = '0 0 0';
 
-	STAT(SUPERWEAPONS_FINISHED, this) = (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
+	if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
+		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0);
 
 	this.items = start_items;
 
-	this.spawnshieldtime = time + autocvar_g_spawnshieldtime;
+	float shieldtime = time + autocvar_g_spawnshieldtime;
+
 	this.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 	this.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 	this.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -621,11 +621,13 @@ void PutPlayerInServer(entity this)
 	if (!sv_ready_restart_after_countdown && time < game_starttime)
 	{
 		float f = game_starttime - time;
-		this.spawnshieldtime += f;
+		shieldtime += f;
 		this.pauserotarmor_finished += f;
 		this.pauserothealth_finished += f;
 		this.pauseregen_finished += f;
 	}
+
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, shieldtime, 0);
 
 	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
@@ -657,15 +659,8 @@ void PutPlayerInServer(entity this)
 	this.punchangle = '0 0 0';
 	this.punchvector = '0 0 0';
 
-	STAT(STRENGTH_FINISHED, this) = 0;
-	STAT(INVINCIBLE_FINISHED, this) = 0;
-	this.fire_endtime = -1;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
-
-	// TODO: we can't set these in the PlayerSpawn hook since the target code is called before it!
-	STAT(BUFFS, this) = 0;
-	STAT(BUFF_TIME, this) = 0;
 
 	STAT(AIR_FINISHED, this) = 0;
 	this.waterlevel = WATERLEVEL_NONE;
@@ -769,6 +764,10 @@ void PutPlayerInServer(entity this)
 		}
 	});
 
+	Unfreeze(this, false);
+
+	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
+
 	{
 		string s = spot.target;
 		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
@@ -777,10 +776,6 @@ void PutPlayerInServer(entity this)
 		if(g_assault || g_race)
 			spot.target = s;
 	}
-
-	Unfreeze(this, false);
-
-	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 
 	if (autocvar_spawn_debug)
 	{
@@ -1071,10 +1066,6 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	//string versionmessage = GetClientVersionMessage(this);
@@ -1109,8 +1100,6 @@ string getwelcomemessage(entity this)
 	}
 	return s;
 }
-
-bool autocvar_sv_qcphysics = true; // TODO this is for testing - remove when qcphysics work
 
 /**
 =============
@@ -1481,14 +1470,12 @@ void play_countdown(entity this, float finished, Sound samp)
 
 void player_powerups_remove_all(entity this)
 {
-	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	if (this.items & IT_SUPERWEAPON)
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
 		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
 		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-		this.items &= ~ITEM_Strength.m_itemid;
-		this.items &= ~ITEM_Shield.m_itemid;
 		this.items -= (this.items & IT_SUPERWEAPON);
 	}
 }
@@ -1500,7 +1487,7 @@ void player_powerups(entity this)
 	else
 		this.modelflags &= ~MF_ROCKET;
 
-	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
+	this.effects &= ~EF_NODEPTHTEST;
 
 	if (IS_DEAD(this))
 		player_powerups_remove_all(this);
@@ -1511,58 +1498,14 @@ void player_powerups(entity this)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 
-	Fire_ApplyDamage(this);
-	Fire_ApplyEffect(this);
-
 	if (!MUTATOR_IS_ENABLED(mutator_instagib))
 	{
-		if (this.items & ITEM_Strength.m_itemid)
-		{
-			play_countdown(this, STAT(STRENGTH_FINISHED, this), SND_POWEROFF);
-			this.effects = this.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > STAT(STRENGTH_FINISHED, this))
-			{
-				this.items = this.items - (this.items & ITEM_Strength.m_itemid);
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_STRENGTH, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
-			}
-		}
-		else
-		{
-			if (time < STAT(STRENGTH_FINISHED, this))
-			{
-				this.items = this.items | ITEM_Strength.m_itemid;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_STRENGTH);
-			}
-		}
-		if (this.items & ITEM_Shield.m_itemid)
-		{
-			play_countdown(this, STAT(INVINCIBLE_FINISHED, this), SND_POWEROFF);
-			this.effects = this.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > STAT(INVINCIBLE_FINISHED, this))
-			{
-				this.items = this.items - (this.items & ITEM_Shield.m_itemid);
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_SHIELD, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
-			}
-		}
-		else
-		{
-			if (time < STAT(INVINCIBLE_FINISHED, this))
-			{
-				this.items = this.items | ITEM_Shield.m_itemid;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_SHIELD);
-			}
-		}
+		// NOTE: superweapons are a special case and as such are handled here instead of the status effects system
 		if (this.items & IT_SUPERWEAPON)
 		{
 			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 			{
-				STAT(SUPERWEAPONS_FINISHED, this) = 0;
+				StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_NORMAL);
 				this.items = this.items - (this.items & IT_SUPERWEAPON);
 				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_LOST, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_LOST);
@@ -1573,8 +1516,8 @@ void player_powerups(entity this)
 			}
 			else
 			{
-				play_countdown(this, STAT(SUPERWEAPONS_FINISHED, this), SND_POWEROFF);
-				if (time > STAT(SUPERWEAPONS_FINISHED, this))
+				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
+				if (time > StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
@@ -1585,7 +1528,7 @@ void player_powerups(entity this)
 		}
 		else if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
 		{
-			if (time < STAT(SUPERWEAPONS_FINISHED, this) || (this.items & IT_UNLIMITED_SUPERWEAPONS))
+			if (time < StatusEffects_gettime(STATUSEFFECT_Superweapons, this) || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				this.items = this.items | IT_SUPERWEAPON;
 				if(!(this.items & IT_UNLIMITED_SUPERWEAPONS))
@@ -1597,13 +1540,14 @@ void player_powerups(entity this)
 			}
 			else
 			{
-				STAT(SUPERWEAPONS_FINISHED, this) = 0;
+				if(StatusEffects_active(STATUSEFFECT_Superweapons, this))
+					StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_TIMEOUT);
 				STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 			}
 		}
-		else
+		else if(StatusEffects_active(STATUSEFFECT_Superweapons, this)) // cheaper to check than to update each frame!
 		{
-			STAT(SUPERWEAPONS_FINISHED, this) = 0;
+			StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_CLEAR);
 		}
 	}
 
@@ -1612,10 +1556,6 @@ void player_powerups(entity this)
 
 	if(autocvar_g_fullbrightplayers)
 		this.effects = this.effects | EF_FULLBRIGHT;
-
-	if (time >= game_starttime)
-	if (time < this.spawnshieldtime)
-		this.effects = this.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups, this, items_prev);
 }
@@ -1793,9 +1733,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
 	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);
-	STAT(STRENGTH_FINISHED, this) = STAT(STRENGTH_FINISHED, spectatee);
-	STAT(INVINCIBLE_FINISHED, this) = STAT(INVINCIBLE_FINISHED, spectatee);
-	STAT(SUPERWEAPONS_FINISHED, this) = STAT(SUPERWEAPONS_FINISHED, spectatee);
 	STAT(AIR_FINISHED, this) = STAT(AIR_FINISHED, spectatee);
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
@@ -2772,6 +2709,7 @@ void PlayerPostThink (entity this)
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					if (this.caplayer)
 						this.caplayer = 0;
+					this.lms_spectate_warning = 2; // TODO: mutator hook for players forcibly moved to spectator?
 					PutObserverInServer(this);
 				}
 				else

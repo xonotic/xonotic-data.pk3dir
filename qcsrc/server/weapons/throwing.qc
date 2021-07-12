@@ -3,6 +3,7 @@
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/subs.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/state.qh>
 #include <common/util.qh>
@@ -69,15 +70,20 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			});
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = STAT(SUPERWEAPONS_FINISHED, own);
-				STAT(SUPERWEAPONS_FINISHED, own) = 0;
+				wep.superweapons_finished = StatusEffects_gettime(STATUSEFFECT_Superweapons, own);
+				StatusEffects_remove(STATUSEFFECT_Superweapons, own, STATUSEFFECT_REMOVE_CLEAR);
 			}
 			else
 			{
-				float timeleft = STAT(SUPERWEAPONS_FINISHED, own) - time;
+				float timeleft = StatusEffects_gettime(STATUSEFFECT_Superweapons, own) - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
-				STAT(SUPERWEAPONS_FINISHED, own) -= weptimeleft;
+				if(own.statuseffects)
+				{
+					// TODO: this doesn't explicitly enable the effect, use apply here?
+					own.statuseffects.statuseffect_time[STATUSEFFECT_Superweapons.m_id] -= weptimeleft;
+					StatusEffects_update(own);
+				}
 			}
 		}
 	}

@@ -306,7 +306,8 @@ void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float ty
 	setthink(gren, W_Porto_Think);
 	settouch(gren, W_Porto_Touch);
 
-	if(actor.items & ITEM_Strength.m_itemid)
+	// TODO: handle as mutator effect
+	if(StatusEffects_active(STATUSEFFECT_Strength, actor))
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
