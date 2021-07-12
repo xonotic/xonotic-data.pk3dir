@@ -1,4 +1,0 @@
-#pragma once
-
-const int ATFLAG_SAMETEAM = BIT(0);
-

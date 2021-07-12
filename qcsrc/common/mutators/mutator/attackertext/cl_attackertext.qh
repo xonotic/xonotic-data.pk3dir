@@ -1,4 +1,0 @@
-#pragma once
-
-float last_attack_time;
-string last_attack_name;
