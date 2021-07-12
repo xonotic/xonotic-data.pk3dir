@@ -17,11 +17,6 @@
 #include <server/main.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>
-
-//SMB mods
-#include <server/mute.qc>
-//
-
 #include <server/player.qc>
 #include <server/portals.qc>
 #include <server/race.qc>

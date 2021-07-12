@@ -1,9 +1,5 @@
 noref float autocvar_net_connecttimeout = 30;
 
-//SMB mods
-#include "announcer.qc"
-#include "cvars.qh"
-
 #ifdef GAMEQC
 #include "anim.qc"
 #include "animdecide.qc"

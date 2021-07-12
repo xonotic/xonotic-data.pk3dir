@@ -807,14 +807,15 @@ void nade_emerald_randomvehicles(entity e, vector org)
 //TODO: turrets must be spawned by owner team, cannot be spawned to attack owner team or both
 void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 {
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		if (it.turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
+	//FOREACH_CLIENT(IS_PLAYER(it),
+	//{
+		if (ent.turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
 		{
 			//ent = spawn();
-			ent.owner = it.owner;
-			ent.realowner = it.realowner;
-			ent.team = it.team;
+			//ent.owner = it.owner;
+			//ent.realowner = it.realowner;
+			//ent.team = ent.realowner.team;
+			FOREACH_CLIENT(!IS_OBSERVER(it.realowner), ent.team = it.team;);
 			ent.noalign = true; // don't drop to floor
 			//ent.angles = '0 0 0';
 			//ent.gravity = 1;
@@ -825,8 +826,9 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 			//setthink(ent, turrets_respawn);
 			// fading handled globally
 			//bool turret_initialize(entity this, Turret tur)
+			//turret_validate_target(ent.realowner, ent.enemy, ent.target_validate_flags);
 			turret_initialize(ent, tur);
-			it.turspawncount++;
+			//it.turspawncount++;
 			//PrintToChatAll(sprintf("^1AFTER^7 it.turspawncount: ^3%f", it.turspawncount));
 			//if (!IS_ONGROUND(ent))
 			//	ent.gravity = 1; setorigin(ent, org);
@@ -838,8 +840,8 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 		}
 		//PrintToChatAll(sprintf("^4tur- ^2it.netname: %s", it.netname));
 		//PrintToChatAll(sprintf("^4tur- ^1tur.classname: %s", tur.classname));
-		return;
-	});
+	//	return;
+	//});
 }
 
 //LegendGuard adds random turret spawn function for emerald nade 22-06-2021

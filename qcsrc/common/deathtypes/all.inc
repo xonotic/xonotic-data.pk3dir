@@ -59,3 +59,5 @@ REGISTER_DEATHTYPE(VH_WAKI_DEATH,           DEATH_SELF_VH_WAKI_DEATH,       DEAT
 REGISTER_DEATHTYPE(VH_WAKI_GUN,             NULL,                           DEATH_MURDER_VH_WAKI_GUN,       "vehicle")
 REGISTER_DEATHTYPE(VH_WAKI_ROCKET,          DEATH_SELF_VH_WAKI_ROCKET,      DEATH_MURDER_VH_WAKI_ROCKET,    "vehicle")
 REGISTER_DEATHTYPE(WEAPON,                  NULL,                           NULL,                           "")
+
+//REGISTER_DEATHTYPE(VH_CCHOP_DEATH,          DEATH_SELF_VH_CCHOP_DEATH,      DEATH_MURDER_VH_CCHOP_DEATH,    "vehicle")

@@ -7,3 +7,7 @@
 #include <common/vehicles/vehicle/raptor_weapons.qc>
 #include <common/vehicles/vehicle/spiderbot.qc>
 #include <common/vehicles/vehicle/spiderbot_weapons.qc>
+
+//LegendGuard's Cyberchopper vehicle
+//#include <common/vehicles/vehicle/cyberchop.qc>
+//#include <common/vehicles/vehicle/cyberchop_weapons.qc>
