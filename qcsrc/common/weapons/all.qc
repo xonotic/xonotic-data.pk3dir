@@ -61,11 +61,11 @@ WepSet _WepSet_FromWeapon(int a)
 				if (a >= 24)
 				{
 					a -= 24;
-					return '0 0 1' * (2 ** a);
+					return '0 0 1' * BIT(a);
 				}
-			return '0 1 0' * (2 ** a);
+			return '0 1 0' * BIT(a);
 		}
-	return '1 0 0' * (2 ** a);
+	return '1 0 0' * BIT(a);
 }
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)

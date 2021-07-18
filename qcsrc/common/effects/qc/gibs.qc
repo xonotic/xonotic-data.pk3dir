@@ -170,7 +170,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	entity gib;
 
 	// TODO remove some gibs according to cl_nogibs
-	gib = RubbleNew(new(gib));
+	gib = ListNewChildRubble(CasingsNGibs, new(gib));
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
@@ -205,7 +205,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	gib.nextthink = time + autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15);
 	gib.drawmask = MASK_NORMAL;
 
-	RubbleLimit("gib", autocvar_cl_gibs_maxcount, Gib_Delete);
+	LimitedChildrenRubble(CasingsNGibs, "gib", autocvar_cl_gibs_maxcount, Gib_Delete, NULL);
 }
 
 NET_HANDLE(net_gibsplash, bool isNew)

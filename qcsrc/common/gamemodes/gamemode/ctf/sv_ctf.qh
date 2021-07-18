@@ -20,7 +20,6 @@ REGISTER_MUTATOR(ctf, false)
     MUTATOR_STATIC();
     MUTATOR_ONADD
     {
-		CTF_FLAG = NEW(Flag);
         GameRules_teams(true);
         GameRules_limit_score(autocvar_capturelimit_override);
         GameRules_limit_lead(autocvar_captureleadlimit_override);

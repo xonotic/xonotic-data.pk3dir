@@ -10,6 +10,7 @@
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
@@ -151,15 +152,12 @@ float CheatImpulse(entity this, int imp)
 			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
 			SetResource(this.personal, RES_ARMOR, GetResource(this, RES_ARMOR));
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
-			STAT(BUFFS, this.personal) = STAT(BUFFS, this);
-			STAT(BUFF_TIME, this.personal) = STAT(BUFF_TIME, this);
+			StatusEffects_copy(this.statuseffects, this.personal, 0);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
 			this.personal.pauserotfuel_finished = this.pauserotfuel_finished;
 			this.personal.pauseregen_finished = this.pauseregen_finished;
-			STAT(STRENGTH_FINISHED, this.personal) = STAT(STRENGTH_FINISHED, this);
-			STAT(INVINCIBLE_FINISHED, this.personal) = STAT(INVINCIBLE_FINISHED, this);
 			this.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
@@ -212,15 +210,13 @@ float CheatImpulse(entity this, int imp)
 				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
 				SetResource(this, RES_ARMOR, GetResource(this.personal, RES_ARMOR));
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
-				STAT(BUFFS, this) = STAT(BUFFS, this.personal);
-				STAT(BUFF_TIME, this) = STAT(BUFF_TIME, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;
 				this.pauserotfuel_finished = time + this.personal.pauserotfuel_finished - this.personal.teleport_time;
 				this.pauseregen_finished = time + this.personal.pauseregen_finished - this.personal.teleport_time;
-				STAT(STRENGTH_FINISHED, this) = time + STAT(STRENGTH_FINISHED, this.personal) - this.personal.teleport_time;
-				STAT(INVINCIBLE_FINISHED, this) = time + STAT(INVINCIBLE_FINISHED, this.personal) - this.personal.teleport_time;
+				StatusEffects_copy(this.personal, this.statuseffects, this.personal.teleport_time);
+				StatusEffects_update(this);
 
 				if(!autocvar_g_allow_checkpoints)
 					DID_CHEAT();

@@ -66,11 +66,6 @@ void write_recordmarker(entity pl, float tstart, float dt)
 
 IntrusiveList g_race_targets;
 IntrusiveList g_racecheckpoints;
-STATIC_INIT(g_race)
-{
-	g_race_targets = IL_NEW();
-	g_racecheckpoints = IL_NEW();
-}
 
 void race_InitSpectator()
 {
@@ -1091,7 +1086,13 @@ spawnfunc(trigger_race_checkpoint)
 	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 	this.spawn_evalfunc = trigger_race_checkpoint_spawn_evalfunc;
 
+	if (!g_racecheckpoints)
+		g_racecheckpoints = IL_NEW();
 	IL_PUSH(g_racecheckpoints, this);
+
+	// trigger_race_checkpoint_verify checks this list too
+	if (!g_race_targets)
+		g_race_targets = IL_NEW();
 
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
@@ -1136,7 +1137,13 @@ void target_checkpoint_setup(entity this)
 
 	race_timed_checkpoint = 1;
 
+	if (!g_race_targets)
+		g_race_targets = IL_NEW();
 	IL_PUSH(g_race_targets, this);
+
+	// trigger_race_checkpoint_verify checks this list too
+	if (!g_racecheckpoints)
+		g_racecheckpoints = IL_NEW();
 
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }

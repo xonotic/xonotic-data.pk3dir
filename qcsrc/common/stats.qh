@@ -66,14 +66,17 @@ REGISTER_STAT(PL_CROUCH_MIN, vector)
 REGISTER_STAT(PL_MAX, vector)
 REGISTER_STAT(PL_CROUCH_MAX, vector)
 
-REGISTER_STAT(KH_KEYS, int)
+// networked bitflag for game objective display (modicons)
+REGISTER_STAT(OBJECTIVE_STATUS, int)
+#ifdef SVQC
+SPECTATE_COPYFIELD(_STAT(OBJECTIVE_STATUS))
+#endif
 
 #ifdef SVQC
 float W_WeaponRateFactor(entity this);
 float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
-bool autocvar_g_allow_oldvortexbeam;
 int autocvar_leadlimit;
 // TODO: world.qh can't be included here due to circular includes!
 #define autocvar_fraglimit cvar("fraglimit")
@@ -84,12 +87,8 @@ int autocvar_leadlimit;
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))
 REGISTER_STAT(GAME_STOPPED, int, game_stopped)
 REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
-REGISTER_STAT(STRENGTH_FINISHED, float)
-REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
 REGISTER_STAT(PRESSED_KEYS, int)
-/** this stat could later contain some other bits of info, like, more server-side particle config */
-REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool, autocvar_g_allow_oldvortexbeam)
 REGISTER_STAT(FUEL, int)
 REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
@@ -102,7 +101,6 @@ REGISTER_STAT(HUD, int)
 REGISTER_STAT(HIT_TIME, float)
 REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
 REGISTER_STAT(TYPEHIT_TIME, float)
-REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
 REGISTER_STAT(AIR_FINISHED, float)
 REGISTER_STAT(VEHICLESTAT_HEALTH, int)
 REGISTER_STAT(VEHICLESTAT_SHIELD, int)
@@ -119,7 +117,6 @@ REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
 REGISTER_STAT(MONSTERS_TOTAL, int)
 REGISTER_STAT(MONSTERS_KILLED, int)
-REGISTER_STAT(BUFFS, int)
 REGISTER_STAT(NADE_BONUS, float)
 REGISTER_STAT(NADE_BONUS_TYPE, int)
 REGISTER_STAT(NADE_BONUS_SCORE, float)
@@ -129,8 +126,6 @@ REGISTER_STAT(PLASMA, int)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
 REGISTER_STAT(ROUNDLOST, int)
-REGISTER_STAT(BUFF_TIME, float)
-REGISTER_STAT(CTF_FLAGSTATUS, int)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
@@ -184,6 +179,7 @@ float g_bugrigs_speed_ref;
 float g_bugrigs_speed_pow;
 float g_bugrigs_steer;
 #endif
+#if 0
 REGISTER_STAT(BUGRIGS, int, g_bugrigs)
 REGISTER_STAT(BUGRIGS_ACCEL, float, g_bugrigs_accel)
 REGISTER_STAT(BUGRIGS_AIR_STEERING, int, g_bugrigs_air_steering)
@@ -199,6 +195,7 @@ REGISTER_STAT(BUGRIGS_REVERSE_STOPPING, int, g_bugrigs_reverse_stopping)
 REGISTER_STAT(BUGRIGS_SPEED_POW, float, g_bugrigs_speed_pow)
 REGISTER_STAT(BUGRIGS_SPEED_REF, float, g_bugrigs_speed_ref)
 REGISTER_STAT(BUGRIGS_STEER, float, g_bugrigs_steer)
+#endif
 
 #ifdef SVQC
 int autocvar_sv_gameplayfix_downtracesupportsongroundflag = 1;
@@ -424,7 +421,6 @@ REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
-REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
 #ifdef SVQC
 int autocvar_sv_wallclip;
 #endif

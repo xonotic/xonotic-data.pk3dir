@@ -14,8 +14,6 @@ REGISTER_MUTATOR(dom, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		g_dompoints = IL_NEW();
-
 		int fraglimit_override = autocvar_g_domination_point_limit;
 		if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
 			fraglimit_override = autocvar_g_domination_roundbased_point_limit;

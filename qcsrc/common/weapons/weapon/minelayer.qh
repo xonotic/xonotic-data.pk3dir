@@ -62,7 +62,6 @@ SPAWNFUNC_WEAPON(weapon_minelayer, WEP_MINE_LAYER)
 void W_MineLayer_Think(entity this);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
-.vector mine_orientation;
 
 IntrusiveList g_mines;
 STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
