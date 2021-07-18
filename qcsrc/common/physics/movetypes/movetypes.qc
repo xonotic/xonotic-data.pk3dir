@@ -6,6 +6,8 @@ void set_movetype(entity this, int mt)
 	this.move_movetype = mt;
 	if (mt == MOVETYPE_PHYSICS) {
 		this.move_qcphysics = false;
+	} else if (autocvar_sv_qcphysics == 2) {
+		this.move_qcphysics = true;
 	}
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
@@ -424,6 +426,21 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 	if(this.solid == SOLID_NOT)
 		return;
 
+	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
+	bool save_trace_allsolid = trace_allsolid;
+	bool save_trace_startsolid = trace_startsolid;
+	float save_trace_fraction = trace_fraction;
+	bool save_trace_inwater = trace_inwater;
+	bool save_trace_inopen = trace_inopen;
+	vector save_trace_endpos = trace_endpos;
+	vector save_trace_plane_normal = trace_plane_normal;
+	float save_trace_plane_dist = trace_plane_dist;
+	entity save_trace_ent = trace_ent;
+	int save_trace_dpstartcontents = trace_dpstartcontents;
+	int save_trace_dphitcontents = trace_dphitcontents;
+	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
+	string save_trace_dphittexturename = trace_dphittexturename;
+
     FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
@@ -446,6 +463,20 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			gettouch(it)(it, this);
 		}
     });
+
+	trace_allsolid = save_trace_allsolid;
+	trace_startsolid = save_trace_startsolid;
+	trace_fraction = save_trace_fraction;
+	trace_inwater = save_trace_inwater;
+	trace_inopen = save_trace_inopen;
+	trace_endpos = save_trace_endpos;
+	trace_plane_normal = save_trace_plane_normal;
+	trace_plane_dist = save_trace_plane_dist;
+	trace_ent = save_trace_ent;
+	trace_dpstartcontents = save_trace_dpstartcontents;
+	trace_dphitcontents = save_trace_dphitcontents;
+	trace_dphitq3surfaceflags = save_trace_dphitq3surfaceflags;
+	trace_dphittexturename = save_trace_dphittexturename;
 }
 
 bool autocvar__movetype_debug = false;

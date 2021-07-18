@@ -285,6 +285,13 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(rc, PlayerDamaged)
+{
+	int frag_deathtype = M_ARGV(5, int);
+	if (frag_deathtype == DEATH_KILL.m_id)
+		return true; // forbid logging damage
+}
+
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);

@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/chat.qh>
+#include <client/hud/panel/physics.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/hud/panel/weapons.qh>
@@ -1561,7 +1562,9 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	return end_pos;
 }
 
-
+int rankings_rows = 0;
+int rankings_columns = 0;
+int rankings_cnt = 0;
 vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector rgb, vector bg_size)
 {
 	int i;
@@ -1575,7 +1578,6 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	vector hl_rgb = rgb + '0.5 0.5 0.5';
 
-	pos.y += hud_fontsize.y;
 	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
@@ -1600,15 +1602,20 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	float ranksize = 3 * hud_fontsize.x;
 	float timesize = 5 * hud_fontsize.x;
 	vector columnsize = vec2(ranksize + timesize + namesize + hud_fontsize.x, 1.25 * hud_fontsize.y);
-	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
-	columns = min(columns, RANKINGS_RECEIVED_CNT);
+	rankings_columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
+	rankings_columns = min(rankings_columns, RANKINGS_RECEIVED_CNT);
+	if (!rankings_cnt)
+	{
+		rankings_cnt = RANKINGS_RECEIVED_CNT;
+		rankings_rows = ceil(rankings_cnt / rankings_columns);
+	}
 
 	// expand name column to fill the entire row
-	float available_space = (panel_size.x - 2 * panel_bg_padding - columnsize.x * columns) / columns;
+	float available_space = (panel_size.x - 2 * panel_bg_padding - columnsize.x * rankings_columns) / rankings_columns;
 	namesize += available_space;
 	columnsize.x += available_space;
 
-	panel_size.y = ceil(RANKINGS_RECEIVED_CNT / columns) * 1.25 * hud_fontsize.y;
+	panel_size.y = rankings_rows * 1.25 * hud_fontsize.y;
 	panel_size.y += panel_bg_padding * 2;
 
 	HUD_Panel_DrawBg();
@@ -1632,7 +1639,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	string str = "";
 	int column = 0, j = 0;
 	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
-	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
+	for(i = 0; i < rankings_cnt; ++i)
 	{
 		float t;
 		t = grecordtime[i];
@@ -1654,11 +1661,11 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 		pos.y += 1.25 * hud_fontsize.y;
 		j++;
-		if(j >= ceil(RANKINGS_RECEIVED_CNT / columns))
+		if(j >= rankings_rows)
 		{
 			column++;
 			j = 0;
-			pos.x += panel_size.x / columns;
+			pos.x += panel_size.x / rankings_columns;
 			pos.y = panel_pos.y;
 		}
 	}
@@ -1737,9 +1744,10 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	return true;
 }
 
-vector Scoreboard_Spectators_Draw(vector pos, entity tm, string str, vector hud_fontsize) {
+vector Scoreboard_Spectators_Draw(vector pos) {
 
-	entity pl;
+	entity pl, tm;
+	string str = "";
 
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
@@ -1760,6 +1768,8 @@ vector Scoreboard_Spectators_Draw(vector pos, entity tm, string str, vector hud_
 			break;
 		}
 	}
+	if (str != "") // if there's at least one spectator
+		pos.y += 0.5 * hud_fontsize.y;
 
 	return pos;
 }
@@ -1830,12 +1840,14 @@ void Scoreboard_Draw()
 
 	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
 	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.93);
-	panel_pos.x = 0.5 * (vid_conwidth - fixed_scoreboard_width);
+	scoreboard_left = 0.5 * (vid_conwidth - fixed_scoreboard_width);
+	scoreboard_right = scoreboard_left + fixed_scoreboard_width;
+	panel_pos.x = scoreboard_left;
 	panel_size.x = fixed_scoreboard_width;
 
 	Scoreboard_UpdatePlayerTeams();
 
-	float initial_pos_y = panel_pos.y;
+	scoreboard_top = panel_pos.y;
 	vector pos = panel_pos;
 	entity tm;
 	string str;
@@ -2049,10 +2061,10 @@ void Scoreboard_Draw()
 
 	// draw scoreboard spectators before accuracy and item stats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 0) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
-	// draw accuracy and item stats 
+	// draw accuracy and item stats
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 	if (Scoreboard_ItemStats_WouldDraw(pos.y))
@@ -2060,32 +2072,37 @@ void Scoreboard_Draw()
 
 	// draw scoreboard spectators after accuracy and item stats and before rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 1) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
+		string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, race_speedaward_unit, ColorTranslateRGB(race_speedaward_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, ColorTranslateRGB(race_speedaward_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_unit, ColorTranslateRGB(race_speedaward_alltimebest_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, ColorTranslateRGB(race_speedaward_alltimebest_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
 		}
+		if (race_speedaward || race_speedaward_alltimebest)
+			pos.y += 0.25 * hud_fontsize.y;
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
+	else
+		rankings_cnt = 0;
 
 	// draw scoreboard spectators after rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 2) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
 	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
 	// draw scoreboard spectators after mapstats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 3) {
-		pos = Scoreboard_Spectators_Draw(pos, tm, str, hud_fontsize);
+		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
 
@@ -2127,14 +2144,26 @@ void Scoreboard_Draw()
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	pos.y += 2 * hud_fontsize.y;
+	pos.y += hud_fontsize.y;
 	if (scoreboard_fade_alpha < 1)
-		scoreboard_bottom = initial_pos_y + (pos.y - initial_pos_y) * scoreboard_fade_alpha;
+		scoreboard_bottom = scoreboard_top + (pos.y - scoreboard_top) * scoreboard_fade_alpha;
 	else if (pos.y != scoreboard_bottom)
 	{
 		if (pos.y > scoreboard_bottom)
-			scoreboard_bottom = min(pos.y, scoreboard_bottom + frametime * 10 * (pos.y - initial_pos_y));
+			scoreboard_bottom = min(pos.y, scoreboard_bottom + frametime * 10 * (pos.y - scoreboard_top));
 		else
-			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - initial_pos_y));
+			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - scoreboard_top));
+	}
+
+	if (rankings_cnt)
+	{
+		if (scoreboard_fade_alpha == 1)
+		{
+			if (scoreboard_bottom > 0.95 * vid_conheight)
+				rankings_rows = max(1, rankings_rows - 1);
+			else if (scoreboard_bottom + 1.25 * hud_fontsize.y < 0.95 * vid_conheight)
+				rankings_rows = min(ceil(RANKINGS_RECEIVED_CNT / rankings_columns), rankings_rows + 1);
+		}
+		rankings_cnt = rankings_rows * rankings_columns;
 	}
 }

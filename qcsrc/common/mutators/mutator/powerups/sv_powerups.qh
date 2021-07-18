@@ -1,0 +1,12 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+
+#include "powerups.qh"
+
+int autocvar_g_powerups;
+
+REGISTER_MUTATOR(powerups, true);
+
+.float prevstrengthsound;
+.float prevstrengthsoundattempt;
