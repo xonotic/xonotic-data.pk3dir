@@ -772,63 +772,56 @@ void HUD_StrafeHUD()
             }
         }
 
-        float angleheight_offset;
-        // don't offset text and arrows if the angle indicator line isn't drawn
-        if(autocvar_hud_panel_strafehud_angle_style == 0 || autocvar_hud_panel_strafehud_angle_style > 2)
-            angleheight_offset = panel_size.y;
-        else
-            angleheight_offset = currentangle_size.y;
-
-        if(autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0)
+        float angleheight_offset = currentangle_size.y;
+        float ghost_offset = 0;
+        if(autocvar_hud_panel_strafehud_bestangle && direction != 0)
         {
-            float ghost_offset = 0;
-            if(autocvar_hud_panel_strafehud_bestangle && direction != 0)
-            {
-                ghost_offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
-                if(ghost_offset < 0) ghost_offset = 0;
-                if(ghost_offset > panel_size.x) ghost_offset = panel_size.x;
-            }
+            ghost_offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
+            if(ghost_offset < 0) ghost_offset = 0;
+            if(ghost_offset > panel_size.x) ghost_offset = panel_size.x;
+        }
 
-            switch(autocvar_hud_panel_strafehud_angle_style)
-            {
-                case 1:
-                    if(currentangle_size.x > 0 && currentangle_size.y > 0)
-                    {
-                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (ghost_offset - currentangle_size.x/2), currentangle_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    }
-                    break;
-                case 2:
-                    if(currentangle_size.x > 0 && currentangle_size.y > 0)
-                    {
-                        vector line_size = currentangle_size;
-                        line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, currentangle_size.y)*2-1);
-                        for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
-                        {
-                            if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
-                            if(autocvar_hud_panel_strafehud_bestangle && direction != 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (ghost_offset - line_size.x/2), line_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                        }
-                    }
-                    break;
-                case 0:
-                default:
-            }
-
-            if(autocvar_hud_panel_strafehud_angle_arrow > 0)
-            {
-                if(arrow_size > 0)
+        switch(autocvar_hud_panel_strafehud_angle_style)
+        {
+            case 1:
+                if(currentangle_size.x > 0 && currentangle_size.y > 0)
                 {
-                    if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                    if(autocvar_hud_panel_strafehud_bestangle && direction != 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (ghost_offset - currentangle_size.x/2), currentangle_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                }
+                break;
+            case 2:
+                if(currentangle_size.x > 0 && currentangle_size.y > 0)
+                {
+                    vector line_size = currentangle_size;
+                    line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, currentangle_size.y)*2-1);
+                    for(float i = 0; i < currentangle_size.y; i += line_size.y*2)
                     {
-                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true);
-                        StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true);
+                        if(i + line_size.y*2 >= currentangle_size.y) line_size.y = currentangle_size.y - i;
+                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (ghost_offset - line_size.x/2), line_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x/2), line_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     }
-                    if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
-                    {
-                        if(autocvar_hud_panel_strafehud_bestangle && direction != 0) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false);
-                        StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false);
-                    }
+                }
+                break;
+            case 0:
+            default:
+                // don't offset text and arrows if the angle indicator line isn't drawn
+                angleheight_offset = panel_size.y;
+        }
+
+        if(autocvar_hud_panel_strafehud_angle_arrow > 0)
+        {
+            if(arrow_size > 0)
+            {
+                if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                {
+                    if(autocvar_hud_panel_strafehud_bestangle && direction != 0) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true);
+                    StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true);
+                }
+                if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
+                {
+                    if(autocvar_hud_panel_strafehud_bestangle && direction != 0) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false);
+                    StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false);
                 }
             }
         }
@@ -864,11 +857,15 @@ void HUD_StrafeHUD()
                 if(!autocvar_hud_panel_strafehud_uncapped)
                     startspeed_size.y = max(startspeed_size.y, 1);
 
-                float text_offset = (angleheight_offset - panel_size.y) / 2;
-                if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
-                    text_offset += arrow_size;
-                // make sure text doesn't draw inside the strafehud bar
-                text_offset = max(text_offset, 0);
+                float text_offset = 0;
+                if((autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0) || (autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha > 0))
+                {
+                    text_offset = (angleheight_offset - panel_size.y) / 2;
+                    if(arrow_size > 0 && autocvar_hud_panel_strafehud_angle_arrow >= 2)
+                        text_offset += arrow_size;
+                    // make sure text doesn't draw inside the strafehud bar
+                    text_offset = max(text_offset, 0);
+                }
 
                 drawstring_aspect(panel_pos + eY * (panel_size.y + text_offset), strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
@@ -928,11 +925,15 @@ void HUD_StrafeHUD()
                 if(!autocvar_hud_panel_strafehud_uncapped)
                     jumpheight_size.y = max(jumpheight_size.y, 1);
 
-                float text_offset = (angleheight_offset - panel_size.y) / 2;
-                if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
-                    text_offset += arrow_size;
-                // make sure text doesn't draw inside the strafehud bar
-                text_offset = max(text_offset, 0);
+                float text_offset = 0;
+                if((autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0) || (autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha > 0))
+                {
+                    text_offset = (angleheight_offset - panel_size.y) / 2;
+                    if(arrow_size > 0 && autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
+                        text_offset += arrow_size;
+                    // make sure text doesn't draw inside the strafehud bar
+                    text_offset = max(text_offset, 0);
+                }
 
                 drawstring_aspect(panel_pos - eY * (jumpheight_size.y + text_offset), strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
