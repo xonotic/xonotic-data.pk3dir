@@ -13,6 +13,7 @@
 #include <common/viewloc.qh>
 #include <common/wepent.qh>
 #include <lib/csqcmodel/cl_player.qh>
+#include <lib/warpzone/common.qh>
 
 float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
@@ -212,6 +213,16 @@ LABEL(normalcolor)
 	return wcross_color;
 }
 
+.entity tag_entity;
+void HUD_Crosshair_ApplyPlayerAlpha(float new_alpha)
+{
+	csqcplayer.alpha = new_alpha;
+	FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer,
+	{
+		it.alpha = new_alpha;
+	});
+}
+
 void HUD_Crosshair(entity this)
 {
 	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
@@ -220,7 +231,8 @@ void HUD_Crosshair(entity this)
 
 	if (autocvar_chase_active > 0 && autocvar_chase_front)
 	{
-		csqcplayer.alpha = csqcplayer.m_alpha;
+		if (csqcplayer.alpha != csqcplayer.m_alpha)
+			HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
 		return;
 	}
 
@@ -259,20 +271,37 @@ void HUD_Crosshair(entity this)
 		// TrueAim check
 		float shottype;
 
+		static int crosshair_chase_state = 0;
+
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
 		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1)
+			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
+			float chase_playeralpha = bound(0.001, autocvar_crosshair_chase_playeralpha, 1);
+			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha)
 			{
-				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
-				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-				if(trace_ent == csqcplayer)
-					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
+				crosshair_chase_state = 2;
+				bool hit = false;
+				if (pointinsidebox(view_origin, csqcplayer.absmin, csqcplayer.absmax))
+					hit = true;
 				else
-					csqcplayer.alpha = csqcplayer.m_alpha;
+				{
+					WarpZone_TraceLine(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+					if(trace_ent == csqcplayer)
+						hit = true;
+				}
+				float prev_alpha = csqcplayer.alpha;
+				float new_alpha;
+				if(hit)
+					new_alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
+				else
+					new_alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
+
+				if (new_alpha != prev_alpha)
+					HUD_Crosshair_ApplyPlayerAlpha(new_alpha);
 			}
 			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
 			wcross_origin = project_3d_to_2d(trace_endpos);
@@ -280,6 +309,16 @@ void HUD_Crosshair(entity this)
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
+		if (crosshair_chase_state == 2) // enabled (this frame)
+			crosshair_chase_state = 1;
+		else if (crosshair_chase_state == 1) // turned off in the previous frame
+		{
+			// reset player alpha only in this frame
+			if (csqcplayer)
+				HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
+			crosshair_chase_state = 0; // turned off and alpha reset
+		}
+
 		if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;
@@ -494,27 +533,27 @@ void HUD_Crosshair(entity this)
 
 					ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
 					ring_inner_rgb = vec3(autocvar_crosshair_ring_vortex_inner_color_red, autocvar_crosshair_ring_vortex_inner_color_green, autocvar_crosshair_ring_vortex_inner_color_blue);
-					ring_inner_image = "gfx/crosshair_ring_inner.tga";
+					ring_inner_image = "gfx/crosshair_ring_inner";
 
 					// draw the outer ring to show the current charge of the weapon
 					ring_value = charge;
 					ring_alpha = autocvar_crosshair_ring_vortex_alpha;
 					ring_rgb = wcross_color;
-					ring_image = "gfx/crosshair_ring_nexgun.tga";
+					ring_image = "gfx/crosshair_ring_nexgun";
 				}
 				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
 				{
 					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(minelayer, limit), 1);
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
-					ring_image = "gfx/crosshair_ring.tga";
+					ring_image = "gfx/crosshair_ring";
 				}
 				else if (wepent.activeweapon == WEP_HAGAR && wepent.hagar_load && autocvar_crosshair_ring_hagar)
 				{
 					ring_value = bound(0, wepent.hagar_load / WEP_CVAR_SEC(hagar, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
-					ring_image = "gfx/crosshair_ring.tga";
+					ring_image = "gfx/crosshair_ring";
 				}
 				else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
 				{
@@ -526,9 +565,9 @@ void HUD_Crosshair(entity this)
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
 					if ((wepent.activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
-						ring_image = "gfx/crosshair_ring_rifle.tga";
+						ring_image = "gfx/crosshair_ring_rifle";
 					else
-						ring_image = "gfx/crosshair_ring.tga";
+						ring_image = "gfx/crosshair_ring";
 				}
 				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && wepent.activeweapon == WEP_ARC )
 				{
@@ -536,7 +575,7 @@ void HUD_Crosshair(entity this)
 					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
 						arc_heat*autocvar_crosshair_ring_arc_hot_alpha;
 					ring_rgb = (1-arc_heat)*wcross_color + arc_heat*autocvar_crosshair_ring_arc_hot_color;
-					ring_image = "gfx/crosshair_ring.tga";
+					ring_image = "gfx/crosshair_ring";
 				}
 
 				// if in weapon switch animation, fade ring out/in
@@ -612,7 +651,7 @@ void HUD_Crosshair(entity this)
 				if((autocvar_crosshair_dot_color_custom) && (autocvar_crosshair_dot_color != "0"))
 					wcross_color = stov(autocvar_crosshair_dot_color);
 
-				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
+				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot", f * autocvar_crosshair_dot_alpha);
 				// FIXME why don't we use wcross_alpha here?
 				wcross_color = wcross_color_old;
 			}

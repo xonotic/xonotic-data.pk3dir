@@ -4,10 +4,15 @@
 entityclass(Rubble);
 classfield(Rubble).float creationtime;
 
-IntrusiveList g_rubble;
-STATIC_INIT(g_rubble) { g_rubble = IL_NEW(); }
+#ifdef CSQC
+IntrusiveList CasingsNGibs;
+STATIC_INIT(CasingsNGibs) { CasingsNGibs = IL_NEW(); }
+#endif
 
-void RubbleLimit(string cname, int limit, void(entity) deleteproc);
+void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(entity) deleteproc, entity parent);
 
-entity RubbleNew(entity e);
+entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, entity oldChild);
+
+entity ListNewChildRubble(IntrusiveList list, entity child);
+
 #endif

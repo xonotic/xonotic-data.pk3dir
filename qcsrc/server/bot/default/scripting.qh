@@ -71,6 +71,8 @@ float bot_barriertime;
 .float bot_cmd_execution_index;		// Position in the queue of the command to be executed
 
 
+bool bot_ispaused(entity this);
+
 void bot_resetqueues();
 void bot_queuecommand(entity bot, string cmdstring);
 void bot_cmdhelp(string scmd);
