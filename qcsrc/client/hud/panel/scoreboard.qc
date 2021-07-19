@@ -108,6 +108,8 @@ bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
 
+float scoreboard_time;
+
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
 string Label_getInfo(string label, int mode)
@@ -1639,16 +1641,17 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	string str = "";
 	int column = 0, j = 0;
 	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
-	for(i = 0; i < rankings_cnt; ++i)
+	int start_column = bound(0, floor((time - 1 - scoreboard_time) / 3), (ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns));
+	int start_item = start_column * rankings_rows;
+	for(i = start_item; i < start_item + rankings_cnt; ++i)
 	{
-		float t;
-		t = grecordtime[i];
+		int t = grecordtime[i];
 		if (t == 0)
 			continue;
 
 		if(strdecolorize(grecordholder[i]) == zoned_name_self)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
-		else if(!((j + column) & 1) && sbt_highlight)
+		else if(!((j + start_column + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
@@ -1675,7 +1678,6 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	return end_pos;
 }
 
-float scoreboard_time;
 bool have_weapon_stats;
 bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
@@ -2078,16 +2080,22 @@ void Scoreboard_Draw()
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
 		string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
-		if(race_speedaward) {
-			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, ColorTranslateRGB(race_speedaward_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos.y += 1.25 * hud_fontsize.y;
+		if(race_speedaward_alltimebest)
+		{
+			string name;
+			float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+			str = "";
+			if(race_speedaward)
+			{
+				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
+				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, name);
+				str = strcat(str, " / ");
+			}
+			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
+			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, name));
+			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}
-		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, ColorTranslateRGB(race_speedaward_alltimebest_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos.y += 1.25 * hud_fontsize.y;
-		}
-		if (race_speedaward || race_speedaward_alltimebest)
-			pos.y += 0.25 * hud_fontsize.y;
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
 	else
