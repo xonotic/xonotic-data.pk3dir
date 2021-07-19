@@ -63,8 +63,8 @@ bool ItemSend(entity this, entity to, int sf)
 			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now");
 
 		WriteString(MSG_ENTITY, this.mdl);
+		WriteByte(MSG_ENTITY, bound(0, this.skin, 255));
 	}
-
 
 	if(sf & ISF_COLORMAP)
 	{
@@ -1070,6 +1070,10 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	settouch(this, Item_Touch);
 	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
+
+	// support skinned models for powerups
+	this.skin = def.m_skin;
+	this.glowmod = def.m_color;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
