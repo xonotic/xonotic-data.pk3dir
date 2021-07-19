@@ -9,7 +9,7 @@
 #endif
 
 #ifdef GAMEQC
-MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
+//MODEL(Speed_ITEM, Item_Model("g_invincible.md3")); // TODO: new model required
 SOUND(Speed, Item_Sound("powerup_shield"));
 #endif
 
@@ -28,8 +28,10 @@ void powerup_speed_init(Pickup this, entity item)
 REGISTER_ITEM(Speed, Powerup) {
     this.m_canonical_spawnfunc = "item_speed";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_MUTATORBLOCKED; // TODO: ITEM_FLAG_NORMAL (once it has a model!)
-    this.m_model            =   MDL_Speed_ITEM;
+    this.spawnflags = ITEM_FLAG_NORMAL;
+//    this.m_model            =   MDL_Speed_ITEM; // TODO: new model required
+    this.m_model            =   MDL_BUFF;
+    this.m_skin             =   9;
     this.m_sound            =   SND_Speed;
     this.m_glow             =   true;
     this.m_respawnsound     =   SND_SHIELD_RESPAWN;
