@@ -551,22 +551,42 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.strength_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Strength, player, max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time) + item.strength_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.strength_finished;
+		else
+			t = max(t, time + item.strength_finished);
+		StatusEffects_apply(STATUSEFFECT_Strength, player, t, 0);
 	}
 	if (item.invincible_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Shield, player, max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time) + item.invincible_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.invincible_finished;
+		else
+			t = max(t, time + item.invincible_finished);
+		StatusEffects_apply(STATUSEFFECT_Shield, player, t, 0);
 	}
 	if (item.speed_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Speed, player, max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time) + item.speed_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.speed_finished;
+		else
+			t = max(t, time + item.speed_finished);
+		StatusEffects_apply(STATUSEFFECT_Speed, player, t, 0);
 	}
 	if (item.invisibility_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Invisibility, player, max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time) + item.invisibility_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.invisibility_finished;
+		else
+			t = max(t, time + item.invisibility_finished);
+		StatusEffects_apply(STATUSEFFECT_Invisibility, player, t, 0);
 	}
 	if (item.superweapons_finished)
 	{
