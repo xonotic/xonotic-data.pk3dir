@@ -123,7 +123,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
-	impressive_hits = 0;
+	//impressive_hits = 0;
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
@@ -131,14 +131,16 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
 	SendCSQCVaporizerBeamParticle(actor, impressive_hits);
 
-	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(impressive_hits && actor.vaporizer_lasthit)
+	if(yoda && flying) {
+		Give_Medal(actor, YODA);
+	}
+	
+	// We're gonna disable Impressive medals for the vaporizer.
+	/*if(impressive_hits && actor.vaporizer_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
 		Give_Medal(actor, IMPRESSIVE);
 		impressive_hits = 0; // only every second time
-	}
+	}*/
 
 	actor.vaporizer_lasthit = impressive_hits;
 
