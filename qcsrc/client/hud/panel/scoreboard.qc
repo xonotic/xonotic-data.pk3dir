@@ -55,6 +55,8 @@ vector team_name_fontsize;
 vector team_score_size;
 int total_medals;
 
+float autocvar_hud_panel_scoreboard_duel_weapon_scale = 1.25; // z411
+
 float sbt_bg_alpha;
 float sbt_fg_alpha;
 float sbt_fg_alpha_self;
@@ -112,6 +114,7 @@ bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
 int average_ping[NUM_TEAMS];
+int total_weapons;
 
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
@@ -1368,11 +1371,12 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	
 	tmp_in = tmp;
 	
-	int total_weapons = 0;
-	
 	// Accuracy rows
 	int dmg_percent;
 	vector dmg_color;
+	
+	total_weapons = 0;
+	int used_weapons = 0;
 	
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	FOREACH(Weapons, it != WEP_Null, {
@@ -1381,7 +1385,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			continue;
 		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
-
+		
 		int weapon_cnt_fired = pl.accuracy_cnt_fired[i - WEP_FIRST];
 		int weapon_cnt_hit   = pl.accuracy_cnt_hit[i - WEP_FIRST];
 		int weapon_acc = 0;
@@ -1389,8 +1393,12 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			weapon_acc = floor((weapon_cnt_hit / weapon_cnt_fired) * 100);
 		average_acc += weapon_acc;
 		
+		// center vertically
+		vector row_in = tmp_in;
+		row_in.y += ((hud_fontsize.y * autocvar_hud_panel_scoreboard_duel_weapon_scale) - column_dim.y) / 2;
+		
 		// draw row background
-		drawfill(tmp_in + eX * column_width * (invert ? 1 : 0), column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+		drawfill(row_in + eX * column_width * (invert ? 1 : 0), column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 		
 		if(weapon_cnt_fired) {
 			if(invert) {
@@ -1416,35 +1424,38 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			int c = (invert ? 4 : 0);
 			
 			draw_str = ftos(pl.accuracy_frags[i - WEP_FIRST]);
-			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
+			drawstring(row_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
 				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 			draw_str = ftos(pl.accuracy_hit[i - WEP_FIRST]);
-			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
+			drawstring(row_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
 				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 			draw_str = sprintf("%d%%", weapon_acc);
-			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
+			drawstring(row_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
 				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 			draw_str = strcat(ftos(weapon_cnt_hit), " / ", ftos(weapon_cnt_fired));
-			drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth(ftos(weapon_cnt_hit), false, hud_fontsize) - eX * hud_fontsize.x * 0.5,
+			drawstring(row_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth(ftos(weapon_cnt_hit), false, hud_fontsize) - eX * hud_fontsize.x * 0.5,
 				draw_str, hud_fontsize, dmg_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-			total_weapons++;
+			used_weapons++;
 		}
 		
 		// weapon icon
 		if(invert) {
 			tmp_in.x = pos.x + panel_size.x - panel_bg_padding - hud_fontsize.x / 2;
-			drawpic_aspect_skin(tmp_in, it.model2, vec2(50, hud_fontsize.y * 1.15), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(tmp_in, it.model2, vec2(50, hud_fontsize.y * autocvar_hud_panel_scoreboard_duel_weapon_scale), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		
 		tmp_in.x = pos.x + panel_bg_padding;
-		tmp_in.y += hud_fontsize.y * 1.25;
+		tmp_in.y += hud_fontsize.y * autocvar_hud_panel_scoreboard_duel_weapon_scale;
+		
+		total_weapons++;
 	});
-	if(total_weapons)
-		average_acc = floor((average_acc / total_weapons) + 0.5);
+	
+	if(used_weapons)
+		average_acc = floor((average_acc / used_weapons) + 0.5);
 	
 	// draw total accuracy now
 	tmp_str = sprintf("%d%%", average_acc);
@@ -1491,7 +1502,10 @@ vector Scoreboard_MakeDuelTable(vector pos, entity tm, vector rgb, vector bg_siz
 	float weapon_margin = hud_fontsize.x;
 	
 	panel_size.x = screen_half - weapon_margin;
-	panel_size.y = (duel_score_size.y * 5.5);
+	if(total_weapons)
+		panel_size.y = max(duel_score_size.y * 5.5, duel_score_size.y * 2.25 + (hud_fontsize.y * autocvar_hud_panel_scoreboard_duel_weapon_scale * total_weapons));
+	else
+		panel_size.y = duel_score_size.y * 5.5;
 	
 	entity pl_left = players.sort_next;
 	entity pl_right = pl_left.sort_next;
