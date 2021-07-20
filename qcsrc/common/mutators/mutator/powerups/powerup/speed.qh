@@ -33,10 +33,12 @@ REGISTER_ITEM(Speed, Powerup) {
         this.spawnflags = ITEM_FLAG_NORMAL;
     else
         this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_speed_init;
 #endif
 #ifdef GAMEQC
-//    this.m_model            =   MDL_Speed_ITEM; // TODO: new model required
-    this.m_model            =   MDL_BUFF;
+    this.m_itemid           =   IT_SPEED;
+    this.m_model            =   MDL_BUFF; // TODO: MDL_Speed_ITEM when new model available
     this.m_skin             =   9;
     this.m_sound            =   SND_Speed;
     this.m_glow             =   true;
@@ -48,12 +50,6 @@ REGISTER_ITEM(Speed, Powerup) {
     this.m_color            =   '0.1 1 0.84';
     this.m_waypoint         =   _("Speed");
     this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_SPEED;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_speed_init;
-#endif
 }
 
 SPAWNFUNC_ITEM(item_speed, ITEM_Speed)

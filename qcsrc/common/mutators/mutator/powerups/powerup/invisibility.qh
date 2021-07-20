@@ -32,10 +32,12 @@ REGISTER_ITEM(Invisibility, Powerup) {
         this.spawnflags = ITEM_FLAG_NORMAL;
     else
         this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_invisibility_init;
 #endif
 #ifdef GAMEQC
-//    this.m_model            =   MDL_Invisibility_ITEM; // TODO: new model required
-    this.m_model            =   MDL_BUFF;
+    this.m_itemid           =   IT_INVISIBILITY;
+    this.m_model            =   MDL_BUFF; // TODO: MDL_Invisibility_ITEM when new model available
     this.m_skin             =   12;
     this.m_sound            =   SND_Invisibility;
     this.m_glow             =   true;
@@ -47,12 +49,6 @@ REGISTER_ITEM(Invisibility, Powerup) {
     this.m_color            =   '0.5 0.5 1';
     this.m_waypoint         =   _("Invisibility");
     this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_INVISIBILITY;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_invisibility_init;
-#endif
 }
 
 SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)

@@ -31,8 +31,11 @@ REGISTER_ITEM(Shield, Powerup) {
         this.spawnflags = ITEM_FLAG_NORMAL;
     else
         this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_shield_init;
 #endif
 #ifdef GAMEQC
+    this.m_itemid           =   IT_INVINCIBLE;
     this.m_model            =   MDL_Shield_ITEM;
     this.m_sound            =   SND_Shield;
     this.m_glow             =   true;
@@ -44,12 +47,6 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_color            =   '1 0 1';
     this.m_waypoint         =   _("Shield");
     this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_INVINCIBLE;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_shield_init;
-#endif
 }
 
 SPAWNFUNC_ITEM(item_shield, ITEM_Shield)

@@ -33,8 +33,11 @@ REGISTER_ITEM(Strength, Powerup) {
         this.spawnflags = ITEM_FLAG_NORMAL;
     else
         this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_strength_init;
 #endif
 #ifdef GAMEQC
+    this.m_itemid           =   IT_STRENGTH;
     this.m_model            =   MDL_Strength_ITEM;
     this.m_sound            =   SND_Strength;
     this.m_glow             =   true;
@@ -46,12 +49,6 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_STRENGTH;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_strength_init;
-#endif
 }
 
 SPAWNFUNC_ITEM(item_strength, ITEM_Strength)
