@@ -62,6 +62,9 @@ string autocvar_g_teamnames_blue;
 string autocvar_g_teamnames_yellow;
 string autocvar_g_teamnames_pink;
 
+// Medals
+float autocvar_g_medals_excellent_time = 2;
+
 // WEAPONTODO
 .string weaponorder_byimpulse;
 
