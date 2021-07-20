@@ -22,7 +22,7 @@ float autocvar_g_balance_powerup_invisibility_time = 30;
 void powerup_invisibility_init(Pickup this, entity item)
 {
     if(!item.invisibility_finished)
-        item.invisibility_finished = autocvar_g_balance_powerup_invisibility_time;
+        item.invisibility_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invisibility_time;
 }
 #endif
 REGISTER_ITEM(Invisibility, Powerup) {

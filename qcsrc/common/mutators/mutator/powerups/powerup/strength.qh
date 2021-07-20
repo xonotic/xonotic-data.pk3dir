@@ -23,7 +23,7 @@ float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(Pickup this, entity item)
 {
     if(!item.strength_finished)
-        item.strength_finished = autocvar_g_balance_powerup_strength_time;
+        item.strength_finished = (item.count) ? item.count : autocvar_g_balance_powerup_strength_time;
 }
 #endif
 REGISTER_ITEM(Strength, Powerup) {

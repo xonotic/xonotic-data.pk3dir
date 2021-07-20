@@ -23,7 +23,7 @@ float autocvar_g_balance_powerup_speed_time = 30;
 void powerup_speed_init(Pickup this, entity item)
 {
     if(!item.speed_finished)
-        item.speed_finished = autocvar_g_balance_powerup_speed_time;
+        item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
 }
 #endif
 REGISTER_ITEM(Speed, Powerup) {
