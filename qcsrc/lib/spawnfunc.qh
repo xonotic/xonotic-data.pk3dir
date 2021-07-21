@@ -182,6 +182,7 @@ noref string __fullspawndata;
 		FIELD_SCALAR(fld, noise) \
 		FIELD_SCALAR(fld, notcpm) \
 		FIELD_SCALAR(fld, notfree) \
+		FIELD_SCALAR(fld, notsingle) \
 		FIELD_SCALAR(fld, notta) \
 		FIELD_SCALAR(fld, notteam) \
 		FIELD_SCALAR(fld, notvq3) \

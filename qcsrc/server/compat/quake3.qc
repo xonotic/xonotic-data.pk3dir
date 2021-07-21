@@ -305,6 +305,7 @@ bool DoesQ3ARemoveThisEntity(entity this)
 	if(this.notta)
 		return true;
 
+	// FIXME: singleplayer does not use maxclients 1 as that would prevent bots
 	if(this.notsingle)
 		if(maxclients == 1)
 			return true;
