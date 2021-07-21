@@ -944,7 +944,7 @@ void nade_emerald_dropping(vector org)
 	int itemcount = autocvar_g_nades_emerald_spawncount;
 	entity e = spawn();
 	e.spawnfunc_checked = true;
-	if(!IS_GAMETYPE(CA))
+	if(!IS_GAMETYPE(CA) && !autocvar_g_instagib)
 	{
 		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
 		switch (autocvar_g_nades_emerald_dropitemselect)
