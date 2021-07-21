@@ -49,7 +49,8 @@ void HUD_Timer()
 	timeleft = ceil(timeleft);
 
 	// countdown sound
-	if(autocvar_hud_panel_timer_count && timeleft > 0 && timeleft != last_timeleft && timeleft <= 10) {
+	if(autocvar_hud_panel_timer_count && timeleft > 0 && timeleft != last_timeleft && timeleft <= 10)
+	{
 		sound(NULL, CH_INFO, SND_ENDCOUNT, VOL_BASE, ATTN_NONE);
 		last_timeleft = timeleft;
 	}

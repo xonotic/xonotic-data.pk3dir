@@ -389,7 +389,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			}
 			
 			// Excellent check
-			if(attacker.lastkill && attacker.lastkill > time - 2) {
+			if(attacker.lastkill && attacker.lastkill > time - autocvar_g_medals_excellent_time) {
 				Give_Medal(attacker, EXCELLENT);
 			}
 			attacker.lastkill = time;

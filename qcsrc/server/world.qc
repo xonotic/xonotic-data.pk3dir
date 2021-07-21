@@ -390,16 +390,15 @@ void cvar_changes_init()
 		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
-		BADCVAR("g_tmayhem_point_leadlimit");
-		BADCVAR("g_tmayhem_point_limit");
+		BADCVAR("g_mayhem_fraglimit");
+		BADCVAR("g_tmayhem_fraglimit");
+		BADCVAR("g_mayhem_visual_score_limit");
+		BADCVAR("g_tmayhem_visual_score_limit");
+		BADCVAR("g_tmayhem_score_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
-		BADCVAR("g_mayhem_frags2score");
-		BADCVAR("g_mayhem_damage2score");
-		BADCVAR("g_mayhem_damage2score_multiplier");
-		BADCVAR("g_tmayhem_frags2score");
-		BADCVAR("g_tmayhem_damage2score");
-		BADCVAR("g_tmayhem_damage2score_multiplier");
+		BADCVAR("g_mayhem_scoringmethod");
+		BADCVAR("g_tmayhem_scoringmethod");
 		BADCVAR("pausable");
 		BADCVAR("sv_announcer");
 		BADCVAR("sv_checkforpacketsduringsleep");
@@ -1739,8 +1738,9 @@ void CheckRules_World()
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_FRAG);
+			checkrules_overtimesadded = 1;
 			sound(NULL, CH_INFO, SND_OVERTIME, VOL_BASE, ATTN_NONE);
-			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_SUDDENDEATH);
+			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_OVERTIME);
 		}
 	}
 	else
