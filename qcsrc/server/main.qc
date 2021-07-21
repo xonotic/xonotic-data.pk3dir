@@ -415,7 +415,7 @@ string GetField_fullspawndata(entity e, string f, ...)
 
 	if (!e.fullspawndata)
 	{
-		LOG_WARNF("^1EDICT %s (classname %s) has no fullspawndata, engine lacks support?", ftos(num_for_edict(e)), e.classname);
+		//LOG_WARNF("^1EDICT %s (classname %s) has no fullspawndata, engine lacks support?", ftos(num_for_edict(e)), e.classname);
 		return v;
 	}
 
