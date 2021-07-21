@@ -225,6 +225,10 @@ void target_give_init(entity this)
 				this.invincible_finished += it.invincible_finished;
 			else if (it.strength_finished)
 				this.strength_finished += it.strength_finished;
+			else if (it.speed_finished)
+				this.speed_finished += it.speed_finished;
+			else if (it.invisibility_finished)
+				this.invisibility_finished += it.invisibility_finished;
 			else if (it.health)
 				this.health += it.health;
 			else if (it.armorvalue)
