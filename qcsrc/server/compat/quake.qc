@@ -8,7 +8,7 @@
  * QUAKE 1 ENTITIES - So people can play quake1 maps with the xonotic weapons
  ***********************
  weapon_nailgun handled in quake3.qc
- item_armor1 handled in items.qc
+ item_armor1 handled in items/spawning.qc
 */
 
 SPAWNFUNC_WEAPON(weapon_supernailgun, WEP_HAGAR)

@@ -23,27 +23,24 @@
  ***********************
 
  * Map entities NOT handled in this file:
- holdable_invulnerability	Q3TA	buffs mutator
- holdable_kamikaze		Q3TA	buffs mutator
- holdable_teleporter		Q3A	buffs mutator
- item_ammoregen			Q3TA	buffs mutator
- item_doubler			Q3TA	buffs mutator
- item_guard			Q3TA	buffs mutator
- item_scout			Q3TA	buffs mutator
- item_armor_jacket		CPMA	quake2.qc
- item_flight			Q3A	buffs mutator
- item_haste			Q3A	buffs mutator
- item_health			Q3A	quake.qc
- item_health_large		Q3A	items.qc
- item_health_small		Q3A	health.qh
- item_health_mega		Q3A	health.qh
- item_invis			Q3A	buffs mutator
- item_quad			Q3A	items.qc
- item_regen			Q3A	buffs mutator
- weapon_machinegun		Q3A	machinegun.qh
- weapon_grenadelauncher		Q3A	mortar.qh
- weapon_rocketlauncher		Q3A	devastator.qh
- CTF spawnfuncs handled in sv_ctf.qc
+ holdable_invulnerability    Q3TA   buffs/all.inc
+ holdable_kamikaze           Q3TA   buffs/all.inc
+ holdable_teleporter         Q3A    buffs/all.inc
+ item_ammoregen              Q3TA   buffs/all.inc
+ item_doubler                Q3TA   buffs/all.inc
+ item_guard                  Q3TA   buffs/all.inc
+ item_scout                  Q3TA   buffs/all.inc
+ item_armor_jacket           CPMA   quake2.qc
+ item_flight                 Q3A    buffs/all.inc
+ item_health                 Q3A    quake.qc
+ item_health_large           Q3A    items/spawning.qc
+ item_health_small           Q3A    health.qh
+ item_health_mega            Q3A    health.qh
+ item_regen                  Q3A    buffs/all.inc
+ weapon_machinegun           Q3A    machinegun.qh
+ weapon_grenadelauncher      Q3A    mortar.qh
+ weapon_rocketlauncher       Q3A    devastator.qh
+ * CTF spawnfuncs in sv_ctf.qc
 
  NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 */
@@ -99,8 +96,11 @@ SPAWNFUNC_ITEM(item_armor_combat, ITEM_ArmorBig)
 SPAWNFUNC_ITEM(item_armor_shard, ITEM_ArmorSmall)
 SPAWNFUNC_ITEM(item_armor_green, ITEM_ArmorMedium) // CCTF
 
-// Battle Suit
+// Powerups
+SPAWNFUNC_ITEM(item_quad, ITEM_Strength)
 SPAWNFUNC_ITEM(item_enviro, ITEM_Shield)
+SPAWNFUNC_ITEM(item_haste, ITEM_Speed)
+SPAWNFUNC_ITEM(item_invis, ITEM_Invisibility)
 
 // medkit -> armor (we have no holdables)
 SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorBig)

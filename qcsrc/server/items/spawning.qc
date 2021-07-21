@@ -145,5 +145,3 @@ SPAWNFUNC_ITEM(item_health25, ITEM_HealthMedium)
 SPAWNFUNC_ITEM(item_health_large, ITEM_HealthBig)
 
 SPAWNFUNC_ITEM(item_health100, ITEM_HealthMega)
-
-SPAWNFUNC_ITEM(item_quad, ITEM_Strength)
