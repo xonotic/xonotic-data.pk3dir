@@ -241,7 +241,7 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 			if(d < dist)
 			{
 				e.fireball_impactvec = p;
-				RandomSelection_AddEnt(e, 1 / (1 + d), !Fire_IsBurning(e));
+				RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
 			}
 		}
 	if(RandomSelection_chosen_ent)
@@ -807,14 +807,15 @@ void nade_emerald_randomvehicles(entity e, vector org)
 //TODO: turrets must be spawned by owner team, cannot be spawned to attack owner team or both
 void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 {
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		if (it.turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
+	//FOREACH_CLIENT(IS_PLAYER(it),
+	//{
+		if (ent.turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
 		{
 			//ent = spawn();
-			ent.owner = it.owner;
-			ent.realowner = it.realowner;
-			ent.team = it.team;
+			//ent.owner = it.owner;
+			//ent.realowner = it.realowner;
+			//ent.team = ent.realowner.team;
+			FOREACH_CLIENT(!IS_OBSERVER(it.realowner), ent.team = it.team;);
 			ent.noalign = true; // don't drop to floor
 			//ent.angles = '0 0 0';
 			//ent.gravity = 1;
@@ -825,8 +826,9 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 			//setthink(ent, turrets_respawn);
 			// fading handled globally
 			//bool turret_initialize(entity this, Turret tur)
+			//turret_validate_target(ent.realowner, ent.enemy, ent.target_validate_flags);
 			turret_initialize(ent, tur);
-			it.turspawncount++;
+			//it.turspawncount++;
 			//PrintToChatAll(sprintf("^1AFTER^7 it.turspawncount: ^3%f", it.turspawncount));
 			//if (!IS_ONGROUND(ent))
 			//	ent.gravity = 1; setorigin(ent, org);
@@ -838,8 +840,8 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 		}
 		//PrintToChatAll(sprintf("^4tur- ^2it.netname: %s", it.netname));
 		//PrintToChatAll(sprintf("^4tur- ^1tur.classname: %s", tur.classname));
-		return;
-	});
+	//	return;
+	//});
 }
 
 //LegendGuard adds random turret spawn function for emerald nade 22-06-2021
@@ -942,7 +944,7 @@ void nade_emerald_dropping(vector org)
 	int itemcount = autocvar_g_nades_emerald_spawncount;
 	entity e = spawn();
 	e.spawnfunc_checked = true;
-	if(!IS_GAMETYPE(CA))
+	if(!IS_GAMETYPE(CA) && !autocvar_g_instagib)
 	{
 		//int cvar which manages the ONLY dropping per each type of item 14-03-2021
 		switch (autocvar_g_nades_emerald_dropitemselect)
@@ -1797,7 +1799,7 @@ void nade_prime(entity this)
 	int tntype = this.tandemnade_type;
 	string pntype = this.pokenade_type;
 
-	if((this.items & ITEM_Strength.m_itemid) && autocvar_g_nades_bonus_onstrength)
+	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
 		ntype = STAT(NADE_BONUS_TYPE, this);
 	else if (STAT(NADE_BONUS, this) >= 1)
 	{
