@@ -230,7 +230,7 @@ void target_give_init(entity this)
 			else if (it.armorvalue)
 				this.armorvalue += it.armorvalue;
 
-			this.netname = cons(this.netname, it.netname);
+			this.netname = cons(this.netname, (it.itemdef.m_weapon) ? it.itemdef.m_weapon.netname : it.itemdef.netname);
 		}
 
 		//remove(it); // removing ents in init functions causes havoc, workaround:
