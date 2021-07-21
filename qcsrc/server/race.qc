@@ -841,26 +841,26 @@ bool race_waypointsprite_visible_for_player(entity this, entity player, entity v
 
 void defrag_waypointsprites(entity targeted, entity checkpoint)
 {
-	for(entity t = findchain(target, targeted.targetname); t; t = t.chain)
+	// bones_was_here: spawn a waypoint for every entity with a bmodel
+	// that directly or indirectly targets this checkpoint
+	// (anything a player could touch or shoot to activate this cp)
+
+	entity s = WP_RaceCheckpoint;
+	if (checkpoint.classname == "target_startTimer")
+		s = WP_RaceStart;
+	else if (checkpoint.classname == "target_stopTimer")
+		s = WP_RaceFinish;
+
+	for (entity t = findchain(target, targeted.targetname); t; t = t.chain)
 	{
-		if(t.modelindex)
+		if (t.modelindex)
 		{
-			entity s = WP_RaceStart;
-
-			if(checkpoint.classname == "target_checkpoint")
-				s = WP_RaceCheckpoint;
-			else if(checkpoint.classname == "target_stopTimer")
-				s = WP_RaceFinish;
-
-			vector o = (t.absmin + t.absmax) * 0.5;
-
-			WaypointSprite_SpawnFixed(s, o, t, sprite, RADARICON_NONE);
-
+			WaypointSprite_SpawnFixed(s, (t.absmin + t.absmax) * 0.5, t, sprite, RADARICON_NONE);
 			t.sprite.realowner = checkpoint;
 			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 		}
 
-		if(t.targetname)
+		if (t.targetname)
 			defrag_waypointsprites(t, checkpoint);
 	}
 }
