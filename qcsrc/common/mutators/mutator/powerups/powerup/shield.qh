@@ -14,7 +14,7 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
 #ifdef SVQC
-bool autocvar_g_powerups_shield;
+bool autocvar_g_powerups_shield = 1;
 float autocvar_g_balance_powerup_invincible_takedamage;
 float autocvar_g_balance_powerup_invincible_takeforce = 0.33;
 float autocvar_g_balance_powerup_invincible_time;

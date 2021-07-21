@@ -14,7 +14,7 @@ SOUND(Strength, Item_Sound("powerup"));
 #endif
 
 #ifdef SVQC
-bool autocvar_g_powerups_strength;
+bool autocvar_g_powerups_strength = 1;
 float autocvar_g_balance_powerup_strength_damage;
 float autocvar_g_balance_powerup_strength_force;
 float autocvar_g_balance_powerup_strength_selfdamage;

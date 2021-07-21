@@ -16,7 +16,7 @@ SOUND(Invisibility, Item_Sound("powerup"));
 #ifdef SVQC
 .float invisibility_finished;
 
-bool autocvar_g_powerups_invisibility;
+bool autocvar_g_powerups_invisibility = 1;
 float autocvar_g_balance_powerup_invisibility_alpha = 0.15;
 float autocvar_g_balance_powerup_invisibility_time = 30;
 void powerup_invisibility_init(Pickup this, entity item)
