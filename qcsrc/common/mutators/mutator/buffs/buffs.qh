@@ -45,6 +45,7 @@ STATIC_INIT(REGISTER_BUFFS) {
 
 #ifdef SVQC
 	.entity buffdef;
+	.int team_forced;
 	void buff_Init(entity ent);
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
