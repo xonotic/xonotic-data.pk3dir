@@ -207,32 +207,21 @@ void target_give_init(entity this)
 	{
 		if (it.classname == "item_buff")
 		{
-			entity buff = it.buffdef;
-			this.netname = cons(this.netname, buff.netname);
-			this.buffs_finished += it.count;
+			this.netname = cons(this.netname, it.buffdef.netname);
+			this.buffs_finished += it.buffs_finished;
 		}
 		else
 		{
-			if (it.ammo_rockets)
-				this.ammo_rockets += it.ammo_rockets;
-			else if (it.ammo_cells)
-				this.ammo_cells += it.ammo_cells;
-			else if (it.ammo_shells)
-				this.ammo_shells += it.ammo_shells;
-			else if (it.ammo_nails)
-				this.ammo_nails += it.ammo_nails;
-			else if (it.invincible_finished)
-				this.invincible_finished += it.invincible_finished;
-			else if (it.strength_finished)
-				this.strength_finished += it.strength_finished;
-			else if (it.speed_finished)
-				this.speed_finished += it.speed_finished;
-			else if (it.invisibility_finished)
-				this.invisibility_finished += it.invisibility_finished;
-			else if (it.health)
-				this.health += it.health;
-			else if (it.armorvalue)
-				this.armorvalue += it.armorvalue;
+			this.ammo_rockets          += it.ammo_rockets;
+			this.ammo_cells            += it.ammo_cells;
+			this.ammo_shells           += it.ammo_shells;
+			this.ammo_nails            += it.ammo_nails;
+			this.invincible_finished   += it.invincible_finished;
+			this.strength_finished     += it.strength_finished;
+			this.speed_finished        += it.speed_finished;
+			this.invisibility_finished += it.invisibility_finished;
+			this.health                += it.health;
+			this.armorvalue            += it.armorvalue;
 
 			this.netname = cons(this.netname, (it.itemdef.m_weapon) ? it.itemdef.m_weapon.netname : it.itemdef.netname);
 		}
