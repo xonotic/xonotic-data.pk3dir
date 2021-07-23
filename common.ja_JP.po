@@ -7,13 +7,15 @@
 # LegendGuard, 2020
 # LegendGuard, 2020-2021
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
+# 8fb942b4466cdbffede843a6379dce7e_4dc4284 <cbc8558ff26f685f62baa2a2eaee30b3_1013263>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 07:23+0200\n"
-"PO-Revision-Date: 2021-06-27 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-07-22 11:06+0000\n"
+"Last-Translator: 8fb942b4466cdbffede843a6379dce7e_4dc4284 "
+"<cbc8558ff26f685f62baa2a2eaee30b3_1013263>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -30,7 +32,7 @@ msgstr "^2%s への書き出すに成功! (註: data/data/ に保存されまし
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr "^1%sへ書かなかった"
+msgstr "^1%sへ書けませんでした"
 
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
@@ -81,7 +83,7 @@ msgstr "観戦するために ^3%s ^1を押して"
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:47
 msgid "primary fire"
-msgstr "一次射撃"
+msgstr "メイン射撃"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
@@ -118,7 +120,7 @@ msgstr "武器を落とす"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:48
 msgid "secondary fire"
-msgstr "二次射撃"
+msgstr "サブ射撃"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
@@ -652,7 +654,7 @@ msgstr "キル数 - 自殺数 = "
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^frags"
-msgstr "削除数"
+msgstr "FRAG数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of goals scored"
@@ -1553,11 +1555,11 @@ msgstr "よくやった! 「次のレベル」をクリックして続行する"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1163
 msgid "Better luck next time!"
-msgstr "次回は頑張って!"
+msgstr "次回は頑張ってくれたまえ!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1168
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "管状! 「次のレベル」を押して続行して!"
+msgstr "管状! 「次のレベル」を押して次へ!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1170
 msgid "Wicked! Press \"Next Level\" to continue!"
@@ -1811,7 +1813,7 @@ msgstr "障害"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:83
 msgid "Disabled"
-msgstr ""
+msgstr "無効"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
@@ -1969,7 +1971,7 @@ msgstr "燃焼"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "スポーンシールド"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -6202,19 +6204,19 @@ msgstr "ズームモード:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr "ズームした内"
+msgstr "ズームイン"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr "ズームした外"
+msgstr "ズームアウト"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr "常にズームした"
+msgstr "常にズーム"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr "決してズームした"
+msgstr "ズームしない"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -6549,7 +6551,7 @@ msgstr "モンスター:"
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
 msgid "Spawn"
-msgstr "現れる"
+msgstr "スポーン"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 msgid "Remove"
@@ -6586,7 +6588,7 @@ msgstr "スキンを設定する:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qh:6
 msgid "Monster Tools"
-msgstr "モンスター用具"
+msgstr "モンスターツール"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Servers"
@@ -6610,14 +6612,14 @@ msgstr "プロフィール"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr "マルチプレイヤー"
+msgstr "マルチプレイ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
-"オンラインで遊ぶ、LANの友達に対して、デモを表示するか、選手設定を変更する"
+"オンラインで遊ぶ、LANの友達と対決、デモを表示するか、プレイヤー設定を変更"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
@@ -6710,15 +6712,15 @@ msgstr "ボット"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "Beginner"
-msgstr "初心者"
+msgstr "ビギナー"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "You will win"
-msgstr "勝つ"
+msgstr "必ず勝つ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "You can win"
-msgstr "勝てる"
+msgstr "勝てるかも"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "You might win"
@@ -6726,11 +6728,11 @@ msgstr "勝つかもしれない"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Advanced"
-msgstr "高度"
+msgstr "アドバンス"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Expert"
-msgstr "専門家"
+msgstr "エキスパート"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "Pro"
@@ -6738,7 +6740,7 @@ msgstr "プロ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "Assassin"
-msgstr "暗殺者"
+msgstr "アサシン"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "Unhuman"
@@ -6802,7 +6804,7 @@ msgstr "利用可能な全てのマップを選択から削除する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:206
 msgid "Start Multiplayer!"
-msgstr "マルチプレイヤーを開始!"
+msgstr "マルチプレイをスタート!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -6997,23 +6999,25 @@ msgstr "武器とアイテムのミューテーター:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr "選手はグラップリングフックで現れる。使用するには「フック」キーを押して"
+msgstr ""
+"プレイヤーはグラップリングフックで現れます。「フック」キーを押して使用してく"
+"ださい"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
-"選手はジェットパックでスポーンする。 「ジャンプ」をダブルタップするか、使用す"
-"るために「ジェットパック」キーを押して"
+"プレイヤーはジェットパックでスポーンします。 「ジャンプ」をダブルタップする"
+"か、「ジェットパック」キーを押して使用してください"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
-"弾は破壊できない。ただし、エレクトの一次射撃でエレクトオーブを爆発させること"
-"はできる"
+"弾は破壊できません。ただし、エレクトのメイン射撃でエレクトオーブを爆発させる"
+"ことができます"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
@@ -7081,7 +7085,7 @@ msgid ""
 msgstr ""
 "選手は武器を受け取り、一発で敵を即座に殺すことができます。選手が弾薬を使い果"
 "たした場合、弾薬を見つけるまで10秒かかりますが、弾薬を見つけられない場合は死"
-"にます。二次射撃モードはダメージを与えませんが、ジャンプに適しています。"
+"にます。サブ射撃モードはダメージを与えませんが、ジャンプに適しています。"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:289
 msgid ""
@@ -7220,7 +7224,7 @@ msgstr "必須 (暗号化します)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr "設定を変更するには `crypto_aeslevel` cvarを使用する"
+msgstr "設定を変更するには `crypto_aeslevel` cvarを使用します"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
@@ -7289,7 +7293,7 @@ msgstr "音楽プレーヤー"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
-msgstr "自動録音デモ"
+msgstr "自動録画デモ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
 msgid "Timedemo"
@@ -7298,7 +7302,8 @@ msgstr "最高速度でデモを再生する"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr ""
-"お使いのコンピューターが強調表示されたデモを実行できる速度をベンチマークする"
+"お使いのコンピューターが強調表示されたデモを実行できる速度をベンチマークしま"
+"す"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
@@ -7306,7 +7311,7 @@ msgstr "再生する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
-msgstr "デモを再生すると、現在の試合から切断される。"
+msgstr "デモを再生すると、現在の試合から切断されます。"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
@@ -7435,7 +7440,7 @@ msgstr "選手の統計が得点表であなたをランク付けできるよう
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
-msgstr "言語を選択する..."
+msgstr "言語選択..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
@@ -7660,7 +7665,7 @@ msgstr "新しいスタイルの音響減衰"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:103
 msgid "Mute sounds when not active"
-msgstr "活発でないときに音を消す"
+msgstr "アクティブでないときに音を消す"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:106
 msgid "Frequency:"
@@ -7828,7 +7833,7 @@ msgstr "両"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:176
 msgid "Automatic taunts:"
-msgstr "自動からかう:"
+msgstr "自動挑発:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:178
 msgid "Automatically taunt enemies after fragging them"
@@ -8015,8 +8020,8 @@ msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
-"高解像度のライトマップを使用する、見た目はきれいですが、追加のビデオメモリを"
-"使い果たします。"
+"高解像度のライトマップを使用します、見た目はきれいですが、追加のビデオメモリ"
+"を使い果たします。"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Deluxe mapping"
@@ -8227,7 +8232,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "モーションブラーの強度 - 0.4を勧めす"
+msgstr "モーションブラーの強度 - 0.4がオススメ"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Motion blur:"
@@ -8286,7 +8291,7 @@ msgstr "サイズ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
-msgstr "健康で"
+msgstr "ヘルスで"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
@@ -8436,7 +8441,7 @@ msgstr "十字線に近い場合のみ"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:158
 msgid "Display health and armor"
-msgstr "健康と鎧を表示する"
+msgstr "ヘルスとアーマーを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Damage overlay:"
@@ -8448,11 +8453,11 @@ msgstr "ダイナミックHUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "HUD moves around following player's movement"
-msgstr "HUDは選手の動きに従って動き回る"
+msgstr "HUDをプレイヤーの動きに従って動き回る"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "Shake the HUD when hurt"
-msgstr "傷ついたときにHUDを振る"
+msgstr "傷ついたときにHUDを揺らす"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
@@ -8473,11 +8478,11 @@ msgstr "HUDを構成するローカルゲームを開始しますか?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
-msgstr "削除情報"
+msgstr "FRAG情報"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Display information about killing sprees"
-msgstr "殺害に関する情報を表示する"
+msgstr "連続キルに関する情報を表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
 msgid "Only display sprees if they are achievements"
@@ -8656,7 +8661,7 @@ msgstr "体フェージング:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 msgid "Gibs:"
-msgstr "内臓:"
+msgstr "バラバラ死体:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "GIBS^None"
@@ -8779,7 +8784,7 @@ msgstr "ズーム中にレチクル2Dオーバーレイを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
 msgid "Release zoom when you die or respawn"
-msgstr "死んだり再び現れたときにズームを解放する"
+msgstr "死んだりリスポーンしたときにズームを解放する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:119
 msgid "Release zoom when you switch weapons"
@@ -8928,7 +8933,7 @@ msgstr "DGAマウス入力を利用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr "「コンソールを入力する」キーを押すと、それも閉じる"
+msgstr "「コンソール入力」キーを押すと、それも閉じる"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
@@ -9238,7 +9243,7 @@ msgstr "解像度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Font/UI size:"
-msgstr "フォント / UIサイズ:"
+msgstr "フォント/UIサイズ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "SZ^Unreadable"
@@ -9246,7 +9251,7 @@ msgstr "読めない"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:40
 msgid "SZ^Tiny"
-msgstr "小っぽけ"
+msgstr "ちっこい"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:41
 msgid "SZ^Little"
@@ -9294,7 +9299,7 @@ msgstr "32bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
-msgstr "フルスケ"
+msgstr "全画面"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
@@ -9306,7 +9311,7 @@ msgid ""
 "screen refresh rate"
 msgstr ""
 "垂直同期を有効にしてティアリングを防止し、fpsを画面のリフレッシュレートに制限"
-"する"
+"します"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
@@ -9376,7 +9381,7 @@ msgid ""
 "normal rendering starts"
 msgstr ""
 "通常のレンダリングが開始する前に、深度のみのバージョンのシーンをレンダリング"
-"することにより、オーバードローを排除する"
+"することにより、オーバードローを排除します"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
@@ -9410,7 +9415,7 @@ msgid ""
 "for faster rendering"
 msgstr ""
 "頂点バッファオブジェクトを使用して、静的ジオメトリをビデオメモリに格納し、レ"
-"ンダリングを高速化する"
+"ンダリングを高速化します"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:115
 msgid "Vertices"
@@ -9464,7 +9469,7 @@ msgid ""
 "requires GLSL color control"
 msgstr ""
 "彩度調整 (0 = グレースケール、1 = 通常、2 = 過飽和)、GLSLカラーコントロールが"
-"必要する"
+"必要です"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:149
 msgid "LIT^Ambient:"
@@ -9504,7 +9509,7 @@ msgstr "OpenGL 2.0 シェーダー(GLSL)を使う"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:169
 msgid "Psycho coloring (easter egg)"
-msgstr "サイコカラーズ (イースターエッグ)"
+msgstr "サイコカラー (イースターエッグ)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:172
 msgid "Trippy vertices (easter egg)"
@@ -9520,7 +9525,7 @@ msgstr "???"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:165
 msgid "Campaign Difficulty:"
-msgstr "キャンペーンの難しさ:"
+msgstr "キャンペーンの難易度:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:166
 msgid "CSKL^Easy"
@@ -9536,11 +9541,11 @@ msgstr "難い"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "Start Singleplayer!"
-msgstr "シングルプレイヤーを開始!"
+msgstr "シングルプレイをスタート!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
-msgstr "シングルプレイヤー"
+msgstr "シングルプレイ"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
@@ -9599,11 +9604,11 @@ msgstr "チームのトーナメント"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr "やりたい放題"
+msgstr "フリー・フォー・オール"
 
 #: qcsrc/menu/xonotic/keybinder.qc:35
 msgid "Moving"
-msgstr "動き中"
+msgstr "移動"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "forward"
@@ -9615,11 +9620,11 @@ msgstr "後方"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
-msgstr "左"
+msgstr "左へ水平移動"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "strafe right"
-msgstr "右"
+msgstr "右へ水平移動"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "jump / swim"
@@ -9743,7 +9748,7 @@ msgstr "鍵/旗を落とす / 乗り物から降りる"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr "自殺する / 再び現れる"
+msgstr "自殺/リスポーン"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
@@ -9777,21 +9782,21 @@ msgstr "もう一度このボタンを押さないでください!"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
-"あれ? これを遊べません (m is NULL)。これが再度発生しないように再フィルタリン"
-"グします。"
+"おや? これを遊ぶことができません (m is NULL)。これが再度発生しないように再"
+"フィルタリングします。"
 
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr "%s XONOTICサーバー"
+msgstr "%sのXONOTICサーバー"
 
 #: qcsrc/menu/xonotic/maplist.qc:301
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
-"あれ? これを遊べません (invalid game type)。これが再度発生しないように再フィ"
-"ルタリングします。"
+"おや? これを遊ぶことができません (invalid game type)。これが再度発生しないよ"
+"うに再フィルタリングします。"
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
@@ -9874,7 +9879,7 @@ msgstr "有効な状態"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
-msgstr "好き"
+msgstr "お気に入り"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
@@ -9902,11 +9907,11 @@ msgstr "オーバーキル"
 
 #: qcsrc/menu/xonotic/serverlist.qh:163
 msgid "SLCAT^InstaGib"
-msgstr "インスタギブ"
+msgstr "一触即発"
 
 #: qcsrc/menu/xonotic/serverlist.qh:164
 msgid "SLCAT^Defrag Mode"
-msgstr "デフラグモード"
+msgstr "DEFRAGモード"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
