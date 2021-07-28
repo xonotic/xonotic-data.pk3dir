@@ -5,8 +5,12 @@
 #include "powerups.qh"
 
 int autocvar_g_powerups;
+bool autocvar_g_powerups_stack;
 
 REGISTER_MUTATOR(powerups, true);
 
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
+
+// q3compat
+.float count;
