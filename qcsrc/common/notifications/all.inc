@@ -402,10 +402,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_INFO(ONSLAUGHT_GENDESTROYED,                  N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG generator has been destroyed"), "", GENERATOR)
     MULTITEAM_INFO(ONSLAUGHT_GENDESTROYED_OVERTIME,         N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG generator spontaneously combusted due to overtime!"), "", GENERATOR)
 
-    MSG_INFO_NOTIF(POWERUP_INVISIBILITY,                    N_CONSOLE,  1, 0, "s1", "s1",       "strength",     _("^BG%s^K1 picked up Invisibility"), "")
-    MSG_INFO_NOTIF(POWERUP_SHIELD,                          N_CONSOLE,  1, 0, "s1", "s1",       "shield",       _("^BG%s^K1 picked up Shield"), "")
-    MSG_INFO_NOTIF(POWERUP_SPEED,                           N_CONSOLE,  1, 0, "s1", "s1",       "shield",       _("^BG%s^K1 picked up Speed"), "")
-    MSG_INFO_NOTIF(POWERUP_STRENGTH,                        N_CONSOLE,  1, 0, "s1", "s1",       "strength",     _("^BG%s^K1 picked up Strength"), "")
+    MSG_INFO_NOTIF(POWERUP_INVISIBILITY,                    N_CONSOLE,  1, 0, "s1", "s1",       "buff_invisible", _("^BG%s^K1 picked up Invisibility"), "")
+    MSG_INFO_NOTIF(POWERUP_SHIELD,                          N_CONSOLE,  1, 0, "s1", "s1",       "shield",         _("^BG%s^K1 picked up Shield"), "")
+    MSG_INFO_NOTIF(POWERUP_SPEED,                           N_CONSOLE,  1, 0, "s1", "s1",       "buff_speed",     _("^BG%s^K1 picked up Speed"), "")
+    MSG_INFO_NOTIF(POWERUP_STRENGTH,                        N_CONSOLE,  1, 0, "s1", "s1",       "strength",       _("^BG%s^K1 picked up Strength"), "")
 
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 disconnected"), "")
     MSG_INFO_NOTIF(QUIT_KICK_IDLING,                        N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 was kicked after idling for %s seconds"), "")

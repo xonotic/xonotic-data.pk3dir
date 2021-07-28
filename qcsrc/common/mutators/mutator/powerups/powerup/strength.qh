@@ -14,6 +14,7 @@ SOUND(Strength, Item_Sound("powerup"));
 #endif
 
 #ifdef SVQC
+bool autocvar_g_powerups_strength = 1;
 float autocvar_g_balance_powerup_strength_damage;
 float autocvar_g_balance_powerup_strength_force;
 float autocvar_g_balance_powerup_strength_selfdamage;
@@ -22,13 +23,21 @@ float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(Pickup this, entity item)
 {
     if(!item.strength_finished)
-        item.strength_finished = autocvar_g_balance_powerup_strength_time;
+        item.strength_finished = (item.count) ? item.count : autocvar_g_balance_powerup_strength_time;
 }
 #endif
 REGISTER_ITEM(Strength, Powerup) {
     this.m_canonical_spawnfunc = "item_strength";
+#ifdef SVQC
+    if(autocvar_g_powerups_strength)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_strength_init;
+#endif
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+    this.m_itemid           =   IT_STRENGTH;
     this.m_model            =   MDL_Strength_ITEM;
     this.m_sound            =   SND_Strength;
     this.m_glow             =   true;
@@ -40,12 +49,6 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_STRENGTH;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_strength_init;
-#endif
 }
 
 SPAWNFUNC_ITEM(item_strength, ITEM_Strength)
