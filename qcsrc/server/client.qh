@@ -65,6 +65,9 @@ string autocvar_g_teamnames_pink;
 // Medals
 float autocvar_g_medals_excellent_time = 2;
 
+// Timer
+int autocvar_sv_timer_countdown = 1; // 0 = disabled, 1 = enabled, 2 = spect only
+
 // WEAPONTODO
 .string weaponorder_byimpulse;
 

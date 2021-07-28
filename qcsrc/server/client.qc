@@ -898,6 +898,9 @@ void ClientInit_misc(entity this)
 	// z411 send full hostname
 	WriteString(channel, (autocvar_hostname_full != "" ? autocvar_hostname_full : autocvar_hostname));
 	WriteString(channel, autocvar_sv_motd_permanent);
+	
+	// z411 send client countdown type
+	WriteByte(channel, autocvar_sv_timer_countdown);
 }
 
 void ClientInit_CheckUpdate(entity this)

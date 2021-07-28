@@ -5,7 +5,7 @@
 
 // Timer (#5)
 float last_timeleft;
-bool autocvar_hud_panel_timer_count = true;
+int autocvar_cl_timer_countdown = 3; // 0 = disabled, 1 = always on, 2 = only spec, 3 = as dictated by server
 
 void HUD_Timer_Export(int fh)
 {
@@ -49,9 +49,18 @@ void HUD_Timer()
 	timeleft = ceil(timeleft);
 
 	// countdown sound
-	if(autocvar_hud_panel_timer_count && timeleft > 0 && timeleft != last_timeleft && timeleft <= 10)
+	// if 3 use server dictated option, otherwise the client's
+	int countdown_type;
+	if(autocvar_cl_timer_countdown == 3)
+		countdown_type = sv_timer_countdown;
+	else
+		countdown_type = autocvar_cl_timer_countdown;
+	
+	if(countdown_type && !warmup_stage && timeleft > 0 && timeleft != last_timeleft && timeleft <= 10)
 	{
-		sound(NULL, CH_INFO, SND_ENDCOUNT, VOL_BASE, ATTN_NONE);
+		if(countdown_type == 1 || (countdown_type == 2 && spectatee_status))
+			sound(NULL, CH_INFO, SND_ENDCOUNT, VOL_BASE, ATTN_NONE);
+		
 		last_timeleft = timeleft;
 	}
 

@@ -1063,6 +1063,8 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	
 	strcpy(hostname_full, ReadString());
 	strcpy(motd_permanent, ReadString());
+	
+	sv_timer_countdown = ReadByte();
 
 	return = true;
 
