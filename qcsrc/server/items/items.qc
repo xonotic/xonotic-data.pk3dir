@@ -63,8 +63,8 @@ bool ItemSend(entity this, entity to, int sf)
 			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now");
 
 		WriteString(MSG_ENTITY, this.mdl);
+		WriteByte(MSG_ENTITY, bound(0, this.skin, 255));
 	}
-
 
 	if(sf & ISF_COLORMAP)
 	{
@@ -579,22 +579,42 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.strength_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Strength, player, max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time) + item.strength_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.strength_finished;
+		else
+			t = max(t, time + item.strength_finished);
+		StatusEffects_apply(STATUSEFFECT_Strength, player, t, 0);
 	}
 	if (item.invincible_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Shield, player, max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time) + item.invincible_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.invincible_finished;
+		else
+			t = max(t, time + item.invincible_finished);
+		StatusEffects_apply(STATUSEFFECT_Shield, player, t, 0);
 	}
 	if (item.speed_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Speed, player, max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time) + item.speed_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.speed_finished;
+		else
+			t = max(t, time + item.speed_finished);
+		StatusEffects_apply(STATUSEFFECT_Speed, player, t, 0);
 	}
 	if (item.invisibility_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Invisibility, player, max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time) + item.invisibility_finished, 0);
+		float t = max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time);
+		if (autocvar_g_powerups_stack)
+			t += item.invisibility_finished;
+		else
+			t = max(t, time + item.invisibility_finished);
+		StatusEffects_apply(STATUSEFFECT_Invisibility, player, t, 0);
 	}
 	if (item.superweapons_finished)
 	{
@@ -1098,6 +1118,10 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	settouch(this, Item_Touch);
 	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
+
+	// support skinned models for powerups
+	this.skin = def.m_skin;
+	this.glowmod = def.m_color;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
