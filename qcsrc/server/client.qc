@@ -6,6 +6,7 @@
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/lms/sv_lms.qh>
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
@@ -590,9 +591,13 @@ void PutPlayerInServer(entity this)
 
 	PS(this).dual_weapons = '0 0 0';
 
+	if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
+		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0);
+
 	this.items = start_items;
 
-	this.spawnshieldtime = time + autocvar_g_spawnshieldtime;
+	float shieldtime = time + autocvar_g_spawnshieldtime;
+
 	this.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 	this.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 	this.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -600,11 +605,13 @@ void PutPlayerInServer(entity this)
 	if (!sv_ready_restart_after_countdown && time < game_starttime)
 	{
 		float f = game_starttime - time;
-		this.spawnshieldtime += f;
+		shieldtime += f;
 		this.pauserotarmor_finished += f;
 		this.pauserothealth_finished += f;
 		this.pauseregen_finished += f;
 	}
+
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, shieldtime, 0);
 
 	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
@@ -1037,10 +1044,6 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
@@ -1073,8 +1076,6 @@ string getwelcomemessage(entity this)
 	}
 	return s;
 }
-
-bool autocvar_sv_qcphysics = true; // TODO this is for testing - remove when qcphysics work
 
 /**
 =============
@@ -1445,14 +1446,12 @@ void play_countdown(entity this, float finished, Sound samp)
 
 void player_powerups_remove_all(entity this)
 {
-	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	if (this.items & IT_SUPERWEAPON)
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
 		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
 		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-		this.items &= ~ITEM_Strength.m_itemid;
-		this.items &= ~ITEM_Shield.m_itemid;
 		this.items -= (this.items & IT_SUPERWEAPON);
 	}
 }
@@ -1464,7 +1463,7 @@ void player_powerups(entity this)
 	else
 		this.modelflags &= ~MF_ROCKET;
 
-	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_NODEPTHTEST);
+	this.effects &= ~EF_NODEPTHTEST;
 
 	if (IS_DEAD(this))
 		player_powerups_remove_all(this);
@@ -1477,48 +1476,7 @@ void player_powerups(entity this)
 
 	if (!MUTATOR_IS_ENABLED(mutator_instagib))
 	{
-		if (this.items & ITEM_Strength.m_itemid)
-		{
-			play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Strength, this), SND_POWEROFF);
-			this.effects = this.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > StatusEffects_gettime(STATUSEFFECT_Strength, this))
-			{
-				this.items = this.items - (this.items & ITEM_Strength.m_itemid);
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_STRENGTH, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
-			}
-		}
-		else
-		{
-			if (time < StatusEffects_gettime(STATUSEFFECT_Strength, this))
-			{
-				this.items = this.items | ITEM_Strength.m_itemid;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_STRENGTH);
-			}
-		}
-		if (this.items & ITEM_Shield.m_itemid)
-		{
-			play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Shield, this), SND_POWEROFF);
-			this.effects = this.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > StatusEffects_gettime(STATUSEFFECT_Shield, this))
-			{
-				this.items = this.items - (this.items & ITEM_Shield.m_itemid);
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_SHIELD, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
-			}
-		}
-		else
-		{
-			if (time < StatusEffects_gettime(STATUSEFFECT_Shield, this))
-			{
-				this.items = this.items | ITEM_Shield.m_itemid;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_SHIELD);
-			}
-		}
+		// NOTE: superweapons are a special case and as such are handled here instead of the status effects system
 		if (this.items & IT_SUPERWEAPON)
 		{
 			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
@@ -1574,10 +1532,6 @@ void player_powerups(entity this)
 
 	if(autocvar_g_fullbrightplayers)
 		this.effects = this.effects | EF_FULLBRIGHT;
-
-	if (time >= game_starttime)
-	if (time < this.spawnshieldtime)
-		this.effects = this.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups, this, items_prev);
 }
@@ -2725,6 +2679,7 @@ void PlayerPostThink (entity this)
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					if (this.caplayer)
 						this.caplayer = 0;
+					this.lms_spectate_warning = 2; // TODO: mutator hook for players forcibly moved to spectator?
 					PutObserverInServer(this);
 				}
 				else

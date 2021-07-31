@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-06 07:23+0200\n"
-"PO-Revision-Date: 2021-06-15 02:07+0000\n"
-"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>\n"
+"POT-Creation-Date: 2021-06-27 07:23+0200\n"
+"PO-Revision-Date: 2021-06-27 05:24+0000\n"
+"Last-Translator: Ḷḷumex03\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -165,7 +165,7 @@ msgstr "Preparase"
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sPrimi ^3%s%s namás que puedas"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -406,7 +406,7 @@ msgstr "Vista en 3ᵉʳ persona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "Igualar los modelos de los xugadores"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^Names above players"
@@ -861,7 +861,7 @@ msgstr "Tiempu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Total time raced (Race/CTS)"
-msgstr "El tiempu total en carrerra"
+msgstr "El tiempu total en carrera"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:358
 msgid ""
@@ -1002,7 +1002,7 @@ msgstr "^7Mapa: ^2%s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2071
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Récor de velocidá: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2075
 #, c-format
@@ -1173,15 +1173,15 @@ msgstr ""
 msgid "Requesting preview..."
 msgstr "Solicitando la previsualización..."
 
-#: qcsrc/client/view.qc:959
+#: qcsrc/client/view.qc:892
 msgid "Nade timer"
 msgstr ""
 
-#: qcsrc/client/view.qc:964
+#: qcsrc/client/view.qc:897
 msgid "Capture progress"
-msgstr ""
+msgstr "Progresu de la captura"
 
-#: qcsrc/client/view.qc:969
+#: qcsrc/client/view.qc:902
 msgid "Revival progress"
 msgstr "Progresu de la resurreición"
 
@@ -1261,7 +1261,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
-msgstr ""
+msgstr "Carrera CE"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race for fastest time."
@@ -1480,14 +1480,6 @@ msgstr ""
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
 msgstr ""
-
-#: qcsrc/common/items/item/powerup.qh:47 qcsrc/common/items/item/powerup.qh:50
-msgid "Strength"
-msgstr "Fuercia"
-
-#: qcsrc/common/items/item/powerup.qh:87 qcsrc/common/items/item/powerup.qh:90
-msgid "Shield"
-msgstr "Escudu"
 
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
@@ -1761,6 +1753,10 @@ msgstr "Araña"
 msgid "Spider attack"
 msgstr ""
 
+#: qcsrc/common/monsters/monster/spider.qh:39
+msgid "Webbed"
+msgstr ""
+
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
@@ -1775,7 +1771,7 @@ msgstr ""
 msgid "Zombie"
 msgstr "Zombi"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:16
+#: qcsrc/common/mutators/mutator/buffs/all.inc:14
 msgid "Ammo"
 msgstr "Munición"
 
@@ -1783,63 +1779,57 @@ msgstr "Munición"
 msgid "Resistance"
 msgstr "Resistencia"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:34
-#: qcsrc/common/mutators/mutator/instagib/items.qh:130
-#: qcsrc/common/mutators/mutator/instagib/items.qh:133
-msgid "Speed"
-msgstr "Velocidá"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:44
+#: qcsrc/common/mutators/mutator/buffs/all.inc:36
 msgid "Medic"
 msgstr "Melecina"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:54
+#: qcsrc/common/mutators/mutator/buffs/all.inc:48
 msgid "Bash"
 msgstr "Golpetazu"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:63
+#: qcsrc/common/mutators/mutator/buffs/all.inc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:71
+#: qcsrc/common/mutators/mutator/buffs/all.inc:69
 msgid "Disability"
 msgstr "Invalidez"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:79
+#: qcsrc/common/mutators/mutator/buffs/all.inc:83
+msgid "Disabled"
+msgstr "Deshabilitáu"
+
+#: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
 msgstr "Venganza"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:87
+#: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Jump"
 msgstr "Saltu"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:96
-msgid "Invisible"
-msgstr "Invisibilidá"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:105
+#: qcsrc/common/mutators/mutator/buffs/all.inc:115
 msgid "Inferno"
 msgstr "Infiernu"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:113
+#: qcsrc/common/mutators/mutator/buffs/all.inc:125
 msgid "Swapper"
 msgstr "Intercambéu"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:121
+#: qcsrc/common/mutators/mutator/buffs/all.inc:135
 msgid "Magnet"
 msgstr "Imán"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:129
+#: qcsrc/common/mutators/mutator/buffs/all.inc:145
 msgid "Luck"
 msgstr "Suerte"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:137
+#: qcsrc/common/mutators/mutator/buffs/all.inc:155
 msgid "Flight"
 msgstr "Vuelu"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
 msgid "Buff"
 msgstr ""
 
@@ -1881,11 +1871,6 @@ msgstr "Munición pa Vaporiador"
 msgid "Extra life"
 msgstr "Vida adicional"
 
-#: qcsrc/common/mutators/mutator/instagib/items.qh:93
-#: qcsrc/common/mutators/mutator/instagib/items.qh:96
-msgid "Invisibility"
-msgstr "Invisibilidá"
-
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
 msgstr "Granada de napalm"
@@ -1916,7 +1901,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr ""
+msgstr "Granada de velu"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -1941,6 +1926,42 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
 msgstr "Escopeta desaxerada"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:37
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:40
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:56
+msgid "Invisibility"
+msgstr "Invisibilidá"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:36
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:39
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:54
+msgid "Shield"
+msgstr "Escudu"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:58
+msgid "Speed"
+msgstr "Velocidá"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:55
+msgid "Strength"
+msgstr "Fuercia"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
+msgid "Burning"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
+msgid "Spawn Shield"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
+msgid "Superweapons"
+msgstr "Superarmes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2105,7 +2126,7 @@ msgstr "¡El %s precisa ayuda!"
 
 #: qcsrc/common/net_notice.qc:90
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Avisos del sirvidor:"
 
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2996,7 +3017,7 @@ msgstr "^F3Espulsóse a ^BG%s^F3 por matar a compañeros munches vegaes"
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^F3Agora ^BG%s^F3 ye ^BG espectador"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3187,7 +3208,7 @@ msgstr "^BG%s%s^K1 averóse muncho a un orbe del Electro de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 xugó coles boles del Electro%s%s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
@@ -3212,7 +3233,7 @@ msgstr "^BG%s^K1 debió usar una arma más pequeña%s%s"
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 escaeció ónde punxo les mines%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
@@ -3415,7 +3436,7 @@ msgstr "^BG%s%s^K1 golpió a ^BG%s^K1 con una Escopeta%s%s"
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s"
-msgstr ""
+msgstr "^K1Agora ^BG%s^K1 quedó pensando colos portales%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3727,7 +3748,7 @@ msgstr "^K1¡Morri, camperu!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Reconsider your tactics, camper!"
-msgstr ""
+msgstr "^K1¡Piensa n'otra táctica, camperu!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^K1You unfairly eliminated yourself!"
@@ -3752,7 +3773,7 @@ msgstr "^K1¡Teníes un pocoñín de calor!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1¡Quedesti un pocoñín turráu!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
@@ -3808,7 +3829,7 @@ msgstr "^K1Morriesti por escosar la munición..."
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You grew too old without taking your medicine"
-msgstr ""
+msgstr "^K1Duresti muncho ensin tomar melecina"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You need to preserve your health"
@@ -5434,7 +5455,7 @@ msgstr "%dᵘ"
 msgid "No description"
 msgstr ""
 
-#: qcsrc/lib/spawnfunc.qh:250
+#: qcsrc/lib/spawnfunc.qh:252
 #, c-format
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
@@ -5938,11 +5959,11 @@ msgstr "Desactivar"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr ""
+msgstr "Al ser espectador"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Al tar tamién nun calentamientu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -6629,7 +6650,7 @@ msgstr "4 equipos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:117
 msgid "Player slots:"
-msgstr ""
+msgstr "Güecos pa xugadores:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid ""
@@ -6814,7 +6835,7 @@ msgstr "NIX"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
 msgid "Rocket Flying"
-msgstr ""
+msgstr "Vuelu con cohetes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:67
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
@@ -7098,10 +7119,10 @@ msgstr "Amuesa más información tocante al sirvidor rescampláu"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:97
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
 msgid "Join!"
-msgstr "¡Xunise!"
+msgstr "Xunise"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 msgid "MOD^Default"
 msgstr "Por defeutu"
 
@@ -7193,7 +7214,7 @@ msgstr "Robós:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:229
 msgid "Free slots:"
-msgstr ""
+msgstr "Güecos llibres"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:235
 msgid "Encryption:"
@@ -7247,7 +7268,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr "¿De xuru que desees desconectate agora?"
+msgstr "¿De xuru que quies desconectate agora?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -8386,7 +8407,7 @@ msgstr "Pa que l'editor de la interfaz s'amuese, has tar nuna partida primero."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "¿Desees aniciar la partida llocal pa configurar la interfaz?"
+msgstr "¿Quies entamar una partida llocal pa configurar la interfaz?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
@@ -8542,7 +8563,7 @@ msgid "GHOITEMS^Blue"
 msgstr "Azul"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
-#: qcsrc/menu/xonotic/serverlist.qc:750
+#: qcsrc/menu/xonotic/serverlist.qc:752
 msgid "Players"
 msgstr "Xugadores"
 
@@ -8726,7 +8747,7 @@ msgstr "Usar la llista de prioridá pal cambéu d'arma"
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
-msgstr "Fai usu de la llista d'al llau al cambiar d'arma cola rueda del mur"
+msgstr "Usa la llista d'al llau al cambiar d'arma cola rueda del mur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
 msgid "Cycle through only usable weapon selections"
@@ -8748,7 +8769,7 @@ msgstr "Soltar los botones d'ataque al cambiar d'arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr ""
+msgstr "Dibuxar el modelu de les armes en 1ᵉʳ persona"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
@@ -8762,7 +8783,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr "Opacidá de los modelos de les armes:"
+msgstr "Opacidá de los modelos:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -9326,8 +9347,8 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
-"Fai usu de los oxetos del búfer de vértices p'atroxar la xeometría estática "
-"na memoria de videu y renderizar más rápido"
+"Usa los oxetos del búfer de vértices p'atroxar la xeometría estática na "
+"memoria de videu y renderizar más rápido"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:115
 msgid "Vertices"
@@ -9729,91 +9750,91 @@ msgid ""
 msgstr ""
 "Amiesta'l sirvidor rescampláu a Favoritos p'atopalu más rápido nel futuru"
 
-#: qcsrc/menu/xonotic/serverlist.qc:746
+#: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.qc:747
+#: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Hostname"
 msgstr "Nome d'agospiador"
 
-#: qcsrc/menu/xonotic/serverlist.qc:748
+#: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Map"
 msgstr "Mapa"
 
-#: qcsrc/menu/xonotic/serverlist.qc:749
+#: qcsrc/menu/xonotic/serverlist.qc:751
 msgid "Type"
 msgstr "Tipu"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 #, c-format
 msgid "AES level %d"
 msgstr "nivel d'AES %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
 msgstr "nengún"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
 msgstr "cifráu:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 #, c-format
 msgid "mod: %s"
 msgstr "mod: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "modified settings"
 msgstr "axustes modificaos"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "official settings"
 msgstr "axustes oficiales"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
 msgstr "estadístiques desactivaes"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
 msgstr "estadístiques activaes"
 
-#: qcsrc/menu/xonotic/serverlist.qh:155
+#: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
 msgstr "Sirvidores favoritos"
 
-#: qcsrc/menu/xonotic/serverlist.qh:156
+#: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
 msgstr "Sirvidores aconseyaos"
 
-#: qcsrc/menu/xonotic/serverlist.qh:157
+#: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Normal Servers"
 msgstr "Sirvidores normales"
 
-#: qcsrc/menu/xonotic/serverlist.qh:158
+#: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Servers"
 msgstr "Sirvidores"
 
-#: qcsrc/menu/xonotic/serverlist.qh:159
+#: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Competitive Mode"
 msgstr "Mou competitivu"
 
-#: qcsrc/menu/xonotic/serverlist.qh:160
+#: qcsrc/menu/xonotic/serverlist.qh:161
 msgid "SLCAT^Modified Servers"
 msgstr "Sirvidores modificaos"
 
-#: qcsrc/menu/xonotic/serverlist.qh:161
+#: qcsrc/menu/xonotic/serverlist.qh:162
 msgid "SLCAT^Overkill"
 msgstr "Mou desaxeráu"
 
-#: qcsrc/menu/xonotic/serverlist.qh:162
+#: qcsrc/menu/xonotic/serverlist.qh:163
 msgid "SLCAT^InstaGib"
 msgstr "InstaGib"
 
-#: qcsrc/menu/xonotic/serverlist.qh:163
+#: qcsrc/menu/xonotic/serverlist.qh:164
 msgid "SLCAT^Defrag Mode"
 msgstr ""
 

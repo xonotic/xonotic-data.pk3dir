@@ -265,6 +265,7 @@ bool racer_frame(entity this, float dt)
 		}
 
 #ifdef SVQC
+		// TODO: move these to the client side where they belong
 		// NOTE: reusing .invincible_finished here as delay counter for the smoke effect
 		if(vehic.invincible_finished < time)
 		{

@@ -4,6 +4,7 @@
 #include <common/util.qh>
 
 #ifdef GAMEQC
+#include <common/items/item.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
 
@@ -12,13 +13,14 @@ REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
 
-#define REGISTER_BUFF(id) \
-    REGISTER(StatusEffect, BUFF_##id, m_id, NEW(Buff))
+#define REGISTER_BUFF(id, inst) \
+    REGISTER(StatusEffect, BUFF_##id, m_id, inst)
 
 #include <common/mutators/mutator/status_effects/_mod.qh>
 CLASS(Buff, StatusEffects)
-	/** bit index */
-	ATTRIB(Buff, m_itemid, int, 0);
+#ifdef GAMEQC
+	ATTRIB(Buff, m_itemid, int, IT_BUFF);
+#endif
 	ATTRIB(Buff, netname, string, "buff");
 	ATTRIB(Buff, m_icon, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
@@ -37,7 +39,6 @@ ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
 	FOREACH(StatusEffect, it.instanceOfBuff, {
-		it.m_itemid = BIT(it.m_id - 1);
 		it.m_sprite = strzone(strcat("buff-", it.netname));
 	});
 }

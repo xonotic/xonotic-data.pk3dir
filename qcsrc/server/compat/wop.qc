@@ -1,12 +1,12 @@
 #include "wop.qh"
 
 #include <common/stats.qh>
-#include <common/weapons/_all.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <server/items/spawning.qh>
 
-spawnfunc(item_haste);
-spawnfunc(item_invis);
+spawnfunc(item_speed);
+spawnfunc(item_invisibility);
 
 //***********************
 //WORLD OF PADMAN ENTITIES - So people can play wop maps with the xonotic weapons
@@ -35,8 +35,8 @@ SPAWNFUNC_ITEM(ammo_imperius, ITEM_Cells)
 
 SPAWNFUNC_ITEM(item_padpower, ITEM_Strength)
 SPAWNFUNC_ITEM(item_climber, ITEM_Shield)
-spawnfunc(item_speedy)		{ spawnfunc_item_haste(this);			}
-spawnfunc(item_visionless)	{ spawnfunc_item_invis(this);			}
+spawnfunc(item_speedy)		{ spawnfunc_item_speed(this);			}
+spawnfunc(item_visionless)	{ spawnfunc_item_invisibility(this);			}
 SPAWNFUNC_ITEM(item_armor_padshield, ITEM_ArmorMega)
 
 SPAWNFUNC_ITEM(holdable_floater, ITEM_Jetpack)

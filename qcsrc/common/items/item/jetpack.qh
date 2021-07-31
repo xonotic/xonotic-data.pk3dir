@@ -5,7 +5,7 @@
 #endif
 
 #include "ammo.qh"
-#include "powerup.qh"
+#include <common/mutators/mutator/powerups/_mod.qh>
 
 #ifndef SVQC
 .int m_itemid;
@@ -27,7 +27,7 @@ void powerup_jetpack_init(Pickup this, entity item)
 CLASS(Jetpack, Powerup)
 ENDCLASS(Jetpack)
 
-REGISTER_ITEM(Jetpack, Powerup) {
+REGISTER_ITEM(Jetpack, Jetpack) {
     this.m_canonical_spawnfunc = "item_jetpack";
 #ifdef GAMEQC
 	this.spawnflags = ITEM_FLAG_NORMAL;
