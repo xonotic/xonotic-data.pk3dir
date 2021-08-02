@@ -143,7 +143,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	if(yoda && flying) {
 		if(charge == 1) // play additional sound if we hit in the air with maximum damage
-			sound(NULL, CH_INFO, SND_MIDAIR, VOL_BASE, ATTN_NONE);
+			sound(actor, CH_INFO, SND_MIDAIR, VOL_BASE, ATTN_NONE);
 		
 		Give_Medal(actor, YODA);
 	}
