@@ -10,6 +10,7 @@ int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
+bool autocvar_g_lms_forcejoin;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -267,11 +268,12 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	}
 }
 
-// FIXME LMS doesn't allow clients to spectate due to its particular implementation
+// LMS doesn't allow clients to spectate due to its particular implementation
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
-	if(autocvar_g_campaign)
+	if(autocvar_g_campaign || !autocvar_g_lms_forcejoin)
 		return false;
+
 	return true;
 }
 
