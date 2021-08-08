@@ -466,6 +466,7 @@ void cvar_changes_init()
 		BADCVAR("g_rocket_flying_disabledelays");
 		BADPREFIX("g_spawnshield");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_lms_extra_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
@@ -2117,6 +2118,9 @@ void readlevelcvars()
 
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
+
+	if (GetGametype() == "lms")
+		game_starttime += cvar("g_lms_extra_start_delay");
 
 	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
 
