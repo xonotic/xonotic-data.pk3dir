@@ -450,6 +450,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
 	bool override = false;
+	override |= HUD_Scoreboard_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
+
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
 	if (override)
 		return true;

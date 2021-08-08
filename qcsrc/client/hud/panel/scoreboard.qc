@@ -165,6 +165,221 @@ string Label_getInfo(string label, int mode)
 	}
 	return label;
 }
+int rankings_start_column;
+int rankings_rows = 0;
+int rankings_columns = 0;
+int rankings_cnt = 0;
+float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	string s;
+
+	if(bInputType == 3)
+	{
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
+		return true;
+	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(scoreboard_ui_enabled)
+	{
+		// ESC to exit (TAB-ESC works too)
+		if(nPrimary == K_ESCAPE)
+		{
+			if (!key_pressed)
+				return true;
+			scoreboard_showscores = false;
+			scoreboard_ui_enabled = false;
+			scoreboard_selected_panel = 0;
+			scoreboard_selected_player = NULL;
+			return true;
+		}
+	}
+	else //if(!scoreboard_ui_enabled)
+	{
+		// TAB-ESC to enter
+		if(nPrimary == K_ESCAPE && (hudShiftState & S_TAB))
+		{
+			if (!key_pressed)
+				return true;
+
+			scoreboard_ui_enabled = true;
+			scoreboard_selected_panel = SB_PANEL_SCOREBOARD;
+			scoreboard_selected_panel_time = time;
+		}
+	}
+
+	// block any input while a menu dialog is fading
+	if(autocvar__menu_alpha)
+	{
+		hudShiftState = 0;
+		return true;
+	}
+
+	// allow console bind to work
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+
+	bool hit_con_bind = false;
+	int i;
+	for (i = 0; i < keys; ++i)
+	{
+		if(nPrimary == stof(argv(i)))
+			hit_con_bind = true;
+	}
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+	}
+
+	if(!scoreboard_ui_enabled)
+		return false;
+
+	if(nPrimary == K_TAB)
+	{
+		if (!key_pressed)
+			return true;
+		++scoreboard_selected_panel;
+		if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
+			++scoreboard_selected_panel;
+		if (scoreboard_selected_panel >= SB_PANEL_MAX)
+			scoreboard_selected_panel = 1;
+
+		scoreboard_selected_panel_time = time;
+	}
+	else if(nPrimary == K_DOWNARROW)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			entity pl, tm;
+			entity curr_pl = NULL;
+			bool scoreboard_selected_player_found = false;
+			if (!scoreboard_selected_player)
+				scoreboard_selected_player_found = true;
+
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+			{
+				if(tm.team != NUM_SPECTATOR)
+				for(pl = players.sort_next; pl; pl = pl.sort_next)
+				{
+					if(pl.team != tm.team)
+						continue;
+					curr_pl = pl;
+					if (scoreboard_selected_player_found)
+						goto ok_done;
+					if (scoreboard_selected_player == pl)
+						scoreboard_selected_player_found = true;
+				}
+			}
+			LABEL(ok_done);
+			if (curr_pl == scoreboard_selected_player) // loop reached the last player
+				curr_pl = NULL;
+			scoreboard_selected_player = curr_pl;
+		}
+	}
+	else if(nPrimary == K_UPARROW)
+	{
+		if (!key_pressed)
+			return true;
+		entity prev_pl = NULL;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			entity pl, tm;
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+			{
+				if(tm.team != NUM_SPECTATOR)
+				for(pl = players.sort_next; pl; pl = pl.sort_next)
+				{
+					if(pl.team != tm.team)
+						continue;
+					if (pl == scoreboard_selected_player)
+						goto ok_done2;
+					prev_pl = pl;
+				}
+			}
+			LABEL(ok_done2);
+			scoreboard_selected_player = prev_pl;
+		}
+	}
+	else if(nPrimary == K_RIGHTARROW)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
+			rankings_start_column = min(rankings_start_column + 1, (ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns));
+	}
+	else if(nPrimary == K_LEFTARROW)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
+			rankings_start_column = max(rankings_start_column - 1, 0);
+	}
+	else if(nPrimary == K_ENTER || nPrimary == K_SPACE || nPrimary == K_KP_ENTER)
+	{
+		if (bInputType == 1)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (!scoreboard_selected_player || (hudShiftState & S_SHIFT))
+			{
+				localcmd("join\n");
+				scoreboard_ui_enabled = false;
+				scoreboard_showscores = false;
+				scoreboard_selected_panel = 0;
+				scoreboard_selected_player = NULL;
+			}
+			else
+				localcmd(sprintf("spectate %d", scoreboard_selected_player.sv_entnum + 1));
+		}
+	}
+	else if(nPrimary == 't' && (hudShiftState & S_CTRL))
+	{
+		if (bInputType == 1)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_selected_player)
+			{
+				localcmd(sprintf("commandmode tell \"%s^7\"", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+				scoreboard_ui_enabled = false;
+				scoreboard_showscores = false;
+				scoreboard_selected_panel = 0;
+				scoreboard_selected_player = NULL;
+			}
+		}
+	}
+	else if(nPrimary == 'k' && (hudShiftState & S_CTRL))
+	{
+		if (bInputType == 1)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_selected_player)
+				localcmd(sprintf("vcall kick \"%s^7\"", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+		}
+	}
+	else if(hit_con_bind || nPrimary == K_PAUSE)
+		return false;
+
+	return true;
+}
 
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
@@ -898,7 +1113,12 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	vector h_pos = item_pos;
 	vector h_size = vec2(panel_size.x, hud_fontsize.y * 1.25);
 	// alternated rows highlighting
-	if(is_self)
+	if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+	{
+		if (pl == scoreboard_selected_player)
+			drawfill(h_pos, h_size, rgb, 0.44, DRAWFLAG_NORMAL);
+	}
+	else if(is_self)
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
 	else if((sbt_highlight) && (!(pl_number % 2)))
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
@@ -1067,6 +1287,16 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			}
 		}
 
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (pl == scoreboard_selected_player)
+			{
+				h_size.x = column_width + hud_fontsize.x * 0.25;
+				h_size.y = hud_fontsize.y;
+				drawfill(pos - hud_fontsize.x * 0.25 * eX, h_size, rgb, 0.44, DRAWFLAG_NORMAL);
+			}
+		}
+
 		vector name_pos = pos;
 		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 			name_pos.x += max(fieldsize, min_fieldsize) + 2 * fieldpadding + hud_fontsize.x * 0.25;
@@ -1121,6 +1351,12 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_pos = pos;
 	panel_size.y = 1.25 * hud_fontsize.y * (1 + bound(1, tm.team_size, max_players));
 	panel_size.y += panel_bg_padding * 2;
+
+	vector scoreboard_selected_hl_pos = pos;
+	vector scoreboard_selected_hl_size = '0 0 0';
+	scoreboard_selected_hl_size.x = scoreboard_right - scoreboard_left;
+	scoreboard_selected_hl_size.y = panel_size.y;
+
 	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
@@ -1180,6 +1416,12 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 			self_shown = true;
 		pos.y += 1.25 * hud_fontsize.y;
 		++i;
+	}
+
+	if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+	{
+		float fade = max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
+		drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '1 1 1', fade * 0.3, DRAWFLAG_NORMAL);
 	}
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
@@ -1564,9 +1806,6 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	return end_pos;
 }
 
-int rankings_rows = 0;
-int rankings_columns = 0;
-int rankings_cnt = 0;
 vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector rgb, vector bg_size)
 {
 	int i;
@@ -1580,10 +1819,16 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	vector hl_rgb = rgb + '0.5 0.5 0.5';
 
+	vector scoreboard_selected_hl_pos = pos;
+
 	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
+
+	vector scoreboard_selected_hl_size = '0 0 0';
+	scoreboard_selected_hl_size.x = scoreboard_right - scoreboard_left;
+	scoreboard_selected_hl_size.y = pos.y - scoreboard_selected_hl_pos.y;
 
 	panel_pos = pos;
 
@@ -1619,6 +1864,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	panel_size.y = rankings_rows * 1.25 * hud_fontsize.y;
 	panel_size.y += panel_bg_padding * 2;
+	scoreboard_selected_hl_size.y += panel_size.y;
 
 	HUD_Panel_DrawBg();
 
@@ -1641,8 +1887,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	string str = "";
 	int column = 0, j = 0;
 	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
-	int start_column = bound(0, floor((time - 1 - scoreboard_time) / 3), (ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns));
-	int start_item = start_column * rankings_rows;
+	int start_item = rankings_start_column * rankings_rows;
 	for(i = start_item; i < start_item + rankings_cnt; ++i)
 	{
 		int t = grecordtime[i];
@@ -1651,7 +1896,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 		if(strdecolorize(grecordholder[i]) == zoned_name_self)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
-		else if(!((j + start_column + column) & 1) && sbt_highlight)
+		else if(!((j + rankings_start_column + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
@@ -1673,6 +1918,12 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 		}
 	}
 	strfree(zoned_name_self);
+
+	if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
+	{
+		float fade = max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
+		drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '1 1 1', fade * 0.44, DRAWFLAG_NORMAL);
+	}
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
