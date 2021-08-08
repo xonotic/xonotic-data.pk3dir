@@ -229,6 +229,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
 
+	this.skin = ReadByte();
+
         setsize(this, '-16 -16 0', '16 16 48');
     }
 

@@ -414,11 +414,40 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 	if(!this && !oth)
 		return;
 
+	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
+	bool save_trace_allsolid = trace_allsolid;
+	bool save_trace_startsolid = trace_startsolid;
+	float save_trace_fraction = trace_fraction;
+	bool save_trace_inwater = trace_inwater;
+	bool save_trace_inopen = trace_inopen;
+	vector save_trace_endpos = trace_endpos;
+	vector save_trace_plane_normal = trace_plane_normal;
+	float save_trace_plane_dist = trace_plane_dist;
+	entity save_trace_ent = trace_ent;
+	int save_trace_dpstartcontents = trace_dpstartcontents;
+	int save_trace_dphitcontents = trace_dphitcontents;
+	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
+	string save_trace_dphittexturename = trace_dphittexturename;
+
 	if(this.solid != SOLID_NOT && gettouch(this))
 		gettouch(this)(this, oth);
 
 	if(oth.solid != SOLID_NOT && gettouch(oth))
 		gettouch(oth)(oth, this);
+
+	trace_allsolid = save_trace_allsolid;
+	trace_startsolid = save_trace_startsolid;
+	trace_fraction = save_trace_fraction;
+	trace_inwater = save_trace_inwater;
+	trace_inopen = save_trace_inopen;
+	trace_endpos = save_trace_endpos;
+	trace_plane_normal = save_trace_plane_normal;
+	trace_plane_dist = save_trace_plane_dist;
+	trace_ent = save_trace_ent;
+	trace_dpstartcontents = save_trace_dpstartcontents;
+	trace_dphitcontents = save_trace_dphitcontents;
+	trace_dphitq3surfaceflags = save_trace_dphitq3surfaceflags;
+	trace_dphittexturename = save_trace_dphittexturename;
 }
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
@@ -636,7 +665,7 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 	}
 }
 
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVelocity
+vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // ClipVelocity
 {
 	vel -= ((vel * norm) * norm) * f;
 
@@ -725,9 +754,6 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
-			if(wasfreed(this))
-				return;
-			_Movetype_LinkEdict(this, true);
 			break;
 		case MOVETYPE_PHYSICS:
 			break;
