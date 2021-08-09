@@ -815,7 +815,7 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 			//ent.owner = it.owner;
 			//ent.realowner = it.realowner;
 			//ent.team = ent.realowner.team;
-			FOREACH_CLIENT(!IS_OBSERVER(it.realowner), ent.team = it.team;);
+			//FOREACH_CLIENT(!IS_OBSERVER(it.realowner), ent.team = it.team;);
 			ent.noalign = true; // don't drop to floor
 			//ent.angles = '0 0 0';
 			//ent.gravity = 1;
