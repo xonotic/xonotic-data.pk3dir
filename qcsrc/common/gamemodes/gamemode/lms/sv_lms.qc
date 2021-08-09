@@ -272,7 +272,15 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
 	if(autocvar_g_campaign || !autocvar_g_lms_forcejoin)
+	{
+		if ((IS_OBSERVER(player) && player.spectated == false) || 
+		(IS_SPEC(player) && player.spectated == false))
+		{
+			GameRules_scoring_add(player, LMS_LIVES, -LMS_NewPlayerLives());
+			player.spectated = true;
+		}
 		return false;
+	}
 
 	return true;
 }
@@ -442,6 +450,19 @@ MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 {
+		entity player = M_ARGV(0, entity);
+
+	if (!autocvar_g_lms_forcejoin)
+	{
+		if(player.spectated == true)
+		{
+			if(!IS_DEAD(player))
+			{
+				GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
+				player.spectated = false;
+			}
+		}
+	}
 	return true;
 }
 

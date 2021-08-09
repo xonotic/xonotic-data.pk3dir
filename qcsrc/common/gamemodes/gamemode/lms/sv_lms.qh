@@ -34,3 +34,4 @@ REGISTER_MUTATOR(lms, false)
 // lives related defs
 int lms_lowest_lives;
 int LMS_NewPlayerLives();
+.bool spectated;
