@@ -271,6 +271,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 // LMS doesn't allow clients to spectate due to its particular implementation
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
+	entity player = M_ARGV(0, entity);
 	if(autocvar_g_campaign || !autocvar_g_lms_forcejoin)
 	{
 		if ((IS_OBSERVER(player) && player.spectated == false) || 
