@@ -273,7 +273,6 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
 	entity player = M_ARGV(0, entity);
-	
 	if(autocvar_g_campaign || !autocvar_g_lms_forcejoin)
 	{
 		player.canjoin = cannotjoin;
