@@ -132,7 +132,7 @@ void W_Electro_TouchExplode(entity this, entity toucher)
 }
 
 
-void sys_phys_update_single(entity this);
+//void sys_phys_update_single(entity this);
 
 void W_Electro_Bolt_Think(entity this)
 {
