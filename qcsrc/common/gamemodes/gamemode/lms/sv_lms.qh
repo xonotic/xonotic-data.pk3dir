@@ -35,3 +35,5 @@ REGISTER_MUTATOR(lms, false)
 int lms_lowest_lives;
 int LMS_NewPlayerLives();
 .bool spectated;
+.bool canjoin;
+.bool verifyjoin;
