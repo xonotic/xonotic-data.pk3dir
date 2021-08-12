@@ -239,12 +239,17 @@ void lms_RemovePlayer(entity player)
 
 void lms_CanJoin(entity player)
 {
-	if ((IS_OBSERVER(player) && !player.spectated) || 
-	(IS_SPEC(player) && !player.spectated))
+	if(!player.canjoin)
 	{
-		GameRules_scoring_add(player, LMS_LIVES, -LMS_NewPlayerLives());
-		player.spectated = true;
+		if ((IS_OBSERVER(player) && !player.spectated) || 
+		(IS_SPEC(player) && !player.spectated))
+		{
+			GameRules_scoring_add(player, LMS_LIVES, -LMS_NewPlayerLives());
+			player.spectated = true;
+		}
 	}
+	else
+		player.spectated = false;
 }
 
 void lms_GoingToSpectate(entity player)
