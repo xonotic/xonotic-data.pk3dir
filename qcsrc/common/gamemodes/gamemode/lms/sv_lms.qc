@@ -10,6 +10,8 @@ int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
+bool autocvar_g_lms_forcejoin;
+bool cannotjoin;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -235,6 +237,33 @@ void lms_RemovePlayer(entity player)
 	}
 }
 
+void lms_CanJoin(entity player)
+{
+	if(!player.canjoin)
+	{
+		if ((IS_OBSERVER(player) && !player.spectated) || 
+		(IS_SPEC(player) && !player.spectated))
+		{
+			GameRules_scoring_add(player, LMS_LIVES, -LMS_NewPlayerLives());
+			player.spectated = true;
+		}
+	}
+	else
+		player.spectated = false;
+}
+
+void lms_GoingToSpectate(entity player)
+{
+	if(player.spectated)
+	{
+		if(!IS_DEAD(player))
+		{
+			GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
+			player.spectated = false;
+		}
+	}
+}
+
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
@@ -267,11 +296,25 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	}
 }
 
-// FIXME LMS doesn't allow clients to spectate due to its particular implementation
+// LMS doesn't allow clients to spectate due to its particular implementation
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
-	if(autocvar_g_campaign)
+	entity player = M_ARGV(0, entity);
+	
+	if(autocvar_g_campaign || !autocvar_g_lms_forcejoin)
+	{
+		if (cvar("g_lms_extra_start_delay") > 0)
+		{
+			player.canjoin = cannotjoin;
+			if (!cannotjoin)
+				lms_CanJoin(player);
+		}
+		else
+			lms_CanJoin(player);
+		
 		return false;
+	}
+
 	return true;
 }
 
@@ -440,6 +483,37 @@ MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 {
+	entity player = M_ARGV(0, entity);
+
+	if (!autocvar_g_lms_forcejoin)
+	{
+		if (cvar("g_lms_extra_start_delay") > 0)
+		{
+			lms_GoingToSpectate(player);
+			if (!cannotjoin)
+			{
+				if (time >= cvar("g_lms_extra_start_delay") + 1)
+				{
+					GameRules_scoring_add(player, LMS_LIVES, -10);
+					cannotjoin = true;
+					player.canjoin = cannotjoin;
+					player.verifyjoin = true;
+				}
+			}
+			else
+			{
+				if (!player.verifyjoin)
+				if (!player.canjoin)
+				{
+					GameRules_scoring_add(player, LMS_LIVES, -10);
+					GameRules_scoring_add(player, LMS_LIVES, 10-LMS_NewPlayerLives()); // avoid negative value in the scoreboard after reducing total lives
+					player.verifyjoin = true;
+				}
+			}
+		}
+		else
+			lms_GoingToSpectate(player);
+	}
 	return true;
 }
 
