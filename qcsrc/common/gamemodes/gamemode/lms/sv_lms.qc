@@ -497,6 +497,7 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 					GameRules_scoring_add(player, LMS_LIVES, -10);
 					cannotjoin = true;
 					player.canjoin = cannotjoin;
+					player.verifyjoin = true;
 				}
 			}
 			else
