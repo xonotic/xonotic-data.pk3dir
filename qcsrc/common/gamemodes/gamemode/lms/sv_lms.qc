@@ -118,7 +118,6 @@ int WinningCondition_LMS()
 MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
 	lms_lowest_lives = 999;
-	lms_quitters = 0;
 }
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
@@ -262,6 +261,7 @@ void lms_RemovePlayer(entity player)
 		}
 		else
 		{
+			int min_forfeiter_rank = 665; // different from 666
 			FOREACH_CLIENT(true, {
 				// update rank of other players that were eliminated
 				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
@@ -269,6 +269,8 @@ void lms_RemovePlayer(entity player)
 					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
 					if (it_rank > player_rank && it_rank <= 256)
 						GameRules_scoring_add(it, LMS_RANK, -1);
+					if (it_rank > 256 && it_rank <= min_forfeiter_rank)
+						min_forfeiter_rank = it_rank - 1;
 				}
 				else if (it.frags != FRAGS_SPECTATOR)
 				{
@@ -277,12 +279,9 @@ void lms_RemovePlayer(entity player)
 						lms_lowest_lives = tl;
 				}
 			});
-			GameRules_scoring_add(player, LMS_RANK, 665 - lms_quitters); // different from 666
+			GameRules_scoring_add(player, LMS_RANK, min_forfeiter_rank);
 			if(!warmup_stage)
-			{
 				GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
-				++lms_quitters;
-			}
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			TRANSMUTE(Observer, player);
 		}

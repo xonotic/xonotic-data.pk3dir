@@ -9,8 +9,6 @@
 .int lms_spectate_warning;
 .int lmsplayer;
 
-int lms_quitters = 0;
-
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
 string autocvar_g_lms_weaponarena = "most_available";
 
