@@ -2643,14 +2643,29 @@ void PlayerPostThink (entity this)
 		int totalClients = 0;
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
+			// maxidle disabled in local matches by not counting clients (totalClients 0)
+			if (server_is_dedicated)
+			{
+				FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
+				{
+					++totalClients;
+				});
+			}
+		}
+		else if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
 				++totalClients;
 			});
 		}
 
-		if (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
-		{ /* do nothing */ }
+		if (totalClients <= 1
+			|| (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots))
+		{
+			CS(this).parm_idlesince = time;
+			/* do nothing */
+		}
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (CS(this).idlekick_lasttimeleft)
