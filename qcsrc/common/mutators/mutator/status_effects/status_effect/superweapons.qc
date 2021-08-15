@@ -1,5 +1,12 @@
 #include "superweapons.qh"
 
+#ifdef SVQC
+METHOD(Superweapons, m_persistent, bool(StatusEffects this, entity actor))
+{
+    return (actor.items & IT_UNLIMITED_SUPERWEAPONS);
+}
+#endif
+
 #ifdef CSQC
 METHOD(Superweapons, m_active, bool(StatusEffects this, entity actor))
 {
