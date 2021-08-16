@@ -65,7 +65,7 @@ MUTATOR_HOOKFUNCTION(status_effects, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
-	StatusEffects_removeall(frag_target, STATUSEFFECT_REMOVE_NORMAL);
+	StatusEffects_removeall(frag_target, STATUSEFFECT_REMOVE_CLEAR);
 }
 
 MUTATOR_HOOKFUNCTION(status_effects, MakePlayerObserver)
