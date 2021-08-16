@@ -302,6 +302,10 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
+	bool is_forced = M_ARGV(1, bool);
+	if (is_forced && player.caplayer)
+		player.caplayer = 0;
+
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate

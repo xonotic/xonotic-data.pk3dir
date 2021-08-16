@@ -310,6 +310,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
+	bool is_forced = M_ARGV(1, bool);
 
 	if (!IS_PLAYER(player))
 		return true;
@@ -321,8 +322,13 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 		TRANSMUTE(Observer, player);
 		player.lmsplayer = 0;
 	}
-	else if (!GameRules_scoring_add(player, LMS_RANK, 0))
-		lms_RemovePlayer(player);
+	else
+	{
+		if (is_forced)
+			player.lms_spectate_warning = 2;
+		if (!GameRules_scoring_add(player, LMS_RANK, 0))
+			lms_RemovePlayer(player);
+	}
 	return true;  // prevent team reset
 }
 
