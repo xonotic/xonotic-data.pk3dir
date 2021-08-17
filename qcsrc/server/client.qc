@@ -2650,6 +2650,8 @@ void PlayerPostThink (entity this)
 				{
 					++totalClients;
 				});
+				if (maxclients - totalClients > autocvar_sv_maxidle_slots)
+					totalClients = 0;
 			}
 		}
 		else if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
@@ -2660,8 +2662,7 @@ void PlayerPostThink (entity this)
 			});
 		}
 
-		if (totalClients <= 1
-			|| (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots))
+		if (totalClients <= 1)
 		{
 			CS(this).parm_idlesince = time;
 			/* do nothing */
