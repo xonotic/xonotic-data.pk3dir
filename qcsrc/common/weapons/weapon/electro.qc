@@ -295,6 +295,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
 	setsize(newproj, this.mins, this.maxs);
 	newproj.angles = vectoangles(-trace_plane_normal); // face against the surface
+	newproj.traileffectnum = _particleeffectnum(EFFECT_TR_NEXUIZPLASMA.eent_eff_name);
 
 	newproj.movedir = -trace_plane_normal;
 
