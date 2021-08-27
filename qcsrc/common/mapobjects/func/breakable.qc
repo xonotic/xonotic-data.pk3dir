@@ -311,8 +311,7 @@ void func_breakable_reset(entity this)
 		func_breakable_behave_restore(this);
 }
 
-// destructible walls that can be used to trigger target_objective_decrease
-spawnfunc(func_breakable)
+void func_breakable_setup(entity this)
 {
 	float n, i;
 	if(!GetResource(this, RES_HEALTH))
@@ -382,7 +381,8 @@ spawnfunc(func_breakable)
 }
 
 // for use in maps with a "model" key set
-spawnfunc(misc_breakablemodel) {
-	spawnfunc_func_breakable(this);
-}
+spawnfunc(misc_breakablemodel) { func_breakable_setup(this); }
+
+// destructible walls that can be used to trigger target_objective_decrease
+spawnfunc(func_breakable) { func_breakable_setup(this); }
 #endif

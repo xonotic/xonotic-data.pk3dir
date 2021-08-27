@@ -32,7 +32,7 @@
 
 // See common.qc for their proper commands
 
-string getrecords(int page)  // 50 records per page
+string getrecords(int page)
 {
 	string s = "";
 
@@ -40,9 +40,6 @@ string getrecords(int page)  // 50 records per page
 	s = M_ARGV(1, string);
 
 	MapInfo_ClearTemps();
-
-	if (s == "" && page == 0)
-		return "No records are available on this server for the current game mode.\n";
 	return s;
 }
 

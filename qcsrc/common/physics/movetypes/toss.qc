@@ -56,9 +56,17 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 		if (wasfreed(this))
 			return;
 
-		if (trace_startsolid)
+		// NOTE: this is bmodelstartsolid in the engine
+		if (trace_startsolid && trace_ent.solid == SOLID_BSP)
 		{
+			// QC lacks pointers so we must save the old trace values
+			float oldtrace_fraction = trace_fraction;
+			vector oldtrace_plane_normal = trace_plane_normal;
+			entity oldtrace_ent = trace_ent;
 			_Movetype_UnstickEntity(this);
+			trace_fraction = oldtrace_fraction;
+			trace_plane_normal = oldtrace_plane_normal;
+			trace_ent = oldtrace_ent;
 			if(!_Movetype_PushEntity(this, move, true, true))
 				return;
 			if (wasfreed(this))

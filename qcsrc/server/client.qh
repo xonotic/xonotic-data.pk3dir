@@ -33,7 +33,8 @@ bool autocvar_g_nodepthtestplayers;
 string autocvar_g_mutatormsg;
 float autocvar_sv_foginterval;
 float autocvar_sv_maxidle;
-bool autocvar_sv_maxidle_spectatorsareidle;
+float autocvar_sv_maxidle_playertospectator = 60;
+bool autocvar_sv_maxidle_alsokickspectators;
 int autocvar_sv_maxidle_slots;
 bool autocvar_sv_maxidle_slots_countbots;
 bool autocvar_g_forced_respawn;
@@ -274,9 +275,6 @@ CLASS(Player, Client)
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
     ATTRIB(Player, ballistics_density, float, this.ballistics_density);
-    ATTRIB(Player, prevstrengthsound, float, this.prevstrengthsound);
-    ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
-    ATTRIB(Player, buff_shield, float, this.buff_shield);
 
     INIT(Player) {
         this.classname = STR_PLAYER;
@@ -363,8 +361,6 @@ bool PlayerInList(entity player, string list);
 void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
-
-void checkSpectatorBlock(entity this);
 
 void PlayerUseKey(entity this);
 

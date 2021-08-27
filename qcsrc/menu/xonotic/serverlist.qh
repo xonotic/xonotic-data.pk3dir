@@ -63,6 +63,7 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, seenIPv4, float, 0);
 	ATTRIB(XonoticServerList, seenIPv6, float, 0);
 	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25);
+	ATTRIB(XonoticServerList, serversHeight, float, 1.0);
 
 	METHOD(XonoticServerList, getTotalHeight, float(entity));
 	METHOD(XonoticServerList, getItemAtPos, float(entity, float));
