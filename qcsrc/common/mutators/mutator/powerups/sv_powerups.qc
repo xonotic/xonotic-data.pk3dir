@@ -77,6 +77,39 @@ MUTATOR_HOOKFUNCTION(powerups, MonsterValidTarget)
 	return StatusEffects_active(STATUSEFFECT_Invisibility, targ);
 }
 
+void powerups_DropItem(entity this, StatusEffects effect)
+{
+	entity item = Item_DefinitionFromInternalName(effect.netname);
+	float timeleft = StatusEffects_gettime(effect, this);
+	if((timeleft - time) <= 0 || !item)
+		return;
+	entity e = spawn();
+	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
+	switch(item)
+	{
+		case ITEM_Strength: e.strength_finished = timeleft; break;
+		case ITEM_Shield: e.invincible_finished = timeleft; break;
+		case ITEM_Invisibility: e.invisibility_finished = timeleft; break;
+		case ITEM_Speed: e.speed_finished = timeleft; break;
+	}
+	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', min(timeleft - time, 10));
+	Item_SetExpiring(e, true);
+}
+
+MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
+{
+	if(!autocvar_g_powerups_dropondeath)
+		return;
+
+	entity frag_target = M_ARGV(2, entity);
+
+	FOREACH(StatusEffect, it.instanceOfPowerups,
+	{
+		if(StatusEffects_active(it, frag_target))
+			powerups_DropItem(frag_target, it);
+	});
+}
+
 MUTATOR_HOOKFUNCTION(powerups, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
