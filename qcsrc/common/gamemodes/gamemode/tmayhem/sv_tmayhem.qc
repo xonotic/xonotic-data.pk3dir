@@ -224,7 +224,6 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 	}
 }
 
-
 MUTATOR_HOOKFUNCTION(tmayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	switch(autocvar_g_tmayhem_scoringmethod)
