@@ -1710,23 +1710,6 @@ Notification Announcer_PickNumber(int type, int num)
 			}
 			break;
 		}
-		case CNT_IDLE:
-		{
-			switch(num)
-			{
-				case 10: return ANNCE_NUM_IDLE_10;
-				case 9:  return ANNCE_NUM_IDLE_9;
-				case 8:  return ANNCE_NUM_IDLE_8;
-				case 7:  return ANNCE_NUM_IDLE_7;
-				case 6:  return ANNCE_NUM_IDLE_6;
-				case 5:  return ANNCE_NUM_IDLE_5;
-				case 4:  return ANNCE_NUM_IDLE_4;
-				case 3:  return ANNCE_NUM_IDLE_3;
-				case 2:  return ANNCE_NUM_IDLE_2;
-				case 1:  return ANNCE_NUM_IDLE_1;
-			}
-			break;
-		}
 		case CNT_KILL:
 		{
 			switch(num)
@@ -1778,6 +1761,7 @@ Notification Announcer_PickNumber(int type, int num)
 			}
 			break;
 		}
+		case CNT_NORMAL:
 		default:
 		{
 			switch(num)
@@ -1921,27 +1905,40 @@ void SetMovetypeFollow(entity ent, entity e)
 	ent.v_angle = ent.angles - e.angles; // relative angles
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
+
+	if(IS_PLAYER(ent.aiment))
+	{
+		entity pl = ent.aiment;
+		ent.view_ofs.x = bound(pl.mins.x + 4, ent.view_ofs.x, pl.maxs.x - 4);
+		ent.view_ofs.y = bound(pl.mins.y + 4, ent.view_ofs.y, pl.maxs.y - 4);
+		ent.view_ofs.z = bound(pl.mins.z + 4, ent.view_ofs.z, pl.maxs.z - 4);
+	}
 }
+
 void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
-	ent.aiment = NULL;
+	if (ent.aiment_classname)
+		strunzone(ent.classname);
+	// FIXME: engine bug?
+	// resetting aiment the engine will set orb's origin close to world's origin
+	//ent.aiment = NULL;
 }
-float LostMovetypeFollow(entity ent)
+
+int LostMovetypeFollow(entity ent)
 {
 /*
 	if(ent.move_movetype != MOVETYPE_FOLLOW)
 		if(ent.aiment)
 			error("???");
 */
-	if(ent.aiment)
-	{
-		if(ent.aiment.classname != ent.aiment_classname)
-			return 1;
-		if(ent.aiment.deadflag != ent.aiment_deadflag)
-			return 1;
-	}
+	// FIXME: engine bug?
+	// when aiment disconnects the engine will set orb's origin close to world's origin
+	if(!ent.aiment)
+		return 2;
+	if(ent.aiment.classname != ent.aiment_classname || ent.aiment.deadflag != ent.aiment_deadflag)
+		return 1;
 	return 0;
 }
 #endif

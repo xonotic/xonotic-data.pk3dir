@@ -449,6 +449,7 @@ MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 
 /**
  * Called when a player is damaged
+ * Returns true if damage shouldn't be logged
  */
 #define EV_PlayerDamaged(i, o) \
     /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -1249,3 +1250,9 @@ MUTATOR_HOOKABLE(LogDeath_AppendItemCodes, EV_LogDeath_AppendItemCodes);
     /**/                            o(bool, MUTATOR_ARGV_0_bool) \
     /**/
 MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);
+
+/** Called when weapons are performing their attack, useful for applying bonus attack sounds */
+#define EV_W_PlayStrengthSound(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(W_PlayStrengthSound, EV_W_PlayStrengthSound);

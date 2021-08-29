@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
+		WriteShort(MSG_BROADCAST, bound(1, rint(CS(e).ping), 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
@@ -351,10 +351,12 @@ void cvar_changes_init()
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_ca_spectate_enemies");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADCVAR("g_ctf_flagcarrier_auto_helpme_damage");
 		BADPRESUFFIX("g_ctf_flag_", "_model");
 		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
@@ -397,6 +399,7 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_qcphysics");
 		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
@@ -417,7 +420,7 @@ void cvar_changes_init()
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
@@ -452,6 +455,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
+		BADCVAR("g_freezetag_revive_spawnshield");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -471,7 +475,7 @@ void cvar_changes_init()
 		BADCVAR("g_player_brightness");
 		BADCVAR("g_rocket_flying");
 		BADCVAR("g_rocket_flying_disabledelays");
-		BADCVAR("g_spawnshieldtime");
+		BADPREFIX("g_spawnshield");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
@@ -499,7 +503,6 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_maxidle");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
@@ -770,6 +773,9 @@ spawnfunc(worldspawn)
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
+	// default to RACE_RECORD, can be overwritten by gamemodes
+	record_type = RACE_RECORD;
+
 	// needs to be done so early because of the constants they create
 	static_init();
 
@@ -850,7 +856,8 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
+		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -876,12 +883,6 @@ spawnfunc(worldspawn)
 		// TODO to mutator system
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
-
-		// TODO to mutator system
-		if(autocvar_g_powerups == 0)
-			s = strcat(s, ":no_powerups");
-		if(autocvar_g_powerups > 0)
-			s = strcat(s, ":powerups");
 
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
@@ -2221,11 +2222,11 @@ void droptofloor(entity this)
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
-void RunThink(entity this)
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -2241,7 +2242,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -2271,8 +2272,8 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 

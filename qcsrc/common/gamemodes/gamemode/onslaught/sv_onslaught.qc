@@ -2180,6 +2180,7 @@ void ons_DelayedInit(entity this) // Do this check with a delay so we can wait f
 void ons_Initialize()
 {
 	g_onslaught = true;
+	g_onsshields = IL_NEW();
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
 
 	cam = new(objective_camera);

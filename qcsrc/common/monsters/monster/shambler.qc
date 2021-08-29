@@ -256,7 +256,7 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 
     setanim(actor, actor.anim_shoot, false, true, true);
     actor.spawn_time = actor.animstate_endtime;
-    actor.spawnshieldtime = actor.spawn_time;
+    StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.monster_attackfunc = M_Shambler_Attack;
 
     return true;
