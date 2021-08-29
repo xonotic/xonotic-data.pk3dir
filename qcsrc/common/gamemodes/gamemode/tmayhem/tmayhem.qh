@@ -7,7 +7,7 @@
 CLASS(tmayhem, Gametype)
     INIT(tmayhem)
     {
-        this.gametype_init(this, _("Team Mayhem"),"tmayhem","g_tmayhem",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("The team with the most frags in total mayhem wins!"));
+        this.gametype_init(this, _("Team Mayhem"),"tmayhem","g_tmayhem",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("The team with the most damage and frags in total mayhem wins!"));
     }
     METHOD(tmayhem, m_parse_mapinfo, bool(string k, string v))
     {

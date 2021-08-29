@@ -63,12 +63,12 @@ MUTATOR_HOOKFUNCTION(mayhem, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 	if (autocvar_g_powerups == 1){
-		if (item.flags & FL_POWERUP){
+		if (item.itemdef.instanceOfPowerup){
 			return false;
 		} 
 	}
 	else if (autocvar_g_powerups == -1){
-		if (item.flags & FL_POWERUP){
+		if (item.itemdef.instanceOfPowerup){
 			if (autocvar_g_mayhem_powerups){
 				return false;
 			} 
@@ -114,26 +114,25 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 			float excess = max(0, frag_damage - damage_take - damage_save);
 
 			if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
-				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * (1/(start_health + start_armorvalue)));
+				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 			
 			if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
-				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * (1/(start_health + start_armorvalue)));
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 		
-			//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
+			//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+			//deathtypes:
+			//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+			//camp = campcheck, lava = lava, slime = slime
+			//team change / rebalance suicides are currently not included
 			if (!IS_PLAYER(frag_attacker) && (
+				frag_deathtype == DEATH_KILL.m_id ||
 				frag_deathtype == DEATH_DROWN.m_id ||
 				frag_deathtype == DEATH_HURTTRIGGER.m_id ||
 				frag_deathtype == DEATH_CAMP.m_id ||
 				frag_deathtype == DEATH_LAVA.m_id ||
-				frag_deathtype == DEATH_SLIME.m_id))
-					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * (1/(start_health + start_armorvalue)));
-				
-			//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
-			//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
-			//FIXME: ^ , might require fixing hp+a check for suicides as a whole
-			if (frag_deathtype == DEATH_KILL.m_id)
-				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * (1/(start_health + start_armorvalue)));
-			return;
+				frag_deathtype == DEATH_SLIME.m_id ||
+				frag_deathtype == DEATH_SWAMP.m_id))
+					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 		}
 		
 		//combined damage and frags
@@ -149,27 +148,28 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 
 			float excess = max(0, frag_damage - damage_take - damage_save);
 
+			//non-friendly fire
 			if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 			
+			//friendly fire aka self damage
 			if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
 				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 		
-			//handle hazard suiciding, check first if player has a registered attacker who most likely pushed them there
+			//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+			//deathtypes:
+			//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+			//camp = campcheck, lava = lava, slime = slime
+			//team change / rebalance suicides are currently not included
 			if (!IS_PLAYER(frag_attacker) && (
+				frag_deathtype == DEATH_KILL.m_id ||
 				frag_deathtype == DEATH_DROWN.m_id ||
 				frag_deathtype == DEATH_HURTTRIGGER.m_id ||
 				frag_deathtype == DEATH_CAMP.m_id ||
 				frag_deathtype == DEATH_LAVA.m_id ||
-				frag_deathtype == DEATH_SLIME.m_id))
+				frag_deathtype == DEATH_SLIME.m_id ||
+				frag_deathtype == DEATH_SWAMP.m_id))
 					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-				
-			//when hp and armor values are checked when suiciding for some reason they are 0.9 hp and 0 armor regardless that player suicided with 200+200
-			//AFAIK dynamic hp value checking is not possible, hardcoded start hp and armor
-			//FIXME: ^ , might require fixing hp+a check for suicides as a whole
-			if (frag_deathtype == DEATH_KILL.m_id)
-				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-			return;
 		}
 	}
 }
