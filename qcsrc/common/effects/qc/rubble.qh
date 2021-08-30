@@ -4,12 +4,10 @@
 entityclass(Rubble);
 classfield(Rubble).float creationtime;
 
+#ifdef CSQC
 IntrusiveList CasingsNGibs;
 STATIC_INIT(CasingsNGibs) { CasingsNGibs = IL_NEW(); }
-
-IntrusiveList LimitedElectroBallRubbleList;
-STATIC_INIT(LimitedElectroBallRubbleList) { LimitedElectroBallRubbleList = IL_NEW(); }
-
+#endif
 
 void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(entity) deleteproc, entity parent);
 

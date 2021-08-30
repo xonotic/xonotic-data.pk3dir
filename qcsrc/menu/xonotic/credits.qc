@@ -127,10 +127,10 @@
 	NL() \
 	TITLE(_("Other Active Contributors")) \
 		PERSON(Jeff) \
-		PERSON(Lyberta) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
 		PERSON(slava) \
+		PERSON(Victor "LegendGuard" Jaume) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -224,6 +224,9 @@
 			PERSON(stdi) \
 			PERSON(XCostaX) \
 		NL() \
+		FUNCTION(_("Japanese")) \
+			PERSON(Victor "LegendGuard" Jaume) \
+		NL() \
 		FUNCTION(_("Kazakh")) \
 			PERSON("Артем "bystrov.arterm" Быстров") \
 		NL() \
@@ -282,6 +285,7 @@
 			PERSON(Rodrigo Mouton Laudin) \
 			PERSON(SouL) \
 			PERSON(Starfire24680) \
+			PERSON(Victor "LegendGuard" Jaume) \
 		NL() \
 		FUNCTION(_("Swedish")) \
 			PERSON(Karl-Oskar "machine" Rikås) \
@@ -342,6 +346,7 @@
 		PERSON(Lee David Ash) \
 		PERSON(Lee Vermeulen) \
 		PERSON(leileilol) \
+		PERSON(Lyberta) \
 		PERSON(magorian) \
 		PERSON(Marius "GreEn`mArine" Shekow) \
 		PERSON(Marko "Urre" Permanto) \

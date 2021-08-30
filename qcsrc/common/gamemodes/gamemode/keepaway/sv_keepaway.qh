@@ -4,6 +4,7 @@
 #include <common/scores.qh>
 void ka_Initialize();
 
+IntrusiveList g_kaballs;
 REGISTER_MUTATOR(ka, false)
 {
     MUTATOR_STATIC();
@@ -24,10 +25,11 @@ const int KA_BALL_COUNT = 1;
 
 entity ka_Handler;
 
-IntrusiveList g_kaballs;
-STATIC_INIT(g_kaballs) { g_kaballs = IL_NEW(); }
-
 void(entity this) havocbot_role_ka_carrier;
 void(entity this) havocbot_role_ka_collector;
+
+void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+void ka_TouchEvent(entity this, entity toucher);
 
 void ka_DropEvent(entity plyr);

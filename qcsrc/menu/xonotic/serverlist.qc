@@ -398,6 +398,8 @@ void XonoticServerList_focusEnter(entity me)
 
 void XonoticServerList_draw(entity me)
 {
+	me.serversHeight = (autocvar_menu_slist_categories > 0 ? 1.0 : me.categoriesHeight);
+
 	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
 	{
 		if(!me.needsRefresh)
@@ -775,8 +777,10 @@ void ServerList_Info_Click(entity btn, entity me)
 	if (me.nItems != 0)
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 
-	vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
-	vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
+	float thisPos = me.getItemStart(me, me.selectedItem); 
+	float thisHeight = me.getItemHeight(me, me.selectedItem); 
+	vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
+	vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
 	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 }
 void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
@@ -788,8 +792,8 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
 #define SET_YRANGE(start,end) \
-	draw_scale = boxToGlobalSize(eX + eY * (end - start), oldscale); \
-	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
+	draw_scale = boxToGlobalSize(eX + eY * ((end) - (start)), oldscale); \
+	draw_shift = boxToGlobal(eY * (start), oldshift, oldscale);
 
 	int c;
 	for (c = 0; c < category_draw_count; ++c) {
@@ -825,6 +829,10 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
 		}
 	}
+
+	// Now categories are done. Set the Y range in stone.
+	oldscale = draw_scale;
+	oldshift = draw_shift;
 
 	if(isSelected && !me.lockedSelectedItem)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
@@ -972,7 +980,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	// --------------
 	vector iconSize = '0 0 0';
 	iconSize_y = me.realFontSize.y * me.iconsSizeFactor;
-	iconSize_x = me.realFontSize.x * me.iconsSizeFactor;
+	iconSize_x = me.realFontSize.x * me.iconsSizeFactor * me.serversHeight;
 
 	vector iconPos = '0 0 0';
 	iconPos_x = (me.columnIconsSize - 3 * iconSize.x) * 0.5;
@@ -1041,6 +1049,12 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	//  RENDER TEXT
 	// --------------
 
+	// Center it in the row.
+	SET_YRANGE(
+		0.5 - 0.5 / me.serversHeight,
+		0.5 + 0.5 / me.serversHeight
+	);
+
 	// ping
 	s = ftos(ping);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
@@ -1093,8 +1107,10 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 	{
 		if(me.nItems != 0)
 		{
-			vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
-			vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
+			float thisPos = me.getItemStart(me, me.selectedItem); 
+			float thisHeight = me.getItemHeight(me, me.selectedItem); 
+			vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
+			vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
 			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
@@ -1124,34 +1140,34 @@ float XonoticServerList_getTotalHeight(entity me)
 {
 	float num_normal_rows = me.nItems;
 	int num_headers = category_draw_count;
-	return me.itemHeight * (num_normal_rows + me.categoriesHeight * num_headers);
+	return me.itemHeight * (me.serversHeight * num_normal_rows + me.categoriesHeight * num_headers);
 }
 int XonoticServerList_getItemAtPos(entity me, float pos)
 {
 	pos = pos / me.itemHeight;
 	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
-		float itempos = i * me.categoriesHeight + category_item[i];
-		if (pos >= itempos + me.categoriesHeight + 1)
-			return itemidx + 1 + floor(pos - (itempos + me.categoriesHeight + 1));
+		float itempos = i * me.categoriesHeight + category_item[i] * me.serversHeight;
+		if (pos >= itempos + me.categoriesHeight + me.serversHeight)
+			return itemidx + 1 + floor((pos - (itempos + me.categoriesHeight + me.serversHeight)) / me.serversHeight);
 		if (pos >= itempos)
 			return itemidx;
 	}
 	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
-	return floor(pos);
+	return floor(pos / me.serversHeight);
 }
 float XonoticServerList_getItemStart(entity me, int item)
 {
 	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
-		float itempos = i * me.categoriesHeight + category_item[i];
+		float itempos = i * me.categoriesHeight + category_item[i] * me.serversHeight;
 		if (item >= itemidx + 1)
-			return (itempos + me.categoriesHeight + 1 + item - (itemidx + 1)) * me.itemHeight;
+			return (itempos + me.categoriesHeight + (1 + item - (itemidx + 1)) * me.serversHeight) * me.itemHeight;
 		if (item >= itemidx)
 			return itempos * me.itemHeight;
 	}
 	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
-	return item * me.itemHeight;
+	return item * me.serversHeight * me.itemHeight;
 }
 float XonoticServerList_getItemHeight(entity me, int item)
 {
@@ -1160,5 +1176,5 @@ float XonoticServerList_getItemHeight(entity me, int item)
 		if (item == category_item[i])
 			return me.itemHeight * (me.categoriesHeight + 1);
 	}
-	return me.itemHeight;
+	return me.itemHeight * me.serversHeight;
 }

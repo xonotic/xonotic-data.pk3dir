@@ -143,21 +143,14 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 bool Heal(entity targ, entity inflictor, float amount, float limit);
 
 .float fire_damagepersec;
-.float fire_endtime;
 .float fire_deathtype;
 .entity fire_owner;
 .float fire_hitsound;
 .entity fire_burner;
 
-void fireburner_think(entity this);
-
-float Fire_IsBurning(entity e);
-
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 
 void Fire_ApplyDamage(entity e);
-
-void Fire_ApplyEffect(entity e);
 
 IntrusiveList g_damagedbycontents;
 STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }

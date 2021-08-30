@@ -123,13 +123,13 @@ void CSQC_Init()
 
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
-		minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
+		minimapname = strcat("gfx/", mi_shortname, "_radar");
 		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
 			// but maybe we have a non-clever minimap
-			minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+			minimapname = strcat("gfx/", mi_shortname, "_mini");
 			if (precache_pic(minimapname) == "")
 				minimapname = ""; // FAIL
 			else
@@ -877,6 +877,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
+			ONREMOVE(this);
 			clearentity(this);
 			isnew = true;
 		}
@@ -1182,12 +1183,10 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_SPEED_AWARD:
 			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			strcpy(race_speedaward_holder, ReadString());
-			strcpy(race_speedaward_unit, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
 			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
-			strcpy(race_speedaward_alltimebest_unit, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_RANKINGS_CNT:
 			RANKINGS_DISPLAY_CNT = ReadByte();

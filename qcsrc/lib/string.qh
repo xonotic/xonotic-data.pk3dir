@@ -60,6 +60,63 @@ MACRO_END
 	this = string_null; \
 MACRO_END
 
+// Returns the number of days since 0000-03-01 (March 1, year 0)
+// Starting counting from March, as the 1st month of the year, February becomes the 12th and last month,
+// so its variable duration does not affect, given that the 29th is the last day of the period
+ERASEABLE
+int days_up_to_date(int Y, int M, int D)
+{
+	int years = (M <= 2) ? Y - 1 : Y;
+
+	int leap_days = floor(years / 4) - floor(years / 100) + floor(years / 400);
+
+	// using these 2 formulas to save 2 arrays or switches (performance isn't important here)
+	int months = (M <= 2) ? (M + 9) : (M - 3); // 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	int leftover_days = (M <= 2) ? (M + 5) : floor(0.58 * M - 1.1); // 6, 7, 0, 1, 1, 2, 2, 3, 4, 4, 5, 5
+
+	int month_days = 30 * months + leftover_days;
+
+	return 365 * years + month_days + D + leap_days;
+}
+
+#define DAYS_UP_TO_EPOCH 719469 // days_up_to_date(1970, 1, 1);
+
+// Returns the number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
+// This function exists only as a replacement for strftime(false, "%s") which doesn't work
+// on Windows (%s is not supported) and at least in some linux systems doesn't return the
+// correct result
+// NOTE: at the current date, the number (string) returned by both strftime(false, "%s") and
+// strftime_s() is so high that can't be converted to int (with ftos) without precision loss
+ERASEABLE
+string strftime_s()
+{
+	string date = strftime(false, "%Y-%m-%d %H:%M:%S");
+	int i, seconds = 0;
+	i =0; int Y = stof(substring(date, i, 4)); // years
+	i+=5; int M = stof(substring(date, i, 2)); // months
+	i+=3; int D = stof(substring(date, i, 2)); // days
+
+	i+=3; seconds += stof(substring(date, i, 2)) * 60 * 60; // hours
+	i+=3; seconds += stof(substring(date, i, 2)) * 60; // minutes
+	i+=3; seconds += stof(substring(date, i, 2)); // seconds
+
+	// doing so we loose precision
+	//seconds += (days_up_to_date(Y, M, D) - DAYS_UP_TO_EPOCH) * 24 * 60 * 60;
+	//return ftos(seconds);
+
+	int days_since_epoch = days_up_to_date(Y, M, D) - DAYS_UP_TO_EPOCH;
+	// use hundreds of seconds as unit to avoid precision loss
+	int hundreds_of_seconds = days_since_epoch * 24 * 6 * 6;
+	hundreds_of_seconds += floor(seconds / 100);
+
+	// tens of seconds and seconds
+	string seconds_str = ftos(seconds % 100);
+	if ((seconds % 100) < 10)
+		seconds_str = strcat("0", seconds_str);
+
+	return strcat(ftos(hundreds_of_seconds), seconds_str);
+}
+
 ERASEABLE
 string seconds_tostring(float sec)
 {

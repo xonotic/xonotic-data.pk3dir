@@ -585,6 +585,7 @@ bool WarpZoneLib_BadEntity(entity e)
 		case "spawnfunc":
 		case "weaponchild":
 		case "chatbubbleentity":
+		case "buff_model":
 		//case "net_linked": // actually some real entities are linked without classname, fail
 		case "":
 			return true;

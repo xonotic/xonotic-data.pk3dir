@@ -2,6 +2,7 @@
 
 #include "items.qh"
 #include <common/gamemodes/_mod.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 
 // TODO: make this its own mutator (somehow)!
 float autocvar_g_rm;
@@ -24,8 +25,12 @@ float autocvar_g_rm_laser_radius;
 float autocvar_g_rm_laser_force;
 
 bool autocvar_g_instagib;
-float autocvar_g_instagib_invis_alpha;
 int autocvar_g_instagib_extralives;
+
+/// \brief Time of invisibility powerup in seconds.
+float autocvar_g_instagib_invisibility_time;
+/// \brief Time of speed powerup in seconds.
+float autocvar_g_instagib_speed_time;
 
 void instagib_invisibility(entity this);
 void instagib_extralife(entity this);

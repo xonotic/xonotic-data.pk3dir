@@ -36,6 +36,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
+		case MSG_CENTER_KILL: return "MSG_CENTER_KILL";
 	}
 	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";

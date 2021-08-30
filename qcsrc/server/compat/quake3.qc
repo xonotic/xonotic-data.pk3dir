@@ -5,6 +5,9 @@
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>
@@ -130,17 +133,19 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		STAT(STRENGTH_FINISHED, actor) = 0;
-		STAT(INVINCIBLE_FINISHED, actor) = 0;
-		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
+		FOREACH(StatusEffect, it.instanceOfPowerups,
 		{
-			int buffid = buff_FirstFromFlags(STAT(BUFFS, actor)).m_id;
+			it.m_remove(it, actor, STATUSEFFECT_REMOVE_NORMAL);
+		});
+		entity heldbuff = buff_FirstFromFlags(actor);
+		if(heldbuff) // TODO: make a dropbuffs function to handle this
+		{
+			int buffid = heldbuff.m_id;
 			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_BUFF_DROP, buffid);
 			sound(actor, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			if(!IS_INDEPENDENT_PLAYER(actor))
 				Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
-			STAT(BUFFS, actor) = 0;
-			STAT(BUFF_TIME, actor) = 0;
+			buff_RemoveAll(actor, STATUSEFFECT_REMOVE_NORMAL);
 		}
 	}
 
@@ -196,9 +201,9 @@ void target_give_init(entity this)
 		else if (it.classname == "item_health_mega")
 			SetResourceExplicit(this, RES_HEALTH, 200);
 		else if (it.classname == "item_buff") {
-			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
+			entity buff = it.buffdef;
 			this.netname = cons(this.netname, buff.netname);
-			STAT(BUFF_TIME, this) = it.count;
+			this.buffs_finished = it.count;
 		}
 
 		//remove(it); // removing ents in init functions causes havoc, workaround:
@@ -249,12 +254,12 @@ spawnfunc(target_fragsFilter)
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */
 //spawnfunc(item_doubler)        /* handled by buffs mutator */
-//spawnfunc(item_haste)        /* handled by buffs mutator */
+//spawnfunc(item_haste)        /* handled by powerups mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
 //spawnfunc(item_health_large) /* handled in items.qc */
 //spawnfunc(item_health_small) /* handled in items.qc */
 //spawnfunc(item_health_mega)  /* handled in items.qc */
-//spawnfunc(item_invis)        /* handled by buffs mutator */
+//spawnfunc(item_invis)        /* handled by powerups mutator */
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
