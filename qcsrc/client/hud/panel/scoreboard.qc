@@ -1243,7 +1243,8 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		rows = 2;
 	int columnns = ceil(weapon_cnt / rows);
 
-	float weapon_height = hud_fontsize.y * 2.3;
+	float aspect = max(0.001, autocvar_hud_panel_weapons_aspect);
+	float weapon_height = hud_fontsize.y * 2.3 / aspect;
 	float height = weapon_height + hud_fontsize.y;
 
 	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
