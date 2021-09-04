@@ -524,7 +524,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 
     if(fire & 1)
     {
-        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire) * W_WeaponRateFactor(actor))
+        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor))
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
         {
                 W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
@@ -533,7 +533,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     }
     else if(fire & 2)
     {
-        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor))
+        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire) * W_WeaponRateFactor(actor))
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
         {
             W_Electro_Attack_Orb(thiswep, actor, weaponentity);
