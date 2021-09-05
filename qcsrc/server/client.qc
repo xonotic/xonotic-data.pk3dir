@@ -2662,10 +2662,10 @@ void PlayerPostThink (entity this)
 			});
 		}
 
-		if (totalClients <= 1)
+		if (totalClients < autocvar_sv_maxidle_minplayers)
 		{
+			// idle kick disabled
 			CS(this).parm_idlesince = time;
-			/* do nothing */
 		}
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
