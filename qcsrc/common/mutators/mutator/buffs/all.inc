@@ -2,10 +2,15 @@ string Buff_UndeprecateName(string buffname)
 {
     switch(buffname)
     {
-        case "ammoregen": return "ammo";
-        case "guard": return "resistance";
-        case "revival": case "regen": return "medic";
-        case "jumper": return "jump";
+        case "ammoregen": return "ammo";               // Q3TA ammoregen
+        case "doubler": return "inferno";              // Q3TA doubler
+        case "scout": return "bash";                   // Q3TA scout
+        case "guard": return "resistance";             // Q3TA guard
+        case "revival": case "regen": return "medic";  // WOP revival, Q3A regen
+        case "jumper": return "jump";                  // WOP jumper
+        case "invulnerability": return "vampire";      // Q3TA invulnerability
+        case "kamikaze": return "vengeance";           // Q3TA kamikaze
+        case "teleporter": return "swapper";           // Q3A personal teleporter
         default: return buffname;
     }
 }
@@ -19,7 +24,7 @@ CLASS(AmmoBuff, Buff)
 ENDCLASS(AmmoBuff)
 REGISTER_BUFF(AMMO, NEW(AmmoBuff));
 BUFF_SPAWNFUNCS(ammo, BUFF_AMMO)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen, BUFF_AMMO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_ammoregen, BUFF_AMMO)
 
 CLASS(ResistanceBuff, Buff)
     ATTRIB(ResistanceBuff, m_name, string, _("Resistance"));
@@ -30,7 +35,7 @@ CLASS(ResistanceBuff, Buff)
 ENDCLASS(ResistanceBuff)
 REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));
 BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(guard, BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)
 
 CLASS(MedicBuff, Buff)
     ATTRIB(MedicBuff, m_name, string, _("Medic"));
@@ -41,8 +46,8 @@ CLASS(MedicBuff, Buff)
 ENDCLASS(MedicBuff)
 REGISTER_BUFF(MEDIC, NEW(MedicBuff));
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(regen, BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(revival, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3COMPAT(item_regen, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3COMPAT(item_revival, BUFF_MEDIC)
 
 CLASS(BashBuff, Buff)
     ATTRIB(BashBuff, m_name, string, _("Bash"));
@@ -53,7 +58,7 @@ CLASS(BashBuff, Buff)
 ENDCLASS(BashBuff)
 REGISTER_BUFF(BASH, NEW(BashBuff));
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_BASH)
+BUFF_SPAWNFUNC_Q3COMPAT(item_scout, BUFF_BASH)
 
 CLASS(VampireBuff, Buff)
     ATTRIB(VampireBuff, m_name, string, _("Vampire"));
@@ -64,6 +69,7 @@ CLASS(VampireBuff, Buff)
 ENDCLASS(VampireBuff)
 REGISTER_BUFF(VAMPIRE, NEW(VampireBuff));
 BUFF_SPAWNFUNCS(vampire, BUFF_VAMPIRE)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_invulnerability, BUFF_VAMPIRE)
 
 CLASS(DisabilityBuff, Buff)
     ATTRIB(DisabilityBuff, m_name, string, _("Disability"));
@@ -99,6 +105,7 @@ CLASS(VengeanceBuff, Buff)
 ENDCLASS(VengeanceBuff)
 REGISTER_BUFF(VENGEANCE, NEW(VengeanceBuff));
 BUFF_SPAWNFUNCS(vengeance, BUFF_VENGEANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_kamikaze, BUFF_VENGEANCE)
 
 CLASS(JumpBuff, Buff)
     ATTRIB(JumpBuff, m_name, string, _("Jump"));
@@ -109,7 +116,7 @@ CLASS(JumpBuff, Buff)
 ENDCLASS(JumpBuff)
 REGISTER_BUFF(JUMP, NEW(JumpBuff));
 BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(jumper, BUFF_JUMP)
+BUFF_SPAWNFUNC_Q3COMPAT(item_jumper, BUFF_JUMP)
 
 CLASS(InfernoBuff, Buff)
     ATTRIB(InfernoBuff, m_name, string, _("Inferno"));
@@ -120,6 +127,7 @@ CLASS(InfernoBuff, Buff)
 ENDCLASS(InfernoBuff)
 REGISTER_BUFF(INFERNO, NEW(InfernoBuff));
 BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_doubler, BUFF_INFERNO)
 
 CLASS(SwapperBuff, Buff)
     ATTRIB(SwapperBuff, m_name, string, _("Swapper"));
@@ -130,6 +138,7 @@ CLASS(SwapperBuff, Buff)
 ENDCLASS(SwapperBuff)
 REGISTER_BUFF(SWAPPER, NEW(SwapperBuff));
 BUFF_SPAWNFUNCS(swapper, BUFF_SWAPPER)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_teleporter, BUFF_SWAPPER)
 
 CLASS(MagnetBuff, Buff)
     ATTRIB(MagnetBuff, m_name, string, _("Magnet"));
@@ -160,4 +169,4 @@ CLASS(FlightBuff, Buff)
 ENDCLASS(FlightBuff)
 REGISTER_BUFF(FLIGHT, NEW(FlightBuff));
 BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(flight, BUFF_FLIGHT)
+BUFF_SPAWNFUNC_Q3COMPAT(item_flight, BUFF_FLIGHT)
