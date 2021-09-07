@@ -485,8 +485,8 @@ void HUD_StrafeHUD()
         }
 
         // best angle to strafe at
-        bestangle = (speed > (movespeed - maxaccel) ? acos((movespeed - maxaccel) / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
-        prebestangle = (speed > movespeed ? acos(movespeed / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1);
+        bestangle = (speed > fabs(movespeed - maxaccel) ? acos(fabs(movespeed - maxaccel) / speed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
+        prebestangle = (speed > fabs(movespeed) ? acos(fabs(movespeed) / speed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
         odd_bestangle = -bestangle - wishangle;
         bestangle -= wishangle;
         prebestangle -= wishangle;
@@ -712,7 +712,7 @@ void HUD_StrafeHUD()
             drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
 
-        if(speed < ((movespeed - maxaccel) + antiflicker_speed) && !immobile)
+        if(speed <= (fabs(movespeed - maxaccel) + antiflicker_speed) && !immobile)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
         }
