@@ -467,15 +467,13 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_ESCAPE)
 	{
-		if (!key_pressed)
-			return true;
-		QuickMenu_Close();
+		if (key_pressed)
+			QuickMenu_Close();
 	}
 	else if(nPrimary >= '0' && nPrimary <= '9')
 	{
-		if (!key_pressed)
-			return true;
-		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
+		if (key_pressed)
+			QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
 	if(nPrimary == K_MOUSE1)
 	{
@@ -492,6 +490,10 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(hit_con_bind)
+		return false;
+
+	// let the engine handle all release key events so that it's possible to stop movement, weapon fire, etc...
+	if(!key_pressed)
 		return false;
 
 	return true;
