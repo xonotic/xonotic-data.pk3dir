@@ -189,7 +189,15 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
+	mouseClicked = 0;
 	hudShiftState = 0;
+
+	// we must unset the player's buttons, as they aren't released elsewhere
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
 
 	QuickMenu_TimeOut_Set();
 	return true;
@@ -465,17 +473,15 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
 	}
 
-	if(nPrimary == K_ESCAPE)
+	if(nPrimary == K_ESCAPE && key_pressed)
 	{
-		if (key_pressed)
-			QuickMenu_Close();
+		QuickMenu_Close();
 	}
-	else if(nPrimary >= '0' && nPrimary <= '9')
+	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
 	{
-		if (key_pressed)
-			QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
+		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
-	if(nPrimary == K_MOUSE1)
+	else if(nPrimary == K_MOUSE1)
 	{
 		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
@@ -489,12 +495,14 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
-	else if(hit_con_bind)
+	else
+	{
+		if(hit_con_bind)
+			return false;
+		if (key_pressed)
+			QuickMenu_Close();
 		return false;
-
-	// let the engine handle all release key events so that it's possible to stop movement, weapon fire, etc...
-	if(!key_pressed)
-		return false;
+	}
 
 	return true;
 }
