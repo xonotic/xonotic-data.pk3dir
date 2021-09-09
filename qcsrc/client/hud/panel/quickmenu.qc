@@ -449,17 +449,6 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
 	if(key_pressed)
 	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
@@ -473,15 +462,7 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
 	}
 
-	if(nPrimary == K_ESCAPE && key_pressed)
-	{
-		QuickMenu_Close();
-	}
-	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
-	{
-		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
-	}
-	else if(nPrimary == K_MOUSE1)
+	if(nPrimary == K_MOUSE1)
 	{
 		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
@@ -495,10 +476,25 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
+	else if(nPrimary == K_ESCAPE && key_pressed)
+	{
+		QuickMenu_Close();
+	}
+	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
+	{
+		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
+	}
 	else
 	{
-		if(hit_con_bind)
-			return false;
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		int i;
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
 		if (key_pressed)
 			QuickMenu_Close();
 		return false;
