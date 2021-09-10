@@ -348,7 +348,7 @@ MUTATOR_HOOKFUNCTION(sv, PlayerDies)
 	{
 		eliminatedPlayers.SendFlags |= 1;
 		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
+			bot_clearqueue(frag_target);
 	}
 
 	// killed an ally! punishment is death
