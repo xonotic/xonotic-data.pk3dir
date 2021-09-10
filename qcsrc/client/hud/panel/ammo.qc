@@ -1,6 +1,5 @@
 #include "ammo.qh"
 
-#include <client/autocvars.qh>
 #include <client/draw.qh>
 #include <client/items/items.qh>
 #include <client/view.qh>
@@ -116,7 +115,7 @@ void HUD_Ammo()
 	{
 		if((!autocvar_hud_panel_ammo) || (spectatee_status == -1))
 			return;
-		if(STAT(HEALTH) < 1 && autocvar_hud_panel_ammo_hide_ondeath)
+		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_ammo_hide_ondeath)
 			return;
 	}
 

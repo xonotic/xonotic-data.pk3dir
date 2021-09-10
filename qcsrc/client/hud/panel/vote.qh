@@ -1,4 +1,10 @@
 #pragma once
 #include "../panel.qh"
 
+bool autocvar_hud_panel_vote;
+float autocvar_hud_panel_vote_alreadyvoted_alpha;
+bool autocvar_hud_panel_vote_dynamichud         = true;
+
+int autocvar_cl_allow_uid2name;
+
 float uid2name_dialog;

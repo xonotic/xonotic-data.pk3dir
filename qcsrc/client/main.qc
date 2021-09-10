@@ -123,13 +123,13 @@ void CSQC_Init()
 
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
-		minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
+		minimapname = strcat("gfx/", mi_shortname, "_radar");
 		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
 			// but maybe we have a non-clever minimap
-			minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+			minimapname = strcat("gfx/", mi_shortname, "_mini");
 			if (precache_pic(minimapname) == "")
 				minimapname = ""; // FAIL
 			else
@@ -166,6 +166,9 @@ void Shutdown()
 	// unset the event chasecam's chase_active
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
+
+	if (autocvar_r_drawviewmodel < 0)
+		cvar_set("r_drawviewmodel", "0");
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
@@ -848,7 +851,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
-// The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
+// The parameter isnew reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
 	this.sourceLoc = __FILE__":"STR(__LINE__);
@@ -874,6 +877,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
+			ONREMOVE(this);
 			clearentity(this);
 			isnew = true;
 		}
@@ -892,7 +896,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+			LOG_INFOF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
@@ -900,7 +904,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	time = savetime;
 	if (!done)
 	{
-		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		LOG_FATALF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
@@ -1179,12 +1183,10 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_SPEED_AWARD:
 			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			strcpy(race_speedaward_holder, ReadString());
-			strcpy(race_speedaward_unit, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
 			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
-			strcpy(race_speedaward_alltimebest_unit, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_RANKINGS_CNT:
 			RANKINGS_DISPLAY_CNT = ReadByte();

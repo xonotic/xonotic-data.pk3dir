@@ -1,9 +1,36 @@
 #pragma once
 
+bool autocvar_cl_vehicles_alarm = false;
+bool autocvar_cl_vehicles_hud_tactical = true;
+float autocvar_cl_vehicles_hudscale = 0.5;
+float autocvar_cl_vehicles_notify_time = 15;
+float autocvar_cl_vehicles_crosshair_size = 0.5;
+bool autocvar_cl_vehicles_crosshair_colorize = true;
+bool autocvar__vehicles_shownchasemessage;
+vector autocvar_hud_progressbar_vehicles_ammo1_color;
+vector autocvar_hud_progressbar_vehicles_ammo2_color;
+
+const string vCROSS_BURST = "gfx/vehicles/crosshair_burst";
+const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop";
+const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide";
+const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal";
+const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint";
+const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock";
+const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain";
+
+entity dropmark;
+
+const int MAX_AXH = 4;
+entity AuxiliaryXhair[MAX_AXH];
+
+.string axh_image;
+.float  axh_fadetime;
+.int    axh_drawflag;
+
+float alarm1time;
+float alarm2time;
+
 vector vehicleHud_Size;
 vector vehicleHud_Pos;
-
-void RaptorCBShellfragDraw(entity this);
-void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 
 #define weapon2mode STAT(VEHICLESTAT_W2MODE)

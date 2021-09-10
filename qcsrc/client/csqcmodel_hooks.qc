@@ -1,6 +1,5 @@
 #include "csqcmodel_hooks.qh"
 
-#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
 #include <client/player_skeleton.qh>
 #include <client/weapons/projectile.qh>
@@ -245,8 +244,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if((autocvar_cl_forceplayercolors == 2 && team_count == 2)
-			|| (autocvar_cl_forceplayercolors == 3 && IS_GAMETYPE(DUEL)))
+		if(autocvar_cl_forceplayercolors != 3 && autocvar_cl_forceplayercolors == 2 && team_count == 2)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -281,11 +279,23 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 				this.colormap = forcecolor_enemy;
 		}
 	}
-	else
+	else // if(!teamplay)
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
-		else if(autocvar_cl_forceplayercolors)
+		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !ISGAMETYPE(DUEL))
+		{
+			// Assign each enemy unique colors
+			// pick colors from 0 to 14 since 15 is the rainbow color
+			// pl01 0 1, pl02 1 2, ..., pl14 13 14, pl15 14 0
+			// pl16 0 2, pl17 1 3, ..., pl29 13  0, pl30 14 1
+			int num = this.entnum - 1;
+			int c1 = num % 15;
+			int q = floor(num / 15);
+			int c2 = (c1 + 1 + q) % 15;
+			this.colormap = 1024 + (c1 << 4) + c2;
+		}
+		else if(autocvar_cl_forceplayercolors && (autocvar_cl_forceplayercolors != 3 || ISGAMETYPE(DUEL)))
 			this.colormap = player_localnum + 1;
 	}
 
@@ -619,7 +629,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null" || this.alpha < 0)
+	if(!this.modelindex || this.model == "null")
 	{
 		this.drawmask = 0;
 		if(this.snd_looping > 0)
@@ -675,6 +685,8 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 				tracebox(this.origin + '0 0 1', this.mins, this.maxs, this.origin - '0 0 4', MOVE_NORMAL, this);
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
+				// predicted clients handle smoothing in the prediction code
+				this.origin = CSQCModel_ApplyStairSmoothing(this, onground, this.origin);
 			}
 			animdecide_load_if_needed(this);
 			animdecide_setimplicitstate(this, onground);
@@ -737,6 +749,7 @@ void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islo
 	bool is_playermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
 							(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
+	this.csqcmodel_isdead = false; // workaround for dead players who become a spectator
 
 	// save values set by server
 	if((this.isplayermodel & ISPLAYER_MODEL))

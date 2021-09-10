@@ -134,11 +134,8 @@ bool jumppad_push(entity this, entity targ)
 		return false;
 
 	vector org = targ.origin;
-#ifdef SVQC
-	if(autocvar_sv_q3defragcompat)
-#elif defined(CSQC)
-	if(STAT(Q3DEFRAGCOMPAT))
-#endif
+
+	if(STAT(Q3COMPAT))
 	{
 		org.z += targ.mins_z;
 		org.z += 1; // off by 1!
@@ -192,7 +189,9 @@ bool jumppad_push(entity this, entity targ)
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		targ.oldvelocity = targ.velocity;
 
-		if(this.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
+		// prevent sound spam when a player hits the jumppad more than once
+		// or when a dead player gets stuck in the jumppad for some reason
+		if(this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);

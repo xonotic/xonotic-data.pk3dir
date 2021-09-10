@@ -189,7 +189,7 @@ void HUD_CenterPrint()
 
 	if ( HUD_Radar_Clickable() )
 	{
-		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
+		if (hud_panel_radar_bottom >= vid_conheight)
 			return;
 
 		panel_pos.x = 0.5 * (vid_conwidth - panel_size.x);
@@ -198,15 +198,16 @@ void HUD_CenterPrint()
 	}
 	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
-		// move the panel below the scoreboard
-		if (scoreboard_bottom >= 0.96 * vid_conheight)
-			return;
 		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom);
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
 			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
 		}
+
+		// move the panel below the scoreboard
+		if (panel_pos.y >= vid_conheight)
+			return;
 	}
 
 	if (autocvar_hud_panel_centerprint_dynamichud)

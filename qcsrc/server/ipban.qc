@@ -4,7 +4,6 @@
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
-#include <server/autocvars.qh>
 #include <server/command/banning.qh>
 #include <server/main.qh>
 

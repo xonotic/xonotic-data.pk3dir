@@ -24,7 +24,7 @@ var .float teamscores_primary;
 float scores_flags_primary;
 float teamscores_flags_primary;
 
-vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, vector previous, float strict) // returns: cmp value, best prio
+vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, vector previous, bool strict) // returns: cmp value, best prio
 {
 	if(!strict && !(fieldflags & SFL_SORT_PRIO_MASK)) // column does not sort
 		return previous;
@@ -130,7 +130,7 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 	}
 	if(score)
 		if(teamscores_label(scorefield) != "")
-			s.SendFlags |= (2 ** scorefield);
+			s.SendFlags |= BIT(scorefield);
 	return (s.(teamscores(scorefield)) += score);
 }
 
@@ -139,7 +139,7 @@ float TeamScore_Add(entity player, float scorefield, float score)
 	return TeamScore_AddToTeam(player.team, scorefield, score);
 }
 
-float TeamScore_Compare(entity t1, entity t2, float strict)
+float TeamScore_Compare(entity t1, entity t2, bool strict)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
@@ -277,7 +277,7 @@ float PlayerScore_Clear(entity player)
 	FOREACH(Scores, true, {
 		if(sk.(scores(it)) != 0)
 			if(scores_label(it) != "")
-				sk.SendFlags |= (2 ** (i % 16));
+				sk.SendFlags |= BIT(i % 16);
 		if(i != SP_ELO.m_id)
 			sk.(scores(it)) = 0;
 	});
@@ -295,7 +295,7 @@ void Score_ClearAll()
 		FOREACH(Scores, true, {
 			if(sk.(scores(it)) != 0)
 				if(scores_label(it) != "")
-					sk.SendFlags |= (2 ** (i % 16));
+					sk.SendFlags |= BIT(i % 16);
 			if(i != SP_ELO.m_id)
 				sk.(scores(it)) = 0;
 		});
@@ -309,7 +309,7 @@ void Score_ClearAll()
 		{
 			if(sk.(teamscores(j)) != 0)
 				if(teamscores_label(j) != "")
-					sk.SendFlags |= (2 ** j);
+					sk.SendFlags |= BIT(j);
 			sk.(teamscores(j)) = 0;
 		}
 	}
@@ -357,7 +357,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 		return s.(scores(scorefield));
 	}
 	if(scores_label(scorefield) != "")
-		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	if(!warmup_stage)
 		PlayerStats_GameReport_Event_Player(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
 	s.(scores(scorefield)) += score;
@@ -382,7 +382,7 @@ float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
 		return oldscore;
 
 	if(scores_label(scorefield) != "")
-		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	s.(scores(scorefield)) = score;
 	return s.(scores(scorefield));
 }
@@ -396,7 +396,7 @@ float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tsc
 	return r;
 }
 
-float PlayerScore_Compare(entity t1, entity t2, float strict)
+float PlayerScore_Compare(entity t1, entity t2, bool strict)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
@@ -492,7 +492,7 @@ void WinningConditionHelper(entity this)
 		secondscorekeeper = NULL;
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			sk = CS(it).scorekeeper;
-			c = PlayerScore_Compare(winnerscorekeeper, sk, 1);
+			c = PlayerScore_Compare(winnerscorekeeper, sk, true);
 			if(c < 0)
 			{
 				WinningConditionHelper_second = WinningConditionHelper_winner;
@@ -502,7 +502,7 @@ void WinningConditionHelper(entity this)
 			}
 			else
 			{
-				c = PlayerScore_Compare(secondscorekeeper, sk, 1);
+				c = PlayerScore_Compare(secondscorekeeper, sk, true);
 				if(c < 0)
 				{
 					WinningConditionHelper_second = it;
@@ -511,7 +511,7 @@ void WinningConditionHelper(entity this)
 			}
 		});
 
-		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
+		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, false) == 0);
 		if(WinningConditionHelper_equality)
 			WinningConditionHelper_winner = WinningConditionHelper_second = NULL;
 
@@ -533,7 +533,8 @@ void WinningConditionHelper(entity this)
 			else
 				WinningConditionHelper_topscore = -999999999;
 		}
-		WinningConditionHelper_equality = 0;
+		if(player_count == 0) // special case: empty servers DO end the match at a 0:0 tie
+			WinningConditionHelper_equality = 0;
 	}
 
 	if(WinningConditionHelper_secondscore == 0)
@@ -699,7 +700,7 @@ string GetTeamScoreString(float tm, float shortString)
 	return out;
 }
 
-float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
+float PlayerTeamScore_Compare(entity p1, entity p2, float teams, bool strict)
 {
 	if(teams && teamscores_entities_count)
 	{
@@ -719,7 +720,7 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 	return PlayerScore_Compare(CS(p1).scorekeeper, CS(p2).scorekeeper, strict);
 }
 
-entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators)
+entity PlayerScore_Sort(.float field, int teams, bool strict, bool nospectators)
 {
 	entity p, plist, pprev, pbest, pbestprev, pfirst, plast;
 	float i, j;
@@ -763,7 +764,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		pbest.chain = NULL;
 
 		++i;
-		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, 0))
+		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, strict))
 			j = i;
 
 		pbest.(field) = j;
@@ -910,7 +911,7 @@ void Score_NicePrint(entity to)
     });
 	w = bound(6, floor(SCORESWIDTH / t - 1), 9);
 
-	p = PlayerScore_Sort(score_dummyfield, 1, 1, 0);
+	p = PlayerScore_Sort(score_dummyfield, 1, true, false);
 	t = -1;
 
 	if(!teamscores_entities_count)

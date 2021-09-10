@@ -5,7 +5,6 @@ REGISTER_MUTATOR(waypointsprites, true);
 REGISTER_NET_LINKED(waypointsprites)
 
 #ifdef SVQC
-/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 {
     WriteHeader(MSG_ENTITY, waypointsprites);
@@ -15,17 +14,14 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     if (this.max_health || (this.pain_finished && (time < this.pain_finished + 0.25)))
         sendflags |= 0x80;
 
-    int f = 0;
-    if(this.currentammo == 1)
-        f |= 1; // hideable
-    if(this.exteriormodeltoclient == to)
-        f |= 2; // my own
-    if(this.currentammo == 2)
-        f |= 2; // radar only
+    int hide_flags = 0;
+    if(this.currentammo == 1) hide_flags |= 1; // hideable
+    else if(this.currentammo == 2) hide_flags |= 2; // radar only
+    if(this.exteriormodeltoclient == to) hide_flags |= 2; // my own
 
-    MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
+    MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, hide_flags);
     sendflags = M_ARGV(2, int);
-    f = M_ARGV(3, int);
+    hide_flags = M_ARGV(3, int);
 
     WriteByte(MSG_ENTITY, sendflags);
     WriteByte(MSG_ENTITY, this.wp_extra);
@@ -69,8 +65,8 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     {
         WriteCoord(MSG_ENTITY, this.fade_time);
         WriteCoord(MSG_ENTITY, this.teleport_time);
-        WriteShort(MSG_ENTITY, this.fade_rate); // maxdist
-        WriteByte(MSG_ENTITY, f);
+        WriteShort(MSG_ENTITY, bound(0, this.fade_rate, 32767)); // maxdist
+        WriteByte(MSG_ENTITY, hide_flags);
     }
 
     if (sendflags & 32)
@@ -107,7 +103,6 @@ void Ent_RemoveWaypointSprite(entity this)
     strfree(this.netname3);
 }
 
-/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
@@ -881,9 +876,13 @@ void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col)
 {
     // no check, as this is never called without doing an actual change (usually only once)
     int i = icon.m_id;
-    e.cnt = (e.cnt & BIT(7)) | (i & BITS(7));
-    e.colormod = col;
-    e.SendFlags |= 32;
+    int new_cnt = (e.cnt & BIT(7)) | (i & BITS(7));
+    if (new_cnt != e.cnt || col != e.colormod)
+    {
+    	e.cnt = new_cnt;
+    	e.colormod = col;
+    	e.SendFlags |= 32;
+    }
 }
 
 void WaypointSprite_Ping(entity e)

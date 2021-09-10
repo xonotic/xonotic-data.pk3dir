@@ -20,7 +20,7 @@ void XonoticSliderCheckBox_configureXonoticSliderCheckBox(entity me, float theOf
 		me.savedValue = theControlledSlider.valueMin;
 	me.controlledSlider = theControlledSlider;
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
-	me.cvarName = theControlledSlider.cvarName; // in case we want to display the cvar in the tooltip
+	me.controlledCvar = theControlledSlider.controlledCvar; // in case we want to display the cvar in the tooltip
 	me.tooltip = theControlledSlider.tooltip;
 }
 void XonoticSliderCheckBox_draw(entity me)

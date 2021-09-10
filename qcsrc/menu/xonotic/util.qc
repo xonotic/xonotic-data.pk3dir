@@ -26,7 +26,7 @@ void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, e
 	depthfirst(root, parent, firstChild, nextSibling, funcPre, funcPost, pass);
 }
 
-.string cvarName;
+.string controlledCvar;
 void SUB_Null_ee(entity e1, entity e2)
 {
 }
@@ -53,12 +53,12 @@ void loadAllCvars(entity root)
 	forAllDescendants(root, loadCvarsOf, SUB_Null_ee, NULL);
 }
 
-.string cvarNames_Multi;
+.string controlledCvars_Multi;
 .void(entity me) saveCvars_Multi;
 string getCvarsMulti(entity me)
 {
-	if (me.cvarNames_Multi)
-		return me.cvarNames_Multi;
+	if (me.controlledCvars_Multi)
+		return me.controlledCvars_Multi;
 	return string_null;
 }
 void saveCvarsMulti(entity me)
@@ -67,9 +67,9 @@ void saveCvarsMulti(entity me)
 	string s, cvarname;
 
 	me.saveCvars_Multi(me);
-	s = cvar_string(me.cvarName);
+	s = cvar_string(me.controlledCvar);
 
-	n = tokenize_console(me.cvarNames_Multi);
+	n = tokenize_console(me.controlledCvars_Multi);
 	for(i = 0; i < n; ++i)
 	{
 		// cvars prefixed with ! get saved with the inverted value
@@ -89,7 +89,7 @@ void saveCvarsMulti(entity me)
 }
 void makeMulti(entity e, string otherCvars)
 {
-	e.cvarNames_Multi = otherCvars;
+	e.controlledCvars_Multi = otherCvars;
 	e.saveCvars_Multi = e.saveCvars;
 	e.saveCvars = saveCvarsMulti;
 }

@@ -4,6 +4,8 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/teams.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/vote.qh>
 #include <server/damage.qh>
@@ -26,8 +28,6 @@ enum
 /// \brief Indicates that the player is not allowed to join a team.
 const int TEAM_NOT_ALLOWED = -1;
 
-.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
-
 .int m_team_balance_state; ///< Holds the state of the team balance entity.
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
@@ -44,11 +44,13 @@ string autocvar_g_forced_team_pink;
 
 entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
-STATIC_INIT(g_team_entities)
+void Team_InitTeams()
 {
+	if (g_team_entities[0])
+		return;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		g_team_entities[i] = spawn();
+		g_team_entities[i] = new_pure(team_entity);
 	}
 }
 
@@ -205,38 +207,39 @@ bool Player_SetTeamIndex(entity player, int index)
 bool SetPlayerTeam(entity player, int team_index, int type)
 {
 	int old_team_index = Entity_GetTeamIndex(player);
+
 	if (!Player_SetTeamIndex(player, team_index))
-	{
 		return false;
-	}
+
 	LogTeamChange(player.playerid, player.team, type);
+
 	if (team_index != old_team_index)
 	{
-		PlayerScore_Clear(player);
-		if (team_index != -1)
-		{
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(
-				player.team, INFO_JOIN_PLAY_TEAM), player.netname);
-		}
-		else
-		{
-			if (!CS(player).just_joined)
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
-					player.netname);
-			}
-		}
 		KillPlayerForTeamChange(player);
+		PlayerScore_Clear(player);
+		CS(player).parm_idlesince = time;
+
 		if (!IS_BOT_CLIENT(player))
-		{
 			TeamBalance_AutoBalanceBots();
+
+		if (team_index != -1)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+	}
+
+	if (team_index == -1)
+	{
+		if (autocvar_sv_maxidle_playertospectator > 0 && CS(player).idlekick_lasttimeleft)
+		{
+			// this done here so it happens even when manually speccing during the countdown
+			Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_IDLING);
+			CS(player).idlekick_lasttimeleft = 0;
+		}
+		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 		}
 	}
-	else if (team_index == -1)
-	{
-		if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
-	}
+
 	return true;
 }
 
@@ -1121,18 +1124,13 @@ void SV_ChangeTeam(entity player, int new_color)
 	{
 		SetPlayerColors(player, new_color);
 	}
-	// TODO: Should we really bother with this?
 	if(!IS_CLIENT(player))
 	{
-		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING,
-			player.netname);
 		return;
 	}
 	if (!teamplay)
 	{
 		return;
 	}
-	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) +
-		1));
+	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
 }
