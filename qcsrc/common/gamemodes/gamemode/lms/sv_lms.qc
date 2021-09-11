@@ -335,9 +335,7 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
-	TRANSMUTE(Observer, player);
 	player.frags = FRAGS_SPECTATOR;
-	player.lms_spectate_warning = 0;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)

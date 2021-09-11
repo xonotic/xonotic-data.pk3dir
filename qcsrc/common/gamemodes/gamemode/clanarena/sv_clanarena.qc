@@ -227,14 +227,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-
-	TRANSMUTE(Observer, player);
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
