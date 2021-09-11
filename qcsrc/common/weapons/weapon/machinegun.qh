@@ -38,6 +38,7 @@ CLASS(MachineGun, Weapon)
         P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, solidpenetration, float, NONE) \
 		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, spread_decay, float, NONE) \
 		P(class, prefix, spread_max, float, NONE) \
 		P(class, prefix, spread_min, float, NONE) \
 		P(class, prefix, sustained_ammo, float, NONE) \
