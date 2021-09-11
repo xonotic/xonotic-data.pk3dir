@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 07:23+0200\n"
-"PO-Revision-Date: 2021-08-09 00:33+0000\n"
+"PO-Revision-Date: 2021-08-19 23:34+0000\n"
 "Last-Translator: Jessica Amoruso <jessica.amoruso123@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -1786,7 +1786,7 @@ msgstr "Attacco di Spider"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
-msgstr ""
+msgstr "Intrappolato"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -1984,15 +1984,15 @@ msgstr "Forza"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "In fiamme"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Genera Scudo"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Superarmi"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3065,12 +3065,14 @@ msgstr "^BG%s^F3 si è disconnesso"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 è stato cacciato per inattività per %s secondi"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
+"^BG%s^F3 è stato spostato tra gli ^BG spettatori ^F3 after idling for %s "
+"secondi"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid ""
@@ -3089,7 +3091,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 adesso è uno^BG spettatore"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3848,7 +3850,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:616
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1Sei stato punito per aver attaccato i tuoi compagni di squadra!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Die camper!"
@@ -3885,7 +3887,7 @@ msgstr "^K1Sei diventato un pò troppo croccante!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1Ti sei fraggato da solo!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -4035,22 +4037,22 @@ msgstr "^K1Attento a dove metti i piedi!"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1Traditore! Hai tradito il tuo compagno di sqaudra ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1Traditore! Hai ucciso ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1Sei stato tradito dal tuo compagno di squadra ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1Sei stato ucciso dal tuo compagno di squadra ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -4065,6 +4067,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1Smettila di non far nulla!\n"
+"^BGVerrai spostato tra gli spettatori fra ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format

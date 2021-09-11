@@ -66,9 +66,9 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 .float buff_effect_delay;
 
 // buff definitions
-.float buff_active;
+.bool buff_active;
 .float buff_activetime;
-.float buff_activetime_updated;
+.bool buff_activetime_updated;
 .entity buff_waypoint;
 .entity oldbuffs; // for updating effects
 .float buff_shield; // delay for players to keep them from spamming buff pickups

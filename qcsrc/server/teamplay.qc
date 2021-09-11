@@ -28,8 +28,6 @@ enum
 /// \brief Indicates that the player is not allowed to join a team.
 const int TEAM_NOT_ALLOWED = -1;
 
-.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
-
 .int m_team_balance_state; ///< Holds the state of the team balance entity.
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
