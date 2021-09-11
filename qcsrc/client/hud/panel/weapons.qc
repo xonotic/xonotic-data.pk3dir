@@ -127,7 +127,7 @@ void HUD_Weapons()
 	int weapon_count, weapon_id;
 	int row, column, rows = 0, columns = 0;
 	bool vertical_order = true;
-	float aspect = autocvar_hud_panel_weapons_aspect;
+	float aspect = max(0.001, autocvar_hud_panel_weapons_aspect);
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);

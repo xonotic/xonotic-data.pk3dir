@@ -52,8 +52,6 @@ REGISTER_ITEM(Invisibility, Powerup) {
 }
 
 SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)
-// compat
-SPAWNFUNC_ITEM(item_invis, ITEM_Invisibility)
 
 CLASS(Invisibility, Powerups)
     ATTRIB(Invisibility, netname, string, "invisibility");

@@ -33,6 +33,7 @@ bool autocvar_g_nodepthtestplayers;
 string autocvar_g_mutatormsg;
 float autocvar_sv_foginterval;
 float autocvar_sv_maxidle;
+int autocvar_sv_maxidle_minplayers = 2;
 float autocvar_sv_maxidle_playertospectator = 60;
 bool autocvar_sv_maxidle_alsokickspectators;
 int autocvar_sv_maxidle_slots;

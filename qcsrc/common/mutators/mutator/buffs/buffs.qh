@@ -45,11 +45,13 @@ STATIC_INIT(REGISTER_BUFFS) {
 
 #ifdef SVQC
 	.entity buffdef;
+	.int team_forced;
 	void buff_Init(entity ent);
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
 		this.buffdef = b; \
-		this.team = t; \
+		if(teamplay) \
+			this.team_forced = t; \
 		buff_Init(this); \
 	}
 	#define BUFF_SPAWNFUNCS(e, b)                       \
@@ -58,11 +60,11 @@ STATIC_INIT(REGISTER_BUFFS) {
 			BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
 			BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
 			BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
-	#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r) spawnfunc(item_##o) { buff_Init_Compat(this, r); }
+	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r) spawnfunc(o) { buff_Init_Compat(this, r); }
 #else
 	#define BUFF_SPAWNFUNC(e, b, t)
 	#define BUFF_SPAWNFUNCS(e, b)
-	#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r)
+	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r)
 #endif
 
 string Buff_UndeprecateName(string buffname);

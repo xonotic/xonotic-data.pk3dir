@@ -1241,10 +1241,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	int rows = 1;
 	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((REGISTRY_COUNT(Weapons) - nHidden - 1) * 0.5))
 		rows = 2;
-	int columnns = ceil(weapon_cnt / rows);
+	int columns = ceil(weapon_cnt / rows);
 
-	float weapon_height = 29;
-	float height = hud_fontsize.y + weapon_height;
+	float aspect = max(0.001, autocvar_hud_panel_weapons_aspect);
+	float weapon_height = hud_fontsize.y * 2.3 / aspect;
+	float height = weapon_height + hud_fontsize.y;
 
 	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
@@ -1273,7 +1274,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	pos = panel_pos;
 	vector tmp = panel_size;
 
-	float weapon_width = tmp.x / columnns / rows;
+	float weapon_width = tmp.x / columns / rows;
 
 	if (sbt_bg_alpha)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
@@ -1281,7 +1282,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	if(sbt_highlight)
 	{
 		// column highlighting
-		for (int i = 0; i < columnns; ++i)
+		for (int i = 0; i < columns; ++i)
 			if ((i % 2) == 0)
 				drawfill(pos + eX * weapon_width * rows * i, vec2(weapon_width * rows, height * rows), '0 0 0', sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 
@@ -1326,11 +1327,8 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
-			string s;
-			s = sprintf("%d%%", weapon_stats * 100);
-
-			float padding;
-			padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2; // center the accuracy value
+			string s = sprintf("%d%%", weapon_stats * 100);
+			float padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2;
 
 			if(!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
@@ -1339,7 +1337,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 		tmpos.x += weapon_width * rows;
 		pos.x += weapon_width * rows;
-		if (rows == 2 && column == columnns - 1) {
+		if (rows == 2 && column == columns - 1) {
 			tmpos.x = oldposx;
 			tmpos.y += height;
 			pos.y += height;
@@ -1401,11 +1399,10 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	if (n <= 0) return pos;
 
 	int rows = (autocvar_hud_panel_scoreboard_itemstats_doublerows && n >= floor(REGISTRY_COUNT(Items) / 2)) ? 2 : 1;
-	int columnns = max(6, ceil(n / rows));
+	int columns = max(6, ceil(n / rows));
 
-	float height = 40;
-	float fontsize = height * 1/3;
-	float item_height = height * 2/3;
+	float item_height = hud_fontsize.y * 2.3;
+	float height = item_height + hud_fontsize.y;
 
 	drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
@@ -1434,7 +1431,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	pos = panel_pos;
 	vector tmp = panel_size;
 
-	float item_width = tmp.x / columnns / rows;
+	float item_width = tmp.x / columns / rows;
 
 	if (sbt_bg_alpha)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
@@ -1442,13 +1439,13 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	if(sbt_highlight)
 	{
 		// column highlighting
-		for (int i = 0; i < columnns; ++i)
+		for (int i = 0; i < columns; ++i)
 			if ((i % 2) == 0)
-				drawfill(pos + '1 0 0' * item_width * rows * i, '0 1 0' * height * rows + '1 0 0' * item_width * rows, '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * item_width * rows * i, vec2(item_width * rows, height * rows), '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + '0 1 0' * item_height + '0 1 0' * height * i, '1 0 0' * panel_size.x + '0 1 0' * fontsize, rgb, sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * (item_height + height * i), vec2(panel_size.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if (rows == 2)
@@ -1462,13 +1459,13 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
-		drawpic_aspect_skin(tmpos, it.m_icon, '1 0 0' * item_width + '0 1 0' * item_height, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, it.m_icon, eX * item_width + eY * item_height, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		string s = ftos(n);
-		float padding = (item_width - stringwidth(s, false, '1 0 0' * fontsize)) / 2; // center
-		drawstring(tmpos + '1 0 0' * padding + '0 1 0' * item_height, s, '1 1 0' * fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		float padding = (item_width - stringwidth(s, false, hud_fontsize)) / 2;
+		drawstring(tmpos + vec2(padding, item_height), s, hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		tmpos.x += item_width * rows;
 		pos.x += item_width * rows;
-		if (rows == 2 && column == columnns - 1) {
+		if (rows == 2 && column == columns - 1) {
 			tmpos.x = oldposx;
 			tmpos.y += height;
 			pos.y += height;
