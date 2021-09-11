@@ -162,7 +162,7 @@ bool lms_AddPlayer(entity player)
 		int lives = GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
 		if(lives <= 0)
 			return false;
-		player.lmsplayer = 1;
+		player.lmsplayer = 2; // temp value indicating player has just joined the game (but not spawned yet)
 	}
 	if (warmup_stage || time <= game_starttime)
 	{
@@ -203,19 +203,25 @@ MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 	if (warmup_stage || time < game_starttime)
 		return true;
 
-	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
-	float min_health = start_health;
-	float min_armorvalue = start_armorvalue;
-	FOREACH_CLIENT(it != player && IS_PLAYER(it) && !IS_DEAD(it) && GameRules_scoring_add(it, LMS_LIVES, 0) == pl_lives, {
-		if (GetResource(it, RES_HEALTH) < min_health)
-			min_health = GetResource(it, RES_HEALTH);
-		if (GetResource(it, RES_ARMOR) < min_armorvalue)
-			min_armorvalue = GetResource(it, RES_ARMOR);
-	});
-	if (min_health != start_health)
-		SetResource(player, RES_HEALTH, max(1, min_health));
-	if (min_armorvalue != start_armorvalue)
-		SetResource(player, RES_ARMOR, min_armorvalue);
+	if (player.lmsplayer == 2) // just joined the game
+	{
+		// spawn player with the same amount of health / armor
+		// as the least healthy player with the least number of lives
+		int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+		float min_health = start_health;
+		float min_armorvalue = start_armorvalue;
+		FOREACH_CLIENT(it != player && IS_PLAYER(it) && !IS_DEAD(it) && GameRules_scoring_add(it, LMS_LIVES, 0) == pl_lives, {
+			if (GetResource(it, RES_HEALTH) < min_health)
+				min_health = GetResource(it, RES_HEALTH);
+			if (GetResource(it, RES_ARMOR) < min_armorvalue)
+				min_armorvalue = GetResource(it, RES_ARMOR);
+		});
+		if (min_health != start_health)
+			SetResource(player, RES_HEALTH, max(1, min_health));
+		if (min_armorvalue != start_armorvalue)
+			SetResource(player, RES_ARMOR, min_armorvalue);
+		player.lmsplayer = 1;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
