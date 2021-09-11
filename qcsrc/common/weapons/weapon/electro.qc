@@ -468,10 +468,10 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 	{
 		W_Electro_Attack_Orb(thiswep, actor, weaponentity);
 		actor.(weaponentity).electro_count -= 1;
+		actor.(weaponentity).electro_secondarytime = time;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
-	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
 	w_ready(thiswep, actor, weaponentity, fire);
 }
 
@@ -524,6 +524,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 
     if(fire & 1)
     {
+        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor))
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
         {
                 W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
@@ -532,13 +533,13 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     }
     else if(fire & 2)
     {
-        if(time >= actor.(weaponentity).electro_secondarytime)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
+        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire) * W_WeaponRateFactor(actor))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
         {
             W_Electro_Attack_Orb(thiswep, actor, weaponentity);
             actor.(weaponentity).electro_count = WEP_CVAR_SEC(electro, count);
+            actor.(weaponentity).electro_secondarytime = time;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-            actor.(weaponentity).electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor);
         }
     }
 }
