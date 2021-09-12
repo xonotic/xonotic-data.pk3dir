@@ -10,6 +10,7 @@
 /** called when a player becomes observer, after shared setup */
 #define EV_MakePlayerObserver(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** is_forced */ i(bool, MUTATOR_ARGV_1_bool) \
     /**/
 MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
 

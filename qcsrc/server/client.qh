@@ -397,7 +397,7 @@ bool Spectate(entity this, entity pl);
 
 void ClientInit_Spawn();
 
-void PutObserverInServer(entity this);
+void PutObserverInServer(entity this, bool is_forced);
 
 void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);
