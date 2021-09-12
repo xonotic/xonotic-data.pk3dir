@@ -244,7 +244,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors != 3 && autocvar_cl_forceplayercolors == 2 && team_count == 2)
+		if(autocvar_cl_forceplayercolors == 2 && team_count == 2 && myteam != NUM_SPECTATOR)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -296,7 +296,10 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 			this.colormap = 1024 + (c1 << 4) + c2;
 		}
 		else if(autocvar_cl_forceplayercolors && (autocvar_cl_forceplayercolors != 3 || ISGAMETYPE(DUEL)))
-			this.colormap = player_localnum + 1;
+		{
+			if (!ISGAMETYPE(DUEL) || myteam != NUM_SPECTATOR)
+				this.colormap = player_localnum + 1;
+		}
 	}
 
 	LABEL(skipforcecolors)
