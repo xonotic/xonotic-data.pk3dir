@@ -24,7 +24,7 @@ void ClientKill_Now_TeamChange(entity this)
 	{
 		if (blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		PutObserverInServer(this);
+		PutObserverInServer(this, false);
 	}
 	else
 	{
