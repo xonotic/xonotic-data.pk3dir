@@ -361,6 +361,15 @@ MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(lms, PlayerPowerups)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.waypointsprite_attachedforcarrier)
+		player.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+	else
+		player.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+}
+
 MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 {
 	// forbode!
