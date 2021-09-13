@@ -172,39 +172,8 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
+MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
-	entity player = M_ARGV(0, entity);
-	player.respawn_flags |= RESPAWN_FORCE;
-
-	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
-	if (pl_lives <= 0)
-	{
-		player.respawn_flags = RESPAWN_SILENT;
-		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
-		player.respawn_time = time + 2;
-		return true;
-	}
-
-	if (autocvar_g_lms_dynamic_respawn_delay <= 0)
-		return false;
-
-	int max_lives = 0;
-	int pl_cnt = 0;
-	FOREACH_CLIENT(it != player && IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
-		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
-		if (lives > max_lives)
-			max_lives = lives;
-		pl_cnt++;
-	});
-
-	// min delay with only 2 players
-	if (pl_cnt == 1) // player wasn't counted
-		max_lives = 0;
-
-	player.respawn_time = time + autocvar_g_lms_dynamic_respawn_delay_base +
-		autocvar_g_lms_dynamic_respawn_delay_increase * max(0, max_lives - pl_lives);
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
@@ -219,6 +188,10 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 		return true;
 	}
 	return false;
+}
+
+MUTATOR_HOOKFUNCTION(lms, PlayerDies)
+{
 }
 
 void lms_RemovePlayer(entity player)
@@ -435,6 +408,41 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDied)
 {
 	if (!warmup_stage && autocvar_g_lms_leader_wp_lives > 0)
 		lms_UpdateWaypoints();
+}
+
+MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
+{
+	entity player = M_ARGV(0, entity);
+	player.respawn_flags |= RESPAWN_FORCE;
+
+	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+	if (pl_lives <= 0)
+	{
+		player.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		player.respawn_time = time + 2;
+		return true;
+	}
+
+	if (autocvar_g_lms_dynamic_respawn_delay <= 0)
+		return false;
+
+	int max_lives = 0;
+	int pl_cnt = 0;
+	FOREACH_CLIENT(it != player && IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives > max_lives)
+			max_lives = lives;
+		pl_cnt++;
+	});
+
+	// min delay with only 2 players
+	if (pl_cnt == 1) // player wasn't counted
+		max_lives = 0;
+
+	player.respawn_time = time + autocvar_g_lms_dynamic_respawn_delay_base +
+		autocvar_g_lms_dynamic_respawn_delay_increase * max(0, max_lives - pl_lives);
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
