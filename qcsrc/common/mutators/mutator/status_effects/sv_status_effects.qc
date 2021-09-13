@@ -39,18 +39,23 @@ METHOD(StatusEffects, m_apply, void(StatusEffects this, entity actor, float eff_
 
 METHOD(StatusEffects, m_remove, void(StatusEffects this, entity actor, int removal_type))
 {
-	if(!actor.statuseffects)
+	StatusEffects data = actor.statuseffects;
+	if(!data)
 		return;
-	if(removal_type == STATUSEFFECT_REMOVE_NORMAL && this.m_active(this, actor))
+	// NOTE: persistent effects do not make a sound on removal, this is intended as a workaround for #2620
+	if(removal_type == STATUSEFFECT_REMOVE_NORMAL && !(data.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT) && this.m_active(this, actor))
 		sound(actor, CH_TRIGGER, this.m_sound_rm, VOL_BASE, ATTEN_NORM);
-	actor.statuseffects.statuseffect_time[this.m_id] = 0;
-	actor.statuseffects.statuseffect_flags[this.m_id] = 0;
+	data.statuseffect_time[this.m_id] = 0;
+	data.statuseffect_flags[this.m_id] = 0;
 	StatusEffects_update(actor);
 }
 
 MUTATOR_HOOKFUNCTION(status_effects, SV_StartFrame)
 {
+	if(game_stopped)
+		return;
 	// TODO: explicitly only loop through entities with a valid statuseffects object
+	// NOTE: due to the way vehicles work currently, this does not function correctly! effect does not tick while inside a vehicle
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP || !it.statuseffects) continue;
@@ -95,7 +100,7 @@ MUTATOR_HOOKFUNCTION(status_effects, SpectateCopy)
 	client.statuseffects = spectatee.statuseffects;
 }
 
-MUTATOR_HOOKFUNCTION(status_effects, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(status_effects, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -109,8 +114,4 @@ MUTATOR_HOOKFUNCTION(status_effects, PlayerSpawn)
 		StatusEffects_clearall(player.statuseffects_store);
 		player.statuseffects = NULL;
 	}
-
-	// TODO: special hook for when effects are initialized?
-	if(STAT(WEAPONS, player) & WEPSET_SUPERWEAPONS)
-		StatusEffects_apply(STATUSEFFECT_Superweapons, player, time + autocvar_g_balance_superweapons_time, 0);
 }

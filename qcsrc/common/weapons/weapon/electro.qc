@@ -130,7 +130,7 @@ void W_Electro_TouchExplode(entity this, entity toucher)
 }
 
 
-void sys_phys_update_single(entity this);
+//void sys_phys_update_single(entity this);
 
 void W_Electro_Bolt_Think(entity this)
 {
@@ -295,6 +295,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
 	setsize(newproj, this.mins, this.maxs);
 	newproj.angles = vectoangles(-trace_plane_normal); // face against the surface
+	newproj.traileffectnum = _particleeffectnum(EFFECT_TR_NEXUIZPLASMA.eent_eff_name);
 
 	newproj.movedir = -trace_plane_normal;
 
@@ -467,10 +468,10 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 	{
 		W_Electro_Attack_Orb(thiswep, actor, weaponentity);
 		actor.(weaponentity).electro_count -= 1;
+		actor.(weaponentity).electro_secondarytime = time;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
-	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
 	w_ready(thiswep, actor, weaponentity, fire);
 }
 
@@ -523,21 +524,22 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 
     if(fire & 1)
     {
+        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor))
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
         {
-                W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
-                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
     }
     else if(fire & 2)
     {
-        if(time >= actor.(weaponentity).electro_secondarytime)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
+        if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(electro, refire) * W_WeaponRateFactor(actor))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
         {
             W_Electro_Attack_Orb(thiswep, actor, weaponentity);
             actor.(weaponentity).electro_count = WEP_CVAR_SEC(electro, count);
+            actor.(weaponentity).electro_secondarytime = time;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-            actor.(weaponentity).electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor);
         }
     }
 }
@@ -561,14 +563,6 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(electro, ammo);
     }
     return ammo_amount;
-}
-METHOD(Electro, wr_resetplayer, void(entity thiswep, entity actor))
-{
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).electro_secondarytime = time;
-    }
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {

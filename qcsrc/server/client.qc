@@ -235,9 +235,9 @@ void setplayermodel(entity e, string modelname)
 }
 
 /** putting a client as observer in the server */
-void PutObserverInServer(entity this)
+void PutObserverInServer(entity this, bool is_forced)
 {
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this, is_forced);
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -590,9 +590,13 @@ void PutPlayerInServer(entity this)
 
 	PS(this).dual_weapons = '0 0 0';
 
+	if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
+		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0);
+
 	this.items = start_items;
 
-	this.spawnshieldtime = time + autocvar_g_spawnshieldtime;
+	float shieldtime = time + autocvar_g_spawnshieldtime;
+
 	this.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 	this.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 	this.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -600,19 +604,20 @@ void PutPlayerInServer(entity this)
 	if (!sv_ready_restart_after_countdown && time < game_starttime)
 	{
 		float f = game_starttime - time;
-		this.spawnshieldtime += f;
+		shieldtime += f;
 		this.pauserotarmor_finished += f;
 		this.pauserothealth_finished += f;
 		this.pauseregen_finished += f;
 	}
+
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, shieldtime, 0);
 
 	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox;
-	this.scale = ((q3dfcompat) ? 0.9 : autocvar_sv_player_scale);
+	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.9 : autocvar_sv_player_scale);
 	this.fade_time = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
@@ -813,7 +818,7 @@ void PutClientInServer(entity this)
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
 	if (IS_OBSERVER(this)) {
-		PutObserverInServer(this);
+		PutObserverInServer(this, false);
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
@@ -1037,10 +1042,6 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
@@ -1073,8 +1074,6 @@ string getwelcomemessage(entity this)
 	}
 	return s;
 }
-
-bool autocvar_sv_qcphysics = true; // TODO this is for testing - remove when qcphysics work
 
 /**
 =============
@@ -1445,14 +1444,12 @@ void play_countdown(entity this, float finished, Sound samp)
 
 void player_powerups_remove_all(entity this)
 {
-	if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+	if (this.items & IT_SUPERWEAPON)
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
 		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
 		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-		this.items &= ~ITEM_Strength.m_itemid;
-		this.items &= ~ITEM_Shield.m_itemid;
 		this.items -= (this.items & IT_SUPERWEAPON);
 	}
 }
@@ -1464,7 +1461,7 @@ void player_powerups(entity this)
 	else
 		this.modelflags &= ~MF_ROCKET;
 
-	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_NODEPTHTEST);
+	this.effects &= ~EF_NODEPTHTEST;
 
 	if (IS_DEAD(this))
 		player_powerups_remove_all(this);
@@ -1477,48 +1474,7 @@ void player_powerups(entity this)
 
 	if (!MUTATOR_IS_ENABLED(mutator_instagib))
 	{
-		if (this.items & ITEM_Strength.m_itemid)
-		{
-			play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Strength, this), SND_POWEROFF);
-			this.effects = this.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > StatusEffects_gettime(STATUSEFFECT_Strength, this))
-			{
-				this.items = this.items - (this.items & ITEM_Strength.m_itemid);
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_STRENGTH, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
-			}
-		}
-		else
-		{
-			if (time < StatusEffects_gettime(STATUSEFFECT_Strength, this))
-			{
-				this.items = this.items | ITEM_Strength.m_itemid;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_STRENGTH);
-			}
-		}
-		if (this.items & ITEM_Shield.m_itemid)
-		{
-			play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Shield, this), SND_POWEROFF);
-			this.effects = this.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > StatusEffects_gettime(STATUSEFFECT_Shield, this))
-			{
-				this.items = this.items - (this.items & ITEM_Shield.m_itemid);
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_SHIELD, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
-			}
-		}
-		else
-		{
-			if (time < StatusEffects_gettime(STATUSEFFECT_Shield, this))
-			{
-				this.items = this.items | ITEM_Shield.m_itemid;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_SHIELD);
-			}
-		}
+		// NOTE: superweapons are a special case and as such are handled here instead of the status effects system
 		if (this.items & IT_SUPERWEAPON)
 		{
 			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
@@ -1574,10 +1530,6 @@ void player_powerups(entity this)
 
 	if(autocvar_g_fullbrightplayers)
 		this.effects = this.effects | EF_FULLBRIGHT;
-
-	if (time >= game_starttime)
-	if (time < this.spawnshieldtime)
-		this.effects = this.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups, this, items_prev);
 }
@@ -1835,7 +1787,7 @@ bool SpectateSet(entity this)
 	accuracy_resend(this);
 
 	if(!SpectateUpdate(this))
-		PutObserverInServer(this);
+		PutObserverInServer(this, false);
 
 	return true;
 }
@@ -2339,7 +2291,7 @@ void ObserverOrSpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
-				PutObserverInServer(this);
+				PutObserverInServer(this, false);
 				this.would_spectate = true;
 			}
 		}
@@ -2365,7 +2317,7 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		if(is_spec && !SpectateUpdate(this))
-			PutObserverInServer(this);
+			PutObserverInServer(this, false);
 	}
 	if (is_spec)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
@@ -2689,14 +2641,30 @@ void PlayerPostThink (entity this)
 		int totalClients = 0;
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
+			// maxidle disabled in local matches by not counting clients (totalClients 0)
+			if (server_is_dedicated)
+			{
+				FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
+				{
+					++totalClients;
+				});
+				if (maxclients - totalClients > autocvar_sv_maxidle_slots)
+					totalClients = 0;
+			}
+		}
+		else if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
 				++totalClients;
 			});
 		}
 
-		if (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
-		{ /* do nothing */ }
+		if (totalClients < autocvar_sv_maxidle_minplayers)
+		{
+			// idle kick disabled
+			CS(this).parm_idlesince = time;
+		}
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (CS(this).idlekick_lasttimeleft)
@@ -2723,9 +2691,7 @@ void PlayerPostThink (entity this)
 				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
 				{
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
-					if (this.caplayer)
-						this.caplayer = 0;
-					PutObserverInServer(this);
+					PutObserverInServer(this, true);
 				}
 				else
 				{

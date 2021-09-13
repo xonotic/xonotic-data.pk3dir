@@ -21,6 +21,7 @@
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
@@ -1230,9 +1231,13 @@ void View_PostProcessing()
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = StatusEffects_gettime(STATUSEFFECT_Strength, g_statuseffects), invincible_finished = StatusEffects_gettime(STATUSEFFECT_Shield, g_statuseffects);
-		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
-		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		float sharpen_intensity = 0;
+		FOREACH(StatusEffect, it.instanceOfPowerups,
+		{
+			float powerup_finished = StatusEffects_gettime(it, g_statuseffects) - time;
+			if(powerup_finished > 0)
+				sharpen_intensity += powerup_finished;
+		});
 
 		sharpen_intensity = bound(0, ((STAT(HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 
