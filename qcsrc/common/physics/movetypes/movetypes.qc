@@ -224,7 +224,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			}
 
 			// accept the new position if it made some progress...
-			if(fabs(this.origin_x - org.x) >= 0.03125 || fabs(this.origin_y - org.y) >= 0.03125)
+			// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
+			if(this.origin_x - org.x || this.origin_y - org.y)
 			{
 				trace_endpos = this.origin;
 				time_left *= 1 - trace2_fraction;
