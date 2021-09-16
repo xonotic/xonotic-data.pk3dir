@@ -224,7 +224,7 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 			if(d < dist)
 			{
 				e.fireball_impactvec = p;
-				RandomSelection_AddEnt(e, 1 / (1 + d), !Fire_IsBurning(e));
+				RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
 			}
 		}
 	if(RandomSelection_chosen_ent)
@@ -1140,7 +1140,7 @@ void nade_prime(entity this)
 	int ntype;
 	string pntype = this.pokenade_type;
 
-	if((this.items & ITEM_Strength.m_itemid) && autocvar_g_nades_bonus_onstrength)
+	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
 		ntype = STAT(NADE_BONUS_TYPE, this);
 	else if (STAT(NADE_BONUS, this) >= 1)
 	{

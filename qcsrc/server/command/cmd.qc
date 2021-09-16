@@ -560,22 +560,22 @@ void ClientCommand_selfstuff(entity caller, int request, string command)
 	}
 }
 
-void ClientCommand_sentcvar(entity caller, int request, int argc, string command)
+void ClientCommand_sentcvar(entity caller, int request, int argc)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argv(1) != "")
+			if (argc >= 3)
 			{
-				// float tokens;
-				string s;
-
+			// NOTE: client-side settings do not exist on the server, this functionality has been deprecated
+			#if 0
 				if (argc == 2)  // undefined cvar: use the default value on the server then
 				{
-					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+					string s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
 					tokenize_console(s);
 				}
+			#endif
 
 				GetCvars(caller, CS_CVAR(caller), 1);
 
@@ -587,7 +587,7 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar>\n");
+			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar> <arguments>\n");
 			sprint(caller, "  Where <cvar> is the cvar plus arguments to send to the server.\n");
 			return;
 		}
@@ -815,7 +815,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(ent, request, arguments, command), "Print a message to chat to all team mates") \
 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(ent, request, arguments), "Attempt to choose a team to join into") \
 	CLIENT_COMMAND("selfstuff", ClientCommand_selfstuff(ent, request, command), "Stuffcmd a command to your own client") \
-	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(ent, request, arguments, command), "New system for sending a client cvar to the server") \
+	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(ent, request, arguments), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(ent, request), "Become an observer") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \

@@ -21,6 +21,8 @@
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
@@ -401,7 +403,7 @@ void fpscounter_update()
 
 		int channel = MSG_C2S;
 		WriteHeader(channel, fpsreport);
-		WriteShort(channel, bound(0, rint(fps), 65535)); // prevent insane fps values
+		WriteShort(channel, bound(0, rint(fps), 32767)); // prevent insane fps values
 	}
 }
 
@@ -855,75 +857,6 @@ void HitSound()
 	}
 }
 
-const int MAX_SPECIALCOMMAND = 15;
-vector specialcommand_slots[MAX_SPECIALCOMMAND];
-vector specialcommand_colors[MAX_SPECIALCOMMAND];
-const float SPECIALCOMMAND_SPEED = 150;
-const float SPECIALCOMMAND_TURNSPEED = 2;
-const float SPECIALCOMMAND_SIZE = 0.025;
-const float SPECIALCOMMAND_CHANCE = 0.35;
-float sc_spawntime, sc_changetime;
-vector sc_color = '1 1 1';
-void SpecialCommand()
-{
-	if(!STAT(MOVEVARS_SPECIALCOMMAND))
-		return;
-
-	if(time >= sc_changetime)
-	{
-		sc_changetime = time + 1;
-		sc_color = randomvec() * 1.5;
-		sc_color.x = bound(0.2, sc_color.x, 0.75);
-		sc_color.y = bound(0.2, sc_color.y, 0.75);
-		sc_color.z = bound(0.2, sc_color.z, 0.75);
-	}
-	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), sc_color, autocvar_hud_colorflash_alpha * bound(0.1, sc_changetime - time, 0.3), DRAWFLAG_ADDITIVE);
-
-	if(!precache_pic("gfx/smile"))
-		return; // damn party poopers
-
-	for(int j = MAX_SPECIALCOMMAND - 1; j >= 0; --j)
-	{
-		vector slot = specialcommand_slots[j];
-		if(slot.y)
-			slot.y += SPECIALCOMMAND_SPEED * frametime;
-		//if(slot.z)
-			//slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
-		if(slot.y >= vid_conheight)
-			slot = '0 0 0';
-
-		if(slot == '0 0 0')
-		{
-			if(random() <= SPECIALCOMMAND_CHANCE && time > sc_spawntime) // low chance to spawn!
-			{
-				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
-				slot.y = 1; // start it off 0 so we can use it
-				slot.z = floor(random() * REGISTRY_MAX(Weapons));
-				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
-				vector newcolor = randomvec() * 2;
-				newcolor.x = bound(0.4, newcolor.x, 1);
-				newcolor.y = bound(0.4, newcolor.y, 1);
-				newcolor.z = bound(0.4, newcolor.z, 1);
-				specialcommand_colors[j] = newcolor;
-			}
-		}
-		else
-		{
-			vector splash_size = '0 0 0';
-			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			entity wep = REGISTRY_GET(Weapons, slot.z);
-			if(wep == WEP_Null)
-				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
-			else
-				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
-			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
-		}
-
-		specialcommand_slots[j] = slot;
-	}
-}
-
 void HUD_Draw(entity this)
 {
 	// if we don't know gametype and scores yet avoid drawing the scoreboard
@@ -981,7 +914,6 @@ void HUD_Draw(entity this)
 		}
 
 	// crosshair goes VERY LAST
-	SpecialCommand();
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
@@ -1299,9 +1231,13 @@ void View_PostProcessing()
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = STAT(STRENGTH_FINISHED), invincible_finished = STAT(INVINCIBLE_FINISHED);
-		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
-		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		float sharpen_intensity = 0;
+		FOREACH(StatusEffect, it.instanceOfPowerups,
+		{
+			float powerup_finished = StatusEffects_gettime(it, g_statuseffects) - time;
+			if(powerup_finished > 0)
+				sharpen_intensity += powerup_finished;
+		});
 
 		sharpen_intensity = bound(0, ((STAT(HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 

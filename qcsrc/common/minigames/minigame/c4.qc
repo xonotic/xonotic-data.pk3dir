@@ -18,6 +18,7 @@ const int C4_MAX_TILES = 42;
 const int C4_TILE_SIZE = 8;
 
 const int C4_TEAMS = 2;
+const int C4_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 .int c4_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
 .int c4_nexteam; // (minigame) next team (used to change the starting team on following matches)
@@ -211,7 +212,7 @@ int c4_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 2 players
-			if(pl_num >= C4_TEAMS) { return false; }
+			if(pl_num >= C4_TEAMS) { return C4_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -222,9 +223,13 @@ int c4_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == C4_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					c4_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 			}
@@ -337,17 +342,20 @@ void c4_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	if ( (active_minigame.minigame_flags&C4_TURN_TEAM) == 2 )
-		mypos_y  += player_fontsize_y + ts_y;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != C4_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		if ( (active_minigame.minigame_flags&C4_TURN_TEAM) == 2 )
+			mypos_y  += player_fontsize_y + ts_y;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != C4_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			if ( e.team == 2 )
@@ -369,6 +377,9 @@ void c4_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string c4_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == C4_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & C4_TURN_DRAW )
 		return _("Draw");
 

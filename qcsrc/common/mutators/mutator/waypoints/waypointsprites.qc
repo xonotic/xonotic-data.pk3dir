@@ -65,7 +65,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     {
         WriteCoord(MSG_ENTITY, this.fade_time);
         WriteCoord(MSG_ENTITY, this.teleport_time);
-        WriteShort(MSG_ENTITY, this.fade_rate); // maxdist
+        WriteShort(MSG_ENTITY, bound(0, this.fade_rate, 32767)); // maxdist
         WriteByte(MSG_ENTITY, hide_flags);
     }
 

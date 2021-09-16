@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-30 07:23+0200\n"
-"PO-Revision-Date: 2021-05-30 08:40+0000\n"
+"POT-Creation-Date: 2021-06-27 07:23+0200\n"
+"PO-Revision-Date: 2021-06-27 09:06+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -1209,15 +1209,15 @@ msgstr "^1Erreur :^7 Impossible de trouver l'index du pak."
 msgid "Requesting preview..."
 msgstr "Demande d'aperçu…"
 
-#: qcsrc/client/view.qc:959
+#: qcsrc/client/view.qc:892
 msgid "Nade timer"
 msgstr "Minuteur de grenade"
 
-#: qcsrc/client/view.qc:964
+#: qcsrc/client/view.qc:897
 msgid "Capture progress"
 msgstr "Capture en cours"
 
-#: qcsrc/client/view.qc:969
+#: qcsrc/client/view.qc:902
 msgid "Revival progress"
 msgstr "Dégel en cours"
 
@@ -1519,14 +1519,6 @@ msgstr "Régénérateur de carburant"
 msgid "Fuel regen"
 msgstr "Régén. essence"
 
-#: qcsrc/common/items/item/powerup.qh:47 qcsrc/common/items/item/powerup.qh:50
-msgid "Strength"
-msgstr "Force"
-
-#: qcsrc/common/items/item/powerup.qh:87 qcsrc/common/items/item/powerup.qh:90
-msgid "Shield"
-msgstr "Bouclier"
-
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
@@ -1805,6 +1797,10 @@ msgstr "Araignée"
 msgid "Spider attack"
 msgstr "Attaque d'araignée"
 
+#: qcsrc/common/monsters/monster/spider.qh:39
+msgid "Webbed"
+msgstr "Pris dans la toile"
+
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
@@ -1819,7 +1815,7 @@ msgstr "Attaque de vouivre"
 msgid "Zombie"
 msgstr "Zombie"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:16
+#: qcsrc/common/mutators/mutator/buffs/all.inc:14
 msgid "Ammo"
 msgstr "Munitions"
 
@@ -1827,63 +1823,57 @@ msgstr "Munitions"
 msgid "Resistance"
 msgstr "Résistance"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:34
-#: qcsrc/common/mutators/mutator/instagib/items.qh:130
-#: qcsrc/common/mutators/mutator/instagib/items.qh:133
-msgid "Speed"
-msgstr "Vitesse"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:44
+#: qcsrc/common/mutators/mutator/buffs/all.inc:36
 msgid "Medic"
 msgstr "Médecin"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:54
+#: qcsrc/common/mutators/mutator/buffs/all.inc:48
 msgid "Bash"
 msgstr "Coup de poing"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:63
+#: qcsrc/common/mutators/mutator/buffs/all.inc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
 msgstr "Vampire"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:71
+#: qcsrc/common/mutators/mutator/buffs/all.inc:69
 msgid "Disability"
 msgstr "Handicap"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:79
+#: qcsrc/common/mutators/mutator/buffs/all.inc:83
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
 msgstr "Vengeance"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:87
+#: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Jump"
 msgstr "Saut"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:96
-msgid "Invisible"
-msgstr "Invisibilité"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:105
+#: qcsrc/common/mutators/mutator/buffs/all.inc:115
 msgid "Inferno"
 msgstr "Inferno"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:113
+#: qcsrc/common/mutators/mutator/buffs/all.inc:125
 msgid "Swapper"
 msgstr "Échange"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:121
+#: qcsrc/common/mutators/mutator/buffs/all.inc:135
 msgid "Magnet"
 msgstr "Aimant"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:129
+#: qcsrc/common/mutators/mutator/buffs/all.inc:145
 msgid "Luck"
 msgstr "Chance"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:137
+#: qcsrc/common/mutators/mutator/buffs/all.inc:155
 msgid "Flight"
 msgstr "Envol"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
 msgid "Buff"
 msgstr "Bonus"
 
@@ -1925,11 +1915,6 @@ msgstr "Munitions du Vaporizer"
 msgid "Extra life"
 msgstr "Vie supplémentaire"
 
-#: qcsrc/common/mutators/mutator/instagib/items.qh:93
-#: qcsrc/common/mutators/mutator/instagib/items.qh:96
-msgid "Invisibility"
-msgstr "Invisibilité"
-
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
 msgstr "Grenade au napalm"
@@ -1960,7 +1945,7 @@ msgstr "Grenade piégée"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr "Grenade de voile"
+msgstr "Grenade dissimulée"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -1985,6 +1970,42 @@ msgstr "Tronçonneuse à roquettes Overkill"
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
 msgstr "Fusil Overkill"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:37
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:40
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:56
+msgid "Invisibility"
+msgstr "Invisibilité"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:36
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:39
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:54
+msgid "Shield"
+msgstr "Bouclier"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:58
+msgid "Speed"
+msgstr "Vitesse"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:55
+msgid "Strength"
+msgstr "Force"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
+msgid "Burning"
+msgstr "Enflammé"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
+msgid "Spawn Shield"
+msgstr "Bouclier d'apparition"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
+msgid "Superweapons"
+msgstr "Super-armes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -5546,7 +5567,7 @@ msgstr "%dè"
 msgid "No description"
 msgstr "Aucune description"
 
-#: qcsrc/lib/spawnfunc.qh:250
+#: qcsrc/lib/spawnfunc.qh:252
 #, c-format
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
@@ -5706,50 +5727,54 @@ msgid "Italian"
 msgstr "Italien"
 
 #: qcsrc/menu/xonotic/credits.qc:227
+msgid "Japanese"
+msgstr "Japonais"
+
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:233
 msgid "Korean"
 msgstr "Coréen"
 
-#: qcsrc/menu/xonotic/credits.qc:234
+#: qcsrc/menu/xonotic/credits.qc:237
 msgid "Polish"
 msgstr "Polonais"
 
-#: qcsrc/menu/xonotic/credits.qc:242
+#: qcsrc/menu/xonotic/credits.qc:245
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: qcsrc/menu/xonotic/credits.qc:248
+#: qcsrc/menu/xonotic/credits.qc:251
 msgid "Romanian"
 msgstr "Roumain"
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:258
 msgid "Russian"
 msgstr "Russe"
 
-#: qcsrc/menu/xonotic/credits.qc:266
+#: qcsrc/menu/xonotic/credits.qc:269
 msgid "Scottish Gaelic"
 msgstr "Gaélique écossais"
 
-#: qcsrc/menu/xonotic/credits.qc:269
+#: qcsrc/menu/xonotic/credits.qc:272
 msgid "Serbian"
 msgstr "Serbe"
 
-#: qcsrc/menu/xonotic/credits.qc:275
+#: qcsrc/menu/xonotic/credits.qc:278
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Swedish"
 msgstr "Suédois"
 
-#: qcsrc/menu/xonotic/credits.qc:290
+#: qcsrc/menu/xonotic/credits.qc:294
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
-#: qcsrc/menu/xonotic/credits.qc:297
+#: qcsrc/menu/xonotic/credits.qc:301
 msgid "Past Contributors"
 msgstr "Contributeurs passés"
 
@@ -7240,7 +7265,7 @@ msgid "Join!"
 msgstr "Rejoindre !"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 msgid "MOD^Default"
 msgstr "Par défaut"
 
@@ -8714,7 +8739,7 @@ msgid "GHOITEMS^Blue"
 msgstr "Bleu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
-#: qcsrc/menu/xonotic/serverlist.qc:750
+#: qcsrc/menu/xonotic/serverlist.qc:752
 msgid "Players"
 msgstr "Joueurs"
 
@@ -9931,91 +9956,91 @@ msgstr ""
 "Mettre le serveur en haut de la liste pour pouvoir le repérer plus "
 "facilement plus tard"
 
-#: qcsrc/menu/xonotic/serverlist.qc:746
+#: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.qc:747
+#: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Hostname"
 msgstr "Nom d'hôte"
 
-#: qcsrc/menu/xonotic/serverlist.qc:748
+#: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Map"
 msgstr "Carte"
 
-#: qcsrc/menu/xonotic/serverlist.qc:749
+#: qcsrc/menu/xonotic/serverlist.qc:751
 msgid "Type"
 msgstr "Type"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 #, c-format
 msgid "AES level %d"
 msgstr "AES niveau %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
 msgstr "aucun"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
 msgstr "chiffrement :"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 #, c-format
 msgid "mod: %s"
 msgstr "mode : %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "modified settings"
 msgstr "paramètres modifiés"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "official settings"
 msgstr "paramètres officiels"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
 msgstr "stats désactivées"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
 msgstr "stats activées"
 
-#: qcsrc/menu/xonotic/serverlist.qh:155
+#: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
 msgstr "Favoris"
 
-#: qcsrc/menu/xonotic/serverlist.qh:156
+#: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
 msgstr "Recommandés"
 
-#: qcsrc/menu/xonotic/serverlist.qh:157
+#: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Normal Servers"
 msgstr "Serveurs Normaux"
 
-#: qcsrc/menu/xonotic/serverlist.qh:158
+#: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Servers"
 msgstr "Serveurs"
 
-#: qcsrc/menu/xonotic/serverlist.qh:159
+#: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Competitive Mode"
 msgstr "Mode Compétition"
 
-#: qcsrc/menu/xonotic/serverlist.qh:160
+#: qcsrc/menu/xonotic/serverlist.qh:161
 msgid "SLCAT^Modified Servers"
 msgstr "Serveurs Modifiés"
 
-#: qcsrc/menu/xonotic/serverlist.qh:161
+#: qcsrc/menu/xonotic/serverlist.qh:162
 msgid "SLCAT^Overkill"
 msgstr "Overkill"
 
-#: qcsrc/menu/xonotic/serverlist.qh:162
+#: qcsrc/menu/xonotic/serverlist.qh:163
 msgid "SLCAT^InstaGib"
 msgstr "InstaGib"
 
-#: qcsrc/menu/xonotic/serverlist.qh:163
+#: qcsrc/menu/xonotic/serverlist.qh:164
 msgid "SLCAT^Defrag Mode"
 msgstr "Mode Defrag"
 

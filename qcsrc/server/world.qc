@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
+		WriteShort(MSG_BROADCAST, bound(1, rint(CS(e).ping), 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
@@ -356,6 +356,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADCVAR("g_ctf_flagcarrier_auto_helpme_damage");
 		BADPRESUFFIX("g_ctf_flag_", "_model");
 		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
@@ -391,6 +392,7 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_qcphysics");
 		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
@@ -870,12 +872,6 @@ spawnfunc(worldspawn)
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
 
-		// TODO to mutator system
-		if(autocvar_g_powerups == 0)
-			s = strcat(s, ":no_powerups");
-		if(autocvar_g_powerups > 0)
-			s = strcat(s, ":powerups");
-
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}
@@ -894,11 +890,8 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	if(fexists(strcat("scripts/", mapname, ".arena")))
-		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
-
-	if(fexists(strcat("scripts/", mapname, ".defi")))
-		cvar_settemp("sv_q3defragcompat", "1");
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -2214,11 +2207,11 @@ void droptofloor(entity this)
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
-void RunThink(entity this)
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -2234,7 +2227,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -2264,8 +2257,8 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 

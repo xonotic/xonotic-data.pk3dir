@@ -9,6 +9,8 @@
 # Andrei Stepanov <adem4ik@gmail.com>, 2014-2021
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
+# Blueberryy <igory.ygr200@gmail.com>, 2021
+# Blueberryy <igory.ygr200@gmail.com>, 2021
 # Lord Canistra <lordcanistra@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
 # Nick S <morosophos@teichisma.info>, 2018-2019
@@ -18,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-30 07:23+0200\n"
-"PO-Revision-Date: 2021-05-30 09:26+0000\n"
+"POT-Creation-Date: 2021-06-27 07:23+0200\n"
+"PO-Revision-Date: 2021-06-27 08:29+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -211,7 +213,7 @@ msgstr "^1Наблюдают за вами:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Нажмите ^3ESC ^7для просмотра настроек HUD."
+msgstr "^7Нажмите ^3ESC ^7для просмотра настроек интерфейса."
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -405,7 +407,7 @@ msgstr "QMCMD^Настройки"
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^View/HUD settings"
-msgstr "QMCMD^Настройки вида/HUD"
+msgstr "QMCMD^Настройки вида/интерфейса"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^3rd person view"
@@ -1080,7 +1082,7 @@ msgstr "РАЗМИНКА"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr "^1Вы должны ответить перед входом в режим настройки HUD"
+msgstr "^1Вы должны ответить перед входом в режим настройки интерфейса"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1096,7 +1098,7 @@ msgstr "Позволить серверам хранить и отображат
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
-msgstr "^1Настроить HUD"
+msgstr "^1Настроить интерфейс"
 
 #: qcsrc/client/hud/panel/vote.qc:129
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
@@ -1204,15 +1206,15 @@ msgstr "^1Error:^7 Не удалось найти индекс пака."
 msgid "Requesting preview..."
 msgstr "Запрос эскиза…"
 
-#: qcsrc/client/view.qc:959
+#: qcsrc/client/view.qc:892
 msgid "Nade timer"
 msgstr "Таймер гранаты"
 
-#: qcsrc/client/view.qc:964
+#: qcsrc/client/view.qc:897
 msgid "Capture progress"
 msgstr "Прогресс захвата"
 
-#: qcsrc/client/view.qc:969
+#: qcsrc/client/view.qc:902
 msgid "Revival progress"
 msgstr "Прогресс оживления"
 
@@ -1511,14 +1513,6 @@ msgstr "Регенератор топлива"
 msgid "Fuel regen"
 msgstr "Регенератор топлива"
 
-#: qcsrc/common/items/item/powerup.qh:47 qcsrc/common/items/item/powerup.qh:50
-msgid "Strength"
-msgstr "Сила"
-
-#: qcsrc/common/items/item/powerup.qh:87 qcsrc/common/items/item/powerup.qh:90
-msgid "Shield"
-msgstr "Щит"
-
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
@@ -1791,6 +1785,10 @@ msgstr "Паук"
 msgid "Spider attack"
 msgstr "Атака паука"
 
+#: qcsrc/common/monsters/monster/spider.qh:39
+msgid "Webbed"
+msgstr "Паутинный"
+
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
@@ -1805,7 +1803,7 @@ msgstr "Атака виверна"
 msgid "Zombie"
 msgstr "Зомби"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:16
+#: qcsrc/common/mutators/mutator/buffs/all.inc:14
 msgid "Ammo"
 msgstr "Патроны"
 
@@ -1813,63 +1811,57 @@ msgstr "Патроны"
 msgid "Resistance"
 msgstr "Сопротивление"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:34
-#: qcsrc/common/mutators/mutator/instagib/items.qh:130
-#: qcsrc/common/mutators/mutator/instagib/items.qh:133
-msgid "Speed"
-msgstr "Скорость"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:44
+#: qcsrc/common/mutators/mutator/buffs/all.inc:36
 msgid "Medic"
 msgstr "Медик"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:54
+#: qcsrc/common/mutators/mutator/buffs/all.inc:48
 msgid "Bash"
 msgstr "Удар"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:63
+#: qcsrc/common/mutators/mutator/buffs/all.inc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
 msgstr "Вампиризм"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:71
+#: qcsrc/common/mutators/mutator/buffs/all.inc:69
 msgid "Disability"
 msgstr "Бессилие"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:79
+#: qcsrc/common/mutators/mutator/buffs/all.inc:83
+msgid "Disabled"
+msgstr "Выключено"
+
+#: qcsrc/common/mutators/mutator/buffs/all.inc:94
 msgid "Vengeance"
 msgstr "Месть"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:87
+#: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Jump"
 msgstr "Прыжок"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:96
-msgid "Invisible"
-msgstr "Невидимый"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:105
+#: qcsrc/common/mutators/mutator/buffs/all.inc:115
 msgid "Inferno"
 msgstr "Инферно"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:113
+#: qcsrc/common/mutators/mutator/buffs/all.inc:125
 msgid "Swapper"
 msgstr "Сваппер"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:121
+#: qcsrc/common/mutators/mutator/buffs/all.inc:135
 msgid "Magnet"
 msgstr "Магнит"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:129
+#: qcsrc/common/mutators/mutator/buffs/all.inc:145
 msgid "Luck"
 msgstr "Удача"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:137
+#: qcsrc/common/mutators/mutator/buffs/all.inc:155
 msgid "Flight"
 msgstr "Полёт"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
 msgid "Buff"
 msgstr "Бонус"
 
@@ -1910,11 +1902,6 @@ msgstr "Патроны испарителя"
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
 msgid "Extra life"
 msgstr "Экстра жизнь"
-
-#: qcsrc/common/mutators/mutator/instagib/items.qh:93
-#: qcsrc/common/mutators/mutator/instagib/items.qh:96
-msgid "Invisibility"
-msgstr "Невидимость"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
@@ -1971,6 +1958,42 @@ msgstr "Оверкилл Реактивная Бензопила"
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
 msgstr "Оверкилл Дробовик"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:37
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:40
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:56
+msgid "Invisibility"
+msgstr "Невидимость"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:36
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:39
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:54
+msgid "Shield"
+msgstr "Щит"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:58
+msgid "Speed"
+msgstr "Скорость"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:41
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:55
+msgid "Strength"
+msgstr "Сила"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
+msgid "Burning"
+msgstr "Горение"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
+msgid "Spawn Shield"
+msgstr "Защита при возрождении"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
+msgid "Superweapons"
+msgstr "Супероружия"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -5490,7 +5513,7 @@ msgstr "%d"
 msgid "No description"
 msgstr "Без описания"
 
-#: qcsrc/lib/spawnfunc.qh:250
+#: qcsrc/lib/spawnfunc.qh:252
 #, c-format
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
@@ -5650,50 +5673,54 @@ msgid "Italian"
 msgstr "Итальянский"
 
 #: qcsrc/menu/xonotic/credits.qc:227
+msgid "Japanese"
+msgstr "Японский"
+
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Kazakh"
 msgstr "Казахский"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:233
 msgid "Korean"
 msgstr "Корейский"
 
-#: qcsrc/menu/xonotic/credits.qc:234
+#: qcsrc/menu/xonotic/credits.qc:237
 msgid "Polish"
 msgstr "Польский"
 
-#: qcsrc/menu/xonotic/credits.qc:242
+#: qcsrc/menu/xonotic/credits.qc:245
 msgid "Portuguese"
 msgstr "Португальский"
 
-#: qcsrc/menu/xonotic/credits.qc:248
+#: qcsrc/menu/xonotic/credits.qc:251
 msgid "Romanian"
 msgstr "Румынский"
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:258
 msgid "Russian"
 msgstr "Русский"
 
-#: qcsrc/menu/xonotic/credits.qc:266
+#: qcsrc/menu/xonotic/credits.qc:269
 msgid "Scottish Gaelic"
 msgstr "Шотландский"
 
-#: qcsrc/menu/xonotic/credits.qc:269
+#: qcsrc/menu/xonotic/credits.qc:272
 msgid "Serbian"
 msgstr "Сербский"
 
-#: qcsrc/menu/xonotic/credits.qc:275
+#: qcsrc/menu/xonotic/credits.qc:278
 msgid "Spanish"
 msgstr "Испанский"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Swedish"
 msgstr "Шведский"
 
-#: qcsrc/menu/xonotic/credits.qc:290
+#: qcsrc/menu/xonotic/credits.qc:294
 msgid "Ukrainian"
 msgstr "Украинский"
 
-#: qcsrc/menu/xonotic/credits.qc:297
+#: qcsrc/menu/xonotic/credits.qc:301
 msgid "Past Contributors"
 msgstr "Прошлые участники"
 
@@ -6250,7 +6277,7 @@ msgstr "Таблица очков"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
-msgstr "Режим HUD'a распрыжки:"
+msgstr "Режим интерфейса распрыжки:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "View angle centered"
@@ -6262,7 +6289,7 @@ msgstr "Угол скорости по центру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr "Стиль HUD'a распрыжки:"
+msgstr "Стиль интерфейсa распрыжки:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
@@ -6333,7 +6360,7 @@ msgstr "Неактивный:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr "Панель HUD'a распрыжки"
+msgstr "Панель интерфейса распрыжки"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
@@ -6441,7 +6468,7 @@ msgstr "Панель оружия"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
-msgstr "Темы HUD"
+msgstr "Темы интерфейса"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
@@ -6499,7 +6526,7 @@ msgstr "Отступ:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:93
 msgid "HUD Dock:"
-msgstr "Область HUD:"
+msgstr "Область интерфейса:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
@@ -6543,7 +6570,7 @@ msgstr "Выйти из настроек"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:6
 msgid "Panel HUD Setup"
-msgstr "Настройка панелей HUD"
+msgstr "Настройка панелей интерфейса"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -7177,7 +7204,7 @@ msgid "Join!"
 msgstr "Присоединиться!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 msgid "MOD^Default"
 msgstr "MOD^Стандартный"
 
@@ -8458,15 +8485,15 @@ msgstr "Индикатор урона:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "Dynamic HUD"
-msgstr "Динамический HUD"
+msgstr "Динамический интерфейс"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "HUD moves around following player's movement"
-msgstr "HUD покачивается в зависимости от движений игрока"
+msgstr "Интерфейс покачивается в зависимости от движений игрока"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "Shake the HUD when hurt"
-msgstr "Сотрясать HUD при получении урона"
+msgstr "Содрогание интерфейса при получении урона"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
@@ -8475,15 +8502,15 @@ msgstr "Открыть редактор HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
-msgstr "HUD"
+msgstr "Интерфейс"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr "Редактор HUD работает только при запущенной игре."
+msgstr "Редактор интерфейса работает только при запущенной игре."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "Хотите начать локальную игру для настройки HUD?"
+msgstr "Хотите начать локальную игру для настройки интерфейса?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
@@ -8636,7 +8663,7 @@ msgid "GHOITEMS^Blue"
 msgstr "Синий"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
-#: qcsrc/menu/xonotic/serverlist.qc:750
+#: qcsrc/menu/xonotic/serverlist.qc:752
 msgid "Players"
 msgstr "Игроки"
 
@@ -9619,7 +9646,7 @@ msgstr "командный"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr "игра для всех"
+msgstr "каждый сам за себя"
 
 #: qcsrc/menu/xonotic/keybinder.qc:35
 msgid "Moving"
@@ -9840,91 +9867,91 @@ msgid ""
 msgstr ""
 "Добавить выбранный сервер в закладки, чтобы быстрее найти его в будущем"
 
-#: qcsrc/menu/xonotic/serverlist.qc:746
+#: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Ping"
 msgstr "Пинг"
 
-#: qcsrc/menu/xonotic/serverlist.qc:747
+#: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Hostname"
 msgstr "Имя сервера"
 
-#: qcsrc/menu/xonotic/serverlist.qc:748
+#: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Map"
 msgstr "Арена"
 
-#: qcsrc/menu/xonotic/serverlist.qc:749
+#: qcsrc/menu/xonotic/serverlist.qc:751
 msgid "Type"
 msgstr "Режим"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 #, c-format
 msgid "AES level %d"
 msgstr "Уровень AES %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
 msgstr "ENC^нет"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1032
+#: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
 msgstr "шифрование:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1033
+#: qcsrc/menu/xonotic/serverlist.qc:1041
 #, c-format
 msgid "mod: %s"
 msgstr "мод: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "modified settings"
 msgstr "изменённые настройки"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1035
+#: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "official settings"
 msgstr "официальные настройки"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
 msgstr "статистика отключена"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1037
+#: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
 msgstr "статистика включена"
 
-#: qcsrc/menu/xonotic/serverlist.qh:155
+#: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
 msgstr "Избранные"
 
-#: qcsrc/menu/xonotic/serverlist.qh:156
+#: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
 msgstr "Рекомендуемые"
 
-#: qcsrc/menu/xonotic/serverlist.qh:157
+#: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Normal Servers"
 msgstr "Обычные серверы"
 
-#: qcsrc/menu/xonotic/serverlist.qh:158
+#: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Servers"
 msgstr "Серверы"
 
-#: qcsrc/menu/xonotic/serverlist.qh:159
+#: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Competitive Mode"
 msgstr "Спортивный режим"
 
-#: qcsrc/menu/xonotic/serverlist.qh:160
+#: qcsrc/menu/xonotic/serverlist.qh:161
 msgid "SLCAT^Modified Servers"
 msgstr "Модифицированные"
 
-#: qcsrc/menu/xonotic/serverlist.qh:161
+#: qcsrc/menu/xonotic/serverlist.qh:162
 msgid "SLCAT^Overkill"
 msgstr "SLCAT^Оверкилл"
 
-#: qcsrc/menu/xonotic/serverlist.qh:162
+#: qcsrc/menu/xonotic/serverlist.qh:163
 msgid "SLCAT^InstaGib"
 msgstr "SLCAT^Инстагиб"
 
-#: qcsrc/menu/xonotic/serverlist.qh:163
+#: qcsrc/menu/xonotic/serverlist.qh:164
 msgid "SLCAT^Defrag Mode"
 msgstr "Гоночный режим"
 
