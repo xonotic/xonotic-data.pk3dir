@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-09-19 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-09-20 12:35+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -74,12 +74,12 @@ msgstr "^1Osservando"
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Assistendo: ^7%s"
+msgstr "^1Guardando: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Premi ^3%s^1 per assistere"
+msgstr "^1Premi ^3%s^1 per guardare"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -196,7 +196,7 @@ msgstr "menu scelta squadra"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
-msgstr "^1Guardando questo giocatore:"
+msgstr "^1Stanno guardando questo giocatore:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating you:"
@@ -1576,7 +1576,7 @@ msgstr "Ben fatto! Clicca 'Prossimo livello' per continuare"
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Stai guardando"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -1998,7 +1998,7 @@ msgstr "In fiamme"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr "Genera Scudo"
+msgstr "Scudo di nascita"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -3075,13 +3075,13 @@ msgstr "^BG%s^F3 si è disconnesso"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr "^BG%s^F3 è stato cacciato per inattività per %s secondi"
+msgstr "^BG%s^F3 è stato cacciato perché inattivo per %s secondi"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
-"^BG%s^F3 è stato spostato tra gli ^BG spettatori ^F3 after idling for %s "
+"^BG%s^F3 è stato spostato tra gli ^BG spettatori ^F3 perché inattivo per %s "
 "secondi"
 
 #: qcsrc/common/notifications/all.inc:413
@@ -3089,14 +3089,14 @@ msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
-"^F2Sei stato buttato fuori dal server perché sei spettatore e gli spettatori "
-"non sono permessi al momento."
+"^F2Sei stato cacciato dal server perché sei spettatore e gli spettatori non "
+"sono permessi al momento."
 
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
 msgstr ""
-"^BG%s^F3 è stato buttato fuori per eccessive uccisioni di compagni di squadra"
+"^BG%s^F3 è stato cacciato per eccessive uccisioni di compagni di squadra"
 
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
@@ -3178,8 +3178,8 @@ msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
-"^F2Devi entrare in gioco entro i prossimi %s, altrimenti sarai buttato "
-"fuori, perchè in questo momento non è permesso guardare!"
+"^F2Devi entrare in gioco entro i prossimi %s, altrimenti sarai cacciato, "
+"perchè in questo momento non è permesso guardare!"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
@@ -8847,7 +8847,7 @@ msgstr "Distanza in su"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:65
 msgid "Allow passing through walls while spectating"
-msgstr "Consenti attraversamento dei muri mentre si osserva"
+msgstr "Consenti attraversamento dei muri mentre si guarda"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:69
 msgid "Field of view:"
@@ -9838,7 +9838,7 @@ msgstr "vista terza persona"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "enter spectator mode"
-msgstr "modalità spettatore"
+msgstr "diventa spettatore"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
