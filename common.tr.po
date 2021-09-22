@@ -6,9 +6,9 @@
 # Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>, 2019
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
-# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
+# Big Brother <tanakinci2002@gmail.com>, 2021
 # ibra kap <ibrakap@gmail.com>, 2019
-# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
+# Big Brother <tanakinci2002@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
