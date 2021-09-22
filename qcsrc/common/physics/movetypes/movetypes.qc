@@ -179,6 +179,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		if(trace_fraction == 1)
 			break;
 
+		time_left *= 1 - trace_fraction;
+
 		float my_trace_fraction = trace_fraction;
 		vector my_trace_plane_normal = trace_plane_normal;
 
@@ -204,6 +206,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			// step - handle it immediately
 			vector org = this.origin;
 			vector steppush = '0 0 1' * stepheight;
+			push = this.velocity * time_left;
 
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
@@ -249,8 +252,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			original_velocity = this.velocity;
 			numplanes = 0;
 		}
-
-		time_left *= 1 - my_trace_fraction;
 
 		// clipped to another plane
 		if(numplanes >= MAX_CLIP_PLANES)
