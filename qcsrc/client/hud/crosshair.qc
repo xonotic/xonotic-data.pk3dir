@@ -229,7 +229,7 @@ void HUD_Crosshair(entity this)
 	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
 		csqcplayer.alpha = csqcplayer.m_alpha;
 
-	if (autocvar_chase_active > 0 && autocvar_chase_front)
+	if (autocvar_chase_active > 0 && (autocvar_chase_front || autocvar_cl_lockview))
 	{
 		if (csqcplayer.alpha != csqcplayer.m_alpha)
 			HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
