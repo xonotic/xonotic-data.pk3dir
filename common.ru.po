@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-09-19 19:22+0000\n"
+"PO-Revision-Date: 2021-09-27 11:59+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -271,11 +271,11 @@ msgstr "QMCMD^хорошая игра"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^привет и удачи"
+msgstr "QMCMD^привет / удачной игры"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^привет, приятной игры и удачи"
+msgstr "QMCMD^привет / удачи и приятной игры"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^Send in English"
@@ -1507,11 +1507,11 @@ msgstr "топливо"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr "Регенератор топлива"
+msgstr "Топливный восстановитель"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
-msgstr "Регенератор топлива"
+msgstr "Топливный восстановитель"
 
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
@@ -1695,7 +1695,7 @@ msgstr "Бот"
 
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
-msgstr "Нажмите \"^1Начать матч^7\" для старта игры с текущим игроком"
+msgstr "Нажмите \"^1Начать матч^7\" для старта матча с текущими игроками"
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
@@ -2186,7 +2186,7 @@ msgid ""
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG захватил ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий рекорд "
-"^BG%s^BG -— ^F2%s^BG секунды"
+"^BG%s^BG — ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:230
 #, c-format
@@ -2977,7 +2977,7 @@ msgstr "^BG%s^F3 аннулирован"
 #: qcsrc/common/notifications/all.inc:392
 #, c-format
 msgid "^BG%s^F3 has no more lives left"
-msgstr " У ^BG%s^F3 закончились жизни"
+msgstr "У ^BG%s^F3 закончились жизни"
 
 #: qcsrc/common/notifications/all.inc:394
 msgid "^BGMonsters are currently disabled"
@@ -3986,7 +3986,7 @@ msgstr "^K1Предатель! Вы подвели товарища по ком�
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr "^K1Предатель! Вы убили сююзника ^BG%s"
+msgstr "^K1Предатель! Вы убили союзника ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
@@ -4045,7 +4045,7 @@ msgstr "^K3Вы оживили сами себя"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3Вы были оживлены ^BG%s"
+msgstr "^K3Вас оживил ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:666
 #, c-format
@@ -4075,7 +4075,7 @@ msgstr "^K1A %s прибыл!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGУ вас есть ^F1Регенератор топлива"
+msgstr "^BGУ вас есть ^F1Топливный восстановитель"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^BGYou got the ^F1Jetpack"
