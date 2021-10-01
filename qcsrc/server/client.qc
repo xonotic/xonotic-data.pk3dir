@@ -1578,7 +1578,9 @@ float CalcRot(float current, float stable, float rotfactor, float rotframetime)
 		return max(stable, current + (stable - current) * rotfactor * rotframetime);
 }
 
-void RotRegen(entity this, int res, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod)
+void RotRegen(entity this, int res, float limit_mod,
+	float regenstable, float regenfactor, float regenlinear, float regenframetime,
+	float rotstable, float rotfactor, float rotlinear, float rotframetime)
 {
 	float old = GetResource(this, res);
 	float current = old;
@@ -1631,19 +1633,27 @@ void player_regen(entity this)
 	regen_health_stable = M_ARGV(9, float);
 	regen_health_rotstable = M_ARGV(10, float);
 
+	float rotstable, regenstable, rotframetime, regenframetime;
+
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
-		float maxa = autocvar_g_balance_armor_rotstable;
-		float mina = autocvar_g_balance_armor_regenstable;
+		regenstable = autocvar_g_balance_armor_regenstable;
+		rotstable = autocvar_g_balance_armor_rotstable;
+		regenframetime = (time > this.pauseregen_finished) ? (regen_mod * frametime) : 0;
+		rotframetime = (time > this.pauserotarmor_finished) ? (rot_mod * frametime) : 0;
+		RotRegen(this, RES_ARMOR, limit_mod,
+			regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regenframetime,
+			rotstable, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rotframetime);
 
-		RotRegen(this, RES_ARMOR, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear,
-			regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
-			rot_mod * frametime * (time > this.pauserotarmor_finished), limit_mod);
-
-		RotRegen(this, RES_HEALTH, regen_health_stable * max_mod, regen_health, regen_health_linear,
-			regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable * max_mod, regen_health_rot, regen_health_rotlinear,
-			rot_mod * frametime * (time > this.pauserothealth_finished), limit_mod);
+		// NOTE: max_mod is only applied to health
+		regenstable = regen_health_stable * max_mod;
+		rotstable = regen_health_rotstable * max_mod;
+		regenframetime = (time > this.pauseregen_finished) ? (regen_mod * frametime) : 0;
+		rotframetime = (time > this.pauserothealth_finished) ? (rot_mod * frametime) : 0;
+		RotRegen(this, RES_HEALTH, limit_mod,
+			regenstable, regen_health, regen_health_linear, regenframetime,
+			rotstable, regen_health_rot, regen_health_rotlinear, rotframetime);
 	}
 
 	// if player rotted to death...  die!
@@ -1658,12 +1668,13 @@ void player_regen(entity this)
 
 	if (!(this.items & IT_UNLIMITED_AMMO))
 	{
-		float maxf = autocvar_g_balance_fuel_rotstable;
-		float minf = autocvar_g_balance_fuel_regenstable;
-
-		RotRegen(this, RES_FUEL, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear,
-			frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
-			maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), 1);
+		regenstable = autocvar_g_balance_fuel_regenstable;
+		rotstable = autocvar_g_balance_fuel_rotstable;
+		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_JetpackRegen.m_itemid)) ? frametime : 0;
+		rotframetime = (time > this.pauserotfuel_finished) ? frametime : 0;
+		RotRegen(this, RES_FUEL, 1,
+			regenstable, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regenframetime,
+			rotstable, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rotframetime);
 	}
 }
 
