@@ -5,6 +5,7 @@
 # Translators:
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # Adam Říha, 2021
+# Adam Říha, 2021
 # fasdasd sdasd <transifexalternativeaccount@yopmail.com>, 2021
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
 # Jan Kocka <kockahonza@gmail.com>, 2019
