@@ -241,8 +241,7 @@ vector bobmodel_ofs(entity view)
 
 void viewmodel_animate(entity this)
 {
-	if (autocvar_chase_active) return;
-	if (STAT(HEALTH) <= 0) return;
+	if (autocvar_chase_active || STAT(HEALTH) <= 0) return;
 
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 
