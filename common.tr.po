@@ -9,6 +9,7 @@
 # Demiray Muhterem <mdemiray@msn.com>, 2018
 # Big Brother <tanakinci2002@gmail.com>, 2021
 # Gokdeniz.Kucukali, 2021
+# Gokdeniz.Kucukali, 2021
 # ibra kap <ibrakap@gmail.com>, 2019
 # Big Brother <tanakinci2002@gmail.com>, 2021
 msgid ""
@@ -16,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-10-04 17:15+0000\n"
+"PO-Revision-Date: 2021-10-05 12:37+0000\n"
 "Last-Translator: Gokdeniz.Kucukali\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
@@ -246,7 +247,7 @@ msgstr "Sohbet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Kişisine herkese açık mesaj gönder"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^:-) / nice one"
@@ -422,7 +423,7 @@ msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Net graph"
-msgstr ""
+msgstr "QMCMD^Ağ grafiği"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 #: qcsrc/client/hud/panel/quickmenu.qc:846
@@ -589,11 +590,11 @@ msgstr "SCO^hasar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "The total damage done"
-msgstr ""
+msgstr "Verilen toplam hasar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^dmgtaken"
-msgstr ""
+msgstr "SCO^alınan hasar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage taken"
@@ -617,7 +618,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^fastest"
-msgstr ""
+msgstr "SCO^en hızlı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Time of fastest lap (Race/CTS)"
@@ -645,7 +646,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of kills minus suicides"
@@ -857,7 +858,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^time"
-msgstr ""
+msgstr "SCO^süre"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Total time raced (Race/CTS)"
@@ -973,13 +974,13 @@ msgstr "Seyirciler"
 #: qcsrc/client/hud/panel/scoreboard.qc:1872
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f dakika"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1881
 #: qcsrc/client/hud/panel/scoreboard.qc:1888
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1882
 #: qcsrc/client/hud/panel/scoreboard.qc:1889
@@ -1046,7 +1047,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:71
 msgid "WARMUP"
-msgstr ""
+msgstr "ISINMA"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1171,7 +1172,7 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:532
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Önizleme isteniyor..."
 
 #: qcsrc/client/view.qc:892
 msgid "Nade timer"
