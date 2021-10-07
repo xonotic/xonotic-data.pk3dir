@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-10-05 12:37+0000\n"
+"PO-Revision-Date: 2021-10-06 15:59+0000\n"
 "Last-Translator: Gokdeniz.Kucukali\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
@@ -7794,35 +7794,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
-msgstr ""
+msgstr "DET^En düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "DET^Low"
-msgstr ""
+msgstr "DET^Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr ""
+msgstr "DET^Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
-msgstr ""
+msgstr "DET^İyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "DET^Best"
-msgstr ""
+msgstr "DET^En iyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr ""
+msgstr "DET^Aşırı yüksek"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
-msgstr ""
+msgstr "Karakter detayları:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr ""
+msgstr "PDET^Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
@@ -7830,19 +7830,19 @@ msgstr "PDET^Vasat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr ""
+msgstr "PDET^Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
-msgstr ""
+msgstr "PDET^İyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr ""
+msgstr "PDET^En iyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
-msgstr ""
+msgstr "Doku çözünürlüğü"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
 msgid "RES^Leet"
@@ -7850,27 +7850,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "RES^Lowest"
-msgstr ""
+msgstr "RES^En düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:93
 msgid "RES^Very low"
-msgstr ""
+msgstr "RES^Çok düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:94
 msgid "RES^Low"
-msgstr ""
+msgstr "RES^Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
 msgid "RES^Normal"
-msgstr ""
+msgstr "RES^Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
 msgid "RES^Good"
-msgstr ""
+msgstr "RES^İyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "RES^Best"
-msgstr ""
+msgstr "RES^En iyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
@@ -7880,11 +7880,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable sky for performance and visibility"
-msgstr ""
+msgstr "Performans ve görünürlük için gökyüzünü devre dışı bırak"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Gökyüzünü göster"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -7895,6 +7895,8 @@ msgid ""
 "Disable textures completely for very slow hardware. This gives a huge "
 "performance boost, but looks very ugly."
 msgstr ""
+"Düşük donanımlar için dokuları devre dışı bırakır. Büyük ölçüde performans "
+"artışı sağlar, fakat kötü gözükür."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid "Use lightmaps"
@@ -7916,7 +7918,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Gloss"
-msgstr ""
+msgstr "Parıltı"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:143
 msgid "Enable the use of glossmaps on textures supporting it"
@@ -7943,13 +7945,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
 msgid "Reflections:"
-msgstr ""
+msgstr "Yansıma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:154
 msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
+"Yansıma ve ışık kırılması kalitesinin bazı haritalar üzerinde önemli "
+"performans etkisi vardır"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
 msgid "Resolution of reflections/refractions"
@@ -7957,7 +7961,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:158
 msgid "Blurred"
-msgstr ""
+msgstr "Bulanık"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "REFL^Good"
@@ -7965,7 +7969,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Sharp"
-msgstr ""
+msgstr "Keskin"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Decals"
@@ -7982,7 +7986,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
 msgid "Distance:"
-msgstr ""
+msgstr "Mesafe:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:173
 msgid "Decals further away than this will not be drawn"
@@ -7990,7 +7994,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
 msgid "Time:"
-msgstr ""
+msgstr "Süre:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:180
 msgid "Time in seconds before decals fade away"
@@ -8002,7 +8006,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "DMGFX^Disabled"
-msgstr ""
+msgstr "DMGFX^Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
 msgid "Skeletal"
@@ -8014,7 +8018,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "No dynamic lighting"
-msgstr ""
+msgstr "Dinamik ışıklandırma kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid "Enable corona flares around certain lights"
@@ -8041,7 +8045,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Shadows"
-msgstr ""
+msgstr "Gölgeler"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:203
 msgid "Enable rendering of shadows from dynamic lights"
@@ -8063,7 +8067,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Use normal maps"
-msgstr ""
+msgstr "Normal haritaları kullan"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Enable use of directional shading on textures"
@@ -8071,7 +8075,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:216
 msgid "Soft shadows"
-msgstr ""
+msgstr "Yumuşak gölgeler"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Fade corona according to visibility"
@@ -8103,15 +8107,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
 msgid "Motion blur strength - 0.4 recommended"
-msgstr ""
+msgstr "Motion blur yoğunluğu - 0.4 önerilir"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Motion blur:"
-msgstr ""
+msgstr "Motion blur:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Particles"
-msgstr ""
+msgstr "Parçacıklar"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Spawnpoint effects"
@@ -8123,7 +8127,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Quality:"
-msgstr ""
+msgstr "Kalite:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:250
 #: qcsrc/menu/xonotic/slider_particles.qc:13
@@ -8138,7 +8142,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
-msgstr ""
+msgstr "Crosshair yok"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:62
