@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-10-06 15:59+0000\n"
+"PO-Revision-Date: 2021-10-08 21:33+0000\n"
 "Last-Translator: Gokdeniz.Kucukali\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
@@ -247,36 +247,36 @@ msgstr "Sohbet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^Send public message to"
-msgstr "QMCMD^Kişisine herkese açık mesaj gönder"
+msgstr "Kişisine herkese açık mesaj gönder"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^:-) / nice one"
-msgstr "QMCMD^:-) / güzel"
+msgstr ":-) / iyiydi"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^nice one"
-msgstr "QMCMD^güzel"
+msgstr "iyiydi"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^good game"
-msgstr "QMCMD^iyi oyun"
+msgstr "iyi oyun"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^selam / iyi şanslar"
+msgstr "selam / iyi şanslar"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^selam / iyi şanslar ve iyi eğlenceler"
+msgstr "selam / iyi şanslar ve iyi eğlenceler"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^İngilizce dilinde gönder"
+msgstr "İngilizce dilinde gönder"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 msgid "QMCMD^Team chat"
-msgstr "QMCMD^Takım sohbet"
+msgstr "Takım sohbet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^strength soon"
@@ -284,11 +284,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr "QMCMD^ücretsiz malzeme %x^7 (l:%y^7)"
+msgstr "Ücretsiz malzeme %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^free item, icon"
-msgstr "QMCMD^ücretsiz malzeme, simge"
+msgstr "Ücretsiz malzeme, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^took item (l:%l^7)"
@@ -296,7 +296,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "eşya alındı, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^negative"
@@ -304,11 +304,11 @@ msgstr "QMCMD^olumsuz"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^positive"
-msgstr "QMCMD^olumlu"
+msgstr "Olumlu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "yardıma ihtiyacım var (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^need help, icon"
@@ -316,19 +316,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr "QMCMD^düşman görüldü(l:%y^7)"
+msgstr "Düşman görüldü(l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^enemy seen, icon"
-msgstr ""
+msgstr "düşman görüldü, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr ""
+msgstr "bayrak görüldü (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^flag seen, icon"
-msgstr ""
+msgstr "bayrak görüldü, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -377,7 +377,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "silah bırakıldı %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 msgid "QMCMD^drop flag/key, icon"
@@ -389,21 +389,21 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^Send private message to"
-msgstr "QMCMD^Şu kişiye özel mesaj gönder"
+msgstr "Şu kişiye özel mesaj gönder"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Settings"
-msgstr "QMCMD^Ayarları"
+msgstr "Ayarlar"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^View/HUD settings"
-msgstr "QMCMD^View/HUD ayarları"
+msgstr "Görünüm/HUD ayarları"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^3rd person view"
-msgstr "QMCMD^Üçüncü şahıs görünümü"
+msgstr "Üçüncü şahıs görünümü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Player models like mine"
@@ -411,7 +411,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^Names above players"
-msgstr "QMCMD^İsimler oyuncuların üzerinde"
+msgstr "İsimler oyuncuların üzerinde"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^Crosshair per weapon"
@@ -419,41 +419,41 @@ msgstr "QMCMD^Her silah için ayrı crosshair"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^FPS"
-msgstr "QMCMD^FPS"
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Net graph"
-msgstr "QMCMD^Ağ grafiği"
+msgstr "Ağ grafiği"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^Sound settings"
-msgstr "QMCMD^Ses ayarları"
+msgstr "Ses ayarları"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Hit sound"
-msgstr "QMCMD^Vurma sesi"
+msgstr "Vurma sesi"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Chat sound"
-msgstr "QMCMD^Sohbet sesi"
+msgstr "Sohbet sesi"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Change spectator camera"
-msgstr "QMCMD^İzleyici kamerasını değiştir"
+msgstr "İzleyici kamerasını değiştir"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "Gözlemci kamerası"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Increase speed"
-msgstr "QMCMD^Hızı arttır"
+msgstr "Hızı arttır"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Decrease speed"
-msgstr "QMCMD^Hızı azalt"
+msgstr "Hızı azalt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^Wall collision"
@@ -466,41 +466,41 @@ msgstr "Tam Ekran"
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "Oylama başlat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^Restart the map"
-msgstr "QMCMD^Haritayı tekrardan başlat"
+msgstr "Haritayı tekrardan başlat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^End match"
-msgstr "QMCMD^Karşılaşmayı bitir"
+msgstr "Karşılaşmayı bitir"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^Reduce match time"
-msgstr "QMCMD^Karşılaşma süresini azalt"
+msgstr "Karşılaşma süresini azalt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Extend match time"
-msgstr "QMCMD^Karşılaşma süresini arttır"
+msgstr "Karşılaşma süresini arttır"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^Shuffle teams"
-msgstr "QMCMD^Takımları karıştır"
+msgstr "Takımları karıştır"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Spectate a player"
-msgstr "QMCMD^Bir oyuncuyu izle"
+msgstr "Bir oyuncuyu izle"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:80
 msgid "Start line"
@@ -515,7 +515,7 @@ msgstr "Bitiş çizgisi"
 #: qcsrc/client/hud/panel/racetimer.qc:153
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Orta seviye %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156
 #: qcsrc/client/hud/panel/racetimer.qc:203
@@ -574,7 +574,7 @@ msgstr "Ölüm sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^deaths"
-msgstr ""
+msgstr "ölümler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of keys destroyed by pushing them into void"
@@ -586,7 +586,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^damage"
-msgstr "SCO^hasar"
+msgstr "hasar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "The total damage done"
@@ -594,7 +594,7 @@ msgstr "Verilen toplam hasar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^dmgtaken"
-msgstr "SCO^alınan hasar"
+msgstr "alınan hasar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage taken"
@@ -618,7 +618,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^fastest"
-msgstr "SCO^en hızlı"
+msgstr "en hızlı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Time of fastest lap (Race/CTS)"
@@ -646,7 +646,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fps"
-msgstr "SCO^fps"
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of kills minus suicides"
@@ -729,11 +729,11 @@ msgstr "Oyuncu ismi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^name"
-msgstr ""
+msgstr "isim"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^nick"
-msgstr ""
+msgstr "takma ad"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of objectives destroyed"
@@ -754,15 +754,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Ping time"
-msgstr ""
+msgstr "Ping süresi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^ping"
-msgstr "SCO^ping"
+msgstr "ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Packet loss"
-msgstr ""
+msgstr "Paket kaybı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^pl"
@@ -778,11 +778,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Player rank"
-msgstr ""
+msgstr "Oyuncu rütbesi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^rank"
-msgstr ""
+msgstr "rütbe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of flag returns"
@@ -802,15 +802,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Kazanılan raunt sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "kazanılan rauntlar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^score"
-msgstr ""
+msgstr "skor"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Total score"
@@ -818,7 +818,7 @@ msgstr "Toplam skor"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of suicides"
-msgstr ""
+msgstr "İntihar sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^suicides"
@@ -858,7 +858,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^time"
-msgstr "SCO^süre"
+msgstr "Süre"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Total time raced (Race/CTS)"
@@ -871,7 +871,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:360
 msgid "Usage:"
-msgstr ""
+msgstr "Kullanım:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:362
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -987,7 +987,7 @@ msgstr "^5%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:1908
 #: qcsrc/client/hud/panel/scoreboard.qc:1915
 msgid "SCO^points"
-msgstr ""
+msgstr "puanlar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1907
 #: qcsrc/client/hud/panel/scoreboard.qc:1914
@@ -1031,11 +1031,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/strafehud.qc:909
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: qcsrc/client/hud/panel/strafehud.qc:910
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:911
 msgid "mi"
@@ -1208,7 +1208,7 @@ msgstr "Zaman dolmadan düşman güç merkezini bul ve yok etmek için engelleri
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "Point limit:"
-msgstr ""
+msgstr "Puan sınırı"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1223,7 +1223,7 @@ msgstr "Turu kazanmak için tüm düşman takım unsurlarını öldür"
 #: qcsrc/common/mapinfo.qh:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
 msgid "Frag limit:"
-msgstr ""
+msgstr "Öldürme sınırı"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
@@ -1413,7 +1413,7 @@ msgstr "Ölümmaçı Takımı"
 
 #: qcsrc/common/items/item/ammo.qh:67
 msgid "bullets"
-msgstr ""
+msgstr "mermiler"
 
 #: qcsrc/common/items/item/ammo.qh:97
 msgid "cells"
@@ -1421,11 +1421,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:127
 msgid "plasma"
-msgstr ""
+msgstr "plazma"
 
 #: qcsrc/common/items/item/ammo.qh:157
 msgid "rockets"
-msgstr ""
+msgstr "roketler"
 
 #: qcsrc/common/items/item/ammo.qh:191
 msgid "shells"
@@ -1433,11 +1433,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Küçük zırh"
 
 #: qcsrc/common/items/item/armor.qh:80
 msgid "Medium armor"
-msgstr ""
+msgstr "Orta zırh"
 
 #: qcsrc/common/items/item/armor.qh:118 qcsrc/common/items/item/armor.qh:121
 msgid "Big armor"
@@ -1449,11 +1449,11 @@ msgstr "Mega zırh"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Küçük can"
 
 #: qcsrc/common/items/item/health.qh:80
 msgid "Medium health"
-msgstr ""
+msgstr "Orta can"
 
 #: qcsrc/common/items/item/health.qh:118 qcsrc/common/items/item/health.qh:121
 msgid "Big health"
@@ -1467,7 +1467,7 @@ msgstr "Mega sağlık"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:215
 msgid "Jetpack"
-msgstr ""
+msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
@@ -1532,7 +1532,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:425
 #: qcsrc/common/minigames/minigame/ps.qc:431
 msgid "Game over!"
-msgstr ""
+msgstr "Oyun bitti!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
@@ -2476,7 +2476,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid "^BG%s^K1 was in the water for too long%s%s"
-msgstr ""
+msgstr "^BG%s^K1 çok uzun süre suyun içinde kaldı%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
@@ -2501,7 +2501,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr ""
+msgstr "^BG%s^K1 öldü%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
@@ -4087,7 +4087,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:715 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Seviye %s:"
 
 #: qcsrc/common/notifications/all.inc:715
 #, c-format
@@ -4532,19 +4532,19 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
-msgstr "TEAM^Kırmızı"
+msgstr "Kırmızı"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Blue"
-msgstr "TEAM^Mavi"
+msgstr "Mavi"
 
 #: qcsrc/common/teams.qh:33
 msgid "TEAM^Yellow"
-msgstr "TEAM^Sarı"
+msgstr "Sarı"
 
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
-msgstr "TEAM^Pembe"
+msgstr "Pembe"
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
@@ -4556,51 +4556,51 @@ msgstr "Tarafsız"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
-msgstr "KEY^Kırmızı"
+msgstr "Kırmızı"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Blue"
-msgstr "KEY^Mavi"
+msgstr "Mavi"
 
 #: qcsrc/common/teams.qh:41
 msgid "KEY^Yellow"
-msgstr "KEY^Sarı"
+msgstr "Sarı"
 
 #: qcsrc/common/teams.qh:42
 msgid "KEY^Pink"
-msgstr "KEY^Pembe"
+msgstr "Pembe"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Red"
-msgstr "FLAG^Kırmızı"
+msgstr "Kırmızı"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Blue"
-msgstr "FLAG^Mavi"
+msgstr "Mavi"
 
 #: qcsrc/common/teams.qh:45
 msgid "FLAG^Yellow"
-msgstr "FLAG^Sarı"
+msgstr "Sarı"
 
 #: qcsrc/common/teams.qh:46
 msgid "FLAG^Pink"
-msgstr "FLAG^Pembe"
+msgstr "Pembe"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Red"
-msgstr "GENERATOR^Kırmızı"
+msgstr "Kırmızı"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Blue"
-msgstr "GENERATOR^Mavi"
+msgstr "Mavi"
 
 #: qcsrc/common/teams.qh:49
 msgid "GENERATOR^Yellow"
-msgstr "GENERATOR^Sarı"
+msgstr "Sarı"
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
-msgstr "GENERATOR^Pembe"
+msgstr "Pembe"
 
 #: qcsrc/common/turrets/cl_turrets.qc:126
 #, c-format
@@ -5173,7 +5173,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
-msgstr ""
+msgstr "Tüfek"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:20
 msgid "T.A.G. Seeker"
@@ -5185,7 +5185,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:20
 msgid "Shotgun"
-msgstr ""
+msgstr "Pompalı"
 
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
@@ -5198,7 +5198,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/vortex.qh:21
 msgid "Vortex"
-msgstr ""
+msgstr "Vortex"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format
@@ -6292,7 +6292,7 @@ msgstr "Solma efekti:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "EF^None"
-msgstr "EF^Yok"
+msgstr "Hiçbiri/Yok"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
@@ -6304,7 +6304,7 @@ msgstr "Kaydır"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
 msgid "EF^Both"
-msgstr "EF^Her ikisi de"
+msgstr "Her ikisi de"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Weapon icons:"
@@ -6320,7 +6320,7 @@ msgstr "Silah kimliğini şunun gibi göster:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "SHOWAS^None"
-msgstr "SHOWAS^Yok"
+msgstr "Hiçbiri/Yok"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:56
 msgid "Number"
@@ -6418,15 +6418,15 @@ msgstr "HUD Rıhtım:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
-msgstr "DOCK^Devredışı"
+msgstr "Devredışı"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:96
 msgid "DOCK^Small"
-msgstr "DOCK^Küçük"
+msgstr "Küçük"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:97
 msgid "DOCK^Medium"
-msgstr "DOCK^Vasat"
+msgstr "Orta"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:98
 msgid "DOCK^Large"
@@ -7477,7 +7477,7 @@ msgstr "Video"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:19
 msgid "Effects"
-msgstr "Efekt"
+msgstr "Efektler"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:20
 msgid "Audio"
@@ -7766,7 +7766,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:50
 msgid "PRE^Medium"
-msgstr "PRE^Vasat"
+msgstr "Kötü"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:52
 msgid "PRE^Normal"
@@ -7794,27 +7794,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
-msgstr "DET^En düşük"
+msgstr "En düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "DET^Low"
-msgstr "DET^Düşük"
+msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr "DET^Normal"
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
-msgstr "DET^İyi"
+msgstr "İyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "DET^Best"
-msgstr "DET^En iyi"
+msgstr "En iyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr "DET^Aşırı yüksek"
+msgstr "Aşırı yüksek"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
@@ -7822,23 +7822,23 @@ msgstr "Karakter detayları:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr "PDET^Düşük"
+msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
-msgstr "PDET^Vasat"
+msgstr "Kötü"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr "PDET^Normal"
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
-msgstr "PDET^İyi"
+msgstr "İyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr "PDET^En iyi"
+msgstr "En iyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
@@ -7850,27 +7850,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "RES^Lowest"
-msgstr "RES^En düşük"
+msgstr "En düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:93
 msgid "RES^Very low"
-msgstr "RES^Çok düşük"
+msgstr "Çok düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:94
 msgid "RES^Low"
-msgstr "RES^Düşük"
+msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
 msgid "RES^Normal"
-msgstr "RES^Normal"
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
 msgid "RES^Good"
-msgstr "RES^İyi"
+msgstr "İyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "RES^Best"
-msgstr "RES^En iyi"
+msgstr "En iyi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
@@ -8006,7 +8006,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "DMGFX^Disabled"
-msgstr "DMGFX^Kapalı"
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
 msgid "Skeletal"
@@ -8499,7 +8499,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:752
 msgid "Players"
-msgstr ""
+msgstr "Oyuncular"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
@@ -8549,7 +8549,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
 msgid "Models"
-msgstr ""
+msgstr "Modeller"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
@@ -8597,7 +8597,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:69
 msgid "Field of view:"
-msgstr ""
+msgstr "Görüş alanı:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 msgid "Field of vision in degrees"
@@ -8639,7 +8639,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Forward movement only"
-msgstr ""
+msgstr "Sadece ileri hareket"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
 msgid "VZOOM^Factor"
@@ -8717,7 +8717,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "Silah modeli opaklığı"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -8730,7 +8730,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "Weapons"
-msgstr ""
+msgstr "Silahlar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:34
 msgid "Key Bindings"
@@ -8738,27 +8738,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:38
 msgid "Change key..."
-msgstr ""
+msgstr "Tuşu değiş"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:42
 msgid "Edit..."
-msgstr ""
+msgstr "Düzenle"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:48
 msgid "Clear"
-msgstr ""
+msgstr "Temizle"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:53
 msgid "Reset all"
-msgstr ""
+msgstr "Tümünü sıfırla"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:58
 msgid "Mouse"
-msgstr ""
+msgstr "Fare"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:60
 msgid "Sensitivity:"
-msgstr ""
+msgstr "Hassasiyet:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:62
 msgid "Mouse speed multiplier"
@@ -8766,11 +8766,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Yumuşak nişan alma"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
 msgstr ""
+"Fare hareketini yumuşaklaştırır, ama nişan almayı daha az hassas yapar."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert aiming"
@@ -8842,7 +8843,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "İptal et"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
@@ -8877,7 +8878,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Bandwidth:"
-msgstr ""
+msgstr "Ağ genişliği:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Specify your network speed"
@@ -8921,7 +8922,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Show netgraph"
-msgstr ""
+msgstr "Ağ grafiğini göster"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
 msgid "Show a graph of packet sizes and other information"
@@ -8941,15 +8942,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Framerate"
-msgstr ""
+msgstr "Kare sayısı"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
 msgid "Maximum:"
-msgstr ""
+msgstr "Maksimum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:90
 msgid "MAXFPS^Unlimited"
-msgstr ""
+msgstr "Sınırsız"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:93
 msgid "Target:"
@@ -8957,7 +8958,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:95
 msgid "TRGT^Disabled"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:106
 msgid "Idle limit:"
@@ -8965,7 +8966,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:112
 msgid "IDLFPS^Unlimited"
-msgstr ""
+msgstr "Sınırsız"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
 msgid "Save processing time for other apps"
@@ -8973,7 +8974,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:119
 msgid "Show frames per second"
-msgstr ""
+msgstr "FPSi göster"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:120
 msgid "Show your rendered frames per second"
@@ -8991,19 +8992,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:128
 msgid "TLTIP^Disabled"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "TLTIP^Standard"
-msgstr ""
+msgstr "Standart"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
 msgid "TLTIP^Advanced"
-msgstr ""
+msgstr "Gelişmiş"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Show current date and time"
-msgstr ""
+msgstr "Mevcut tarihi ve saati göster"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:134
 msgid "Show current date and time of day, useful on screenshots"
@@ -9011,7 +9012,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
 msgid "Enable developer mode"
-msgstr ""
+msgstr "Geliştirici modunu etkinleştir"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:141
 msgid "Advanced settings..."
@@ -9024,7 +9025,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
-msgstr ""
+msgstr "Fabrika reseti"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
@@ -9036,27 +9037,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
-msgstr ""
+msgstr "Ayar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
-msgstr ""
+msgstr "Tür:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
-msgstr ""
+msgstr "Değer:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
-msgstr ""
+msgstr "Tanım:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr ""
+msgstr "Gelişmiş ayarlar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "Tüm ayarları sıfırlamak istediğinize emin misiniz?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
@@ -9068,11 +9069,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
-msgstr ""
+msgstr "Metin Dili"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:67
 msgid "Set language"
-msgstr ""
+msgstr "Dili ayarla"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:72
 msgid "Disable gore effects and harsh language"
@@ -9096,59 +9097,59 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr ""
+msgstr "Dili değiştir"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
-msgstr ""
+msgstr "Uyarı"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Resolution:"
-msgstr ""
+msgstr "Çözünürlük:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Font/UI size:"
-msgstr ""
+msgstr "Yazı/Arayüz boyutu"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "SZ^Unreadable"
-msgstr ""
+msgstr "Okunamayacak kadar"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:40
 msgid "SZ^Tiny"
-msgstr ""
+msgstr "Ufacık"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:41
 msgid "SZ^Little"
-msgstr ""
+msgstr "Çok küçük"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:42
 msgid "SZ^Small"
-msgstr ""
+msgstr "Küçük"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:43
 msgid "SZ^Medium"
-msgstr "SZ^Vasat"
+msgstr "Kötü"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:44
 msgid "SZ^Large"
-msgstr ""
+msgstr "Büyük"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:45
 msgid "SZ^Huge"
-msgstr ""
+msgstr "Çok büyük"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:46
 msgid "SZ^Gigantic"
-msgstr ""
+msgstr "Kocaman"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:47
 msgid "SZ^Colossal"
-msgstr ""
+msgstr "En büyük"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:51
 msgid "Color depth:"
-msgstr ""
+msgstr "Renk derinliği"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
@@ -9164,7 +9165,7 @@ msgstr "32bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
-msgstr ""
+msgstr "Tam ekran"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
@@ -9194,7 +9195,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid "ANISO^Disabled"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:75
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:86
@@ -9226,7 +9227,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "AA^Disabled"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:92
 msgid "High-quality frame buffer"
@@ -9244,15 +9245,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:101
 msgid "DF^World"
-msgstr ""
+msgstr "Dünya"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:102
 msgid "DF^All"
-msgstr ""
+msgstr "Tümü"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:107
 msgid "Vertex Buffer Objects (VBOs)"
@@ -9260,7 +9261,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:110
 msgid "VBO^Off"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:111
 msgid "Vertices, some Tris (compatible)"
@@ -9284,7 +9285,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:122
 msgid "Brightness:"
-msgstr ""
+msgstr "Parlaklık"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:124
 msgid "Brightness of black"
@@ -9292,7 +9293,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:126
 msgid "Contrast:"
-msgstr ""
+msgstr "Kontrast"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:128
 msgid "Brightness of white"
@@ -9300,7 +9301,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:130
 msgid "Gamma:"
-msgstr ""
+msgstr "Gamma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid ""
@@ -9318,7 +9319,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:142
 msgid "Saturation:"
-msgstr ""
+msgstr "Doygunluk:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:145
 msgid ""
@@ -9328,7 +9329,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:149
 msgid "LIT^Ambient:"
-msgstr ""
+msgstr "Ambiyans"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:151
 msgid ""
@@ -9338,7 +9339,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
 msgid "Intensity:"
-msgstr ""
+msgstr "Yoğunluk:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Global rendering brightness"
@@ -9372,23 +9373,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:152
 msgid "???"
-msgstr ""
+msgstr "???"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:165
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Mücadele Zorluğu:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:166
 msgid "CSKL^Easy"
-msgstr "CSKL^Kolay"
+msgstr "Kolay"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:167
 msgid "CSKL^Medium"
-msgstr "CSKL^Vasat"
+msgstr "Kötü"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:168
 msgid "CSKL^Hard"
-msgstr "CSKL^Zor"
+msgstr "Zor"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "Start Singleplayer!"
@@ -9404,40 +9405,40 @@ msgstr "Tek oyunculu mücadele veya botlara karşı anlık müsabakaları oynay�
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
-msgstr ""
+msgstr "Kazanan"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr ""
+msgstr "'en iyi' takıma katıl (otomatik-seç)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr ""
+msgstr "Takımı otomatik seç (önerilir)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
-msgstr ""
+msgstr "kırmızı"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "blue"
-msgstr ""
+msgstr "mavi"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:39
 msgid "yellow"
-msgstr ""
+msgstr "sarı"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:40
 msgid "pink"
-msgstr ""
+msgstr "pembe"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
 #: qcsrc/menu/xonotic/keybinder.qc:116
 msgid "spectate"
-msgstr ""
+msgstr "izle"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr ""
+msgstr "Takım Seçimi"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -9788,7 +9789,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PART^Medium"
-msgstr "PART^Vasat"
+msgstr "Kötü"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
