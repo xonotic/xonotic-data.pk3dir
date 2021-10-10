@@ -21,6 +21,7 @@
 # Rafał Szymański <okavasly@gmail.com>, 2017
 # Robert Wolniak <robert.wolniak@gmail.com>, 2015,2018
 # Saikuru Zero, 2021
+# Saikuru Zero, 2021
 # Sertomas, 2014
 msgid ""
 msgstr ""

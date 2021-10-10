@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-10-08 21:33+0000\n"
+"PO-Revision-Date: 2021-10-09 10:17+0000\n"
 "Last-Translator: Gokdeniz.Kucukali\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
@@ -993,7 +993,7 @@ msgstr "puanlar"
 #: qcsrc/client/hud/panel/scoreboard.qc:1914
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1925
 #, c-format
@@ -1597,7 +1597,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 oyunu kazandı!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:384
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -2159,7 +2159,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:230
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG bayrağı ele geçirdi"
 
 #: qcsrc/common/notifications/all.inc:231
 #, c-format
@@ -2236,7 +2236,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:246
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr ""
+msgstr "^BG%s^BG bayrağı düşürdü"
 
 #: qcsrc/common/notifications/all.inc:247
 #, c-format
@@ -2262,7 +2262,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:254
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr ""
+msgstr "^BG^F1Jetpack için yakıtın yok"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -2274,7 +2274,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:259
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Bir sonraki raundu izleyeceksin"
 
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
@@ -2789,12 +2789,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:359
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGRound tied"
-msgstr ""
+msgstr "Raunt berabere bitti"
 
 #: qcsrc/common/notifications/all.inc:360
 #: qcsrc/common/notifications/all.inc:535
 msgid "^BGRound over, there's no winner"
-msgstr ""
+msgstr "Raunt bitti, kazanan yok"
 
 #: qcsrc/common/notifications/all.inc:362
 #, c-format
@@ -2867,17 +2867,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:377
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 Bağlandı"
 
 #: qcsrc/common/notifications/all.inc:378
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "^BG%s^F3 şimdi oynuyor"
 
 #: qcsrc/common/notifications/all.inc:379
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 şimdi ^TC^TT takımında oynuyor"
 
 #: qcsrc/common/notifications/all.inc:381
 #: qcsrc/common/notifications/all.inc:693
@@ -2990,12 +2990,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 ayrıldı"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 %s saniye boyunca hareket etmediği için atıldı"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
@@ -3036,7 +3036,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG yarışı bitrdi"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
@@ -3096,7 +3096,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:436
 msgid "^BGYou are not allowed to change teams"
-msgstr ""
+msgstr "^BGTakım değiştiremezsin"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3499,7 +3499,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:545
 msgid "^BGYou captured the flag!"
-msgstr ""
+msgstr "^BGBayrağı ele geçirdin!"
 
 #: qcsrc/common/notifications/all.inc:546
 #, c-format
@@ -3552,7 +3552,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:556
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGBayrağı ele geçirdin!"
 
 #: qcsrc/common/notifications/all.inc:557
 #, c-format
@@ -3616,7 +3616,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BGArtık düşmanlar seni radarda görebilir!"
 
 #: qcsrc/common/notifications/all.inc:570
 msgid "^BGYou returned the ^TC^TT^BG flag!"
@@ -3662,7 +3662,7 @@ msgstr "^K3%sYandın ^BG%s"
 #: qcsrc/common/notifications/all.inc:587
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr ""
+msgstr "^K1%s^BG%s tarafından alevle yakıldın"
 
 #: qcsrc/common/notifications/all.inc:594
 #, c-format
@@ -3751,7 +3751,7 @@ msgstr "^K1Biraz çıtır çıtır!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1Kendini öldürdün!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -3759,7 +3759,7 @@ msgstr "^K1Daha dikkatli olmalısın!"
 
 #: qcsrc/common/notifications/all.inc:624
 msgid "^K1You couldn't stand the heat!"
-msgstr ""
+msgstr "^K1Sıcaklığa dayanamadın!"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You need to watch out for monsters!"
@@ -3767,7 +3767,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You were killed by a monster!"
-msgstr ""
+msgstr "^K1Bir canavar tarafından öldürüldün"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1Tastes like chicken!"
@@ -3896,7 +3896,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1Watch your step!"
-msgstr ""
+msgstr "^K1Adımlarına dikkat et!"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
@@ -4011,7 +4011,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:695
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGTopu aldın"
 
 #: qcsrc/common/notifications/all.inc:696
 msgid "^BGKilling people while you don't have the ball gives no points!"
@@ -4037,7 +4037,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:701
 msgid "^F4Round will start in ^COUNT"
-msgstr ""
+msgstr "^F4Raunt ^COUNT içinde başlayacak"
 
 #: qcsrc/common/notifications/all.inc:702
 msgid "^BGScanning frequency range..."
@@ -4113,7 +4113,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:722
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGKontrol noktasını ele geçirdin"
 
 #: qcsrc/common/notifications/all.inc:723
 #, c-format
@@ -4220,11 +4220,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:749
 msgid "^F2You are invisible"
-msgstr ""
+msgstr "^F2Görünmezsin"
 
 #: qcsrc/common/notifications/all.inc:750
 msgid "^F2Invisibility has worn off"
-msgstr ""
+msgstr "^F2Görünmezliğin bitti"
 
 #: qcsrc/common/notifications/all.inc:752
 msgid "^F2The race is over, finish your lap!"
@@ -5203,172 +5203,172 @@ msgstr "Vortex"
 #: qcsrc/lib/counting.qh:9
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "%syıl"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "%dyıl"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "%dyıl"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "%dyıl"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "%dyıl"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "%dyıl"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "%shafta"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "%dhafta"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "%dhafta"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "%dhafta"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "%dhafta"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "%dhafta"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "%sgün"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "%dgün"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "%dgün"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "%dgün"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "%dgün"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "%dgün"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "%ssaat"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "%dsaat"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "%dsaat"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "%dsaat"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "%dsaat"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "%dsaat"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "%sdakika"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "%ddakika"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "%ddakika"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "%ddakika"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "%ddakika"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "%ddakika"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "%ssaniye"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "%dsaniye"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "%dsaniye"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "%dsaniye"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
@@ -8817,7 +8817,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
@@ -8825,7 +8825,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:104
 msgid "JPJUMP^All"
-msgstr ""
+msgstr "Tümü"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
@@ -9498,19 +9498,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:52
 msgid "WEAPON^previous"
-msgstr ""
+msgstr "önceki"
 
 #: qcsrc/menu/xonotic/keybinder.qc:53
 msgid "WEAPON^next"
-msgstr ""
+msgstr "sonraki"
 
 #: qcsrc/menu/xonotic/keybinder.qc:54
 msgid "WEAPON^previously used"
-msgstr ""
+msgstr "önceki kullanılan"
 
 #: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^best"
-msgstr ""
+msgstr "en iyi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
@@ -9654,7 +9654,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "Favoriyi kaldır"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
@@ -9662,7 +9662,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "Favori"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""
@@ -9693,7 +9693,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
-msgstr ""
+msgstr "Hiçbiri/yok"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
@@ -9724,19 +9724,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
-msgstr ""
+msgstr "Favoriler"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Recommended"
-msgstr ""
+msgstr "Önerilen"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Normal Servers"
-msgstr ""
+msgstr "Normal Sunucular"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Servers"
-msgstr ""
+msgstr "Sunucular"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Competitive Mode"
@@ -9768,11 +9768,11 @@ msgstr "<AUTHOR>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
-msgstr ""
+msgstr "Maksimum"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:74
 msgid "VOL^OFF"
-msgstr ""
+msgstr "Kapalı"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
@@ -9785,7 +9785,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PART^Low"
-msgstr ""
+msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PART^Medium"
@@ -9828,7 +9828,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "PART^Instant"
-msgstr ""
+msgstr "Ani"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
