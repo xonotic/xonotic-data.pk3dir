@@ -234,17 +234,35 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	if(MUTATOR_CALLHOOK(ForcePlayercolors_Skip, this, islocalplayer))
 		goto skipforcecolors;
 
+	bool forceplayercolors_enabled = false;
+	#define fpc autocvar_cl_forceplayercolors
+	if (ISGAMETYPE(DUEL))
+	{
+		if ((myteam != NUM_SPECTATOR) && (fpc == 1 || fpc == 2 || fpc == 3 || fpc == 5))
+			forceplayercolors_enabled = true;
+	}
+	else if (teamplay)
+	{
+		if ((team_count == 2) && (myteam != NUM_SPECTATOR) && (fpc == 2 || fpc == 4 || fpc == 5))
+			forceplayercolors_enabled = true;
+	}
+	else
+	{
+		if (fpc == 1 || fpc == 2)
+			forceplayercolors_enabled = true;
+	}
+
 	// forceplayercolors too
 	if(teamplay)
 	{
 		// own team's color is never forced
-		int forcecolor_friend = 0;
-		int forcecolor_enemy = 0;
+		int forcecolor_friend = 0, forcecolor_enemy = 0;
 		entity tm;
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors == 2 && team_count == 2 && myteam != NUM_SPECTATOR)
+
+		if(forceplayercolors_enabled)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -295,11 +313,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 			int c2 = (c1 + 1 + q) % 15;
 			this.colormap = 1024 + (c1 << 4) + c2;
 		}
-		else if(autocvar_cl_forceplayercolors && (autocvar_cl_forceplayercolors != 3 || ISGAMETYPE(DUEL)))
-		{
-			if (!ISGAMETYPE(DUEL) || myteam != NUM_SPECTATOR)
-				this.colormap = player_localnum + 1;
-		}
+		else if(forceplayercolors_enabled)
+			this.colormap = player_localnum + 1;
 	}
 
 	LABEL(skipforcecolors)
