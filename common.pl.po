@@ -7,6 +7,7 @@
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
+# Cris Sus, 2021
 # Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
@@ -28,8 +29,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-10-08 13:01+0000\n"
-"Last-Translator: Saikuru Zero\n"
+"PO-Revision-Date: 2021-10-10 17:50+0000\n"
+"Last-Translator: Cris Sus\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -53,7 +54,7 @@ msgstr "^1Nie można zapisać do %s"
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Komunikat o odliczaniu czasu %s, zostało sekund: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:175
 #, c-format
