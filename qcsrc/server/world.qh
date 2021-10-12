@@ -32,6 +32,9 @@ bool autocvar_sv_jingle_end;
 string autocvar_sv_jingle_end_list;
 float autocvar_sv_jingle_end_volume;
 
+float fragsleft;
+int fragsleft_last;
+
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;

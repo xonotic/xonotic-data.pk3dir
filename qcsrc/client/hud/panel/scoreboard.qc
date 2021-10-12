@@ -2637,7 +2637,7 @@ void Scoreboard_Draw()
 		pos = Scoreboard_Spectators_Draw(pos);
 	}
 
-	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
+	//pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
 	// draw scoreboard spectators after mapstats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 3) {
