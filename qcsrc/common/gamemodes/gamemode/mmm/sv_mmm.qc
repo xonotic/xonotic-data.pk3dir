@@ -418,6 +418,23 @@ void ReduceKarmaPointsandFrags(entity frag_attacker, entity frag_target, float f
 // Hook Functions
 // ==============
 
+MUTATOR_HOOKFUNCTION(mmm, FragCenterMessage)
+{
+	entity attacker = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+	
+	// Conditions that count as team kill in MMM
+	if((attacker.mmm_status == targ.mmm_status) ||
+	   (attacker.mmm_status == MMM_STATUS_DETECTIVE && targ.mmm_status == MMM_STATUS_CIVILIAN) ||
+	   (attacker.mmm_status == MMM_STATUS_CIVILIAN  && targ.mmm_status == MMM_STATUS_CIVILIAN)
+	)
+	{
+		Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
+		Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, "???");
+		return true;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 {
 	// LegendGuard's IDEA: To adjust the grade of severity of karma, 
@@ -427,6 +444,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 	// in mmm, announcing a frag would tell everyone who the murderer is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	M_ARGV(5, bool) = true; // anonymous attacker
 	
 	if(IS_PLAYER(frag_attacker) && frag_attacker != frag_target)
 	{
@@ -441,6 +459,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 		{
 			//PrintToChatAll("^1DEBUG^7: A ^2PLAYER^7 has fragged a ^2PLAYER OF HIS OWN TEAM^7, TOO BAD!");
 			ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+			frag_attacker.killsound -= 1; frag_attacker.typehitsound += 1; // Teamkill sound
 			switch (frag_attacker.mmm_status)
 			{
 				case MMM_STATUS_CIVILIAN: frag_target.killerrole = "\n^3Killer role: ^2Civilian"; return;
@@ -453,10 +472,11 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 
 		if(frag_attacker.mmm_status == MMM_STATUS_DETECTIVE)
 		{
-			if (frag_target.mmm_status == MMM_STATUS_CIVILIAN || frag_target.mmm_status == MMM_STATUS_DETECTIVE)
+			if (frag_target.mmm_status == MMM_STATUS_CIVILIAN)
 			{	
 				//PrintToChatAll("^1DEBUG^7: A ^4Detective^7 fragged an ^2Civilian^7/^4Detective^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+				frag_attacker.killsound -= 1; frag_attacker.typehitsound += 1; // Teamkill sound
 				frag_target.killerrole = "\n^3Killer role: ^4Detective";
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 			}
@@ -473,6 +493,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 			{
 				//PrintToChatAll("^1DEBUG^7: An ^2Civilian^7 fragged a ^4Detective^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+				frag_attacker.killsound -= 1; frag_attacker.typehitsound += 1; // Teamkill sound
 				frag_target.killerrole = "\n^3Killer role: ^2Civilian";
 			}
 			else
@@ -504,8 +525,6 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 		float frag_deathtype = M_ARGV(3, float);
 		checkWeaponDeathtype(frag_target, frag_deathtype);
 	}
-
-	M_ARGV(5, bool) = true; // anonymous attacker
 }
 
 //karma weapon damage, halve the damage attack when player has low karma 20-03-2021
