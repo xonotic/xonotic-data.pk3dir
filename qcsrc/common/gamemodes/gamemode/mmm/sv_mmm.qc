@@ -1,9 +1,7 @@
 #include "sv_mmm.qh"
 
-//set g_mmm_detective_count 0.125 "number of players who will become detectives, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players"
-//float autocvar_g_mmm_detective_count = 0.125; //I don't think that it'll be used...
-float autocvar_g_mmm_civilian_count = 0.625;
-//float autocvar_g_mmm_murderer_count = 0.25;
+float autocvar_g_mmm_detective_count = 0.125;
+float autocvar_g_mmm_murderer_count = 0.25;
 float autocvar_g_mmm_round_timelimit = 180;
 float autocvar_g_mmm_warmup = 10;
 bool autocvar_g_mmm_punish_teamkill = false;
@@ -243,101 +241,34 @@ void mmm_RoundStart()
 		if(IS_PLAYER(it) && !IS_DEAD(it))
 		{
 			++playercount;
-			it.mmm_status = MMM_STATUS_CIVILIAN;
 		}
 		else
 			it.mmm_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a mmm status, clear it before the round starts!
 		it.mmm_validkills = 0;
 	});
 	
-	int civilian_count = bound(1, ((autocvar_g_mmm_civilian_count >= 1) ? autocvar_g_mmm_civilian_count : floor(playercount * autocvar_g_mmm_civilian_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
-	int total_civilians = 0;
-	//int murderer_count = bound(1, ((autocvar_g_mmm_murderer_count >= 1) ? autocvar_g_mmm_murderer_count : floor(playercount * autocvar_g_mmm_murderer_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int murderer_count = ((autocvar_g_mmm_murderer_count >= 1) ? autocvar_g_mmm_murderer_count : max(floor(playercount * autocvar_g_mmm_murderer_count), 1)); // There must be at least 1 murderer
+	int detective_count = ((autocvar_g_mmm_detective_count >= 1 || autocvar_g_mmm_detective_count == 0) ? autocvar_g_mmm_detective_count : floor(playercount * autocvar_g_mmm_detective_count)); // It's fine if there are no detectives
+	
 	int total_murderers = 0;
-	//int detective_count = bound(1, ((autocvar_g_mmm_detective_count >= 1) ? autocvar_g_mmm_detective_count : floor(playercount * autocvar_g_mmm_detective_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_detectives = 0;
+	int total_civilians = 0;
 
-	//civilians TOTAL
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		if(total_civilians >= civilian_count)
-			break;
-		//LegendGuard fixes the round start again 22-03-2021
-		total_civilians++;
-		if (total_civilians <= 1)
-		{
-			if (total_murderers <= 1)
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-		}
-		else if (total_civilians == 2)
-		{
-			if (total_detectives >= 1)
-				break;
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else if (total_civilians == 5)
-		{
-			if (total_murderers <= 2)
-				break;
-			else
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-		}
-		else if (total_civilians == 6)
-		{
-			if (total_detectives >= 2)
-				break;
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else if (total_civilians == 7)
-		{
-			if (total_detectives >= 3)
-				break;
-			else if (total_murderers == 3)
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else if (total_civilians >= 8)
-		{
-			if (total_detectives >= 4)
-				break;
-			else if (total_murderers == 4)
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else
-		{
-			total_murderers++; 
+		if (total_murderers < murderer_count) {
 			it.mmm_status = MMM_STATUS_MURDERER;
+			total_murderers++;
+		} else if (total_detectives < detective_count) {
+			it.mmm_status = MMM_STATUS_DETECTIVE;
+			total_detectives++;
+		} else {
+			it.mmm_status = MMM_STATUS_CIVILIAN;
+			total_civilians++;
 		}
 	});
+	
+	//LOG_INFOF("Total players: %d || Murderers: %d, Detectives: %d, Civilians: %d", playercount, total_murderers, total_detectives, total_civilians);
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
