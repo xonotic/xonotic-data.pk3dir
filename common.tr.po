@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-10-09 10:17+0000\n"
+"PO-Revision-Date: 2021-10-11 17:48+0000\n"
 "Last-Translator: Gokdeniz.Kucukali\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
@@ -205,7 +205,7 @@ msgstr "^1Sen izleniyorsun:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "HUD seçeneklerini göstermek için ^3ESC'ye ^7basın."
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -292,7 +292,7 @@ msgstr "Ücretsiz malzeme, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "eşya alındı (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^took item, icon"
@@ -312,7 +312,7 @@ msgstr "yardıma ihtiyacım var (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "yardım gerek, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^enemy seen (l:%y^7)"
@@ -658,11 +658,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Atılan gollerin sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^goals"
-msgstr ""
+msgstr "goller"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of keys carrier kills"
@@ -680,7 +680,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "öldürme-ölme oranı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^kdr"
@@ -692,11 +692,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of kills"
-msgstr ""
+msgstr "Öldürme sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^kills"
-msgstr ""
+msgstr "öldürmeler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of laps finished (Race/CTS)"
@@ -704,7 +704,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^laps"
-msgstr ""
+msgstr "turlar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of lives (LMS)"
@@ -842,7 +842,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Takım arkadaşlarını öldürme sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^teamkills"
@@ -948,7 +948,7 @@ msgstr "N/A"
 #: qcsrc/client/hud/panel/scoreboard.qc:1250
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "İsabet istatistikleri (ortalama %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1407
 msgid "Item stats"
@@ -2246,7 +2246,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:248
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG bayrağı ele geçirdi"
 
 #: qcsrc/common/notifications/all.inc:249
 #: qcsrc/common/notifications/all.inc:250
@@ -3021,7 +3021,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG yarışı terketti"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
@@ -3212,7 +3212,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr ""
+msgstr "^BG%s^K1 daha küçük bir silah kullanmalıydı%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -7802,7 +7802,7 @@ msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr "Normal"
+msgstr "Vasat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
@@ -7830,7 +7830,7 @@ msgstr "Kötü"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr "Normal"
+msgstr "Vasat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
@@ -7862,7 +7862,7 @@ msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
 msgid "RES^Normal"
-msgstr "Normal"
+msgstr "Vasat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
 msgid "RES^Good"
@@ -8175,7 +8175,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:111
 msgid "Use normal crosshair color"
-msgstr ""
+msgstr "Normal crosshair rengini kullan"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:122
 msgid "Smooth effects of crosshairs"
@@ -9490,7 +9490,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
-msgstr ""
+msgstr "jetpack"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "Attacking"
@@ -9534,35 +9534,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "screen shot"
-msgstr ""
+msgstr "ekran görüntüsü"
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "maximize radar"
-msgstr ""
+msgstr "radarı en büyük boyuta getir"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "3rd person view"
-msgstr ""
+msgstr "3. kişi görünümü"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "enter spectator mode"
-msgstr ""
+msgstr "izleyici moduna geç"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "İletişim"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
-msgstr ""
+msgstr "herkese açık sohbet"
 
 #: qcsrc/menu/xonotic/keybinder.qc:95
 msgid "team chat"
-msgstr ""
+msgstr "takım sohbeti"
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "show chat history"
-msgstr ""
+msgstr "sohbet geçmişini göster"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "vote YES"
@@ -9646,11 +9646,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
-msgstr ""
+msgstr "izleyici"
 
 #: qcsrc/menu/xonotic/playermodel.qc:161
 msgid "<no model found>"
-msgstr ""
+msgstr "<no model found>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
@@ -9672,7 +9672,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Ping"
-msgstr ""
+msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Hostname"
@@ -9680,16 +9680,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Map"
-msgstr ""
+msgstr "Harita"
 
 #: qcsrc/menu/xonotic/serverlist.qc:751
 msgid "Type"
-msgstr ""
+msgstr "Tür"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1040
 #, c-format
 msgid "AES level %d"
-msgstr ""
+msgstr "AES seviyesi %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "ENC^none"
@@ -9697,12 +9697,12 @@ msgstr "Hiçbiri/yok"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1040
 msgid "encryption:"
-msgstr ""
+msgstr "şifreleme"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1041
 #, c-format
 msgid "mod: %s"
-msgstr ""
+msgstr "mod: %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
@@ -9716,11 +9716,11 @@ msgstr "Varsayılan ayarlar"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats disabled"
-msgstr ""
+msgstr "istatistikler kapalı"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1045
 msgid "stats enabled"
-msgstr ""
+msgstr "istatistikler açık"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Favorites"
@@ -9908,7 +9908,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Galibiyet/Yenilgi"
 
 #: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
@@ -9918,7 +9918,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
 msgid "Kills/Deaths:"
-msgstr ""
+msgstr "Öldürme/Ölüm"
 
 #: qcsrc/menu/xonotic/statslist.qc:173
 #, c-format
@@ -9944,7 +9944,7 @@ msgstr "%d (derecelendirilmemiş)"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "Güncelleme şuradan indirilebilir:"
 
 #: qcsrc/menu/xonotic/util.qc:528
 msgid "Autogenerating mapinfo for newly added maps..."

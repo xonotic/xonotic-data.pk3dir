@@ -8,6 +8,7 @@
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
 # Cris Sus, 2021
+# Cris Sus, 2021
 # Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
