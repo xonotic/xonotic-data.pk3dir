@@ -426,7 +426,7 @@ MUTATOR_HOOKFUNCTION(mmm, FragCenterMessage)
 	// Conditions that count as team kill in MMM
 	if((attacker.mmm_status == targ.mmm_status) ||
 	   (attacker.mmm_status == MMM_STATUS_DETECTIVE && targ.mmm_status == MMM_STATUS_CIVILIAN) ||
-	   (attacker.mmm_status == MMM_STATUS_CIVILIAN  && targ.mmm_status == MMM_STATUS_CIVILIAN)
+	   (attacker.mmm_status == MMM_STATUS_CIVILIAN  && targ.mmm_status == MMM_STATUS_DETECTIVE)
 	)
 	{
 		Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
