@@ -379,7 +379,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
 
         float desirabledamage;
         desirabledamage = enemydamage;
-        if(time > STAT(INVINCIBLE_FINISHED, actor) && time > actor.spawnshieldtime)
+        if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
             desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;

@@ -239,8 +239,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				if (it.caplayer) it.caplayer = 0;
-				PutObserverInServer(it);
+				PutObserverInServer(it, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -800,7 +799,7 @@ void GameCommand_gametype(int request, int argc)
 				}
 				else
 				{
-					bprint("Game type switch to ", s, " failed: this type does not exist!\n");
+					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
 				}
 
 				return;
@@ -1097,8 +1096,7 @@ void GameCommand_moveplayer(int request, int argc)
 						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							if (client.caplayer) client.caplayer = 0;
-							PutObserverInServer(client);
+							PutObserverInServer(client, true);
 
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
