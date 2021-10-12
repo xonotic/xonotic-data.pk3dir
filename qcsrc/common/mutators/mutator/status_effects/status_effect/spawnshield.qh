@@ -1,0 +1,17 @@
+#pragma once
+
+#include <common/mutators/mutator/status_effects/all.qh>
+
+CLASS(SpawnShield, StatusEffects)
+    ATTRIB(SpawnShield, netname, string, "spawnshield");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(SpawnShield, m_name, string, _("Spawn Shield"));
+    ATTRIB(SpawnShield, m_icon, string, "shield");
+#endif
+    ATTRIB(SpawnShield, m_color, vector, '0.36 1 0.07');
+    ATTRIB(SpawnShield, m_hidden, bool, true);
+    ATTRIB(SpawnShield, m_lifetime, float, 10);
+ENDCLASS(SpawnShield)
+REGISTER_STATUSEFFECT(SpawnShield, NEW(SpawnShield));

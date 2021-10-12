@@ -96,7 +96,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && GetResource(it, RES_HEALTH) < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
 			if (time < it.msnt_timer) continue;
-			if (time < it.spawnshieldtime) continue;
+			if (StatusEffects_active(STATUSEFFECT_SpawnShield, it)) continue;
 			if (weaponLocked(it)) continue;
 			if (it == player) continue;
 

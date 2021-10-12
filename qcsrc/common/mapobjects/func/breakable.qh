@@ -8,5 +8,5 @@ const int STATE_ALIVE = 0;
 const int STATE_BROKEN = 1;
 
 #ifdef SVQC
-spawnfunc(func_breakable);
+void func_breakable_setup(entity this);
 #endif

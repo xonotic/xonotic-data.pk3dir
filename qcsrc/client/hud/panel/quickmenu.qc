@@ -189,7 +189,15 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
+	mouseClicked = 0;
 	hudShiftState = 0;
+
+	// we must unset the player's buttons, as they aren't released elsewhere
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
 
 	QuickMenu_TimeOut_Set();
 	return true;
@@ -441,17 +449,6 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
 	if(key_pressed)
 	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
@@ -465,18 +462,6 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
 	}
 
-	if(nPrimary == K_ESCAPE)
-	{
-		if (!key_pressed)
-			return true;
-		QuickMenu_Close();
-	}
-	else if(nPrimary >= '0' && nPrimary <= '9')
-	{
-		if (!key_pressed)
-			return true;
-		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
-	}
 	if(nPrimary == K_MOUSE1)
 	{
 		if(key_pressed)
@@ -491,8 +476,29 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		else
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
-	else if(hit_con_bind)
+	else if(nPrimary == K_ESCAPE && key_pressed)
+	{
+		QuickMenu_Close();
+	}
+	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
+	{
+		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
+	}
+	else
+	{
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		int i;
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+		if (key_pressed)
+			QuickMenu_Close();
 		return false;
+	}
 
 	return true;
 }
@@ -777,7 +783,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;
-		QUICKMENU_ENTRY(entcs_GetName(pl.sv_entnum), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
+		QUICKMENU_ENTRY(strcat("^7", entcs_GetName(pl.sv_entnum)), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
 	}
 
 	return;

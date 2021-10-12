@@ -78,8 +78,8 @@ void HUD_Radar_Hide_Maximized();
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect);
 vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink);
-void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha);
-void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp);
+void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, bool icon_right_align, vector color, float theAlpha);
+void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, int icon_right_align, vector color, float theAlpha, float fadelerp);
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag);
 vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect);
 
@@ -107,7 +107,6 @@ entity highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
-float scoreboard_bottom;
 int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;
@@ -252,7 +251,7 @@ REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // AMMO
 REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // POWERUPS
 REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // HEALTHARMOR
-REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // NOTIFY
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // NOTIFY
 REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // TIMER
 REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RADAR
 REGISTER_HUD_PANEL(SCORE,           HUD_Score,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // SCORE
