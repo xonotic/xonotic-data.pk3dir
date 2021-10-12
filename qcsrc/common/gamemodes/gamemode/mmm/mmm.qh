@@ -23,6 +23,12 @@ CLASS(MurderinMegaerebusManor, Gametype)
             if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.m_flags))
                 return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
         }
+        if(!cvar("g_mmm_not_dm_maps"))
+        {
+            // if this is unset, all DM maps support MMM too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
         return false;
     }
 #ifdef CSQC
@@ -36,10 +42,10 @@ REGISTER_GAMETYPE(MMM, NEW(MurderinMegaerebusManor));
 .int mmm_status;
 const int MMM_STATUS_CIVILIAN = 1;
 const int MMM_STATUS_MURDERER = 2;
-const int MMM_STATUS_SLEUTH = 3;
+const int MMM_STATUS_DETECTIVE = 3;
 
 // hardcoded player colors for mmm
-const int MMM_COLOR_SLEUTH = 221; // blue
+const int MMM_COLOR_DETECTIVE = 221; // blue
 const int MMM_COLOR_CIVILIAN = 51; // green
 const int MMM_COLOR_MURDERER = 68; // red
 #endif

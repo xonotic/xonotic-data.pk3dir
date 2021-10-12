@@ -23,9 +23,9 @@ void HUD_Mod_MMM(vector pos, vector mySize)
 		player_color = '0 1 0';
 		//player_icon = "player_neutral";
 	}
-	else if(mystatus == MMM_STATUS_SLEUTH)
+	else if(mystatus == MMM_STATUS_DETECTIVE)
 	{
-		player_text = _("Sleuth");
+		player_text = _("Detective");
 		player_color = '0 0 1';
 		//player_icon = "player_blue";
 	}
@@ -88,10 +88,10 @@ MUTATOR_HOOKFUNCTION(cl_mmm, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 		plcolor = MMM_COLOR_CIVILIAN;
 	}
 
-	//LegendGuard adds if sentence for Sleuth model color which will shown for everyone 21-02-2021
-	if (otherplayer_status == MMM_STATUS_SLEUTH)
+	//LegendGuard adds if sentence for Detective model color which will shown for everyone 21-02-2021
+	if (otherplayer_status == MMM_STATUS_DETECTIVE)
 	{
-		plcolor = MMM_COLOR_SLEUTH;
+		plcolor = MMM_COLOR_DETECTIVE;
 	}
 
 	player.colormap = 1024 + plcolor;
