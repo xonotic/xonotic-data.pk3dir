@@ -1104,6 +1104,9 @@ string getwelcomemessage(entity this)
 	if (motd != "") {
 		s = strcat(s, "\n\n^7", strreplace("\\n", "\n", motd));
 	}
+	
+	// It's been a work, I want some credit for a while. Might remove later.
+	s = strcat(s, "\n\nUsing BaI mod by z411 - bienvenidoainternet.org");
 	return s;
 }
 
