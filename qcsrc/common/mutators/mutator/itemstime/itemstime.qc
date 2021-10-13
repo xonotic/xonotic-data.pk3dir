@@ -25,6 +25,15 @@ NET_HANDLE(itemstime, bool isNew)
     return = true;
     ItemsTime_time[i] = f;
 }
+
+NET_HANDLE(TE_CSQC_TOTALSHARDS, bool isNew)
+{
+	// for RJZ
+	total_shards = ReadInt24_t();
+	
+	return = true;
+}
+
 #endif
 
 #ifdef CSQC
@@ -200,6 +209,25 @@ void HUD_ItemsTime_Export(int fh)
 	HUD_Write_Cvar("hud_panel_itemstime_dynamicsize");
 }
 
+// for RJZ
+void DrawItemsTimeItemFixed(vector myPos, vector mySize, float ar, string item_icon, float t)
+{
+	vector picpos, numpos;
+    if (autocvar_hud_panel_itemstime_iconalign)
+    {
+        numpos = myPos;
+        picpos = myPos + eX * (ar - 1) * mySize_y;
+    }
+    else
+    {
+        numpos = myPos + eX * mySize_y;
+        picpos = myPos;
+    }
+    
+    drawstring_aspect(numpos, ftos(t), vec2(((ar - 1)/ar) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+    drawpic_aspect_skin(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, float item_time, bool item_available, float item_availableTime)
 {
     float t = 0;
@@ -323,6 +351,10 @@ void HUD_ItemsTime()
         });
         count += (Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) != -1);
     }
+    // for RJZ
+    if (total_shards != -1)
+		count++;
+	
     if (count == 0)
         return;
 
@@ -399,6 +431,7 @@ void HUD_ItemsTime()
     FOREACH(Items, Item_ItemsTime_Allow(it) && Item_ItemsTime_GetTime(it.m_id) != -1, {
     	id = it.m_id;
     	icon = it.m_icon;
+		
 
 LABEL(iteration)
         float item_time = Item_ItemsTime_GetTime(id);
@@ -441,6 +474,18 @@ LABEL(iteration)
         if(id == REGISTRY_MAX(Items)) // can happen only in the last fake iteration
         	break;
     });
+	
+	// for RJZ
+	if(total_shards != -1) {
+		DrawItemsTimeItemFixed(pos + vec2(column * (itemstime_size.x + offset.x), row * (itemstime_size.y + offset.y)), itemstime_size, ar, "armor", total_shards);
+		++row;
+		if (row >= rows)
+		{
+			row = 0;
+			column = column + 1;
+		}
+	}
+	
     // add another fake iteration for superweapons time
     if(id < REGISTRY_MAX(Items) && Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) != -1)
     {

@@ -101,6 +101,27 @@ void PingPLReport_Spawn()
 
 const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 
+void send_TotalShards(entity to) {
+	// for RJZ
+	// Send total number of picked up shards
+	if(!autocvar_g_count_shards) return;
+	if(!IS_REAL_CLIENT(to)) return;
+	
+	msg_entity = to;
+	WriteHeader(MSG_ONE, TE_CSQC_TOTALSHARDS);
+	WriteInt24_t(MSG_ONE, total_shards);
+}
+
+void send_TotalShardsAll() {
+	// for RJZ
+	// Send total number of picked up shards
+	if(!autocvar_g_count_shards) return;
+	
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)), {
+		send_TotalShards(it);
+	});
+}
+
 void SetDefaultAlpha()
 {
 	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
