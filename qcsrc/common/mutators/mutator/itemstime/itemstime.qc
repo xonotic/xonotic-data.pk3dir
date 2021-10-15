@@ -210,7 +210,7 @@ void HUD_ItemsTime_Export(int fh)
 }
 
 // for RJZ
-void DrawItemsTimeItemFixed(vector myPos, vector mySize, float ar, string item_icon, float t)
+void DrawItemsTimeItemFixed(vector myPos, vector mySize, float ar, string item_icon, float t, vector color)
 {
 	vector picpos, numpos;
     if (autocvar_hud_panel_itemstime_iconalign)
@@ -224,8 +224,8 @@ void DrawItemsTimeItemFixed(vector myPos, vector mySize, float ar, string item_i
         picpos = myPos;
     }
     
-    drawstring_aspect(numpos, ftos(t), vec2(((ar - 1)/ar) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-    drawpic_aspect_skin(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+    drawstring_aspect(numpos, ftos(t), vec2(((ar - 1)/ar) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+    drawpic_aspect(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, float item_time, bool item_available, float item_availableTime)
@@ -420,6 +420,9 @@ void HUD_ItemsTime()
             itemstime_size.y = newSize;
         }
     }
+    
+    if (total_shards != -1)
+		panel_size.y += itemstime_size.y * 0.5;
 
     HUD_Scale_Enable();
     HUD_Panel_DrawBg();
@@ -477,7 +480,7 @@ LABEL(iteration)
 	
 	// for RJZ
 	if(total_shards != -1) {
-		DrawItemsTimeItemFixed(pos + vec2(column * (itemstime_size.x + offset.x), row * (itemstime_size.y + offset.y)), itemstime_size, ar, "armor", total_shards);
+		DrawItemsTimeItemFixed(pos + vec2(column * (itemstime_size.x + offset.x), row * (itemstime_size.y + offset.y) + itemstime_size.y * 0.5), itemstime_size, ar, "gfx/shards.tga", total_shards, '0.16 0.7 0.83');
 		++row;
 		if (row >= rows)
 		{
