@@ -409,10 +409,8 @@ void PutObserverInServer(entity this, bool is_forced)
 		CS(this).just_joined = false;
 	
 	// for RJZ
-	if (autocvar_g_count_shards) {
-		total_shards = 0;
+	if (autocvar_g_count_shards)
 		send_TotalShards(this);
-	}
 }
 
 int player_getspecies(entity this)
