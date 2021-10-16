@@ -7,6 +7,8 @@
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
+# Cris Sus, 2021
+# Cris Sus, 2021
 # Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
@@ -20,14 +22,16 @@
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
 # Robert Wolniak <robert.wolniak@gmail.com>, 2015,2018
+# Saikuru Zero, 2021
+# Saikuru Zero, 2021
 # Sertomas, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-09-19 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-10-10 17:50+0000\n"
+"Last-Translator: Cris Sus\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -51,7 +55,7 @@ msgstr "^1Nie można zapisać do %s"
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Komunikat o odliczaniu czasu %s, zostało sekund: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:175
 #, c-format
@@ -258,7 +262,7 @@ msgstr "Czat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Wyślij publiczną wiadomość do"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^:-) / nice one"
@@ -282,7 +286,7 @@ msgstr "hej / powodzenia i miłej zabawy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Wyślij w języku angielskim"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 #: qcsrc/client/hud/panel/quickmenu.qc:828
@@ -371,7 +375,7 @@ msgstr "zabiłem niosącego flagę (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^zabiłem niosącego flagę, ikona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 #, c-format
@@ -430,7 +434,7 @@ msgstr "Celownik broni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^FPS"
-msgstr "FPS"
+msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Net graph"
@@ -451,7 +455,7 @@ msgstr "Dźwięk czatu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Zmień kamerę trybu widza"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 #: qcsrc/client/hud/panel/quickmenu.qc:859
@@ -468,7 +472,7 @@ msgstr "Zmniejsz szybkość"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Kolizja ze ścianą"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^Fullscreen"
@@ -501,7 +505,7 @@ msgstr "Wymieszaj drużyny"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Obserwuj gracza"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
@@ -537,19 +541,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1174
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "brak punktu kontrolnego"
 
 #: qcsrc/client/hud/panel/radar.qc:349
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Kliknij by wybrać miejsce teleportacji"
 
 #: qcsrc/client/hud/panel/radar.qc:353
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Kliknij by wybrać miejsce odrodzenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Liczba zabitych graczy niosących piłkę"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^bckills"
@@ -565,7 +569,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr ""
+msgstr "Jak często została przejęta flaga (CTF) lub klucz (KeyHunt)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^caps"
@@ -577,7 +581,7 @@ msgstr "czas przejęcia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Czas najszybszego przejęcia (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of deaths"
@@ -589,7 +593,7 @@ msgstr "śmierci"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "Liczba kluczy zniszczonych przez zepchnięcie do pustki"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^destroyed"
@@ -601,7 +605,7 @@ msgstr "zadane obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "The total damage done"
-msgstr ""
+msgstr "Całkowite zadane obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^dmgtaken"
@@ -609,7 +613,7 @@ msgstr "przyjęte obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage taken"
-msgstr ""
+msgstr "Całkowite przyjęte obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Number of flag drops"
@@ -621,7 +625,7 @@ msgstr "porzucenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Player ELO"
-msgstr ""
+msgstr "Punkty rankingowe gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^elo"
@@ -633,11 +637,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Czas najszybszego okrążenia (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Liczba popełnionych błędów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^faults"
@@ -645,11 +649,11 @@ msgstr "błędy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Liczba zabitych graczy niosących flagę"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^fckills"
-msgstr "fckills"
+msgstr "SCO^fckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "FPS"
@@ -657,19 +661,19 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fps"
-msgstr "fps"
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Liczba zabójstw odjąć samobójstwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^frags"
-msgstr ""
+msgstr "SCO^fragi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Liczba trafionych bramek"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^goals"
@@ -677,7 +681,7 @@ msgstr "cele"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Liczba zabitych graczy niosących klucze"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^kckills"
@@ -685,53 +689,53 @@ msgstr "kckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^k/d"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Stosunek zabójstwa-śmierci"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^kdr"
-msgstr ""
+msgstr "SCO^kdr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^kdratio"
-msgstr ""
+msgstr "SCO^kdratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of kills"
-msgstr ""
+msgstr "Liczba zabójstw"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^kills"
-msgstr "zabici"
+msgstr "SCO^zabici"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Liczba zakończonych okrążeń (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^laps"
-msgstr "okrążenia"
+msgstr "SCO^okrążenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Liczba żyć (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^lives"
-msgstr "życia"
+msgstr "SCO^życia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Ile razy klucz został zgubiony"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^losses"
-msgstr "straty"
+msgstr "SCO^straty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 #: qcsrc/client/hud/panel/scoreboard.qc:145
@@ -740,19 +744,19 @@ msgstr "Nazwa gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^name"
-msgstr "nazwa"
+msgstr "SCO^nazwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^nick"
-msgstr "nick"
+msgstr "SCO^ksywka"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Liczba zniszczonych celów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^objectives"
-msgstr "cele"
+msgstr "SCO^cele"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid ""
@@ -761,71 +765,71 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^pickups"
-msgstr ""
+msgstr "SCO^znajdźki"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Ping time"
-msgstr ""
+msgstr "Czas pingowania"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^ping"
-msgstr "ping"
+msgstr "SCO^ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Packet loss"
-msgstr "Utrata pakietu"
+msgstr "Utrata pakietów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^pl"
-msgstr "pl"
+msgstr "SCO^pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Liczba graczy zepchniętych w pustkę"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^pushes"
-msgstr "pchnięcia"
+msgstr "SCO^pchnięcia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Player rank"
-msgstr ""
+msgstr "Ranga gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^rank"
-msgstr "ranga"
+msgstr "SCO^ranga"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Liczba zwróceń flagi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^returns"
-msgstr "zwroty"
+msgstr "SCO^zwroty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of revivals"
-msgstr ""
+msgstr "Liczba wskrzeszeń"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^revivals"
-msgstr "rozmrożenia"
+msgstr "SCO^wskrzeszenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Liczba wygranych rund"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^rounds won"
-msgstr "wygranych rund"
+msgstr "SCO^wygrane rundy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^score"
-msgstr "wynik"
+msgstr "SCO^wynik"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Total score"
-msgstr ""
+msgstr "Łączny wynik"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of suicides"
@@ -833,19 +837,19 @@ msgstr "Liczba samobójstw"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^suicides"
-msgstr "samobójstwa"
+msgstr "SCO^samobójstwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Liczba zabójstw odjąć śmierci"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^sum"
-msgstr "suma"
+msgstr "SCO^suma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Liczba przejętych punktów dominacji (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^takes"
@@ -853,11 +857,11 @@ msgstr "SCO^przejęcia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Liczba zabitych sojuszników"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "SCO^teamkille"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Number of ticks (Domination)"
@@ -869,11 +873,11 @@ msgstr "SCO^ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^time"
-msgstr "czas"
+msgstr "SCO^czas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Łączny czas ścigania (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:359
 msgid ""
@@ -965,7 +969,7 @@ msgstr "Statystyka dokładności (średnia %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1407
 msgid "Item stats"
-msgstr ""
+msgstr "Statystyki przedmiotu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1518
 msgid "Map stats:"
@@ -1000,7 +1004,7 @@ msgstr "^5%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:1908
 #: qcsrc/client/hud/panel/scoreboard.qc:1915
 msgid "SCO^points"
-msgstr "punkty"
+msgstr "SCO^punkty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1907
 #: qcsrc/client/hud/panel/scoreboard.qc:1914
@@ -1064,7 +1068,7 @@ msgstr "ROZGRZEWKA"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1Musisz odpowiedzieć zanim przejdziesz do trybu konfiguracji HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"

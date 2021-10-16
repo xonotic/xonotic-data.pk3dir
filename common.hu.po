@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Ács Zoltán <acszoltan111@gmail.com>, 2021
 # Ákos RUSZKAI, 2012
 # divVerent <divVerent@xonotic.org>, 2011
 # MmAaXx500 <viktor.balogh2000@gmail.com>, 2018
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-19 07:22+0200\n"
-"PO-Revision-Date: 2021-09-19 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-10-02 10:25+0000\n"
+"Last-Translator: Ács Zoltán <acszoltan111@gmail.com>\n"
 "Language-Team: Hungarian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/hu/)\n"
 "Language: hu\n"
@@ -112,7 +113,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
-msgstr "fegyver eldobás"
+msgstr "fegyver eldobása"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:48
@@ -731,7 +732,7 @@ msgstr "Név"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^nick"
-msgstr "Nick"
+msgstr "Becenév"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of objectives destroyed"
@@ -1527,7 +1528,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:425
 #: qcsrc/common/minigames/minigame/ps.qc:431
 msgid "Game over!"
-msgstr ""
+msgstr "Játék vége!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
@@ -1592,7 +1593,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 nyerte meg a játékot!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:384
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1727,7 +1728,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Amőba"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:699
 msgid "Single Player"
@@ -1964,7 +1965,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Szuperfegyverek"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
