@@ -6,7 +6,6 @@
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/lms/sv_lms.qh>
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
@@ -236,9 +235,9 @@ void setplayermodel(entity e, string modelname)
 }
 
 /** putting a client as observer in the server */
-void PutObserverInServer(entity this)
+void PutObserverInServer(entity this, bool is_forced)
 {
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this, is_forced);
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -618,8 +617,7 @@ void PutPlayerInServer(entity this)
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox;
-	this.scale = ((q3dfcompat) ? 0.9 : autocvar_sv_player_scale);
+	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.9 : autocvar_sv_player_scale);
 	this.fade_time = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
@@ -820,7 +818,7 @@ void PutClientInServer(entity this)
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
 	if (IS_OBSERVER(this)) {
-		PutObserverInServer(this);
+		PutObserverInServer(this, false);
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
@@ -1556,7 +1554,9 @@ float CalcRot(float current, float stable, float rotfactor, float rotframetime)
 		return max(stable, current + (stable - current) * rotfactor * rotframetime);
 }
 
-void RotRegen(entity this, int res, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod)
+void RotRegen(entity this, int res, float limit_mod,
+	float regenstable, float regenfactor, float regenlinear, float regenframetime,
+	float rotstable, float rotfactor, float rotlinear, float rotframetime)
 {
 	float old = GetResource(this, res);
 	float current = old;
@@ -1609,19 +1609,27 @@ void player_regen(entity this)
 	regen_health_stable = M_ARGV(9, float);
 	regen_health_rotstable = M_ARGV(10, float);
 
+	float rotstable, regenstable, rotframetime, regenframetime;
+
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
-		float maxa = autocvar_g_balance_armor_rotstable;
-		float mina = autocvar_g_balance_armor_regenstable;
+		regenstable = autocvar_g_balance_armor_regenstable;
+		rotstable = autocvar_g_balance_armor_rotstable;
+		regenframetime = (time > this.pauseregen_finished) ? (regen_mod * frametime) : 0;
+		rotframetime = (time > this.pauserotarmor_finished) ? (rot_mod * frametime) : 0;
+		RotRegen(this, RES_ARMOR, limit_mod,
+			regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regenframetime,
+			rotstable, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rotframetime);
 
-		RotRegen(this, RES_ARMOR, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear,
-			regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
-			rot_mod * frametime * (time > this.pauserotarmor_finished), limit_mod);
-
-		RotRegen(this, RES_HEALTH, regen_health_stable * max_mod, regen_health, regen_health_linear,
-			regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable * max_mod, regen_health_rot, regen_health_rotlinear,
-			rot_mod * frametime * (time > this.pauserothealth_finished), limit_mod);
+		// NOTE: max_mod is only applied to health
+		regenstable = regen_health_stable * max_mod;
+		rotstable = regen_health_rotstable * max_mod;
+		regenframetime = (time > this.pauseregen_finished) ? (regen_mod * frametime) : 0;
+		rotframetime = (time > this.pauserothealth_finished) ? (rot_mod * frametime) : 0;
+		RotRegen(this, RES_HEALTH, limit_mod,
+			regenstable, regen_health, regen_health_linear, regenframetime,
+			rotstable, regen_health_rot, regen_health_rotlinear, rotframetime);
 	}
 
 	// if player rotted to death...  die!
@@ -1636,12 +1644,13 @@ void player_regen(entity this)
 
 	if (!(this.items & IT_UNLIMITED_AMMO))
 	{
-		float maxf = autocvar_g_balance_fuel_rotstable;
-		float minf = autocvar_g_balance_fuel_regenstable;
-
-		RotRegen(this, RES_FUEL, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear,
-			frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
-			maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), 1);
+		regenstable = autocvar_g_balance_fuel_regenstable;
+		rotstable = autocvar_g_balance_fuel_rotstable;
+		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_JetpackRegen.m_itemid)) ? frametime : 0;
+		rotframetime = (time > this.pauserotfuel_finished) ? frametime : 0;
+		RotRegen(this, RES_FUEL, 1,
+			regenstable, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regenframetime,
+			rotstable, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rotframetime);
 	}
 }
 
@@ -1789,7 +1798,7 @@ bool SpectateSet(entity this)
 	accuracy_resend(this);
 
 	if(!SpectateUpdate(this))
-		PutObserverInServer(this);
+		PutObserverInServer(this, false);
 
 	return true;
 }
@@ -2293,7 +2302,7 @@ void ObserverOrSpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
-				PutObserverInServer(this);
+				PutObserverInServer(this, false);
 				this.would_spectate = true;
 			}
 		}
@@ -2319,7 +2328,7 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		if(is_spec && !SpectateUpdate(this))
-			PutObserverInServer(this);
+			PutObserverInServer(this, false);
 	}
 	if (is_spec)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
@@ -2643,14 +2652,30 @@ void PlayerPostThink (entity this)
 		int totalClients = 0;
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
+			// maxidle disabled in local matches by not counting clients (totalClients 0)
+			if (server_is_dedicated)
+			{
+				FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
+				{
+					++totalClients;
+				});
+				if (maxclients - totalClients > autocvar_sv_maxidle_slots)
+					totalClients = 0;
+			}
+		}
+		else if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
 				++totalClients;
 			});
 		}
 
-		if (autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
-		{ /* do nothing */ }
+		if (totalClients < autocvar_sv_maxidle_minplayers)
+		{
+			// idle kick disabled
+			CS(this).parm_idlesince = time;
+		}
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (CS(this).idlekick_lasttimeleft)
@@ -2677,10 +2702,7 @@ void PlayerPostThink (entity this)
 				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
 				{
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
-					if (this.caplayer)
-						this.caplayer = 0;
-					this.lms_spectate_warning = 2; // TODO: mutator hook for players forcibly moved to spectator?
-					PutObserverInServer(this);
+					PutObserverInServer(this, true);
 				}
 				else
 				{
