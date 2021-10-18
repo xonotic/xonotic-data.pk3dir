@@ -9,27 +9,37 @@
 #endif
 
 #ifdef GAMEQC
-MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
+//MODEL(Speed_ITEM, Item_Model("g_invincible.md3")); // TODO: new model required
 SOUND(Speed, Item_Sound("powerup_shield"));
 #endif
 
 #ifdef SVQC
 .float speed_finished;
 
+bool autocvar_g_powerups_speed = 1;
 float autocvar_g_balance_powerup_speed_attackrate = 0.8;
 float autocvar_g_balance_powerup_speed_highspeed = 1.5;
 float autocvar_g_balance_powerup_speed_time = 30;
 void powerup_speed_init(Pickup this, entity item)
 {
     if(!item.speed_finished)
-        item.speed_finished = autocvar_g_balance_powerup_speed_time;
+        item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
 }
 #endif
 REGISTER_ITEM(Speed, Powerup) {
     this.m_canonical_spawnfunc = "item_speed";
+#ifdef SVQC
+    if(autocvar_g_powerups_speed)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_speed_init;
+#endif
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_MUTATORBLOCKED; // TODO: ITEM_FLAG_NORMAL (once it has a model!)
-    this.m_model            =   MDL_Speed_ITEM;
+    this.m_itemid           =   IT_SPEED;
+    this.m_model            =   MDL_BUFF; // TODO: MDL_Speed_ITEM when new model available
+    this.m_skin             =   9;
     this.m_sound            =   SND_Speed;
     this.m_glow             =   true;
     this.m_respawnsound     =   SND_SHIELD_RESPAWN;
@@ -40,18 +50,9 @@ REGISTER_ITEM(Speed, Powerup) {
     this.m_color            =   '0.1 1 0.84';
     this.m_waypoint         =   _("Speed");
     this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_SPEED;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_speed_init;
-#endif
 }
 
 SPAWNFUNC_ITEM(item_speed, ITEM_Speed)
-// compat
-SPAWNFUNC_ITEM(item_haste, ITEM_Speed)
-SPAWNFUNC_ITEM(item_scout, ITEM_Speed)
 
 CLASS(Speed, Powerups)
     ATTRIB(Speed, netname, string, "speed");
