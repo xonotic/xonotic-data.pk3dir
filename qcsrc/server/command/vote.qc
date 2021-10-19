@@ -348,6 +348,12 @@ void reset_map(bool dorespawn)
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
+	
+	// for RJZ
+	if (autocvar_g_count_shards) {
+		total_shards = 0;
+		send_TotalShardsAll();
+	}
 
 	if (shuffleteams_on_reset_map)
 	{

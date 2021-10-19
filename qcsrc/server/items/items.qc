@@ -529,7 +529,7 @@ bool Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
 	
 	// for RJZ
-	if (autocvar_g_count_shards && item.itemdef == ITEM_ArmorSmall) {
+	if (autocvar_g_count_shards && !warmup_stage && item.itemdef == ITEM_ArmorSmall) {
 		total_shards++;
 		send_TotalShardsAll();
 	}

@@ -1062,11 +1062,17 @@ spawnfunc(worldspawn)
 
 	WinningConditionHelper(this); // set worldstatus
 
-	world_initialized = 1;
-	__spawnfunc_spawn_all();
-	
 	if(!warmup_stage)
 		round_handler_Activate(true);
+	
+	// for RJZ
+	if (autocvar_g_count_shards && warmup_stage) {
+		total_shards = -2;
+		send_TotalShardsAll();
+	}
+	
+	world_initialized = 1;
+	__spawnfunc_spawn_all();
 }
 
 spawnfunc(light)

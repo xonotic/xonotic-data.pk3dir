@@ -224,7 +224,7 @@ void DrawItemsTimeItemFixed(vector myPos, vector mySize, float ar, string item_i
         picpos = myPos;
     }
     
-    drawstring_aspect(numpos, ftos(t), vec2(((ar - 1)/ar) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+    drawstring_aspect(numpos, (t < 0 ? "-" : ftos(t)), vec2(((ar - 1)/ar) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
     drawpic_aspect(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
