@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-17 08:29+0000\n"
+"PO-Revision-Date: 2021-10-19 12:53+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -5309,7 +5309,7 @@ msgstr "Дробовик"
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n Туба"
+msgstr "@!#%'а Туба"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:21
 msgid "Vaporizer"
@@ -5552,7 +5552,7 @@ msgstr "Предмет %d"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
-msgstr "Свой"
+msgstr "Своё"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -7911,7 +7911,7 @@ msgstr "Сбросить привязки клавиш"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
-msgstr "Предустановка качества:"
+msgstr "Предустановка:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
@@ -7943,7 +7943,7 @@ msgstr "Максимальная"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
 msgid "Geometry detail:"
-msgstr "Детализация геометрии:"
+msgstr "Качество геометрии:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map"
@@ -7951,27 +7951,27 @@ msgstr "Меняет сглаживание кривых на арене"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
-msgstr "Нижайшая"
+msgstr "Низшее"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "DET^Low"
-msgstr "Низкая"
+msgstr "Низкое"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr "Обычная"
+msgstr "Нормальное"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
-msgstr "Хорошая"
+msgstr "Хорошее"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "DET^Best"
-msgstr "Лучшая"
+msgstr "Лучшее"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr "Высочайшая"
+msgstr "Безумное"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
@@ -7979,23 +7979,23 @@ msgstr "Детализация игроков:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr "Низкий"
+msgstr "Низкая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
-msgstr "Средний"
+msgstr "Средняя"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr "Нормальный"
+msgstr "Нормальная"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
-msgstr "Хороший"
+msgstr "Хорошая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr "Лучший"
+msgstr "Лучшая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
