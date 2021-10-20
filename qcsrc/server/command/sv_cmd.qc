@@ -1395,7 +1395,7 @@ void GameCommand_shuffleteams(int request)
 	}
 }
 
-void GameCommand_srestart(int request)
+void GameCommand_reset(int request)
 {
 	switch (request)
 	{
@@ -1409,7 +1409,7 @@ void GameCommand_srestart(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd srestart");
+			LOG_HELP("Usage:^3 sv_cmd reset");
 			LOG_HELP("  No arguments required.");
 			return;
 		}
@@ -1763,9 +1763,9 @@ SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { G
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
+SERVER_COMMAND(reset, "Soft restart the server and reset the players") { GameCommand_reset(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
-SERVER_COMMAND(srestart, "Soft restart the server and reset the players") { GameCommand_srestart(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
 SERVER_COMMAND(trace, "Various debugging tools with tracing") { GameCommand_trace(request, arguments); }
 SERVER_COMMAND(unlockteams, "Enable the ability for players to switch or enter teams") { GameCommand_unlockteams(request); }
