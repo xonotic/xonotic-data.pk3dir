@@ -438,15 +438,9 @@ void ReadyRestart_force()
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 	
 	if(!warmup_stage)
-	{
-		readyrestart_happened = true;
 		game_starttime = time + RESTART_COUNTDOWN;
-	}
 	else
-	{
-		readyrestart_happened = false;
-		game_starttime = 0;
-	}
+		game_starttime = time; // No countdown in warmup
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
