@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-17 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-10-19 18:39+0000\n"
+"Last-Translator: Gokdeniz.Kucukali\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -1270,7 +1270,7 @@ msgstr "En hızlı zaman için yarış."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
-msgstr "Ölümmaçı"
+msgstr "Herkes tek"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
@@ -1336,7 +1336,7 @@ msgstr "Anahtar Avı"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1Match has already begun"
-msgstr "^1Savaş çoktan başladı"
+msgstr "^1Karşılaşma çoktan başladı"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:25
 msgid "^1You have no more lives left"
@@ -1409,7 +1409,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
-msgstr "Ölümmaçı Takımı"
+msgstr "Takım Kapışması"
 
 #: qcsrc/common/items/item/ammo.qh:67
 msgid "bullets"
@@ -1669,7 +1669,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
-msgstr "Müsabaka Başlat"
+msgstr "Karşılaşma Başlat"
 
 #: qcsrc/common/minigames/minigame/pong.qc:699
 msgid "Add AI player"
@@ -1703,7 +1703,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:613
 #: qcsrc/common/minigames/minigame/ttt.qc:698
 msgid "Next Match"
-msgstr "Sonraki Müsabaka"
+msgstr "Sonraki Karşılaşma"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
@@ -2142,7 +2142,7 @@ msgstr "^1Sunucu bildirimleri:"
 
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
-msgstr "^F4NOT: ^BGMaç sırasında oyunculara sohbet gönderilmez"
+msgstr "^F4NOT: ^BGKarşılaşma sırasında oyunculara sohbet gönderilmez"
 
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
@@ -3440,7 +3440,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:523
 msgid "^F4You are now alone!"
-msgstr ""
+msgstr "^F4Artık yalnızsın!"
 
 #: qcsrc/common/notifications/all.inc:525
 msgid "^BGYou are attacking!"
@@ -3457,11 +3457,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:529
 msgid "^F4Begin!"
-msgstr ""
+msgstr "^F4Başla!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^F4Game starts in ^COUNT"
-msgstr ""
+msgstr "^F4Oyun ^COUNT içinde başlıyor"
 
 #: qcsrc/common/notifications/all.inc:531
 msgid "^F4Round starts in ^COUNT"
@@ -3544,7 +3544,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:554
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BGBayrağı %s kişisine devrettin"
 
 #: qcsrc/common/notifications/all.inc:555
 msgid "^BGYou got the ^TC^TT^BG flag!"
@@ -4349,7 +4349,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:455
 msgid "TRIPLE FRAG! "
-msgstr ""
+msgstr "ÜÇLÜ ÖLDÜRME!"
 
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
@@ -4377,7 +4377,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:457
 msgid "MASSACRE! "
-msgstr ""
+msgstr "KATLİAM!"
 
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
@@ -4405,7 +4405,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:459
 msgid "BERSERKER! "
-msgstr ""
+msgstr "VAHŞİ!"
 
 #: qcsrc/common/notifications/all.qh:460
 #, c-format
@@ -4419,7 +4419,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:460
 msgid "CARNAGE! "
-msgstr ""
+msgstr "KIYIM!"
 
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
@@ -4475,7 +4475,7 @@ msgstr "İlk kan!"
 
 #: qcsrc/common/notifications/all.qh:525
 msgid "First score! "
-msgstr "İlk sonuç!"
+msgstr "İlk skor!"
 
 #: qcsrc/common/notifications/all.qh:529
 msgid "First casualty! "
@@ -4605,7 +4605,7 @@ msgstr "Pembe"
 #: qcsrc/common/turrets/cl_turrets.qc:126
 #, c-format
 msgid "%s under attack!"
-msgstr ""
+msgstr "%ssaldırı altında!"
 
 #: qcsrc/common/turrets/turret.qh:11
 msgid "Turret"
@@ -4702,76 +4702,76 @@ msgstr ""
 
 #: qcsrc/common/util.qc:1333
 msgid "Male"
-msgstr ""
+msgstr "Erkek"
 
 #: qcsrc/common/util.qc:1334
 msgid "Female"
-msgstr ""
+msgstr "Kadın"
 
 #: qcsrc/common/util.qc:1335
 msgid "Undisclosed"
-msgstr ""
+msgstr "Gizli"
 
 #: qcsrc/common/util.qc:1382
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<KEY NOT FOUND>"
 
 #: qcsrc/common/util.qc:1383
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1388
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1389 qcsrc/common/util.qc:1460
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "ENTER"
 
 #: qcsrc/common/util.qc:1390
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESC"
 
 #: qcsrc/common/util.qc:1391
 msgid "SPACE"
-msgstr ""
+msgstr "SPACE"
 
 #: qcsrc/common/util.qc:1393
 msgid "BACKSPACE"
-msgstr ""
+msgstr "GERİ TUŞU"
 
 #: qcsrc/common/util.qc:1394 qcsrc/common/util.qc:1451
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "YUKARI OK"
 
 #: qcsrc/common/util.qc:1395 qcsrc/common/util.qc:1446
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "AŞAĞI OK"
 
 #: qcsrc/common/util.qc:1396 qcsrc/common/util.qc:1448
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "SOL OK"
 
 #: qcsrc/common/util.qc:1397 qcsrc/common/util.qc:1449
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "SAĞ OK"
 
 #: qcsrc/common/util.qc:1399
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #: qcsrc/common/util.qc:1400
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #: qcsrc/common/util.qc:1401
 msgid "SHIFT"
-msgstr ""
+msgstr "SHIFT"
 
 #: qcsrc/common/util.qc:1403 qcsrc/common/util.qc:1444
 #, c-format
@@ -5419,7 +5419,7 @@ msgstr ""
 #: qcsrc/lib/string.qh:139
 #, c-format
 msgid "%02d:%02d:%02d"
-msgstr ""
+msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
@@ -5970,7 +5970,7 @@ msgstr "Bildirim Paneli"
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
 #: qcsrc/menu/xonotic/util.qc:758
 msgid "Enable"
-msgstr ""
+msgstr "Etkinleştir"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
@@ -6047,7 +6047,7 @@ msgstr "Güç Paneli"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "Her zaman etkinleştir"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -6067,7 +6067,7 @@ msgstr "Yarış Zamanlayıcı Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr ""
+msgstr "Takım oyunlarında etkinleştir"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -6205,7 +6205,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "Renkleri sıfırla"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
@@ -6581,7 +6581,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:109
 msgid "Teams:"
-msgstr ""
+msgstr "Takımlar:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 msgid "2 teams"
@@ -6734,11 +6734,11 @@ msgstr "Oyun türleri:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:257
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:88
 msgid "MAP^Play"
-msgstr ""
+msgstr "Oyna"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qh:7
 msgid "Map Information"
@@ -6755,7 +6755,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:46
 #, c-format
 msgid "%s Arena"
-msgstr ""
+msgstr "%s Arena"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:57
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:163
@@ -6858,7 +6858,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "MUT^None"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Gameplay mutators:"
@@ -6876,7 +6876,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:172
 msgid "All players are almost invisible"
-msgstr ""
+msgstr "Tüm oyuncular neredeyse görünmez"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:176
 msgid ""
@@ -6937,11 +6937,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr ""
+msgstr "Oyuncunun aldığı tüm silahlar oyuncu öldükten sonra kaybolur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:240
 msgid "Weapons stay after they are picked up"
-msgstr ""
+msgstr "Silahlar toplandıktan sonra oyuncuda kalır"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:245
 msgid "Regular (no arena)"
@@ -6971,7 +6971,7 @@ msgstr "Tüm silahlar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:280
 msgid "Special arenas:"
-msgstr ""
+msgstr "Özel arenalar:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:284
 msgid ""
@@ -7002,15 +7002,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
-msgstr ""
+msgstr "Kategoriler"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
 msgid "SRVS^Empty"
-msgstr ""
+msgstr "Boş"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:43
 msgid "Show empty servers"
-msgstr ""
+msgstr "Boş sunucuları göster"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:47
 msgid "SRVS^Full"
@@ -7168,7 +7168,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Information"
-msgstr ""
+msgstr "Sunucu bilgisi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
 msgid "Demos"
@@ -7196,7 +7196,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
-msgstr ""
+msgstr "Oyna"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
@@ -7205,7 +7205,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr ""
+msgstr "Gerçekten şimdi çıkmak istiyor musun?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -7233,7 +7233,7 @@ msgstr "Oynatma listesi:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
 msgid "Random order"
-msgstr ""
+msgstr "Rastgele sıralama"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "MUSICPL^Stop"
@@ -8159,7 +8159,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:97
 msgid "Size:"
-msgstr ""
+msgstr "Boyut:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
@@ -8171,7 +8171,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:93
 msgid "Enable center crosshair dot"
-msgstr ""
+msgstr "Crosshairin ortasına nokta ekle"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:111
 msgid "Use normal crosshair color"
@@ -8207,7 +8207,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
 msgid "Crosshair"
-msgstr ""
+msgstr "Crosshair"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
@@ -8254,7 +8254,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Fontsize:"
-msgstr ""
+msgstr "Yazı boyutu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
@@ -8286,15 +8286,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Player Names"
-msgstr ""
+msgstr "Oyuncu isimleri"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:120
 msgid "Show names above players"
-msgstr ""
+msgstr "Oyuncuların yukarısında isimlerini göster"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
-msgstr ""
+msgstr "Maksimum mesafe:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:142
 msgid "Decolorize:"
@@ -8311,7 +8311,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:158
 msgid "Display health and armor"
-msgstr ""
+msgstr "Canı ve zırhı göster"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Damage overlay:"
@@ -8327,16 +8327,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "Shake the HUD when hurt"
-msgstr ""
+msgstr "Darbe aldığında HUDu salla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr ""
+msgstr "HUD düzenleyicisini aç"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
-msgstr ""
+msgstr "HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
@@ -8503,33 +8503,35 @@ msgstr "Oyuncular"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
-msgstr ""
+msgstr "Oyuncu modellerini benimkiyle aynı olmaya zorla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player colors to mine"
-msgstr ""
+msgstr "Oyuncu renklerini benimkiyle aynı olmaya zorla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"Uyarı: Eğer takım oyunlarında aktif edilirse, senin takımının rengi ile "
+"karşı takımın rengi aynı olabilir."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Takım oyunları haricinde"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr ""
+msgstr "Sadece düellolarda"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Sadece takım oyunlarında"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "Takım oyunlarında ve düellolarda"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
@@ -8541,19 +8543,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
 msgid "GIBS^None"
-msgstr ""
+msgstr "Yok"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
 msgid "GIBS^Few"
-msgstr ""
+msgstr "Çok az"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:71
 msgid "GIBS^Many"
-msgstr ""
+msgstr "Fazla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
 msgid "GIBS^Lots"
-msgstr ""
+msgstr "Çok fazla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
 msgid "Models"
@@ -8676,11 +8678,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
-msgstr ""
+msgstr "Yukarı"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:43
 msgid "Down"
-msgstr ""
+msgstr "Aşağı"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
@@ -8914,7 +8916,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:45
 msgid "Downloads:"
-msgstr ""
+msgstr "İndirmeler:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:47
 msgid "Maximum number of concurrent HTTP/FTP downloads"
@@ -8922,7 +8924,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Download speed:"
-msgstr ""
+msgstr "İndirme hızı:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Local latency:"
@@ -9073,7 +9075,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"
-msgstr ""
+msgstr "Menü temaları"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -9365,7 +9367,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:163
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr ""
+msgstr "OpenGL 2.0 shaderlarını kullan (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:169
 msgid "Psycho coloring (easter egg)"
@@ -9409,7 +9411,7 @@ msgstr "Tekli Oyuncu"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr "Tek oyunculu mücadele veya botlara karşı anlık müsabakaları oynayın"
+msgstr "Tek oyunculu mücadele veya botlara karşı anlık karşılaşmaları oynayın"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9522,7 +9524,7 @@ msgstr "en iyi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
-msgstr ""
+msgstr "şarjörü doldur"
 
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
@@ -9538,7 +9540,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:86
 msgid "show scores"
-msgstr ""
+msgstr "skorları göster"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "screen shot"
@@ -9574,31 +9576,31 @@ msgstr "sohbet geçmişini göster"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "vote YES"
-msgstr ""
+msgstr "EVETi oyla "
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "vote NO"
-msgstr ""
+msgstr "HAYIRı oyla"
 
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "Client"
-msgstr ""
+msgstr "Sunucu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106 qcsrc/menu/xonotic/keybinder.qc:108
 msgid "enter console"
-msgstr ""
+msgstr "Konsolu aç"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "disconnect"
-msgstr ""
+msgstr "Sunucudan ayrıl"
 
 #: qcsrc/menu/xonotic/keybinder.qc:110
 msgid "quit"
-msgstr ""
+msgstr "Çık"
 
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "auto-join team"
-msgstr ""
+msgstr "Otomatik olarak bir takıma katıl"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
@@ -9634,7 +9636,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mainwindow.qc:97 qcsrc/menu/xonotic/mainwindow.qc:100
 msgid "Do not press this button again!"
-msgstr ""
+msgstr "Bu tuşa tekrar basma!"
 
 #: qcsrc/menu/xonotic/maplist.qc:288
 msgid ""
@@ -9644,7 +9646,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr ""
+msgstr "%s kişisinin Xonotic sunucusu"
 
 #: qcsrc/menu/xonotic/maplist.qc:301
 msgid ""
@@ -9793,33 +9795,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "En düşük"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "Düşük"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "Orta"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "Yüksek"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "Çok yüksek"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "En yüksek"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"Dokuların keskinliğini değiştirir. Ayarı düşürmek dokuların kullandığı "
+"bellek kullanımını düşürür, fakat bu sefer de dokular vulanık görünür."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:131
 msgid "Screen resolution"
@@ -9827,19 +9831,19 @@ msgstr "Ekran çözünürlüğü"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "Yavaş"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "Hızlı"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "Ani"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
@@ -9900,21 +9904,21 @@ msgstr "Katıldı:"
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr ""
+msgstr "Son karşılaşma:"
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
-msgstr ""
+msgstr "Oynanan süre:"
 
 #: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
-msgstr ""
+msgstr "Favori harita:"
 
 #: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
 #: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Karşılaşmalar:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
@@ -9924,7 +9928,7 @@ msgstr "Galibiyet/Yenilgi"
 #: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
-msgstr ""
+msgstr "Galibiyet yüzdesi:"
 
 #: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
