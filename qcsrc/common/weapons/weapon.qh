@@ -136,11 +136,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
     spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
 
 #define SPAWNFUNC_WEAPON_COND(name, cond, wep1, wep2) \
-    spawnfunc(name) \
-    { \
-        entity wep = (cond) ? wep1 : wep2; \
-        weapon_defaultspawnfunc(this, wep); \
-    }
+	SPAWNFUNC_WEAPON(name, (cond ? wep1 : wep2))
 
 #else
 
@@ -230,6 +226,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
 string GetAmmoPicture(int ammotype);
 
 string GetAmmoName(int ammotype);
+
+entity GetAmmoItem(int ammotype);
 
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i);

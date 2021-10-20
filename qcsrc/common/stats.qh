@@ -4,6 +4,7 @@
 
 #ifdef SVQC
 #include <server/client.qh>
+#include <server/compat/quake3.qh>
 #include <server/main.qh>
 #include <common/gamemodes/sv_rules.qh>
 #include <common/mapobjects/teleporters.qh>
@@ -352,10 +353,7 @@ bool autocvar_sv_slick_applygravity;
 #endif
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
-#ifdef SVQC
-bool autocvar_sv_q3defragcompat;
-#endif
-REGISTER_STAT(Q3DEFRAGCOMPAT, bool, autocvar_sv_q3defragcompat)
+REGISTER_STAT(Q3COMPAT, int, q3compat)
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
