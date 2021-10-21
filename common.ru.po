@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-19 12:53+0000\n"
+"PO-Revision-Date: 2021-10-21 00:34+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -2569,7 +2569,7 @@ msgstr "^BG%s^K1 был подорван Магом%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1's вывернут наизнанку Шамблером%s%s"
+msgstr "^BG%s^K1 вывернут наизнанку Шамблером%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
@@ -3092,7 +3092,7 @@ msgstr "^BG%s^BG закончил гонку"
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
-msgstr "^BG%s^BG побил рекорд %s^BG's %s%s^BG места со временем %s%s %s"
+msgstr "^BG%s^BG побил рекорд %s^BG %s%s^BG места со временем %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
@@ -3185,7 +3185,7 @@ msgstr ""
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
-msgstr "^BG%s%s^K1 умер от убийственной игры ^BG%s^K1's на @!#%%м Баяне%s%s"
+msgstr "^BG%s%s^K1 умер от убийственной игры ^BG%s^K1 на @!#%%м Баяне%s%s"
 
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
@@ -3200,7 +3200,7 @@ msgstr "^BG%s%s^K1 попал под раздачу тока из Дуговой
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 был взорван кривыми болтами%s%s ^BG%s^K1's"
+msgstr "^BG%s%s^K1 был взорван кривыми болтами%s%s ^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
@@ -3317,7 +3317,7 @@ msgstr "^BG%s%s^K1 засосало в воронку гравитационно
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s"
 msgstr ""
-"^BG%s%s^K1 умер от убийственной игры ^BG%s^K1's на @!#%%й Бутылке Клейна%s%s"
+"^BG%s%s^K1 умер от убийственной игры ^BG%s^K1 на @!#%%й Бутылке Клейна%s%s"
 
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
@@ -4152,7 +4152,7 @@ msgid ""
 "Need active players for: %s"
 msgstr ""
 "^BGОжидание игроков…\n"
-"%s нуждается в активных игроках"
+"%s — требуются активные игроки"
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
