@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/mh/mh.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/mh/cl_mh.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/mh/sv_mh.qh>
+#endif

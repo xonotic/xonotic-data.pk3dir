@@ -1,0 +1,56 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_MH(vector pos, vector mySize);
+void HUD_Mod_MH_Export(int fh);
+#endif
+CLASS(Manhunt, Gametype)
+    INIT(Manhunt)
+    {
+        this.gametype_init(this, _("Manhunt"),"mh","g_mh",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=10 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
+    }
+    METHOD(Manhunt, m_parse_mapinfo, bool(string k, string v))
+    {
+        if (!k) {
+            cvar_set("g_mh_teams", cvar_defstring("g_mh_teams"));
+            return true;
+        }
+        switch (k) {
+            case "teams":
+                cvar_set("g_mh_teams", v);
+                return true;
+        }
+        return false;
+    }
+    METHOD(Manhunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        if(spawnpoints >= 8 && diameter > 4096)
+            return true;
+        return false;
+    }
+    METHOD(Manhunt, m_isForcedSupported, bool(Gametype this))
+    {
+        if(!cvar("g_mh_not_dm_maps"))
+        {
+            // if this is unset, all DM maps support MMM too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
+
+        return false;
+    }
+    METHOD(Manhunt, m_setTeams, void(string sa))
+    {
+        cvar_set("g_mh_teams", sa);
+    }
+    METHOD(Manhunt, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Point limit:"),     5,  100,  5, "g_mh_point_limit",         "g_mh_teams_override",         _("The amount of points needed before the match will end"));
+    }
+    ATTRIB(Manhunt, m_legacydefaults, string, "50 20 2 0");
+ENDCLASS(Manhunt)
+REGISTER_GAMETYPE(MANHUNT, NEW(Manhunt));
+#define g_mh IS_GAMETYPE(MANHUNT)

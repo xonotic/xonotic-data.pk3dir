@@ -1,0 +1,19 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+
+// TODO: change this?
+int autocvar_g_mh_point_limit;
+int autocvar_g_mh_point_leadlimit;
+bool autocvar_g_mh_team_spawns;
+void mh_Initialize();
+
+REGISTER_MUTATOR(mh, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		mh_Initialize();
+	}
+	return 0;
+}
