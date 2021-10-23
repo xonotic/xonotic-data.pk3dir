@@ -1,0 +1,15 @@
+everything xd
+
+have players be in 2 teams
+round based
+support for weaponarena, by default players are weaponless
+shuffle teams after every round
+have players change teams upon dying
+decide names for teams, runners and hunters?
+mid-round joins go into hunters(?)
+collision detection which kills the runner(?), check if goombastomp's or touchexplode's code is reusable
+avoid players bumping into each other and losing speed regardless of team without affecting ^
+score for hunters(?) for each kill and score for runners(?) for staying alive
+on-screen notification (and sound?) for getting tagged
+add more TODO: notes
+

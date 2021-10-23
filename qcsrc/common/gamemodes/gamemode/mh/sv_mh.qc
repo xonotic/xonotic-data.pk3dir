@@ -1,9 +1,5 @@
 #include "sv_mh.qh"
 
-// TODO: change this?
-int autocvar_g_mh_teams;
-int autocvar_g_mh_teams_override;
-
 spawnfunc(mh_team)
 {
 	if(!g_mh || !this.cnt) { delete(this); return; }
@@ -31,8 +27,7 @@ void mh_DelayedInit(entity this)
 	{
 		LOG_TRACE("No \"mh_team\" entities found on this map, creating them anyway.");
 
-		int numteams = autocvar_g_mh_teams_override;
-		if(numteams < 2) { numteams = autocvar_g_mh_teams; }
+		int numteams = 2;
 
 		int teams = BITS(bound(2, numteams, 2));
 		if(teams & BIT(0))
@@ -47,7 +42,6 @@ void mh_Initialize()
 	GameRules_teams(true);
 	GameRules_spawning_teams(autocvar_g_mh_team_spawns);
 	GameRules_limit_score(autocvar_g_mh_point_limit);
-	GameRules_limit_lead(autocvar_g_mh_point_leadlimit);
 
 	InitializeEntity(NULL, mh_DelayedInit, INITPRIO_GAMETYPE);
 }
