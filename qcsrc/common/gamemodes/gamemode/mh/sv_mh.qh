@@ -5,6 +5,8 @@
 // TODO: change this?
 float autocvar_g_mh_point_limit;
 bool autocvar_g_mh_team_spawns;
+//float autocvar_g_mh_warmup;
+string autocvar_g_mh_weaponarena;
 void mh_Initialize();
 
 REGISTER_MUTATOR(mh, false)
