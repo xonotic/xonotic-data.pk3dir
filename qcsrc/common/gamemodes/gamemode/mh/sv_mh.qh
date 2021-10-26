@@ -1,20 +1,62 @@
 #pragma once
 
 #include <common/mutators/base.qh>
+#include <server/elimination.qh>
+#include <server/round_handler.qh>
+#include <server/command/sv_cmd.qh>
 
 // TODO: change this?
 float autocvar_g_mh_point_limit;
 bool autocvar_g_mh_team_spawns;
-//float autocvar_g_mh_warmup;
+float autocvar_g_mh_warmup;
+float autocvar_g_mh_round_timelimit;
 string autocvar_g_mh_weaponarena;
-void mh_Initialize();
+
+int mh_teams;
+bool allowed_to_spawn_untagged;
+
+const int ST_MH_ROUNDS = 1;
+
+bool MH_CheckTeams();
+bool MH_CheckWinner();
+void MH_RoundStart();
+bool mh_isEliminated(entity e);
+
+// code from here on is just to support maps that don't have team entities
+void mh_SpawnTeam (string teamname, int teamcolor)
+{
+	entity this = new_pure(mh_team);
+	this.netname = teamname;
+	this.cnt = teamcolor - 1;
+	this.team = teamcolor;
+	this.spawnfunc_checked = true;
+	//spawnfunc_mh_team(this);
+}
 
 REGISTER_MUTATOR(mh, false)
 {
 	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		mh_Initialize();
+		GameRules_teams(true);
+		GameRules_spawning_teams(autocvar_g_mh_team_spawns);
+		GameRules_limit_score(autocvar_g_mh_point_limit);
+
+
+		mh_teams = BITS(2);
+		if(mh_teams & BIT(0))
+			mh_SpawnTeam("Runners", NUM_TEAM_1); //is this the place to change the displayed team name?
+		if(mh_teams & BIT(1))
+			mh_SpawnTeam("Hunters", NUM_TEAM_2); //is this the place to change the displayed team name?
+		
+		GameRules_scoring(mh_teams, SFL_SORT_PRIO_PRIMARY, 0, {
+            field_team(ST_MH_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+        });
+
+		allowed_to_spawn_untagged = true;
+		round_handler_Spawn(MH_CheckTeams, MH_CheckWinner, MH_RoundStart);
+		round_handler_Init(5, autocvar_g_mh_warmup, autocvar_g_mh_round_timelimit);
+		EliminatedPlayers_Init(mh_isEliminated);
 	}
 	return 0;
 }
