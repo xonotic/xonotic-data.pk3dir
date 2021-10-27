@@ -1,8 +1,7 @@
 everything xd
 
-have players be in 2 teams
 round based
-support for weaponarena, by default players are weaponless
+create INFO_MH_JOIN_LATE based on INFO_CA_JOIN_LATE for the use of "newly joined player is only able to join the hunters for this round"
 shuffle teams after every round
 have players change teams upon dying
 decide names for teams, runners and hunters?

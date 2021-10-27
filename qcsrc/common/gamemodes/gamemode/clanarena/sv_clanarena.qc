@@ -83,6 +83,7 @@ float CA_CheckWinner()
 	}
 
 	int winner_team = CA_GetWinnerTeam();
+	print("\n winner_team: ", sprintf("%f ", winner_team), "\n");
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));

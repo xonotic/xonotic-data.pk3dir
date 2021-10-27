@@ -1,12 +1,5 @@
 #include "sv_mh.qh"
 
-spawnfunc(mh_team)
-{
-	if(!g_mh || !this.cnt) { delete(this); return; }
-
-	this.team = this.cnt + 1;
-}
-
 MUTATOR_HOOKFUNCTION(mh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "mh_team";
@@ -84,6 +77,9 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDamage_SplitHealthArmor)
 
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	if(frag_attacker.team == -1 || frag_target.team == -1)return;
+	//print("\n", "frag_attacker.team: ", sprintf("%f ", frag_attacker.team), "\n"); //
+	//print("\n", "frag_target.team: ", sprintf("%f ", frag_target.team), "\n");     //
 	float frag_deathtype = M_ARGV(6, float);
 	float frag_damage = M_ARGV(7, float);
 	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
@@ -243,15 +239,23 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 	entity frag_target = M_ARGV(2, entity);
 
 	mh_LastPlayerForTeam_Notify(frag_target);
-	if (!allowed_to_spawn_untagged)
-	{
+	//if (!allowed_to_spawn_untagged)
+	//{
 		frag_target.respawn_flags = RESPAWN_SILENT;
 		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
-		frag_target.respawn_time = time + 2;
-	}
+		frag_target.respawn_time = time;
+	//}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
-	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+	//print("\n", "frag_target.team: ", sprintf("%f ", frag_target.team), "\n");     //5 or 14
+	//print("\n", "Team_IndexToTeam(1): ", sprintf("%f ", Team_IndexToTeam(1)), "\n");     //5
+	//print("\n", "Team_IndexToTeam(2): ", sprintf("%f ", Team_IndexToTeam(2)), "\n");     //14
+	//print("\n", "Team_IndexToTeam(3): ", sprintf("%f ", Team_IndexToTeam(3)), "\n");     //13
+	//print("\n", "Team_IndexToTeam(4): ", sprintf("%f ", Team_IndexToTeam(4)), "\n");     //10
+	if(frag_target.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && (frag_target != mh_LastPlayerForTeam(frag_target)))
+		MoveToTeam(frag_target, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
+
+	//if (!warmup_stage)
+	//	eliminatedPlayers.SendFlags |= 1;
 	return true;
 }
 
@@ -297,14 +301,17 @@ MUTATOR_HOOKFUNCTION(mh, HideTeamNagger)
 // a player spawning
 // Calls:
 // none
-MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
+//MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
+//{
+//	entity player = M_ARGV(0, entity);
 
-	player.caplayer = 1;
-	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
-}
+	//if(!allowed_to_spawn_untagged)
+	//	MoveToTeam(player, Team_IndexToTeam(2), 6);
+
+	//player.caplayer = 1;
+	//if (!warmup_stage)
+	//	eliminatedPlayers.SendFlags |= 1;
+//}
 
 // Function: 
 // ForbidSpawn
@@ -313,22 +320,22 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 // Needed in MH? Purpose?:
 // 
 // Needed modifications for MH:
-// 
+// remove?
 // Called by:
 // 
 // Calls:
 // 
-MUTATOR_HOOKFUNCTION(mh, ForbidSpawn)
-{
-	entity player = M_ARGV(0, entity);
-
-	// spectators / observers that weren't playing can join; they are
-	// immediately forced to observe in the PutClientInServer hook
-	// this way they are put in a team and can play in the next round
-	if (!allowed_to_spawn_untagged && player.caplayer)
-		return true;
-	return false;
-}
+//MUTATOR_HOOKFUNCTION(mh, ForbidSpawn)
+//{
+//	entity player = M_ARGV(0, entity);
+//
+//	// spectators / observers that weren't playing can join; they are
+//	// immediately forced to observe in the PutClientInServer hook
+//	// this way they are put in a team and can play in the next round
+//	if (!allowed_to_spawn_untagged && player.caplayer)
+//		return true;
+//	return false;
+//}
 
 // Function: 
 // PutClientInServer
@@ -337,7 +344,7 @@ MUTATOR_HOOKFUNCTION(mh, ForbidSpawn)
 // Needed in MH? Purpose?:
 // 
 // Needed modifications for MH:
-// 
+// Removed TRANSMUTE(Observer, player);
 // Called by:
 // 
 // Calls:
@@ -348,10 +355,8 @@ MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 
 	if (!allowed_to_spawn_untagged && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
-		TRANSMUTE(Observer, player);
-		if (CS(player).jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time) // not when connecting
 		{
-			player.caplayer = 0.5;
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
@@ -374,18 +379,16 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		if (!it.caplayer && IS_BOT_CLIENT(it))
-		{
+		if(IS_BOT_CLIENT(it)){
 			it.team = -1;
-			it.caplayer = 1;
+			
 		}
-		if (it.caplayer)
-		{
-			TRANSMUTE(Player, it);
-			it.caplayer = 1;
+		if(1){
+			//TRANSMUTE(Player, it);
 			PutClientInServer(it);
 		}
 	});
+	
 	return true;
 }
 
@@ -422,15 +425,12 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_global)
 void MH_count_alive_players()
 {
 	total_players = 0;
-	for (int i = 1; i <= 2; ++i)
-	{
+	for (int i = 1; i <= 2; ++i){
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 	}
-	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
-	{
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),{
 		++total_players;
-		if (IS_DEAD(it))
-		{
+		if (IS_DEAD(it)){
 			continue;
 		}
 		entity team_ = Entity_GetTeam(it);
@@ -438,8 +438,7 @@ void MH_count_alive_players()
 		++num_alive;
 		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	});
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),{
 		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(
 			Team_GetTeamFromIndex(1));
 		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
@@ -465,21 +464,18 @@ void MH_count_alive_players()
 // none
 int MH_GetWinnerTeam()
 {
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1){
-		winner_team = 1;
+	//print("\n", "Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1): ", sprintf("%f ", Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)), "\n"));     //5
+	//print("\n", "Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2): ", sprintf("%f ", Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)), "\n"));     //14
+	//there were runners and hunters alive, runners win
+	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1)){
+		return Team_IndexToTeam(2);
 	}
-	for (int i = 2; i <= 2; ++i){
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1){
-			if (winner_team != 0){
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
+	
+	//only hunters were alive
+	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) == 0)){
+		return Team_IndexToTeam(1);
 	}
-	if (winner_team){
-		return winner_team;
-	}
+	
 	return -1; // no player left
 }
 
@@ -510,40 +506,43 @@ void nades_Clear(entity player);
 // Calls:
 // round_handler_Init , MH_count_alive_players
 float MH_CheckWinner(){
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0){
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
-
-		allowed_to_spawn_untagged = false;
-		game_stopped = true;
-		round_handler_Init(5, autocvar_g_mh_warmup, autocvar_g_mh_round_timelimit);
-		return 1;
-	}
-
+	
+	int did_the_round_end = 0;
 	MH_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() > 1){
-		return 0;
-	}
-
 	int winner_team = MH_GetWinnerTeam();
-	if(winner_team > 0){
+	if(winner_team != 14)print("\n", "winner_team: ", sprintf("%f ", winner_team), "\n");
+	if(round_handler_GetEndTime() - time > 0 && winner_team == Team_IndexToTeam(2)){
+		did_the_round_end = 0;
+	} else if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0 && winner_team == Team_IndexToTeam(2)){
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		print("runners \n");
 		TeamScore_AddToTeam(winner_team, ST_MH_ROUNDS, +1);
-	}
-	else if(winner_team == -1){
+		did_the_round_end = 1;
+	} else if(winner_team == Team_IndexToTeam(1)){
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		print("hunters \n");
+		TeamScore_AddToTeam(winner_team, ST_MH_ROUNDS, +1);
+		did_the_round_end = 1;
+	} else if(winner_team == -1){
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
+		did_the_round_end = 1;
+	} else {
+		print("How did we get here? \n");
 	}
-
+	
+	if(did_the_round_end == 0)return 0;
+	
 	allowed_to_spawn_untagged = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_mh_warmup, autocvar_g_mh_round_timelimit);
+	shuffleteams_on_reset_map = !allowed_to_spawn_untagged;
 
 	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
-	return 1;
+	return did_the_round_end;
 }
 
 // Function: 
@@ -560,6 +559,7 @@ float MH_CheckWinner(){
 // none
 void MH_RoundStart()
 {
+	//shuffleteams_on_reset_map = 0;
 	allowed_to_spawn_untagged = boolean(warmup_stage);
 }
 
@@ -623,11 +623,11 @@ bool MH_CheckTeams()
 // EliminatedPlayers_Init
 // Calls:
 // none
-bool mh_isEliminated(entity e)
-{
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
-		return true;
-	if(e.caplayer == 0.5)
-		return true;
-	return false;
-}
+//bool mh_isEliminated(entity e)
+//{
+//	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
+//		return true;
+//	if(e.caplayer == 0.5)
+//		return true;
+//	return false;
+//}
