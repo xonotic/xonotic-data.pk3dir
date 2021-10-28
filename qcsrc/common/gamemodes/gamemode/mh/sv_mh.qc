@@ -45,75 +45,21 @@ MUTATOR_HOOKFUNCTION(mh, FilterItem)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(mh, PlayerRegen)
+{
+	// no regeneration nor rot
+	return true;
+}
+
 // =============
 //  score hooks
 // =============
 
-//refactor this when setting up score for tagging
-MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
-{
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(3, float);
-	float frag_damage = M_ARGV(4, float);
-	float frag_mirrordamage = M_ARGV(5, float);
-
-	if (IS_PLAYER(frag_target))
-	if (!IS_DEAD(frag_target))
-	if (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
-		frag_damage = 0;
-
-	frag_mirrordamage = 0;
-
-	M_ARGV(4, float) = frag_damage;
-	M_ARGV(5, float) = frag_mirrordamage;
-}
-
-//refactor this when setting up score for tagging
-MUTATOR_HOOKFUNCTION(mh, PlayerDamage_SplitHealthArmor)
-{
-	if (time < game_starttime || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
-		return;
-
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-	if(frag_attacker.team == -1 || frag_target.team == -1)return;
-	//print("\n", "frag_attacker.team: ", sprintf("%f ", frag_attacker.team), "\n"); //
-	//print("\n", "frag_target.team: ", sprintf("%f ", frag_target.team), "\n");     //
-	float frag_deathtype = M_ARGV(6, float);
-	float frag_damage = M_ARGV(7, float);
-	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-	float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
-
-	float excess = max(0, frag_damage - damage_take - damage_save);
-
-	//non-friendly fire
-	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * 1);
-
-	//friendly fire
-	if (SAME_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * 1);
-
-	//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
-	//deathtypes:
-	//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
-	//camp = campcheck, lava = lava, slime = slime
-	//team change / rebalance suicides are currently not included
-	if (!IS_PLAYER(frag_attacker) && (
-		frag_deathtype == DEATH_KILL.m_id ||
-		frag_deathtype == DEATH_DROWN.m_id ||
-		frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-		frag_deathtype == DEATH_CAMP.m_id ||
-		frag_deathtype == DEATH_LAVA.m_id ||
-		frag_deathtype == DEATH_SLIME.m_id ||
-		frag_deathtype == DEATH_SWAMP.m_id))
-			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 1);
-}
+// MH_CheckWinner gives runners score
 
 MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	M_ARGV(2, float) = 0; // score will be given to the players differently
+	M_ARGV(2, float) = 30; //30 points for every tag a hunter gets, might include runners telefragging a hunter idk lol but they can keep it then
 	return true;
 }
 
@@ -126,50 +72,38 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 
 // "wtf do these functions do" chart
 
-// all functions:					read and			modified
-//                                  understood:			to fit mh:
+// all functions:					refactor			documented:
+//                                  finished:			:)
 
 // mh_LastPlayerForTeam				y					y
 // mh_LastPlayerForTeam_Notify		y					y
-// PlayerDies						y					
+// PlayerDies						add tp				y
 // ClientDisconnect					y					y
 // HideTeamNagger					y					y
-// PlayerSpawn											
-// ForbidSpawn											
-// PutClientInServer									
-// reset_map_players									
-// reset_map_global					y					y until something needs to be added there
+// PlayerSpawn						add tp				y
+// PutClientInServer				y					y
 // MH_count_alive_players			y					y
 // MH_GetWinnerTeam					y					y
-// nades_Clear						??					??
+// nades_Clear						y					y
 // MH_CheckWinner					y					y
 // MH_RoundStart					y					y
 // MH_CheckTeams					y					y
-// mh_isEliminated					y					y
-
-// general order which they are called in:
+			
 
 
+// general order which they are called in / when they are called:
+// todo: update after cleanup is finished and when new functions are added
 
+// Start by initiating round_handler, when there is >= 1 player alive on both teams MH_CheckTeams(which is done by calling MH_count_alive_players and 
+// it also updates the count for alive players for Team_ functions) let's round handler start a new round
 
+// Between rounds reset_map_ hooks get triggered and on new round start MH_RoundStart is called
 
+// On every tick round handler calls MH_CheckWinner to see if the round should end, if a round should end the game is stopped, 
+// nades_Clear is called and MH_CheckWinner calls forward adding score to teams
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// When a player dies PlayerDies hook gets triggered and mh_LastPlayerForTeam gets called, it may chain to
+// mh_LastPlayerForTeam_Notify if appropriate. These are also called when ClientDisconnect hook gets triggered
 
 
 
@@ -180,9 +114,9 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 // Needed in MH? Purpose?:
 // yes, same
 // Needed modifications for MH:
-// Removed check for if player is not dead as players don't "die" die
+// Removed check for if player is not dead as players don't "die" die without being instantly respawned
 // Called by:
-// mh_LastPlayerForTeam_Notify
+// mh_LastPlayerForTeam_Notify , PlayerDies
 // Calls:
 // none
 entity mh_LastPlayerForTeam(entity this)
@@ -223,43 +157,6 @@ void mh_LastPlayerForTeam_Notify(entity this)
 }
 
 // Function: 
-// PlayerDies
-// Purpose in CA:
-// handle players dying
-// Needed in MH? Purpose?:
-// yes, handle players getting tagged
-// Needed modifications for MH:
-// change respawning
-// Called by:
-// a player dying
-// Calls:
-// mh_LastPlayerForTeam_Notify
-MUTATOR_HOOKFUNCTION(mh, PlayerDies)
-{
-	entity frag_target = M_ARGV(2, entity);
-
-	mh_LastPlayerForTeam_Notify(frag_target);
-	//if (!allowed_to_spawn_untagged)
-	//{
-		frag_target.respawn_flags = RESPAWN_SILENT;
-		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
-		frag_target.respawn_time = time;
-	//}
-	frag_target.respawn_flags |= RESPAWN_FORCE;
-	//print("\n", "frag_target.team: ", sprintf("%f ", frag_target.team), "\n");     //5 or 14
-	//print("\n", "Team_IndexToTeam(1): ", sprintf("%f ", Team_IndexToTeam(1)), "\n");     //5
-	//print("\n", "Team_IndexToTeam(2): ", sprintf("%f ", Team_IndexToTeam(2)), "\n");     //14
-	//print("\n", "Team_IndexToTeam(3): ", sprintf("%f ", Team_IndexToTeam(3)), "\n");     //13
-	//print("\n", "Team_IndexToTeam(4): ", sprintf("%f ", Team_IndexToTeam(4)), "\n");     //10
-	if(frag_target.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && (frag_target != mh_LastPlayerForTeam(frag_target)))
-		MoveToTeam(frag_target, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
-
-	//if (!warmup_stage)
-	//	eliminatedPlayers.SendFlags |= 1;
-	return true;
-}
-
-// Function: 
 // ClientDisconnect
 // Purpose in CA:
 // if 2nd last player of a team dc's notify the last player that they are the last one
@@ -290,127 +187,6 @@ MUTATOR_HOOKFUNCTION(mh, HideTeamNagger)
 }
 
 // Function: 
-// PlayerSpawn
-// Purpose in CA:
-// 
-// Needed in MH? Purpose?:
-// 
-// Needed modifications for MH:
-// 
-// Called by:
-// a player spawning
-// Calls:
-// none
-//MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
-//{
-//	entity player = M_ARGV(0, entity);
-
-	//if(!allowed_to_spawn_untagged)
-	//	MoveToTeam(player, Team_IndexToTeam(2), 6);
-
-	//player.caplayer = 1;
-	//if (!warmup_stage)
-	//	eliminatedPlayers.SendFlags |= 1;
-//}
-
-// Function: 
-// ForbidSpawn
-// Purpose in CA:
-// 
-// Needed in MH? Purpose?:
-// 
-// Needed modifications for MH:
-// remove?
-// Called by:
-// 
-// Calls:
-// 
-//MUTATOR_HOOKFUNCTION(mh, ForbidSpawn)
-//{
-//	entity player = M_ARGV(0, entity);
-//
-//	// spectators / observers that weren't playing can join; they are
-//	// immediately forced to observe in the PutClientInServer hook
-//	// this way they are put in a team and can play in the next round
-//	if (!allowed_to_spawn_untagged && player.caplayer)
-//		return true;
-//	return false;
-//}
-
-// Function: 
-// PutClientInServer
-// Purpose in CA:
-// 
-// Needed in MH? Purpose?:
-// 
-// Needed modifications for MH:
-// Removed TRANSMUTE(Observer, player);
-// Called by:
-// 
-// Calls:
-// 
-MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
-{
-	entity player = M_ARGV(0, entity);
-
-	if (!allowed_to_spawn_untagged && IS_PLAYER(player)) // this is true even when player is trying to join
-	{
-		if (CS(player).jointime != time) // not when connecting
-		{
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
-		}
-	}
-}
-
-// Function: 
-// reset_map_players
-// Purpose in CA:
-// reset's each player's killstreak
-//
-// Needed in MH? Purpose?:
-// yes, 
-// Needed modifications for MH:
-// 
-// Called by:
-// map being reset after round end
-// Calls:
-// PutClientInServer
-MUTATOR_HOOKFUNCTION(mh, reset_map_players)
-{
-	FOREACH_CLIENT(true, {
-		CS(it).killcount = 0;
-		if(IS_BOT_CLIENT(it)){
-			it.team = -1;
-			
-		}
-		if(1){
-			//TRANSMUTE(Player, it);
-			PutClientInServer(it);
-		}
-	});
-	
-	return true;
-}
-
-// Function: 
-// reset_map_global
-// Purpose in CA:
-// allow players to spawn after a new round is started
-// Needed in MH? Purpose?:
-// yes, same but as untagged
-// Needed modifications for MH:
-// renamed allowed_to_spawn to allowed_to_spawn_untagged
-// Called by:
-// map being reset after round end
-// Calls:
-// none
-MUTATOR_HOOKFUNCTION(mh, reset_map_global)
-{
-	allowed_to_spawn_untagged = true;
-	return true;
-}
-
-// Function: 
 // MH_count_alive_players
 // Purpose in CA:
 // refresh count of how many players are alive in each team to Team_ functions
@@ -419,7 +195,7 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_global)
 // Needed modifications for MH:
 // Removed support for 3rd and 4th teams
 // Called by:
-// MH_CheckWinner
+// MH_CheckWinner , MH_CheckTeams
 // Calls:
 // multiple Team_ functions which are imported
 void MH_count_alive_players()
@@ -457,16 +233,13 @@ void MH_count_alive_players()
 // Needed in MH? Purpose?:
 // yes, same
 // Needed modifications for MH:
-// cleanup
+// changed running out of time being a stalemate into runners winning, removed support for 3rd and 4th teams, refactored
 // Called by:
 // MH_CheckWinner
 // Calls:
-// none
+// Team_
 int MH_GetWinnerTeam()
 {
-	//print("\n", "Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1): ", sprintf("%f ", Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)), "\n"));     //5
-	//print("\n", "Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2): ", sprintf("%f ", Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)), "\n"));     //14
-	//there were runners and hunters alive, runners win
 	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1)){
 		return Team_IndexToTeam(2);
 	}
@@ -480,49 +253,37 @@ int MH_GetWinnerTeam()
 }
 
 // Function: 
-// nades_Clear
-// Purpose in CA:
-// ??? maybe clear nades of the entity given as argument? how?
-// Needed in MH? Purpose?:
-// if it's needed in CA, yes
-// Needed modifications for MH:
-// none?
-// Called by:
-// MH_CheckWinner
-// Calls:
-// ??? maybe qcsrc/common/mutators/mutator/nades/nades.qc nades_Clear, idfk this magic / bubblegum fix and only given documentation is "// Remove nades that are being thrown"
-void nades_Clear(entity player);
-
-// Function: 
 // MH_CheckWinner
 // Purpose in CA:
-// 
+// ran on every frame to handle checking if a team has won with CA_GetWinnerTeam and then do the appropriate actions depending on results including starting a new round or continueing current round
 // Needed in MH? Purpose?:
-// 
+// yes, same
 // Needed modifications for MH:
-// renamed allowed_to_spawn to allowed_to_spawn_untagged
+// renamed allowed_to_spawn to allowed_to_spawn_untagged, refactored
 // Called by:
-// 
+// round_handler
 // Calls:
-// round_handler_Init , MH_count_alive_players
-float MH_CheckWinner(){
-	
+// round_handler_Init , MH_count_alive_players , MH_GetWinnerTeam , nades_Clear
+float MH_CheckWinner()
+{
 	int did_the_round_end = 0;
 	MH_count_alive_players();
 	int winner_team = MH_GetWinnerTeam();
-	if(winner_team != 14)print("\n", "winner_team: ", sprintf("%f ", winner_team), "\n");
+	if(winner_team == 14)
+		FOREACH_CLIENT(IS_PLAYER(it) && it.team == 14, 
+			{ GameRules_scoring_add_team(it, SCORE, (0.016666667)); }); //add 1 score to each runner's score per second at 60 tickrate
 	if(round_handler_GetEndTime() - time > 0 && winner_team == Team_IndexToTeam(2)){
 		did_the_round_end = 0;
 	} else if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0 && winner_team == Team_IndexToTeam(2)){
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		print("runners \n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN)); //replace with runners win
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));     //replace with runners win
 		TeamScore_AddToTeam(winner_team, ST_MH_ROUNDS, +1);
 		did_the_round_end = 1;
+		FOREACH_CLIENT(IS_PLAYER(it) && it.team == 14,
+			{ GameRules_scoring_add_team(it, SCORE, (30)); }); //add 30 score to each runner's score
 	} else if(winner_team == Team_IndexToTeam(1)){
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		print("hunters \n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN)); //replace with hunters win
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));     //replace with hunters win
 		TeamScore_AddToTeam(winner_team, ST_MH_ROUNDS, +1);
 		did_the_round_end = 1;
 	} else if(winner_team == -1){
@@ -530,19 +291,62 @@ float MH_CheckWinner(){
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 		did_the_round_end = 1;
 	} else {
-		print("How did we get here? \n");
+		//print("Error: Ran out of appropriate team win situations\n");
 	}
 	
 	if(did_the_round_end == 0)return 0;
 	
-	allowed_to_spawn_untagged = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_mh_warmup, autocvar_g_mh_round_timelimit);
-	shuffleteams_on_reset_map = !allowed_to_spawn_untagged;
-
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+	if(pymod(round_counter_for_teamchanging, 2))
+		shuffleteams_on_reset_map = !allowed_to_spawn_untagged; //only shuffle every other round
+	++round_counter_for_teamchanging;
+	FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 
 	return did_the_round_end;
+}
+
+// Function: 
+// MH_CheckTeams
+// Purpose in CA:
+// check that there are no empty teams
+// Needed in MH? Purpose?:
+// yes, same
+// Needed modifications for MH:
+// removed support for 3rd and 4th teams, none more? I skimmed through this without fully diving in and understanding deeply every bit
+// Called by:
+// round_handler_Spawn
+// Calls:
+// MH_count_alive_players , Team_ functions which are imported
+bool MH_CheckTeams()
+{
+	static int prev_missing_teams_mask;
+	allowed_to_spawn_untagged = true;
+	MH_count_alive_players();
+	if (Team_GetNumberOfAliveTeams() == NumTeams(mh_teams)){
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return true;
+	}
+	if(total_players == 0){
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return false;
+	}
+	int missing_teams_mask = 0;
+	for (int i = 1; i <= 2; ++i){
+		if ((mh_teams & Team_IndexToBit(i)) &&
+			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0)){
+			missing_teams_mask |= Team_IndexToBit(i);
+		}
+	}
+	if(prev_missing_teams_mask != missing_teams_mask){
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
+	}
+	return false;
 }
 
 // Function: 
@@ -559,75 +363,107 @@ float MH_CheckWinner(){
 // none
 void MH_RoundStart()
 {
-	//shuffleteams_on_reset_map = 0;
 	allowed_to_spawn_untagged = boolean(warmup_stage);
 }
 
 // Function: 
-// MH_CheckTeams
+// PutClientInServer
 // Purpose in CA:
-// check that there are no empty teams
+// place the client in the server with the appropriate flags and as an observer when a spectator joins the game in the middle of the round
 // Needed in MH? Purpose?:
-// yes, same
+// only to send an edited join late message about not being able to join runners?
 // Needed modifications for MH:
-// 
+// Removed TRANSMUTE(Observer, player); , fixed unnecessary printing of the message(fixed by removing call from reset_map_players?) , replaced the message with a new mh one
 // Called by:
-// round_handler_Spawn
+// a connecting player , reset_map_players
 // Calls:
-// MH_count_alive_players , Team_ functions which are imported
-bool MH_CheckTeams()
+// none
+MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 {
-	static int prev_missing_teams_mask;
-	allowed_to_spawn_untagged = true;
-	MH_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() == NumTeams(mh_teams))
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
-		return true;
-	}
-	if(total_players == 0)
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
-		return false;
-	}
-	int missing_teams_mask = 0;
-	for (int i = 1; i <= 2; ++i)
-	{
-		if ((mh_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
-		{
-			missing_teams_mask |= Team_IndexToBit(i);
+	entity player = M_ARGV(0, entity);
+
+	if (!allowed_to_spawn_untagged && IS_PLAYER(player)){ // this is true even when player is trying to join
+		if (CS(player).jointime != time){ // not when connecting
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_MH_JOIN_LATE);
 		}
 	}
-	if(prev_missing_teams_mask != missing_teams_mask)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
-		prev_missing_teams_mask = missing_teams_mask;
-	}
-	return false;
 }
 
 // Function: 
-// mh_isEliminated
+// nades_Clear
 // Purpose in CA:
-// find if player has been eliminated and is not alive anymore
+// clear nades of the entity given as argument
 // Needed in MH? Purpose?:
-// no?
+// yes, same
 // Needed modifications for MH:
-// remove?
+// none
 // Called by:
-// EliminatedPlayers_Init
+// MH_CheckWinner
+// Calls:
+// qcsrc/common/mutators/mutator/nades/nades.qc nades_Clear
+void nades_Clear(entity player);
+
+
+
+// ===========
+//  to change
+// ===========
+
+
+
+// Maybe add player teleporting to where they died if they just got tagged?
+
+// Function: 
+// PlayerSpawn
+// Purpose in CA:
+// set flags on the player when they spawn as a player
+// Needed in MH? Purpose?:
+// yes, don't allow players to join runners mid-round
+// Needed modifications for MH:
+// 
+// Called by:
+// a player spawning
 // Calls:
 // none
-//bool mh_isEliminated(entity e)
-//{
-//	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
-//		return true;
-//	if(e.caplayer == 0.5)
-//		return true;
-//	return false;
-//}
+MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	MH_count_alive_players();
+	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
+		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
+		MoveToTeam(player, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
+		player.deadflag = 0; // with bubblegum and prayers, there probably is probably a better check to use here
+	}
+	//if (!warmup_stage)
+	//	eliminatedPlayers.SendFlags |= 1;
+}
+
+// Maybe add player teleporting to where they died if they just got tagged?
+
+// Function: 
+// PlayerDies
+// Purpose in CA:
+// handle players dying
+// Needed in MH? Purpose?:
+// yes, handle players getting tagged
+// Needed modifications for MH:
+// change respawning
+// Called by:
+// a player dying/dc'ing
+// Calls:
+// mh_LastPlayerForTeam_Notify
+MUTATOR_HOOKFUNCTION(mh, PlayerDies)
+{
+	entity frag_target = M_ARGV(2, entity);
+
+	mh_LastPlayerForTeam_Notify(frag_target);
+	if (!allowed_to_spawn_untagged)
+	{
+		frag_target.respawn_flags = RESPAWN_SILENT; //idk what this exactly does yet, below comment was there for respawn time = time + 2 and this line inside the backets
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+	}
+	frag_target.respawn_time = time;
+	frag_target.respawn_flags |= RESPAWN_FORCE;
+
+	return true;
+}

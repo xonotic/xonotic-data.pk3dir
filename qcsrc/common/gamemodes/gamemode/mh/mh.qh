@@ -9,11 +9,11 @@ void HUD_Mod_MH_Export(int fh);
 CLASS(Manhunt, Gametype)
 	INIT(Manhunt)
 	{
-		this.gametype_init(this, _("Manhunt"),"mh","g_mh",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=10 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
+		this.gametype_init(this, _("Manhunt"),"mh","g_mh",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=30 pointlimit=10 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
 	}
 	METHOD(Manhunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
-		if(spawnpoints >= 8 && diameter > 4096)
+		if(spawnpoints >= 4 && diameter > 4096)
 			return true;
 		return false;
 	}
