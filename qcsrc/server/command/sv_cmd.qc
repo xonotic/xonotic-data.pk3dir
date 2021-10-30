@@ -1138,7 +1138,7 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), ".");
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1156,15 +1156,21 @@ void GameCommand_moveplayer(int request, int argc)
 						int team_id = Team_TeamToIndex(team_num);
 						if (team_id == -1)
 						{
-							LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
+							LOG_INFO("Can't move player to ", destination, " team because it doesn't exist.");
+							TeamBalance_Destroy(balance);
+							return;
+						}
+						if (!IsTeamAvailable(team_num))
+						{
+							LOG_INFO("Can't move player to ", destination, " team because it isn't available.");
 							TeamBalance_Destroy(balance);
 							return;
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
 							TeamBalance_Destroy(balance);
-							return;
+							continue;
 						}
 						TeamBalance_Destroy(balance);
 
