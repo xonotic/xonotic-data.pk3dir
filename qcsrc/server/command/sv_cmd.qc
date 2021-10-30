@@ -1093,6 +1093,7 @@ void GameCommand_moveplayer(int request, int argc)
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, false, false);
+					string client_num_str = ftos(etof(client));
 
 					if (accepted <= 0)
 					{
@@ -1109,7 +1110,7 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already spectating.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already spectating.");
 						}
 					}
 					else
@@ -1124,7 +1125,7 @@ void GameCommand_moveplayer(int request, int argc)
 						if (IS_SPEC(client) || IS_OBSERVER(client))
 						{
 							// well technically we could, but should we allow that? :P
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is not in the game.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not in the game.");
 							continue;
 						}
 
@@ -1138,7 +1139,7 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1168,7 +1169,7 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
 							TeamBalance_Destroy(balance);
 							continue;
 						}
@@ -1179,11 +1180,11 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
 						}
 						else
 						{
-							LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", pl_name, ")");
+							LOG_INFO("Unable to move player #", client_num_str, " (", pl_name, ")");
 						}
 					}
 				} // loop end
