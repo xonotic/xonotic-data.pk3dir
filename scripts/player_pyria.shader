@@ -1,7 +1,7 @@
 pyria
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/pyria.tga
 		rgbgen lightingDiffuse
 	}
@@ -9,7 +9,7 @@ pyria
 pyriafullbright
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/pyriafullbright.tga
 		rgbgen lightingDiffuse
 	}
@@ -17,7 +17,6 @@ pyriafullbright
 
 pyriahair
 {
-
 	surfaceparm trans
 	cull none
 
