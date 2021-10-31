@@ -23,6 +23,7 @@
 #include <server/ipban.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
