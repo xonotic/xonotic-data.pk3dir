@@ -40,7 +40,11 @@ REGISTER_ITEM(HealthSmall, Health) {
 #endif
     this.netname                =   "health_small";
     this.m_name                 =   _("Small health");
-    this.m_icon                 =   "health";
+    this.m_icon                 =   "health_small";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
+#endif
 #ifdef SVQC
     this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
@@ -78,7 +82,11 @@ REGISTER_ITEM(HealthMedium, Health) {
 #endif
     this.netname                =   "health_medium";
     this.m_name                 =   _("Medium health");
-    this.m_icon                 =   "health";
+    this.m_icon                 =   "health_medium";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
+#endif
 #ifdef SVQC
     this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
@@ -116,9 +124,13 @@ REGISTER_ITEM(HealthBig, Health) {
 #endif
     this.netname                =   "health_big";
     this.m_name                 =   _("Big health");
-    this.m_icon                 =   "health";
+    this.m_icon                 =   "health_big";
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Big health");
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
+#endif
 #ifdef SVQC
     this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
@@ -156,7 +168,11 @@ REGISTER_ITEM(HealthMega, Health) {
 #endif
     this.netname                =   "health_mega";
     this.m_name                 =   _("Mega health");
-    this.m_icon                 =   "item_mega_health";
+    this.m_icon                 =   "health_mega";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "item_mega_health"; // compatible with Xonotic v0.8.2 or lower
+#endif
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Mega health");
     this.m_waypointblink        =   2;
