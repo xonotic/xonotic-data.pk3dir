@@ -806,6 +806,8 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		}
 
 		case "restart":
+		case "reset":
+		case "gg":
 		case "shuffleteams":
 		case "allready":
 		case "endmatch":
