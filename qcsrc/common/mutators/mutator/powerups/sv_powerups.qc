@@ -80,20 +80,34 @@ MUTATOR_HOOKFUNCTION(powerups, MonsterValidTarget)
 void powerups_DropItem(entity this, StatusEffects effect)
 {
 	entity item = Item_DefinitionFromInternalName(effect.netname);
-	float timeleft = StatusEffects_gettime(effect, this);
-	if((timeleft - time) <= 0 || !item)
+	float t = StatusEffects_gettime(effect, this);
+	float timeleft = t - time;
+
+	if(timeleft <= 1 || !item)
 		return;
 	entity e = spawn();
+
+	// If we want the timer to keep running, we enable expiring then use the exact time the powerup will finish at.
+	// If we want the timer to freeze, we disable expiring and we just use the time left of the powerup.
+	// See Item_SetExpiring() below.
+	float finished_time = (autocvar_g_powerups_dropondeath == 2 ? timeleft : t);
+
+	// If the timer is frozen, the item will stay on the floor for 60 secs (TODO hardcoded for now),
+	// otherwise it'll disappear after the timer runs out.
+	float time_to_live = (autocvar_g_powerups_dropondeath == 2 ? 60 : timeleft);
+
 	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
 	switch(item)
 	{
-		case ITEM_Strength: e.strength_finished = timeleft; break;
-		case ITEM_Shield: e.invincible_finished = timeleft; break;
-		case ITEM_Invisibility: e.invisibility_finished = timeleft; break;
-		case ITEM_Speed: e.speed_finished = timeleft; break;
+		case ITEM_Strength: e.strength_finished = finished_time; break;
+		case ITEM_Shield: e.invincible_finished = finished_time; break;
+		case ITEM_Invisibility: e.invisibility_finished = finished_time; break;
+		case ITEM_Speed: e.speed_finished = finished_time; break;
 	}
-	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', min(timeleft - time, 10));
-	Item_SetExpiring(e, true);
+	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', time_to_live);
+
+	if(autocvar_g_powerups_dropondeath != 2)
+		Item_SetExpiring(e, true);
 }
 
 MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
