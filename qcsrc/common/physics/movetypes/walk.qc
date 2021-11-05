@@ -46,7 +46,11 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		else type = MOVE_NORMAL;
 		tracebox(upmove, this.mins, this.maxs, downmove, type, this);
 		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
+		{
 			clip |= 1;  // but we HAVE found a floor
+			// set groundentity so we get carried when walking onto a mover
+			this.groundentity = trace_ent;
+		}
 	}
 
 	// if the move did not hit the ground at any point, we're not on ground
