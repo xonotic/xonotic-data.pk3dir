@@ -90,19 +90,19 @@ void powerups_DropItem(entity this, StatusEffects effect)
 	// If we want the timer to keep running, we enable expiring then use the exact time the powerup will finish at.
 	// If we want the timer to freeze, we disable expiring and we just use the time left of the powerup.
 	// See Item_SetExpiring() below.
-	float finished_time = (autocvar_g_powerups_dropondeath == 2 ? timeleft : t);
+	float finished = (autocvar_g_powerups_dropondeath == 2 ? timeleft : t);
 
-	// If the timer is frozen, the item will stay on the floor for 60 secs (TODO hardcoded for now),
+	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
 	// otherwise it'll disappear after the timer runs out.
-	float time_to_live = (autocvar_g_powerups_dropondeath == 2 ? 60 : timeleft);
+	float time_to_live = (autocvar_g_powerups_dropondeath == 2 ? 20 : timeleft);
 
 	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
 	switch(item)
 	{
-		case ITEM_Strength: e.strength_finished = finished_time; break;
-		case ITEM_Shield: e.invincible_finished = finished_time; break;
-		case ITEM_Invisibility: e.invisibility_finished = finished_time; break;
-		case ITEM_Speed: e.speed_finished = finished_time; break;
+		case ITEM_Strength: e.strength_finished = finished; break;
+		case ITEM_Shield: e.invincible_finished = finished; break;
+		case ITEM_Invisibility: e.invisibility_finished = finished; break;
+		case ITEM_Speed: e.speed_finished = finished; break;
 	}
 	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', time_to_live);
 
