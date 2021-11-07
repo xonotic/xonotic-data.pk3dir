@@ -23,6 +23,7 @@
 #include <server/ipban.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
@@ -184,8 +185,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				if (it.caplayer) it.caplayer = 0;
-				PutObserverInServer(it);
+				PutObserverInServer(it, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -999,6 +999,7 @@ void GameCommand_moveplayer(int request, int argc)
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, false, false);
+					string client_num_str = ftos(etof(client));
 
 					if (accepted <= 0)
 					{
@@ -1009,14 +1010,13 @@ void GameCommand_moveplayer(int request, int argc)
 						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							if (client.caplayer) client.caplayer = 0;
-							PutObserverInServer(client);
+							PutObserverInServer(client, true);
 
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already spectating.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already spectating.");
 						}
 					}
 					else
@@ -1031,7 +1031,7 @@ void GameCommand_moveplayer(int request, int argc)
 						if (IS_SPEC(client) || IS_OBSERVER(client))
 						{
 							// well technically we could, but should we allow that? :P
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is not in the game.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not in the game.");
 							continue;
 						}
 
@@ -1045,7 +1045,7 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), ".");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1063,15 +1063,21 @@ void GameCommand_moveplayer(int request, int argc)
 						int team_id = Team_TeamToIndex(team_num);
 						if (team_id == -1)
 						{
-							LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
+							LOG_INFO("Can't move player to ", destination, " team because it doesn't exist.");
+							TeamBalance_Destroy(balance);
+							return;
+						}
+						if (!IsTeamAvailable(team_num))
+						{
+							LOG_INFO("Can't move player to ", destination, " team because it isn't available.");
 							TeamBalance_Destroy(balance);
 							return;
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
 							TeamBalance_Destroy(balance);
-							return;
+							continue;
 						}
 						TeamBalance_Destroy(balance);
 
@@ -1080,11 +1086,11 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
 						}
 						else
 						{
-							LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", pl_name, ")");
+							LOG_INFO("Unable to move player #", client_num_str, " (", pl_name, ")");
 						}
 					}
 				} // loop end

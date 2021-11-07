@@ -95,9 +95,6 @@ entity GetIndexedEntity(int argc, float start_index);
 // find a player which matches the input string, and return their entity
 entity GetFilteredEntity(string input);
 
-// same thing, but instead return their edict number
-float GetFilteredNumber(string input);
-
 // switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input);
 

@@ -227,14 +227,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-
-	TRANSMUTE(Observer, player);
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
@@ -301,6 +293,10 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
+
+	bool is_forced = M_ARGV(1, bool);
+	if (is_forced && player.caplayer)
+		player.caplayer = 0;
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);

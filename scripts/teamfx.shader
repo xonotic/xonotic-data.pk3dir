@@ -16,7 +16,6 @@ deformVertexes autosprite
 	map models/teamfx/blobred.tga
 	blendfunc add
 }
-
 }
 
 teamfx/blobyellow
@@ -27,7 +26,6 @@ deformVertexes autosprite
 	map models/teamfx/blobyellow.tga
 	blendfunc add
 }
-
 }
 
 teamfx/blobpink
@@ -38,7 +36,6 @@ deformVertexes autosprite
 	map models/teamfx/blobpink.tga
 	blendfunc add
 }
-
 }
 
 teamfx/bluering
@@ -57,6 +54,7 @@ surfaceparm trans
 	blendfunc add
 }
 }
+
 teamfx/yellowring
 {
 surfaceparm trans
@@ -65,6 +63,7 @@ surfaceparm trans
 	blendfunc add
 }
 }
+
 teamfx/pinkring
 {
 surfaceparm trans
@@ -73,6 +72,7 @@ surfaceparm trans
 	blendfunc add
 }
 }
+
 teamfx/flare
 {
 surfaceparm trans
@@ -82,6 +82,7 @@ deformVertexes autosprite
 	blendfunc add
 }
 }
+
 teamfx/rayblue
 {
 surfaceparm trans
@@ -91,6 +92,7 @@ deformVertexes autosprite
 	blendfunc add
 }
 }
+
 teamfx/rayred
 {
 surfaceparm trans
@@ -100,6 +102,7 @@ deformVertexes autosprite
 	blendfunc add
 }
 }
+
 teamfx/rayyellow
 {
 surfaceparm trans
@@ -109,6 +112,7 @@ deformVertexes autosprite
 	blendfunc add
 }
 }
+
 teamfx/raypink
 {
 surfaceparm trans
