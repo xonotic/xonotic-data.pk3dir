@@ -10,7 +10,14 @@ bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
 int autocvar_g_tmayhem_scoringmethod;
 
-
+float autocvar_g_tmayhem_start_health = 200;
+float autocvar_g_tmayhem_start_armor = 200;
+float autocvar_g_tmayhem_start_ammo_shells = 60;
+float autocvar_g_tmayhem_start_ammo_nails = 320;
+float autocvar_g_tmayhem_start_ammo_rockets = 180;
+float autocvar_g_tmayhem_start_ammo_cells = 180;
+float autocvar_g_tmayhem_start_ammo_plasma = 180;
+float autocvar_g_tmayhem_start_ammo_fuel = 0;
 
 // code from here on is just to support maps that don't have team entities
 void tmayhem_SpawnTeam (string teamname, int teamcolor)
@@ -72,14 +79,14 @@ MUTATOR_HOOKFUNCTION(tmayhem, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_tmayhem_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_tmayhem_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_tmayhem_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_tmayhem_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_tmayhem_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_tmayhem_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_tmayhem_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_tmayhem_start_ammo_fuel");
+	start_health       = warmup_start_health       = autocvar_g_tmayhem_start_health;
+	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_tmayhem_start_armor;
+	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_tmayhem_start_ammo_shells;
+	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_tmayhem_start_ammo_nails;
+	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_tmayhem_start_ammo_rockets;
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_tmayhem_start_ammo_cells;
+	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_tmayhem_start_ammo_plasma;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_tmayhem_start_ammo_fuel;
 }
 
 //this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now
