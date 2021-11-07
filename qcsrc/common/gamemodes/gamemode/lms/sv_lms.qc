@@ -402,14 +402,14 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 {
 	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-    start_health       = warmup_start_health       = autocvar_g_lms_start_health;
-    start_armorvalue   = warmup_start_armorvalue   = autocvar_g_lms_start_armor;
-    start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_lms_start_ammo_shells;
-    start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_lms_start_ammo_nails;
-    start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_lms_start_ammo_rockets;
-    start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_lms_start_ammo_cells;
-    start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_lms_start_ammo_plasma;
-    start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_lms_start_ammo_fuel;
+	start_health       = warmup_start_health       = autocvar_g_lms_start_health;
+	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_lms_start_armor;
+	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_lms_start_ammo_shells;
+	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_lms_start_ammo_nails;
+	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_lms_start_ammo_rockets;
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_lms_start_ammo_cells;
+	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_lms_start_ammo_plasma;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_lms_start_ammo_fuel;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
