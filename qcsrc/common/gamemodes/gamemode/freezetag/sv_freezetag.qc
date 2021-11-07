@@ -10,6 +10,15 @@ float autocvar_g_freezetag_round_timelimit;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
+float autocvar_g_ft_start_health = 200;
+float autocvar_g_ft_start_armor = 200;
+float autocvar_g_ft_start_ammo_shells = 60;
+float autocvar_g_ft_start_ammo_nails = 320;
+float autocvar_g_ft_start_ammo_rockets = 180;
+float autocvar_g_ft_start_ammo_cells = 180;
+float autocvar_g_ft_start_ammo_plasma = 180;
+float autocvar_g_ft_start_ammo_fuel = 0;
+
 void freezetag_count_alive_players()
 {
 	total_players = 0;
@@ -695,14 +704,14 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
 	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_ft_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_ft_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_ft_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_ft_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_ft_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_ft_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_ft_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_ft_start_ammo_fuel");
+    start_health       = warmup_start_health       = autocvar_g_ft_start_health;
+    start_armorvalue   = warmup_start_armorvalue   = autocvar_g_ft_start_armor;
+    start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_ft_start_ammo_shells;
+    start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ft_start_ammo_nails;
+    start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
+    start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
+    start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ft_start_ammo_plasma;
+    start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
