@@ -23,6 +23,11 @@ CLASS(mayhem, Gametype)
         }
         return false;		
     }
+	METHOD(mayhem, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Frag limit:"),     5,  100,  5, "g_mayhem_fraglimit",         string_null,         _("How many frags worth of score is needed before the match will end"));
+    }
     ATTRIB(mayhem, m_legacydefaults, string, "30 20 0");
 ENDCLASS(mayhem)
 REGISTER_GAMETYPE(MAYHEM, NEW(mayhem));
