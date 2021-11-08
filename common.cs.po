@@ -7,7 +7,7 @@
 # Adam Říha, 2021
 # Adam Říha, 2021
 # fasdasd sdasd <transifexalternativeaccount@yopmail.com>, 2021
-# GamingasCZ <gamingforyou875@gmail.com>, 2019
+# gamingforyou875 <gamingforyou875@gmail.com>, 2019
 # Jan Kocka <kockahonza@gmail.com>, 2019
 # Jiří Vrána <jirkacz199@gmail.com>, 2020-2021
 # Martin Taibr <taibr.martin@gmail.com>, 2017
