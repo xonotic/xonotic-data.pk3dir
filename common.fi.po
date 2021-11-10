@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Dr Jaska <drjaska83@gmail.com>, 2020
+# Dr. Jaska <drjaska83@gmail.com>, 2020
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
 # Oi Suomi On! <oisuomion@protonmail.com>, 2020
