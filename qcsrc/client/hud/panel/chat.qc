@@ -13,10 +13,12 @@ void HUD_Chat()
 {
 	if(!autocvar__hud_configure)
 	{
-		if (!autocvar_hud_panel_chat)
+		if (!autocvar_hud_panel_chat && !autocvar__con_chat_maximized)
 		{
-			if (!autocvar_con_chatrect)
+			if (autocvar_con_chatrect)
 				cvar_set("con_chatrect", "0");
+			if (autocvar_con_chat != -1)
+				cvar_set("con_chat", "-1");
 			return;
 		}
 		if(autocvar__con_chat_maximized)
@@ -74,16 +76,25 @@ void HUD_Chat()
 	if (!autocvar_con_chatrect)
 		cvar_set("con_chatrect", "1");
 
-	cvar_set("con_chatrect_x", ftos(pos.x/vid_conwidth));
-	cvar_set("con_chatrect_y", ftos(pos.y/vid_conheight));
-
-	cvar_set("con_chatwidth", ftos(mySize.x/vid_conwidth));
-	cvar_set("con_chat", ftos(floor(mySize.y/autocvar_con_chatsize - 0.5)));
+	// can't use a name ending with _x, _y and _z for a float autocvar as for autocvar specs
+	// it prevents ambiguity with component names of vector autocvars
+	if (cvar_string("con_chatrect_x") != ftos(pos.x / vid_conwidth))
+		cvar_set("con_chatrect_x", ftos(pos.x / vid_conwidth));
+	if (cvar_string("con_chatrect_y") != ftos(pos.y / vid_conheight))
+		cvar_set("con_chatrect_y", ftos(pos.y / vid_conheight));
+	// can't use direct comparison here, it would always returns true even if
+	// both arguments are equal because con_chatwidth is saved with cvar_set
+	//if (autocvar_con_chatwidth != mySize.x / vid_conwidth)
+	if (fabs(autocvar_con_chatwidth - mySize.x / vid_conwidth) > 0.00001)
+		cvar_set("con_chatwidth", ftos(mySize.x / vid_conwidth));
+	if (autocvar_con_chat != floor(mySize.y / autocvar_con_chatsize - 0.5))
+		cvar_set("con_chat", ftos(floor(mySize.y / autocvar_con_chatsize - 0.5)));
 
 	if(autocvar__hud_configure)
 	{
 		vector chatsize = '1 1 0' * autocvar_con_chatsize;
-		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
+		if (cvar_string("con_chatrect_x") != "9001")
+			cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
 		string str = textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors);
 		for(int i = 0; i < autocvar_con_chat; ++i)
 		{

@@ -7,6 +7,7 @@ bool autocvar_g_overkill_filter_armorbig = true;
 bool autocvar_g_overkill_filter_armormega;
 
 .float ok_item;
+IntrusiveList g_overkill_items;
 
 REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MapInfo_LoadedGametype.m_weaponarena && cvar_string("g_mod_balance") == "Overkill")
 {
@@ -30,6 +31,12 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(m
 		{
 			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		}
+		g_overkill_items = IL_NEW();
+		IL_PUSH(g_overkill_items, ITEM_HealthMega);
+		IL_PUSH(g_overkill_items, ITEM_ArmorSmall);
+		IL_PUSH(g_overkill_items, ITEM_ArmorMedium);
+		IL_PUSH(g_overkill_items, ITEM_ArmorBig);
+		IL_PUSH(g_overkill_items, ITEM_ArmorMega);
 	}
 
 	MUTATOR_ONREMOVE
@@ -38,5 +45,6 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(m
 		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		IL_DELETE(g_overkill_items);
 	}
 }

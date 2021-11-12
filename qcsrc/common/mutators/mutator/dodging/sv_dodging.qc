@@ -310,6 +310,31 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
+void dodging_ResetPlayer(entity this)
+{
+	this.last_dodging_time = 0;
+
+	this.dodging_action = 0;
+	this.dodging_single_action = 0;
+
+	this.dodging_force_total = 0;
+	this.dodging_force_remaining = 0;
+
+	this.dodging_direction = '0 0 0';
+}
+
+MUTATOR_HOOKFUNCTION(dodging, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	dodging_ResetPlayer(player);
+}
+
+MUTATOR_HOOKFUNCTION(dodging, MakePlayerObserver)
+{
+	entity player = M_ARGV(0, entity);
+	dodging_ResetPlayer(player);
+}
+
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);

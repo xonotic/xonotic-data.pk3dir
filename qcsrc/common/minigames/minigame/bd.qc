@@ -21,6 +21,7 @@ const int BD_NUM_CNT = 20;
 const int BD_TILE_SIZE = 20;
 
 const int BD_TEAMS = 1;
+const int BD_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 .int bd_dir;
 
@@ -881,30 +882,44 @@ int bd_server_event(entity minigame, string event, ...)
 		{
 			int pl_num = minigame_count_players(minigame);
 
-			if(pl_num >= BD_TEAMS) { return false; }
+			if(pl_num >= BD_TEAMS) { return BD_SPECTATOR_TEAM; }
 
 			return 1;
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == BD_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					bd_do_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null), ((...(1,int)) >= 4 ? argv(3) : string_null));
 					return true;
 				case "next":
+					if(event_blocked)
+						return true;
 					bd_next_match(minigame,...(0,entity), ((...(1,int) >= 2 ? argv(1) : string_null)));
 					return true;
 				case "restart":
+					if(event_blocked)
+						return true;
 					bd_restart_match(minigame,...(0,entity));
 					return true;
 				case "edit":
+					if(event_blocked)
+						return true;
 					bd_activate_editor(minigame,...(0,entity));
 					return true;
 				case "save":
+					if(event_blocked)
+						return true;
 					bd_close_editor(minigame,...(0,entity));
 					return true;
 				case "fill":
+					if(event_blocked)
+						return true;
 					bd_do_fill(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null));
 					return true;
 			}
@@ -1124,15 +1139,18 @@ void bd_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != BD_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != BD_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
@@ -1159,6 +1177,9 @@ void bd_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string bd_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == BD_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & BD_TURN_LOSS )
 		return _("Better luck next time!");
 
@@ -1253,7 +1274,7 @@ int bd_client_event(entity minigame, string event, ...)
 		case "key_released":
 		{
 			bool event_blocked = ((event == "key_released")
-				|| !(minigame.minigame_flags & BD_TURN_MOVE));
+				|| !(minigame.minigame_flags & BD_TURN_MOVE) || (minigame_self.team == BD_SPECTATOR_TEAM));
 			if (!(minigame.minigame_flags & BD_TURN_WIN) && !(minigame.minigame_flags & BD_TURN_LOSS))
 			{
 				switch ( ...(0,int) )
@@ -1347,7 +1368,7 @@ int bd_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_pressed":
 		{
-			if(minigame.minigame_flags & BD_TURN_EDIT)
+			if((minigame.minigame_flags & BD_TURN_EDIT) && minigame_self.team != BD_SPECTATOR_TEAM)
 			{
 				if(...(0,int) == K_MOUSE1)
 				{
@@ -1368,7 +1389,7 @@ int bd_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_moved":
 		{
-			if(minigame.minigame_flags & BD_TURN_EDIT)
+			if((minigame.minigame_flags & BD_TURN_EDIT) && minigame_self.team != BD_SPECTATOR_TEAM)
 			{
 				vector mouse_pos = minigame_hud_normalize(mousepos,bd_boardpos,bd_boardsize);
 				bd_set_curr_pos(minigame_tile_name(mouse_pos,BD_LET_CNT,BD_NUM_CNT));

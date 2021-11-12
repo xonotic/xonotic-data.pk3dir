@@ -36,6 +36,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
+		case MSG_CENTER_KILL: return "MSG_CENTER_KILL";
 	}
 	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";
@@ -193,7 +194,7 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into " DEFAULT_FILENAME, fal
 				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd."));
+			LOG_INFO("Notification dump command only works with cl_cmd and sv_cmd.");
 			#endif
 			return;
 		}
