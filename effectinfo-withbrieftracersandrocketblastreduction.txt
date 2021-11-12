@@ -1816,7 +1816,7 @@ effect rocket_explode
 effect rocket_explode
 	type static
 	airfriction 8
-	alpha 200 256 512
+	alpha 50 50 200
 	bounce 1.500000
 	color 0x8f0d00 0xff5a00
 	count 32
@@ -1830,7 +1830,7 @@ effect rocket_explode
 effect rocket_explode
 	type smoke
 	airfriction 19
-	alpha 200 256 612
+	alpha 50 50 200
 	bounce 2.500000
 	color 0xea691b 0xeed05a
 	count 14
@@ -1844,7 +1844,7 @@ effect rocket_explode
 effect rocket_explode
 	type alphastatic
 	airfriction 5
-	alpha 200 450 456
+	alpha 100 200 400
 	bounce 2
 	color 0x000000 0x111111
 	count 32
