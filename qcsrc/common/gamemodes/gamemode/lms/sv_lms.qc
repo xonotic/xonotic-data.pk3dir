@@ -17,6 +17,7 @@ float autocvar_g_lms_leader_wp_time_repeat;
 float autocvar_g_lms_dynamic_respawn_delay;
 float autocvar_g_lms_dynamic_respawn_delay_base;
 float autocvar_g_lms_dynamic_respawn_delay_increase;
+float autocvar_g_lms_dynamic_respawn_delay_max;
 bool autocvar_g_lms_dynamic_vampire;
 float autocvar_g_lms_dynamic_vampire_factor_base;
 float autocvar_g_lms_dynamic_vampire_factor_increase;
@@ -547,8 +548,9 @@ MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
 	if (pl_cnt == 1) // player wasn't counted
 		max_lives = 0;
 
-	player.respawn_time = time + autocvar_g_lms_dynamic_respawn_delay_base +
+	float dlay = autocvar_g_lms_dynamic_respawn_delay_base +
 		autocvar_g_lms_dynamic_respawn_delay_increase * max(0, max_lives - pl_lives);
+	player.respawn_time = time + min(autocvar_g_lms_dynamic_respawn_delay_max, dlay);
 	return true;
 }
 
