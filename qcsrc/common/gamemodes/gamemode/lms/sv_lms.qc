@@ -24,6 +24,9 @@ float autocvar_g_lms_dynamic_vampire_factor_max;
 int autocvar_g_lms_dynamic_vampire_min_lives_diff;
 
 .float lms_leader;
+int lms_leaders;
+bool lms_visible_leaders;
+bool lms_visible_leaders_prev;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -135,9 +138,7 @@ bool lms_waypointsprite_visible_for_player(entity this, entity player, entity vi
 		if(IS_SPEC(player))
 			return false; // we don't want spectators of leaders to see the attached waypoint on the top of their screen
 
-	float leader_time = autocvar_g_lms_leader_wp_time;
-	float leader_repeat_time = leader_time + autocvar_g_lms_leader_wp_time_repeat;
-	if (time % leader_repeat_time > leader_time)
+	if (!lms_visible_leaders)
 		return false;
 
 	return true;
@@ -407,7 +408,6 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	player.frags = FRAGS_SPECTATOR;
 }
 
-int lms_leaders = 0;
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
@@ -421,8 +421,14 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 {
+	float leader_time = autocvar_g_lms_leader_wp_time;
+	float leader_repeat_time = leader_time + autocvar_g_lms_leader_wp_time_repeat;
+	lms_visible_leaders_prev = lms_visible_leaders;
+	lms_visible_leaders = (time % leader_repeat_time < leader_time);
+
 	lms_leaders = 0;
 	FOREACH_CLIENT(true, {
+		STAT(OBJECTIVE_STATUS, it) = lms_visible_leaders;
 		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		{
 			if (it.lms_leader)
@@ -436,11 +442,18 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 					WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
 					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
 				}
+				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
 				lms_leaders++;
 			}
 		}
 		else
 		{
+			if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+			{
+				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_OTHER);
+			}
 			if (it.waypointsprite_attachedforcarrier)
 				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 		}

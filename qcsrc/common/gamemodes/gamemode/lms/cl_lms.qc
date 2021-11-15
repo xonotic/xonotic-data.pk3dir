@@ -40,9 +40,12 @@ void HUD_Mod_LMS_Draw(vector myPos, vector mySize)
 		return;
 	}
 
+	bool visible_leaders = STAT(OBJECTIVE_STATUS);
 	string pic = "player_neutral";
 	vector color = '1 1 1';
 
+	if (visible_leaders)
+		drawpic_aspect_skin(myPos, "flag_stalemate", vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(myPos, pic, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawstring_aspect(myPos + eX * 0.5 * mySize.x, ftos(stat), vec2(0.5 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
