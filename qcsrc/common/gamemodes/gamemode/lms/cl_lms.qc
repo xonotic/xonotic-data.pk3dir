@@ -30,3 +30,26 @@ MUTATOR_HOOKFUNCTION(cl_lms, DrawInfoMessages)
 	}
 	return false;
 }
+
+void HUD_Mod_LMS_Draw(vector myPos, vector mySize)
+{
+	int stat = STAT(REDALIVE); // number of leaders
+	if(!stat)
+	{
+		mod_active = 0;
+		return;
+	}
+
+	string pic = "player_neutral";
+	vector color = '1 1 1';
+
+	drawpic_aspect_skin(myPos, pic, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(myPos + eX * 0.5 * mySize.x, ftos(stat), vec2(0.5 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+void HUD_Mod_LMS(vector myPos, vector mySize)
+{
+	mod_active = 1;
+
+	HUD_Mod_LMS_Draw(myPos, mySize);
+}

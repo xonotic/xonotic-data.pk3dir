@@ -23,7 +23,7 @@ float autocvar_g_lms_dynamic_vampire_factor_increase;
 float autocvar_g_lms_dynamic_vampire_factor_max;
 int autocvar_g_lms_dynamic_vampire_min_lives_diff;
 
-.float lms_wp_time;
+.float lms_leader;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -131,20 +131,19 @@ int WinningCondition_LMS()
 // runs on waypoints which are attached to leaders, updates once per frame
 bool lms_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
-	if(view.lms_wp_time)
+	if(view.lms_leader)
 		if(IS_SPEC(player))
 			return false; // we don't want spectators of leaders to see the attached waypoint on the top of their screen
 
 	float leader_time = autocvar_g_lms_leader_wp_time;
 	float leader_repeat_time = leader_time + autocvar_g_lms_leader_wp_time_repeat;
-	float wp_time = this.owner.lms_wp_time;
-	if (wp_time && (time - wp_time) % leader_repeat_time > leader_time)
+	if (time % leader_repeat_time > leader_time)
 		return false;
 
 	return true;
 }
 
-void lms_UpdateWaypoints()
+void lms_UpdateLeaders()
 {
 	int max_lives = 0;
 	int pl_cnt = 0;
@@ -171,30 +170,19 @@ void lms_UpdateWaypoints()
 			int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
 			if (lives == max_lives)
 			{
-				if (!it.waypointsprite_attachedforcarrier)
-				{
-					WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
-					it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
-					WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-					vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
-					WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
-					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
-				}
-				if (!it.lms_wp_time)
-					it.lms_wp_time = time;
+				if (!it.lms_leader)
+					it.lms_leader = true;
 			}
 			else
 			{
-				if (it.waypointsprite_attachedforcarrier)
-					WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
-				it.lms_wp_time = 0;
+				it.lms_leader = false;
 			}
 		});
 	else
 		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 			if (it.waypointsprite_attachedforcarrier)
 				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
-			it.lms_wp_time = 0;
+			it.lms_leader = false;
 		});
 }
 
@@ -227,7 +215,7 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 
 		TRANSMUTE(Player, it);
 		PutClientInServer(it);
-		it.lms_wp_time = 0;
+		it.lms_leader = false;
 		if (it.waypointsprite_attachedforcarrier)
 			WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 	});
@@ -365,7 +353,7 @@ void lms_RemovePlayer(entity player)
 			TRANSMUTE(Observer, player);
 		}
 		if (autocvar_g_lms_leader_wp_lives > 0)
-			lms_UpdateWaypoints();
+			lms_UpdateLeaders();
 	}
 
 	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
@@ -419,12 +407,44 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	player.frags = FRAGS_SPECTATOR;
 }
 
+int lms_leaders = 0;
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
+	// recycled REDALIVE to avoid adding a dedicated stat
+	STAT(REDALIVE, player) = lms_leaders;
+
 	if(player.deadflag == DEAD_DYING)
 		player.deadflag = DEAD_RESPAWNING;
+}
+
+MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
+{
+	lms_leaders = 0;
+	FOREACH_CLIENT(true, {
+		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+		{
+			if (it.lms_leader)
+			{
+				if (!it.waypointsprite_attachedforcarrier)
+				{
+					WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
+					it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
+					WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+					vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
+					WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
+					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+				}
+				lms_leaders++;
+			}
+		}
+		else
+		{
+			if (it.waypointsprite_attachedforcarrier)
+				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
+		}
+	});
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
@@ -481,7 +501,7 @@ MUTATOR_HOOKFUNCTION(lms, Damage_Calculate)
 MUTATOR_HOOKFUNCTION(lms, PlayerDied)
 {
 	if (!warmup_stage && autocvar_g_lms_leader_wp_lives > 0)
-		lms_UpdateWaypoints();
+		lms_UpdateLeaders();
 }
 
 MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
