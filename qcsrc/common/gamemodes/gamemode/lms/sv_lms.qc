@@ -27,9 +27,9 @@ int autocvar_g_lms_dynamic_vampire_min_lives_diff = 2;
 
 .float lms_leader;
 int lms_leaders;
-bool lms_visible_leaders;
+float lms_visible_leaders_time;
+bool lms_visible_leaders = true; // triggers lms_visible_leaders_time update in the first frame
 bool lms_visible_leaders_prev;
-float lms_leader_interval_jitter;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -427,10 +427,9 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 	float leader_time = autocvar_g_lms_leader_wp_time;
 	float leader_interval = leader_time + autocvar_g_lms_leader_wp_interval;
 	lms_visible_leaders_prev = lms_visible_leaders;
-	lms_visible_leaders = (time % leader_interval < leader_time);
+	lms_visible_leaders = (time > lms_visible_leaders_time && time < lms_visible_leaders_time + leader_time);
 	if (lms_visible_leaders_prev && !lms_visible_leaders)
-		lms_leader_interval_jitter = random() * autocvar_g_lms_leader_wp_interval_jitter;
-	leader_interval += lms_leader_interval_jitter;
+		lms_visible_leaders_time = time + leader_interval + random() * autocvar_g_lms_leader_wp_interval_jitter;
 
 	lms_leaders = 0;
 	FOREACH_CLIENT(true, {
@@ -452,16 +451,16 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
 				lms_leaders++;
 			}
-		}
-		else
-		{
-			if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+			else // if (!it.lms_leader)
 			{
-				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
-					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_OTHER);
+				if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+				{
+					if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
+						Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_OTHER);
+				}
+				if (it.waypointsprite_attachedforcarrier)
+					WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 			}
-			if (it.waypointsprite_attachedforcarrier)
-				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 		}
 	});
 }
