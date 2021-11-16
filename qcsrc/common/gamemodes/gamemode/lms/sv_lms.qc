@@ -13,7 +13,8 @@ bool autocvar_g_lms_regenerate;
 int autocvar_g_lms_leader_wp_lives = 2;
 float autocvar_g_lms_leader_wp_max_relative = 0.5;
 float autocvar_g_lms_leader_wp_time = 5;
-float autocvar_g_lms_leader_wp_time_repeat = 30;
+float autocvar_g_lms_leader_wp_time_jitter = 10;
+float autocvar_g_lms_leader_wp_time_repeat = 25;
 float autocvar_g_lms_dynamic_respawn_delay = 1;
 float autocvar_g_lms_dynamic_respawn_delay_base = 2;
 float autocvar_g_lms_dynamic_respawn_delay_increase = 3;
@@ -28,6 +29,7 @@ int autocvar_g_lms_dynamic_vampire_min_lives_diff = 2;
 int lms_leaders;
 bool lms_visible_leaders;
 bool lms_visible_leaders_prev;
+float lms_leader_time_jitter;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -426,6 +428,9 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 	float leader_repeat_time = leader_time + autocvar_g_lms_leader_wp_time_repeat;
 	lms_visible_leaders_prev = lms_visible_leaders;
 	lms_visible_leaders = (time % leader_repeat_time < leader_time);
+	if (lms_visible_leaders_prev && !lms_visible_leaders)
+		lms_leader_time_jitter = random() * autocvar_g_lms_leader_wp_time_jitter;
+	leader_repeat_time += lms_leader_time_jitter;
 
 	lms_leaders = 0;
 	FOREACH_CLIENT(true, {
