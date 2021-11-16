@@ -10,11 +10,11 @@ int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
-int autocvar_g_lms_leader_wp_lives = 2;
-float autocvar_g_lms_leader_wp_max_relative = 0.5;
+int autocvar_g_lms_leader_lives_diff = 2;
+float autocvar_g_lms_leader_minpercent = 0.5;
+float autocvar_g_lms_leader_wp_interval = 25;
+float autocvar_g_lms_leader_wp_interval_jitter = 10;
 float autocvar_g_lms_leader_wp_time = 5;
-float autocvar_g_lms_leader_wp_time_jitter = 10;
-float autocvar_g_lms_leader_wp_time_repeat = 25;
 float autocvar_g_lms_dynamic_respawn_delay = 1;
 float autocvar_g_lms_dynamic_respawn_delay_base = 2;
 float autocvar_g_lms_dynamic_respawn_delay_increase = 3;
@@ -29,7 +29,7 @@ int autocvar_g_lms_dynamic_vampire_min_lives_diff = 2;
 int lms_leaders;
 bool lms_visible_leaders;
 bool lms_visible_leaders_prev;
-float lms_leader_time_jitter;
+float lms_leader_interval_jitter;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -168,8 +168,8 @@ void lms_UpdateLeaders()
 			second_max_lives = lives;
 	});
 
-	int lives_diff = autocvar_g_lms_leader_wp_lives;
-	if (max_lives - second_max_lives >= lives_diff && pl_cnt_with_max_lives <= pl_cnt * autocvar_g_lms_leader_wp_max_relative)
+	int lives_diff = autocvar_g_lms_leader_lives_diff;
+	if (max_lives - second_max_lives >= lives_diff && pl_cnt_with_max_lives <= pl_cnt * autocvar_g_lms_leader_minpercent)
 		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 			int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
 			if (lives == max_lives)
@@ -356,7 +356,7 @@ void lms_RemovePlayer(entity player)
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			TRANSMUTE(Observer, player);
 		}
-		if (autocvar_g_lms_leader_wp_lives > 0)
+		if (autocvar_g_lms_leader_lives_diff > 0)
 			lms_UpdateLeaders();
 	}
 
@@ -425,12 +425,12 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 {
 	float leader_time = autocvar_g_lms_leader_wp_time;
-	float leader_repeat_time = leader_time + autocvar_g_lms_leader_wp_time_repeat;
+	float leader_interval = leader_time + autocvar_g_lms_leader_wp_interval;
 	lms_visible_leaders_prev = lms_visible_leaders;
-	lms_visible_leaders = (time % leader_repeat_time < leader_time);
+	lms_visible_leaders = (time % leader_interval < leader_time);
 	if (lms_visible_leaders_prev && !lms_visible_leaders)
-		lms_leader_time_jitter = random() * autocvar_g_lms_leader_wp_time_jitter;
-	leader_repeat_time += lms_leader_time_jitter;
+		lms_leader_interval_jitter = random() * autocvar_g_lms_leader_wp_interval_jitter;
+	leader_interval += lms_leader_interval_jitter;
 
 	lms_leaders = 0;
 	FOREACH_CLIENT(true, {
@@ -519,7 +519,7 @@ MUTATOR_HOOKFUNCTION(lms, Damage_Calculate)
 
 MUTATOR_HOOKFUNCTION(lms, PlayerDied)
 {
-	if (!warmup_stage && autocvar_g_lms_leader_wp_lives > 0)
+	if (!warmup_stage && autocvar_g_lms_leader_lives_diff > 0)
 		lms_UpdateLeaders();
 }
 
