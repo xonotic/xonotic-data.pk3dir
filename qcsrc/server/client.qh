@@ -376,7 +376,9 @@ STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
 void play_countdown(entity this, float finished, Sound samp);
 void player_powerups_remove_all(entity this);
 
-void RotRegen(entity this, float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod);
+void RotRegen(entity this, float current, float limit_mod,
+	float regenstable, float regenfactor, float regenlinear, float regenframetime,
+	float rotstable, float rotfactor, float rotlinear, float rotframetime);
 
 bool Spectate(entity this, entity pl);
 
