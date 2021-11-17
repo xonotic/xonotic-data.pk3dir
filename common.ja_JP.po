@@ -9,13 +9,14 @@
 # LegendGuard, 2020-2021
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
 # RYU N. <ryusho2523@yahoo.co.jp>, 2021
+# z 411 <winrar.hurr@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-17 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-11-15 21:41+0000\n"
+"Last-Translator: z 411 <winrar.hurr@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -32,7 +33,7 @@ msgstr "^2%s への書き出すに成功! (註: data/data/ に保存されまし
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr "^1%sへ書けませんでした"
+msgstr "^1%sへの書き込みは失敗しました"
 
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
@@ -195,7 +196,7 @@ msgstr "チームメニュー"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
-msgstr "^1この選手を観戦中:"
+msgstr "^1このプレイヤーを観戦中:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating you:"
@@ -203,7 +204,7 @@ msgstr "^1あなたを観戦中:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7HUDオプションを表示するために ^3ESC ^7を押して。"
+msgstr "^7HUDオプションを表示するには ^3ESC ^7キーを押して下さい。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -221,7 +222,7 @@ msgstr "^3ALT ^7+ ^3ARROW KEYS ^7で微調整する。"
 #: qcsrc/client/hud/panel/score.qc:66
 #, c-format
 msgid "Player %d"
-msgstr "選手 %d"
+msgstr "プレイヤー %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:617
 #: qcsrc/client/hud/panel/quickmenu.qc:619

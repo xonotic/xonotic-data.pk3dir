@@ -7,7 +7,7 @@ float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
 float autocvar_g_ca_start_ammo_shells = 60;
 float autocvar_g_ca_start_ammo_nails = 320;
-float autocvar_g_ca_start_ammo_rockets = 180;
+float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
 float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
@@ -337,6 +337,9 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
 	start_health       = warmup_start_health       = autocvar_g_ca_start_health;
 	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_ca_start_armor;
 	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_ca_start_ammo_shells;

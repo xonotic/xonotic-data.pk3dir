@@ -26,13 +26,14 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
 # Yllelder, 2016
+# z 411 <winrar.hurr@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-17 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-11-15 21:37+0000\n"
+"Last-Translator: z 411 <winrar.hurr@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1593,7 +1594,7 @@ msgstr "¡Bien hecho! Haz clic en 'Siguiente nivel' para continuar"
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Estás espectando"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -8763,6 +8764,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"Advertencia: seleccionando 'Siempre' el color de su equipo puede ser el "
+"mismo que el del equipo enemigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
@@ -8774,11 +8777,11 @@ msgstr "Sólo en Duelo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Sólo en juego de equipo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "En juegos de equipo y duelo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
@@ -10081,27 +10084,27 @@ msgstr "¡DIOS!"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "PARTQUAL^Bajo"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "PARTQUAL^Medio"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "PARTQUAL^Normal"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "PARTQUAL^Alto"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "PARTQUAL^Ultra"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "PARTQUAL^Máximo"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -10118,19 +10121,19 @@ msgstr "Resolución de pantalla"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "FADESPEED^Lento"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "FADESPEED^Normal"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "FADESPEED^Rápido"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "FADESPEED^Instantáneo"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
