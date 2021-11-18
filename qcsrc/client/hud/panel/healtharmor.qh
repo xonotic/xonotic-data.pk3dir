@@ -10,6 +10,7 @@ bool autocvar_hud_panel_healtharmor_hide_ondeath  = false;
 int autocvar_hud_panel_healtharmor_iconalign;
 int autocvar_hud_panel_healtharmor_maxarmor;
 int autocvar_hud_panel_healtharmor_maxhealth;
+float autocvar_hud_panel_healtharmor_fuelbar_startalpha = 0.3;
 float autocvar_hud_panel_healtharmor_oxygenbar_startalpha = 0.2;
 bool autocvar_hud_panel_healtharmor_progressbar;
 string autocvar_hud_panel_healtharmor_progressbar_armor;
