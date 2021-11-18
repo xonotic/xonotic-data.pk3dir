@@ -58,7 +58,9 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		tmp_over = pos;
 		vector total_sz = vec2(line_sz.x, line_sz.y + line_sz_sub.y);
 		
-		if(pl.eliminated) {
+		bool dead = entcs_IsDead(pl.sv_entnum) || pl.eliminated;
+		
+		if(dead) {
 			// z411 TODO : Unhardcode luma
 			icon = "gfx/hud/luma/notify_death.tga";
 			icon_rgb = rgb;
@@ -115,7 +117,7 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		// Highlight current player
 		if(pl.sv_entnum == current_player && spectatee_status != -1)
 			drawfill(tmp_over, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
-		if(pl.eliminated)
+		if(dead || pl.eliminated)
 			drawfill(tmp_over, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
 		
 		if(!invert)
@@ -189,6 +191,9 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	
 	if(pl.sv_entnum == current_player && spectatee_status != -1)
 		drawfill(tmp, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
+
+	if(entcs_IsDead(pl.sv_entnum))
+		drawfill(tmp, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
 	
 	// Player score
 	tmp_str = ftos(pl.(scores(ps_primary)));
