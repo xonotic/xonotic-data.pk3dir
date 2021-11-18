@@ -46,6 +46,7 @@ void HUD_Timer()
 	timeout_last = STAT(TIMEOUT_LAST);
 
 	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
+	timeleft = min(timeleft, timelimit * 60);
 	timeleft = ceil(timeleft);
 
 	// countdown sound
@@ -109,12 +110,7 @@ void HUD_Timer()
 			else
 				timer = warmup_timeleft;
 		} else {
-			if (time < STAT(GAMESTARTTIME))
-				timer = floor(timelimit * 60);
-			//else if (overtimes > 0)
-			//	timer = floor(time - STAT(OVERTIMESTARTTIME));
-			else
-				timer = timeleft;
+			timer = timeleft;
 		}
 	}
 	
