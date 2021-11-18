@@ -71,18 +71,20 @@ MUTATOR_HOOKFUNCTION(mayhem, SetWeaponArena)
 MUTATOR_HOOKFUNCTION(mayhem, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
-	if (autocvar_g_powerups == 1){
+	
+	//enable powerups if forced globally or global accepts gamemodes to have powerups according to their own settings
+	if (autocvar_g_powerups == 1 || (autocvar_g_powerups == -1 && autocvar_g_mayhem_powerups == 1)){
 		if (item.itemdef.instanceOfPowerup){
 			return false;
 		} 
 	}
-	else if (autocvar_g_powerups == -1){
+	//disabled powerups if forced off globally or in this gamemode
+	if (autocvar_g_powerups == 0 || autocvar_g_mayhem_powerups == 0){
 		if (item.itemdef.instanceOfPowerup){
-			if (autocvar_g_mayhem_powerups){
-				return false;
-			} 
+			return true; 
 		} 
 	}
+	//handle other items, remove unless globally forced on
 	if (autocvar_g_pickup_items <= 0)
 		return true;
 }
