@@ -134,7 +134,7 @@ const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath 
 
 float WinningCondition_Scores(float limit, float leadlimit);
 void SetWinners(.float field, float value);
-void ReadyRestart();
+void ReadyRestart(bool endWarmup);
 
 void DumpStats(float final);
 

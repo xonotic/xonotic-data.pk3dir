@@ -437,10 +437,15 @@ void ReadyRestart_force()
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 	
-	if(!warmup_stage)
+	if(warmup_stage) {
+		// Warmup: No countdown in warmup
+		game_starttime = time;
+		readyrestart_happened = false;
+	} else {
+		// Go into match mode
+		readyrestart_happened = true;
 		game_starttime = time + RESTART_COUNTDOWN;
-	else
-		game_starttime = time; // No countdown in warmup
+	}
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -483,7 +488,7 @@ void ReadyRestart_force()
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
-void ReadyRestart()
+void ReadyRestart(bool endWarmup)
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
@@ -491,6 +496,12 @@ void ReadyRestart()
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
 	if (!sv_ready_restart_after_countdown) Score_ClearAll();
+
+	if(endWarmup)
+		warmup_stage = 0; // forcefully end warmup and go to match stage
+	else
+		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage anyway
+
 	ReadyRestart_force();
 }
 
@@ -512,11 +523,7 @@ void ReadyCount()
 	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
 	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
 
-	if (readycount >= ready_needed_count)
-	{
-		warmup_stage = 0;
-		ReadyRestart();
-	}
+	if (readycount >= ready_needed_count) ReadyRestart(true);
 }
 
 

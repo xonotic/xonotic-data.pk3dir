@@ -51,7 +51,7 @@ void HUD_Timer()
 	{
 		float warmup_timelimit = STAT(WARMUP_TIMELIMIT);
 		if(warmup_timelimit > 0)
-			warmup_timeleft = max(0, warmup_timelimit - time);
+			warmup_timeleft = max(0, warmup_timelimit - time + STAT(GAMESTARTTIME));
 		else if(warmup_timelimit == 0)
 			warmup_timeleft = timeleft;
 		warmup_timeleft = ceil(warmup_timeleft);

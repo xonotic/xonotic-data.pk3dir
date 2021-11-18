@@ -163,8 +163,7 @@ void GameCommand_allready(int request)
 		{
 			if(warmup_stage)
 			{
-				warmup_stage = 0;
-				ReadyRestart();
+				ReadyRestart(true);
 			}
 			else
 				LOG_INFO("Not in warmup.");
@@ -1313,8 +1312,7 @@ void GameCommand_reset(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			warmup_stage = cvar("g_warmup");
-			ReadyRestart();
+			ReadyRestart(false);
 			return;
 		}
 

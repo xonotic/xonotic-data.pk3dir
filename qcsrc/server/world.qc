@@ -1644,7 +1644,7 @@ void CheckRules_World()
 				if(readyplayers || playerswithlaps >= 2)
 				{
 					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
+					ReadyRestart(true); // go to race
 					return;
 				}
 				else
