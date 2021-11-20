@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-30 16:01+0000\n"
+"PO-Revision-Date: 2021-11-19 20:18+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -10125,19 +10125,19 @@ msgstr "Résolution de l'écran"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "Lente"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "Normale"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "Rapide"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "Instantanée"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
