@@ -6,6 +6,7 @@
 
 int autocvar_g_powerups;
 int autocvar_g_powerups_dropondeath;
+int autocvar_g_powerups_dropondeath_ttl;
 bool autocvar_g_powerups_stack;
 
 REGISTER_MUTATOR(powerups, true);
