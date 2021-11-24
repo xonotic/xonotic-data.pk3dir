@@ -38,6 +38,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
             dt = bound(0, dt * 32, 16383);
             WriteByte(MSG_ENTITY, (dt & 0xFF00) / 256 + 192);
             WriteByte(MSG_ENTITY, (dt & 0x00FF));
+            WriteByte(MSG_ENTITY, this.wp_reverse);
         }
     }
 
@@ -137,6 +138,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
             else
                 this.build_starthealth = 0;
             this.build_finished = servertime + t / 32;
+            this.build_reverse = ReadByte();
         }
     }
     else
@@ -538,7 +540,12 @@ void Draw_WaypointSprite(entity this)
         a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1) ** waypointsprite_distancealphaexponent);
     }
 
-    vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
+    vector rgb;
+    if(this.build_reverse)
+        rgb = '1 0 0';
+    else
+        rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
+
     if (rgb == '0 0 0')
     {
         this.teamradar_color = '1 0 1';
@@ -648,12 +655,20 @@ void Draw_WaypointSprite(entity this)
     {
         if (time < this.build_finished + 0.25)
         {
+            float vhealth;
+
             if (time < this.build_started)
-                SetResourceExplicit(this, RES_HEALTH, this.build_starthealth);
+                vhealth = this.build_starthealth;
             else if (time < this.build_finished)
-                SetResourceExplicit(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
+                vhealth = (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth;
             else
-                SetResourceExplicit(this, RES_HEALTH, 1);
+                vhealth = 1;
+
+            if (this.build_reverse)
+                vhealth = 1 - vhealth;
+
+			LOG_INFOF( "Setting health to %f (%f)", vhealth, this.build_starthealth);
+            SetResourceExplicit(this, RES_HEALTH, vhealth);
         }
         else
             SetResourceExplicit(this, RES_HEALTH, -1);
