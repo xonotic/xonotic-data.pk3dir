@@ -1,5 +1,7 @@
 #pragma once
 
+string autocvar__termsofservice_accepted;
+
 #include "rootdialog.qh"
 CLASS(XonoticToSDialog, XonoticRootDialog)
 	METHOD(XonoticToSDialog, shouldShow, bool());

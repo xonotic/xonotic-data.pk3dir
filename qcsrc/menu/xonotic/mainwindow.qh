@@ -21,7 +21,7 @@ CLASS(MainWindow, ModalController)
 	ATTRIB(MainWindow, languageWarningDialog, entity);
 	ATTRIB(MainWindow, mainNexposee, entity);
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND);
-	ATTRIB(MainWindow, dialogToShow, entity);
+	ATTRIB(MainWindow, firstDraw, bool, true);
 	ATTRIB(MainWindow, demostartconfirmDialog, entity);
 	ATTRIB(MainWindow, demotimeconfirmDialog, entity);
 	ATTRIB(MainWindow, resetDialog, entity);

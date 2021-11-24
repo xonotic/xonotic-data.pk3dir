@@ -59,10 +59,13 @@ void MainWindow_draw(entity me)
 {
 	SUPER(MainWindow).draw(me);
 
-	if(me.dialogToShow)
-	{
-		DialogOpenButton_Click_withCoords(NULL, me.dialogToShow, '0 0 0', eX * conwidth + eY * conheight);
-		me.dialogToShow = NULL;
+	if (me.firstDraw) {
+		if (me.ToSDialog.shouldShow())
+			DialogOpenButton_Click_withCoords(NULL, me.ToSDialog, '0 0 0', eX * conwidth + eY * conheight);
+		else if(me.firstRunDialog.shouldShow())
+			DialogOpenButton_Click_withCoords(NULL, me.firstRunDialog, '0 0 0', eX * conwidth + eY * conheight);
+		
+		me.firstDraw = false;
 	}
 
 	//-------------------------------------
@@ -338,13 +341,4 @@ void MainWindow_configureMainWindow(entity me)
 
 	me.initializeDialog(me, n);
 	me.disconnectDialogVisibility = 1;
-
-    if (me.ToSDialog.shouldShow())
-    {
-        me.dialogToShow = me.ToSDialog;
-    }
-	else if(me.firstRunDialog.shouldShow())
-    {
-		me.dialogToShow = me.firstRunDialog;
-    }
 }

@@ -10,11 +10,12 @@
 
 void Close_Clicked(entity btn, entity me)
 {
-    cvar_set("_termsofservice_accepted", "1");
+	LOG_INFO("Setting _termsofservice_accepted to ", _Nex_ExtResponseSystem_NewToS);
+    cvar_set("_termsofservice_accepted", _Nex_ExtResponseSystem_NewToS);
     localcmd("saveconfig");
     if (main.firstRunDialog.shouldShow())
     {
-        main.dialogToShow = main.firstRunDialog;
+		main.firstDraw = true;
     }
     Dialog_Close(btn, me);
 }
@@ -26,24 +27,6 @@ void DontAccept_Clicked(entity btn, entity me)
 
 void XonoticToSDialog_loadXonoticToS(entity me)
 {
-    /*string ToSText = "";
-    int fh = fopen("tos.txt", FILE_READ);
-    if (fh >= 0)
-    {
-        for (string line; (line = fgets(fh)); ) {
-            if (ToSText != "")
-            {
-                ToSText = strcat(ToSText, "\n", line);
-            }
-            else
-            {
-                ToSText = line;
-            }
-        }
-        fclose(fh);
-    }
-    LOG_INFO("Test: ", _Nex_ExtResponseSystem_TOS, ": ", ftos(XonoticToSDialog_shouldShow()));
-    me.textBox.setText(me.textBox, ToSText);*/
 	string downloadurl = "http://maria.omaera.org/tos.txt";
 	url_single_fopen(downloadurl, FILE_READ, XonoticToS_OnGet, me);
 }
@@ -90,9 +73,8 @@ void XonoticToS_OnGet(entity fh, entity me, int status)
 
 bool XonoticToSDialog_shouldShow()
 {
-    //return (_Nex_ExtResponseSystem_TOS && !autocvar__termsofservice_accepted);
 	LOG_INFO("newtos value: ", _Nex_ExtResponseSystem_NewToS);
-	return (_Nex_ExtResponseSystem_NewToS != "");
+	return (_Nex_ExtResponseSystem_NewToS != autocvar__termsofservice_accepted);
 }
 
 void XonoticToSDialog_fill(entity me)

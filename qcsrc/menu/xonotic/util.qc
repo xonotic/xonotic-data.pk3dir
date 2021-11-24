@@ -307,10 +307,6 @@ void URI_Get_Callback(float id, float status, string data)
 	{
 		UpdateNotification_URI_Get_Callback(id, status, data);
 	}
-	else if (id == URI_GET_TOS)
-	{
-		TOS_URI_Get_Callback(id, status, data);
-	}
 	else
 	{
 		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
@@ -444,10 +440,8 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	
 	if(un_tosversion != "")
 	{
-		if(autocvar__termsofservice_accepted != un_tosversion) {
-			_Nex_ExtResponseSystem_NewToS = strzone(un_tosversion);
-			LOG_INFO("Setting netwos value to ", un_tosversion);
-		}
+		_Nex_ExtResponseSystem_NewToS = strzone(un_tosversion);
+		LOG_INFO("Setting netwos value to ", un_tosversion);
 	}
 
 	if(un_bannedservers != "")
@@ -473,24 +467,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		_Nex_ExtResponseSystem_RecommendedServers = strzone(un_recommended);
 		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
 	}
-}
-
-void TOS_URI_Get_Callback(float id, float status, string data)
-{
-	if(_Nex_ExtResponseSystem_TOS)
-	{
-		LOG_TRACE("error: TOS_URI_Get_Callback has been called before");
-		return;
-	}
-	if(status != 0)
-	{
-		LOG_TRACEF("error receiving tos: status is %d", status);
-		return;
-	}
-
-	_Nex_ExtResponseSystem_TOS = strzone(data);
-	LOG_INFO("Data: ", _Nex_ExtResponseSystem_TOS);
-	LOG_INFO("New TOS version: ", _Nex_ExtResponseSystem_NewToS);
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
