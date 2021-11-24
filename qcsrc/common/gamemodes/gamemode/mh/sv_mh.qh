@@ -15,7 +15,12 @@ string autocvar_g_mh_weaponarena;
 int mh_teams;
 bool allowed_to_spawn_untagged = 1;
 
-//int round_counter_for_teamchanging = 1;
+//every round needs a shuffle with >2 players unless something else is added to reset the teams
+int round_counter_for_teamchanging = 1;
+int autocvar_g_mh_how_many_rounds_before_shuffle;
+
+bool autocvar_g_mh_enable_tagging_on_touch;
+//float autocvar_g_mh_player_waypoints;
 
 const int ST_MH_ROUNDS = 1;
 

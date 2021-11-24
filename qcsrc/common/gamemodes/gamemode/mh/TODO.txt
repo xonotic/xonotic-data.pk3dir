@@ -1,17 +1,13 @@
-fix broken hunters and players not resetting
-
-decide names for teams, runners and hunters?
-
 add g_mh_startitem cvars to the balance files
 
 add waypoints on runners
 
+rename teams as far as possible
+
 count dead players to be in a team
 
-avoid players bumping into each other and losing speed regardless of team without affecting ^
+more dynamic
 
-more dynamic, offswitch for shuffle
-
-on-screen notification (and sound?) for getting tagged
+on-screen notification for getting tagged
 
 add more TODO: notes

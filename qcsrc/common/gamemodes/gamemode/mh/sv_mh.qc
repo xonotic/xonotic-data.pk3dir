@@ -5,7 +5,6 @@
 .vector taggedplayervelocity;
 .vector taggedplayerviewangles;
 
-
 MUTATOR_HOOKFUNCTION(mh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "mh_team";
@@ -26,7 +25,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.team == Team_IndexToTeam(1) && !game_stopped && !IS_DEAD(player) && IS_PLAYER(player) && !IS_INDEPENDENT_PLAYER(player))
+	if(autocvar_g_mh_enable_tagging_on_touch && round_handler_IsRoundStarted() && player.team == Team_IndexToTeam(1) && !game_stopped && !IS_DEAD(player) && IS_PLAYER(player) && !IS_INDEPENDENT_PLAYER(player))
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player && it.team == Team_IndexToTeam(2), {
 			if(!IS_DEAD(it) && !IS_INDEPENDENT_PLAYER(it))
@@ -36,7 +35,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 				float armor = GetResource(it, RES_ARMOR);
 				float max_dmg;
 				if(autocvar_g_balance_armor_blockpercent == 1){
-					max_dmg = health + armor; //skip handling (1 - autocvar_g_balance_armor_blockpercent) in case of value of 1 as it leads to divide by 0
+					max_dmg = health + armor; //skip handling (1 - autocvar_g_balance_armor_blockpercent) in case of cvar value of 1 as it leads to divide by 0
 				} else {
 					max_dmg = health + bound(0, armor, ((health / (1 - autocvar_g_balance_armor_blockpercent))- health)); 
 				}
@@ -112,10 +111,10 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 
 // mh_LastPlayerForTeam				y					y
 // mh_LastPlayerForTeam_Notify		y					y
-// PlayerDies						add tp				y
+// PlayerDies						y					y
 // ClientDisconnect					y					y
 // HideTeamNagger					y					y
-// PlayerSpawn						add tp				y
+// PlayerSpawn						y					y
 // PutClientInServer				y					y
 // MH_count_alive_players			y					y
 // MH_GetWinnerTeam					y					y
@@ -334,9 +333,9 @@ float MH_CheckWinner()
 	
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_mh_warmup, autocvar_g_mh_round_timelimit);
-	//if(pymod(round_counter_for_teamchanging, 2))
-	//	shuffleteams_on_reset_map = !allowed_to_spawn_untagged; //only shuffle every other round
-	//++round_counter_for_teamchanging;
+	if(pymod(round_counter_for_teamchanging, autocvar_g_mh_how_many_rounds_before_shuffle) || autocvar_g_mh_how_many_rounds_before_shuffle == 1)
+		shuffleteams_on_reset_map = !allowed_to_spawn_untagged;
+	++round_counter_for_teamchanging;
 	//FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 
@@ -419,7 +418,7 @@ MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 	
-	if (!allowed_to_spawn_untagged && IS_PLAYER(player)){ // this is true even when player is trying to join
+	if (!allowed_to_spawn_untagged && IS_PLAYER(player) && round_handler_IsRoundStarted()){ // this can be true even when player is trying to join
 		if (CS(player).jointime != time){ // not when connecting
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_MH_JOIN_LATE);
 		}
@@ -468,24 +467,6 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 	return true;
 }
 
-
-
-// ===========
-//  to change
-// ===========
-
-MUTATOR_HOOKFUNCTION(mh, reset_map_players)
-{
-	FOREACH_CLIENT(true, {
-		CS(it).killcount = 0;
-		TRANSMUTE(Player, it);
-		}
-	);
-	return true;
-}
-
-// Maybe add player teleporting to where they died if they just got tagged?
-
 // Function: 
 // PlayerSpawn
 // Purpose in CA:
@@ -501,6 +482,7 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_players)
 MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
+	player.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	MH_count_alive_players();
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
 		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
@@ -513,4 +495,27 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 		player.velocity = player.taggedplayervelocity;
 		player.angles = player.taggedplayerviewangles;
 	}
+}
+
+//reset kill streaks and respawn players on round reset
+MUTATOR_HOOKFUNCTION(mh, reset_map_players)
+{
+	FOREACH_CLIENT(true, {
+		CS(it).killcount = 0;
+		PutClientInServer(it);
+		}
+	);
+	return true;
+}
+
+// ===========
+//  to change
+// ===========
+
+
+
+//idk if this function is needed
+MUTATOR_HOOKFUNCTION(mh, reset_map_global)
+{
+	return true;
 }
