@@ -35,6 +35,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
+.int m_num_players_total; ///< Number of total players in a team.
 .int m_num_control_points; ///< Number of control points owned by a team.
 
 string autocvar_g_forced_team_red;
@@ -92,12 +93,35 @@ void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
 	team_ent.m_num_players_alive = number;
 }
 
+int Team_GetNumberOfTotalPlayers(entity team_ent)
+{
+	return team_ent.m_num_players_total;
+}
+
+void Team_SetNumberOfTotalPlayers(entity team_ent, int number)
+{
+	team_ent.m_num_players_total = number;
+}
+
 int Team_GetNumberOfAliveTeams()
 {
 	int result = 0;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
 		if (g_team_entities[i].m_num_players_alive > 0)
+		{
+			++result;
+		}
+	}
+	return result;
+}
+
+int Team_GetNumberOfTotalTeams()
+{
+	int result = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		if (g_team_entities[i].m_num_players_total > 0)
 		{
 			++result;
 		}

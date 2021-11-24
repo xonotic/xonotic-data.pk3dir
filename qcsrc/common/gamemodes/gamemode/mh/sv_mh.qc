@@ -116,7 +116,7 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 // HideTeamNagger					y					y
 // PlayerSpawn						y					y
 // PutClientInServer				y					y
-// MH_count_alive_players			y					y
+// MH_count_players					y					y
 // MH_GetWinnerTeam					y					y
 // nades_Clear						y					y
 // MH_CheckWinner					y					y
@@ -128,7 +128,7 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 // general order which they are called in / when they are called:
 // todo: update after cleanup is finished and when new functions are added
 
-// Start by initiating round_handler, when there is >= 1 player alive on both teams MH_CheckTeams(which is done by calling MH_count_alive_players and 
+// Start by initiating round_handler, when there is >= 1 player alive on both teams MH_CheckTeams(which is done by calling MH_count_players and 
 // it also updates the count for alive players for Team_ functions) let's round handler start a new round
 
 // Between rounds reset_map_ hooks get triggered and on new round start MH_RoundStart is called
@@ -206,8 +206,12 @@ MUTATOR_HOOKFUNCTION(mh, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (IS_PLAYER(player))
+	if (IS_PLAYER(player)){
 		mh_LastPlayerForTeam_Notify(player);
+		if (player.waypointsprite_attachedforcarrier)
+			WaypointSprite_Kill(player.waypointsprite_attachedforcarrier);
+
+	}
 	return true;
 }
 
@@ -221,7 +225,7 @@ MUTATOR_HOOKFUNCTION(mh, HideTeamNagger)
 }
 
 // Function: 
-// MH_count_alive_players
+// MH_count_players
 // Purpose in CA:
 // refresh count of how many players are alive in each team to Team_ functions
 // Needed in MH? Purpose?:
@@ -232,18 +236,22 @@ MUTATOR_HOOKFUNCTION(mh, HideTeamNagger)
 // MH_CheckWinner , MH_CheckTeams
 // Calls:
 // multiple Team_ functions which are imported
-void MH_count_alive_players()
+void MH_count_players()
 {
 	total_players = 0;
 	for (int i = 1; i <= 2; ++i){
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+		Team_SetNumberOfTotalPlayers(Team_GetTeamFromIndex(i), 0);
 	}
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),{
+		entity team_ = Entity_GetTeam(it);
+		int num_total = Team_GetNumberOfTotalPlayers(team_);
+		++num_total;
+		Team_SetNumberOfTotalPlayers(team_, num_total);
 		++total_players;
 		if (IS_DEAD(it)){
 			continue;
 		}
-		entity team_ = Entity_GetTeam(it);
 		int num_alive = Team_GetNumberOfAlivePlayers(team_);
 		++num_alive;
 		Team_SetNumberOfAlivePlayers(team_, num_alive);
@@ -274,13 +282,13 @@ void MH_count_alive_players()
 // Team_
 int MH_GetWinnerTeam()
 {
-	//both teams have alive players
-	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1)){
+	//both teams have players
+	if ((Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1)){
 		return Team_IndexToTeam(2);
 	}
 	
 	//only hunters were alive
-	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) == 0)){
+	if ((Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) == 0)){
 		return Team_IndexToTeam(1);
 	}
 	
@@ -298,11 +306,11 @@ int MH_GetWinnerTeam()
 // Called by:
 // round_handler
 // Calls:
-// round_handler_Init , MH_count_alive_players , MH_GetWinnerTeam , nades_Clear
+// round_handler_Init , MH_count_players , MH_GetWinnerTeam , nades_Clear
 float MH_CheckWinner()
 {
 	int did_the_round_end = 0;
-	MH_count_alive_players();
+	MH_count_players();
 	int winner_team = MH_GetWinnerTeam();
 	if(winner_team == 14)
 		FOREACH_CLIENT(IS_PLAYER(it) && it.team == 14, 
@@ -353,13 +361,13 @@ float MH_CheckWinner()
 // Called by:
 // round_handler_Spawn
 // Calls:
-// MH_count_alive_players , Team_ functions which are imported
+// MH_count_players , Team_ functions which are imported
 bool MH_CheckTeams()
 {
 	static int prev_missing_teams_mask;
 	allowed_to_spawn_untagged = true;
-	MH_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() == NumTeams(mh_teams)){
+	MH_count_players();
+	if (Team_GetNumberOfTotalTeams() == NumTeams(mh_teams)){
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
@@ -374,7 +382,7 @@ bool MH_CheckTeams()
 	int missing_teams_mask = 0;
 	for (int i = 1; i <= 2; ++i){
 		if ((mh_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0)){
+			(Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(i)) == 0)){
 			missing_teams_mask |= Team_IndexToBit(i);
 		}
 	}
@@ -400,6 +408,18 @@ bool MH_CheckTeams()
 void MH_RoundStart()
 {
 	allowed_to_spawn_untagged = boolean(warmup_stage);
+	if(autocvar_g_mh_player_waypoints == 0){
+		return;
+	} else if(autocvar_g_mh_player_waypoints == 1 || autocvar_g_mh_player_waypoints == 2){
+		FOREACH_CLIENT(IS_PLAYER(it) && it.team == Team_IndexToTeam(2), 
+		{
+			WaypointSprite_AttachCarrier(WP_Null, it, RADARICON_FLAGCARRIER);
+			WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+			vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
+			WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
+			WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+		});
+	}
 }
 
 // Function: 
@@ -455,6 +475,9 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
+	if (frag_target.waypointsprite_attachedforcarrier)
+		WaypointSprite_Kill(frag_target.waypointsprite_attachedforcarrier);
+
 	mh_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn_untagged)
 	{
@@ -463,6 +486,18 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 	}
 	frag_target.respawn_time = time;
 	frag_target.respawn_flags |= RESPAWN_FORCE;
+
+	return true;
+}
+
+// runs on waypoints which are attached to players, updates once per frame
+bool mh_waypointsprite_visible_for_player(entity this, entity player, entity view)
+{
+	//if(IS_PLAYER(view) || this == view || IS_SPEC(player)) //fix me
+	//	return false; // we don't want spectators to see the attached waypoint on the top of their screen
+
+	if(autocvar_g_mh_player_waypoints == 0)
+		return false;
 
 	return true;
 }
@@ -483,7 +518,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 	player.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-	MH_count_alive_players();
+	MH_count_players();
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
 		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
 		MoveToTeam(player, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
@@ -494,6 +529,18 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 		player.origin = player.taggedplayerlocation;
 		player.velocity = player.taggedplayervelocity;
 		player.angles = player.taggedplayerviewangles;
+	}
+	//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player; 
+	if(autocvar_g_mh_player_waypoints == 2){
+		if(player.team == Team_IndexToTeam(2))
+		{
+			WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
+			//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player;
+			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+			vector pl_color = colormapPaletteColor(player.clientcolors & 0x0F, false);
+			WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
+			WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
+		};
 	}
 }
 

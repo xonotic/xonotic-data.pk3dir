@@ -20,7 +20,7 @@ int round_counter_for_teamchanging = 1;
 int autocvar_g_mh_how_many_rounds_before_shuffle;
 
 bool autocvar_g_mh_enable_tagging_on_touch;
-//float autocvar_g_mh_player_waypoints;
+float autocvar_g_mh_player_waypoints;
 
 const int ST_MH_ROUNDS = 1;
 

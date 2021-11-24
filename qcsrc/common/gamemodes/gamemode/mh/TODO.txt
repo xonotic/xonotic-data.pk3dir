@@ -1,12 +1,10 @@
 add g_mh_startitem cvars to the balance files
 
-add waypoints on runners
+fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for self or for spectators of that player.
 
 rename teams as far as possible
 
-count dead players to be in a team
-
-more dynamic
+more dynamicity for the code :)
 
 on-screen notification for getting tagged
 

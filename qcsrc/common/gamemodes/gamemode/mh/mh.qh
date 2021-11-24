@@ -2,6 +2,9 @@
 
 #include <common/mapinfo.qh>
 
+
+bool autocvar_g_mh_not_dm_maps;
+
 #ifdef CSQC
 void HUD_Mod_MH(vector pos, vector mySize);
 void HUD_Mod_MH_Export(int fh);
@@ -9,7 +12,7 @@ void HUD_Mod_MH_Export(int fh);
 CLASS(Manhunt, Gametype)
 	INIT(Manhunt)
 	{
-		this.gametype_init(this, _("Manhunt"),"mh","g_mh",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=30 pointlimit=10 teams=2 leadlimit=0",_("Avoid getting tagged yourself and once tagged go catch as many untagged players as possible"));
+		this.gametype_init(this, _("Tag Manhunt"),"mh","g_mh",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=30 pointlimit=10 teams=2 leadlimit=0",_("Avoid getting tagged yourself and once tagged go catch as many untagged players as possible"));
 	}
 	METHOD(Manhunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
@@ -19,7 +22,7 @@ CLASS(Manhunt, Gametype)
 	}
 	METHOD(Manhunt, m_isForcedSupported, bool(Gametype this))
 	{
-		if(!cvar("g_mh_not_dm_maps"))
+		if(!autocvar_g_mh_not_dm_maps)
 		{
 			// if this is unset, all DM maps support MMM too
 			if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
