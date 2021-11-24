@@ -10,13 +10,11 @@
 
 void Close_Clicked(entity btn, entity me)
 {
-	LOG_INFO("Setting _termsofservice_accepted to ", _Nex_ExtResponseSystem_NewToS);
+	LOG_INFO("Setting _termsofservice_accepted cvar to ", _Nex_ExtResponseSystem_NewToS);
     cvar_set("_termsofservice_accepted", _Nex_ExtResponseSystem_NewToS);
     localcmd("saveconfig");
     if (main.firstRunDialog.shouldShow())
-    {
 		main.firstDraw = true;
-    }
     Dialog_Close(btn, me);
 }
 
@@ -74,7 +72,7 @@ void XonoticToS_OnGet(entity fh, entity me, int status)
 bool XonoticToSDialog_shouldShow()
 {
 	LOG_INFO("newtos value: ", _Nex_ExtResponseSystem_NewToS);
-	return (_Nex_ExtResponseSystem_NewToS != autocvar__termsofservice_accepted);
+	return (_Nex_ExtResponseSystem_NewToS != "" && _Nex_ExtResponseSystem_NewToS != autocvar__termsofservice_accepted);
 }
 
 void XonoticToSDialog_fill(entity me)
