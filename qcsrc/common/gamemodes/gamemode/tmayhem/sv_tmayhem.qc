@@ -9,6 +9,9 @@ string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
 int autocvar_g_tmayhem_scoringmethod;
+bool autocvar_g_tmayhem_pickup_items;
+bool autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo;
+bool autocvar_g_tmayhem_unlimited_ammo;
 
 float autocvar_g_tmayhem_start_health = 200;
 float autocvar_g_tmayhem_start_armor = 200;
@@ -79,6 +82,9 @@ MUTATOR_HOOKFUNCTION(tmayhem, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
+	if(!cvar("g_use_ammunition") || autocvar_g_tmayhem_unlimited_ammo)
+		start_items |= IT_UNLIMITED_AMMO;
+
 	start_health       = warmup_start_health       = autocvar_g_tmayhem_start_health;
 	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_tmayhem_start_armor;
 	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_tmayhem_start_ammo_shells;
@@ -124,9 +130,21 @@ MUTATOR_HOOKFUNCTION(tmayhem, FilterItem)
 			return true; 
 		} 
 	}
-	//handle other items, remove unless globally forced on
-	if (autocvar_g_pickup_items <= 0)
+	//remove all items if items are forced off globally
+	if (autocvar_g_pickup_items == 0){
 		return true;
+	}
+	//if items are switched on in this gamemode allow the removal of weapons and ammo still
+	if ((autocvar_g_tmayhem_pickup_items == 1 && autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo == 1) && autocvar_g_pickup_items <= 0){
+		if (item.itemdef.instanceOfAmmo || item.itemdef.instanceOfWeaponPickup){
+			return true;
+		}
+	}
+	//remove items if not globally set to follow mode's settings and locally set off
+	if (autocvar_g_pickup_items == -1 && autocvar_g_tmayhem_pickup_items == 0){
+		return true;
+	}
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, Damage_Calculate)
