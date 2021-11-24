@@ -10,7 +10,7 @@
 
 void Close_Clicked(entity btn, entity me)
 {
-	LOG_INFO("Setting _termsofservice_accepted cvar to ", _Nex_ExtResponseSystem_NewToS);
+	LOG_INFO("Accepted ToS version ", _Nex_ExtResponseSystem_NewToS);
     cvar_set("_termsofservice_accepted", _Nex_ExtResponseSystem_NewToS);
     localcmd("saveconfig");
     if (main.firstRunDialog.shouldShow())
