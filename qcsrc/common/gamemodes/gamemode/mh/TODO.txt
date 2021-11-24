@@ -1,13 +1,16 @@
+fix broken hunters and players not resetting
 
 decide names for teams, runners and hunters?
 
 add g_mh_startitem cvars to the balance files
 
-collision detection which kills the runner(?), check if goombastomp's or touchexplode's code is reusable
+add waypoints on runners
+
+count dead players to be in a team
 
 avoid players bumping into each other and losing speed regardless of team without affecting ^
 
-teleport tagged players to where they got tagged / restore their velocity, coordinates and view angles
+more dynamic, offswitch for shuffle
 
 on-screen notification (and sound?) for getting tagged
 

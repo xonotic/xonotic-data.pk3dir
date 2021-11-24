@@ -15,7 +15,7 @@ string autocvar_g_mh_weaponarena;
 int mh_teams;
 bool allowed_to_spawn_untagged = 1;
 
-int round_counter_for_teamchanging = 1;
+//int round_counter_for_teamchanging = 1;
 
 const int ST_MH_ROUNDS = 1;
 

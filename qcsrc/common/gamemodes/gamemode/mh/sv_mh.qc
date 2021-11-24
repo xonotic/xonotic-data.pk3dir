@@ -1,5 +1,11 @@
 #include "sv_mh.qh"
 
+.bool tagteleport;
+.vector taggedplayerlocation;
+.vector taggedplayervelocity;
+.vector taggedplayerviewangles;
+
+
 MUTATOR_HOOKFUNCTION(mh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "mh_team";
@@ -14,6 +20,35 @@ MUTATOR_HOOKFUNCTION(mh, Scores_CountFragsRemaining)
 // ===================
 //  weaponarena hooks
 // ===================
+
+//damage dealing for tagging
+MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.team == Team_IndexToTeam(1) && !game_stopped && !IS_DEAD(player) && IS_PLAYER(player) && !IS_INDEPENDENT_PLAYER(player))
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player && it.team == Team_IndexToTeam(2), {
+			if(!IS_DEAD(it) && !IS_INDEPENDENT_PLAYER(it))
+			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
+			{
+				float health = GetResource(it, RES_HEALTH);
+				float armor = GetResource(it, RES_ARMOR);
+				float max_dmg;
+				if(autocvar_g_balance_armor_blockpercent == 1){
+					max_dmg = health + armor; //skip handling (1 - autocvar_g_balance_armor_blockpercent) in case of value of 1 as it leads to divide by 0
+				} else {
+					max_dmg = health + bound(0, armor, ((health / (1 - autocvar_g_balance_armor_blockpercent))- health)); 
+				}
+				Damage(it, player, player, max_dmg, DEATH_CAMP.m_id, DMG_NOWEP, player.origin, '0 0 0');
+				it.tagteleport = true;
+				it.taggedplayerlocation = it.origin;
+				it.taggedplayervelocity = it.velocity;
+				it.taggedplayerviewangles = it.angles;
+			}
+		});
+	}
+}
 
 MUTATOR_HOOKFUNCTION(mh, SetWeaponArena)
 {
@@ -240,6 +275,7 @@ void MH_count_alive_players()
 // Team_
 int MH_GetWinnerTeam()
 {
+	//both teams have alive players
 	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1)){
 		return Team_IndexToTeam(2);
 	}
@@ -298,10 +334,11 @@ float MH_CheckWinner()
 	
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_mh_warmup, autocvar_g_mh_round_timelimit);
-	if(pymod(round_counter_for_teamchanging, 2))
-		shuffleteams_on_reset_map = !allowed_to_spawn_untagged; //only shuffle every other round
-	++round_counter_for_teamchanging;
-	FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
+	//if(pymod(round_counter_for_teamchanging, 2))
+	//	shuffleteams_on_reset_map = !allowed_to_spawn_untagged; //only shuffle every other round
+	//++round_counter_for_teamchanging;
+	//FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
+	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 
 	return did_the_round_end;
 }
@@ -381,7 +418,7 @@ void MH_RoundStart()
 MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
-
+	
 	if (!allowed_to_spawn_untagged && IS_PLAYER(player)){ // this is true even when player is trying to join
 		if (CS(player).jointime != time){ // not when connecting
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_MH_JOIN_LATE);
@@ -402,43 +439,6 @@ MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 // Calls:
 // qcsrc/common/mutators/mutator/nades/nades.qc nades_Clear
 void nades_Clear(entity player);
-
-
-
-// ===========
-//  to change
-// ===========
-
-
-
-// Maybe add player teleporting to where they died if they just got tagged?
-
-// Function: 
-// PlayerSpawn
-// Purpose in CA:
-// set flags on the player when they spawn as a player
-// Needed in MH? Purpose?:
-// yes, don't allow players to join runners mid-round
-// Needed modifications for MH:
-// 
-// Called by:
-// a player spawning
-// Calls:
-// none
-MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
-	MH_count_alive_players();
-	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
-		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
-		MoveToTeam(player, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
-		player.deadflag = 0; // with bubblegum and prayers, there probably is probably a better check to use here
-	}
-	//if (!warmup_stage)
-	//	eliminatedPlayers.SendFlags |= 1;
-}
-
-// Maybe add player teleporting to where they died if they just got tagged?
 
 // Function: 
 // PlayerDies
@@ -466,4 +466,51 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 
 	return true;
+}
+
+
+
+// ===========
+//  to change
+// ===========
+
+MUTATOR_HOOKFUNCTION(mh, reset_map_players)
+{
+	FOREACH_CLIENT(true, {
+		CS(it).killcount = 0;
+		TRANSMUTE(Player, it);
+		}
+	);
+	return true;
+}
+
+// Maybe add player teleporting to where they died if they just got tagged?
+
+// Function: 
+// PlayerSpawn
+// Purpose in CA:
+// set flags on the player when they spawn as a player
+// Needed in MH? Purpose?:
+// yes, don't allow players to join runners mid-round
+// Needed modifications for MH:
+// 
+// Called by:
+// a player spawning
+// Calls:
+// none
+MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	MH_count_alive_players();
+	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
+		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
+		MoveToTeam(player, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
+		player.deadflag = 0; // with bubblegum and prayers, there probably is probably a better check to use here
+	}
+	if(player.team == Team_IndexToTeam(1) && !IS_DEAD(player) && player.tagteleport == true && !allowed_to_spawn_untagged){
+		player.tagteleport = false;
+		player.origin = player.taggedplayerlocation;
+		player.velocity = player.taggedplayervelocity;
+		player.angles = player.taggedplayerviewangles;
+	}
 }
