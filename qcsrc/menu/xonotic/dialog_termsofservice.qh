@@ -1,7 +1,5 @@
 #pragma once
 
-bool autocvar__termsofservice_accepted = false;
-
 #include "rootdialog.qh"
 CLASS(XonoticToSDialog, XonoticRootDialog)
 	METHOD(XonoticToSDialog, shouldShow, bool());
@@ -13,7 +11,11 @@ CLASS(XonoticToSDialog, XonoticRootDialog)
 	ATTRIB(XonoticToSDialog, rows, float, 16);
 	ATTRIB(XonoticToSDialog, columns, float, 6.2);
 	ATTRIB(XonoticToSDialog, name, string, "TermsOfService");
+	
+	ATTRIB(XonoticToSDialog, text, string);
 	ATTRIB(XonoticToSDialog, textBox, entity);
 
 	ATTRIB(XonoticToSDialog, closable, float, 0);
 ENDCLASS(XonoticToSDialog)
+
+void XonoticToS_OnGet(entity fh, entity me, int status);

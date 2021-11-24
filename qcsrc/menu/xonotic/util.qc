@@ -356,6 +356,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string s;
 
 	string un_version = "";
+	string un_tosversion = "";
 	string un_download = "";
 	string un_url = "";
 	string un_bannedservers = "";
@@ -374,6 +375,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			case "V":
 			{
 				un_version = s;
+				break;
+			}
+			case "T":
+			{
+				un_tosversion = s;
 				break;
 			}
 			case "C":
@@ -435,6 +441,14 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			}
 		}
 	}
+	
+	if(un_tosversion != "")
+	{
+		if(autocvar__termsofservice_accepted != un_tosversion) {
+			_Nex_ExtResponseSystem_NewToS = strzone(un_tosversion);
+			LOG_INFO("Setting netwos value to ", un_tosversion);
+		}
+	}
 
 	if(un_bannedservers != "")
 	{
@@ -476,6 +490,7 @@ void TOS_URI_Get_Callback(float id, float status, string data)
 
 	_Nex_ExtResponseSystem_TOS = strzone(data);
 	LOG_INFO("Data: ", _Nex_ExtResponseSystem_TOS);
+	LOG_INFO("New TOS version: ", _Nex_ExtResponseSystem_NewToS);
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
@@ -492,17 +507,9 @@ void updateCheck()
 
 		// for privacy, munge the start count a little
 		startcnt = floor((floor(startcnt / 10) + random()) * 10);
-		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+		//uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+		uri = "http://maria.omaera.org/checkupdate.txt";
 		uri_get(uri, URI_GET_UPDATENOTIFICATION);
-	}
-
-	// Terms of Service updater, re-using the existing external response system!
-	if(_Nex_ExtResponseSystem_Queried == 1)
-	{
-		_Nex_ExtResponseSystem_Queried = 2;
-
-		string tosurl = "http://update.xonotic.org/tos.txt";
-		uri_get(tosurl, URI_GET_TOS);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
@@ -612,6 +619,7 @@ void preMenuDraw()
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
+
 	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)

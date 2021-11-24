@@ -79,7 +79,7 @@ void MainWindow_draw(entity me)
 	} else if(!me.disconnectDialogVisibility && (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) {
 
 		// If gamestate is "ingame" (and dialog is not visible),
-		// make disconnect button visible
+		// make disconnect button visiblefosdialog
 		entity n, i;
 		n = me.mainNexposee;
 		i = me.disconnectDialog;

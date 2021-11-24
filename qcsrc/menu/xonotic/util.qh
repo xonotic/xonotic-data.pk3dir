@@ -50,5 +50,8 @@ float _Nex_ExtResponseSystem_PromotedServersNeedsRefresh;
 string _Nex_ExtResponseSystem_RecommendedServers;
 float _Nex_ExtResponseSystem_RecommendedServersNeedsRefresh;
 string _Nex_ExtResponseSystem_TOS;
+string _Nex_ExtResponseSystem_NewToS;
 
 void CheckSendCvars(entity me, string cvarnamestring);
+
+string autocvar__termsofservice_accepted = "0";
