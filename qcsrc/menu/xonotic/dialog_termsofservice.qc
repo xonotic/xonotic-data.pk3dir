@@ -10,11 +10,11 @@
 
 void Close_Clicked(entity btn, entity me)
 {
-	LOG_INFO("Accepted ToS version ", _Nex_ExtResponseSystem_NewToS);
-    cvar_set("_termsofservice_accepted", _Nex_ExtResponseSystem_NewToS);
+    LOG_INFOF("Accepted ToS version %d", _Nex_ExtResponseSystem_NewToS);
+    cvar_set("_termsofservice_accepted", ftos(_Nex_ExtResponseSystem_NewToS));
     localcmd("saveconfig");
     if (main.firstRunDialog.shouldShow())
-		main.firstDraw = true;
+        main.firstDraw = true;
     Dialog_Close(btn, me);
 }
 
@@ -71,8 +71,7 @@ void XonoticToS_OnGet(entity fh, entity me, int status)
 
 bool XonoticToSDialog_shouldShow()
 {
-	LOG_INFO("newtos value: ", _Nex_ExtResponseSystem_NewToS);
-	return (_Nex_ExtResponseSystem_NewToS != "" && _Nex_ExtResponseSystem_NewToS != autocvar__termsofservice_accepted);
+	return (_Nex_ExtResponseSystem_NewToS && _Nex_ExtResponseSystem_NewToS > autocvar__termsofservice_accepted);
 }
 
 void XonoticToSDialog_fill(entity me)
