@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-21 00:34+0000\n"
+"PO-Revision-Date: 2021-11-24 13:13+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -411,7 +411,7 @@ msgstr "QMCMD^Настройки вида/интерфейса"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^3rd person view"
-msgstr "QMCMD^Вид от 3-го лица"
+msgstr "QMCMD^Вид от третьего лица"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Player models like mine"
@@ -2305,7 +2305,8 @@ msgstr "^BGУ вас нет топлива для ^F1Реактивного ра
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
 msgstr ""
-"^F2У вас нет UID, настройки суперзрителя не будут сохранены или восстановлены"
+"^F2У вас нет уникального идентификатора, настройки суперзрителя не будут "
+"сохранены или восстановлены"
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^F1Round already started, you will join the game in the next round"
@@ -2323,7 +2324,7 @@ msgstr "^BG%s%s^K1 был убит ^BG%s^K1 с усилителем ^BG%s^K1 ^K1
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 был растерзан ^BG%s^K1 с усилителем ^BG%s^K1 ^K1%s%s"
+msgstr "^BG%s%s^K1 был фрагнут ^BG%s^K1 с усилителем ^BG%s^K1 ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:262
 #, c-format
@@ -3105,8 +3106,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
 msgstr ""
-"^BG%s^BG установил новый рекорд в ^F2%s^BG, но, к сожалению, у него нет UID, "
-"поэтому рекорд не будет сохранён."
+"^BG%s^BG установил новый рекорд в ^F2%s^BG, но, к сожалению, у него нет "
+"уникального идентификатора и его рекорд не будет сохранён."
 
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
@@ -3115,7 +3116,7 @@ msgid ""
 "lost."
 msgstr ""
 "^BG%s^BG установил новый рекорд в ^F2%s^BG, но, к сожалению, он анонимен и "
-"потому будет потерян."
+"потому потеряется."
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -3140,7 +3141,7 @@ msgid ""
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
 "^F2Вы должны присоединиться к игре в течение %s, в противном случае вы "
-"будете отсоединены от сервера, так как быть зрителем временно запрещено!"
+"будете отключены от сервера, так как быть зрителем временно запрещено!"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
@@ -3720,7 +3721,7 @@ msgstr "^K3%sВы фрагнули ^BG%s"
 #: qcsrc/common/notifications/all.inc:595
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
-msgstr "^K3%sВы отыграли очко у ^BG%s"
+msgstr "^K3%sВы фрагнули ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
@@ -3732,7 +3733,7 @@ msgstr "^K1%sВас фрагнул ^BG%s"
 #: qcsrc/common/notifications/all.inc:597
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr "^K1%sВы проиграли очко ^BG%s"
+msgstr "^K1%sВас фрагнул ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
@@ -3762,7 +3763,7 @@ msgstr "^K1%sВы фрагнули ^BG%s, пока он писал"
 #: qcsrc/common/notifications/all.inc:604
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr "^K1%sВы отыграли очко у ^BG%s^K1 пока они писали"
+msgstr "^K1%sВы фрагнули ^BG%s^K1, пока они писали"
 
 #: qcsrc/common/notifications/all.inc:605
 #, c-format
@@ -3772,7 +3773,7 @@ msgstr "^K1%sПока вы писали, вас фрагнул ^BG%s"
 #: qcsrc/common/notifications/all.inc:606
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr "^K1%sВас фрагнул игрок ^BG%s^K1, пока вы писали"
+msgstr "^K1%sВас фрагнул ^BG%s^K1, пока вы писали"
 
 #: qcsrc/common/notifications/all.inc:612
 #, c-format
@@ -5272,7 +5273,7 @@ msgstr "Тяжёлое Лазерное Орудие"
 #: qcsrc/common/weapons/weapon/hook.qh:20
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:211
 msgid "Grappling Hook"
-msgstr "Захватный крюк"
+msgstr "Крюк"
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:20
 msgid "MachineGun"
@@ -6438,7 +6439,7 @@ msgstr "Показывать только имеющееся оружие"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show weapon ID as:"
-msgstr "Показывать ID оружия:"
+msgstr "Показывать ИД оружия:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "SHOWAS^None"
@@ -6454,7 +6455,7 @@ msgstr "Клавиша"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Weapon ID scale:"
-msgstr "Размер ID оружия:"
+msgstr "Размер ИД оружия:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
@@ -7245,19 +7246,19 @@ msgstr "Не поддерживается (шифрования не будет)
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:143
 msgid "Supported (will encrypt)"
-msgstr "Поддерживается (будет шифрование)"
+msgstr "Поддерживается (будет шифровано)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
 msgid "Supported (won't encrypt)"
-msgstr "Поддерживается (шифрования не будет)"
+msgstr "Поддерживается (не будет шифровано)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:149
 msgid "Requested (will encrypt)"
-msgstr "Запрошено (будет шифрование)"
+msgstr "Запрошено (будет шифровано)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Requested (won't encrypt)"
-msgstr "Запрошено (шифрования не будет)"
+msgstr "Запрошено (не будет шифровано)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:155
 msgid "Required (can't connect)"
@@ -7265,7 +7266,7 @@ msgstr "Требуется (не могу подключиться)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:157
 msgid "Required (will encrypt)"
-msgstr "Требуется (будет шифрование)"
+msgstr "Требуется (будет шифровано)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
@@ -7315,7 +7316,7 @@ msgstr "Шифрование:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:240
 msgid "ID:"
-msgstr "ID:"
+msgstr "ИД:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:245
 msgid "Key:"
@@ -8470,7 +8471,7 @@ msgstr "Показывать имена над игроками"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
-msgstr "Макс. дальность:"
+msgstr "Дальность:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:142
 msgid "Decolorize:"
@@ -8479,7 +8480,7 @@ msgstr "Обесцвечивание:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:146
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "Teamplay"
-msgstr "Командный"
+msgstr "Команды"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:154
 msgid "Only when near crosshair"
@@ -8743,7 +8744,7 @@ msgstr "Настроить, как игроки и предметы будут �
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "1st person perspective"
-msgstr "Вид от 1-ого лица"
+msgstr "Вид от первого лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Slide to third person upon death"
@@ -8767,7 +8768,7 @@ msgstr "Раскачивание при ходьбе"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:50
 msgid "3rd person perspective"
-msgstr "Вид от 3-го лица"
+msgstr "Вид от третьего лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:53
 msgid "Back distance"
@@ -8829,7 +8830,7 @@ msgstr "Быстрота увеличения"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Forward movement only"
-msgstr "Движение только вперёд"
+msgstr "Только при движении вперёд"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
 msgid "VZOOM^Factor"
@@ -8894,7 +8895,7 @@ msgstr "Отключать кнопку атаки при смене оружи�
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr "Рисовать оружие в виде от 1-го лица"
+msgstr "Рисовать модель оружия в виде от первого лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
@@ -9656,7 +9657,7 @@ msgstr "Разрешить статистике использовать ваш�
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "В случае ответа \"Нет\", вы будете известны как \"Anonymous player\""
+msgstr "В случае ответа \"Нет\", вы станете известны как \"Anonymous player\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
@@ -9704,7 +9705,7 @@ msgstr "реактивный ранец"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "Attacking"
-msgstr "Нападение"
+msgstr "Атака"
 
 #: qcsrc/menu/xonotic/keybinder.qc:52
 msgid "WEAPON^previous"
@@ -9752,7 +9753,7 @@ msgstr "увеличить радар"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "3rd person view"
-msgstr "вид от 3-го лица"
+msgstr "вид от третьего лица"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "enter spectator mode"
@@ -9816,7 +9817,7 @@ msgstr "горячее меню"
 
 #: qcsrc/menu/xonotic/keybinder.qc:125
 msgid "User defined"
-msgstr "Определенно пользователем"
+msgstr "Пользовательские"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
