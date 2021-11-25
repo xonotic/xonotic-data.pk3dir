@@ -67,8 +67,8 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		} else {
 			entity entcs = entcs_receiver(pl.sv_entnum);
 			if(entcs.m_entcs_private) {
-				health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * line_sz.x;
-				armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * line_sz_sub.x;
+				health = (min(entcs.healthvalue, autocvar_hud_panel_healtharmor_maxhealth) / autocvar_hud_panel_healtharmor_maxhealth) * line_sz.x;
+				armor = (min(GetResource(entcs, RES_ARMOR), autocvar_hud_panel_healtharmor_maxarmor) / autocvar_hud_panel_healtharmor_maxarmor) * line_sz_sub.x;
 					
 				Weapon wep = REGISTRY_GET(Weapons, entcs.activewepid);
 				icon = strcat("gfx/hud/luma/", wep.model2);
@@ -178,8 +178,8 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	
 	entity entcs = entcs_receiver(pl.sv_entnum);
 	if(entcs.m_entcs_private) {
-		health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * health_sz.x;
-		armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * armor_sz.x;
+		health = (min(entcs.healthvalue, autocvar_hud_panel_healtharmor_maxhealth) / autocvar_hud_panel_healtharmor_maxhealth) * health_sz.x;
+		armor = (min(GetResource(entcs, RES_ARMOR), autocvar_hud_panel_healtharmor_maxarmor) / autocvar_hud_panel_healtharmor_maxarmor) * armor_sz.x;
 	}
 	
 	if(invert)
