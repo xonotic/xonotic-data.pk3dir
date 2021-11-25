@@ -114,7 +114,6 @@ void powerups_DropItem(entity this, StatusEffects effect)
 	wp.wp_extra = item.m_id;
 	wp.wp_reverse = 1;
 	WaypointSprite_UpdateBuildFinished(e.waypointsprite_attached, time + time_to_live);
-	WaypointSprite_Ping(this.waypointsprite_attached);
 }
 
 MUTATOR_HOOKFUNCTION(powerups, ItemTouched)

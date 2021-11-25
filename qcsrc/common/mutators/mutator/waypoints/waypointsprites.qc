@@ -655,20 +655,12 @@ void Draw_WaypointSprite(entity this)
     {
         if (time < this.build_finished + 0.25)
         {
-            float vhealth;
-
             if (time < this.build_started)
-                vhealth = this.build_starthealth;
+                SetResourceExplicit(this, RES_HEALTH, this.build_starthealth);
             else if (time < this.build_finished)
-                vhealth = (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth;
+                SetResourceExplicit(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
             else
-                vhealth = 1;
-
-            if (this.build_reverse)
-                vhealth = 1 - vhealth;
-
-			LOG_INFOF( "Setting health to %f (%f)", vhealth, this.build_starthealth);
-            SetResourceExplicit(this, RES_HEALTH, vhealth);
+                SetResourceExplicit(this, RES_HEALTH, 1);
         }
         else
             SetResourceExplicit(this, RES_HEALTH, -1);
@@ -736,7 +728,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                GetResource(this, RES_HEALTH),
+                (this.build_reverse ? 1 - GetResource(this, RES_HEALTH) : GetResource(this, RES_HEALTH)),
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,
