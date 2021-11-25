@@ -6,6 +6,12 @@
 #include "dialog_multiplayer_join_serverinfo.qh"
 #include <common/mapinfo.qh>
 
+#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
+#define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
+
+float m_gethostcachecategory(float entry) { return CategoryOverride(CategoryForEntry(entry)); }
+
 void SL_ProcessCategoryOverrides(.string override_field_string, .float override_field)
 {
 	for (int i = 0; i < category_ent_count; ++i)
@@ -1107,8 +1113,8 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 	{
 		if(me.nItems != 0)
 		{
-			float thisPos = me.getItemStart(me, me.selectedItem); 
-			float thisHeight = me.getItemHeight(me, me.selectedItem); 
+			float thisPos = me.getItemStart(me, me.selectedItem);
+			float thisHeight = me.getItemHeight(me, me.selectedItem);
 			vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
 			vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
 			m_play_click_sound(MENU_SOUND_OPEN);
