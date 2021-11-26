@@ -77,9 +77,15 @@ bool XonoticToSDialog_shouldShow()
 void XonoticToSDialog_fill(entity me)
 {
 	entity e;
+	string subtitle;
+
+	if (autocvar__termsofservice_accepted > 0)
+		subtitle = _("Terms of Service have been updated. Please read them before continuing:");
+	else
+		subtitle = _("Welcome to Xonotic! Please read the following Terms of Service:");
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Welcome to Xonotic! Please read the following Terms of Service")));
+		me.TD(me, 1, 5, e = makeXonoticTextLabel(0, subtitle));
 		e.allowWrap = 1;
 
     me.TR(me);
