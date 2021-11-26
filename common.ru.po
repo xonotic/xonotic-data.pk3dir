@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-11-24 13:13+0000\n"
+"PO-Revision-Date: 2021-11-26 04:58+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -1136,7 +1136,7 @@ msgstr "Нет"
 
 #: qcsrc/client/hud/panel/weapons.qc:638
 msgid "Unavailable"
-msgstr "Недоступен"
+msgstr "Нет"
 
 #: qcsrc/client/main.qc:289
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1302,7 +1302,7 @@ msgstr "Устанавливайте рекорды."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
-msgstr "Смертельный матч"
+msgstr "Смертельная битва"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
@@ -1441,7 +1441,7 @@ msgstr "Помогите вашей команде набрать больше �
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
-msgstr "Командный матч"
+msgstr "Командная битва"
 
 #: qcsrc/common/items/item/ammo.qh:67
 msgid "bullets"
@@ -1516,7 +1516,7 @@ msgstr "Топливный восстановитель"
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr "@!#%'n Швыряние Тубой"
+msgstr "Швыряние @!#%'й Тубой"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -2354,7 +2354,7 @@ msgstr "^BG%s%s^K1 был прожарен до хрустящей корочк�
 #: qcsrc/common/notifications/all.inc:266
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 был испечён с помощью ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был испечён руками ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:267
 #, c-format
@@ -3196,12 +3196,12 @@ msgstr "^BGУ %s^K1 завяли уши от игры на @!#%%м Баяне%s%
 #: qcsrc/common/notifications/all.inc:444
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 попал под раздачу тока из Дуговой Пушки ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 ударило током из Дугомёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 был взорван кривыми болтами%s%s ^BG%s^K1"
+msgstr "^BG%s%s^K1 был взорван болтами из Дугомёта %s%s ^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
@@ -3495,12 +3495,12 @@ msgstr "^BG%s^K1 теперь будет относиться к портала�
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
-msgstr "^BG%s%s^K1 умер от убийственной игры ^BG%s^K1 на @!#%%й Тубе%s%s"
+msgstr "^BG%s%s^K1 умер от убийственной игры ^BG%s^K1 на @!#%%'й Тубе%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"
-msgstr "^BGУ %s^K1 завяли уши от собственной игры @!#%%й Тубе%s%s"
+msgstr "^BGУ %s^K1 завяли уши от собственной игры на @!#%%'й Тубе%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
@@ -4582,12 +4582,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:500 qcsrc/common/notifications/all.qh:513
 #, c-format
 msgid "%d score spree! "
-msgstr "%d очков подряд! "
+msgstr "Серия очков: %d! "
 
 #: qcsrc/common/notifications/all.qh:512
 #, c-format
 msgid "%d frag spree! "
-msgstr "%d убийств подряд! "
+msgstr "Серия фрагов: %d! "
 
 #: qcsrc/common/notifications/all.qh:525
 msgid "First blood! "
@@ -5240,7 +5240,7 @@ msgstr "Паук-бот"
 
 #: qcsrc/common/weapons/weapon/arc.qh:20
 msgid "Arc"
-msgstr "Дуговая пушка"
+msgstr "Дугомёт"
 
 #: qcsrc/common/weapons/weapon/blaster.qh:20
 msgid "Blaster"
@@ -5310,7 +5310,7 @@ msgstr "Дробовик"
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'а Туба"
+msgstr "@!#%'я Туба"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:21
 msgid "Vaporizer"
@@ -7193,8 +7193,7 @@ msgstr "Пауза"
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
-"Приостановить обновление списка серверов для закрепления серверов на одном "
-"месте"
+"Приостановить обновление списка для закрепления серверов на одном месте"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
@@ -8569,7 +8568,7 @@ msgstr "Печатать на отдельных линиях"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
-msgstr "Добавлять расширенную информацию о фрагах в центральной панели"
+msgstr "Добавлять расширенные сведения о фрагах в центральной панели"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
@@ -8591,7 +8590,7 @@ msgstr "Отображать имя захватчика флага в режи�
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:123
 msgid "Other"
-msgstr "Другие"
+msgstr "Прочее"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
@@ -9122,11 +9121,11 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Client-side movement prediction"
-msgstr "Предсказание движения на стороне клиента"
+msgstr "Предсказывать движения на стороне клиента"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid "Movement error compensation"
-msgstr "Компенсация ошибок движения"
+msgstr "Компенсировать ошибки движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "Use encryption (AES) when available"
@@ -9733,11 +9732,11 @@ msgstr "бросить оружие / гранату"
 
 #: qcsrc/menu/xonotic/keybinder.qc:84
 msgid "hold zoom"
-msgstr "держать для увеличения"
+msgstr "увеличитель по удержанию"
 
 #: qcsrc/menu/xonotic/keybinder.qc:85
 msgid "toggle zoom"
-msgstr "переключать увеличение"
+msgstr "увеличитель по нажатию"
 
 #: qcsrc/menu/xonotic/keybinder.qc:86
 msgid "show scores"
