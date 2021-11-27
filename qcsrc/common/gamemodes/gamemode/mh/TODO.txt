@@ -1,5 +1,11 @@
 add g_mh_startitem cvars to the balance files
 
+weapon support
+
+fix waypoints on hunters
+
+score bonus for last survivor
+
 fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for self or for spectators of that player.
 
 rename teams as far as possible
