@@ -108,19 +108,6 @@ void powerups_DropItem(entity this, StatusEffects effect)
 
 	if(autocvar_g_powerups_dropondeath != 2)
 		Item_SetExpiring(e, true);
-
-	// Create expiring waypoint
-	entity wp = WaypointSprite_Spawn(WP_Item, time_to_live * -1, 0, e, '0 0 1' * e.maxs.z, NULL, 0, e, waypointsprite_attached, true, RADARICON_Item);
-	wp.wp_extra = item.m_id;
-	wp.wp_reverse = 1;
-	WaypointSprite_UpdateBuildFinished(e.waypointsprite_attached, time + time_to_live);
-}
-
-MUTATOR_HOOKFUNCTION(powerups, ItemTouched)
-{
-	entity e = M_ARGV(0, entity);
-	if(e.waypointsprite_attached)
-		WaypointSprite_Kill(e.waypointsprite_attached);
 }
 
 MUTATOR_HOOKFUNCTION(powerups, PlayerDies)

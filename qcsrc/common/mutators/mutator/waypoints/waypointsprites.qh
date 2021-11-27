@@ -4,7 +4,6 @@
 
 /** Additional networked waypoint state, used for items, weapons, buffs */
 .int wp_extra;
-.int wp_reverse;
 
 const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;
@@ -27,7 +26,6 @@ classfield(WaypointSprite) .float health;
 classfield(WaypointSprite) .float build_started;
 classfield(WaypointSprite) .float build_starthealth;
 classfield(WaypointSprite) .float build_finished;
-classfield(WaypointSprite) .int build_reverse;
 
 bool autocvar_cl_hidewaypoints;
 

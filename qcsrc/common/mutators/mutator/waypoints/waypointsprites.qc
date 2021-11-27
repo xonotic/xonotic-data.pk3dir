@@ -38,7 +38,6 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
             dt = bound(0, dt * 32, 16383);
             WriteByte(MSG_ENTITY, (dt & 0xFF00) / 256 + 192);
             WriteByte(MSG_ENTITY, (dt & 0x00FF));
-            WriteByte(MSG_ENTITY, this.wp_reverse);
         }
     }
 
@@ -138,7 +137,6 @@ void Ent_WaypointSprite(entity this, bool isnew)
             else
                 this.build_starthealth = 0;
             this.build_finished = servertime + t / 32;
-            this.build_reverse = ReadByte();
         }
     }
     else
@@ -540,12 +538,7 @@ void Draw_WaypointSprite(entity this)
         a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1) ** waypointsprite_distancealphaexponent);
     }
 
-    vector rgb;
-    if(this.build_reverse)
-        rgb = '1 0 0';
-    else
-        rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
-
+    vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
     {
         this.teamradar_color = '1 0 1';
@@ -728,7 +721,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                (this.build_reverse ? 1 - GetResource(this, RES_HEALTH) : GetResource(this, RES_HEALTH)),
+                GetResource(this, RES_HEALTH),
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,
