@@ -11,6 +11,9 @@ bool autocvar_g_mh_team_spawns;
 float autocvar_g_mh_warmup;
 float autocvar_g_mh_round_timelimit;
 string autocvar_g_mh_weaponarena;
+int autocvar_g_mh_weapons_damage;
+int autocvar_g_mh_weapons_force;
+bool autocvar_g_mh_limited_ammunition;
 
 int mh_teams;
 bool allowed_to_spawn_untagged = 1;

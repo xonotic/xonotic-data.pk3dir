@@ -49,6 +49,77 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+	
+	if(frag_deathtype==DEATH_CAMP.m_id)return;
+	
+	if(IS_PLAYER(frag_target) && !IS_DEAD(frag_target)){ //check that the target is a player and not dead, allows anyone to knock around corpses for funsies
+
+		if(frag_deathtype == DEATH_FALL.m_id)frag_damage = 0; //no fall damage or splat damage
+
+		switch(autocvar_g_mh_weapons_damage)
+		{
+			// no damage
+			default:
+			case 0: {
+				frag_damage = 0;
+				break;
+			}
+			// only self-damage for runners
+			case 1: {
+				if(frag_target != frag_attacker)frag_damage = 0;
+				break;
+			}
+			// only damage opposing team
+			case 2: {
+				if(SAME_TEAM(frag_target, frag_attacker))frag_damage = 0;
+				break;
+			}
+			// only allow hunters to damage runners
+			case 3: {
+				//print(sprintf("%f", frag_attacker.team));
+				//print("\n");
+				//print(sprintf("%f", frag_target.team));
+				//print("\n");
+				if(!((frag_attacker.team==5) && (frag_target.team==14)))frag_damage = 0;
+				break;
+			}
+			// self-damage and opposing team damage
+			case 4: {
+				if(frag_target != frag_attacker && SAME_TEAM(frag_target, frag_attacker))frag_damage = 0;
+				break;
+			}
+		}
+		switch(autocvar_g_mh_weapons_force){
+			// no force
+			case 0: {
+				frag_force = '0 0 0';
+				break;
+			}
+			// only self-force
+			default:
+			case 1: {
+				if(frag_target != frag_attacker)frag_force = '0 0 0';
+				break;
+			}
+			// self-force and opposing team force
+			case 2: {
+				if(frag_target != frag_attacker && SAME_TEAM(frag_target, frag_attacker))frag_force = '0 0 0';
+				break;
+			}
+		}
+	}
+
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(6, vector) = frag_force;
+}
+
 MUTATOR_HOOKFUNCTION(mh, SetWeaponArena)
 {
 	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
@@ -59,6 +130,9 @@ MUTATOR_HOOKFUNCTION(mh, SetWeaponArena)
 MUTATOR_HOOKFUNCTION(mh, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
+	if(!cvar("g_use_ammunition") || autocvar_g_mh_limited_ammunition)
+		start_items |= IT_UNLIMITED_AMMO;
+
 	start_health       = warmup_start_health       = cvar("g_ca_start_health");
 	start_armorvalue   = warmup_start_armorvalue   = cvar("g_ca_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_ca_start_ammo_shells");
@@ -106,7 +180,7 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 
 // "wtf do these functions do" chart
 
-// all functions:					refactor			documented:
+// functions:						refactor			documented:
 //                                  finished:			:)
 
 // mh_LastPlayerForTeam				y					y
@@ -312,9 +386,16 @@ float MH_CheckWinner()
 	int did_the_round_end = 0;
 	MH_count_players();
 	int winner_team = MH_GetWinnerTeam();
-	if(winner_team == 14)
+	if(winner_team == 14){
+		//(total amount of players divided by total amount of runners) divided by 2[because of initial team split] amount of score per second divided over X ticks per second
+		//(2 total players / 1 total runner) / 2 = 1 score per second
+		//(9 total players / 3 total runners) / 2 = 1.5 score per second (5v4 in the beginning and only 1 person has been tagged making it 6v3)
+		//(10 total players / 1 total runner) / 2 = 5 score per second (5v5 in which only 1 runner is alive, they gain 5 score per second as last alive)
+		//(10 total players / 9 total runners) / 2 = 0.55556 score per second(1 hunter and 9 runners, doesn't really award runners for stacking for that team)
+		float survivalscore = (((total_players/(Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(2))))/2)/(1/cvar("sys_ticrate")));
 		FOREACH_CLIENT(IS_PLAYER(it) && it.team == 14, 
-			{ GameRules_scoring_add_team(it, SCORE, (0.016666667)); }); //add 1 score to each runner's score per second at 60 tickrate
+			{ GameRules_scoring_add_team(it, SCORE, (survivalscore)); }); //add 1 score to each runner's score per second at 60 tickrate
+	}
 	if(round_handler_GetEndTime() - time > 0 && winner_team == Team_IndexToTeam(2)){
 		did_the_round_end = 0;
 	} else if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0 && winner_team == Team_IndexToTeam(2)){
@@ -323,7 +404,7 @@ float MH_CheckWinner()
 		TeamScore_AddToTeam(winner_team, ST_MH_ROUNDS, +1);
 		did_the_round_end = 1;
 		FOREACH_CLIENT(IS_PLAYER(it) && it.team == 14,
-			{ GameRules_scoring_add_team(it, SCORE, (30)); }); //add 30 score to each runner's score
+			{ GameRules_scoring_add_team(it, SCORE, (autocvar_g_mh_round_timelimit)); }); //add score to each runner's score, equal to the round timelimit
 	} else if(winner_team == Team_IndexToTeam(1)){
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN)); //replace with hunters win
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));     //replace with hunters win
@@ -334,7 +415,7 @@ float MH_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 		did_the_round_end = 1;
 	} else {
-		//print("Error: Ran out of appropriate team win situations\n");
+		print("Error: Ran out of appropriate team win situations\n");
 	}
 	
 	if(did_the_round_end == 0)return 0;
@@ -532,7 +613,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	}
 	//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player; 
 	if(autocvar_g_mh_player_waypoints == 2){
-		if(player.team == Team_IndexToTeam(2))
+		if(player.team == Team_IndexToTeam(1))
 		{
 			WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
 			//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player;

@@ -1,17 +1,20 @@
 add g_mh_startitem cvars to the balance files
 
-weapon support
-
-fix waypoints on hunters
-
-score bonus for last survivor
-
-fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for self or for spectators of that player.
++1 waypoint mode, waypoints for runners on round start always and waypoints for hunters when there are 3 or more hunters
 
 rename teams as far as possible
 
-more dynamicity for the code :)
-
 on-screen notification for getting tagged
 
+on-screen indication for your role
+
+gamemode icon
+
+more dynamicity for the code :)
+
 add more TODO: notes
+
+
+
+fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for self or for spectators of that player.
+can you even see your own null waypoint?

@@ -457,6 +457,17 @@ void cvar_changes_init()
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maxplayers");
+		BADCVAR("g_mh_team_spawns");
+		BADCVAR("g_mh_point_limit");
+		BADCVAR("g_mh_warmup");
+		BADCVAR("g_mh_round_timelimit");
+		BADCVAR("g_mh_how_many_rounds_before_shuffle");
+		BADCVAR("g_mh_enable_tagging_on_touch");
+		BADCVAR("g_mh_player_waypoints");
+		BADCVAR("g_mh_weaponarena");
+		BADCVAR("g_mh_weapons_damage");
+		BADCVAR("g_mh_weapons_force");
+		BADCVAR("g_mh_limited_ammunition");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_norecoil");
