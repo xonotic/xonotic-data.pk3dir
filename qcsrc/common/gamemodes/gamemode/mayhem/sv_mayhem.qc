@@ -162,6 +162,7 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 				frag_deathtype == DEATH_SLIME.m_id ||
 				frag_deathtype == DEATH_SWAMP.m_id))
 					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
+			return;
 		}
 		
 		//combined damage and frags
@@ -199,6 +200,7 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 				frag_deathtype == DEATH_SLIME.m_id ||
 				frag_deathtype == DEATH_SWAMP.m_id))
 					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
+			return;
 		}
 	}
 }
