@@ -57,11 +57,16 @@ MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 	
-	if(frag_deathtype==DEATH_CAMP.m_id)return;
+	if(frag_deathtype == DEATH_FALL.m_id){
+		M_ARGV(4, float) = 0; //no fall damage or splat damage
+		return;
+	}
+	
+	if(frag_deathtype==DEATH_CAMP.m_id || !IS_PLAYER(frag_attacker)return;
 	
 	if(IS_PLAYER(frag_target) && !IS_DEAD(frag_target)){ //check that the target is a player and not dead, allows anyone to knock around corpses for funsies
 
-		if(frag_deathtype == DEATH_FALL.m_id)frag_damage = 0; //no fall damage or splat damage
+		
 
 		switch(autocvar_g_mh_weapons_damage)
 		{

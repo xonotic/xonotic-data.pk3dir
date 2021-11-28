@@ -16,7 +16,7 @@ CLASS(Manhunt, Gametype)
 	}
 	METHOD(Manhunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
-		if(spawnpoints >= 4 && diameter > 4096)
+		if(spawnpoints >= 2 && diameter > 4096)
 			return true;
 		return false;
 	}

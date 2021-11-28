@@ -1,8 +1,12 @@
 add g_mh_startitem cvars to the balance files
 
-+1 waypoint mode, waypoints for runners on round start always and waypoints for hunters when there are 3 or more hunters
++2 waypoint modes, 
+waypoints for runners on round start always and waypoints for hunters when there are 3 or more hunters
+only runners can see other runners but hunters don't see others
 
 rename teams as far as possible
+
+find a proper damage type for tagging instead of death by camping as it doesn't show kill notifications or text
 
 on-screen notification for getting tagged
 
@@ -16,5 +20,4 @@ add more TODO: notes
 
 
 
-fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for self or for spectators of that player.
-can you even see your own null waypoint?
+fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for spectators of that player.
