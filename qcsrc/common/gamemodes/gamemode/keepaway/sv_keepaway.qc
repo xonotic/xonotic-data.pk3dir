@@ -27,6 +27,7 @@ float autocvar_g_keepaway_score_timeinterval;
 float autocvar_g_keepawayball_damageforcescale;
 int autocvar_g_keepawayball_effects;
 float autocvar_g_keepawayball_respawntime;
+float autocvar_g_keepawayball_wait;
 int autocvar_g_keepawayball_trail_color;
 
 bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
@@ -179,7 +180,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	// reset the ball
 	setattachment(ball, NULL, "");
 	set_movetype(ball, MOVETYPE_BOUNCE);
-	ball.wait = time + 1;
+	ball.wait = time + autocvar_g_keepawayball_wait;
 	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
