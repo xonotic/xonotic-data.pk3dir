@@ -2,12 +2,10 @@
 
 #include <common/mapinfo.qh>
 
-
 bool autocvar_g_mh_not_dm_maps;
 
 #ifdef CSQC
 void HUD_Mod_MH(vector pos, vector mySize);
-void HUD_Mod_MH_Export(int fh);
 #endif
 CLASS(Manhunt, Gametype)
 	INIT(Manhunt)
@@ -16,7 +14,7 @@ CLASS(Manhunt, Gametype)
 	}
 	METHOD(Manhunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
-		if(spawnpoints >= 4 && diameter > 4096)
+		if(spawnpoints >= 2 && diameter > 4096)
 			return true;
 		return false;
 	}
@@ -24,7 +22,7 @@ CLASS(Manhunt, Gametype)
 	{
 		if(!autocvar_g_mh_not_dm_maps)
 		{
-			// if this is unset, all DM maps support MMM too
+			// if this is unset, all DM maps support MH too
 			if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
 				return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
 		}
@@ -38,7 +36,17 @@ CLASS(Manhunt, Gametype)
 		TC(Gametype, this);
 		returns(menu, _("Point limit:"),     5,  100,  5, "g_mh_point_limit",         "g_mh_teams_override",         _("The amount of points needed before the match will end"));
 	}
+#ifdef CSQC
+    ATTRIB(Manhunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_MH);
+#endif
 	ATTRIB(Manhunt, m_legacydefaults, string, "50 20 2 0");
 ENDCLASS(Manhunt)
 REGISTER_GAMETYPE(MANHUNT, NEW(Manhunt));
 #define g_mh IS_GAMETYPE(MANHUNT)
+
+#ifdef GAMEQC
+// shared state signalling the player's mh status
+.int mh_status;
+const int MH_STATUS_HUNTER = 1;
+const int MH_STATUS_RUNNER = 2;
+#endif

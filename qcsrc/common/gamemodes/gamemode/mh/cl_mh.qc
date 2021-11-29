@@ -1,83 +1,56 @@
 #include "cl_mh.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/modicons.qh>
 
-// TODO: change this?
-
-void HUD_Mod_MH_Export(int fh)
-{
-	HUD_Write_Cvar("hud_panel_modicons_mh_layout");
-}
-
-void DrawMHItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
-{
-	TC(int, layout); TC(int, i);
-	int stat = -1;
-	string pic = "";
-	vector color = '0 0 0';
-	switch(i)
-	{
-		case 0: stat = STAT(REDALIVE); pic = "player_red"; color = '1 0 0'; break;
-		case 1: stat = STAT(BLUEALIVE); pic = "player_blue"; color = '0 0 1'; break;
-		case 2: stat = STAT(YELLOWALIVE); pic = "player_yellow"; color = '1 1 0'; break;
-		default:
-		case 3: stat = STAT(PINKALIVE); pic = "player_pink"; color = '1 0 1'; break;
-	}
-
-	if(mySize.x/mySize.y > aspect_ratio)
-	{
-		i = aspect_ratio * mySize.y;
-		myPos.x = myPos.x + (mySize.x - i) / 2;
-		mySize.x = i;
-	}
-	else
-	{
-		i = 1/aspect_ratio * mySize.x;
-		myPos.y = myPos.y + (mySize.y - i) / 2;
-		mySize.y = i;
-	}
-
-	if(layout)
-	{
-		drawpic_aspect_skin(myPos, pic, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(myPos + eX * 0.5 * mySize.x, ftos(stat), vec2(0.5 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-	else
-		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-}
-
-void HUD_Mod_MH_Draw(vector myPos, vector mySize, int layout)
-{
-	int rows, columns;
-	float aspect_ratio;
-	aspect_ratio = (layout) ? 2 : 1;
-	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
-	columns = ceil(team_count/rows);
-
-	int i;
-	float row = 0, column = 0;
-	vector pos = '0 0 0', itemSize;
-	itemSize = vec2(mySize.x / columns, mySize.y / rows);
-	for(i=0; i<team_count; ++i)
-	{
-		pos.x = myPos.x + column * itemSize.x;
-		pos.y = myPos.y + row * itemSize.y;
-
-		DrawMHItem(pos, itemSize, aspect_ratio, layout, i);
-
-		++row;
-		if(row >= rows)
-		{
-			row = 0;
-			++column;
-		}
-	}
-}
-
-// Clan Arena and Freeze Tag HUD modicons
-void HUD_Mod_MH(vector myPos, vector mySize)
+void HUD_Mod_MH(vector pos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 
-	HUD_Mod_MH_Draw(myPos, mySize, autocvar_hud_panel_modicons_mh_layout);
+	int mystatus = entcs_receiver(player_localnum).mh_status;
+	string player_text = "";
+	vector player_color = '1 1 1';
+	//string player_icon = "";
+	if(mystatus == MH_STATUS_HUNTER)
+	{
+		player_text = _("Hunter");
+		player_color = '1 0 0';
+		//player_icon = "player_red";
+	}
+	else if(mystatus == MH_STATUS_RUNNER)
+	{
+		player_text = _("Runner");
+		player_color = '0 0 1';
+		//player_icon = "player_blue";
+	}
+	else
+	{
+		// if the player has no valid status, don't draw anything
+		return;
+	}
+
+	string time_text = string_null;
+	vector timer_color = '1 1 1';
+	if(!STAT(GAME_STOPPED) && !warmup_stage && STAT(MH_ROUNDTIMER) > 0)
+	{
+		float timeleft = max(0, STAT(MH_ROUNDTIMER) - time);
+		timeleft = ceil(timeleft);
+		float minutesLeft = floor(timeleft / 60);
+		time_text = seconds_tostring(timeleft);
+		if(intermission_time || minutesLeft >= 5 || warmup_stage || STAT(MH_ROUNDTIMER) == 0)
+			timer_color = '1 1 1'; //white
+		else if(minutesLeft >= 1)
+			timer_color = '1 1 0'; //yellow
+		else
+			timer_color = '1 0 0'; //red
+	}
+
+	//drawpic_aspect_skin(pos, player_icon, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if(!time_text)
+		drawstring_aspect(pos, player_text, vec2(mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	else
+	{
+		drawstring_aspect(pos, player_text, vec2(0.5 * mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * (0.5 * mySize.x), time_text, vec2(0.5 * mySize.x, mySize.y), timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 }

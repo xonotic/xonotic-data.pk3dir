@@ -5,6 +5,23 @@
 .vector taggedplayervelocity;
 .vector taggedplayerviewangles;
 
+void MH_FakeTimeLimit(entity e, float t)
+{
+	if(!IS_REAL_CLIENT(e))
+		return;
+#if 0
+	msg_entity = e;
+	WriteByte(MSG_ONE, 3); // svc_updatestat
+	WriteByte(MSG_ONE, 236); // STAT_TIMELIMIT
+	if(t < 0)
+		WriteCoord(MSG_ONE, autocvar_timelimit);
+	else
+		WriteCoord(MSG_ONE, (t + 1) / 60);
+#else
+	STAT(MH_ROUNDTIMER, e) = t;
+#endif
+}
+
 MUTATOR_HOOKFUNCTION(mh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "mh_team";
@@ -47,6 +64,11 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 			}
 		});
 	}
+
+	if(player.team == Team_IndexToTeam(1))
+		player.mh_status = MH_STATUS_HUNTER;
+	else if(player.team == Team_IndexToTeam(2))
+		player.mh_status = MH_STATUS_RUNNER;
 }
 
 MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
@@ -57,11 +79,15 @@ MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 	
-	if(frag_deathtype==DEATH_CAMP.m_id)return;
+	if(frag_deathtype == DEATH_FALL.m_id){
+		M_ARGV(4, float) = 0; //no fall damage or splat damage
+		return;
+	}
+	
+	if(frag_deathtype==DEATH_CAMP.m_id || !IS_PLAYER(frag_attacker)) return;
+
 	
 	if(IS_PLAYER(frag_target) && !IS_DEAD(frag_target)){ //check that the target is a player and not dead, allows anyone to knock around corpses for funsies
-
-		if(frag_deathtype == DEATH_FALL.m_id)frag_damage = 0; //no fall damage or splat damage
 
 		switch(autocvar_g_mh_weapons_damage)
 		{
@@ -196,7 +222,7 @@ MUTATOR_HOOKFUNCTION(mh, GiveFragsForKill, CBC_ORDER_FIRST)
 // MH_CheckWinner					y					y
 // MH_RoundStart					y					y
 // MH_CheckTeams					y					y
-			
+
 
 
 // general order which they are called in / when they are called:
@@ -287,6 +313,19 @@ MUTATOR_HOOKFUNCTION(mh, ClientDisconnect)
 
 	}
 	return true;
+}
+
+// when players want to spec, clear team HUD
+MUTATOR_HOOKFUNCTION(mh, MakePlayerObserver)
+{
+	entity player = M_ARGV(0, entity);
+
+	if (IS_PLAYER(player) && !IS_DEAD(player))
+		mh_LastPlayerForTeam_Notify(player);
+		
+	player.mh_status = 0;
+	MH_FakeTimeLimit(player, -1); // restore original timelimit
+	return false;  // allow team reset
 }
 
 // Function: 
@@ -426,7 +465,7 @@ float MH_CheckWinner()
 		shuffleteams_on_reset_map = !allowed_to_spawn_untagged;
 	++round_counter_for_teamchanging;
 	//FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
+	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); MH_FakeTimeLimit(it, -1); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 
 	return did_the_round_end;
 }
@@ -490,15 +529,30 @@ void MH_RoundStart()
 {
 	allowed_to_spawn_untagged = boolean(warmup_stage);
 	if(autocvar_g_mh_player_waypoints == 0){
+		FOREACH_CLIENT(IS_PLAYER(it), 
+		{
+			if(it.team == Team_IndexToTeam(1))
+				it.mh_status = MH_STATUS_HUNTER;
+			else if(it.team == Team_IndexToTeam(2))
+				it.mh_status = MH_STATUS_RUNNER;
+			MH_FakeTimeLimit(it, round_handler_GetEndTime());
+		});
 		return;
 	} else if(autocvar_g_mh_player_waypoints == 1 || autocvar_g_mh_player_waypoints == 2){
-		FOREACH_CLIENT(IS_PLAYER(it) && it.team == Team_IndexToTeam(2), 
+		FOREACH_CLIENT(IS_PLAYER(it), 
 		{
-			WaypointSprite_AttachCarrier(WP_Null, it, RADARICON_FLAGCARRIER);
-			WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-			vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
-			WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
-			WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+			if(it.team == Team_IndexToTeam(1))
+				it.mh_status = MH_STATUS_HUNTER;
+			else if(it.team == Team_IndexToTeam(2))
+			{
+				it.mh_status = MH_STATUS_RUNNER;
+				WaypointSprite_AttachCarrier(WP_Null, it, RADARICON_FLAGCARRIER);
+				WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+				vector pl_color = colormapPaletteColor(it.clientcolors, false);
+				WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
+				WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+			}
+			MH_FakeTimeLimit(it, round_handler_GetEndTime());
 		});
 	}
 }
@@ -521,6 +575,7 @@ MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 	
 	if (!allowed_to_spawn_untagged && IS_PLAYER(player) && round_handler_IsRoundStarted()){ // this can be true even when player is trying to join
 		if (CS(player).jointime != time){ // not when connecting
+			MH_FakeTimeLimit(player, round_handler_GetEndTime() - CS(player).jointime); // set HUD with current round time
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_MH_JOIN_LATE);
 		}
 	}
@@ -601,11 +656,13 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	player.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	MH_count_players();
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
+		player.mh_status = MH_STATUS_RUNNER;
 		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
 		MoveToTeam(player, 1, 6); //index of 1 static is wrong way but it's working somehow with bubblegum and prayers
 		player.deadflag = 0; // with bubblegum and prayers, there probably is probably a better check to use here
 	}
 	if(player.team == Team_IndexToTeam(1) && !IS_DEAD(player) && player.tagteleport == true && !allowed_to_spawn_untagged){
+		player.mh_status = MH_STATUS_HUNTER;
 		player.tagteleport = false;
 		player.origin = player.taggedplayerlocation;
 		player.velocity = player.taggedplayervelocity;
@@ -615,6 +672,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	if(autocvar_g_mh_player_waypoints == 2){
 		if(player.team == Team_IndexToTeam(1))
 		{
+			player.mh_status = MH_STATUS_HUNTER;
 			WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
 			//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
@@ -630,6 +688,11 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
+		MH_FakeTimeLimit(it, -1);
+		if(it.team == Team_IndexToTeam(1))
+			it.mh_status = MH_STATUS_HUNTER;
+		else if(it.team == Team_IndexToTeam(2))
+			it.mh_status = MH_STATUS_RUNNER;
 		PutClientInServer(it);
 		}
 	);

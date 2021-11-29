@@ -157,6 +157,11 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
 	{ ent.sv_solid = ReadByte(); })
 
+// gamemode specific player mh status (independent of score and frags)
+ENTCS_PROP(MH_STATUS, true, mh_status, mh_status, ENTCS_SET_NORMAL,
+	{ WriteShort(chan, ent.mh_status); },
+	{ ent.mh_status = ReadShort(); })
+
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0, ENTCS_PRIVATEMASK = 0;

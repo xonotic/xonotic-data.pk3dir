@@ -1,7 +1,3 @@
 #pragma once
 
-int autocvar_hud_panel_modicons_mh_layout;
-
 void HUD_Mod_MH(vector myPos, vector mySize);
-void HUD_Mod_MH_Draw(vector myPos, vector mySize, int layout);
-void HUD_Mod_MH_Export(int fh);
