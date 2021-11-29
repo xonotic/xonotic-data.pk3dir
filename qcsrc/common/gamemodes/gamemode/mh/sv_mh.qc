@@ -315,7 +315,7 @@ MUTATOR_HOOKFUNCTION(mh, ClientDisconnect)
 	return true;
 }
 
-// when players want to spec, clear team HUD
+// when players want to spec, clear HUD
 MUTATOR_HOOKFUNCTION(mh, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
@@ -655,6 +655,13 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	player.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	MH_count_players();
+	
+	if(autocvar_g_mh_hunterblind)
+	{
+		if(player.team == Team_IndexToTeam(1))
+			HunterEyesStart(player); // Hunters can't see anything until round starts
+	}
+	
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
 		player.mh_status = MH_STATUS_RUNNER;
 		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
@@ -672,7 +679,6 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	if(autocvar_g_mh_player_waypoints == 2){
 		if(player.team == Team_IndexToTeam(1))
 		{
-			player.mh_status = MH_STATUS_HUNTER;
 			WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
 			//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
@@ -690,7 +696,11 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_players)
 		CS(it).killcount = 0;
 		MH_FakeTimeLimit(it, -1);
 		if(it.team == Team_IndexToTeam(1))
+		{
+			if(autocvar_g_mh_hunterblind)
+				HunterEyesStart(it); // Hunters can't see anything until round starts
 			it.mh_status = MH_STATUS_HUNTER;
+		}
 		else if(it.team == Team_IndexToTeam(2))
 			it.mh_status = MH_STATUS_RUNNER;
 		PutClientInServer(it);

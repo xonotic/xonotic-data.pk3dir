@@ -14,6 +14,7 @@ string autocvar_g_mh_weaponarena;
 int autocvar_g_mh_weapons_damage;
 int autocvar_g_mh_weapons_force;
 bool autocvar_g_mh_limited_ammunition;
+bool autocvar_g_mh_hunterblind;
 
 int mh_teams;
 bool allowed_to_spawn_untagged = 1;
