@@ -679,6 +679,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	if(autocvar_g_mh_player_waypoints == 2){
 		if(player.team == Team_IndexToTeam(1))
 		{
+			player.mh_status = MH_STATUS_HUNTER;
 			WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
 			//player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = mh_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
