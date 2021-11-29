@@ -548,7 +548,7 @@ void MH_RoundStart()
 				it.mh_status = MH_STATUS_RUNNER;
 				WaypointSprite_AttachCarrier(WP_Null, it, RADARICON_FLAGCARRIER);
 				WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-				vector pl_color = colormapPaletteColor(it.clientcolors, false);
+				vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
 				WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
 				WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
 			}
