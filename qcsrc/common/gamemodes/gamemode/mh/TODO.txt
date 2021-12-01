@@ -8,9 +8,7 @@ rename teams as far as possible
 
 find a proper damage type for tagging instead of death by camping as it doesn't show kill notifications or text
 
-on-screen notification for getting tagged
-
-on-screen indication for your role
+add a cvar to disable teleportating the first spawned hunter to where last runner got tagged on round reset
 
 gamemode icon (WIP)
 
