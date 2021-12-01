@@ -6,14 +6,15 @@
 # Basil <cigariscigar@gmail.com>, 2011,2013
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 # Basil <cigariscigar@gmail.com>, 2011,2013
+# Ihor Andreev, 2021
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-11-30 13:08+0000\n"
+"Last-Translator: Ihor Andreev\n"
 "Language-Team: Ukrainian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -28,12 +29,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Успішно експортовано в %s! (Примітка: він збережений в data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Не вдалося записати в %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
@@ -50,11 +51,11 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:177
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Повідомлення протягом %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:182
 msgid "Generic message"
-msgstr ""
+msgstr "Загальне повідомлення"
 
 #: qcsrc/client/hud/panel/chat.qc:98
 msgid "^3Player^7: This is the chat area."
@@ -94,12 +95,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
 msgid "next weapon"
-msgstr ""
+msgstr "Наступна зброя"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
 msgid "previous weapon"
-msgstr ""
+msgstr "попередня зброя"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -139,7 +140,7 @@ msgstr "^1Натисніть ^3%s^1 щоб приєднатися"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/common/notifications/all.qh:430
 msgid "jump"
-msgstr ""
+msgstr "стрибок"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 #, c-format
@@ -196,11 +197,11 @@ msgstr "командне меню"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Спостерігаєте за:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Спостерігають за тобою:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -244,11 +245,11 @@ msgstr "Продовжити..."
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "Chat"
-msgstr ""
+msgstr "Чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Надіслати публічне повідомлення в"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^:-) / nice one"
@@ -260,19 +261,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^гарна гра"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^привіт/успіхів"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^привіт / успіхів та веселощів"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Надіслати англійською мовою"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 #: qcsrc/client/hud/panel/quickmenu.qc:834
@@ -970,7 +971,7 @@ msgstr "Знайдено секретів:"
 #: qcsrc/client/hud/panel/scoreboard.qc:1756
 #, c-format
 msgid "Spectators"
-msgstr "Спектатори"
+msgstr "Спостерігачі"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1872
 #, c-format
