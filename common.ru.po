@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-30 22:33+0000\n"
+"PO-Revision-Date: 2021-12-02 02:07+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -9007,7 +9007,7 @@ msgstr "Автоматически повторять прыжки при уде
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
-msgstr "Реактивный ранец по прыжку:"
+msgstr "Реактив. ранец по прыжку:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
