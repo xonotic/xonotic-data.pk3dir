@@ -20,9 +20,9 @@ void XonoticServerToSTab_loadToS(entity me, string downloadurl)
 void XonoticServerToSTab_fill(entity me)
 {
 	entity e;
-    me.TR(me);
-        me.TD(me, me.rows, me.columns, e = makeXonoticTextBox());
-        me.textBox = e;
+	me.TR(me);
+	me.TD(me, me.rows, me.columns, e = makeXonoticTextBox());
+	me.textBox = e;
 }
 
 void AdditionalServerInfo_OnGet(entity fh, entity me, int status)
@@ -32,30 +32,26 @@ void AdditionalServerInfo_OnGet(entity fh, entity me, int status)
 		{
 			break;
 		}
-        case URL_READY_ERROR:
-        {
-            me.text = strzone("Error reading ToS");
-            me.textBox.setText(me.textBox, me.text);
-            break;
-        }
+		case URL_READY_ERROR:
+		{
+			me.text = strzone("Error reading ToS");
+			me.textBox.setText(me.textBox, me.text);
+			break;
+		}
 		case URL_READY_CANREAD:
 		{
-            strfree(me.text);
-            string temp = "";
+			strfree(me.text);
+			string temp = "";
 			for (string s; (s = url_fgets(fh)); )
 			{
-                if (temp != "")
-                {
-				    temp = strcat(temp, "\n", s);
-                }
-                else
-                {
-                    temp = s;
-                }
+				if (temp != "")
+					temp = strcat(temp, "\n", s);
+				else
+					temp = s;
 			}
 			url_fclose(fh);
-            me.text = strzone(temp);
-            me.textBox.setText(me.textBox, me.text);
+			me.text = strzone(temp);
+			me.textBox.setText(me.textBox, me.text);
 			break;
 		}
 		default:
