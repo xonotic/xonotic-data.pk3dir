@@ -32,4 +32,5 @@ void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage
 
 void ka_TouchEvent(entity this, entity toucher);
 
-void ka_DropEvent(entity plyr);
+void ka_DropEvent(entity player);
+void ka_DropBall(entity player, vector velo, vector delta);
