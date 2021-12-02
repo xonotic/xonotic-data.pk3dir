@@ -18,7 +18,7 @@ CLASS(Vortex, Weapon)
 /* reticle   */ ATTRIB(Vortex, w_reticle, string, "gfx/reticle_nex");
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
-/* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
+/* wepname   */ ATTRIB(Vortex, m_name, string, _("Nex"));
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
