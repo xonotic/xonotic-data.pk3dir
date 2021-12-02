@@ -88,7 +88,7 @@ void powerups_DropItem_Think(entity this)
 	}
 	
 	// Only needed to update if the timer of the powerup is running
-	if(autocvar_g_powerups_dropondeath == 1)
+	if(autocvar_g_powerups_drop_ondeath == 1)
 		WaypointSprite_UpdateHealth(this.waypointsprite_attached, GetResource(this, RES_HEALTH));
 	
 	this.nextthink = time + 1;
@@ -108,11 +108,11 @@ void powerups_DropItem(entity this, StatusEffects effect)
 	// If we want the timer to keep running, we enable expiring then use the exact time the powerup will finish at.
 	// If we want the timer to freeze, we disable expiring and we just use the time left of the powerup.
 	// See Item_SetExpiring() below.
-	float finished = (autocvar_g_powerups_dropondeath == 2 ? timeleft : t);
+	float finished = (autocvar_g_powerups_drop_ondeath == 2 ? timeleft : t);
 
 	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
 	// otherwise it'll disappear after the timer runs out.
-	float time_to_live = (autocvar_g_powerups_dropondeath == 2 ? autocvar_g_powerups_dropondeath_ttl : timeleft);
+	float time_to_live = (autocvar_g_powerups_drop_ondeath == 2 ? autocvar_g_powerups_drop_expire_time : timeleft);
 
 	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
 	switch(item)
@@ -124,7 +124,7 @@ void powerups_DropItem(entity this, StatusEffects effect)
 	}
 	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', time_to_live);
 
-	if(autocvar_g_powerups_dropondeath != 2)
+	if(autocvar_g_powerups_drop_ondeath != 2)
 		Item_SetExpiring(e, true);
 	
 	// Use health as time left to live
@@ -150,7 +150,7 @@ MUTATOR_HOOKFUNCTION(powerups, ItemTouched)
 
 MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 {
-	if(!autocvar_g_powerups_dropondeath)
+	if(!autocvar_g_powerups_drop_ondeath)
 		return;
 
 	entity frag_target = M_ARGV(2, entity);

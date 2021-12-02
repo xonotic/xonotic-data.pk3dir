@@ -5,8 +5,8 @@
 #include "powerups.qh"
 
 int autocvar_g_powerups;
-int autocvar_g_powerups_dropondeath;
-int autocvar_g_powerups_dropondeath_ttl;
+int autocvar_g_powerups_drop_ondeath;
+float autocvar_g_powerups_drop_expire_time;
 bool autocvar_g_powerups_stack;
 
 REGISTER_MUTATOR(powerups, true);
