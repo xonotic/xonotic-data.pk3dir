@@ -1,10 +1,16 @@
 #include "sv_mayhem.qh"
 
+float autocvar_g_mayhem_fraglimit;
+float autocvar_g_mayhem_visual_score_limit;
+float mayhempointmultiplier;
+
 bool autocvar_g_mayhem_regenerate;
 string autocvar_g_mayhem_weaponarena;
 bool autocvar_g_mayhem_powerups;
 bool autocvar_g_mayhem_selfdamage;
 int autocvar_g_mayhem_scoringmethod;
+float autocvar_g_mayhem_scoringmethod_damage_weight;
+float autocvar_g_mayhem_scoringmethod_frag_weight;
 bool autocvar_g_mayhem_pickup_items;
 bool autocvar_g_mayhem_pickup_items_remove_weapons_and_ammo;
 bool autocvar_g_mayhem_unlimited_ammo;
@@ -180,11 +186,11 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 
 			//non-friendly fire
 			if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
-				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
+				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_mayhem_scoringmethod_damage_weight * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 			
 			//friendly fire aka self damage
 			if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
-				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
+				GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_mayhem_scoringmethod_damage_weight * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 		
 			//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
 			//deathtypes:
@@ -199,7 +205,7 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 				frag_deathtype == DEATH_LAVA.m_id ||
 				frag_deathtype == DEATH_SLIME.m_id ||
 				frag_deathtype == DEATH_SWAMP.m_id))
-					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * 0.75 * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
+					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_mayhem_scoringmethod_damage_weight * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
 			return;
 		}
 	}
@@ -207,29 +213,60 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(mayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	switch(autocvar_g_mayhem_scoringmethod)
-	{
-		//frags only
-		case 2:
+	entity frag_attacker = M_ARGV(0, entity);
+	entity frag_target = M_ARGV(1, entity);
+	
+	if(frag_target == frag_attacker){
+		switch(autocvar_g_mayhem_scoringmethod)
 		{
-														//fix 999 score from 30 kills for example
-			M_ARGV(2, float) = 1 * mayhempointmultiplier * 1.0001;
-			return true;
+			//frags only
+			case 2:
+			{
+															//fix 999 score from 30 kills for example
+				M_ARGV(2, float) = -1 * mayhempointmultiplier * 1.0001;
+				return true;
+			}
+
+			//damage only
+			case 3:
+			{
+				M_ARGV(2, float) = 0;
+				return true;
+			}
+
+			//combined damage and frags
+			default:
+			case 1:
+			{
+				M_ARGV(2, float) = -autocvar_g_mayhem_scoringmethod_frag_weight * mayhempointmultiplier * 1.0001;
+				return true;
+			}
 		}
-		
-		//damage only
-		case 3:
+	} else {
+		switch(autocvar_g_mayhem_scoringmethod)
 		{
-			M_ARGV(2, float) = 0;
-			return true;
-		}
-		
-		//combined damage and frags
-		default:
-		case 1:
-		{
-			M_ARGV(2, float) = 0.25 * mayhempointmultiplier * 1.0001;
-			return true;
+			//frags only
+			case 2:
+			{
+															//fix 999 score from 30 kills for example
+				M_ARGV(2, float) = 1 * mayhempointmultiplier * 1.0001;
+				return true;
+			}
+
+			//damage only
+			case 3:
+			{
+				M_ARGV(2, float) = 0;
+				return true;
+			}
+
+			//combined damage and frags
+			default:
+			case 1:
+			{
+				M_ARGV(2, float) = autocvar_g_mayhem_scoringmethod_frag_weight * mayhempointmultiplier * 1.0001;
+				return true;
+			}
 		}
 	}
 }
