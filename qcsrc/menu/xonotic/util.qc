@@ -483,8 +483,7 @@ void updateCheck()
 
 		// for privacy, munge the start count a little
 		startcnt = floor((floor(startcnt / 10) + random()) * 10);
-		//uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-		uri = "http://maria.omaera.org/checkupdate.txt";
+		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
 		uri_get(uri, URI_GET_UPDATENOTIFICATION);
 	}
 

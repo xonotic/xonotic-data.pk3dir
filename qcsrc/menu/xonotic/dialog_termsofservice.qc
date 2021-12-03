@@ -25,8 +25,7 @@ void DontAccept_Clicked(entity btn, entity me)
 
 void XonoticToSDialog_loadXonoticToS(entity me)
 {
-	string downloadurl = "http://maria.omaera.org/tos.txt";
-	url_single_fopen(downloadurl, FILE_READ, XonoticToS_OnGet, me);
+	url_single_fopen(termsofservice_url, FILE_READ, XonoticToS_OnGet, me);
 }
 
 void XonoticToS_OnGet(entity fh, entity me, int status)
