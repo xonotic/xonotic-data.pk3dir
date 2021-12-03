@@ -765,6 +765,18 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "allready":
+		{
+			if(!warmup_stage) {
+				print_to(caller, "Game already started. Use the reset command to restart the match.");
+				return -1;
+			}
+
+			vote_parsed_command = vote_command;
+			vote_parsed_display = strzone(strcat("^1", vote_command));
+			break;
+		}
+
 		default:
 		{
 			vote_parsed_command = vote_command;

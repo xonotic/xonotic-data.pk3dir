@@ -1670,7 +1670,7 @@ SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { G
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
-SERVER_COMMAND(reset, "Soft restart the game without changing teams, going back to warmup if enabled") { GameCommand_reset(request); }
+SERVER_COMMAND(reset, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_reset(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
