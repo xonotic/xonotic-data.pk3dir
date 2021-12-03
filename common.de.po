@@ -28,8 +28,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-12-02 20:44+0000\n"
+"Last-Translator: Mirio <opivy@hotmail.de>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -5990,7 +5990,7 @@ msgstr "Schriftgröße:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Fette Schriftgröße:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"

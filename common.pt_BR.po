@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2021-12-02 15:37+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -1575,7 +1575,7 @@ msgstr "Bom trabalho! Clique em \"Próximo mapa\" para continuar!"
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Você está observando"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -5955,7 +5955,7 @@ msgstr "Tamanho da fonte:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Tamanho da fonte em negrito:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
@@ -8745,6 +8745,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"Aviso: ao ativar em modos de equipes, a cor da sua equipe pode ser a mesma "
+"que a da equipe inimiga."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
@@ -8756,11 +8758,11 @@ msgstr "Somente em Duelo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Apenas em modos de equipes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "Em modos de equipes e Duelo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
@@ -10067,27 +10069,27 @@ msgstr "MEUDEUS"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "Baixa"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "Média"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "Alta"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "Ultra"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "Extrema"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -10103,19 +10105,19 @@ msgstr "Resolução da tela"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "Lenta"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "Rápida"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "Instantânea"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
