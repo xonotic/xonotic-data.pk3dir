@@ -390,25 +390,16 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			//if (restart_mapalreadyrestarted || (time < game_starttime))
-			//{
-				FOREACH_CLIENT(IS_PLAYER(it),
-				{
-					/*
-					only reset players if a restart countdown is active
-					this can either be due to cvar sv_ready_restart_after_countdown having set
-					restart_mapalreadyrestarted to 1 after the countdown ended or when
-					sv_ready_restart_after_countdown is not used and countdown is still running
-					*/
-					// PlayerScore_Clear(it);
-					CS(it).killcount = 0;
-					// stop the player from moving so that he stands still once he gets respawned
-					it.velocity = '0 0 0';
-					it.avelocity = '0 0 0';
-					CS(it).movement = '0 0 0';
-					PutClientInServer(it);
-				});
-			//}
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				// PlayerScore_Clear(it);
+				CS(it).killcount = 0;
+				// stop the player from moving so that he stands still once he gets respawned
+				it.velocity = '0 0 0';
+				it.avelocity = '0 0 0';
+				CS(it).movement = '0 0 0';
+				PutClientInServer(it);
+			});
 		}
 	}
 }
@@ -416,7 +407,6 @@ void reset_map(bool dorespawn)
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think(entity this)
 {
-	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
 	delete(this);
@@ -437,15 +427,10 @@ void ReadyRestart_force()
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 	
-	if(warmup_stage) {
-		// Warmup: No countdown in warmup
-		game_starttime = time;
-		readyrestart_happened = false;
-	} else {
-		// Go into match mode
-		readyrestart_happened = true;
-		game_starttime = time + RESTART_COUNTDOWN;
-	}
+	if(warmup_stage)
+		game_starttime = time; // Warmup: No countdown in warmup
+	else
+		game_starttime = time + RESTART_COUNTDOWN; // Go into match mode
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -454,8 +439,6 @@ void ReadyRestart_force()
 		float val = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
 		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, -val);
 	});
-
-	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
 	if(!warmup_stage)

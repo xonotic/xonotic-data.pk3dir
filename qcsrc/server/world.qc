@@ -493,7 +493,6 @@ void cvar_changes_init()
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
-		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
