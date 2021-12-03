@@ -1,6 +1,6 @@
 #pragma once
 
-float autocvar__termsofservice_accepted;
+int autocvar__termsofservice_accepted;
 
 #include "rootdialog.qh"
 CLASS(XonoticToSDialog, XonoticRootDialog)
