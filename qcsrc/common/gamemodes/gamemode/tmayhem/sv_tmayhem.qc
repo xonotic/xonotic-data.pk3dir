@@ -15,8 +15,9 @@ string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
 int autocvar_g_tmayhem_scoringmethod;
-float autocvar_g_tmayhem_scoringmethod_damage_weight;
-float autocvar_g_tmayhem_scoringmethod_frag_weight;
+float autocvar_g_tmayhem_scoringmethod_1_damage_weight;
+float autocvar_g_tmayhem_scoringmethod_1_frag_weight;
+bool autocvar_g_tmayhem_scoringmethod_1_disable_selfdamage2score;
 bool autocvar_g_tmayhem_pickup_items;
 bool autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo;
 bool autocvar_g_tmayhem_unlimited_ammo;
@@ -235,25 +236,25 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 
 			//non-friendly fire
 			if (IS_PLAYER(frag_attacker) && !SAME_TEAM(frag_target, frag_attacker))
-				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_tmayhem_scoringmethod_damage_weight * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+				GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_tmayhem_scoringmethod_1_damage_weight * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
 			
 			//friendly fire or self damage
-			if (frag_target == frag_attacker && IS_PLAYER(frag_attacker) || SAME_TEAM(frag_target, frag_attacker))
-				GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_scoringmethod_damage_weight * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+			if ((SAME_TEAM(frag_target, frag_attacker) && frag_target != frag_attacker) || (frag_target == frag_attacker && IS_PLAYER(frag_attacker) && !autocvar_g_tmayhem_scoringmethod_1_disable_selfdamage2score))
+				GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_scoringmethod_1_damage_weight * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
 		
 			//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
 			//deathtypes:
 			//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
 			//camp = campcheck, lava = lava, slime = slime
 			//team change / rebalance suicides are currently not included
-			if (!IS_PLAYER(frag_attacker) && (
+			if (!autocvar_g_tmayhem_scoringmethod_1_disable_selfdamage2score && !IS_PLAYER(frag_attacker) && (
 				frag_deathtype == DEATH_KILL.m_id ||
 				frag_deathtype == DEATH_DROWN.m_id ||
 				frag_deathtype == DEATH_HURTTRIGGER.m_id ||
 				frag_deathtype == DEATH_CAMP.m_id ||
 				frag_deathtype == DEATH_LAVA.m_id ||
 				frag_deathtype == DEATH_SLIME.m_id))
-					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_scoringmethod_damage_weight * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
+					GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_tmayhem_scoringmethod_1_damage_weight * tmayhempointmultiplier * (1/(start_health + start_armorvalue)));
 			return;
 		}
 	}
@@ -286,7 +287,13 @@ MUTATOR_HOOKFUNCTION(tmayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 			default:
 			case 1:
 			{
-				M_ARGV(2, float) = -autocvar_g_tmayhem_scoringmethod_frag_weight * tmayhempointmultiplier * 1.0001;
+				//when selfdamage2score is disabled don't enable cheap discounted suicides at the cost of the possibility of 
+				//punishing for a full life when they only deal a single point worth of self damage to kill themselves
+				if(autocvar_g_tmayhem_scoringmethod_1_disable_selfdamage2score && frag_target==frag_attacker){
+					M_ARGV(2, float) = -1 * tmayhempointmultiplier * 1.0001;
+				} else {
+					M_ARGV(2, float) = -autocvar_g_tmayhem_scoringmethod_1_frag_weight * tmayhempointmultiplier * 1.0001;
+				}
 				return true;
 			}
 		}
@@ -312,7 +319,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 			default:
 			case 1:
 			{
-				M_ARGV(2, float) = autocvar_g_tmayhem_scoringmethod_frag_weight * tmayhempointmultiplier * 1.0001;
+				M_ARGV(2, float) = autocvar_g_tmayhem_scoringmethod_1_frag_weight * tmayhempointmultiplier * 1.0001;
 				return true;
 			}
 		}
