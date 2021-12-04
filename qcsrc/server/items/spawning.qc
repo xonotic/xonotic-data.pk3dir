@@ -29,6 +29,19 @@ entity Item_FindDefinition(string class_name)
 	return NULL;
 }
 
+entity Item_DefinitionFromInternalName(string item_name)
+{
+	FOREACH(Items, it.netname == item_name,
+	{
+		return it;
+	});
+	FOREACH(Weapons, it.netname == item_name,
+	{
+		return it.m_pickup;
+	});
+	return NULL;
+}
+
 bool Item_IsAllowed(string class_name)
 {
 	entity definition = Item_FindDefinition(class_name);
