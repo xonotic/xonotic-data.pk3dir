@@ -1,6 +1,6 @@
 #include "sv_clanarena.qh"
 
-float autocvar_g_ca_damage2score_multiplier;
+float autocvar_g_ca_damage2score = 100;
 bool autocvar_g_ca_spectate_enemies;
 
 float autocvar_g_ca_start_health = 200;
@@ -11,6 +11,8 @@ float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
 float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
+
+.float ca_damage_counter;
 
 void CA_count_alive_players()
 {
@@ -221,6 +223,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
+		it.ca_damage_counter = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 		{
 			it.team = -1;
@@ -397,11 +400,11 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	//non-friendly fire
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+		frag_attacker.ca_damage_counter += frag_damage - excess;
 
 	//friendly fire
 	if (SAME_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
+		frag_attacker.ca_damage_counter -= frag_damage - excess;
 
 	//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
 	//deathtypes:
@@ -416,7 +419,25 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 		frag_deathtype == DEATH_LAVA.m_id ||
 		frag_deathtype == DEATH_SLIME.m_id ||
 		frag_deathtype == DEATH_SWAMP.m_id))
-			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
+			frag_target.ca_damage_counter -= frag_damage - excess;
+
+	entity pl = frag_attacker;
+	LABEL(assign_score);
+	while (pl.ca_damage_counter >= autocvar_g_ca_damage2score)
+	{
+		GameRules_scoring_add(pl, SCORE, +1);
+		pl.ca_damage_counter -= autocvar_g_ca_damage2score;
+	}
+	while (pl.ca_damage_counter <= -autocvar_g_ca_damage2score)
+	{
+		GameRules_scoring_add(pl, SCORE, -1);
+		pl.ca_damage_counter += autocvar_g_ca_damage2score;
+	}
+	if (pl != frag_target)
+	{
+		pl = frag_target;
+		goto assign_score;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
