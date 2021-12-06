@@ -147,6 +147,7 @@ bool lms_waypointsprite_visible_for_player(entity this, entity player, entity vi
 	return true;
 }
 
+int lms_leaders_lives_diff;
 void lms_UpdateLeaders()
 {
 	int max_lives = 0;
@@ -168,8 +169,10 @@ void lms_UpdateLeaders()
 			second_max_lives = lives;
 	});
 
+	lms_leaders_lives_diff = max_lives - second_max_lives;
+
 	int lives_diff = autocvar_g_lms_leader_lives_diff;
-	if (max_lives - second_max_lives >= lives_diff && pl_cnt_with_max_lives <= pl_cnt * autocvar_g_lms_leader_minpercent)
+	if (lms_leaders_lives_diff >= lives_diff && pl_cnt_with_max_lives <= pl_cnt * autocvar_g_lms_leader_minpercent)
 		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 			int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
 			if (lives == max_lives)
@@ -415,8 +418,9 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	// recycled REDALIVE to avoid adding a dedicated stat
+	// recycled REDALIVE and BLUEALIVE to avoid adding a dedicated stat
 	STAT(REDALIVE, player) = lms_leaders;
+	STAT(BLUEALIVE, player) = lms_leaders_lives_diff;
 
 	if(player.deadflag == DEAD_DYING)
 		player.deadflag = DEAD_RESPAWNING;
