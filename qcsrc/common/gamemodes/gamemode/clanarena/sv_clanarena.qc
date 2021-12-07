@@ -188,6 +188,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.caplayer = 1;
+	player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -223,7 +224,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		it.ca_damage_counter = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 		{
 			it.team = -1;
@@ -425,11 +425,9 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	LABEL(assign_score);
 	if (fabs(pl.ca_damage_counter) >= autocvar_g_ca_damage2score)
 	{
-		int points;
-		if (pl.ca_damage_counter > 0)
-			points = floor(pl.ca_damage_counter / autocvar_g_ca_damage2score);
-		else
-			points = ceil(pl.ca_damage_counter / autocvar_g_ca_damage2score);
+		// NOTE: here we are actually rounding since ca_damage_counter is
+		// initialized on player spawn to half autocvar_g_ca_damage2score
+		int points = floor(pl.ca_damage_counter / autocvar_g_ca_damage2score);
 		GameRules_scoring_add(pl, SCORE, points);
 		pl.ca_damage_counter -= points * autocvar_g_ca_damage2score;
 	}
