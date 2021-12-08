@@ -81,7 +81,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 				if(player.team == Team_IndexToTeam(2))
 				{
 					// play sound to make hunter notice
-					sound(player, CH_SHOTS, SND_RUNNER_TAUNT_RANDOM(), VOL_BASEVOICE, ATTEN_NORM);
+					sound(player, CH_VOICE, SND_RUNNER_TAUNT_RANDOM(), VOL_BASEVOICE, VOICETYPE_TAUNT);
 					player.RunnerSoundTaunt_time = time + autocvar_g_mh_autotaunt_runner_time;
 					STAT(MH_RUNNER_TAUNTTIMER, player) = player.RunnerSoundTaunt_time;
 				}
