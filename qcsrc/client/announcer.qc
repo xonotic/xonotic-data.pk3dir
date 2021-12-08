@@ -107,7 +107,7 @@ void Announcer_Gamestart()
 			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
 				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 
-			announcer_countdown.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime
 		}
 	}
 
