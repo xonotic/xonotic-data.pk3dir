@@ -188,7 +188,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.caplayer = 1;
-	player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
+	if (time < game_starttime) // reset on game restart, not on round start
+		player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -291,6 +292,12 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ca, ClientConnect)
+{
+	entity player = M_ARGV(0, entity);
+	player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
