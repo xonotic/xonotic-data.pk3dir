@@ -2,7 +2,6 @@ add g_mh_startitem cvars to the balance files
 
 +2 waypoint modes, 
 waypoints for runners on round start always and waypoints for hunters when there are 3 or more hunters
-only runners can see other runners but hunters don't see others
 
 rename teams as far as possible
 
@@ -16,7 +15,6 @@ more dynamicity for the code :)
 
 add more TODO: notes
 
-it might need to improve something in Hunter black screen in mh.qh, sv_mh.qc uses HunterEyesStart function to execute black screen
-g_mh_hunterblind 1 // to activate hunter black screen
+if player(runner) taunts, his autotaunt time is restarted. something similar to "voice taunt"
 
 fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for spectators of that player.

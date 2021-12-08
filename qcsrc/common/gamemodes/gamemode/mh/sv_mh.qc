@@ -4,6 +4,7 @@
 .vector taggedplayerlocation;
 .vector taggedplayervelocity;
 .vector taggedplayerviewangles;
+.float RunnerSoundTaunt_time;
 
 void MH_FakeTimeLimit(entity e, float t)
 {
@@ -69,6 +70,30 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 		player.mh_status = MH_STATUS_HUNTER;
 	else if(player.team == Team_IndexToTeam(2))
 		player.mh_status = MH_STATUS_RUNNER;
+	
+	// Autotaunt feature
+	if(autocvar_g_mh_autotaunt_runner)
+	{
+		if(!game_stopped && !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
+		{
+			if(time > player.RunnerSoundTaunt_time)
+			{
+				if(player.team == Team_IndexToTeam(2))
+				{
+					// play sound to make hunter notice
+					sound(player, CH_SHOTS, SND_RUNNER_TAUNT_RANDOM(), VOL_BASEVOICE, ATTEN_NORM);
+					player.RunnerSoundTaunt_time = time + autocvar_g_mh_autotaunt_runner_time;
+					STAT(MH_RUNNER_TAUNTTIMER, player) = player.RunnerSoundTaunt_time;
+				}
+			}
+		}
+		else
+		{
+			// LOG_INFOF("^2RESTARTED RUNNER TAUNT TIMER!");
+			player.RunnerSoundTaunt_time = time + autocvar_g_mh_autotaunt_runner_time;
+			STAT(MH_RUNNER_TAUNTTIMER, player) = player.RunnerSoundTaunt_time;
+		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
@@ -84,7 +109,7 @@ MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
 		return;
 	}
 	
-	if(frag_deathtype==DEATH_CAMP.m_id || !IS_PLAYER(frag_attacker)) return;
+	if(frag_deathtype == DEATH_CAMP.m_id || !IS_PLAYER(frag_attacker)) return;
 
 	
 	if(IS_PLAYER(frag_target) && !IS_DEAD(frag_target)){ //check that the target is a player and not dead, allows anyone to knock around corpses for funsies

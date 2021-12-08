@@ -340,6 +340,7 @@ REGISTER_STAT(DOM_PPS_PINK, float)
 
 // man hunt
 REGISTER_STAT(MH_ROUNDTIMER, float)
+REGISTER_STAT(MH_RUNNER_TAUNTTIMER, float)
 
 #ifdef SVQC
 float autocvar_g_teleport_maxspeed;
