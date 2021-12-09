@@ -45,7 +45,6 @@ void Announcer_Countdown(entity this)
 	}
 	else // countdown is still going
 	{
-		// if concomitant countdown to round start overrides countdown to game start
 		if(inround)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
