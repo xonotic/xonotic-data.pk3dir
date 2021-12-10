@@ -441,7 +441,10 @@ void ReadyRestart_force()
 	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(true, {
+		accuracy_reset(it);
+		if (!IS_PLAYER(it))
+			continue;
 		it.alivetime = 0;
 		CS(it).killcount = 0;
 		float val = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
