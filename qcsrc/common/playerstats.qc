@@ -30,13 +30,17 @@ void PlayerStats_GameReport_Reset_All()
 	if (PS_GR_OUT_DB)
 		db_close(PS_GR_OUT_DB);
 	PlayerStats_GameReport_Init();
+	if(PS_GR_OUT_DB < 0)
+		return;
+
 	for (int i = 0; i < 16; i++)
 		if (teamscorekeepers[i])
 			PlayerStats_GameReport_AddTeam(i + 1);
 	FOREACH_CLIENT(true, {
 		strfree(it.playerstats_id);
 		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
-		PlayerStats_GameReport_AddPlayer(it);
+		if (IS_BOT_CLIENT(it) || CS_CVAR(it).cvar_cl_allow_uidtracking)
+			PlayerStats_GameReport_AddPlayer(it);
 	});
 	FOREACH(Scores, true, {
 		string label = scores_label(it);
