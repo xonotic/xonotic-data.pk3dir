@@ -352,8 +352,11 @@ void reset_map(bool dorespawn)
 		shuffleteams_on_reset_map = false;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
+	FOREACH_CLIENT(true, {
+		if (time <= game_starttime)
+			accuracy_reset(it); // for spectators too because weapon accuracy is persistent
+		if (!IS_PLAYER(it))
+			continue;
 		if (STAT(FROZEN, it))
 			Unfreeze(it, false);
 		player_powerups_remove_all(it);
@@ -442,10 +445,7 @@ void ReadyRestart_force()
 	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
-	FOREACH_CLIENT(true, {
-		accuracy_reset(it);
-		if (!IS_PLAYER(it))
-			continue;
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.alivetime = 0;
 		CS(it).killcount = 0;
 		float val = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
