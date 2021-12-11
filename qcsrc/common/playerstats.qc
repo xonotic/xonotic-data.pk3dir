@@ -27,7 +27,7 @@ void PlayerStats_GameReport_Reset_All()
 	strfree(PS_GR_OUT_PL);
 	strfree(PS_GR_OUT_EVL);
 
-	if (PS_GR_OUT_DB)
+	if (PS_GR_OUT_DB >= 0)
 		db_close(PS_GR_OUT_DB);
 	PlayerStats_GameReport_Init();
 	if(PS_GR_OUT_DB < 0)

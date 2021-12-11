@@ -342,6 +342,8 @@ void reset_map(bool dorespawn)
 	{
 		if (game_stopped)
 			return;
+
+		PlayerStats_GameReport_Reset_All();
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
@@ -449,8 +451,6 @@ void ReadyRestart_force()
 		it.alivetime = 0;
 		CS(it).killcount = 0;
 	});
-
-	PlayerStats_GameReport_Reset_All();
 
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
