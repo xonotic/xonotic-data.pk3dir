@@ -23,6 +23,7 @@
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/world.qh>
 
 // =============================================
