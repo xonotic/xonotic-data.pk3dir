@@ -440,7 +440,7 @@ void ReadyRestart_force()
 		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, -val);
 	});
 
-	// disable the warmup global for the server
+	// if we're ending the warmup stage call the corresponding hook
 	if(!warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
 
