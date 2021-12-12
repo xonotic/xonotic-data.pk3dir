@@ -768,7 +768,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		case "allready":
 		{
 			if(!warmup_stage) {
-				print_to(caller, "Game already started. Use the reset command to restart the match.");
+				print_to(caller, "Game already started. Use the resetmatch command to restart the match.");
 				return -1;
 			}
 
