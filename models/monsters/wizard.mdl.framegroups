@@ -1,1 +1,14 @@
-1 14 10 1 // wizard hover16 13 10 1 // wizard fly30 12 10 1 // wizard magic attack43 3 10 0 // wizard pain47 7 10 0 // wizard death
+/*
+Generated framegroups file for Dragon
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 101 30 1 // dragon idle
+102 101 30 1 // dragon glide
+203 101 30 1 // dragon fly
+304 26 30 0 // dragon pain1
+330 26 30 0 // dragon pain2
+356 51 30 1 // dragon melee
+407 51 30 1 // dragon fireball
+458 101 30 1 // dragon dying
+559 26 30 0 // dragon dead

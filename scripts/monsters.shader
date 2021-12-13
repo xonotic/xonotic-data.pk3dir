@@ -1,16 +1,26 @@
-textures/spider/spidertex
+nanomage
 {
-	cull none
-
-	{
-		map textures/spidertex
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/nanomage.tga
+		rgbgen lightingDiffuse
 	}
 }
-mage
-{
-	cull none
 
-	{
-		map textures/mage
+spider
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/spider.tga
+		rgbgen lightingDiffuse
+	}
+}
+
+golem
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/golem.tga
+		rgbgen lightingDiffuse
 	}
 }
