@@ -59,10 +59,14 @@ float autocvar_g_monster_wyvern_speed_walk;
 
 /*
 const float wyvern_anim_hover	= 0;
-const float wyvern_anim_fly		= 1;
-const float wyvern_anim_magic	= 2;
+const float wyvern_anim_flyrun		= 1;
+const float wyvern_anim_fly		= 2;
 const float wyvern_anim_pain	= 3;
-const float wyvern_anim_death	= 4;
+const float wyvern_anim_pain2	= 4;
+const float wyvern_anim_melee	= 5;
+const float wyvern_anim_magic	= 6;
+const float wyvern_anim_flyfast	= 7;
+const float wyvern_anim_death	= 8;
 */
 
 void M_Wyvern_Attack_Fireball_Explode(entity this)
@@ -120,7 +124,7 @@ METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, enti
 {
     TC(Wyvern, this);
     actor.pain_finished = time + 0.5;
-    setanim(actor, actor.anim_pain1, true, true, false);
+    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
     return damage_take;
 }
 
@@ -139,12 +143,13 @@ METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);
     vector none = '0 0 0';
-    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_die1 = animfixfps(actor, '8 1 0.5', none); // 2 seconds
+    actor.anim_walk = animfixfps(actor, '2 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
     actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
-    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    actor.anim_pain2 = animfixfps(actor, '4 1 2', none); // 0.5 seconds
+    actor.anim_shoot = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '1 1 1', none); // or 7? They just look with the same process
     return true;
 }
 #endif

@@ -17,16 +17,25 @@ float autocvar_g_monster_shambler_speed_stop;
 float autocvar_g_monster_shambler_speed_run;
 float autocvar_g_monster_shambler_speed_walk;
 
+//For a new model
 /*
 const float shambler_anim_stand		= 0;
 const float shambler_anim_walk		= 1;
 const float shambler_anim_run		= 2;
-const float shambler_anim_smash		= 3;
+const float shambler_anim_smash		= 6;
+const float shambler_anim_smash2		= 5;
 const float shambler_anim_swingr	= 4;
-const float shambler_anim_swingl	= 5;
-const float shambler_anim_magic		= 6;
+const float shambler_anim_swingl	= 3;
+const float shambler_anim_magic		= 4;
 const float shambler_anim_pain		= 7;
-const float shambler_anim_death		= 8;
+const float shambler_anim_pain2		= 8;
+const float shambler_anim_pain3		= 9;
+const float shambler_anim_pain4		= 10;
+const float shambler_anim_pain5		= 11;
+const float shambler_anim_spawn		= 12;
+const float shambler_anim_death		= 13;
+const float shambler_anim_death2		= 15;
+const float shambler_anim_death3		= 17;
 */
 
 .float shambler_lastattack; // delay attacks separately
@@ -211,14 +220,16 @@ METHOD(Shambler, mr_pain, float(Shambler this, entity actor, float damage_take, 
 {
     TC(Shambler, this);
     actor.pain_finished = time + 0.5;
-    setanim(actor, actor.anim_pain1, true, true, false);
+    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
+    //setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2 : actor.anim_pain3 : actor.anim_pain4 : actor.anim_pain5), true, true, false);
     return damage_take;
 }
 
 METHOD(Shambler, mr_death, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);
-    setanim(actor, actor.anim_die1, false, true, true);
+    setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
+    //setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2 : actor.anim_die3), false, true, true);
     return true;
 }
 #endif
@@ -227,14 +238,21 @@ METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);
     vector none = '0 0 0';
-    actor.anim_die1 = animfixfps(actor, '8 1 0.5', none); // 2 seconds
+    actor.anim_die1 = animfixfps(actor, '13 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '15 1 0.5', none); // 2 seconds
+    //actor.anim_die3 = animfixfps(actor, '17 1 0.5', none); // 2 seconds, brokes compiling
     actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
     actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
-    actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    actor.anim_pain2 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
+    //actor.anim_pain3 = animfixfps(actor, '9 1 2', none); // 0.5 seconds, brokes compiling
+    //actor.anim_pain4 = animfixfps(actor, '10 1 2', none); // 0.5 seconds, brokes compiling
+    //actor.anim_pain5 = animfixfps(actor, '11 1 2', none); // 0.5 seconds, brokes compiling
+    actor.anim_spawn = animfixfps(actor, '12 1 0.5', none); // 2 seconds, brokes compiling
+    actor.anim_melee1 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
     actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-    actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
-    actor.anim_shoot = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+    actor.anim_melee3 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
     actor.anim_run = animfixfps(actor, '2 1 1', none);
     return true;
 }
@@ -254,7 +272,7 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
     actor.monster_loot = ITEM_HealthMega;
     actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
 
-    setanim(actor, actor.anim_shoot, false, true, true);
+    setanim(actor, actor.anim_spawn, false, true, true);
     actor.spawn_time = actor.animstate_endtime;
     StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.monster_attackfunc = M_Shambler_Attack;

@@ -69,13 +69,20 @@ float autocvar_g_monster_mage_speed_stop;
 float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
+//For a new model, it will work wrong with old model, there are more animations for it. Probably, the unused animations will be used in the future
 /*
 const float mage_anim_idle		= 0;
 const float mage_anim_walk		= 1;
-const float mage_anim_attack	= 2;
-const float mage_anim_pain		= 3;
-const float mage_anim_death		= 4;
-const float mage_anim_run		= 5;
+const float mage_anim_attack1	= 2;
+const float mage_anim_spawn	= 3; // Or attack4
+const float mage_anim_attack2	= 4;
+const float mage_anim_attack3	= 5;
+const float mage_anim_pain		= 6;
+const float mage_anim_pain		= 7;
+const float mage_anim_pain		= 8;
+const float mage_anim_death		= 9;
+const float mage_anim_death2		= 10;
+const float mage_anim_run		= 1;
 */
 
 void M_Mage_Defend_Heal(entity this);
@@ -428,13 +435,15 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
 METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Mage, this);
+    actor.pain_finished = time + 0.34;
+    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
     return damage_take;
 }
 
 METHOD(Mage, mr_death, bool(Mage this, entity actor))
 {
     TC(Mage, this);
-    setanim(actor, actor.anim_die1, false, true, true);
+    setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
     return true;
 }
 
@@ -444,12 +453,16 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 {
     TC(Mage, this);
     vector none = '0 0 0';
-    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
+    actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '10 1 0.5', none); // 2 seconds
     actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_spawn = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
+    actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+    //actor.anim_pain3 = animfixfps(actor, '8 1 2', none); // 0.5 seconds, removed to make it compilable
     actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '5 1 1', none);
+    actor.anim_run = animfixfps(actor, '1 1 1', none);
     return true;
 }
 #endif
@@ -467,6 +480,9 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     actor.monster_loot = ITEM_HealthBig;
     actor.monster_attackfunc = M_Mage_Attack;
 
+    setanim(actor, actor.anim_spawn, false, true, true);
+    actor.spawn_time = actor.animstate_endtime;
+    
     return true;
 }
 #endif

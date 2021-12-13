@@ -77,11 +77,26 @@ float autocvar_g_monster_spider_speed_stop;
 float autocvar_g_monster_spider_speed_run;
 float autocvar_g_monster_spider_speed_walk;
 
+//For a new model
 /*
-const float spider_anim_idle		= 0;
-const float spider_anim_walk		= 1;
-const float spider_anim_attack		= 2;
-const float spider_anim_attack2		= 3;
+const float spider_anim_melee		= 0;
+const float spider_anim_death		= 1;
+const float spider_anim_death2		= 2;
+const float spider_anim_shoot1		= 3;
+const float spider_anim_ultrashoot		= 4;
+const float spider_anim_idle		= 5;
+const float spider_anim_spawn		= 6;
+const float spider_anim_pain		= 7;
+const float spider_anim_pain2		= 8;
+const float spider_anim_pain3		= 9;
+const float spider_anim_moveforward		= 10;
+const float spider_anim_moveforwardright		= 11;
+const float spider_anim_movebackright		= 12;
+const float spider_anim_movebackward		= 13;
+const float spider_anim_movebackleft		= 14;
+const float spider_anim_moveleft		= 15;
+const float spider_anim_moveforwardleft		= 16;
+const float spider_anim_movebackleft		= 17;
 */
 
 void M_Spider_Attack_Web_Explode(entity this)
@@ -183,14 +198,17 @@ METHOD(Spider, mr_think, bool(Spider this, entity actor))
 METHOD(Spider, mr_pain, float(Spider this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Spider, this);
+    actor.pain_finished = time + 0.34;
+    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
+    //setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2 : actor.anim_pain3), true, true, false);
     return damage_take;
 }
 
 METHOD(Spider, mr_death, bool(Spider this, entity actor))
 {
     TC(Spider, this);
-    setanim(actor, actor.anim_melee, false, true, true);
-    actor.angles_x = 180;
+    setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
+    actor.angles_x = 0;
     return true;
 }
 #endif
@@ -199,11 +217,17 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
     TC(Spider, this);
     vector none = '0 0 0';
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
-    actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_melee = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_shoot = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    actor.anim_walk = animfixfps(actor, '10 1 1', none);
+    actor.anim_die1 = animfixfps(actor, '1 1 1', none);
+    actor.anim_die2 = animfixfps(actor, '2 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '7 1 1', none);
+    //actor.anim_pain3 = animfixfps(actor, '8 1 1', none); //brokes compiling
+    actor.anim_pain2 = animfixfps(actor, '9 1 1', none); 
+    actor.anim_idle = animfixfps(actor, '5 1 1', none); 
+    actor.anim_spawn = animfixfps(actor, '6 1 1', none);
+    actor.anim_melee = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '10 1 1', none);
     return true;
 }
 #endif
@@ -219,6 +243,9 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 
     actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Spider_Attack;
+    
+    setanim(actor, actor.anim_spawn, false, true, true);
+    actor.spawn_time = actor.animstate_endtime;
 
     return true;
 }
