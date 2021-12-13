@@ -80,23 +80,23 @@ void XonoticToSDialog_fill(entity me)
 		subtitle = _("Welcome to Xonotic! Please read the following Terms of Service:");
 
 	me.TR(me);
-	me.TD(me, 1, 5, e = makeXonoticTextLabel(0, subtitle));
-	e.allowWrap = 1;
+		me.TD(me, 1, 5, e = makeXonoticTextLabel(0, subtitle));
+		e.allowWrap = 1;
 
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, me.rows - 4, me.columns, me.textBox = makeXonoticTextBox());
-	me.loadXonoticToS(me);
+		me.TD(me, me.rows - 4, me.columns, me.textBox = makeXonoticTextBox());
+		me.loadXonoticToS(me);
 
 	me.TR(me);
 	me.gotoRC(me, me.rows - 1, 0);
 
-	me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Accept"), '0 0 0'));
-	e.onClick = Close_Clicked;
-	e.onClickEntity = me;
+		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Accept"), '0 1 0'));
+		e.onClick = Close_Clicked;
+		e.onClickEntity = me;
 
-	me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Don't accept (quit the game)"), '0 0 0'));
-	e.onClick = DontAccept_Clicked;
-	e.onClickEntity = me;
+		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Don't accept (quit the game)"), '1 0 0'));
+		e.onClick = DontAccept_Clicked;
+		e.onClickEntity = me;
 }
 
