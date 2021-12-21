@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tab.qh"
+const int COLOR_BUTTONS_COUNT = 15;
 CLASS(XonoticProfileTab, XonoticTab)
 	METHOD(XonoticProfileTab, fill, void(entity));
 	METHOD(XonoticProfileTab, draw, void(entity));
@@ -11,5 +12,7 @@ CLASS(XonoticProfileTab, XonoticTab)
 	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, SKINALPHA_HEADER);
 	ATTRIB(XonoticProfileTab, applyButton, entity);
 	ATTRIB(XonoticProfileTab, nameInput, entity);
+	ATTRIB(XonoticProfileTab, colorButtonGroup1[COLOR_BUTTONS_COUNT], entity);
+	ATTRIB(XonoticProfileTab, colorButtonGroup2[COLOR_BUTTONS_COUNT], entity);
 ENDCLASS(XonoticProfileTab)
 entity makeXonoticProfileTab();
