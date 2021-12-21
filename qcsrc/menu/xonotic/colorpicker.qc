@@ -19,6 +19,12 @@ void XonoticColorpicker_configureXonoticColorpicker(entity me, entity theTextbox
 METHOD(XonoticColorpicker, mousePress, bool(XonoticColorpicker this, vector pos))
 {
 	this.mouseDrag(this, pos);
+
+    if(this.controlledTextbox.applyButton)
+    {
+        this.controlledTextbox.applyButton.disabled = false;
+    }
+
 	return true;
 }
 
