@@ -14,5 +14,6 @@ CLASS(XonoticProfileTab, XonoticTab)
 	ATTRIB(XonoticProfileTab, nameInput, entity);
 	ATTRIB(XonoticProfileTab, colorButtonGroup1[COLOR_BUTTONS_COUNT], entity);
 	ATTRIB(XonoticProfileTab, colorButtonGroup2[COLOR_BUTTONS_COUNT], entity);
+	ATTRIB(XonoticProfileTab, playerModelSelector, entity);
 ENDCLASS(XonoticProfileTab)
 entity makeXonoticProfileTab();

@@ -1,10 +1,10 @@
 #include "playermodel.qh"
 
-entity makeXonoticPlayerModelSelector()
+entity makeXonoticPlayerModelSelector(string theSkinCvar, string theModelCvar)
 {
 	entity me;
 	me = NEW(XonoticPlayerModelSelector);
-	me.configureXonoticPlayerModelSelector(me);
+	me.configureXonoticPlayerModelSelector(me, theSkinCvar, theModelCvar);
 	return me;
 }
 
@@ -17,8 +17,10 @@ const float BUFMODELS_COUNT = 5;
 
 #define XONVOTE186 1 // (nyov) removal of model text description
 
-void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
+void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me, string theSkinCvar, string theModelCvar)
 {
+    me.skinCvar = theSkinCvar;
+    me.modelCvar = theModelCvar;
 	me.configureXonoticImage(me, string_null, -1);
 }
 
@@ -95,14 +97,14 @@ void XonoticPlayerModelSelector_loadCvars(entity me)
 	string skin, modelname;
 	float i;
 
-	skin = cvar_string("_cl_playerskin");
-	modelname = cvar_string("_cl_playermodel");
+	skin = cvar_string(me.skinCvar);
+	modelname = cvar_string(me.modelCvar);
 
 	for(i = 0; i < me.numModels; ++i)
 	{
 		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == modelname)
-		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
-			break;
+            if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
+                break;
 	}
 	if(i >= me.numModels) // fail
 		i = 0;
@@ -147,8 +149,8 @@ void PlayerModelSelector_Prev_Click(entity btn, entity me)
 void XonoticPlayerModelSelector_saveCvars(entity me)
 {
 	// we can't immediately apply here because of flood control
-	cvar_set("_cl_playermodel", me.currentModel);
-	cvar_set("_cl_playerskin", ftos(me.currentSkin));
+	cvar_set(me.modelCvar, me.currentModel);
+	cvar_set(me.skinCvar, ftos(me.currentSkin));
 }
 
 void XonoticPlayerModelSelector_draw(entity me)

@@ -32,6 +32,12 @@ entity makeXonoticProfileTab()
     }
     registercvar("_menu_profile_color", color, 0);
 
+    string skin = cvar_string("_cl_playerskin");
+    registercvar("_menu_profile_skin", skin, 0);
+
+    string model = cvar_string("_cl_playermodel");
+    registercvar("_menu_profile_model", model, 0);
+
 	return me;
 }
 
@@ -44,9 +50,10 @@ void XonoticProfileTab_draw(entity me)
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
     
-    // if values changed from console
+    // if values changed from console, update it in menu
     if (me.applyButton.disabled)
     {
+        // name field
         string inputName  = cvar_string("_menu_profile_name");
         if (name != inputName)
         {
@@ -54,6 +61,7 @@ void XonoticProfileTab_draw(entity me)
             me.nameInput.loadCvars(me.nameInput);
         }
 
+        // color buttons
         string color = cvar_string("_cl_color");
         string inputColor = cvar_string("_menu_profile_color");
         if (color != inputColor)
@@ -65,6 +73,19 @@ void XonoticProfileTab_draw(entity me)
                 me.colorButtonGroup2[i].loadCvars(me.colorButtonGroup2[i]);
             }
         }
+
+        // player model
+        string skin = cvar_string("_cl_playerskin");
+        string skinInput = cvar_string("_menu_profile_skin");
+        string model = cvar_string("_cl_playermodel");
+        string modelInput = cvar_string("_menu_profile_model");
+        if (skin != skinInput || model != modelInput)
+        {
+            cvar_set("_menu_profile_skin", skin);
+            cvar_set("_menu_profile_model", model);
+            me.playerModelSelector.loadCvars(me.playerModelSelector);
+            me.playerModelSelector.go(me.playerModelSelector, 0);
+        }
     }
 
 	SUPER(XonoticProfileTab).draw(me);
@@ -75,14 +96,14 @@ void language_selector_click(entity me, entity btn)
 }
 void XonoticProfileTab_fill(entity me)
 {
-	entity e, pms, label;
+	entity e, label;
 	float i;
 	me.applyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
         "_cl_color \"$_menu_profile_color\""
 		"color -1 -1;" // apply colors contained in _cl_color
 		"name \"$_menu_profile_name\";"
-		"playermodel $_cl_playermodel;"
-		"playerskin $_cl_playerskin;"
+		"playermodel $_menu_profile_model;"
+		"playerskin $_menu_profile_skin;"
 		, COMMANDBUTTON_APPLY);
 	me.applyButton.disableOnClick = true;
 
@@ -124,15 +145,15 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 		//me.TDempty(me, 0); // MODEL LEFT, COLOR RIGHT
 		me.TDempty(me, 1); // MODEL RIGHT, COLOR LEFT
-		pms = makeXonoticPlayerModelSelector();
+		me.playerModelSelector = makeXonoticPlayerModelSelector("_menu_profile_skin", "_menu_profile_model");
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
-			e.onClickEntity = pms;
+			e.onClickEntity = me.playerModelSelector;
 			e.applyButton = me.applyButton;
-		me.TD(me, 11.5, 1.4, pms);
+		me.TD(me, 11.5, 1.4, me.playerModelSelector);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
-			e.onClickEntity = pms;
+			e.onClickEntity = me.playerModelSelector;
 			e.applyButton = me.applyButton;
 
 	//me.setFirstColumn(me, me.currentColumn + 2); // MODEL LEFT, COLOR RIGHT
