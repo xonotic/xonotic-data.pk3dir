@@ -9,5 +9,7 @@ CLASS(XonoticProfileTab, XonoticTab)
 	ATTRIB(XonoticProfileTab, columns, float, 6.1);  // added extra .2 for center space
 	ATTRIB(XonoticProfileTab, playerNameLabel, entity);
 	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, SKINALPHA_HEADER);
+	ATTRIB(XonoticProfileTab, applyButton, entity);
+	ATTRIB(XonoticProfileTab, nameInput, entity);
 ENDCLASS(XonoticProfileTab)
 entity makeXonoticProfileTab();
