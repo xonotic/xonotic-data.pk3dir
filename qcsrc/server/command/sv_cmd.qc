@@ -1744,9 +1744,6 @@ void GameCommand_(int request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
-SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
-
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
 SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
@@ -1764,6 +1761,7 @@ SERVER_COMMAND(extendmatchtime, "Increase the timelimit value incrementally") { 
 SERVER_COMMAND(gametype, "Simple command to change the active gametype") { GameCommand_gametype(request, arguments); }
 SERVER_COMMAND(gettaginfo, "Get specific information about a weapon model") { GameCommand_gettaginfo(request, arguments); }
 SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand_gotomap(request, arguments); }
+SERVER_COMMAND(ircmsg, "Chat message to be sent by IRC bots") { GameCommand_ircmsg(request, arguments, command); }
 SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
@@ -1773,8 +1771,10 @@ SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_rada
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
 SERVER_COMMAND(reset, "Soft restart the server and reset the players") { GameCommand_reset(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
+SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
+SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
 SERVER_COMMAND(trace, "Various debugging tools with tracing") { GameCommand_trace(request, arguments); }
 SERVER_COMMAND(unlockteams, "Enable the ability for players to switch or enter teams") { GameCommand_unlockteams(request); }
 SERVER_COMMAND(warp, "Choose different level in campaign") { GameCommand_warp(request, arguments); }
