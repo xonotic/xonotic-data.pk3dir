@@ -27,9 +27,6 @@ void Announcer_Countdown(entity this)
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	bool game_timeout = (STAT(TIMEOUT_LAST) > 0);
 	
-	bool rounds;
-	float countdown;
-	
 	if(roundstarttime == -1 || game_timeout)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
