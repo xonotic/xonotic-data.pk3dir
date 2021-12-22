@@ -23,6 +23,7 @@
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/world.qh>
 
 // =============================================
@@ -361,8 +362,11 @@ void reset_map(bool dorespawn)
 		shuffleteams_on_reset_map = false;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
+	FOREACH_CLIENT(true, {
+		if (time <= game_starttime)
+			accuracy_reset(it); // for spectators too because weapon accuracy is persistent
+		if (!IS_PLAYER(it))
+			continue;
 		if (STAT(FROZEN, it))
 			Unfreeze(it, false);
 		player_powerups_remove_all(it);

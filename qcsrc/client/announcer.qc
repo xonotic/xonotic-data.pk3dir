@@ -38,19 +38,11 @@ void Announcer_Countdown(entity this)
 		return;
 	}
 
-	//if(roundstarttime >= starttime)
-	//	starttime = roundstarttime;
 	if(starttime <= time && roundstarttime != starttime) // game start time has passed
 		announcer_5min = announcer_1min = false; // reset maptime announcers now as well
 
-	if(roundstarttime && time >= starttime) {
-		rounds = true;
-		countdown = (roundstarttime - time);
-	} else {
-		rounds = false;
-		countdown = (starttime - time);
-	}
-	
+	bool inround = (roundstarttime && time >= starttime);
+	float countdown = (inround ? roundstarttime - time : starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
 
 	if(time >= starttime) centerprint_ClearTitle();
@@ -66,8 +58,7 @@ void Announcer_Countdown(entity this)
 	}
 	else // countdown is still going
 	{
-		// counting down to rounds
-		if(rounds)
+		if(inround)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
@@ -79,7 +70,7 @@ void Announcer_Countdown(entity this)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(!roundstarttime && annce_num != NULL) // count only if the gametype has no rounds
+			if(!roundstarttime && annce_num != NULL) // Don't announce game start in round based modes
 				Local_Notification(MSG_ANNCE, annce_num);
 			this.nextthink = (starttime - (countdown - 1));
 		}

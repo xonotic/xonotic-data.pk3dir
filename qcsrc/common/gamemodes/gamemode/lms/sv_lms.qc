@@ -420,7 +420,7 @@ MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 	{
 		return false;
 	}
-	return true;
+	return (autocvar_g_pickup_items <= 0); // only allow items if explicitly enabled
 }
 
 void lms_extralife(entity this)
