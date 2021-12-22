@@ -979,6 +979,46 @@ void GameCommand_gotomap(int request, int argc)
 	}
 }
 
+void GameCommand_ircmsg(int request, int argc, string command)
+{
+	/* IRCSay from the SMB Modpack */
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string msgstr = substring(command, strlen(argv(0))+1, strlen(command));
+			
+			if(msgstr == "")
+				return;
+			
+			string prefix;
+			if(substring(msgstr, 0, 3) == "^4*") // actions
+					prefix = "\{3}";
+			else
+					prefix = "\{1}";
+
+			msgstr = strcat(prefix, strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+
+			FOREACH_CLIENTSLOT(true,
+			{
+					if(!intermission_running)
+					if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || game_stopped)))
+					if(IS_PLAYER(it))
+						continue;
+					if(IS_REAL_CLIENT(it))
+						sprint(it, msgstr);
+			});
+		}
+		
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd ircmsg message");
+			return;
+		}
+	}
+}
+
 void GameCommand_lockteams(int request)
 {
 	switch (request)
