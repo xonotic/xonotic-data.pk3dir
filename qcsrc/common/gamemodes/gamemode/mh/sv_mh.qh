@@ -15,6 +15,7 @@ int autocvar_g_mh_weapons_damage;
 int autocvar_g_mh_weapons_force;
 bool autocvar_g_mh_limited_ammunition;
 bool autocvar_g_mh_hunterblind;
+bool autocvar_g_mh_propmode;
 bool autocvar_g_mh_autotaunt_runner;
 float autocvar_g_mh_autotaunt_runner_time;
 
@@ -43,6 +44,13 @@ SOUND(RUNNER_TAUNT9, "sound/mh/taunt9");
 SOUND(RUNNER_TAUNT10, "sound/mh/taunt10");
 Sound SND_RUNNER_TAUNT_RANDOM() {
     return REGISTRY_GET(Sounds, SND_RUNNER_TAUNT1.m_id + floor(prandom() * 10));
+}
+
+// Prop feature
+MODEL(RUNNER_PROP1, "models/containers/barrel01.iqm");
+MODEL(RUNNER_PROP2, "models/containers/crate01.iqm");
+Model MDL_RUNNER_PROP_RANDOM() {
+    return REGISTRY_GET(Sounds, MDL_RUNNER_PROP1.m_id + floor(prandom() * 2));
 }
 
 bool MH_CheckTeams();

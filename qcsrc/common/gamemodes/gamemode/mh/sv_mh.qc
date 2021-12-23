@@ -5,6 +5,7 @@
 .vector taggedplayervelocity;
 .vector taggedplayerviewangles;
 .float RunnerSoundTaunt_time;
+.float proptime;
 
 void MH_FakeTimeLimit(entity e, float t)
 {
@@ -32,6 +33,31 @@ MUTATOR_HOOKFUNCTION(mh, Scores_CountFragsRemaining)
 {
 	// announce remaining frags
 	return true;
+}
+
+// Prop feature
+.entity mh_prop; // TODO: to be checked
+MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
+{
+	entity player = M_ARGV(2, entity);
+
+	if(autocvar_g_mh_propmode)
+	{
+		if (player.team == Team_IndexToTeam(2))
+		{
+			string defaultmodel = M_ARGV(0, string);
+			// TODO: to be checked
+			//M_ARGV(0, string) = player.mh_prop.model;
+			//M_ARGV(1, int) = player.mh_prop.skin;
+			
+			defaultmodel = MDL_RUNNER_PROP2.model_str();
+			player.playermodel = defaultmodel; // Runners are transformed into props
+			//cvar_set("sv_defaultcharacter", "1");
+			//cvar_set("sv_defaultplayermodel", "");
+			//_setmodel(player, defaultmodel);
+			//setplayermodel(player, MDL_RUNNER_PROP_RANDOM().model_str());//LOG_INFOF("Runner %s fixplayermodel disabled", player.netname);
+		}
+	}
 }
 
 // ===================
@@ -70,6 +96,16 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 		player.mh_status = MH_STATUS_HUNTER;
 	else if(player.team == Team_IndexToTeam(2))
 		player.mh_status = MH_STATUS_RUNNER;
+	
+	if(!IS_DEAD(player) && player.team == Team_IndexToTeam(2))
+		traceline_antilag(
+			player, 
+			CS(player).cursor_trace_start, 
+			CS(player).cursor_trace_start + normalize(CS(player).cursor_trace_endpos - CS(player).cursor_trace_start) * max_shot_distance, 
+			MOVE_NORMAL, 
+			player, 
+			ANTILAG_LATENCY(player)
+		);
 	
 	// Autotaunt feature
 	if(autocvar_g_mh_autotaunt_runner)
@@ -685,6 +721,17 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	{
 		if(player.team == Team_IndexToTeam(1))
 			HunterEyesStart(player); // Hunters can't see anything until round starts
+	}
+
+	if(autocvar_g_mh_propmode)
+	{
+		if(player.team == Team_IndexToTeam(2))
+		{
+			setmodel(player, MDL_RUNNER_PROP2);
+			//setplayermodel(player, MDL_RUNNER_PROP_RANDOM().model_str());//prop_setup(player);
+			//setmodel(player, MDL_RUNNER_PROP_RANDOM());
+			LOG_INFOF("Spawned prop");
+		}
 	}
 	
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
