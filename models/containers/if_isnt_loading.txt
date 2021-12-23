@@ -1,0 +1,9 @@
+if some model doesnt load, it's because Materials are called the same as the texture:
+example:
+"Main"
+
+in barrrel01 model
+
+it should be replaced to "barrel01" the same as the assigned texture
+
+More TODO for models

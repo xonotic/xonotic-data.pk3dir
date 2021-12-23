@@ -5,7 +5,6 @@
 .vector taggedplayervelocity;
 .vector taggedplayerviewangles;
 .float RunnerSoundTaunt_time;
-.float proptime;
 
 void MH_FakeTimeLimit(entity e, float t)
 {
@@ -97,6 +96,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 	else if(player.team == Team_IndexToTeam(2))
 		player.mh_status = MH_STATUS_RUNNER;
 	
+	// TODO: Runners using prop must select an object in the map
 	if(!IS_DEAD(player) && player.team == Team_IndexToTeam(2))
 		traceline_antilag(
 			player, 
