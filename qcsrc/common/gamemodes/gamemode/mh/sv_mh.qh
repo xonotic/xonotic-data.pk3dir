@@ -47,8 +47,8 @@ Sound SND_RUNNER_TAUNT_RANDOM() {
 }
 
 // Prop feature
-MODEL(RUNNER_PROP1, "models/containers/barrel01.iqm");
-MODEL(RUNNER_PROP2, "models/containers/crate01.iqm");
+MODEL(RUNNER_PROP1, "models/props/barrel01.iqm");
+MODEL(RUNNER_PROP2, "models/props/crate01.iqm");
 Model MDL_RUNNER_PROP_RANDOM() {
     return REGISTRY_GET(Models, MDL_RUNNER_PROP1.m_id + floor(prandom() * 2));
 }

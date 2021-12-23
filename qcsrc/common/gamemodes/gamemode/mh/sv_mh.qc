@@ -36,6 +36,7 @@ MUTATOR_HOOKFUNCTION(mh, Scores_CountFragsRemaining)
 
 // Prop feature
 .entity mh_prop; // TODO: to be checked
+.bool modelchecked;
 MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
 {
 	entity player = M_ARGV(2, entity);
@@ -44,13 +45,21 @@ MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
 	{
 		if (player.team == Team_IndexToTeam(2))
 		{
-			string defaultmodel = M_ARGV(0, string);
+			//string defaultmodel = M_ARGV(0, string);
 			// TODO: to be checked
-			//M_ARGV(0, string) = player.mh_prop.model;
-			//M_ARGV(1, int) = player.mh_prop.skin;
+			if (!player.mh_prop.modelchecked)
+			{
+				//PrintToChatAll("PROPMODEL CHECKED");
+				player.mh_prop.model = MDL_RUNNER_PROP_RANDOM().model_str();
+				M_ARGV(0, string) = player.mh_prop.model;
+				M_ARGV(1, int) = player.mh_prop.skin;
+				player.playermodel = M_ARGV(0,string);
+				//setmodel(player, MDL_RUNNER_PROP_RANDOM());
+				player.mh_prop.modelchecked = true;
+			}
 			
-			defaultmodel = MDL_RUNNER_PROP2.model_str();
-			player.playermodel = defaultmodel; // Runners are transformed into props
+			//defaultmodel = MDL_RUNNER_PROP2.model_str();
+			//player.playermodel = defaultmodel; // Runners are transformed into props
 			//cvar_set("sv_defaultcharacter", "1");
 			//cvar_set("sv_defaultplayermodel", "");
 			//_setmodel(player, defaultmodel);
@@ -97,7 +106,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 		player.mh_status = MH_STATUS_RUNNER;
 	
 	// TODO: Runners using prop must select an object in the map
-	if(!IS_DEAD(player) && player.team == Team_IndexToTeam(2))
+	/*if(!IS_DEAD(player) && player.team == Team_IndexToTeam(2))
 		traceline_antilag(
 			player, 
 			CS(player).cursor_trace_start, 
@@ -105,7 +114,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 			MOVE_NORMAL, 
 			player, 
 			ANTILAG_LATENCY(player)
-		);
+		);*/
 	
 	// Autotaunt feature
 	if(autocvar_g_mh_autotaunt_runner)
@@ -725,12 +734,15 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 
 	if(autocvar_g_mh_propmode)
 	{
-		if(player.team == Team_IndexToTeam(2))
+		if(player.team == Team_IndexToTeam(2) && !IS_DEAD(player))
 		{
-			setmodel(player, MDL_RUNNER_PROP2);
+			//setmodel(player, MDL_RUNNER_PROP2);
 			//setplayermodel(player, MDL_RUNNER_PROP_RANDOM().model_str());//prop_setup(player);
 			//setmodel(player, MDL_RUNNER_PROP_RANDOM());
 			LOG_INFOF("Spawned prop");
+			
+			if(player.mh_prop) // TOFIX: only spawns per one and not for all
+				player.mh_prop.modelchecked = false;
 		}
 	}
 	
