@@ -1179,8 +1179,9 @@ float XonoticServerList_getItemHeight(entity me, int item)
 {
 	for (int i = 0; i < category_draw_count; ++i) {
 		// Matches exactly the headings with increased height.
+		// FIXME server row next to the heading is slightly smaller than others if (autocvar_menu_slist_categories <= 0)
 		if (item == category_item[i])
-			return me.itemHeight * (me.categoriesHeight + 1);
+			return me.itemHeight * (me.categoriesHeight + me.serversHeight);
 	}
 	return me.itemHeight * me.serversHeight;
 }
