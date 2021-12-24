@@ -2,7 +2,7 @@
 
 #include "../item/radiobutton.qh"
 CLASS(XonoticColorButton, RadioButton)
-	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float));
+	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, string, float, float, float));
 	METHOD(XonoticColorButton, setChecked, void(entity, float));
 	METHOD(XonoticColorButton, draw, void(entity));
 	ATTRIB(XonoticColorButton, fontSize, float, 0);
@@ -16,4 +16,4 @@ CLASS(XonoticColorButton, RadioButton)
 	METHOD(XonoticColorButton, loadCvars, void(entity));
 	METHOD(XonoticColorButton, saveCvars, void(entity));
 ENDCLASS(XonoticColorButton)
-entity makeXonoticColorButton(float, float, float);
+entity makeXonoticColorButton(string, float, float, float);
