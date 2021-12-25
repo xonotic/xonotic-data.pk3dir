@@ -18,75 +18,75 @@ entity makeXonoticProfileTab()
 	me = NEW(XonoticProfileTab);
 	me.configureDialog(me);
 
-    // profile menu specific cvars
-    string name = cvar_string("_cl_name");
-    registercvar("_menu_profile_name", name, 0);
+	// profile menu specific cvars
+	string name = cvar_string("_cl_name");
+	registercvar("_menu_profile_name", name, 0);
 
-    string color = cvar_string("_cl_color");
-    // if color unset, set random color
+	string color = cvar_string("_cl_color");
+	// if color unset, set random color
 	if(color == cvar_defstring("_cl_color"))
-    {
-        // idk what meaning of 16, maybe just COLOR_BUTTONS_COUNT+1
-        float randomColor = 16 * floor(random() * COLOR_BUTTONS_COUNT) + floor(random() * COLOR_BUTTONS_COUNT);
+	{
+		// idk what meaning of 16, maybe just COLOR_BUTTONS_COUNT+1
+		float randomColor = 16 * floor(random() * COLOR_BUTTONS_COUNT) + floor(random() * COLOR_BUTTONS_COUNT);
 		cvar_set("_cl_color", ftos(randomColor));
-    }
-    registercvar("_menu_profile_color", color, 0);
+	}
+	registercvar("_menu_profile_color", color, 0);
 
-    string skin = cvar_string("_cl_playerskin");
-    registercvar("_menu_profile_skin", skin, 0);
+	string skin = cvar_string("_cl_playerskin");
+	registercvar("_menu_profile_skin", skin, 0);
 
-    string model = cvar_string("_cl_playermodel");
-    registercvar("_menu_profile_model", model, 0);
+	string model = cvar_string("_cl_playermodel");
+	registercvar("_menu_profile_model", model, 0);
 
 	return me;
 }
 
 void XonoticProfileTab_draw(entity me)
 {
-    string name = cvar_string("_cl_name");
+	string name = cvar_string("_cl_name");
 
 	if(name == "Player")
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
-    
-    // if values changed from console, update it in menu
-    if (me.applyButton.disabled)
-    {
-        // name field
-        string inputName  = cvar_string("_menu_profile_name");
-        if (name != inputName)
-        {
-            cvar_set("_menu_profile_name", name);
-            me.nameInput.loadCvars(me.nameInput);
-        }
+	
+	// if values changed from console, update it in menu
+	if (me.applyButton.disabled)
+	{
+		// name field
+		string inputName  = cvar_string("_menu_profile_name");
+		if (name != inputName)
+		{
+			cvar_set("_menu_profile_name", name);
+			me.nameInput.loadCvars(me.nameInput);
+		}
 
-        // color buttons
-        string color = cvar_string("_cl_color");
-        string inputColor = cvar_string("_menu_profile_color");
-        if (color != inputColor)
-        {
-            cvar_set("_menu_profile_color", color);
-            for (int i = 0; i < COLOR_BUTTONS_COUNT; i++)
-            {
-                me.colorButtonGroup1[i].loadCvars(me.colorButtonGroup1[i]);
-                me.colorButtonGroup2[i].loadCvars(me.colorButtonGroup2[i]);
-            }
-        }
+		// color buttons
+		string color = cvar_string("_cl_color");
+		string inputColor = cvar_string("_menu_profile_color");
+		if (color != inputColor)
+		{
+			cvar_set("_menu_profile_color", color);
+			for (int i = 0; i < COLOR_BUTTONS_COUNT; i++)
+			{
+				me.colorButtonGroup1[i].loadCvars(me.colorButtonGroup1[i]);
+				me.colorButtonGroup2[i].loadCvars(me.colorButtonGroup2[i]);
+			}
+		}
 
-        // player model
-        string skin = cvar_string("_cl_playerskin");
-        string skinInput = cvar_string("_menu_profile_skin");
-        string model = cvar_string("_cl_playermodel");
-        string modelInput = cvar_string("_menu_profile_model");
-        if (skin != skinInput || model != modelInput)
-        {
-            cvar_set("_menu_profile_skin", skin);
-            cvar_set("_menu_profile_model", model);
-            me.playerModelSelector.loadCvars(me.playerModelSelector);
-            me.playerModelSelector.go(me.playerModelSelector, 0);
-        }
-    }
+		// player model
+		string skin = cvar_string("_cl_playerskin");
+		string skinInput = cvar_string("_menu_profile_skin");
+		string model = cvar_string("_cl_playermodel");
+		string modelInput = cvar_string("_menu_profile_model");
+		if (skin != skinInput || model != modelInput)
+		{
+			cvar_set("_menu_profile_skin", skin);
+			cvar_set("_menu_profile_model", model);
+			me.playerModelSelector.loadCvars(me.playerModelSelector);
+			me.playerModelSelector.go(me.playerModelSelector, 0);
+		}
+	}
 
 	SUPER(XonoticProfileTab).draw(me);
 }
@@ -99,7 +99,7 @@ void XonoticProfileTab_fill(entity me)
 	entity e, label;
 	float i;
 	me.applyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-        "_cl_color \"$_menu_profile_color\""
+		"_cl_color \"$_menu_profile_color\""
 		"color -1 -1;" // apply colors contained in _cl_color
 		"name \"$_menu_profile_name\";"
 		"playermodel $_menu_profile_model;"

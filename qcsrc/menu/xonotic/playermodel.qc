@@ -19,8 +19,8 @@ const float BUFMODELS_COUNT = 5;
 
 void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me, string theSkinCvar, string theModelCvar)
 {
-    me.skinCvar = theSkinCvar;
-    me.modelCvar = theModelCvar;
+	me.skinCvar = theSkinCvar;
+	me.modelCvar = theModelCvar;
 	me.configureXonoticImage(me, string_null, -1);
 }
 
@@ -103,8 +103,8 @@ void XonoticPlayerModelSelector_loadCvars(entity me)
 	for(i = 0; i < me.numModels; ++i)
 	{
 		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == modelname)
-            if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
-                break;
+			if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
+				break;
 	}
 	if(i >= me.numModels) // fail
 		i = 0;
