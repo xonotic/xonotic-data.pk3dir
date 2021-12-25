@@ -7,7 +7,6 @@
 .float RunnerSoundTaunt_time;
 .entity mh_prop; // TODO: to be checked
 .bool modelchecked;
-.entity original;
 
 bool first_time_props_spawn;
 
@@ -61,8 +60,6 @@ void PropSetup(entity ent)
 	//setorigin(ent, org);
 	ent.velocity = randomvec() * 150 + '0 0 325';
 	ent.reset = SUB_Remove;
-	
-	ent.mh_prop.model = ent.model; // assigns prop model if this is the case when runners shot it
 }
 
 void prop_droptofloor(entity e)
@@ -74,7 +71,6 @@ void prop_droptofloor(entity e)
 
 void SpawnProps(int pcount)
 {
-	pcount = autocvar_g_mh_random_props_count;
 	for(int j = 0; j < pcount; ++j)
 	{
 		entity e = spawn();
@@ -107,7 +103,6 @@ MUTATOR_HOOKFUNCTION(mh, Scores_CountFragsRemaining)
 }
 
 // Prop feature
-
 MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
 {
 	entity player = M_ARGV(2, entity);
@@ -118,15 +113,15 @@ MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
 		{
 			//string defaultmodel = M_ARGV(0, string);
 			// TODO: to be checked
-			if (!IS_DEAD(player) && !player.mh_prop.modelchecked) // to brake the loop
+			if (!player.mh_prop && !IS_DEAD(player.mh_prop) && !player.mh_prop.modelchecked) // to brake the loop
 			{
-				player.original.model = player.model;
-				player.original.skin = player.skin;
+				player.mh_prop = spawn();
 
 				player.mh_prop.model = MDL_RUNNER_PROP_RANDOM().model_str();
 
 				player.mh_prop.solid = SOLID_BBOX;
 				setsize(player, '-16 -16 -16', '16 16 16');
+				//setsize(player.mh_prop, '-16 -16 -16', '16 16 16');
 
 				M_ARGV(0, string) = player.mh_prop.model;
 				M_ARGV(1, int) = player.mh_prop.skin;
@@ -136,13 +131,10 @@ MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
 
 				player.mh_prop.modelchecked = true;
 			}
-			
-			//defaultmodel = MDL_RUNNER_PROP2.model_str();
-			//player.playermodel = defaultmodel; // Runners are transformed into props
-			//cvar_set("sv_defaultcharacter", "1");
-			//cvar_set("sv_defaultplayermodel", "");
-			//_setmodel(player, defaultmodel);
-			//setplayermodel(player, MDL_RUNNER_PROP_RANDOM().model_str());//LOG_INFOF("Runner %s fixplayermodel disabled", player.netname);
+
+			// is this necessary? I just checked it does nothing or isn't noticeable
+			/*if(IS_DEAD(player) && player.mh_prop)
+				player.mh_prop = NULL;*/
 		}
 	}
 }
@@ -471,7 +463,7 @@ MUTATOR_HOOKFUNCTION(mh, MakePlayerObserver)
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		mh_LastPlayerForTeam_Notify(player);
-		
+	
 	player.mh_status = 0;
 	MH_FakeTimeLimit(player, -1); // restore original timelimit
 	return false;  // allow team reset
@@ -614,7 +606,7 @@ float MH_CheckWinner()
 		shuffleteams_on_reset_map = !allowed_to_spawn_untagged;
 	++round_counter_for_teamchanging;
 	//FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); MH_FakeTimeLimit(it, -1); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
+	FOREACH_CLIENT(IS_PLAYER(it), { delete(it.mh_prop); nades_Clear(it); MH_FakeTimeLimit(it, -1); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 
 	return did_the_round_end;
 }
@@ -737,11 +729,6 @@ MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 			MH_FakeTimeLimit(player, round_handler_GetEndTime() - CS(player).jointime); // set HUD with current round time
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_MH_JOIN_LATE);
 		}
-
-		// if(player.mh_prop) // TOFIX: only spawns per one and not for all
-		//player.mh_prop = player;
-		/*if (player.team == Team_IndexToTeam(2))
-			player.mh_prop.modelchecked = false;*/
 	}
 }
 
@@ -777,18 +764,12 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 
 	if (frag_target.waypointsprite_attachedforcarrier)
 		WaypointSprite_Kill(frag_target.waypointsprite_attachedforcarrier);
-	
-	/*if (IS_DEAD(frag_target) && frag_target.playermodel == frag_target.mh_prop.model) // return player original model to avoid spamming errors
-	{
-		frag_target.skin = frag_target.original.skin;
-		frag_target.playermodel = frag_target.original.model;
-	}*/
 
 	mh_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn_untagged)
 	{
 		frag_target.respawn_flags = RESPAWN_SILENT; //idk what this exactly does yet, below comment was there for respawn time = time + 2 and this line inside the backets
-		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera	
 	}
 	frag_target.respawn_time = time;
 	frag_target.respawn_flags |= RESPAWN_FORCE;
@@ -845,16 +826,12 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 
 		if(player.team == Team_IndexToTeam(2) && !IS_DEAD(player))
 		{
-			//setmodel(player, MDL_RUNNER_PROP2);
-			//setplayermodel(player, MDL_RUNNER_PROP_RANDOM().model_str());//prop_setup(player);
-			//setmodel(player, MDL_RUNNER_PROP_RANDOM());
 			LOG_INFOF("Spawned prop");
-			//player.mh_prop.model = MDL_RUNNER_PROP_RANDOM().model_str();
-			//player.playermodel = player.mh_prop.model;
-			player.mh_prop.modelchecked = false;
+			if(player.mh_prop.modelchecked)
+				player.mh_prop.modelchecked = false;
 		}
 	}
-	
+
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
 		player.mh_status = MH_STATUS_RUNNER;
 		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
@@ -879,7 +856,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 			vector pl_color = colormapPaletteColor(player.clientcolors & 0x0F, false);
 			WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
 			WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
-		};
+		}
 	}
 }
 
