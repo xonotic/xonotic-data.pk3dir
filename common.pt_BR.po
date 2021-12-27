@@ -9,14 +9,15 @@
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 # Rui <xymarior@yandex.com>, 2018
+# yy0zz, 2021
 # zerowhy . <anymailz@tutanota.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-12-02 15:37+0000\n"
-"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
+"PO-Revision-Date: 2021-12-26 23:13+0000\n"
+"Last-Translator: yy0zz\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -5360,7 +5361,7 @@ msgstr "%d anos"
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr "^%d ano"
+msgstr "%d ano"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
@@ -5375,157 +5376,157 @@ msgstr "%d anos"
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr "^%d anos"
+msgstr "%d anos"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr "^%s semanas"
+msgstr "%s semanas"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr "^%d semanas"
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr "^%d semana"
+msgstr "%d semana"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr "^%d semanas"
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr "^%d semanas"
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr "^%d semanas"
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr "^%s dias"
+msgstr "%s dias"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr "^%d dias"
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr "^%d dia"
+msgstr "%d dia"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr "^%d dias"
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr "^%d dias"
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr "^%d dias"
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr "^%s horas"
+msgstr "%s horas"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr "^%d horas"
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr "^%d hora"
+msgstr "%d hora"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr "^%d horas"
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr "^%d horas"
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr "^%d horas"
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr "^%s minutos"
+msgstr "%s minutos"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr "^%d minutos"
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr "^%d minuto"
+msgstr "%d minuto"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr "^%d minutos"
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr "^%d minutos"
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr "^%d minutos"
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr "^%s segundos"
+msgstr "%s segundos"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr "^%d segundos"
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr "^%d segundo"
+msgstr "%d segundo"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr "^%d segundos"
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr "^%d segundos"
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr "^%d segundos"
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
