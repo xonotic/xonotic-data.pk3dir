@@ -23,25 +23,13 @@ entity makeXonoticProfileTab()
 	me = NEW(XonoticProfileTab);
 	me.configureDialog(me);
 
-	// profile menu specific cvars
-	string name = cvar_string("_cl_name");
-	registercvar(MENU_CVAR_NAME, name, 0);
-
-	string color = cvar_string("_cl_color");
-	// if color unset, set random color
-	if(color == cvar_defstring("_cl_color"))
+	// if color unset, set random color (init it)
+	if (cvar_string("_cl_color") == cvar_defstring("_cl_color"))
 	{
 		// idk what meaning of 16, maybe just COLOR_BUTTONS_COUNT+1
 		float randomColor = 16 * floor(random() * COLOR_BUTTONS_COUNT) + floor(random() * COLOR_BUTTONS_COUNT);
 		cvar_set("_cl_color", ftos(randomColor));
 	}
-	registercvar(MENU_CVAR_COLOR, color, 0);
-
-	string skin = cvar_string("_cl_playerskin");
-	registercvar(MENU_CVAR_SKIN, skin, 0);
-
-	string model = cvar_string("_cl_playermodel");
-	registercvar(MENU_CVAR_MODEL, model, 0);
 
 	return me;
 }
