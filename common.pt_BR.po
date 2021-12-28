@@ -10,13 +10,14 @@
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 # Rui <xymarior@yandex.com>, 2018
 # yy0zz, 2021
+# yy0zz, 2021
 # zerowhy . <anymailz@tutanota.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-12-26 23:13+0000\n"
+"PO-Revision-Date: 2021-12-27 13:05+0000\n"
 "Last-Translator: yy0zz\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -4540,7 +4541,7 @@ msgstr "MUTILAÇÃO! "
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr "%s^K1 está FURIOSO! %s^BG"
+msgstr "%s^K1 é um BERSERKER! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
@@ -4549,7 +4550,7 @@ msgstr "%s^K1 fez VINTE PONTUAÇÕES SEGUIDAS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 msgid "BERSERKER! "
-msgstr "FURIOSO!"
+msgstr "BERSERKER! "
 
 #: qcsrc/common/notifications/all.qh:460
 #, c-format
@@ -4577,7 +4578,7 @@ msgstr "%s^K1 desencadeou o ARMAGEDOM! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:461
 msgid "ARMAGEDDON! "
-msgstr "ARMAGEDDON! "
+msgstr "ARMAGEDOM! "
 
 #: qcsrc/common/notifications/all.qh:468
 #, c-format
@@ -5531,22 +5532,22 @@ msgstr "%d segundos"
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr "%dst"
+msgstr "%dº"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr "%dnd"
+msgstr "%dº"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr "%drd"
+msgstr "%dº"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr "%dth"
+msgstr "%dº"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
