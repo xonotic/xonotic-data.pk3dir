@@ -44,28 +44,24 @@ void XonoticProfileTab_draw(entity me)
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 	
 	// if values changed from console, update it in menu
-	if (me.applyButton.disabled)
+	// WORKAROUND
+	// in DP master when the Apply button is pressed cmd("_cl_name $_menu_cl_name") takes 2 frames
+	// to update _cl_name, so in the following code we have to delay the update of _menu_cl_name
+	// by one frame to avoid setting _menu_cl_name to the old _cl_name value
+	static bool was_disabled = true;
+	if (!me.applyButton.disabled) // if enabled
+		was_disabled = false;
+	else if (!was_disabled) // if disabled but was enabled in the previous frame
+		was_disabled = true; // don't check cvars this frame
+	else // if disabled and was disabled in the previous frame too
 	{
 		// name field
 		string inputName  = cvar_string(MENU_CVAR_NAME);
-		// WORKAROUND
-		// in DP master when the Apply button is pressed cmd("_cl_name $_menu_cl_name") takes 2 frames
-		// to update _cl_name, so in the following code we have to delay the update of _menu_cl_name
-		// by one frame to avoid setting _menu_cl_name to the old _cl_name value
-		static bool name_changed;
 		if (name != inputName)
 		{
-			if (name_changed == false)
-				name_changed = true; // don't update _menu_cl_name this frame
-			else
-			{
-				cvar_set(MENU_CVAR_NAME, name);
-				me.nameInput.loadCvars(me.nameInput);
-				name_changed = false;
-			}
+			cvar_set(MENU_CVAR_NAME, name);
+			me.nameInput.loadCvars(me.nameInput);
 		}
-		else
-			name_changed = false;
 
 		// color buttons
 		string color = cvar_string("_cl_color");
