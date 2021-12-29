@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-12-22 12:41+0000\n"
+"PO-Revision-Date: 2021-12-28 15:49+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -5957,7 +5957,7 @@ msgstr "Сведения о движке:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
-msgstr "Исп. алгоритм усреднения для FPS"
+msgstr "Исп. алгоритм усреднения частоты кадров"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -9046,7 +9046,7 @@ msgstr "Определённая пользователем привязка к�
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
 msgid "%d fps"
-msgstr "%d fps"
+msgstr "%d к/c"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
@@ -9374,7 +9374,7 @@ msgid ""
 "screen refresh rate"
 msgstr ""
 "Включить вертикальную синхронизацию для предотвращения разрыва кадров, это "
-"ограничит частоту кадров в секунду частотой обновления монитора"
+"ограничит частоту кадров частотой обновления монитора"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
