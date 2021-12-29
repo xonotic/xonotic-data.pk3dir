@@ -5,6 +5,7 @@
 #include "dialog_firstrun.qh"
 #include "textbox.qh"
 #include "textlabel.qh"
+#include "languagelist.qh"
 #include "button.qh"
 #include "util.qh"
 
@@ -87,6 +88,17 @@ void XonoticToSDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 4, me.columns, me.textBox = makeXonoticTextBox());
 		me.loadXonoticToS(me);
+
+	/* Language section */
+	me.TR(me);
+	me.gotoRC(me, 0, 4.35); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.5, e = makeXonoticHeaderLabel(_("Text Language")));
+	me.TR(me);
+		me.TD(me, 12.5, 1.5, e = makeXonoticLanguageList());
+
+	me.gotoRC(me, 13.5, 4.35); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.5, e = makeXonoticCommandButton(_("Set language"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; menu_cmd languageselect; menu_restart", 0));
+	/* Language section */
 
 	me.TR(me);
 	me.gotoRC(me, me.rows - 1, 0);
