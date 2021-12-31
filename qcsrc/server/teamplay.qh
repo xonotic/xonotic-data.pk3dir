@@ -51,9 +51,18 @@ int Team_GetNumberOfAlivePlayers(entity team_ent);
 /// \param[in] number Number of players to set.
 void Team_SetNumberOfAlivePlayers(entity team_ent, int number);
 
+/// \brief Returns the winner team.
+/// \return Winner team or 0 if 2 or more teams have alive players or -1 if no team has any alive players.
+int Team_GetWinnerAliveTeam();
+
 /// \brief Returns the number of alive teams.
 /// \return Number of alive teams.
 int Team_GetNumberOfAliveTeams();
+
+/// \brief Returns the winner team.
+/// \param[in] min_control_points Minimum number of control points the winner team must have.
+/// \return Winner team or 0 if 2 or more teams have control points or -1 if no team has any control points.
+int Team_GetWinnerTeam_WIthControlPoints(int min_control_points);
 
 /// \brief Returns the number of control points owned by a team.
 /// \param[in] team_ent Team entity.

@@ -92,6 +92,21 @@ void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
 	team_ent.m_num_players_alive = number;
 }
 
+int Team_GetWinnerAliveTeam()
+{
+	int winner = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		if (g_team_entities[i].m_num_players_alive > 0)
+		{
+			if (winner)
+				return 0;
+			winner = Team_IndexToTeam(i + 1);
+		}
+	}
+	return (winner ? winner : -1);
+}
+
 int Team_GetNumberOfAliveTeams()
 {
 	int result = 0;
@@ -103,6 +118,21 @@ int Team_GetNumberOfAliveTeams()
 		}
 	}
 	return result;
+}
+
+int Team_GetWinnerTeam_WIthControlPoints(int min_control_points)
+{
+	int winner = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		if (g_team_entities[i].m_num_control_points >= min_control_points)
+		{
+			if (winner)
+				return 0;
+			winner = Team_IndexToTeam(i + 1);
+		}
+	}
+	return (winner ? winner : -1);
 }
 
 int Team_GetNumberOfControlPoints(entity team_ent)

@@ -1142,31 +1142,6 @@ void Onslaught_count_generators()
 	}
 }
 
-int Onslaught_GetWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no generators left?
-}
-
 void nades_Clear(entity e);
 
 bool Onslaught_CheckWinner()
@@ -1213,13 +1188,9 @@ bool Onslaught_CheckWinner()
 	else { wpforenemy_announced = false; ons_stalemate = false; }
 
 	Onslaught_count_generators();
-
-	if (Team_GetNumberOfTeamsWithControlPoints() > 1)
-	{
+	int winner_team = Team_GetWinnerTeam_WIthControlPoints(1); // actually generators
+	if (!winner_team)
 		return 0;
-	}
-
-	int winner_team = Onslaught_GetWinnerTeam();
 
 	if(winner_team > 0)
 	{
