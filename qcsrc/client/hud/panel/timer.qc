@@ -42,7 +42,7 @@ void HUD_Timer()
 	timelimit = STAT(TIMELIMIT);
 
 	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
-	timeleft -= max(0, STAT(GAMESTARTTIME) - time); // Remove countdown from timeleft
+	timeleft = min(timeleft, timelimit * 60);
 	timeleft = ceil(timeleft);
 
 	minutesLeft = floor(timeleft / 60);
