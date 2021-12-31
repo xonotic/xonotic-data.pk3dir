@@ -1126,7 +1126,7 @@ void Onslaught_count_generators()
 	total_generators = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
 	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
@@ -1136,9 +1136,9 @@ void Onslaught_count_generators()
 			continue;
 		}
 		entity team_ = Entity_GetTeam(e);
-		int num_control_points = Team_GetNumberOfControlPoints(team_);
-		++num_control_points;
-		Team_SetNumberOfControlPoints(team_, num_control_points);
+		int num_generators = Team_GetNumberOfOwnedItems(team_);
+		++num_generators;
+		Team_SetNumberOfOwnedItems(team_, num_generators);
 	}
 }
 
@@ -1188,7 +1188,7 @@ bool Onslaught_CheckWinner()
 	else { wpforenemy_announced = false; ons_stalemate = false; }
 
 	Onslaught_count_generators();
-	int winner_team = Team_GetWinnerTeam_WIthControlPoints(1); // actually generators
+	int winner_team = Team_GetWinnerTeam_WIthOwnedItems(1);
 	if (!winner_team)
 		return 0;
 

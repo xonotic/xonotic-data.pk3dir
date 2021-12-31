@@ -60,23 +60,23 @@ int Team_GetWinnerAliveTeam();
 int Team_GetNumberOfAliveTeams();
 
 /// \brief Returns the winner team.
-/// \param[in] min_control_points Minimum number of control points the winner team must have.
-/// \return Winner team or 0 if 2 or more teams have control points or -1 if no team has any control points.
-int Team_GetWinnerTeam_WIthControlPoints(int min_control_points);
+/// \param[in] min_owned_items Minimum number of items the winner team must have.
+/// \return Winner team or 0 if 2 or more teams own items or -1 if no team own any items.
+int Team_GetWinnerTeam_WIthOwnedItems(int min_owned_items);
 
-/// \brief Returns the number of control points owned by a team.
+/// \brief Returns the number of items owned by a team.
 /// \param[in] team_ent Team entity.
-/// \return Number of control points owned by a team.
-int Team_GetNumberOfControlPoints(entity team_ent);
+/// \return Number of items owned by a team.
+int Team_GetNumberOfOwnedItems(entity team_ent);
 
-/// \brief Sets the number of control points owned by a team.
+/// \brief Sets the number of items owned by a team.
 /// \param[in,out] team_ent Team entity.
-/// \param[in] number Number of control points to set.
-void Team_SetNumberOfControlPoints(entity team_ent, int number);
+/// \param[in] number Number of items to set.
+void Team_SetNumberOfOwnedItems(entity team_ent, int number);
 
-/// \brief Returns the number of teams that own control points.
-/// \return Number of teams that own control points.
-int Team_GetNumberOfTeamsWithControlPoints();
+/// \brief Returns the number of teams that own items.
+/// \return Number of teams that own items.
+int Team_GetNumberOfTeamsWithOwnedItems();
 
 // ======================= Entity specific API ================================
 

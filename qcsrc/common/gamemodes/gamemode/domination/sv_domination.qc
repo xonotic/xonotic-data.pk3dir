@@ -311,7 +311,7 @@ void Domination_count_controlpoints()
 	total_control_points = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
 	IL_EACH(g_dompoints, true,
 	{
@@ -321,9 +321,9 @@ void Domination_count_controlpoints()
 			continue;
 		}
 		entity team_ = Entity_GetTeam(it.goalentity);
-		int num_control_points = Team_GetNumberOfControlPoints(team_);
+		int num_control_points = Team_GetNumberOfOwnedItems(team_);
 		++num_control_points;
-		Team_SetNumberOfControlPoints(team_, num_control_points);
+		Team_SetNumberOfOwnedItems(team_, num_control_points);
 	});
 }
 
@@ -340,7 +340,7 @@ bool Domination_CheckWinner()
 	}
 
 	Domination_count_controlpoints();
-	int winner_team = Team_GetWinnerTeam_WIthControlPoints(total_control_points);
+	int winner_team = Team_GetWinnerTeam_WIthOwnedItems(total_control_points);
 	if (winner_team == -1)
 		return 0;
 

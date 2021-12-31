@@ -35,7 +35,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
-.int m_num_control_points; ///< Number of control points owned by a team.
+.int m_num_owned_items; ///< Number of items owned by a team.
 
 string autocvar_g_forced_team_red;
 string autocvar_g_forced_team_blue;
@@ -120,12 +120,12 @@ int Team_GetNumberOfAliveTeams()
 	return result;
 }
 
-int Team_GetWinnerTeam_WIthControlPoints(int min_control_points)
+int Team_GetWinnerTeam_WIthOwnedItems(int min_control_points)
 {
 	int winner = 0;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		if (g_team_entities[i].m_num_control_points >= min_control_points)
+		if (g_team_entities[i].m_num_owned_items >= min_control_points)
 		{
 			if (winner)
 				return 0;
@@ -135,22 +135,22 @@ int Team_GetWinnerTeam_WIthControlPoints(int min_control_points)
 	return (winner ? winner : -1);
 }
 
-int Team_GetNumberOfControlPoints(entity team_ent)
+int Team_GetNumberOfOwnedItems(entity team_ent)
 {
-	return team_ent.m_num_control_points;
+	return team_ent.m_num_owned_items;
 }
 
-void Team_SetNumberOfControlPoints(entity team_ent, int number)
+void Team_SetNumberOfOwnedItems(entity team_ent, int number)
 {
-	team_ent.m_num_control_points = number;
+	team_ent.m_num_owned_items = number;
 }
 
-int Team_GetNumberOfTeamsWithControlPoints()
+int Team_GetNumberOfTeamsWithOwnedItems()
 {
 	int result = 0;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		if (g_team_entities[i].m_num_control_points > 0)
+		if (g_team_entities[i].m_num_owned_items > 0)
 		{
 			++result;
 		}
