@@ -265,10 +265,10 @@ void lms_RemovePlayer(entity player)
 			});
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
-		else
+		else if (player.lmsplayer)
 		{
 			int min_forfeiter_rank = 665; // different from 666
-			FOREACH_CLIENT(true, {
+			FOREACH_CLIENT(it != player, {
 				// update rank of other players that were eliminated
 				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
 				{
