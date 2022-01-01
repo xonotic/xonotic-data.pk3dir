@@ -41,8 +41,7 @@ void HUD_Timer()
 
 	timelimit = STAT(TIMELIMIT);
 
-	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
-	timeleft = min(timeleft, timelimit * 60);
+	timeleft = bound(0, timelimit * 60 + STAT(GAMESTARTTIME) - time, timelimit * 60);
 	timeleft = ceil(timeleft);
 
 	minutesLeft = floor(timeleft / 60);
