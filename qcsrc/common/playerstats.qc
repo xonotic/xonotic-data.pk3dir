@@ -21,6 +21,7 @@ void PlayerStats_Prematch()
 	//foobar
 }
 
+// Deletes current playerstats DB, creates a new one and fully initializes it
 void PlayerStats_GameReport_Reset_All()
 {
 	strfree(PS_GR_OUT_TL);
@@ -37,6 +38,8 @@ void PlayerStats_GameReport_Reset_All()
 		if (teamscorekeepers[i])
 			PlayerStats_GameReport_AddTeam(i + 1);
 	FOREACH_CLIENT(true, {
+		// NOTE Adding back a player we are applying any cl_allow_uidtracking change
+		// usually only possible by reconnecting to the server
 		strfree(it.playerstats_id);
 		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
 		if (IS_BOT_CLIENT(it) || CS_CVAR(it).cvar_cl_allow_uidtracking)
