@@ -21,6 +21,47 @@ void PlayerStats_Prematch()
 	//foobar
 }
 
+// Deletes current playerstats DB, creates a new one and fully initializes it
+void PlayerStats_GameReport_Reset_All()
+{
+	strfree(PS_GR_OUT_TL);
+	strfree(PS_GR_OUT_PL);
+	strfree(PS_GR_OUT_EVL);
+
+	if (PS_GR_OUT_DB >= 0)
+		db_close(PS_GR_OUT_DB);
+	PlayerStats_GameReport_Init();
+	if(PS_GR_OUT_DB < 0)
+		return;
+
+	for (int i = 0; i < 16; i++)
+		if (teamscorekeepers[i])
+			PlayerStats_GameReport_AddTeam(i + 1);
+	FOREACH_CLIENT(true, {
+		// NOTE Adding back a player we are applying any cl_allow_uidtracking change
+		// usually only possible by reconnecting to the server
+		strfree(it.playerstats_id);
+		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
+		if (IS_BOT_CLIENT(it) || CS_CVAR(it).cvar_cl_allow_uidtracking)
+			PlayerStats_GameReport_AddPlayer(it);
+	});
+	FOREACH(Scores, true, {
+		string label = scores_label(it);
+		if (label == "")
+			continue;
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	});
+	for(int i = 0; i < MAX_TEAMSCORE; ++i)
+	{
+		string label = teamscores_label(i);
+		if (label == "")
+			continue;
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
+}
+
 void PlayerStats_GameReport_AddPlayer(entity e)
 {
 	if((PS_GR_OUT_DB < 0) || (e.playerstats_id)) { return; }

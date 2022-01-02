@@ -56,6 +56,8 @@ const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
 // delay map switch until this is set
 bool PlayerStats_GameReport_DelayMapVote;
 
+void PlayerStats_GameReport_Reset_All();
+
 // call at initialization
 void PlayerStats_GameReport_Init();
 
