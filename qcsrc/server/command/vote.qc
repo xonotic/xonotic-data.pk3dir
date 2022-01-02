@@ -336,14 +336,15 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(bool dorespawn)
+void reset_map(bool dorespawn, bool is_fake_round_start)
 {
 	if (time <= game_starttime)
 	{
 		if (game_stopped)
 			return;
 
-		PlayerStats_GameReport_Reset_All();
+		if (!is_fake_round_start)
+			PlayerStats_GameReport_Reset_All();
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
@@ -413,18 +414,18 @@ void reset_map(bool dorespawn)
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think(entity this)
 {
-	reset_map(true);
+	reset_map(true, false);
 	Score_ClearAll();
 	delete(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
-void ReadyRestart_force()
+void ReadyRestart_force(bool is_fake_round_start)
 {
 	if (time <= game_starttime && game_stopped)
 		return;
-
-	bprint("^1Match is restarting...\n");
+	if (!is_fake_round_start)
+		bprint("^1Match is restarting...\n");
 
 	VoteReset();
 
@@ -432,7 +433,7 @@ void ReadyRestart_force()
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
-	
+
 	if(warmup_stage)
 		game_starttime = time; // Warmup: No countdown in warmup
 	else
@@ -445,7 +446,7 @@ void ReadyRestart_force()
 	});
 
 	// if we're ending the warmup stage call the corresponding hook
-	if(!warmup_stage)
+	if(!is_fake_round_start && !warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
 
 	// reset the .ready status of all players (also spectators)
@@ -458,7 +459,7 @@ void ReadyRestart_force()
 		lockteams = !warmup_stage;
 
 	// initiate the restart-countdown-announcer entity
-	if (sv_ready_restart_after_countdown && !warmup_stage)
+	if (!is_fake_round_start && sv_ready_restart_after_countdown && !warmup_stage)
 	{
 		entity restart_timer = new_pure(restart_timer);
 		setthink(restart_timer, ReadyRestart_think);
@@ -471,7 +472,7 @@ void ReadyRestart_force()
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true);
+	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true, is_fake_round_start);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
@@ -489,7 +490,7 @@ void ReadyRestart(bool forceWarmupEnd)
 	else
 		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage
 
-	ReadyRestart_force();
+	ReadyRestart_force(false);
 }
 
 // Count the players who are ready and determine whether or not to restart the match
