@@ -9,6 +9,7 @@
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
+bool autocvar_g_lms_items;
 bool autocvar_g_lms_regenerate;
 
 // main functions
@@ -414,6 +415,9 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
+	if (autocvar_g_lms_items)
+		return false;
+
 	entity definition = M_ARGV(0, entity);
 
 	if (autocvar_g_lms_extra_lives && definition == ITEM_ExtraLife)
