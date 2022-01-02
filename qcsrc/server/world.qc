@@ -494,7 +494,6 @@ void cvar_changes_init()
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
-		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
@@ -1645,7 +1644,7 @@ void CheckRules_World()
 				if(readyplayers || playerswithlaps >= 2)
 				{
 					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
+					ReadyRestart(true); // go to race
 					return;
 				}
 				else
