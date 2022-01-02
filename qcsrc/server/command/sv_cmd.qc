@@ -162,7 +162,13 @@ void GameCommand_allready(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			ReadyRestart();
+			if(warmup_stage)
+			{
+				ReadyRestart(true);
+			}
+			else
+				LOG_INFO("Not in warmup.");
+
 			return;
 		}
 
@@ -1308,6 +1314,26 @@ void GameCommand_shuffleteams(int request)
 	}
 }
 
+void GameCommand_resetmatch(int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			ReadyRestart(false);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd resetmatch");
+			LOG_HELP("  No arguments required.");
+			return;
+		}
+	}
+}
+
 void GameCommand_stuffto(int request, int argc)
 {
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
@@ -1629,7 +1655,7 @@ void GameCommand_(int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
-SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
+SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
 SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
@@ -1652,6 +1678,7 @@ SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { G
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
+SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
