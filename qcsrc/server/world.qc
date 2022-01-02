@@ -1299,10 +1299,18 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	int winner_team = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(playername(it.netname, it.team, false), " ^7wins.\n");
+		{
+			if (teamplay && !winner_team)
+			{
+				winner_team = it.team;
+				bprint(Team_ColorCode(winner_team), Team_ColorName_Upper(winner_team), "^7 team wins the match\n");
+			}
+			bprint(playername(it.netname, it.team, false), " ^7wins\n");
+		}
 	});
 
 	target_music_kill();
@@ -1382,13 +1390,13 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
+	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
 		if(it.(field) == value)
 			it.winning = 1;
 	});
@@ -1397,7 +1405,7 @@ void AddWinners(.float field, float value)
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
+	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, { it.winning = 0; });
 }
 
 int fragsleft_last;
