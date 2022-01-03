@@ -3,6 +3,15 @@
 float autocvar_g_ca_damage2score_multiplier;
 bool autocvar_g_ca_spectate_enemies;
 
+float autocvar_g_ca_start_health = 200;
+float autocvar_g_ca_start_armor = 200;
+float autocvar_g_ca_start_ammo_shells = 60;
+float autocvar_g_ca_start_ammo_nails = 320;
+float autocvar_g_ca_start_ammo_rockets = 160;
+float autocvar_g_ca_start_ammo_cells = 180;
+float autocvar_g_ca_start_ammo_plasma = 180;
+float autocvar_g_ca_start_ammo_fuel = 0;
+
 void CA_count_alive_players()
 {
 	total_players = 0;
@@ -24,40 +33,11 @@ void CA_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
-			1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
-}
-
-int CA_GetWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no player left
 }
 
 void nades_Clear(entity player);
@@ -77,12 +57,10 @@ float CA_CheckWinner()
 	}
 
 	CA_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() > 1)
-	{
+	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
 		return 0;
-	}
 
-	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
@@ -227,14 +205,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-
-	TRANSMUTE(Observer, player);
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
@@ -302,6 +272,10 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
+	bool is_forced = M_ARGV(1, bool);
+	if (is_forced && player.caplayer)
+		player.caplayer = 0;
+
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
@@ -332,14 +306,17 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_ca_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_ca_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_ca_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_ca_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_ca_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_ca_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_ca_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_ca_start_ammo_fuel");
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
+	start_health       = warmup_start_health       = autocvar_g_ca_start_health;
+	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_ca_start_armor;
+	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_ca_start_ammo_shells;
+	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ca_start_ammo_nails;
+	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ca_start_ammo_rockets;
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ca_start_ammo_cells;
+	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ca_start_ammo_plasma;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ca_start_ammo_fuel;
 }
 
 MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
@@ -366,7 +343,7 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if (autocvar_g_powerups <= 0)
-	if (item.flags & FL_POWERUP)
+	if (item.itemdef.instanceOfPowerup)
 		return true;
 
 	if (autocvar_g_pickup_items <= 0)

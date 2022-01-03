@@ -839,9 +839,35 @@ bool race_waypointsprite_visible_for_player(entity this, entity player, entity v
 		return false;
 }
 
+void defrag_waypointsprites(entity targeted, entity checkpoint)
+{
+	// bones_was_here: spawn a waypoint for every entity with a bmodel
+	// that directly or indirectly targets this checkpoint
+	// (anything a player could touch or shoot to activate this cp)
+
+	entity s = WP_RaceCheckpoint;
+	if (checkpoint.classname == "target_startTimer")
+		s = WP_RaceStart;
+	else if (checkpoint.classname == "target_stopTimer")
+		s = WP_RaceFinish;
+
+	for (entity t = findchain(target, targeted.targetname); t; t = t.chain)
+	{
+		if (t.modelindex)
+		{
+			WaypointSprite_SpawnFixed(s, (t.absmin + t.absmax) * 0.5, t, sprite, RADARICON_NONE);
+			t.sprite.realowner = checkpoint;
+			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+		}
+
+		if (t.targetname)
+			defrag_waypointsprites(t, checkpoint);
+	}
+}
+
 void trigger_race_checkpoint_verify(entity this)
 {
-    static bool have_verified;
+	static bool have_verified;
 	if (have_verified) return;
 	have_verified = true;
 
@@ -859,7 +885,7 @@ void trigger_race_checkpoint_verify(entity this)
 			pl_race_place = 0;
 			if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for respawning in race) - bailing out"));
-            }
+			}
 
 			if (i == 0) {
 				// qualifying only
@@ -867,7 +893,7 @@ void trigger_race_checkpoint_verify(entity this)
 				pl_race_place = race_lowest_place_spawn;
 				if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for qualifying) - bailing out"));
-                }
+				}
 
 				// race only (initial spawn)
 				g_race_qualifying = 0;
@@ -875,7 +901,7 @@ void trigger_race_checkpoint_verify(entity this)
 					pl_race_place = p;
 					if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 						error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for initially spawning in race) - bailing out"));
-                    }
+					}
 				}
 			}
 		}
@@ -886,7 +912,7 @@ void trigger_race_checkpoint_verify(entity this)
 		pl_race_place = race_lowest_place_spawn;
 		if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 			error(strcat("Checkpoint 0 misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for qualifying) - bailing out"));
-        }
+		}
 	} else {
 		pl_race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
@@ -908,8 +934,8 @@ void trigger_race_checkpoint_verify(entity this)
 				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 					if (argv(0) == cp.targetname) {
 						cp.race_checkpoint = stof(argv(1));
-                    }
-                }
+					}
+				}
 			}
 			fclose(fh);
 		}
@@ -917,37 +943,12 @@ void trigger_race_checkpoint_verify(entity this)
 
 	g_race_qualifying = qual;
 
-	IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
-	{
-		if(it.targetname == "" || !it.targetname) // somehow this is a case...
-			continue;
-		entity cpt = it;
-		FOREACH_ENTITY_STRING(target, cpt.targetname,
-		{
-			vector org = (it.absmin + it.absmax) * 0.5;
-			if(cpt.race_checkpoint == 0)
-				WaypointSprite_SpawnFixed(WP_RaceStart, org, it, sprite, RADARICON_NONE);
-			else
-				WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, it, sprite, RADARICON_NONE);
-
-			it.sprite.realowner = cpt;
-			it.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
-		});
-	});
-
 	if (race_timed_checkpoint) {
 		if (defrag_ents) {
 			IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
 			{
-				entity cpt = it;
-				if(it.classname == "target_startTimer" || it.classname == "target_stopTimer") {
-					if(it.targetname == "" || !it.targetname) // somehow this is a case...
-						continue;
-					FOREACH_ENTITY_STRING(target, cpt.targetname, {
-						if(it.sprite)
-							WaypointSprite_UpdateSprites(it.sprite, ((cpt.classname == "target_startTimer") ? WP_RaceStart : WP_RaceFinish), WP_Null, WP_Null);
-					});
-				}
+				defrag_waypointsprites(it, it);
+
 				if(it.classname == "target_checkpoint") {
 					if(it.race_checkpoint == -2)
 						defragcpexists = -1; // something's wrong with the defrag cp file or it has not been written yet, set defragcpexists to -1 so that it will be rewritten when someone finishes
@@ -958,17 +959,17 @@ void trigger_race_checkpoint_verify(entity this)
 				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 					if (cp.race_checkpoint > largest_cp_id) {
 						largest_cp_id = cp.race_checkpoint;
-                    }
-                }
+					}
+				}
 				for (entity cp = NULL; (cp = find(cp, classname, "target_stopTimer"));) {
 					cp.race_checkpoint = largest_cp_id + 1; // finish line
-                }
+				}
 				race_highest_checkpoint = largest_cp_id + 1;
 				race_timed_checkpoint = largest_cp_id + 1;
 			} else {
 				for (entity cp = NULL; (cp = find(cp, classname, "target_stopTimer"));) {
 					cp.race_checkpoint = 255; // finish line
-                }
+				}
 				race_highest_checkpoint = 255;
 				race_timed_checkpoint = 255;
 			}
@@ -977,14 +978,14 @@ void trigger_race_checkpoint_verify(entity this)
 			{
 				if (it.race_checkpoint == 0) {
 					WaypointSprite_UpdateSprites(it.sprite, WP_RaceStart, WP_Null, WP_Null);
-                } else if (it.race_checkpoint == race_timed_checkpoint) {
+				} else if (it.race_checkpoint == race_timed_checkpoint) {
 					WaypointSprite_UpdateSprites(it.sprite, WP_RaceFinish, WP_Null, WP_Null);
 				}
-            });
+			});
 		}
 	}
 
-	if (defrag_ents) {
+	if (defrag_ents) { /* The following hack shall be removed when per-player trigger_multiple.wait is implemented for cts */
 		for (entity trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); ) {
 			for (entity targ = NULL; (targ = find(targ, targetname, trigger.target)); ) {
 				if (targ.classname == "target_checkpoint" || targ.classname == "target_startTimer" || targ.classname == "target_stopTimer") {

@@ -4,4 +4,3 @@
 #include <common/items/item/health.qc>
 #include <common/items/item/jetpack.qc>
 #include <common/items/item/pickup.qc>
-#include <common/items/item/powerup.qc>

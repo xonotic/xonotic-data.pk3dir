@@ -38,6 +38,8 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 void accuracy_init(entity e);
 void accuracy_free(entity e);
 
+void accuracy_reset(entity e);
+
 // force a resend of a player's accuracy stats
 void accuracy_resend(entity e);
 

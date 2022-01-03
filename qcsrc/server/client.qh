@@ -33,6 +33,7 @@ bool autocvar_g_nodepthtestplayers;
 string autocvar_g_mutatormsg;
 float autocvar_sv_foginterval;
 float autocvar_sv_maxidle;
+int autocvar_sv_maxidle_minplayers = 2;
 float autocvar_sv_maxidle_playertospectator = 60;
 bool autocvar_sv_maxidle_alsokickspectators;
 int autocvar_sv_maxidle_slots;
@@ -275,9 +276,6 @@ CLASS(Player, Client)
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
     ATTRIB(Player, ballistics_density, float, this.ballistics_density);
-    ATTRIB(Player, prevstrengthsound, float, this.prevstrengthsound);
-    ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
-    ATTRIB(Player, buff_shield, float, this.buff_shield);
 
     INIT(Player) {
         this.classname = STR_PLAYER;
@@ -378,13 +376,15 @@ STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
 void play_countdown(entity this, float finished, Sound samp);
 void player_powerups_remove_all(entity this);
 
-void RotRegen(entity this, float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod);
+void RotRegen(entity this, float current, float limit_mod,
+	float regenstable, float regenfactor, float regenlinear, float regenframetime,
+	float rotstable, float rotfactor, float rotlinear, float rotframetime);
 
 bool Spectate(entity this, entity pl);
 
 void ClientInit_Spawn();
 
-void PutObserverInServer(entity this);
+void PutObserverInServer(entity this, bool is_forced);
 
 void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);

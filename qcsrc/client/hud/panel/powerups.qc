@@ -21,6 +21,7 @@ void HUD_Powerups_Export(int fh)
 .vector colormod; // Color
 .float count;     // Time left
 .float lifetime;  // Maximum time
+.float cnt;       // Infinite timer
 
 entity powerupItems;
 int powerupItemsCount;
@@ -34,7 +35,7 @@ void resetPowerupItems()
 	powerupItemsCount = 0;
 }
 
-void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime)
+void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime, bool isInfinite)
 {
 	if(!powerupItems)
 		powerupItems = spawn();
@@ -49,6 +50,7 @@ void addPowerupItem(string name, string icon, vector color, float currentTime, f
 	item.colormod = color;
 	item.count    = currentTime;
 	item.lifetime = lifeTime;
+	item.cnt      = isInfinite;
 
 	++powerupItemsCount;
 }
@@ -72,10 +74,6 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 void HUD_Powerups()
 {
-	int allItems = STAT(ITEMS);
-	int allBuffs = STAT(BUFFS);
-	float strengthTime, shieldTime, superTime;
-
 	// Initialize items
 	if(!autocvar__hud_configure)
 	{
@@ -83,36 +81,10 @@ void HUD_Powerups()
 			return;
 		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_powerups_hide_ondeath)
 			return;
-		//if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
-
-		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
-		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
-		superTime = bound(0, STAT(SUPERWEAPONS_FINISHED) - time, 99);
-
-		if(allItems & IT_UNLIMITED_SUPERWEAPONS)
-			superTime = 99;
-
-		// Prevent stuff to show up on mismatch that will be fixed next frame
-		if(!(allItems & IT_SUPERWEAPON))
-			superTime = 0;
-	}
-	else
-	{
-		strengthTime = 15;
-		shieldTime = 27;
-		superTime = 13;
-		allBuffs = 0;
 	}
 
 	// Add items to linked list
 	resetPowerupItems();
-
-	if(strengthTime)
-		addPowerupItem("Strength", "strength", autocvar_hud_progressbar_strength_color, strengthTime, 30);
-	if(shieldTime)
-		addPowerupItem("Shield", "shield", autocvar_hud_progressbar_shield_color, shieldTime, 30);
-	if(superTime && !(allItems & IT_UNLIMITED_SUPERWEAPONS))
-		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
 	MUTATOR_CALLHOOK(HUD_Powerups_add);
 
@@ -205,10 +177,15 @@ void HUD_Powerups()
 			fullSeconds = ceil(item.count);
 			textColor = '0.6 0.6 0.6' + (item.colormod * 0.4);
 
-			if(item.count > 1)
-				DrawNumIcon(itemPos, itemSize, fullSeconds, item.netname, isVertical, align, textColor, panel_fg_alpha);
-			if(item.count <= 5)
-				DrawNumIcon_expanding(itemPos, itemSize, fullSeconds, item.netname, isVertical, align, textColor, panel_fg_alpha, bound(0, (fullSeconds - item.count) / 0.5, 1));
+			if(item.cnt)
+				DrawNumIcon(itemPos, itemSize, fullSeconds, item.netname, isVertical, true, align, textColor, panel_fg_alpha);
+			else
+			{
+				if(item.count > 1)
+					DrawNumIcon(itemPos, itemSize, fullSeconds, item.netname, isVertical, false, align, textColor, panel_fg_alpha);
+				if(item.count <= 5)
+					DrawNumIcon_expanding(itemPos, itemSize, fullSeconds, item.netname, isVertical, false, align, textColor, panel_fg_alpha, bound(0, (fullSeconds - item.count) / 0.5, 1));
+			}
 		}
 
 		// Determine next section
