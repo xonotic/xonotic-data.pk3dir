@@ -163,7 +163,10 @@ bool lms_AddPlayer(entity player)
 		int lives = GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
 		if(lives <= 0)
 			return false;
-		INGAME_STATUS_SET(player, INGAME_STATUS_JOINING); // this is just to delay setting health and armor that can't be done here
+		if (time < game_starttime)
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
+		else
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING); // this is just to delay setting health and armor that can't be done here
 	}
 	if (warmup_stage || time <= game_starttime)
 	{
