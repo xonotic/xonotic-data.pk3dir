@@ -381,13 +381,13 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 					if (caller.ready)            // toggle
 					{
 						caller.ready = false;
-						if(IS_PLAYER(caller) || caller.caplayer == 1)
+						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
 							bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 					}
 					else
 					{
 						caller.ready = true;
-						if(IS_PLAYER(caller) || caller.caplayer == 1)
+						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
 							bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
 

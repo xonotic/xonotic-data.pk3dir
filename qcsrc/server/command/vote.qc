@@ -499,7 +499,7 @@ void ReadyCount()
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || it.caplayer == 1), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
 		++t_players;
 		if (it.ready) ++t_ready;
 	});
