@@ -589,7 +589,7 @@ void nade_entrap_touch(entity this, entity toucher)
 	#endif
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
@@ -645,7 +645,7 @@ void nade_heal_touch(entity this, entity toucher)
 
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_red = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 		STAT(HEALING_ORB, show_red) = time+0.1;
@@ -674,7 +674,7 @@ void nade_monster_boom(entity this)
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 
