@@ -464,6 +464,7 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_powerups_drop_ondeath");
 		BADCVAR("g_player_brightness");
 		BADCVAR("g_rocket_flying");
 		BADCVAR("g_rocket_flying_disabledelays");
@@ -496,7 +497,6 @@ void cvar_changes_init()
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
-		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
@@ -1216,7 +1216,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+		if(IS_PLAYER(it) || INGAME_JOINED(it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
@@ -1302,10 +1302,18 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	int winner_team = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(playername(it.netname, it.team, false), " ^7wins.\n");
+		{
+			if (teamplay && !winner_team)
+			{
+				winner_team = it.team;
+				bprint(Team_ColorCode(winner_team), Team_ColorName_Upper(winner_team), "^7 team wins the match\n");
+			}
+			bprint(playername(it.netname, it.team, false), " ^7wins\n");
+		}
 	});
 
 	target_music_kill();
@@ -1385,13 +1393,13 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if(it.(field) == value)
 			it.winning = 1;
 	});
@@ -1400,7 +1408,7 @@ void AddWinners(.float field, float value)
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = 0; });
 }
 
 int fragsleft_last;
@@ -1647,7 +1655,7 @@ void CheckRules_World()
 				if(readyplayers || playerswithlaps >= 2)
 				{
 					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
+					ReadyRestart(true); // go to race
 					return;
 				}
 				else

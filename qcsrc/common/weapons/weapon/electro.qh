@@ -60,6 +60,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, speed_z, float, SEC) \
 		P(class, prefix, spread, float, BOTH) \
 		P(class, prefix, stick, float, SEC) \
+		P(class, prefix, stick_lifetime, float, SEC) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, touchexplode, float, SEC) \

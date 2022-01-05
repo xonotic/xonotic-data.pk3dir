@@ -36,4 +36,8 @@ void XonoticHUDCenterprintDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Font scale:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.5, 2, 0.1, "hud_panel_centerprint_fontscale"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Bold font scale:")));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.5, 3, 0.2, "hud_panel_centerprint_fontscale_bold"));
 }
