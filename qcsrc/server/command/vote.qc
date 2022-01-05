@@ -340,12 +340,15 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(bool dorespawn)
+void reset_map(bool dorespawn, bool is_fake_round_start)
 {
 	if (time <= game_starttime)
 	{
 		if (game_stopped)
 			return;
+
+		if (!is_fake_round_start)
+			PlayerStats_GameReport_Reset_All();
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
@@ -404,25 +407,16 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			//if (restart_mapalreadyrestarted || (time < game_starttime))
-			//{
-				FOREACH_CLIENT(IS_PLAYER(it),
-				{
-					/*
-					only reset players if a restart countdown is active
-					this can either be due to cvar sv_ready_restart_after_countdown having set
-					restart_mapalreadyrestarted to 1 after the countdown ended or when
-					sv_ready_restart_after_countdown is not used and countdown is still running
-					*/
-					// PlayerScore_Clear(it);
-					CS(it).killcount = 0;
-					// stop the player from moving so that he stands still once he gets respawned
-					it.velocity = '0 0 0';
-					it.avelocity = '0 0 0';
-					CS(it).movement = '0 0 0';
-					PutClientInServer(it);
-				});
-			//}
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				// PlayerScore_Clear(it);
+				CS(it).killcount = 0;
+				// stop the player from moving so that he stands still once he gets respawned
+				it.velocity = '0 0 0';
+				it.avelocity = '0 0 0';
+				CS(it).movement = '0 0 0';
+				PutClientInServer(it);
+			});
 		}
 	}
 }
@@ -430,20 +424,19 @@ void reset_map(bool dorespawn)
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think(entity this)
 {
-	restart_mapalreadyrestarted = true;
-	reset_map(true);
+	reset_map(true, false);
 	Score_ClearAll();
 	Inventory_ClearAll();
 	delete(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
-void ReadyRestart_force()
+void ReadyRestart_force(bool is_fake_round_start)
 {
 	if (time <= game_starttime && game_stopped)
 		return;
-
-	bprint("^1Server is restarting...\n");
+	if (!is_fake_round_start)
+		bprint("^1Match is restarting...\n");
 
 	VoteReset();
 
@@ -451,24 +444,20 @@ void ReadyRestart_force()
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
-	
-	if(!warmup_stage)
-		game_starttime = time + RESTART_COUNTDOWN;
+
+	if(warmup_stage)
+		game_starttime = time; // Warmup: No countdown in warmup
 	else
-		game_starttime = time; // No countdown in warmup
+		game_starttime = time + RESTART_COUNTDOWN; // Go into match mode
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.alivetime = 0;
 		CS(it).killcount = 0;
-		float val = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
-		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, -val);
 	});
 
-	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
-
-	// disable the warmup global for the server
-	if(!warmup_stage)
+	// if we're ending the warmup stage call the corresponding hook
+	if(!is_fake_round_start && !warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
 
 	// reset the .ready status of all players (also spectators)
@@ -484,7 +473,7 @@ void ReadyRestart_force()
 		lockteams = !warmup_stage;
 
 	// initiate the restart-countdown-announcer entity
-	if (sv_ready_restart_after_countdown && !warmup_stage)
+	if (!is_fake_round_start && sv_ready_restart_after_countdown && !warmup_stage)
 	{
 		entity restart_timer = new_pure(restart_timer);
 		setthink(restart_timer, ReadyRestart_think);
@@ -497,23 +486,25 @@ void ReadyRestart_force()
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	round_handler_Activate(!warmup_stage);
-	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true);
+	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true, is_fake_round_start);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
-void ReadyRestart()
+void ReadyRestart(bool forceWarmupEnd)
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) {
-		Score_ClearAll();
-		//Inventory_ClearAll();
-	}
-	ReadyRestart_force();
+	if (!sv_ready_restart_after_countdown) Score_ClearAll();
+
+	if(forceWarmupEnd)
+		warmup_stage = 0; // forcefully end warmup and go to match stage
+	else
+		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage
+
+	ReadyRestart_force(false);
 }
 
 // Count the players who are ready and determine whether or not to restart the match
@@ -522,7 +513,7 @@ void ReadyCount()
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || it.caplayer == 1), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
 		++t_players;
 		if (it.ready) ++t_ready;
 	});
@@ -534,11 +525,7 @@ void ReadyCount()
 	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
 	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
 
-	if (readycount >= ready_needed_count)
-	{
-		warmup_stage = 0;
-		ReadyRestart();
-	}
+	if (readycount >= ready_needed_count) ReadyRestart(true);
 }
 
 
@@ -809,18 +796,37 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "restart":
-		case "reset":
 		case "gg":
 		case "shuffleteams":
-		case "allready":
 		case "endmatch":
 		{
 			// add a delay so that vote result can be seen and announcer can be heard
 			// if the vote is accepted
 			vote_parsed_command = strcat("defer 2 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
+			
+			break;
+		}
 
+		case "reset":
+		case "restart":
+		case "resetmatch":  // re-direct all match restarting to resetmatch
+		{
+			vote_parsed_command = "defer 2 resetmatch";
+			vote_parsed_display = strzone("^1resetmatch");
+
+			break;
+		}
+
+		case "allready":
+		{
+			if(!warmup_stage) {
+				print_to(caller, "Game already started. Use the resetmatch command to restart the match.");
+				return -1;
+			}
+
+			vote_parsed_command = strcat("defer 2 ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_command));
 			break;
 		}
 

@@ -40,40 +40,11 @@ void CA_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
-			1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
-}
-
-int CA_GetWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no player left
 }
 
 void nades_Clear(entity player);
@@ -111,12 +82,10 @@ float CA_CheckWinner()
 	}
 
 	CA_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() > 1)
-	{
+	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
 		return 0;
-	}
 
-	int winner_team = CA_GetWinnerTeam();
 	bool perfect = false;
 	if(winner_team > 0)
 	{
@@ -211,9 +180,9 @@ bool CA_CheckTeams()
 
 bool ca_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
+	if(INGAME_JOINED(e) && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
-	if(e.caplayer == 0.5)
+	if(INGAME_JOINING(e))
 		return true;
 	return false;
 }
@@ -240,7 +209,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.caplayer = 1;
+	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -252,7 +221,7 @@ MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
 	// spectators / observers that weren't playing can join; they are
 	// immediately forced to observe in the PutClientInServer hook
 	// this way they are put in a team and can play in the next round
-	if (!allowed_to_spawn && player.caplayer)
+	if (!allowed_to_spawn && INGAME(player))
 		return true;
 	return false;
 }
@@ -264,9 +233,9 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (CS(player).jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !INGAME(player)) // not when connecting
 		{
-			player.caplayer = 0.5;
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING);
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
@@ -276,15 +245,15 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		if (!it.caplayer && IS_BOT_CLIENT(it))
+		if (!INGAME(it) && IS_BOT_CLIENT(it))
 		{
 			it.team = -1;
-			it.caplayer = 1;
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 		}
-		if (it.caplayer)
+		if (INGAME(it))
 		{
 			TRANSMUTE(Player, it);
-			it.caplayer = 1;
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
 	});
@@ -367,21 +336,21 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	bool is_forced = M_ARGV(1, bool);
-	if (is_forced && player.caplayer)
-		player.caplayer = 0;
+	if (is_forced && INGAME(player))
+		INGAME_STATUS_CLEAR(player);
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 	{
 		entcs_update_players(player);
-		player.caplayer = 0;
+		INGAME_STATUS_CLEAR(player);
 	}
-	if (player.caplayer)
+	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	if (!player.caplayer)
+	if (!INGAME(player))
 		return false;  // allow team reset
 	return true;  // prevent team reset
 }
@@ -499,7 +468,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (!autocvar_g_ca_spectate_enemies && INGAME(client))
 	if (DIFF_TEAM(targ, client))
 		return true;
 }
@@ -508,7 +477,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
@@ -523,7 +492,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }
@@ -548,7 +517,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		if (IS_PLAYER(it) || it.caplayer == 1)
+		if (IS_PLAYER(it) || INGAME_JOINED(it))
 			++M_ARGV(0, int);
 		++M_ARGV(1, int);
 	});
@@ -559,7 +528,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.caplayer)
+	if (INGAME(player))
 	{
 		// they're going to spec, we can do other checks
 		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
@@ -573,13 +542,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
 {
 	return true; // doesn't work well with the whole spectator as player thing
-}
-
-MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
-{
-	entity player = M_ARGV(0, entity);
-
-	return player.caplayer == 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)

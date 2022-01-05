@@ -219,8 +219,7 @@ void GameCommand_allready(int request)
 		{
 			if(warmup_stage)
 			{
-				warmup_stage = 0;
-				ReadyRestart();
+				ReadyRestart(true);
 			}
 			else
 				LOG_INFO("Not in warmup.");
@@ -1261,12 +1260,9 @@ void GameCommand_nospectators(int request)
 		{
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, {
-				if(!it.caplayer)
-				{
-					CS(it).spectatortime = time;
-					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-				}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
+				CS(it).spectatortime = time;
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 			});
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
@@ -1382,7 +1378,7 @@ void shuffleteams()
 		return;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if (Player_HasRealForcedTeam(it)) {
 			// we could theoretically assign forced players to their teams
 			// and shuffle the rest to fill the empty spots but in practise
@@ -1404,7 +1400,7 @@ void shuffleteams()
 	TeamBalance_Destroy(balance);
 
 	int team_index = 0;
-	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || INGAME(it), {
 		int target_team_index = team_index + 1;
 		if (Entity_GetTeamIndex(it) != target_team_index)
 		{
@@ -1443,21 +1439,20 @@ void GameCommand_shuffleteams(int request)
 	}
 }
 
-void GameCommand_reset(int request)
+void GameCommand_resetmatch(int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			warmup_stage = cvar("g_warmup");
-			ReadyRestart();
+			ReadyRestart(false);
 			return;
 		}
 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd reset");
+			LOG_HELP("Usage:^3 sv_cmd resetmatch");
 			LOG_HELP("  No arguments required.");
 			return;
 		}
@@ -1809,7 +1804,7 @@ SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { G
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
-SERVER_COMMAND(reset, "Soft restart the server and reset the players") { GameCommand_reset(request); }
+SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }

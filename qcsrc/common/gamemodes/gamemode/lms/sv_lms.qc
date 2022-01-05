@@ -9,6 +9,7 @@
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
+bool autocvar_g_lms_items;
 bool autocvar_g_lms_regenerate;
 
 // main functions
@@ -133,7 +134,7 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 		}
 
 		CS(it).killcount = 0;
-		it.lmsplayer = 0;
+		INGAME_STATUS_CLEAR(it);
 		it.lms_spectate_warning = 0;
 		GameRules_scoring_add(it, LMS_RANK, -GameRules_scoring_add(it, LMS_RANK, 0));
 		GameRules_scoring_add(it, LMS_LIVES, -GameRules_scoring_add(it, LMS_LIVES, 0));
@@ -157,12 +158,15 @@ MUTATOR_HOOKFUNCTION(lms, ReadLevelCvars)
 // returns true if player is added to the game
 bool lms_AddPlayer(entity player)
 {
-	if (!player.lmsplayer)
+	if (!INGAME(player))
 	{
 		int lives = GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
 		if(lives <= 0)
 			return false;
-		player.lmsplayer = 2; // temp value indicating player has just joined the game (but not spawned yet)
+		if (time < game_starttime)
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
+		else
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING); // this is just to delay setting health and armor that can't be done here
 	}
 	if (warmup_stage || time <= game_starttime)
 	{
@@ -203,7 +207,7 @@ MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 	if (warmup_stage || time < game_starttime)
 		return true;
 
-	if (player.lmsplayer == 2) // just joined the game
+	if (INGAME_JOINING(player))
 	{
 		// spawn player with the same amount of health / armor
 		// as the least healthy player with the least number of lives
@@ -220,7 +224,7 @@ MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 			SetResource(player, RES_HEALTH, max(1, min_health));
 		if (min_armorvalue != start_armorvalue)
 			SetResource(player, RES_ARMOR, min_armorvalue);
-		player.lmsplayer = 1;
+		INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	}
 }
 
@@ -265,10 +269,10 @@ void lms_RemovePlayer(entity player)
 			});
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
-		else
+		else if (INGAME(player))
 		{
 			int min_forfeiter_rank = 665; // different from 666
-			FOREACH_CLIENT(true, {
+			FOREACH_CLIENT(it != player, {
 				// update rank of other players that were eliminated
 				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
 				{
@@ -310,7 +314,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 	player.lms_spectate_warning = 3;
 
 	lms_RemovePlayer(player);
-	player.lmsplayer = 0;
+	INGAME_STATUS_CLEAR(player);
 }
 
 MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
@@ -326,7 +330,7 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 		GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
 		player.frags = FRAGS_SPECTATOR;
 		TRANSMUTE(Observer, player);
-		player.lmsplayer = 0;
+		INGAME_STATUS_CLEAR(player);
 	}
 	else
 	{
@@ -414,6 +418,9 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
+	if (autocvar_g_lms_items)
+		return false;
+
 	entity definition = M_ARGV(0, entity);
 
 	if (autocvar_g_lms_extra_lives && definition == ITEM_ExtraLife)
@@ -470,7 +477,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		if (it.lmsplayer && it.lms_spectate_warning < 2)
+		if (INGAME(it) && it.lms_spectate_warning < 2)
 			++M_ARGV(0, int); // activerealplayers
 		++M_ARGV(1, int); // realplayers
 	});
@@ -509,13 +516,6 @@ MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 {
 	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
 		M_ARGV(0, string) = autocvar_g_lms_weaponarena;
-}
-
-MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
-{
-	entity player = M_ARGV(0, entity);
-
-	return boolean(player.lmsplayer);
 }
 
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)

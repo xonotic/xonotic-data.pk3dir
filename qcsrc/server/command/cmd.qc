@@ -374,34 +374,25 @@ void ClientCommand_ready(entity caller, int request)
 		{
 			if (IS_CLIENT(caller) && caller.last_ready < time - 3) // anti-spam
 			{
-				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
+					if (time < game_starttime) // game is already restarting
+						return;
+					if (caller.ready)            // toggle
 					{
-						if (time < game_starttime) // game is already restarting
-							return;
-						if (caller.ready)            // toggle
-						{
-							caller.ready = false;
-							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
-						}
-						else
-						{
-							caller.ready = true;
-							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ready\n");
-						}
-						
-						caller.last_ready = time;
-
-						// cannot reset the game while a timeout is active!
-						if (!timeout_status) ReadyCount();
+						caller.ready = false;
+						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
+							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 					}
 					else
 					{
-						sprint(caller, "^1Game has already been restarted\n");
+						caller.ready = true;
+						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
+							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
+
+					// cannot reset the game while a timeout is active!
+					if (!timeout_status) ReadyCount();
 				}
 			}
 			return;  // never fall through to usage
