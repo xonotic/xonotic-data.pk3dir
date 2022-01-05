@@ -582,12 +582,12 @@ void WinningConditionHelper(entity this)
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
-			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if(!(IS_PLAYER(it) || INGAME_JOINED(it)))
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if (IS_PLAYER(it) || INGAME_JOINED(it))
 				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";

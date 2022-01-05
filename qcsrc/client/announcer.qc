@@ -4,10 +4,6 @@
 #include <client/mutators/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
-#include <common/mapinfo.qh>
-
-#include <common/ent_cs.qh>
-#include <common/gamemodes/gamemode/duel/duel.qh>
 
 bool announcer_1min;
 bool announcer_5min;
@@ -25,49 +21,31 @@ void Announcer_Countdown(entity this)
 {
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
-	bool game_timeout = (STAT(TIMEOUT_LAST) > 0);
-	
-	bool rounds;
-	float countdown;
-	
-	if(roundstarttime == -1 || game_timeout)
+	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		delete(this);
 		announcer_countdown = NULL;
 		return;
 	}
-
-	//if(roundstarttime >= starttime)
-	//	starttime = roundstarttime;
 	if(starttime <= time && roundstarttime != starttime) // game start time has passed
 		announcer_5min = announcer_1min = false; // reset maptime announcers now as well
 
-	if(roundstarttime && time >= starttime) {
-		rounds = true;
-		countdown = (roundstarttime - time);
-	} else {
-		rounds = false;
-		countdown = (starttime - time);
-	}
-	
+	bool inround = (roundstarttime && time >= starttime);
+	float countdown = (inround ? roundstarttime - time : starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
 
-	if(time >= starttime) centerprint_ClearTitle();
-	
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
-		centerprint_ClearTitle();
 		return;
 	}
 	else // countdown is still going
 	{
-		// counting down to rounds
-		if(rounds)
+		if(inround)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
@@ -79,7 +57,7 @@ void Announcer_Countdown(entity this)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(!roundstarttime && annce_num != NULL) // count only if the gametype has no rounds
+			if(!roundstarttime && annce_num != NULL) // Don't announce game start in round based modes
 				Local_Notification(MSG_ANNCE, annce_num);
 			this.nextthink = (starttime - (countdown - 1));
 		}
@@ -124,27 +102,11 @@ void Announcer_Gamestart()
 				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
-			// z411 set title
-			if(time < STAT(GAMESTARTTIME) && !warmup_stage) {
-				if(gametype == MAPINFO_TYPE_DUEL) {
-					entity pl1 = players.sort_next;
-					entity pl2 = pl1.sort_next;
-					
-					centerprint_SetTitle(strcat(entcs_GetName(pl1.sv_entnum), " vs ", entcs_GetName(pl2.sv_entnum)));
-				} else {
-					centerprint_SetTitle(MapInfo_Type_ToText(gametype));
-				}
-			}
-			
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > announcer_countdown.nextthink && !warmup_stage && time < STAT(GAMESTARTTIME)) { // don't play it again if countdown was already going
-				if(teamplay)
-					Local_Notification(MSG_ANNCE, ANNCE_PREPARE_TEAM);
-				else
-					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
-			}
-			
-			announcer_countdown.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
+				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+
+			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime
 		}
 	}
 

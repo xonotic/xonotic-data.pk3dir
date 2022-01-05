@@ -7,6 +7,21 @@ int autocvar_leadlimit_override;
 // TODO: find a better location for these?
 int total_players;
 
+.int ingame;
+#define INGAME_STATUS_NONE 0
+#define INGAME_STATUS_JOINING 0.5
+#define INGAME_STATUS_JOINED 1
+
+// typically used by game modes that temporarily turn players into spectators/observers
+// when they are eliminated but keeping them "in game", i.e. listed among players
+#define INGAME_STATUS_SET(it, s) (it).ingame = s
+#define INGAME_STATUS_CLEAR(it) INGAME_STATUS_SET(it, INGAME_STATUS_NONE)
+
+#define INGAME(it) ((it).ingame)
+#define INGAME_JOINED(it) ((it).ingame == INGAME_STATUS_JOINED)
+#define INGAME_JOINING(it) ((it).ingame == INGAME_STATUS_JOINING)
+
+
 // todo: accept the number of teams as a parameter
 void GameRules_teams(bool value);
 

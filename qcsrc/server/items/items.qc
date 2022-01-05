@@ -1009,7 +1009,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
-		this.nextthink = time + 20;
+		this.nextthink = time + autocvar_g_items_dropped_lifetime;
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
