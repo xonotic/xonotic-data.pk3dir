@@ -606,7 +606,7 @@ void nade_entrap_touch(entity this, entity toucher)
 	#endif
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
@@ -662,10 +662,10 @@ void nade_heal_touch(entity this, entity toucher)
 
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_red = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
-		STAT(HEALING_ORB, show_red) = time+0.1;
+		STAT(HEALING_ORB, show_red) = time + 0.1;
 		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
 }
@@ -691,7 +691,7 @@ void nade_monster_boom(entity this)
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 
@@ -805,11 +805,12 @@ void nade_emerald_randomvehicles(entity e, vector org)
 //LegendGuard adds turret spawn option for emerald nade 22-06-2021
 //EXPERIMENTAL
 //TODO: turrets must be spawned by owner team, cannot be spawned to attack owner team or both
+/*
 void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 {
 	//FOREACH_CLIENT(IS_PLAYER(it),
 	//{
-		if (ent.turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
+		if (turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
 		{
 			//ent = spawn();
 			//ent.owner = it.owner;
@@ -828,8 +829,8 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 			//bool turret_initialize(entity this, Turret tur)
 			//turret_validate_target(ent.realowner, ent.enemy, ent.target_validate_flags);
 			turret_initialize(ent, tur);
-			//it.turspawncount++;
-			//PrintToChatAll(sprintf("^1AFTER^7 it.turspawncount: ^3%f", it.turspawncount));
+			//turspawncount++;
+			//PrintToChatAll(sprintf("^1AFTER^7 turspawncount: ^3%f", turspawncount));
 			//if (!IS_ONGROUND(ent))
 			//	ent.gravity = 1; setorigin(ent, org);
 		}
@@ -848,13 +849,8 @@ void nade_emerald_SpawnTurret(entity ent, vector org, entity tur)
 //EXPERIMENTAL
 void nade_emerald_randomturrets(entity e, vector org)
 {
-	/*//taken from: qcsrc/common/turrets/turret.qh
-	const int TSF_SUSPENDED = 1;
-	const int TSF_TERRAINBASE = 2; // currently unused
-	const int TSF_NO_AMMO_REGEN = 4; // disable builtin ammo regeneration
-	const int TSF_NO_PATHBREAK = 8; // don't break path to chase enemies, will still fire at them if possible
-	const int TSL_NO_RESPAWN = 16; // don't re-spawn
-	const int TSL_ROAM = 32; // roam while idle*/
+	//in: qcsrc/common/turrets/turret.qh , look constants
+
 	RandomSelection_Init();
 	FOREACH(Turrets, it != TUR_Null && (!((it.spawnflags & TSF_SUSPENDED))),
 	{
@@ -866,7 +862,7 @@ void nade_emerald_randomturrets(entity e, vector org)
 		RandomSelection_AddEnt(it, chancetur, 1);
 	});
 	nade_emerald_SpawnTurret(e, org, RandomSelection_chosen_ent);
-}
+}*/
 
 void nade_emerald_randomitem(entity e, vector org)
 {
@@ -1080,12 +1076,12 @@ void nade_emerald_boom(entity this)
 		{
 			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				if (it.vehspawncount < autocvar_g_nades_emerald_vehiclespawnlimit)
+				if (vehspawncount < autocvar_g_nades_emerald_vehiclespawnlimit)
 				{
 					spawnlimited = false;
-					//PrintToChatAll(sprintf("^2BEFORE^7 it.vehspawncount: ^3%f", it.vehspawncount));
-					it.vehspawncount++;
-					//PrintToChatAll(sprintf("^1AFTER^7 it.vehspawncount: ^3%f", it.vehspawncount));
+					//PrintToChatAll(sprintf("^2BEFORE^7 vehspawncount: ^3%f", vehspawncount));
+					vehspawncount++;
+					//PrintToChatAll(sprintf("^1AFTER^7 vehspawncount: ^3%f", vehspawncount));
 				}
 				else
 					spawnlimited = true;
@@ -1097,7 +1093,11 @@ void nade_emerald_boom(entity this)
 
 			return;
 		}
-		case 2: nade_emerald_randomturrets(e, this.origin); return; //EXPERIMENTAL
+		/*case 2: 
+		{
+			nade_emerald_randomturrets(e, this.origin);
+			return; //EXPERIMENTAL
+		}*/
 		default:
 		{
 			for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
@@ -1205,7 +1205,7 @@ void nade_ammo_touch(entity this, entity toucher)
 		}
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_brown = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 		STAT(AMMUNITIONING_ORB, show_brown) = time+0.1;
@@ -1284,7 +1284,7 @@ void DarkBlinking(entity e);
 //copy of the special.qc function contents for DarkBlinking
 void nade_dark_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 
