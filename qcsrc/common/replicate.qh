@@ -34,6 +34,7 @@ REPLICATE_FIELD(string, cvar_g_xonoticversion);
 REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_allow_uid2name, int, "cl_allow_uid2name");
 REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
+REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
@@ -55,10 +56,6 @@ REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fal
 float cvar_cl_newusekeysupported;
 REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
 */
-// cvar_cl_allow_uidtracking is handled specially on the server
-#ifdef CSQC
-REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
-#endif
 
 REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority");
 
