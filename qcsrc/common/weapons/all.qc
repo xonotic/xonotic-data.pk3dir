@@ -826,3 +826,12 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 #endif
 
 #endif
+
+#ifdef SVQC
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
+{
+	string o = W_FixWeaponOrder_ForceComplete(wo);
+	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
+	return o;
+}
+#endif

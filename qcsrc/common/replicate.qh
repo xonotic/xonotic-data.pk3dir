@@ -21,8 +21,6 @@ REPLICATE_FIELD(float, cvar_cl_voice_directional_taunt_attenuation);
 REPLICATE_FIELD(bool, cvar_cl_weapon_switch_reload);
 REPLICATE_FIELD(bool, cvar_cl_weapon_switch_fallback_to_impulse);
 REPLICATE_FIELD(int, cvar_cl_weaponimpulsemode);
-REPLICATE_FIELD(string, cvar_cl_weaponpriority);
-REPLICATE_FIELD(string, cvar_cl_weaponpriorities[10]);
 REPLICATE_FIELD(string, cvar_g_xonoticversion);
 #endif
 
@@ -57,16 +55,4 @@ float cvar_cl_newusekeysupported;
 REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
 */
 
-REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority");
-
-REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0");
-REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1");
-REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2");
-REPLICATE(cvar_cl_weaponpriorities[3], string, "cl_weaponpriority3");
-REPLICATE(cvar_cl_weaponpriorities[4], string, "cl_weaponpriority4");
-REPLICATE(cvar_cl_weaponpriorities[5], string, "cl_weaponpriority5");
-REPLICATE(cvar_cl_weaponpriorities[6], string, "cl_weaponpriority6");
-REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7");
-REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8");
-REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9");
 #endif

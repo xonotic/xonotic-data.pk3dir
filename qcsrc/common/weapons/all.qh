@@ -403,9 +403,25 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
+
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
+
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 
-#ifdef SVQC
-void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
-#endif
+REPLICATE_FIELD(string, cvar_cl_weaponpriority);
+REPLICATE_FIELD(string, cvar_cl_weaponpriorities[10]);
+REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[3], string, "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[4], string, "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[5], string, "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[6], string, "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+
 #endif

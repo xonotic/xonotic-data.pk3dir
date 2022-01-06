@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SVQC
+// copies a string to a tempstring (so one can strunzone it)
+string strcat1(string s) = #115; // FRIK_FILE
+#endif
 
 #if defined(CSQC)
 #define REPLICATE_FIELD(type, name) type name
@@ -34,7 +38,7 @@
 		{ strfree(field); }, \
 		{ \
 			/* also initialize to the default value of func when requesting cvars */ \
-			string s = func(field); \
+			string s = func(this, strcat1(field)); \
 			if (s != field) \
 			{ \
 				strcpy(field, s); \
