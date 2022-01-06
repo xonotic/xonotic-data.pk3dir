@@ -84,7 +84,7 @@ void ka_TimeScoring(entity this)
 		if(autocvar_g_keepaway_score_timepoints)
 			GameRules_scoring_add(this.owner, SCORE, autocvar_g_keepaway_score_timepoints);
 
-		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, autocvar_g_keepaway_score_timeinterval);
 		this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }

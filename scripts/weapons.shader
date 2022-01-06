@@ -75,7 +75,7 @@ minelayer
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/minelayer.tga	
+		map textures/minelayer.tga
 		rgbgen lightingDiffuse
 	}
 }

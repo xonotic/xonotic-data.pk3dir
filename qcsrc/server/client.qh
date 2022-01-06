@@ -378,13 +378,15 @@ void play_countdown(entity this, float finished, Sound samp);
 void player_powerups_remove_all(entity this);
 
 // NOTE: current type is Resource (avoiding circular includes!)
-void RotRegen(entity this, entity current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod);
+void RotRegen(entity this, entity current, float limit_mod,
+	float regenstable, float regenfactor, float regenlinear, float regenframetime,
+	float rotstable, float rotfactor, float rotlinear, float rotframetime);
 
 bool Spectate(entity this, entity pl);
 
 void ClientInit_Spawn();
 
-void PutObserverInServer(entity this);
+void PutObserverInServer(entity this, bool is_forced);
 
 void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);
