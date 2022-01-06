@@ -486,6 +486,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
+	round_handler_Activate(!warmup_stage);
 	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true, is_fake_round_start);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }

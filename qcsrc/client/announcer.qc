@@ -113,7 +113,7 @@ void Announcer_Gamestart()
 			}
 
 			// z411 set title
-			if(time < STAT(GAMESTARTTIME) && !warmup_stage) {
+			if(time <= STAT(GAMESTARTTIME) && !warmup_stage) {
 				if(gametype == MAPINFO_TYPE_DUEL) {
 					entity pl1 = players.sort_next;
 					entity pl2 = pl1.sort_next;
@@ -132,7 +132,7 @@ void Announcer_Gamestart()
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 			}
 			
-			announcer_countdown.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime
 		}
 	}
 
