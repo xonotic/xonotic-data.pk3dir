@@ -1547,9 +1547,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars(false);
-	if (ReplicateVars_NOT_SENDING())
-		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+	ReplicateVars_Check();
 
 	HUD_Scale_Disable();
 

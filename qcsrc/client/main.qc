@@ -57,6 +57,8 @@ void CSQC_Init()
 		maxclients = i;
 	}
 
+	ReplicateVars_Send_All();
+
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
@@ -190,7 +192,7 @@ void Shutdown()
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 
-	ReplicateVars(true); // destroy
+	ReplicateVars_Destroy();
 }
 
 void AuditLists()
