@@ -1,66 +1,38 @@
 #pragma once
 
-// TODO: sort/merge these!
-#if defined(CSQC)
-	float autoswitch;
-	bool cvar_cl_allow_uid2name;
-	float cvar_cl_allow_uidtracking;
-	bool cvar_cl_allow_uidranking;
-	float cvar_cl_autoscreenshot;
-	float cvar_cl_autotaunt;
-	bool cvar_cl_clippedspectating;
-	int cvar_cl_gunalign;
-	float cvar_cl_handicap;
-	float cvar_cl_jetpack_jump;
-	float cvar_cl_movement_track_canjump;
-	float cvar_cl_noantilag;
-	string cvar_cl_physics;
-	float cvar_cl_voice_directional;
-	float cvar_cl_voice_directional_taunt_attenuation;
-	float cvar_cl_weaponimpulsemode;
+#ifdef GAMEQC
+// TODO: merge into REPLICATE
+REPLICATE_FIELD(bool, cvar_cl_autoswitch);
+REPLICATE_FIELD(int, cvar_cl_allow_uid2name);
+REPLICATE_FIELD(bool, cvar_cl_allow_uidranking);
+REPLICATE_FIELD(int, cvar_cl_allow_uidtracking);
+REPLICATE_FIELD(int, cvar_cl_autoscreenshot);
+REPLICATE_FIELD(float, cvar_cl_autotaunt);
+REPLICATE_FIELD(bool, cvar_cl_clippedspectating);
+REPLICATE_FIELD(bool, cvar_cl_cts_noautoswitch);
+REPLICATE_FIELD(int, cvar_cl_gunalign);
+REPLICATE_FIELD(float, cvar_cl_handicap);
+REPLICATE_FIELD(bool, cvar_cl_jetpack_jump);
+REPLICATE_FIELD(bool, cvar_cl_movement_track_canjump);
+REPLICATE_FIELD(bool, cvar_cl_noantilag);
+REPLICATE_FIELD(string, cvar_cl_physics);
+REPLICATE_FIELD(int, cvar_cl_voice_directional);
+REPLICATE_FIELD(float, cvar_cl_voice_directional_taunt_attenuation);
+REPLICATE_FIELD(bool, cvar_cl_weapon_switch_reload);
+REPLICATE_FIELD(bool, cvar_cl_weapon_switch_fallback_to_impulse);
+REPLICATE_FIELD(int, cvar_cl_weaponimpulsemode);
+REPLICATE_FIELD(string, cvar_cl_weaponpriority);
+REPLICATE_FIELD(string, cvar_cl_weaponpriorities[10]);
+REPLICATE_FIELD(string, cvar_g_xonoticversion);
+#endif
 
-	string cvar_g_xonoticversion;
-	string cvar_cl_weaponpriority;
-	string cvar_cl_weaponpriorities[10];
-	float cvar_cl_cts_noautoswitch;
-	bool cvar_cl_weapon_switch_reload;
-	bool cvar_cl_weapon_switch_fallback_to_impulse;
-#elif defined(SVQC)
-	.float cvar_cl_handicap;
-	.int cvar_cl_gunalign;
-	.bool cvar_cl_clippedspectating;
-	.float cvar_cl_autoscreenshot;
-	.float cvar_cl_jetpack_jump;
-	.float cvar_cl_movement_track_canjump;
-	.float cvar_cl_newusekeysupported;
-	.float cvar_cl_cts_noautoswitch;
-	.bool cvar_cl_weapon_switch_reload;
-	.bool cvar_cl_weapon_switch_fallback_to_impulse;
-
-	.string cvar_g_xonoticversion;
-	.string cvar_cl_weaponpriority;
-	.string cvar_cl_weaponpriorities[10];
-	.float cvar_cl_noantilag;
-
-	// WEAPONTODO
-	.float autoswitch;
-	.float cvar_cl_weaponimpulsemode;
-
-	.float cvar_cl_allow_uid2name;
-	.float cvar_cl_allow_uidtracking;
-	.bool cvar_cl_allow_uidranking;
-
-	.string cvar_cl_physics;
-
-	// autotaunt system
-	.float cvar_cl_autotaunt;
-	.float cvar_cl_voice_directional;
-	.float cvar_cl_voice_directional_taunt_attenuation;
+#ifdef SVQC
+.float cvar_cl_newusekeysupported;
 #endif
 
 #ifdef GAMEQC
-REPLICATE(autoswitch, bool, "cl_autoswitch");
-REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
+REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
+REPLICATE(cvar_cl_allow_uid2name, int, "cl_allow_uid2name");
 REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");

@@ -1,5 +1,12 @@
 #pragma once
 
+
+#if defined(CSQC)
+#define REPLICATE_FIELD(type, name) type name
+#elif defined(SVQC)
+#define REPLICATE_FIELD(type, name) .type name
+#endif
+
 #ifdef GAMEQC
 
     /**
