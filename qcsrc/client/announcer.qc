@@ -32,6 +32,7 @@ void Announcer_Countdown(entity this)
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		delete(this);
 		announcer_countdown = NULL;
+		centerprint_ClearTitle();
 		return;
 	}
 
@@ -113,7 +114,7 @@ void Announcer_Gamestart()
 			}
 
 			// z411 set title
-			if(time <= STAT(GAMESTARTTIME) && !warmup_stage) {
+			if(time < STAT(GAMESTARTTIME) && !warmup_stage) {
 				if(gametype == MAPINFO_TYPE_DUEL) {
 					entity pl1 = players.sort_next;
 					entity pl2 = pl1.sort_next;

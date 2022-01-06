@@ -52,6 +52,7 @@ string centerprint_title;
 
 void centerprint_ClearTitle()
 {
+	centerprint_title = string_null;
 	centerprint_title_show = false;
 }
 void centerprint_SetTitle(string title)
