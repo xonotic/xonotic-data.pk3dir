@@ -1188,7 +1188,7 @@ bool Onslaught_CheckWinner()
 	else { wpforenemy_announced = false; ons_stalemate = false; }
 
 	Onslaught_count_generators();
-	int winner_team = Team_GetWinnerTeam_WIthOwnedItems(1);
+	int winner_team = Team_GetWinnerTeam_WithOwnedItems(1);
 	if (!winner_team)
 		return 0;
 
