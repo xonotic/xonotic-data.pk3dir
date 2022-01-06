@@ -211,7 +211,6 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_clippedspectating, bool, this.cvar_cl_clippedspectating);
     ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
     ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);
-    ATTRIB(Client, cvar_cl_newusekeysupported, bool, this.cvar_cl_newusekeysupported);
     ATTRIB(Client, cvar_cl_noantilag, bool, this.cvar_cl_noantilag);
     ATTRIB(Client, cvar_cl_movement_track_canjump, bool, this.cvar_cl_movement_track_canjump);
     ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
