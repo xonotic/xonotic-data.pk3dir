@@ -395,22 +395,6 @@ void GetCvars(entity this, entity store, int f)
 	Notification_GetCvars(this, store);
 
 	ReplicateVars(this, store, s, f);
-
-	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
-	{
-		if (s == "cl_weaponpriority")
-		{
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			{
-				.entity weaponentity = weaponentities[slot];
-				if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))
-					this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
-			}
-		}
-		if (s == "cl_allow_uidtracking")
-			PlayerStats_GameReport_AddPlayer(this);
-		//if (s == "cl_gunalign")
-			//W_ResetGunAlign(this, store.cvar_cl_gunalign);
-	}
+		ReplicateVars_ApplyChange(this, store, s, f);
 }

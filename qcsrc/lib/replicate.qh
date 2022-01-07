@@ -14,17 +14,30 @@ string strcat1(string s) = #115; // FRIK_FILE
 #ifdef GAMEQC
 
     /**
+     * \def REPLICATE(fld, type, cvar)
      * Replicate a client cvar into a server field
      *
      * @param fld   The field to replicate into
      * @param type  The field type
-     * @param cvar  The cvar name
+     * @param cvarname
+     * @param fixup_func((entity this, string original_value))  optional parameter
      */
 	#define REPLICATE(...) EVAL_REPLICATE(OVERLOAD(REPLICATE, __VA_ARGS__))
 	#define EVAL_REPLICATE(...) __VA_ARGS__
 
 	#if defined(SVQC)
 	ACCUMULATE void ReplicateVars(entity this, entity store, string thisname, int i) {}
+	ACCUMULATE void ReplicateVars_ApplyChange(entity this, entity store, string thisname, int i) {}
+    /**
+     * \def REPLICATE(cvarname, ApplyChange_code)
+     * Allow setting code to will be executed on cvar value changes
+     *
+     * @param cvarname
+     * @param ApplyChange_code  code meant to be run on cvar value changes
+     */
+	#define REPLICATE_APPLYCHANGE(var, ApplyChange_code) \
+		void ReplicateVars_ApplyChange(entity this, entity store, string thisname, int i) \
+			{ if (thisname == var) { ApplyChange_code } }
 	#elif defined(CSQC)
 	ACCUMULATE void ReplicateVars(int mode) {}
 	#endif

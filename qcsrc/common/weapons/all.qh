@@ -410,6 +410,9 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 
+REPLICATE_FIELD(int, cvar_cl_gunalign);
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+
 REPLICATE_FIELD(string, cvar_cl_weaponpriority);
 REPLICATE_FIELD(string, cvar_cl_weaponpriorities[10]);
 REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
