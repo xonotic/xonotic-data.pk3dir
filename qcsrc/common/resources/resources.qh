@@ -41,11 +41,6 @@ REGISTRY_CHECK(Resources);
 REGISTRY_DEFINE_GET(Resources, NULL)
 STATIC_INIT(Resources_renumber) { FOREACH(Resources, true, it.m_id = i); }
 
-/// \file
-/// \brief Header file that describes resource types.
-/// \author Lyberta
-/// \copyright GNU GPLv2 or any later version.
-
 /// \brief Unconditional maximum amount of resources the entity can have.
 const int RES_AMOUNT_HARD_LIMIT = 999;
 const int RES_LIMIT_NONE = -1;
