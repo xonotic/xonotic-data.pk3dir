@@ -72,3 +72,8 @@ string Buff_UndeprecateName(string buffname);
 BUFF_SPAWNFUNCS(random, NULL)
 
 #include "all.inc"
+
+#ifdef GAMEQC
+REPLICATE_FIELD(bool, cvar_cl_buffs_autoreplace);
+REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
+#endif

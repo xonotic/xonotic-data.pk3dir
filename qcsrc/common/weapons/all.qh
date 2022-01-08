@@ -395,9 +395,9 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 
 #ifdef CSQC
-bool cvar_cl_accuracy_data_share;
+REPLICATE_FIELD(bool, cvar_cl_accuracy_data_share);
+REPLICATE_FIELD(bool, cvar_cl_accuracy_data_receive);
 REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
-bool cvar_cl_accuracy_data_receive;
 REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 #endif
 

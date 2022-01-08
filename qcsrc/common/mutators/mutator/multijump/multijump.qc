@@ -25,13 +25,9 @@ REGISTER_MUTATOR(multijump, true);
 .bool multijump_ready;
 
 #ifdef CSQC
-int cvar_cl_multijump;
 int autocvar_cl_multijump = -1;
-
 	#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
 #elif defined(SVQC)
-.int cvar_cl_multijump;
-
 	#define PHYS_MULTIJUMP_CLIENT(s)	CS_CVAR(s).cvar_cl_multijump
 #endif
 
@@ -117,8 +113,6 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 		player.multijump_ready = false; // require releasing and pressing the jump button again for the next jump
 	}
 }
-
-REPLICATE(cvar_cl_multijump, int, "cl_multijump");
 
 #ifdef SVQC
 

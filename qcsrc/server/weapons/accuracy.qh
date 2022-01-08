@@ -20,9 +20,9 @@
 
 float autocvar_sv_accuracy_data_share = 1;
 
-.bool cvar_cl_accuracy_data_share;
+REPLICATE_FIELD(bool, cvar_cl_accuracy_data_share);
+REPLICATE_FIELD(bool, cvar_cl_accuracy_data_receive);
 REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
-.bool cvar_cl_accuracy_data_receive;
 REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 
 .entity accuracy;
