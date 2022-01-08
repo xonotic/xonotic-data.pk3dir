@@ -11,15 +11,7 @@ REPLICATE_FIELD(float, cvar_cl_autotaunt);
 REPLICATE_FIELD(bool, cvar_cl_clippedspectating);
 REPLICATE_FIELD(bool, cvar_cl_cts_noautoswitch);
 REPLICATE_FIELD(float, cvar_cl_handicap);
-REPLICATE_FIELD(bool, cvar_cl_jetpack_jump);
-REPLICATE_FIELD(bool, cvar_cl_movement_track_canjump);
 REPLICATE_FIELD(bool, cvar_cl_noantilag);
-REPLICATE_FIELD(string, cvar_cl_physics);
-REPLICATE_FIELD(int, cvar_cl_voice_directional);
-REPLICATE_FIELD(float, cvar_cl_voice_directional_taunt_attenuation);
-REPLICATE_FIELD(bool, cvar_cl_weapon_switch_reload);
-REPLICATE_FIELD(bool, cvar_cl_weapon_switch_fallback_to_impulse);
-REPLICATE_FIELD(int, cvar_cl_weaponimpulsemode);
 REPLICATE_FIELD(string, cvar_g_xonoticversion);
 #endif
 
@@ -36,15 +28,7 @@ REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
 REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
 REPLICATE(cvar_cl_handicap, float, "cl_handicap");
-REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
-REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
 REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
-REPLICATE(cvar_cl_physics, string, "cl_physics");
-REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
-REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
-REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
-REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
-REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
 REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 
 #endif
