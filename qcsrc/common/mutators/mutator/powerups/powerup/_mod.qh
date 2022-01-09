@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <common/mutators/mutator/powerups/powerup/invisibility.qh>
+#include <common/mutators/mutator/powerups/powerup/shield.qh>
+#include <common/mutators/mutator/powerups/powerup/speed.qh>
+#include <common/mutators/mutator/powerups/powerup/strength.qh>

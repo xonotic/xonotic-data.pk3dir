@@ -94,7 +94,7 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into " DEFAULT_FILENAME, false)
                 LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
             }
             #else
-            LOG_INFO(_("Turrets dump command only works with sv_cmd."));
+            LOG_INFO("Turrets dump command only works with sv_cmd.");
             #endif
             return;
         }

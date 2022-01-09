@@ -409,7 +409,7 @@ void GenericCommand_restartnotifs(int request)
 			Destroy_All_Notifications();
 			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 			#else
-			LOG_INFO(_("Notification restart command only works with cl_cmd and sv_cmd."));
+			LOG_INFO("Notification restart command only works with cl_cmd and sv_cmd.");
 			#endif
 			return;
 		}

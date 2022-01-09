@@ -113,16 +113,24 @@ void bot_think(entity this)
 	}
 
 	// if dead, just wait until we can respawn
-	if (IS_DEAD(this))
+	if (IS_DEAD(this) || IS_OBSERVER(this))
 	{
 		if (bot_waypoint_queue_owner == this)
 			bot_waypoint_queue_owner = NULL;
 		this.aistatus = 0;
 		CS(this).movement = '0 0 0';
-		if (this.deadflag == DEAD_DEAD)
+		if (IS_OBSERVER(this))
+			return;
+		if (IS_DEAD(this))
 		{
-			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
-			navigation_goalrating_timeout_force(this);
+			if (!navigation_goalrating_timeout(this))
+				navigation_goalrating_timeout_force(this);
+			// jump must not be pressed for at least one frame in order for
+			// PlayerThink to detect the key down event
+			if (this.deadflag == DEAD_DYING)
+				PHYS_INPUT_BUTTON_JUMP(this) = false;
+			else if (this.deadflag == DEAD_DEAD)
+				PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
@@ -383,17 +391,19 @@ void bot_relinkplayerlist()
 
 		if(IS_BOT_CLIENT(it))
 		{
-			if(prevbot)
-				prevbot.nextbot = it;
-			else
-				bot_list = it;
-			prevbot = it;
+			if (!IS_OBSERVER(it) && !bot_ispaused(it))
+			{
+				if(prevbot)
+					prevbot.nextbot = it;
+				else
+					bot_list = it;
+				prevbot = it;
+			}
 			++currentbots;
 		}
 	});
 	if(prevbot)
 		prevbot.nextbot = NULL;
-	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -642,39 +652,6 @@ bool bot_fixcount()
 	}
 
 	return true;
-}
-
-void bot_remove_from_bot_list(entity this)
-{
-	entity e = bot_list;
-	entity prev_bot = NULL;
-	while (e)
-	{
-		if(e == this)
-		{
-			if(!prev_bot)
-				bot_list = this.nextbot;
-			else
-				prev_bot.nextbot = this.nextbot;
-			if(bot_strategytoken == this)
-			{
-				bot_strategytoken = this.nextbot;
-				bot_strategytoken_taken = true;
-			}
-			this.nextbot = NULL;
-			break;
-		}
-		prev_bot = e;
-		e = e.nextbot;
-	}
-}
-
-void bot_clear(entity this)
-{
-	bot_remove_from_bot_list(this);
-	if(bot_waypoint_queue_owner == this)
-		bot_waypoint_queue_owner = NULL;
-	this.aistatus &= ~AI_STATUS_STUCK; // otherwise bot_waypoint_queue_owner will be set again to this by navigation_unstuck
 }
 
 void bot_serverframe()

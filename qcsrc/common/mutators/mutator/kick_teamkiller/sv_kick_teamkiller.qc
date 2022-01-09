@@ -28,7 +28,7 @@ MUTATOR_HOOKFUNCTION(kick_teamkiller, PlayerDies)
 	if (teamkills >= autocvar_g_kick_teamkiller_lower_limit &&
 	    teamkills >= autocvar_g_kick_teamkiller_rate*playtime/60.0)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_TEAMKILL, attacker.netname);
-		dropclient(attacker);
+		if (dropclient_schedule(attacker))
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_TEAMKILL, attacker.netname);
 	}
 }

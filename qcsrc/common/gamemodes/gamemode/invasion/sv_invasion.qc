@@ -4,20 +4,11 @@
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 
 #include <server/bot/api.qh>
 #include <server/world.qh>
 #include <server/teamplay.qh>
-
-IntrusiveList g_invasion_roundends;
-IntrusiveList g_invasion_waves;
-IntrusiveList g_invasion_spawns;
-STATIC_INIT(g_invasion)
-{
-	g_invasion_roundends = IL_NEW();
-	g_invasion_waves = IL_NEW();
-	g_invasion_spawns = IL_NEW();
-}
 
 float autocvar_g_invasion_round_timelimit;
 float autocvar_g_invasion_spawnpoint_spawn_delay;
@@ -222,7 +213,7 @@ void invasion_SpawnChosenMonster(Monster mon)
 	if(!monster)
 		return;
 
-	monster.spawnshieldtime = time;
+	StatusEffects_remove(STATUSEFFECT_SpawnShield, monster, STATUSEFFECT_REMOVE_NORMAL);
 
 	if(spawn_point)
 	{

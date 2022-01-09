@@ -45,6 +45,8 @@ string modname;
 
 string gamemode_name;
 
+string record_type;
+
 string clientstuff;
 
 string matchid;
@@ -132,7 +134,7 @@ const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath 
 
 float WinningCondition_Scores(float limit, float leadlimit);
 void SetWinners(.float field, float value);
-void ReadyRestart();
+void ReadyRestart(bool forceWarmupEnd);
 
 void DumpStats(float final);
 

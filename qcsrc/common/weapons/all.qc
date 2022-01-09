@@ -61,11 +61,11 @@ WepSet _WepSet_FromWeapon(int a)
 				if (a >= 24)
 				{
 					a -= 24;
-					return '0 0 1' * (2 ** a);
+					return '0 0 1' * BIT(a);
 				}
-			return '0 1 0' * (2 ** a);
+			return '0 1 0' * BIT(a);
 		}
-	return '1 0 0' * (2 ** a);
+	return '1 0 0' * BIT(a);
 }
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)
@@ -228,6 +228,23 @@ string GetAmmoName(int ammotype)
 		case RES_FUEL:    return ITEM_JetpackFuel.m_name;
 		default:          return "batteries";
 	}
+}
+
+entity GetAmmoItem(int ammotype)
+{
+	switch (ammotype)
+	{
+		case RES_SHELLS:  return ITEM_Shells;
+		case RES_BULLETS: return ITEM_Bullets;
+		case RES_ROCKETS: return ITEM_Rockets;
+		case RES_CELLS:   return ITEM_Cells;
+		case RES_PLASMA:  return ITEM_Plasma;
+		case RES_FUEL:    return ITEM_JetpackFuel;
+	}
+	LOG_WARNF("Invalid ammo type %d ", ammotype);
+	return NULL;
+	// WEAPONTODO: use this generic func to reduce duplication ?
+	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
 
 #ifdef CSQC

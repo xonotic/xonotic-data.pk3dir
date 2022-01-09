@@ -1,7 +1,7 @@
 ignis
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/ignis.tga
 		rgbgen lightingDiffuse
 	}
@@ -9,7 +9,7 @@ ignis
 ignisfullbright
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/ignisfullbright.tga
 		rgbgen lightingDiffuse
 	}
@@ -18,7 +18,7 @@ ignisfullbright
 ignishead
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/ignishead.tga
 		rgbgen lightingDiffuse
 	}

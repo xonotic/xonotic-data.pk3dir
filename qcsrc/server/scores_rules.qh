@@ -1,5 +1,6 @@
 #pragma once
 
+bool IsTeamAvailable(int team_num);
 int NumTeams(int teams);
 int AvailableTeams();
 void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled);

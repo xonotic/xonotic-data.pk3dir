@@ -168,17 +168,6 @@ entity GetFilteredEntity(string input)
 	return selection;
 }
 
-// same thing, but instead return their edict number
-float GetFilteredNumber(string input)
-{
-	entity selection = GetFilteredEntity(input);
-	float output;
-
-	output = etof(selection);
-
-	return output;
-}
-
 // switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input)
 {

@@ -346,11 +346,11 @@ GENERIC_COMMAND(findent, "Search through entities for matching classname", false
 			int entcnt = 0;
 			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
 			{
-				LOG_INFOF("%i (%s)", it, it.classname);
+				LOG_HELPF("%i (%s)", it, it.classname);
 				++entcnt;
 			});
 			if(entcnt)
-				LOG_INFOF("Found %d entities", entcnt);
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
@@ -374,10 +374,21 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 		{
 			vector org = stov(argv(1));
 			float dist = stof(argv(2));
-			if (dist > 0)
-				FOREACH_ENTITY_ORDERED(vdist(it.origin - org, <, dist), LOG_HELPF("%i (%s)", it, it.classname));
-			else
-				FOREACH_ENTITY_ORDERED(it.origin == org, LOG_HELPF("%i (%s)", it, it.classname));
+			int entcnt = 0;
+			FOREACH_ENTITY_ORDERED(true,
+			{
+				if (dist > 0)
+				{
+					if (!vdist(it.origin - org, <, dist))
+						continue;
+				}
+				else if (it.origin != org)
+					continue;
+				LOG_HELPF("%i (%s)", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 

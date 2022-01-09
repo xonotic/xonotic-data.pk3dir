@@ -55,6 +55,21 @@ void accuracy_free(entity e)
 	delete(CS(e).accuracy);
 }
 
+void accuracy_reset(entity e)
+{
+	entity a = CS(e).accuracy;
+	if (!a) return;
+
+	for (int i = 0; i < REGISTRY_MAX(Weapons); i++)
+	{
+		a.accuracy_frags[i] = 0;
+		a.accuracy_hit[i] = 0;
+		a.accuracy_fired[i] = 0;
+		a.accuracy_cnt_hit[i] = 0;
+		a.accuracy_cnt_fired[i] = 0;
+	}
+}
+
 // force a resend of a player's accuracy stats
 void accuracy_resend(entity e)
 {

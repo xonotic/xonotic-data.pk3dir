@@ -19,3 +19,7 @@ CLASS(Keepaway, Gametype)
 #endif
 ENDCLASS(Keepaway)
 REGISTER_GAMETYPE(KEEPAWAY, NEW(Keepaway));
+
+#ifdef GAMEQC
+const int KA_CARRYING = BIT(0);
+#endif

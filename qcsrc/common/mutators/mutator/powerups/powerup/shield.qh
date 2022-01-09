@@ -1,0 +1,60 @@
+#pragma once
+
+#include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/powerups.qh>
+#ifdef SVQC
+    // For FL_POWERUP
+    #include <common/constants.qh>
+    #include <server/items/items.qh>
+#endif
+
+#ifdef GAMEQC
+MODEL(Shield_ITEM, Item_Model("g_invincible.md3"));
+SOUND(Shield, Item_Sound("powerup_shield"));
+#endif
+
+#ifdef SVQC
+bool autocvar_g_powerups_shield = 1;
+float autocvar_g_balance_powerup_invincible_takedamage;
+float autocvar_g_balance_powerup_invincible_takeforce = 0.33;
+float autocvar_g_balance_powerup_invincible_time;
+void powerup_shield_init(Pickup this, entity item)
+{
+    if(!item.invincible_finished)
+        item.invincible_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invincible_time;
+}
+#endif
+REGISTER_ITEM(Shield, Powerup) {
+    this.m_canonical_spawnfunc = "item_shield";
+#ifdef SVQC
+    if(autocvar_g_powerups_shield)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_shield_init;
+#endif
+#ifdef GAMEQC
+    this.m_itemid           =   IT_INVINCIBLE;
+    this.m_model            =   MDL_Shield_ITEM;
+    this.m_sound            =   SND_Shield;
+    this.m_glow             =   true;
+    this.m_respawnsound     =   SND_SHIELD_RESPAWN;
+#endif
+    this.netname            =   "invincible";
+    this.m_name             =   _("Shield");
+    this.m_icon             =   "shield";
+    this.m_color            =   '1 0 1';
+    this.m_waypoint         =   _("Shield");
+    this.m_waypointblink    =   2;
+}
+
+SPAWNFUNC_ITEM(item_shield, ITEM_Shield)
+SPAWNFUNC_ITEM(item_invincible, ITEM_Shield)
+
+CLASS(Shield, Powerups)
+    ATTRIB(Shield, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
+    ATTRIB(Shield, m_name, string, _("Shield"));
+    ATTRIB(Shield, m_icon, string, "shield");
+ENDCLASS(Shield)
+REGISTER_STATUSEFFECT(Shield, NEW(Shield));

@@ -1,0 +1,11 @@
+// generated file; do not modify
+#include <common/mutators/mutator/status_effects/all.qc>
+#include <common/mutators/mutator/status_effects/status_effects.qc>
+#ifdef CSQC
+    #include <common/mutators/mutator/status_effects/cl_status_effects.qc>
+#endif
+#ifdef SVQC
+    #include <common/mutators/mutator/status_effects/sv_status_effects.qc>
+#endif
+
+#include <common/mutators/mutator/status_effects/status_effect/_mod.inc>

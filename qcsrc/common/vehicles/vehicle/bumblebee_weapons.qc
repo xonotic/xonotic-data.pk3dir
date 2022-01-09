@@ -110,17 +110,17 @@ void bumble_raygun_draw(entity this)
         al = 0.25 + random() * 0.5;
         _vtmp1 = this.origin + _dir * _len * (0.25 + i);
         _vtmp1 += (randomvec() * (_len * 0.2) * (frametime * 2));       //this.raygun_l1;
-        Draw_CylindricLine(this.origin, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
+        Draw_CylindricLine(this.origin, _vtmp1, sz, "gfx/colors/white", 1, 1, this.colormod, al, df, view_origin);
 
         _vtmp2 = this.origin + _dir * _len * (0.5 + i);
         _vtmp2 += (randomvec() * (_len * 0.2) * (frametime * 5));       //this.raygun_l2;
-        Draw_CylindricLine(_vtmp1, _vtmp2, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
+        Draw_CylindricLine(_vtmp1, _vtmp2, sz, "gfx/colors/white", 1, 1, this.colormod, al, df, view_origin);
 
         _vtmp1 = this.origin + _dir * _len * (0.75 + i);
         _vtmp1 += randomvec() * (_len * 0.2) * (frametime * 10);     //this.raygun_l3;
-        Draw_CylindricLine(_vtmp2, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
+        Draw_CylindricLine(_vtmp2, _vtmp1, sz, "gfx/colors/white", 1, 1, this.colormod, al, df, view_origin);
 
-        Draw_CylindricLine(_vtmp1, this.bumble_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
+        Draw_CylindricLine(_vtmp1, this.bumble_origin +  randomvec() * 32, sz, "gfx/colors/white", 1, 1, this.colormod, al, df, view_origin);
     }
 }
 
