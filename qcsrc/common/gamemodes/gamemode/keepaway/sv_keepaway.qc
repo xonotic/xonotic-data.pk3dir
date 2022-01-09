@@ -26,7 +26,7 @@ int autocvar_g_keepaway_score_timepoints;
 float autocvar_g_keepaway_score_timeinterval;
 float autocvar_g_keepawayball_damageforcescale;
 int autocvar_g_keepawayball_effects;
-float autocvar_g_keepawayball_pickup_delay;
+float autocvar_g_keepawayball_pickup_delay = 1;
 float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 
