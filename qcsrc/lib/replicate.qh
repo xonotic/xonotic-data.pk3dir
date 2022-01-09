@@ -15,7 +15,7 @@ string strcat1(string s) = #115; // FRIK_FILE
 
     /**
      * \def REPLICATE(fld, type, cvar)
-     * Replicate a client cvar into a server field
+     * Replicates a client cvar into a server field
      *
      * @param fld   The field to replicate into
      * @param type  The field type
@@ -29,8 +29,8 @@ string strcat1(string s) = #115; // FRIK_FILE
 	ACCUMULATE void ReplicateVars(entity this, entity store, string thisname, int i) {}
 	ACCUMULATE void ReplicateVars_ApplyChange(entity this, entity store, string thisname, int i) {}
     /**
-     * \def REPLICATE(cvarname, ApplyChange_code)
-     * Allow setting code to will be executed on cvar value changes
+     * \def REPLICATE_APPLYCHANGE(cvarname, ApplyChange_code)
+     * Allows setting code that will be executed on cvar value changes
      *
      * @param cvarname
      * @param ApplyChange_code  code meant to be run on cvar value changes
@@ -39,7 +39,13 @@ string strcat1(string s) = #115; // FRIK_FILE
 		void ReplicateVars_ApplyChange(entity this, entity store, string thisname, int i) \
 			{ if (thisname == var) { ApplyChange_code } }
 	#elif defined(CSQC)
-	ACCUMULATE void ReplicateVars(int mode) {}
+	noref float ReplicateVars_time;
+	ACCUMULATE void ReplicateVars(int mode)
+	{
+		if (time < ReplicateVars_time)
+			return;
+		ReplicateVars_time = time + 0.8 + random() * 0.4; // check cvars periodically
+	}
 	#endif
 
 	#define REPLICATE_3(fld, type, var) REPLICATE_4(fld, type, var, )
@@ -83,21 +89,15 @@ string strcat1(string s) = #115; // FRIK_FILE
 				store.fld = field; \
 			}
 	#elif defined(CSQC)
-		noref float ReplicateVars_time;
 		#define REPLICATE_string(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar_string(var)), { strcpy(fld, cvar_string(var)); }, { strfree(fld); })
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 
-		void ReplicateVars_Destroy() { ReplicateVars(1); }
-		void ReplicateVars_Send_All() { ReplicateVars(-1); }
-		void ReplicateVars_Check()
-		{
-			if (time < ReplicateVars_time)
-				return;
-			ReplicateVars(0);
-			ReplicateVars_time = time + 0.8 + random() * 0.4; // check cvars periodically
-		}
+		#define ReplicateVars_Destroy() ReplicateVars(1)
+		#define ReplicateVars_Send_All() ReplicateVars(-1)
+		#define ReplicateVars_Check() ReplicateVars(0)
+
 		void ReplicateVars_Send(string cvarname) { localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); }
 
 		#define REPLICATE_7(fld, type, var, func, check, update, destroy) \
