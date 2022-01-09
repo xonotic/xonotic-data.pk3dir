@@ -84,9 +84,6 @@ string strcat1(string s) = #115; // FRIK_FILE
 			}
 	#elif defined(CSQC)
 		noref float ReplicateVars_time;
-		#define ReplicateVars_NOT_SENDING() (time > ReplicateVars_time)
-		#define ReplicateVars_DELAY(t) ReplicateVars_time = time + t
-		#define ReplicateVars_DELAY_1FRAME() ReplicateVars_time = time
 		#define REPLICATE_string(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar_string(var)), { strcpy(fld, cvar_string(var)); }, { strfree(fld); })
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
@@ -96,10 +93,10 @@ string strcat1(string s) = #115; // FRIK_FILE
 		void ReplicateVars_Send_All() { ReplicateVars(-1); }
 		void ReplicateVars_Check()
 		{
-			// if a cvar has changed send it and check cvars again next frame
+			if (time < ReplicateVars_time)
+				return;
 			ReplicateVars(0);
-			if (ReplicateVars_NOT_SENDING()) // if no cvar has changed
-				ReplicateVars_DELAY(0.8 + random() * 0.4); // check cvars after a while
+			ReplicateVars_time = time + 0.8 + random() * 0.4; // check cvars periodically
 		}
 		void ReplicateVars_Send(string cvarname) { localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); }
 
@@ -107,27 +104,19 @@ string strcat1(string s) = #115; // FRIK_FILE
 			void ReplicateVars(int mode) \
 			{ \
 				if (mode == 1) { destroy } \
-				else if (mode == -1) { ReplicateVars_Send(var); update } \
-				else if (ReplicateVars_NOT_SENDING() && check) \
+				else if (mode == -1 || check) \
 				{ \
 					ReplicateVars_Send(var); \
-					ReplicateVars_DELAY_1FRAME(); \
 					update \
-					return; \
 				} \
 			}
 
 		#define REPLICATE_SIMPLE(field, cvarname) MACRO_BEGIN \
-			if (ReplicateVars_NOT_SENDING()) \
+			float thecvar = cvar(cvarname); \
+			if(field != thecvar) \
 			{ \
-				float thecvar = cvar(cvarname); \
-				if(field != thecvar) \
-				{ \
-					ReplicateVars_Send(cvarname); \
-					ReplicateVars_DELAY_1FRAME(); \
-					field = thecvar; \
-					return; \
-				} \
+				ReplicateVars_Send(cvarname); \
+				field = thecvar; \
 			} \
 		MACRO_END
 	#endif
