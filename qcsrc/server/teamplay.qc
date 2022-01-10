@@ -714,7 +714,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
-			if (IS_CLIENT(it) || (it.caplayer))
+			if (IS_CLIENT(it) || INGAME(it))
 			{
 				team_num = it.team;
 			}

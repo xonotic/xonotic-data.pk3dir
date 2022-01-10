@@ -1213,7 +1213,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+		if(IS_PLAYER(it) || INGAME_JOINED(it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
@@ -1300,7 +1300,7 @@ void NextLevel()
 	GameLogClose();
 
 	int winner_team = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
 		{
@@ -1390,13 +1390,13 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, { it.winning = (it.(field) == value); });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if(it.(field) == value)
 			it.winning = 1;
 	});
@@ -1405,7 +1405,7 @@ void AddWinners(.float field, float value)
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, { it.winning = 0; });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = 0; });
 }
 
 int fragsleft_last;

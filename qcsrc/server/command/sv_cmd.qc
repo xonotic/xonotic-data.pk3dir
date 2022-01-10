@@ -1132,12 +1132,9 @@ void GameCommand_nospectators(int request)
 		{
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, {
-				if(!it.caplayer)
-				{
-					CS(it).spectatortime = time;
-					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-				}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
+				CS(it).spectatortime = time;
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 			});
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
@@ -1253,7 +1250,7 @@ void shuffleteams()
 		return;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if (Player_HasRealForcedTeam(it)) {
 			// we could theoretically assign forced players to their teams
 			// and shuffle the rest to fill the empty spots but in practise
@@ -1275,7 +1272,7 @@ void shuffleteams()
 	TeamBalance_Destroy(balance);
 
 	int team_index = 0;
-	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || INGAME(it), {
 		int target_team_index = team_index + 1;
 		if (Entity_GetTeamIndex(it) != target_team_index)
 		{

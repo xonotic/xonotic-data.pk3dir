@@ -4,7 +4,7 @@
 #if defined(CSQC)
 	float autoswitch;
 	bool cvar_cl_allow_uid2name;
-	float cvar_cl_allow_uidtracking;
+	string cvar_cl_allow_uidtracking;
 	bool cvar_cl_allow_uidranking;
 	float cvar_cl_autoscreenshot;
 	float cvar_cl_autotaunt;
@@ -85,7 +85,8 @@ REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
 */
 #ifdef CSQC
 // handled specially on the server
-REPLICATE(cvar_cl_allow_uidtracking, float, "cl_allow_uidtracking");
+// FIXME change cvar_cl_allow_uidtracking type from string to float without breaking playerstats
+REPLICATE(cvar_cl_allow_uidtracking, string, "cl_allow_uidtracking");
 #endif
 
 REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority");

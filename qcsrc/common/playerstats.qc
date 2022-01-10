@@ -42,8 +42,7 @@ void PlayerStats_GameReport_Reset_All()
 		// usually only possible by reconnecting to the server
 		strfree(it.playerstats_id);
 		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
-		if (IS_BOT_CLIENT(it) || CS_CVAR(it).cvar_cl_allow_uidtracking)
-			PlayerStats_GameReport_AddPlayer(it);
+		PlayerStats_GameReport_AddPlayer(it);
 	});
 	FOREACH(Scores, true, {
 		string label = scores_label(it);

@@ -188,7 +188,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			{
 				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
-				if (!(IS_PLAYER(to) || to.caplayer)) break;
+				if (!(IS_PLAYER(to) || INGAME(to))) break;
 			}
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
