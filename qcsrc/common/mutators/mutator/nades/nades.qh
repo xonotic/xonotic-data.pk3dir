@@ -262,7 +262,7 @@ MUTATOR_HOOKFUNCTION(cl_darkblink, HUD_Draw_overlay)
 	if (g_stat_HEALTH < 0)
 		darkblink = false;
 	
-	if(!STAT(GAME_STOPPED) && !warmup_stage)
+	if(STAT(GAME_STOPPED))
 		darkblink = false;
 
 	if(time <= dark_fadetime)
