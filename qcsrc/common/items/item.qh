@@ -69,27 +69,23 @@ const int ITS_GLOW              = BIT(6);
 .float invincible_finished; // ditto
 .float buffs_finished; // ditts
 
-#define spawnfunc_body(item) \
-	if (!Item_IsDefinitionAllowed(item)) \
+#define SPAWNFUNC_BODY(item) \
+	if (item && Item_IsDefinitionAllowed(item)) \
+		StartItem(this, item); \
+	else \
 	{ \
 		startitem_failed = true; \
 		delete(this); \
-		return; \
-	} \
-	StartItem(this, item)
+	}
 
 #define SPAWNFUNC_ITEM(name, item) \
 	spawnfunc(name) \
 	{ \
-		spawnfunc_body(item); \
+		SPAWNFUNC_BODY(item) \
 	}
 
 #define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
-	spawnfunc(name) \
-	{ \
-		entity item = (cond) ? item1 : item2; \
-		spawnfunc_body(item); \
-	}
+	SPAWNFUNC_ITEM(name, (cond ? item1 : item2))
 
 #else
 

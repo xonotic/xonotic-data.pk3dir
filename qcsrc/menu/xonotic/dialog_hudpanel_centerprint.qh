@@ -6,7 +6,7 @@ CLASS(XonoticHUDCenterprintDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDCenterprintDialog, title, string, _("Centerprint Panel"));
 	ATTRIB(XonoticHUDCenterprintDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDCenterprintDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDCenterprintDialog, rows, float, 15.5);
+	ATTRIB(XonoticHUDCenterprintDialog, rows, float, 16.5);
 	ATTRIB(XonoticHUDCenterprintDialog, columns, float, 4);
 	ATTRIB(XonoticHUDCenterprintDialog, name, string, "HUDcenterprint");
 	ATTRIB(XonoticHUDCenterprintDialog, requiresConnection, float, true);

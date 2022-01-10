@@ -230,6 +230,23 @@ string GetAmmoName(int ammotype)
 	}
 }
 
+entity GetAmmoItem(int ammotype)
+{
+	switch (ammotype)
+	{
+		case RES_SHELLS:  return ITEM_Shells;
+		case RES_BULLETS: return ITEM_Bullets;
+		case RES_ROCKETS: return ITEM_Rockets;
+		case RES_CELLS:   return ITEM_Cells;
+		case RES_PLASMA:  return ITEM_Plasma;
+		case RES_FUEL:    return ITEM_JetpackFuel;
+	}
+	LOG_WARNF("Invalid ammo type %d ", ammotype);
+	return NULL;
+	// WEAPONTODO: use this generic func to reduce duplication ?
+	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
+}
+
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i)
 {

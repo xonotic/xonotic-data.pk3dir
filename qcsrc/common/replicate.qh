@@ -83,9 +83,9 @@ REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fal
 float cvar_cl_newusekeysupported;
 REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
 */
+// cvar_cl_allow_uidtracking is handled specially on the server
 #ifdef CSQC
-// handled specially on the server
-REPLICATE(cvar_cl_allow_uidtracking, float, "cl_allow_uidtracking");
+REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
 #endif
 
 REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority");

@@ -39,12 +39,14 @@ METHOD(StatusEffects, m_apply, void(StatusEffects this, entity actor, float eff_
 
 METHOD(StatusEffects, m_remove, void(StatusEffects this, entity actor, int removal_type))
 {
-	if(!actor.statuseffects)
+	StatusEffects data = actor.statuseffects;
+	if(!data)
 		return;
-	if(removal_type == STATUSEFFECT_REMOVE_NORMAL && this.m_active(this, actor))
+	// NOTE: persistent effects do not make a sound on removal, this is intended as a workaround for #2620
+	if(removal_type == STATUSEFFECT_REMOVE_NORMAL && !(data.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT) && this.m_active(this, actor))
 		sound(actor, CH_TRIGGER, this.m_sound_rm, VOL_BASE, ATTEN_NORM);
-	actor.statuseffects.statuseffect_time[this.m_id] = 0;
-	actor.statuseffects.statuseffect_flags[this.m_id] = 0;
+	data.statuseffect_time[this.m_id] = 0;
+	data.statuseffect_flags[this.m_id] = 0;
 	StatusEffects_update(actor);
 }
 

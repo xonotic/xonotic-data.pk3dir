@@ -1,8 +1,40 @@
 #pragma once
 
-bool autocvar_sv_q3acompat_machineshotgunswap;
-bool autocvar_sv_q3defragcompat_changehitbox = false;
+int q3compat = 0;
+#define Q3COMPAT_ARENA BIT(0)
+#define Q3COMPAT_DEFI BIT(1)
+
+bool autocvar_sv_q3compat_changehitbox;
 
 bool DoesQ3ARemoveThisEntity(entity this);
+int GetAmmoConsumptionQ3(string netname);
 
 .int fragsfilter_cnt;
+
+/* We tell the ammo spawnfunc which weapon will use the ammo so it can
+ * calculate the amount required for the number of shots in the count field,
+ * and so the type can be looked up rather than specified in quake3.qc
+ */
+// Ammo only, unconditional
+#define SPAWNFUNC_Q3AMMO(ammo_classname, xonwep) \
+	spawnfunc(ammo_classname) \
+	{ \
+		if(this.count && xonwep.ammo_type) \
+			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionQ3(xonwep.netname)); \
+	SPAWNFUNC_BODY(GetAmmoItem(xonwep.ammo_type)) \
+	}
+
+// Ammo only, conditional
+#define SPAWNFUNC_Q3AMMO_COND(ammo_classname, cond, xonwep1, xonwep0) \
+	SPAWNFUNC_Q3AMMO(ammo_classname, (cond ? xonwep1 : xonwep0))
+
+// Weapon & ammo, unconditional
+#define SPAWNFUNC_Q3(weapon_classname, ammo_classname, xonwep) \
+	SPAWNFUNC_WEAPON(weapon_classname, xonwep) \
+	SPAWNFUNC_Q3AMMO(ammo_classname, xonwep)
+
+// Weapon & ammo, conditional
+#define SPAWNFUNC_Q3_COND(weapon_classname, ammo_classname, cond, xonwep1, xonwep0) \
+	SPAWNFUNC_WEAPON_COND(weapon_classname, cond, xonwep1, xonwep0) \
+	SPAWNFUNC_Q3AMMO_COND(ammo_classname, cond, xonwep1, xonwep0)
+
