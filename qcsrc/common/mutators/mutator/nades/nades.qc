@@ -606,9 +606,9 @@ void nade_entrap_touch(entity this, entity toucher)
 	#endif
 	}
 
-	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
 
 		float tint_alpha = 0.75;
@@ -662,9 +662,9 @@ void nade_heal_touch(entity this, entity toucher)
 
 	}
 
-	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_red = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_red = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(HEALING_ORB, show_red) = time + 0.1;
 		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -691,9 +691,9 @@ void nade_monster_boom(entity this)
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
@@ -1205,9 +1205,9 @@ void nade_ammo_touch(entity this, entity toucher)
 		}
 	}
 
-	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_brown = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_brown = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(AMMUNITIONING_ORB, show_brown) = time+0.1;
 		STAT(AMMUNITIONING_ORB_ALPHA, show_brown) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -1284,9 +1284,9 @@ void DarkBlinking(entity e);
 //copy of the special.qc function contents for DarkBlinking
 void nade_dark_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) && !IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner) || SAME_TEAM(toucher, this))
