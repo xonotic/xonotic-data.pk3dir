@@ -16,6 +16,8 @@ bool autocvar_g_balance_falldamage_onlyvertical;
 #define autocvar_slowmo cvar("slowmo")
 float autocvar_sys_ticrate;
 
+bool dropclient_schedule(entity this);
+
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 

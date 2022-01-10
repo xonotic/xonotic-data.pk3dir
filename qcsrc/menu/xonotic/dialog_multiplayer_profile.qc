@@ -149,7 +149,7 @@ void XonoticProfileTab_fill(entity me)
 	me.gotoRC(me, 16, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
 	//me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
 	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, TOP POS
-		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
+		//me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
 
 	me.TR(me);
 		me.TDempty(me, 0.75);
@@ -160,32 +160,6 @@ void XonoticProfileTab_fill(entity me)
 		me.TDempty(me, 0.5);
 		me.TD(me, 4.5, 2, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
 		*/
-
-
-	// ================
-	//  GENDER SECTION
-	// ================
-	me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
-	//me.gotoRC(me, 19.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, BOTTOM POS
-	//me.gotoRC(me, 6.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, BOTTOM POS
-	#if 0
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_gender"));
-			e.addValue(e, _("Undisclosed"), "0");
-			e.addValue(e, _("Female"), "1");
-			e.addValue(e, _("Male"), "2");
-			e.configureXonoticTextSliderValues(e);
-	#else
-			me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gender")));
-		me.TR(me);
-			#define GENDERWIDTH_OFFSET 0.25
-			#define GENDERWIDTH_LENGTH 2.5
-			#define GENDERWIDTH_ITEM (GENDERWIDTH_LENGTH / 3)
-			me.TDempty(me, GENDERWIDTH_OFFSET);
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "2", _("Female")));
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "1", _("Male")));
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "0", _("Undisclosed")));
-	#endif
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, profileApplyButton);

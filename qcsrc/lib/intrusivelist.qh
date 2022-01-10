@@ -2,6 +2,10 @@
 
 #include "iter.qh"
 
+/**
+ * Maximum amount of creatable lists.
+ * Lists can be given endless amount of entities, only restricted by engine limitations.
+ */
 const int IL_MAX = 128;
 
 ERASEABLE
@@ -242,13 +246,16 @@ void IL_ENDFRAME()
 #endif
 }
 
-ERASEABLE
+// called when an entity is deleted with delete() / remove()
+// or when a player disconnects
 void ONREMOVE(entity this)
 {
-	if (this.il_lists) {
+	// remove 'this' from any intrusive lists it is on
+	vector lists = this.il_lists;
+	if (lists) {
 		for (int i = 0; i < IL_MAX; ++i) {
 			IntrusiveList list = il_links[i];
-			if ((this.il_lists & list.il_listmask) && IL_CONTAINS(list, this)) {
+			if ((lists & list.il_listmask) && IL_CONTAINS(list, this)) {
 				IL_REMOVE(list, this);
 			}
 		}

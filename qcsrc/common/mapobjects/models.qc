@@ -116,9 +116,9 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 		if(sf & 0x80)
 		{
 			WriteShort(MSG_ENTITY, this.lodmodelindex0);
-			WriteShort(MSG_ENTITY, bound(0, this.loddistance1, 65535));
+			WriteShort(MSG_ENTITY, bound(0, this.loddistance1, 32767));
 			WriteShort(MSG_ENTITY, this.lodmodelindex1);
-			WriteShort(MSG_ENTITY, bound(0, this.loddistance2, 65535));
+			WriteShort(MSG_ENTITY, bound(0, this.loddistance2, 32767));
 			WriteShort(MSG_ENTITY, this.lodmodelindex2);
 		}
 		else
@@ -140,8 +140,8 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 			WriteVector(MSG_ENTITY, this.movedir);
 			WriteByte(MSG_ENTITY, floor(this.lip * 255));
 		}
-		WriteShort(MSG_ENTITY, bound(0, this.fade_start, 65535));
-		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 65535));
+		WriteShort(MSG_ENTITY, bound(0, this.fade_start, 32767));
+		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
 		WriteByte(MSG_ENTITY, floor(this.alpha_max * 256));
 		WriteByte(MSG_ENTITY, floor(this.alpha_min * 256));
 		WriteByte(MSG_ENTITY, this.inactive);

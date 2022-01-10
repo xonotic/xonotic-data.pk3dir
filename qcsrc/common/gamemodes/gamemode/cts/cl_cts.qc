@@ -19,6 +19,11 @@ MUTATOR_HOOKFUNCTION(cl_cts, HUD_Score_show)
 	return spectatee_status == -1 && ISGAMETYPE(CTS); // hide the score panel while observing
 }
 
+MUTATOR_HOOKFUNCTION(cl_cts, DrawScoreboardItemStats)
+{
+	return ISGAMETYPE(CTS); // hide the item stats panel
+}
+
 MUTATOR_HOOKFUNCTION(cl_cts, DrawDeathScoreboard)
 {
 	return ISGAMETYPE(CTS); // no scoreboard shown while dead

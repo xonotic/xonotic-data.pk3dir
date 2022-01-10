@@ -26,11 +26,6 @@ REGISTER_NET_LINKED(ENT_CLIENT_GENERATOR)
 REGISTER_NET_LINKED(ENT_CLIENT_CONTROLPOINT_ICON)
 #endif
 
-#ifdef SVQC
-IntrusiveList g_onsshields;
-STATIC_INIT(g_onsshields) { g_onsshields = IL_NEW(); }
-#endif
-
 #ifdef CSQC
 IntrusiveList g_onsgenerators;
 STATIC_INIT(g_onsgenerators) { g_onsgenerators = IL_NEW(); }

@@ -56,7 +56,9 @@ REGISTRY_CHECK(Turrets)
 	#define TR_CONFIG_END()
 #endif
 
-GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
+#define DEFAULT_FILENAME "turrets_dump.cfg"
+// NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
+GENERIC_COMMAND(dumpturrets, "Dump all turrets into " DEFAULT_FILENAME, false)
 {
     switch(request)
     {
@@ -69,12 +71,12 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
 
             if(filename == "")
             {
-                filename = "turrets_dump.cfg";
+                filename = DEFAULT_FILENAME;
                 tur_config_alsoprint = false;
             }
             else if(filename == "-")
             {
-                filename = "turrets_dump.cfg";
+                filename = DEFAULT_FILENAME;
                 tur_config_alsoprint = true;
             }
             tur_config_file = fopen(filename, FILE_WRITE);
@@ -92,7 +94,7 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
                 LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
             }
             #else
-            LOG_INFO(_("Turrets dump command only works with sv_cmd."));
+            LOG_INFO("Turrets dump command only works with sv_cmd.");
             #endif
             return;
         }
@@ -100,14 +102,15 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
         default:
         case CMD_REQUEST_USAGE:
         {
-            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]");
-            LOG_HELP("  Where 'filename' is the file to write (default is turrets_dump.cfg),");
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpturrets [<filename>]");
+            LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
             LOG_HELP("  if supplied with '-' output to console as well as default,");
             LOG_HELP("  if left blank, it will only write to default.");
             return;
         }
     }
 }
+#undef DEFAULT_FILENAME
 
 
 const int TUR_FIRST = 1;

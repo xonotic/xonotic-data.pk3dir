@@ -9,6 +9,7 @@ void GameRules_teams(bool value)
         serverflags |= SERVERFLAG_TEAMPLAY;
         teamplay = 1;
         cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
+        Team_InitTeams();
         GameRules_spawning_teams(true);
     } else {
     	serverflags &= ~SERVERFLAG_TEAMPLAY;

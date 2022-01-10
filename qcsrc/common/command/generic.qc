@@ -89,8 +89,8 @@ void GenericCommand_addtolist(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " addtolist variable value");
-			LOG_HELP("  Where 'variable' is what to add 'value' to.");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " addtolist <cvar> <value>");
+			LOG_HELP("  Where <cvar> is the cvar to add <value> to.");
 			LOG_HELP("See also: ^2removefromlist^7");
 			return;
 		}
@@ -163,7 +163,7 @@ void GenericCommand_qc_curl(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key <n>] [--cvar] [--exec] <url> [<postargs>]");
 			return;
 		}
 	}
@@ -303,10 +303,10 @@ void GenericCommand_maplist(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist action [map]");
-			LOG_HELP("  Where 'action' is the command to complete,");
-			LOG_HELP("  and 'map' is what it acts upon (if required).");
-			LOG_HELP("  Full list of commands here: \"add, cleanup, remove, shuffle.\"");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist <action> [<map>]");
+			LOG_HELP("  Where <action> is the command to complete,");
+			LOG_HELP("  and <map> is what it acts upon (for the 'add' and 'remove' actions).");
+			LOG_HELP("  Full list of commands here: add, cleanup, remove, shuffle.");
 			return;
 		}
 	}
@@ -325,8 +325,8 @@ void GenericCommand_nextframe(int request, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " nextframe command...");
-			LOG_HELP("  Where command will be executed next frame of this VM");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " nextframe <command>");
+			LOG_HELP("  Where <command> will be executed next frame of this VM");
 			return;
 		}
 	}
@@ -359,8 +359,8 @@ void GenericCommand_removefromlist(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value");
-			LOG_HELP("  Where 'variable' is what cvar to remove 'value' from.");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist <cvar> <value>");
+			LOG_HELP("  Where <cvar> is the cvar to remove <value> from.");
 			LOG_HELP("See also: ^2addtolist^7");
 			return;
 		}
@@ -409,7 +409,7 @@ void GenericCommand_restartnotifs(int request)
 			Destroy_All_Notifications();
 			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 			#else
-			LOG_INFO(_("Notification restart command only works with cl_cmd and sv_cmd."));
+			LOG_INFO("Notification restart command only works with cl_cmd and sv_cmd.");
 			#endif
 			return;
 		}
@@ -447,8 +447,8 @@ void GenericCommand_settemp(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"");
-			LOG_HELP("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " settemp <cvar> \"<arguments>\"");
+			LOG_HELP("  Where <cvar> is the cvar you want to temporarily set with <arguments>.");
 			LOG_HELP("See also: ^2settemp_restore^7");
 			return;
 		}
@@ -502,7 +502,7 @@ void GenericCommand_runtest(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " [function to run]");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " <function>");
 			return;
 		}
 	}

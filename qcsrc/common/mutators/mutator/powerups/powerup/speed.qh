@@ -1,0 +1,63 @@
+#pragma once
+
+#include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/powerups.qh>
+#ifdef SVQC
+    // For FL_POWERUP
+    #include <common/constants.qh>
+    #include <server/items/items.qh>
+#endif
+
+#ifdef GAMEQC
+//MODEL(Speed_ITEM, Item_Model("g_invincible.md3")); // TODO: new model required
+SOUND(Speed, Item_Sound("powerup_shield"));
+#endif
+
+#ifdef SVQC
+.float speed_finished;
+
+bool autocvar_g_powerups_speed = 1;
+float autocvar_g_balance_powerup_speed_attackrate = 0.8;
+float autocvar_g_balance_powerup_speed_highspeed = 1.5;
+float autocvar_g_balance_powerup_speed_time = 30;
+void powerup_speed_init(Pickup this, entity item)
+{
+    if(!item.speed_finished)
+        item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
+}
+#endif
+REGISTER_ITEM(Speed, Powerup) {
+    this.m_canonical_spawnfunc = "item_speed";
+#ifdef SVQC
+    if(autocvar_g_powerups_speed)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_speed_init;
+#endif
+#ifdef GAMEQC
+    this.m_itemid           =   IT_SPEED;
+    this.m_model            =   MDL_BUFF; // TODO: MDL_Speed_ITEM when new model available
+    this.m_skin             =   9;
+    this.m_sound            =   SND_Speed;
+    this.m_glow             =   true;
+    this.m_respawnsound     =   SND_SHIELD_RESPAWN;
+#endif
+    this.netname            =   "speed";
+    this.m_name             =   _("Speed");
+    this.m_icon             =   "buff_speed";
+    this.m_color            =   '0.1 1 0.84';
+    this.m_waypoint         =   _("Speed");
+    this.m_waypointblink    =   2;
+}
+
+SPAWNFUNC_ITEM(item_speed, ITEM_Speed)
+
+CLASS(Speed, Powerups)
+    ATTRIB(Speed, netname, string, "speed");
+    ATTRIB(Speed, m_name, string, _("Speed"));
+    ATTRIB(Speed, m_color, vector, '0.1 1 0.84');
+    ATTRIB(Speed, m_icon, string, "buff_speed");
+ENDCLASS(Speed)
+REGISTER_STATUSEFFECT(Speed, NEW(Speed));

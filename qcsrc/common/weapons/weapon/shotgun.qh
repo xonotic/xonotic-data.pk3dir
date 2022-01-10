@@ -56,4 +56,3 @@ CLASS(Shotgun, Weapon)
 ENDCLASS(Shotgun)
 REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
 
-SPAWNFUNC_WEAPON(weapon_shotgun, WEP_SHOTGUN)

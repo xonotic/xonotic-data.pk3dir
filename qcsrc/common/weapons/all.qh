@@ -38,7 +38,9 @@ STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPicku
 #define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
 
-GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt", false) // WEAPONTODO: make this work with other progs than just server
+#define DEFAULT_FILENAME "weapons_dump.cfg"
+// NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
+GENERIC_COMMAND(dumpweapons, "Dump all turrets into " DEFAULT_FILENAME, false) // WEAPONTODO: make this work with other progs than just server
 {
     switch(request)
     {
@@ -51,12 +53,12 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt", false) //
 
             if(filename == "")
             {
-                filename = "weapons_dump.cfg";
+                filename = DEFAULT_FILENAME;
                 wep_config_alsoprint = false;
             }
             else if(filename == "-")
             {
-                filename = "weapons_dump.cfg";
+                filename = DEFAULT_FILENAME;
                 wep_config_alsoprint = true;
             }
             wep_config_file = fopen(filename, FILE_WRITE);
@@ -74,7 +76,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt", false) //
                 LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
             }
             #else
-            LOG_INFO(_("Weapons dump command only works with sv_cmd."));
+            LOG_INFO("Weapons dump command only works with sv_cmd.");
             #endif
             return;
         }
@@ -82,14 +84,15 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt", false) //
         default:
         case CMD_REQUEST_USAGE:
         {
-            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]");
-            LOG_HELP("  Where 'filename' is the file to write (default is weapons_dump.cfg),");
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [<filename>]");
+            LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
             LOG_HELP("  if supplied with '-' output to console as well as default,");
             LOG_HELP("  if left blank, it will only write to default.");
             return;
         }
     }
 }
+#undef DEFAULT_FILENAME
 
 #ifdef SVQC
 entity W_PROP_reloader;

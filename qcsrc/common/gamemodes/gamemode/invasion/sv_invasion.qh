@@ -6,6 +6,9 @@ int autocvar_g_invasion_teams;
 int autocvar_g_invasion_type;
 bool autocvar_g_invasion_team_spawns;
 bool g_invasion;
+IntrusiveList g_invasion_roundends;
+IntrusiveList g_invasion_waves;
+IntrusiveList g_invasion_spawns;
 void invasion_Initialize();
 
 REGISTER_MUTATOR(inv, false)
@@ -13,6 +16,9 @@ REGISTER_MUTATOR(inv, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
+		g_invasion_roundends = IL_NEW();
+		g_invasion_waves = IL_NEW();
+		g_invasion_spawns = IL_NEW();
 		if (autocvar_g_invasion_teams >= 2) {
 			GameRules_teams(true);
 			GameRules_spawning_teams(autocvar_g_invasion_team_spawns);

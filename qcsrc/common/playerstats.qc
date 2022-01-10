@@ -21,6 +21,46 @@ void PlayerStats_Prematch()
 	//foobar
 }
 
+// Deletes current playerstats DB, creates a new one and fully initializes it
+void PlayerStats_GameReport_Reset_All()
+{
+	strfree(PS_GR_OUT_TL);
+	strfree(PS_GR_OUT_PL);
+	strfree(PS_GR_OUT_EVL);
+
+	if (PS_GR_OUT_DB >= 0)
+		db_close(PS_GR_OUT_DB);
+	PlayerStats_GameReport_Init();
+	if(PS_GR_OUT_DB < 0)
+		return;
+
+	for (int i = 0; i < 16; i++)
+		if (teamscorekeepers[i])
+			PlayerStats_GameReport_AddTeam(i + 1);
+	FOREACH_CLIENT(true, {
+		// NOTE Adding back a player we are applying any cl_allow_uidtracking change
+		// usually only possible by reconnecting to the server
+		strfree(it.playerstats_id);
+		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
+		PlayerStats_GameReport_AddPlayer(it);
+	});
+	FOREACH(Scores, true, {
+		string label = scores_label(it);
+		if (label == "")
+			continue;
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	});
+	for(int i = 0; i < MAX_TEAMSCORE; ++i)
+	{
+		string label = teamscores_label(i);
+		if (label == "")
+			continue;
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
+}
+
 void PlayerStats_GameReport_AddPlayer(entity e)
 {
 	if((PS_GR_OUT_DB < 0) || (e.playerstats_id)) { return; }
@@ -28,7 +68,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	// set up player identification
 	string s = "";
 
-	if((e.crypto_idfp != "") && (CS(e).cvar_cl_allow_uidtracking == 1))
+	if((e.crypto_idfp != "") && (CS_CVAR(e).cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
@@ -136,7 +176,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+	if(CS_CVAR(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p.netname, p.team, false));
 
 	if(teamplay)
@@ -157,7 +197,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
 
-		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));
 	}
 
 	strfree(p.playerstats_id);
@@ -547,7 +587,6 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
 			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			*/url_fputs(fh, "\n");
@@ -742,7 +781,6 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
 			//url_fputs(fh, sprintf("c %s\n", cvar_string("_cl_country"))); // country
-			//url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			url_fputs(fh, "\n");
@@ -948,7 +986,6 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 #ifdef MENUQC
                         url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
                         url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-                        url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
                         url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
                         url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 #endif

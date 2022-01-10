@@ -391,6 +391,9 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 		case K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
 			break;
+		case K_MOUSE2:
+			KeyBinder_Bind_Edit(me, me);
+			break;
 		default:
 			r = SUPER(XonoticKeyBinder).keyDown(me, key, ascii, shift);
 			break;

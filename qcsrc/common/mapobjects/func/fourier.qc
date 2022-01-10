@@ -59,7 +59,7 @@ spawnfunc(func_fourier)
 	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
-    if(this.dmg && (this.message2 == ""))
+	if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
@@ -74,7 +74,7 @@ spawnfunc(func_fourier)
 	this.active = ACTIVE_ACTIVE;
 
 	// wait for targets to spawn
-	controller = new(func_fourier_controller);
+	controller = new_pure(func_fourier_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_fourier_controller_think);

@@ -5,7 +5,7 @@
 
 void Disconnect_Click(entity btn, entity me)
 {
-	localcmd("disconnect");
+	localcmd("disconnect\n");
 	Dialog_Close(btn, me);
 }
 

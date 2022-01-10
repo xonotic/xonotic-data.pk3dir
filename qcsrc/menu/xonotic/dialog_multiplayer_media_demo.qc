@@ -10,7 +10,7 @@ const float DMO_PLAY = 1;
 const float DMO_TIME = 2;
 void DemoConfirm_Check_Gamestatus(entity btn, entity me)
 {
-	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, lets watch the demo
+	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) || isdemo()) // we're not in a match, lets watch the demo
 	{
 		if(btn.democlicktype == DMO_PLAY)
 			{ demolist.startDemo(demolist); }

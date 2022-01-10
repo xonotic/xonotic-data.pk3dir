@@ -23,10 +23,8 @@ string race_penaltyreason; // reason for penalty
 float race_server_record; // server record
 float race_speedaward;
 string race_speedaward_holder;
-string race_speedaward_unit;
 float race_speedaward_alltimebest;
 string race_speedaward_alltimebest_holder;
-string race_speedaward_alltimebest_unit;
 
 // RACE
 float race_mycheckpoint;

@@ -22,8 +22,8 @@ void _Movetype_Physics_Follow(entity this) // SV_Physics_Follow
 		ang_x = -e.angles_x;
 		makevectors(ang);
 		this.origin_x = v_x * v_forward_x + v_y * v_forward_y + v_z * v_forward_z + e.origin_x;
-		this.origin_x = v_x * v_right_x + v_y * v_right_y + v_z * v_right_z + e.origin_y;
-		this.origin_x = v_x * v_up_x + v_y * v_up_y + v_z * v_up_z + e.origin_z;
+		this.origin_y = v_x * v_right_x + v_y * v_right_y + v_z * v_right_z + e.origin_y;
+		this.origin_z = v_x * v_up_x + v_y * v_up_y + v_z * v_up_z + e.origin_z;
 	}
 
 	this.angles = e.angles + this.v_angle;

@@ -83,7 +83,6 @@ void M_Mage_Defend_Shield(entity this);
 
 .entity mage_spike;
 .float mage_shield_delay;
-.float mage_shield_time;
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
@@ -97,7 +96,7 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 		return false;
 	if(!IS_PLAYER(targ))
 		return (IS_MONSTER(targ) && GetResource(targ, RES_HEALTH) < targ.max_health);
-	if(targ.items & ITEM_Shield.m_itemid)
+	if(StatusEffects_active(STATUSEFFECT_Shield, targ))
 		return false;
 
 	switch(this.skin)
@@ -324,18 +323,11 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 	this.attack_finished_single[0] = time + 0.2;
 }
 
-void M_Mage_Defend_Shield_Remove(entity this)
-{
-	this.effects &= ~(EF_ADDITIVE | EF_BLUE);
-	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
-}
-
 void M_Mage_Defend_Shield(entity this)
 {
-	this.effects |= (EF_ADDITIVE | EF_BLUE);
+	StatusEffects_apply(STATUSEFFECT_Shield, this, time + autocvar_g_monster_mage_shield_time, 0);
 	this.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
 	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
-	this.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	setanim(this, this.anim_shoot, true, true, true);
 	this.attack_finished_single[0] = time + 1;
 	this.anim_finished = time + 1;
@@ -426,13 +418,8 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     if(random() < 0.5)
         M_Mage_Defend_Heal(actor);
 
-    if(time >= actor.mage_shield_time && GetResource(actor, RES_ARMOR))
-        M_Mage_Defend_Shield_Remove(actor);
-
-    if(actor.enemy)
-    if(GetResource(actor, RES_HEALTH) < actor.max_health)
-    if(time >= actor.mage_shield_delay)
-    if(random() < 0.5)
+    if(actor.enemy && time >= actor.mage_shield_delay && random() < 0.5)
+    if(GetResource(actor, RES_HEALTH) < actor.max_health && !StatusEffects_active(STATUSEFFECT_Shield, actor))
         M_Mage_Defend_Shield(actor);
 
     return true;

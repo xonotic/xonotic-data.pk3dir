@@ -48,13 +48,11 @@ void InterpolateOrigin_Note(entity this)
 		this.iorigin2 = this.origin;
 	}
 
-	if ((this.iflags & IFLAG_AUTOANGLES)
-	    && this.iorigin2
-	    != this.iorigin1) this.angles = vectoangles(this.iorigin2 - this.iorigin1);
+	if ((this.iflags & IFLAG_AUTOANGLES) && this.iorigin2 != this.iorigin1)
+		this.angles = vectoangles(this.iorigin2 - this.iorigin1);
 
-	if ((this.iflags & IFLAG_AUTOVELOCITY)
-	    && this.itime2
-	    != this.itime1) this.velocity = (this.iorigin2 - this.iorigin1) * (1.0 / (this.itime2 - this.itime1));
+	if ((this.iflags & IFLAG_AUTOVELOCITY) && this.itime2 != this.itime1)
+		this.velocity = (this.iorigin2 - this.iorigin1) * (1.0 / (this.itime2 - this.itime1));
 
 	if (this.iflags & IFLAG_ANGLES)
 	{
@@ -134,7 +132,8 @@ void InterpolateOrigin_Do(entity this)
 	{
 		float f = bound(0, (time - this.itime1) / (this.itime2 - this.itime1), 1 + autocvar_cl_lerpexcess);
 		float f_1 = 1 - f;
-		if (this.iflags & IFLAG_ORIGIN) setorigin(this, f_1 * this.iorigin1 + f * this.iorigin2);
+		if (this.iflags & IFLAG_ORIGIN)
+			setorigin(this, f_1 * this.iorigin1 + f * this.iorigin2);
 		if (this.iflags & IFLAG_ANGLES)
 		{
 			vector forward = f_1 * this.iforward1 + f * this.iforward2;
@@ -151,7 +150,8 @@ void InterpolateOrigin_Do(entity this)
 		{
 			this.v_angle_x = f_1 * this.ivforward1.x + f * this.ivforward2.x;
 		}
-		if (this.iflags & IFLAG_VELOCITY) this.velocity = f_1 * this.ivelocity1 + f * this.ivelocity2;
+		if (this.iflags & IFLAG_VELOCITY)
+			this.velocity = f_1 * this.ivelocity1 + f * this.ivelocity2;
 	}
 }
 

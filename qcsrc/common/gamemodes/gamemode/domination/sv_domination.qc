@@ -311,7 +311,7 @@ void Domination_count_controlpoints()
 	total_control_points = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
 	IL_EACH(g_dompoints, true,
 	{
@@ -321,37 +321,10 @@ void Domination_count_controlpoints()
 			continue;
 		}
 		entity team_ = Entity_GetTeam(it.goalentity);
-		int num_control_points = Team_GetNumberOfControlPoints(team_);
+		int num_control_points = Team_GetNumberOfOwnedItems(team_);
 		++num_control_points;
-		Team_SetNumberOfControlPoints(team_, num_control_points);
+		Team_SetNumberOfOwnedItems(team_, num_control_points);
 	});
-}
-
-int Domination_GetWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) ==
-		total_control_points)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) ==
-			total_control_points)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no control points left?
 }
 
 bool Domination_CheckWinner()
@@ -367,22 +340,15 @@ bool Domination_CheckWinner()
 	}
 
 	Domination_count_controlpoints();
-
-	float winner_team = Domination_GetWinnerTeam();
-
-	if(winner_team == -1)
-		return false;
+	int winner_team = Team_GetWinnerTeam_WithOwnedItems(total_control_points);
+	if (winner_team == -1)
+		return 0;
 
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_DOM_CAPS, +1);
-	}
-	else if(winner_team == -1)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	game_stopped = true;
@@ -671,5 +637,7 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 void dom_Initialize()
 {
 	g_domination = true;
+	g_dompoints = IL_NEW();
+
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
