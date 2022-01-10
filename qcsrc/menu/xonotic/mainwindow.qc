@@ -108,9 +108,9 @@ void MainWindow_configureMainWindow(entity me)
 {
 	entity n, i;
 
-    // terms of service dialog
-    me.ToSDialog = i = NEW(XonoticToSDialog);
-    i.configureDialog(i);
+	// terms of service dialog
+	me.ToSDialog = i = NEW(XonoticToSDialog);
+	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	// dialog run upon startup
