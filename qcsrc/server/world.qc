@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
+		WriteShort(MSG_BROADCAST, bound(1, rint(CS(e).ping), 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
@@ -100,7 +100,6 @@ void PingPLReport_Spawn()
 }
 
 const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
-float world_initialized;
 
 void SetDefaultAlpha()
 {
@@ -349,10 +348,12 @@ void cvar_changes_init()
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_ca_spectate_enemies");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADCVAR("g_ctf_flagcarrier_auto_helpme_damage");
 		BADPRESUFFIX("g_ctf_flag_", "_model");
 		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
@@ -388,6 +389,7 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_qcphysics");
 		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
@@ -408,7 +410,7 @@ void cvar_changes_init()
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
@@ -443,6 +445,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
+		BADCVAR("g_freezetag_revive_spawnshield");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -458,10 +461,11 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_powerups_drop_ondeath");
 		BADCVAR("g_player_brightness");
 		BADCVAR("g_rocket_flying");
 		BADCVAR("g_rocket_flying_disabledelays");
-		BADCVAR("g_spawnshieldtime");
+		BADPREFIX("g_spawnshield");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
@@ -487,11 +491,9 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_maxidle");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
-		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
@@ -756,6 +758,9 @@ spawnfunc(worldspawn)
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
+	// default to RACE_RECORD, can be overwritten by gamemodes
+	record_type = RACE_RECORD;
+
 	// needs to be done so early because of the constants they create
 	static_init();
 
@@ -836,7 +841,8 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
+		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -863,12 +869,6 @@ spawnfunc(worldspawn)
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
 
-		// TODO to mutator system
-		if(autocvar_g_powerups == 0)
-			s = strcat(s, ":no_powerups");
-		if(autocvar_g_powerups > 0)
-			s = strcat(s, ":powerups");
-
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}
@@ -887,11 +887,8 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	if(fexists(strcat("scripts/", mapname, ".arena")))
-		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
-
-	if(fexists(strcat("scripts/", mapname, ".defi")))
-		cvar_settemp("sv_q3defragcompat", "1");
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -1191,7 +1188,7 @@ void DumpStats(float final)
 	s = strcat(s, GetGametype(), "_", GetMapname(), ":", ftos(rint(time)));
 
 	if(to_console)
-		LOG_INFO(s);
+		LOG_HELP(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 
@@ -1207,7 +1204,7 @@ void DumpStats(float final)
 
 	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
-		LOG_INFO(s);
+		LOG_HELP(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 	if(to_file)
@@ -1216,13 +1213,13 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+		if(IS_PLAYER(it) || INGAME_JOINED(it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, playername(it.netname, it.team, false));
+			LOG_HELP(s, playername(it.netname, it.team, false));
 		if(to_eventlog)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it.netname, it.team, false)));
 		if(to_file)
@@ -1233,7 +1230,7 @@ void DumpStats(float final)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
-			LOG_INFO(s);
+			LOG_HELP(s);
 		if(to_eventlog)
 			GameLogEcho(s);
 		if(to_file)
@@ -1244,7 +1241,7 @@ void DumpStats(float final)
 			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
-				LOG_INFO(s);
+				LOG_HELP(s);
 			if(to_eventlog)
 				GameLogEcho(s);
 			if(to_file)
@@ -1253,7 +1250,7 @@ void DumpStats(float final)
 	}
 
 	if(to_console)
-		LOG_INFO(":end");
+		LOG_HELP(":end");
 	if(to_eventlog)
 		GameLogEcho(":end");
 	if(to_file)
@@ -1302,10 +1299,18 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	int winner_team = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(playername(it.netname, it.team, false), " ^7wins.\n");
+		{
+			if (teamplay && !winner_team)
+			{
+				winner_team = it.team;
+				bprint(Team_ColorCode(winner_team), Team_ColorName_Upper(winner_team), "^7 team wins the match\n");
+			}
+			bprint(playername(it.netname, it.team, false), " ^7wins\n");
+		}
 	});
 
 	target_music_kill();
@@ -1385,13 +1390,13 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if(it.(field) == value)
 			it.winning = 1;
 	});
@@ -1400,7 +1405,7 @@ void AddWinners(.float field, float value)
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = 0; });
 }
 
 int fragsleft_last;
@@ -1647,7 +1652,7 @@ void CheckRules_World()
 				if(readyplayers || playerswithlaps >= 2)
 				{
 					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
+					ReadyRestart(true); // go to race
 					return;
 				}
 				else
@@ -1966,7 +1971,7 @@ void readplayerstartcvars()
 		random_start_weapons_count = cvar("g_random_start_weapons_count");
 		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
 		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
-		SetResource(random_start_ammo, RES_ROCKETS,cvar("g_random_start_rockets"));
+		SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
 		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
 		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 	}
@@ -2026,16 +2031,11 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
-	SetResource(random_start_ammo, RES_SHELLS,
-		max(0, GetResource(random_start_ammo, RES_SHELLS)));
-	SetResource(random_start_ammo, RES_BULLETS,
-		max(0, GetResource(random_start_ammo, RES_BULLETS)));
-	SetResource(random_start_ammo, RES_ROCKETS,
-		max(0, GetResource(random_start_ammo, RES_ROCKETS)));
-	SetResource(random_start_ammo, RES_CELLS,
-		max(0, GetResource(random_start_ammo, RES_CELLS)));
-	SetResource(random_start_ammo, RES_PLASMA,
-		max(0, GetResource(random_start_ammo, RES_PLASMA)));
+	SetResource(random_start_ammo, RES_SHELLS, max(0, GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS, max(0, GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS, max(0, GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS, max(0, GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA, max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
@@ -2212,11 +2212,11 @@ void droptofloor(entity this)
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
-void RunThink(entity this)
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -2232,7 +2232,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -2262,8 +2262,8 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 
