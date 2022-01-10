@@ -60,7 +60,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	freeslots = -1;
 	sflags = -1;
 	modname = "";
-    bool ToSSpecified = false;
+	bool ToSSpecified = false;
 	for(int j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")

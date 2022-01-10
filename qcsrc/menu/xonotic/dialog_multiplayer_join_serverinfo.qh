@@ -2,15 +2,15 @@
 
 #include "dialog.qh"
 CLASS(XonoticServerInfoDialog, XonoticDialog)
-    METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float));
+	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float));
 	METHOD(XonoticServerInfoDialog, fill, void(entity));
 	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Info"));
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER);
 	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.96);
 	ATTRIB(XonoticServerInfoDialog, rows, float, 19);
 	ATTRIB(XonoticServerInfoDialog, columns, float, 2);
-    ATTRIB(XonoticServerInfoDialog, infoTab, entity);
-    ATTRIB(XonoticServerInfoDialog, ToSTab, entity);
+	ATTRIB(XonoticServerInfoDialog, infoTab, entity);
+	ATTRIB(XonoticServerInfoDialog, ToSTab, entity);
 
 	ATTRIB(XonoticServerInfoTab, currentServerName, string);
 	ATTRIB(XonoticServerInfoTab, currentServerCName, string);
