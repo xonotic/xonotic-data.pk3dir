@@ -2,5 +2,4 @@
 
 #ifdef GAMEQC
 REPLICATE_FIELD(int, cvar_cl_multijump);
-REPLICATE(cvar_cl_multijump, bool, "cl_multijump");
 #endif

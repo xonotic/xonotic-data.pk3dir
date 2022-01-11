@@ -132,8 +132,6 @@ Nade Nade_FromProjectile(int proj)
 #ifdef GAMEQC
 REPLICATE_FIELD(int, cvar_cl_nade_type);
 REPLICATE_FIELD(string, cvar_cl_pokenade_type);
-REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
-REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 #endif
 
 #ifdef SVQC

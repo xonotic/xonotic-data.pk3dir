@@ -54,8 +54,6 @@
 	#define PHYS_DODGING_ENABLED(s)				CS_CVAR(s).cvar_cl_dodging
 #endif
 
-REPLICATE_FIELD(bool, cvar_cl_dodging);
-REPLICATE_FIELD(float, cvar_cl_dodging_timeout);
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 

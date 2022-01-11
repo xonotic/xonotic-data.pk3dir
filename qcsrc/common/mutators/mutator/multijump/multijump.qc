@@ -2,6 +2,8 @@
 
 #ifdef GAMEQC
 
+REPLICATE(cvar_cl_multijump, bool, "cl_multijump");
+
 #ifdef SVQC
 	#include <server/antilag.qh>
 #endif

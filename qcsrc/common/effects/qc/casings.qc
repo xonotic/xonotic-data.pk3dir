@@ -10,9 +10,6 @@
 
 REGISTER_NET_TEMP(casings)
 
-
-REPLICATE_FIELD(bool, cvar_cl_casings);
-REPLICATE_FIELD(int, cvar_r_drawviewmodel);
 REPLICATE(cvar_cl_casings, bool, "cl_casings");
 REPLICATE(cvar_r_drawviewmodel, int, "r_drawviewmodel");
 

@@ -1,1 +1,4 @@
 #pragma once
+
+REPLICATE_FIELD(bool, cvar_cl_dodging);
+REPLICATE_FIELD(float, cvar_cl_dodging_timeout);
