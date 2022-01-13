@@ -6,7 +6,7 @@
 # adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov <adem4ik@gmail.com>, 2014-2021
+# Andrei Stepanov <adem4ik@gmail.com>, 2014-2022
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Blueberryy <igory.ygr200@gmail.com>, 2021
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-12-28 15:49+0000\n"
+"PO-Revision-Date: 2022-01-06 17:20+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -1449,7 +1449,7 @@ msgstr "пули"
 
 #: qcsrc/common/items/item/ammo.qh:97
 msgid "cells"
-msgstr "заряды"
+msgstr "зарядами"
 
 #: qcsrc/common/items/item/ammo.qh:127
 msgid "plasma"

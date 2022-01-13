@@ -141,7 +141,7 @@ int Team_GetNumberOfAliveTeams()
 	return result;
 }
 
-int Team_GetWinnerTeam_WIthOwnedItems(int min_control_points)
+int Team_GetWinnerTeam_WithOwnedItems(int min_control_points)
 {
 	int winner = 0;
 	for (int i = 0; i < NUM_TEAMS; ++i)

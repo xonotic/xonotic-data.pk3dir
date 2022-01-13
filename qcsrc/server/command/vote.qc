@@ -790,11 +790,12 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "restart":
-		case "resetmatch":  // re-direct all match restarting to resetmatch
+		case "restart": // re-direct all match restarting to resetmatch
+			vote_command = "resetmatch"; // fall-through
+		case "resetmatch":
 		{
-			vote_parsed_command = "resetmatch";
-			vote_parsed_display = strzone("^1resetmatch");
+			vote_parsed_command = vote_command;
+			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;
 		}

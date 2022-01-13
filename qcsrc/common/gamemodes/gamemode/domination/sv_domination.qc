@@ -340,7 +340,7 @@ bool Domination_CheckWinner()
 	}
 
 	Domination_count_controlpoints();
-	int winner_team = Team_GetWinnerTeam_WIthOwnedItems(total_control_points);
+	int winner_team = Team_GetWinnerTeam_WithOwnedItems(total_control_points);
 	if (winner_team == -1)
 		return 0;
 

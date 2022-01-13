@@ -770,7 +770,7 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(HITSOUND_DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
@@ -1547,9 +1547,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars(false);
-	if (ReplicateVars_NOT_SENDING())
-		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+	ReplicateVars_Check();
 
 	HUD_Scale_Disable();
 
