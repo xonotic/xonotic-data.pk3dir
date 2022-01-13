@@ -2296,6 +2296,8 @@ void EndFrame()
 			STAT(KILL_TIME, it) = time;
 		} else if (e.damage_dealt) {
 			STAT(HIT_TIME, it) = time;
+			// NOTE: total damage dealt stat is not accurate as client
+			// code doesn't need so much accuracy for its purposes
 			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
 		}
 	});
