@@ -2442,9 +2442,10 @@ void EndFrame()
 			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
 			STAT(KILL_TIME, it) = time;
-		} else if (e.damage_dealt) {
+		} else if (e.hitsound_damage_dealt) {
 			STAT(HIT_TIME, it) = time;
-			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
+			// NOTE: this is not accurate as client code doesn't need so much accuracy for its purposes
+			STAT(HITSOUND_DAMAGE_DEALT_TOTAL, it) += ceil(e.hitsound_damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics
@@ -2455,7 +2456,7 @@ void EndFrame()
 	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
-		it.damage_dealt = 0;
+		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
 	});
