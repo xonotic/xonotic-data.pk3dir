@@ -4,6 +4,7 @@
 #include <common/util.qh>
 #include <server/campaign.qh>
 #include <server/command/vote.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/world.qh>
 
 void round_handler_Think(entity this)

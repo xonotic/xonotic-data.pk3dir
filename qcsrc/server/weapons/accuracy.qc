@@ -3,6 +3,7 @@
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/teams.qh>
+#include <common/gamemodes/gamemode/duel/duel.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <server/client.qh>

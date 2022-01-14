@@ -11,6 +11,7 @@
 #include <common/mutators/mutator/buffs/sv_buffs.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>

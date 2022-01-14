@@ -13,6 +13,7 @@
 #include <server/client.qh>
 #include <server/command/common.qh>
 #include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/world.qh>
 

@@ -6,6 +6,7 @@
 #include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
+#include <common/ent_cs.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/state.qh>

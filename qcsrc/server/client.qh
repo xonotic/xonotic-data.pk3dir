@@ -63,6 +63,8 @@ string autocvar_g_teamnames_blue;
 string autocvar_g_teamnames_yellow;
 string autocvar_g_teamnames_pink;
 
+void send_TeamNames(int channel, entity to);
+
 // Medals
 float autocvar_g_medals_excellent_time = 2;
 
