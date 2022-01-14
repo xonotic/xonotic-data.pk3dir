@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
 MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 {
 	entity frag_attacker = M_ARGV(1, entity);
-	
+
 	switch(autocvar_g_mayhem_scoringmethod)
 	{
 		//frags only
@@ -151,7 +151,7 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 		case 3:
 		{
 			entity frag_target = M_ARGV(2, entity);
-			
+
 			if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) || autocvar_g_spawnshield_blockdamage < 1)
 			{
 				float frag_deathtype = M_ARGV(6, float);
@@ -247,31 +247,31 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 						frag_attacker.total_friendly_damage_dealt += total;
 
 				//calculate missing amount of damage and calculate how much score the player should have based on that and then add the missing score
-				
+
 				//give a different weight for suicides if scoring method 1 doesn't have selfdamage2score enabled to harshly punish for suicides to avoid exploiting
 				float suicide_weight = 1 + (autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score * (1/autocvar_g_mayhem_scoringmethod_1_damage_weight));
-				
+
 				//total damage dealt to opponents minus total damage dealt to self
 				float totaldamagedealt = (frag_attacker.total_damage_dealt - frag_attacker.total_friendly_damage_dealt);
-				
+
 				//total damage divided by player start health&armor to get how many lives worth of damage they've dealt, then how much that is out of the fraglimit, then calculate new value affected by weight
 				float playerdamagescore = ((((totaldamagedealt/(start_health + start_armorvalue))/autocvar_g_mayhem_fraglimit) * autocvar_g_mayhem_scoringmethod_1_damage_weight) );
-				
+
 				//kills minus suicides, total out of fraglimit, calculate weight
 				float playerkillscore = (((PlayerScore_Get(frag_attacker, SP_KILLS) - (PlayerScore_Get(frag_attacker, SP_SUICIDES) * suicide_weight))/ autocvar_g_mayhem_fraglimit) * autocvar_g_mayhem_scoringmethod_1_frag_weight);
-				
+
 				//only used for debug print, add killscore and damagescore together
 				float playerscore = (playerdamagescore + playerkillscore);
-				
+
 				//add killscore and damagescore together to get total score and then adjust it to be total out of the visual score limit
 				float playerscorevisual = (playerdamagescore + playerkillscore) * autocvar_g_mayhem_visual_score_limit;
-				
+
 				//calculated how much score the player has and now calculate total of how much they are supposed to have
 				float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
-				
+
 				//adjust total score to be what the player is supposed to have
 				GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
-				
+
 				//debug printing
 				if(!IS_BOT_CLIENT(frag_attacker)){
 					print(sprintf("%f", frag_attacker.damage_dealt), 				" new damage dealt attacker.damage_dealt \n");
