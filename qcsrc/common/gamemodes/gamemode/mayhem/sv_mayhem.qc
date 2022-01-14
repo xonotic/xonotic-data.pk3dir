@@ -131,167 +131,156 @@ MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
 	M_ARGV(4, float) = frag_damage;
 }
 
-MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_attacker = M_ARGV(1, entity);
-
-	switch(autocvar_g_mayhem_scoringmethod)
+void CalculatePlayerScore(entity frag_attacker, entity frag_target){
+	switch (autocvar_g_mayhem_scoringmethod)
 	{
-		//frags only
-		case 2:
-		{
-			float playerkillscore = ((PlayerScore_Get(frag_attacker, SP_KILLS) - PlayerScore_Get(frag_attacker, SP_SUICIDES))/ autocvar_g_mayhem_fraglimit);
-			float playerscorevisual = playerkillscore * autocvar_g_mayhem_visual_score_limit;
-			float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
-			GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
-			return;
-		}
-		
-		//damage only
-		case 3:
-		{
-			entity frag_target = M_ARGV(2, entity);
-
-			if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) || autocvar_g_spawnshield_blockdamage < 1)
-			{
-				float frag_deathtype = M_ARGV(6, float);
-				float frag_damage = M_ARGV(7, float);
-				float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-				float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
-
-				float excess = max(0, frag_damage - damage_take - damage_save);
-				float total = frag_damage - excess;
-
-				if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage < 1)
-					total *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
-
-				//non-friendly fire
-				if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
-					//GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-					frag_attacker.total_damage_dealt += total;
-
-				//friendly fire aka self damage
-				if (frag_target == frag_attacker && IS_PLAYER(frag_attacker))
-					//GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-					frag_attacker.total_friendly_damage_dealt += total;
-
-				//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
-				//deathtypes:
-				//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
-				//camp = campcheck, lava = lava, slime = slime
-				//team change / rebalance suicides are currently not included
-				if (!IS_PLAYER(frag_attacker) && (
-					frag_deathtype == DEATH_KILL.m_id ||
-					frag_deathtype == DEATH_DROWN.m_id ||
-					frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-					frag_deathtype == DEATH_CAMP.m_id ||
-					frag_deathtype == DEATH_LAVA.m_id ||
-					frag_deathtype == DEATH_SLIME.m_id ||
-					frag_deathtype == DEATH_SWAMP.m_id))
-						//GameRules_scoring_add_team(frag_target, SCORE, (-1 * (start_health + start_armorvalue)) * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-						frag_attacker.total_friendly_damage_dealt += total;
-
-				//calculate missing amount of damage and calculate how much score the player should have based on that and then add the missing score
-				float totaldamagedealt = (frag_attacker.total_damage_dealt - frag_attacker.total_friendly_damage_dealt);
-				float playerdamagescore = ((totaldamagedealt/(start_health + start_armorvalue))/autocvar_g_mayhem_fraglimit);
-				float playerscorevisual = (playerdamagescore * autocvar_g_mayhem_visual_score_limit);
-				float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
-				GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
-			}
-			return;
-		}
-		
-		//combined damage and frags
 		default:
 		case 1:
 		{
-			entity frag_target = M_ARGV(2, entity);
-			
-			if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) || autocvar_g_spawnshield_blockdamage < 1)
-			{
-				float frag_deathtype = M_ARGV(6, float);
-				float frag_damage = M_ARGV(7, float);
-				float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-				float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+			//calculate how much score the player should have based on their damage dealt and frags gotten and then add the missing score
 
-				float excess = max(0, frag_damage - damage_take - damage_save);
-				float total = frag_damage - excess;
+			//give a different weight for suicides if scoring method 1 doesn't have selfdamage2score enabled to harshly punish for suicides to avoid exploiting
+			float suicide_weight = 1 + (autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score * (1/autocvar_g_mayhem_scoringmethod_1_frag_weight));
 
-				if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage < 1)
-					total *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
+			//total damage dealt to opponents minus total damage dealt to self
+			float totaldamagedealt = (frag_attacker.total_damage_dealt - frag_attacker.total_friendly_damage_dealt);
 
-				//non-friendly fire
-				if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
-					//GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_mayhem_scoringmethod_1_damage_weight * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-					frag_attacker.total_damage_dealt += total;
+			//total damage divided by player start health&armor to get how many lives worth of damage they've dealt, then how much that is out of the fraglimit, then calculate new value affected by weight
+			float playerdamagescore = (((((totaldamagedealt/(start_health + start_armorvalue)) * 100)/autocvar_g_mayhem_fraglimit) * autocvar_g_mayhem_scoringmethod_1_damage_weight) );
+																							// * 100 to avoid float inaccuracy at that decimal level
 
-				//friendly fire aka self damage
-				if (frag_target == frag_attacker && IS_PLAYER(frag_attacker) && !autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score)
-					//GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_mayhem_scoringmethod_1_damage_weight * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-					frag_attacker.total_friendly_damage_dealt += total;
+			//playerdamagescore rounded
+			float roundedplayerdamagescore = ((rint(playerdamagescore*10))/10);
 
-				//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
-				//deathtypes:
-				//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
-				//camp = campcheck, lava = lava, slime = slime
-				//team change / rebalance suicides are currently not included
-				if (!autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score && !IS_PLAYER(frag_attacker) && (
-					frag_deathtype == DEATH_KILL.m_id ||
-					frag_deathtype == DEATH_DROWN.m_id ||
-					frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-					frag_deathtype == DEATH_CAMP.m_id ||
-					frag_deathtype == DEATH_LAVA.m_id ||
-					frag_deathtype == DEATH_SLIME.m_id ||
-					frag_deathtype == DEATH_SWAMP.m_id))
-						//GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_mayhem_scoringmethod_1_damage_weight * mayhempointmultiplier * (1/(start_health + start_armorvalue)));
-						frag_attacker.total_friendly_damage_dealt += total;
+			//kills minus suicides, total out of fraglimit, calculate weight
+			float playerkillscore = ((((PlayerScore_Get(frag_attacker, SP_KILLS) - (PlayerScore_Get(frag_attacker, SP_SUICIDES) * suicide_weight)) * 100) / autocvar_g_mayhem_fraglimit) * autocvar_g_mayhem_scoringmethod_1_frag_weight);
+																																				// * 100 to avoid float inaccuracy at that decimal level
 
-				//calculate missing amount of damage and calculate how much score the player should have based on that and then add the missing score
+			//only used for debug print, add killscore and damagescore together
+			float playerscore = (roundedplayerdamagescore + playerkillscore) / 100;
 
-				//give a different weight for suicides if scoring method 1 doesn't have selfdamage2score enabled to harshly punish for suicides to avoid exploiting
-				float suicide_weight = 1 + (autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score * (1/autocvar_g_mayhem_scoringmethod_1_damage_weight));
+			//add killscore and damagescore together to get total score and then adjust it to be total out of the visual score limit
+			float playerscorevisual = (((roundedplayerdamagescore + playerkillscore) * autocvar_g_mayhem_visual_score_limit) / 100);
+																														//   / 100 to move back to the decimal level
 
-				//total damage dealt to opponents minus total damage dealt to self
-				float totaldamagedealt = (frag_attacker.total_damage_dealt - frag_attacker.total_friendly_damage_dealt);
+			//calculated how much score the player has and now calculate total of how much they are supposed to have
+			float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
 
-				//total damage divided by player start health&armor to get how many lives worth of damage they've dealt, then how much that is out of the fraglimit, then calculate new value affected by weight
-				float playerdamagescore = ((((totaldamagedealt/(start_health + start_armorvalue))/autocvar_g_mayhem_fraglimit) * autocvar_g_mayhem_scoringmethod_1_damage_weight) );
+			//adjust total score to be what the player is supposed to have
+			GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
 
-				//kills minus suicides, total out of fraglimit, calculate weight
-				float playerkillscore = (((PlayerScore_Get(frag_attacker, SP_KILLS) - (PlayerScore_Get(frag_attacker, SP_SUICIDES) * suicide_weight))/ autocvar_g_mayhem_fraglimit) * autocvar_g_mayhem_scoringmethod_1_frag_weight);
-
-				//only used for debug print, add killscore and damagescore together
-				float playerscore = (playerdamagescore + playerkillscore);
-
-				//add killscore and damagescore together to get total score and then adjust it to be total out of the visual score limit
-				float playerscorevisual = (playerdamagescore + playerkillscore) * autocvar_g_mayhem_visual_score_limit;
-
-				//calculated how much score the player has and now calculate total of how much they are supposed to have
-				float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
-
-				//adjust total score to be what the player is supposed to have
-				GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
-
-				//debug printing
-				if(!IS_BOT_CLIENT(frag_attacker)){
-					print(sprintf("%f", frag_attacker.damage_dealt), 				" new damage dealt attacker.damage_dealt \n");
-					print(sprintf("%f", total), 									" new damage dealt frag_damage - excess \n");
-					print(sprintf("%f", totaldamagedealt), 							" totaldamagedealt \n");
-					print(sprintf("%f", playerdamagescore), 						" playerdamagescore \n");
-					print(sprintf("%f", playerkillscore), 							" playerkillscore \n");
-					print(sprintf("%f", PlayerScore_Get(frag_attacker, SP_KILLS)),  " PlayerScore_Get(frag_attacker, SP_KILLS) \n");
-					print(sprintf("%f", playerscore), 								" playerscore \n");
-					print(sprintf("%f", playerscorevisual), 						" visual playerscore \n");
-					print(sprintf("%f", scoretoadd), 								" scoretoadd \n \n");
-				}
+			//debug printing
+			if(!IS_BOT_CLIENT(frag_attacker) && frag_target != frag_attacker){
+				print(sprintf("%f", totaldamagedealt), 							" totaldamagedealt \n");
+				print(sprintf("%f", playerdamagescore), 						" playerdamagescore \n");
+				print(sprintf("%f", roundedplayerdamagescore), 					" rounded playerdamagescore \n");
+				print(sprintf("%f", playerkillscore), 							" playerkillscore \n");
+				print(sprintf("%f", PlayerScore_Get(frag_attacker, SP_KILLS)),  " PlayerScore_Get(frag_attacker, SP_KILLS) \n");
+				print(sprintf("%f", playerscore), 								" playerscore \n");
+				print(sprintf("%f", playerscorevisual), 						" visual playerscore \n");
+				print(sprintf("%f", scoretoadd), 								" scoretoadd \n");
+				print(sprintf("%f", PlayerScore_Get(frag_attacker, SP_SCORE)),  " PlayerScore_Get(frag_attacker, SP_SCORE) \n \n");
 			}
-			return;
+		return;
 		}
+
+		case 2:
+		{
+			//calculate how much score the player should have based on their frags gotten and then add the missing score
+			float playerkillscore = (((PlayerScore_Get(frag_attacker, SP_KILLS) - PlayerScore_Get(frag_attacker, SP_SUICIDES)) * 100)/ autocvar_g_mayhem_fraglimit);
+			float playerscorevisual = (playerkillscore * autocvar_g_mayhem_visual_score_limit) / 100;
+			float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
+			GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
+
+			//debug printing
+			if(!IS_BOT_CLIENT(frag_attacker) && frag_target != frag_attacker){
+				print(sprintf("%f", playerkillscore), 							" playerkillscore \n");
+				print(sprintf("%f", PlayerScore_Get(frag_attacker, SP_KILLS)),  " PlayerScore_Get(frag_attacker, SP_KILLS) \n");
+				print(sprintf("%f", playerscorevisual), 						" visual playerscore \n");
+				print(sprintf("%f", scoretoadd), 								" scoretoadd \n");
+				print(sprintf("%f", PlayerScore_Get(frag_attacker, SP_SCORE)),  " PlayerScore_Get(frag_attacker, SP_SCORE) \n \n");
+			}
+		return;
+		}
+
+		case 3:
+		{
+			//calculate how much score the player should have based on their damage dealt and then add the missing score
+			float totaldamagedealt = (frag_attacker.total_damage_dealt - frag_attacker.total_friendly_damage_dealt);
+			float playerdamagescore = (((totaldamagedealt/(start_health + start_armorvalue)) * 100)/autocvar_g_mayhem_fraglimit);
+			float roundedplayerdamagescore = ((rint(playerdamagescore*10))/10);
+			float playerscorevisual = ((roundedplayerdamagescore * autocvar_g_mayhem_visual_score_limit) / 100);
+			float scoretoadd = (playerscorevisual - PlayerScore_Get(frag_attacker, SP_SCORE));
+			GameRules_scoring_add_team(frag_attacker, SCORE, scoretoadd);
+
+			//debug printing
+			if(!IS_BOT_CLIENT(frag_attacker) && frag_target != frag_attacker){
+				print(sprintf("%f", totaldamagedealt), 							" totaldamagedealt \n");
+				print(sprintf("%f", playerdamagescore), 						" playerdamagescore \n");
+				print(sprintf("%f", roundedplayerdamagescore), 					" rounded playerdamagescore \n");
+				print(sprintf("%f", playerscorevisual), 						" visual playerscore \n");
+				print(sprintf("%f", scoretoadd), 								" scoretoadd \n");
+				print(sprintf("%f", PlayerScore_Get(frag_attacker, SP_SCORE)),  " PlayerScore_Get(frag_attacker, SP_SCORE) \n \n");
+			}
+		return;
+		}
+	}
+}
+
+MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
+{
+	if(autocvar_g_mayhem_scoringmethod==2)return;
+	
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
+	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) || autocvar_g_spawnshield_blockdamage < 1)
+	{
+		float frag_deathtype = M_ARGV(6, float);
+		float frag_damage = M_ARGV(7, float);
+		float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+		float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+
+		float excess = max(0, frag_damage - damage_take - damage_save);
+		float total = frag_damage - excess;
+
+		if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage < 1)
+			total *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
+
+		//non-friendly fire
+		if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
+			frag_attacker.total_damage_dealt += total;
+
+		//friendly fire aka self damage
+		if (frag_target == frag_attacker && IS_PLAYER(frag_attacker) && !autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score)
+			frag_attacker.total_friendly_damage_dealt += total;
+
+		//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+		//deathtypes:
+		//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+		//camp = campcheck, lava = lava, slime = slime
+		//team change / rebalance suicides are currently not included
+		if (!autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score && !IS_PLAYER(frag_attacker) && (
+			frag_deathtype == DEATH_KILL.m_id ||
+			frag_deathtype == DEATH_DROWN.m_id ||
+			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+			frag_deathtype == DEATH_CAMP.m_id ||
+			frag_deathtype == DEATH_LAVA.m_id ||
+			frag_deathtype == DEATH_SLIME.m_id ||
+			frag_deathtype == DEATH_SWAMP.m_id))
+				frag_attacker.total_friendly_damage_dealt += total;
+
+		CalculatePlayerScore(frag_attacker, frag_target);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(mayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 {
+	entity frag_attacker = M_ARGV(0, entity);
+	entity frag_target = M_ARGV(1, entity);
 	M_ARGV(2, float) = 0;
+	
+	CalculatePlayerScore(frag_attacker, frag_target);
+	
 	return true;
 }
