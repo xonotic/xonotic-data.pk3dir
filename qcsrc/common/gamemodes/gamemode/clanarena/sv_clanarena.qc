@@ -405,45 +405,52 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
-	//non-friendly fire
-	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
-		frag_attacker.ca_damage_counter += frag_damage - excess;
+	if (frag_damage - excess == 0) return;
 
-	//friendly fire
-	if (SAME_TEAM(frag_target, frag_attacker))
-		frag_attacker.ca_damage_counter -= frag_damage - excess;
+	entity scorer = NULL;
+	float scorer_damage = 0;
 
-	//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
-	//deathtypes:
-	//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
-	//camp = campcheck, lava = lava, slime = slime
-	//team change / rebalance suicides are currently not included
-	if (!IS_PLAYER(frag_attacker) && (
-		frag_deathtype == DEATH_KILL.m_id ||
-		frag_deathtype == DEATH_DROWN.m_id ||
-		frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-		frag_deathtype == DEATH_CAMP.m_id ||
-		frag_deathtype == DEATH_LAVA.m_id ||
-		frag_deathtype == DEATH_SLIME.m_id ||
-		frag_deathtype == DEATH_SWAMP.m_id))
-			frag_target.ca_damage_counter -= frag_damage - excess;
-
-	entity pl = frag_attacker;
-	LABEL(assign_score);
-	if (pl && IS_PLAYER(pl) && fabs(pl.ca_damage_counter) >= autocvar_g_ca_damage2score)
+	if (IS_PLAYER(frag_attacker))
 	{
+		if (DIFF_TEAM(frag_target, frag_attacker))
+			scorer_damage = frag_damage - excess;
+		else // friendly fire
+			scorer_damage = -(frag_damage - excess);
+
+		scorer = frag_attacker;
+	}
+	else
+	{
+		//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+		//deathtypes:
+		//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+		//camp = campcheck, lava = lava, slime = slime
+		//team change / rebalance suicides are currently not included
+		if (frag_deathtype == DEATH_KILL.m_id ||
+			frag_deathtype == DEATH_DROWN.m_id ||
+			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+			frag_deathtype == DEATH_CAMP.m_id ||
+			frag_deathtype == DEATH_LAVA.m_id ||
+			frag_deathtype == DEATH_SLIME.m_id ||
+			frag_deathtype == DEATH_SWAMP.m_id)
+		{
+			scorer_damage = -(frag_damage - excess);
+			scorer = frag_target;
+		}
+	}
+
+	if (scorer)
+	{
+		scorer.ca_damage_counter += scorer_damage;
+		if (fabs(scorer.ca_damage_counter) < autocvar_g_ca_damage2score)
+			return;
 		// NOTE: here we are actually rounding since ca_damage_counter is
 		// initialized on player spawn to half autocvar_g_ca_damage2score
 		// Also note that this code works for subtracting score too
-		int points = floor(pl.ca_damage_counter / autocvar_g_ca_damage2score);
-		GameRules_scoring_add(pl, SCORE, points);
+		int points = floor(scorer.ca_damage_counter / autocvar_g_ca_damage2score);
+		GameRules_scoring_add(scorer, SCORE, points);
 
-		pl.ca_damage_counter -= points * autocvar_g_ca_damage2score;
-	}
-	if (pl != frag_target)
-	{
-		pl = frag_target;
-		goto assign_score;
+		scorer.ca_damage_counter -= points * autocvar_g_ca_damage2score;
 	}
 }
 
