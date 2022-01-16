@@ -405,7 +405,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
-	if (frag_damage - excess == 0) return;
+	if (autocvar_g_ca_damage2score <= 0 || frag_damage - excess == 0) return;
 
 	entity scorer = NULL;
 	float scorer_damage = 0;
