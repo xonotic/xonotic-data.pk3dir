@@ -430,12 +430,14 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	entity pl = frag_attacker;
 	LABEL(assign_score);
-	if (fabs(pl.ca_damage_counter) >= autocvar_g_ca_damage2score)
+	if (pl && IS_PLAYER(pl) && fabs(pl.ca_damage_counter) >= autocvar_g_ca_damage2score)
 	{
 		// NOTE: here we are actually rounding since ca_damage_counter is
 		// initialized on player spawn to half autocvar_g_ca_damage2score
+		// Also note that this code works for subtracting score too
 		int points = floor(pl.ca_damage_counter / autocvar_g_ca_damage2score);
 		GameRules_scoring_add(pl, SCORE, points);
+
 		pl.ca_damage_counter -= points * autocvar_g_ca_damage2score;
 	}
 	if (pl != frag_target)
