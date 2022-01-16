@@ -6,6 +6,9 @@ string strcat1(string s) = #115; // FRIK_FILE
 #endif
 
 #if defined(CSQC)
+const int REPLICATEVARS_SEND_ALL = -1; // sync all cvars with the server (init)
+const int REPLICATEVARS_CHECK = 0; // check if any cvar has changed and sync it with the server
+const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shutdown)
 #define REPLICATE_FIELD(type, name) type name
 #elif defined(SVQC)
 #define REPLICATE_FIELD(type, name) .type name
@@ -94,17 +97,13 @@ string strcat1(string s) = #115; // FRIK_FILE
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 
-		#define ReplicateVars_Destroy() ReplicateVars(1)
-		#define ReplicateVars_Send_All() ReplicateVars(-1)
-		#define ReplicateVars_Check() ReplicateVars(0)
-
 		void ReplicateVars_Send(string cvarname) { localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); }
 
 		#define REPLICATE_7(fld, type, var, func, check, update, destroy) \
 			void ReplicateVars(int mode) \
 			{ \
-				if (mode == 1) { destroy } \
-				else if (mode == -1 || check) \
+				if (mode == REPLICATEVARS_DESTROY) { destroy } \
+				else if (mode == REPLICATEVARS_SEND_ALL || check) \
 				{ \
 					ReplicateVars_Send(var); \
 					update \

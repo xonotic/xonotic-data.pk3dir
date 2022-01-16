@@ -1540,7 +1540,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars_Check();
+	ReplicateVars(REPLICATEVARS_CHECK);
 
 	HUD_Scale_Disable();
 
