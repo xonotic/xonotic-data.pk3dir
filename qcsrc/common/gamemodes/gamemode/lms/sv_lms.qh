@@ -7,7 +7,6 @@
 // 2 when player goes spectator (presses F3 to spectate for the second time)
 // 3 when player disconnects
 .int lms_spectate_warning;
-.int lmsplayer;
 
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
 string autocvar_g_lms_weaponarena = "most_available";

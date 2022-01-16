@@ -15,7 +15,7 @@
 	#if defined(SVQC)
 	ACCUMULATE void ReplicateVars(entity this, entity store, string thisname, int i) {}
 	#elif defined(CSQC)
-	ACCUMULATE void ReplicateVars(bool would_destroy) {}
+	ACCUMULATE void ReplicateVars(int mode) {}
 	#endif
 
 	#define REPLICATE_3(fld, type, var) REPLICATE_4(fld, type, var, )
@@ -68,13 +68,25 @@
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 
+		void ReplicateVars_Destroy() { ReplicateVars(1); }
+		void ReplicateVars_Send_All() { ReplicateVars(-1); }
+		void ReplicateVars_Check()
+		{
+			// if a cvar has changed send it and check cvars again next frame
+			ReplicateVars(0);
+			if (ReplicateVars_NOT_SENDING()) // if no cvar has changed
+				ReplicateVars_DELAY(0.8 + random() * 0.4); // check cvars after a while
+		}
+		void ReplicateVars_Send(string cvarname) { localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); }
+
 		#define REPLICATE_7(fld, type, var, func, check, update, destroy) \
-			void ReplicateVars(bool would_destroy) \
+			void ReplicateVars(int mode) \
 			{ \
-				if (would_destroy) { destroy } \
+				if (mode == 1) { destroy } \
+				else if (mode == -1) { ReplicateVars_Send(var); update } \
 				else if (ReplicateVars_NOT_SENDING() && check) \
 				{ \
-					localcmd(strcat("cl_cmd sendcvar ", var, "\n")); \
+					ReplicateVars_Send(var); \
 					ReplicateVars_DELAY_1FRAME(); \
 					update \
 					return; \
@@ -87,7 +99,7 @@
 				float thecvar = cvar(cvarname); \
 				if(field != thecvar) \
 				{ \
-					localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); \
+					ReplicateVars_Send(cvarname); \
 					ReplicateVars_DELAY_1FRAME(); \
 					field = thecvar; \
 					return; \
