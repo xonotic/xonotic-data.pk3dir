@@ -4,6 +4,7 @@
 #
 # Translators:
 # Archy Coder, 2022
+# Archy Coder, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
