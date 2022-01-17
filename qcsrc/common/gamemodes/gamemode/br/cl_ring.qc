@@ -130,5 +130,5 @@ bool ring_is_closing(entity this)
             return true;
     }
 
-    return (time_elapsed <= this.br_ring_duration);
+    return (time_elapsed < (this.br_ring_duration + this.br_ring_stage_waittime * this.br_ring_stage_count));
 }
