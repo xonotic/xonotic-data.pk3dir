@@ -115,23 +115,11 @@ MUTATOR_HOOKFUNCTION(br, PutClientInServer)
         return false;
 
     if (IN_SQUAD(player))
-    {
         Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_BR_JOIN_DEAD);
-        if(IS_REAL_CLIENT(player) && !player.br_squad.br_squad_dead)
-        {
-            SpectateNext(player);
-            TRANSMUTE(Spectator, player);
-        }
-        else
-        {
-            TRANSMUTE(Observer, player);
-        }
-    }
     else
-    {
         Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_BR_JOIN_LATE);
-        TRANSMUTE(Observer, player);
-    }
+
+    TRANSMUTE(Observer, player);
 }
 
 MUTATOR_HOOKFUNCTION(br, MakePlayerObserver)

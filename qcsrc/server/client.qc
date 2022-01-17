@@ -234,6 +234,8 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
+bool SpectateNext(entity this);
+
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this, bool is_forced)
 {
@@ -397,6 +399,13 @@ void PutObserverInServer(entity this, bool is_forced)
 
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
+
+	// force members of alive squads to spectate another squadmate
+	if(IS_REAL_CLIENT(this) && IN_SQUAD(this) && !this.br_squad.br_squad_dead)
+	{
+		SpectateNext(this);
+		TRANSMUTE(Spectator, this);
+	}
 }
 
 int player_getspecies(entity this)
