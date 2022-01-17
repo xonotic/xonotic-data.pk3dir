@@ -1,0 +1,30 @@
+#pragma once
+
+// player squad entity
+.entity br_squad;
+
+#define IN_SQUAD(a) ((a).br_squad != NULL)
+#define SAME_SQUAD(a,b) (IN_SQUAD((a)) && ((a).br_squad == (b).br_squad))
+#define DIFF_SQUAD(a,b) (!IN_SQUAD((a)) || ((a).br_squad != (b).br_squad))
+
+int max_squad_size;
+
+// squad drop leader
+.entity br_squad_drop_leader;
+
+// squad stats
+.int br_squad_id;
+.bool br_squad_dead;
+
+// squad member list
+.entity br_squad_first;
+.entity br_squad_last;
+.entity br_squad_next;
+.entity br_squad_prev;
+
+int br_SquadUpdateInfo();
+void br_SquadMember_Add(entity squad, entity player);
+void br_SquadMember_Remove(entity player);
+bool br_SquadIsBotsOnly(entity squad);
+entity br_SquadGetRandomAvail();
+entity br_SquadFindLastAlive(entity squad, bool healthy_only);

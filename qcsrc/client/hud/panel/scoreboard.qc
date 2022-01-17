@@ -392,12 +392,12 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl fps name |" \
+"ping pl fps +br/squad name |" \
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
-" -teams,lms/deaths +ft,tdm/deaths" \
+" -teams,lms,br/deaths +ft,tdm/deaths" \
 " +tdm/sum" \
-" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
-" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" -teams,lms,rc,cts,inv,ka,br/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft,br/frags" /* tdm already has this in "score" */ \
 " +tdm,ft,dom,ons,as/teamkills"\
 " -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
 " +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
@@ -407,7 +407,9 @@ void Cmd_Scoreboard_Help()
 " +as/objectives +nb/faults +nb/goals" \
 " +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
 " +dom/ticks +dom/takes" \
-" -lms,rc,cts,inv,nb/score"
+" -lms,rc,cts,inv,nb,br/score" \
+" +br/revivals" \
+" +br/rank"
 
 void Cmd_Scoreboard_SetFields(int argc)
 {

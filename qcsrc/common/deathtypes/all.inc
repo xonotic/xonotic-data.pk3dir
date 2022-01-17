@@ -10,6 +10,7 @@ REGISTER_DEATHTYPE(GENERIC,                 DEATH_SELF_GENERIC,             NULL
 REGISTER_DEATHTYPE(HURTTRIGGER,             DEATH_SELF_VOID,                DEATH_MURDER_VOID,              "")
 REGISTER_DEATHTYPE(KILL,                    DEATH_SELF_SUICIDE,             NULL,                           "")
 REGISTER_DEATHTYPE(LAVA,                    DEATH_SELF_LAVA,                DEATH_MURDER_LAVA,              "")
+REGISTER_DEATHTYPE(RING,                    DEATH_SELF_RING,                NULL,                           "")
 REGISTER_DEATHTYPE(MIRRORDAMAGE,            DEATH_SELF_BETRAYAL,            NULL,                           "")
 REGISTER_DEATHTYPE(MONSTER_MAGE,            DEATH_SELF_MON_MAGE,            DEATH_MURDER_MONSTER,           "monster")
 REGISTER_DEATHTYPE(MONSTER_SHAMBLER_CLAW,   DEATH_SELF_MON_SHAMBLER_CLAW,   DEATH_MURDER_MONSTER,           "monster")

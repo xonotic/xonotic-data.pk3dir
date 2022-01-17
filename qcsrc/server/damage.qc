@@ -305,9 +305,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	// ======
 	// MURDER
 	// ======
-	else if(IS_PLAYER(attacker))
+	else if(IS_PLAYER(attacker) || IN_SQUAD(attacker))
 	{
-		if(SAME_TEAM(attacker, targ))
+		if(SAME_TEAM(attacker, targ) || SAME_SQUAD(attacker, targ))
 		{
 			LogDeath("tk", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, -1, deathtype, weaponentity);
@@ -594,7 +594,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	// special rule: gravity bombs and sound-based attacks do not affect team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || (deathtype & HITTYPE_SOUND))
 	{
-		if(IS_PLAYER(targ) && SAME_TEAM(targ, attacker))
+		if(IS_PLAYER(targ) && (SAME_TEAM(targ, attacker) || SAME_SQUAD(targ, attacker)))
 		{
 			return;
 		}
@@ -633,7 +633,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(!STAT(FROZEN, targ) && SAME_TEAM(attacker, targ))
+			else if(!STAT(FROZEN, targ) && (SAME_TEAM(attacker, targ) || SAME_SQUAD(attacker, targ)))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -781,7 +781,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim, attacker))
 			{
-				if (DIFF_TEAM(victim, attacker))
+				if (DIFF_TEAM(victim, attacker) && DIFF_SQUAD(victim, attacker))
 				{
 					if(damage > 0)
 					{

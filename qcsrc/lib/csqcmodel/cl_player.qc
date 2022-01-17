@@ -613,7 +613,7 @@ void CSQCPlayer_SetCamera()
 #endif
 			CSQCPlayer_SetMinsMaxs(e);
 
-			if (!IS_DEAD(e))
+			if (!IS_DEAD(e) && (STAT(DROP) != DROP_FALLING))
 				e.angles.y = input_angles.y;
 		}
 

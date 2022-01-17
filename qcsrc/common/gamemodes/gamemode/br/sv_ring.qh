@@ -1,0 +1,4 @@
+#pragma once
+
+entity ring_initialize();
+void ring_timelimit(entity this);

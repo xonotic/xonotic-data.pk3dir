@@ -1,0 +1,21 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/br/br.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/br/cl_br.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/br/sv_br.qh>
+#endif
+#include <common/gamemodes/gamemode/br/ring.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/br/cl_ring.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/br/sv_ring.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/br/sv_dropship.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/br/sv_squad.qh>
+#endif

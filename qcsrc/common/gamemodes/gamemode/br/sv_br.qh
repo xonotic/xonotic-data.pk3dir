@@ -1,0 +1,36 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <common/scores.qh>
+
+bool squads_colored = false;
+
+void br_Initialize();
+
+REGISTER_MUTATOR(br, false)
+{
+    MUTATOR_STATIC();
+    MUTATOR_ONADD
+    {
+        GameRules_teams(false);
+        GameRules_limit_score(0);
+        GameRules_limit_lead(0);
+        GameRules_score_enabled(false);
+        GameRules_scoring(0, 0, 0, {
+            field(SP_BR_RANK, "rank", SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY);
+            field(SP_BR_SQUAD, "squad", 0);
+            field(SP_BR_REVIVALS, "revivals", 0);
+        });
+
+        br_Initialize();
+    }
+    return 0;
+}
+
+float autocvar_g_br_revive_extra_size = 100;
+float autocvar_g_br_revive_speed = 0.4;
+float autocvar_g_br_revive_clearspeed = 1.6;
+float autocvar_g_br_bleed = 0.02;
+float autocvar_g_br_bleedlinear = 1;
+int autocvar_g_br_squad_size = 3;
+int autocvar_g_br_minplayers = 2;

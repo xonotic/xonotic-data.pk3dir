@@ -57,6 +57,11 @@ REGISTER_WAYPOINT(OnsCPAttack, _("Control point"), "", '1 0.5 0', 2);
 REGISTER_WAYPOINT(OnsGen, _("Generator"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(OnsGenShielded, _("Generator"), "", '1 0.5 0', 1);
 
+const vector WP_BR_BLEEDING_COLOR = '0.8 0.1 0.1';
+const vector WP_BR_REVIVING_COLOR = '0.2 0.8 0.2';
+REGISTER_WAYPOINT(BRBleeding, _("Bleeding!"), "", WP_BR_BLEEDING_COLOR, 1);
+REGISTER_WAYPOINT(BRReviving, _("Reviving"), "", WP_BR_REVIVING_COLOR, 1);
+
 REGISTER_WAYPOINT(Weapon, _("Weapon"), "", '0 0 0', 1);
 
 REGISTER_WAYPOINT(Monster, _("Monster"), "", '1 0 0', 1);

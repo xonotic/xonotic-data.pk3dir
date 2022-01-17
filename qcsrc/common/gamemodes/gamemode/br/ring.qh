@@ -1,0 +1,18 @@
+#pragma once
+
+#ifdef GAMEQC
+const string BR_RING_NAME = "^3the ring";
+
+const int BR_RING_SETUP  = 2;
+const int BR_RING_MOVE   = 4;
+
+#define BR_RING_STAGE_MAX 128
+.float br_ring_start;
+.float br_ring_duration;
+.float br_ring_alpha;
+.int br_ring_stage_count;
+.float br_ring_stage_waittime;
+.float br_ring_stage_timing[BR_RING_STAGE_MAX];
+
+float ring_calculate_current_radius(entity this);
+#endif

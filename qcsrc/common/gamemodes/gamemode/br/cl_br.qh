@@ -1,0 +1,7 @@
+#pragma once
+
+int autocvar_hud_panel_modicons_br_layout = 1;
+
+void HUD_Mod_BR(vector myPos, vector mySize);
+void HUD_Mod_BR_Draw(vector myPos, vector mySize, int layout);
+void HUD_Mod_BR_Export(int fh);

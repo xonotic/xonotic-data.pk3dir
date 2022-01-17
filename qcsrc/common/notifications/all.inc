@@ -299,6 +299,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_FIRE,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 became a bit too crispy%s%s"), _("^BG%s^K1 felt a little hot%s%s"))
     MSG_INFO_NOTIF(DEATH_SELF_GENERIC,                      N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_selfkill",      _("^BG%s^K1 died%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_LAVA,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s"), _("^BG%s^K1 found a hot place%s%s"))
+    MSG_INFO_NOTIF(DEATH_SELF_RING,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 couldn't escape from ^K2the ring^K1%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_MAGE,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was exploded by a Mage%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_SHAMBLER_CLAW,            N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1's innards became outwards by a Shambler%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_SHAMBLER_SMASH,           N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was smashed by a Shambler%s%s"), "")
@@ -390,6 +391,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_INFO_NOTIF(LMS_FORFEIT,                             N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 forfeited"), "")
     MSG_INFO_NOTIF(LMS_NOLIVES,                             N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^F3 has no more lives left"), "")
+
+    MSG_INFO_NOTIF(BR_REVIVED,                              N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
+    MSG_INFO_NOTIF(BR_DOWN,                                 N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K1 was downed by ^BG%s"), "")
+    MSG_INFO_NOTIF(BR_DOWN_SELF,                            N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^K1 downed themself"), "")
 
     MSG_INFO_NOTIF(MONSTERS_DISABLED,                       N_CONSOLE,  0, 0, "", "",           "",     _("^BGMonsters are currently disabled"), "")
 
@@ -622,6 +627,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(DEATH_SELF_FIRE,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You got a little bit too crispy!")), BOLD(_("^K1You felt a little too hot!")))
     MSG_CENTER_NOTIF(DEATH_SELF_GENERIC,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You fragged yourself!")), BOLD(_("^K1You need to be more careful!")))
     MSG_CENTER_NOTIF(DEATH_SELF_LAVA,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You couldn't stand the heat!")), "")
+    MSG_CENTER_NOTIF(DEATH_SELF_RING,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You couldn't escape from ^K2the ring^K1!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_MONSTER,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were killed by a monster!")), BOLD(_("^K1You need to watch out for monsters!")))
     MSG_CENTER_NOTIF(DEATH_SELF_NADE,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You forgot to put the pin back in!")), BOLD(_("^K1Tastes like chicken!")))
     MSG_CENTER_NOTIF(DEATH_SELF_NADE_NAPALM,            N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Hanging around a napalm explosion is bad!")), "")
@@ -703,6 +709,19 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_CENTER(KEYHUNT_START,                     N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGYou are starting with the ^TC^TT Key"), "", KEY)
 
     MSG_CENTER_NOTIF(LMS_NOLIVES,                       N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGYou have no lives left, you must wait until the next match"), "")
+
+    MSG_CENTER_NOTIF(BR_JOIN_LATE,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGMatch already started, you must wait until the next match"), "")
+    MSG_CENTER_NOTIF(BR_JOIN_DEAD,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou are dead, you must wait until the next match"), "")
+    MSG_CENTER_NOTIF(BR_FORFEIT,                        N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGForfeiting not possible"), "")
+    MSG_CENTER_NOTIF(BR_DOWN_WAIT,                      N_ENABLE,    0, 0, "",               CPID_BR_DOWN,          "-1 0",  _("^F1Waiting for revive..."), "")
+    MSG_CENTER_NOTIF(BR_DEAD_SQUAD,                     N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Your squad has been eliminated"), "")
+    MSG_CENTER_NOTIF(BR_REVIVE,                         N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You revived ^BG%s"), "")
+    MSG_CENTER_NOTIF(BR_REVIVED,                        N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You were revived by ^BG%s"), "")
+    MSG_CENTER_NOTIF(BR_DOWN,                           N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were downed by ^BG%s"), "")
+    MSG_CENTER_NOTIF(BR_DOWN_SELF,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You downed yourself"), "")
+    MSG_CENTER_NOTIF(BR_DROPSHIP,                       N_ENABLE,    0, 0, "",               CPID_BR_DROPSHIP,      "-1 0",  _("^BG^F1Jump^BG to drop"), "")
+    MSG_CENTER_NOTIF(BR_RING_WARN,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F4You are outside of ^F2the ring^F4, get back in fast!"), "")
+    MSG_CENTER_NOTIF(BR_RING_CLOSE,                     N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Ring^F4 is closing! (strength: ^F1%s^F4)"), "")
 
     MSG_CENTER_NOTIF(MISSING_TEAMS,                     N_ENABLE,    0, 1, "missing_teams",  CPID_MISSING_TEAMS,     "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "")
     MSG_CENTER_NOTIF(MISSING_PLAYERS,                   N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "-1 0", _("^BGWaiting for %s player(s) to join..."), "")
@@ -833,6 +852,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_SELF_FIRE,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_FIRE,                   CENTER_DEATH_SELF_FIRE)
     MSG_MULTI_NOTIF(DEATH_SELF_GENERIC,                 N_ENABLE,  NULL,           INFO_DEATH_SELF_GENERIC,                CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(DEATH_SELF_LAVA,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_LAVA,                   CENTER_DEATH_SELF_LAVA)
+    MSG_MULTI_NOTIF(DEATH_SELF_RING,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_RING,                   CENTER_DEATH_SELF_RING)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_MAGE,                N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_MAGE,               CENTER_DEATH_SELF_MONSTER)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_SHAMBLER_CLAW,       N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_SHAMBLER_CLAW,      CENTER_DEATH_SELF_MONSTER)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_SHAMBLER_SMASH,      N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_SHAMBLER_SMASH,     CENTER_DEATH_SELF_MONSTER)
