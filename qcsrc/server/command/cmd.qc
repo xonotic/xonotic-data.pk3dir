@@ -391,6 +391,8 @@ void ClientCommand_ready(entity caller, int request)
 							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
 
+					caller.last_ready = time;
+
 					// cannot reset the game while a timeout is active!
 					if (!timeout_status) ReadyCount();
 				}
