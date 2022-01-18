@@ -202,7 +202,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	return result;
 }
 
-string GetAmmoPicture(int ammotype)
+// TODO: registry handles for below functions
+string GetAmmoPicture(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -216,7 +217,7 @@ string GetAmmoPicture(int ammotype)
 	}
 }
 
-string GetAmmoName(int ammotype)
+string GetAmmoName(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -230,7 +231,7 @@ string GetAmmoName(int ammotype)
 	}
 }
 
-entity GetAmmoItem(int ammotype)
+entity GetAmmoItem(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -241,14 +242,14 @@ entity GetAmmoItem(int ammotype)
 		case RES_PLASMA:  return ITEM_Plasma;
 		case RES_FUEL:    return ITEM_JetpackFuel;
 	}
-	LOG_WARNF("Invalid ammo type %d ", ammotype);
+	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
 	// WEAPONTODO: use this generic func to reduce duplication ?
 	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
 
 #ifdef CSQC
-int GetAmmoTypeFromNum(int i)
+Resource GetAmmoTypeFromNum(int i)
 {
 	switch (i)
 	{
@@ -262,7 +263,7 @@ int GetAmmoTypeFromNum(int i)
 	}
 }
 
-int GetAmmoStat(int ammotype)
+int GetAmmoStat(Resource ammotype)
 {
 	switch (ammotype)
 	{

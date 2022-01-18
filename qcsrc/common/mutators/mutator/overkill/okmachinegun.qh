@@ -2,7 +2,7 @@
 
 CLASS(OverkillMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillMachineGun, m_canonical_spawnfunc, string, "weapon_okmachinegun");
-/* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, int, RES_BULLETS);
+/* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillMachineGun, impulse, int, 3);
 /* flags	 */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED);
 /* rating	*/ ATTRIB(OverkillMachineGun, bot_pickupbasevalue, float, 7000);

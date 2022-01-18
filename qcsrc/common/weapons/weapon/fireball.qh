@@ -2,7 +2,7 @@
 
 CLASS(Fireball, Weapon)
 /* spawnfunc */ ATTRIB(Fireball, m_canonical_spawnfunc, string, "weapon_fireball");
-/* ammotype  */ //ATTRIB(Fireball, ammo_type, int, RES_NONE);
+/* ammotype  */ //ATTRIB(Fireball, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Fireball, impulse, int, 9);
 /* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);

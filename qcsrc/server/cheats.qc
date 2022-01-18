@@ -12,6 +12,7 @@
 #include <common/monsters/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/player.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
@@ -26,7 +27,6 @@
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/race.qh>
-#include <server/resources.qh>
 #include <server/world.qh>
 
 #ifdef NOCHEATS
