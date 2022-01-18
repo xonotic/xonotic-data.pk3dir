@@ -382,13 +382,13 @@ void ClientCommand_ready(entity caller, int request)
 					{
 						caller.ready = false;
 						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
-							bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
+							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 					}
 					else
 					{
 						caller.ready = true;
 						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
-							bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
+							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
 
 					caller.last_ready = time;
