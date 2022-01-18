@@ -17,6 +17,7 @@
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -31,7 +32,6 @@
 #include <server/items/items.qh>
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/scores.qh>
 #include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
