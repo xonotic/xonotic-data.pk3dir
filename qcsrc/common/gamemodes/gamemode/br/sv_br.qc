@@ -469,19 +469,16 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             player.flags |= FL_PICKUPITEMS;
             player.dphitcontentsmask |= DPCONTENTS_BODY;
 
-            if(autocvar_g_br_startweapons)
-            {
-                SetResource(player, RES_SHELLS, start_ammo_shells);
-                SetResource(player, RES_BULLETS, start_ammo_nails);
-                SetResource(player, RES_ROCKETS, start_ammo_rockets);
-                SetResource(player, RES_CELLS, start_ammo_cells);
-                SetResource(player, RES_PLASMA, start_ammo_plasma);
-                SetResource(player, RES_FUEL, start_ammo_fuel);
-                STAT(WEAPONS, player) = player.br_wepset_old;
+            SetResource(player, RES_SHELLS, start_ammo_shells);
+            SetResource(player, RES_BULLETS, start_ammo_nails);
+            SetResource(player, RES_ROCKETS, start_ammo_rockets);
+            SetResource(player, RES_CELLS, start_ammo_cells);
+            SetResource(player, RES_PLASMA, start_ammo_plasma);
+            SetResource(player, RES_FUEL, start_ammo_fuel);
+            STAT(WEAPONS, player) = player.br_wepset_old;
 
-                .entity weaponentity = weaponentities[0];
-                W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
-            }
+            .entity weaponentity = weaponentities[0];
+            W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
         }
     }
 }
@@ -901,7 +898,7 @@ void br_RoundStart(){
         SetResource(it, RES_PLASMA, 0);
         SetResource(it, RES_FUEL, 0);
         STAT(WEAPONS, it) = '0 0 0';
-        it.br_wepset_old = start_weapons;
+        it.br_wepset_old = autocvar_g_br_startweapons ? start_weapons : '0 0 0';
         for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
         {
             it.br_weapon_prev[slot] = WEP_Null;
