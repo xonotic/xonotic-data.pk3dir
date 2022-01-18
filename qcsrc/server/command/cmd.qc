@@ -906,7 +906,7 @@ void SV_ParseClientCommand(entity this, string command)
 				// since gamecode doesn't have any calls earlier than this, do the connecting message here
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
 			}
-			if(teamplay || (squads_colored && IN_SQUAD(this)))
+			if(teamplay)
 				return;
 			break;
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh

@@ -18,6 +18,8 @@ int br_WinningCondition();
 entity ring;
 entity dropship;
 
+bool squads_colored = false;
+
 .bool br_ring_warned;
 .float br_force_drop_distance;
 
@@ -93,6 +95,10 @@ MUTATOR_HOOKFUNCTION(br, GetPlayerStatus)
 
 MUTATOR_HOOKFUNCTION(br, ClientConnect)
 {
+    entity player = M_ARGV(0, entity);
+
+    STAT(SQUADCOLORS, player) = squads_colored;
+
     if(ring)
         ring_timelimit(ring);
 
@@ -940,16 +946,22 @@ void br_RoundStart(){
     });
 
     squads_colored = autocvar_g_br_squad_colors;
+
+    FOREACH_CLIENT(IS_REAL_CLIENT(it),
+    {
+        STAT(SQUADCOLORS, it) = squads_colored;
+    });
+
     IL_EACH(squads, true,
     {
         if(squads_colored)
         {
             float squad_color;
-            squad_color = floor(random() * 256);
+            squad_color = 16 * floor(random() * 15) + floor(random() * 15); // color 15 is special, don't select it as a squad color
 
             for(entity member = it.br_squad_first; member; member = member.br_squad_next)
             {
-                setcolor(member, squad_color);
+                member.colormap = 1024 + squad_color;
             }
         }
 
@@ -963,6 +975,8 @@ void br_RoundStart(){
 
 void br_Initialize()
 {
+    squads_colored = autocvar_g_br_squad_colors;
+
     // TODO: remove round handler
     round_handler_Spawn(br_CheckPlayers, br_CheckWinner, br_RoundStart);
     round_handler_Init(5, 0, 0); // no warmup or timelimit in battle royale

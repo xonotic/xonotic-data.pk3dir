@@ -3,8 +3,6 @@
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 
-bool squads_colored = false;
-
 void br_Initialize();
 
 REGISTER_MUTATOR(br, false)

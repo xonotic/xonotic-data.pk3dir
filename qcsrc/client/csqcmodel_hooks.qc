@@ -248,7 +248,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	}
 	else
 	{
-		if (fpc == 1 || fpc == 2)
+		if ((!(ISGAMETYPE(BR) && STAT(SQUADCOLORS)) && fpc == 1) || fpc == 2)
 			forceplayercolors_enabled = true;
 	}
 

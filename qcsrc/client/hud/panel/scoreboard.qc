@@ -630,7 +630,7 @@ string Scoreboard_GetName(entity pl)
 	{
 		sbt_field_icon0 = "gfx/scoreboard/player_ready";
 	}
-	else if(!teamplay)
+	else if(!teamplay && !(ISGAMETYPE(BR) && STAT(SQUADCOLORS)))
 	{
 		int f = entcs_GetClientColors(pl.sv_entnum);
 		{
