@@ -253,6 +253,7 @@ void PutObserverInServer(entity this, bool is_forced)
 		if(IS_REAL_CLIENT(this))
 		{
 			if (vote_called) { VoteCount(false); }
+			this.ready = false;
 			recount_ready = true;
 		}
 		entcs_update_players(this);
