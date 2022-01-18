@@ -6,6 +6,12 @@
 #include "dialog_multiplayer_join_serverinfo.qh"
 #include <common/mapinfo.qh>
 
+#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
+#define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
+
+float m_gethostcachecategory(float entry) { return CategoryOverride(CategoryForEntry(entry)); }
+
 void SL_ProcessCategoryOverrides(.string override_field_string, .float override_field)
 {
 	for (int i = 0; i < category_ent_count; ++i)
@@ -446,10 +452,11 @@ void XonoticServerList_draw(entity me)
 	for(int i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
 	category_draw_count = 0;
 
+	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+
 	if(autocvar_menu_slist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
 	{
-		float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
-		me.nItems = itemcount;
+		int itemcount = me.nItems;
 
 		//float visible = floor(me.scrollPos / me.itemHeight);
 		// ^ unfortunately no such optimization can be made-- we must process through the
@@ -532,7 +539,6 @@ void XonoticServerList_draw(entity me)
 			me.nItems = itemcount;
 		}
 	}
-	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
 	me.connectButton.disabled = (me.ipAddressBox.text == "");
 	//me.disconnectButton.disabled = (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)));
@@ -777,8 +783,8 @@ void ServerList_Info_Click(entity btn, entity me)
 	if (me.nItems != 0)
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 
-	float thisPos = me.getItemStart(me, me.selectedItem); 
-	float thisHeight = me.getItemHeight(me, me.selectedItem); 
+	float thisPos = me.getItemStart(me, me.selectedItem);
+	float thisHeight = me.getItemHeight(me, me.selectedItem);
 	vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
 	vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
 	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
@@ -1107,8 +1113,8 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 	{
 		if(me.nItems != 0)
 		{
-			float thisPos = me.getItemStart(me, me.selectedItem); 
-			float thisHeight = me.getItemHeight(me, me.selectedItem); 
+			float thisPos = me.getItemStart(me, me.selectedItem);
+			float thisHeight = me.getItemHeight(me, me.selectedItem);
 			vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
 			vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
 			m_play_click_sound(MENU_SOUND_OPEN);
@@ -1147,7 +1153,7 @@ int XonoticServerList_getItemAtPos(entity me, float pos)
 	pos = pos / me.itemHeight;
 	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
-		float itempos = i * me.categoriesHeight + category_item[i] * me.serversHeight;
+		float itempos = i * me.categoriesHeight + itemidx * me.serversHeight;
 		if (pos >= itempos + me.categoriesHeight + me.serversHeight)
 			return itemidx + 1 + floor((pos - (itempos + me.categoriesHeight + me.serversHeight)) / me.serversHeight);
 		if (pos >= itempos)
@@ -1160,7 +1166,7 @@ float XonoticServerList_getItemStart(entity me, int item)
 {
 	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
-		float itempos = i * me.categoriesHeight + category_item[i] * me.serversHeight;
+		float itempos = i * me.categoriesHeight + itemidx * me.serversHeight;
 		if (item >= itemidx + 1)
 			return (itempos + me.categoriesHeight + (1 + item - (itemidx + 1)) * me.serversHeight) * me.itemHeight;
 		if (item >= itemidx)
@@ -1173,8 +1179,9 @@ float XonoticServerList_getItemHeight(entity me, int item)
 {
 	for (int i = 0; i < category_draw_count; ++i) {
 		// Matches exactly the headings with increased height.
+		// FIXME server row next to the heading is slightly smaller than others if (autocvar_menu_slist_categories <= 0)
 		if (item == category_item[i])
-			return me.itemHeight * (me.categoriesHeight + 1);
+			return me.itemHeight * (me.categoriesHeight + me.serversHeight);
 	}
 	return me.itemHeight * me.serversHeight;
 }

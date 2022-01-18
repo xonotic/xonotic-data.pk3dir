@@ -26,13 +26,14 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
 # Yllelder, 2016
+# z 411 <winrar.hurr@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-17 07:22+0200\n"
-"PO-Revision-Date: 2021-10-17 05:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2021-11-28 07:22+0100\n"
+"PO-Revision-Date: 2021-12-12 19:11+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1065,23 +1066,23 @@ msgstr "Estás muerto, espera ^3%s^7 antes de reaparecer"
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Estás muerto, pulsa ^2%s^7 para reaparecer"
 
-#: qcsrc/client/hud/panel/strafehud.qc:908
+#: qcsrc/client/hud/panel/strafehud.qc:879
 msgid "qu"
 msgstr "qu"
 
-#: qcsrc/client/hud/panel/strafehud.qc:909
+#: qcsrc/client/hud/panel/strafehud.qc:880
 msgid "m"
 msgstr "m"
 
-#: qcsrc/client/hud/panel/strafehud.qc:910
+#: qcsrc/client/hud/panel/strafehud.qc:881
 msgid "km"
 msgstr "km"
 
-#: qcsrc/client/hud/panel/strafehud.qc:911
+#: qcsrc/client/hud/panel/strafehud.qc:882
 msgid "mi"
 msgstr "ml"
 
-#: qcsrc/client/hud/panel/strafehud.qc:912
+#: qcsrc/client/hud/panel/strafehud.qc:883
 msgid "nmi"
 msgstr "nmi"
 
@@ -1482,15 +1483,15 @@ msgstr "proyectiles"
 msgid "Small armor"
 msgstr "Armadura pequeña"
 
-#: qcsrc/common/items/item/armor.qh:80
+#: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
 msgstr "Armadura mediana"
 
-#: qcsrc/common/items/item/armor.qh:118 qcsrc/common/items/item/armor.qh:121
+#: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
 msgid "Big armor"
 msgstr "Armadura grande"
 
-#: qcsrc/common/items/item/armor.qh:158 qcsrc/common/items/item/armor.qh:161
+#: qcsrc/common/items/item/armor.qh:170 qcsrc/common/items/item/armor.qh:177
 msgid "Mega armor"
 msgstr "Mega armadura"
 
@@ -1498,15 +1499,15 @@ msgstr "Mega armadura"
 msgid "Small health"
 msgstr "Poción pequeña"
 
-#: qcsrc/common/items/item/health.qh:80
+#: qcsrc/common/items/item/health.qh:84
 msgid "Medium health"
 msgstr "Poción mediana"
 
-#: qcsrc/common/items/item/health.qh:118 qcsrc/common/items/item/health.qh:121
+#: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
 msgid "Big health"
 msgstr "Poción grande"
 
-#: qcsrc/common/items/item/health.qh:158 qcsrc/common/items/item/health.qh:161
+#: qcsrc/common/items/item/health.qh:170 qcsrc/common/items/item/health.qh:177
 msgid "Mega health"
 msgstr "Mega poción"
 
@@ -1593,7 +1594,7 @@ msgstr "¡Bien hecho! Haz clic en 'Siguiente nivel' para continuar"
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Estás espectando"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -5979,6 +5980,10 @@ msgstr "Centro"
 msgid "Font scale:"
 msgstr "Escala de fuente:"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
+msgid "Bold font scale:"
+msgstr "Escala de fuente en negrita:"
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
 msgstr "Panel de visualización central"
@@ -6538,7 +6543,7 @@ msgstr "Apariencia del HUD"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:35
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
@@ -6546,7 +6551,7 @@ msgid "Filter:"
 msgstr "Filtro:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:58
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Refresh"
@@ -7214,68 +7219,68 @@ msgstr "Llevar siempre el blaster como arma adicional en Nix"
 msgid "Mutators"
 msgstr "Mutadores"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:31
 msgid "SRVS^Categories"
 msgstr "Categorías"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:41
 msgid "SRVS^Empty"
 msgstr "Vacíos"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:43
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
 msgid "Show empty servers"
 msgstr "Mostrar servidores vacíos"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:47
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:46
 msgid "SRVS^Full"
 msgstr "Llenos"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:47
 msgid "Show full servers that have no slots available"
 msgstr "Mostrar los servidores que no tienen espacio disponible"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:51
 msgid "SRVS^Laggy"
 msgstr "SRVS^Laggy"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "Show high latency servers"
 msgstr "Mostrar servidores de alta latencia"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:58
 msgid "Reload the server list"
 msgstr "Actualizar la lista de servidores"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:61
 msgid "Pause"
 msgstr "Pausar"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
 "Pausar la actualización de la lista de servidores para evitar que se salten"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
 msgid "Address:"
 msgstr "Dirección:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
 msgid "Info..."
 msgstr "Información..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Show more information about the currently highlighted server"
 msgstr "Mostrar más información sobre el servidor actual resaltado"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:97
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:96
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
 msgid "Join!"
 msgstr "¡Unirse!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1041
+#: qcsrc/menu/xonotic/serverlist.qc:1047
 msgid "MOD^Default"
 msgstr "Por defecto"
 
@@ -8746,7 +8751,7 @@ msgid "GHOITEMS^Blue"
 msgstr "Azul"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
-#: qcsrc/menu/xonotic/serverlist.qc:752
+#: qcsrc/menu/xonotic/serverlist.qc:758
 msgid "Players"
 msgstr "Jugadores"
 
@@ -8763,6 +8768,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"Advertencia: seleccionando 'Siempre' el color de su equipo puede ser el "
+"mismo que el del equipo enemigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
@@ -8774,11 +8781,11 @@ msgstr "Sólo en Duelo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Sólo en juego de equipo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "En juegos de equipo y duelo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
@@ -9946,19 +9953,19 @@ msgstr "espectador"
 msgid "<no model found>"
 msgstr "<ningún modelo encontrado>"
 
-#: qcsrc/menu/xonotic/serverlist.qc:256
+#: qcsrc/menu/xonotic/serverlist.qc:262
 msgid "SERVER^Remove favorite"
 msgstr "Eliminar favorito"
 
-#: qcsrc/menu/xonotic/serverlist.qc:257
+#: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "Remove the currently highlighted server from bookmarks"
 msgstr "Eliminar el servidor resaltado actual de los marcadores"
 
-#: qcsrc/menu/xonotic/serverlist.qc:261
+#: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"
 msgstr "Favorito"
 
-#: qcsrc/menu/xonotic/serverlist.qc:262
+#: qcsrc/menu/xonotic/serverlist.qc:268
 msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
@@ -9966,91 +9973,91 @@ msgstr ""
 "Marcar el servidor resaltado actual para que sea más rápido de encontrar en "
 "el futuro"
 
-#: qcsrc/menu/xonotic/serverlist.qc:748
+#: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.qc:749
+#: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Hostname"
 msgstr "Nombre de host"
 
-#: qcsrc/menu/xonotic/serverlist.qc:750
+#: qcsrc/menu/xonotic/serverlist.qc:756
 msgid "Map"
 msgstr "Mapa"
 
-#: qcsrc/menu/xonotic/serverlist.qc:751
+#: qcsrc/menu/xonotic/serverlist.qc:757
 msgid "Type"
 msgstr "Tipo"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1040
+#: qcsrc/menu/xonotic/serverlist.qc:1046
 #, c-format
 msgid "AES level %d"
 msgstr "Nivel AES %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1040
+#: qcsrc/menu/xonotic/serverlist.qc:1046
 msgid "ENC^none"
 msgstr "Ninguno"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1040
+#: qcsrc/menu/xonotic/serverlist.qc:1046
 msgid "encryption:"
 msgstr "cifrado:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1041
+#: qcsrc/menu/xonotic/serverlist.qc:1047
 #, c-format
 msgid "mod: %s"
 msgstr "mod: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1043
+#: qcsrc/menu/xonotic/serverlist.qc:1049
 #, c-format
 msgid "modified settings"
 msgstr "configuración modificada"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1043
+#: qcsrc/menu/xonotic/serverlist.qc:1049
 #, c-format
 msgid "official settings"
 msgstr "configuración oficial"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1045
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "stats disabled"
 msgstr "estadísticas deshabilitadas"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1045
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "stats enabled"
 msgstr "estadísticas habilitadas"
 
-#: qcsrc/menu/xonotic/serverlist.qh:156
+#: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Favorites"
 msgstr "Favoritos"
 
-#: qcsrc/menu/xonotic/serverlist.qh:157
+#: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Recommended"
 msgstr "Recomendado"
 
-#: qcsrc/menu/xonotic/serverlist.qh:158
+#: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Normal Servers"
 msgstr "Servidores Normales"
 
-#: qcsrc/menu/xonotic/serverlist.qh:159
+#: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Servers"
 msgstr "Servidores"
 
-#: qcsrc/menu/xonotic/serverlist.qh:160
+#: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Competitive Mode"
 msgstr "Modo Competitivo"
 
-#: qcsrc/menu/xonotic/serverlist.qh:161
+#: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Modified Servers"
 msgstr "Servidores Modificados"
 
-#: qcsrc/menu/xonotic/serverlist.qh:162
+#: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Overkill"
 msgstr "Overkill"
 
-#: qcsrc/menu/xonotic/serverlist.qh:163
+#: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^InstaGib"
 msgstr "InstaGib"
 
-#: qcsrc/menu/xonotic/serverlist.qh:164
+#: qcsrc/menu/xonotic/serverlist.qh:161
 msgid "SLCAT^Defrag Mode"
 msgstr "Modo Defrag"
 
@@ -10081,27 +10088,27 @@ msgstr "¡DIOS!"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "PARTQUAL^Bajo"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "PARTQUAL^Medio"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "PARTQUAL^Normal"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "PARTQUAL^Alto"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "PARTQUAL^Ultra"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "PARTQUAL^Máximo"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -10118,19 +10125,19 @@ msgstr "Resolución de pantalla"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "FADESPEED^Lento"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "FADESPEED^Normal"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "FADESPEED^Rápido"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "FADESPEED^Instantáneo"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"

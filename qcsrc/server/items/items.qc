@@ -12,6 +12,7 @@
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/resources.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
@@ -447,7 +448,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	}
 }
 
-bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
+bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammomax)
 {
 	float amount = GetResource(item, res_type);
 	if (amount == 0)
@@ -981,7 +982,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
-		this.nextthink = time + 20;
+		this.nextthink = time + autocvar_g_items_dropped_lifetime;
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
@@ -1450,7 +1451,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
-bool GiveResourceValue(entity e, int res_type, int op, int val)
+bool GiveResourceValue(entity e, Resource res_type, int op, int val)
 {
 	int v0 = GetResource(e, res_type);
 	float new_val = 0;

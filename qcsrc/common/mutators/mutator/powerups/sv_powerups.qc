@@ -77,6 +77,91 @@ MUTATOR_HOOKFUNCTION(powerups, MonsterValidTarget)
 	return StatusEffects_active(STATUSEFFECT_Invisibility, targ);
 }
 
+void powerups_DropItem_Think(entity this)
+{
+	TakeResource(this, RES_HEALTH, 1);
+	
+	if(GetResource(this, RES_HEALTH) < 1) {
+		WaypointSprite_Kill(this.waypointsprite_attached);
+		delete(this);
+		return;
+	}
+	
+	// Only needed to update if the timer of the powerup is running
+	if(autocvar_g_powerups_drop_ondeath == 1)
+		WaypointSprite_UpdateHealth(this.waypointsprite_attached, GetResource(this, RES_HEALTH));
+	
+	this.nextthink = time + 1;
+}
+
+void powerups_DropItem(entity this, StatusEffects effect)
+{
+	entity item = Item_DefinitionFromInternalName(effect.netname);
+	float t = StatusEffects_gettime(effect, this);
+	float timeleft = t - time;
+	float maxtime = 0;
+
+	if(timeleft <= 1 || !item)
+		return;
+	entity e = spawn();
+
+	// If we want the timer to keep running, we enable expiring then use the exact time the powerup will finish at.
+	// If we want the timer to freeze, we disable expiring and we just use the time left of the powerup.
+	// See Item_SetExpiring() below.
+	float finished = (autocvar_g_powerups_drop_ondeath == 2 ? timeleft : t);
+
+	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
+	// otherwise it'll disappear after the timer runs out.
+	float time_to_live = (autocvar_g_powerups_drop_ondeath == 2 ? autocvar_g_items_dropped_lifetime : timeleft);
+
+	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
+	switch(item)
+	{
+		case ITEM_Strength: e.strength_finished = finished; maxtime = autocvar_g_balance_powerup_strength_time; break;
+		case ITEM_Shield: e.invincible_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
+		case ITEM_Invisibility: e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
+		case ITEM_Speed: e.speed_finished = finished; maxtime = autocvar_g_balance_powerup_speed_time; break;
+	}
+	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', time_to_live);
+
+	if(autocvar_g_powerups_drop_ondeath != 2)
+		Item_SetExpiring(e, true);
+	
+	// Use health as time left to live
+	SetResourceExplicit(e, RES_HEALTH, time_to_live);
+	
+	// Create waypoint displaying time left of the powerup
+	entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, e, '0 0 1' * e.maxs.z, NULL, 0, e, waypointsprite_attached, true, RADARICON_Item);
+	wp.wp_extra = item.m_id;
+	WaypointSprite_UpdateMaxHealth(e.waypointsprite_attached, maxtime);
+	WaypointSprite_UpdateHealth(e.waypointsprite_attached, timeleft);
+	
+	// Start dropping its time to live
+	setthink(e, powerups_DropItem_Think);
+	e.nextthink = time + 1;
+}
+
+MUTATOR_HOOKFUNCTION(powerups, ItemTouched)
+{
+	entity e = M_ARGV(0, entity);
+	if(e.waypointsprite_attached)
+		WaypointSprite_Kill(e.waypointsprite_attached);
+}
+
+MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
+{
+	if(!autocvar_g_powerups_drop_ondeath)
+		return;
+
+	entity frag_target = M_ARGV(2, entity);
+
+	FOREACH(StatusEffect, it.instanceOfPowerups,
+	{
+		if(StatusEffects_active(it, frag_target))
+			powerups_DropItem(frag_target, it);
+	});
+}
+
 MUTATOR_HOOKFUNCTION(powerups, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);

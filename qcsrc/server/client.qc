@@ -30,6 +30,7 @@
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/vehicles/all.qh>
@@ -65,7 +66,6 @@
 #include <server/player.qh>
 #include <server/portals.qh>
 #include <server/race.qh>
-#include <server/resources.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
@@ -1554,7 +1554,7 @@ float CalcRot(float current, float stable, float rotfactor, float rotframetime)
 		return max(stable, current + (stable - current) * rotfactor * rotframetime);
 }
 
-void RotRegen(entity this, int res, float limit_mod,
+void RotRegen(entity this, Resource res, float limit_mod,
 	float regenstable, float regenfactor, float regenlinear, float regenframetime,
 	float rotstable, float rotfactor, float rotlinear, float rotframetime)
 {
@@ -2011,8 +2011,7 @@ int nJoinAllowed(entity this, entity ignore)
 	FOREACH_CLIENT(true, {
 		if(it != ignore)
 			++totalClients;
-		if(IS_REAL_CLIENT(it))
-		if(IS_PLAYER(it) || it.caplayer)
+		if(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)))
 			++currentlyPlaying;
 	});
 
@@ -2025,7 +2024,7 @@ int nJoinAllowed(entity this, entity ignore)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
 	static float msg_time = 0;
-	if(this && !this.caplayer && ignore && !free_slots && time > msg_time)
+	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
 		msg_time = time + 0.5;
@@ -2401,7 +2400,7 @@ void PlayerPreThink (entity this)
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
 		if (blockSpectators && IS_REAL_CLIENT(this)
-			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !this.caplayer
+			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this)
 			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
 		{
 			if (dropclient_schedule(this))
