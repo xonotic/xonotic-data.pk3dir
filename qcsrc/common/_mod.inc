@@ -7,6 +7,7 @@
 #include <common/mapinfo.qc>
 #include <common/net_notice.qc>
 #include <common/playerstats.qc>
+#include <common/resources.qc>
 #include <common/replicate.qc>
 #include <common/state.qc>
 #include <common/util.qc>
