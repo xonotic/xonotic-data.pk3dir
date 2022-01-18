@@ -790,7 +790,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 							if(PHYS_INPUT_BUTTON_CHAT(victim))
 								attacker.typehitsound += 1;
 							else
-								attacker.damage_dealt += damage;
+								attacker.hitsound_damage_dealt += damage;
 						}
 
 						impressive_hits += 1;
@@ -1197,12 +1197,12 @@ void Fire_ApplyDamage(entity e)
 	t = min(frametime, fireendtime - time);
 	d = e.fire_damagepersec * t;
 
-	hi = e.fire_owner.damage_dealt;
+	hi = e.fire_owner.hitsound_damage_dealt;
 	ty = e.fire_owner.typehitsound;
 	Damage(e, e, e.fire_owner, d, e.fire_deathtype, DMG_NOWEP, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
-		e.fire_owner.damage_dealt = hi;
+		e.fire_owner.hitsound_damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = true;

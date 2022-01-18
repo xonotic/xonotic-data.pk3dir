@@ -69,7 +69,8 @@ int impressive_hits;
 
 .vector death_origin;
 
-.float damage_dealt, typehitsound, killsound;
+.float hitsound_damage_dealt;
+.int typehitsound, killsound;
 
 // used for custom deathtype
 string deathmessage;
