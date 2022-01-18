@@ -1,6 +1,9 @@
 #pragma once
 
+#include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
 #include <common/mapinfo.qh>
+
+bool autocvar_g_br_not_dm_maps;
 
 #ifdef CSQC
 void HUD_Mod_BR(vector pos, vector mySize);
@@ -26,6 +29,18 @@ CLASS(BattleRoyale, Gametype)
             return true;
         return false;
     }
+    METHOD(BattleRoyale, m_isForcedSupported, bool(Gametype this))
+	{
+		if(!autocvar_g_br_not_dm_maps)
+		{
+			// if this is unset, all DM maps support BR too
+			if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+				return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+		}
+
+		return false;
+	}
+
 #ifdef CSQC
     ATTRIB(BattleRoyale, m_modicons, void(vector pos, vector mySize), HUD_Mod_BR);
     ATTRIB(BattleRoyale, m_modicons_export, void(int fh), HUD_Mod_BR_Export);
