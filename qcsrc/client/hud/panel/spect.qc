@@ -4,10 +4,10 @@
 #include <client/view.qh>
 #include <client/draw.qh>
 #include <client/shownames.qh>
-#include <client/resources.qh>
 #include <client/hud/panel/healtharmor.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/gamemode/duel/duel.qh>
+#include <common/resources/cl_resources.qh>
 
 vector teamscore_size;
 vector teamscore_fontsize;
