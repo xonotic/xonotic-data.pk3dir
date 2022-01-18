@@ -9,6 +9,7 @@
 #include <common/constants.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/net_linked.qh>
 #include <common/scores.qh>
