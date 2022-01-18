@@ -2,7 +2,7 @@
 
 CLASS(Devastator, Weapon)
 /* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");
-/* ammotype  */ ATTRIB(Devastator, ammo_type, int, RES_ROCKETS);
+/* ammotype  */ ATTRIB(Devastator, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Devastator, impulse, int, 9);
 /* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);

@@ -20,7 +20,6 @@
 #include <server/player.qh>
 #include <server/portals.qh>
 #include <server/race.qh>
-#include <server/resources.qh>
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
