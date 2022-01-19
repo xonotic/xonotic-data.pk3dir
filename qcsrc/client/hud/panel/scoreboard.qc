@@ -663,8 +663,10 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
-			tmp = max(0, min(220, f-80)) / 220;
-			sbt_field_rgb = '1 1 1' - '0 1 1' * tmp;
+			if(f < 80)
+				sbt_field_rgb = '0 1 0' + '1 0 1' * max(0, min(60, f-20)) / 60;
+			else
+				sbt_field_rgb = '1 1 1' - '0 1 1' * max(0, min(220, f-80)) / 220;
 			return ftos(f);
 
 		case SP_PL:
