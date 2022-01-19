@@ -157,7 +157,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
-	if (time < game_starttime) // reset on game restart, not on round start
+	if (time <= game_starttime) // reset on game restart, not on round start
 		player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
