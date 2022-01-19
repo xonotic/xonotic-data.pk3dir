@@ -472,7 +472,11 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true, is_fake_round_start);
+	if (!sv_ready_restart_after_countdown || warmup_stage) {
+		reset_map(true, is_fake_round_start);
+		Score_ClearAll();
+	}
+
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
@@ -480,10 +484,6 @@ void ReadyRestart(bool forceWarmupEnd)
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
-
-	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
-	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) Score_ClearAll();
 
 	if(forceWarmupEnd)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
