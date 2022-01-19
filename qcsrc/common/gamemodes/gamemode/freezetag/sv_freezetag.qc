@@ -1,7 +1,7 @@
 #include "sv_freezetag.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <server/elimination.qh>
-#include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;

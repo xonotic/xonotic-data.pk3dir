@@ -4,7 +4,7 @@
 
 CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* spawnfunc */ ATTRIB(OverkillRocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_okrpc");
-/* ammotype  */ ATTRIB(OverkillRocketPropelledChainsaw, ammo_type, int, RES_ROCKETS);
+/* ammotype  */ ATTRIB(OverkillRocketPropelledChainsaw, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(OverkillRocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);

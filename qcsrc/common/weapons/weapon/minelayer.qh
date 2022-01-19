@@ -2,7 +2,7 @@
 
 CLASS(MineLayer, Weapon)
 /* spawnfunc */ ATTRIB(MineLayer, m_canonical_spawnfunc, string, "weapon_minelayer");
-/* ammotype  */ ATTRIB(MineLayer, ammo_type, int, RES_ROCKETS);
+/* ammotype  */ ATTRIB(MineLayer, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
 /* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, 7000);
