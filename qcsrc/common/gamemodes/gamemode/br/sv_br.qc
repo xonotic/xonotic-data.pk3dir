@@ -244,7 +244,11 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 player.br_ring_warned = true;
                 Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_BR_RING_WARN);
             }
-            player.event_damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
+
+            if (player.vehicle) // if a player is controlling vehicles
+                vehicles_damage(player.vehicle, ring, ring, 10 * ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
+     
+            Damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
         }
         else
         {
