@@ -244,7 +244,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
             }
 
             if (player.vehicle) // if a player is controlling vehicles
-                vehicles_damage(player.vehicle, ring, ring, 10 * ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
+                vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
      
             Damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
         }
