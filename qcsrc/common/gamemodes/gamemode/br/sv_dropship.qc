@@ -12,40 +12,44 @@ entity dropship_initialize()
 {
     entity this = dropship_spawn(VEH_RACER, autocvar_g_br_dropship_scale, autocvar_g_br_dropship_color);
 
-    bool moveSucceeded = MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 2500, 8192, 1024);
-    if(!moveSucceeded)
+    for(int i = 0; i < 100; ++i) // try to find a dropship path multiple times
     {
-        delete(this);
-        return NULL;
+        if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 100, 8192, 1024))
+            continue;
+
+        vector mult;
+
+        vector startorigin;
+        startorigin = dropship_seekPoint(this, this.origin, 2, 2, 1);
+        startorigin = dropship_seekPoint(this, startorigin, 0, 0, 1);
+        startorigin = dropship_seekPoint(this, startorigin, 1, 0, 1);
+        mult = dropship_getMultipliers();
+        startorigin = dropship_seekPoint(this, startorigin, 0, 1, mult.x);
+        startorigin = dropship_seekPoint(this, startorigin, 1, 1, mult.y);
+
+        vector endorigin;
+        mult = dropship_getMultipliers();
+        endorigin = dropship_seekPoint(this, startorigin, 0, 1, 1 - mult.x);
+        endorigin = dropship_seekPoint(this, endorigin,   1, 1, 1 - mult.y);
+
+        endorigin = startorigin + normalize(endorigin - startorigin) * vlen(vec2(world.maxs - world.mins));
+
+        tracebox(startorigin, this.mins, this.maxs, endorigin, MOVE_NORMAL, this);
+        dropship_path_length = trace_fraction * vlen(endorigin - startorigin);
+        if(dropship_path_length < (vlen(vec2(world.maxs - world.mins)) / 4)) // if the dropship path isn't atleast one quarter of the diagonal length of the map, retry, we're probably in a building
+            continue;
+        endorigin = trace_endpos;
+        dropship_path_direction = normalize(endorigin - startorigin);
+
+        setorigin(this, startorigin);
+        this.angles = vectoangles(dropship_path_direction);
+        this.velocity = '0 0 0';
+
+        return this;
     }
 
-    vector mult;
-
-    vector startorigin;
-    startorigin = dropship_seekPoint(this, this.origin, 2, 2, 1);
-    startorigin = dropship_seekPoint(this, startorigin, 0, 0, 1);
-    startorigin = dropship_seekPoint(this, startorigin, 1, 0, 1);
-    mult = dropship_getMultipliers();
-    startorigin = dropship_seekPoint(this, startorigin, 0, 1, mult.x);
-    startorigin = dropship_seekPoint(this, startorigin, 1, 1, mult.y);
-
-    vector endorigin;
-    mult = dropship_getMultipliers();
-    endorigin = dropship_seekPoint(this, startorigin, 0, 1, 1 - mult.x);
-    endorigin = dropship_seekPoint(this, endorigin,   1, 1, 1 - mult.y);
-
-    endorigin = startorigin + normalize(endorigin - startorigin) * vlen(world.maxs - world.mins);
-
-    tracebox(startorigin, this.mins, this.maxs, endorigin, MOVE_NORMAL, this);
-    dropship_path_length = trace_fraction * vlen(endorigin - startorigin);
-    endorigin = trace_endpos;
-    dropship_path_direction = normalize(endorigin - startorigin);
-
-    setorigin(this, startorigin);
-    this.angles = vectoangles(dropship_path_direction);
-    this.velocity = '0 0 0';
-
-    return this;
+    delete(this);
+    return NULL;
 }
 
 entity dropship_spawn(Vehicle info, float entity_scale, vector color)
