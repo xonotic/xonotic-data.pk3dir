@@ -12,7 +12,6 @@ void br_SetPlayerDropAngle(entity this);
 void br_LastPlayerForSquad_Notify(entity squad);
 void br_RemovePlayer(entity player);
 void br_Revive(entity player);
-void br_PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 int br_WinningCondition();
 
 entity ring;
@@ -191,13 +190,6 @@ MUTATOR_HOOKFUNCTION(br, SpectatePrev)
     M_ARGV(1, entity) = new_target;
 
     return MUT_SPECPREV_FOUND;
-}
-
-MUTATOR_HOOKFUNCTION(br, PlayerSpawn)
-{
-    entity player = M_ARGV(0, entity);
-
-    player.event_damage = br_PlayerDamage;
 }
 
 MUTATOR_HOOKFUNCTION(br, ForbidSpawn)
@@ -496,14 +488,30 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
 MUTATOR_HOOKFUNCTION(br, Damage_Calculate)
 {
     entity target = M_ARGV(2, entity);
+    float deathtype = M_ARGV(3, float);
 
-    if(STAT(DROP, target) == DROP_FALLING)
+    if(STAT(DROP, target) != DROP_LANDED)
     {
-        // only take half of the usual damage
-        M_ARGV(4, float) /= 2;
-        M_ARGV(5, float) /= 2;
         // weapon impact has no push force while dropping
         M_ARGV(6, vector) = '0 0 0';
+
+        if(STAT(DROP, target) == DROP_TRANSPORT)
+            M_ARGV(4, float) = M_ARGV(5, float) = 0; // can't take damage while on the dropship
+        else if(STAT(DROP, target) == DROP_FALLING)
+        {
+            switch(deathtype)
+            {
+                case DEATH_FALL.m_id:
+                case DEATH_SHOOTING_STAR.m_id:
+                    // do not take fall damage when landing from dropship
+                    M_ARGV(4, float) = M_ARGV(5, float) = 0;
+                    break;
+                default:
+                    // only take half of the usual damage
+                    M_ARGV(4, float) /= 2;
+                    M_ARGV(5, float) /= 2;
+            }
+        }
     }
 }
 
@@ -599,13 +607,34 @@ MUTATOR_HOOKFUNCTION(br, PlayerDied)
 
 MUTATOR_HOOKFUNCTION(br, ClientObituary)
 {
+    entity frag_inflictor = M_ARGV(0, entity);
+    entity frag_attacker = M_ARGV(1, entity);
     entity frag_target = M_ARGV(2, entity);
     float frag_deathtype = M_ARGV(3, float); // float for some reason, breaks if changed to int
+    //entity frag_weaponentity = M_ARGV(4, entity);
 
-    if(BR_KILLS_INSTANTLY(frag_target, frag_deathtype))
-        return false;
-    else
-        return !STAT(BLEEDING, frag_target);
+    if(!STAT(BLEEDING, frag_target) && !BR_KILLS_INSTANTLY(frag_target, frag_deathtype))
+    {
+        frag_target.br_bleeding_inflictor = frag_inflictor;
+        frag_target.br_bleeding_attacker = frag_attacker;
+        frag_target.br_bleeding_deathtype = frag_deathtype;
+        //frag_target.br_bleeding_weaponentity = frag_weaponentity; // TODO: get entity field
+        return true;
+    }
+
+    if(STAT(BLEEDING, frag_target) && frag_target.br_bleeding_attacker)
+    {
+        entity new_inflictor = frag_target.br_bleeding_inflictor;
+        entity new_attacker = frag_target.br_bleeding_attacker;
+        int new_deathtype = frag_target.br_bleeding_deathtype;
+        .entity new_weaponentity = frag_target.br_bleeding_weaponentity;
+        frag_target.br_bleeding_attacker = frag_target.br_bleeding_inflictor = NULL;
+
+        Obituary(new_attacker, new_inflictor, frag_target, new_deathtype, new_weaponentity);
+        return true;
+    }
+
+    return false;
 }
 
 MUTATOR_HOOKFUNCTION(br, SetResource)
@@ -781,43 +810,6 @@ void br_Revive(entity player)
     WaypointSprite_Kill(player.waypointsprite_attached);
 
     br_SquadUpdateInfo();
-}
-
-void br_PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
-{
-    if(STAT(DROP, this) == DROP_TRANSPORT)
-        return; // can't take damage while on the dropship
-
-    // do not take fall damage when landing from dropship
-    if(STAT(DROP, this) == DROP_FALLING)
-    {
-        switch(deathtype)
-        {
-            case DEATH_FALL.m_id:
-            case DEATH_SHOOTING_STAR.m_id:
-                return;
-        }
-    }
-
-    if(STAT(BLEEDING, this) && this.br_bleeding_attacker)
-    {
-        inflictor = this.br_bleeding_inflictor;
-        attacker = this.br_bleeding_attacker;
-        deathtype = this.br_bleeding_deathtype;
-        weaponentity = this.br_bleeding_weaponentity;
-    }
-
-    PlayerDamage(this, inflictor, attacker, damage, deathtype, weaponentity, hitloc, force);
-
-    if(STAT(BLEEDING, this))
-    {
-        this.br_bleeding_inflictor = inflictor;
-        this.br_bleeding_attacker = attacker;
-        this.br_bleeding_deathtype = deathtype;
-        this.br_bleeding_weaponentity = weaponentity;
-
-        this.fixangle = false;
-    }
 }
 
 int br_WinningCondition()

@@ -503,7 +503,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		Portal_ClearAllLater(this);
 
-		this.fixangle = true;
+		if(!STAT(BLEEDING, this))
+			this.fixangle = true;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(this); // can turn player into spectator
