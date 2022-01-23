@@ -131,7 +131,13 @@ MUTATOR_HOOKFUNCTION(br, MakePlayerObserver)
 {
     entity player = M_ARGV(0, entity);
 
-    return IN_SQUAD(player);
+    if(IN_SQUAD(player))
+    {
+        player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+        return true;
+    }
+
+    return false;
 }
 
 MUTATOR_HOOKFUNCTION(br, SpectateSet)

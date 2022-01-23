@@ -235,6 +235,7 @@ void setplayermodel(entity e, string modelname)
 }
 
 bool SpectateNext(entity this);
+.bool would_spectate;
 
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this, bool is_forced)
@@ -402,10 +403,7 @@ void PutObserverInServer(entity this, bool is_forced)
 
 	// force members of alive squads to spectate another squadmate
 	if(IS_REAL_CLIENT(this) && IN_SQUAD(this) && !this.br_squad.br_squad_dead)
-	{
-		SpectateNext(this);
-		TRANSMUTE(Spectator, this);
-	}
+		this.would_spectate = true;
 }
 
 int player_getspecies(entity this)
@@ -2259,7 +2257,6 @@ bool PlayerThink(entity this)
 	return true;
 }
 
-.bool would_spectate;
 // merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
