@@ -12,7 +12,7 @@ entity dropship_initialize()
 {
     entity this = dropship_spawn(VEH_RACER, autocvar_g_br_dropship_scale, autocvar_g_br_dropship_color);
 
-    bool moveSucceeded = MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 2500, 8192, 1024);
+    bool moveSucceeded = MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 2500, 8192, 1024);
     if(!moveSucceeded)
     {
         delete(this);
@@ -65,6 +65,8 @@ entity dropship_spawn(Vehicle info, float entity_scale, vector color)
     this.vehicleid              = info.vehicleid;
     this.vehicledef             = info;
     this.dphitcontentsmask      = DPCONTENTS_SOLID;
+    if(autocvar_g_playerclip_collisions)
+        this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
     this.flags                  = FL_NOTARGET;
     this.nextthink              = time;
     setthink(this, dropship_think);
