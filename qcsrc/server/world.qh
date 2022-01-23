@@ -161,7 +161,7 @@ void readlevelcvars();
 void droptofloor(entity this);
 
 /* z411 for RJZ */
-bool autocvar_g_count_shards = false;
+bool autocvar_rjz_count_shards = false;
 int  total_shards = 0;
 void send_TotalShards(entity to);
 void send_TotalShardsAll();

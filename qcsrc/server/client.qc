@@ -409,7 +409,7 @@ void PutObserverInServer(entity this, bool is_forced)
 		CS(this).just_joined = false;
 	
 	// for RJZ
-	if (autocvar_g_count_shards)
+	if (autocvar_rjz_count_shards)
 		send_TotalShards(this);
 }
 

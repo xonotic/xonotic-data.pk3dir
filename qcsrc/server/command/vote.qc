@@ -354,7 +354,7 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 	}
 	
 	// for RJZ
-	if (autocvar_g_count_shards) {
+	if (autocvar_rjz_count_shards) {
 		total_shards = 0;
 		send_TotalShardsAll();
 	}
