@@ -1121,11 +1121,11 @@ void GameCommand_setrank(int request, int argc)
 			if (accepted <= 0)
 			{
 				LOG_INFO("^1ERROR^7: Couldn't set player rank");
-				LOG_HELP("Usage:^3 sv_cmd setrank #client_id #rank");
+				LOG_HELP("Usage:^3 sv_cmd setrank #client_id rank");
 				return;
 			}
 			
-			client.rank = stof(argv(2));
+			client.rank = strzone(argv(2));
 			LOG_INFO("^2SUCCESS^7: Player rank set!");
 			return;
 		}

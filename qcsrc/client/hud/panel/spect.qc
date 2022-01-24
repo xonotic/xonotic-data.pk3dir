@@ -256,11 +256,9 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	tmp.y += ((teamscore_size.y / 2) - teamname_fontsize.y) / 2;
 	tmp.y += teamscore_size.y / 2;
 	
-		// RJZ rank
-	int rank = entcs_GetRank(pl.sv_entnum);
-	string rank_str = "";
-	if(rank) {
-		rank_str = strcat("(", ftos(rank), ")");
+	// RJZ rank
+	string rank_str = entcs_GetRank(pl.sv_entnum);
+	if(rank_str) {
 		if(invert)
 			tmp.x -= stringwidth_colors(rank_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
 		else
@@ -277,7 +275,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	if(invert)
 		tmp.x -= stringwidth_colors(tmp_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
 	else
-		tmp.x += (rank ? stringwidth_colors(rank_str, teamname_fontsize) : teamscore_size.x) + teamname_fontsize.x * 0.5;
+		tmp.x += (rank_str ? stringwidth_colors(rank_str, teamname_fontsize) : teamscore_size.x) + teamname_fontsize.x * 0.5;
 	
 	drawcolorcodedstring(tmp, tmp_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }

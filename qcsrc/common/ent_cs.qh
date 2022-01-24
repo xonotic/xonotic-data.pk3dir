@@ -140,10 +140,10 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		return e.countrycode;
 	}
 	
-	int entcs_GetRank(int i)
+	string entcs_GetRank(int i)
 	{
 		entity e = entcs_receiver(i);
-		return e.rank;
+		return (e.rank != "" ? e.rank : string_null);
 	}
 
     /**

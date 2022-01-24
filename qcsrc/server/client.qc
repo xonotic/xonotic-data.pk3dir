@@ -1145,7 +1145,7 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 		
 		/* z411 for RJZ */
-		if(autocvar_rjz_ranks) GameLogEcho(strcat(":idfp:", this.crypto_idfp));
+		if(autocvar_rjz_ranks) GameLogEcho(strcat(":idfp:", ftos(etof(this)), ":", this.crypto_idfp));
 	}
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
