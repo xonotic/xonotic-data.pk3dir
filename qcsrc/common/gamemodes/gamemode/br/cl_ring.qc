@@ -22,13 +22,14 @@ void ring_draw(entity this)
         this.scale = this.alpha = 0;
         this.velocity = '0 0 0';
         this.draw = func_null;
+        IL_REMOVE(g_drawables, this);
         return;
     }
 
     this.scale = current_radius / RING_MODEL_RADIUS;
     this.alpha = max((1 - min(max(current_radius - vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin), 0) / this.br_ring_fadedistance, 1)) * this.br_ring_alpha, 0.01);
     if(vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin) > current_radius)
-        this.alpha = max(this.alpha / 4, 0.01); // let's weaken the ring visuals a bit, everything is already ring colored
+        this.alpha = max(this.alpha, 0.01);
 }
 
 void ring_draw2d(entity this)
