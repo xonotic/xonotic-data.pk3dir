@@ -69,6 +69,7 @@ REGISTER_GAMETYPE(BR, NEW(BattleRoyale));
 
 #ifdef GAMEQC
 const int DROP_LANDED    = 0;
-const int DROP_FALLING   = 1;
-const int DROP_TRANSPORT = 2;
+const int DROP_LANDING   = 1; // intermediate frame between falling and landed, makes sure player takes no fall damage
+const int DROP_FALLING   = 2;
+const int DROP_TRANSPORT = 3;
 #endif

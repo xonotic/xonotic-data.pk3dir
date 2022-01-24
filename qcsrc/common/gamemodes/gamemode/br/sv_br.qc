@@ -415,6 +415,10 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
     if(STAT(DROP, player) == DROP_TRANSPORT)
         return true;
 
+    // set the drop stat to landed on the next frame if it was set on landing
+    if(STAT(DROP, player) == DROP_LANDING)
+        STAT(DROP, player) = DROP_LANDED;
+
     // TODO: improve dropping physics
     if(STAT(DROP, player) == DROP_FALLING){
         if(!IS_ONGROUND(player) && ((tracebox(player.origin, player.mins, player.maxs, player.origin - '0 0 1', MOVE_NOMONSTERS, player), trace_fraction) >= 1)) // IS_ONGROUND doesn't work if jump is held (jump is theoretically blocked until landed)
@@ -473,7 +477,7 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
         }
         else
         {
-            STAT(DROP, player) = DROP_LANDED;
+            STAT(DROP, player) = DROP_LANDING;
             ITEMS_STAT(player) &= ~IT_USING_JETPACK;
             player.flags |= FL_PICKUPITEMS;
             player.dphitcontentsmask |= DPCONTENTS_BODY;
@@ -504,7 +508,7 @@ MUTATOR_HOOKFUNCTION(br, Damage_Calculate)
 
         if(STAT(DROP, target) == DROP_TRANSPORT)
             M_ARGV(4, float) = M_ARGV(5, float) = 0; // can't take damage while on the dropship
-        else if(STAT(DROP, target) == DROP_FALLING)
+        else
         {
             switch(deathtype)
             {
