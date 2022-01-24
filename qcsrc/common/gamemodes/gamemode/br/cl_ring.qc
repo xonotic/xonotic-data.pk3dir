@@ -4,8 +4,6 @@
 
 bool ring_is_closing(entity this);
 
-float autocvar_g_br_ring_fadedistance = 2000;
-
 #define RING_MODEL_PATH "models/sphere/sphere.md3"
 #define RING_MODEL_RADIUS 64 // radius of model at 1.0 scale
 void ring_draw(entity this)
@@ -28,7 +26,7 @@ void ring_draw(entity this)
     }
 
     this.scale = current_radius / RING_MODEL_RADIUS;
-    this.alpha = max((1 - min(max(current_radius - vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin), 0) / max(autocvar_g_br_ring_fadedistance, 1), 1)) * this.br_ring_alpha, 0.01);
+    this.alpha = max((1 - min(max(current_radius - vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin), 0) / this.br_ring_fadedistance, 1)) * this.br_ring_alpha, 0.01);
     if(vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin) > current_radius)
         this.alpha = max(this.alpha / 4, 0.01); // let's weaken the ring visuals a bit, everything is already ring colored
 }
@@ -88,6 +86,8 @@ NET_HANDLE(ENT_CLIENT_RING, bool isnew)
         this.colormod = normalize(ReadVector());
 
         this.br_ring_alpha = bound(0.01, ReadCoord(), 1);
+
+        this.br_ring_fadedistance = max(ReadCoord(), 1);
 
         this.br_ring_stage_count = max(ReadByte(), 1);
         this.br_ring_stage_waittime = max(ReadCoord(), 0);

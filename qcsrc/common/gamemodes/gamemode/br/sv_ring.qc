@@ -13,8 +13,9 @@ void ring_parseStrength(entity this, bool has_invalid);
 void ring_alignPosition(entity this);
 
 float autocvar_g_br_ring_duration = 150;
-vector autocvar_g_br_ring_color = '1 0 0';
-float autocvar_g_br_ring_alpha = 0.5;
+vector autocvar_g_br_ring_color = '1 0 0'; // FIXME: put visual-only cvar client side?
+float autocvar_g_br_ring_alpha = 0.5; // FIXME: put visual-only cvar client side?
+float autocvar_g_br_ring_fadedistance = 2000; // FIXME: put visual-only cvar client side?
 float autocvar_g_br_ring_radius = -1; // useful for per map settings
 string autocvar_g_br_ring_timing = "0.6 0.8 0.9";
 string autocvar_g_br_ring_strength = "2.5 5 10 20 50";
@@ -36,6 +37,7 @@ entity ring_initialize()
     this.br_ring_stage = -1;
     this.colormod = autocvar_g_br_ring_color; // TODO: color changing ring
     this.alpha = this.br_ring_alpha = bound(0.01, autocvar_g_br_ring_alpha, 1);
+    this.br_ring_fadedistance = max(autocvar_g_br_ring_fadedistance, 1);
     this.br_ring_stage_waittime = max(autocvar_g_br_ring_wait, 0);
 
     bool has_invalid_timings = ring_parseTiming(this);
@@ -70,6 +72,7 @@ bool ring_send(entity this, entity to, float sf)
         WriteCoord(MSG_ENTITY, this.radius);
         WriteVector(MSG_ENTITY, this.colormod);
         WriteCoord(MSG_ENTITY, this.br_ring_alpha);
+        WriteCoord(MSG_ENTITY, this.br_ring_fadedistance);
 
         WriteByte(MSG_ENTITY, this.br_ring_stage_count);
         WriteCoord(MSG_ENTITY, this.br_ring_stage_waittime);
