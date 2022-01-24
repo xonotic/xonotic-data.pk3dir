@@ -251,16 +251,33 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		drawfill(tmp, vec2(armor, armor_sz.y), autocvar_hud_progressbar_armor_color, 0.7, DRAWFLAG_NORMAL);
 	}
 	
+	// Align vertically
+	tmp = pos;
+	tmp.y += ((teamscore_size.y / 2) - teamname_fontsize.y) / 2;
+	tmp.y += teamscore_size.y / 2;
+	
+		// RJZ rank
+	int rank = entcs_GetRank(pl.sv_entnum);
+	string rank_str = "";
+	if(rank) {
+		rank_str = strcat("(", ftos(rank), ")");
+		if(invert)
+			tmp.x -= stringwidth_colors(rank_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
+		else
+			tmp.x += teamscore_size.x + teamname_fontsize.x * 0.5;
+		
+		draw_beginBoldFont();
+		drawcolorcodedstring(tmp, rank_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
+	}
+	
 	// Player name
 	tmp_str = entcs_GetName(pl.sv_entnum);
 	
-	tmp = pos;
 	if(invert)
 		tmp.x -= stringwidth_colors(tmp_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
 	else
-		tmp.x += teamscore_size.x + teamname_fontsize.x * 0.5;
-	tmp.y += ((teamscore_size.y / 2) - teamname_fontsize.y) / 2;
-	tmp.y += teamscore_size.y / 2;
+		tmp.x += (rank ? stringwidth_colors(rank_str, teamname_fontsize) : teamscore_size.x) + teamname_fontsize.x * 0.5;
 	
 	drawcolorcodedstring(tmp, tmp_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }

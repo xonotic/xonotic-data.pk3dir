@@ -108,6 +108,7 @@ CLASS(Client, Object)
     ATTRIB(Client, team, int, this.team);
     ATTRIB(Client, clientcolors, int, this.clientcolors);
 	ATTRIB(Client, countrycode, int, this.countrycode);
+	ATTRIB(Client, rank, int, this.rank);
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
@@ -336,6 +337,7 @@ bool independent_players;
 .float lastkill;
 .int countrycode;
 .int killcount;
+.int rank;
 
 //flood fields
 .float nickspamtime; // time of last nick change

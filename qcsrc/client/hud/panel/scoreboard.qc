@@ -1296,14 +1296,30 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	drawstring(tmp_in, tmp_str, duel_score_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 	
+	tmp_in = tmp;
+	tmp_in.y += (duel_score_size.y - duel_name_fontsize.y) / 2;
+	
+	// RJZ rank
+	int rank = entcs_GetRank(pl.sv_entnum);
+	string rank_str = "";
+	if(rank) {
+		rank_str = strcat("(", ftos(rank), ")");
+		if(invert)
+			tmp_in.x -= stringwidth_colors(rank_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
+		else
+			tmp_in.x += duel_score_size.x + duel_name_fontsize.x * 0.5;
+		
+		draw_beginBoldFont();
+		drawcolorcodedstring(tmp_in, rank_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
+	}
+	
 	// Player name
 	tmp_str = Scoreboard_GetField(pl, SP_NAME);
-	tmp_in = tmp;
 	if(invert)
 		tmp_in.x -= stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 	else
-		tmp_in.x += duel_score_size.x + duel_name_fontsize.x * 0.5;
-	tmp_in.y += (duel_score_size.y - duel_name_fontsize.y) / 2;
+		tmp_in.x += (rank ? stringwidth_colors(rank_str, duel_name_fontsize) : duel_score_size.x) + duel_name_fontsize.x * 0.5;
 	drawcolorcodedstring(tmp_in, tmp_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	//LegendGuard adds a conditional sentence for country column 05-04-2021

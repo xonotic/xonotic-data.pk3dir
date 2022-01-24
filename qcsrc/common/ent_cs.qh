@@ -139,6 +139,12 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		entity e = entcs_receiver(i);
 		return e.countrycode;
 	}
+	
+	int entcs_GetRank(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e.rank;
+	}
 
     /**
      * @param i zero indexed player

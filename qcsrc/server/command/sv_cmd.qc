@@ -1106,6 +1106,39 @@ void GameCommand_setflag(int request, int argc)
 	}
 }
 
+void GameCommand_setrank(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity client;
+			float accepted;
+			
+			client = GetFilteredEntity(argv(1));
+			accepted = VerifyClientEntity(client, false, false);
+
+			if (accepted <= 0)
+			{
+				LOG_INFO("^1ERROR^7: Couldn't set player rank");
+				LOG_HELP("Usage:^3 sv_cmd setrank #client_id #rank");
+				return;
+			}
+			
+			client.rank = stof(argv(2));
+			LOG_INFO("^2SUCCESS^7: Player rank set!");
+			return;
+		}
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd setrank #client_id #rank");
+			return;
+		}
+	}
+}
+
 void GameCommand_moveplayer(int request, int argc)
 {
 	switch (request)
@@ -1807,6 +1840,7 @@ SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { 
 SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
+SERVER_COMMAND(setrank, "Set client rank") { GameCommand_setrank(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
 SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
