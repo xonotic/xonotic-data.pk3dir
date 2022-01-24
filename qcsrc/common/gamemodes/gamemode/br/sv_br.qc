@@ -34,6 +34,7 @@ bool squads_colored = false;
 
 float autocvar_g_br_revive_health = 0.25;
 float autocvar_g_br_bleeding_health = 0.5;
+float autocvar_g_br_drop_damage = 0.5;
 float autocvar_g_br_drop_speed_max = 2;
 float autocvar_g_br_drop_speed_horizontal_max = 0.9;
 float autocvar_g_br_drop_speed_horizontal_min = 0.5;
@@ -519,8 +520,8 @@ MUTATOR_HOOKFUNCTION(br, Damage_Calculate)
                     break;
                 default:
                     // only take half of the usual damage
-                    M_ARGV(4, float) /= 2;
-                    M_ARGV(5, float) /= 2;
+                    M_ARGV(4, float) *= max(autocvar_g_br_drop_damage, 0);
+                    M_ARGV(5, float) *= max(autocvar_g_br_drop_damage, 0);
             }
         }
     }
