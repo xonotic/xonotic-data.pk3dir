@@ -234,7 +234,6 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
-bool SpectateNext(entity this);
 .bool would_spectate;
 
 /** putting a client as observer in the server */
