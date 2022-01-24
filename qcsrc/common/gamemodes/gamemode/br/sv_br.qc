@@ -41,6 +41,7 @@ float autocvar_g_br_drop_speed_vertical = 1.5;
 bool autocvar_g_br_squad_colors = true;
 float autocvar_g_br_drop_acceleration = 1200;
 bool autocvar_g_br_startweapons = false;
+bool autocvar_g_br_ring_exitvehicle = false;
 
 .vector br_drop_velocity;
 .vector br_drop_angles;
@@ -243,7 +244,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_BR_RING_WARN);
             }
 
-            if (player.vehicle) // if a player is controlling vehicles
+            if(player.vehicle && autocvar_g_br_ring_exitvehicle) // if the player is controlling a vehicle
                 vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
      
             Damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
