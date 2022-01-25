@@ -1134,7 +1134,11 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
 			field = Scoreboard_GetField(pl, SP_SCORE);
 
-		string str = entcs_GetName(pl.sv_entnum);
+		string str;
+		if(entcs_GetRank(pl.sv_entnum) != "")
+			str = strcat(entcs_GetRank(pl.sv_entnum), "^7 ", entcs_GetName(pl.sv_entnum));
+		else
+			str = entcs_GetName(pl.sv_entnum);
 		if (autocvar_hud_panel_scoreboard_playerid)
 			str = Scoreboard_AddPlayerId(str, pl);
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
