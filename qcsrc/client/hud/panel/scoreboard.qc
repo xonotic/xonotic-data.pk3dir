@@ -1301,7 +1301,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	
 	// RJZ rank
 	string rank_str = entcs_GetRank(pl.sv_entnum);
-	if(rank_str) {
+	if(rank_str != "") {
 		if(invert)
 			tmp_in.x -= stringwidth_colors(rank_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 		else
@@ -1317,7 +1317,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	if(invert)
 		tmp_in.x -= stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 	else
-		tmp_in.x += (rank_str ? stringwidth_colors(rank_str, duel_name_fontsize) : duel_score_size.x) + duel_name_fontsize.x * 0.5;
+		tmp_in.x += (rank_str != "" ? stringwidth_colors(rank_str, duel_name_fontsize) : duel_score_size.x) + duel_name_fontsize.x * 0.5;
 	drawcolorcodedstring(tmp_in, tmp_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	//LegendGuard adds a conditional sentence for country column 05-04-2021
