@@ -27,7 +27,8 @@ void ring_draw(entity this)
     }
 
     this.scale = current_radius / RING_MODEL_RADIUS;
-    this.alpha = max((1 - min(max(current_radius - vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin), 0) / this.br_ring_fadedistance, 1)) * this.br_ring_alpha, 0.01);
+    float dist_to_ring = max(current_radius - vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin), 0);
+    this.alpha = max((1 - min(dist_to_ring / max(current_radius * this.br_ring_fadedistance, this.br_ring_fadedistance_min), 1)) * this.br_ring_alpha, 0.01);
 }
 
 void ring_draw2d(entity this)
@@ -88,7 +89,8 @@ NET_HANDLE(ENT_CLIENT_RING, bool isnew)
 
         this.br_ring_alpha = bound(0.01, ReadCoord(), 1);
 
-        this.br_ring_fadedistance = max(ReadCoord(), 1);
+        this.br_ring_fadedistance = max(ReadCoord(), 0);
+        this.br_ring_fadedistance_min = max(ReadCoord(), 1);
 
         this.br_ring_stage_count = max(ReadByte(), 1);
         this.br_ring_stage_waittime = max(ReadCoord(), 0);

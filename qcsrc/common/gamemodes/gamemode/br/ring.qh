@@ -11,6 +11,7 @@ const int BR_RING_MOVE   = 4;
 .float br_ring_duration;
 .float br_ring_alpha;
 .float br_ring_fadedistance;
+.float br_ring_fadedistance_min;
 .int br_ring_stage_count;
 .float br_ring_stage_waittime;
 .float br_ring_stage_timing[BR_RING_STAGE_MAX];
