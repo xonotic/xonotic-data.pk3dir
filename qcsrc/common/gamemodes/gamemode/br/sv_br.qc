@@ -245,8 +245,13 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_BR_RING_WARN);
             }
 
-            if(player.vehicle && autocvar_g_br_ring_exitvehicle) // if the player is controlling a vehicle
-                vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
+            if(player.vehicle) // if the player is controlling a vehicle
+            {
+                if(autocvar_g_br_ring_exitvehicle)
+                    vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
+                else
+                    vehicles_damage(player.vehicle, ring, ring, 10 * ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
+            }
 
             Damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
         }
