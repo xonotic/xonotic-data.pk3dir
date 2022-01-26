@@ -19,8 +19,11 @@ entity dropship;
 
 bool squads_colored = false;
 
+const float br_drop_time_secs = 1;
 .bool br_ring_warned;
+.float br_drop_time;
 .float br_force_drop_distance;
+.int br_drop_launch;
 
 .entity br_bleeding_inflictor;
 .entity br_bleeding_attacker;
@@ -262,7 +265,19 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
     }
 
     if(STAT(DROP, player) == DROP_TRANSPORT){
-        if(!(IS_REAL_CLIENT(player) && (STAT(PRESSED_KEYS, player) & KEY_JUMP)) && (dropship_path_length > player.br_squad.br_force_drop_distance)){
+        // jump has to be released then pressed to launch
+        if(!(STAT(PRESSED_KEYS, player) & KEY_JUMP) && (time > (player.br_squad.br_drop_time + br_drop_time_secs))){
+            if(player.br_drop_launch == 0){
+                player.br_drop_launch = 1;
+            }
+        }
+        else{
+            if(player.br_drop_launch == 1){
+                player.br_drop_launch = 2;
+            }
+        }
+
+        if(!(IS_REAL_CLIENT(player) && (player.br_drop_launch == 2)) && (dropship_path_length > player.br_squad.br_force_drop_distance)){
             player.velocity = dropship_path_direction * dropship_speed;
         }
         else{
@@ -1012,6 +1027,7 @@ void br_RoundStart(){
         it.effects |= EF_NODRAW;
         Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_BR_DROPSHIP);
         STAT(DROP, it) = DROP_TRANSPORT;
+        it.br_drop_launch = 0;
         UNSET_ONGROUND(it); // otherwise this isn't unset if the player drops in the same frame
     });
 
@@ -1035,11 +1051,13 @@ void br_RoundStart(){
             }
         }
 
+        it.br_drop_time = time;
+
         float min_distance = max(autocvar_g_br_drop_distance_force, 0);
         if(!br_SquadIsBotsOnly(it))
             it.br_force_drop_distance = min_distance;
         else
-            it.br_force_drop_distance = min_distance + random() * max(dropship_path_length - min_distance, 0);
+            it.br_force_drop_distance = min_distance + random() * max(dropship_path_length - (min_distance + dropship_speed * br_drop_time_secs), 0);
     });
 }
 
