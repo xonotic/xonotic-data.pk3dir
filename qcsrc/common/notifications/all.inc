@@ -720,7 +720,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(BR_REVIVED,                        N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You were revived by ^BG%s"), "")
     MSG_CENTER_NOTIF(BR_DOWN,                           N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were downed by ^BG%s"), "")
     MSG_CENTER_NOTIF(BR_DOWN_SELF,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You downed yourself"), "")
-    MSG_CENTER_NOTIF(BR_DROPSHIP,                       N_ENABLE,    0, 0, "",               CPID_BR_DROPSHIP,      "-1 0",  _("^BG^F1Jump^BG to drop"), "")
+    MSG_CENTER_NOTIF(BR_DROPSHIP,                       N_ENABLE,    0, 0, "",               CPID_BR_DROP,           "-1 0",  _("^BG^F1Jump^BG to drop"), "")
+    MSG_CENTER_NOTIF(BR_DROP_DETACH,                    N_ENABLE,    0, 0, "",               CPID_BR_DROP,           "-1 0",  _("^BG^F1Secondary fire^BG to detach"), "")
     MSG_CENTER_NOTIF(BR_RING_WARN,                      N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F4You are outside of ^F2the ring^F4, get back in fast!"), "")
     MSG_CENTER_NOTIF(BR_RING_CLOSE,                     N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Ring^F4 is closing! (strength: ^F1%s^F4)"), "")
 

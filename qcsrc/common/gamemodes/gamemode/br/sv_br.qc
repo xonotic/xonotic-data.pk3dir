@@ -24,6 +24,7 @@ const float br_drop_time_secs = 1;
 .float br_drop_time;
 .float br_force_drop_distance;
 .int br_drop_launch;
+.int br_drop_detached;
 
 .entity br_bleeding_inflictor;
 .entity br_bleeding_attacker;
@@ -264,6 +265,21 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
         }
     }
 
+    if((STAT(DROP, player) == DROP_FALLING) && (player.br_drop_detached != 2) && IN_SQUAD(player) && (player != player.br_squad.br_squad_drop_leader)){
+        // atck2 has to be released then pressed to detach
+        if(!(STAT(PRESSED_KEYS, player) & KEY_ATCK2)){
+            if(player.br_drop_detached == 0){
+                player.br_drop_detached = 1;
+            }
+        }
+        else{
+            if(player.br_drop_detached == 1){
+                player.br_drop_detached = 2;
+                Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
+            }
+        }
+    }
+
     if(STAT(DROP, player) == DROP_TRANSPORT){
         // jump has to be released then pressed to launch
         if(!(STAT(PRESSED_KEYS, player) & KEY_JUMP) && (time > (player.br_squad.br_drop_time + br_drop_time_secs))){
@@ -286,8 +302,9 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 const float inital_dropangle = 60; // 0 = straight down
                 player.effects &= ~EF_NODRAW;
                 set_movetype(player, MOVETYPE_WALK);
-                Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROPSHIP);
+                Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
                 STAT(DROP, player) = DROP_FALLING;
+                player.br_drop_detached = 0;
                 float maxdropspeed = PHYS_MAXAIRSPEED(player) * max(autocvar_g_br_drop_speed_max, 0); // no maxspeed_mod available here
                 player.br_drop_velocity.x = cos(player.angles.y * DEG2RAD);
                 player.br_drop_velocity.y = sin(player.angles.y * DEG2RAD);
@@ -318,8 +335,10 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                     FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
                         it.effects &= ~EF_NODRAW;
                         set_movetype(it, MOVETYPE_WALK);
-                        Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_BR_DROPSHIP);
+                        Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_BR_DROP);
                         STAT(DROP, it) = DROP_FALLING;
+                        it.br_drop_detached = 0;
+                        Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_BR_DROP_DETACH);
 
                         setorigin(it, player.origin + drop_offset); // FIXME: this can teleport players into brushes/void
                         drop_offset += drop_base_offset;
@@ -448,7 +467,7 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
         if(!IS_ONGROUND(player) && ((tracebox(player.origin, player.mins, player.maxs, player.origin - '0 0 1', MOVE_NOMONSTERS, player), trace_fraction) >= 1)) // IS_ONGROUND doesn't work if jump is held (jump is theoretically blocked until landed)
         {
             ITEMS_STAT(player) |= IT_USING_JETPACK;
-            bool has_drop_leader = IN_SQUAD(player) && (player.br_squad.br_squad_drop_leader && (STAT(DROP, player.br_squad.br_squad_drop_leader) == DROP_FALLING));
+            bool has_drop_leader = IN_SQUAD(player) && (player.br_drop_detached != 2) && (player.br_squad.br_squad_drop_leader && (STAT(DROP, player.br_squad.br_squad_drop_leader) == DROP_FALLING));
             bool player_is_drop_leader = has_drop_leader && (player == player.br_squad.br_squad_drop_leader);
             if(player_is_drop_leader || !has_drop_leader)
             {
@@ -533,10 +552,15 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
 
                 if(player_is_drop_leader)
                 {
-                    FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_FALLING), {
+                    FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (it.br_drop_detached != 2) && (STAT(DROP, it) == DROP_FALLING), {
                         it.velocity = it.br_drop_velocity = player.br_drop_velocity;
                         it.angles = it.br_drop_angles = player.br_drop_angles;
                     });
+                }
+                else if((player.br_drop_detached != 2) && IN_SQUAD(player) && !has_drop_leader)
+                {
+                    player.br_drop_detached = 2;
+                    Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
                 }
             }
             else
@@ -549,6 +573,12 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
         }
         else
         {
+            if((player.br_drop_detached != 2) && IN_SQUAD(player) && (player != player.br_squad.br_squad_drop_leader))
+            {
+                player.br_drop_detached = 2;
+                Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
+            }
+
             STAT(DROP, player) = DROP_LANDING;
             ITEMS_STAT(player) &= ~IT_USING_JETPACK;
             player.flags |= FL_PICKUPITEMS;
@@ -611,7 +641,16 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
     {
         frag_target.effects &= ~EF_NODRAW;
         set_movetype(frag_target, MOVETYPE_WALK);
-        Kill_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CPID_BR_DROPSHIP);
+        Kill_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CPID_BR_DROP);
+    }
+
+    if(STAT(DROP, frag_target) == DROP_FALLING)
+    {
+        if((frag_target.br_drop_detached != 2) && IN_SQUAD(frag_target) && (frag_target != frag_target.br_squad.br_squad_drop_leader))
+        {
+            frag_target.br_drop_detached = 2;
+            Kill_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CPID_BR_DROP);
+        }
     }
 
     if(STAT(DROP, frag_target) != DROP_LANDED)
