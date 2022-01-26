@@ -262,7 +262,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
     }
 
     if(STAT(DROP, player) == DROP_TRANSPORT){
-        if(!(STAT(PRESSED_KEYS, player) & KEY_JUMP) && (dropship_path_length > player.br_squad.br_force_drop_distance)){
+        if(!(IS_REAL_CLIENT(player) && (STAT(PRESSED_KEYS, player) & KEY_JUMP)) && (dropship_path_length > player.br_squad.br_force_drop_distance)){
             player.velocity = dropship_path_direction * dropship_speed;
         }
         else{
@@ -288,15 +288,17 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 player.velocity = player.br_drop_velocity;
                 player.angles = player.br_drop_angles;
 
-                if(IN_SQUAD(player))
+                if(IN_SQUAD(player) && (IS_REAL_CLIENT(player) || br_SquadIsBotsOnly(player.br_squad)))
                 {
                     player.br_squad.br_squad_drop_leader = player;
 
-                    vector drop_offset;
-                    drop_offset.x = cos((player.angles.y + 90) * DEG2RAD);
-                    drop_offset.y = sin((player.angles.y + 90) * DEG2RAD);
-                    drop_offset.z = 0;
-                    drop_offset = drop_offset * vlen(vec2(player.maxs - player.mins)) + drop_offset * 32; // I hope individual players never get different mins/maxs
+                    vector drop_base_offset;
+                    drop_base_offset.x = cos((player.angles.y + 90) * DEG2RAD);
+                    drop_base_offset.y = sin((player.angles.y + 90) * DEG2RAD);
+                    drop_base_offset.z = 0;
+                    drop_base_offset = drop_base_offset * vlen(vec2(player.maxs - player.mins)) + drop_base_offset * 32; // I hope individual players never get different mins/maxs
+
+                    vector drop_offset = drop_base_offset;
 
                     FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
                         it.effects &= ~EF_NODRAW;
@@ -305,7 +307,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                         STAT(DROP, it) = DROP_FALLING;
 
                         setorigin(it, player.origin + drop_offset); // FIXME: this can teleport players into brushes/void
-                        drop_offset *= 2;
+                        drop_offset += drop_base_offset;
 
                         it.velocity = it.br_drop_velocity = player.velocity;
                         it.angles = it.br_drop_angles = player.angles;
