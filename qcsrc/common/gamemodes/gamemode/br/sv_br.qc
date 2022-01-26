@@ -8,7 +8,7 @@
 
 #define BR_KILLS_INSTANTLY(pl, dt) (!IN_SQUAD((pl)) || (br_SquadFindLastAlive((pl).br_squad, true) == (pl)) || ((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_KILL.m_id) || ((dt) == DEATH_TEAMCHANGE.m_id) || ((dt) == DEATH_AUTOTEAMCHANGE.m_id))
 
-void br_SetPlayerDropAngle(entity this);
+float br_CalculatePlayerDropAngle(entity this);
 void br_LastPlayerForSquad_Notify(entity squad);
 void br_RemovePlayer(entity player);
 void br_Revive(entity player);
@@ -36,11 +36,10 @@ float autocvar_g_br_revive_health = 0.25;
 float autocvar_g_br_bleeding_health = 0.5;
 float autocvar_g_br_drop_damage = 0.5;
 float autocvar_g_br_drop_speed_max = 2;
-float autocvar_g_br_drop_speed_horizontal_max = 0.9;
-float autocvar_g_br_drop_speed_horizontal_min = 0.5;
-float autocvar_g_br_drop_speed_vertical = 1.5;
+float autocvar_g_br_drop_speed_vertical_min = 0.1;
 bool autocvar_g_br_squad_colors = true;
-float autocvar_g_br_drop_acceleration = 1200;
+float autocvar_g_br_drop_accel_dive = 600;
+float autocvar_g_br_drop_accel_turn = 1500;
 bool autocvar_g_br_startweapons = false;
 bool autocvar_g_br_ring_exitvehicle = false;
 
@@ -247,7 +246,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
 
             if(player.vehicle && autocvar_g_br_ring_exitvehicle) // if the player is controlling a vehicle
                 vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
-     
+
             Damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
         }
         else
@@ -263,24 +262,25 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
         else{
             if(!(IN_SQUAD(player) && player.br_squad.br_squad_drop_leader))
             {
+                const float inital_dropangle = 60; // 0 = straight down
                 player.effects &= ~EF_NODRAW;
                 set_movetype(player, MOVETYPE_WALK);
                 Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROPSHIP);
                 STAT(DROP, player) = DROP_FALLING;
                 float maxdropspeed = PHYS_MAXAIRSPEED(player) * max(autocvar_g_br_drop_speed_max, 0); // no maxspeed_mod available here
-                float maxdropspeed_xy = maxdropspeed * max(autocvar_g_br_drop_speed_horizontal_max, 0);
-                player.velocity.x = cos(player.angles.y * DEG2RAD);
-                player.velocity.y = sin(player.angles.y * DEG2RAD);
-                player.velocity.z = 0;
+                player.br_drop_velocity.x = cos(player.angles.y * DEG2RAD);
+                player.br_drop_velocity.y = sin(player.angles.y * DEG2RAD);
+                player.br_drop_velocity.z = tan((inital_dropangle - 90) * DEG2RAD);
 
-                player.velocity = player.velocity * maxdropspeed_xy * 0.75;
-                player.velocity.z = (maxdropspeed - vlen(player.velocity)) * -max(autocvar_g_br_drop_speed_vertical, 0);
+                player.br_drop_velocity = normalize(player.br_drop_velocity) * maxdropspeed;
 
-                br_SetPlayerDropAngle(player);
+                player.br_drop_angles.x = br_CalculatePlayerDropAngle(player) - 90;
+                player.br_drop_angles.y = vectoangles(vec2(player.br_drop_velocity)).y + 180;
+                player.br_drop_angles.z = 180;
 
                 // the .br_drop values aren't modified by physics and will be used by other squad members
-                player.br_drop_velocity = player.velocity;
-                player.br_drop_angles = player.angles;
+                player.velocity = player.br_drop_velocity;
+                player.angles = player.br_drop_angles;
 
                 if(IN_SQUAD(player))
                 {
@@ -429,36 +429,75 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             bool player_is_drop_leader = has_drop_leader && (player == player.br_squad.br_squad_drop_leader);
             if(player_is_drop_leader || !has_drop_leader)
             {
-                float maxdropspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1) * max(autocvar_g_br_drop_speed_max, 0);
-                float maxdropspeed_xy = maxdropspeed * max(autocvar_g_br_drop_speed_horizontal_max, 0);
-                float mindropspeed_xy = maxdropspeed * max(autocvar_g_br_drop_speed_horizontal_min, 0);
+                float maxairspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1);
+                float maxdropspeed = maxairspeed * max(autocvar_g_br_drop_speed_max, 0);
+                float mindropspeed_z = maxdropspeed * bound(0, autocvar_g_br_drop_speed_vertical_min, 1);
+                float maxdropspeed_z = maxdropspeed * 0.9; // moving straight down is glitchy
+                float pitch_current = br_CalculatePlayerDropAngle(player);
+                float pitch_view = player.v_angle.x;
+
+                // pitch_view angle needs to be between -90 and 90 degrees
+                if(pitch_view > 90)
+                    pitch_view = 180 - pitch_view;
+                if(pitch_view < -90)
+                    pitch_view = -180 - pitch_view;
+
+                float pitch_diff = pitch_current - pitch_view;
+                float pitch_ratio = 0;
+
+                // calculate how much the player wants to change pitch (ratio is at least 0.1)
+                // ratio is between -1 (looking straight down) and +1 (looking straight ahead or up)
+                if((pitch_diff < 0) && (pitch_current < 90))
+                {
+                    float pitch_diff_max = 90 - pitch_current;
+                    pitch_ratio = bound(-1, sin(max(pitch_diff, -pitch_diff_max) * 90 / pitch_diff_max * DEG2RAD), -0.1);
+                }
+                else if((pitch_diff > 0) && (pitch_current > 0))
+                {
+                    float pitch_diff_max = pitch_current;
+                    pitch_ratio = bound(0.1, sin(min(pitch_diff, pitch_diff_max) * 90 / pitch_diff_max * DEG2RAD), 1);
+                }
 
                 makevectors(player.v_angle);
+                // horizontal wishvel as usual
                 vector wishvel = v_forward * CS(player).movement.x + v_right * CS(player).movement.y;
-                wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxdropspeed);
-                wishvel.x *= max(autocvar_g_br_drop_acceleration, 0);
-                wishvel.y *= max(autocvar_g_br_drop_acceleration, 0);
-                player.velocity = player.velocity + wishvel * dt;
-                player.velocity.z = 0;
+                wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspeed);
+                // vertical wishvel using forward movement and the previously calculated ratio
+                wishvel.z = pitch_ratio * bound(0, CS(player).movement.x / maxairspeed, 1);
+                // apply turn acceleration to the horizontal portion of the wishvel
+                wishvel.x *= max(autocvar_g_br_drop_accel_turn, 0);
+                wishvel.y *= max(autocvar_g_br_drop_accel_turn, 0);
+                // apply dive acceleration to the vertical portion of the wishvel
+                wishvel.z *= max(autocvar_g_br_drop_accel_dive, 0);
+                player.br_drop_velocity += wishvel * dt;
 
-                if(vlen(player.velocity) == 0)
-                {
-                    player.velocity.x = cos(player.angles.y * DEG2RAD);
-                    player.velocity.y = sin(player.angles.y * DEG2RAD);
-                    player.velocity = player.velocity * mindropspeed_xy;
-                }
-                if(vlen(player.velocity) < mindropspeed_xy)
-                    player.velocity = normalize(player.velocity) * mindropspeed_xy;
-                if(vlen(player.velocity) > maxdropspeed_xy)
-                    player.velocity = normalize(player.velocity) * maxdropspeed_xy;
+                // modify mindropspeed_z and maxdropspeed_z so that the player does not rotate beyond the view angle
+                float vpitch_ratio = sin(pitch_view * DEG2RAD);
+                if(pitch_ratio > 0)
+                    mindropspeed_z = bound(mindropspeed_z, vpitch_ratio * maxdropspeed, maxdropspeed_z);
+                else if(pitch_ratio < 0)
+                    maxdropspeed_z = bound(mindropspeed_z, vpitch_ratio * maxdropspeed, maxdropspeed_z);
 
-                player.velocity.z = (maxdropspeed - vlen(player.velocity)) * -max(autocvar_g_br_drop_speed_vertical, 0);
+                // constrain to vertical min/maxdropspeed
+                if(player.br_drop_velocity.z > -mindropspeed_z)
+                    player.br_drop_velocity.z = -mindropspeed_z;
+                if(player.br_drop_velocity.z < -maxdropspeed_z)
+                    player.br_drop_velocity.z = -maxdropspeed_z;
 
-                br_SetPlayerDropAngle(player);
+                // if there is no horizontal movement point the horizontal vector towards the view direction
+                if(vlen(vec2(player.br_drop_velocity)) == 0)
+                    player.br_drop_velocity += eX * cos(player.angles.y * DEG2RAD) + eY * sin(player.angles.y * DEG2RAD);
+
+                // adjust horizontal speed so that vertical speed + horizontal speed = maxdropspeed
+                player.br_drop_velocity = eZ * player.br_drop_velocity.z + normalize(vec2(player.br_drop_velocity)) * sqrt(pow(maxdropspeed, 2) - pow(player.br_drop_velocity.z, 2));
+
+                player.br_drop_angles.x = br_CalculatePlayerDropAngle(player) - 90;
+                player.br_drop_angles.y = vectoangles(vec2(player.br_drop_velocity)).y + 180;
+                player.br_drop_angles.z = 180;
 
                 // the .br_drop values aren't modified by physics and will be used by other squad members
-                player.br_drop_velocity = player.velocity;
-                player.br_drop_angles = player.angles;
+                player.velocity = player.br_drop_velocity;
+                player.angles = player.br_drop_angles;
 
                 if(player_is_drop_leader)
                 {
@@ -766,18 +805,16 @@ MUTATOR_HOOKFUNCTION(br, ClientCommand_Spectate)
     return MUT_SPECCMD_CONTINUE;
 }
 
-void br_SetPlayerDropAngle(entity this)
+float br_CalculatePlayerDropAngle(entity this)
 {
-    this.angles.y = vectoangles(vec2(this.velocity)).y;
-
-    this.angles.x = -90;
-    if(this.velocity.z < 0)
+    if(this.br_drop_velocity.z < 0)
     {
-        float dropspeed_xy = vlen(vec2(this.velocity));
-        float dropspeed_z = fabs(this.velocity.z);
-        //this.angles.x -= dropspeed_z / (dropspeed_z + dropspeed_xy) * 90; // anything beyond 90 degrees flips the model on view change for some reason
-        this.angles.x += dropspeed_z / (dropspeed_z + dropspeed_xy) * 90; // but this looks nice too, I guess
+        float dropspeed_xy = vlen(vec2(this.br_drop_velocity));
+        float dropspeed_z = fabs(this.br_drop_velocity.z);
+        return 90 - atan(dropspeed_xy / dropspeed_z) * RAD2DEG;
     }
+
+    return 0;
 }
 
 void br_LastPlayerForSquad_Notify(entity squad)
