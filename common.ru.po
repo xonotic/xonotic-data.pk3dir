@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2022-01-22 23:41+0000\n"
+"PO-Revision-Date: 2022-01-26 03:30+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -220,7 +220,7 @@ msgstr "^3Двойной щелчок ^7по панели для её настр
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL ^7для отключения столкновения со стенами, ^3SHIFT ^7и"
+msgstr "^3CTRL ^7для откл. проверки столкновений, ^3SHIFT ^7и"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -3509,7 +3509,7 @@ msgstr "^BG%s%s^K1 был сублимирован из Испарителя ^BG
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 был испарён с помощью Вихря ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был испарён Вихрем ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:523
 msgid "^F4You are now alone!"
@@ -6037,7 +6037,7 @@ msgstr "При наблюдении"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr "При наблюдении и разминке"
+msgstr "При наблюдении/разминке"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -6045,11 +6045,11 @@ msgstr "Уменьшенная"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr "Отношение текста и иконок:"
+msgstr "Отношение текста/иконок:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
-msgstr "Прятать появившиеся предметы"
+msgstr "Скрывать появившиеся предметы"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
@@ -6290,7 +6290,7 @@ msgstr "Таблица очков"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
-msgstr "Режим интерфейса распрыжки:"
+msgstr "Режим интерфейса:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "View angle centered"
@@ -6302,7 +6302,7 @@ msgstr "Угол скорости по центру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr "Стиль интерфейсa распрыжки:"
+msgstr "Стиль интерфейсa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
@@ -6381,7 +6381,7 @@ msgstr "Таймер:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:19
 msgid "Show elapsed time"
-msgstr "Показывать прошедшее время"
+msgstr "Отсчитывать прошедшее время"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -6389,7 +6389,7 @@ msgstr "Панель таймера"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr "Прозрач. после голосования:"
+msgstr "Прозрачн. по голосовании:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -6563,7 +6563,7 @@ msgstr "Настройки сетки:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 msgid "Snap panels to grid"
-msgstr "Передвижение панелей по сетке"
+msgstr "Привязка панелей к сетке"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "Grid size:"
@@ -7687,7 +7687,7 @@ msgstr "Предметы:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:65
 msgid "Pain:"
-msgstr "Боль:"
+msgstr "Крики боли:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:72
 msgid "Player:"
@@ -10187,7 +10187,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:780
 msgid "Use default"
-msgstr "По умолчанию"
+msgstr "Стандартно"
 
 #: qcsrc/menu/xonotic/util.qc:800
 msgid "Team Color:"
