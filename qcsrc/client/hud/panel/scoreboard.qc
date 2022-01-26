@@ -1312,7 +1312,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 			tmp_in.x += duel_score_size.x + duel_name_fontsize.x * 0.5;
 		
 		draw_beginBoldFont();
-		drawcolorcodedstring(tmp_in, rank_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(tmp_in, rank_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	}
 	
