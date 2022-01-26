@@ -581,14 +581,14 @@ MUTATOR_HOOKFUNCTION(br, Damage_Calculate)
     }
 }
 
-MUTATOR_HOOKFUNCTION(br, PlayerDies)
+MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
 {
     entity frag_attacker = M_ARGV(1, entity);
     entity frag_target = M_ARGV(2, entity);
     float frag_deathtype = M_ARGV(3, float); // float for some reason, breaks if changed to int
 
     if(!IS_PLAYER(frag_target))
-        return false;
+        return true;
 
     if(STAT(DROP, frag_target) == DROP_TRANSPORT)
     {
@@ -609,6 +609,14 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies)
         {
             Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_BR_DOWN);
             STAT(BLEEDING, frag_target) = false;
+
+            // restore weapons on death to make weapon drop work
+            STAT(WEAPONS, frag_target) = frag_target.br_wepset_old;
+            for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+            {
+                .entity weaponentity = weaponentities[slot];
+                frag_target.(weaponentity).m_weapon = frag_target.br_weapon_prev[slot];
+            }
         }
         frag_target.respawn_flags = RESPAWN_SILENT | RESPAWN_FORCE;
         frag_target.respawn_time = time + 2;
