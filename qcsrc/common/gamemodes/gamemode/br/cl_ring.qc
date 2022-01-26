@@ -28,21 +28,21 @@ void ring_draw(entity this)
 
     this.scale = current_radius / RING_MODEL_RADIUS;
     this.alpha = max((1 - min(max(current_radius - vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin), 0) / this.br_ring_fadedistance, 1)) * this.br_ring_alpha, 0.01);
-    if(vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin) > current_radius)
-        this.alpha = max(this.alpha, 0.01);
 }
 
 void ring_draw2d(entity this)
 {
     float current_radius = ring_calculate_current_radius(this);
 
+    // if outside of the ring, color the player's view in the ring color
     if(vlen((csqcplayer.origin + csqcplayer.view_ofs) - this.origin) > current_radius)
     {
-        R_BeginPolygon("", DRAWFLAG_ADDITIVE, true);
-        R_PolygonVertex('0 0 0', '0 0 0', this.colormod, min(this.br_ring_alpha, 0.5));
-        R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', '1 0 0', this.colormod, min(this.br_ring_alpha, 0.5));
-        R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', '1 1 0', this.colormod, min(this.br_ring_alpha, 0.5));
-        R_PolygonVertex(autocvar_vid_conheight * '0 1 0', '0 1 0', this.colormod, min(this.br_ring_alpha, 0.5));
+        const float weaken_factor = 0.75;
+        R_BeginPolygon("", DRAWFLAG_NORMAL, true);
+        R_PolygonVertex('0 0 0', '0 0 0', this.colormod, max(this.br_ring_alpha * weaken_factor, 0.01));
+        R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', '1 0 0', this.colormod, max(this.br_ring_alpha * weaken_factor, 0.01));
+        R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', '1 1 0', this.colormod, max(this.br_ring_alpha * weaken_factor, 0.01));
+        R_PolygonVertex(autocvar_vid_conheight * '0 1 0', '0 1 0', this.colormod, max(this.br_ring_alpha * weaken_factor, 0.01));
         R_EndPolygon();
     }
 }
