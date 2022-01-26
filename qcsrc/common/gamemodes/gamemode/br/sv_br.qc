@@ -36,10 +36,11 @@ float autocvar_g_br_revive_health = 0.25;
 float autocvar_g_br_bleeding_health = 0.5;
 float autocvar_g_br_drop_damage = 0.5;
 float autocvar_g_br_drop_speed_max = 2;
+float autocvar_g_br_drop_speed_min = 1.25;
 float autocvar_g_br_drop_speed_vertical_min = 0.1;
 bool autocvar_g_br_squad_colors = true;
-float autocvar_g_br_drop_accel_dive = 600;
-float autocvar_g_br_drop_accel_turn = 1500;
+float autocvar_g_br_drop_accel_dive = 50;
+float autocvar_g_br_drop_accel_turn = 600;
 bool autocvar_g_br_startweapons = false;
 bool autocvar_g_br_ring_exitvehicle = false;
 
@@ -429,10 +430,16 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             bool player_is_drop_leader = has_drop_leader && (player == player.br_squad.br_squad_drop_leader);
             if(player_is_drop_leader || !has_drop_leader)
             {
+                const float vertical_max = 0.9;
                 float maxairspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1);
                 float maxdropspeed = maxairspeed * max(autocvar_g_br_drop_speed_max, 0);
-                float mindropspeed_z = maxdropspeed * bound(0, autocvar_g_br_drop_speed_vertical_min, 1);
-                float maxdropspeed_z = maxdropspeed * 0.9; // moving straight down is glitchy
+                float mindropspeed = maxairspeed * max(autocvar_g_br_drop_speed_min, 0);
+                float maxdropspeed_ratio = vertical_max; // moving straight down is glitchy
+                float mindropspeed_ratio = bound(0, autocvar_g_br_drop_speed_vertical_min, vertical_max);
+                float accel_dive = max(autocvar_g_br_drop_accel_dive, 0);
+                float accel_turn = max(autocvar_g_br_drop_accel_turn, 0);
+                float dropspeed = vlen(player.br_drop_velocity);
+                float dropspeed_xy = vlen(vec2(player.br_drop_velocity));
                 float pitch_current = br_CalculatePlayerDropAngle(player);
                 float pitch_view = player.v_angle.x;
 
@@ -464,34 +471,37 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
                 wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspeed);
                 // vertical wishvel using forward movement and the previously calculated ratio
                 wishvel.z = pitch_ratio * bound(0, CS(player).movement.x / maxairspeed, 1);
-                // apply turn acceleration to the horizontal portion of the wishvel
-                wishvel.x *= max(autocvar_g_br_drop_accel_turn, 0);
-                wishvel.y *= max(autocvar_g_br_drop_accel_turn, 0);
-                // apply dive acceleration to the vertical portion of the wishvel
-                wishvel.z *= max(autocvar_g_br_drop_accel_dive, 0);
+                // apply turn acceleration to wishvel
+                wishvel.x *= accel_turn;
+                wishvel.y *= accel_turn;
+                wishvel.z *= accel_turn;
                 player.br_drop_velocity += wishvel * dt;
-
-                // modify mindropspeed_z and maxdropspeed_z so that the player does not rotate beyond the view angle
-                float vpitch_ratio = sin(pitch_view * DEG2RAD);
-                if(pitch_ratio > 0)
-                    mindropspeed_z = bound(mindropspeed_z, vpitch_ratio * maxdropspeed, maxdropspeed_z);
-                else if(pitch_ratio < 0)
-                    maxdropspeed_z = bound(mindropspeed_z, vpitch_ratio * maxdropspeed, maxdropspeed_z);
-
-                // constrain to vertical min/maxdropspeed
-                if(player.br_drop_velocity.z > -mindropspeed_z)
-                    player.br_drop_velocity.z = -mindropspeed_z;
-                if(player.br_drop_velocity.z < -maxdropspeed_z)
-                    player.br_drop_velocity.z = -maxdropspeed_z;
+                player.br_drop_velocity = normalize(eZ * player.br_drop_velocity.z + normalize(vec2(player.br_drop_velocity)) * dropspeed_xy);
 
                 // if there is no horizontal movement point the horizontal vector towards the view direction
                 if(vlen(vec2(player.br_drop_velocity)) == 0)
-                    player.br_drop_velocity += eX * cos(player.angles.y * DEG2RAD) + eY * sin(player.angles.y * DEG2RAD);
+                    player.br_drop_velocity += (eX * cos(player.angles.y * DEG2RAD) + eY * sin(player.angles.y * DEG2RAD)) * sqrt(1 - pow(maxdropspeed_ratio, 2));
+
+                // modify mindropspeed_ratio and maxdropspeed_ratio so that the player does not rotate beyond the view angle
+                float vpitch_ratio = sin(pitch_view * DEG2RAD);
+                if(pitch_ratio > 0)
+                    mindropspeed_ratio = bound(mindropspeed_ratio, vpitch_ratio, maxdropspeed_ratio);
+                else if(pitch_ratio < 0)
+                    maxdropspeed_ratio = bound(mindropspeed_ratio, vpitch_ratio, maxdropspeed_ratio);
+
+                // constrain to vertical min/maxdropspeed
+                if(player.br_drop_velocity.z > -mindropspeed_ratio)
+                    player.br_drop_velocity.z = -mindropspeed_ratio;
+                if(player.br_drop_velocity.z < -maxdropspeed_ratio)
+                    player.br_drop_velocity.z = -maxdropspeed_ratio;
 
                 // adjust horizontal speed so that vertical speed + horizontal speed = maxdropspeed
-                player.br_drop_velocity = eZ * player.br_drop_velocity.z + normalize(vec2(player.br_drop_velocity)) * sqrt(pow(maxdropspeed, 2) - pow(player.br_drop_velocity.z, 2));
+                float dropangle = br_CalculatePlayerDropAngle(player);
+                const float accelangle = 20;
+                dropspeed = bound(mindropspeed, dropspeed + accel_dive * (dropangle - accelangle) / accelangle * dt, maxdropspeed);
+                player.br_drop_velocity = normalize(player.br_drop_velocity) * dropspeed;
 
-                player.br_drop_angles.x = br_CalculatePlayerDropAngle(player) - 90;
+                player.br_drop_angles.x = dropangle - 90;
                 player.br_drop_angles.y = vectoangles(vec2(player.br_drop_velocity)).y + 180;
                 player.br_drop_angles.z = 180;
 
