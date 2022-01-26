@@ -2,8 +2,8 @@
 
 float dropship_path_length = 0;
 vector dropship_path_direction = '0 0 0';
+float dropship_speed = 0;
 
 float autocvar_g_br_drop_distance_force = 500;
-float autocvar_g_br_dropship_speed = 200;
 
 entity dropship_initialize();

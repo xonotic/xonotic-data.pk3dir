@@ -2,6 +2,7 @@
 
 float autocvar_g_br_dropship_scale = 3;
 vector autocvar_g_br_dropship_color = '0.5 0 0.5';
+float autocvar_g_br_dropship_speed = -1;
 
 entity dropship_spawn(Vehicle info, float entity_scale, vector color);
 void dropship_think(entity this);
@@ -44,6 +45,11 @@ entity dropship_initialize()
         setorigin(this, startorigin);
         this.angles = vectoangles(dropship_path_direction);
         this.velocity = '0 0 0';
+
+        dropship_speed = autocvar_g_br_dropship_speed;
+        // if dropship_speed is negative adjust speed dependant on map size
+        if(dropship_speed < 0)
+            dropship_speed = vlen(vec2(world.maxs - world.mins)) / 60; // dropship needs one minute to diagonally fly over the whole map
 
         return this;
     }
@@ -93,8 +99,8 @@ void dropship_think(entity this)
 
     if(dropship_path_length > 0){
         this.alpha = bound(0.01, dropship_path_length / autocvar_g_br_drop_distance_force, 1);
-        this.velocity = dropship_path_direction * autocvar_g_br_dropship_speed;
-        dropship_path_length -= autocvar_g_br_dropship_speed * frametime;
+        this.velocity = dropship_path_direction * dropship_speed;
+        dropship_path_length -= dropship_speed * frametime;
     }
     else{
         delete(this);

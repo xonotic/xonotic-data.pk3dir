@@ -258,7 +258,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
 
     if(STAT(DROP, player) == DROP_TRANSPORT){
         if(!(STAT(PRESSED_KEYS, player) & KEY_JUMP) && (dropship_path_length > player.br_squad.br_force_drop_distance)){
-            player.velocity = dropship_path_direction * max(autocvar_g_br_dropship_speed, 0);
+            player.velocity = dropship_path_direction * dropship_speed;
         }
         else{
             if(!(IN_SQUAD(player) && player.br_squad.br_squad_drop_leader))
