@@ -25,6 +25,7 @@ const float br_drop_time_secs = 1;
 .float br_force_drop_distance;
 .int br_drop_launch;
 .int br_drop_detached;
+.bool br_drop_instructions;
 
 .entity br_bleeding_inflictor;
 .entity br_bleeding_attacker;
@@ -288,15 +289,24 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
     }
 
     if(STAT(DROP, player) == DROP_TRANSPORT){
-        // jump has to be released then pressed to launch
-        if(!(STAT(PRESSED_KEYS, player) & KEY_JUMP) && (time > (player.br_squad.br_drop_time + br_drop_time_secs))){
-            if(player.br_drop_launch == 0){
-                player.br_drop_launch = 1;
+        if(time > (player.br_squad.br_drop_time + br_drop_time_secs))
+        {
+            if(!player.br_drop_instructions)
+            {
+                player.br_drop_instructions = true;
+                Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_BR_DROPSHIP);
             }
-        }
-        else{
-            if(player.br_drop_launch == 1){
-                player.br_drop_launch = 2;
+
+            // jump has to be released then pressed to launch
+            if(!(STAT(PRESSED_KEYS, player) & KEY_JUMP)){
+                if(player.br_drop_launch == 0){
+                    player.br_drop_launch = 1;
+                }
+            }
+            else{
+                if(player.br_drop_launch == 1){
+                    player.br_drop_launch = 2;
+                }
             }
         }
 
@@ -1071,7 +1081,7 @@ void br_RoundStart(){
         it.flags &= ~FL_PICKUPITEMS;
         it.dphitcontentsmask &= ~DPCONTENTS_BODY;
         it.effects |= EF_NODRAW;
-        Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_BR_DROPSHIP);
+        it.br_drop_instructions = false;
         STAT(DROP, it) = DROP_TRANSPORT;
         it.br_drop_launch = 0;
         UNSET_ONGROUND(it); // otherwise this isn't unset if the player drops in the same frame
