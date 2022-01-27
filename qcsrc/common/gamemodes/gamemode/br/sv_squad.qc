@@ -81,6 +81,7 @@ void br_SquadMember_Remove(entity player)
     if(!squad)
         return;
 
+    WaypointSprite_Kill(player.br_allywaypoint);
     --squad.br_squad_members;
 
     entity member_next = player.br_squad_next;

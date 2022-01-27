@@ -25,6 +25,8 @@ REGISTER_MUTATOR(br, false)
     return 0;
 }
 
+.entity br_allywaypoint;
+
 float autocvar_g_br_revive_extra_size = 100;
 float autocvar_g_br_revive_speed = 0.4;
 float autocvar_g_br_revive_clearspeed = 1.6;

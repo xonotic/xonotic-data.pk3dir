@@ -48,6 +48,7 @@ float autocvar_g_br_drop_accel_dive = 50;
 float autocvar_g_br_drop_accel_turn = 600;
 bool autocvar_g_br_startweapons = false;
 bool autocvar_g_br_ring_exitvehicle = false;
+float autocvar_g_br_squad_waypoint_distance = 1500;
 
 .vector br_drop_velocity;
 .vector br_drop_angles;
@@ -693,6 +694,8 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
                 frag_target.(weaponentity).m_weapon = frag_target.br_weapon_prev[slot];
             }
         }
+        WaypointSprite_Kill(frag_target.br_allywaypoint);
+
         frag_target.respawn_flags = RESPAWN_SILENT | RESPAWN_FORCE;
         frag_target.respawn_time = time + 2;
         return true;
@@ -871,6 +874,9 @@ MUTATOR_HOOKFUNCTION(br, CustomizeWaypoint)
 {
     entity wp = M_ARGV(0, entity);
     entity player = M_ARGV(1, entity);
+
+    if((wp == wp.owner.br_allywaypoint) && (vdist(wp.owner.origin - player.origin, <, autocvar_g_br_squad_waypoint_distance) || STAT(BLEEDING, wp.owner)))
+        return true;
 
     if(!IS_PLAYER(player) || DIFF_SQUAD(wp, player))
         return true;
@@ -1087,6 +1093,8 @@ void br_RoundStart(){
         STAT(DROP, it) = DROP_TRANSPORT;
         it.br_drop_launch = 0;
         UNSET_ONGROUND(it); // otherwise this isn't unset if the player drops in the same frame
+
+        WaypointSprite_Spawn(WP_BRAlly, 0, 0, it, '0 0 64', NULL, 0, it, br_allywaypoint, true, RADARICON_WAYPOINT).br_squad = it.br_squad;
     });
 
     squads_colored = autocvar_g_br_squad_colors;
