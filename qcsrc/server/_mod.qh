@@ -25,6 +25,7 @@
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
 #include <server/steerlib.qh>
+#include <server/strafe.qh>
 #include <server/teamplay.qh>
 #include <server/tests.qh>
 #include <server/world.qh>

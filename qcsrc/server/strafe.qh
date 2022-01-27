@@ -1,0 +1,7 @@
+#pragma once
+
+.float strafe_efficiency_sum;
+.float strafe_efficiency_tics;
+.float strafe_efficiency_best;
+
+float calculate_strafe_efficiency(entity, vector);
