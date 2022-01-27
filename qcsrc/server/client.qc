@@ -234,7 +234,7 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
-.bool would_spectate;
+bool SpectateNext(entity this);
 
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this, bool is_forced)
@@ -402,7 +402,10 @@ void PutObserverInServer(entity this, bool is_forced)
 
 	// force members of alive squads to spectate another squadmate
 	if(IS_REAL_CLIENT(this) && IN_SQUAD(this) && !this.br_squad.br_squad_dead)
-		this.would_spectate = true;
+	{
+		SpectateNext(this);
+		TRANSMUTE(Spectator, this);
+	}
 }
 
 int player_getspecies(entity this)
@@ -2256,6 +2259,7 @@ bool PlayerThink(entity this)
 	return true;
 }
 
+.bool would_spectate;
 // merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {

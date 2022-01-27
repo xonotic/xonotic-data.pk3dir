@@ -136,6 +136,13 @@ MUTATOR_HOOKFUNCTION(br, PutClientInServer)
 MUTATOR_HOOKFUNCTION(br, MakePlayerObserver)
 {
     entity player = M_ARGV(0, entity);
+    bool is_forced = M_ARGV(1, bool);
+
+    if(is_forced && IN_SQUAD(player))
+    {
+        br_SquadMember_Remove(player);
+        br_SquadUpdateInfo();
+    }
 
     if(IN_SQUAD(player))
     {
@@ -320,7 +327,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 player.velocity = player.br_drop_velocity;
                 player.angles = player.br_drop_angles;
 
-                if(IN_SQUAD(player) && (IS_REAL_CLIENT(player) || br_SquadIsBotsOnly(player.br_squad)))
+                if(IN_SQUAD(player) && ((IS_REAL_CLIENT(player) && (player.br_drop_launch == 2)) || br_SquadIsBotsOnly(player.br_squad)))
                 {
                     player.br_squad.br_squad_drop_leader = player;
 
