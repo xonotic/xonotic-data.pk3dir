@@ -53,15 +53,23 @@ string uid2name(string myuid)
 	return s;
 }
 
-void write_recordmarker(entity pl, float tstart, float dt)
+void write_recordmarker(entity pl, float newpos, float tstart, float dt)
 {
-    GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
+    GameLogEcho(strcat(":recordset:", ftos(newpos), ":", ftos(pl.playerid), ":", ftos(etof(pl)), ":", ftos(dt)));
 
     // also write a marker into demo files for demotc-race-record-extractor to find
-    stuffcmd(pl,
-             strcat(
-                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
-                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+    if (pl.crypto_idfp != "") {
+      stuffcmd(pl,
+               strcat(
+                   strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                   strcat(" ", ftos(tstart), " ", ftos(dt), " ", ftos(newpos), " "),
+                   strcat(pl.crypto_idfp, "\n")));
+    } else {
+      stuffcmd(pl,
+               strcat(
+                   strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                   strcat(" ", ftos(tstart), " ", ftos(dt), " ", ftos(newpos), " ANONYMOUS")));
+    }
 }
 
 IntrusiveList g_race_targets;
@@ -401,6 +409,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		return;
 	}
 
+        write_recordmarker(e, newpos, time - TIME_DECODE(t), TIME_DECODE(t));
+
 	// if we didn't hit a return yet, we have a new record!
 
 	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
@@ -424,9 +434,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 	// store new ranking
 	race_writeTime(GetMapname(), t, myuid);
 
-	if (newpos == 1 && showmessage)
+	if (showmessage)
 	{
-		write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 		race_send_recordtime(MSG_ALL);
 	}
 
