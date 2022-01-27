@@ -4,6 +4,8 @@
 
 REGISTER_MUTATOR(cl_br, true);
 
+// FIXME: some of these hooks don't work when spectating
+
 MUTATOR_HOOKFUNCTION(cl_br, WantEventchase)
 {
     return (STAT(DROP) == DROP_FALLING);
@@ -12,6 +14,11 @@ MUTATOR_HOOKFUNCTION(cl_br, WantEventchase)
 MUTATOR_HOOKFUNCTION(cl_br, DrawCrosshair)
 {
     return (STAT(BLEEDING) || (STAT(DROP) != DROP_LANDED));
+}
+
+MUTATOR_HOOKFUNCTION(cl_br, DrawReticle)
+{
+    return (STAT(DROP) == DROP_FALLING);
 }
 
 MUTATOR_HOOKFUNCTION(cl_br, PlayerCanCrouch)
