@@ -25,7 +25,7 @@ const int SPECIES_ROBOT_SHINY = 5;
 const int SPECIES_RESERVED = 15;
 
 #ifdef GAMEQC
-const int RANKINGS_CNT = 99;
+const int RANKINGS_CNT = 256;
 
 ///////////////////////////
 // keys pressed
