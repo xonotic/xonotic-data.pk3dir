@@ -488,6 +488,8 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             bool player_is_drop_leader = has_drop_leader && (player == player.br_squad.br_squad_drop_leader);
             if(player_is_drop_leader || !has_drop_leader)
             {
+                player.br_drop_velocity = eZ * player.br_drop_velocity.z + vec2(player.velocity); // use real horizontal velocity in case of collisions
+
                 const float vertical_max = 0.9;
                 float maxairspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1);
                 float maxdropspeed = maxairspeed * max(autocvar_g_br_drop_speed_max, 0);
