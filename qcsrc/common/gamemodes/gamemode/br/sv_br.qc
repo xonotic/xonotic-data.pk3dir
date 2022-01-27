@@ -481,7 +481,7 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
 
     // TODO: improve dropping physics
     if(STAT(DROP, player) == DROP_FALLING){
-        if(!IS_ONGROUND(player) && ((tracebox(player.origin, player.mins, player.maxs, player.origin - '0 0 1', MOVE_NOMONSTERS, player), trace_fraction) >= 1)) // IS_ONGROUND doesn't work if jump is held (jump is theoretically blocked until landed)
+        if(!IS_ONGROUND(player) && (player.waterlevel < WATERLEVEL_SWIMMING) && ((tracebox(player.origin, player.mins, player.maxs, player.origin - '0 0 1', MOVE_NOMONSTERS, player), trace_fraction) >= 1)) // IS_ONGROUND doesn't work if jump is held (jump is theoretically blocked until landed)
         {
             ITEMS_STAT(player) |= IT_USING_JETPACK;
             bool has_drop_leader = IN_SQUAD(player) && (player.br_drop_detached != 2) && (player.br_squad.br_squad_drop_leader && (STAT(DROP, player.br_squad.br_squad_drop_leader) == DROP_FALLING));
