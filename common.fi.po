@@ -7,14 +7,14 @@
 # Dr. Jaska <drjaska83@gmail.com>, 2020
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
-# Oi Suomi On! <oisuomion@protonmail.com>, 2020
+# Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-01-27 21:12+0000\n"
+"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -972,7 +972,7 @@ msgstr "Tarkkuustilastot (keskimäärin %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1407
 msgid "Item stats"
-msgstr ""
+msgstr "Esineen tilastot"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1518
 msgid "Map stats:"
@@ -1570,7 +1570,7 @@ msgstr "Hienosti meni! Napsauta 'Seuraava Taso' jatkaaksesi"
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Olet tällä hetkellä katsojana"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -1791,7 +1791,7 @@ msgstr "Hämähäkin hyökkäys"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
-msgstr ""
+msgstr "Verkotettu"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -1835,7 +1835,7 @@ msgstr "Vammaisuus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:89
 msgid "Disabled"
-msgstr ""
+msgstr "Kytketty pois"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:100
 msgid "Vengeance"
@@ -1989,15 +1989,15 @@ msgstr "Voima"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "Palaa"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Uudelleensyntymäsuoja"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Superaseet"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3043,12 +3043,12 @@ msgstr "^BG%s^F3 yhteys katkesi"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 potkaistiin idlattuaan %s sekuntia"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 siirrettiin osastolle^BG katsojat^F3 idlattuaan %s sekuntia"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid ""
@@ -3066,7 +3066,7 @@ msgstr "^BG%s^F3 potkaistiin jatkuvien oman joukkueen jäsenten tappamisesta"
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 on nyt^BG katsojatilassa"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3811,7 +3811,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:616
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1Sinua rangaistiin hyökkäämisestäsi joukkuekavereitasi vastaan!"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1Die camper!"
@@ -3848,7 +3848,7 @@ msgstr "^K1Nyt oli hiukan liian rapeaa!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1frägäsit itsesi!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -3998,22 +3998,22 @@ msgstr "^K1Katso mihin astut!"
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1Petturi! Kavalsit joukkuekaverisi ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:651
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1Petturi! Joukkuetapoit ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1Joukkuekaverisi petti sinut ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1Sinut joukkuetapettiin ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -4028,6 +4028,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1Lopeta sluibuilu!\n"
+"^BGSiirryt katsojahommiin ajassa ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
@@ -5706,7 +5708,7 @@ msgstr "Italia"
 
 #: qcsrc/menu/xonotic/credits.qc:227
 msgid "Japanese"
-msgstr ""
+msgstr "Japani"
 
 #: qcsrc/menu/xonotic/credits.qc:230
 msgid "Kazakh"
@@ -5856,6 +5858,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"Pelaajatilastot ovat kytketyt päälle vakiollisesti, voit muuttaa tämän "
+"asianhaaran Profiili -valikossa"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Save settings"
@@ -5945,7 +5949,7 @@ msgstr "Fontin skaalaus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Lihavoidun kirjasimen skaala:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
@@ -6335,7 +6339,7 @@ msgstr "edistymispalkki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
-msgstr ""
+msgstr "pinnoite"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
 msgid "Demo mode"
@@ -6343,7 +6347,7 @@ msgstr "Demo-tila"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
 msgid "Range:"
-msgstr ""
+msgstr "Säde:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
 msgid "Center panel"
@@ -7854,23 +7858,23 @@ msgstr "Toista osumaa merkitsevä ääni laukauksesi osuessa viholliseen"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr ""
+msgstr "SND^Korjattu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
-msgstr ""
+msgstr "Vähennä kallistusta enenevän vahingon mukaisesti"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
-msgstr ""
+msgstr "Vähennetään"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
-msgstr ""
+msgstr "Nosta kallistusta enenevän vahingon mukaisesti"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
-msgstr ""
+msgstr "Nostetaan"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
@@ -8396,19 +8400,19 @@ msgstr "Pehmennä tähtäimen efektejä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Perform hit tests for the crosshair"
-msgstr ""
+msgstr "Suorita osumatestejä tähtäimen suhteen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "Blur if obstructed by an obstacle"
-msgstr ""
+msgstr "Sumenna mikäli eteen tulee este"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid "Blur if obstructed by a teammate"
-msgstr ""
+msgstr "Sumenna mikäli joukkuekaveri tulee tielle"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
 msgid "Shrink if obstructed by a teammate"
-msgstr ""
+msgstr "Kutista mikäli joukkuekaveri tulee tielle"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Animate crosshair when hitting an enemy"
@@ -8730,10 +8734,12 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"Varoitus: mikäli tämä on kytketty päälle joukkuepeleissä voi joukkueesi väri "
+"ilmetä samana kuten vastapuolen väri"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Poislukien joukkuepelit"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
@@ -8741,11 +8747,11 @@ msgstr "Vain Kaksintaistelussa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Vain joukkuepeleissä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "Joukkuepeleissä sekä kaksintaisteluissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
@@ -10055,27 +10061,27 @@ msgstr "PART^OMG"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "PARTQUAL^Matala"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "PARTQUAL^Keskitasoa"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "PARTQUAL^Tavanomainen"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "PARTQUAL^Korkea"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "PARTQUAL^Huikea"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "PARTQUAL^Huippu"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -10091,19 +10097,19 @@ msgstr "Näytön tarkkuus"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "FADESPEED^Hidas"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "FADESPEED^Tavanomainen"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "FADESPEED^Nopea"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "FADESPEED^Välitön"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
