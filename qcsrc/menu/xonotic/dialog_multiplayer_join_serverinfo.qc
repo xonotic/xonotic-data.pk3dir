@@ -73,42 +73,43 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			pure_violations = stof(v);
 		}
 		else if(k == "S")
-        {
+		{
 			freeslots = stof(v);
-        }
+		}
 		else if(k == "F")
-        {
+		{
 			sflags = stof(v);
-        }
+		}
 		else if(k == "M")
-        {
+		{
 			modname = v;
-        }
-        else if(k == "T")
-        {
-            ToSSpecified = true;
-            string downloadurl = v;
-            if (downloadurl == "INVALID")
-            {
-                me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
-            }
-            else
-            {
-                int index = strstrofs(downloadurl, "|", 0);
-                while (index != -1)
-                {
-                    downloadurl = strcat(substring(downloadurl, 0, index), ":", substring(downloadurl, index+1, -1));
-                    index = strstrofs(downloadurl, "|", index);
-                }
-                me.ToSTab.loadToS(me.ToSTab, downloadurl);
-            }
-        }
+		}
+		else if(k == "T")
+		{
+			ToSSpecified = true;
+			string downloadurl = v;
+			LOG_INFOF("SERVERTOS DOWNLOADURL: %s", downloadurl);
+			if (downloadurl == "INVALID")
+			{
+				me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
+			}
+			else
+			{
+				int index = strstrofs(downloadurl, "|", 0);
+				while (index != -1)
+				{
+					downloadurl = strcat(substring(downloadurl, 0, index), ":", substring(downloadurl, index+1, -1));
+					index = strstrofs(downloadurl, "|", index);
+				}
+				me.ToSTab.loadToS(me.ToSTab, downloadurl);
+			}
+		}
 	}
 
-    if (!ToSSpecified)
-    {
-        me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
-    }
+	if (!ToSSpecified)
+	{
+		me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
+	}
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
 	if(modname == "")
