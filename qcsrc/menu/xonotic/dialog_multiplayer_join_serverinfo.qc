@@ -95,12 +95,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			}
 			else
 			{
-				int index = strstrofs(downloadurl, "|", 0);
-				while (index != -1)
-				{
-					downloadurl = strcat(substring(downloadurl, 0, index), ":", substring(downloadurl, index+1, -1));
-					index = strstrofs(downloadurl, "|", index);
-				}
+				downloadurl = strreplace("|", ":", downloadurl);
 				me.ToSTab.loadToS(me.ToSTab, downloadurl);
 			}
 		}

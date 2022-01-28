@@ -689,6 +689,23 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
+	{
+		if (sv_termsofservice_url_escaped)
+		{
+			strunzone(sv_termsofservice_url_escaped);
+		}
+		sv_termsofservice_url_escaped = strzone(strreplace(":", "|", autocvar_sv_termsofservice_url));
+	}
+	else
+	{
+		if (sv_termsofservice_url_escaped)
+		{
+			strunzone(sv_termsofservice_url_escaped);
+		}
+		sv_termsofservice_url_escaped = strzone("INVALID");
+	}
+
 	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
