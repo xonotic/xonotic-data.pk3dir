@@ -40,6 +40,7 @@ const float drop_speed_vertical_max = 0.9;
 
 float autocvar_g_br_revive_health = 0.25;
 float autocvar_g_br_bleeding_health = 0.5;
+float autocvar_g_br_bleeding_armor = 50;
 float autocvar_g_br_drop_damage = 0.5;
 float autocvar_g_br_drop_speed_max = 2;
 float autocvar_g_br_drop_speed_min = 1.25;
@@ -691,7 +692,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
     StatusEffects_removeall(frag_target, STATUSEFFECT_REMOVE_NORMAL);
 
     SetResource(frag_target, RES_HEALTH, start_health * max(autocvar_g_br_bleeding_health, 0));
-    SetResource(frag_target, RES_ARMOR, 0);
+    SetResource(frag_target, RES_ARMOR, max(autocvar_g_br_bleeding_armor, 0));
     Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_BR_DOWN_WAIT);
     STAT(BLEEDING, frag_target) = true;
 
@@ -805,7 +806,7 @@ MUTATOR_HOOKFUNCTION(br, GetResourceLimit)
             M_ARGV(2, float) *= max(autocvar_g_br_bleeding_health, 0);
             break;
         case RES_ARMOR:
-            M_ARGV(2, float) = 0;
+            M_ARGV(2, float) = max(autocvar_g_br_bleeding_armor, 0);
     }
 }
 
@@ -931,6 +932,7 @@ void br_Revive(entity player)
     }
     player.flags |= FL_PICKUPITEMS;
     SetResource(player, RES_HEALTH, start_health * max(autocvar_g_br_revive_health, 0));
+    SetResource(player, RES_ARMOR, 0);
 
     STAT(WEAPONS, player) = player.br_wepset_old;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
