@@ -602,6 +602,16 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
         }
     }
+
+    // injured players can't swim
+    if(STAT(BLEEDING, player)){
+        if(player.waterlevel >= WATERLEVEL_SWIMMING)
+        {
+            CS(player).movement.z = -60; // drift towards bottom
+            player.v_angle.x = 0;
+            player.com_in_jump = false;
+        }
+    }
 }
 
 MUTATOR_HOOKFUNCTION(br, Damage_Calculate)
