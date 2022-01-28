@@ -39,6 +39,14 @@ MUTATOR_HOOKFUNCTION(cl_br, PM_Physics)
     if(STAT(DROP) == DROP_FALLING)
         ITEMS_STAT(csqcplayer) |= IT_USING_JETPACK;
 
+    // injured players can't swim
+    if(STAT(BLEEDING)){
+        if(csqcplayer.waterlevel >= WATERLEVEL_SWIMMING)
+        {
+            csqcplayer.com_in_jump = false;
+        }
+    }
+
     return (STAT(DROP) != DROP_LANDED);
 }
 
