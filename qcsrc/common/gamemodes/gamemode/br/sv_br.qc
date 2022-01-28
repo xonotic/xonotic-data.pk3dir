@@ -20,6 +20,7 @@ entity dropship;
 bool squads_colored = false;
 
 const float br_drop_time_secs = 1;
+const float drop_speed_vertical_max = 0.9;
 .bool br_ring_warned;
 .float br_drop_time;
 .float br_force_drop_distance;
@@ -314,17 +315,24 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
         else{
             if(!(IN_SQUAD(player) && player.br_squad.br_squad_drop_leader))
             {
-                const float inital_dropangle = 60; // 0 = straight down
                 player.effects &= ~EF_NODRAW;
                 Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
                 STAT(DROP, player) = DROP_FALLING;
                 player.br_drop_detached = 0;
-                float maxdropspeed = PHYS_MAXAIRSPEED(player) * max(autocvar_g_br_drop_speed_max, 0); // no maxspeed_mod available here
+                float mindropspeed = PHYS_MAXAIRSPEED(player) * max(autocvar_g_br_drop_speed_min, 0); // no maxspeed_mod available here
+                float maxdropspeed_ratio = drop_speed_vertical_max; // moving straight down is glitchy
+                float mindropspeed_ratio = bound(0, autocvar_g_br_drop_speed_vertical_min, drop_speed_vertical_max);
+                float pitch_view = max(player.v_angle.x, 0);
+
+                // pitch_view angle needs to be between 0 and 90 degrees
+                if(pitch_view > 90)
+                    pitch_view = 180 - pitch_view;
+
                 player.velocity.x = cos(player.angles.y * DEG2RAD);
                 player.velocity.y = sin(player.angles.y * DEG2RAD);
-                player.velocity.z = tan((inital_dropangle - 90) * DEG2RAD);
+                player.velocity.z = -tan(bound(asin(mindropspeed_ratio), pitch_view * DEG2RAD, asin(maxdropspeed_ratio)));
 
-                player.velocity = normalize(player.velocity) * maxdropspeed;
+                player.velocity = normalize(player.velocity) * mindropspeed;
 
                 player.angles.x = br_CalculatePlayerDropAngle(player) - 90;
                 player.angles.y = vectoangles(vec2(player.velocity)).y + 180;
@@ -480,47 +488,38 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             bool player_is_drop_leader = has_drop_leader && (player == player.br_squad.br_squad_drop_leader);
             if(player_is_drop_leader || !has_drop_leader)
             {
-                const float vertical_max = 0.9;
                 float maxairspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1);
                 float maxdropspeed = maxairspeed * max(autocvar_g_br_drop_speed_max, 0);
                 float mindropspeed = maxairspeed * max(autocvar_g_br_drop_speed_min, 0);
-                float maxdropspeed_ratio = vertical_max; // moving straight down is glitchy
-                float mindropspeed_ratio = bound(0, autocvar_g_br_drop_speed_vertical_min, vertical_max);
+                float maxdropspeed_ratio = drop_speed_vertical_max; // moving straight down is glitchy
+                float mindropspeed_ratio = bound(0, autocvar_g_br_drop_speed_vertical_min, drop_speed_vertical_max);
                 float accel_dive = max(autocvar_g_br_drop_accel_dive, 0);
                 float accel_turn = max(autocvar_g_br_drop_accel_turn, 0);
                 float dropspeed = vlen(player.velocity);
                 float dropspeed_xy = vlen(vec2(player.velocity));
                 float pitch_current = br_CalculatePlayerDropAngle(player);
-                float pitch_view = player.v_angle.x;
+                float pitch_view = max(player.v_angle.x, 0);
 
-                // pitch_view angle needs to be between -90 and 90 degrees
+                // pitch_view angle needs to be between 0 and 90 degrees
                 if(pitch_view > 90)
                     pitch_view = 180 - pitch_view;
-                if(pitch_view < -90)
-                    pitch_view = -180 - pitch_view;
 
                 float pitch_diff = pitch_current - pitch_view;
-                float pitch_ratio = 0;
+                float pitch_ratio_wish = 0;
 
                 // calculate how much the player wants to change pitch (ratio is at least 0.1)
                 // ratio is between -1 (looking straight down) and +1 (looking straight ahead or up)
                 if((pitch_diff < 0) && (pitch_current < 90))
-                {
-                    float pitch_diff_max = 90 - pitch_current;
-                    pitch_ratio = bound(-1, sin(max(pitch_diff, -pitch_diff_max) * 90 / pitch_diff_max * DEG2RAD), -0.1);
-                }
+                    pitch_ratio_wish = bound(-1, sin(pitch_diff / (90 - pitch_current) * M_PI_2), -0.1);
                 else if((pitch_diff > 0) && (pitch_current > 0))
-                {
-                    float pitch_diff_max = pitch_current;
-                    pitch_ratio = bound(0.1, sin(min(pitch_diff, pitch_diff_max) * 90 / pitch_diff_max * DEG2RAD), 1);
-                }
+                    pitch_ratio_wish = bound(0.1, sin(pitch_diff / pitch_current * M_PI_2), 1);
 
                 makevectors(player.v_angle);
                 // horizontal wishvel as usual
                 vector wishvel = v_forward * CS(player).movement.x + v_right * CS(player).movement.y;
                 wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspeed);
                 // vertical wishvel using forward movement and the previously calculated ratio
-                wishvel.z = pitch_ratio * bound(0, CS(player).movement.x / maxairspeed, 1);
+                wishvel.z = pitch_ratio_wish * bound(0, CS(player).movement.x / maxairspeed, 1);
                 // apply turn acceleration to wishvel
                 wishvel.x *= accel_turn;
                 wishvel.y *= accel_turn;
@@ -533,11 +532,11 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
                     player.velocity += (eX * cos(player.angles.y * DEG2RAD) + eY * sin(player.angles.y * DEG2RAD)) * sqrt(1 - pow(maxdropspeed_ratio, 2));
 
                 // modify mindropspeed_ratio and maxdropspeed_ratio so that the player does not rotate beyond the view angle
-                float vpitch_ratio = sin(pitch_view * DEG2RAD);
-                if(pitch_ratio > 0)
-                    mindropspeed_ratio = bound(mindropspeed_ratio, vpitch_ratio, maxdropspeed_ratio);
-                else if(pitch_ratio < 0)
-                    maxdropspeed_ratio = bound(mindropspeed_ratio, vpitch_ratio, maxdropspeed_ratio);
+                float pitch_ratio_view = sin(pitch_view * DEG2RAD);
+                if(pitch_ratio_wish > 0)
+                    mindropspeed_ratio = bound(mindropspeed_ratio, pitch_ratio_view, maxdropspeed_ratio);
+                else if(pitch_ratio_wish < 0)
+                    maxdropspeed_ratio = bound(mindropspeed_ratio, pitch_ratio_view, maxdropspeed_ratio);
 
                 // constrain to vertical min/maxdropspeed
                 if(player.velocity.z > -mindropspeed_ratio)
@@ -562,7 +561,7 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
                         it.angles = player.angles;
                     });
                 }
-                else if((player.br_drop_detached != 2) && IN_SQUAD(player) && !has_drop_leader)
+                else if((player.br_drop_detached != 2) && IN_SQUAD(player))
                 {
                     player.br_drop_detached = 2;
                     Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
