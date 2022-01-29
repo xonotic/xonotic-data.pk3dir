@@ -148,7 +148,15 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_DecreaseAmmo(thiswep, actor, ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)), weaponentity);
 }
 
-void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
+void W_RocketMinsta_Laser_Damage(entity this, entity directhitentity)
+{
+	int laser_count = max(1, this.rm_laser_count);
+	float laser_force = autocvar_g_rm_laser_force / laser_count;
+	float laser_damage = autocvar_g_rm_laser_damage / laser_count;
+	RadiusDamage(this, this.realowner, laser_damage, laser_damage, autocvar_g_rm_laser_radius, NULL, NULL, laser_force, this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+}
+
+void W_RocketMinsta_Laser_Explode(entity this, entity directhitentity)
 {
 	if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
@@ -159,7 +167,7 @@ void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+	W_RocketMinsta_Laser_Damage(this, directhitentity);
 	delete(this);
 }
 
@@ -172,7 +180,7 @@ void W_RocketMinsta_Laser_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 	//W_RocketMinsta_Laser_Explode ();
-	RadiusDamage(this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, this.weaponentity_fld, toucher);
+	W_RocketMinsta_Laser_Damage(this, toucher);
 	delete(this);
 }
 
@@ -205,9 +213,7 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
         proj.weaponentity_fld = weaponentity;
         setorigin(proj, w_shotorg);
 
-		proj.rm_force = autocvar_g_rm_laser_force / total;
-		proj.rm_damage = autocvar_g_rm_laser_damage / total;
-		proj.rm_edmg = proj.rm_damage;
+		proj.rm_laser_count = total;
 
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
@@ -258,9 +264,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
         proj.weaponentity_fld = weaponentity;
         setorigin(proj, w_shotorg);
 
-		proj.rm_force = autocvar_g_rm_laser_force / total;
-		proj.rm_damage = autocvar_g_rm_laser_damage / total;
-		proj.rm_edmg = proj.rm_damage;
+		proj.rm_laser_count = total;
 
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
