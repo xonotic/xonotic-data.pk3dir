@@ -317,6 +317,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
             if(!(IN_SQUAD(player) && player.br_squad.br_squad_drop_leader))
             {
                 player.effects &= ~EF_NODRAW;
+                player.flags &= ~FL_NOTARGET;
                 Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
                 STAT(DROP, player) = DROP_FALLING;
                 player.br_drop_detached = 0;
@@ -353,6 +354,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
 
                     FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
                         it.effects &= ~EF_NODRAW;
+                        it.flags &= ~FL_NOTARGET;
                         Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_BR_DROP);
                         STAT(DROP, it) = DROP_FALLING;
                         it.br_drop_detached = 0;
@@ -656,6 +658,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
     if(STAT(DROP, frag_target) == DROP_TRANSPORT)
     {
         frag_target.effects &= ~EF_NODRAW;
+        frag_target.flags &= ~FL_NOTARGET;
         Kill_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CPID_BR_DROP);
     }
 
@@ -854,6 +857,20 @@ MUTATOR_HOOKFUNCTION(br, BotShouldAttack)
     entity target = M_ARGV(1, entity);
 
     return SAME_SQUAD(bot, target) || (STAT(DROP, target) == DROP_TRANSPORT);
+}
+
+MUTATOR_HOOKFUNCTION(br, TurretValidateTarget)
+{
+    entity turret = M_ARGV(0, entity);
+    entity target = M_ARGV(1, entity);
+
+    if(SAME_SQUAD(turret, target) || (STAT(DROP, target) == DROP_TRANSPORT))
+    {
+        M_ARGV(3, float) = -1;
+        return true;
+    }
+
+    return false;
 }
 
 MUTATOR_HOOKFUNCTION(br, AccuracyTargetValid)
@@ -1084,6 +1101,7 @@ void br_RoundStart(){
         it.velocity = '0 0 0';
         set_movetype(it, MOVETYPE_FLY_WORLDONLY);
         it.flags &= ~FL_PICKUPITEMS;
+        it.flags |= FL_NOTARGET;
         it.dphitcontentsmask &= ~DPCONTENTS_BODY;
         it.effects |= EF_NODRAW;
         it.br_drop_instructions = false;
