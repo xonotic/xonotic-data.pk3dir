@@ -1099,7 +1099,7 @@ void br_RoundStart(){
         it.angles = vectoangles(dropship_path_direction) + '45 0 0';
         it.fixangle = true;
         it.velocity = '0 0 0';
-        set_movetype(it, MOVETYPE_FLY_WORLDONLY);
+        set_movetype(it, MOVETYPE_FLY);
         it.flags &= ~FL_PICKUPITEMS;
         it.flags |= FL_NOTARGET;
         it.dphitcontentsmask &= ~DPCONTENTS_BODY;
