@@ -691,19 +691,11 @@ spawnfunc(worldspawn)
 
 	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
 	{
-		if (sv_termsofservice_url_escaped)
-		{
-			strunzone(sv_termsofservice_url_escaped);
-		}
-		sv_termsofservice_url_escaped = strzone(strreplace(":", "|", autocvar_sv_termsofservice_url));
+		strcpy(sv_termsofservice_url_escaped, strreplace(":", "|", autocvar_sv_termsofservice_url));
 	}
 	else
 	{
-		if (sv_termsofservice_url_escaped)
-		{
-			strunzone(sv_termsofservice_url_escaped);
-		}
-		sv_termsofservice_url_escaped = strzone("INVALID");
+		strcpy(sv_termsofservice_url_escaped, "INVALID");
 	}
 
 	bool wantrestart = false;
