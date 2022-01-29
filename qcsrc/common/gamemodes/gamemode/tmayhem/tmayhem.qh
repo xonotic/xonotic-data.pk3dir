@@ -43,7 +43,7 @@ CLASS(tmayhem, Gametype)
     METHOD(tmayhem, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
     {
         TC(Gametype, this);
-        returns(menu, _("Frag limit:"),     5,  100,  5, "g_tmayhem_fraglimit",         "g_tmayhem_teams_override",         _("How many frags worth of score is needed before the match will end"));
+        returns(menu, _("Frag limit:"),     5,  100,  5, "fraglimit_override",         "g_tmayhem_teams_override",         _("How many frags worth of score is needed before the match will end"));
     }
     ATTRIB(tmayhem, m_legacydefaults, string, "50 20 2 0");
 ENDCLASS(tmayhem)

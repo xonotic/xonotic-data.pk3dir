@@ -4,7 +4,6 @@ float autocvar_g_tmayhem_fraglimit;
 float autocvar_g_tmayhem_visual_score_limit;
 float autocvar_g_tmayhem_score_leadlimit;
 bool autocvar_g_tmayhem_team_spawns;
-float tmayhempointmultiplier;
 
 // TODO? rename to teammayhem? requires checking alias and other string lengths
 int autocvar_g_tmayhem_teams;
@@ -47,7 +46,7 @@ void tmayhem_SpawnTeam (string teamname, int teamcolor)
 void tmayhem_DelayedInit(entity this)
 {
 	// if no teams are found, spawn defaults
-	if(find(NULL, classname, "tmayhem_team") == NULL)
+	if (find(NULL, classname, "tmayhem_team") == NULL)
 	{
 		LOG_TRACE("No \"tmayhem_team\" entities found on this map, creating them anyway.");
 
@@ -68,13 +67,14 @@ void tmayhem_DelayedInit(entity this)
 
 void tmayhem_Initialize()
 {
-	if(autocvar_g_tmayhem_visual_score_limit != 0 && autocvar_g_tmayhem_fraglimit != 0)
-		tmayhempointmultiplier = autocvar_g_tmayhem_visual_score_limit / autocvar_g_tmayhem_fraglimit;
-
 	GameRules_teams(true);
 	GameRules_spawning_teams(autocvar_g_tmayhem_team_spawns);
-	GameRules_limit_score(autocvar_g_tmayhem_visual_score_limit);
 	GameRules_limit_lead(autocvar_g_tmayhem_score_leadlimit);
+
+	if (autocvar_fraglimit_override != 0)
+		GameRules_limit_score(autocvar_g_tmayhem_visual_score_limit);
+	else
+		GameRules_limit_score(9999);
 
 	InitializeEntity(NULL, tmayhem_DelayedInit, INITPRIO_GAMETYPE);
 }
@@ -94,7 +94,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	if(!cvar("g_use_ammunition") || autocvar_g_tmayhem_unlimited_ammo)
+	if (!cvar("g_use_ammunition") || autocvar_g_tmayhem_unlimited_ammo)
 		start_items |= IT_UNLIMITED_AMMO;
 
 	start_health       = warmup_start_health       = autocvar_g_tmayhem_start_health;
@@ -110,7 +110,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 //this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now until PlayerRegen is changed
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerRegen)
 {
-	if(autocvar_g_tmayhem_regenerate)
+	if (autocvar_g_tmayhem_regenerate)
 		return false;
 	return true;
 }
@@ -178,7 +178,10 @@ MUTATOR_HOOKFUNCTION(tmayhem, Damage_Calculate)
 	M_ARGV(5, float) = frag_mirrordamage;
 }
 
-void TeamMayhemCalculatePlayerScore(entity scorer){
+void TeamMayhemCalculatePlayerScore(entity scorer)
+{
+	if (autocvar_fraglimit_override > 0) autocvar_g_tmayhem_fraglimit = autocvar_fraglimit_override;
+	
 	switch (autocvar_g_tmayhem_scoringmethod)
 	{
 		default:

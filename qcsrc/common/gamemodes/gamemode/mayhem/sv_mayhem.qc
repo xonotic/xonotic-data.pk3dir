@@ -3,7 +3,6 @@
 
 float autocvar_g_mayhem_fraglimit;
 float autocvar_g_mayhem_visual_score_limit;
-float mayhempointmultiplier;
 
 bool autocvar_g_mayhem_regenerate;
 string autocvar_g_mayhem_weaponarena;
@@ -35,10 +34,10 @@ void mayhem_DelayedInit(entity this)
 
 void mayhem_Initialize()
 {
-	if(autocvar_g_mayhem_visual_score_limit > 0 && autocvar_g_mayhem_fraglimit > 0)
-		mayhempointmultiplier = autocvar_g_mayhem_visual_score_limit / autocvar_g_mayhem_fraglimit;
-
-	GameRules_limit_score(autocvar_g_mayhem_visual_score_limit);
+	if (autocvar_fraglimit_override != 0)
+		GameRules_limit_score(autocvar_g_mayhem_visual_score_limit);
+	else
+		GameRules_limit_score(9999);
 
 	InitializeEntity(NULL, mayhem_DelayedInit, INITPRIO_GAMETYPE);
 }
@@ -52,7 +51,7 @@ MUTATOR_HOOKFUNCTION(mayhem, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(mayhem, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	if(!cvar("g_use_ammunition") || autocvar_g_mayhem_unlimited_ammo)
+	if (!cvar("g_use_ammunition") || autocvar_g_mayhem_unlimited_ammo)
 		start_items |= IT_UNLIMITED_AMMO;
 
 	start_health       = warmup_start_health       = autocvar_g_mayhem_start_health;
@@ -68,7 +67,7 @@ MUTATOR_HOOKFUNCTION(mayhem, SetStartItems)
 //this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now
 MUTATOR_HOOKFUNCTION(mayhem, PlayerRegen)
 {
-	if(autocvar_g_mayhem_regenerate)
+	if (autocvar_g_mayhem_regenerate)
 		return false;
 	return true;
 }
@@ -130,7 +129,10 @@ MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
 	M_ARGV(4, float) = frag_damage;
 }
 
-void FFAMayhemCalculatePlayerScore(entity scorer){
+void FFAMayhemCalculatePlayerScore(entity scorer)
+{
+	if (autocvar_fraglimit_override > 0) autocvar_g_mayhem_fraglimit = autocvar_fraglimit_override;
+	
 	switch (autocvar_g_mayhem_scoringmethod)
 	{
 		default:
