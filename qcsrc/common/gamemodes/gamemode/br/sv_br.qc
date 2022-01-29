@@ -12,6 +12,8 @@ float br_CalculatePlayerDropAngle(entity this);
 void br_LastPlayerForSquad_Notify(entity squad);
 void br_RemovePlayer(entity player);
 void br_Revive(entity player);
+void br_Start();
+bool br_CheckPlayers();
 int br_WinningCondition();
 
 entity ring;
@@ -21,6 +23,7 @@ bool squads_colored = false;
 
 const float br_drop_time_secs = 1;
 const float drop_speed_vertical_max = 0.9;
+bool br_started = false;
 .bool br_ring_warned;
 .float br_drop_time;
 .float br_force_drop_distance;
@@ -83,6 +86,9 @@ MUTATOR_HOOKFUNCTION(br, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(br, CheckRules_World)
 {
+    if(!br_started && !warmup_stage && (time > game_starttime) && br_CheckPlayers())
+        br_Start();
+
     M_ARGV(0, float) = br_WinningCondition();
     return true;
 }
@@ -123,7 +129,7 @@ MUTATOR_HOOKFUNCTION(br, PutClientInServer)
 {
     entity player = M_ARGV(0, entity);
 
-    if (!(round_handler_IsActive() && round_handler_IsRoundStarted()))
+    if (!br_started)
         return false;
 
     if (IN_SQUAD(player))
@@ -214,7 +220,7 @@ MUTATOR_HOOKFUNCTION(br, SpectatePrev)
 
 MUTATOR_HOOKFUNCTION(br, ForbidSpawn)
 {
-    return (round_handler_IsActive() && round_handler_IsRoundStarted());
+    return br_started;
 }
 
 MUTATOR_HOOKFUNCTION(br, SetStartItems)
@@ -751,9 +757,11 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(br, PlayerDied)
 {
     entity player = M_ARGV(0, entity);
-    if(round_handler_IsActive() && round_handler_IsRoundStarted())
+    if(br_started)
+    {
         br_LastPlayerForSquad_Notify(player.br_squad);
-    br_SquadUpdateInfo();
+        br_SquadUpdateInfo();
+    }
 }
 
 MUTATOR_HOOKFUNCTION(br, ClientObituary)
@@ -899,7 +907,7 @@ MUTATOR_HOOKFUNCTION(br, ClientKill)
 {
     entity player = M_ARGV(0, entity);
 
-    if(round_handler_IsActive() && round_handler_IsRoundStarted())
+    if(br_started)
     {
         // no forfeiting once the game started
         Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_BR_FORFEIT);
@@ -913,7 +921,7 @@ MUTATOR_HOOKFUNCTION(br, ClientCommand_Spectate)
 {
     entity player = M_ARGV(0, entity);
 
-    if(round_handler_IsActive() && round_handler_IsRoundStarted())
+    if(br_started)
     {
         // no forfeiting once the game started
         Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_BR_FORFEIT);
@@ -983,7 +991,7 @@ int br_WinningCondition()
 {
     int total_squads = br_SquadUpdateInfo();
 
-    if ((total_squads > 1) || !(round_handler_IsActive() && round_handler_IsRoundStarted()))
+    if ((total_squads > 1) || !br_started)
         return WINNING_NEVER;
 
     entity winner_squad = NULL;
@@ -1000,11 +1008,6 @@ int br_WinningCondition()
 bool br_isEliminated(entity e)
 {
     return (IN_SQUAD(e) && (IS_DEAD(e) || IS_SPEC(e) || IS_OBSERVER(e)));
-}
-
-bool br_CheckWinner()
-{
-    return false;
 }
 
 bool br_CheckPlayers()
@@ -1030,7 +1033,7 @@ bool br_CheckPlayers()
     return false;
 }
 
-void br_RoundStart(){
+void br_Start(){
     ring = ring_initialize();
 
     dropship = dropship_initialize();
@@ -1143,15 +1146,14 @@ void br_RoundStart(){
         else
             it.br_force_drop_distance = min_distance + random() * max(dropship_path_length - (min_distance + dropship_speed * br_drop_time_secs), 0);
     });
+
+    br_started = true;
 }
 
 void br_Initialize()
 {
+    br_started = false;
     squads_colored = autocvar_g_br_squad_colors;
-
-    // TODO: remove round handler
-    round_handler_Spawn(br_CheckPlayers, br_CheckWinner, br_RoundStart);
-    round_handler_Init(5, 0, 0); // no warmup or timelimit in battle royale
 
     EliminatedPlayers_Init(br_isEliminated);
 }
