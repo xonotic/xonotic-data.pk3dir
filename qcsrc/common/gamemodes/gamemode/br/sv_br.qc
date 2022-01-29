@@ -1054,6 +1054,9 @@ void br_RoundStart(){
         GameRules_scoring_add(it, BR_SQUAD, -GameRules_scoring_add(it, BR_SQUAD, 0));
         GameRules_scoring_add(it, BR_REVIVALS, -GameRules_scoring_add(it, BR_REVIVALS, 0));
 
+        if(it.vehicle)
+            vehicles_exit(it.vehicle, VHEF_RELEASE);
+
         RemoveGrapplingHooks(it);
         StatusEffects_removeall(it, STATUSEFFECT_REMOVE_CLEAR);
 
