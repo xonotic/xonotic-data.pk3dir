@@ -31,10 +31,12 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		msgin = formatmessage(source, msgin);
 
 	string colorstr;
-	if (!(IS_PLAYER(source) || source.caplayer))
+	if (!(IS_PLAYER(source) || source.caplayer || IN_SQUAD(source)))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
+	else if(IN_SQUAD(source))
+		colorstr = "^7";
 	else
 	{
 		colorstr = "";
@@ -224,7 +226,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer) && !game_stopped
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer || IN_SQUAD(source)) && !game_stopped
 		&& (teamsay || CHAT_NOSPECTATORS()))
 	{
 		teamsay = -1; // spectators
@@ -258,8 +260,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
-	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer) && !game_stopped
-		&& (IS_PLAYER(privatesay) || privatesay.caplayer) && CHAT_NOSPECTATORS())
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer || IN_SQUAD(source)) && !game_stopped
+		&& (IS_PLAYER(privatesay) || privatesay.caplayer || IN_SQUAD(privatesay)) && CHAT_NOSPECTATORS())
 	{
 		ret = -1; // just hide the message completely
 	}
@@ -304,7 +306,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer || IN_SQUAD(it)) && IS_REAL_CLIENT(it) && it != source && (((it.team == source.team) && !IN_SQUAD(source)) || SAME_SQUAD(it, source)) && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -315,7 +317,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer || IN_SQUAD(it)) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));

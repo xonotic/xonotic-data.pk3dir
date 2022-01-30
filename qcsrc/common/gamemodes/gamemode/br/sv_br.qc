@@ -6,7 +6,9 @@
 #include <server/resources.qh>
 #include <common/mutators/base.qh>
 
-#define BR_KILLS_INSTANTLY(pl, dt) (!IN_SQUAD((pl)) || (br_SquadFindLastAlive((pl).br_squad, true) == (pl)) || ((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_KILL.m_id) || ((dt) == DEATH_TEAMCHANGE.m_id) || ((dt) == DEATH_AUTOTEAMCHANGE.m_id))
+#define BR_KILLS_INSTANTLY(pl, dt) \
+    (!IN_SQUAD((pl)) || (br_SquadFindLastAlive((pl).br_squad, true) == (pl)) || ((dt) == DEATH_HURTTRIGGER.m_id) \
+    || ((dt) == DEATH_KILL.m_id) || ((dt) == DEATH_TEAMCHANGE.m_id) || ((dt) == DEATH_AUTOTEAMCHANGE.m_id))
 
 float br_CalculatePlayerDropAngle(entity this);
 void br_LastPlayerForSquad_Notify(entity squad);
@@ -734,7 +736,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
     }
     STAT(WEAPONS, frag_target) = '0 0 0';
 
-    WaypointSprite_Spawn(WP_BRBleeding, 0, 0, frag_target, '0 0 64', NULL, 0, frag_target, waypointsprite_attached, true, RADARICON_WAYPOINT).br_squad = frag_target.br_squad;
+    WaypointSprite_Spawn(WP_BRBleeding, 0, 0, frag_target, '0 0 64', NULL, 0, frag_target, waypointsprite_attached, true, RADARICON_WAYPOINT);
 
     if(frag_attacker == frag_target || !frag_attacker || ITEM_DAMAGE_NEEDKILL(frag_deathtype))
     {
@@ -896,10 +898,13 @@ MUTATOR_HOOKFUNCTION(br, CustomizeWaypoint)
     entity wp = M_ARGV(0, entity);
     entity player = M_ARGV(1, entity);
 
+    if(wp.owner == NULL)
+        return false;
+
     if((wp == wp.owner.br_allywaypoint) && (vdist(wp.owner.origin - player.origin, <, autocvar_g_br_squad_waypoint_distance) || STAT(BLEEDING, wp.owner)))
         return true;
 
-    if(!IS_PLAYER(player) || DIFF_SQUAD(wp, player))
+    if(!IS_PLAYER(player) || DIFF_SQUAD(wp.owner, player))
         return true;
 }
 
@@ -1115,7 +1120,7 @@ void br_Start(){
         it.br_drop_launch = 0;
         UNSET_ONGROUND(it); // otherwise this isn't unset if the player drops in the same frame
 
-        WaypointSprite_Spawn(WP_BRAlly, 0, 0, it, '0 0 64', NULL, 0, it, br_allywaypoint, true, RADARICON_WAYPOINT).br_squad = it.br_squad;
+        WaypointSprite_Spawn(WP_BRAlly, 0, 0, it, '0 0 64', NULL, 0, it, br_allywaypoint, true, RADARICON_WAYPOINT);
     });
 
     squads_colored = autocvar_g_br_squad_colors;
