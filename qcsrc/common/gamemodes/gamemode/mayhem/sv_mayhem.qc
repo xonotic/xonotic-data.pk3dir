@@ -5,6 +5,7 @@ float autocvar_g_mayhem_fraglimit;
 float autocvar_g_mayhem_visual_score_limit;
 
 bool autocvar_g_mayhem_regenerate;
+bool autocvar_g_mayhem_rot;
 string autocvar_g_mayhem_weaponarena;
 bool autocvar_g_mayhem_powerups;
 bool autocvar_g_mayhem_selfdamage;
@@ -64,12 +65,13 @@ MUTATOR_HOOKFUNCTION(mayhem, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_mayhem_start_ammo_fuel;
 }
 
-//this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now
 MUTATOR_HOOKFUNCTION(mayhem, PlayerRegen)
 {
-	if (autocvar_g_mayhem_regenerate)
-		return false;
-	return true;
+	if(!autocvar_g_mayhem_regenerate)
+		M_ARGV(2, float) = 0;
+	if(!autocvar_g_mayhem_rot)
+		M_ARGV(3, float) = 0;
+	return (!autocvar_g_mayhem_regenerate && !autocvar_g_mayhem_rot);
 }
 
 MUTATOR_HOOKFUNCTION(mayhem, ForbidThrowCurrentWeapon)

@@ -10,6 +10,7 @@ int autocvar_g_tmayhem_teams;
 int autocvar_g_tmayhem_teams_override;
 
 bool autocvar_g_tmayhem_regenerate;
+bool autocvar_g_tmayhem_rot;
 string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
@@ -107,12 +108,13 @@ MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_tmayhem_start_ammo_fuel;
 }
 
-//this hook also enables rotting, as players spawn with more hp and armor than what default rot limits are set to this is a bad idea as of now until PlayerRegen is changed
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerRegen)
 {
-	if (autocvar_g_tmayhem_regenerate)
-		return false;
-	return true;
+	if(!autocvar_g_tmayhem_regenerate)
+		M_ARGV(2, float) = 0;
+	if(!autocvar_g_tmayhem_rot)
+		M_ARGV(3, float) = 0;
+	return (!autocvar_g_tmayhem_regenerate && !autocvar_g_tmayhem_rot);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, ForbidThrowCurrentWeapon)
