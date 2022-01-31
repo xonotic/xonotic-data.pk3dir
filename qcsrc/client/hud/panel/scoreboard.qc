@@ -664,8 +664,10 @@ string Scoreboard_GetName(entity pl)
 			sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
 		}
 	}
-	
-	return entcs_GetName(pl.sv_entnum);
+	if(entcs_GetRank(pl.sv_entnum) != "")
+		return strcat(entcs_GetRank(pl.sv_entnum), "^7 ", entcs_GetName(pl.sv_entnum));
+	else
+		return entcs_GetName(pl.sv_entnum);
 }
 
 //LegendGuard adds GetCountrycode function 05-04-2021

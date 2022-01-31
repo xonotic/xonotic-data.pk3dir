@@ -21,14 +21,16 @@ void HUD_SpectHUD_Export(int fh)
 void HUD_SpectHUD_drawCurrentName(vector pos)
 {
 	vector tmp;
+	string s;
 	
 	tmp = pos;
-	string s = entcs_GetName(current_player);
+	
+	s = entcs_GetName(current_player);
 	tmp.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
 	drawcolorcodedstring(tmp, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
-	
+
 	tmp = pos;
-	s = "Spectating";
+	s = (entcs_GetRank(current_player) != "" ? entcs_GetRank(current_player) : "Spectating");
 	tmp.x -= stringwidth_colors(s, hud_fontsize) / 2;
 	tmp.y -= hud_fontsize.y;
 	drawcolorcodedstring(tmp, s, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -107,7 +109,13 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		}
 		
 		// Get player's name
-		playername = textShortenToWidth(entcs_GetName(pl.sv_entnum), line_sz.x * 0.8, hud_fontsize, stringwidth_colors);
+		string playername;
+		if(entcs_GetRank(pl.sv_entnum) != "")
+			playername = strcat(entcs_GetRank(pl.sv_entnum), "^7 ", entcs_GetName(pl.sv_entnum));
+		else
+			playername = entcs_GetName(pl.sv_entnum);
+
+		playername = textShortenToWidth(playername, line_sz.x * 0.8, hud_fontsize, stringwidth_colors);
 		
 		// Draw health and name
 		drawfill(pos, line_sz, rgb * 0.7, a * 0.3, DRAWFLAG_NORMAL);
