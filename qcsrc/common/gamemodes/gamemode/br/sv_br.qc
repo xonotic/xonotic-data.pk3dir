@@ -8,7 +8,8 @@
 
 #define BR_KILLS_INSTANTLY(pl, dt) \
     (!IN_SQUAD((pl)) || (br_SquadFindLastAlive((pl).br_squad, true) == (pl)) || ((dt) == DEATH_HURTTRIGGER.m_id) \
-    || ((dt) == DEATH_KILL.m_id) || ((dt) == DEATH_TEAMCHANGE.m_id) || ((dt) == DEATH_AUTOTEAMCHANGE.m_id))
+    || ((dt) == DEATH_KILL.m_id) || ((dt) == DEATH_TEAMCHANGE.m_id) || ((dt) == DEATH_AUTOTEAMCHANGE.m_id) \
+    || DEATH_ISWEAPON(dt, WEP_VAPORIZER))
 
 float br_CalculatePlayerDropAngle(entity this);
 void br_LastPlayerForSquad_Notify(entity squad);
@@ -18,7 +19,6 @@ void br_Start();
 bool br_CheckPlayers();
 int br_WinningCondition();
 
-entity ring;
 entity dropship;
 
 bool squads_colored = false;
@@ -32,6 +32,7 @@ bool br_started = false;
 .int br_drop_launch;
 .int br_drop_detached;
 .bool br_drop_instructions;
+.float br_ring_damage_time;
 
 .entity br_bleeding_inflictor;
 .entity br_bleeding_attacker;
@@ -54,7 +55,6 @@ bool autocvar_g_br_squad_colors = true;
 float autocvar_g_br_drop_accel_dive = 50;
 float autocvar_g_br_drop_accel_turn = 600;
 bool autocvar_g_br_startweapons = false;
-bool autocvar_g_br_ring_exitvehicle = false;
 float autocvar_g_br_squad_waypoint_distance = 1500;
 
 MUTATOR_HOOKFUNCTION(br, reset_map_global)
@@ -62,7 +62,8 @@ MUTATOR_HOOKFUNCTION(br, reset_map_global)
     dropship_path_length = 0; // this should kill the dropship
     dropship_path_direction = '0 0 0';
 
-    delete(ring);
+    if(ring)
+        delete(ring);
     ring = dropship = NULL;
 }
 
@@ -73,9 +74,12 @@ MUTATOR_HOOKFUNCTION(br, reset_map_players)
         GameRules_scoring_add(it, BR_SQUAD, -GameRules_scoring_add(it, BR_SQUAD, 0));
         GameRules_scoring_add(it, BR_REVIVALS, -GameRules_scoring_add(it, BR_REVIVALS, 0));
 
+        STAT(DROP, it) = DROP_LANDED;
+        STAT(BLEEDING, it) = false;
+
         br_RemovePlayer(it);
 
-        it.br_wepset_old = '0 0 0';
+        it.br_wepset_old = start_weapons;
         for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
         {
             it.br_weapon_prev[slot] = WEP_Null;
@@ -84,6 +88,7 @@ MUTATOR_HOOKFUNCTION(br, reset_map_players)
     });
 
     br_SquadUpdateInfo();
+    return true;
 }
 
 MUTATOR_HOOKFUNCTION(br, CheckRules_World)
@@ -92,6 +97,12 @@ MUTATOR_HOOKFUNCTION(br, CheckRules_World)
         br_Start();
 
     M_ARGV(0, float) = br_WinningCondition();
+    return true;
+}
+
+MUTATOR_HOOKFUNCTION(br, GiveFragsForKill, CBC_ORDER_FIRST)
+{
+    M_ARGV(2, float) = 0; // no frags counted in Battle Royale
     return true;
 }
 
@@ -132,7 +143,12 @@ MUTATOR_HOOKFUNCTION(br, PutClientInServer)
     entity player = M_ARGV(0, entity);
 
     if (!br_started)
+    {
+        br_CheckPlayers();
+        if(total_players >= autocvar_g_br_minplayers)
+            STAT(DROP, player) = DROP_TRANSPORT; // inhibits the spawn effect when the match is about to start
         return false;
+    }
 
     if (IN_SQUAD(player))
         Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_BR_JOIN_DEAD);
@@ -162,6 +178,15 @@ MUTATOR_HOOKFUNCTION(br, MakePlayerObserver)
     return false;
 }
 
+MUTATOR_HOOKFUNCTION(br, SpectateCopy)
+{
+    entity spectatee = M_ARGV(0, entity);
+    entity client = M_ARGV(1, entity);
+
+    STAT(DROP, client) = STAT(DROP, spectatee);
+    STAT(BLEEDING, client) = STAT(BLEEDING, spectatee);
+}
+
 MUTATOR_HOOKFUNCTION(br, SpectateSet)
 {
     entity client = M_ARGV(0, entity);
@@ -184,7 +209,7 @@ MUTATOR_HOOKFUNCTION(br, SpectateNext)
     else
         new_target = client.br_squad.br_squad_first;
 
-    while((new_target == client) || IS_DEAD(new_target) || IS_SPEC(new_target) || IS_OBSERVER(new_target))
+    while((new_target == client) || IS_DEAD(new_target) || !IS_PLAYER(new_target))
     {
         new_target = new_target.br_squad_next;
         if(!new_target)
@@ -209,7 +234,7 @@ MUTATOR_HOOKFUNCTION(br, SpectatePrev)
     else
         new_target = client.br_squad.br_squad_last;
 
-    while((new_target == client) || IS_DEAD(new_target) || IS_SPEC(new_target) || IS_OBSERVER(new_target))
+    while((new_target == client) || IS_DEAD(new_target) || !IS_PLAYER(new_target))
     {
         new_target = new_target.br_squad_prev;
         if(!new_target)
@@ -223,6 +248,15 @@ MUTATOR_HOOKFUNCTION(br, SpectatePrev)
 MUTATOR_HOOKFUNCTION(br, ForbidSpawn)
 {
     return br_started;
+}
+
+MUTATOR_HOOKFUNCTION(br, WantWeapon)
+{
+    if(autocvar_g_br_startweapons)
+        return false;
+
+    M_ARGV(1, float) = 0;
+    return true;
 }
 
 MUTATOR_HOOKFUNCTION(br, SetStartItems)
@@ -245,7 +279,7 @@ MUTATOR_HOOKFUNCTION(br, SetStartItems)
 #endif
 
 #define IN_REVIVING_RANGE(player, it, revive_extra_size) \
-    (it != player && !IS_DEAD(it) && !IS_SPEC(it) && !IS_OBSERVER(it) && SAME_SQUAD(it, player) \
+    (it != player && IS_PLAYER(it) && !IS_DEAD(it) && SAME_SQUAD(it, player) \
     && boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
@@ -257,23 +291,34 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
 
     if(ring)
     {
-        if(vlen((player.origin + player.view_ofs) - ring.origin) > ring_calculate_current_radius(ring))
+        const float ring_damage_interval = 0.75;
+        vector current_origin;
+        if(!player.vehicle)
+            current_origin = player.origin + player.view_ofs;
+        else
+            current_origin = player.vehicle.origin;
+        if(vlen(current_origin - ring.origin) > ring_calculate_current_radius(ring))
         {
             if(!player.br_ring_warned)
             {
                 player.br_ring_warned = true;
+                player.br_ring_damage_time = time + ring_damage_interval;
                 Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_BR_RING_WARN);
             }
 
-            if(player.vehicle) // if the player is controlling a vehicle
+            // ring damage
+            if (player.br_ring_damage_time < time)
             {
-                if(autocvar_g_br_ring_exitvehicle)
-                    vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
-                else
-                    vehicles_damage(player.vehicle, ring, ring, 10 * ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
+                if(player.vehicle) // if the player is controlling a vehicle
+                {
+                    if(autocvar_g_br_ring_exitvehicle)
+                        vehicles_exit(player.vehicle, VHEF_RELEASE); // begone!
+                    else
+                        vehicles_damage(player.vehicle, ring, ring, 10 * ring.strength * ring_damage_interval, DEATH_RING.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
+                }
+                Damage(player, ring, ring, ring.strength * ring_damage_interval, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0');
+                player.br_ring_damage_time = time + ring_damage_interval;
             }
-
-            Damage(player, ring, ring, ring.strength * frametime, DEATH_RING.m_id, DMG_NOWEP, player.origin, '0 0 0'); // ring damage
         }
         else
         {
@@ -325,7 +370,10 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
             if(!(IN_SQUAD(player) && player.br_squad.br_squad_drop_leader))
             {
                 player.effects &= ~EF_NODRAW;
-                player.flags &= ~FL_NOTARGET;
+                player.takedamage = DAMAGE_AIM;
+                player.solid = SOLID_SLIDEBOX;
+                if(!autocvar__notarget)
+                    player.flags &= ~FL_NOTARGET;
                 Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
                 STAT(DROP, player) = DROP_FALLING;
                 player.br_drop_detached = 0;
@@ -362,7 +410,10 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
 
                     FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
                         it.effects &= ~EF_NODRAW;
-                        it.flags &= ~FL_NOTARGET;
+                        it.takedamage = DAMAGE_AIM;
+                        it.solid = SOLID_SLIDEBOX;
+                        if(!autocvar__notarget)
+                            it.flags &= ~FL_NOTARGET;
                         Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_BR_DROP);
                         STAT(DROP, it) = DROP_FALLING;
                         it.br_drop_detached = 0;
@@ -600,12 +651,6 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             player.flags |= FL_PICKUPITEMS;
             player.dphitcontentsmask |= DPCONTENTS_BODY;
 
-            SetResource(player, RES_SHELLS, start_ammo_shells);
-            SetResource(player, RES_BULLETS, start_ammo_nails);
-            SetResource(player, RES_ROCKETS, start_ammo_rockets);
-            SetResource(player, RES_CELLS, start_ammo_cells);
-            SetResource(player, RES_PLASMA, start_ammo_plasma);
-            SetResource(player, RES_FUEL, start_ammo_fuel);
             STAT(WEAPONS, player) = player.br_wepset_old;
 
             .entity weaponentity = weaponentities[0];
@@ -626,19 +671,20 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
 
 MUTATOR_HOOKFUNCTION(br, Damage_Calculate)
 {
-    entity target = M_ARGV(2, entity);
-    float deathtype = M_ARGV(3, float);
+    entity frag_target = M_ARGV(2, entity);
+    float frag_deathtype = M_ARGV(3, float);
 
-    if(STAT(DROP, target) != DROP_LANDED)
+    if(STAT(DROP, frag_target) != DROP_LANDED)
     {
         // weapon impact has no push force while dropping
         M_ARGV(6, vector) = '0 0 0';
 
-        if(STAT(DROP, target) == DROP_TRANSPORT)
+        if(STAT(DROP, frag_target) == DROP_TRANSPORT)
             M_ARGV(4, float) = M_ARGV(5, float) = 0; // can't take damage while on the dropship
+        else if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER)); // do not adjust vaporizer damage
         else
         {
-            switch(deathtype)
+            switch(frag_deathtype)
             {
                 case DEATH_FALL.m_id:
                 case DEATH_SHOOTING_STAR.m_id:
@@ -666,7 +712,10 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
     if(STAT(DROP, frag_target) == DROP_TRANSPORT)
     {
         frag_target.effects &= ~EF_NODRAW;
-        frag_target.flags &= ~FL_NOTARGET;
+        frag_target.takedamage = DAMAGE_AIM;
+        frag_target.solid = SOLID_SLIDEBOX;
+        if(!autocvar__notarget)
+            frag_target.flags &= ~FL_NOTARGET;
         Kill_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CPID_BR_DROP);
     }
 
@@ -683,6 +732,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
     {
         set_movetype(frag_target, MOVETYPE_WALK);
         frag_target.dphitcontentsmask |= DPCONTENTS_BODY;
+        STAT(WEAPONS, frag_target) = frag_target.br_wepset_old;
         STAT(DROP, frag_target) = DROP_LANDED;
     }
 
@@ -833,7 +883,7 @@ MUTATOR_HOOKFUNCTION(br, GetResourceLimit)
     }
 }
 
-MUTATOR_HOOKFUNCTION(br, PlayerRegen)
+MUTATOR_HOOKFUNCTION(br, PlayerRegen, CBC_ORDER_FIRST)
 {
     entity player = M_ARGV(0, entity);
 
@@ -841,9 +891,10 @@ MUTATOR_HOOKFUNCTION(br, PlayerRegen)
         M_ARGV(7, float) = max(autocvar_g_br_bleed, 0);
         M_ARGV(8, float) = max(autocvar_g_br_bleedlinear, 0);
         M_ARGV(2, float) = M_ARGV(10, float) = 0;
-        return false;
     }
-    return true;
+    else{
+        M_ARGV(2, float) = M_ARGV(3, float) = 0; // no regeneration or rot in battle royale
+    }
 }
 
 MUTATOR_HOOKFUNCTION(br, PlayerCanCrouch)
@@ -874,7 +925,7 @@ MUTATOR_HOOKFUNCTION(br, TurretValidateTarget)
     entity turret = M_ARGV(0, entity);
     entity target = M_ARGV(1, entity);
 
-    if(SAME_SQUAD(turret, target) || (STAT(DROP, target) == DROP_TRANSPORT))
+    if(!br_started || SAME_SQUAD(turret, target) || (STAT(DROP, target) == DROP_TRANSPORT))
     {
         M_ARGV(3, float) = -1;
         return true;
@@ -899,7 +950,7 @@ MUTATOR_HOOKFUNCTION(br, CustomizeWaypoint)
     entity player = M_ARGV(1, entity);
 
     if(wp.owner == NULL)
-        return false;
+        return true;
 
     if((wp == wp.owner.br_allywaypoint) && (vdist(wp.owner.origin - player.origin, <, autocvar_g_br_squad_waypoint_distance) || STAT(BLEEDING, wp.owner)))
         return true;
@@ -1007,12 +1058,15 @@ int br_WinningCondition()
         GameRules_scoring_add(member, BR_RANK, 1);
     }
 
+    delete(round_handler);
+    round_handler = NULL;
+
     return WINNING_YES;
 }
 
 bool br_isEliminated(entity e)
 {
-    return (IN_SQUAD(e) && (IS_DEAD(e) || IS_SPEC(e) || IS_OBSERVER(e)));
+    return (IN_SQUAD(e) && (IS_DEAD(e) || !IS_PLAYER(e)));
 }
 
 bool br_CheckPlayers()
@@ -1039,12 +1093,21 @@ bool br_CheckPlayers()
 }
 
 void br_Start(){
+    // battle royale does not need those, besides, the timelimit won't be visible anymore after the game started
+    cvar_set("timelimit", "0");
+    cvar_set("fraglimit", "0");
+    cvar_set("leadlimit", "0");
+
+    reset_map(true);
+
     ring = ring_initialize();
 
     dropship = dropship_initialize();
 
     if(!dropship)
     {
+        br_started = true;
+
         delete(ring);
         ring = NULL;
 
@@ -1058,27 +1121,11 @@ void br_Start(){
     int num_players = 0;
 
     FOREACH_CLIENT(IS_PLAYER(it), {
-        GameRules_scoring_add(it, BR_RANK, -GameRules_scoring_add(it, BR_RANK, 0));
-        GameRules_scoring_add(it, BR_SQUAD, -GameRules_scoring_add(it, BR_SQUAD, 0));
-        GameRules_scoring_add(it, BR_REVIVALS, -GameRules_scoring_add(it, BR_REVIVALS, 0));
+        STAT(DROP, it) = DROP_TRANSPORT;
+        PutPlayerInServer(it);
 
-        if(it.vehicle)
-            vehicles_exit(it.vehicle, VHEF_RELEASE);
-
-        RemoveGrapplingHooks(it);
-        StatusEffects_removeall(it, STATUSEFFECT_REMOVE_CLEAR);
-
-        // isn't there another way to initialize these?
-        SetResource(it, RES_HEALTH, start_health);
-        SetResource(it, RES_ARMOR, start_armorvalue);
-        SetResource(it, RES_SHELLS, 0);
-        SetResource(it, RES_BULLETS, 0);
-        SetResource(it, RES_ROCKETS, 0);
-        SetResource(it, RES_CELLS, 0);
-        SetResource(it, RES_PLASMA, 0);
-        SetResource(it, RES_FUEL, 0);
+        it.br_wepset_old = STAT(WEAPONS, it);
         STAT(WEAPONS, it) = '0 0 0';
-        it.br_wepset_old = autocvar_g_br_startweapons ? start_weapons : '0 0 0';
         for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
         {
             it.br_weapon_prev[slot] = WEP_Null;
@@ -1094,7 +1141,7 @@ void br_Start(){
 
     for(int num_squads = 0; (num_squads * max_squad_size) < num_players; ++num_squads)
     {
-        entity new_squad = spawn();
+        entity new_squad = new_pure(squad);
         new_squad.br_squad_drop_leader = NULL;
         new_squad.br_squad_id = num_squads + 1;
 
@@ -1115,8 +1162,9 @@ void br_Start(){
         it.flags |= FL_NOTARGET;
         it.dphitcontentsmask &= ~DPCONTENTS_BODY;
         it.effects |= EF_NODRAW;
+        it.takedamage = DAMAGE_NO;
+        it.solid = SOLID_NOT;
         it.br_drop_instructions = false;
-        STAT(DROP, it) = DROP_TRANSPORT;
         it.br_drop_launch = 0;
         UNSET_ONGROUND(it); // otherwise this isn't unset if the player drops in the same frame
 
@@ -1152,6 +1200,7 @@ void br_Start(){
             it.br_force_drop_distance = min_distance + random() * max(dropship_path_length - (min_distance + dropship_speed * br_drop_time_secs), 0);
     });
 
+    round_handler.cnt = 0; // emulate round handler round start
     br_started = true;
 }
 
@@ -1159,6 +1208,11 @@ void br_Initialize()
 {
     br_started = false;
     squads_colored = autocvar_g_br_squad_colors;
+
+    // emulate the round handler, useful because this will cause a lot of code to correctly treat the stage before the match starts
+    round_handler = new_pure(round_handler);
+    round_handler.cnt = 1;
+    round_handler.wait = false;
 
     EliminatedPlayers_Init(br_isEliminated);
 }

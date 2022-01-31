@@ -657,9 +657,12 @@ void PutPlayerInServer(entity this)
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
 
-	entity spawnevent = new_pure(spawnevent);
-	spawnevent.owner = this;
-	Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
+	if(STAT(DROP, this) != DROP_TRANSPORT)
+	{
+		entity spawnevent = new_pure(spawnevent);
+		spawnevent.owner = this;
+		Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
+	}
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
@@ -1212,7 +1215,7 @@ void ClientDisconnect(entity this)
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 	if (CS(this).active_minigame) part_minigame(this);
-	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this) && (STAT(DROP, this) != DROP_TRANSPORT)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));

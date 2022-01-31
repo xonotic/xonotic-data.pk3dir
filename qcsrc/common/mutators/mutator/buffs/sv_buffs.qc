@@ -818,7 +818,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = NULL;
 		FOREACH_CLIENT(IS_PLAYER(it), {
-			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
+			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle && (STAT(DROP, player) == DROP_LANDED))
 			if(DIFF_TEAM(it, player))
 			{
 				float test = vlen2(player.origin - it.origin);

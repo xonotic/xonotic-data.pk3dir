@@ -508,7 +508,7 @@ IMPULSE(waypoint_personal_death)
 
 IMPULSE(waypoint_here_follow)
 {
-	if (!teamplay) return;
+	if (!teamplay && !IN_SQUAD(this)) return;
 	if (IS_DEAD(this)) return;
 	if (!MUTATOR_CALLHOOK(HelpMePing, this))
 	{

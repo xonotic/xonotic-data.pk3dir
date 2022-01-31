@@ -14,7 +14,7 @@ int br_SquadUpdateInfo()
 
         for(entity member = it.br_squad_first; member; member = member.br_squad_next)
         {
-            if (IS_DEAD(member) || IS_SPEC(member) || IS_OBSERVER(member))
+            if (IS_DEAD(member) || !IS_PLAYER(member))
                 continue;
             ++alive_players;
 
@@ -37,7 +37,7 @@ int br_SquadUpdateInfo()
             Send_Notification(NOTIF_ONE, member, MSG_CENTER, CENTER_BR_DEAD_SQUAD);
             GameRules_scoring_add(member, BR_RANK, alive_squads + 1);
 
-            if (IS_DEAD(member) || IS_SPEC(member) || IS_OBSERVER(member))
+            if (IS_DEAD(member) || !IS_PLAYER(member))
                 continue;
 
             // kill player
@@ -148,7 +148,7 @@ entity br_SquadFindLastAlive(entity squad, bool healthy_only)
     entity last_alive = NULL;
     for(entity member = squad.br_squad_first; member; member = member.br_squad_next)
     {
-        if (!IS_DEAD(member) && !IS_SPEC(member) && !IS_OBSERVER(member) && (!STAT(BLEEDING, member) || !healthy_only))
+        if (IS_PLAYER(member) && !IS_DEAD(member) && (!STAT(BLEEDING, member) || !healthy_only))
         {
             if(last_alive)
                 return NULL; // more than one squad member is alive

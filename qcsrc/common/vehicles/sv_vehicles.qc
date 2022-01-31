@@ -942,11 +942,21 @@ void vehicles_enter(entity pl, entity veh)
 	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
+	bool veh_ring_no_enter = false;
+	if(ring && autocvar_g_br_ring_exitvehicle)
+	{
+		if(vlen(veh.origin - ring.origin) > ring_calculate_current_radius(ring))
+			veh_ring_no_enter = true;
+	}
+
 	if((!IS_PLAYER(pl))
 	|| (veh.phase >= time)
 	|| (pl.vehicle_enter_delay >= time)
 	|| (STAT(FROZEN, pl))
 	|| (IS_DEAD(pl))
+	|| (STAT(BLEEDING, pl))
+	|| (STAT(DROP, pl) != DROP_LANDED)
+	|| (veh_ring_no_enter)
 	|| (pl.vehicle)
 	) { return; }
 
