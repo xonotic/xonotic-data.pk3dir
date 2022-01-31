@@ -144,8 +144,7 @@ MUTATOR_HOOKFUNCTION(br, PutClientInServer)
 
     if (!br_started)
     {
-        br_CheckPlayers();
-        if(total_players >= autocvar_g_br_minplayers)
+        if(!warmup_stage && (time > game_starttime) && br_CheckPlayers())
             STAT(DROP, player) = DROP_TRANSPORT; // inhibits the spawn effect when the match is about to start
         return false;
     }
@@ -1204,6 +1203,8 @@ void br_Start(){
     br_started = true;
 }
 
+void br_dummy_Think(entity this){}
+
 void br_Initialize()
 {
     br_started = false;
@@ -1211,8 +1212,10 @@ void br_Initialize()
 
     // emulate the round handler, useful because this will cause a lot of code to correctly treat the stage before the match starts
     round_handler = new_pure(round_handler);
+    round_handler.count = 0;
     round_handler.cnt = 1;
     round_handler.wait = false;
+    setthink(round_handler, br_dummy_Think);
 
     EliminatedPlayers_Init(br_isEliminated);
 }
