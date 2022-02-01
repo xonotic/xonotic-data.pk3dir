@@ -88,8 +88,12 @@ MUTATOR_HOOKFUNCTION(tmayhem, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE
 
 MUTATOR_HOOKFUNCTION(tmayhem, Scores_CountFragsRemaining)
 {
-	// announce remaining frags
-	return true;
+	// do not announce remaining frags, upscaled score count doesn't match well with this
+	// when scorelimit is set to 1000 it would announce 997, 998 and 999 score counts
+	// usually a single shot which deals ~40-80 dmg gives 2 or 3 score
+	// this usually would cause a "2 fra..." announcement to be played as the match ends 
+	// without leaving anyone time to even process the announcement
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
