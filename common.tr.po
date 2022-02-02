@@ -5,6 +5,7 @@
 # Translators:
 # Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>, 2019
 # Ahmet, 2022
+# Ahmet, 2022
 # Big Brother <tanakinci2002@gmail.com>, 2021
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
