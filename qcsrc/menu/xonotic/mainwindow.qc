@@ -70,19 +70,19 @@ void MainWindow_draw(entity me)
 
 	//-------------------------------------
 	// Part of Disconnect Dialog button:
-	// In case of this function is recalling every time, need to use condition of visibility
-
-	if (me.disconnectDialogVisibility && !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)))
+	// In case of this function is recalling every time, need to use condition of visibility 
+	
+	if (me.disconnectDialogVisibility && !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) 
 	{
-		// If gamestate is not "ingame" (and it is a first "frame" of drawing (or dialog is visible)),
+		// If gamestate is not "ingame" (and it is a first "frame" of drawing (or dialog is visible)), 
 		// disconnect button is unnecessary, remove it
 		me.removeItem(me.mainNexposee, me.disconnectDialog);
 		me.disconnectDialogVisibility = 0;
 
 	} else if(!me.disconnectDialogVisibility && (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) {
-
-		// If gamestate is "ingame" (and dialog is not visible),
-		// make disconnect button visiblefosdialog
+		
+		// If gamestate is "ingame" (and dialog is not visible), 
+		// make disconnect button visible
 		entity n, i;
 		n = me.mainNexposee;
 		i = me.disconnectDialog;
@@ -91,7 +91,7 @@ void MainWindow_draw(entity me)
 		me.disconnectDialogVisibility = 1;
 	}
 
-	// I haven't found the best solution for making button visible.
+	// I haven't found the best solution for making button visible. 
 	// Alpha channel is the worst thing, because dialog with alpha is also clickable
 	//-------------------------------------
 }
@@ -329,7 +329,7 @@ void MainWindow_configureMainWindow(entity me)
 		n.setNexposee(n, i, '0.5 1.2 0.0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
 		me.disconnectDialog = i;
-
+	
 		i = NEW(XonoticQuitDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
