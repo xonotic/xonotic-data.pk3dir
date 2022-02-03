@@ -581,6 +581,7 @@ void HUD_Weapons()
 
 				if(a > 0)
 				{
+					// TODO: registry handles
 					switch (it.ammo_type)
 					{
 						case RES_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;

@@ -5,6 +5,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
@@ -13,7 +14,6 @@
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
@@ -40,7 +40,7 @@ void thrown_wep_think(entity this)
 float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
 	Weapon info = REGISTRY_GET(Weapons, wpn);
-	int ammotype = info.ammo_type;
+	Resource ammotype = info.ammo_type;
 
 	entity wep = spawn();
 	Item_SetLoot(wep, true);

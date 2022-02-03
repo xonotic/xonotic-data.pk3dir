@@ -8,6 +8,7 @@
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
@@ -21,7 +22,6 @@
 #include <server/items/items.qh>
 #include <server/hook.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>

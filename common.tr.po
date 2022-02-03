@@ -4,6 +4,8 @@
 #
 # Translators:
 # Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>, 2019
+# Ahmet, 2022
+# Ahmet, 2022
 # Big Brother <tanakinci2002@gmail.com>, 2021
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
@@ -17,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-01-30 12:01+0000\n"
+"Last-Translator: Ahmet\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -998,7 +1000,7 @@ msgstr "^2+%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:1925
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Harita: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2079
 #, c-format
@@ -4649,11 +4651,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr ""
+msgstr "Makineli Tüfek Kulesi"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr ""
+msgstr "Makineli Tüfek"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -4673,11 +4675,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "Plazma Topu"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
-msgstr ""
+msgstr "Çift plazma"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:20
 msgid "Dual Plasma Cannon"
