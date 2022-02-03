@@ -49,6 +49,8 @@
 #include <menu/xonotic/dialog_multiplayer_create_mutators.qh>
 #include <menu/xonotic/dialog_multiplayer_join.qh>
 #include <menu/xonotic/dialog_multiplayer_join_serverinfo.qh>
+#include <menu/xonotic/dialog_multiplayer_join_serverinfotab.qh>
+#include <menu/xonotic/dialog_multiplayer_join_termsofservice.qh>
 #include <menu/xonotic/dialog_multiplayer_media.qh>
 #include <menu/xonotic/dialog_multiplayer_media_demo.qh>
 #include <menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh>
@@ -82,6 +84,7 @@
 #include <menu/xonotic/dialog_singleplayer.qh>
 #include <menu/xonotic/dialog_singleplayer_winner.qh>
 #include <menu/xonotic/dialog_teamselect.qh>
+#include <menu/xonotic/dialog_termsofservice.qh>
 #include <menu/xonotic/dialog_uid2name.qh>
 #include <menu/xonotic/gametypelist.qh>
 #include <menu/xonotic/hudskinlist.qh>
@@ -114,6 +117,7 @@
 #include <menu/xonotic/statslist.qh>
 #include <menu/xonotic/tab.qh>
 #include <menu/xonotic/tabcontroller.qh>
+#include <menu/xonotic/textbox.qh>
 #include <menu/xonotic/textlabel.qh>
 #include <menu/xonotic/textslider.qh>
 #include <menu/xonotic/util.qh>
