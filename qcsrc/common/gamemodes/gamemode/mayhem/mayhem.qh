@@ -7,7 +7,7 @@
 CLASS(mayhem, Gametype)
     INIT(mayhem)
     {
-        this.gametype_init(this, _("Mayhem"),"mayhem","g_mayhem",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PREFERRED,"","timelimit=15 pointlimit=30 leadlimit=0",_("The player with the most frags in total mayhem wins!"));
+        this.gametype_init(this, _("Mayhem"),"mayhem","g_mayhem",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PREFERRED,"","timelimit=15 pointlimit=30 leadlimit=0",_("Compete for the most damage dealt and frags in this chaotic mayhem!"));
     }
     METHOD(mayhem, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -22,6 +22,11 @@ CLASS(mayhem, Gametype)
 	        return true;
         }
         return false;		
+    }
+	METHOD(mayhem, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Frag limit:"),     5,  100,  5, "fraglimit_override",         string_null,         _("How many frags worth of score is needed before the match will end"));
     }
     ATTRIB(mayhem, m_legacydefaults, string, "30 20 0");
 ENDCLASS(mayhem)

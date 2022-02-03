@@ -7,7 +7,7 @@
 CLASS(tmayhem, Gametype)
     INIT(tmayhem)
     {
-        this.gametype_init(this, _("Team Mayhem"),"tmayhem","g_tmayhem",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("The team with the most frags in total mayhem wins!"));
+        this.gametype_init(this, _("Team Mayhem"),"tmayhem","g_tmayhem",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Compete with your team for the most damage dealt and frags in this chaotic mayhem!"));
     }
     METHOD(tmayhem, m_parse_mapinfo, bool(string k, string v))
     {
@@ -43,7 +43,7 @@ CLASS(tmayhem, Gametype)
     METHOD(tmayhem, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
     {
         TC(Gametype, this);
-        returns(menu, _("Point limit:"),     5,  100,  5, "g_tmayhem_point_limit",         "g_tmayhem_teams_override",         _("The amount of points needed before the match will end"));
+        returns(menu, _("Frag limit:"),     5,  100,  5, "fraglimit_override",         "g_tmayhem_teams_override",         _("How many frags worth of score is needed before the match will end"));
     }
     ATTRIB(tmayhem, m_legacydefaults, string, "50 20 2 0");
 ENDCLASS(tmayhem)
