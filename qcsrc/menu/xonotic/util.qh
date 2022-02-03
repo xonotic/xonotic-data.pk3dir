@@ -47,5 +47,6 @@ string _Nex_ExtResponseSystem_PromotedServers;
 float _Nex_ExtResponseSystem_PromotedServersNeedsRefresh;
 string _Nex_ExtResponseSystem_RecommendedServers;
 float _Nex_ExtResponseSystem_RecommendedServersNeedsRefresh;
+float _Nex_ExtResponseSystem_NewToS;
 
 void CheckSendCvars(entity me, string cvarnamestring);
