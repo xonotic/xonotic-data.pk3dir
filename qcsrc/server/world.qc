@@ -737,6 +737,15 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
+	{
+		strcpy(sv_termsofservice_url_escaped, strreplace(":", "|", autocvar_sv_termsofservice_url));
+	}
+	else
+	{
+		strcpy(sv_termsofservice_url_escaped, "INVALID");
+	}
+
 	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
@@ -2578,6 +2587,8 @@ void Shutdown()
 
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
+
+		strfree(sv_termsofservice_url_escaped);
 	}
 	else if(world_initialized == 0)
 	{

@@ -101,7 +101,6 @@ REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 /** arc heat in [0,1] */
 REGISTER_STAT(PRESSED_KEYS, int)
 REGISTER_STAT(FUEL, int)
-REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
 REGISTER_STAT(SHOTORG, int)
 REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
@@ -348,6 +347,9 @@ REGISTER_STAT(DOM_PPS_RED, float)
 REGISTER_STAT(DOM_PPS_BLUE, float)
 REGISTER_STAT(DOM_PPS_YELLOW, float)
 REGISTER_STAT(DOM_PPS_PINK, float)
+
+// nexball
+REGISTER_STAT(NB_METERSTART, float)
 
 #ifdef SVQC
 float autocvar_g_teleport_maxspeed;

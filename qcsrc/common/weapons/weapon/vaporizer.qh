@@ -63,7 +63,5 @@ SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)
 .float jump_interval;
 .float jump_interval2;
 .bool held_down;
-.float rm_force;
-.float rm_damage;
-.float rm_edmg;
+.int rm_laser_count;
 #endif
