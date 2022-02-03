@@ -47,6 +47,10 @@ string gamemode_name;
 
 string record_type;
 
+string autocvar_sv_termsofservice_url;
+// only escape the terms of service url on map change
+string sv_termsofservice_url_escaped;
+
 string clientstuff;
 
 string matchid;
