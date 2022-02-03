@@ -48,7 +48,7 @@ void XonoticTextBox_setText(entity me, string text)
 	me.nItems = line+1;
 }
 
-string XonoticTextBox_getTextBoxContent(entity me, int i)
+string XonoticTextBox_getTextBoxLine(entity me, int i)
 {
 	if (me.stringList >= 0)
 	{
@@ -73,11 +73,11 @@ void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	{
 		if (!temp)
 		{
-			temp = me.getTextBoxContent(me, i);
+			temp = me.getTextBoxLine(me, i);
 		}
 		else
 		{
-			temp = strcat(temp, "\n", me.getTextBoxContent(me, i));
+			temp = strcat(temp, "\n", me.getTextBoxLine(me, i));
 		}
 	}
 	me.setText(me, temp);
@@ -85,8 +85,6 @@ void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 
 void XonoticTextBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	string s;
-
-	s = me.getTextBoxContent(me, i);
+	string s = me.getTextBoxLine(me, i);
 	draw_Text(vec2(0, 0), s, me.realFontSize, me.colorL, me.alpha, true);
 }

@@ -12,7 +12,7 @@ void Close_Clicked(entity btn, entity me)
 {
 	LOG_INFOF("Accepted ToS version %d", _Nex_ExtResponseSystem_NewToS);
 	cvar_set("_termsofservice_accepted", ftos(_Nex_ExtResponseSystem_NewToS));
-	localcmd("saveconfig");
+	localcmd("saveconfig\n");
 	if (main.firstRunDialog.shouldShow())
 		main.firstDraw = true;
 	Dialog_Close(btn, me);
@@ -20,7 +20,7 @@ void Close_Clicked(entity btn, entity me)
 
 void DontAccept_Clicked(entity btn, entity me)
 {
-	localcmd("quit");
+	localcmd("quit\n");
 }
 
 void XonoticToSDialog_loadXonoticToS(entity me)
