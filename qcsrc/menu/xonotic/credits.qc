@@ -24,6 +24,9 @@
 		PERSON(packer) \
 		PERSON(Severin "sev" Meyer) \
 		PERSON(SpiKe) \
+		PERSON(Thomas "illwieckz" Debesse) \
+		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(z411) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
@@ -96,6 +99,8 @@
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Samual "Ares" Lenks) \
 		PERSON(TimePath) \
+		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(z411) \
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	FUNCTION(_("Marketing / PR")) \
