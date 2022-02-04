@@ -9,7 +9,7 @@
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 # Rui <xymarior@yandex.com>, 2018
-# yy0zz, 2021
+# yy0zz, 2021-2022
 # yy0zz, 2021
 # zerowhy . <anymailz@tutanota.com>, 2021
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-12-27 13:05+0000\n"
+"PO-Revision-Date: 2022-02-03 17:10+0000\n"
 "Last-Translator: yy0zz\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -10172,7 +10172,7 @@ msgstr "Dezembro"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "DATA ^%m %d, %Y"
+msgstr "%d de %m de %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
