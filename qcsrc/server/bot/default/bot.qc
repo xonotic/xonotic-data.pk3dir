@@ -536,11 +536,8 @@ void bot_removenewest()
 
 void autoskill(float factor)
 {
-	float bestbot;
-	float bestplayer;
-
-	bestbot = -1;
-	bestplayer = -1;
+	int bestbot = -1;
+	int bestplayer = -1;
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
@@ -548,37 +545,37 @@ void autoskill(float factor)
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
 	});
 
-	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
-	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
+	string msg = strcat("autoskill: best player got ", ftos(bestplayer), ", ""best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		LOG_DEBUG("not doing anything");
+		msg = strcat(msg, "not doing anything");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			LOG_DEBUG("2 frags difference, increasing skill");
+			msg = strcat(msg, "2 frags difference, increasing skill");
 			cvar_set("skill", ftos(autocvar_skill + 1));
-			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
+			bprint("^2BOT SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else if(bestbot >= bestplayer * factor + 2)
 	{
 		if(autocvar_skill > 0)
 		{
-			LOG_DEBUG("2 frags difference, decreasing skill");
+			msg = strcat(msg, "2 frags difference, decreasing skill");
 			cvar_set("skill", ftos(autocvar_skill - 1));
-			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
+			bprint("^1BOT SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		LOG_DEBUG("not doing anything");
+		msg = strcat(msg, "not doing anything");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}
+	LOG_DEBUG(msg);
 
 	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
