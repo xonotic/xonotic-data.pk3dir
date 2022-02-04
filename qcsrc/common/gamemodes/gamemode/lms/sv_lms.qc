@@ -54,7 +54,7 @@ int WinningCondition_LMS()
 		{
 			// two or more active players - continue with the game
 
-			if (autocvar_g_campaign)
+			if (autocvar_g_campaign && campaign_bots_may_start)
 			{
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 					float pl_lives = GameRules_scoring_add(it, LMS_LIVES, 0);
