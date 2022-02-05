@@ -344,7 +344,11 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 			return;
 
 		if (!is_fake_round_start)
+		{
+			Score_ClearAll();
 			PlayerStats_GameReport_Reset_All();
+		}
+
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
@@ -415,7 +419,6 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 void ReadyRestart_think(entity this)
 {
 	reset_map(true, false);
-	Score_ClearAll();
 	delete(this);
 }
 
@@ -472,10 +475,8 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	if (!sv_ready_restart_after_countdown || warmup_stage) {
+	if (!sv_ready_restart_after_countdown || warmup_stage)
 		reset_map(true, is_fake_round_start);
-		Score_ClearAll();
-	}
 
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
