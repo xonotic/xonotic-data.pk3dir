@@ -117,12 +117,24 @@ string strftime_s()
 	return strcat(ftos(hundreds_of_seconds), seconds_str);
 }
 
+/// \param[in] seconds number of seconds, can be negative too
+/// \return time as "m:ss" string (floored)
 ERASEABLE
-string seconds_tostring(float sec)
+string seconds_tostring(float seconds)
 {
-	float minutes = floor(sec / 60);
-	sec -= minutes * 60;
-	return sprintf("%d:%02d", minutes, sec);
+	bool negative = false;
+	if (seconds < 0)
+	{
+		negative = true;
+		seconds = -seconds;
+		if (floor(seconds) != seconds)
+			seconds += 1; // make floor work in the other direction
+	}
+	int minutes = floor(seconds / 60);
+	seconds -= minutes * 60;
+	if (negative)
+		return sprintf("-%d:%02d", minutes, seconds);
+	return sprintf("%d:%02d", minutes, seconds);
 }
 
 ERASEABLE
