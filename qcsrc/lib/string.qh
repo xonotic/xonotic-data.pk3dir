@@ -154,8 +154,8 @@ string clockedtime_tostring(int tm, bool hundredths)
 	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, hundredths ? 2 : 1));
 }
 
-#define mmsss(tm) clockedtime_tostring(tm, false)
-#define mmssss(tm) clockedtime_tostring(tm, true)
+#define mmsst(tm) clockedtime_tostring(tm, false)
+#define mmssth(tm) clockedtime_tostring(tm, true)
 
 ERASEABLE
 string format_time(float seconds)
