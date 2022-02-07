@@ -4,3 +4,4 @@
 bool autocvar_hud_panel_timer;
 bool autocvar_hud_panel_timer_dynamichud        = true;
 bool autocvar_hud_panel_timer_increment;
+bool autocvar_hud_panel_timer_unbound;
