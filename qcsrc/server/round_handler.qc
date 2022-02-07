@@ -75,6 +75,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	this.count = fabs(floor(the_count));
 	this.cnt = this.count + 1;
 	this.round_timelimit = (the_round_timelimit > 0) ? the_round_timelimit : 0;
+	round_limit = the_round_timelimit;
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1

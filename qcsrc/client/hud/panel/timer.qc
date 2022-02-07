@@ -29,34 +29,37 @@ void HUD_Timer()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	string timer;
-	float timelimit, timeleft, minutesLeft;
+	string timer, subtimer, subtext;
+	float timelimit, timeleft, minutesLeft, overtimes;
+	float round_timelimit, round_timeleft;
 
-	timelimit = STAT(TIMELIMIT);
-
-	timeleft = bound(0, timelimit * 60 + STAT(GAMESTARTTIME) - time, timelimit * 60);
+	// Calculate timelimit
+	if(warmup_stage)
+	{
+		timelimit = STAT(WARMUP_TIMELIMIT);
+		if(timelimit == 0)
+			timelimit = STAT(TIMELIMIT) * 60;
+		else if(timelimit == -1)
+			timelimit = 0;
+	}
+	else
+	{
+		timelimit = STAT(TIMELIMIT) * 60;
+	}
+	
+	// Calculate time left
+	timeleft = bound(0, timelimit + STAT(GAMESTARTTIME) - time, timelimit);
 	timeleft = ceil(timeleft);
 
 	minutesLeft = floor(timeleft / 60);
 
-	float warmup_timeleft = 0;
-	if(warmup_stage)
-	{
-		float warmup_timelimit = STAT(WARMUP_TIMELIMIT);
-		if(warmup_timelimit > 0)
-			warmup_timeleft = max(0, warmup_timelimit - time + STAT(GAMESTARTTIME));
-		else if(warmup_timelimit == 0)
-			warmup_timeleft = timeleft;
-		warmup_timeleft = ceil(warmup_timeleft);
-	}
-
+	// Timer color
 	vector timer_color;
 	if(intermission_time || minutesLeft >= 5 || warmup_stage || timelimit == 0)
 		timer_color = '1 1 1'; //white
@@ -65,23 +68,64 @@ void HUD_Timer()
 	else
 		timer_color = '1 0 0'; //red
 
+	// Timer text
 	if (intermission_time) {
 		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
-	} else if (warmup_stage && warmup_timeleft >= 60) {
-		timer = _("WARMUP");
-	} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
-		if (time < STAT(GAMESTARTTIME))
-			timer = seconds_tostring(0); //while restart is still active, show 00:00
-		else
-			timer = seconds_tostring(floor(time - STAT(GAMESTARTTIME)));
+	} else if (autocvar_hud_panel_timer_increment || timelimit == 0) {
+		float time_elapsed = floor(time - STAT(GAMESTARTTIME));
+		timer = seconds_tostring(max(0, time_elapsed));
 	} else {
-		if(warmup_stage)
-			timer = seconds_tostring(warmup_timeleft);
-		else
-			timer = seconds_tostring(timeleft);
+		timer = seconds_tostring(timeleft);
 	}
+	
+	// Subtimer text
+	if(STAT(ROUNDSTARTTIME))
+	{
+		round_timelimit = STAT(ROUND_TIMELIMIT);
+		
+		if (autocvar_hud_panel_timer_increment || round_timelimit <= 0) {
+			float round_time_elapsed = floor(time - STAT(ROUNDSTARTTIME));
+			subtimer = seconds_tostring(max(0, round_time_elapsed));
+		} else {
+			round_timeleft = bound(0, round_timelimit + STAT(ROUNDSTARTTIME) - time, round_timelimit);
+			round_timeleft = ceil(round_timeleft);
+			
+			subtimer = seconds_tostring(round_timeleft);
+		}
+	}
+	else
+		subtimer = string_null;
 
-	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	// Subtext
+	overtimes = STAT(OVERTIMESADDED);
+	
+	if(warmup_stage)
+		subtext = "Warmup";
+	else if(overtimes == 1)
+		subtext = "Overtime";
+	else if (overtimes > 1)
+		subtext = sprintf("Overtime #%d", overtimes);
+	else
+		subtext = string_null;
+
+	vector timer_size, subtext_size, subtimer_size;
+	
+	subtext_size  = vec2(mySize.x, mySize.y / 3);
+	timer_size    = vec2(mySize.x, mySize.y - subtext_size.y);
+	subtimer_size = vec2(mySize.x / 3, mySize.y - subtext_size.y);
+	
+	panel_size.y -= subtext_size.y;
+	HUD_Panel_DrawBg();
+	
+	if(subtimer) {
+		timer_size.x -= subtimer_size.x;
+		drawstring_aspect(pos + eX * timer_size.x, subtimer, subtimer_size, '1 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	
+	drawstring_aspect(pos, timer, timer_size, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	if(subtext)
+		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	draw_endBoldFont();
 }
