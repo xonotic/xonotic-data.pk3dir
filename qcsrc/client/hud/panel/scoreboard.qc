@@ -1319,7 +1319,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	}
 	
 	// Player name
-	tmp_str = Scoreboard_GetField(pl, SP_NAME);
+	tmp_str = entcs_GetName(pl.sv_entnum);
 	if(invert)
 		tmp_in.x -= stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 	else
