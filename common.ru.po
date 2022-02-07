@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-06 07:22+0100\n"
-"PO-Revision-Date: 2022-02-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-02-06 08:36+0000\n"
+"Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -7218,7 +7218,7 @@ msgstr "Присоединиться!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:106
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Условия обслуживания не указаны"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
 #: qcsrc/menu/xonotic/serverlist.qc:1052
@@ -7282,7 +7282,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
-msgstr ""
+msgstr "пользовательский сервер статистики"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
 #: qcsrc/menu/xonotic/serverlist.qc:1056
@@ -7296,17 +7296,17 @@ msgstr "статистика включена"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 msgid "Status"
-msgstr ""
+msgstr "Состояние"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:215
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Условия обслуживания"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Сведения о сервере"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7359,7 +7359,7 @@ msgstr "Ключ:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "Статистика:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -9693,18 +9693,21 @@ msgstr "Выбор команды"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
+"Условия обслуживания обновлены. Пожалуйста, прочтите их перед продолжением:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
 msgstr ""
+"Добро пожаловать в Xonotic! Пожалуйста, прочтите следующие условия "
+"обслуживания:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
-msgstr ""
+msgstr "Принять"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Отклонить (выйти из игры)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"

@@ -11,7 +11,7 @@ hu    "Hungarian" "Magyar" 46%
 nl    "Dutch" "Nederlands" 59%
 pl    "Polish" "Polski" 72%
 pt    "Portuguese" "Português" 81%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 71%
 fi    "Finnish" "Suomi" 99%
 sv    "Swedish" "Svenska" 97%
@@ -20,7 +20,7 @@ cs    "Czech" "Čeština" 33%
 el    "Greek" "Ελληνική" 46%
 be    "Belarusian" "Беларуская" 52%
 bg    "Bulgarian" "Български" 61%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 61%
 uk    "Ukrainian" "Українська" 49%
 zh_CN "Chinese (China)" "中文" 59%

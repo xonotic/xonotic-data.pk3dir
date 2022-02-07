@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-06 07:22+0100\n"
-"PO-Revision-Date: 2022-02-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-02-06 12:36+0000\n"
+"Last-Translator: yy0zz\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -7259,7 +7259,7 @@ msgstr "Conectar!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:106
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Termos de Serviço não especificados"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
 #: qcsrc/menu/xonotic/serverlist.qc:1052
@@ -7323,7 +7323,7 @@ msgstr "Use a cvar \"crypto_aeslevel\" para alterar suas preferências"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
-msgstr ""
+msgstr "servidor de estatísticas personalizado"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
 #: qcsrc/menu/xonotic/serverlist.qc:1056
@@ -7337,17 +7337,17 @@ msgstr "estatísticas habilitadas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:215
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Termos de Serviço"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Informações de Servidor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7400,7 +7400,7 @@ msgstr "Chave:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "Estatísticas:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -9758,18 +9758,20 @@ msgstr "Seleção de Equipe"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
+"Os Termos de Serviço foram atualizados. Por favor, leia-os antes de "
+"prosseguir:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "Boas-vindas a Xonotic! Por favor, leia os Termos de Serviço a seguir:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
-msgstr ""
+msgstr "Aceitar"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Não aceitar (sair do jogo)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
