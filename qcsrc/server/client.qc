@@ -935,7 +935,6 @@ void DecodeLevelParms(entity this)
 void FixClientCvars(entity e)
 {
 	// send prediction settings to the client
-	stuffcmd(e, "\nin_bindmap 0 0\n");
 	if(autocvar_g_antilag == 3) // client side hitscan
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
