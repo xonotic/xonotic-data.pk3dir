@@ -94,17 +94,17 @@ void HUD_Timer()
 
 	// Subtext
 	overtimes = STAT(OVERTIMESADDED);
-	
+
 	if(warmup_stage || autocvar__hud_configure)
 		subtext = _("Warmup");
 	else if(intermission_time)
 		subtext = _("Intermission");
 	else if(STAT(TIMEOUT_STATUS))
 		subtext = _("Timeout");
-	else if(overtimes == 1)
-		subtext = _("Overtime");
-	else if (overtimes > 1)
+	else if (overtimes >= 2)
 		subtext = sprintf(_("Overtime #%d"), overtimes);
+	else if(overtimes)
+		subtext = _("Overtime");
 	else
 		subtext = string_null;
 
