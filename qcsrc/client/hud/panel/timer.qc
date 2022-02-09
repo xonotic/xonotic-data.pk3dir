@@ -36,7 +36,7 @@ void HUD_Timer()
 	}
 
 	string timer, subtimer, subtext;
-	float timelimit, timeleft, minutesLeft, overtimes;
+	float timelimit, timeleft, overtimes;
 	float round_timelimit, round_timeleft;
 
 	// Calculate timelimit
@@ -45,8 +45,6 @@ void HUD_Timer()
 		timelimit = STAT(WARMUP_TIMELIMIT);
 		if(timelimit == 0)
 			timelimit = STAT(TIMELIMIT) * 60;
-		else if(timelimit == -1)
-			timelimit = 0;
 	}
 	else
 	{
@@ -57,13 +55,11 @@ void HUD_Timer()
 	timeleft = bound(0, timelimit + STAT(GAMESTARTTIME) - time, timelimit);
 	timeleft = ceil(timeleft);
 
-	minutesLeft = floor(timeleft / 60);
-
 	// Timer color
 	vector timer_color;
-	if(intermission_time || minutesLeft >= 5 || warmup_stage || timelimit == 0)
+	if(intermission_time || timeleft >= 300 || warmup_stage || timelimit <= 0)
 		timer_color = '1 1 1'; //white
-	else if(minutesLeft >= 1)
+	else if(timeleft >= 60)
 		timer_color = '1 1 0'; //yellow
 	else
 		timer_color = '1 0 0'; //red
@@ -71,7 +67,7 @@ void HUD_Timer()
 	// Timer text
 	if (intermission_time) {
 		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
-	} else if (autocvar_hud_panel_timer_increment || timelimit == 0) {
+	} else if (autocvar_hud_panel_timer_increment || timelimit <= 0) {
 		float time_elapsed = floor(time - STAT(GAMESTARTTIME));
 		timer = seconds_tostring(max(0, time_elapsed));
 	} else {
@@ -99,12 +95,16 @@ void HUD_Timer()
 	// Subtext
 	overtimes = STAT(OVERTIMESADDED);
 	
-	if(warmup_stage)
-		subtext = "Warmup";
+	if(warmup_stage || autocvar__hud_configure)
+		subtext = _("Warmup");
+	else if(intermission_time)
+		subtext = _("Intermission");
+	else if(STAT(TIMEOUT_STATUS))
+		subtext = _("Timeout");
 	else if(overtimes == 1)
-		subtext = "Overtime";
+		subtext = _("Overtime");
 	else if (overtimes > 1)
-		subtext = sprintf("Overtime #%d", overtimes);
+		subtext = sprintf(_("Overtime #%d"), overtimes);
 	else
 		subtext = string_null;
 
