@@ -50,9 +50,11 @@ void HUD_Timer()
 	{
 		timelimit = STAT(TIMELIMIT) * 60;
 	}
-	
+
 	// Calculate time left
-	timeleft = bound(0, timelimit + STAT(GAMESTARTTIME) - time, timelimit);
+	timeleft = timelimit + STAT(GAMESTARTTIME) - time;
+	if (!autocvar_hud_panel_timer_unbound)
+		timeleft = bound(0, timeleft, timelimit);
 	timeleft = ceil(timeleft);
 
 	// Timer color
@@ -69,7 +71,10 @@ void HUD_Timer()
 		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
 	} else if (autocvar_hud_panel_timer_increment || timelimit <= 0) {
 		float time_elapsed = floor(time - STAT(GAMESTARTTIME));
-		timer = seconds_tostring(max(0, time_elapsed));
+		if (!autocvar_hud_panel_timer_unbound)
+			time_elapsed = max(0, time_elapsed);
+
+		timer = seconds_tostring(time_elapsed);
 	} else {
 		timer = seconds_tostring(timeleft);
 	}
@@ -81,9 +86,14 @@ void HUD_Timer()
 		
 		if (autocvar_hud_panel_timer_increment || round_timelimit <= 0) {
 			float round_time_elapsed = floor(time - STAT(ROUNDSTARTTIME));
-			subtimer = seconds_tostring(max(0, round_time_elapsed));
+			if (!autocvar_hud_panel_timer_unbound)
+				round_time_elapsed = max(0, round_time_elapsed);
+
+			subtimer = seconds_tostring(round_time_elapsed);
 		} else {
-			round_timeleft = bound(0, round_timelimit + STAT(ROUNDSTARTTIME) - time, round_timelimit);
+			round_timeleft = round_timelimit + STAT(ROUNDSTARTTIME) - time;
+			if (!autocvar_hud_panel_timer_unbound)
+				round_timeleft = bound(0, round_timeleft, round_timelimit);
 			round_timeleft = ceil(round_timeleft);
 			
 			subtimer = seconds_tostring(round_timeleft);
