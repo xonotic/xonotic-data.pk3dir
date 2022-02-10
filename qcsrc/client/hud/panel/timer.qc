@@ -10,6 +10,16 @@ void HUD_Timer_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
+vector HUD_Timer_Color(float timeleft)
+{
+	if(timeleft >= 300)
+		return '1 1 1'; //white
+	else if(timeleft >= 60)
+		return '1 1 0'; //yellow
+	else
+		return '1 0 0'; //red
+}
+
 void HUD_Timer()
 {
 	if(!autocvar__hud_configure)
@@ -35,9 +45,14 @@ void HUD_Timer()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	string timer, subtimer, subtext;
+	string timer;
+	string subtimer = string_null;
+	string subtext = string_null;
 	float timelimit, timeleft, overtimes;
 	float round_timelimit, round_timeleft;
+	vector timer_size, subtext_size, subtimer_size;
+	vector timer_color = '1 1 1';
+	vector subtimer_color = '1 1 1';
 
 	// Calculate timelimit
 	if(warmup_stage)
@@ -58,13 +73,8 @@ void HUD_Timer()
 	timeleft = ceil(timeleft);
 
 	// Timer color
-	vector timer_color;
-	if(intermission_time || timeleft >= 300 || warmup_stage || timelimit <= 0)
-		timer_color = '1 1 1'; //white
-	else if(timeleft >= 60)
-		timer_color = '1 1 0'; //yellow
-	else
-		timer_color = '1 0 0'; //red
+	if(!intermission_time && !warmup_stage && timelimit > 0)
+		timer_color = HUD_Timer_Color(timeleft);
 
 	// Timer text
 	if (intermission_time) {
@@ -79,28 +89,34 @@ void HUD_Timer()
 		timer = seconds_tostring(timeleft);
 	}
 	
-	// Subtimer text
+	// Round-based game modes
 	if(STAT(ROUNDSTARTTIME))
 	{
 		round_timelimit = STAT(ROUND_TIMELIMIT);
-		
-		if (autocvar_hud_panel_timer_increment || round_timelimit <= 0) {
+
+		// Calculate round time left
+		round_timeleft = round_timelimit + STAT(ROUNDSTARTTIME) - time;
+		if (!autocvar_hud_panel_timer_unbound)
+			round_timeleft = bound(0, round_timeleft, round_timelimit);
+		round_timeleft = ceil(round_timeleft);
+
+		// Subtimer color
+		if(!intermission_time && round_timelimit > 0)
+			subtimer_color = HUD_Timer_Color(round_timeleft);
+
+		// Subtimer text
+		if (intermission_time) {
+			subtimer = seconds_tostring(max(0, floor(intermission_time - STAT(ROUNDSTARTTIME))));
+		} else if (autocvar_hud_panel_timer_increment || round_timelimit <= 0) {
 			float round_time_elapsed = floor(time - STAT(ROUNDSTARTTIME));
 			if (!autocvar_hud_panel_timer_unbound)
 				round_time_elapsed = max(0, round_time_elapsed);
 
 			subtimer = seconds_tostring(round_time_elapsed);
 		} else {
-			round_timeleft = round_timelimit + STAT(ROUNDSTARTTIME) - time;
-			if (!autocvar_hud_panel_timer_unbound)
-				round_timeleft = bound(0, round_timeleft, round_timelimit);
-			round_timeleft = ceil(round_timeleft);
-			
 			subtimer = seconds_tostring(round_timeleft);
 		}
 	}
-	else
-		subtimer = string_null;
 
 	// Subtext
 	overtimes = STAT(OVERTIMESADDED);
@@ -115,11 +131,7 @@ void HUD_Timer()
 		subtext = sprintf(_("Overtime #%d"), overtimes);
 	else if(overtimes)
 		subtext = _("Overtime");
-	else
-		subtext = string_null;
 
-	vector timer_size, subtext_size, subtimer_size;
-	
 	subtext_size  = vec2(mySize.x, mySize.y / 3);
 	timer_size    = vec2(mySize.x, mySize.y - subtext_size.y);
 	subtimer_size = vec2(mySize.x / 3, mySize.y - subtext_size.y);
@@ -129,7 +141,7 @@ void HUD_Timer()
 	
 	if(subtimer) {
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x, subtimer, subtimer_size, '1 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * timer_size.x, subtimer, subtimer_size, subtimer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	
 	drawstring_aspect(pos, timer, timer_size, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
