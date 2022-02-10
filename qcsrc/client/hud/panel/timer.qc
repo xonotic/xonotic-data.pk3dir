@@ -147,7 +147,7 @@ void HUD_Timer()
 	drawstring_aspect(pos, timer, timer_size, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	if(subtext)
-		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	draw_endBoldFont();
 }
