@@ -130,8 +130,8 @@ Nade Nade_FromProjectile(int proj)
 .float orb_radius;
 
 #ifdef GAMEQC
-REPLICATE_FIELD(int, cvar_cl_nade_type);
-REPLICATE_FIELD(string, cvar_cl_pokenade_type);
+REPLICATE_INIT(int, cvar_cl_nade_type);
+REPLICATE_INIT(string, cvar_cl_pokenade_type);
 #endif
 
 #ifdef SVQC

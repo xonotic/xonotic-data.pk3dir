@@ -9,9 +9,9 @@ string strcat1(string s) = #115; // FRIK_FILE
 const int REPLICATEVARS_SEND_ALL = -1; // sync all cvars with the server (init)
 const int REPLICATEVARS_CHECK = 0; // check if any cvar has changed and sync it with the server
 const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shutdown)
-#define REPLICATE_FIELD(type, name) type name
+#define REPLICATE_INIT(type, name) type name
 #elif defined(SVQC)
-#define REPLICATE_FIELD(type, name) .type name
+#define REPLICATE_INIT(type, name) .type name
 #endif
 
 #ifdef GAMEQC

@@ -1,5 +1,5 @@
 #pragma once
 
 #ifdef GAMEQC
-REPLICATE_FIELD(bool, cvar_cl_spawn_near_teammate);
+REPLICATE_INIT(bool, cvar_cl_spawn_near_teammate);
 #endif

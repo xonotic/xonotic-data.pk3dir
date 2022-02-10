@@ -74,5 +74,5 @@ BUFF_SPAWNFUNCS(random, NULL)
 #include "all.inc"
 
 #ifdef GAMEQC
-REPLICATE_FIELD(bool, cvar_cl_buffs_autoreplace);
+REPLICATE_INIT(bool, cvar_cl_buffs_autoreplace);
 #endif

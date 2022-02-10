@@ -394,17 +394,17 @@ ENUMCLASS_END(WFRAME)
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 
-REPLICATE_FIELD(int, cvar_cl_gunalign);
-REPLICATE_FIELD(bool, cvar_cl_weapon_switch_reload);
-REPLICATE_FIELD(bool, cvar_cl_weapon_switch_fallback_to_impulse);
-REPLICATE_FIELD(int, cvar_cl_weaponimpulsemode);
+REPLICATE_INIT(int, cvar_cl_gunalign);
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_reload);
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_fallback_to_impulse);
+REPLICATE_INIT(int, cvar_cl_weaponimpulsemode);
 
-REPLICATE_FIELD(string, cvar_cl_weaponpriority);
-REPLICATE_FIELD(string, cvar_cl_weaponpriorities[10]);
+REPLICATE_INIT(string, cvar_cl_weaponpriority);
+REPLICATE_INIT(string, cvar_cl_weaponpriorities[10]);
 
 #ifdef CSQC
-REPLICATE_FIELD(bool, cvar_cl_accuracy_data_share);
-REPLICATE_FIELD(bool, cvar_cl_accuracy_data_receive);
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_share);
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_receive);
 #endif
 
 #ifdef SVQC

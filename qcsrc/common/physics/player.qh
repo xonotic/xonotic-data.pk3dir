@@ -72,9 +72,9 @@ float AdjustAirAccelQW(float accelqw, float factor);
 bool IsFlying(entity a);
 
 #ifdef GAMEQC
-REPLICATE_FIELD(string, cvar_cl_physics);
-REPLICATE_FIELD(bool, cvar_cl_jetpack_jump);
-REPLICATE_FIELD(bool, cvar_cl_movement_track_canjump);
+REPLICATE_INIT(string, cvar_cl_physics);
+REPLICATE_INIT(bool, cvar_cl_jetpack_jump);
+REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #endif
 
 #define PHYS_PL_MAX(s)						STAT(PL_MAX, s)

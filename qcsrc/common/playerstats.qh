@@ -122,8 +122,8 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
 
 #ifdef GAMEQC
 
-REPLICATE_FIELD(int, cvar_cl_allow_uid2name);
-REPLICATE_FIELD(bool, cvar_cl_allow_uidranking);
-REPLICATE_FIELD(int, cvar_cl_allow_uidtracking);
+REPLICATE_INIT(int, cvar_cl_allow_uid2name);
+REPLICATE_INIT(bool, cvar_cl_allow_uidranking);
+REPLICATE_INIT(int, cvar_cl_allow_uidtracking);
 
 #endif

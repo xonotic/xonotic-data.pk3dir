@@ -1,5 +1,5 @@
 #pragma once
 
 #ifdef GAMEQC
-REPLICATE_FIELD(int, cvar_cl_multijump);
+REPLICATE_INIT(int, cvar_cl_multijump);
 #endif

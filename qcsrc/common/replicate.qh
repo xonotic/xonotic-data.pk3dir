@@ -1,13 +1,13 @@
 #pragma once
 
 #ifdef GAMEQC
-REPLICATE_FIELD(bool, cvar_cl_autoswitch);
-REPLICATE_FIELD(int, cvar_cl_autoscreenshot);
-REPLICATE_FIELD(bool, cvar_cl_clippedspectating);
-REPLICATE_FIELD(bool, cvar_cl_cts_noautoswitch);
-REPLICATE_FIELD(float, cvar_cl_handicap);
-REPLICATE_FIELD(bool, cvar_cl_noantilag);
-REPLICATE_FIELD(string, cvar_g_xonoticversion);
+REPLICATE_INIT(bool, cvar_cl_autoswitch);
+REPLICATE_INIT(int, cvar_cl_autoscreenshot);
+REPLICATE_INIT(bool, cvar_cl_clippedspectating);
+REPLICATE_INIT(bool, cvar_cl_cts_noautoswitch);
+REPLICATE_INIT(float, cvar_cl_handicap);
+REPLICATE_INIT(bool, cvar_cl_noantilag);
+REPLICATE_INIT(string, cvar_g_xonoticversion);
 REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");

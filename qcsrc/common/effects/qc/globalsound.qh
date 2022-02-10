@@ -16,9 +16,9 @@
 .string m_playersoundstr;
 ..string m_playersoundfld;
 
-REPLICATE_FIELD(float, cvar_cl_autotaunt);
-REPLICATE_FIELD(int, cvar_cl_voice_directional);
-REPLICATE_FIELD(float, cvar_cl_voice_directional_taunt_attenuation);
+REPLICATE_INIT(float, cvar_cl_autotaunt);
+REPLICATE_INIT(int, cvar_cl_voice_directional);
+REPLICATE_INIT(float, cvar_cl_voice_directional_taunt_attenuation);
 
 REGISTRY(PlayerSounds, BITS(8) - 1)
 #define REGISTER_PLAYERSOUND(id) \
