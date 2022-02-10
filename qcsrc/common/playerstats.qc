@@ -15,6 +15,17 @@
 	#include <server/world.qh>
 #endif
 
+
+#ifdef GAMEQC
+REPLICATE(cvar_cl_allow_uid2name, int, "cl_allow_uid2name");
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
+REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
+#endif
+
+#ifdef SVQC
+REPLICATE_APPLYCHANGE("cl_allow_uidtracking", { PlayerStats_GameReport_AddPlayer(this); });
+#endif
+
 #ifdef SVQC
 void PlayerStats_Prematch()
 {

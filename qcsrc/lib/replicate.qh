@@ -1,21 +1,54 @@
 #pragma once
 
+#ifdef SVQC
+// copies a string to a tempstring (so one can strunzone it)
+string strcat1(string s) = #115; // FRIK_FILE
+#endif
+
+#if defined(CSQC)
+const int REPLICATEVARS_SEND_ALL = -1; // sync all cvars with the server (init)
+const int REPLICATEVARS_CHECK = 0; // check if any cvar has changed and sync it with the server
+const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shutdown)
+#define REPLICATE_INIT(type, name) type name
+#elif defined(SVQC)
+#define REPLICATE_INIT(type, name) .type name
+#endif
+
 #ifdef GAMEQC
 
     /**
-     * Replicate a client cvar into a server field
+     * \def REPLICATE(fld, type, cvar)
+     * Replicates a client cvar into a server field
      *
      * @param fld   The field to replicate into
      * @param type  The field type
-     * @param cvar  The cvar name
+     * @param cvarname
+     * @param fixup_func((entity this, string original_value))  optional parameter
      */
 	#define REPLICATE(...) EVAL_REPLICATE(OVERLOAD(REPLICATE, __VA_ARGS__))
 	#define EVAL_REPLICATE(...) __VA_ARGS__
 
 	#if defined(SVQC)
 	ACCUMULATE void ReplicateVars(entity this, entity store, string thisname, int i) {}
+	ACCUMULATE void ReplicateVars_ApplyChange(entity this, entity store, string thisname, int i) {}
+    /**
+     * \def REPLICATE_APPLYCHANGE(cvarname, ApplyChange_code)
+     * Allows setting code that will be executed on cvar value changes
+     *
+     * @param cvarname
+     * @param ApplyChange_code  code meant to be run on cvar value changes
+     */
+	#define REPLICATE_APPLYCHANGE(var, ApplyChange_code) \
+		void ReplicateVars_ApplyChange(entity this, entity store, string thisname, int i) \
+			{ if (thisname == var) { ApplyChange_code } }
 	#elif defined(CSQC)
-	ACCUMULATE void ReplicateVars(int mode) {}
+	noref float ReplicateVars_time;
+	ACCUMULATE void ReplicateVars(int mode)
+	{
+		if (time < ReplicateVars_time)
+			return;
+		ReplicateVars_time = time + 0.8 + random() * 0.4; // check cvars periodically
+	}
 	#endif
 
 	#define REPLICATE_3(fld, type, var) REPLICATE_4(fld, type, var, )
@@ -27,7 +60,7 @@
 		{ strfree(field); }, \
 		{ \
 			/* also initialize to the default value of func when requesting cvars */ \
-			string s = func(field); \
+			string s = func(this, strcat1(field)); \
 			if (s != field) \
 			{ \
 				strcpy(field, s); \
@@ -59,51 +92,30 @@
 				store.fld = field; \
 			}
 	#elif defined(CSQC)
-		noref float ReplicateVars_time;
-		#define ReplicateVars_NOT_SENDING() (time > ReplicateVars_time)
-		#define ReplicateVars_DELAY(t) ReplicateVars_time = time + t
-		#define ReplicateVars_DELAY_1FRAME() ReplicateVars_time = time
 		#define REPLICATE_string(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar_string(var)), { strcpy(fld, cvar_string(var)); }, { strfree(fld); })
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 
-		void ReplicateVars_Destroy() { ReplicateVars(1); }
-		void ReplicateVars_Send_All() { ReplicateVars(-1); }
-		void ReplicateVars_Check()
-		{
-			// if a cvar has changed send it and check cvars again next frame
-			ReplicateVars(0);
-			if (ReplicateVars_NOT_SENDING()) // if no cvar has changed
-				ReplicateVars_DELAY(0.8 + random() * 0.4); // check cvars after a while
-		}
 		void ReplicateVars_Send(string cvarname) { localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); }
 
 		#define REPLICATE_7(fld, type, var, func, check, update, destroy) \
 			void ReplicateVars(int mode) \
 			{ \
-				if (mode == 1) { destroy } \
-				else if (mode == -1) { ReplicateVars_Send(var); update } \
-				else if (ReplicateVars_NOT_SENDING() && check) \
+				if (mode == REPLICATEVARS_DESTROY) { destroy } \
+				else if (mode == REPLICATEVARS_SEND_ALL || check) \
 				{ \
 					ReplicateVars_Send(var); \
-					ReplicateVars_DELAY_1FRAME(); \
 					update \
-					return; \
 				} \
 			}
 
 		#define REPLICATE_SIMPLE(field, cvarname) MACRO_BEGIN \
-			if (ReplicateVars_NOT_SENDING()) \
+			float thecvar = cvar(cvarname); \
+			if(field != thecvar) \
 			{ \
-				float thecvar = cvar(cvarname); \
-				if(field != thecvar) \
-				{ \
-					ReplicateVars_Send(cvarname); \
-					ReplicateVars_DELAY_1FRAME(); \
-					field = thecvar; \
-					return; \
-				} \
+				ReplicateVars_Send(cvarname); \
+				field = thecvar; \
 			} \
 		MACRO_END
 	#endif

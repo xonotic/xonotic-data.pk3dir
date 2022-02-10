@@ -317,8 +317,17 @@ MUTATOR_HOOKABLE(PlayerPreThink, EV_PlayerPreThink);
     /**/
 MUTATOR_HOOKABLE(GetPressedKeys, EV_GetPressedKeys);
 
-/** is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client */
-// NOTE: requesting cvar values (get_cvars_f 0) is deprecated
+/**
+ * is meant to call GetCvars_handle* for cvars this mutator needs from the client, e.g.:
+	MUTATOR_HOOKFUNCTION(mymutator, GetCvars)
+	{
+		GetCvars_handleFloat(this, store, s, f, cvar_mycvar, "mycvar");
+		return false;
+	}
+ * Usually you can just use REPLICATE instead of this hook, e.g.:
+	REPLICATE(cvar_mycvar, int, "mycvar");
+ * NOTE: requesting cvar values (get_cvars_f 0) is deprecated
+ */
 #define EV_GetCvars(i, o) \
     /**/ i(float, get_cvars_f) \
     /**/ i(string, get_cvars_s) \
