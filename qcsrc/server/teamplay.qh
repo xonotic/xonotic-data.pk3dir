@@ -62,7 +62,7 @@ int Team_GetNumberOfAliveTeams();
 /// \brief Returns the winner team.
 /// \param[in] min_owned_items Minimum number of items the winner team must have.
 /// \return Winner team or 0 if 2 or more teams own items or -1 if no team own any items.
-int Team_GetWinnerTeam_WIthOwnedItems(int min_owned_items);
+int Team_GetWinnerTeam_WithOwnedItems(int min_owned_items);
 
 /// \brief Returns the number of items owned by a team.
 /// \param[in] team_ent Team entity.

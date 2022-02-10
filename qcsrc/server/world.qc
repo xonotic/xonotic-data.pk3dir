@@ -689,6 +689,15 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
+	{
+		strcpy(sv_termsofservice_url_escaped, strreplace(":", "|", autocvar_sv_termsofservice_url));
+	}
+	else
+	{
+		strcpy(sv_termsofservice_url_escaped, "INVALID");
+	}
+
 	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
@@ -2294,9 +2303,10 @@ void EndFrame()
 			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
 			STAT(KILL_TIME, it) = time;
-		} else if (e.damage_dealt) {
+		} else if (e.hitsound_damage_dealt) {
 			STAT(HIT_TIME, it) = time;
-			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
+			// NOTE: this is not accurate as client code doesn't need so much accuracy for its purposes
+			STAT(HITSOUND_DAMAGE_DEALT_TOTAL, it) += ceil(e.hitsound_damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics
@@ -2307,7 +2317,7 @@ void EndFrame()
 	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
-		it.damage_dealt = 0;
+		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
 	});
@@ -2429,6 +2439,8 @@ void Shutdown()
 
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
+
+		strfree(sv_termsofservice_url_escaped);
 	}
 	else if(world_initialized == 0)
 	{

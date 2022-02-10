@@ -9,13 +9,13 @@
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>
 #include <common/weapons/_all.qh>
 #include <server/client.qh>
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
-#include <server/resources.qh>
 #include <server/world.qh>
 
 /***********************

@@ -135,6 +135,7 @@ void NIX_GiveCurrentWeapon(entity this)
 	// get weapon info
 	entity wpn = REGISTRY_GET(Weapons, nix_weapon);
 
+	// TODO: registry handles
 	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{
 		SetResource(this, RES_SHELLS, 0);
