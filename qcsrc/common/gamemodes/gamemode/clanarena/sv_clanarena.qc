@@ -411,7 +411,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	if (scorer)
 	{
 		scorer.ca_damage_counter += scorer_damage;
-		if (fabs(scorer.ca_damage_counter) < autocvar_g_ca_damage2score)
+		if (scorer.ca_damage_counter >= 0 && scorer.ca_damage_counter < autocvar_g_ca_damage2score)
 			return;
 		// NOTE: here we are actually rounding since ca_damage_counter is
 		// initialized on player spawn to half autocvar_g_ca_damage2score
