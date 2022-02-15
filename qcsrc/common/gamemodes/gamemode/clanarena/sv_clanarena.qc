@@ -158,7 +158,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (time <= game_starttime) // reset on game restart, not on round start
-		player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
+		player.ca_damage_counter = 0;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -266,7 +266,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
-	player.ca_damage_counter = autocvar_g_ca_damage2score / 2; // for rounding purposes
+	player.ca_damage_counter = 0;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
@@ -410,13 +410,13 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	if (scorer)
 	{
+		// assign damage score in units (rounded) to avoid bugs with float score
 		scorer.ca_damage_counter += scorer_damage;
-		if (scorer.ca_damage_counter >= 0 && scorer.ca_damage_counter < autocvar_g_ca_damage2score)
+		float score_counter = scorer.ca_damage_counter / autocvar_g_ca_damage2score;
+		if (score_counter >= -0.5 && score_counter < 0.5)
 			return;
-		// NOTE: here we are actually rounding since ca_damage_counter is
-		// initialized on player spawn to half autocvar_g_ca_damage2score
-		// Also note that this code works for subtracting score too
-		int points = floor(scorer.ca_damage_counter / autocvar_g_ca_damage2score);
+		// NOTE: this code works for subtracting score too
+		int points = floor(score_counter + 0.5);
 		GameRules_scoring_add(scorer, SCORE, points);
 
 		scorer.ca_damage_counter -= points * autocvar_g_ca_damage2score;
