@@ -263,11 +263,6 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-	player.ca_damage_counter = 0;
-}
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
@@ -409,18 +404,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	}
 
 	if (scorer)
-	{
-		// assign damage score in units (rounded) to avoid bugs with float score
-		scorer.ca_damage_counter += scorer_damage;
-		float score_counter = scorer.ca_damage_counter / autocvar_g_ca_damage2score;
-		if (score_counter >= -0.5 && score_counter < 0.5)
-			return;
-		// NOTE: this code works for subtracting score too
-		int points = floor(score_counter + 0.5);
-		GameRules_scoring_add(scorer, SCORE, points);
-
-		scorer.ca_damage_counter -= points * autocvar_g_ca_damage2score;
-	}
+		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, ca_damage_counter, autocvar_g_ca_damage2score);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
