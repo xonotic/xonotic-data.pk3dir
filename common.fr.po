@@ -12,17 +12,18 @@
 # Maxime Paradis <taximus.micro@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
 # Nicolas FORMICHELLA, 2022
+# Nicolas FORMICHELLA, 2022
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2021
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-06 07:22+0100\n"
-"PO-Revision-Date: 2022-02-15 10:40+0000\n"
-"Last-Translator: Nicolas FORMICHELLA\n"
+"PO-Revision-Date: 2022-02-16 19:54+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -7282,7 +7283,7 @@ msgstr "Rejoindre !"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:106
 msgid "No Terms of Service specified"
-msgstr "Termes de Service non-spécifiés"
+msgstr "Aucune condition d'utilisation spécifiée"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
 #: qcsrc/menu/xonotic/serverlist.qc:1052
@@ -7366,11 +7367,11 @@ msgstr "Statut"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr "Termes de Service"
+msgstr "Conditions d'utilisation"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr "Informations du serveur"
+msgstr "Informations sur le serveur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7423,7 +7424,7 @@ msgstr "Clé :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr "Statistiques :"
+msgstr "Statistiques :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -9784,12 +9785,14 @@ msgstr "Sélection d'Équipe"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
-"Les Termes de Service ont été mis à jour. Veuillez les lire avant de "
-"continuer :"
+"Les conditions d'utilisation ont été mises à jour. Veuillez les lire avant "
+"de continuer :"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr "Bienvenue sur Xonotic ! Veuillez lire les Termes de Service suivants :"
+msgstr ""
+"Bienvenue sur Xonotic ! Veuillez lire les conditions d'utilisation "
+"suivantes :"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
