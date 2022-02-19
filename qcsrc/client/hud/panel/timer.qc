@@ -53,6 +53,7 @@ void HUD_Timer()
 	vector timer_size, subtext_size, subtimer_size;
 	vector timer_color = '1 1 1';
 	vector subtimer_color = '1 1 1';
+	bool swap = (autocvar_hud_panel_timer_secondary == 2);
 
 	// Calculate timelimit
 	if(warmup_stage)
@@ -90,7 +91,7 @@ void HUD_Timer()
 	}
 	
 	// Round-based game modes
-	if(STAT(ROUNDSTARTTIME))
+	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
 	{
 		round_timelimit = STAT(ROUND_TIMELIMIT);
 
@@ -141,10 +142,10 @@ void HUD_Timer()
 	
 	if(subtimer) {
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x, subtimer, subtimer_size, subtimer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * timer_size.x, (swap ? timer : subtimer), subtimer_size, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	
-	drawstring_aspect(pos, timer, timer_size, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, (swap ? subtimer : timer), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	if(subtext)
 		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
