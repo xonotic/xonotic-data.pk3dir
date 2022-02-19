@@ -88,7 +88,6 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		{
 			ToSSpecified = true;
 			string downloadurl = v;
-			LOG_INFOF("SERVERTOS DOWNLOADURL: %s", downloadurl);
 			if (downloadurl == "INVALID")
 			{
 				me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
