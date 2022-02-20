@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-06 07:22+0100\n"
-"PO-Revision-Date: 2022-02-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-02-19 15:00+0000\n"
+"Last-Translator: Gustaf Alhäll\n"
 "Language-Team: Swedish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -63,17 +63,17 @@ msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:92
 msgid "^1Observing"
-msgstr "^1Obververar"
+msgstr "^1Observerar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Tittar pa: ^7%s"
+msgstr "^1Tittar på: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Tryck på ^3%s^1 för at åskåda"
+msgstr "^1Tryck på ^3%s^1 för att åskåda"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -463,19 +463,19 @@ msgstr "Kalla till röstning"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 msgid "QMCMD^Restart the map"
-msgstr "Starta om kartan"
+msgstr "Börja om kartan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^End match"
-msgstr "Sluta matchen"
+msgstr "Avsluta matchen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Reduce match time"
-msgstr "Minska matchtiden"
+msgstr "Förkorta matchtiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^Extend match time"
-msgstr "Utöka matchtiden"
+msgstr "Förläng matchtiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^Shuffle teams"
@@ -647,7 +647,7 @@ msgstr "Mängden mord minus självmord"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^frags"
-msgstr "frags"
+msgstr "fragg"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of goals scored"
@@ -1493,11 +1493,11 @@ msgstr "bensin"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Bensinregenerator"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
-msgstr ""
+msgstr "Bensinregen"
 
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
@@ -1523,7 +1523,7 @@ msgstr "Nuvarande Spel"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr "Avsluta Meny"
+msgstr "Stäng Meny"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1605,7 +1605,7 @@ msgstr "Spara"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr "Koppla Fyra"
+msgstr "Fyra-i-Rad"
 
 #: qcsrc/common/minigames/minigame/c4.qc:316
 #: qcsrc/common/minigames/minigame/c4.qc:322
@@ -1649,7 +1649,7 @@ msgstr "Väntar på din motståndare att göra sin flytt"
 #: qcsrc/common/minigames/minigame/pp.qc:471
 #: qcsrc/common/minigames/minigame/ttt.qc:354
 msgid "Click on the game board to place your piece"
-msgstr "Klicka på spelbordet för att placera din pjäser"
+msgstr "Klicka på spelbordet för att placera din pjäs"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
@@ -1682,7 +1682,7 @@ msgstr "AI"
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
-"Tryck på ^1Starta Matchen^7 för att starta matchen med de nuvarande spelarna"
+"Tryck på ^1Börja Matchen^7 för att starta matchen med de nuvarande spelarna"
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
@@ -1724,7 +1724,7 @@ msgstr "Nästa Match"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr "Peg Solitaire"
+msgstr "Solitär"
 
 #: qcsrc/common/minigames/minigame/ps.qc:418
 msgid "All pieces cleared!"
@@ -2738,7 +2738,7 @@ msgstr "^BG%s^K1 blev bortsprängd av en Walker-turret%s%s"
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr "^BG%s%s^K1 var inblandad i sprängningen av en Bumblebee-explotion%s%s"
+msgstr "^BG%s^K1 var inblandad i sprängningen av en Bumblebee-explosion%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
@@ -2873,7 +2873,7 @@ msgstr "^BGDu har inte ^F1%s"
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BGDu släppte ^F1%s"
+msgstr "^BGDu släppte ^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
@@ -3031,7 +3031,7 @@ msgstr "^BG%s^K1 plockade upp Styrka"
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr "^BG%s^F3 frånkopplade sig"
+msgstr "^BG%s^F3 är frånkopplad"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
@@ -3042,7 +3042,7 @@ msgstr "^BG%s^F3 var kickad efter att ha varit stilla i %s sekunder"
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
-"^BG%s^F3 var flyttad till^BG åskådare^F3 eftre att ha stått stilla i %s "
+"^BG%s^F3 har flyttats till^BG åskådare^F3 efter att ha stått still i %s "
 "sekunder"
 
 #: qcsrc/common/notifications/all.inc:413
@@ -3203,7 +3203,7 @@ msgstr "^BG%s%s^K1 var skjuten till döds av ^BG%s^K1s Blaster%s%s"
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s^K1 shot themself to hell with their Blaster%s%s"
-msgstr "^BG%s%s^K1 sköt sig själv till helvetet med deras Blaster%s%s"
+msgstr "^BG%s^K1 sköt sig själv till helvetet med deras Blaster%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3213,7 +3213,7 @@ msgstr "^BG%s%s^K1 kände ett starkt drag av ^BG%s^K1s Crylink%s%s"
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr "^BG%s%s^K1 kände ett starkt drag av deras Crylink%s%s"
+msgstr "^BG%s^K1 kände ett starkt drag av deras Crylink%s%s"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
@@ -3392,7 +3392,7 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
-"^BG%s%s^K1 var sågad i hälften av ^BG%s^K1s Overkill Raketframdriven Motorsåg"
+"^BG%s%s^K1 var sågad på mitten av ^BG%s^K1s Overkill Raketframdriven Motorsåg"
 "%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
@@ -3407,15 +3407,15 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 var sågad i hälften av sin egen Overkill Raketframdriven Motorsåg"
-"%s%s"
+"^BG%s^K1 var sågad på mitten av sin egen Overkill Raketframdriven Motorsåg%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 sprängde upp sig själv med sin egen Overkill Raketframdriven "
+"^BG%s^K1 sprängde upp sig själv med sin egen Overkill Raketframdriven "
 "Motorsåg%s%s"
 
 #: qcsrc/common/notifications/all.inc:488
@@ -3561,7 +3561,7 @@ msgid ""
 "^BGMake some defensive scores before trying again."
 msgstr ""
 "^BGDu är nu ^F1sköldad^BG från flaggan/flaggorna\n"
-"^BGpå grund av ^F2för många misslyckade försök^BG att ta.\n"
+"^BGpå grund av ^F2för många misslyckade försök^BG att fånga.\n"
 "^BGGör några beskyddande poäng innan du försöker igen."
 
 #: qcsrc/common/notifications/all.inc:544
@@ -4066,7 +4066,7 @@ msgstr "^K1A %s har anländigt!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr ""
+msgstr "^BGDu fick tag på ^F1Bensinregenerator"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^BGYou got the ^F1Jetpack"
@@ -4316,7 +4316,7 @@ msgstr "^F2Sköld har tagit slut"
 
 #: qcsrc/common/notifications/all.inc:746
 msgid "^F2You are on speed"
-msgstr "^F2Du är nu på hastighet"
+msgstr "^F2Du är på hastighet"
 
 #: qcsrc/common/notifications/all.inc:747
 msgid "^F2Speed has worn off"
@@ -5373,7 +5373,7 @@ msgstr "%d veckor"
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr "%d dagar"
+msgstr "%s dagar"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
@@ -5916,7 +5916,7 @@ msgstr "Typsnittets skala:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Typsnittets skala på tjocktext:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
@@ -7835,7 +7835,7 @@ msgstr "Byt vänster och höger kanal"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone friendly mode"
-msgstr "Hörlursvänligt läge"
+msgstr "Hörlurarvänligt läge"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
@@ -9153,7 +9153,7 @@ msgstr "Visa en graf utav paketstorlekar och annan information"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Client-side movement prediction"
-msgstr "Rörelseprediktering i klienten"
+msgstr "Rörelseförutsägning i klienten"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid "Movement error compensation"
@@ -9233,7 +9233,7 @@ msgstr "Visa nuvarande datum och tid"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:134
 msgid "Show current date and time of day, useful on screenshots"
-msgstr "Visa nuvarande datum och tid på daget, användbart på skärmdumpar"
+msgstr "Visa nuvarande datum och tid på dagen, användbart på skärmdumpar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
 msgid "Enable developer mode"
@@ -9312,11 +9312,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
-msgstr "Under uppkoppling så sker bara språkförändringar i menyn,"
+msgstr "Under uppkoppling sker bara språkförändringar i menyn,"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr "hela språkförändringar börjar ta kraft efter starten på ett nytt spel"
+msgstr "hela språkförändringar börjar få effekt efter starten på ett nytt spel"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
