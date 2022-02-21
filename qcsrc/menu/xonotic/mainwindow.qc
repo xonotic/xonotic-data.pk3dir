@@ -61,7 +61,10 @@ void MainWindow_draw(entity me)
 
 	if (me.firstDraw) {
 		if (me.ToSDialog.shouldShow())
+		{
+			me.ToSDialog.loadXonoticToS(me.ToSDialog);
 			DialogOpenButton_Click_withCoords(NULL, me.ToSDialog, '0 0 0', eX * conwidth + eY * conheight);
+		}
 		else if(me.firstRunDialog.shouldShow())
 			DialogOpenButton_Click_withCoords(NULL, me.firstRunDialog, '0 0 0', eX * conwidth + eY * conheight);
 		
