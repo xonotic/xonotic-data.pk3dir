@@ -86,7 +86,6 @@ void XonoticToSDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, me.rows - 4, me.columns, me.textBox = makeXonoticTextBox());
-		me.loadXonoticToS(me);
 
 	me.TR(me);
 	me.gotoRC(me, me.rows - 1, 0);
