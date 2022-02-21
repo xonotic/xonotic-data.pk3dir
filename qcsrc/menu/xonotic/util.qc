@@ -437,11 +437,10 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			}
 		}
 	}
-	
+
 	if(un_tosversion != "")
 	{
 		_Nex_ExtResponseSystem_NewToS = stof(un_tosversion);
-		LOG_INFOF("Latest ToS version is %d", _Nex_ExtResponseSystem_NewToS);
 	}
 
 	if(un_bannedservers != "")
