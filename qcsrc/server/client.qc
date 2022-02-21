@@ -235,7 +235,7 @@ void setplayermodel(entity e, string modelname)
 }
 
 /** putting a client as observer in the server */
-void PutObserverInServer(entity this, bool is_forced)
+void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 {
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this, is_forced);
 	PlayerState_detach(this);
@@ -257,12 +257,18 @@ void PutObserverInServer(entity this, bool is_forced)
 		entcs_update_players(this);
 	}
 
-	entity spot = SelectSpawnPoint(this, true);
-	if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
-	this.angles = vec2(spot.angles);
+	if (use_spawnpoint)
+	{
+		entity spot = SelectSpawnPoint(this, true);
+		if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+		this.angles = vec2(spot.angles);
+		// offset it so that the spectator spawns higher off the ground, looks better this way
+		setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+	}
+	else // change origin to restore previous view origin
+		setorigin(this, this.origin + STAT(PL_VIEW_OFS, this) - STAT(PL_CROUCH_VIEW_OFS, this));
 	this.fixangle = true;
-	// offset it so that the spectator spawns higher off the ground, looks better this way
-	setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+
 	if (IS_REAL_CLIENT(this))
 	{
 		msg_entity = this;
@@ -809,6 +815,7 @@ void PutClientInServer(entity this)
 	if (game_stopped)
 		TRANSMUTE(Observer, this);
 
+	bool use_spawnpoint = (!this.enemy); // check this.enemy here since SetSpectatee will clear it
 	SetSpectatee(this, NULL);
 
 	// reset player keys
@@ -818,7 +825,7 @@ void PutClientInServer(entity this)
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
 	if (IS_OBSERVER(this)) {
-		PutObserverInServer(this, false);
+		PutObserverInServer(this, false, use_spawnpoint);
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
@@ -1797,7 +1804,7 @@ bool SpectateSet(entity this)
 	accuracy_resend(this);
 
 	if(!SpectateUpdate(this))
-		PutObserverInServer(this, false);
+		PutObserverInServer(this, false, true);
 
 	return true;
 }
@@ -2300,7 +2307,7 @@ void ObserverOrSpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
-				PutObserverInServer(this, false);
+				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
 			}
 		}
@@ -2326,7 +2333,7 @@ void ObserverOrSpectatorThink(entity this)
 			}
 		}
 		if(is_spec && !SpectateUpdate(this))
-			PutObserverInServer(this, false);
+			PutObserverInServer(this, false, true);
 	}
 	if (is_spec)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
@@ -2697,7 +2704,7 @@ void PlayerPostThink (entity this)
 				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
 				{
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
-					PutObserverInServer(this, true);
+					PutObserverInServer(this, true, true);
 				}
 				else
 				{
