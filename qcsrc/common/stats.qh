@@ -79,8 +79,8 @@ float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
 int autocvar_leadlimit;
-float checkrules_overtimesadded;
-float timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
+int checkrules_overtimesadded;
+int timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 
 // TODO: world.qh can't be included here due to circular includes!
 #define autocvar_fraglimit cvar("fraglimit")
@@ -118,8 +118,8 @@ REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
 REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
-REGISTER_STAT(OVERTIMESADDED, float, checkrules_overtimesadded)
-REGISTER_STAT(TIMEOUT_STATUS, float, timeout_status)
+REGISTER_STAT(OVERTIMESADDED, int, checkrules_overtimesadded)
+REGISTER_STAT(TIMEOUT_STATUS, int, timeout_status)
 REGISTER_STAT(MONSTERS_TOTAL, int)
 REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(NADE_BONUS, float)

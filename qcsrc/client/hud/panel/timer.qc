@@ -48,8 +48,8 @@ void HUD_Timer()
 	string timer;
 	string subtimer = string_null;
 	string subtext = string_null;
-	float timelimit, timeleft, overtimes;
-	float round_timelimit, round_timeleft;
+	float timelimit, timeleft, round_timelimit, round_timeleft;
+	int overtimes;
 	vector timer_size, subtext_size, subtimer_size;
 	vector timer_color = '1 1 1';
 	vector subtimer_color = '1 1 1';
