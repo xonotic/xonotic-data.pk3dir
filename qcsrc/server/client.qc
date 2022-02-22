@@ -964,7 +964,6 @@ void DecodeLevelParms(entity this)
 void FixClientCvars(entity e)
 {
 	// send prediction settings to the client
-	stuffcmd(e, "\nin_bindmap 0 0\n");
 	if(autocvar_g_antilag == 3) // client side hitscan
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
@@ -1877,18 +1876,18 @@ void SetSpectatee(entity this, entity spectatee)
 				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
 		}
 	}
-	if(this.enemy)
+	if(spectatee)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(this.enemy.(weaponentity).arc_beam)
-				this.enemy.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+			if(spectatee.(weaponentity).arc_beam)
+				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
 		}
 	}
 
-	if (this.enemy)
-		SetSpectatee_status(this, etof(this.enemy));
+	if (spectatee)
+		SetSpectatee_status(this, etof(spectatee));
 
 	// needed to update spectator list
 	if(old_spectatee) { ClientData_Touch(old_spectatee); }
@@ -2554,12 +2553,9 @@ void PlayerPreThink (entity this)
 		this.last_vehiclecheck = time + 1;
 	}
 
-	if(!CS_CVAR(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
-	{
-		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
-			PlayerUseKey(this);
-		CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
-	}
+	if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
+		PlayerUseKey(this);
+	CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
 
 	if (IS_REAL_CLIENT(this))
 		PrintWelcomeMessage(this);

@@ -1038,17 +1038,9 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
 	{
 		if (sflags & SERVERFLAG_PLAYERSTATS_CUSTOM)
-		{
-			draw_Picture(iconPos, "icon_mod_", iconSize, '1 1 1', 1); // TODO: icon
-		}
+			draw_Picture(iconPos, "icon_mod_", iconSize, '1 1 1', 1); // TODO: custom stats server icon
 		else
-		{
 			draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
-		}
-	}
-	else
-	{
-		draw_Picture(iconPos, "icon_mod_jeff", iconSize, '1 1 1', 1); // TODO: icon
 	}
 
 	if(isFocused && me.mouseOverIcons && !me.tooltip)

@@ -45,7 +45,11 @@ void HUD_Timer()
 	overtimes = STAT(OVERTIMESADDED);
 	timeout_last = STAT(TIMEOUT_LAST);
 
-	timeleft = bound(0, timelimit * 60 + STAT(GAMESTARTTIME) - time, timelimit * 60);
+	if (autocvar_hud_panel_timer_unbound){
+		timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
+	} else {
+		timeleft = bound(0, timelimit * 60 + STAT(GAMESTARTTIME) - time, timelimit * 60);
+	}
 	timeleft = ceil(timeleft);
 
 	// countdown sound
@@ -88,7 +92,6 @@ void HUD_Timer()
 	if (intermission_time) {
 		timer = max(0, floor(intermission_time - STAT(GAMESTARTTIME)));
 		timer_sub = "Intermission";
-	//} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
 	} else if (timeout_last) {
 		if(autocvar_hud_panel_timer_increment)
 			timer = max(0, floor(timeout_last - STAT(GAMESTARTTIME)));

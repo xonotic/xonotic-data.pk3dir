@@ -6,7 +6,6 @@
 void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 void Inventory_clear(PlayerState this);
-//void Inventory_ClearAll();
 void InventoryStorage_attach(PlayerState this);
 void InventoryStorage_delete(PlayerState this);
 
