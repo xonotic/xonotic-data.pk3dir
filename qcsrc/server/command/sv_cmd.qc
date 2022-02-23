@@ -191,7 +191,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				PutObserverInServer(it, true);
+				PutObserverInServer(it, true, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -1016,7 +1016,7 @@ void GameCommand_moveplayer(int request, int argc)
 						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							PutObserverInServer(client, true);
+							PutObserverInServer(client, true, true);
 
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
