@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-06 07:22+0100\n"
-"PO-Revision-Date: 2022-02-06 06:22+0000\n"
+"POT-Creation-Date: 2022-02-27 07:22+0100\n"
+"PO-Revision-Date: 2022-02-27 06:22+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/es_MX/)\n"
@@ -926,12 +926,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:665
 #: qcsrc/client/hud/panel/scoreboard.qc:672
 #: qcsrc/client/hud/panel/scoreboard.qc:727
-#: qcsrc/client/hud/panel/scoreboard.qc:738
+#: qcsrc/client/hud/panel/scoreboard.qc:738 qcsrc/common/util.qc:321
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:152
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:195
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:200
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:194
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:199
 msgid "N/A"
 msgstr ""
 
@@ -1035,7 +1035,7 @@ msgstr "mi"
 msgid "nmi"
 msgstr "nmi"
 
-#: qcsrc/client/hud/panel/timer.qc:71
+#: qcsrc/client/hud/panel/timer.qc:75
 msgid "WARMUP"
 msgstr ""
 
@@ -1323,10 +1323,6 @@ msgid "Key Hunt"
 msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
-msgid "^1Match has already begun"
-msgstr ""
-
-#: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:25
 msgid "^1You have no more lives left"
 msgstr ""
 
@@ -1849,7 +1845,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/util.qc:787
 msgid "Color:"
 msgstr ""
 
@@ -5392,12 +5388,12 @@ msgid ""
 "please file an issue."
 msgstr ""
 
-#: qcsrc/lib/string.qh:138
+#: qcsrc/lib/string.qh:170
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr ""
 
-#: qcsrc/lib/string.qh:139
+#: qcsrc/lib/string.qh:171
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr ""
@@ -5888,8 +5884,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:783 qcsrc/menu/xonotic/util.qc:799
-#: qcsrc/menu/xonotic/util.qc:816
+#: qcsrc/menu/xonotic/util.qc:782 qcsrc/menu/xonotic/util.qc:798
+#: qcsrc/menu/xonotic/util.qc:815
 msgid "Disable"
 msgstr ""
 
@@ -5956,7 +5952,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
-#: qcsrc/menu/xonotic/util.qc:771
+#: qcsrc/menu/xonotic/util.qc:770
 msgid "Enable"
 msgstr ""
 
@@ -6070,7 +6066,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:805
+#: qcsrc/menu/xonotic/util.qc:804
 msgid "Alpha:"
 msgstr ""
 
@@ -6376,12 +6372,12 @@ msgid "Panel background defaults:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:780
+#: qcsrc/menu/xonotic/util.qc:779
 msgid "Background:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:796
+#: qcsrc/menu/xonotic/util.qc:795
 msgid "Border size:"
 msgstr ""
 
@@ -6391,12 +6387,12 @@ msgid "Team color:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:822
+#: qcsrc/menu/xonotic/util.qc:821
 msgid "Test team color in configure mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:825
+#: qcsrc/menu/xonotic/util.qc:824
 msgid "Padding:"
 msgstr ""
 
@@ -6526,9 +6522,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:782
-#: qcsrc/menu/xonotic/util.qc:798 qcsrc/menu/xonotic/util.qc:807
-#: qcsrc/menu/xonotic/util.qc:815 qcsrc/menu/xonotic/util.qc:827
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:781
+#: qcsrc/menu/xonotic/util.qc:797 qcsrc/menu/xonotic/util.qc:806
+#: qcsrc/menu/xonotic/util.qc:814 qcsrc/menu/xonotic/util.qc:826
 msgid "Default"
 msgstr ""
 
@@ -6720,7 +6716,7 @@ msgid "Game types:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:85
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:221
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
 msgstr ""
 
@@ -7043,93 +7039,93 @@ msgid "Show more information about the currently highlighted server"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:96
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:228
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:106
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1052
 msgid "MOD^Default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:152
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
 msgid "%d modified"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:152
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:160
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:162
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "N/A (auth library missing)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:168
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:167
 msgid "Not supported (can't connect)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:170
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "Not supported (won't encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:174
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:173
 msgid "Supported (will encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:176
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:175
 msgid "Supported (won't encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:180
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:179
 msgid "Requested (will encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:181
 msgid "Requested (won't encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:185
 msgid "Required (can't connect)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:187
 msgid "Required (will encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "stats disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:204
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "stats enabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:215
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
@@ -9477,11 +9473,11 @@ msgstr ""
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
 msgid "Accept"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
 msgid "Don't accept (quit the game)"
 msgstr ""
 
@@ -9669,7 +9665,7 @@ msgstr ""
 msgid "waypoint editor menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/mainwindow.qc:101 qcsrc/menu/xonotic/mainwindow.qc:104
+#: qcsrc/menu/xonotic/mainwindow.qc:104 qcsrc/menu/xonotic/mainwindow.qc:107
 msgid "Do not press this button again!"
 msgstr ""
 
@@ -9986,25 +9982,25 @@ msgstr ""
 msgid "Update can be downloaded at:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:540
+#: qcsrc/menu/xonotic/util.qc:539
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:578
+#: qcsrc/menu/xonotic/util.qc:577
 #, c-format
 msgid "Update to %s now!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:663
+#: qcsrc/menu/xonotic/util.qc:662
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/util.qc:792
 msgid "Use default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:813
+#: qcsrc/menu/xonotic/util.qc:812
 msgid "Team Color:"
 msgstr ""
