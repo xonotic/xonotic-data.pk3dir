@@ -1,5 +1,6 @@
 #include "dialog_hudpanel_timer.qh"
 
+#include "textslider.qh"
 #include "checkbox.qh"
 #include "textlabel.qh"
 
