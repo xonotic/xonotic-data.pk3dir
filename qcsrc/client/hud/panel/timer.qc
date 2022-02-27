@@ -96,7 +96,7 @@ void HUD_Timer()
 		round_timelimit = STAT(ROUND_TIMELIMIT);
 
 		// Calculate round time left
-		round_timeleft = round_timelimit + STAT(ROUNDSTARTTIME) - time;
+		round_timeleft = round_timelimit + STAT(ROUNDSTARTTIME) - (game_stopped_time ? game_stopped_time : time);
 		if (!autocvar_hud_panel_timer_unbound)
 			round_timeleft = bound(0, round_timeleft, round_timelimit);
 		round_timeleft = ceil(round_timeleft);
@@ -109,7 +109,7 @@ void HUD_Timer()
 		if (intermission_time) {
 			subtimer = seconds_tostring(max(0, floor(intermission_time - STAT(ROUNDSTARTTIME))));
 		} else if (autocvar_hud_panel_timer_increment || round_timelimit <= 0) {
-			float round_time_elapsed = floor(time - STAT(ROUNDSTARTTIME));
+			float round_time_elapsed = floor((game_stopped_time ? game_stopped_time : time) - STAT(ROUNDSTARTTIME));
 			if (!autocvar_hud_panel_timer_unbound)
 				round_time_elapsed = max(0, round_time_elapsed);
 
