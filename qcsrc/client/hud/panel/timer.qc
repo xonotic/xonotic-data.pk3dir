@@ -53,7 +53,7 @@ void HUD_Timer()
 	vector timer_size, subtext_size, subtimer_size;
 	vector timer_color = '1 1 1';
 	vector subtimer_color = '1 1 1';
-	bool swap = (autocvar_hud_panel_timer_secondary == 2);
+	bool swap = (autocvar_hud_panel_timer_secondary == 2 && STAT(ROUNDSTARTTIME));
 
 	// Calculate timelimit
 	if(warmup_stage)
