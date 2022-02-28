@@ -50,6 +50,7 @@ void round_handler_Think(entity this)
 		else
 		{
 			round_handler_Reset(0);
+			round_starttime = -1; // can't start
 		}
 		this.nextthink = time + 1;  // canRoundStart every second
 	}
@@ -112,7 +113,8 @@ void round_handler_Reset(float next_think)
 	if (this.count)
 		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
 	this.nextthink = next_think;
-	round_starttime = (next_think) ? (next_think + this.count) : -1;
+	if (next_think)
+		round_starttime = next_think + this.count;
 }
 
 void round_handler_Remove()
