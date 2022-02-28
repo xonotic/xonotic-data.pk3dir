@@ -1275,6 +1275,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	cvar_set("_endmatch", "0");
 	game_stopped = true;
 	intermission_running = true; // game over
 
@@ -1613,16 +1614,15 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(timelimit > 0)
-	{
-		timelimit += game_starttime;
-	}
-	else if (timelimit < 0)
+	if (autocvar__endmatch || timelimit < 0)
 	{
 		// endmatch
 		NextLevel();
 		return;
 	}
+
+	if(timelimit > 0)
+		timelimit += game_starttime;
 
 	float wantovertime;
 	wantovertime = 0;

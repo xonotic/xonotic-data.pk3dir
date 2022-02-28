@@ -3,6 +3,7 @@
 #include <common/weapons/_all.qh>
 
 bool autocvar__sv_init;
+bool autocvar__endmatch;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_jetpack;
 bool autocvar_g_warmup_allguns;
