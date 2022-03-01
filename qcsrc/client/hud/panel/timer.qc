@@ -20,12 +20,12 @@ vector HUD_Timer_Color(float timeleft)
 		return '1 0 0'; //red
 }
 
-float HUD_Timer_Elapsed(float curtime, float starttime)
+float HUD_Timer_TimeElapsed(float curtime, float starttime)
 {
-	float time_elapsed = floor(curtime - STAT(GAMESTARTTIME));
+	float time_elapsed = curtime - starttime;
 	if (!autocvar_hud_panel_timer_unbound)
 		time_elapsed = max(0, time_elapsed);
-	return time_elapsed;
+	return floor(time_elapsed);
 }
 
 float HUD_Timer_TimeLeft(float curtime, float starttime, float timelimit)
@@ -92,7 +92,7 @@ void HUD_Timer()
 
 	// Timer text
 	if (autocvar_hud_panel_timer_increment || timelimit == 0)
-		timer = seconds_tostring(HUD_Timer_Elapsed(curtime, STAT(GAMESTARTTIME)));
+		timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
 	else
 		timer = seconds_tostring(timeleft);
 	
@@ -119,7 +119,7 @@ void HUD_Timer()
 
 			// Subtimer text
 			if (autocvar_hud_panel_timer_increment || round_timelimit <= 0)
-				subtimer = seconds_tostring(HUD_Timer_Elapsed(round_curtime, STAT(ROUNDSTARTTIME)));
+				subtimer = seconds_tostring(HUD_Timer_TimeElapsed(round_curtime, STAT(ROUNDSTARTTIME)));
 			else
 				subtimer = seconds_tostring(round_timeleft);
 		}
