@@ -131,8 +131,6 @@ void HUD_Timer()
 
 	if(warmup_stage || autocvar__hud_configure)
 		subtext = _("Warmup");
-	else if(intermission_time)
-		subtext = _("Intermission");
 	else if(STAT(TIMEOUT_STATUS))
 		subtext = _("Timeout");
 	else if (overtimes >= 2)
