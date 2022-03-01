@@ -20,6 +20,22 @@ vector HUD_Timer_Color(float timeleft)
 		return '1 0 0'; //red
 }
 
+float HUD_Timer_Elapsed(float curtime, float starttime)
+{
+	float time_elapsed = floor(curtime - STAT(GAMESTARTTIME));
+	if (!autocvar_hud_panel_timer_unbound)
+		time_elapsed = max(0, time_elapsed);
+	return time_elapsed;
+}
+
+float HUD_Timer_TimeLeft(float curtime, float starttime, float timelimit)
+{
+	float timeleft = timelimit + starttime - curtime;
+	if (!autocvar_hud_panel_timer_unbound)
+		timeleft = bound(0, timeleft, timelimit);
+	return ceil(timeleft);
+}
+
 void HUD_Timer()
 {
 	if(!autocvar__hud_configure)
@@ -48,15 +64,14 @@ void HUD_Timer()
 	string timer;
 	string subtimer = string_null;
 	string subtext = string_null;
-	float hudtime, timelimit, timeleft;
-	int overtimes;
+	float curtime, timelimit, timeleft;
 	vector timer_size, subtext_size, subtimer_size;
 	vector timer_color = '1 1 1';
 	vector subtimer_color = '1 1 1';
 	bool swap = (autocvar_hud_panel_timer_secondary == 2 && STAT(ROUNDSTARTTIME));
 
-	// Calculate game time and timelimit
-	hudtime = (intermission_time ? intermission_time : time);
+	// Use real or frozen time and get the time limit
+	curtime = (intermission_time ? intermission_time : time);
 	if(warmup_stage)
 	{
 		timelimit = STAT(WARMUP_TIMELIMIT);
@@ -69,28 +84,19 @@ void HUD_Timer()
 	}
 
 	// Calculate time left
-	timeleft = timelimit + STAT(GAMESTARTTIME) - hudtime;
-	if (!autocvar_hud_panel_timer_unbound)
-		timeleft = bound(0, timeleft, timelimit);
-	timeleft = ceil(timeleft);
-	//LOG_INFOF("Hudtime %d - intermission_time %d - timelimit %d - timeleft %d", hudtime, intermission_time, timelimit, timeleft);
+	timeleft = HUD_Timer_TimeLeft(curtime, STAT(GAMESTARTTIME), timelimit);
 
 	// Timer color
 	if(!intermission_time && !warmup_stage && timelimit > 0)
 		timer_color = HUD_Timer_Color(timeleft);
 
 	// Timer text
-	if (autocvar_hud_panel_timer_increment || timelimit == 0) {
-		float time_elapsed = floor(hudtime - STAT(GAMESTARTTIME));
-		if (!autocvar_hud_panel_timer_unbound)
-			time_elapsed = max(0, time_elapsed);
-
-		timer = seconds_tostring(time_elapsed);
-	} else {
+	if (autocvar_hud_panel_timer_increment || timelimit == 0)
+		timer = seconds_tostring(HUD_Timer_Elapsed(curtime, STAT(GAMESTARTTIME)));
+	else
 		timer = seconds_tostring(timeleft);
-	}
 	
-	// Round-based game modes
+	// Secondary timer for round-based game modes
 	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
 	{
 		if(STAT(ROUNDSTARTTIME) == -1) {
@@ -98,36 +104,29 @@ void HUD_Timer()
 			subtimer = "--:--";
 			subtimer_color = '1 0 0';
 		} else {
-			float round_hudtime, round_timelimit, round_timeleft;
+			float round_curtime, round_timelimit, round_timeleft;
 
-			round_hudtime = (game_stopped_time ? game_stopped_time : time);
+			// Use real or frozen time and get the time limit
+			round_curtime = (game_stopped_time ? game_stopped_time : time);
 			round_timelimit = STAT(ROUND_TIMELIMIT);
 
-			// Calculate round time left
-			round_timeleft = round_timelimit + STAT(ROUNDSTARTTIME) - round_hudtime;
-			if (!autocvar_hud_panel_timer_unbound)
-				round_timeleft = bound(0, round_timeleft, round_timelimit);
-			round_timeleft = ceil(round_timeleft);
+			// Calculate time left
+			round_timeleft = HUD_Timer_TimeLeft(round_curtime, STAT(ROUNDSTARTTIME), round_timelimit);
 
 			// Subtimer color
 			if(!intermission_time && round_timelimit > 0)
 				subtimer_color = HUD_Timer_Color(round_timeleft);
 
 			// Subtimer text
-			if (autocvar_hud_panel_timer_increment || round_timelimit <= 0) {
-				float round_time_elapsed = floor(round_hudtime - STAT(ROUNDSTARTTIME));
-				if (!autocvar_hud_panel_timer_unbound)
-					round_time_elapsed = max(0, round_time_elapsed);
-
-				subtimer = seconds_tostring(round_time_elapsed);
-			} else {
+			if (autocvar_hud_panel_timer_increment || round_timelimit <= 0)
+				subtimer = seconds_tostring(HUD_Timer_Elapsed(round_curtime, STAT(ROUNDSTARTTIME)));
+			else
 				subtimer = seconds_tostring(round_timeleft);
-			}
 		}
 	}
 
 	// Subtext
-	overtimes = STAT(OVERTIMESADDED);
+	int overtimes = STAT(OVERTIMESADDED);
 
 	if(warmup_stage || autocvar__hud_configure)
 		subtext = _("Warmup");
