@@ -588,7 +588,7 @@ void bot_calculate_stepheightvec()
 	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }
 
-bool bot_fixcount()
+bool bot_fixcount(bool multiple_per_frame)
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
@@ -636,12 +636,16 @@ bool bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		if (currentbots < bots)
+		while (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
 				bprint("Can not add bot, server full.\n");
 				return false;
+			}
+			if (!multiple_per_frame)
+			{
+				break;
 			}
 		}
 		while (currentbots > bots && bots >= 0)
@@ -713,7 +717,7 @@ void bot_serverframe()
 
 	if(time > botframe_nextthink)
 	{
-		if(!bot_fixcount())
+		if(!bot_fixcount(false))
 			botframe_nextthink = time + 10;
 	}
 

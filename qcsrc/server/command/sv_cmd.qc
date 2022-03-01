@@ -333,9 +333,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", "0");
-				bot_fixcount();
+				bot_fixcount(false);  // Kill all bots.
 				cvar_settemp("bot_number", argv(2));
-				if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+				if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 				return;
 			}
 			else if (argv(1) == "load" && argc == 3)
@@ -366,9 +366,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 							cvar_settemp("minplayers", "0");
 							cvar_settemp("minplayers_per_team", "0");
 							cvar_settemp("bot_number", "0");
-							bot_fixcount();
+							bot_fixcount(false);  // Kill all bots.
 							cvar_settemp("bot_number", argv(3));
-							if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+							if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 						}
 						else
 						{
@@ -1225,7 +1225,7 @@ void GameCommand_setbots(int request, int argc)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", argv(1));
-				bot_fixcount();
+				bot_fixcount(true);
 				return;
 			}
 		}
