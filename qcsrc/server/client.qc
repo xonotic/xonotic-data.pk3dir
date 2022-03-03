@@ -238,6 +238,7 @@ void setplayermodel(entity e, string modelname)
 void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 {
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this, is_forced);
+	bool recount_ready = false;
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -252,7 +253,8 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		if(IS_REAL_CLIENT(this))
 		{
 			if (vote_called) { VoteCount(false); }
-			ReadyCount();
+			this.ready = false;
+			recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -317,6 +319,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.monster_attack = false;
 	STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
+	if(recount_ready) ReadyCount();
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
 	if(this.damagedbycontents)
