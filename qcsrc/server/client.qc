@@ -303,12 +303,15 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 
+	TRANSMUTE(Observer, this);
+
+	if(recount_ready) ReadyCount();
+
 	WaypointSprite_PlayerDead(this);
+	accuracy_resend(this);
 
 	if (CS(this).killcount != FRAGS_SPECTATOR && !game_stopped && CHAT_NOSPECTATORS())
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-
-	accuracy_resend(this);
 
 	CS(this).spectatortime = time;
 	if(this.bot_attack)
@@ -318,8 +321,6 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		IL_REMOVE(g_monster_targets, this);
 	this.monster_attack = false;
 	STAT(HUD, this) = HUD_NORMAL;
-	TRANSMUTE(Observer, this);
-	if(recount_ready) ReadyCount();
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
 	if(this.damagedbycontents)
