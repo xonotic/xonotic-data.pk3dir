@@ -22,6 +22,7 @@
 # Sless <sless@gmx.net>, 2014
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # Wuzzy <Wuzzy@disroot.org>, 2016
+# Wuzzy <Wuzzy@disroot.org>, 2016
 # Yepoleb <huberg18@gmail.com>, 2013
 msgid ""
 msgstr ""
