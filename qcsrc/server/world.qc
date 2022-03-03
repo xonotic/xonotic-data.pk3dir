@@ -1636,7 +1636,6 @@ void CheckRules_World()
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_FRAG);
-			checkrules_overtimesadded = -1; // Treat sudden death as an overtime
 		}
 	}
 	else
