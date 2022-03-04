@@ -126,16 +126,18 @@ void HUD_Timer()
 	}
 
 	// Subtext
-	int overtimes = STAT(OVERTIMESADDED);
+	int overtimes = STAT(OVERTIMES);
 
 	if(warmup_stage || autocvar__hud_configure)
 		subtext = _("Warmup");
 	else if(STAT(TIMEOUT_STATUS))
 		subtext = _("Timeout");
+	else if (overtimes == -1)
+		subtext = _("Sudden Death");
+	else if(overtimes == 1)
+		subtext = _("Overtime");
 	else if (overtimes >= 2)
 		subtext = sprintf(_("Overtime #%d"), overtimes);
-	else if(overtimes)
-		subtext = _("Overtime");
 
 	subtext_size  = vec2(mySize.x, mySize.y / 3);
 	timer_size    = vec2(mySize.x, mySize.y - subtext_size.y);

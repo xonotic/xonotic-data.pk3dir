@@ -31,6 +31,7 @@ float autocvar_timelimit_suddendeath;
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
+int checkrules_overtimesadded; //how many overtimes have been already added
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
 bool server_is_dedicated;
