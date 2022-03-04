@@ -147,8 +147,9 @@ void HUD_Timer()
 	HUD_Panel_DrawBg();
 	
 	if(subtimer) {
+		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x, (swap ? timer : subtimer), subtimer_size, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? timer : subtimer), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	
 	drawstring_aspect(pos, (swap ? subtimer : timer), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
