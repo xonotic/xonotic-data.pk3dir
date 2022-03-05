@@ -117,10 +117,10 @@ string count_fill(float interval, string zeroth, string first, string second, st
 }
 
 ERASEABLE
-string process_time(float outputtype, float seconds)
+string process_time(float outputtype, int seconds)
 {
-	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
-	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
+	int tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
+	int tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
 
 	tmp_seconds = floor(seconds);
 
@@ -160,7 +160,8 @@ string process_time(float outputtype, float seconds)
 		{
 			string output = "";
 
-			output = count_seconds(tmp_seconds);
+			if (tmp_seconds)
+				output = count_seconds(tmp_seconds);
 
 			if (tmp_minutes)
 			{
@@ -196,6 +197,9 @@ string process_time(float outputtype, float seconds)
 					count_years(tmp_years),
 					((output != "") ? strcat(", ", output) : ""));
 			}
+
+			if (output == "")
+				return count_seconds(0);
 
 			return output;
 		}
