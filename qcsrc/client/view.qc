@@ -1639,6 +1639,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(intermission && !intermission_time)
 		intermission_time = time;
 
+	if(STAT(GAME_STOPPED) && !game_stopped_time)
+		game_stopped_time = time;
+	else if(game_stopped_time && !STAT(GAME_STOPPED))
+		game_stopped_time = 0;
+
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
 		if(calledhooks & HOOK_START)

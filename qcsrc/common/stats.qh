@@ -79,6 +79,9 @@ float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
 int autocvar_leadlimit;
+int overtimes; // overtimes added (-1 = sudden death)
+int timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
+
 // TODO: world.qh can't be included here due to circular includes!
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
@@ -115,6 +118,8 @@ REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
 REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
+REGISTER_STAT(OVERTIMES, int, overtimes)
+REGISTER_STAT(TIMEOUT_STATUS, int, timeout_status)
 REGISTER_STAT(MONSTERS_TOTAL, int)
 REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(NADE_BONUS, float)
@@ -360,6 +365,7 @@ REGISTER_STAT(Q3COMPAT, int, q3compat)
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
+float round_limit;
 #endif
 
 #ifdef SVQC
@@ -399,6 +405,7 @@ REGISTER_STAT(MOVEVARS_AIRCONTROL, float)
 REGISTER_STAT(FRAGLIMIT, float, autocvar_fraglimit)
 REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
 REGISTER_STAT(WARMUP_TIMELIMIT, float, warmup_limit)
+REGISTER_STAT(ROUND_TIMELIMIT, float, round_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #define autocvar_sv_gravity cvar("sv_gravity")
