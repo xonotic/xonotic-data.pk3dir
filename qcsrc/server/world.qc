@@ -1275,6 +1275,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	cvar_set("_endmatch", "0");
 	game_stopped = true;
 	intermission_running = true; // game over
 
@@ -1350,9 +1351,14 @@ float InitiateSuddenDeath()
 		if(!checkrules_suddendeathend)
 		{
 			if(autocvar_g_campaign)
+			{
 				checkrules_suddendeathend = time; // no suddendeath in campaign
+			}
 			else
+			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
+				overtimes = -1;
+			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
 		}
@@ -1363,6 +1369,7 @@ float InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
@@ -1613,16 +1620,15 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(timelimit > 0)
-	{
-		timelimit += game_starttime;
-	}
-	else if (timelimit < 0)
+	if (autocvar__endmatch || timelimit < 0)
 	{
 		// endmatch
 		NextLevel();
 		return;
 	}
+
+	if(timelimit > 0)
+		timelimit += game_starttime;
 
 	float wantovertime;
 	wantovertime = 0;
