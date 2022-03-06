@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-27 07:22+0100\n"
+"POT-Creation-Date: 2022-03-06 07:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1034,8 +1034,25 @@ msgstr ""
 msgid "nmi"
 msgstr ""
 
-#: qcsrc/client/hud/panel/timer.qc:75
-msgid "WARMUP"
+#: qcsrc/client/hud/panel/timer.qc:132
+msgid "Warmup"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:134
+msgid "Timeout"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:136
+msgid "Sudden Death"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:138
+msgid "Overtime"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:140
+#, c-format
+msgid "Overtime #%d"
 msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:30
@@ -5870,6 +5887,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
@@ -5942,6 +5960,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
 #: qcsrc/menu/xonotic/util.qc:770
 msgid "Enable"
 msgstr ""
@@ -6224,12 +6243,20 @@ msgstr ""
 msgid "StrafeHUD Panel"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+msgid "Secondary timer:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
+msgid "Swapped"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6

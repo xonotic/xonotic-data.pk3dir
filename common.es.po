@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-27 07:22+0100\n"
-"PO-Revision-Date: 2022-02-27 06:22+0000\n"
+"POT-Creation-Date: 2022-03-06 07:22+0100\n"
+"PO-Revision-Date: 2022-03-06 06:22+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -1086,9 +1086,26 @@ msgstr "ml"
 msgid "nmi"
 msgstr "nmi"
 
-#: qcsrc/client/hud/panel/timer.qc:75
-msgid "WARMUP"
-msgstr "CALENTAMIENTO"
+#: qcsrc/client/hud/panel/timer.qc:132
+msgid "Warmup"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:134
+msgid "Timeout"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:136
+msgid "Sudden Death"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:138
+msgid "Overtime"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:140
+#, c-format
+msgid "Overtime #%d"
+msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -6075,6 +6092,7 @@ msgstr "Panel de Información de los mensajes"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
@@ -6147,6 +6165,7 @@ msgstr "Panel de notificaciones"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
 #: qcsrc/menu/xonotic/util.qc:770
 msgid "Enable"
 msgstr "Habilitar"
@@ -6429,13 +6448,21 @@ msgstr "Inactivo:"
 msgid "StrafeHUD Panel"
 msgstr "Panel StrafeHUD:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"
 msgstr "Reloj:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
 msgstr "Mostrar el tiempo transcurrido"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+msgid "Secondary timer:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
+msgid "Swapped"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
