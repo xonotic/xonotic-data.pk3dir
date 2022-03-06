@@ -361,6 +361,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.revival_time = 0;
 	this.draggable = drag_undraggable;
 
+	player_powerups_remove_all(this);
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
 	this.drawonlytoclient = this;
@@ -1452,15 +1453,17 @@ void play_countdown(entity this, float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+// it removes special powerups not handled by StatusEffects
 void player_powerups_remove_all(entity this)
 {
-	if (this.items & IT_SUPERWEAPON)
+	if (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
 		if (time > game_starttime + 1 && IS_CLIENT(this))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-		this.items -= (this.items & IT_SUPERWEAPON);
+		if (this.items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
+			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+		this.items -= (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS));
 	}
 }
 
