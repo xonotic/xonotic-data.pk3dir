@@ -95,7 +95,7 @@ void HUD_Timer()
 		timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
 	else
 		timer = seconds_tostring(timeleft);
-	
+
 	// Secondary timer for round-based game modes
 	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
 	{
@@ -130,7 +130,7 @@ void HUD_Timer()
 
 	if(warmup_stage || autocvar__hud_configure)
 		subtext = _("Warmup");
-	else if(STAT(TIMEOUT_STATUS))
+	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");
 	else if (overtimes == -1)
 		subtext = _("Sudden Death");
@@ -142,18 +142,18 @@ void HUD_Timer()
 	subtext_size  = vec2(mySize.x, mySize.y / 3);
 	timer_size    = vec2(mySize.x, mySize.y - subtext_size.y);
 	subtimer_size = vec2(mySize.x / 3, mySize.y - subtext_size.y);
-	
+
 	panel_size.y -= subtext_size.y;
 	HUD_Panel_DrawBg();
-	
+
 	if(subtimer) {
 		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
 		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? timer : subtimer), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	
+
 	drawstring_aspect(pos, (swap ? subtimer : timer), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
-	
+
 	if(subtext)
 		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 
