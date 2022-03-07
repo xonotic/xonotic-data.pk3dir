@@ -4,6 +4,7 @@
 bool autocvar_hud_panel_centerprint;
 float autocvar_hud_panel_centerprint_align;
 float autocvar_hud_panel_centerprint_fade_in = 0.15;
+float autocvar_hud_panel_centerprint_fade_in_short = 0;
 float autocvar_hud_panel_centerprint_fade_out = 0.15;
 float autocvar_hud_panel_centerprint_fade_subsequent = 1;
 float autocvar_hud_panel_centerprint_fade_subsequent_passone = 3;
