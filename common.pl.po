@@ -25,13 +25,14 @@
 # Saikuru Zero, 2021
 # Saikuru Zero, 2021
 # Sertomas, 2014
+# SFS Atlas, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
-"PO-Revision-Date: 2022-03-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-03-06 09:54+0000\n"
+"Last-Translator: SFS Atlas\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -67,7 +68,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:177
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Wiadomość o czasu %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:182
 msgid "Generic message"
@@ -295,7 +296,7 @@ msgstr "Czat drużynowy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "niedługo siła"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -537,7 +538,7 @@ msgstr "Pośredni %d"
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "KARA: %.1f %s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1180
 msgid "missing a checkpoint"
@@ -633,7 +634,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^fastest"
-msgstr ""
+msgstr "Najszybszy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Time of fastest lap (Race/CTS)"
@@ -1020,12 +1021,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2079
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Nagroda za szybkość: %d %s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2083
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Najszybszy w historii: %d %s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2119
 #, c-format
@@ -1064,15 +1065,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "Rozgrewka"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "Koniec czasu"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "Nagła śmierć"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
@@ -1328,7 +1329,7 @@ msgstr "Ilość punktów potrzebna przed końcem meczu"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr ""
+msgstr "Pojedynek"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -1360,7 +1361,7 @@ msgstr "Trzymaj kulę, aby otrzymywać punkty za zabicia"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
-msgstr ""
+msgstr "Trzymaj się z daleka"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
