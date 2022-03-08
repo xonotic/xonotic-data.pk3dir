@@ -26,6 +26,7 @@
 # Saikuru Zero, 2021
 # Sertomas, 2014
 # SFS Atlas, 2022
+# SFS Atlas, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
