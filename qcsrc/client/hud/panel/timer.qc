@@ -12,12 +12,12 @@ void HUD_Timer_Export(int fh)
 
 vector HUD_Timer_Color(float timeleft)
 {
-	if(timeleft >= 300)
-		return '1 1 1'; //white
-	else if(timeleft >= 60)
-		return '1 1 0'; //yellow
+	if(timeleft <= 60)
+		return '1 0 0'; // red
+	else if(timeleft <= 300)
+		return '1 1 0'; // yellow
 	else
-		return '1 0 0'; //red
+		return '1 1 1'; // white
 }
 
 float HUD_Timer_TimeElapsed(float curtime, float starttime)
