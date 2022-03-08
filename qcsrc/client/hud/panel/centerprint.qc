@@ -39,6 +39,7 @@ string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
 bool centerprint_bold[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
+float centerprint_start_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
@@ -46,7 +47,7 @@ bool centerprint_showing;
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
-	//LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
+	LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
 	int i, j;
 
 	if(strMessage == "" && new_id == 0)
@@ -106,6 +107,7 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 		j = cpm_index;
 	}
 	strcpy(centerprint_messages[j], strMessage);
+	centerprint_start_time[j] = time;
 	centerprint_bold[j] = is_bold;
 	centerprint_msgID[j] = new_id;
 	if (duration < 0)
@@ -239,17 +241,10 @@ void HUD_CenterPrint()
 	if (autocvar_hud_panel_centerprint_flip)
 		pos.y += panel_size.y;
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
+	bool is_bold = true;
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
-		bool is_bold = centerprint_bold[j];
-
-		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
-		// height = panel_size_y/entries;
-		// fontsize = '1 1 0' * height;
-		height = (is_bold) ? vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale_bold : vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
-		fontsize = '1 1 0' * height;
-		entries = bound(1, floor(panel_size.y/height), CENTERPRINT_MAX_ENTRIES);
-
+		fontsize = hud_fontsize;
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
 		if (centerprint_expire_time[j] == -1)
@@ -274,17 +269,22 @@ void HUD_CenterPrint()
 
 		all_messages_expired = false;
 
+		if (time < centerprint_start_time[j]) continue;
+
 		float fade_in_time = autocvar_hud_panel_centerprint_fade_in;
-		if (centerprint_time[j] <= 2)
+		float fade_out_time = autocvar_hud_panel_centerprint_fade_out;
+
+		if (centerprint_time[j] == 1)
 			fade_in_time = autocvar_hud_panel_centerprint_fade_in_short;
 
 		// fade
-		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
-			a = (time - centerprint_expire_time[j]) / max(0.0001, fade_in_time);
-		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
-			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, fade_in_time);
-		else // Expiring soon, so fade it out.
-			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
+		a = 1;
+		if(fade_in_time && centerprint_start_time[j] && time < centerprint_start_time[j] + fade_in_time) // Fade in
+			a = (time - centerprint_start_time[j]) / fade_in_time;
+		else if(time < centerprint_expire_time[j] - fade_out_time || centerprint_time[j] < 0) // Regularily printed or forced
+			a = 1;
+		else if(fade_out_time) // Expiring soon, so fade it out.
+			a = (centerprint_expire_time[j] - time) / fade_out_time;
 
 		if(centerprint_msgID[j] == ORDINAL(CPID_TIMEIN))
 			a = 1;
@@ -292,8 +292,6 @@ void HUD_CenterPrint()
 		// while counting down show it anyway in order to hold the current message position
 		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
-		if (a > 1)
-			a = 1;
 
 		// set the size from fading in/out before subsequent fading
 		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
