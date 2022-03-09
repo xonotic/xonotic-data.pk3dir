@@ -233,7 +233,7 @@
 			PERSON(Victor "LegendGuard" Jaume) \
 		NL() \
 		FUNCTION(_("Kazakh")) \
-			PERSON("Артем "bystrov.arterm" Быстров") \
+			PERSON(Артем "bystrov.arterm" Быстров) \
 		NL() \
 		FUNCTION(_("Korean")) \
 			PERSON(Jisoo "s6e9x" Lim) \
