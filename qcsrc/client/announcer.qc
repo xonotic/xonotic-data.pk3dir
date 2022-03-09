@@ -52,7 +52,7 @@ void Announcer_Countdown(entity this)
 	{
 		if(inround)
 		{
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded, STAT(ROUND_COUNT));
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
@@ -112,7 +112,7 @@ void Announcer_Gamestart()
 				centerprint_SetTitle(MapInfo_Type_ToText(gametype));
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
+			if(!warmup_stage && time < STAT(GAMESTARTTIME))
 				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 
 			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime

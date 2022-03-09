@@ -349,8 +349,10 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 			PlayerStats_GameReport_Reset_All();
 		}
 
-		if (round_handler_IsActive())
+		if (round_handler_IsActive()) {
+			round_count = 0;
 			round_handler_Reset(game_starttime);
+		}
 	}
 
 	if (shuffleteams_on_reset_map)

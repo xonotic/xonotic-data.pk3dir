@@ -528,7 +528,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  _("^BOLDBegin!"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_GAMESTART,               N_ENABLE,    0, 1, "",               CPID_ROUND,             "1 f1", _("^BGGame starts in\n^BOLD^COUNT"), "")
-    MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 1, "",               CPID_ROUND,             "1 f1", _("^BGRound starts in\n^BOLD^COUNT"), "")
+    MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 2, "f2",               CPID_ROUND,           "1 f1", _("^BGRound %s starts in\n^BOLD^COUNT"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTOP,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  _("^F4Round cannot start"), "")
 
     MSG_CENTER_NOTIF(ROUND_TIED,                        N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^BGRound tied"), "")

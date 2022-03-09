@@ -35,7 +35,10 @@ void round_handler_Think(entity this)
 	{
 		if (this.canRoundStart() && !(autocvar_g_campaign && !campaign_bots_may_start))
 		{
-			if (this.cnt == this.count + 1) round_starttime = time + this.count;
+			if (this.cnt == this.count + 1) {
+				round_starttime = time + this.count;
+				++round_count;
+			}
 			int f = this.cnt - 1;
 			if (f == 0)
 			{

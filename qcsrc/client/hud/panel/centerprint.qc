@@ -50,7 +50,7 @@ string centerprint_title;
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
-	LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
+	//LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
 	int i, j;
 
 	if(strMessage == "" && new_id == 0)
