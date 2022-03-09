@@ -35,16 +35,14 @@ void round_handler_Think(entity this)
 	{
 		if (this.canRoundStart() && !(autocvar_g_campaign && !campaign_bots_may_start))
 		{
-			if (this.cnt == this.count + 1) {
-				round_starttime = time + this.count;
-				++round_count;
-			}
+			if (this.cnt == this.count + 1) round_starttime = time + this.count;
 			int f = this.cnt - 1;
 			if (f == 0)
 			{
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;
+				rounds_played++;
 				if (this.roundStart) this.roundStart();
 				return;
 			}
@@ -117,7 +115,10 @@ void round_handler_Reset(float next_think)
 		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
 	this.nextthink = next_think;
 	if (next_think)
+	{
+		if (next_think <= game_starttime) rounds_played = 0;
 		round_starttime = next_think + this.count;
+	}
 }
 
 void round_handler_Remove()
