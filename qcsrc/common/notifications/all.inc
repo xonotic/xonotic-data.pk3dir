@@ -526,7 +526,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ASSAULT_DEFENDING,                 N_ENABLE,    0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are defending!"), "")
     MSG_CENTER_NOTIF(ASSAULT_OBJ_DESTROYED,             N_ENABLE,    0, 1, "f1time",         CPID_ASSAULT_ROLE,      "0 0",  _("^BGObjective destroyed in ^F4%s^BG!"), "")
 
-    MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  _("^F4Begin!"), "")
+    MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  _("^BOLDBegin!"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_GAMESTART,               N_ENABLE,    0, 1, "",               CPID_ROUND,             "1 f1", _("^BGGame starts in\n^BOLD^COUNT"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 1, "",               CPID_ROUND,             "1 f1", _("^BGRound starts in\n^BOLD^COUNT"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTOP,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  _("^F4Round cannot start"), "")

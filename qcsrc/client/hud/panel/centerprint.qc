@@ -33,7 +33,7 @@ void HUD_CenterPrint_Export(int fh)
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
-const float CENTERPRINT_SPACING = 0.7;
+const float CENTERPRINT_SPACING = 0.5;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -167,10 +167,11 @@ void HUD_CenterPrint()
 				if (r > 0.8)
 					centerprint_Add(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
 				else if (r > 0.55)
-					centerprint_Add(0, sprintf(_("^1Multiline message at time %s that\n^1lasts longer than normal"), seconds_tostring(time)), 20, 0);
+					centerprint_Add(0, sprintf(_("^1Multiline message at time %s that\n^BOLDlasts longer than normal"), seconds_tostring(time)), 20, 0);
 				else
 					centerprint_AddStandard(sprintf(_("Message at time %s"), seconds_tostring(time)));
-				hud_configure_cp_generation_time = time + 1 + random()*4;
+				//hud_configure_cp_generation_time = time + 1 + random()*4;
+				hud_configure_cp_generation_time = time + 1;
 			}
 			else
 			{
@@ -261,8 +262,10 @@ void HUD_CenterPrint()
 		float fade_in_time = autocvar_hud_panel_centerprint_fade_in;
 		float fade_out_time = autocvar_hud_panel_centerprint_fade_out;
 
-		if (centerprint_time[j] == 1)
+		if (centerprint_countdown_num[j]) {
 			fade_in_time = autocvar_hud_panel_centerprint_fade_in_short;
+			fade_out_time = 0;
+		}
 
 		// fade
 		a = 1;
@@ -274,8 +277,6 @@ void HUD_CenterPrint()
 			a = (centerprint_expire_time[j] - time) / fade_out_time;
 
 		if(centerprint_msgID[j] == ORDINAL(CPID_TIMEIN))
-			a = 1;
-		if(centerprint_countdown_num[j])
 			a = 1;
 
 		// while counting down show it anyway in order to hold the current message position
@@ -296,7 +297,9 @@ void HUD_CenterPrint()
 		a *= panel_fg_alpha;
 
 		// finally set the size based on the new alpha from subsequent fading
-		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
+		// TODO: Apply this only if subsequent, otherwise it fucks it up
+		if(g)
+			sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
@@ -314,6 +317,7 @@ void HUD_CenterPrint()
 				{
 					bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
 					vector fontsize = hud_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+
 					ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
 						pos.y -= fontsize.y;
@@ -331,14 +335,14 @@ void HUD_CenterPrint()
 
 			bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
 			vector fontsize = hud_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+			if (is_bold)
+				getWrappedLine_remaining = substring(getWrappedLine_remaining, 5, -1);
 
 			while(getWrappedLine_remaining)
 			{
 				ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 				{
-					if (is_bold)
-						ts = substring(ts, 5, -1);
 					if (align)
 						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
@@ -352,18 +356,15 @@ void HUD_CenterPrint()
 			}
 		}
 
-		float height_used = pos.y - msg_size;
-
 		++g; // move next position number up
 
 		msg_size = pos.y - msg_size;
+
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos.y += height_used;
-			//pos.y = current_msg_posY - CENTERPRINT_SPACING * fontsize.y;
+			pos.y -= msg_size + CENTERPRINT_SPACING * hud_fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				//pos.y += (msg_size + CENTERPRINT_SPACING * fontsize.y) * (1 - sqrt(sz));
-				pos.y += height_used * (1 - sqrt(sz));
+				pos.y += (1 - sqrt(a));
 
 			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
@@ -373,11 +374,9 @@ void HUD_CenterPrint()
 		}
 		else
 		{
-			//pos.y += CENTERPRINT_SPACING * fontsize.y;
-			pos.y += height_used;
+			pos.y += CENTERPRINT_SPACING * hud_fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				//pos.y -= (msg_size + CENTERPRINT_SPACING * fontsize.y) * (1 - sqrt(sz));
-				pos.y -= height_used * (1 - sqrt(sz));
+				pos.y -= (1 - sqrt(a));
 
 			if(pos.y > panel_pos.y + panel_size.y - hud_fontsize.y) // check if the next message can be shown
 			{
