@@ -34,6 +34,7 @@ void HUD_CenterPrint_Export(int fh)
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
 const float CENTERPRINT_SPACING = 0.5;
+const float CENTERPRINT_TITLE_SPACING = 1;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -42,6 +43,9 @@ float centerprint_start_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
+
+bool centerprint_title_show;
+string centerprint_title;
 
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
@@ -141,6 +145,23 @@ void centerprint_KillAll()
 	}
 }
 
+void centerprint_ClearTitle()
+{
+	strfree(centerprint_title);
+	centerprint_title_show = false;
+}
+
+void centerprint_SetTitle(string title)
+{
+	if(title != centerprint_title) {
+		if(centerprint_title)
+			strfree(centerprint_title);
+
+		centerprint_title = strzone(title);
+		centerprint_title_show = true;
+	}
+}
+
 float hud_configure_cp_generation_time;
 void HUD_CenterPrint()
 {
@@ -148,8 +169,10 @@ void HUD_CenterPrint()
 	{
 		if(!autocvar_hud_panel_centerprint) return;
 
-		if(hud_configure_prev)
+		if(hud_configure_prev) {
+			centerprint_ClearTitle();
 			centerprint_KillAll();
+		}
 	}
 	else
 	{
@@ -162,6 +185,8 @@ void HUD_CenterPrint()
 		{
 			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
 			{
+				centerprint_SetTitle(strcat("test", ftos(hud_configure_cp_generation_time)));
+
 				float r;
 				r = random();
 				if (r > 0.8)
@@ -222,7 +247,7 @@ void HUD_CenterPrint()
 	}
 
 	int i, j, k, n, g;
-	float a, sz, align, current_msg_posY = 0, msg_size;
+	float a = 1, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
 	string ts = "";
 	bool all_messages_expired = true;
@@ -231,6 +256,22 @@ void HUD_CenterPrint()
 	if (autocvar_hud_panel_centerprint_flip)
 		pos.y += panel_size.y;
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
+
+	// Show title if available
+	if(centerprint_title_show) {
+		vector fontsize = hud_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
+
+		pos.x = panel_pos.x + (panel_size.x - stringwidth(centerprint_title, true, fontsize)) * align;
+		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
+
+		if (autocvar_hud_panel_centerprint_flip)
+			pos.y -= fontsize.y + CENTERPRINT_TITLE_SPACING;
+		else
+			pos.y += fontsize.y + CENTERPRINT_TITLE_SPACING;
+
+		all_messages_expired = false;
+	}
+
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
@@ -268,7 +309,6 @@ void HUD_CenterPrint()
 		}
 
 		// fade
-		a = 1;
 		if(fade_in_time && centerprint_start_time[j] && time < centerprint_start_time[j] + fade_in_time) // Fade in
 			a = (time - centerprint_start_time[j]) / fade_in_time;
 		else if(time < centerprint_expire_time[j] - fade_out_time || centerprint_time[j] < 0) // Regularily printed or forced

@@ -4,6 +4,7 @@
 #include <client/mutators/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include <common/mapinfo.qh>
 
 bool announcer_1min;
 bool announcer_5min;
@@ -26,6 +27,7 @@ void Announcer_Countdown(entity this)
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		delete(this);
 		announcer_countdown = NULL;
+		centerprint_ClearTitle();
 		return;
 	}
 	if(starttime <= time && roundstarttime != starttime) // game start time has passed
@@ -35,12 +37,15 @@ void Announcer_Countdown(entity this)
 	float countdown = (inround ? roundstarttime - time : starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
 
+	if(time >= starttime) centerprint_ClearTitle();
+
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
+		centerprint_ClearTitle();
 		return;
 	}
 	else // countdown is still going
@@ -101,6 +106,10 @@ void Announcer_Gamestart()
 				announcer_countdown = new(announcer_countdown);
 				setthink(announcer_countdown, Announcer_Countdown);
 			}
+
+			// Set centerprint title
+			if(time < STAT(GAMESTARTTIME) && !warmup_stage)
+				centerprint_SetTitle(MapInfo_Type_ToText(gametype));
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
