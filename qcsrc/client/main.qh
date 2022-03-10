@@ -7,6 +7,7 @@
 // z411
 string hostname_full;
 string motd_permanent;
+int sv_timer_countdown;
 
 bool autocvar_cl_db_saveasdump;
 bool autocvar_cl_spawn_event_particles;
@@ -168,6 +169,7 @@ string GetSpeedUnit(int speed_unit);
 .int team;
 .int team_size;
 .int countrycode;
+.string rank;
 
 int binddb;
 
@@ -194,3 +196,4 @@ float serverprevtime, serverdeltatime;
 float ticrate;
 
 int serverflags;
+

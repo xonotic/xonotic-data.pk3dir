@@ -939,7 +939,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(game_stopped || IS_DEAD(player) || !IS_PLAYER(player)) return;
+	if(game_stopped || game_timeout || IS_DEAD(player) || frametime || !IS_PLAYER(player)) return;
 
 	// NOTE: this is kept here to ensure crouches are picked up each player movement frame
 	if(StatusEffects_active(BUFF_FLIGHT, player))
@@ -968,8 +968,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 		M_ARGV(2, float) = autocvar_g_buffs_medic_regen; // regen_mod
 	}
 }
-
-REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {

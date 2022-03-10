@@ -148,7 +148,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
 
 		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )
-			PutObserverInServer(player, true);
+			PutObserverInServer(player, true, true);
 		if ( autocvar_sv_minigames_observer == 2 )
 			Player_SetForcedTeamIndex(player, TEAM_FORCE_SPECTATOR);
 

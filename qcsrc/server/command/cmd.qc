@@ -73,8 +73,8 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		{
 			if (argv(1) != "")
 			{
-				CS_CVAR(caller).autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).autoswitch ? "on" : "off"), ".\n"));
+				CS_CVAR(caller).cvar_cl_autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).cvar_cl_autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -372,7 +372,7 @@ void ClientCommand_ready(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller) && caller.last_ready < time - 3) // anti-spam
+			if (IS_CLIENT(caller) && caller.last_ready < time - 3)
 			{
 				if (warmup_stage || g_race_qualifying == 2)
 				{
@@ -382,14 +382,16 @@ void ClientCommand_ready(entity caller, int request)
 					{
 						caller.ready = false;
 						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
-							bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
+							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 					}
 					else
 					{
 						caller.ready = true;
 						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
-							bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
+							bprint("\{1}", playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
+
+					caller.last_ready = time;
 
 					// cannot reset the game while a timeout is active!
 					if (!timeout_status) ReadyCount();

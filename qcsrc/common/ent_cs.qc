@@ -2,12 +2,12 @@
 
 #if defined(CSQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
+	#include <common/resources/resources.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
-	#include <server/resources.qh>
+	#include <common/resources/resources.qh>
+	#include <common/resources/sv_resources.qh>
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
@@ -155,6 +155,10 @@ ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 ENTCS_PROP(COUNTRYCODE, true, countrycode, countrycode, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.countrycode); },
 	{ ent.countrycode = ReadByte(); })
+
+ENTCS_PROP(RANK, true, rank, rank, ENTCS_SET_NORMAL,
+	{ WriteString(chan, ent.rank); },
+	{ strcpy(ent.rank, ReadString()); })
 
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,

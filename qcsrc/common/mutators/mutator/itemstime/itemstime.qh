@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+int total_shards = -1;
+#endif
+
 #ifdef SVQC
 int autocvar_sv_itemstime;
 #endif

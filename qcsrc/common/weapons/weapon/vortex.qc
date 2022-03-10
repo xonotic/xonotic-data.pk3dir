@@ -142,6 +142,9 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, false, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
 
 	if(yoda && flying) {
+		if(charge == 1) // play additional sound if we hit in the air with maximum damage
+			sound(actor, CH_INFO, SND_MIDAIR, VOL_BASE, ATTN_NONE);
+		
 		Give_Medal(actor, YODA);
 	}
 	

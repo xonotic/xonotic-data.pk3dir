@@ -280,6 +280,8 @@ SOUND(ENDMATCH, "misc/endmatch");
 SOUND(OVERTIME, "misc/overtime");
 SOUND(TIMEOUT, "misc/timeout");
 
+SOUND(MIDAIR, "misc/midair");
+
 SOUND(SPAWN, "misc/spawn");
 
 SOUND(TALK, "misc/talk");

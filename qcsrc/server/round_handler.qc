@@ -4,12 +4,14 @@
 #include <common/util.qh>
 #include <server/campaign.qh>
 #include <server/command/vote.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/world.qh>
 
 void round_handler_Think(entity this)
 {
+	if (!this.isactive) return;
 	if (game_timeout) { this.nextthink = time + 1; return; }
-	
+
 	if (intermission_running)
 	{
 		round_handler_Reset(0);
@@ -53,6 +55,7 @@ void round_handler_Think(entity this)
 		else
 		{
 			round_handler_Reset(0);
+			round_starttime = -1; // can't start
 		}
 		this.nextthink = time + 1;  // canRoundStart every second
 	}
@@ -78,6 +81,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	this.count = fabs(floor(the_count));
 	this.cnt = this.count + 1;
 	this.round_timelimit = (the_round_timelimit > 0) ? the_round_timelimit : 0;
+	round_limit = the_round_timelimit;
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1
@@ -97,14 +101,12 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 		return;
 	}
 	entity this = round_handler = new_pure(round_handler);
-
 	
 	this.canRoundStart = canRoundStart_func;
 	this.canRoundEnd = canRoundEnd_func;
 	this.roundStart = roundStart_func;
 	this.wait = false;
 	round_handler_Init(5, 5, 180);
-	
 }
 
 void round_handler_Activate(bool active) {
@@ -115,6 +117,8 @@ void round_handler_Activate(bool active) {
 		if(active) {
 			setthink(this, round_handler_FirstThink);
 			this.nextthink = time;
+		} else {
+			round_starttime = -1;
 		}
 	}
 }
@@ -126,7 +130,8 @@ void round_handler_Reset(float next_think)
 	if (this.count)
 		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
 	this.nextthink = next_think;
-	round_starttime = (next_think) ? (next_think + this.count) : -1;
+	if (next_think)
+		round_starttime = next_think + this.count;
 }
 
 void round_handler_Remove()

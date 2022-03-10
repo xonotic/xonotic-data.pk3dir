@@ -226,16 +226,4 @@ void Inventory_clear(entity store)
 
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
 void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
-
-void Inventory_ClearAll() {
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		entity store = PS(it);
-		if (store)
-		{
-			Inventory_clear(store.inventory);
-			Inventory_update(store);
-		}
-	});
-}
 #endif

@@ -2,6 +2,12 @@
 
 #include <client/hud/hud.qh>
 #include <client/view.qh>
+#include <client/draw.qh>
+#include <client/shownames.qh>
+#include <client/hud/panel/healtharmor.qh>
+#include <common/ent_cs.qh>
+#include <common/gamemodes/gamemode/duel/duel.qh>
+#include <common/resources/cl_resources.qh>
 
 vector teamscore_size;
 vector teamscore_fontsize;
@@ -15,14 +21,16 @@ void HUD_SpectHUD_Export(int fh)
 void HUD_SpectHUD_drawCurrentName(vector pos)
 {
 	vector tmp;
+	string s;
 	
 	tmp = pos;
-	string s = entcs_GetName(current_player);
+	
+	s = entcs_GetName(current_player);
 	tmp.x -= stringwidth_colors(s, hud_fontsize * 2) / 2;
 	drawcolorcodedstring(tmp, s, hud_fontsize * 2, panel_fg_alpha, DRAWFLAG_NORMAL);
-	
+
 	tmp = pos;
-	s = "Spectating";
+	s = (entcs_GetRank(current_player) != "" ? entcs_GetRank(current_player) : "Spectating");
 	tmp.x -= stringwidth_colors(s, hud_fontsize) / 2;
 	tmp.y -= hud_fontsize.y;
 	drawcolorcodedstring(tmp, s, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -58,15 +66,17 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		tmp_over = pos;
 		vector total_sz = vec2(line_sz.x, line_sz.y + line_sz_sub.y);
 		
-		if(pl.eliminated) {
+		bool dead = entcs_IsDead(pl.sv_entnum) || pl.eliminated;
+		
+		if(dead) {
 			// z411 TODO : Unhardcode luma
 			icon = "gfx/hud/luma/notify_death.tga";
 			icon_rgb = rgb;
 		} else {
 			entity entcs = entcs_receiver(pl.sv_entnum);
 			if(entcs.m_entcs_private) {
-				health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * line_sz.x;
-				armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * line_sz_sub.x;
+				health = (min(entcs.healthvalue, autocvar_hud_panel_healtharmor_maxhealth) / autocvar_hud_panel_healtharmor_maxhealth) * line_sz.x;
+				armor = (min(GetResource(entcs, RES_ARMOR), autocvar_hud_panel_healtharmor_maxarmor) / autocvar_hud_panel_healtharmor_maxarmor) * line_sz_sub.x;
 					
 				Weapon wep = REGISTRY_GET(Weapons, entcs.activewepid);
 				icon = strcat("gfx/hud/luma/", wep.model2);
@@ -99,7 +109,13 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		}
 		
 		// Get player's name
-		playername = textShortenToWidth(entcs_GetName(pl.sv_entnum), line_sz.x * 0.8, hud_fontsize, stringwidth_colors);
+		string playername;
+		if(entcs_GetRank(pl.sv_entnum) != "")
+			playername = strcat(entcs_GetRank(pl.sv_entnum), "^7 ", entcs_GetName(pl.sv_entnum));
+		else
+			playername = entcs_GetName(pl.sv_entnum);
+
+		playername = textShortenToWidth(playername, line_sz.x * 0.8, hud_fontsize, stringwidth_colors);
 		
 		// Draw health and name
 		drawfill(pos, line_sz, rgb * 0.7, a * 0.3, DRAWFLAG_NORMAL);
@@ -115,7 +131,7 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		// Highlight current player
 		if(pl.sv_entnum == current_player && spectatee_status != -1)
 			drawfill(tmp_over, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
-		if(pl.eliminated)
+		if(dead || pl.eliminated)
 			drawfill(tmp_over, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
 		
 		if(!invert)
@@ -176,8 +192,8 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	
 	entity entcs = entcs_receiver(pl.sv_entnum);
 	if(entcs.m_entcs_private) {
-		health = (entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth) * health_sz.x;
-		armor = (GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor) * armor_sz.x;
+		health = (min(entcs.healthvalue, autocvar_hud_panel_healtharmor_maxhealth) / autocvar_hud_panel_healtharmor_maxhealth) * health_sz.x;
+		armor = (min(GetResource(entcs, RES_ARMOR), autocvar_hud_panel_healtharmor_maxarmor) / autocvar_hud_panel_healtharmor_maxarmor) * armor_sz.x;
 	}
 	
 	if(invert)
@@ -189,6 +205,9 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	
 	if(pl.sv_entnum == current_player && spectatee_status != -1)
 		drawfill(tmp, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
+
+	if(entcs_IsDead(pl.sv_entnum))
+		drawfill(tmp, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
 	
 	// Player score
 	tmp_str = ftos(pl.(scores(ps_primary)));
@@ -240,16 +259,31 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		drawfill(tmp, vec2(armor, armor_sz.y), autocvar_hud_progressbar_armor_color, 0.7, DRAWFLAG_NORMAL);
 	}
 	
+	// Align vertically
+	tmp = pos;
+	tmp.y += ((teamscore_size.y / 2) - teamname_fontsize.y) / 2;
+	tmp.y += teamscore_size.y / 2;
+	
+	// RJZ rank
+	string rank_str = entcs_GetRank(pl.sv_entnum);
+	if(rank_str != "") {
+		if(invert)
+			tmp.x -= stringwidth_colors(rank_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
+		else
+			tmp.x += teamscore_size.x + teamname_fontsize.x * 0.5;
+		
+		draw_beginBoldFont();
+		drawcolorcodedstring(tmp, rank_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
+	}
+	
 	// Player name
 	tmp_str = entcs_GetName(pl.sv_entnum);
 	
-	tmp = pos;
 	if(invert)
 		tmp.x -= stringwidth_colors(tmp_str, teamname_fontsize) + teamname_fontsize.x * 0.5;
 	else
-		tmp.x += teamscore_size.x + teamname_fontsize.x * 0.5;
-	tmp.y += ((teamscore_size.y / 2) - teamname_fontsize.y) / 2;
-	tmp.y += teamscore_size.y / 2;
+		tmp.x += (rank_str != "" ? stringwidth_colors(rank_str, teamname_fontsize) : teamscore_size.x) + teamname_fontsize.x * 0.5;
 	
 	drawcolorcodedstring(tmp, tmp_str, teamname_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }

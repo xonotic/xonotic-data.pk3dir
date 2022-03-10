@@ -5,6 +5,7 @@
 #include <common/effects/all.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
+#include <common/scores.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>

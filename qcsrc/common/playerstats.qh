@@ -117,4 +117,13 @@ float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automaticall
 void PlayerStats_PlayerDetail();
 void PlayerStats_PlayerDetail_CheckUpdate();
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
+
+#endif
+
+#ifdef GAMEQC
+
+REPLICATE_INIT(int, cvar_cl_allow_uid2name);
+REPLICATE_INIT(bool, cvar_cl_allow_uidranking);
+REPLICATE_INIT(int, cvar_cl_allow_uidtracking);
+
 #endif

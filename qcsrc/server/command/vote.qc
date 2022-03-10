@@ -348,9 +348,19 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 			return;
 
 		if (!is_fake_round_start)
+		{
+			Score_ClearAll();
 			PlayerStats_GameReport_Reset_All();
+		}
+
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
+	}
+	
+	// for RJZ
+	if (autocvar_rjz_count_shards) {
+		total_shards = 0;
+		send_TotalShardsAll();
 	}
 
 	if (shuffleteams_on_reset_map)
@@ -419,8 +429,6 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 void ReadyRestart_think(entity this)
 {
 	reset_map(true, false);
-	Score_ClearAll();
-	Inventory_ClearAll();
 	delete(this);
 }
 
@@ -437,7 +445,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	// clear overtime, we have to decrease timelimit to its original value again.
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
-	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
+	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = overtimes = 0;
 
 	if(warmup_stage)
 		game_starttime = time; // Warmup: No countdown in warmup
@@ -480,7 +488,10 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true, is_fake_round_start);
+	round_handler_Activate(!warmup_stage);
+	if (!sv_ready_restart_after_countdown || warmup_stage)
+		reset_map(true, is_fake_round_start);
+
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
@@ -488,10 +499,6 @@ void ReadyRestart(bool forceWarmupEnd)
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
-
-	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
-	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) Score_ClearAll();
 
 	if(forceWarmupEnd)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
@@ -790,11 +797,24 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "gg":
+		case "shuffleteams":
+		case "endmatch":
+		{
+			// add a delay so that vote result can be seen and announcer can be heard
+			// if the vote is accepted
+			vote_parsed_command = strcat("defer 2 ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_command));
+			
+			break;
+		}
+
+		case "reset":
 		case "restart": // re-direct all match restarting to resetmatch
 			vote_command = "resetmatch"; // fall-through
 		case "resetmatch":
 		{
-			vote_parsed_command = vote_command;
+			vote_parsed_command = strcat("defer 2 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;
@@ -807,7 +827,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				return -1;
 			}
 
-			vote_parsed_command = vote_command;
+			vote_parsed_command = strcat("defer 2 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 			break;
 		}

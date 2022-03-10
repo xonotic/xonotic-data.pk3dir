@@ -15,6 +15,17 @@
 	#include <server/world.qh>
 #endif
 
+
+#ifdef GAMEQC
+REPLICATE(cvar_cl_allow_uid2name, int, "cl_allow_uid2name");
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
+REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
+#endif
+
+#ifdef SVQC
+REPLICATE_APPLYCHANGE("cl_allow_uidtracking", { PlayerStats_GameReport_AddPlayer(this); });
+#endif
+
 #ifdef SVQC
 void PlayerStats_Prematch()
 {
@@ -268,6 +279,10 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_DelayMapVote = true;
 
 		serverflags |= SERVERFLAG_PLAYERSTATS;
+		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
+		{
+			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
+		}
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);

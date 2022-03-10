@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/scoreboard.qh>
+#include <common/mapinfo.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
 

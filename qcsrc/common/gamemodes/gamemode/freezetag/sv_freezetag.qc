@@ -1,7 +1,7 @@
 #include "sv_freezetag.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <server/elimination.qh>
-#include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
@@ -485,6 +485,12 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 {
 	entity targ = M_ARGV(0, entity);
 	targ.freezetag_frozen_time = 0;
+	
+	if(autocvar_g_freezetag_revive_respawn) {
+		targ.freezetag_frozen_timeout = -1;
+		PutClientInServer(targ);
+	}
+	
 	targ.freezetag_frozen_timeout = 0;
 }
 

@@ -3,6 +3,7 @@
 #include <common/weapons/_all.qh>
 
 bool autocvar__sv_init;
+bool autocvar__endmatch;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_jetpack;
 bool autocvar_g_warmup_allguns;
@@ -32,10 +33,13 @@ bool autocvar_sv_jingle_end;
 string autocvar_sv_jingle_end_list;
 float autocvar_sv_jingle_end_volume;
 
+float fragsleft;
+int fragsleft_last;
+
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
-//float checkrules_overtimesadded; //how many overtimes have been already added
+int checkrules_overtimesadded; //how many overtimes have been already added
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
 bool server_is_dedicated;
@@ -50,9 +54,11 @@ string modname;
 
 string gamemode_name;
 
-int fragsleft;
-int fragsleft_last;
 string record_type;
+
+string autocvar_sv_termsofservice_url;
+// only escape the terms of service url on map change
+string sv_termsofservice_url_escaped;
 
 string clientstuff;
 
@@ -158,6 +164,13 @@ void readlevelcvars();
 
 .vector dropped_origin;
 void droptofloor(entity this);
+
+/* z411 for RJZ */
+bool autocvar_rjz_count_shards = false;
+bool autocvar_rjz_ranks = false;
+int  total_shards = 0;
+void send_TotalShards(entity to);
+void send_TotalShardsAll();
 
 IntrusiveList g_moveables;
 STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }

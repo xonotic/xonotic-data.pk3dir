@@ -19,8 +19,6 @@ REGISTER_MUTATOR(spawn_near_teammate, expr_evaluate(autocvar_g_spawn_near_teamma
 
 .float msnt_timer;
 
-.float cvar_cl_spawn_near_teammate;
-
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 {
 	if (!teamplay) return;
@@ -228,5 +226,3 @@ LABEL(skip)
 		*/
 	}
 }
-
-REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");

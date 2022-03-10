@@ -52,6 +52,7 @@ string centerprint_title;
 
 void centerprint_ClearTitle()
 {
+	centerprint_title = string_null;
 	centerprint_title_show = false;
 }
 void centerprint_SetTitle(string title)
@@ -359,11 +360,15 @@ void HUD_CenterPrint()
 
 		all_messages_expired = false;
 
+		float fade_in_time = autocvar_hud_panel_centerprint_fade_in;
+		if (centerprint_time[j] <= 2)
+			fade_in_time = autocvar_hud_panel_centerprint_fade_in_short;
+
 		// fade
-		//if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
-		//	a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
-		if(centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
-			a = 1;
+		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
+			a = (time - centerprint_expire_time[j]) / max(0.0001, fade_in_time);
+		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
+			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, fade_in_time);
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 

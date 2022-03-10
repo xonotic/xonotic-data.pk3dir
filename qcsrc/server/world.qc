@@ -101,6 +101,27 @@ void PingPLReport_Spawn()
 
 const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 
+void send_TotalShards(entity to) {
+	// for RJZ
+	// Send total number of picked up shards
+	if(!autocvar_rjz_count_shards) return;
+	if(!IS_REAL_CLIENT(to)) return;
+	
+	msg_entity = to;
+	WriteHeader(MSG_ONE, TE_CSQC_TOTALSHARDS);
+	WriteInt24_t(MSG_ONE, total_shards);
+}
+
+void send_TotalShardsAll() {
+	// for RJZ
+	// Send total number of picked up shards
+	if(!autocvar_rjz_count_shards) return;
+	
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)), {
+		send_TotalShards(it);
+	});
+}
+
 void SetDefaultAlpha()
 {
 	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
@@ -301,8 +322,6 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
-		BADCVAR("g_mmm");
-		BADCVAR("g_mmm_not_dm_maps");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
@@ -312,7 +331,6 @@ void cvar_changes_init()
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
 		BADCVAR("g_maplist_sizes_count_bots");
-		//LegendGuard adds BADCVAR(g_*) for MMM 20-02-2021
 
 		// long
 		BADCVAR("hostname");
@@ -701,6 +719,15 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
+	{
+		strcpy(sv_termsofservice_url_escaped, strreplace(":", "|", autocvar_sv_termsofservice_url));
+	}
+	else
+	{
+		strcpy(sv_termsofservice_url_escaped, "INVALID");
+	}
+
 	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
@@ -1025,11 +1052,17 @@ spawnfunc(worldspawn)
 
 	WinningConditionHelper(this); // set worldstatus
 
-	world_initialized = 1;
-	__spawnfunc_spawn_all();
-	
 	if(!warmup_stage)
 		round_handler_Activate(true);
+	
+	// for RJZ
+	if (autocvar_rjz_count_shards && warmup_stage) {
+		total_shards = -2;
+		send_TotalShardsAll();
+	}
+	
+	world_initialized = 1;
+	__spawnfunc_spawn_all();
 }
 
 spawnfunc(light)
@@ -1281,6 +1314,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	cvar_set("_endmatch", "0");
 	game_stopped = true;
 	intermission_running = true; // game over
 
@@ -1386,9 +1420,14 @@ float InitiateSuddenDeath()
 		if(!checkrules_suddendeathend)
 		{
 			if(autocvar_g_campaign)
+			{
 				checkrules_suddendeathend = time; // no suddendeath in campaign
+			}
 			else
+			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
+				overtimes = -1;
+			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
 		}
@@ -1399,6 +1438,7 @@ float InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
@@ -1705,16 +1745,15 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(timelimit > 0)
-	{
-		timelimit += game_starttime;
-	}
-	else if (timelimit < 0)
+	if (autocvar__endmatch || timelimit < 0)
 	{
 		// endmatch
 		NextLevel();
 		return;
 	}
+
+	if(timelimit > 0)
+		timelimit += game_starttime;
 
 	float wantovertime;
 	wantovertime = 0;
@@ -2536,6 +2575,8 @@ void Shutdown()
 
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
+
+		strfree(sv_termsofservice_url_escaped);
 	}
 	else if(world_initialized == 0)
 	{

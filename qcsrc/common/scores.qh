@@ -15,7 +15,6 @@ STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
  * Score indices
  */
 
-// game mode specific indices are not in common/, but in server/scores_rules.qc!
 #ifdef GAMEQC
 // fields not networked via the score system
 REGISTER_SP(END);
@@ -111,6 +110,7 @@ REGISTER_SP(MEDAL_KILLSTREAK_03);
 REGISTER_SP(MEDAL_KILLSTREAK_05);
 REGISTER_SP(MEDAL_KILLSTREAK_10);
 REGISTER_SP(MEDAL_KILLSTREAK_15);
+REGISTER_SP(MMM_KARMA); //LegendGuard adds REGISTER_SP for MMM Karma points 21-02-2021
 #endif
 
 

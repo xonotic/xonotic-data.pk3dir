@@ -6,6 +6,7 @@
 #include <common/weapons/_all.qh>
 #include <server/command/banning.qh>
 #include <server/main.qh>
+#include <common/notifications/all.qh>
 
 /*
  * Protocol of online ban list:

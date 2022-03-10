@@ -246,7 +246,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				PutObserverInServer(it, true);
+				PutObserverInServer(it, true, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -388,9 +388,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", "0");
-				bot_fixcount();
+				bot_fixcount(false);  // Kill all bots.
 				cvar_settemp("bot_number", argv(2));
-				if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+				if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 				return;
 			}
 			else if (argv(1) == "load" && argc == 3)
@@ -421,9 +421,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 							cvar_settemp("minplayers", "0");
 							cvar_settemp("minplayers_per_team", "0");
 							cvar_settemp("bot_number", "0");
-							bot_fixcount();
+							bot_fixcount(false);  // Kill all bots.
 							cvar_settemp("bot_number", argv(3));
-							if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+							if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 						}
 						else
 						{
@@ -978,6 +978,46 @@ void GameCommand_gotomap(int request, int argc)
 	}
 }
 
+void GameCommand_ircmsg(int request, int argc, string command)
+{
+	/* IRCSay from the SMB Modpack */
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string msgstr = substring(command, strlen(argv(0))+1, strlen(command));
+			
+			if(msgstr == "")
+				return;
+			
+			string prefix;
+			if(substring(msgstr, 0, 3) == "^4*") // actions
+					prefix = "\{3}";
+			else
+					prefix = "\{1}";
+
+			msgstr = strcat(prefix, strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+
+			FOREACH_CLIENTSLOT(true,
+			{
+					if(!intermission_running)
+					if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || game_stopped)))
+					if(IS_PLAYER(it))
+						continue;
+					if(IS_REAL_CLIENT(it))
+						sprint(it, msgstr);
+			});
+		}
+		
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd ircmsg message");
+			return;
+		}
+	}
+}
+
 void GameCommand_lockteams(int request)
 {
 	switch (request)
@@ -1066,6 +1106,39 @@ void GameCommand_setflag(int request, int argc)
 	}
 }
 
+void GameCommand_setrank(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity client;
+			float accepted;
+			
+			client = GetFilteredEntity(argv(1));
+			accepted = VerifyClientEntity(client, false, false);
+
+			if (accepted <= 0)
+			{
+				LOG_INFO("^1ERROR^7: Couldn't set player rank");
+				LOG_HELP("Usage:^3 sv_cmd setrank #client_id rank");
+				return;
+			}
+			
+			client.rank = strzone(argv(2));
+			LOG_INFO("^2SUCCESS^7: Player rank set!");
+			return;
+		}
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd setrank #client_id #rank");
+			return;
+		}
+	}
+}
+
 void GameCommand_moveplayer(int request, int argc)
 {
 	switch (request)
@@ -1104,7 +1177,7 @@ void GameCommand_moveplayer(int request, int argc)
 						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							PutObserverInServer(client, true);
+							PutObserverInServer(client, true, true);
 
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
@@ -1313,7 +1386,7 @@ void GameCommand_setbots(int request, int argc)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", argv(1));
-				bot_fixcount();
+				bot_fixcount(true);
 				return;
 			}
 		}
@@ -1739,9 +1812,6 @@ void GameCommand_(int request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
-SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
-
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
 SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
@@ -1759,6 +1829,7 @@ SERVER_COMMAND(extendmatchtime, "Increase the timelimit value incrementally") { 
 SERVER_COMMAND(gametype, "Simple command to change the active gametype") { GameCommand_gametype(request, arguments); }
 SERVER_COMMAND(gettaginfo, "Get specific information about a weapon model") { GameCommand_gettaginfo(request, arguments); }
 SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand_gotomap(request, arguments); }
+SERVER_COMMAND(ircmsg, "Chat message to be sent by IRC bots") { GameCommand_ircmsg(request, arguments, command); }
 SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
@@ -1768,8 +1839,11 @@ SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_rada
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
 SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
+SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
+SERVER_COMMAND(setrank, "Set client rank") { GameCommand_setrank(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
+SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
 SERVER_COMMAND(trace, "Various debugging tools with tracing") { GameCommand_trace(request, arguments); }
 SERVER_COMMAND(unlockteams, "Enable the ability for players to switch or enter teams") { GameCommand_unlockteams(request); }
 SERVER_COMMAND(warp, "Choose different level in campaign") { GameCommand_warp(request, arguments); }

@@ -318,7 +318,7 @@ string ScoreString(int pFlags, float pValue)
 	if((pValue == 0) && (pFlags & (SFL_HIDE_ZERO | SFL_RANK | SFL_TIME)))
 		valstr = "";
 	else if(pFlags & SFL_RANK)
-		valstr = count_ordinal(pValue);
+		valstr = (pValue < 256 ? count_ordinal(pValue) : _("N/A"));
 	else if(pFlags & SFL_TIME)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else

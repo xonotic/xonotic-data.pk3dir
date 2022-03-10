@@ -22,7 +22,7 @@ void HUD_HealthArmor_Export(int fh)
 
 void HUD_HealthArmor()
 {
-	int armor, health, fuel, air_time;
+	int armor, health, health_real, fuel, air_time;
 	if(!autocvar__hud_configure)
 	{
 		if((!autocvar_hud_panel_healtharmor) || (spectatee_status == -1))
@@ -30,8 +30,10 @@ void HUD_HealthArmor()
 		if(hud != HUD_NORMAL) return;
 
 		health = STAT(HEALTH);
+		health_real = health;
 		if(health <= 0)
 		{
+			health_real = max(health, -999);
 			health = 0;
 			prev_health = -1;
 			if(autocvar_hud_panel_healtharmor_hide_ondeath)
@@ -70,6 +72,7 @@ void HUD_HealthArmor()
 	else
 	{
 		health = 150;
+		health_real = 150;
 		armor = 75;
 		fuel = 20;
 		air_time = 6;
@@ -246,7 +249,7 @@ void HUD_HealthArmor()
 				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
-				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, false, health_iconalign, HUD_Get_Num_Color(health, maxhealth, true), 1);
+				DrawNumIcon(pos + health_offset, mySize, health_real, "health", is_vertical, false, health_iconalign, HUD_Get_Num_Color(health, maxhealth, true), 1);
 		}
 
 		//if(armor)

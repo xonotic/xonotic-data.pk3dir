@@ -3,6 +3,7 @@
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/teams.qh>
+#include <common/gamemodes/gamemode/duel/duel.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <server/client.qh>
@@ -177,3 +178,6 @@ bool accuracy_canbegooddamage(entity attacker)
 {
 	return !warmup_stage && IS_CLIENT(attacker);
 }
+
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");

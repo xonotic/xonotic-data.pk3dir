@@ -125,3 +125,4 @@ float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
 #endif
 
 float intermission_time;
+float game_stopped_time;

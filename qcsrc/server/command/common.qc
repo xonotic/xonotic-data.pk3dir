@@ -13,6 +13,7 @@
 #include <server/client.qh>
 #include <server/command/common.qh>
 #include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/world.qh>
 
@@ -688,6 +689,7 @@ void CommonCommand_timein(int request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEOUT);
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}

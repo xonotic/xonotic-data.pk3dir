@@ -9,6 +9,7 @@
 #include <common/constants.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
+#include <common/gamemodes/gamemode/duel/duel.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/net_linked.qh>
 #include <common/scores.qh>
@@ -663,8 +664,10 @@ string Scoreboard_GetName(entity pl)
 			sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
 		}
 	}
-	
-	return entcs_GetName(pl.sv_entnum);
+	if(entcs_GetRank(pl.sv_entnum) != "")
+		return strcat(entcs_GetRank(pl.sv_entnum), "^7 ", entcs_GetName(pl.sv_entnum));
+	else
+		return entcs_GetName(pl.sv_entnum);
 }
 
 //LegendGuard adds GetCountrycode function 05-04-2021
@@ -1133,7 +1136,11 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
 			field = Scoreboard_GetField(pl, SP_SCORE);
 
-		string str = entcs_GetName(pl.sv_entnum);
+		string str;
+		if(entcs_GetRank(pl.sv_entnum) != "")
+			str = strcat(entcs_GetRank(pl.sv_entnum), "^7 ", entcs_GetName(pl.sv_entnum));
+		else
+			str = entcs_GetName(pl.sv_entnum);
 		if (autocvar_hud_panel_scoreboard_playerid)
 			str = Scoreboard_AddPlayerId(str, pl);
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
@@ -1295,14 +1302,28 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	drawstring(tmp_in, tmp_str, duel_score_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 	
-	// Player name
-	tmp_str = Scoreboard_GetField(pl, SP_NAME);
 	tmp_in = tmp;
+	tmp_in.y += (duel_score_size.y - duel_name_fontsize.y) / 2;
+	
+	// RJZ rank
+	string rank_str = entcs_GetRank(pl.sv_entnum);
+	if(rank_str != "") {
+		if(invert)
+			tmp_in.x -= stringwidth_colors(rank_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
+		else
+			tmp_in.x += duel_score_size.x + duel_name_fontsize.x * 0.5;
+		
+		draw_beginBoldFont();
+		drawcolorcodedstring(tmp_in, rank_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
+	}
+	
+	// Player name
+	tmp_str = entcs_GetName(pl.sv_entnum);
 	if(invert)
 		tmp_in.x -= stringwidth_colors(tmp_str, duel_name_fontsize) + duel_name_fontsize.x * 0.5;
 	else
-		tmp_in.x += duel_score_size.x + duel_name_fontsize.x * 0.5;
-	tmp_in.y += (duel_score_size.y - duel_name_fontsize.y) / 2;
+		tmp_in.x += (rank_str != "" ? stringwidth_colors(rank_str, duel_name_fontsize) : duel_score_size.x) + duel_name_fontsize.x * 0.5;
 	drawcolorcodedstring(tmp_in, tmp_str, duel_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	//LegendGuard adds a conditional sentence for country column 05-04-2021
@@ -1635,7 +1656,7 @@ bool Scoreboard_WouldDraw()
 		return true;
 	else if (intermission == 2)
 		return false;
-	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
+	else if (!spectatee_status && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
 		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
 		return true;
@@ -2042,7 +2063,6 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 }
 */
 
-
 int rankings_rows = 0;
 int rankings_columns = 0;
 int rankings_cnt = 0;
@@ -2334,7 +2354,7 @@ void Scoreboard_Draw()
 
 	scoreboard_top = panel_pos.y;
 	vector pos = panel_pos;
-	entity pl, tm;
+	entity tm;
 	string str;
 	vector str_pos;
 
@@ -2632,24 +2652,6 @@ void Scoreboard_Draw()
 	}
 	else
 		rankings_cnt = 0;
-
-	// List spectators
-	for(pl = players.sort_next; pl; pl = pl.sort_next)
-	{
-		if(pl.team == NUM_SPECTATOR)
-		{
-			for(tm = teams.sort_next; tm; tm = tm.sort_next)
-				if(tm.team == NUM_SPECTATOR)
-					break;
-			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
-			draw_beginBoldFont();
-			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			draw_endBoldFont();
-			pos.y += 1.25 * hud_fontsize.y;
-
-			break;
-		}
-	}
 
 	// draw scoreboard spectators after rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 2) {
