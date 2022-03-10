@@ -1286,6 +1286,18 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
+string welcomedialog_args;
+NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
+{
+	if(welcomedialog_args)
+		strunzone(welcomedialog_args);
+	welcomedialog_args = strcat("name \"", ReadString(), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, " motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())), "\"");
+	localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+	welcomedialog_args = string_null;
+	return true;
+}
+
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;

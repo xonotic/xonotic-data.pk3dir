@@ -1055,10 +1055,9 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	string versionmessage = GetClientVersionMessage(this);
-	string s = strcat(versionmessage, "^8\n^8\nserver is ^9", autocvar_hostname, "^8\n");
+	string s = GetClientVersionMessage(this);
 
-	s = strcat(s, "^8\nmatch type is ^1", gamemode_name, "^8\n");
+	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -1084,6 +1083,14 @@ string getwelcomemessage(entity this)
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
 	return s;
+}
+
+void serverinfo_welcomemessage_send(entity this)
+{
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
+	WriteString(MSG_ONE, autocvar_hostname);
+	WriteString(MSG_ONE, getwelcomemessage(this));
 }
 
 /**
@@ -1173,7 +1180,11 @@ void ClientConnect(entity this)
 	CS(this).model_randomizer = random();
 
 	if (IS_REAL_CLIENT(this))
+	{
+		if (!autocvar_g_campaign)
+			serverinfo_welcomemessage_send(this);
 		sv_notice_join(this);
+	}
 
 	this.move_qcphysics = autocvar_sv_qcphysics;
 

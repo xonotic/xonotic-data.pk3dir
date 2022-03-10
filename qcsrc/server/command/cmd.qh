@@ -8,5 +8,7 @@ int autocvar_sv_clientcommand_antispam_count;
 
 string MapVote_Suggest(entity this, string m);
 
+void serverinfo_welcomemessage_send(entity this);
+
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void ClientCommand_macro_write_aliases(float fh);
