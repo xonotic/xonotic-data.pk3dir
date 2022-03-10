@@ -17,6 +17,19 @@ void welcomeDialog_resetStrings(entity me)
 		strunzone(me.serverinfo_MOTD);
 	me.serverinfo_MOTD = strzone(_("<NO MOTD>"));
 }
+float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shift)
+{
+	switch(key)
+	{
+		case K_KP_ENTER:
+		case K_ENTER:
+		case K_SPACE:
+			XonoticWelcomeDialog_close(me);
+			return true;
+		default:
+			return SUPER(XonoticWelcomeDialog).keyDown(me, key, ascii, shift);
+	}
+}
 void XonoticWelcomeDialog_close(entity me)
 {
 	SUPER(XonoticWelcomeDialog).close(me);

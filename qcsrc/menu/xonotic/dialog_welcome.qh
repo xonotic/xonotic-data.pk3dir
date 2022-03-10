@@ -10,6 +10,7 @@ CLASS(XonoticWelcomeDialog, XonoticRootDialog)
 	ATTRIB(XonoticWelcomeDialog, columns, float, 4);
 	ATTRIB(XonoticWelcomeDialog, name, string, "Welcome");
 
+	METHOD(XonoticWelcomeDialog, keyDown, float(entity, float, float, float));
 	METHOD(XonoticWelcomeDialog, close, void(entity));
 	METHOD(XonoticWelcomeDialog, configureDialog, void(entity));
 	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, float));
