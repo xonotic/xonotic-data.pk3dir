@@ -34,7 +34,7 @@ void HUD_CenterPrint_Export(int fh)
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
 const float CENTERPRINT_SPACING = 0.5;
-const float CENTERPRINT_TITLE_SPACING = 1;
+const float CENTERPRINT_TITLE_SPACING = 0.8;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -260,14 +260,22 @@ void HUD_CenterPrint()
 	// Show title if available
 	if(centerprint_title_show) {
 		vector fontsize = hud_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
+		float width = stringwidth(centerprint_title, true, fontsize);
 
-		pos.x = panel_pos.x + (panel_size.x - stringwidth(centerprint_title, true, fontsize)) * align;
+		pos.x = panel_pos.x + (panel_size.x - width) * align;
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= fontsize.y + CENTERPRINT_TITLE_SPACING;
+			pos.y -= fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2);
 		else
-			pos.y += fontsize.y + CENTERPRINT_TITLE_SPACING;
+			pos.y += fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2);
+
+		drawfill(pos, vec2(width, 1), '1 1 1', 1, DRAWFLAG_NORMAL);
+
+		if (autocvar_hud_panel_centerprint_flip)
+			pos.y -= hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2;
+		else
+			pos.y += hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2;
 
 		all_messages_expired = false;
 	}
