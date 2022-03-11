@@ -76,7 +76,7 @@ void Announcer_Countdown(entity this)
  * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
  * and STAT_FRAGLIMIT to be auto-sent)
  */
- float previous_game_starttime;
+float previous_game_starttime;
 void Announcer_Gamestart()
 {
 	float startTime = STAT(GAMESTARTTIME);
@@ -107,13 +107,12 @@ void Announcer_Gamestart()
 				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
-			// Set centerprint title
-			if(time < STAT(GAMESTARTTIME) && !warmup_stage)
-				centerprint_SetTitle(MapInfo_Type_ToText(gametype));
-
-			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 			if(!warmup_stage && time < STAT(GAMESTARTTIME))
-				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+			{
+				centerprint_SetTitle(MapInfo_Type_ToText(gametype)); // Set centerprint title
+				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
+					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+			}
 
 			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime
 		}
