@@ -96,6 +96,9 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 		}
 	}
 
+	if (strMessage == "")
+		return;
+
 	if (i == CENTERPRINT_MAX_MSGS)
 	{
 		// a msg with the same id was not found, add the msg at the next position
