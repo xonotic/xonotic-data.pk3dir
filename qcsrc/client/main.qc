@@ -1286,15 +1286,23 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string welcomedialog_args;
 NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
-	if(welcomedialog_args)
-		strunzone(welcomedialog_args);
-	welcomedialog_args = strcat("name \"", ReadString(), "\"");
-	welcomedialog_args = strcat(welcomedialog_args, " motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())), "\"");
-	localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-	welcomedialog_args = string_null;
+	string hostname = ReadString();
+	string msg = ReadString();
+	// players running older Xonotic version without the Welocome dialog have the cvar
+	// cl_welcome_in_menu_dialog not saved because it was created by the relative autocvar
+	// initilaization when server's client program is run
+	if (cvar_type("cl_welcome_in_menu_dialog") & CVAR_TYPEFLAG_SAVED && autocvar_cl_welcome_in_menu_dialog)
+	{
+		string welcomedialog_args;
+		welcomedialog_args = strcat("name \"", hostname, "\"");
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " motd \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+	}
+	else
+		centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", msg), -1, 0);
 	return true;
 }
 

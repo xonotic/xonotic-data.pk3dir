@@ -17,6 +17,7 @@ void welcomeDialog_resetStrings(entity me)
 		strunzone(me.serverinfo_MOTD);
 	me.serverinfo_MOTD = strzone(_("<NO MOTD>"));
 }
+
 float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shift)
 {
 	switch(key)
@@ -24,21 +25,19 @@ float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shif
 		case K_KP_ENTER:
 		case K_ENTER:
 		case K_SPACE:
-			XonoticWelcomeDialog_close(me);
+			me.close(me);
 			return true;
 		default:
 			return SUPER(XonoticWelcomeDialog).keyDown(me, key, ascii, shift);
 	}
 }
-void XonoticWelcomeDialog_close(entity me)
-{
-	SUPER(XonoticWelcomeDialog).close(me);
-}
+
 void XonoticWelcomeDialog_configureDialog(entity me)
 {
 	welcomeDialog_resetStrings(me);
 	SUPER(XonoticWelcomeDialog).configureDialog(me);
 }
+
 void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
 {
 	int i = 0;
@@ -63,7 +62,6 @@ void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
 		}
 		++i;
 	}
-	localcmd("\nwait; wait; +show_info; wait; wait; -show_info\n");
 	//me.serverinfo_name_ent.setText(me.serverinfo_name_ent, me.serverinfo_name);
 	me.serverinfo_MOTD_ent.setText(me.serverinfo_MOTD_ent, me.serverinfo_MOTD);
 	me.frame.setText(me.frame, me.serverinfo_name);

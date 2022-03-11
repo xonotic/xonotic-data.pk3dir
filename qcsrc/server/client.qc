@@ -1199,14 +1199,8 @@ void ClientConnect(entity this)
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
-	if (IS_REAL_CLIENT(this))
-	{
-		if (!autocvar_g_campaign && !IS_PLAYER(this))
-		{
-			CS(this).motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
-		}
-	}
+	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
+		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
 /*
 =============

@@ -11,7 +11,6 @@ CLASS(XonoticWelcomeDialog, XonoticRootDialog)
 	ATTRIB(XonoticWelcomeDialog, name, string, "Welcome");
 
 	METHOD(XonoticWelcomeDialog, keyDown, float(entity, float, float, float));
-	METHOD(XonoticWelcomeDialog, close, void(entity));
 	METHOD(XonoticWelcomeDialog, configureDialog, void(entity));
 	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, float));
 	ATTRIB(XonoticWelcomeDialog, serverinfo_name, string, string_null);
