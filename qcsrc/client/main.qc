@@ -1293,9 +1293,9 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 	if (!isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
 	{
 		string welcomedialog_args;
-		welcomedialog_args = strcat("name \"", hostname, "\"");
+		welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " motd \"", msg, "\"");
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
 		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 	}
 	else

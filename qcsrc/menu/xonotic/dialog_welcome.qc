@@ -9,13 +9,8 @@
 
 void welcomeDialog_resetStrings(entity me)
 {
-	if(me.serverinfo_name)
-		strunzone(me.serverinfo_name);
-	me.serverinfo_name = strzone(_("<NO NAME>"));
-
-	if(me.serverinfo_MOTD)
-		strunzone(me.serverinfo_MOTD);
-	me.serverinfo_MOTD = strzone(_("<NO MOTD>"));
+	strcpy(me.serverinfo_name, "<NO HOSTNAME>");
+	strcpy(me.serverinfo_MOTD, "<NO WELCOME MESSAGE>");
 }
 
 float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shift)
@@ -45,7 +40,7 @@ void XonoticWelcomeDialog_destroy(entity me)
 	cvar_set("_menu_welcome_dialog_available", "0");
 }
 
-void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
+void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 {
 	int i = 0;
 	string s;
@@ -53,20 +48,10 @@ void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
 	if(argsbuf >= 0)
 	while((s = bufstr_get(argsbuf, i)) != "")
 	{
-		if(s == "name")
-		{
-			if(me.serverinfo_name)
-				strunzone(me.serverinfo_name);
-			me.serverinfo_name = strzone(bufstr_get(argsbuf, i + 1));
-			++i;
-		}
-		else if(s == "motd")
-		{
-			if(me.serverinfo_MOTD)
-				strunzone(me.serverinfo_MOTD);
-			me.serverinfo_MOTD = strzone(bufstr_get(argsbuf, i + 1));
-			++i;
-		}
+		if(s == "HOSTNAME")
+			strcpy(me.serverinfo_name, bufstr_get(argsbuf, ++i));
+		else if(s == "WELCOME")
+			strcpy(me.serverinfo_MOTD, bufstr_get(argsbuf, ++i));
 		++i;
 	}
 	//me.serverinfo_name_ent.setText(me.serverinfo_name_ent, me.serverinfo_name);

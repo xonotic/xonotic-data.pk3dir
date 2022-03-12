@@ -7,7 +7,7 @@
 
 #include <common/command/_mod.qh>
 
-.void(entity me, float argsbuf) readInputArgs;
+.void(entity me, int argsbuf) readInputArgs;
 .entity firstChild, nextSibling;
 
 string _dumptree_space;

@@ -13,7 +13,7 @@ CLASS(XonoticWelcomeDialog, XonoticRootDialog)
 	METHOD(XonoticWelcomeDialog, keyDown, float(entity, float, float, float));
 	METHOD(XonoticWelcomeDialog, configureDialog, void(entity));
 	METHOD(XonoticWelcomeDialog, destroy, void(entity));
-	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, float));
+	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, int));
 	ATTRIB(XonoticWelcomeDialog, serverinfo_name, string, string_null);
 	//ATTRIB(XonoticWelcomeDialog, serverinfo_name_ent, entity, world);
 	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD, string, string_null);
