@@ -1290,7 +1290,7 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
 	string hostname = ReadString();
 	string msg = ReadString();
-	if (cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
+	if (!isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
 	{
 		string welcomedialog_args;
 		welcomedialog_args = strcat("name \"", hostname, "\"");
