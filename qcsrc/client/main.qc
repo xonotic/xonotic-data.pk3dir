@@ -1290,10 +1290,7 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
 	string hostname = ReadString();
 	string msg = ReadString();
-	// players running older Xonotic version without the Welocome dialog have the cvar
-	// cl_welcome_in_menu_dialog not saved because it was created by the relative autocvar
-	// initilaization when server's client program is run
-	if (cvar_type("cl_welcome_in_menu_dialog") & CVAR_TYPEFLAG_SAVED && autocvar_cl_welcome_in_menu_dialog)
+	if (cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
 	{
 		string welcomedialog_args;
 		welcomedialog_args = strcat("name \"", hostname, "\"");

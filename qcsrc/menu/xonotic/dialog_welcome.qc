@@ -36,6 +36,13 @@ void XonoticWelcomeDialog_configureDialog(entity me)
 {
 	welcomeDialog_resetStrings(me);
 	SUPER(XonoticWelcomeDialog).configureDialog(me);
+	registercvar("_menu_welcome_dialog_available", "0", 0);
+	cvar_set("_menu_welcome_dialog_available", "1");
+}
+
+void XonoticWelcomeDialog_destroy(entity me)
+{
+	cvar_set("_menu_welcome_dialog_available", "0");
 }
 
 void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
