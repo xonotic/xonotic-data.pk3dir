@@ -5,8 +5,10 @@
 #include <common/items/_mod.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
@@ -20,7 +22,6 @@
 #include <server/items/items.qh>
 #include <server/hook.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
@@ -301,7 +302,8 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 	if (this == NULL) return;
 	this.state = WS_INUSE;
 
-	actor.spawnshieldtime = min(actor.spawnshieldtime, time);  // kill spawn shield when you fire
+	if(StatusEffects_active(STATUSEFFECT_SpawnShield, actor)) // given this is performed often, perform a lighter check first
+		StatusEffects_remove(STATUSEFFECT_SpawnShield, actor, STATUSEFFECT_REMOVE_CLEAR); // kill spawn shield when you fire
 
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0)

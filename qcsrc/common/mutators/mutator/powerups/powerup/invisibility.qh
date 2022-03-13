@@ -1,0 +1,62 @@
+#pragma once
+
+#include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/powerups.qh>
+#ifdef SVQC
+    // For FL_POWERUP
+    #include <common/constants.qh>
+    #include <server/items/items.qh>
+#endif
+
+#ifdef GAMEQC
+//MODEL(Invisibility_ITEM, Item_Model("g_strength.md3")); // TODO: new model required
+SOUND(Invisibility, Item_Sound("powerup"));
+#endif
+
+#ifdef SVQC
+.float invisibility_finished;
+
+bool autocvar_g_powerups_invisibility = 1;
+float autocvar_g_balance_powerup_invisibility_alpha = 0.15;
+float autocvar_g_balance_powerup_invisibility_time = 30;
+void powerup_invisibility_init(Pickup this, entity item)
+{
+    if(!item.invisibility_finished)
+        item.invisibility_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invisibility_time;
+}
+#endif
+REGISTER_ITEM(Invisibility, Powerup) {
+    this.m_canonical_spawnfunc = "item_invisibility";
+#ifdef SVQC
+    if(autocvar_g_powerups_invisibility)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
+    this.m_iteminit         =   powerup_invisibility_init;
+#endif
+#ifdef GAMEQC
+    this.m_itemid           =   IT_INVISIBILITY;
+    this.m_model            =   MDL_BUFF; // TODO: MDL_Invisibility_ITEM when new model available
+    this.m_skin             =   12;
+    this.m_sound            =   SND_Invisibility;
+    this.m_glow             =   true;
+    this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
+#endif
+    this.netname            =   "invisibility";
+    this.m_name             =   _("Invisibility");
+    this.m_icon             =   "buff_invisible";
+    this.m_color            =   '0.5 0.5 1';
+    this.m_waypoint         =   _("Invisibility");
+    this.m_waypointblink    =   2;
+}
+
+SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)
+
+CLASS(Invisibility, Powerups)
+    ATTRIB(Invisibility, netname, string, "invisibility");
+    ATTRIB(Invisibility, m_name, string, _("Invisibility"));
+    ATTRIB(Invisibility, m_color, vector, '0.5 0.5 1');
+    ATTRIB(Invisibility, m_icon, string, "buff_invisible");
+ENDCLASS(Invisibility)
+REGISTER_STATUSEFFECT(Invisibility, NEW(Invisibility));

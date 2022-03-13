@@ -318,7 +318,7 @@ string ScoreString(int pFlags, float pValue)
 	if((pValue == 0) && (pFlags & (SFL_HIDE_ZERO | SFL_RANK | SFL_TIME)))
 		valstr = "";
 	else if(pFlags & SFL_RANK)
-		valstr = count_ordinal(pValue);
+		valstr = (pValue < 256 ? count_ordinal(pValue) : _("N/A"));
 	else if(pFlags & SFL_TIME)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
@@ -1707,23 +1707,6 @@ Notification Announcer_PickNumber(int type, int num)
 				case 3:  return ANNCE_NUM_GAMESTART_3;
 				case 2:  return ANNCE_NUM_GAMESTART_2;
 				case 1:  return ANNCE_NUM_GAMESTART_1;
-			}
-			break;
-		}
-		case CNT_IDLE:
-		{
-			switch(num)
-			{
-				case 10: return ANNCE_NUM_IDLE_10;
-				case 9:  return ANNCE_NUM_IDLE_9;
-				case 8:  return ANNCE_NUM_IDLE_8;
-				case 7:  return ANNCE_NUM_IDLE_7;
-				case 6:  return ANNCE_NUM_IDLE_6;
-				case 5:  return ANNCE_NUM_IDLE_5;
-				case 4:  return ANNCE_NUM_IDLE_4;
-				case 3:  return ANNCE_NUM_IDLE_3;
-				case 2:  return ANNCE_NUM_IDLE_2;
-				case 1:  return ANNCE_NUM_IDLE_1;
 			}
 			break;
 		}

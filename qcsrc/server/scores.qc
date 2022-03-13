@@ -434,6 +434,7 @@ void WinningConditionHelper(entity this)
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
 	s = strcat(s, ":F", ftos(serverflags));
+	s = strcat(s, ":T", sv_termsofservice_url_escaped);
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(NULL, (fullstatus ? 1 : 2)));
 
@@ -556,12 +557,12 @@ void WinningConditionHelper(entity this)
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
-			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if(!(IS_PLAYER(it) || INGAME_JOINED(it)))
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if (IS_PLAYER(it) || INGAME_JOINED(it))
 				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";

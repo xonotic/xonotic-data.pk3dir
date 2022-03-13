@@ -262,8 +262,6 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
-	// this gives unlimited ammo (the 4 types) but not fuel
-	// using `g_use_ammunition` instead gives also fuel which is unnecessary and distracting in the HUD
 	start_items |= IT_UNLIMITED_AMMO;
 
 	start_weapons = warmup_start_weapons = ok_start_items;

@@ -1,0 +1,44 @@
+#pragma once
+
+/// \file
+/// \brief Header file that describes the resource system.
+/// \copyright GNU GPLv2 or any later version.
+
+#include <common/resources/resources.qh>
+
+// ============================ Public API ====================================
+
+/// \brief Returns the current amount of resource the given entity has.
+/// \param[in] e Entity to check.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \return Current amount of resource the given entity has.
+float GetResource(entity e, Resource res_type);
+
+/// \brief Sets the resource amount of an entity without calling any hooks.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return Boolean for whether the ammo amount was changed
+bool SetResourceExplicit(entity e, Resource res_type, float amount);
+
+/// \brief Sets the current amount of resource the given entity will have.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return No return.
+void SetResource(entity e, Resource res_type, float amount);
+
+/// \brief Takes an entity some resource.
+/// \param[in,out] receiver Entity to take resource from.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to take.
+/// \return No return.
+void TakeResource(entity receiver, Resource res_type, float amount);
+
+/// \brief Takes an entity some resource but not less than a limit.
+/// \param[in,out] receiver Entity to take resource from.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to take.
+/// \param[in] limit Limit of resources to take.
+/// \return No return.
+void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, float limit);

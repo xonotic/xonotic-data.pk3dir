@@ -9,6 +9,11 @@
 
 int ScoreRules_teams;
 
+bool IsTeamAvailable(int team_num)
+{
+	return boolean(ScoreRules_teams & Team_TeamToBit(team_num));
+}
+
 int NumTeams(int teams)
 {
 	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));

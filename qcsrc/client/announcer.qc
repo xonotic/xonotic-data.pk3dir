@@ -28,12 +28,9 @@ void Announcer_Countdown(entity this)
 		announcer_countdown = NULL;
 		return;
 	}
-	if(roundstarttime >= starttime)
-		starttime = roundstarttime;
-	if(starttime <= time && roundstarttime != starttime) // game start time has passed
-		announcer_5min = announcer_1min = false; // reset maptime announcers now as well
 
-	float countdown = (starttime - time);
+	bool inround = (roundstarttime && time >= starttime);
+	float countdown = (inround ? roundstarttime - time : starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
 
 	if(countdown <= 0) // countdown has finished, starttime is now
@@ -46,23 +43,22 @@ void Announcer_Countdown(entity this)
 	}
 	else // countdown is still going
 	{
-		// if concomitant countdown to round start overrides countdown to game start
-		if(roundstarttime == starttime)
+		if(inround)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
+			this.nextthink = (roundstarttime - (countdown - 1));
 		}
 		else
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(annce_num != NULL)
+			if(!roundstarttime && annce_num != NULL) // Don't announce game start in round based modes
 				Local_Notification(MSG_ANNCE, annce_num);
+			this.nextthink = (starttime - (countdown - 1));
 		}
-
-		this.nextthink = (starttime - (countdown - 1));
 	}
 }
 
@@ -108,7 +104,7 @@ void Announcer_Gamestart()
 			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
 				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 
-			announcer_countdown.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime
 		}
 	}
 
@@ -129,8 +125,24 @@ MACRO_END
 
 void Announcer_Time()
 {
+	static bool warmup_stage_prev;
+
 	if(intermission)
 		return;
+
+	if (warmup_stage != warmup_stage_prev)
+	{
+		announcer_5min = announcer_1min = false;
+		warmup_stage_prev = warmup_stage;
+		return;
+	}
+
+	float starttime = STAT(GAMESTARTTIME);
+	if(time < starttime)
+	{
+		announcer_5min = announcer_1min = false;
+		return;
+	}
 
 	float timeleft;
 	if(warmup_stage)
@@ -142,7 +154,7 @@ void Announcer_Time()
 			timeleft = 0;
 	}
 	else
-		timeleft = max(0, STAT(TIMELIMIT) * 60 + STAT(GAMESTARTTIME) - time);
+		timeleft = max(0, STAT(TIMELIMIT) * 60 + starttime - time);
 
 	if(autocvar_cl_announcer_maptime >= 2)
 		ANNOUNCER_CHECKMINUTE(5);

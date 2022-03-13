@@ -5,6 +5,7 @@
 CLASS(MainWindow, ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity));
 	METHOD(MainWindow, draw, void(entity));
+	ATTRIB(MainWindow, ToSDialog, entity);
 	ATTRIB(MainWindow, firstRunDialog, entity);
 	ATTRIB(MainWindow, advancedDialog, entity);
 	ATTRIB(MainWindow, mutatorsDialog, entity);
@@ -20,7 +21,7 @@ CLASS(MainWindow, ModalController)
 	ATTRIB(MainWindow, languageWarningDialog, entity);
 	ATTRIB(MainWindow, mainNexposee, entity);
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND);
-	ATTRIB(MainWindow, dialogToShow, entity);
+	ATTRIB(MainWindow, firstDraw, bool, true);
 	ATTRIB(MainWindow, demostartconfirmDialog, entity);
 	ATTRIB(MainWindow, demotimeconfirmDialog, entity);
 	ATTRIB(MainWindow, resetDialog, entity);

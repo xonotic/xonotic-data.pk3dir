@@ -1,7 +1,7 @@
 erebus
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/erebus.tga
 		rgbgen lightingDiffuse
 	}
@@ -10,7 +10,7 @@ erebus
 erebusfullbright
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/erebusfullbright.tga
 		rgbgen lightingDiffuse
 	}
@@ -19,7 +19,7 @@ erebusfullbright
 shadowhead
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/shadowhead.tga
 		rgbgen lightingDiffuse
 	}

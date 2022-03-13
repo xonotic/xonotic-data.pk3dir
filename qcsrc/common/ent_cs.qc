@@ -2,12 +2,12 @@
 
 #if defined(CSQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
+	#include <common/resources/resources.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
-	#include <server/resources.qh>
+	#include <common/resources/resources.qh>
+	#include <common/resources/sv_resources.qh>
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
@@ -188,7 +188,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			{
 				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
-				if (!(IS_PLAYER(to) || to.caplayer)) break;
+				if (!(IS_PLAYER(to) || INGAME(to))) break;
 			}
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);

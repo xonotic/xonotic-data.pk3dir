@@ -2,7 +2,7 @@
 
 CLASS(Hagar, Weapon)
 /* spawnfunc */ ATTRIB(Hagar, m_canonical_spawnfunc, string, "weapon_hagar");
-/* ammotype  */ ATTRIB(Hagar, ammo_type, int, RES_ROCKETS);
+/* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);

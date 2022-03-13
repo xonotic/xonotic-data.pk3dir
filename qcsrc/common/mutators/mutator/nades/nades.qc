@@ -11,6 +11,7 @@ float autocvar_g_nades_spread = 0.04;
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
+
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
@@ -224,7 +225,7 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 			if(d < dist)
 			{
 				e.fireball_impactvec = p;
-				RandomSelection_AddEnt(e, 1 / (1 + d), !Fire_IsBurning(e));
+				RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
 			}
 		}
 	if(RandomSelection_chosen_ent)
@@ -589,9 +590,9 @@ void nade_entrap_touch(entity this, entity toucher)
 	#endif
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
 
 		float tint_alpha = 0.75;
@@ -645,9 +646,9 @@ void nade_heal_touch(entity this, entity toucher)
 
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_red = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_red = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(HEALING_ORB, show_red) = time+0.1;
 		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -674,9 +675,9 @@ void nade_monster_boom(entity this)
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
@@ -1140,7 +1141,7 @@ void nade_prime(entity this)
 	int ntype;
 	string pntype = this.pokenade_type;
 
-	if((this.items & ITEM_Strength.m_itemid) && autocvar_g_nades_bonus_onstrength)
+	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
 		ntype = STAT(NADE_BONUS_TYPE, this);
 	else if (STAT(NADE_BONUS, this) >= 1)
 	{
