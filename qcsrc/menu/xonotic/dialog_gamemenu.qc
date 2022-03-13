@@ -1,0 +1,34 @@
+#include "dialog_gamemenu.qh"
+
+#include "textlabel.qh"
+#include "commandbutton.qh"
+#include "leavematchbutton.qh"
+#include "button.qh"
+
+void XonoticGameMenuDialog_fill(entity me)
+{
+	entity e;
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Main menu"), '0 0 0', "menu_cmd nexposee", 0));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Profile"), '0 0 0', "menu_cmd profile", 0));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Settings"), '0 0 0', "menu_cmd videosettings", 0));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Keys"), '0 0 0', "menu_cmd inputsettings", 0));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quick menu"), '0 0 0', "quickmenu", COMMANDBUTTON_CLOSE));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Join!"), '0 0 0', "join", COMMANDBUTTON_CLOSE));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Spectate"), '0 0 0', "spec", COMMANDBUTTON_CLOSE));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticLeaveMatchButton('0 0 0', COMMANDBUTTON_CLOSE));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quit Xonotic"), '1 0 0', "echo ]quit; quit", 0));
+}

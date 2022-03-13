@@ -969,12 +969,16 @@ void m_goto(string itemname)
 		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
 		{
 			m_hide();
+			return;
 		}
-		else
-		{
-			m_activate_window(main.mainNexposee);
-			m_display();
-		}
+		itemname = "nexposee";
+	}
+
+	if (itemname == "nexposee")
+	{
+		// unlike 'togglemenu 1', this closes modal and root dialogs if opened
+		m_activate_window(main.mainNexposee);
+		m_display();
 	}
 	else
 	{

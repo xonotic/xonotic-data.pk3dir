@@ -245,6 +245,10 @@ void MainWindow_configureMainWindow(entity me)
 
 
 	// miscellaneous dialogs
+	i = NEW(XonoticGameMenuDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	i = NEW(XonoticTeamSelectDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
