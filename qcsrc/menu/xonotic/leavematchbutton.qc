@@ -12,7 +12,7 @@ string leaveMatchButton_getText(entity me)
 		return _("Leave current match");
 	else if(cvar("g_campaign"))
 		return _("Leave campaign");
-	else if (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1")
+	else if (isServerSingleplayer())
 		return _("Leave singleplayer");
 	else
 		return _("Leave multiplayer");
@@ -24,7 +24,7 @@ string leaveMatchButton_getTooltip(entity me)
 		return "-";
 	else if(cvar("g_campaign"))
 		return _("Leave current campaign level");
-	else if (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1")
+	else if (isServerSingleplayer())
 		return _("Leave current singleplayer match");
 	else
 		return _("Leave current multiplayer match / Disconnect from the server");
