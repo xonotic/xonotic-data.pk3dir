@@ -89,7 +89,7 @@ void XonoticTextBox_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 	string s = me.getTextBoxLine(me, i);
 	vector color = (me.allowColors) ? '1 1 1' : me.colorL;
 	if (me.align == 0.5)
-		draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, s, me.realFontSize, color, 1, me.allowColors);
+		draw_CenterText(0.5 * eX, s, me.realFontSize, color, 1, me.allowColors);
 	else
 		draw_Text(vec2(0, 0), s, me.realFontSize, color, me.alpha, me.allowColors);
 }
