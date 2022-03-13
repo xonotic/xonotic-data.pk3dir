@@ -43,6 +43,7 @@
 #include "dialog_multiplayer_create_mutators.qh"
 #include "dialog_sandboxtools.qh"
 #include "dialog_monstertools.qh"
+#include "dialog_gamemenu.qh"
 #include "dialog_teamselect.qh"
 #include "dialog_uid2name.qh"
 #include "dialog_singleplayer.qh"
