@@ -106,6 +106,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if (argv(0) == "servers")
+	{
+		m_goto("servers");
+		return;
+	}
+
 	if (argv(0) == "profile")
 	{
 		m_goto("profile");
