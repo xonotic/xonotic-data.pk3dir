@@ -2,6 +2,7 @@
 
 #include "rootdialog.qh"
 CLASS(XonoticGameMenuDialog, XonoticRootDialog)
+	METHOD(XonoticGameMenuDialog, destroy, void(entity));
 	METHOD(XonoticGameMenuDialog, fill, void(entity));
 	ATTRIB(XonoticGameMenuDialog, title, string, _("Game menu"));
 	ATTRIB(XonoticGameMenuDialog, color, vector, SKINCOLOR_DIALOG_QUIT);

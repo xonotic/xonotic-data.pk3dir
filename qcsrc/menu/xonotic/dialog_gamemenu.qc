@@ -5,8 +5,16 @@
 #include "leavematchbutton.qh"
 #include "button.qh"
 
+void XonoticGameMenuDialog_destroy(entity me)
+{
+	cvar_set("_menu_gamemenu_dialog_available", "0");
+}
+
 void XonoticGameMenuDialog_fill(entity me)
 {
+	registercvar("_menu_gamemenu_dialog_available", "0", 0);
+	cvar_set("_menu_gamemenu_dialog_available", "1");
+
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Main menu"), '0 0 0', "menu_cmd nexposee", 0));

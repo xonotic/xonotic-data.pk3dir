@@ -119,7 +119,6 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("+use"                                  , _("drop key/flag, exit vehicle"));
 	KEYBIND_DEF("kill"                                  , _("suicide / respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
-	KEYBIND_DEF("menu_showgamemenudialog"               , _("game menu"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("User defined"));
