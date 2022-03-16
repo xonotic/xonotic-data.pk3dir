@@ -26,4 +26,4 @@ uk    "Ukrainian" "Українська" 49%
 zh_CN "Chinese (China)" "中文" 59%
 zh_TW "Chinese (Taiwan)" "國語" 58%
 ja_JP "Japanese" "日本語" 99%
-ko    "Korean" "한국의" 28%
+ko    "Korean" "한국의" 29%

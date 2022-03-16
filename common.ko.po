@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# BYEONGJIN AN, 2022
 # Iso Lee, 2016
 # Jisoo Lim <liminj0719@gmail.com>, 2017
 # Iso Lee, 2016
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
-"PO-Revision-Date: 2022-03-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2022-03-16 01:32+0000\n"
+"Last-Translator: BYEONGJIN AN\n"
 "Language-Team: Korean (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ko/)\n"
 "Language: ko\n"
@@ -32,7 +33,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1%s에 저장하지 못했습니다."
 
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
@@ -53,7 +54,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:182
 msgid "Generic message"
-msgstr ""
+msgstr "일반 메시지"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -239,7 +240,7 @@ msgstr "계속..."
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "Chat"
-msgstr ""
+msgstr "채팅"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Send public message to"
@@ -610,7 +611,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^elo"
-msgstr ""
+msgstr "SCO^elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^fastest"
@@ -638,11 +639,11 @@ msgstr "SCO^깃발 운반자 킬"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of kills minus suicides"
@@ -842,7 +843,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "SCO^팀킬"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Number of ticks (Domination)"
@@ -850,28 +851,28 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^ticks"
-msgstr ""
+msgstr "SCO^틱"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^time"
-msgstr ""
+msgstr "SCO^시간"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "총 경주한 시간 (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:359
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
-msgstr ""
+msgstr "^2scoreboard_columns_set 명령을 사용하여 스코어보드 수정이 가능합니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:360
 msgid "Usage:"
-msgstr ""
+msgstr "용법:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:362
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:363
 msgid ""
