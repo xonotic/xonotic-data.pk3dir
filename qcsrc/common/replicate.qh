@@ -1,103 +1,18 @@
 #pragma once
 
-// TODO: sort/merge these!
-#if defined(CSQC)
-	float autoswitch;
-	bool cvar_cl_allow_uid2name;
-	float cvar_cl_allow_uidtracking;
-	bool cvar_cl_allow_uidranking;
-	float cvar_cl_autoscreenshot;
-	float cvar_cl_autotaunt;
-	bool cvar_cl_clippedspectating;
-	int cvar_cl_gunalign;
-	float cvar_cl_handicap;
-	float cvar_cl_jetpack_jump;
-	float cvar_cl_movement_track_canjump;
-	float cvar_cl_noantilag;
-	string cvar_cl_physics;
-	float cvar_cl_voice_directional;
-	float cvar_cl_voice_directional_taunt_attenuation;
-	float cvar_cl_weaponimpulsemode;
-
-	string cvar_g_xonoticversion;
-	string cvar_cl_weaponpriority;
-	string cvar_cl_weaponpriorities[10];
-	float cvar_cl_cts_noautoswitch;
-	bool cvar_cl_weapon_switch_reload;
-	bool cvar_cl_weapon_switch_fallback_to_impulse;
-#elif defined(SVQC)
-	.float cvar_cl_handicap;
-	.int cvar_cl_gunalign;
-	.bool cvar_cl_clippedspectating;
-	.float cvar_cl_autoscreenshot;
-	.float cvar_cl_jetpack_jump;
-	.float cvar_cl_movement_track_canjump;
-	.float cvar_cl_newusekeysupported;
-	.float cvar_cl_cts_noautoswitch;
-	.bool cvar_cl_weapon_switch_reload;
-	.bool cvar_cl_weapon_switch_fallback_to_impulse;
-
-	.string cvar_g_xonoticversion;
-	.string cvar_cl_weaponpriority;
-	.string cvar_cl_weaponpriorities[10];
-	.float cvar_cl_noantilag;
-
-	// WEAPONTODO
-	.float autoswitch;
-	.float cvar_cl_weaponimpulsemode;
-
-	.float cvar_cl_allow_uid2name;
-	.float cvar_cl_allow_uidtracking;
-	.bool cvar_cl_allow_uidranking;
-
-	.string cvar_cl_physics;
-
-	// autotaunt system
-	.float cvar_cl_autotaunt;
-	.float cvar_cl_voice_directional;
-	.float cvar_cl_voice_directional_taunt_attenuation;
-#endif
-
 #ifdef GAMEQC
-REPLICATE(autoswitch, bool, "cl_autoswitch");
-REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
-REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
+REPLICATE_INIT(bool, cvar_cl_autoswitch);
+REPLICATE_INIT(int, cvar_cl_autoscreenshot);
+REPLICATE_INIT(bool, cvar_cl_clippedspectating);
+REPLICATE_INIT(bool, cvar_cl_cts_noautoswitch);
+REPLICATE_INIT(float, cvar_cl_handicap);
+REPLICATE_INIT(bool, cvar_cl_noantilag);
+REPLICATE_INIT(string, cvar_g_xonoticversion);
+REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
-REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
-REPLICATE(cvar_cl_handicap, float, "cl_handicap");
-REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
-REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
-REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
-REPLICATE(cvar_cl_physics, string, "cl_physics");
-REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
-REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
-REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
-REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
-REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
-REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
-/*
-// cvar cl_newusekeysupported doesn't exist
-float cvar_cl_newusekeysupported;
-REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
-*/
-// cvar_cl_allow_uidtracking is handled specially on the server
-#ifdef CSQC
-REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
-#endif
-
-REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority");
-
-REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0");
-REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1");
-REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2");
-REPLICATE(cvar_cl_weaponpriorities[3], string, "cl_weaponpriority3");
-REPLICATE(cvar_cl_weaponpriorities[4], string, "cl_weaponpriority4");
-REPLICATE(cvar_cl_weaponpriorities[5], string, "cl_weaponpriority5");
-REPLICATE(cvar_cl_weaponpriorities[6], string, "cl_weaponpriority6");
-REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7");
-REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8");
-REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9");
+REPLICATE(cvar_cl_handicap, float, "cl_handicap");
+REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
+REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 #endif

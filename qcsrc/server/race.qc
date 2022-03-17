@@ -8,6 +8,7 @@
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/playerstats.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/vehicles/sv_vehicles.qh>

@@ -1,0 +1,18 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticServerToSTab, XonoticTab)
+	METHOD(XonoticServerToSTab, fill, void(entity));
+	METHOD(XonoticServerToSTab, loadToS, void(entity, string));
+	ATTRIB(XonoticServerToSTab, title, string, _("Terms of Service"));
+	ATTRIB(XonoticServerToSTab, color, vector, SKINCOLOR_DIALOG_SERVERINFO);
+	ATTRIB(XonoticServerToSTab, intendedWidth, float, 0.8);
+	ATTRIB(XonoticServerToSTab, rows, float, 17);
+	ATTRIB(XonoticServerToSTab, columns, float, 6.2);
+
+	ATTRIB(XonoticServerToSTab, text, string);
+	ATTRIB(XonoticServerToSTab, textBox, entity);
+ENDCLASS(XonoticServerToSTab)
+entity makeXonoticServerToSTab();
+
+void AdditionalServerInfo_OnGet(entity fh, entity pass, int status);

@@ -1,0 +1,65 @@
+#pragma once
+
+#ifdef SVQC
+	#include <common/stats.qh>
+#endif
+
+#ifdef CSQC
+/// \brief Legacy fields for the resources. To be removed.
+.float health;
+.float armorvalue;
+#endif
+
+#if 1
+.int ammo_none;
+.int ammo_shells;
+.int ammo_nails;
+.int ammo_rockets;
+.int ammo_cells;
+#ifdef SVQC
+const .int ammo_plasma = _STAT(PLASMA);
+const .int ammo_fuel = _STAT(FUEL);
+#else
+.int ammo_plasma;
+.int ammo_fuel;
+#endif
+#endif
+
+CLASS(Resource, Object)
+	ATTRIB(Resource, netname, string, "");
+#ifdef GAMEQC
+	ATTRIB(Resource, m_field, .float, health);
+#endif
+ENDCLASS(Resource)
+
+#define REGISTER_RESOURCE(id, inst) REGISTER(Resources, RES, id, m_id, inst)
+REGISTRY(Resources, BITS(4));
+REGISTER_REGISTRY(Resources)
+REGISTRY_SORT(Resources);
+REGISTRY_CHECK(Resources);
+
+REGISTRY_DEFINE_GET(Resources, NULL)
+STATIC_INIT(Resources_renumber) { FOREACH(Resources, true, it.m_id = i); }
+
+/// \brief Unconditional maximum amount of resources the entity can have.
+const int RES_AMOUNT_HARD_LIMIT = 999;
+const int RES_LIMIT_NONE = -1;
+
+/// \brief Describes the available resource types.
+REGISTER_RESOURCE(NONE, NEW(Resource)); ///< Indicates the lack of resource. Use with caution.
+
+#include "all.inc"
+
+#ifdef GAMEQC
+// ===================== Legacy and/or internal API ===========================
+
+/// \brief Converts an entity field to resource type.
+/// \param[in] res_field Entity field to convert.
+/// \return Resource type (a RES_* constant).
+Resource GetResourceType(.float res_field);
+
+/// \brief Converts resource type (a RES_* constant) to entity field.
+/// \param[in] res_type Type of the resource.
+/// \return Entity field for that resource.
+.float GetResourceField(Resource res_type);
+#endif

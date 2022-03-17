@@ -4,6 +4,7 @@
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/chat.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
@@ -57,7 +58,7 @@ void CSQC_Init()
 		maxclients = i;
 	}
 
-	ReplicateVars_Send_All();
+	ReplicateVars(REPLICATEVARS_SEND_ALL);
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -189,7 +190,7 @@ void Shutdown()
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 
-	ReplicateVars_Destroy();
+	ReplicateVars(REPLICATEVARS_DESTROY);
 }
 
 void AuditLists()
@@ -452,9 +453,12 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
 	bool override = false;
+
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
 	if (override)
 		return true;
+
+	override |= HUD_Panel_Chat_InputEvent(bInputType, nPrimary, nSecondary);
 
 	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
 

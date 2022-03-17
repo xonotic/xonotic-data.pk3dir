@@ -75,3 +75,5 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 void weapon_prepareattack_do(entity actor, .entity weaponentity, float secondary, float attacktime);
 
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);
+
+//REPLICATE_APPLYCHANGE("cl_gunalign", { W_ResetGunAlign(this, store.cvar_cl_gunalign); });

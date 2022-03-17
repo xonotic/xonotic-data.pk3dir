@@ -938,7 +938,14 @@ void Draw_ArcBeam(entity this)
 		// into a weapon system for client code.
 
 		// find where we are aiming
-		vector myviewangle = ((autocvar_chase_active) ? warpzone_save_view_angles : view_angles);
+		vector myviewangle = view_angles;
+		if (autocvar_chase_active)
+		{
+			if (autocvar_cl_lockview)
+				myviewangle = eX * csqcplayer.v_angle.x + eY * csqcplayer.angles.y;
+			else
+				myviewangle = warpzone_save_view_angles;
+		}
 		vector forward, right, up;
 		MAKE_VECTORS(myviewangle, forward, right, up);
 		entity wepent = viewmodels[this.beam_slot];

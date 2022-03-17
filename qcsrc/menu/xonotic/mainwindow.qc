@@ -4,6 +4,7 @@
 
 #include "nexposee.qh"
 #include "inputbox.qh"
+#include "dialog_termsofservice.qh"
 #include "dialog_firstrun.qh"
 #include "dialog_hudsetup_exit.qh"
 #include "dialog_hudpanel_notification.qh"
@@ -58,10 +59,16 @@ void MainWindow_draw(entity me)
 {
 	SUPER(MainWindow).draw(me);
 
-	if(me.dialogToShow)
-	{
-		DialogOpenButton_Click_withCoords(NULL, me.dialogToShow, '0 0 0', eX * conwidth + eY * conheight);
-		me.dialogToShow = NULL;
+	if (me.firstDraw) {
+		if (me.ToSDialog.shouldShow())
+		{
+			me.ToSDialog.loadXonoticToS(me.ToSDialog);
+			DialogOpenButton_Click_withCoords(NULL, me.ToSDialog, '0 0 0', eX * conwidth + eY * conheight);
+		}
+		else if(me.firstRunDialog.shouldShow())
+			DialogOpenButton_Click_withCoords(NULL, me.firstRunDialog, '0 0 0', eX * conwidth + eY * conheight);
+		
+		me.firstDraw = false;
 	}
 
 	//-------------------------------------
@@ -103,6 +110,11 @@ void DemoButton_Click(entity me, entity other)
 void MainWindow_configureMainWindow(entity me)
 {
 	entity n, i;
+
+	// terms of service dialog
+	me.ToSDialog = i = NEW(XonoticToSDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	// dialog run upon startup
 	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
@@ -281,7 +293,7 @@ void MainWindow_configureMainWindow(entity me)
 
 	// main dialogs/windows
 	me.mainNexposee = n = NEW(XonoticNexposee);
-	
+
 	/*
 		if(checkextension("DP_GECKO_SUPPORT"))
 		{
@@ -291,7 +303,7 @@ void MainWindow_configureMainWindow(entity me)
 			n.setNexposee(n, i, '0.1 0.1 0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		}
 	*/
-	
+
 		i = NEW(XonoticSingleplayerDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -332,7 +344,4 @@ void MainWindow_configureMainWindow(entity me)
 
 	me.initializeDialog(me, n);
 	me.disconnectDialogVisibility = 1;
-
-	if(cvar_string("_cl_name") == cvar_defstring("_cl_name"))
-		me.dialogToShow = me.firstRunDialog;
 }

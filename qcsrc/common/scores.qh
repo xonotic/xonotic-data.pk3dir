@@ -15,7 +15,6 @@ STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
  * Score indices
  */
 
-// game mode specific indices are not in common/, but in server/scores_rules.qc!
 #ifdef GAMEQC
 // fields not networked via the score system
 REGISTER_SP(END);

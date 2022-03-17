@@ -90,7 +90,7 @@ int _content_type;
  */
 
 entity bot_spawn();
-bool bot_fixcount();
+bool bot_fixcount(bool multiple_per_frame);
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);

@@ -129,6 +129,11 @@ Nade Nade_FromProjectile(int proj)
 .float orb_lifetime;
 .float orb_radius;
 
+#ifdef GAMEQC
+REPLICATE_INIT(int, cvar_cl_nade_type);
+REPLICATE_INIT(string, cvar_cl_pokenade_type);
+#endif
+
 #ifdef SVQC
 
 .entity nade;
@@ -137,8 +142,6 @@ Nade Nade_FromProjectile(int proj)
 .float nade_special_time;
 .string pokenade_type;
 .entity nade_damage_target;
-.float cvar_cl_nade_type;
-.string cvar_cl_pokenade_type;
 .float toss_time;
 .float nade_show_particles;
 .float nade_veil_prevalpha;
@@ -167,8 +170,6 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 #endif
 
 #ifdef CSQC
-float cvar_cl_nade_type;
-string cvar_cl_pokenade_type;
 bool Projectile_isnade(int proj); // TODO: remove
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator

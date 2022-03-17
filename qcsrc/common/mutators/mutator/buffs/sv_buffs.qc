@@ -969,8 +969,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 	}
 }
 
-REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
-
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
 	if(autocvar_g_buffs > 0) // only report as a mutator if they're enabled

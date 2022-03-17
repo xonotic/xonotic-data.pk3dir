@@ -1,0 +1,24 @@
+#pragma once
+
+int autocvar__termsofservice_accepted;
+const string termsofservice_url = "http://update.xonotic.org/tos.txt";
+
+#include "rootdialog.qh"
+CLASS(XonoticToSDialog, XonoticRootDialog)
+	METHOD(XonoticToSDialog, shouldShow, bool());
+	METHOD(XonoticToSDialog, fill, void(entity));
+	METHOD(XonoticToSDialog, loadXonoticToS, void(entity));
+	ATTRIB(XonoticToSDialog, title, string, _("Terms of Service"));
+	ATTRIB(XonoticToSDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN);
+	ATTRIB(XonoticToSDialog, intendedWidth, float, 0.8);
+	ATTRIB(XonoticToSDialog, rows, float, 16);
+	ATTRIB(XonoticToSDialog, columns, float, 6.2);
+	ATTRIB(XonoticToSDialog, name, string, "TermsOfService");
+
+	ATTRIB(XonoticToSDialog, text, string);
+	ATTRIB(XonoticToSDialog, textBox, entity);
+
+	ATTRIB(XonoticToSDialog, closable, float, 0);
+ENDCLASS(XonoticToSDialog)
+
+void XonoticToS_OnGet(entity fh, entity me, int status);

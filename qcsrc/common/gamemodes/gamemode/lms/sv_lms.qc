@@ -11,6 +11,7 @@ bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_items;
 bool autocvar_g_lms_regenerate;
+bool autocvar_g_lms_rot;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -54,7 +55,7 @@ int WinningCondition_LMS()
 		{
 			// two or more active players - continue with the game
 
-			if (autocvar_g_campaign)
+			if (autocvar_g_campaign && campaign_bots_may_start)
 			{
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 					float pl_lives = GameRules_scoring_add(it, LMS_LIVES, 0);
@@ -358,9 +359,11 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
 {
-	if(autocvar_g_lms_regenerate)
-		return false;
-	return true;
+	if(!autocvar_g_lms_regenerate)
+		M_ARGV(2, float) = 0;
+	if(!autocvar_g_lms_rot)
+		M_ARGV(3, float) = 0;
+	return (!autocvar_g_lms_regenerate && !autocvar_g_lms_rot);
 }
 
 MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)

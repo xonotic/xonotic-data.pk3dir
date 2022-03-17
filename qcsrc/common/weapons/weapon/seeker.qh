@@ -2,7 +2,7 @@
 
 CLASS(Seeker, Weapon)
 /* spawnfunc */ ATTRIB(Seeker, m_canonical_spawnfunc, string, "weapon_seeker");
-/* ammotype  */ ATTRIB(Seeker, ammo_type, int, RES_ROCKETS);
+/* ammotype  */ ATTRIB(Seeker, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Seeker, impulse, int, 8);
 /* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);

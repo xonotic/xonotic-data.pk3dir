@@ -352,6 +352,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string s;
 
 	string un_version = "";
+	string un_tosversion = "";
 	string un_download = "";
 	string un_url = "";
 	string un_bannedservers = "";
@@ -370,6 +371,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			case "V":
 			{
 				un_version = s;
+				break;
+			}
+			case "T":
+			{
+				un_tosversion = s;
 				break;
 			}
 			case "C":
@@ -430,6 +436,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 					DisableServerBackwardsCompatibility();
 			}
 		}
+	}
+
+	if(un_tosversion != "")
+	{
+		_Nex_ExtResponseSystem_NewToS = stof(un_tosversion);
 	}
 
 	if(un_bannedservers != "")
@@ -582,6 +593,7 @@ void preMenuDraw()
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
+
 	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)

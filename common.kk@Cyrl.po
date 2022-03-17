@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2022-03-06 07:22+0100\n"
+"PO-Revision-Date: 2013-09-12 16:53+0000\n"
+"Last-Translator: Артем Быстров, 2015-2016\n"
 "Language-Team: Kazakh (Cyrillic) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/kk@Cyrl/)\n"
 "Language: kk@Cyrl\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Generic message"
 msgstr ""
 
-#: qcsrc/client/hud/panel/chat.qc:98
+#: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Player^7: Бұл чат аренасы."
 
@@ -518,7 +518,7 @@ msgstr "Аралықтағы  %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1174
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1180
 msgid "missing a checkpoint"
 msgstr ""
 
@@ -930,12 +930,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:665
 #: qcsrc/client/hud/panel/scoreboard.qc:672
 #: qcsrc/client/hud/panel/scoreboard.qc:727
-#: qcsrc/client/hud/panel/scoreboard.qc:738
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:46
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:47
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:164
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:738 qcsrc/common/util.qc:321
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:194
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:199
 msgid "N/A"
 msgstr ""
 
@@ -1039,8 +1039,25 @@ msgstr ""
 msgid "nmi"
 msgstr ""
 
-#: qcsrc/client/hud/panel/timer.qc:71
-msgid "WARMUP"
+#: qcsrc/client/hud/panel/timer.qc:132
+msgid "Warmup"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:134
+msgid "Timeout"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:136
+msgid "Sudden Death"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:138
+msgid "Overtime"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:140
+#, c-format
+msgid "Overtime #%d"
 msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:30
@@ -1065,7 +1082,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:129
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:82
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:14
@@ -1078,7 +1095,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:131
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -1089,43 +1106,43 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: qcsrc/client/hud/panel/weapons.qc:630
+#: qcsrc/client/hud/panel/weapons.qc:631
 msgid "Out of ammo"
 msgstr "оқ-дәрілер бітіп қалды"
 
-#: qcsrc/client/hud/panel/weapons.qc:634
+#: qcsrc/client/hud/panel/weapons.qc:635
 msgid "Don't have"
 msgstr ""
 
-#: qcsrc/client/hud/panel/weapons.qc:638
+#: qcsrc/client/hud/panel/weapons.qc:639
 msgid "Unavailable"
 msgstr "Қолжетімсіз"
 
-#: qcsrc/client/main.qc:289
+#: qcsrc/client/main.qc:292
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 
-#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1082 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1083 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1084 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr ""
 
-#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1085 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr ""
 
-#: qcsrc/client/main.qc:1080 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1086 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr ""
 
-#: qcsrc/client/main.qc:1325
+#: qcsrc/client/main.qc:1331
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (байланыс емес)"
@@ -1325,10 +1342,6 @@ msgid "Key Hunt"
 msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
-msgid "^1Match has already begun"
-msgstr "^1Матч баяғыда басталды"
-
-#: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:25
 msgid "^1You have no more lives left"
 msgstr "^1Сенде енді өмірдер жоқ"
 
@@ -1400,23 +1413,23 @@ msgstr ""
 msgid "Team Deathmatch"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:67
+#: qcsrc/common/items/item/ammo.qh:52
 msgid "bullets"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:97
+#: qcsrc/common/items/item/ammo.qh:82
 msgid "cells"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:127
+#: qcsrc/common/items/item/ammo.qh:112
 msgid "plasma"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:157
+#: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:191
+#: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
 msgstr ""
 
@@ -1851,7 +1864,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:775
+#: qcsrc/menu/xonotic/util.qc:787
 msgid "Color:"
 msgstr ""
 
@@ -4508,7 +4521,7 @@ msgstr ""
 msgid ", losing their %d score spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:647
+#: qcsrc/common/notifications/all.qh:648
 #, c-format
 msgid " with %d %s"
 msgstr ""
@@ -5394,12 +5407,12 @@ msgid ""
 "please file an issue."
 msgstr ""
 
-#: qcsrc/lib/string.qh:138
+#: qcsrc/lib/string.qh:170
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr ""
 
-#: qcsrc/lib/string.qh:139
+#: qcsrc/lib/string.qh:171
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr ""
@@ -5424,175 +5437,175 @@ msgstr ""
 msgid "Extended Team"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:29
+#: qcsrc/menu/xonotic/credits.qc:32
 msgid "Website"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:34
+#: qcsrc/menu/xonotic/credits.qc:37
 msgid "Stats"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:38
+#: qcsrc/menu/xonotic/credits.qc:41
 msgid "Art"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:46
+#: qcsrc/menu/xonotic/credits.qc:49
 msgid "Animation"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:50
+#: qcsrc/menu/xonotic/credits.qc:53
 msgid "Level Design"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:73
+#: qcsrc/menu/xonotic/credits.qc:76
 msgid "Music / Sound FX"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:89
+#: qcsrc/menu/xonotic/credits.qc:92
 msgid "Game Code"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:101
+#: qcsrc/menu/xonotic/credits.qc:106
 msgid "Marketing / PR"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:107
+#: qcsrc/menu/xonotic/credits.qc:112
 msgid "Legal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:112
+#: qcsrc/menu/xonotic/credits.qc:117
 msgid "Game Engine"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:116
+#: qcsrc/menu/xonotic/credits.qc:121
 msgid "Engine Additions"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:122
+#: qcsrc/menu/xonotic/credits.qc:127
 msgid "Compiler"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:128
+#: qcsrc/menu/xonotic/credits.qc:133
 msgid "Other Active Contributors"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:136
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Translators"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:138
+#: qcsrc/menu/xonotic/credits.qc:143
 msgid "Asturian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:143
+#: qcsrc/menu/xonotic/credits.qc:148
 msgid "Belarusian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:146
+#: qcsrc/menu/xonotic/credits.qc:151
 msgid "Bulgarian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:153
+#: qcsrc/menu/xonotic/credits.qc:158
 msgid "Chinese (China)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:159
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Chinese (Taiwan)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:164
+#: qcsrc/menu/xonotic/credits.qc:169
 msgid "Cornish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:167
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Czech"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:172
+#: qcsrc/menu/xonotic/credits.qc:177
 msgid "Dutch"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:179
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "English (Australia)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:184
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "Finnish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:189
+#: qcsrc/menu/xonotic/credits.qc:194
 msgid "French"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:202
 msgid "German"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:208
+#: qcsrc/menu/xonotic/credits.qc:213
 msgid "Greek"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:214
+#: qcsrc/menu/xonotic/credits.qc:219
 msgid "Hungarian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:218
+#: qcsrc/menu/xonotic/credits.qc:223
 msgid "Irish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:221
+#: qcsrc/menu/xonotic/credits.qc:226
 msgid "Italian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:232
 msgid "Japanese"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:235
 msgid "Kazakh"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:238
 msgid "Korean"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:237
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Polish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:245
+#: qcsrc/menu/xonotic/credits.qc:250
 msgid "Portuguese"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:251
+#: qcsrc/menu/xonotic/credits.qc:256
 msgid "Romanian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:258
+#: qcsrc/menu/xonotic/credits.qc:263
 msgid "Russian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:269
+#: qcsrc/menu/xonotic/credits.qc:274
 msgid "Scottish Gaelic"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:272
+#: qcsrc/menu/xonotic/credits.qc:277
 msgid "Serbian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:283
 msgid "Spanish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:290
+#: qcsrc/menu/xonotic/credits.qc:295
 msgid "Swedish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:294
+#: qcsrc/menu/xonotic/credits.qc:299
 msgid "Ukrainian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:301
+#: qcsrc/menu/xonotic/credits.qc:306
 msgid "Past Contributors"
 msgstr ""
 
@@ -5659,46 +5672,46 @@ msgstr ""
 msgid "Disconnect from the server you are connected to"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:39
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:44
 msgid ""
 "Welcome to Xonotic, please select your language preference and enter your "
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:45
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:53
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:69
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
 msgid "Text language:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:78
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
 msgid "Undecided"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:86
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
 msgid "Save settings"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qh:6
+#: qcsrc/menu/xonotic/dialog_firstrun.qh:7
 msgid "Welcome"
 msgstr ""
 
@@ -5879,12 +5892,13 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:770 qcsrc/menu/xonotic/util.qc:786
-#: qcsrc/menu/xonotic/util.qc:803
+#: qcsrc/menu/xonotic/util.qc:782 qcsrc/menu/xonotic/util.qc:798
+#: qcsrc/menu/xonotic/util.qc:815
 msgid "Disable"
 msgstr ""
 
@@ -5951,7 +5965,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
-#: qcsrc/menu/xonotic/util.qc:758
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
+#: qcsrc/menu/xonotic/util.qc:770
 msgid "Enable"
 msgstr ""
 
@@ -6065,7 +6080,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:792
+#: qcsrc/menu/xonotic/util.qc:804
 msgid "Alpha:"
 msgstr ""
 
@@ -6233,12 +6248,20 @@ msgstr ""
 msgid "StrafeHUD Panel"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+msgid "Secondary timer:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
+msgid "Swapped"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
@@ -6371,12 +6394,12 @@ msgid "Panel background defaults:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:767
+#: qcsrc/menu/xonotic/util.qc:779
 msgid "Background:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:783
+#: qcsrc/menu/xonotic/util.qc:795
 msgid "Border size:"
 msgstr ""
 
@@ -6386,12 +6409,12 @@ msgid "Team color:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:809
+#: qcsrc/menu/xonotic/util.qc:821
 msgid "Test team color in configure mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:812
+#: qcsrc/menu/xonotic/util.qc:824
 msgid "Padding:"
 msgstr ""
 
@@ -6521,9 +6544,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:769
-#: qcsrc/menu/xonotic/util.qc:785 qcsrc/menu/xonotic/util.qc:794
-#: qcsrc/menu/xonotic/util.qc:802 qcsrc/menu/xonotic/util.qc:814
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:781
+#: qcsrc/menu/xonotic/util.qc:797 qcsrc/menu/xonotic/util.qc:806
+#: qcsrc/menu/xonotic/util.qc:814 qcsrc/menu/xonotic/util.qc:826
 msgid "Default"
 msgstr ""
 
@@ -6715,7 +6738,7 @@ msgid "Game types:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:85
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:257
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
 msgstr ""
 
@@ -7025,7 +7048,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:74
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:30
 msgid "Address:"
 msgstr ""
 
@@ -7038,118 +7061,156 @@ msgid "Show more information about the currently highlighted server"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:96
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1047
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
+msgid "No Terms of Service specified"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
+#: qcsrc/menu/xonotic/serverlist.qc:1052
 msgid "MOD^Default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
 msgid "%d modified"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "N/A (auth library missing)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:167
 msgid "Not supported (can't connect)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "Not supported (won't encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:173
 msgid "Supported (will encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:175
 msgid "Supported (won't encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:149
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:179
 msgid "Requested (will encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:181
 msgid "Requested (won't encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:155
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:185
 msgid "Required (can't connect)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:157
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:187
 msgid "Required (will encrypt)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
-msgid "Hostname:"
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
+#: qcsrc/menu/xonotic/serverlist.qc:1056
+msgid "custom stats server"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:192
-msgid "Gametype:"
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
+#: qcsrc/menu/xonotic/serverlist.qc:1056
+msgid "stats disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:197
-msgid "Map:"
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
+#: qcsrc/menu/xonotic/serverlist.qc:1056
+msgid "stats enabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:202
-msgid "Mod:"
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
+msgid "Status"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:207
-msgid "Version:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:212
-msgid "Settings:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:219
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:251
-msgid "Players:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:224
-msgid "Bots:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:229
-msgid "Free slots:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:235
-msgid "Encryption:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:240
-msgid "ID:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:245
-msgid "Key:"
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
+#: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
+msgid "Terms of Service"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
+msgid "Server Info"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
+msgid "Hostname:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
+msgid "Gametype:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
+msgid "Map:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:48
+msgid "Mod:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:53
+msgid "Version:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:58
+msgid "Settings:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:65
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:102
+msgid "Players:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:70
+msgid "Bots:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:75
+msgid "Free slots:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:81
+msgid "Encryption:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:86
+msgid "ID:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:91
+msgid "Key:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
+msgid "Stats:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
 msgstr ""
 
@@ -9426,6 +9487,22 @@ msgstr ""
 msgid "Team Selection"
 msgstr ""
 
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
+msgid "Terms of Service have been updated. Please read them before continuing:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
+msgid "Welcome to Xonotic! Please read the following Terms of Service:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
+msgid "Accept"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
+msgid "Don't accept (quit the game)"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
 msgstr ""
@@ -9610,7 +9687,7 @@ msgstr ""
 msgid "waypoint editor menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/mainwindow.qc:97 qcsrc/menu/xonotic/mainwindow.qc:100
+#: qcsrc/menu/xonotic/mainwindow.qc:104 qcsrc/menu/xonotic/mainwindow.qc:107
 msgid "Do not press this button again!"
 msgstr ""
 
@@ -9672,40 +9749,32 @@ msgstr "Карта"
 msgid "Type"
 msgstr "түрі"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1046
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 #, c-format
 msgid "AES level %d"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.qc:1046
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "ENC^none"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.qc:1046
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "encryption:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.qc:1047
+#: qcsrc/menu/xonotic/serverlist.qc:1052
 #, c-format
 msgid "mod: %s"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.qc:1049
+#: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
 msgid "modified settings"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.qc:1049
+#: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
 msgid "official settings"
-msgstr ""
-
-#: qcsrc/menu/xonotic/serverlist.qc:1051
-msgid "stats disabled"
-msgstr ""
-
-#: qcsrc/menu/xonotic/serverlist.qc:1051
-msgid "stats enabled"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
@@ -9931,29 +10000,29 @@ msgstr ""
 msgid "%d (unranked)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:420
+#: qcsrc/menu/xonotic/util.qc:426
 msgid "Update can be downloaded at:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:528
+#: qcsrc/menu/xonotic/util.qc:539
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Жана карталар үшің mapinfo автоматикалық  генерациясы..."
 
-#: qcsrc/menu/xonotic/util.qc:566
+#: qcsrc/menu/xonotic/util.qc:577
 #, c-format
 msgid "Update to %s now!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:650
+#: qcsrc/menu/xonotic/util.qc:662
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:780
+#: qcsrc/menu/xonotic/util.qc:792
 msgid "Use default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:800
+#: qcsrc/menu/xonotic/util.qc:812
 msgid "Team Color:"
 msgstr "Тобының түсі"

@@ -73,8 +73,8 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		{
 			if (argv(1) != "")
 			{
-				CS_CVAR(caller).autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).autoswitch ? "on" : "off"), ".\n"));
+				CS_CVAR(caller).cvar_cl_autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).cvar_cl_autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -366,13 +366,13 @@ void ClientCommand_physics(entity caller, int request, int argc)
 	}
 }
 
-void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for toggling readyness
+void ClientCommand_ready(entity caller, int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
+			if (IS_CLIENT(caller) && caller.last_ready < time - 3)
 			{
 				if (warmup_stage || g_race_qualifying == 2)
 				{
@@ -390,6 +390,8 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
 							bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
+
+					caller.last_ready = time;
 
 					// cannot reset the game while a timeout is active!
 					if (!timeout_status) ReadyCount();

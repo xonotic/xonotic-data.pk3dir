@@ -77,9 +77,6 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 const vector BUFF_MIN = ('-16 -16 0');
 const vector BUFF_MAX = ('16 16 60');
 
-// client side options
-.float cvar_cl_buffs_autoreplace;
-
 float buff_Available(entity buff);
 
 void buff_RemoveAll(entity actor, int removal_type);

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 07:22+0100\n"
-"PO-Revision-Date: 2021-11-28 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2022-03-06 07:22+0100\n"
+"PO-Revision-Date: 2013-09-12 16:53+0000\n"
+"Last-Translator: Hanicef <gustaf@hanicef.me>, 2021\n"
 "Language-Team: Swedish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -52,7 +52,7 @@ msgstr "Meddelande vid tiden %s"
 msgid "Generic message"
 msgstr "Generellt meddelande"
 
-#: qcsrc/client/hud/panel/chat.qc:98
+#: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Spelare^7: Det här är chattområdet."
 
@@ -63,17 +63,17 @@ msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:92
 msgid "^1Observing"
-msgstr "^1Obververar"
+msgstr "^1Observerar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Tittar pa: ^7%s"
+msgstr "^1Tittar på: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Tryck på ^3%s^1 för at åskåda"
+msgstr "^1Tryck på ^3%s^1 för att åskåda"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -463,19 +463,19 @@ msgstr "Kalla till röstning"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 msgid "QMCMD^Restart the map"
-msgstr "Starta om kartan"
+msgstr "Börja om kartan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^End match"
-msgstr "Sluta matchen"
+msgstr "Avsluta matchen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Reduce match time"
-msgstr "Minska matchtiden"
+msgstr "Förkorta matchtiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^Extend match time"
-msgstr "Utöka matchtiden"
+msgstr "Förläng matchtiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^Shuffle teams"
@@ -517,7 +517,7 @@ msgstr "Mellanliggande %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "BESTRAFFNING: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1174
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1180
 msgid "missing a checkpoint"
 msgstr "Saknar en kontrollpunkt"
 
@@ -647,7 +647,7 @@ msgstr "Mängden mord minus självmord"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^frags"
-msgstr "frags"
+msgstr "fragg"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of goals scored"
@@ -952,12 +952,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:665
 #: qcsrc/client/hud/panel/scoreboard.qc:672
 #: qcsrc/client/hud/panel/scoreboard.qc:727
-#: qcsrc/client/hud/panel/scoreboard.qc:738
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:46
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:47
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:164
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:738 qcsrc/common/util.qc:321
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:194
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:199
 msgid "N/A"
 msgstr "N/A"
 
@@ -1061,9 +1061,26 @@ msgstr "mi"
 msgid "nmi"
 msgstr "nmi"
 
-#: qcsrc/client/hud/panel/timer.qc:71
-msgid "WARMUP"
-msgstr "UPPVÄRMNING"
+#: qcsrc/client/hud/panel/timer.qc:132
+msgid "Warmup"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:134
+msgid "Timeout"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:136
+msgid "Sudden Death"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:138
+msgid "Overtime"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:140
+#, c-format
+msgid "Overtime #%d"
+msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1087,7 +1104,7 @@ msgstr "^1Konfigurera HUD:en"
 
 #: qcsrc/client/hud/panel/vote.qc:129
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:82
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:14
@@ -1100,7 +1117,7 @@ msgstr "Ja"
 
 #: qcsrc/client/hud/panel/vote.qc:131
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -1111,43 +1128,43 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nej"
 
-#: qcsrc/client/hud/panel/weapons.qc:630
+#: qcsrc/client/hud/panel/weapons.qc:631
 msgid "Out of ammo"
 msgstr "Slut på ammunition"
 
-#: qcsrc/client/hud/panel/weapons.qc:634
+#: qcsrc/client/hud/panel/weapons.qc:635
 msgid "Don't have"
 msgstr "Har inte"
 
-#: qcsrc/client/hud/panel/weapons.qc:638
+#: qcsrc/client/hud/panel/weapons.qc:639
 msgid "Unavailable"
 msgstr "Otillgänglig"
 
-#: qcsrc/client/main.qc:289
+#: qcsrc/client/main.qc:292
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Försöker ta bort ett lag som inte är i laglistan!"
 
-#: qcsrc/client/main.qc:1076 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1082 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1077 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1083 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1078 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1084 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1079 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1085 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1080 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1086 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr "knop"
 
-#: qcsrc/client/main.qc:1325
+#: qcsrc/client/main.qc:1331
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ej bunden)"
@@ -1354,10 +1371,6 @@ msgid "Key Hunt"
 msgstr "Key Hunt"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
-msgid "^1Match has already begun"
-msgstr "^1Matchen har redan börjat"
-
-#: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:25
 msgid "^1You have no more lives left"
 msgstr "^1Du har inga mer liv kvar"
 
@@ -1429,23 +1442,23 @@ msgstr "Hjälp ditt lag få så många frags som möjligt mot det andra laget"
 msgid "Team Deathmatch"
 msgstr "Team Deathmatch"
 
-#: qcsrc/common/items/item/ammo.qh:67
+#: qcsrc/common/items/item/ammo.qh:52
 msgid "bullets"
 msgstr "skott"
 
-#: qcsrc/common/items/item/ammo.qh:97
+#: qcsrc/common/items/item/ammo.qh:82
 msgid "cells"
 msgstr "celler"
 
-#: qcsrc/common/items/item/ammo.qh:127
+#: qcsrc/common/items/item/ammo.qh:112
 msgid "plasma"
 msgstr "plasma"
 
-#: qcsrc/common/items/item/ammo.qh:157
+#: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
 msgstr "raketer"
 
-#: qcsrc/common/items/item/ammo.qh:191
+#: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
 msgstr "skal"
 
@@ -1493,11 +1506,11 @@ msgstr "bensin"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Bensinregenerator"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
-msgstr ""
+msgstr "Bensinregen"
 
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
@@ -1523,7 +1536,7 @@ msgstr "Nuvarande Spel"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr "Avsluta Meny"
+msgstr "Stäng Meny"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1605,7 +1618,7 @@ msgstr "Spara"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr "Koppla Fyra"
+msgstr "Fyra-i-Rad"
 
 #: qcsrc/common/minigames/minigame/c4.qc:316
 #: qcsrc/common/minigames/minigame/c4.qc:322
@@ -1649,7 +1662,7 @@ msgstr "Väntar på din motståndare att göra sin flytt"
 #: qcsrc/common/minigames/minigame/pp.qc:471
 #: qcsrc/common/minigames/minigame/ttt.qc:354
 msgid "Click on the game board to place your piece"
-msgstr "Klicka på spelbordet för att placera din pjäser"
+msgstr "Klicka på spelbordet för att placera din pjäs"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
@@ -1682,7 +1695,7 @@ msgstr "AI"
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
-"Tryck på ^1Starta Matchen^7 för att starta matchen med de nuvarande spelarna"
+"Tryck på ^1Börja Matchen^7 för att starta matchen med de nuvarande spelarna"
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
@@ -1724,7 +1737,7 @@ msgstr "Nästa Match"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr "Peg Solitaire"
+msgstr "Solitär"
 
 #: qcsrc/common/minigames/minigame/ps.qc:418
 msgid "All pieces cleared!"
@@ -1883,7 +1896,7 @@ msgstr "Maximal typsnittsstorlek:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:775
+#: qcsrc/menu/xonotic/util.qc:787
 msgid "Color:"
 msgstr "Färg:"
 
@@ -2738,7 +2751,7 @@ msgstr "^BG%s^K1 blev bortsprängd av en Walker-turret%s%s"
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr "^BG%s%s^K1 var inblandad i sprängningen av en Bumblebee-explotion%s%s"
+msgstr "^BG%s^K1 var inblandad i sprängningen av en Bumblebee-explosion%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
@@ -2873,7 +2886,7 @@ msgstr "^BGDu har inte ^F1%s"
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BGDu släppte ^F1%s"
+msgstr "^BGDu släppte ^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
@@ -3031,7 +3044,7 @@ msgstr "^BG%s^K1 plockade upp Styrka"
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr "^BG%s^F3 frånkopplade sig"
+msgstr "^BG%s^F3 är frånkopplad"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
@@ -3042,7 +3055,7 @@ msgstr "^BG%s^F3 var kickad efter att ha varit stilla i %s sekunder"
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
-"^BG%s^F3 var flyttad till^BG åskådare^F3 eftre att ha stått stilla i %s "
+"^BG%s^F3 har flyttats till^BG åskådare^F3 efter att ha stått still i %s "
 "sekunder"
 
 #: qcsrc/common/notifications/all.inc:413
@@ -3203,7 +3216,7 @@ msgstr "^BG%s%s^K1 var skjuten till döds av ^BG%s^K1s Blaster%s%s"
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s^K1 shot themself to hell with their Blaster%s%s"
-msgstr "^BG%s%s^K1 sköt sig själv till helvetet med deras Blaster%s%s"
+msgstr "^BG%s^K1 sköt sig själv till helvetet med deras Blaster%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3213,7 +3226,7 @@ msgstr "^BG%s%s^K1 kände ett starkt drag av ^BG%s^K1s Crylink%s%s"
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr "^BG%s%s^K1 kände ett starkt drag av deras Crylink%s%s"
+msgstr "^BG%s^K1 kände ett starkt drag av deras Crylink%s%s"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
@@ -3392,7 +3405,7 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
-"^BG%s%s^K1 var sågad i hälften av ^BG%s^K1s Overkill Raketframdriven Motorsåg"
+"^BG%s%s^K1 var sågad på mitten av ^BG%s^K1s Overkill Raketframdriven Motorsåg"
 "%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
@@ -3407,15 +3420,15 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 var sågad i hälften av sin egen Overkill Raketframdriven Motorsåg"
-"%s%s"
+"^BG%s^K1 var sågad på mitten av sin egen Overkill Raketframdriven Motorsåg%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 sprängde upp sig själv med sin egen Overkill Raketframdriven "
+"^BG%s^K1 sprängde upp sig själv med sin egen Overkill Raketframdriven "
 "Motorsåg%s%s"
 
 #: qcsrc/common/notifications/all.inc:488
@@ -3561,7 +3574,7 @@ msgid ""
 "^BGMake some defensive scores before trying again."
 msgstr ""
 "^BGDu är nu ^F1sköldad^BG från flaggan/flaggorna\n"
-"^BGpå grund av ^F2för många misslyckade försök^BG att ta.\n"
+"^BGpå grund av ^F2för många misslyckade försök^BG att fånga.\n"
 "^BGGör några beskyddande poäng innan du försöker igen."
 
 #: qcsrc/common/notifications/all.inc:544
@@ -4066,7 +4079,7 @@ msgstr "^K1A %s har anländigt!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr ""
+msgstr "^BGDu fick tag på ^F1Bensinregenerator"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^BGYou got the ^F1Jetpack"
@@ -4316,7 +4329,7 @@ msgstr "^F2Sköld har tagit slut"
 
 #: qcsrc/common/notifications/all.inc:746
 msgid "^F2You are on speed"
-msgstr "^F2Du är nu på hastighet"
+msgstr "^F2Du är på hastighet"
 
 #: qcsrc/common/notifications/all.inc:747
 msgid "^F2Speed has worn off"
@@ -4635,7 +4648,7 @@ msgstr ", förlorar sin %d fraggningsrus"
 msgid ", losing their %d score spree"
 msgstr ", förlorar sin %d poängrus"
 
-#: qcsrc/common/notifications/all.qh:647
+#: qcsrc/common/notifications/all.qh:648
 #, c-format
 msgid " with %d %s"
 msgstr " med %d %s"
@@ -5373,7 +5386,7 @@ msgstr "%d veckor"
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr "%d dagar"
+msgstr "%s dagar"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
@@ -5523,12 +5536,12 @@ msgstr ""
 "Enhetsfält %s.%s (%s) är inte vitlistad. Om du tror detta är ett fel, "
 "vänligen skicka in ett fråga."
 
-#: qcsrc/lib/string.qh:138
+#: qcsrc/lib/string.qh:170
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d dagar, %02d:%02d:%02d"
 
-#: qcsrc/lib/string.qh:139
+#: qcsrc/lib/string.qh:171
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr ""
@@ -5553,175 +5566,175 @@ msgstr "Grundteamet"
 msgid "Extended Team"
 msgstr "Utökade Teamet"
 
-#: qcsrc/menu/xonotic/credits.qc:29
+#: qcsrc/menu/xonotic/credits.qc:32
 msgid "Website"
 msgstr "Webbsida"
 
-#: qcsrc/menu/xonotic/credits.qc:34
+#: qcsrc/menu/xonotic/credits.qc:37
 msgid "Stats"
 msgstr "Statistik"
 
-#: qcsrc/menu/xonotic/credits.qc:38
+#: qcsrc/menu/xonotic/credits.qc:41
 msgid "Art"
 msgstr "Konst"
 
-#: qcsrc/menu/xonotic/credits.qc:46
+#: qcsrc/menu/xonotic/credits.qc:49
 msgid "Animation"
 msgstr "Animation"
 
-#: qcsrc/menu/xonotic/credits.qc:50
+#: qcsrc/menu/xonotic/credits.qc:53
 msgid "Level Design"
 msgstr "Kartdesign"
 
-#: qcsrc/menu/xonotic/credits.qc:73
+#: qcsrc/menu/xonotic/credits.qc:76
 msgid "Music / Sound FX"
 msgstr "Musik / Ljudeffekter"
 
-#: qcsrc/menu/xonotic/credits.qc:89
+#: qcsrc/menu/xonotic/credits.qc:92
 msgid "Game Code"
 msgstr "Spelkod"
 
-#: qcsrc/menu/xonotic/credits.qc:101
+#: qcsrc/menu/xonotic/credits.qc:106
 msgid "Marketing / PR"
 msgstr "Maknadsföring / PR"
 
-#: qcsrc/menu/xonotic/credits.qc:107
+#: qcsrc/menu/xonotic/credits.qc:112
 msgid "Legal"
 msgstr "Juridik"
 
-#: qcsrc/menu/xonotic/credits.qc:112
+#: qcsrc/menu/xonotic/credits.qc:117
 msgid "Game Engine"
 msgstr "Spelmotor"
 
-#: qcsrc/menu/xonotic/credits.qc:116
+#: qcsrc/menu/xonotic/credits.qc:121
 msgid "Engine Additions"
 msgstr "Motoradditioner"
 
-#: qcsrc/menu/xonotic/credits.qc:122
+#: qcsrc/menu/xonotic/credits.qc:127
 msgid "Compiler"
 msgstr "Kompilator"
 
-#: qcsrc/menu/xonotic/credits.qc:128
+#: qcsrc/menu/xonotic/credits.qc:133
 msgid "Other Active Contributors"
 msgstr "Övriga Aktiva Bidragsgivare"
 
-#: qcsrc/menu/xonotic/credits.qc:136
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Translators"
 msgstr "Översättare"
 
-#: qcsrc/menu/xonotic/credits.qc:138
+#: qcsrc/menu/xonotic/credits.qc:143
 msgid "Asturian"
 msgstr "Österrikiska"
 
-#: qcsrc/menu/xonotic/credits.qc:143
+#: qcsrc/menu/xonotic/credits.qc:148
 msgid "Belarusian"
 msgstr "Vitryska"
 
-#: qcsrc/menu/xonotic/credits.qc:146
+#: qcsrc/menu/xonotic/credits.qc:151
 msgid "Bulgarian"
 msgstr "Bulgariska"
 
-#: qcsrc/menu/xonotic/credits.qc:153
+#: qcsrc/menu/xonotic/credits.qc:158
 msgid "Chinese (China)"
 msgstr "Kinesiska (Kina)"
 
-#: qcsrc/menu/xonotic/credits.qc:159
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Chinese (Taiwan)"
 msgstr "Kinesiska (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:164
+#: qcsrc/menu/xonotic/credits.qc:169
 msgid "Cornish"
 msgstr "Korniska"
 
-#: qcsrc/menu/xonotic/credits.qc:167
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Czech"
 msgstr "Tjeckiska"
 
-#: qcsrc/menu/xonotic/credits.qc:172
+#: qcsrc/menu/xonotic/credits.qc:177
 msgid "Dutch"
 msgstr "Nederländska"
 
-#: qcsrc/menu/xonotic/credits.qc:179
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "English (Australia)"
 msgstr "Engelska (Australien)"
 
-#: qcsrc/menu/xonotic/credits.qc:184
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "Finnish"
 msgstr "Finska"
 
-#: qcsrc/menu/xonotic/credits.qc:189
+#: qcsrc/menu/xonotic/credits.qc:194
 msgid "French"
 msgstr "Franska"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:202
 msgid "German"
 msgstr "Tyska"
 
-#: qcsrc/menu/xonotic/credits.qc:208
+#: qcsrc/menu/xonotic/credits.qc:213
 msgid "Greek"
 msgstr "Grekiska"
 
-#: qcsrc/menu/xonotic/credits.qc:214
+#: qcsrc/menu/xonotic/credits.qc:219
 msgid "Hungarian"
 msgstr "Ungerska"
 
-#: qcsrc/menu/xonotic/credits.qc:218
+#: qcsrc/menu/xonotic/credits.qc:223
 msgid "Irish"
 msgstr "Irländska"
 
-#: qcsrc/menu/xonotic/credits.qc:221
+#: qcsrc/menu/xonotic/credits.qc:226
 msgid "Italian"
 msgstr "Italienska"
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:232
 msgid "Japanese"
 msgstr "Japanska"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:235
 msgid "Kazakh"
 msgstr "Kazakiska"
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:238
 msgid "Korean"
 msgstr "Koreanska"
 
-#: qcsrc/menu/xonotic/credits.qc:237
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Polish"
 msgstr "Polska"
 
-#: qcsrc/menu/xonotic/credits.qc:245
+#: qcsrc/menu/xonotic/credits.qc:250
 msgid "Portuguese"
 msgstr "Portugisiska"
 
-#: qcsrc/menu/xonotic/credits.qc:251
+#: qcsrc/menu/xonotic/credits.qc:256
 msgid "Romanian"
 msgstr "Rumäniska"
 
-#: qcsrc/menu/xonotic/credits.qc:258
+#: qcsrc/menu/xonotic/credits.qc:263
 msgid "Russian"
 msgstr "Ryska"
 
-#: qcsrc/menu/xonotic/credits.qc:269
+#: qcsrc/menu/xonotic/credits.qc:274
 msgid "Scottish Gaelic"
 msgstr "Skotsk Gäliska"
 
-#: qcsrc/menu/xonotic/credits.qc:272
+#: qcsrc/menu/xonotic/credits.qc:277
 msgid "Serbian"
 msgstr "Serbiska"
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:283
 msgid "Spanish"
 msgstr "Spanska"
 
-#: qcsrc/menu/xonotic/credits.qc:290
+#: qcsrc/menu/xonotic/credits.qc:295
 msgid "Swedish"
 msgstr "Svenska"
 
-#: qcsrc/menu/xonotic/credits.qc:294
+#: qcsrc/menu/xonotic/credits.qc:299
 msgid "Ukrainian"
 msgstr "Ukrainska"
 
-#: qcsrc/menu/xonotic/credits.qc:301
+#: qcsrc/menu/xonotic/credits.qc:306
 msgid "Past Contributors"
 msgstr "Föregående Bidragsgivare"
 
@@ -5788,7 +5801,7 @@ msgstr "Koppla bort"
 msgid "Disconnect from the server you are connected to"
 msgstr "Koppla bort från servern du är uppkopplad till"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:39
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:44
 msgid ""
 "Welcome to Xonotic, please select your language preference and enter your "
 "player name to get started.  You can change these options later through the "
@@ -5798,41 +5811,41 @@ msgstr ""
 "spelarnamn för att komma igång.  Du kan senare ändra dessa inställningar via "
 "menyn."
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:45
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr "Namn:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:53
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr "Namn som du kommer att synas som i spelet"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:69
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
 msgid "Text language:"
 msgstr "Ställ in språk:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:78
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 "Tillåt spelstatistiken att använda ditt spelarnamn på stats.xonotic.org?"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
 msgid "Undecided"
 msgstr "Obeslutad"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:86
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
 "Spelstatistik är påslagen som standard, du kan ändra på detta i Profilmenyn"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
 msgid "Save settings"
 msgstr "Spara inställningar"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qh:6
+#: qcsrc/menu/xonotic/dialog_firstrun.qh:7
 msgid "Welcome"
 msgstr "Välkommen"
 
@@ -5916,7 +5929,7 @@ msgstr "Typsnittets skala:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Typsnittets skala på tjocktext:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
@@ -6013,12 +6026,13 @@ msgstr "Panel För Infomeddelanden"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:770 qcsrc/menu/xonotic/util.qc:786
-#: qcsrc/menu/xonotic/util.qc:803
+#: qcsrc/menu/xonotic/util.qc:782 qcsrc/menu/xonotic/util.qc:798
+#: qcsrc/menu/xonotic/util.qc:815
 msgid "Disable"
 msgstr "Inaktivera"
 
@@ -6085,7 +6099,8 @@ msgstr "Notifikationspanel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
-#: qcsrc/menu/xonotic/util.qc:758
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
+#: qcsrc/menu/xonotic/util.qc:770
 msgid "Enable"
 msgstr "Slå på"
 
@@ -6199,7 +6214,7 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:792
+#: qcsrc/menu/xonotic/util.qc:804
 msgid "Alpha:"
 msgstr "Alfa:"
 
@@ -6367,13 +6382,21 @@ msgstr "Inaktiv:"
 msgid "StrafeHUD Panel"
 msgstr "StrafeHUD-Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"
 msgstr "Tidtagare:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
 msgstr "Visa förfluten tid"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+msgid "Secondary timer:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
+msgid "Swapped"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -6505,12 +6528,12 @@ msgid "Panel background defaults:"
 msgstr "Standardinställningar för panelbakgrund:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:767
+#: qcsrc/menu/xonotic/util.qc:779
 msgid "Background:"
 msgstr "Bakgrund:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:783
+#: qcsrc/menu/xonotic/util.qc:795
 msgid "Border size:"
 msgstr "Ramstorlek:"
 
@@ -6520,12 +6543,12 @@ msgid "Team color:"
 msgstr "Lagets färg:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:809
+#: qcsrc/menu/xonotic/util.qc:821
 msgid "Test team color in configure mode"
 msgstr "Testa lagfärg i konfigureringsläge"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:812
+#: qcsrc/menu/xonotic/util.qc:824
 msgid "Padding:"
 msgstr "Utfyllnad:"
 
@@ -6657,9 +6680,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:769
-#: qcsrc/menu/xonotic/util.qc:785 qcsrc/menu/xonotic/util.qc:794
-#: qcsrc/menu/xonotic/util.qc:802 qcsrc/menu/xonotic/util.qc:814
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:781
+#: qcsrc/menu/xonotic/util.qc:797 qcsrc/menu/xonotic/util.qc:806
+#: qcsrc/menu/xonotic/util.qc:814 qcsrc/menu/xonotic/util.qc:826
 msgid "Default"
 msgstr "Standardinställning"
 
@@ -6855,7 +6878,7 @@ msgid "Game types:"
 msgstr "Speltyper:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:85
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:257
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
 msgstr "Stäng"
 
@@ -7192,7 +7215,7 @@ msgstr ""
 "runt\""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:74
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:184
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:30
 msgid "Address:"
 msgstr "Adress:"
 
@@ -7205,118 +7228,156 @@ msgid "Show more information about the currently highlighted server"
 msgstr "Visa mer information om den markerade servern"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:96
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
 msgstr "Anslut!"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
-#: qcsrc/menu/xonotic/serverlist.qc:1047
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
+msgid "No Terms of Service specified"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
+#: qcsrc/menu/xonotic/serverlist.qc:1052
 msgid "MOD^Default"
 msgstr "Standard"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
 msgid "%d modified"
 msgstr "%d modifierad"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
 msgstr "Officiell"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
 msgstr "N/A (auktoriseringsbibliotek saknas, kan inte ansluta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "N/A (auth library missing)"
 msgstr "N/A (auktoriseringsbibliotek saknas)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:167
 msgid "Not supported (can't connect)"
 msgstr "Stöds ej (kan inte ansluta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "Not supported (won't encrypt)"
 msgstr "Stöds ej (kommer inte att kryptera)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:173
 msgid "Supported (will encrypt)"
 msgstr "Stöds (kommer att kryptera)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:175
 msgid "Supported (won't encrypt)"
 msgstr "Stöds (kommer inte att kryptera)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:149
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:179
 msgid "Requested (will encrypt)"
 msgstr "Begärd (kommer att kryptera)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:181
 msgid "Requested (won't encrypt)"
 msgstr "Begärd (kommer inte att kryptera)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:155
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:185
 msgid "Required (can't connect)"
 msgstr "Begärd (kan inte ansluta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:157
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:187
 msgid "Required (will encrypt)"
 msgstr "Krävs (kommer att kryptera)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
 msgstr "Använd `crypto_aeslevel` cvaren för att ändra dina preferenser"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
+#: qcsrc/menu/xonotic/serverlist.qc:1056
+msgid "custom stats server"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
+#: qcsrc/menu/xonotic/serverlist.qc:1056
+msgid "stats disabled"
+msgstr "statistik avslagen"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
+#: qcsrc/menu/xonotic/serverlist.qc:1056
+msgid "stats enabled"
+msgstr "statistik påslagen"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
+msgid "Status"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
+#: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
+msgid "Terms of Service"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
+msgid "Server Info"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
 msgstr "Värdnamn:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Speltyp:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:197
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Karta:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:48
 msgid "Mod:"
 msgstr "Mod:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:207
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:53
 msgid "Version:"
 msgstr "Version:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:212
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:58
 msgid "Settings:"
 msgstr "Inställningar:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:219
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:251
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:65
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:102
 msgid "Players:"
 msgstr "Spelare:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:224
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:70
 msgid "Bots:"
 msgstr "Bottar:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:229
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:75
 msgid "Free slots:"
 msgstr "Öppna platser:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:235
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:81
 msgid "Encryption:"
 msgstr "Kryptering:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:240
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:86
 msgid "ID:"
 msgstr "ID:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:245
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:91
 msgid "Key:"
 msgstr "Nyckel:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
+msgid "Stats:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
 msgstr "Serverinformation"
 
@@ -7797,7 +7858,7 @@ msgstr "Byt vänster och höger kanal"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone friendly mode"
-msgstr "Hörlursvänligt läge"
+msgstr "Hörlurarvänligt läge"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
@@ -9115,7 +9176,7 @@ msgstr "Visa en graf utav paketstorlekar och annan information"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Client-side movement prediction"
-msgstr "Rörelseprediktering i klienten"
+msgstr "Rörelseförutsägning i klienten"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid "Movement error compensation"
@@ -9195,7 +9256,7 @@ msgstr "Visa nuvarande datum och tid"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:134
 msgid "Show current date and time of day, useful on screenshots"
-msgstr "Visa nuvarande datum och tid på daget, användbart på skärmdumpar"
+msgstr "Visa nuvarande datum och tid på dagen, användbart på skärmdumpar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
 msgid "Enable developer mode"
@@ -9274,11 +9335,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
-msgstr "Under uppkoppling så sker bara språkförändringar i menyn,"
+msgstr "Under uppkoppling sker bara språkförändringar i menyn,"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr "hela språkförändringar börjar ta kraft efter starten på ett nytt spel"
+msgstr "hela språkförändringar börjar få effekt efter starten på ett nytt spel"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
@@ -9643,6 +9704,22 @@ msgstr "åskåda"
 msgid "Team Selection"
 msgstr "Lagval"
 
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
+msgid "Terms of Service have been updated. Please read them before continuing:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
+msgid "Welcome to Xonotic! Please read the following Terms of Service:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
+msgid "Accept"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
+msgid "Don't accept (quit the game)"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
 msgstr "Tillåt spelarstatistik att använda ditt spelarnamn?"
@@ -9828,7 +9905,7 @@ msgstr "dra objekt (sandlåda)"
 msgid "waypoint editor menu"
 msgstr "redigeringsmeny för vägpunkter"
 
-#: qcsrc/menu/xonotic/mainwindow.qc:97 qcsrc/menu/xonotic/mainwindow.qc:100
+#: qcsrc/menu/xonotic/mainwindow.qc:104 qcsrc/menu/xonotic/mainwindow.qc:107
 msgid "Do not press this button again!"
 msgstr "Tryck inte på den här knappen igen!"
 
@@ -9896,41 +9973,33 @@ msgstr "Karta"
 msgid "Type"
 msgstr "Typ"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1046
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 #, c-format
 msgid "AES level %d"
 msgstr "AES-nivå %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1046
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "ENC^none"
 msgstr "ingen"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1046
+#: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "encryption:"
 msgstr "kryptering:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1047
+#: qcsrc/menu/xonotic/serverlist.qc:1052
 #, c-format
 msgid "mod: %s"
 msgstr "mod: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1049
+#: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
 msgid "modified settings"
 msgstr "modifierade inställningar"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1049
+#: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
 msgid "official settings"
 msgstr "officiella inställningar"
-
-#: qcsrc/menu/xonotic/serverlist.qc:1051
-msgid "stats disabled"
-msgstr "statistik avslagen"
-
-#: qcsrc/menu/xonotic/serverlist.qc:1051
-msgid "stats enabled"
-msgstr "statistik påslagen"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Favorites"
@@ -10157,20 +10226,20 @@ msgstr "Percentil:"
 msgid "%d (unranked)"
 msgstr "%d (orankad)"
 
-#: qcsrc/menu/xonotic/util.qc:420
+#: qcsrc/menu/xonotic/util.qc:426
 msgid "Update can be downloaded at:"
 msgstr "Uppdatering kan laddas ner hos:"
 
-#: qcsrc/menu/xonotic/util.qc:528
+#: qcsrc/menu/xonotic/util.qc:539
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Automatgenererar kartinfo för nyligen tillagda kartor..."
 
-#: qcsrc/menu/xonotic/util.qc:566
+#: qcsrc/menu/xonotic/util.qc:577
 #, c-format
 msgid "Update to %s now!"
 msgstr "Uppdatera till %s nu!"
 
-#: qcsrc/menu/xonotic/util.qc:650
+#: qcsrc/menu/xonotic/util.qc:662
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
@@ -10178,10 +10247,10 @@ msgstr ""
 "^1FEL: Texturkomprimering krävs men stöds inte.\n"
 "^1Förvända dig visuella problem."
 
-#: qcsrc/menu/xonotic/util.qc:780
+#: qcsrc/menu/xonotic/util.qc:792
 msgid "Use default"
 msgstr "Använd standard"
 
-#: qcsrc/menu/xonotic/util.qc:800
+#: qcsrc/menu/xonotic/util.qc:812
 msgid "Team Color:"
 msgstr "Lagfärg:"

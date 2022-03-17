@@ -2,7 +2,7 @@
 
 CLASS(Crylink, Weapon)
 /* spawnfunc */ ATTRIB(Crylink, m_canonical_spawnfunc, string, "weapon_crylink");
-/* ammotype  */ ATTRIB(Crylink, ammo_type, int, RES_CELLS);
+/* ammotype  */ ATTRIB(Crylink, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Crylink, impulse, int, 6);
 /* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB);
 /* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);

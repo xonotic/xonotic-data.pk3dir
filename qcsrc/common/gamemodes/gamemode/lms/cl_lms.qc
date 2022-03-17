@@ -13,14 +13,7 @@ MUTATOR_HOOKFUNCTION(cl_lms, DrawInfoMessages)
 		vector mySize = M_ARGV(1, vector);
 		vector fontsize = '0.2 0.2 0' * mySize.y;
 		int img_curr_group = M_ARGV(2, int);
-		if(sk.(scores(ps_primary)) >= 666)
-		{
-			InfoMessage(_("^1Match has already begun"));
-			M_ARGV(0, vector) = pos;
-			M_ARGV(2, int) = img_curr_group;
-			return true;
-		}
-		else if(sk.(scores(ps_primary)) > 0)
+		if(sk.(scores(ps_primary)) > 0)
 		{
 			InfoMessage(_("^1You have no more lives left"));
 			M_ARGV(0, vector) = pos;

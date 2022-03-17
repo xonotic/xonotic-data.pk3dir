@@ -1036,7 +1036,12 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	// Stats
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-		draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
+	{
+		if (sflags & SERVERFLAG_PLAYERSTATS_CUSTOM)
+			draw_Picture(iconPos, "icon_mod_", iconSize, '1 1 1', 1); // TODO: custom stats server icon
+		else
+			draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
+	}
 
 	if(isFocused && me.mouseOverIcons && !me.tooltip)
 	{
@@ -1048,7 +1053,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		if(pure_available)
 			t = strcat(t, sprintf(" (%s)", (pure) ? _("official settings") : _("modified settings")));
 		t = strcat(t, ", ");
-		t = strcat(t, ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? _("stats enabled") : _("stats disabled")));
+		t = strcat(t, ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? ((sflags & SERVERFLAG_PLAYERSTATS_CUSTOM) ? _("custom stats server") : _("stats enabled")) : _("stats disabled")));
 		setZonedTooltip(me, t, string_null);
 	}
 	// --------------

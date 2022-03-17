@@ -24,6 +24,9 @@
 		PERSON(packer) \
 		PERSON(Severin "sev" Meyer) \
 		PERSON(SpiKe) \
+		PERSON(Thomas "illwieckz" Debesse) \
+		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(z411) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
@@ -96,6 +99,8 @@
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Samual "Ares" Lenks) \
 		PERSON(TimePath) \
+		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(z411) \
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	FUNCTION(_("Marketing / PR")) \
@@ -228,7 +233,7 @@
 			PERSON(Victor "LegendGuard" Jaume) \
 		NL() \
 		FUNCTION(_("Kazakh")) \
-			PERSON("Артем "bystrov.arterm" Быстров") \
+			PERSON(Артем "bystrov.arterm" Быстров) \
 		NL() \
 		FUNCTION(_("Korean")) \
 			PERSON(Jisoo "s6e9x" Lim) \
@@ -401,21 +406,52 @@
 		PERSON(... and a goat) \
 		/**/
 
-int credits_get()
+
+int CREDITS_TYPE_TITLE = 2;
+int CREDITS_TYPE_FUNCTION = 1;
+int CREDITS_TYPE_PERSON = 0;
+int CREDITS_TYPE_NL = -1;
+void credits_add_line(int fh, int n, int type, string line)
 {
-	int n = buf_create();
-	#define CREDITS_TITLE(t) bufstr_add(n, strcat("**", t), 0);
-	#define CREDITS_FUNCTION(f) bufstr_add(n, strcat("*", f), 0);
-	#define CREDITS_PERSON(p) bufstr_add(n, p, 0);
+	if (type == CREDITS_TYPE_TITLE)
+		line = strcat("**", line);
+	else if (type == CREDITS_TYPE_FUNCTION)
+		line = strcat("*", line);
+
+	if (fh >= 0)
+		fputs(fh, strcat(line, "\n"));
+	if (n >= 0)
+		bufstr_add(n, line, 0);
+}
+
+void credits_build(int fh, int n)
+{
+	#define CREDITS_TITLE(t) credits_add_line(fh, n, CREDITS_TYPE_TITLE, t);
+	#define CREDITS_FUNCTION(f) credits_add_line(fh, n, CREDITS_TYPE_FUNCTION, f);
+	#define CREDITS_PERSON(p) credits_add_line(fh, n, CREDITS_TYPE_PERSON, p);
 	#define _CREDITS_PERSON(p) CREDITS_PERSON(#p)
-	#define CREDITS_NL() bufstr_add(n, "", 0);
-    CREDITS(CREDITS_TITLE, CREDITS_FUNCTION, _CREDITS_PERSON, CREDITS_PERSON, CREDITS_NL)
+	#define CREDITS_NL() credits_add_line(fh, n, CREDITS_TYPE_NL, "");
+	CREDITS(CREDITS_TITLE, CREDITS_FUNCTION, _CREDITS_PERSON, CREDITS_PERSON, CREDITS_NL)
 	#undef CREDITS_TITLE
 	#undef CREDITS_FUNCTION
 	#undef CREDITS_PERSON
 	#undef _CREDITS_PERSON
 	#undef CREDITS_NL
+}
+
+int credits_get()
+{
+	int n = buf_create();
+	credits_build(-1, n);
 	return n;
+}
+
+void credits_export()
+{
+	int fh = fopen("credits.txt", FILE_WRITE);
+	if(fh < 0)
+		return;
+	credits_build(fh, -1);
 }
 
 #undef CREDITS
@@ -430,8 +466,13 @@ entity makeXonoticCreditsList()
 void XonoticCreditsList_configureXonoticCreditsList(entity me)
 {
 	me.configureXonoticListBox(me);
-    me.bufferIndex = credits_get();
+	me.bufferIndex = credits_get();
 	me.nItems = buf_getsize(me.bufferIndex);
+	if (cvar("_menu_credits_export")) // set by the menu_credits_export alias
+	{
+		credits_export();
+		cvar_set("_menu_credits_export", "0");
+	}
 }
 void XonoticCreditsList_destroy(entity me)
 {
