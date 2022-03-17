@@ -48,6 +48,8 @@ float bot_distance_close;
 entity bot_list;
 .entity nextbot;
 .string cleanname;
+// the *_freeme fields exist only to avoid an engine crash
+// when trying to strunzone the original fields
 .string netname_freeme;
 .string playermodel_freeme;
 .string playerskin_freeme;
@@ -88,14 +90,13 @@ int _content_type;
  */
 
 entity bot_spawn();
-bool bot_fixcount();
+bool bot_fixcount(bool multiple_per_frame);
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);
 void bot_custom_weapon_priority_setup();
 void bot_endgame();
 void bot_relinkplayerlist();
-void bot_clear(entity this);
 void bot_clientdisconnect(entity this);
 void bot_clientconnect(entity this);
 void bot_removefromlargestteam();

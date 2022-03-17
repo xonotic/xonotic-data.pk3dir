@@ -16,6 +16,8 @@ bool autocvar_g_balance_falldamage_onlyvertical;
 #define autocvar_slowmo cvar("slowmo")
 float autocvar_sys_ticrate;
 
+bool dropclient_schedule(entity this);
+
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
@@ -25,9 +27,6 @@ void remove_except_protected(entity e);
 void remove_safely(entity e);
 
 void remove_unsafely(entity e);
-
-// copies a string to a tempstring (so one can strunzone it)
-string strcat1(string s) = #115; // FRIK_FILE
 
 #ifdef PROFILING
 float client_cefc_accumulator;

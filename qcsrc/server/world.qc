@@ -69,7 +69,7 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 32767));
+		WriteShort(MSG_BROADCAST, bound(1, rint(CS(e).ping), 32767));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
@@ -348,10 +348,12 @@ void cvar_changes_init()
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_ca_spectate_enemies");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADCVAR("g_ctf_flagcarrier_auto_helpme_damage");
 		BADPRESUFFIX("g_ctf_flag_", "_model");
 		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
@@ -387,6 +389,7 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_qcphysics");
 		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
@@ -407,7 +410,7 @@ void cvar_changes_init()
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
@@ -442,6 +445,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
+		BADCVAR("g_freezetag_revive_spawnshield");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -457,10 +461,11 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_powerups_drop_ondeath");
 		BADCVAR("g_player_brightness");
 		BADCVAR("g_rocket_flying");
 		BADCVAR("g_rocket_flying_disabledelays");
-		BADCVAR("g_spawnshieldtime");
+		BADPREFIX("g_spawnshield");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
@@ -486,11 +491,9 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_maxidle");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
-		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_showfps");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
@@ -686,6 +689,15 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
+	{
+		strcpy(sv_termsofservice_url_escaped, strreplace(":", "|", autocvar_sv_termsofservice_url));
+	}
+	else
+	{
+		strcpy(sv_termsofservice_url_escaped, "INVALID");
+	}
+
 	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
@@ -754,6 +766,9 @@ spawnfunc(worldspawn)
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
+
+	// default to RACE_RECORD, can be overwritten by gamemodes
+	record_type = RACE_RECORD;
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -835,7 +850,8 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
+		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -862,12 +878,6 @@ spawnfunc(worldspawn)
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
 
-		// TODO to mutator system
-		if(autocvar_g_powerups == 0)
-			s = strcat(s, ":no_powerups");
-		if(autocvar_g_powerups > 0)
-			s = strcat(s, ":powerups");
-
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}
@@ -886,11 +896,8 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	if(fexists(strcat("scripts/", mapname, ".arena")))
-		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
-
-	if(fexists(strcat("scripts/", mapname, ".defi")))
-		cvar_settemp("sv_q3defragcompat", "1");
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -1215,7 +1222,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+		if(IS_PLAYER(it) || INGAME_JOINED(it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
@@ -1268,6 +1275,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	cvar_set("_endmatch", "0");
 	game_stopped = true;
 	intermission_running = true; // game over
 
@@ -1301,10 +1309,18 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	int winner_team = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(playername(it.netname, it.team, false), " ^7wins.\n");
+		{
+			if (teamplay && !winner_team)
+			{
+				winner_team = it.team;
+				bprint(Team_ColorCode(winner_team), Team_ColorName_Upper(winner_team), "^7 team wins the match\n");
+			}
+			bprint(playername(it.netname, it.team, false), " ^7wins\n");
+		}
 	});
 
 	target_music_kill();
@@ -1335,9 +1351,14 @@ float InitiateSuddenDeath()
 		if(!checkrules_suddendeathend)
 		{
 			if(autocvar_g_campaign)
+			{
 				checkrules_suddendeathend = time; // no suddendeath in campaign
+			}
 			else
+			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
+				overtimes = -1;
+			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
 		}
@@ -1348,6 +1369,7 @@ float InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
@@ -1384,13 +1406,13 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if(it.(field) == value)
 			it.winning = 1;
 	});
@@ -1399,7 +1421,7 @@ void AddWinners(.float field, float value)
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = 0; });
 }
 
 int fragsleft_last;
@@ -1598,16 +1620,15 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(timelimit > 0)
-	{
-		timelimit += game_starttime;
-	}
-	else if (timelimit < 0)
+	if (autocvar__endmatch || timelimit < 0)
 	{
 		// endmatch
 		NextLevel();
 		return;
 	}
+
+	if(timelimit > 0)
+		timelimit += game_starttime;
 
 	float wantovertime;
 	wantovertime = 0;
@@ -1646,7 +1667,7 @@ void CheckRules_World()
 				if(readyplayers || playerswithlaps >= 2)
 				{
 					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
+					ReadyRestart(true); // go to race
 					return;
 				}
 				else
@@ -2206,11 +2227,11 @@ void droptofloor(entity this)
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
-void RunThink(entity this)
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -2226,7 +2247,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -2256,8 +2277,8 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 
@@ -2288,9 +2309,10 @@ void EndFrame()
 			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
 			STAT(KILL_TIME, it) = time;
-		} else if (e.damage_dealt) {
+		} else if (e.hitsound_damage_dealt) {
 			STAT(HIT_TIME, it) = time;
-			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
+			// NOTE: this is not accurate as client code doesn't need so much accuracy for its purposes
+			STAT(HITSOUND_DAMAGE_DEALT_TOTAL, it) += ceil(e.hitsound_damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics
@@ -2301,7 +2323,7 @@ void EndFrame()
 	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
-		it.damage_dealt = 0;
+		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
 	});
@@ -2423,6 +2445,8 @@ void Shutdown()
 
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
+
+		strfree(sv_termsofservice_url_escaped);
 	}
 	else if(world_initialized == 0)
 	{

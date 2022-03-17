@@ -6,5 +6,5 @@ shotgun_sight
 		map textures/shotgun_sight.tga
 		blendfunc add
 		//rgbGen vertex
-	}	
+	}
 }

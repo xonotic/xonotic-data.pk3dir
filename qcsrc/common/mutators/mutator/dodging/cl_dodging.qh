@@ -1,7 +1,4 @@
 #pragma once
 
-float cvar_cl_dodging_timeout;
-REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
-
-float cvar_cl_dodging;
-REPLICATE(cvar_cl_dodging, float, "cl_dodging");
+REPLICATE_INIT(float, cvar_cl_dodging_timeout);
+REPLICATE_INIT(bool, cvar_cl_dodging);

@@ -399,7 +399,7 @@ string GotoMap(string m)
 	if(!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
 	cvar_set("nextmap", m);
-	cvar_set("timelimit", "-1");
+	cvar_set("_endmatch", "1");
 	if(mapvote_initialized || alreadychangedlevel)
 	{
 		if(DoNextMapOverride(0))
@@ -431,7 +431,12 @@ void IntermissionThink(entity this)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
 	{
 		this.autoscreenshot = -1;
-		if(IS_REAL_CLIENT(this)) { stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
+		if(IS_REAL_CLIENT(this))
+		{
+			string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
+			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+		}
 		return;
 	}
 

@@ -243,9 +243,10 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 void W_SwitchWeapon_Force(Player this, Weapon wep, .entity weaponentity)
 {
 	TC(Weapon, wep);
-	this.(weaponentity).cnt = this.(weaponentity).m_switchweapon.m_id;
-	this.(weaponentity).m_switchweapon = wep;
-	this.(weaponentity).selectweapon = wep.m_id;
+	entity w_ent = this.(weaponentity);
+	w_ent.cnt = w_ent.m_switchweapon.m_id;
+	w_ent.m_switchweapon = wep;
+	w_ent.selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
@@ -345,3 +346,13 @@ void W_LastWeapon(entity this, .entity weaponentity)
 	else
 		W_SwitchToOtherWeapon(this, weaponentity);
 }
+
+// fix switchweapon (needed when spectating is disabled, as PutClientInServer comes too early)
+REPLICATE_APPLYCHANGE("cl_weaponpriority",
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))
+			this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+	}
+);

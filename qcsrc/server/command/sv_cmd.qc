@@ -23,6 +23,7 @@
 #include <server/ipban.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
@@ -161,7 +162,13 @@ void GameCommand_allready(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			ReadyRestart();
+			if(warmup_stage)
+			{
+				ReadyRestart(true);
+			}
+			else
+				LOG_INFO("Not in warmup.");
+
 			return;
 		}
 
@@ -184,8 +191,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				if (it.caplayer) it.caplayer = 0;
-				PutObserverInServer(it);
+				PutObserverInServer(it, true, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -327,9 +333,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", "0");
-				bot_fixcount();
+				bot_fixcount(false);  // Kill all bots.
 				cvar_settemp("bot_number", argv(2));
-				if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+				if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 				return;
 			}
 			else if (argv(1) == "load" && argc == 3)
@@ -360,9 +366,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 							cvar_settemp("minplayers", "0");
 							cvar_settemp("minplayers_per_team", "0");
 							cvar_settemp("bot_number", "0");
-							bot_fixcount();
+							bot_fixcount(false);  // Kill all bots.
 							cvar_settemp("bot_number", argv(3));
-							if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+							if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 						}
 						else
 						{
@@ -745,7 +751,7 @@ void GameCommand_gametype(int request, int argc)
 				}
 				else
 				{
-					bprint("Game type switch to ", s, " failed: this type does not exist!\n");
+					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
 				}
 
 				return;
@@ -984,13 +990,13 @@ void GameCommand_moveplayer(int request, int argc)
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
+			if (destination == "spec")
+				destination = "spectator";
 
-			string successful, t;
-			successful = string_null;
-
-			// lets see if the target(s) even actually exist.
 			if ((targets) && (destination))
 			{
+				string successful = string_null;
+				string t;
 				for ( ; targets; )
 				{
 					t = car(targets);
@@ -999,101 +1005,101 @@ void GameCommand_moveplayer(int request, int argc)
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, false, false);
+					string client_num_str = ftos(etof(client));
 
 					if (accepted <= 0)
 					{
-						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : "."));
-						continue;
+						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), ".");
 					}
-
-					// Where are we putting this player?
-					if (destination == "spec" || destination == "spectator")
+					else if (destination == "spectator")
 					{
+						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							if (client.caplayer) client.caplayer = 0;
-							PutObserverInServer(client);
+							PutObserverInServer(client, true, true);
 
-							successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
+							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already spectating.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already spectating.");
 						}
-						continue;
 					}
 					else
 					{
-						if (!IS_SPEC(client) && !IS_OBSERVER(client))
+						if (!teamplay)
 						{
-							if (teamplay)
-							{
-								// set up
-								int save = Player_GetForcedTeamIndex(client);
-								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
+							LOG_INFO("Can't change teams when currently not playing a team game.");
+							return;
+						}
 
-								// find the team to move the player to
-								int team_num = Team_ColorToTeam(destination);
-								entity balance;
-								if (team_num == client.team)  // already on the destination team
-								{
-									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
-									continue;
-								}
-								else if (team_num == 0)  // auto team
-								{
-									balance = TeamBalance_CheckAllowedTeams(client);
-									team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
-								}
-								else
-								{
-									balance = TeamBalance_CheckAllowedTeams(client);
-								}
-								Player_SetForcedTeamIndex(client, save);
+						string pl_name = playername(client.netname, client.team, false);
+						if (IS_SPEC(client) || IS_OBSERVER(client))
+						{
+							// well technically we could, but should we allow that? :P
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not in the game.");
+							continue;
+						}
 
-								// Check to see if the destination team is even available
-								int team_id = Team_TeamToIndex(team_num);
-								if (team_id == -1)
-								{
-									LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
-									TeamBalance_Destroy(balance);
-									return;
-								}
-								if (!TeamBalance_IsTeamAllowed(balance, team_id))
-								{
-									LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
-									TeamBalance_Destroy(balance);
-									return;
-								}
-								TeamBalance_Destroy(balance);
+						// set up
+						int save = Player_GetForcedTeamIndex(client);
+						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
-								// If so, lets continue and finally move the player
-								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
-								if (MoveToTeam(client, team_id, 6))
-								{
-									successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
-								}
-								else
-								{
-									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ")");
-								}
-								continue;
-							}
-							else
-							{
-								LOG_INFO("Can't change teams when currently not playing a team game.");
-								return;
-							}
+						// find the team to move the player to
+						int team_num = Team_ColorToTeam(destination);
+						entity balance;
+						if (team_num == client.team)  // already on the destination team
+						{
+							// keep the forcing undone
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							continue;
+						}
+						else if (team_num == 0)  // auto team
+						{
+							balance = TeamBalance_CheckAllowedTeams(client);
+							team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 						}
 						else
 						{
-							LOG_INFO("Can't change teams if the player isn't in the game.");  // well technically we could, but should we allow that? :P
+							balance = TeamBalance_CheckAllowedTeams(client);
+						}
+						Player_SetForcedTeamIndex(client, save);
+
+						// Check to see if the destination team is even available
+						int team_id = Team_TeamToIndex(team_num);
+						if (team_id == -1)
+						{
+							LOG_INFO("Can't move player to ", destination, " team because it doesn't exist.");
+							TeamBalance_Destroy(balance);
 							return;
 						}
+						if (!IsTeamAvailable(team_num))
+						{
+							LOG_INFO("Can't move player to ", destination, " team because it isn't available.");
+							TeamBalance_Destroy(balance);
+							return;
+						}
+						if (!TeamBalance_IsTeamAllowed(balance, team_id))
+						{
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							TeamBalance_Destroy(balance);
+							continue;
+						}
+						TeamBalance_Destroy(balance);
+
+						// If so, lets continue and finally move the player
+						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
+						if (MoveToTeam(client, team_id, 6))
+						{
+							successful = strcat(successful, (successful ? ", " : ""), pl_name);
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+						}
+						else
+						{
+							LOG_INFO("Unable to move player #", client_num_str, " (", pl_name, ")");
+						}
 					}
-				}
+				} // loop end
 
 				if (successful) bprint("Successfully moved players ", successful, " to destination ", destination, ".\n");
 				else LOG_INFO("No players given (", original_targets, ") are able to move.");
@@ -1126,12 +1132,9 @@ void GameCommand_nospectators(int request)
 		{
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, {
-				if(!it.caplayer)
-				{
-					CS(it).spectatortime = time;
-					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-				}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
+				CS(it).spectatortime = time;
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 			});
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
@@ -1222,7 +1225,7 @@ void GameCommand_setbots(int request, int argc)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", argv(1));
-				bot_fixcount();
+				bot_fixcount(true);
 				return;
 			}
 		}
@@ -1247,7 +1250,7 @@ void shuffleteams()
 		return;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if (Player_HasRealForcedTeam(it)) {
 			// we could theoretically assign forced players to their teams
 			// and shuffle the rest to fill the empty spots but in practise
@@ -1269,7 +1272,7 @@ void shuffleteams()
 	TeamBalance_Destroy(balance);
 
 	int team_index = 0;
-	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || INGAME(it), {
 		int target_team_index = team_index + 1;
 		if (Entity_GetTeamIndex(it) != target_team_index)
 		{
@@ -1303,6 +1306,26 @@ void GameCommand_shuffleteams(int request)
 			LOG_HELP("Usage:^3 sv_cmd shuffleteams");
 			LOG_HELP("  No arguments required.");
 			LOG_HELP("See also: ^2moveplayer, allspec^7");
+			return;
+		}
+	}
+}
+
+void GameCommand_resetmatch(int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			ReadyRestart(false);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd resetmatch");
+			LOG_HELP("  No arguments required.");
 			return;
 		}
 	}
@@ -1629,7 +1652,7 @@ void GameCommand_(int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
-SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
+SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
 SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
@@ -1652,6 +1675,7 @@ SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { G
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
+SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }

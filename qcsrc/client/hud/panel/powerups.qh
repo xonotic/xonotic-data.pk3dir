@@ -13,4 +13,4 @@ vector autocvar_hud_progressbar_shield_color;
 vector autocvar_hud_progressbar_strength_color;
 vector autocvar_hud_progressbar_superweapons_color;
 
-void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime);
+void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime, bool isInfinite);

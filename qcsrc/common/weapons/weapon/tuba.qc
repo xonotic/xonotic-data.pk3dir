@@ -304,8 +304,14 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 
 	if(time > actor.(weaponentity).tuba_smoketime)
 	{
-		vector o = gettaginfo(actor.exteriorweaponentity, 0);
-		Send_Effect(EFFECT_SMOKE_RING, o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
+		// FIXME gettaginfo(actor.(weaponentity), 0) doesn't return the real origin of the weapon
+		vector org = gettaginfo(actor.(weaponentity), 0);
+		if(actor.(weaponentity).tuba_instrument == 1)
+			Send_Effect(EFFECT_SMOKE_RING, org + v_up * 25 + v_right * 10 + v_forward * 14, v_up * 100, 1);
+		else if(actor.(weaponentity).tuba_instrument == 2)
+			Send_Effect(EFFECT_SMOKE_RING, org + v_up * 50 + v_right * 10 + v_forward * 45, v_up * 100, 1);
+		else
+			Send_Effect(EFFECT_SMOKE_RING, org + v_up * 40 + v_right * 10 + v_forward * 14, v_up * 100, 1);
 		actor.(weaponentity).tuba_smoketime = time + 0.25;
 	}
 }
