@@ -63,28 +63,28 @@ test_sv_unit:
 # NOTE: The generated docs are incomplete - they don't contain code behind SVQC CSQC MENUQC GAMEQC ifdefs.
 # With them added to PREDEFINED, it would take over half an hour to generate the docs and even then
 # they might not be complete. Doxygen doesn't handle #elif and might not understand some QC definitions.
-doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
-  before_script:
-    - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
-    - apt-get update
-    - apt-get -y install doxygen graphviz
-  stage: deploy
-  script:
-    - cd qcsrc && doxygen
-    - mv html ../public
-    - mkdir -p ~/.ssh
-    - for i in {0..0}; do eval $(printf "echo \$id_rsa_%02d\n" $i) >> ~/.ssh/id_rsa_base64; done
-    - base64 --decode ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tLogLevel ERROR\n" >> ~/.ssh/config
-    - git config --global user.name "Gitlab CI"
-    - git config --global user.email "<>"
-    - git clone --single-branch --depth 1 ${DEPLOY_HOST}:${DEPLOY_REPO} ~/deploy_
-    - mkdir ~/deploy && mv ~/deploy_/.git ~/deploy && rm -r ~/deploy_
-    - cp -r ../public/* ~/deploy
-    - cd ~/deploy && git add -A . && git commit -m "Deploy ${CI_BUILD_REF}" && git push origin gh-pages
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
+#doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
+#  before_script:
+#    - ln -s $PWD data/xonotic-data.pk3dir # is this needed?
+#    - apt-get update
+#    - apt-get -y install doxygen graphviz
+#  stage: deploy
+#  script:
+#    - cd qcsrc && doxygen
+#    - mv html ../public
+#    - mkdir -p ~/.ssh
+#    - for i in {0..0}; do eval $(printf "echo \$id_rsa_%02d\n" $i) >> ~/.ssh/id_rsa_base64; done
+#    - base64 --decode ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
+#    - chmod 600 ~/.ssh/id_rsa
+#    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tLogLevel ERROR\n" >> ~/.ssh/config
+#    - git config --global user.name "Gitlab CI"
+#    - git config --global user.email "<>"
+#    - git clone --single-branch --depth 1 ${DEPLOY_HOST}:${DEPLOY_REPO} ~/deploy_
+#    - mkdir ~/deploy && mv ~/deploy_/.git ~/deploy && rm -r ~/deploy_
+#    - cp -r ../public/* ~/deploy
+#    - cd ~/deploy && git add -A . && git commit -m "Deploy ${CI_BUILD_REF}" && git push origin gh-pages
+#  artifacts:
+#    paths:
+#      - public
+#  only:
+#    - master
