@@ -188,7 +188,7 @@ void HUD_CenterPrint()
 		{
 			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
 			{
-				centerprint_SetTitle(strcat("test", ftos(hud_configure_cp_generation_time)));
+				centerprint_SetTitle(strcat("Title at ", ftos(floor(hud_configure_cp_generation_time))));
 
 				float r;
 				r = random();
@@ -198,8 +198,7 @@ void HUD_CenterPrint()
 					centerprint_Add(0, sprintf(_("^1Multiline message at time %s that\n^BOLDlasts longer than normal"), seconds_tostring(time)), 20, 0);
 				else
 					centerprint_AddStandard(sprintf(_("Message at time %s"), seconds_tostring(time)));
-				//hud_configure_cp_generation_time = time + 1 + random()*4;
-				hud_configure_cp_generation_time = time + 1;
+				hud_configure_cp_generation_time = time + 1 + random()*4;
 			}
 			else
 			{
@@ -262,7 +261,7 @@ void HUD_CenterPrint()
 
 	// Show title if available
 	if(centerprint_title_show) {
-		vector fontsize = hud_fontsize * 1.5 * autocvar_hud_panel_centerprint_fontscale_title;
+		vector fontsize = hud_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
 		float width = stringwidth(centerprint_title, true, fontsize);
 
 		pos.x = panel_pos.x + (panel_size.x - width) * align;
@@ -271,14 +270,14 @@ void HUD_CenterPrint()
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2;
 		else
-			pos.y += fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2);
+			pos.y += fontsize.y + (hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
 
 		drawfill(pos, vec2(width, 1), '1 1 1', 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= hud_fontsize.y * 1.5 * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y -= hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 		else
-			pos.y += hud_fontsize.y * 1.5 * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y += hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 
 		all_messages_expired = false;
 	}
@@ -334,9 +333,6 @@ void HUD_CenterPrint()
 		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
 
-		// set the size from fading in/out before subsequent fading
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
-
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
@@ -347,10 +343,8 @@ void HUD_CenterPrint()
 		}
 		a *= panel_fg_alpha;
 
-		// finally set the size based on the new alpha from subsequent fading
-		// TODO: Apply this only if subsequent, otherwise it fucks it up
-		if(g)
-			sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
+		// finally set the size based on the alpha
+		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
@@ -367,7 +361,7 @@ void HUD_CenterPrint()
 				while(getWrappedLine_remaining)
 				{
 					bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
-					vector fontsize = hud_fontsize * 1.5 * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+					vector fontsize = hud_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
 
 					ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
@@ -385,7 +379,7 @@ void HUD_CenterPrint()
 			getWrappedLine_remaining = argv(k);
 
 			bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
-			vector fontsize = hud_fontsize * 1.5 * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+			vector fontsize = hud_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
 			if (is_bold)
 				getWrappedLine_remaining = substring(getWrappedLine_remaining, 5, -1);
 
