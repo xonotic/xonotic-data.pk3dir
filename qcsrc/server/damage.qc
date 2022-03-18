@@ -916,10 +916,15 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			vector diff;
 			float power;
 
-			// LordHavoc: measure distance to nearest point on target (not origin)
-			// (this guarentees 100% damage on a touch impact)
+			// measure distance from nearest point on target (not origin)
+			// to nearest point on inflictor (not origin)
 			nearest = targ.WarpZone_findradius_nearest;
-			diff = targ.WarpZone_findradius_dist;
+			vector inflictornearest = WarpZoneLib_NearestPointOnBox(
+				inflictororigin - (inflictor.maxs - inflictor.mins) * 0.5,
+				inflictororigin + (inflictor.maxs - inflictor.mins) * 0.5,
+				nearest);
+			diff = inflictornearest - nearest;
+
 			// round up a little on the damage to ensure full damage on impacts
 			// and turn the distance into a fraction of the radius
 			power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
