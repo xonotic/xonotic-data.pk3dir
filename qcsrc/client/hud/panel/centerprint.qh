@@ -15,7 +15,7 @@ float autocvar_hud_panel_centerprint_fade_minfontsize = 1;
 bool autocvar_hud_panel_centerprint_flip;
 float autocvar_hud_panel_centerprint_fontscale = 1;
 float autocvar_hud_panel_centerprint_fontscale_bold = 1.4;
-float autocvar_hud_panel_centerprint_fontscale_title = 1.8;
+float autocvar_hud_panel_centerprint_fontscale_title = 1.6;
 bool autocvar_hud_panel_centerprint_dynamichud = true;
 float autocvar_hud_panel_centerprint_time;
 

@@ -269,7 +269,7 @@ void HUD_CenterPrint()
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING / 2;
+			pos.y -= cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 		else
 			pos.y += fontsize.y + (cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
 
