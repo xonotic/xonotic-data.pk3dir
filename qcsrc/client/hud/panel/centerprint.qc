@@ -251,6 +251,7 @@ void HUD_CenterPrint()
 	int i, j, k, n, g;
 	float a = 1, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
+	vector cp_fontsize = hud_fontsize * 1.1;
 	string ts = "";
 	bool all_messages_expired = true;
 
@@ -261,23 +262,23 @@ void HUD_CenterPrint()
 
 	// Show title if available
 	if(centerprint_title_show) {
-		vector fontsize = hud_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
+		vector fontsize = cp_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
 		float width = stringwidth(centerprint_title, true, fontsize);
 
 		pos.x = panel_pos.x + (panel_size.x - width) * align;
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= hud_fontsize.y * CENTERPRINT_TITLE_SPACING / 2;
+			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING / 2;
 		else
-			pos.y += fontsize.y + (hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
+			pos.y += fontsize.y + (cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
 
 		drawfill(pos, vec2(width, 1), '1 1 1', 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y -= cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 		else
-			pos.y += hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y += cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 
 		all_messages_expired = false;
 	}
@@ -361,7 +362,7 @@ void HUD_CenterPrint()
 				while(getWrappedLine_remaining)
 				{
 					bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
-					vector fontsize = hud_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+					vector fontsize = cp_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
 
 					ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
@@ -379,7 +380,7 @@ void HUD_CenterPrint()
 			getWrappedLine_remaining = argv(k);
 
 			bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
-			vector fontsize = hud_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+			vector fontsize = cp_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
 			if (is_bold)
 				getWrappedLine_remaining = substring(getWrappedLine_remaining, 5, -1);
 
@@ -407,7 +408,7 @@ void HUD_CenterPrint()
 
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos.y -= msg_size + CENTERPRINT_SPACING * hud_fontsize.y;
+			pos.y -= msg_size + CENTERPRINT_SPACING * cp_fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos.y += (1 - sqrt(a));
 
@@ -419,11 +420,11 @@ void HUD_CenterPrint()
 		}
 		else
 		{
-			pos.y += CENTERPRINT_SPACING * hud_fontsize.y;
+			pos.y += CENTERPRINT_SPACING * cp_fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos.y -= (1 - sqrt(a));
 
-			if(pos.y > panel_pos.y + panel_size.y - hud_fontsize.y) // check if the next message can be shown
+			if(pos.y > panel_pos.y + panel_size.y - cp_fontsize.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
 				return;
