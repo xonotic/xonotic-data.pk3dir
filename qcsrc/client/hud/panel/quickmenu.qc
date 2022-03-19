@@ -481,8 +481,7 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		// allow console bind to work
 		string con_keys = findkeysforcommand("toggleconsole", 0);
 		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		int i;
-		for (i = 0; i < keys; ++i)
+		for (int i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false; // hit console bind
