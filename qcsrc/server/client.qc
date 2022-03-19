@@ -1447,10 +1447,9 @@ void respawn(entity this)
 void play_countdown(entity this, float finished, Sound samp)
 {
 	TC(Sound, samp);
-	if(IS_REAL_CLIENT(this))
-		if(floor(finished - time - frametime) != floor(finished - time))
-			if(finished - time < 6)
-				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
+	float time_left = finished - time;
+	if(IS_REAL_CLIENT(this) && time_left < 6 && floor(time_left - frametime) != floor(time_left))
+		sound(this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
 // it removes special powerups not handled by StatusEffects
@@ -1459,8 +1458,11 @@ void player_powerups_remove_all(entity this)
 	if (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
-		if (time > game_starttime + 1 && IS_CLIENT(this))
+		if (time > game_starttime + 1 && IS_CLIENT(this)
+			&& !(start_items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS)))
+		{
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+		}
 		if (this.items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
 		this.items -= (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS));
