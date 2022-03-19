@@ -315,7 +315,7 @@ void HUD_CenterPrint()
 		float fade_out_time = autocvar_hud_panel_centerprint_fade_out;
 
 		if (centerprint_countdown_num[j]) {
-			fade_in_time = autocvar_hud_panel_centerprint_fade_in_short;
+			fade_in_time = 0;
 			fade_out_time = 0;
 		}
 
