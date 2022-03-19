@@ -251,7 +251,7 @@ void HUD_CenterPrint()
 	int i, j, k, n, g;
 	float a = 1, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
-	vector cp_fontsize = hud_fontsize * 1.1;
+	vector cp_fontsize = hud_fontsize * 1.4;
 	string ts = "";
 	bool all_messages_expired = true;
 
@@ -269,9 +269,9 @@ void HUD_CenterPrint()
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y -= hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 		else
-			pos.y += fontsize.y + (cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
+			pos.y += fontsize.y + (hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
 
 		drawfill(pos, vec2(width, 1), '1 1 1', 1, DRAWFLAG_NORMAL);
 
