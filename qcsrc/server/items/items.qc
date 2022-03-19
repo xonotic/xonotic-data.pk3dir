@@ -484,7 +484,7 @@ bool Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS_CVAR(player).autoswitch)
+	if(CS_CVAR(player).cvar_cl_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1435,12 +1435,12 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != NULL)
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+			sound(e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != NULL)
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+			sound(e, ((snd_incr == SND_POWERUP) ? CH_TRIGGER_SINGLE : CH_TRIGGER), snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1513,7 +1513,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS_CVAR(e).autoswitch)
+	if(CS_CVAR(e).cvar_cl_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

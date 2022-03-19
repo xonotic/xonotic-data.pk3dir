@@ -191,7 +191,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				PutObserverInServer(it, true);
+				PutObserverInServer(it, true, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -333,9 +333,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", "0");
-				bot_fixcount();
+				bot_fixcount(false);  // Kill all bots.
 				cvar_settemp("bot_number", argv(2));
-				if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+				if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 				return;
 			}
 			else if (argv(1) == "load" && argc == 3)
@@ -366,9 +366,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 							cvar_settemp("minplayers", "0");
 							cvar_settemp("minplayers_per_team", "0");
 							cvar_settemp("bot_number", "0");
-							bot_fixcount();
+							bot_fixcount(false);  // Kill all bots.
 							cvar_settemp("bot_number", argv(3));
-							if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+							if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 						}
 						else
 						{
@@ -1016,7 +1016,7 @@ void GameCommand_moveplayer(int request, int argc)
 						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							PutObserverInServer(client, true);
+							PutObserverInServer(client, true, true);
 
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
@@ -1225,7 +1225,7 @@ void GameCommand_setbots(int request, int argc)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", argv(1));
-				bot_fixcount();
+				bot_fixcount(true);
 				return;
 			}
 		}

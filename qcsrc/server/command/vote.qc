@@ -344,7 +344,11 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 			return;
 
 		if (!is_fake_round_start)
+		{
+			Score_ClearAll();
 			PlayerStats_GameReport_Reset_All();
+		}
+
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
@@ -415,7 +419,6 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 void ReadyRestart_think(entity this)
 {
 	reset_map(true, false);
-	Score_ClearAll();
 	delete(this);
 }
 
@@ -432,7 +435,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	// clear overtime, we have to decrease timelimit to its original value again.
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
-	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
+	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = overtimes = 0;
 
 	if(warmup_stage)
 		game_starttime = time; // Warmup: No countdown in warmup
@@ -472,7 +475,9 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	if (!sv_ready_restart_after_countdown || warmup_stage) reset_map(true, is_fake_round_start);
+	if (!sv_ready_restart_after_countdown || warmup_stage)
+		reset_map(true, is_fake_round_start);
+
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
@@ -480,10 +485,6 @@ void ReadyRestart(bool forceWarmupEnd)
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
-
-	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
-	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) Score_ClearAll();
 
 	if(forceWarmupEnd)
 		warmup_stage = 0; // forcefully end warmup and go to match stage

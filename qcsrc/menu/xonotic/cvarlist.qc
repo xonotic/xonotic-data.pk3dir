@@ -23,7 +23,7 @@ void CvarList_Load(entity me, string filter)
 	if(me.handle < 0)
 		return;
 
-	buf_cvarlist(me.handle, filter, "_");
+	buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
 	me.nItems = buf_getsize(me.handle);
 	if(autocvar_menu_cvarlist_onlymodified)
 	{

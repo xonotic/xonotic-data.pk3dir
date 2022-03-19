@@ -42,21 +42,20 @@
 #endif
 
 #ifdef CSQC
-	float cvar_cl_dodging_timeout;
-	bool cvar_cl_dodging;
 	bool autocvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 	#define PHYS_DODGING_ENABLED(s)				autocvar_cl_dodging
 #elif defined(SVQC)
-	.float cvar_cl_dodging_timeout;
-	.bool cvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			CS_CVAR(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
 	#define PHYS_DODGING_ENABLED(s)				CS_CVAR(s).cvar_cl_dodging
 #endif
+
+REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
+REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
 #ifdef SVQC
 
@@ -306,9 +305,6 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 }
 
 #ifdef SVQC
-
-REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
-REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
 void dodging_ResetPlayer(entity this)
 {

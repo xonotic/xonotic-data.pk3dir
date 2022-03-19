@@ -2,28 +2,28 @@ ast   "Asturian" "Asturianu" 77%
 de    "German" "Deutsch" 100%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
-en_AU "English (Australia)" "English (Australia)" 73%
-es    "Spanish" "Español" 100%
+en_AU "English (Australia)" "English (Australia)" 72%
+es    "Spanish" "Español" 99%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 31%
 it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 46%
-nl    "Dutch" "Nederlands" 60%
+nl    "Dutch" "Nederlands" 59%
 pl    "Polish" "Polski" 72%
-pt    "Portuguese" "Português" 82%
+pt    "Portuguese" "Português" 81%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
-ro    "Romanian" "Romana" 72%
-fi    "Finnish" "Suomi" 100%
-sv    "Swedish" "Svenska" 98%
+ro    "Romanian" "Romana" 71%
+fi    "Finnish" "Suomi" 99%
+sv    "Swedish" "Svenska" 97%
 tr    "Turkish" "Türkçe" 52%
-cs    "Czech" "Čeština" 33%
+cs    "Czech" "Čeština" 32%
 el    "Greek" "Ελληνική" 46%
 be    "Belarusian" "Беларуская" 52%
 bg    "Bulgarian" "Български" 61%
 ru    "Russian" "Русский" 100%
-sr    "Serbian" "Српски" 62%
+sr    "Serbian" "Српски" 61%
 uk    "Ukrainian" "Українська" 49%
-zh_CN "Chinese (China)" "中文" 60%
-zh_TW "Chinese (Taiwan)" "國語" 59%
-ja_JP "Japanese" "日本語" 100%
-ko    "Korean" "한국의" 28%
+zh_CN "Chinese (China)" "中文" 59%
+zh_TW "Chinese (Taiwan)" "國語" 58%
+ja_JP "Japanese" "日本語" 99%
+ko    "Korean" "한국의" 29%

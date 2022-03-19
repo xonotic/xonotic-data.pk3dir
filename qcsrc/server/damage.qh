@@ -147,7 +147,6 @@ bool Heal(entity targ, entity inflictor, float amount, float limit);
 .float fire_deathtype;
 .entity fire_owner;
 .float fire_hitsound;
-.entity fire_burner;
 
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 
