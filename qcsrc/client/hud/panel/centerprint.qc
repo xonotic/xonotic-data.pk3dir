@@ -265,11 +265,14 @@ void HUD_CenterPrint()
 		vector fontsize = cp_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
 		float width = stringwidth(centerprint_title, true, fontsize);
 
+		if (autocvar_hud_panel_centerprint_flip)
+			pos.y -= cp_fontsize.y;
+
 		pos.x = panel_pos.x + (panel_size.x - width) * align;
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y -= cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
 		else
 			pos.y += fontsize.y + (hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
 
