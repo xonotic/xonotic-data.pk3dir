@@ -1,10 +1,10 @@
 ast   "Asturian" "Asturianu" 77%
-de    "German" "Deutsch" 99%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
+de    "German" "Deutsch" 100%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 72%
 es    "Spanish" "Español" 99%
-fr    "French" "Français" 99%
+fr    "French" "Français" 100%
 ga    "Irish" "Irish" 31%
 it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 46%
@@ -26,4 +26,4 @@ uk    "Ukrainian" "Українська" 49%
 zh_CN "Chinese (China)" "中文" 59%
 zh_TW "Chinese (Taiwan)" "國語" 58%
 ja_JP "Japanese" "日本語" 99%
-ko    "Korean" "한국의" 28%
+ko    "Korean" "한국의" 29%

@@ -30,8 +30,6 @@ void Announcer_Countdown(entity this)
 		centerprint_ClearTitle();
 		return;
 	}
-	if(starttime <= time && roundstarttime != starttime) // game start time has passed
-		announcer_5min = announcer_1min = false; // reset maptime announcers now as well
 
 	bool inround = (roundstarttime && time >= starttime);
 	float countdown = (inround ? roundstarttime - time : starttime - time);
@@ -135,8 +133,24 @@ MACRO_END
 
 void Announcer_Time()
 {
+	static bool warmup_stage_prev;
+
 	if(intermission)
 		return;
+
+	if (warmup_stage != warmup_stage_prev)
+	{
+		announcer_5min = announcer_1min = false;
+		warmup_stage_prev = warmup_stage;
+		return;
+	}
+
+	float starttime = STAT(GAMESTARTTIME);
+	if(time < starttime)
+	{
+		announcer_5min = announcer_1min = false;
+		return;
+	}
 
 	float timeleft;
 	if(warmup_stage)
@@ -148,7 +162,7 @@ void Announcer_Time()
 			timeleft = 0;
 	}
 	else
-		timeleft = max(0, STAT(TIMELIMIT) * 60 + STAT(GAMESTARTTIME) - time);
+		timeleft = max(0, STAT(TIMELIMIT) * 60 + starttime - time);
 
 	if(autocvar_cl_announcer_maptime >= 2)
 		ANNOUNCER_CHECKMINUTE(5);
