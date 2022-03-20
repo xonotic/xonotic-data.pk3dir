@@ -135,7 +135,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
 
 .float damageforcescale;
-const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MIN_DAMAGEEXTRARADIUS = 0.1;
 const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
 
