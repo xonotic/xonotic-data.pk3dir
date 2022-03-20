@@ -396,6 +396,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 		if(hp < 100)
 			SetResource(toucher, RES_HEALTH, 100);
+		// work around SetResource overriding M_ARGV(1, entity)
+		M_ARGV(1, entity) = toucher;
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
