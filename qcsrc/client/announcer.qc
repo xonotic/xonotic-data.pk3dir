@@ -5,6 +5,7 @@
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 #include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
 
 bool announcer_1min;
 bool announcer_5min;
@@ -107,7 +108,18 @@ void Announcer_Gamestart()
 
 			if(!warmup_stage && time < STAT(GAMESTARTTIME))
 			{
-				centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Set centerprint title
+				if (gametype.m_1v1)
+				{
+					entity pl1 = players.sort_next;
+					entity pl2 = pl1.sort_next;
+					string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
+					string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
+
+					centerprint_SetTitle(sprintf(_("^BG%s^BG vs %s"), pl1_name, pl2_name)); // Show duelers in 1v1 game mode
+				}
+				else
+					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Show game type as title
+
 				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 			}
