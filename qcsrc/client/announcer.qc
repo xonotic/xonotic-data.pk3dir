@@ -109,7 +109,7 @@ void Announcer_Gamestart()
 
 			if(!warmup_stage && time < STAT(GAMESTARTTIME))
 			{
-				centerprint_SetTitle(MapInfo_Type_ToText(gametype)); // Set centerprint title
+				centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Set centerprint title
 				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 			}

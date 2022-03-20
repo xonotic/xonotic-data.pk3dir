@@ -160,7 +160,7 @@ void centerprint_SetTitle(string title)
 		if(centerprint_title)
 			strfree(centerprint_title);
 
-		centerprint_title = strzone(title);
+		centerprint_title = strzone(CCR(title));
 		centerprint_title_show = true;
 	}
 }
