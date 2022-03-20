@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Iso Lee, 2016\n"
+"Last-Translator: BYEONGJIN AN, 2022\n"
 "Language-Team: Korean (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ko/)\n"
 "Language: ko\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2성공적으로 %s에 내보냈어요! (참고: data/data/에 저장했어요)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -39,7 +39,7 @@ msgstr "^1%s에 저장하지 못했습니다."
 #: qcsrc/client/hud/panel/centerprint.qc:173
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3%s 카운트다운 메시지, 남은 시간(초): ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:175
 #, c-format
@@ -47,11 +47,13 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1보통보다 긴\n"
+"^1%s의 여러 줄 메세지"
 
 #: qcsrc/client/hud/panel/centerprint.qc:177
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "%s의 메시지"
 
 #: qcsrc/client/hud/panel/centerprint.qc:182
 msgid "Generic message"
@@ -245,31 +247,31 @@ msgstr "채팅"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^전체 메세지로 보내요"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^:-) / nice one"
-msgstr "QMCMD^ㅇㅅㅇ / 굳잡"
+msgstr "QMCMD^:-) / 잘했어"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^nice one"
-msgstr "QMCMD^굳잡"
+msgstr "QMCMD^잘했어"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^good game"
-msgstr "QMCMD^gg"
+msgstr "QMCMD^GG"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^ㅎㅇ / 칸바레"
+msgstr "QMCMD^ / 행운을 빌어요"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^ㅎㅇ / 칸바레, 젠카이노 아이마스"
+msgstr "QMCMD^ㅎㅇ / 행운을 빌어요 즐겜 하세요"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^영어로 말해주세요"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 #: qcsrc/client/hud/panel/quickmenu.qc:834
@@ -278,7 +280,7 @@ msgstr "QMCMD^팀 채팅"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^곧 힘이 생성됨"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -413,7 +415,7 @@ msgstr "QMCMD^플레이어 위에 이름을"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Crosshair per weapon"
-msgstr ""
+msgstr "QMCMD^무기 별 조준점"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^FPS"
@@ -438,7 +440,7 @@ msgstr "QMCMD^채팅 소리"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^관전자 카메라 변경"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 #: qcsrc/client/hud/panel/quickmenu.qc:865
@@ -455,7 +457,7 @@ msgstr "QMCMD^속도 줄이기"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^벽 충돌"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Fullscreen"
@@ -488,7 +490,7 @@ msgstr "QMCMD^팀 섞기"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^플레이어를 관전"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
@@ -520,23 +522,23 @@ msgstr "중급 %d"
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "페널티: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1180
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "체크포인트를 놓침"
 
 #: qcsrc/client/hud/panel/radar.qc:349
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "클릭으로 텔레포트 지점을 지정"
 
 #: qcsrc/client/hud/panel/radar.qc:353
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "클릭으로 스폰 장소를 지정"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "공 가진 사람을 죽인 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^bckills"
@@ -548,11 +550,11 @@ msgstr "SCO^공 운반 시간"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Keepaway 에서 공을 가지고 있던 총 시간"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr ""
+msgstr "깃발(CTF)이나 열쇠(KeyHunt)가 캡쳐된 빈도"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^caps"
@@ -564,11 +566,11 @@ msgstr "SCO^점령 시간"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "가장 빠르게 캡쳐한 시간(CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of deaths"
-msgstr ""
+msgstr "죽음 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^deaths"
@@ -576,7 +578,7 @@ msgstr "SCO^죽음"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "장외로 빠져 파괴된 키 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^destroyed"
@@ -588,7 +590,7 @@ msgstr "SCO^데미지"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "The total damage done"
-msgstr ""
+msgstr "총 가한 데미지"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^dmgtaken"
@@ -596,11 +598,11 @@ msgstr "SCO^입은 데미지"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage taken"
-msgstr ""
+msgstr "총 피해 데미지"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Number of flag drops"
-msgstr ""
+msgstr "떨어트린 깃발 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^drops"
@@ -608,7 +610,7 @@ msgstr "SCO^떨어뜨림"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Player ELO"
-msgstr ""
+msgstr "플레이어 ELO"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^elo"
@@ -616,15 +618,15 @@ msgstr "SCO^elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^fastest"
-msgstr ""
+msgstr "SCO^가장 빠름"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "가장 빠르게 돌은 랩 시간 (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Number of faults committed"
-msgstr ""
+msgstr "저지른 자책 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^faults"
@@ -632,7 +634,7 @@ msgstr "SCO^실수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "깃발 가진 사람 죽인 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^fckills"
@@ -648,15 +650,15 @@ msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "자책 자살 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^frags"
-msgstr ""
+msgstr "SCO^사살"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of goals scored"
-msgstr ""
+msgstr "들어간 골 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^goals"
@@ -664,7 +666,7 @@ msgstr "SCO^골"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "열쇠 가진 사람 죽인 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^kckills"
@@ -678,7 +680,7 @@ msgstr "SCO^킬/뎃"
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "킬-데스 비율"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^kdr"
@@ -690,7 +692,7 @@ msgstr "SCO^킬뎃비율"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of kills"
-msgstr ""
+msgstr "죽인 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^kills"
@@ -698,7 +700,7 @@ msgstr "SCO^죽임"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "돌은 랩 수 (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^laps"
@@ -706,7 +708,7 @@ msgstr "SCO^바퀴"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "목숨 수 (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^lives"
@@ -714,7 +716,7 @@ msgstr "SCO^목숨"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "키가 분실된 횟수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^losses"
@@ -723,7 +725,7 @@ msgstr "SCO^패배"
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Player name"
-msgstr ""
+msgstr "플레이어 이름"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^name"
@@ -735,7 +737,7 @@ msgstr "SCO^별칭"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "파괴된 오브젝티브 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^objectives"
@@ -744,7 +746,7 @@ msgstr "SCO^목표"
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr ""
+msgstr "깃발(CTF)이나 열쇠(KeyHunt)나 공(Keepaway)이 주워진 빈도"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^pickups"
@@ -752,7 +754,7 @@ msgstr "SCO^픽업"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Ping time"
-msgstr ""
+msgstr "핑 시간"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^ping"
@@ -760,7 +762,7 @@ msgstr "SCO^핑"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Packet loss"
-msgstr ""
+msgstr "패킷 손실"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^pl"
@@ -768,7 +770,7 @@ msgstr "SCO^패킷 손실"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "장외로 떨어진 플레이어 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^pushes"
@@ -776,7 +778,7 @@ msgstr "SCO^밀어냄"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Player rank"
-msgstr ""
+msgstr "플레이어 랭크"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^rank"
@@ -784,7 +786,7 @@ msgstr "SCO^순위"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of flag returns"
-msgstr ""
+msgstr "회수된 깃발 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^returns"
@@ -792,7 +794,7 @@ msgstr "SCO^귀환"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of revivals"
-msgstr ""
+msgstr "탈환한 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^revivals"
@@ -800,7 +802,7 @@ msgstr "SCO^부활"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of rounds won"
-msgstr ""
+msgstr "이긴 라운드 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^rounds won"
@@ -812,11 +814,11 @@ msgstr "SCO^점수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Total score"
-msgstr ""
+msgstr "총 득점"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of suicides"
-msgstr ""
+msgstr "자살 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^suicides"
@@ -824,7 +826,7 @@ msgstr "SCO^자살"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "자책 죽음 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^sum"
@@ -832,7 +834,7 @@ msgstr "SCO^합"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "득점한 점령 점수 (점령전)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^takes"
@@ -840,7 +842,7 @@ msgstr "SCO^가져감"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of teamkills"
-msgstr ""
+msgstr "팀킬 수"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^teamkills"
@@ -848,7 +850,7 @@ msgstr "SCO^팀킬"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "틱 수 (점령전)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^ticks"
@@ -880,26 +882,32 @@ msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"인수를 주지 않은 ^2scoreboard_columns_set ^7는 인수를 cvar "
+"scoreboard_columns 에서 읽어옵니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:364
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+"  ^5참고: ^7인수가 없는 scoreboard_columns_set는 맵이 시작 될 때마다 실행됩니"
+"다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:365
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set 과 ^3expand_default ^7 는 기본 레이아웃을 불러오고 "
+"cvar scoreboard_columns 를 확장시켜 수정 할 수 있게 합니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:366
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "^3|^7 로 오른쪽 정렬된 필드를 시작할 수 있습니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:367
 msgid "The following field names are recognized (case insensitive):"
-msgstr ""
+msgstr "다음의 필드 네임이 인식됨(대소문자 구분 안 함)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:373
 msgid ""
@@ -908,28 +916,39 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"필드 앞에 + 또는 - 기호를 넣고서, 컴마로 구분된 게임 유형 목록을 넣은 다음\n"
+"슬래시를 써서 이 게임 타입들만 필드가 표시되거나\n"
+"이 게임 타입들을 제외한 모든 타입에 표시되도록 할 수 있습니다.\n"
+"'all'을 필드로 지정하여 현재 게임 모드에서 사용 가능한 모든 필드를 표시할 수"
+"도 있습니다. "
 
 #: qcsrc/client/hud/panel/scoreboard.qc:379
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"'teams' 와 'noteams' 라고 하는 특수한 게임 타입은\n"
+"모든 teams/noteams 게임 모드를 포함/제외하는 데 사용할 수 있습니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:383
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
+msgstr "예시: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:384
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"이는 이름과 왼쪽으로 정렬된 핑 및 pl과\n"
+"오른쪽 수직 바에 오른쪽으로 정렬 된 필드를 표시합니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:386
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
+"'field3' 는 CTF 에서만 표시되고, 'field4' 는 DM을 제외한\n"
+"모든 다른 게임모드 들에서 표시 됩니다."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:665
 #: qcsrc/client/hud/panel/scoreboard.qc:672
@@ -950,7 +969,7 @@ msgstr "정확도 통계(평균 %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1407
 msgid "Item stats"
-msgstr ""
+msgstr "아이템 상태"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1518
 msgid "Map stats:"
@@ -972,13 +991,13 @@ msgstr "관전자"
 #: qcsrc/client/hud/panel/scoreboard.qc:1872
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f 분"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1881
 #: qcsrc/client/hud/panel/scoreboard.qc:1888
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1882
 #: qcsrc/client/hud/panel/scoreboard.qc:1889
@@ -991,22 +1010,22 @@ msgstr "SCO^점"
 #: qcsrc/client/hud/panel/scoreboard.qc:1914
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1925
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7맵: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2079
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "스피드 어워드: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2083
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "역대 가장 빠름: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2119
 #, c-format
@@ -1025,48 +1044,48 @@ msgstr "당신은 죽었어요, ^2%s^7를 눌러 부활하세요"
 
 #: qcsrc/client/hud/panel/strafehud.qc:879
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:880
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: qcsrc/client/hud/panel/strafehud.qc:881
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:882
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:883
 msgid "nmi"
-msgstr ""
+msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "워밍업"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "타임아웃"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "서든 데스"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "초과시간"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "초과시간 #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1HUD 조작 모드에 진입하기 전에 반드시 답해야 해요"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1095,7 +1114,7 @@ msgstr "^1 HUD를 설정하세요"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "네"
 
 #: qcsrc/client/hud/panel/vote.qc:131
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
@@ -1108,7 +1127,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "아니오"
 
 #: qcsrc/client/hud/panel/weapons.qc:631
 msgid "Out of ammo"
@@ -1128,23 +1147,23 @@ msgstr "팀 목록에 없는 팀을 지우려고 하는 중이에요!"
 
 #: qcsrc/client/main.qc:1082 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1083 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/main.qc:1084 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: qcsrc/client/main.qc:1085 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: qcsrc/client/main.qc:1086 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
-msgstr ""
+msgstr "노트"
 
 #: qcsrc/client/main.qc:1331
 #, c-format
@@ -1179,15 +1198,15 @@ msgstr "%d 초 남음"
 
 #: qcsrc/client/mapvoting.qc:513
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
-msgstr ""
+msgstr "mv_mapdownload: ^3이 명령을 직접 사용하지 마세요!"
 
 #: qcsrc/client/mapvoting.qc:523
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1오류:^7 pak 인덱스를 찾지 못함"
 
 #: qcsrc/client/mapvoting.qc:532
 msgid "Requesting preview..."
-msgstr ""
+msgstr "프리뷰 요청..."
 
 #: qcsrc/client/view.qc:891
 msgid "Nade timer"
@@ -1195,7 +1214,7 @@ msgstr "수류탄 시간 기록기"
 
 #: qcsrc/client/view.qc:896
 msgid "Capture progress"
-msgstr ""
+msgstr "캡처 진행"
 
 #: qcsrc/client/view.qc:901
 msgid "Revival progress"
@@ -1203,7 +1222,7 @@ msgstr "부활 진행 상황"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "curl 핸들 생성 오류"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
@@ -1223,7 +1242,7 @@ msgstr "시간이 되기 전에 적 파워 코어를 찾아 파괴하기 위해 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "Point limit:"
-msgstr ""
+msgstr "점수 한도:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1238,17 +1257,17 @@ msgstr "이번 판을 이기기 위해선 모든 적 팀을 섬멸하세요"
 #: qcsrc/common/mapinfo.qh:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
 msgid "Frag limit:"
-msgstr ""
+msgstr "사살 한도:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 #: qcsrc/common/mapinfo.qh:86
 msgid "The amount of frags needed before the match will end"
-msgstr ""
+msgstr "매치가 끝나기 전에 필요한 사살 양"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
-msgstr ""
+msgstr "캡처 시간 순위:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
@@ -1264,11 +1283,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr ""
+msgstr "캡처 한도:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "매치가 끝나기 전에 필요한 캡처 양"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1303,11 +1322,11 @@ msgstr "점령"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "매치가 끝나기 전에 필요한 점수"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr ""
+msgstr "결투"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -2992,7 +3011,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:408
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr ""
+msgstr "^BG%s^K1 이 힘을 먹음"
 
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
@@ -4213,11 +4232,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^F2Strength infuses your weapons with devastating power"
-msgstr ""
+msgstr "^F2힘이 폭발적인 능력을 무기에 일으킵니다"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^F2Strength has worn off"
-msgstr ""
+msgstr "^F2힘이 해제 됨"
 
 #: qcsrc/common/notifications/all.inc:743
 msgid "^F2Shield surrounds you"
@@ -6528,46 +6547,48 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:31
 msgid "Colors:"
-msgstr ""
+msgstr "색상:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:33
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:39
 msgid "Set skin:"
-msgstr ""
+msgstr "스킨 설정:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qh:6
 msgid "Monster Tools"
-msgstr ""
+msgstr "몬스터 툴"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Servers"
-msgstr ""
+msgstr "서버"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Find servers to play on"
-msgstr ""
+msgstr "플레이 할 서버를 찾으세요"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Host your own game"
-msgstr ""
+msgstr "직접 게임을 호스트 하세요"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:18
 msgid "Media"
-msgstr ""
+msgstr "미디어"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
 msgid "Profile"
-msgstr ""
+msgstr "프로필"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr ""
+msgstr "멀티플레이어"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
+"온라인으로 플레이 하거나, LAN으로 친구들과 겨루거나, 데모를 보거나, 플레이어 "
+"설정을 변경합니다"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
@@ -8176,7 +8197,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
 msgid "Motion blur strength - 0.4 recommended"
-msgstr ""
+msgstr "모션 블러 강도 - 0.4 추천"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Motion blur:"
@@ -8745,11 +8766,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
-msgstr ""
+msgstr "위"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:43
 msgid "Down"
-msgstr ""
+msgstr "아래"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
@@ -9080,36 +9101,36 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Show current date and time"
-msgstr ""
+msgstr "현재 날짜 및 시간 보이기"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:134
 msgid "Show current date and time of day, useful on screenshots"
-msgstr ""
+msgstr "현재 날짜 및 시간 보이기, 스크린샷에 유용"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
 msgid "Enable developer mode"
-msgstr ""
+msgstr "개발자 모드 활성"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:141
 msgid "Advanced settings..."
-msgstr ""
+msgstr "고급 설정..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:142
 msgid "Advanced settings where you can tweak every single variable of the game"
-msgstr ""
+msgstr "게임의 모든 변수를 트윅할 수 있는 고급 설정"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
-msgstr ""
+msgstr "공장 초기화"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
-msgstr ""
+msgstr "Cvar 필터:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr ""
+msgstr "수정된 cvar만 사용"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
@@ -9117,31 +9138,31 @@ msgstr "설정:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
-msgstr ""
+msgstr "종류:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
-msgstr ""
+msgstr "값:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
-msgstr ""
+msgstr "설명:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr ""
+msgstr "고급 설정"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "정말 모든 설정을 재설정 하시겠습니까?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
-msgstr ""
+msgstr "이 작업은 데이터 디렉토리에 백업 설정파일을 생성합니다"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"
-msgstr ""
+msgstr "메뉴 스킨"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -9153,19 +9174,19 @@ msgstr "확인"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:72
 msgid "Disable gore effects and harsh language"
-msgstr ""
+msgstr "고어 효과와 폭력적인 언어 비활성화"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:73
 msgid "Replace blood and gibs with content that does not have any gore effects"
-msgstr ""
+msgstr "아무 고어 효과가 포함하지 않게 피와 살이 변경됨"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
-msgstr ""
+msgstr "접속해 있을 때는 언어 변경은 메뉴에서만 적용됨"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr ""
+msgstr "모든 언어 변경은 다음 게임에서 부터 적용됨"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
@@ -9173,63 +9194,63 @@ msgstr "지금 연결 종료하기"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr ""
+msgstr "언어 선택"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
-msgstr ""
+msgstr "주의"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Resolution:"
-msgstr ""
+msgstr "해상도:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Font/UI size:"
-msgstr ""
+msgstr "글꼴/UI 크기:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "SZ^Unreadable"
-msgstr ""
+msgstr "SZ^못 읽겠을 정도"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:40
 msgid "SZ^Tiny"
-msgstr ""
+msgstr "SZ^아주 조그맣게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:41
 msgid "SZ^Little"
-msgstr ""
+msgstr "SZ^조그맣게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:42
 msgid "SZ^Small"
-msgstr ""
+msgstr "SZ^작게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:43
 msgid "SZ^Medium"
-msgstr ""
+msgstr "SZ^중간"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:44
 msgid "SZ^Large"
-msgstr ""
+msgstr "SZ^크게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:45
 msgid "SZ^Huge"
-msgstr ""
+msgstr "SZ^커다랗게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:46
 msgid "SZ^Gigantic"
-msgstr ""
+msgstr "SZ^거대하게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:47
 msgid "SZ^Colossal"
-msgstr ""
+msgstr "SZ^아주 거대하게"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:51
 msgid "Color depth:"
-msgstr ""
+msgstr "색 깊이"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
-msgstr ""
+msgstr "렌더링 하는 데에 얼마나 많은 픽셀 당 비트(BPP)가 있는가, 32 권장"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
@@ -9241,37 +9262,39 @@ msgstr "32빗"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
-msgstr ""
+msgstr "전체 화면"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
-msgstr ""
+msgstr "수직 동기화"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:62
 msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate"
 msgstr ""
+"화면 찢어짐 방지를 위한 수직 동기화(V-Sync)를 작동, 화면 재생률 제한 될 수 있"
+"음"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
-msgstr ""
+msgstr "마우스 반전(수평 플립 뷰)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
-msgstr ""
+msgstr "간이적인 왼손잡이 모드"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Anisotropy:"
-msgstr ""
+msgstr "비등방성:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:73
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "비등방적인 필터링 퀄리티"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid "ANISO^Disabled"
-msgstr ""
+msgstr "ANISO^비활성화 됨"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:75
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:86
@@ -9300,44 +9323,48 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
+"3D 모형의 외곽선을 부드럽게 하는 안티앨리어싱 활성. 상당한 수준으로 퍼포먼스"
+"를 감소시킬 수 있음을 참고"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "AA^Disabled"
-msgstr ""
+msgstr "AA^비활성화 됨"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:92
 msgid "High-quality frame buffer"
-msgstr ""
+msgstr "고품질 프레임 버퍼"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "Depth first:"
-msgstr ""
+msgstr "깊이 우선:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"일반 렌더링을 시작하기 전에 depth-only 버전의 신을 렌더링해서 오버드로우를 없"
+"앰"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
-msgstr ""
+msgstr "DF^비활성화 됨"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:101
 msgid "DF^World"
-msgstr ""
+msgstr "DF^월드"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:102
 msgid "DF^All"
-msgstr ""
+msgstr "DF^모두"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:107
 msgid "Vertex Buffer Objects (VBOs)"
-msgstr ""
+msgstr "Vertex Buffer Objects (VBO)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:110
 msgid "VBO^Off"
-msgstr ""
+msgstr "VBO^끔"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:111
 msgid "Vertices, some Tris (compatible)"
@@ -9350,58 +9377,61 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
+"빠른 렌더링을 위한 비디오 메모리의 정적 지오메트리를 저장할 수 있게 Vertex "
+"Buffer Objects를 사용하세요"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:115
 msgid "Vertices"
-msgstr ""
+msgstr "정점"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:117
 msgid "Vertices and Triangles"
-msgstr ""
+msgstr "정점과 삼각형"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:122
 msgid "Brightness:"
-msgstr ""
+msgstr "밝기:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:124
 msgid "Brightness of black"
-msgstr ""
+msgstr "흑색 밝기"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:126
 msgid "Contrast:"
-msgstr ""
+msgstr "대비:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:128
 msgid "Brightness of white"
-msgstr ""
+msgstr "백색 밝기"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:130
 msgid "Gamma:"
-msgstr ""
+msgstr "감마:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
-msgstr ""
+msgstr "감마 보정 반전, 흑백에 영향이 없는 밝기 효과"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:136
 msgid "Contrast boost:"
-msgstr ""
+msgstr "대비 증폭:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "어두운 공간에서 얼마나 대비가 증가했는가에 따라"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:142
 msgid "Saturation:"
-msgstr ""
+msgstr "채도:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:145
 msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"채도 조정 (0 = 그레이스케일, 1 = 보통, 2 = 과포화), GLSL 색상 제어 요구"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:149
 msgid "LIT^Ambient:"
