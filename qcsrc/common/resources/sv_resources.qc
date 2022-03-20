@@ -65,7 +65,7 @@ float GetResourceLimit(entity e, Resource res_type)
 		}
 	}
 	MUTATOR_CALLHOOK(GetResourceLimit, e, res_type, limit);
-	limit = M_ARGV(2, float);
+	limit = M_ARGV(9, float);
 	if (limit > RES_AMOUNT_HARD_LIMIT)
 	{
 		limit = RES_AMOUNT_HARD_LIMIT;
@@ -96,8 +96,8 @@ void SetResource(entity e, Resource res_type, float amount)
 	{
 		return;
 	}
-	res_type = M_ARGV(1, entity);
-	amount = M_ARGV(2, float);
+	res_type = M_ARGV(8, entity);
+	amount = M_ARGV(9, float);
 	float max_amount = GetResourceLimit(e, res_type); // TODO: should allow overriding these limits if cheats are enabled!
 	float amount_wasted = 0;
 	if (amount > max_amount && max_amount != RES_LIMIT_NONE)
@@ -128,8 +128,8 @@ void GiveResource(entity receiver, Resource res_type, float amount)
 	{
 		return;
 	}
-	res_type = M_ARGV(1, entity);
-	amount = M_ARGV(2, float);
+	res_type = M_ARGV(8, entity);
+	amount = M_ARGV(9, float);
 	if (amount <= 0)
 	{
 		return;
@@ -172,9 +172,9 @@ void GiveResourceWithLimit(entity receiver, Resource res_type, float amount, flo
 	{
 		return;
 	}
-	res_type = M_ARGV(1, entity);
-	amount = M_ARGV(2, float);
-	limit = M_ARGV(3, float);
+	res_type = M_ARGV(8, entity);
+	amount = M_ARGV(9, float);
+	limit = M_ARGV(10, float);
 	if (amount <= 0)
 	{
 		return;
@@ -198,8 +198,8 @@ void TakeResource(entity receiver, Resource res_type, float amount)
 	{
 		return;
 	}
-	res_type = M_ARGV(1, entity);
-	amount = M_ARGV(2, float);
+	res_type = M_ARGV(8, entity);
+	amount = M_ARGV(9, float);
 	if (amount <= 0)
 	{
 		return;
@@ -218,9 +218,9 @@ void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, flo
 	{
 		return;
 	}
-	res_type = M_ARGV(1, entity);
-	amount = M_ARGV(2, float);
-	limit = M_ARGV(3, float);
+	res_type = M_ARGV(8, entity);
+	amount = M_ARGV(9, float);
+	limit = M_ARGV(10, float);
 	if (amount <= 0)
 	{
 		return;
