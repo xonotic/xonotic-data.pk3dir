@@ -22,7 +22,7 @@ test_compilation_units:
       - qcsrc/**/*
   stage: test
   script:
-    - ./qcsrc/tools/compilationunits.sh
+    - make test
 
 test_sv_game:
   stage: test
