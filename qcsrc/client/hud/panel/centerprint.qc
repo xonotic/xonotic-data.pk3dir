@@ -34,7 +34,7 @@ void HUD_CenterPrint_Export(int fh)
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
 const float CENTERPRINT_SPACING = 0.5;
-const float CENTERPRINT_TITLE_SPACING = 0.8;
+const float CENTERPRINT_TITLE_SPACING = 0.35;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -272,16 +272,16 @@ void HUD_CenterPrint()
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
 		else
-			pos.y += fontsize.y + (hud_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2));
+			pos.y += fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING);
 
 		drawfill(pos, vec2(width, 1), '1 1 1', 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
 		else
-			pos.y += cp_fontsize.y * (CENTERPRINT_TITLE_SPACING / 2);
+			pos.y += cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
 
 		all_messages_expired = false;
 	}

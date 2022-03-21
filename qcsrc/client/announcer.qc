@@ -115,7 +115,7 @@ void Announcer_Gamestart()
 					string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
 					string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
 
-					centerprint_SetTitle(sprintf(_("^BG%s^BG vs %s"), pl1_name, pl2_name)); // Show duelers in 1v1 game mode
+					centerprint_SetTitle(sprintf(_("^BG%s^BG  vs  %s"), pl1_name, pl2_name)); // Show duelers in 1v1 game mode
 				}
 				else
 					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Show game type as title
