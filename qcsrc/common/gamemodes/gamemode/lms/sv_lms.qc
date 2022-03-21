@@ -519,7 +519,8 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		{
 			player.lms_spectate_warning = 1;
-			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+			sprint(player, "^1WARNING:^7 you can't rejoin this match after spectating. Use the same command again to spectate anyway.\n");
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_LMS_SPECWARN);
 		}
 		return MUT_SPECCMD_RETURN;
 	}
