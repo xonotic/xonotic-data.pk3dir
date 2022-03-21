@@ -7,9 +7,14 @@ workflow:
 before_script:
   - ln -s $PWD data/xonotic-data.pk3dir
 
+  - export MAKEFLAGS=-j$(nproc); echo MAKEFLAGS=$MAKEFLAGS
+#   FIXME: -march=native -mtune=native _changes the hash_, why?!?
+# - export CC="gcc -pipe -march=native -mtune=native"
+  - export CC="gcc -pipe"
+
   - git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
-  - cd ..
+  - make -C gmqcc || exit 1
+  - export QCC="$PWD/gmqcc/gmqcc"
 
 test_compilation_units:
   rules:
@@ -23,22 +28,22 @@ test_sv_game:
   stage: test
   script:
     - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
-    - cd ..
+    - make -C darkplaces sv-release || exit 1
+    - export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic -noconfig -nohome"
+    - make qc || exit 1
 
     - mkdir -p data/maps
     - wget -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
     - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
-    - make
 
-    - $ENGINE -noconfig -nohome +map stormkeep +dumpnotifs +wait +quit
+    - ${ENGINE} +map stormkeep +dumpnotifs +wait +quit
     - diff notifications.cfg data/data/notifications_dump.cfg ||
         { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
     - EXPECT=d4060caf37a2e60bab68d1f83bc57368
-    - HASH=$(${ENGINE} -noconfig -nohome +timestamps 1 +exec serverbench.cfg
+    - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
       | tee /dev/stderr
       | sed -e 's,^\[[^]]*\] ,,'
       | grep '^:'
@@ -54,11 +59,11 @@ test_sv_unit:
   stage: test
   script:
     - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
-    - cd ..
+    - cd darkplaces && make sv-release || exit 1
+    - export ENGINE="$PWD/darkplaces-dedicated -xonotic" && cd ..
+    - make qc || exit 1
 
     - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
-    - make
     - while read line; do
         echo $line;
         if [[ $line == "All tests OK" ]]; then exit 0; fi;
