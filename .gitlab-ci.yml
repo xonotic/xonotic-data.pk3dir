@@ -33,14 +33,22 @@ test_sv_game:
     - make qc || exit 1
 
     - mkdir -p data/maps
+    - wget -O data/maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+
+    - while read LINE; do
+        echo $LINE;
+        [ "$LINE" = "All tests OK" ] && PASS=1;
+      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +wait +quit)
+    - test "$PASS" = "1" || { echo 'sv_cmd runtest failed!'; exit 1; }
+
+    - ${ENGINE} +map gitlab-ci +sv_cmd dumpnotifs +wait +quit
+    - diff notifications.cfg data/data/notifications_dump.cfg ||
+        { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
+
     - wget -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
     - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
-
-    - ${ENGINE} +map stormkeep +dumpnotifs +wait +quit
-    - diff notifications.cfg data/data/notifications_dump.cfg ||
-        { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
     - EXPECT=d4060caf37a2e60bab68d1f83bc57368
     - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
@@ -55,20 +63,6 @@ test_sv_game:
     - test "$HASH" == "$EXPECT"
     - exit $?
 
-test_sv_unit:
-  stage: test
-  script:
-    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - cd darkplaces && make sv-release || exit 1
-    - export ENGINE="$PWD/darkplaces-dedicated -xonotic" && cd ..
-    - make qc || exit 1
-
-    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
-    - while read line; do
-        echo $line;
-        if [[ $line == "All tests OK" ]]; then exit 0; fi;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
-    - exit 1
 
 # NOTE: The generated docs are incomplete - they don't contain code behind SVQC CSQC MENUQC GAMEQC ifdefs.
 # With them added to PREDEFINED, it would take over half an hour to generate the docs and even then
