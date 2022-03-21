@@ -32,6 +32,11 @@ test_sv_game:
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
     - make
+
+    - $ENGINE -noconfig -nohome +map stormkeep +dumpnotifs +wait +quit
+    - diff notifications.cfg data/data/notifications_dump.cfg ||
+        { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
+
     - EXPECT=d4060caf37a2e60bab68d1f83bc57368
     - HASH=$(${ENGINE} -noconfig -nohome +timestamps 1 +exec serverbench.cfg
       | tee /dev/stderr
