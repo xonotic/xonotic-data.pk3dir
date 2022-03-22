@@ -1,5 +1,6 @@
 #include "announcer.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/centerprint.qh>
 #include <client/mutators/_mod.qh>
 #include <common/notifications/all.qh>
@@ -35,8 +36,6 @@ void Announcer_Countdown(entity this)
 	bool inround = (roundstarttime && time >= starttime);
 	float countdown = (inround ? roundstarttime - time : starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
-
-	if(time >= starttime) centerprint_ClearTitle();
 
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
@@ -115,10 +114,11 @@ void Announcer_Gamestart()
 					string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
 					string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
 
-					centerprint_SetTitle(sprintf(_("^BG%s^BG  vs  %s"), pl1_name, pl2_name)); // Show duelers in 1v1 game mode
+					float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
+					centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2); // Show duelers in 1v1 game mode
 				}
 				else
-					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Show game type as title
+					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype)), 0); // Show game type as title
 
 				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);

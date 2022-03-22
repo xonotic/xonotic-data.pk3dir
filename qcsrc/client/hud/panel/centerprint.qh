@@ -24,4 +24,4 @@ void centerprint_Kill(int id);
 void centerprint_KillAll();
 
 void centerprint_ClearTitle();
-void centerprint_SetTitle(string title);
+void centerprint_SetTitle(string title, float offset);

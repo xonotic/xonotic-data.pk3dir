@@ -33,6 +33,7 @@ void HUD_CenterPrint_Export(int fh)
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
+const float CENTERPRINT_BASE_SIZE = 1.4;
 const float CENTERPRINT_SPACING = 0.5;
 const float CENTERPRINT_TITLE_SPACING = 0.35;
 int cpm_index;
@@ -44,8 +45,8 @@ float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
 
-bool centerprint_title_show;
 string centerprint_title;
+float centerprint_title_offset;
 
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
@@ -151,17 +152,17 @@ void centerprint_KillAll()
 void centerprint_ClearTitle()
 {
 	strfree(centerprint_title);
-	centerprint_title_show = false;
+	centerprint_title_offset = 0;
 }
 
-void centerprint_SetTitle(string title)
+void centerprint_SetTitle(string title, float offset)
 {
 	if(title != centerprint_title) {
 		if(centerprint_title)
 			strfree(centerprint_title);
 
 		centerprint_title = strzone(CCR(title));
-		centerprint_title_show = true;
+		centerprint_title_offset = offset;
 	}
 }
 
@@ -188,7 +189,7 @@ void HUD_CenterPrint()
 		{
 			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
 			{
-				centerprint_SetTitle(sprintf(_("Title at %s"), seconds_tostring(hud_configure_cp_generation_time)));
+				centerprint_SetTitle(sprintf(_("Title at %s"), seconds_tostring(hud_configure_cp_generation_time)), 0);
 
 				float r;
 				r = random();
@@ -251,7 +252,7 @@ void HUD_CenterPrint()
 	int i, j, k, n, g;
 	float a = 1, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
-	vector cp_fontsize = hud_fontsize * 1.4;
+	vector cp_fontsize = hud_fontsize * CENTERPRINT_BASE_SIZE;
 	string ts = "";
 	bool all_messages_expired = true;
 
@@ -261,14 +262,17 @@ void HUD_CenterPrint()
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 
 	// Show title if available
-	if(centerprint_title_show) {
+	if(centerprint_title) {
 		vector fontsize = cp_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
 		float width = stringwidth(centerprint_title, true, fontsize);
 
-		if (autocvar_hud_panel_centerprint_flip)
-			pos.y -= cp_fontsize.y;
-
 		pos.x = panel_pos.x + (panel_size.x - width) * align;
+
+		if (autocvar_hud_panel_centerprint_flip)
+			pos.y -= fontsize.y;
+		if (centerprint_title_offset && align == 0.5)
+			pos.x += centerprint_title_offset * CENTERPRINT_BASE_SIZE * autocvar_hud_panel_centerprint_fontscale_title;
+
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
