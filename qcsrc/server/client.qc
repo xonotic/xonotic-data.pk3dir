@@ -1033,8 +1033,15 @@ string GetClientVersionMessage(entity this)
 	}
 }
 
-string getwelcomemessage(entity this)
+void SendWelcomemessage(entity this, bool force_centerprint)
 {
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
+	WriteByte(MSG_ONE, force_centerprint);
+	WriteString(MSG_ONE, autocvar_hostname);
+	WriteString(MSG_ONE, GetClientVersionMessage(this));
+	WriteString(MSG_ONE, gamemode_name);
+
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
 
@@ -1055,12 +1062,7 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	string s = GetClientVersionMessage(this);
-
-	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
-
-	if(modifications != "")
-		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
+	WriteString(MSG_ONE, modifications);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1068,29 +1070,14 @@ string getwelcomemessage(entity this)
 		strcpy(cache_mutatormsg, cache_lastmutatormsg);
 	}
 
-	if (cache_mutatormsg != "") {
-		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
-	}
+	WriteString(MSG_ONE, cache_mutatormsg);
 
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
 
-	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
-
-	string motd = autocvar_sv_motd;
-	if (motd != "") {
-		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
-	}
-	return s;
-}
-
-void serverinfo_welcomemessage_send(entity this)
-{
-	msg_entity = this;
-	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
-	WriteString(MSG_ONE, autocvar_hostname);
-	WriteString(MSG_ONE, getwelcomemessage(this));
+	WriteString(MSG_ONE, mutator_msg); // trust that the mutator will do proper formatting
+	WriteString(MSG_ONE, strreplace("\\n", "\n", autocvar_sv_motd));
 }
 
 /**
@@ -1182,7 +1169,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 	{
 		if (!autocvar_g_campaign)
-			serverinfo_welcomemessage_send(this);
+			SendWelcomemessage(this, false);
 		sv_notice_join(this);
 	}
 
@@ -2063,7 +2050,7 @@ void PrintWelcomeMessage(entity this)
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
+				SendWelcomemessage(this, true);
 			}
 		}
 	}

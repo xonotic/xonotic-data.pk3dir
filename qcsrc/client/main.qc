@@ -1288,9 +1288,27 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 
 NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
+	bool force_centerprint = ReadByte();
 	string hostname = ReadString();
-	string msg = ReadString();
-	if (!isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
+	string ver = ReadString();
+	string gamemode_name = ReadString();
+	string modifications = ReadString();
+	string cache_mutatormsg = ReadString();
+	string mutator_msg = ReadString();
+	string motd = ReadString();
+
+	string msg = "";
+	msg = strcat(msg, ver);
+	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", gamemode_name, "^8\n");
+	if(modifications != "")
+		msg = strcat(msg, "^8\n", _("active modifications:"), " ^3", modifications, "^8\n");
+	if (cache_mutatormsg != "")
+		msg = strcat(msg, "\n\n^8", _("special gameplay tips:"), " ^7", cache_mutatormsg);
+	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
+	if (motd != "")
+		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+
+	if (!force_centerprint && !isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
 	{
 		string welcomedialog_args;
 		welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
