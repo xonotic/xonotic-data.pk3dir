@@ -1040,7 +1040,6 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 	WriteByte(MSG_ONE, force_centerprint);
 	WriteString(MSG_ONE, autocvar_hostname);
 	WriteString(MSG_ONE, GetClientVersionMessage(this));
-	WriteString(MSG_ONE, gamemode_name);
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
@@ -1078,6 +1077,17 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 
 	WriteString(MSG_ONE, mutator_msg); // trust that the mutator will do proper formatting
 	WriteString(MSG_ONE, strreplace("\\n", "\n", autocvar_sv_motd));
+}
+
+void SendWelcomemessage_onConnection_think(entity this)
+{
+	SendWelcomemessage(this, false);
+}
+
+void SendWelcomemessage_onConnection(entity this)
+{
+	// give the client time to sent its version
+	defer(this, 0.5, SendWelcomemessage_onConnection_think);
 }
 
 /**
@@ -1169,7 +1179,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 	{
 		if (!autocvar_g_campaign)
-			SendWelcomemessage(this, false);
+			SendWelcomemessage_onConnection(this);
 		sv_notice_join(this);
 	}
 

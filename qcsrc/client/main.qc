@@ -1291,7 +1291,6 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 	bool force_centerprint = ReadByte();
 	string hostname = ReadString();
 	string ver = ReadString();
-	string gamemode_name = ReadString();
 	string modifications = ReadString();
 	string cache_mutatormsg = ReadString();
 	string mutator_msg = ReadString();
@@ -1299,7 +1298,7 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 
 	string msg = "";
 	msg = strcat(msg, ver);
-	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", gamemode_name, "^8\n");
+	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", MapInfo_Type_ToText(gametype), "^8\n");
 	if(modifications != "")
 		msg = strcat(msg, "^8\n", _("active modifications:"), " ^3", modifications, "^8\n");
 	if (cache_mutatormsg != "")
