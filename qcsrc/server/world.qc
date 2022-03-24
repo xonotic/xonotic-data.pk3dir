@@ -1937,7 +1937,10 @@ void readplayerstartcvars()
 				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
 			}
 		}
-		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
+		if (g_weaponarena_list != "") // remove trailing " & "
+			g_weaponarena_list = substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3);
+		else // no valid weapon found
+			g_weaponarena_list = "No Weapons";
 	}
 
 	if (g_weaponarena)
@@ -1945,6 +1948,7 @@ void readplayerstartcvars()
 		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena_weapons;
 		start_items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+		g_weaponarena_list = strzone(g_weaponarena_list);
 	}
 	else
 	{
