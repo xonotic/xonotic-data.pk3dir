@@ -16,6 +16,11 @@ before_script:
   - make -C gmqcc || exit 1
   - export QCC="$PWD/gmqcc/gmqcc"
 
+  # Makefile: don't complain about lack of tags (fetching them is slow)
+  - export QCCFLAGS_WATERMARK=gitlab_pipeline
+  # Makefile: don't compress anything or complain about lack of zip program
+  - export ZIP=/bin/true
+
 test_compilation_units:
   rules:
     - changes:
