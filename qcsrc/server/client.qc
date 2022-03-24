@@ -1018,28 +1018,15 @@ void ClientPreConnect(entity this)
 }
 #endif
 
-string GetClientVersionMessage(entity this)
-{
-	if (CS(this).version_mismatch) {
-		if(CS(this).version < autocvar_gameversion) {
-			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
-				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
-		} else {
-			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
-				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
-		}
-	} else {
-		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
-	}
-}
-
 void SendWelcomemessage(entity this, bool force_centerprint)
 {
 	msg_entity = this;
 	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
 	WriteByte(MSG_ONE, force_centerprint);
 	WriteString(MSG_ONE, autocvar_hostname);
-	WriteString(MSG_ONE, GetClientVersionMessage(this));
+	WriteString(MSG_ONE, autocvar_g_xonoticversion);
+	WriteByte(MSG_ONE, CS(this).version_mismatch);
+	WriteByte(MSG_ONE, (CS(this).version < autocvar_gameversion));
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);

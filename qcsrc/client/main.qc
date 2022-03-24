@@ -1314,11 +1314,34 @@ string translate_weaponarena(string s)
 	return sprintf(_("%s Arena"), wpn_list);
 }
 
+string GetVersionMessage(string hostversion, bool version_mismatch, bool version_check)
+{
+	string xonotic_hostversion = strcat("Xonotic ", hostversion);
+	if (version_mismatch)
+	{
+		if(!version_check)
+			return strcat(sprintf(_("This is %s"), xonotic_hostversion), "\n^3",
+				_("Your client version is outdated."), "\n\n\n",
+				_("### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"), "\n\n\n",
+				_("Please update!"));
+		else
+			return strcat(sprintf(_("This is %s"), xonotic_hostversion), "\n^3",
+				_("This server is using an outdated Xonotic version."), "\n\n\n",
+				_("### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"));
+	}
+	return sprintf(_("Welcome to %s"), xonotic_hostversion);
+}
+
 NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
 	bool force_centerprint = ReadByte();
 	string hostname = ReadString();
-	string ver = ReadString();
+
+	string hostversion = ReadString();
+	bool version_mismatch = ReadByte();
+	bool version_check = ReadByte();
+	string ver = GetVersionMessage(hostversion, version_mismatch, version_check);
+
 	string modifications = translate_modifications(ReadString());
 	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
