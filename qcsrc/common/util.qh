@@ -44,6 +44,8 @@ void wordwrap_cb(string s, float l, void(string) callback);
 #ifndef SVQC
 string draw_currentSkin;
 string draw_UseSkinFor(string pic);
+
+string build_mutator_list(string s);
 #endif
 
 // iterative depth-first search, with fields that go "up", "down left" and "right" in a tree

@@ -210,6 +210,48 @@ string draw_UseSkinFor(string pic)
 	else
 		return strcat(draw_currentSkin, "/", pic);
 }
+
+// if s == "" (MENUQC) builds the mutator list for the Mutators dialog based on local cvar values
+// otherwise (CSQC) translates the mutator list (s) that client has received from server
+// NOTE: this function merges MENUQC and CSQC code in order to avoid duplicating and separating strings
+string build_mutator_list(string s)
+{
+	int i = -1, n = 0; // allow only 1 iteration in the following for loop if (s == "")
+	if (s != "")
+	{
+		i = 0;
+		n = tokenizebyseparator(s, ", ");
+	}
+	string s2 = "";
+	for (string arg = ""; i < n; i++)
+	{
+		if (i >= 0) arg = argv(i);
+		if(arg == "Dodging"					|| (!n && cvar("g_dodging")))					s2 = cons_mid(s2, ", ", _("Dodging"));
+		if(arg == "InstaGib"				|| (!n && cvar("g_instagib")))					s2 = cons_mid(s2, ", ", _("InstaGib"));
+		if(arg == "New Toys"				|| (!n && cvar("g_new_toys")))					s2 = cons_mid(s2, ", ", _("New Toys"));
+		if(arg == "NIX"						|| (!n && cvar("g_nix")))						s2 = cons_mid(s2, ", ", _("NIX"));
+		if(arg == "Rocket Flying"			|| (!n && cvar("g_rocket_flying")))				s2 = cons_mid(s2, ", ", _("Rocket Flying"));
+		if(arg == "Invincible Projectiles"	|| (!n && cvar("g_invincible_projectiles")))	s2 = cons_mid(s2, ", ", _("Invincible Projectiles"));
+		if(arg == "Low gravity"				|| (!n && cvar("sv_gravity") < stof(cvar_defstring("sv_gravity"))))	s2 = cons_mid(s2, ", ", _("Low gravity"));
+		if(arg == "Cloaked"					|| (!n && cvar("g_cloaked")))					s2 = cons_mid(s2, ", ", _("Cloaked"));
+		if(arg == "Hook"					|| (!n && cvar("g_grappling_hook")))			s2 = cons_mid(s2, ", ", _("Hook"));
+		if(arg == "Midair"					|| (!n && cvar("g_midair")))					s2 = cons_mid(s2, ", ", _("Midair"));
+		if(arg == "Melee only"				|| (!n && cvar("g_melee_only")))				s2 = cons_mid(s2, ", ", _("Melee only"));
+		if(arg == "Vampire"					|| (!n && cvar("g_vampire")))					s2 = cons_mid(s2, ", ", _("Vampire"));
+		if(arg == "Piñata"					|| (!n && cvar("g_pinata")))					s2 = cons_mid(s2, ", ", _("Piñata"));
+		if(arg == "Weapons stay"			|| (!n && cvar("g_weapon_stay")))				s2 = cons_mid(s2, ", ", _("Weapons stay"));
+		if(arg == "Blood loss"				|| (!n && cvar("g_bloodloss") > 0))				s2 = cons_mid(s2, ", ", _("Blood loss"));
+		if(arg == "Jetpack"					|| (!n && cvar("g_jetpack")))					s2 = cons_mid(s2, ", ", _("Jetpack"));
+		if(arg == "Buffs"					|| (!n && cvar("g_buffs") > 0))					s2 = cons_mid(s2, ", ", _("Buffs"));
+		if(arg == "Overkill"				|| (!n && cvar("g_overkill")))					s2 = cons_mid(s2, ", ", _("Overkill"));
+		if(arg == "No powerups"				|| (!n && cvar("g_powerups") == 0))				s2 = cons_mid(s2, ", ", _("No powerups"));
+		if(arg == "Powerups"				|| (!n && cvar("g_powerups") > 0))				s2 = cons_mid(s2, ", ", _("Powerups"));
+		if(arg == "Touch explode"			|| (!n && cvar("g_touchexplode") > 0))			s2 = cons_mid(s2, ", ", _("Touch explode"));
+		if(arg == "Wall jumping"			|| (!n && cvar("g_walljump")))					s2 = cons_mid(s2, ", ", _("Wall jumping"));
+		if(arg == "No start weapons"		|| (!n && cvar_string("g_weaponarena") == "0" && cvar("g_balance_blaster_weaponstartoverride") == 0))	s2 = cons_mid(s2, ", ", _("No start weapons"));
+	}
+	return s2;
+}
 #endif
 
 void wordwrap_cb(string s, float l, void(string) callback)

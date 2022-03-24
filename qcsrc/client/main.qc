@@ -1286,12 +1286,41 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
+string translate_modifications(string s)
+{
+	return build_mutator_list(s);
+}
+
+string translate_weaponarena(string s)
+{
+	if (s == "") return s;
+	if (s == "All Weapons Arena") return _("All Weapons Arena");
+	if (s == "Dev All Weapons Arena") return _("Dev All Weapons Arena");
+	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
+	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
+	if (s == "Dev All Available Weapons Arena") return _("Dev All Available Weapons Arena");
+	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
+	if (s == "No Weapons Arena") return _("No Weapons Arena");
+
+	int n = tokenizebyseparator(s, " & ");
+	string wpn_list = "";
+	for (int i = 0; i < n; i++)
+	{
+		Weapon wep = Weapon_from_name(argv(i));
+		if (wep == WEP_Null)
+			LOG_INFO("^3Warning: ^7server sent an invalid weapon name\n");
+		wpn_list = cons_mid(wpn_list, " & ", wep.m_name);
+	}
+	return sprintf(_("%s Arena"), wpn_list);
+}
+
 NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
 	bool force_centerprint = ReadByte();
 	string hostname = ReadString();
 	string ver = ReadString();
-	string modifications = ReadString();
+	string modifications = translate_modifications(ReadString());
+	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
 	string mutator_msg = ReadString();
 	string motd = ReadString();
@@ -1299,6 +1328,7 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 	string msg = "";
 	msg = strcat(msg, ver);
 	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", MapInfo_Type_ToText(gametype), "^8\n");
+	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
 		msg = strcat(msg, "^8\n", _("active modifications:"), " ^3", modifications, "^8\n");
 	if (cache_mutatormsg != "")
