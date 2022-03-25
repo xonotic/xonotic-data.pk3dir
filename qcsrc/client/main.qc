@@ -1295,10 +1295,10 @@ string translate_weaponarena(string s)
 {
 	if (s == "") return s;
 	if (s == "All Weapons Arena") return _("All Weapons Arena");
-	if (s == "Dev All Weapons Arena") return _("Dev All Weapons Arena");
+	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
 	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
 	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
-	if (s == "Dev All Available Weapons Arena") return _("Dev All Available Weapons Arena");
+	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
 	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
 	if (s == "No Weapons Arena") return _("No Weapons Arena");
 
