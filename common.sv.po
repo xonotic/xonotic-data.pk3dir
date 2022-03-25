@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Gustaf Alhäll, 2022
 # Hanicef <gustaf@hanicef.me>, 2021
 msgid ""
 msgstr ""
@@ -10,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hanicef <gustaf@hanicef.me>, 2021\n"
+"Last-Translator: Gustaf Alhäll, 2022\n"
 "Language-Team: Swedish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -1063,7 +1064,7 @@ msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "Uppvärmning"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1075,12 +1076,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "Övertid"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Övertid #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1655,7 +1656,7 @@ msgstr "Du vann!"
 #: qcsrc/common/minigames/minigame/pp.qc:468
 #: qcsrc/common/minigames/minigame/ttt.qc:351
 msgid "Wait for your opponent to make their move"
-msgstr "Väntar på din motståndare att göra sin flytt"
+msgstr "Vänta på din motståndare att göra sin flytt"
 
 #: qcsrc/common/minigames/minigame/c4.qc:397
 #: qcsrc/common/minigames/minigame/nmm.qc:617
@@ -3815,7 +3816,7 @@ msgstr "^K1Du orättvist eliminerade dig själv!"
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
 msgid "^K1You were %s"
-msgstr "^K1Du var %s"
+msgstr "^K1Du blev %s"
 
 #: qcsrc/common/notifications/all.inc:620
 msgid "^K1You couldn't catch your breath!"
@@ -3899,7 +3900,7 @@ msgstr "^K1Du blev ett stjärnskott!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You melted away in slime!"
-msgstr "^K1Du smält ner i slem!"
+msgstr "^K1Du smälte bort i slem!"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1You committed suicide!"
@@ -4000,7 +4001,7 @@ msgstr "^K1Du blev bedragen av lagkamraten ^BG%s"
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr "^K1Du var lagdödad av ^BG%s"
+msgstr "^K1Du blev lagdödad av ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -5044,7 +5045,7 @@ msgstr "MHJULNER"
 #: qcsrc/common/util.qc:1475
 #, c-format
 msgid "JOY%d"
-msgstr "JOY%d"
+msgstr "SPAK%d"
 
 #: qcsrc/common/util.qc:1478
 #, c-format
@@ -5169,7 +5170,7 @@ msgstr "HÖGER_THUMB_HÖGER"
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
 #, c-format
 msgid "JOY_%s"
-msgstr "JOY_%s"
+msgstr "SPAK_%s"
 
 #: qcsrc/common/util.qc:1514
 #, c-format
@@ -5506,22 +5507,22 @@ msgstr "%d sekunder"
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%d:a"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%d:a"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%d:e"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d:e"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
@@ -6396,7 +6397,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
-msgstr ""
+msgstr "Växlad"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -6979,7 +6980,7 @@ msgstr "Blodförlust"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:175
 msgid "Buffs"
-msgstr ""
+msgstr "Buffar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Overkill"
@@ -7312,7 +7313,7 @@ msgstr "statistik påslagen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
@@ -7322,7 +7323,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Serverinfo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7375,7 +7376,7 @@ msgstr "Nyckel:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "Statistik:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -7657,7 +7658,7 @@ msgstr "Sätt kraft:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:76
 msgid "Claim *"
-msgstr ""
+msgstr "Ta förfodran över *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
 msgid "* object info"
@@ -7665,7 +7666,7 @@ msgstr "* objektinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "* mesh info"
-msgstr ""
+msgstr "* nätinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:80
 msgid "* attachment info"
@@ -9426,7 +9427,7 @@ msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate"
 msgstr ""
-"Slå på vertikal synkronisering för att undvika rivning, kommet att låsa din "
+"Slå på vertikal synkronisering för att undvika rivning, kommer att låsa din "
 "fps till skärmens uppdateringsfrekvens"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
@@ -9596,7 +9597,7 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
-"Omgivet belysning, om satt för högt så brukar den göra att ljus på kartor "
+"Omgiven belysning, om satt för högt så brukar den göra att ljus på kartor "
 "ser tråkiga och platta ut"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
@@ -9633,7 +9634,7 @@ msgstr "Trippiga kanter (påskegg)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:145
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "Omedelbar action! (slumpmässig bana med bottar)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:152
 msgid "???"
@@ -9714,11 +9715,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
 msgid "Accept"
-msgstr ""
+msgstr "Acceptera"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Acceptera inte (avsluta spelet)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -9767,7 +9768,7 @@ msgstr "ducka / sjunk"
 
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "off-hand hook"
-msgstr ""
+msgstr "av-handskrok"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
@@ -9823,7 +9824,7 @@ msgstr "maximera radar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "3rd person view"
-msgstr "tredje-personsvy"
+msgstr "Tredje-personsvy"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "enter spectator mode"
@@ -9871,7 +9872,7 @@ msgstr "avsluta"
 
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "auto-join team"
-msgstr ""
+msgstr "gå med lag automatiskt"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"

@@ -6,7 +6,7 @@
 # 8fb942b4466cdbffede843a6379dce7e_4dc4284 <cbc8558ff26f685f62baa2a2eaee30b3_1013263>, 2021
 # Antoni Das <Antonidas159@gmail.com>, 2017
 # LegendGuard, 2020
-# LegendGuard, 2020-2021
+# LegendGuard, 2020-2022
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
 # RYU N. <ryusho2523@yahoo.co.jp>, 2021
 # z 411 <winrar.hurr@gmail.com>, 2021
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -1062,24 +1062,24 @@ msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "ウォームアップ"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "タイムアウト"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "突然死"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "残業"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "残業 #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -4244,16 +4244,16 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
-"^F2残業中!\n"
-"勝者が出るまで削除を立て続けて!"
+"^F4残業中^F2!\n"
+"^F2勝者が出るまで削除を立て続けて!"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
-"^F2残業中!\n"
-"勝者が出るまで得点を立て続けて!"
+"^F4残業中^F2!\n"
+"^F2勝者が出るまで得点を立て続けて!"
 
 #: qcsrc/common/notifications/all.inc:733
 msgid ""
@@ -6372,11 +6372,11 @@ msgstr "経過時間を表示する:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr ""
+msgstr "二次タイマー:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
-msgstr ""
+msgstr "交換された"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -7207,7 +7207,7 @@ msgstr "参加!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "利用規約は指定されていません"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1052
@@ -7270,7 +7270,7 @@ msgstr "設定を変更するには `crypto_aeslevel` cvarを使用します"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
-msgstr ""
+msgstr "カスタムサーバー状態"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
@@ -7284,17 +7284,17 @@ msgstr "有効な状態"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "利用規約"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "サーバー情報"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7347,7 +7347,7 @@ msgstr "キー:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "状態:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -9674,19 +9674,19 @@ msgstr "チームの選択"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
-msgstr ""
+msgstr "利用規約を更新されました。続行する前にそれらをお読みください:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "XONOTICへようこそ! 利用規約をお読みください:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
 msgid "Accept"
-msgstr ""
+msgstr "同意する"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "同意しない（ゲームを終了する）"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
