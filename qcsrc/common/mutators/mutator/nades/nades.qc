@@ -120,8 +120,9 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
 {
+	string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
 	M_ARGV(0, string) = strcat(M_ARGV(0, string),
-		"\n\n", _("^3nades^8 are enabled, press 'g' (dropweapon) to use them"), "\n");
+		"\n\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
 }
 
 bool Projectile_isnade(int p)
