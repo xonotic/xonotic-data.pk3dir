@@ -1053,11 +1053,6 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 
 	WriteString(MSG_ONE, cache_mutatormsg);
 
-	string mutator_msg = "";
-	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
-	mutator_msg = M_ARGV(0, string);
-
-	WriteString(MSG_ONE, mutator_msg); // trust that the mutator will do proper formatting
 	WriteString(MSG_ONE, strreplace("\\n", "\n", autocvar_sv_motd));
 }
 

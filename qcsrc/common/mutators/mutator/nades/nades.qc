@@ -117,6 +117,13 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	else
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 }
+
+MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
+{
+	M_ARGV(0, string) = strcat(M_ARGV(0, string),
+		"\n\n", _("^3nades^8 are enabled, press 'g' (dropweapon) to use them"), "\n");
+}
+
 bool Projectile_isnade(int p)
 {
 	return Nade_FromProjectile(p) != NADE_TYPE_Null;
@@ -1567,11 +1574,6 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
-}
-
-MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
-{
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' (dropweapon) to use them\n");
 }
 
 #endif

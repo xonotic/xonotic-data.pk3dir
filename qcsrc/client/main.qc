@@ -1345,18 +1345,23 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 	string modifications = translate_modifications(ReadString());
 	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
-	string mutator_msg = ReadString();
 	string motd = ReadString();
 
 	string msg = "";
 	msg = strcat(msg, ver);
 	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", MapInfo_Type_ToText(gametype), "^8\n");
+
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
 		msg = strcat(msg, "^8\n", _("active modifications:"), " ^3", modifications, "^8\n");
+
 	if (cache_mutatormsg != "")
 		msg = strcat(msg, "\n\n^8", _("special gameplay tips:"), " ^7", cache_mutatormsg);
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = M_ARGV(0, string);
 	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
+
 	if (motd != "")
 		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
 
