@@ -3,14 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Gustaf Alhäll, 2022
+# Gustaf Alhäll, 2022
 # Hanicef <gustaf@hanicef.me>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
-"PO-Revision-Date: 2022-03-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2013-09-12 16:53+0000\n"
+"Last-Translator: Hanicef <gustaf@hanicef.me>, 2021\n"
 "Language-Team: Swedish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -488,12 +490,12 @@ msgstr "Åskåda spelare"
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dV)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dV)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:80
 msgid "Start line"
@@ -1063,24 +1065,24 @@ msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "Uppvärmning"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "Timeout"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "Plötslig Död"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "Övertid"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Övertid #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1655,7 +1657,7 @@ msgstr "Du vann!"
 #: qcsrc/common/minigames/minigame/pp.qc:468
 #: qcsrc/common/minigames/minigame/ttt.qc:351
 msgid "Wait for your opponent to make their move"
-msgstr "Väntar på din motståndare att göra sin flytt"
+msgstr "Vänta på din motståndare att göra sin flytt"
 
 #: qcsrc/common/minigames/minigame/c4.qc:397
 #: qcsrc/common/minigames/minigame/nmm.qc:617
@@ -3815,7 +3817,7 @@ msgstr "^K1Du orättvist eliminerade dig själv!"
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
 msgid "^K1You were %s"
-msgstr "^K1Du var %s"
+msgstr "^K1Du blev %s"
 
 #: qcsrc/common/notifications/all.inc:620
 msgid "^K1You couldn't catch your breath!"
@@ -3899,7 +3901,7 @@ msgstr "^K1Du blev ett stjärnskott!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You melted away in slime!"
-msgstr "^K1Du smält ner i slem!"
+msgstr "^K1Du smälte bort i slem!"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1You committed suicide!"
@@ -4000,7 +4002,7 @@ msgstr "^K1Du blev bedragen av lagkamraten ^BG%s"
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr "^K1Du var lagdödad av ^BG%s"
+msgstr "^K1Du blev lagdödad av ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid ""
@@ -5007,7 +5009,7 @@ msgstr "SNEDSTRECK"
 #: qcsrc/common/util.qc:1457
 #, c-format
 msgid "MULTIPLY"
-msgstr "MULTIPLICERA"
+msgstr "GÅNGER"
 
 #: qcsrc/common/util.qc:1458
 #, c-format
@@ -5044,12 +5046,12 @@ msgstr "MHJULNER"
 #: qcsrc/common/util.qc:1475
 #, c-format
 msgid "JOY%d"
-msgstr "JOY%d"
+msgstr "SPAK%d"
 
 #: qcsrc/common/util.qc:1478
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1485
 #, c-format
@@ -5169,7 +5171,7 @@ msgstr "HÖGER_THUMB_HÖGER"
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
 #, c-format
 msgid "JOY_%s"
-msgstr "JOY_%s"
+msgstr "SPAK_%s"
 
 #: qcsrc/common/util.qc:1514
 #, c-format
@@ -5194,7 +5196,7 @@ msgstr "HÖGER"
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDINOT%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 #, c-format
@@ -5506,22 +5508,22 @@ msgstr "%d sekunder"
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%d:a"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%d:a"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%d:e"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d:e"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
@@ -5608,7 +5610,7 @@ msgstr "Spelmotor"
 
 #: qcsrc/menu/xonotic/credits.qc:121
 msgid "Engine Additions"
-msgstr "Motoradditioner"
+msgstr "Motortillägg"
 
 #: qcsrc/menu/xonotic/credits.qc:127
 msgid "Compiler"
@@ -5777,7 +5779,7 @@ msgstr "Tack till"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
-msgstr ""
+msgstr "Xonotic tack till"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
@@ -6317,7 +6319,7 @@ msgstr "ingen stil"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "progress bar"
-msgstr "framstegsbar"
+msgstr "förloppsindikator"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
@@ -6368,7 +6370,7 @@ msgstr "Växelindikatorer:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Direction caps:"
-msgstr ""
+msgstr "Riktningskanter:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Active:"
@@ -6392,11 +6394,11 @@ msgstr "Visa förfluten tid"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr ""
+msgstr "Sekundär tidtagare:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
-msgstr ""
+msgstr "Växlad"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -6979,7 +6981,7 @@ msgstr "Blodförlust"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:175
 msgid "Buffs"
-msgstr ""
+msgstr "Buffar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Overkill"
@@ -7031,6 +7033,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Slå på buffupplock (slumpmässiga bonusar som Läkare, Osynlighet, osv.) på "
+"kartor som stödjer det"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -7235,7 +7239,7 @@ msgstr "Anslut!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Inga villkor för tjänsten specifierade"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1052
@@ -7298,7 +7302,7 @@ msgstr "Använd `crypto_aeslevel` cvaren för att ändra dina preferenser"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
-msgstr ""
+msgstr "egen statistikserver"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
@@ -7312,17 +7316,17 @@ msgstr "statistik påslagen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Villkor för Tjänst"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Serverinfo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7375,7 +7379,7 @@ msgstr "Nyckel:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "Statistik:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -7657,7 +7661,7 @@ msgstr "Sätt kraft:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:76
 msgid "Claim *"
-msgstr ""
+msgstr "Ta förfodran över *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
 msgid "* object info"
@@ -7665,11 +7669,11 @@ msgstr "* objektinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "* mesh info"
-msgstr ""
+msgstr "* nätinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:80
 msgid "* attachment info"
-msgstr ""
+msgstr "* fästningsinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
@@ -7762,7 +7766,7 @@ msgstr "Vapen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:100
 msgid "New style sound attenuation"
-msgstr ""
+msgstr "Ny ljuddämpningsstil"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:103
 msgid "Mute sounds when not active"
@@ -9426,7 +9430,7 @@ msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate"
 msgstr ""
-"Slå på vertikal synkronisering för att undvika rivning, kommet att låsa din "
+"Slå på vertikal synkronisering för att undvika rivning, kommer att låsa din "
 "fps till skärmens uppdateringsfrekvens"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
@@ -9497,7 +9501,7 @@ msgid ""
 "normal rendering starts"
 msgstr ""
 "Eliminera överritning genom att rita en bara-djup-version av scenen innan "
-"normala rendering börjar"
+"den normala renderingen börjar"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
@@ -9513,7 +9517,7 @@ msgstr "Allt"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:107
 msgid "Vertex Buffer Objects (VBOs)"
-msgstr ""
+msgstr "Vertex Buffer Objects (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:110
 msgid "VBO^Off"
@@ -9530,6 +9534,8 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
+"Ta användning av Vertex Buffer Objects för att lagra statisk geometri i "
+"bildminne för snabbare rendering"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:115
 msgid "Vertices"
@@ -9596,7 +9602,7 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
-"Omgivet belysning, om satt för högt så brukar den göra att ljus på kartor "
+"Omgiven belysning, om satt för högt så brukar den göra att ljus på kartor "
 "ser tråkiga och platta ut"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
@@ -9633,7 +9639,7 @@ msgstr "Trippiga kanter (påskegg)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:145
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "Omedelbar action! (slumpmässig bana med bottar)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:152
 msgid "???"
@@ -9665,7 +9671,7 @@ msgstr "Enspelarläge"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr ""
+msgstr "Spela enspelarkampanj eller matcher med omedelbar action mot bottar"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9707,18 +9713,21 @@ msgstr "Lagval"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
+"Villkoren för tjänsten har blivit uppdaterats. Vänligen läs den innan du "
+"fortsätter:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
 msgstr ""
+"Välkommen till Xonotic! Vänligen läs de följande villkoren för tjänsten:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
 msgid "Accept"
-msgstr ""
+msgstr "Acceptera"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Acceptera inte (avsluta spelet)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -9767,7 +9776,7 @@ msgstr "ducka / sjunk"
 
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "off-hand hook"
-msgstr ""
+msgstr "av-handskrok"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
@@ -9823,7 +9832,7 @@ msgstr "maximera radar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "3rd person view"
-msgstr "tredje-personsvy"
+msgstr "Tredje-personsvy"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "enter spectator mode"
@@ -9871,7 +9880,7 @@ msgstr "avsluta"
 
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "auto-join team"
-msgstr ""
+msgstr "gå med lag automatiskt"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"

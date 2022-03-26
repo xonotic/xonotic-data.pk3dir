@@ -14,7 +14,7 @@
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
 # LegendGuard, 2020
-# LegendGuard, 2020-2021
+# LegendGuard, 2020-2022
 # LegendGuard, 2020
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
@@ -32,8 +32,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-06 07:22+0100\n"
-"PO-Revision-Date: 2022-03-06 06:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2013-09-12 16:53+0000\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1088,24 +1088,24 @@ msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "Calentamiento"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "Tiempo muerto"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "Muerte súbita"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "Tiempo extra"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Tiempo extra #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -4455,11 +4455,11 @@ msgstr "^K1Suicidio en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4Tiempo fuera comienza en ^COUNT"
+msgstr "^F4Tiempo muerto comienza en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:768
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Tiempo fuera se acaba en ^COUNT"
+msgstr "^F4Tiempo muerto en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:770
 msgid "^K1Cannot join given minigame session!"
@@ -6458,11 +6458,11 @@ msgstr "Mostrar el tiempo transcurrido"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr ""
+msgstr "Reloj secundario:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
-msgstr ""
+msgstr "Intercambiado"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -7305,7 +7305,7 @@ msgstr "¡Unirse!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "No se han especificado los Términos del Servicio"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1052
@@ -7368,7 +7368,7 @@ msgstr "Usa la cvar `crypto_aeslevel` para cambiar tus preferencias"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
-msgstr ""
+msgstr "estadísticas personalizadas del servidor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
@@ -7382,17 +7382,17 @@ msgstr "estadísticas habilitadas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Términos del Servicio"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Información del servidor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7445,7 +7445,7 @@ msgstr "Llave:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "Estadísticas:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -9801,18 +9801,20 @@ msgstr "Selección de equipo"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
+"Los Términos del Servicio han sido actualizados. Por favor, lea antes de "
+"continuar:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "¡Bienvenido a Xonotic! Por favor, lea los Términos del Servicio:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
 msgid "Accept"
-msgstr ""
+msgstr "Acepto"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "No acepto (salir del juego)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"

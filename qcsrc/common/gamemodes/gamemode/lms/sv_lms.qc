@@ -7,6 +7,7 @@
 #include <server/items/items.qh>
 
 int autocvar_g_lms_extra_lives;
+float autocvar_g_lms_forfeit_min_match_time;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_items;
@@ -43,10 +44,16 @@ int WinningCondition_LMS()
 
 	entity first_player = NULL;
 	int totalplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER, {
-		if (!totalplayers)
-			first_player = it;
-		++totalplayers;
+	int totalplayed = 0;
+	FOREACH_CLIENT(true, {
+		if (IS_PLAYER(it) && it.frags == FRAGS_PLAYER)
+		{
+			if (!totalplayers)
+				first_player = it;
+			++totalplayers;
+		}
+		else if (GameRules_scoring_add(it, LMS_RANK, 0))
+			++totalplayed;
 	});
 
 	if (totalplayers)
@@ -74,6 +81,11 @@ int WinningCondition_LMS()
 
 			if (LMS_NewPlayerLives())
 			{
+				if (totalplayed && game_starttime > 0 && time > game_starttime + autocvar_g_lms_forfeit_min_match_time) // give players time to join
+				{
+					GameRules_scoring_add(first_player, LMS_RANK, 1);
+					return WINNING_YES;
+				}
 				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
 				return WINNING_NO;
 			}
@@ -91,6 +103,11 @@ int WinningCondition_LMS()
 		// nobody is playing at all...
 		if (LMS_NewPlayerLives())
 		{
+			if (totalplayed && game_starttime > 0 && time > game_starttime + autocvar_g_lms_forfeit_min_match_time) // give players time to join
+			{
+				ClearWinners();
+				return WINNING_YES;
+			}
 			// wait for players...
 		}
 		else
@@ -502,7 +519,8 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		{
 			player.lms_spectate_warning = 1;
-			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+			sprint(player, "^1WARNING:^7 you can't rejoin this match after spectating. Use the same command again to spectate anyway.\n");
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_LMS_SPECWARN);
 		}
 		return MUT_SPECCMD_RETURN;
 	}
