@@ -95,8 +95,6 @@ void GameCommand(string theCommand)
 		}
 		else if (argc == 2 && !isdemo())     // don't allow this command in demos
 		{
-			if (argv(1) == "Welcome" && cvar("g_campaign"))
-				return;
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
 		}

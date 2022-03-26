@@ -1037,6 +1037,14 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 {
 	msg_entity = this;
 	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
+	WriteByte(MSG_ONE, boolean(autocvar_g_campaign));
+	if (boolean(autocvar_g_campaign))
+	{
+		WriteString(MSG_ONE, Campaign_GetTitle());
+		WriteByte(MSG_ONE, Campaign_GetLevelNum());
+		WriteString(MSG_ONE, Campaign_GetMessage());
+		return;
+	}
 	WriteByte(MSG_ONE, force_centerprint);
 	WriteString(MSG_ONE, autocvar_hostname);
 	WriteString(MSG_ONE, GetClientVersionMessage(this));
@@ -2057,7 +2065,7 @@ void PrintWelcomeMessage(entity this)
 		if (autocvar_g_campaign) {
 			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_CAMPAIGN_MESSAGE, Campaign_GetMessage(), Campaign_GetLevelNum());
+				SendWelcomemessage(this, false);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
@@ -2073,7 +2081,7 @@ void PrintWelcomeMessage(entity this)
 				CS(this).motd_actived_time = time;
 			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
 				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this))
@@ -2092,10 +2100,7 @@ void PrintWelcomeMessage(entity this)
 		{
 			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
-			if (autocvar_g_campaign)
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
-			else
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
 		else if (IS_PLAYER(this) || IS_SPEC(this))
 		{

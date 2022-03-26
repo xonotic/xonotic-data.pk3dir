@@ -41,6 +41,11 @@ float Campaign_Invalid()
 	return 0;
 }
 
+string Campaign_GetTitle()
+{
+	return campaign_title;
+}
+
 int Campaign_GetLevelNum()
 {
 	return campaign_level + 1;
@@ -95,7 +100,6 @@ void CampaignPreInit()
 	cvar_settemp("g_dm", "0");
 	cvar_settemp("skill", ftos(baseskill));
 	cvar_settemp("bot_number", ftos(campaign_bots[0]));
-	cvar_settemp("cl_welcome_in_menu_dialog", "0");
 
 	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false));
 

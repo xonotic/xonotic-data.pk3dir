@@ -1288,6 +1288,25 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 
 NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 {
+	bool campaign = ReadByte();
+	if (campaign)
+	{
+		string campaign_title = ReadString();
+		int campaign_level = ReadByte();
+		string campaign_msg = ReadString();
+		string welcomedialog_args;
+		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		string key = getcommandkey(_("jump"), "+jump");
+		string msg = strcat(
+			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
+			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		return true;
+	}
+
 	bool force_centerprint = ReadByte();
 	string hostname = ReadString();
 	string ver = ReadString();
