@@ -4459,7 +4459,7 @@ msgstr "^F4Tiempo muerto comienza en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:768
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Tiempo muerto se acaba en ^COUNT"
+msgstr "^F4Tiempo muerto en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:770
 msgid "^K1Cannot join given minigame session!"
