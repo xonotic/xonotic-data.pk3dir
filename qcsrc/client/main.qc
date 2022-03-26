@@ -1286,7 +1286,7 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
+NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
 {
 	bool campaign = ReadByte();
 	if (campaign)
@@ -1317,7 +1317,7 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 
 	string msg = "";
 	msg = strcat(msg, ver);
-	msg = strcat(msg, "^8\n\n", sprintf(_("Game type: ^1%s"), MapInfo_Type_ToText(gametype)), "^8\n");
+	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
 	if(modifications != "")
 		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
 	if (cache_mutatormsg != "")

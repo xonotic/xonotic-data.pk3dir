@@ -1036,7 +1036,7 @@ string GetClientVersionMessage(entity this)
 void SendWelcomemessage(entity this, bool force_centerprint)
 {
 	msg_entity = this;
-	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
 	WriteByte(MSG_ONE, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
