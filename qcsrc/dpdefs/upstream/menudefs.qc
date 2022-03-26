@@ -18,6 +18,7 @@ void(float keynr, float ascii) m_keydown;
 void(float width, float height) m_draw;
 void(float mode) m_toggle;
 void() m_shutdown;
+void(string name, string oldValue, string newValue) m_cvar_changed;
 // optional: float(float) m_gethostcachecategory;
 
 /////////////////////////////////////////////////////////

@@ -1,13 +1,13 @@
 #include "colorbutton.qh"
 
-entity makeXonoticColorButton(float theGroup, float theColor, float theValue)
+entity makeXonoticColorButton(string theControlledCvar, float theGroup, float theColor, float theValue)
 {
 	entity me;
 	me = NEW(XonoticColorButton);
-	me.configureXonoticColorButton(me, theGroup, theColor, theValue);
+	me.configureXonoticColorButton(me, theControlledCvar, theGroup, theColor, theValue);
 	return me;
 }
-void XonoticColorButton_configureXonoticColorButton(entity me, float theGroup, float theColor, float theValue)
+void XonoticColorButton_configureXonoticColorButton(entity me, string theControlledCvar, float theGroup, float theColor, float theValue)
 {
 	switch(theValue)
 	{
@@ -30,7 +30,7 @@ void XonoticColorButton_configureXonoticColorButton(entity me, float theGroup, f
 			// no change
 			break;
 	}
-	me.controlledCvar = "_cl_color";
+	me.controlledCvar = theControlledCvar;
 	me.cvarValueFloat = theValue;
 	me.cvarPart = theColor;
 	me.loadCvars(me);
@@ -48,9 +48,6 @@ void XonoticColorButton_loadCvars(entity me)
 {
 	if (!me.controlledCvar)
 		return;
-
-	if(cvar_string(me.controlledCvar) == cvar_defstring(me.controlledCvar))
-		cvar_set(me.controlledCvar, ftos(16 * floor(random() * 15) + floor(random() * 15)));
 
 	if(me.cvarPart == 1)
 		me.checked = (cvar(me.controlledCvar) & 240) == me.cvarValueFloat * 16;

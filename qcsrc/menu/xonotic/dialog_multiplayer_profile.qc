@@ -12,19 +12,114 @@
 #include "checkbox.qh"
 #include "radiobutton.qh"
 
+#define MENU_CVAR_NAME "_menu_cl_name"
+#define MENU_CVAR_COLOR "_menu_cl_color"
+#define MENU_CVAR_SKIN "_menu_cl_playerskin"
+#define MENU_CVAR_MODEL "_menu_cl_playermodel"
+
 entity makeXonoticProfileTab()
 {
 	entity me;
 	me = NEW(XonoticProfileTab);
 	me.configureDialog(me);
+
+	string name = cvar_string("_cl_name");
+	string playermodel = cvar_string("_cl_playermodel");
+	string playerskin = cvar_string("_cl_playerskin");
+	string color = cvar_string("_cl_color");
+
+	// if color unset, set random color (init it)
+	if (color == cvar_defstring("_cl_color"))
+	{
+		// idk what meaning of 16, maybe just COLOR_BUTTONS_COUNT+1
+		float randomColor = 16 * floor(random() * COLOR_BUTTONS_COUNT) + floor(random() * COLOR_BUTTONS_COUNT);
+		color = ftos(randomColor);
+		cvar_set("_cl_color", color);
+	}
+
+	// copy field values from game cvars
+	cvar_set(MENU_CVAR_COLOR, color);
+	cvar_set(MENU_CVAR_NAME, name);
+	cvar_set(MENU_CVAR_SKIN, playerskin);
+	cvar_set(MENU_CVAR_MODEL, playermodel);
+
+	// subscribe to cvar changes
+
+	// stable branch cvars
+	cvar_onChangeSubscribe("_cl_name", onCvarChanged, me);
+	cvar_onChangeSubscribe("_cl_color", onCvarChanged, me);
+	cvar_onChangeSubscribe("_cl_playermodel", onCvarChanged, me);
+
+	// master branch cvars
+	cvar_onChangeSubscribe("name", onCvarChanged, me);
+	cvar_onChangeSubscribe("topcolor", onCvarChanged, me);
+	cvar_onChangeSubscribe("bottomcolor", onCvarChanged, me);
+	cvar_onChangeSubscribe("playermodel", onCvarChanged, me);
+
 	return me;
 }
+
+// if values changed from console, update it in menu
+void onCvarChanged(string cvarName, string oldValue, string newValue, entity me)
+{
+	// IMPORTANT: dont change same cvars that was observed to avoid infinite loop
+
+	// nothing to change
+	if (oldValue == newValue)
+	{
+		return;
+	}
+
+	// not update field values when tab in 'edit mode'
+	if (!me.applyButton.disabled)
+	{
+		return;
+	}
+
+	// LOG_INFOF("[onCvarChanged]: %s, %s, %s", cvarName, oldValue, newValue);
+
+	// name
+	if (cvarName == "_cl_name" || cvarName == "name")
+	{
+		cvar_set(MENU_CVAR_NAME, newValue);
+		me.nameInput.loadCvars(me.nameInput);
+	}
+
+	// model
+	else if (cvarName == "_cl_playermodel" || cvarName == "playermodel")
+	{
+		cvar_set(MENU_CVAR_MODEL, newValue);
+		me.playerModelSelector.loadCvars(me.playerModelSelector);
+		me.playerModelSelector.go(me.playerModelSelector, 0);
+	}
+
+	// skin (skin not tested, dont know what cvars it use)
+	// else if (cvarName == "_cl_playerskin" || cvarName == "playerskin")
+	// {
+	// }
+
+	// color
+	else if (cvarName == "_cl_color")
+	{
+		cvar_set(MENU_CVAR_COLOR, newValue);
+		me.updateColor(me);
+	}
+	else if (cvarName == "topcolor" || cvarName == "bottomcolor")
+	{
+		cvar_set(MENU_CVAR_COLOR, cvar_string("_cl_color"));
+		me.updateColor(me);
+	}
+}
+
 void XonoticProfileTab_draw(entity me)
 {
-	if(cvar_string("_cl_name") == "Player")
+	string name = cvar_string("_cl_name");
+
+	if(name == "Player")
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
+
 	SUPER(XonoticProfileTab).draw(me);
 }
 void language_selector_click(entity me, entity btn)
@@ -33,15 +128,16 @@ void language_selector_click(entity me, entity btn)
 }
 void XonoticProfileTab_fill(entity me)
 {
-	entity e, pms, label, box;
+	entity e, label;
 	float i;
-	entity profileApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
+	me.applyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
+		"_cl_color \"$"MENU_CVAR_COLOR"\";"
 		"color -1 -1;" // apply colors contained in _cl_color
-		"name \"$_cl_name\";"
-		"playermodel $_cl_playermodel;"
-		"playerskin $_cl_playerskin;"
+		"name \"$"MENU_CVAR_NAME"\";"
+		"playermodel $"MENU_CVAR_MODEL";"
+		"playerskin $"MENU_CVAR_SKIN";"
 		, COMMANDBUTTON_APPLY);
-	profileApplyButton.disableOnClick = true;
+	me.applyButton.disableOnClick = true;
 
 	// ==============
 	//  NAME SECTION
@@ -58,17 +154,17 @@ void XonoticProfileTab_fill(entity me)
 			label.fontSize = SKINFONTSIZE_TITLE;
 
 	me.gotoRC(me, 2.5, 0);
-		me.TD(me, 1, 3.0, box = makeXonoticInputBox_T(1, "_cl_name",
+		me.TD(me, 1, 3.0, me.nameInput = makeXonoticInputBox_T(1, MENU_CVAR_NAME,
 			_("Name under which you will appear in the game")));
-			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
-			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
-			box.enableClearButton = 0;
-			box.applyButton = profileApplyButton;
-			label.textEntity = box;
+			me.nameInput.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
+			me.nameInput.maxLength = -127; // negative means encoded length in bytes
+			me.nameInput.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
+			me.nameInput.enableClearButton = 0;
+			me.nameInput.applyButton = me.applyButton;
+			label.textEntity = me.nameInput;
 	me.TR(me);
-		me.TD(me, 5, 1, e = makeXonoticColorpicker(box));
-		me.TD(me, 5, 2, e = makeXonoticCharmap(box));
+		me.TD(me, 5, 1, e = makeXonoticColorpicker(me.nameInput));
+		me.TD(me, 5, 2, e = makeXonoticCharmap(me.nameInput));
 
 	// ===============
 	//  MODEL SECTION
@@ -81,37 +177,37 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 		//me.TDempty(me, 0); // MODEL LEFT, COLOR RIGHT
 		me.TDempty(me, 1); // MODEL RIGHT, COLOR LEFT
-		pms = makeXonoticPlayerModelSelector();
+		me.playerModelSelector = makeXonoticPlayerModelSelector(MENU_CVAR_SKIN, MENU_CVAR_MODEL);
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
-			e.onClickEntity = pms;
-			e.applyButton = profileApplyButton;
-		me.TD(me, 11.5, 1.4, pms);
+			e.onClickEntity = me.playerModelSelector;
+			e.applyButton = me.applyButton;
+		me.TD(me, 11.5, 1.4, me.playerModelSelector);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
-			e.onClickEntity = pms;
-			e.applyButton = profileApplyButton;
+			e.onClickEntity = me.playerModelSelector;
+			e.applyButton = me.applyButton;
 
 	//me.setFirstColumn(me, me.currentColumn + 2); // MODEL LEFT, COLOR RIGHT
 	me.gotoRC(me, me.currentRow, 0); me.setFirstColumn(me, me.currentColumn); // MODEL RIGHT, COLOR LEFT
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticHeaderLabel(_("Glowing color")));
-		for(i = 0; i < 15; ++i)
+		for(i = 0; i < COLOR_BUTTONS_COUNT; ++i)
 		{
 			if(mod(i, 5) == 0)
 				me.TR(me);
-			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(1, 0, i), '0 1 0');
-				e.applyButton = profileApplyButton;
+			me.TDNoMargin(me, 1, 0.2, me.colorButtonGroup1[i] = makeXonoticColorButton(MENU_CVAR_COLOR, 1, 0, i), '0 1 0');
+				me.colorButtonGroup1[i].applyButton = me.applyButton;
 		}
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticHeaderLabel(_("Detail color")));
-		for(i = 0; i < 15; ++i)
+		for(i = 0; i < COLOR_BUTTONS_COUNT; ++i)
 		{
 			if(mod(i, 5) == 0)
 				me.TR(me);
-			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
-				e.applyButton = profileApplyButton;
+			me.TDNoMargin(me, 1, 0.2, me.colorButtonGroup2[i] = makeXonoticColorButton(MENU_CVAR_COLOR, 2, 1, i), '0 1 0');
+				me.colorButtonGroup2[i].applyButton = me.applyButton;
 		}
 
 	// ====================
@@ -162,5 +258,14 @@ void XonoticProfileTab_fill(entity me)
 		*/
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, profileApplyButton);
+		me.TD(me, 1, me.columns, me.applyButton);
+}
+
+void XonoticProfileTab_updateColor(entity me)
+{
+	for (int i = 0; i < COLOR_BUTTONS_COUNT; i++)
+	{
+		me.colorButtonGroup1[i].loadCvars(me.colorButtonGroup1[i]);
+		me.colorButtonGroup2[i].loadCvars(me.colorButtonGroup2[i]);
+	}
 }

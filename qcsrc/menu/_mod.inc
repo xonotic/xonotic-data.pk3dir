@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include <menu/cvarcallbackitem.qc>
 #include <menu/draw.qc>
 #include <menu/item.qc>
 #include <menu/matrix.qc>

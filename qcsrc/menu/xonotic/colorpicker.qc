@@ -19,22 +19,28 @@ void XonoticColorpicker_configureXonoticColorpicker(entity me, entity theTextbox
 METHOD(XonoticColorpicker, mousePress, bool(XonoticColorpicker this, vector pos))
 {
 	this.mouseDrag(this, pos);
+
+	if(this.controlledTextbox.applyButton)
+	{
+		this.controlledTextbox.applyButton.disabled = false;
+	}
+
 	return true;
 }
 
 // must match hslimage.c
 vector hslimage_color(vector v, vector margin)
 {
-    v_x = (v.x - margin.x) / (1 - 2 * margin.x);
-    v_y = (v.y - margin.y) / (1 - 2 * margin.y);
-    if(v.x < 0) v_x = 0;
-    if(v.y < 0) v_y = 0;
-    if(v.x > 1) v_x = 1;
-    if(v.y > 1) v_y = 1;
-    if(v.y > 0.875) // grey bar
-        return hsl_to_rgb(eZ * v.x);
-    else
-        return hsl_to_rgb(v.x * 6 * eX + eY + v.y / 0.875 * eZ);
+	v_x = (v.x - margin.x) / (1 - 2 * margin.x);
+	v_y = (v.y - margin.y) / (1 - 2 * margin.y);
+	if(v.x < 0) v_x = 0;
+	if(v.y < 0) v_y = 0;
+	if(v.x > 1) v_x = 1;
+	if(v.y > 1) v_y = 1;
+	if(v.y > 0.875) // grey bar
+		return hsl_to_rgb(eZ * v.x);
+	else
+		return hsl_to_rgb(v.x * 6 * eX + eY + v.y / 0.875 * eZ);
 }
 
 vector color_hslimage(vector v, vector margin)
