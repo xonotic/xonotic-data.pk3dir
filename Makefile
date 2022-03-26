@@ -23,12 +23,12 @@ qc: check-cvars
 .PHONY: skin
 skin: gfx/menu/default/skinvalues.txt
 
+gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc
+	$(PERL) qcsrc/menu/skin-customizables.inc > gfx/menu/default/skinvalues.txt
+
 .PHONY: clean
 clean:
 	$(MAKE) -C qcsrc clean
-
-gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc
-	$(PERL) qcsrc/menu/skin-customizables.inc > gfx/menu/default/skinvalues.txt
 
 .PHONY: sv
 sv:
@@ -37,3 +37,7 @@ sv:
 .PHONY: pk3
 pk3:
 	$(MAKE) -C qcsrc pk3
+
+.PHONY: test
+test:
+	$(MAKE) -C qcsrc test
