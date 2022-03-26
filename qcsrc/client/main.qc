@@ -1298,11 +1298,11 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 
 	string msg = "";
 	msg = strcat(msg, ver);
-	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", MapInfo_Type_ToText(gametype), "^8\n");
+	msg = strcat(msg, "^8\n\n", sprintf(_("Game type: ^1%s"), MapInfo_Type_ToText(gametype)), "^8\n");
 	if(modifications != "")
-		msg = strcat(msg, "^8\n", _("active modifications:"), " ^3", modifications, "^8\n");
+		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
 	if (cache_mutatormsg != "")
-		msg = strcat(msg, "\n\n^8", _("special gameplay tips:"), " ^7", cache_mutatormsg);
+		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
 	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
 	if (motd != "")
 		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
