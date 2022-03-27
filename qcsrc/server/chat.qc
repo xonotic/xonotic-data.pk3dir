@@ -62,7 +62,14 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string namestr = "";
 	if (source)
+	{
 		namestr = playername(source.netname, source.team, (autocvar_g_chat_teamcolors && IS_PLAYER(source)));
+
+		if (IS_DEAD(source) || source.frags == FRAGS_PLAYER_OUT_OF_GAME)
+			namestr = strcat(_("(DEAD)"), " ", namestr);
+		else if (IS_OBSERVER(source) || IS_SPEC(source))
+			namestr = strcat(_("(s)"), " ", namestr);
+	}
 
 	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
