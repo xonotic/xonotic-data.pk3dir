@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-06 07:22+0100\n"
+"POT-Creation-Date: 2022-03-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
@@ -224,270 +224,270 @@ msgstr "^3ALT ^7+ ^3ARROW KEYS ^7で微調整する。"
 msgid "Player %d"
 msgstr "プレイヤー %d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:617
-#: qcsrc/client/hud/panel/quickmenu.qc:619
+#: qcsrc/client/hud/panel/quickmenu.qc:608
+#: qcsrc/client/hud/panel/quickmenu.qc:610
 #, c-format
 msgid "Submenu%d"
 msgstr "サブメニュー%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:624
+#: qcsrc/client/hud/panel/quickmenu.qc:615
 #, c-format
 msgid "Command%d"
 msgstr "コマンド%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:650
+#: qcsrc/client/hud/panel/quickmenu.qc:641
 msgid "Continue..."
 msgstr "続ける..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:807
-#: qcsrc/client/hud/panel/quickmenu.qc:814
+#: qcsrc/client/hud/panel/quickmenu.qc:798
+#: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "Chat"
 msgstr "チャット"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:808
+#: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^Send public message to"
 msgstr "QMCMD^公開メッセージを送信する:"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:809
+#: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^:-) / nice one"
 msgstr "QMCMD^ (^_^) / ナイス"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:809
+#: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^nice one"
 msgstr "QMCMD^ナイス"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:810
+#: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^good game"
 msgstr "よくやった"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:811
+#: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^hi / good luck"
 msgstr "QMCMD^やあ / グッドラック"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:811
+#: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "QMCMD^やあ / グッドラック、楽しんでね"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:813
+#: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^Send in English"
 msgstr "QMCMD^英語で送る"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:818
-#: qcsrc/client/hud/panel/quickmenu.qc:834
+#: qcsrc/client/hud/panel/quickmenu.qc:809
+#: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Team chat"
 msgstr "QMCD^チームチャット"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:819
+#: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^strength soon"
 msgstr "QMCMD^間もなく力"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
+#: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "QMCMD^無料アイテム %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
+#: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^free item, icon"
 msgstr "QMCMD^無料アイテム、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "QMCMD^アイテムを取った (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^took item, icon"
 msgstr "QMCMD^アイテムを取った、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:822
+#: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^negative"
 msgstr "QMCMD^陰性"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:823
+#: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^positive"
 msgstr "QMCMD^陽性"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^助けが必要 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^need help, icon"
 msgstr "QMCMD^助けが必要、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:825
+#: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "QMCMD^敵が見えました (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:825
+#: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^enemy seen, icon"
 msgstr "QMCMD^敵が見えました、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:826
+#: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "QMCMD^旗が見えました (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:826
+#: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^flag seen, icon"
 msgstr "QMCMD^旗が見えました、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:827
+#: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^守り中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:827
+#: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^defending, icon"
 msgstr "QMCMD^守り中、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:828
+#: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^動き中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:828
+#: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^roaming, icon"
 msgstr "QMCMD^動き中、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:829
+#: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^攻撃中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:829
+#: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^attacking, icon"
 msgstr "QMCMD^攻撃中、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:830
+#: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr "QMCMD^殺された旗持ち (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:830
+#: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^killed flagcarrier, icon"
 msgstr "QMCMD^殺された旗持ち、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:831
+#: qcsrc/client/hud/panel/quickmenu.qc:822
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr "QMCMD^旗を落とした (l:%d^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:831
+#: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^dropped flag, icon"
 msgstr "QMCMD^旗を落とした、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:832
+#: qcsrc/client/hud/panel/quickmenu.qc:823
 msgid "QMCMD^drop weapon, icon"
 msgstr "QMCMD^武器を落とす、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:832
+#: qcsrc/client/hud/panel/quickmenu.qc:823
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
 msgstr "QMCMD^武器を落とした、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^drop flag/key, icon"
 msgstr "QMCMD^旗/鍵を落とす、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "QMCMD^旗/鍵を落とした %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:837
+#: qcsrc/client/hud/panel/quickmenu.qc:828
 msgid "QMCMD^Send private message to"
 msgstr "QMCMD^非公開のメッセージを送信する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
-#: qcsrc/client/hud/panel/quickmenu.qc:869
+#: qcsrc/client/hud/panel/quickmenu.qc:830
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Settings"
 msgstr "QMCMD^設定"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
-#: qcsrc/client/hud/panel/quickmenu.qc:847
+#: qcsrc/client/hud/panel/quickmenu.qc:831
+#: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^View/HUD settings"
 msgstr "QMCMD^ビュー / HUD設定"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:841
+#: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^3rd person view"
 msgstr "QMCMD^三人称視点"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^Player models like mine"
 msgstr "QMCMD^私のような選手モデルを表示する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:843
+#: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Names above players"
 msgstr "QMCMD^上に選手の名前"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^Crosshair per weapon"
 msgstr "QMCMD^武器ごとの十字線"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:845
+#: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^FPS"
 msgstr "QMCMD^FPS"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:846
+#: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^Net graph"
 msgstr "QMCMD^ネットグラフ"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:849
-#: qcsrc/client/hud/panel/quickmenu.qc:852
+#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^Sound settings"
 msgstr "QMCMD^サウンド設定"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Hit sound"
 msgstr "QMCMD^衝撃のサウンド"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Chat sound"
 msgstr "QMCMD^チャットのサウンド"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:856
+#: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Change spectator camera"
 msgstr "QMCMD^観客のカメラを変更する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
-#: qcsrc/client/hud/panel/quickmenu.qc:865
+#: qcsrc/client/hud/panel/quickmenu.qc:852
+#: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Observer camera"
 msgstr "QMCMD^観客のカメラ"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Increase speed"
 msgstr "QMCMD^速度を上げる"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:863
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Decrease speed"
 msgstr "QMCMD^速度を下げる"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "QMCMD^Wall collision"
 msgstr "QMCMD^壁衝突"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:868
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Fullscreen"
 msgstr "QMCMD^全画面"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:871
-#: qcsrc/client/hud/panel/quickmenu.qc:881
+#: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:872
 msgid "QMCMD^Call a vote"
 msgstr "QMCMD^投票を呼び出す"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:872
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Restart the map"
 msgstr "QMCMD^マップを再起動する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:873
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^End match"
 msgstr "QMCMD^試合終了"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:876
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Reduce match time"
 msgstr "QMCMD^試合時刻を下げる"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:877
+#: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Extend match time"
 msgstr "QMCMD^試合時刻を拡張する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:880
+#: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Shuffle teams"
 msgstr "QMCMD^チームをシャッフルする"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:885
+#: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^選手を観戦する"
 
@@ -1253,14 +1253,14 @@ msgstr "ラウンドに勝つために全ての敵チームメイトを殺して
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
-#: qcsrc/common/mapinfo.qh:86
+#: qcsrc/common/mapinfo.qh:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
 msgid "Frag limit:"
 msgstr "削除制限:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
-#: qcsrc/common/mapinfo.qh:86
+#: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
 msgstr "試合が終了する前に必要な削除の量"
 
@@ -3320,7 +3320,7 @@ msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
 msgstr "^BG%s%s^K1 は ^BG%s^K1 の機関銃%s%sによって穴だらけになられた"
 
 #: qcsrc/common/notifications/all.inc:472
-#: qcsrc/common/notifications/all.inc:778
+#: qcsrc/common/notifications/all.inc:779
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
 msgstr "^BG一度に ^F2%s^BG 以上の鉱山を置けません"
@@ -4128,7 +4128,13 @@ msgstr "^BG ^TC^TT 鍵で開始ている"
 msgid "^BGYou have no lives left, you must wait until the next match"
 msgstr "^BGあなたには残りの命がない、あなたは次の試合まで待つ必要がない"
 
-#: qcsrc/common/notifications/all.inc:707
+#: qcsrc/common/notifications/all.inc:706
+msgid ""
+"^F4WARNING:^BG you can't rejoin this match after spectating.\n"
+"Use the same command again to spectate anyway."
+msgstr ""
+
+#: qcsrc/common/notifications/all.inc:708
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
@@ -4137,43 +4143,43 @@ msgstr ""
 "^BG選手の参加を待ち中...\n"
 "必要活発な選手: %s"
 
-#: qcsrc/common/notifications/all.inc:708
+#: qcsrc/common/notifications/all.inc:709
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
 msgstr "^BG%s 選手の参加を待ち中..."
 
-#: qcsrc/common/notifications/all.inc:710
+#: qcsrc/common/notifications/all.inc:711
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
 msgstr "^BG弾薬がいくつか見つかるまで、あなたの武器が格下げされた!"
 
-#: qcsrc/common/notifications/all.inc:711
+#: qcsrc/common/notifications/all.inc:712
 msgid "^F4^COUNT^BG left to find some ammo!"
 msgstr "^F4残り ^COUNT^BG で弾薬が見つかる!"
 
-#: qcsrc/common/notifications/all.inc:712
+#: qcsrc/common/notifications/all.inc:713
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
 msgstr "^BG弾薬を入手しないと ^F4^COUNT^BG で死んでしまいる!"
 
-#: qcsrc/common/notifications/all.inc:712
+#: qcsrc/common/notifications/all.inc:713
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
 msgstr "^BG弾薬を入手しろ! ^F4残り ^COUNT^BG !"
 
-#: qcsrc/common/notifications/all.inc:713
+#: qcsrc/common/notifications/all.inc:714
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2残りの余分な命: ^K1%s"
 
-#: qcsrc/common/notifications/all.inc:715 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/common/notifications/all.inc:716 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
 msgstr "レベル %s: "
 
-#: qcsrc/common/notifications/all.inc:715
+#: qcsrc/common/notifications/all.inc:716
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BG ^F2%s^BG を押してゲームに入る"
 
-#: qcsrc/common/notifications/all.inc:718
+#: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
@@ -4182,34 +4188,34 @@ msgstr ""
 "^F2^COUNT^BG 、武器が変更されるまで...\n"
 "次の武器: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:719
+#: qcsrc/common/notifications/all.inc:720
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
 msgstr "^F2活発な武器: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:721
+#: qcsrc/common/notifications/all.inc:722
 #, c-format
 msgid "^BGYou captured %s^BG control point"
 msgstr "^BG %s^BG コントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:722
+#: qcsrc/common/notifications/all.inc:723
 msgid "^BGYou captured a control point"
 msgstr "^BGコントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:723
+#: qcsrc/common/notifications/all.inc:724
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
 msgstr "^TC^TT^BG チームは %s^BG コントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:724
+#: qcsrc/common/notifications/all.inc:725
 msgid "^TC^TT^BG team captured a control point"
 msgstr "^TC^TT^BG チームはコントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:725
+#: qcsrc/common/notifications/all.inc:726
 msgid "^BGThis control point currently cannot be captured"
 msgstr "^BGこのコントロールポイントは現在取られない"
 
-#: qcsrc/common/notifications/all.inc:726
+#: qcsrc/common/notifications/all.inc:727
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
@@ -4217,11 +4223,11 @@ msgstr ""
 "^BG敵の発生器はまだ破壊できない\n"
 "^F2いくつかのコントロールポイントを取れて、非シールドする"
 
-#: qcsrc/common/notifications/all.inc:727
+#: qcsrc/common/notifications/all.inc:728
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
 msgstr "^BG ^TC 敵^BGの発生器はシールドされなくなった!"
 
-#: qcsrc/common/notifications/all.inc:728
+#: qcsrc/common/notifications/all.inc:729
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
@@ -4229,17 +4235,17 @@ msgstr ""
 "^K1あなたの発生器はシールドされていない!\n"
 "^BGコントロールポイントを再取れてシールドして!"
 
-#: qcsrc/common/notifications/all.inc:729
+#: qcsrc/common/notifications/all.inc:730
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
 msgstr "^BG ^F2%s^BG を押してテレポートする"
 
-#: qcsrc/common/notifications/all.inc:730
+#: qcsrc/common/notifications/all.inc:731
 #, c-format
 msgid "^BGTeleporting disabled for %s"
 msgstr "^BGテレポートは %s 間無効"
 
-#: qcsrc/common/notifications/all.inc:732
+#: qcsrc/common/notifications/all.inc:733
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
@@ -4247,7 +4253,7 @@ msgstr ""
 "^F4残業中^F2!\n"
 "^F2勝者が出るまで削除を立て続けて!"
 
-#: qcsrc/common/notifications/all.inc:732
+#: qcsrc/common/notifications/all.inc:733
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
@@ -4255,7 +4261,7 @@ msgstr ""
 "^F4残業中^F2!\n"
 "^F2勝者が出るまで得点を立て続けて!"
 
-#: qcsrc/common/notifications/all.inc:733
+#: qcsrc/common/notifications/all.inc:734
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "\n"
@@ -4269,7 +4275,7 @@ msgstr ""
 "チームが保持するコントロールポイントが多いほど、\n"
 "敵の発生器の減衰が速くなる"
 
-#: qcsrc/common/notifications/all.inc:734
+#: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
@@ -4278,123 +4284,123 @@ msgstr ""
 "^F2残業中!\n"
 "^BG F4%s^BG がゲームに追加された!"
 
-#: qcsrc/common/notifications/all.inc:736
+#: qcsrc/common/notifications/all.inc:737
 msgid "^K1In^BG-portal created"
 msgstr "^BGポータル^K1内^BGが作成された"
 
-#: qcsrc/common/notifications/all.inc:737
+#: qcsrc/common/notifications/all.inc:738
 msgid "^F3Out^BG-portal created"
 msgstr "^BGポータル^F3外^BGが作成された"
 
-#: qcsrc/common/notifications/all.inc:738
+#: qcsrc/common/notifications/all.inc:739
 msgid "^F1Portal creation failed"
 msgstr "^F1ポータルの作成に失敗した"
 
-#: qcsrc/common/notifications/all.inc:740
+#: qcsrc/common/notifications/all.inc:741
 msgid "^F2Strength infuses your weapons with devastating power"
 msgstr "^F2「力」はあなたの武器に壊滅的な力を吹き込みる"
 
-#: qcsrc/common/notifications/all.inc:741
+#: qcsrc/common/notifications/all.inc:742
 msgid "^F2Strength has worn off"
 msgstr "^F2「力」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:743
+#: qcsrc/common/notifications/all.inc:744
 msgid "^F2Shield surrounds you"
 msgstr "^F2「寿」があなたを囲んでいる"
 
-#: qcsrc/common/notifications/all.inc:744
+#: qcsrc/common/notifications/all.inc:745
 msgid "^F2Shield has worn off"
 msgstr "^F2「寿」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:746
+#: qcsrc/common/notifications/all.inc:747
 msgid "^F2You are on speed"
 msgstr "^F2「速度」に乗っている"
 
-#: qcsrc/common/notifications/all.inc:747
+#: qcsrc/common/notifications/all.inc:748
 msgid "^F2Speed has worn off"
 msgstr "^F2「速度」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:749
+#: qcsrc/common/notifications/all.inc:750
 msgid "^F2You are invisible"
 msgstr "^F2あなたには「不可視」がある"
 
-#: qcsrc/common/notifications/all.inc:750
+#: qcsrc/common/notifications/all.inc:751
 msgid "^F2Invisibility has worn off"
 msgstr "^F2「不可視」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:752
+#: qcsrc/common/notifications/all.inc:753
 msgid "^F2The race is over, finish your lap!"
 msgstr "^F2レースが終わった、ラップを終了して!"
 
-#: qcsrc/common/notifications/all.inc:754
+#: qcsrc/common/notifications/all.inc:755
 msgid "^BGSequence completed!"
 msgstr "^BG順序完了!"
 
-#: qcsrc/common/notifications/all.inc:755
+#: qcsrc/common/notifications/all.inc:756
 msgid "^BGThere are more to go..."
 msgstr "^BG続行するにはさらに必要がある..."
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:757
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
 msgstr "^BG後 ^BG%s だけ..."
 
-#: qcsrc/common/notifications/all.inc:758
+#: qcsrc/common/notifications/all.inc:759
 msgid "^F2Superweapons have broken down"
 msgstr "^F2スーパー武器が壊れられた"
 
-#: qcsrc/common/notifications/all.inc:759
+#: qcsrc/common/notifications/all.inc:760
 msgid "^F2Superweapons have been lost"
 msgstr "^F2スーパー武器は失われた"
 
-#: qcsrc/common/notifications/all.inc:760
+#: qcsrc/common/notifications/all.inc:761
 msgid "^F2You now have a superweapon"
 msgstr "^F2今、あなたはスーパー武器がある"
 
-#: qcsrc/common/notifications/all.inc:762
+#: qcsrc/common/notifications/all.inc:763
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
 msgstr "^K1 ^COUNT に ^TC^TT^K1 に変更中"
 
-#: qcsrc/common/notifications/all.inc:763
+#: qcsrc/common/notifications/all.inc:764
 msgid "^K1Changing team in ^COUNT"
 msgstr "^K1 ^COUNT にチームに変更中"
 
-#: qcsrc/common/notifications/all.inc:764
+#: qcsrc/common/notifications/all.inc:765
 msgid "^K1Spectating in ^COUNT"
 msgstr "^K1 ^COUNT に観戦中"
 
-#: qcsrc/common/notifications/all.inc:765
+#: qcsrc/common/notifications/all.inc:766
 msgid "^K1Suicide in ^COUNT"
 msgstr "^K1 ^COUNT に自殺中"
 
-#: qcsrc/common/notifications/all.inc:767
+#: qcsrc/common/notifications/all.inc:768
 msgid "^F4Timeout begins in ^COUNT"
 msgstr "^F4タイムアウトは ^COUNT から開始します"
 
-#: qcsrc/common/notifications/all.inc:768
+#: qcsrc/common/notifications/all.inc:769
 msgid "^F4Timeout ends in ^COUNT"
 msgstr "^F4タイムアウトは ^COUNT で終了します"
 
-#: qcsrc/common/notifications/all.inc:770
+#: qcsrc/common/notifications/all.inc:771
 msgid "^K1Cannot join given minigame session!"
 msgstr "^K1特定のミニゲームセッションに参加できない!"
 
-#: qcsrc/common/notifications/all.inc:772
+#: qcsrc/common/notifications/all.inc:773
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
 msgstr "^BG乗り物に出入りするために ^F2%s^BG を押して"
 
-#: qcsrc/common/notifications/all.inc:773
+#: qcsrc/common/notifications/all.inc:774
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
 msgstr "^BG乗り物の砲手に入るために ^F2%s^BG を押して"
 
-#: qcsrc/common/notifications/all.inc:774
+#: qcsrc/common/notifications/all.inc:775
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
 msgstr "^BGこの乗り物を盗むために ^F2%s^BG を押して"
 
-#: qcsrc/common/notifications/all.inc:775
+#: qcsrc/common/notifications/all.inc:776
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
@@ -4402,7 +4408,7 @@ msgstr ""
 "^F2敵はあなたの乗り物を盗んでいる!\n"
 "^F4彼らを止めて!"
 
-#: qcsrc/common/notifications/all.inc:776
+#: qcsrc/common/notifications/all.inc:777
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2侵入者を検出した、シールドを無効中!"
 
