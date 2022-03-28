@@ -32,13 +32,14 @@ void XonoticTextBox_setText(entity me, string text)
 	string t;
 
 	buf = buf_create();
-	for (int i = 0, n = tokenizebyseparator(text, "\n"); i < n; ++i)
+	string separator = (me.escapedNewLines) ? "\\n" : "\n";
+	for (int i = 0, n = tokenizebyseparator(text, separator); i < n; ++i)
 	{
 		t = substring(argv(i), 0, -1);
 		getWrappedLine_remaining = t;
 		while (getWrappedLine_remaining)
 		{
-			t = getWrappedLine(1, me.realFontSize, draw_TextWidth_WithColors);
+			t = getWrappedLine(1, me.realFontSize, (me.allowColors) ? draw_TextWidth_WithColors : draw_TextWidth_WithoutColors);
 			bufstr_set(buf, line, t);
 			line++;
 		}
@@ -86,5 +87,9 @@ void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 void XonoticTextBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s = me.getTextBoxLine(me, i);
-	draw_Text(vec2(0, 0), s, me.realFontSize, me.colorL, me.alpha, true);
+	vector color = (me.allowColors) ? '1 1 1' : me.colorL;
+	if (me.align == 0.5)
+		draw_CenterText(0.5 * eX, s, me.realFontSize, color, 1, me.allowColors);
+	else
+		draw_Text(vec2(0, 0), s, me.realFontSize, color, me.alpha, me.allowColors);
 }
