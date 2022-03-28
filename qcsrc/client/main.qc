@@ -471,6 +471,32 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if(override)
 		return true;
 
+	if(bInputType == 3 || bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+	}
+
+	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
+	{
+		if (cvar("_menu_gamemenu_dialog_available"))
+		{
+			localcmd("\nmenu_showgamemenudialog\n");
+			return true;
+		}
+	}
+
 	return false;
 }
 

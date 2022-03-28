@@ -122,6 +122,24 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if (argv(0) == "nexposee")
+	{
+		m_goto("nexposee");
+		return;
+	}
+
+	if (argv(0) == "servers")
+	{
+		m_goto("servers");
+		return;
+	}
+
+	if (argv(0) == "profile")
+	{
+		m_goto("profile");
+		return;
+	}
+
 	if (argv(0) == "skinselect")
 	{
 		m_goto("skinselector");
@@ -131,6 +149,12 @@ void GameCommand(string theCommand)
 	if (argv(0) == "languageselect")
 	{
 		m_goto("languageselector");
+		return;
+	}
+
+	if (argv(0) == "inputsettings")
+	{
+		m_goto("inputsettings");
 		return;
 	}
 

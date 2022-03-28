@@ -39,6 +39,9 @@ int GameType_GetTotalCount();
 void dialog_hudpanel_main_checkbox(entity me, string panelname);
 void dialog_hudpanel_main_settings(entity me, string panelname);
 
+bool isServerSingleplayer();
+void makeServerSingleplayer();
+
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha);
 
 string _Nex_ExtResponseSystem_BannedServers;
