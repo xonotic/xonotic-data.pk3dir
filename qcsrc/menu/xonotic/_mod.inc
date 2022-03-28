@@ -86,6 +86,7 @@
 #include <menu/xonotic/dialog_teamselect.qc>
 #include <menu/xonotic/dialog_termsofservice.qc>
 #include <menu/xonotic/dialog_uid2name.qc>
+#include <menu/xonotic/dialog_welcome.qc>
 #include <menu/xonotic/gametypelist.qc>
 #include <menu/xonotic/hudskinlist.qc>
 #include <menu/xonotic/image.qc>

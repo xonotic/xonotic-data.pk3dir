@@ -41,6 +41,11 @@ float Campaign_Invalid()
 	return 0;
 }
 
+string Campaign_GetTitle()
+{
+	return campaign_title;
+}
+
 int Campaign_GetLevelNum()
 {
 	return campaign_level + 1;

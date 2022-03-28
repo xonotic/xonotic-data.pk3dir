@@ -44,6 +44,7 @@
 #include "dialog_sandboxtools.qh"
 #include "dialog_monstertools.qh"
 #include "dialog_gamemenu.qh"
+#include "dialog_welcome.qh"
 #include "dialog_teamselect.qh"
 #include "dialog_uid2name.qh"
 #include "dialog_singleplayer.qh"
@@ -88,6 +89,10 @@ void MainWindow_configureMainWindow(entity me)
 
 	// dialog run upon startup
 	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticWelcomeDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
