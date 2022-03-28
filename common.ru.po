@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Simple88, 2016\n"
+"Last-Translator: Andrei Stepanov, 2014-2022\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -4163,6 +4163,9 @@ msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
+"^F4ВНИМАНИЕ:^BG вы не сможете заново подсоединиться к матчу после перехода в "
+"зрители.\n"
+"Используйте ту же команду ещё раз, чтобы стать зрителем в любом случае."
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
