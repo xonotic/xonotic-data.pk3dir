@@ -6,6 +6,7 @@
 #include "inputbox.qh"
 #include "checkbox.qh"
 #include "commandbutton.qh"
+#include "leavematchbutton.qh"
 #include "button.qh"
 
 entity makeXonoticServerListTab()
@@ -88,12 +89,8 @@ void XonoticServerListTab_fill(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		/*
-		me.TD(me, 1, 1, e = makeXonoticCommandButton_T(_("Disconnect"), '0 0 0', "disconnect", 0,
-			_("Disconnect from the server")));
-			slist.disconnectButton = e;
-		*/
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Join!"), '0 0 0'));
+		me.TD(me, 1, me.columns * 0.5, e = makeXonoticLeaveMatchButton('0 0 0', 0));
+		me.TD(me, 1, me.columns * 0.5, e = makeXonoticButton(_("Join!"), '0 0 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;
