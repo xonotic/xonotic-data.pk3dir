@@ -1286,6 +1286,59 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
+NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
+{
+	bool campaign = ReadByte();
+	if (campaign)
+	{
+		string campaign_title = ReadString();
+		int campaign_level = ReadByte();
+		string campaign_msg = ReadString();
+		string welcomedialog_args;
+		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		string key = getcommandkey(_("jump"), "+jump");
+		string msg = strcat(
+			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
+			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		return true;
+	}
+
+	bool force_centerprint = ReadByte();
+	string hostname = ReadString();
+	string ver = ReadString();
+	string modifications = ReadString();
+	string cache_mutatormsg = ReadString();
+	string mutator_msg = ReadString();
+	string motd = ReadString();
+
+	string msg = "";
+	msg = strcat(msg, ver);
+	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+	if(modifications != "")
+		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
+	if (cache_mutatormsg != "")
+		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
+	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
+	if (motd != "")
+		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+
+	if (!force_centerprint && !isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
+	{
+		string welcomedialog_args;
+		welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+	}
+	else
+		centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", msg), -1, 0);
+	return true;
+}
+
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;

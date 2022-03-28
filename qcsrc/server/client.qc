@@ -1033,8 +1033,22 @@ string GetClientVersionMessage(entity this)
 	}
 }
 
-string getwelcomemessage(entity this)
+void SendWelcomemessage(entity this, bool force_centerprint)
 {
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
+	WriteByte(MSG_ONE, boolean(autocvar_g_campaign));
+	if (boolean(autocvar_g_campaign))
+	{
+		WriteString(MSG_ONE, Campaign_GetTitle());
+		WriteByte(MSG_ONE, Campaign_GetLevelNum());
+		WriteString(MSG_ONE, Campaign_GetMessage());
+		return;
+	}
+	WriteByte(MSG_ONE, force_centerprint);
+	WriteString(MSG_ONE, autocvar_hostname);
+	WriteString(MSG_ONE, GetClientVersionMessage(this));
+
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
 
@@ -1055,13 +1069,7 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	string versionmessage = GetClientVersionMessage(this);
-	string s = strcat(versionmessage, "^8\n^8\nserver is ^9", autocvar_hostname, "^8\n");
-
-	s = strcat(s, "^8\nmatch type is ^1", gamemode_name, "^8\n");
-
-	if(modifications != "")
-		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
+	WriteString(MSG_ONE, modifications);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1069,21 +1077,25 @@ string getwelcomemessage(entity this)
 		strcpy(cache_mutatormsg, cache_lastmutatormsg);
 	}
 
-	if (cache_mutatormsg != "") {
-		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
-	}
+	WriteString(MSG_ONE, cache_mutatormsg);
 
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
 
-	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
+	WriteString(MSG_ONE, mutator_msg); // trust that the mutator will do proper formatting
+	WriteString(MSG_ONE, strreplace("\\n", "\n", autocvar_sv_motd));
+}
 
-	string motd = autocvar_sv_motd;
-	if (motd != "") {
-		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
-	}
-	return s;
+void SendWelcomemessage_onConnection_think(entity this)
+{
+	SendWelcomemessage(this, false);
+}
+
+void SendWelcomemessage_onConnection(entity this)
+{
+	// give the client time to sent its version
+	defer(this, 0.5, SendWelcomemessage_onConnection_think);
 }
 
 /**
@@ -1173,7 +1185,11 @@ void ClientConnect(entity this)
 	CS(this).model_randomizer = random();
 
 	if (IS_REAL_CLIENT(this))
+	{
+		if (!autocvar_g_campaign)
+			SendWelcomemessage_onConnection(this);
 		sv_notice_join(this);
+	}
 
 	this.move_qcphysics = autocvar_sv_qcphysics;
 
@@ -1188,14 +1204,8 @@ void ClientConnect(entity this)
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
-	if (IS_REAL_CLIENT(this))
-	{
-		if (!autocvar_g_campaign && !IS_PLAYER(this))
-		{
-			CS(this).motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
-		}
-	}
+	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
+		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
 /*
 =============
@@ -2055,12 +2065,12 @@ void PrintWelcomeMessage(entity this)
 		if (autocvar_g_campaign) {
 			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_CAMPAIGN_MESSAGE, Campaign_GetMessage(), Campaign_GetLevelNum());
+				SendWelcomemessage(this, false);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
+				SendWelcomemessage(this, true);
 			}
 		}
 	}
@@ -2071,7 +2081,7 @@ void PrintWelcomeMessage(entity this)
 				CS(this).motd_actived_time = time;
 			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
 				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this))
@@ -2090,10 +2100,7 @@ void PrintWelcomeMessage(entity this)
 		{
 			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
-			if (autocvar_g_campaign)
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
-			else
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
 		else if (IS_PLAYER(this) || IS_SPEC(this))
 		{
