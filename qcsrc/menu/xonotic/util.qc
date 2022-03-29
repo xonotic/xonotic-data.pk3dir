@@ -476,7 +476,7 @@ void updateCheck()
 	{
 		_Nex_ExtResponseSystem_Queried = 1;
 		cvar_set("cl_startcount", ftos(cvar("cl_startcount") + 1));
-		uri_get("http://update.xonotic.org/checkupdate.txt", URI_GET_UPDATENOTIFICATION);
+		uri_get("https://update.xonotic.org/checkupdate.txt", URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
