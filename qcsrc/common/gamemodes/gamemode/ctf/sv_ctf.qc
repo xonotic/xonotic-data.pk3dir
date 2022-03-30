@@ -113,16 +113,17 @@ void ctf_CaptureRecord(entity flag, entity player)
 	float cap_record = ctf_captimerecord;
 	float cap_time = (time - flag.ctf_pickuptime);
 	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
+	string player_cname = playername(player.netname, player.team, autocvar_g_chat_teamcolors);
 
 	// notify about shit
 	if(ctf_oneflag)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CTF_CAPTURE_NEUTRAL, player.netname);
 	else if(!ctf_captimerecord)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_TIME), player.netname, TIME_ENCODE(cap_time));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_TIME), player_cname, TIME_ENCODE(cap_time));
 	else if(cap_time < cap_record)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_BROKEN), player.netname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_BROKEN), player_cname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
 	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_UNBROKEN), player.netname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_UNBROKEN), player_cname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
 
 	// write that shit in the database
 	if(!ctf_oneflag) // but not in 1-flag mode
@@ -349,6 +350,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 {
 	// declarations
 	player = (player ? player : flag.pass_sender);
+	string player_cname = playername(player.netname, player.team, autocvar_g_chat_teamcolors);
 
 	// main
 	set_movetype(flag, MOVETYPE_TOSS);
@@ -360,7 +362,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	flag.ctf_status = FLAG_DROPPED;
 
 	// messages and sounds
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_LOST), player.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_LOST), player_cname);
 	_sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
@@ -637,6 +639,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 
 void ctf_Handle_Return(entity flag, entity player)
 {
+	string player_cname = playername(player.netname, player.team, autocvar_g_chat_teamcolors);
+	
 	// messages and sounds
 	if(IS_MONSTER(player))
 	{
@@ -645,7 +649,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	else if(flag.team)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_RETURN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN), player.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN), player_cname);
 	}
 	_sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -682,6 +686,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 {
 	// declarations
 	float pickup_dropped_score; // used to calculate dropped pickup score
+	string player_cname = playername(player.netname, player.team, autocvar_g_chat_teamcolors);
 
 	// attach the flag to the player
 	flag.owner = player;
@@ -714,7 +719,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// messages and sounds
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_PICKUP), player.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_PICKUP), player_cname);
 	if(ctf_stalemate)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER);
 	if(!flag.team)
