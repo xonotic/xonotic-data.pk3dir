@@ -91,7 +91,12 @@ void HUD_Timer()
 		timer_color = HUD_Timer_Color(timeleft);
 
 	// Timer text
-	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
+	if (timelimit == -1) // Infinite warmup
+		if (autocvar_hud_panel_timer_increment)
+			timer = seconds_tostring(0);
+		else
+			timer = seconds_tostring(STAT(TIMELIMIT) * 60);
+	else if (autocvar_hud_panel_timer_increment || timelimit == 0)
 		timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
 	else
 		timer = seconds_tostring(timeleft);
