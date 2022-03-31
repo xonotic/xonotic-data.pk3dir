@@ -26,6 +26,7 @@ int autocvar_g_keepaway_score_timepoints;
 float autocvar_g_keepaway_score_timeinterval;
 float autocvar_g_keepawayball_damageforcescale;
 int autocvar_g_keepawayball_effects;
+float autocvar_g_keepawayball_pickup_delay = 1;
 float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 
@@ -184,7 +185,7 @@ void ka_PlayerReset(entity player)
 	player.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 }
 
-void ka_DropEvent(entity player) // runs any time that a player is supposed to lose the ball
+void ka_DropBall(entity player, vector org, vector velo) // runs any time that a player is supposed to lose the ball
 {
 	entity ball = player.ballcarried;
 
@@ -193,7 +194,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	// reset the ball
 	setattachment(ball, NULL, "");
 	set_movetype(ball, MOVETYPE_BOUNCE);
-	ball.wait = time + 1;
+	ball.wait = time + autocvar_g_keepawayball_pickup_delay;
 	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
@@ -202,8 +203,8 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	ball.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, ball);
 	ball.effects &= ~EF_NODRAW;
-	setorigin(ball, player.origin + '0 0 10');
-	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
+	setorigin(ball, org);
+	ball.velocity = velo;
 	ball.owner = NULL;
 	navigation_dynamicgoal_set(ball, player);
 
@@ -219,6 +220,10 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 
 	ka_PlayerReset(player);
+}
+
+void ka_DropEvent(entity player) {
+	ka_DropBall(player, player.origin + '0 0 10', '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom());
 }
 
 .bool pushable;
@@ -396,7 +401,8 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_killac);
 	}
 
-	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it
+	if(frag_target.ballcarried) // a player with the ball has died, drop it
+		ka_DropEvent(frag_target);
 }
 
 MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
@@ -426,7 +432,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	if(MUTATOR_RETURNVALUE == 0)
 	if(player.ballcarried)
 	{
-		ka_DropEvent(player);
+		ka_DropBall(player, player.origin + (v_forward * 100), '0 0 200' + (v_forward * 500));
 		return true;
 	}
 }
