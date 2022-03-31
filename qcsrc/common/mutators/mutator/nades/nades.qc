@@ -120,9 +120,12 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
 {
-	string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
-	M_ARGV(0, string) = strcat(M_ARGV(0, string),
-		"\n\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
+	if (mut_is_active(MUT_NADES))
+	{
+		string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
+		M_ARGV(0, string) = strcat(M_ARGV(0, string),
+			"\n\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
+	}
 }
 
 bool Projectile_isnade(int p)
@@ -1570,6 +1573,11 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
+}
+
+MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
+{
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
