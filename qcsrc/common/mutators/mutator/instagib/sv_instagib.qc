@@ -453,7 +453,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", instagib");
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", InstaGib");
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)
