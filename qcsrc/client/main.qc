@@ -1037,6 +1037,7 @@ void Fog_Force()
 		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
+bool net_handle_ServerWelcome();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
@@ -1052,6 +1053,8 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		strcpy(teamscores_label(i), ReadString());
 		teamscores_flags(i) = ReadByte();
 	}
+	if (ReadByte())
+		net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
 	Gamemode_Init();
@@ -1312,7 +1315,7 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
+bool net_handle_ServerWelcome()
 {
 	bool campaign = ReadByte();
 	if (campaign)
@@ -1363,6 +1366,11 @@ NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
 	else
 		centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", msg), -1, 0);
 	return true;
+}
+
+NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
+{
+	return net_handle_ServerWelcome();
 }
 
 string _getcommandkey(string cmd_name, string command, bool forcename)

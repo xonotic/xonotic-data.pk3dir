@@ -194,6 +194,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 }
 
+int Welcomemessage_too = 1;
 bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
@@ -207,6 +208,15 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	{
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
+	}
+	WriteByte(MSG_ENTITY, Welcomemessage_too);
+	// for some reason ScoreInfo_SendEntity is called twice on client connection
+	// send the welcome message only once
+	if (Welcomemessage_too)
+	{
+		// welcome message is sent here because it needs to know the gametype
+		SendWelcomemessage_msg_type(this, false, MSG_ENTITY);
+		Welcomemessage_too = 0;
 	}
 	return true;
 }

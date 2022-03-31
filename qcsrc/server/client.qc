@@ -1037,17 +1037,22 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 {
 	msg_entity = this;
 	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
-	WriteByte(MSG_ONE, boolean(autocvar_g_campaign));
+	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
+}
+
+void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
+{
+	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
-		WriteString(MSG_ONE, Campaign_GetTitle());
-		WriteByte(MSG_ONE, Campaign_GetLevelNum());
-		WriteString(MSG_ONE, Campaign_GetMessage());
+		WriteString(msg_type, Campaign_GetTitle());
+		WriteByte(msg_type, Campaign_GetLevelNum());
+		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
-	WriteByte(MSG_ONE, force_centerprint);
-	WriteString(MSG_ONE, autocvar_hostname);
-	WriteString(MSG_ONE, GetClientVersionMessage(this));
+	WriteByte(msg_type, force_centerprint);
+	WriteString(msg_type, autocvar_hostname);
+	WriteString(msg_type, GetClientVersionMessage(this));
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
@@ -1069,7 +1074,7 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	WriteString(MSG_ONE, modifications);
+	WriteString(msg_type, modifications);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1077,25 +1082,14 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 		strcpy(cache_mutatormsg, cache_lastmutatormsg);
 	}
 
-	WriteString(MSG_ONE, cache_mutatormsg);
+	WriteString(msg_type, cache_mutatormsg);
 
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
 
-	WriteString(MSG_ONE, mutator_msg); // trust that the mutator will do proper formatting
-	WriteString(MSG_ONE, strreplace("\\n", "\n", autocvar_sv_motd));
-}
-
-void SendWelcomemessage_onConnection_think(entity this)
-{
-	SendWelcomemessage(this, false);
-}
-
-void SendWelcomemessage_onConnection(entity this)
-{
-	// give the client time to sent its version
-	defer(this, 0.5, SendWelcomemessage_onConnection_think);
+	WriteString(msg_type, mutator_msg); // trust that the mutator will do proper formatting
+	WriteString(msg_type, strreplace("\\n", "\n", autocvar_sv_motd));
 }
 
 /**
@@ -1185,11 +1179,7 @@ void ClientConnect(entity this)
 	CS(this).model_randomizer = random();
 
 	if (IS_REAL_CLIENT(this))
-	{
-		if (!autocvar_g_campaign)
-			SendWelcomemessage_onConnection(this);
 		sv_notice_join(this);
-	}
 
 	this.move_qcphysics = autocvar_sv_qcphysics;
 
