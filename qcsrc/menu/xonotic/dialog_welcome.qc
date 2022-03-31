@@ -27,6 +27,18 @@ float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shif
 	}
 }
 
+// the same implentation in mousePress apparently works, but for some reason if you try to open
+// the dialog again it doesn't show up and requires opening it a seconds time to show up
+bool XonoticWelcomeDialog_mouseRelease(entity me, vector pos)
+{
+	if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
+	{
+		return SUPER(XonoticWelcomeDialog).mouseRelease(me, pos);
+	}
+	me.close(me);
+	return true;
+}
+
 void XonoticWelcomeDialog_destroy(entity me)
 {
 	cvar_set("_menu_welcome_dialog_available", "0");
