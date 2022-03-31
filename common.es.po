@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -91,12 +91,12 @@ msgstr "^1Observando"
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Espectando: ^7%s"
+msgstr "^1Observando: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Pulsa ^3%s^1 para espectar"
+msgstr "^1Pulsa ^3%s^1 para entrar en modo espectador"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -214,11 +214,11 @@ msgstr "menú de equipo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
-msgstr "^1Espectando a este jugador:"
+msgstr "^1Observando a este jugador:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating you:"
-msgstr "^1Espectándote a ti:"
+msgstr "^1Observando a ti:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -507,7 +507,7 @@ msgstr "QMCMD^Barajar equipos"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Spectate a player"
-msgstr "QMCMD^Espectar a un jugador"
+msgstr "QMCMD^Observar a un jugador"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
@@ -1122,7 +1122,7 @@ msgstr "Una votación ha sido iniciada para:"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "Allow servers to store and display your name?"
-msgstr "¿Permitir a los servidores guardar y mostrar tu nombre?"
+msgstr "¿Permitir que los servidores guarden y muestren tu nombre?"
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
@@ -1607,7 +1607,7 @@ msgstr "¡Bien hecho! Haz clic en 'Siguiente nivel' para continuar"
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr "Estás espectando"
+msgstr "Estás en modo espectador"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -2207,8 +2207,8 @@ msgstr "^1Avisos del servidor:"
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
-"^F4NOTA: ^BGEl chat de espectador no se envía a los jugadores durante la "
-"partida"
+"^F4NOTA: ^BGLos mensajes del espectador no se enviarán a los jugadores "
+"durante la partida"
 
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
@@ -3117,7 +3117,7 @@ msgstr "^BG%s^F3 ha sido expulsado por matar a tus propios compañeros"
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr "^BG%s^F3 está ahora^BG espectando"
+msgstr "^BG%s^F3 está ahora^BG en modo espectador"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
@@ -3192,7 +3192,8 @@ msgid ""
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
 "^F2¡Tienes que convertirte en jugador en los siguientes %s, o serás "
-"expulsado, porque no está permitido espectar en este momento!"
+"expulsado, porque no está permitido entrar en modo espectador en este "
+"momento!"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
@@ -3205,7 +3206,7 @@ msgstr "^BGNo te puedes transferir a un equipo más grande"
 
 #: qcsrc/common/notifications/all.inc:436
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGNo tienes permitido cambiar de equipo"
+msgstr "^BGNo puedes cambiar de equipo"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -4219,6 +4220,10 @@ msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
+"^F4ADVERTENCIA:^BG no puedes volver a unirte a esta partida después de "
+"entrar en modo espectador.\n"
+"Use el mismo comando nuevamente para entrar en modo espectador de todos "
+"modos."
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
@@ -4453,7 +4458,7 @@ msgstr "^K1Cambiando equipo en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:765
 msgid "^K1Spectating in ^COUNT"
-msgstr "^K1Cambiando a espectador en ^COUNT"
+msgstr "^K1Cambiando a modo espectador en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:766
 msgid "^K1Suicide in ^COUNT"
@@ -6111,7 +6116,7 @@ msgstr "Deshabilitar"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr "Habilitar espectador"
+msgstr "Habilitar modo espectador"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
@@ -8924,7 +8929,7 @@ msgstr "Distancia hacia arriba"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:65
 msgid "Allow passing through walls while spectating"
-msgstr "Permitir traspazar paredes mientras en modo espectador"
+msgstr "Permitir que en modo espectador pueda atravesar paredes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:69
 msgid "Field of view:"
@@ -9143,7 +9148,7 @@ msgstr "Pulsar la tecla \"entrar en la consola\" y cerrarla"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
-msgstr "Permitir el atajo de la tecla de la consola para también cerrarla"
+msgstr "Permitir que el atajo de teclado de la consola pueda también cerrarla"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
@@ -9798,7 +9803,7 @@ msgstr "rosa"
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
 #: qcsrc/menu/xonotic/keybinder.qc:116
 msgid "spectate"
-msgstr "espectar"
+msgstr "observar"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"

@@ -5,6 +5,7 @@
 # Translators:
 # Dr. Jaska <drjaska83@gmail.com>, 2020
 # Dr. Jaska <drjaska83@gmail.com>, 2020
+# Heidi Wenger, 2022
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jaakko Saarikko <jaakko.saarikko@protonmail.com>, 2022
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022\n"
+"Last-Translator: Heidi Wenger, 2022\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -1072,7 +1073,7 @@ msgstr "Lämmittely"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "Aikalisä"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
@@ -4183,6 +4184,9 @@ msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
+"^F4VAROITUS:^BG et voi uudelleenliittyä tähän otteluun sen seuraamisen "
+"jälkeen.\n"
+"Käytä samaa käskyä uudelleen seurataksesi joka tapauksessa."
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
@@ -6432,11 +6436,11 @@ msgstr "Näytä kulutettu aika"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr ""
+msgstr "Toisarvoinen ajastin:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
-msgstr ""
+msgstr "Vaihdettu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -7345,7 +7349,7 @@ msgstr "Käytä `crypto_aeslevel` cvar muuttaaksesi asetuksia"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "custom stats server"
-msgstr ""
+msgstr "räätälöity tilastopalvelin"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1056
@@ -7359,7 +7363,7 @@ msgstr "tilastot päällä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
@@ -7422,7 +7426,7 @@ msgstr "Avain:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "Tilastot:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -9780,11 +9784,11 @@ msgstr "Joukkueen valinta"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
-msgstr ""
+msgstr "Käyttöehtoihin on tullut päivitys. Luethan ne ennen jatkamista: "
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "Tervetuloa Xonoticiin! Luethan seuraavat käyttöehdot:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:93
 msgid "Accept"
@@ -9792,7 +9796,7 @@ msgstr "Hyväksy"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:97
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Älä hyväksy (lopeta peli)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"

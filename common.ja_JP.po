@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -4133,6 +4133,9 @@ msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
+"^F4警告：^BG 観客モードに入った後は、この試合に再び参加することはできませ"
+"ん。\n"
+"とにかく、同じコマンドをもう一度使用して、観客モードに入ってください。"
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
