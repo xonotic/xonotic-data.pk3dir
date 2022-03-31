@@ -1053,8 +1053,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		strcpy(teamscores_label(i), ReadString());
 		teamscores_flags(i) = ReadByte();
 	}
-	if (ReadByte())
-		net_handle_ServerWelcome();
+	net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
 	Gamemode_Init();
