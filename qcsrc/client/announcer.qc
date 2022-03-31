@@ -1,9 +1,12 @@
 #include "announcer.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/centerprint.qh>
 #include <client/mutators/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
 
 bool announcer_1min;
 bool announcer_5min;
@@ -26,6 +29,7 @@ void Announcer_Countdown(entity this)
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		delete(this);
 		announcer_countdown = NULL;
+		centerprint_ClearTitle();
 		return;
 	}
 
@@ -39,13 +43,14 @@ void Announcer_Countdown(entity this)
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
+		centerprint_ClearTitle();
 		return;
 	}
 	else // countdown is still going
 	{
 		if(inround)
 		{
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, STAT(ROUNDS_PLAYED) + 1, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
@@ -69,7 +74,7 @@ void Announcer_Countdown(entity this)
  * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
  * and STAT_FRAGLIMIT to be auto-sent)
  */
- float previous_game_starttime;
+float previous_game_starttime;
 void Announcer_Gamestart()
 {
 	float startTime = STAT(GAMESTARTTIME);
@@ -100,9 +105,24 @@ void Announcer_Gamestart()
 				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
-			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
-				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+			if(!warmup_stage && time < STAT(GAMESTARTTIME))
+			{
+				if (gametype.m_1v1)
+				{
+					entity pl1 = players.sort_next;
+					entity pl2 = pl1.sort_next;
+					string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
+					string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
+
+					float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
+					centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2); // Show duelers in 1v1 game mode
+				}
+				else
+					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype)), 0); // Show game type as title
+
+				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
+					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+			}
 
 			announcer_countdown.nextthink = startTime - floor(startTime - time + 0.5); //synchronize nextthink to startTime
 		}

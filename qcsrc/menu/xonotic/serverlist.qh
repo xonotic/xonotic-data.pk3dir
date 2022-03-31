@@ -53,7 +53,6 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, sortButton4, entity);
 	ATTRIB(XonoticServerList, sortButton5, entity);
 	ATTRIB(XonoticServerList, connectButton, entity);
-	//ATTRIB(XonoticServerList, disconnectButton, entity);
 	ATTRIB(XonoticServerList, infoButton, entity);
 	ATTRIB(XonoticServerList, currentSortOrder, float, 0);
 	ATTRIB(XonoticServerList, currentSortField, float, -1);

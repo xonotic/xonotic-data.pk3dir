@@ -19,8 +19,8 @@
 #include <menu/xonotic/demolist.qc>
 #include <menu/xonotic/dialog.qc>
 #include <menu/xonotic/dialog_credits.qc>
-#include <menu/xonotic/dialog_disconnect.qc>
 #include <menu/xonotic/dialog_firstrun.qc>
+#include <menu/xonotic/dialog_gamemenu.qc>
 #include <menu/xonotic/dialog_hudpanel_ammo.qc>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qc>
 #include <menu/xonotic/dialog_hudpanel_chat.qc>
@@ -101,6 +101,7 @@
 #include <menu/xonotic/playerlist.qc>
 #include <menu/xonotic/playermodel.qc>
 #include <menu/xonotic/playlist.qc>
+#include <menu/xonotic/leavematchbutton.qc>
 #include <menu/xonotic/radiobutton.qc>
 #include <menu/xonotic/rootdialog.qc>
 #include <menu/xonotic/screenshotimage.qc>

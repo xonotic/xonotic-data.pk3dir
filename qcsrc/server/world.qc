@@ -1334,7 +1334,7 @@ void NextLevel()
 }
 
 
-float InitiateSuddenDeath()
+int InitiateSuddenDeath()
 {
 	// Check first whether normal overtimes could be added before initiating suddendeath mode
 	// - for this timelimit_overtime needs to be >0 of course
@@ -1630,8 +1630,8 @@ void CheckRules_World()
 	if(timelimit > 0)
 		timelimit += game_starttime;
 
-	float wantovertime;
-	wantovertime = 0;
+	int overtimes_prev = overtimes;
+	int wantovertime = 0;
 
 	if(checkrules_suddendeathend)
 	{
@@ -1717,6 +1717,12 @@ void CheckRules_World()
 
 	if(checkrules_status == WINNING_YES)
 	{
+		if (overtimes == -1 && overtimes != overtimes_prev)
+		{
+			// if suddendeathend overtime has just begun, revert it
+			checkrules_suddendeathend = 0;
+			overtimes = overtimes_prev;
+		}
 		//print("WINNING\n");
 		NextLevel();
 	}

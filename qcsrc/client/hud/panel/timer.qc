@@ -91,7 +91,7 @@ void HUD_Timer()
 		timer_color = HUD_Timer_Color(timeleft);
 
 	// Timer text
-	if (autocvar_hud_panel_timer_increment || timelimit == 0)
+	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
 		timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
 	else
 		timer = seconds_tostring(timeleft);

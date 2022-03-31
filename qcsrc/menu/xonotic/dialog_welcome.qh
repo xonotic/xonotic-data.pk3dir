@@ -10,8 +10,8 @@ CLASS(XonoticWelcomeDialog, XonoticRootDialog)
 	ATTRIB(XonoticWelcomeDialog, columns, float, 4);
 	ATTRIB(XonoticWelcomeDialog, name, string, "Welcome");
 
+	METHOD(XonoticWelcomeDialog, mouseRelease, bool(entity, vector));
 	METHOD(XonoticWelcomeDialog, keyDown, float(entity, float, float, float));
-	METHOD(XonoticWelcomeDialog, configureDialog, void(entity));
 	METHOD(XonoticWelcomeDialog, destroy, void(entity));
 	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, int));
 	ATTRIB(XonoticWelcomeDialog, serverinfo_name, string, string_null);

@@ -471,6 +471,32 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if(override)
 		return true;
 
+	if(bInputType == 3 || bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+	}
+
+	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
+	{
+		if (cvar("_menu_gamemenu_dialog_available"))
+		{
+			localcmd("\nmenu_showgamemenudialog\n");
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -1011,6 +1037,7 @@ void Fog_Force()
 		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
+bool net_handle_ServerWelcome();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
@@ -1026,6 +1053,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		strcpy(teamscores_label(i), ReadString());
 		teamscores_flags(i) = ReadByte();
 	}
+	net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
 	Gamemode_Init();
@@ -1332,8 +1360,27 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 	return sprintf(_("Welcome to %s"), xonotic_hostversion);
 }
 
-NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
+bool net_handle_ServerWelcome()
 {
+	bool campaign = ReadByte();
+	if (campaign)
+	{
+		string campaign_title = ReadString();
+		int campaign_level = ReadByte();
+		string campaign_msg = ReadString();
+		string welcomedialog_args;
+		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		string key = getcommandkey(_("jump"), "+jump");
+		string msg = strcat(
+			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
+			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		return true;
+	}
+
 	bool force_centerprint = ReadByte();
 	string hostname = ReadString();
 
@@ -1349,14 +1396,14 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 
 	string msg = "";
 	msg = strcat(msg, ver);
-	msg = strcat(msg, "^8\n\n", _("match type is "), " ^1", MapInfo_Type_ToText(gametype), "^8\n");
+	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
-		msg = strcat(msg, "^8\n", _("active modifications:"), " ^3", modifications, "^8\n");
+		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
 
 	if (cache_mutatormsg != "")
-		msg = strcat(msg, "\n\n^8", _("special gameplay tips:"), " ^7", cache_mutatormsg);
+		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
@@ -1376,6 +1423,11 @@ NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
 	else
 		centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", msg), -1, 0);
 	return true;
+}
+
+NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
+{
+	return net_handle_ServerWelcome();
 }
 
 string _getcommandkey(string cmd_name, string command, bool forcename)

@@ -208,6 +208,10 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
 	}
+	// for some reason ScoreInfo_SendEntity is called twice on client connection
+	// FIXME send the welcome message only once
+	// welcome message is sent here because it needs to know the gametype
+	SendWelcomemessage_msg_type(this, false, MSG_ENTITY);
 	return true;
 }
 

@@ -829,6 +829,18 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 }
 
+bool isServerSingleplayer()
+{
+	return (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1");
+}
+
+void makeServerSingleplayer()
+{
+	// it doesn't allow clients to connect from different machines
+	localcmd("defer 0.1 \"sv_cmd settemp net_address 127.0.0.1\"\n");
+	localcmd("defer 0.1 \"sv_cmd settemp net_address_ipv6 ::1\"\n");
+}
+
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
 {
 	if(startAlpha < targetAlpha)

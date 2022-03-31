@@ -95,8 +95,6 @@ void GameCommand(string theCommand)
 		}
 		else if (argc == 2 && !isdemo())     // don't allow this command in demos
 		{
-			if (argv(1) == "Welcome" && cvar("g_campaign"))
-				return;
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
 		}
@@ -124,6 +122,24 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if (argv(0) == "nexposee")
+	{
+		m_goto("nexposee");
+		return;
+	}
+
+	if (argv(0) == "servers")
+	{
+		m_goto("servers");
+		return;
+	}
+
+	if (argv(0) == "profile")
+	{
+		m_goto("profile");
+		return;
+	}
+
 	if (argv(0) == "skinselect")
 	{
 		m_goto("skinselector");
@@ -133,6 +149,12 @@ void GameCommand(string theCommand)
 	if (argv(0) == "languageselect")
 	{
 		m_goto("languageselector");
+		return;
+	}
+
+	if (argv(0) == "inputsettings")
+	{
+		m_goto("inputsettings");
 		return;
 	}
 
