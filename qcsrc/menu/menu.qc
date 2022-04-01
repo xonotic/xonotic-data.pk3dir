@@ -676,12 +676,12 @@ float autocvar_menu_force_on_disconnection;
 bool autocvar_g_campaign;
 void m_draw(float width, float height)
 {
-	if (autocvar_menu_force_on_disconnection > 0)
+	static float connected_time;
+	if (clientstate() == CS_DISCONNECTED)
 	{
-		static float connected_time;
-		if (clientstate() == CS_DISCONNECTED)
+		if (autocvar_g_campaign)
 		{
-			if (autocvar_g_campaign)
+			if (connected_time && time - connected_time > 0)
 			{
 				// in the case player uses the disconnect command (in the console or with a key)
 				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
@@ -689,15 +689,18 @@ void m_draw(float width, float height)
 				cvar_set("g_campaign", "0");
 				m_sync();
 			}
+		}
+		if (autocvar_menu_force_on_disconnection > 0)
+		{
 			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
 			{
 				m_toggle(true);
 				connected_time = 0;
 			}
 		}
-		else
-			connected_time = time;
 	}
+	else
+		connected_time = time;
 
 	m_gamestatus();
 
