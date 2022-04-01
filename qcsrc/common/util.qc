@@ -242,6 +242,7 @@ string build_mutator_list(string s)
 	for (string arg = ""; i < n; i++)
 	{
 		if (i >= 0) arg = argv(i);
+		// cond is the condition for showing the mutator enabled in the menu
 		#define X(name, translated_name, mut, cond) \
 			if(arg == name || (!n && (cond))) { s2 = cons_mid(s2, ", ", translated_name); mut_set_active(mut); }
 		X("Dodging"                   , _("Dodging")                   , MUT_DODGING                   , cvar("g_dodging"))
@@ -266,7 +267,7 @@ string build_mutator_list(string s)
 		X("Powerups"                  , _("Powerups")                  , MUT_POWERUPS                  , cvar("g_powerups") > 0)
 		X("Touch explode"             , _("Touch explode")             , MUT_TOUCHEXPLODE              , cvar("g_touchexplode") > 0)
 		X("Wall jumping"              , _("Wall jumping")              , MUT_WALLJUMP                  , cvar("g_walljump"))
-		X("No start weapons"          , _("No start weapons")          , MUT_WEAPONARENA               , cvar_string("g_weaponarena") == "0" && cvar("g_balance_blaster_weaponstartoverride") == 0)
+		X("No start weapons"          , _("No start weapons")          , MUT_NO_START_WEAPONS          , cvar_string("g_weaponarena") == "0" && cvar("g_balance_blaster_weaponstartoverride") == 0)
 		X("Nades"                     , _("Nades")                     , MUT_NADES                     , cvar("g_nades"))
 		X("Offhand blaster"           , _("Offhand blaster")           , MUT_OFFHAND_BLASTER           , cvar("g_offhand_blaster"))
 		#undef X

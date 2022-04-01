@@ -45,7 +45,8 @@ void wordwrap_cb(string s, float l, void(string) callback);
 string draw_currentSkin;
 string draw_UseSkinFor(string pic);
 
-// some of these aren't proper mutators, e.g. jetpack
+// NOTE they aren't all registered mutators, e.g. jetpack, low gravity
+// TODO add missing "mutators"
 const int MUT_DODGING = 0;
 const int MUT_INSTAGIB = 1;
 const int MUT_NEW_TOYS = 2;
@@ -68,7 +69,7 @@ const int MUT_NO_POWERUPS = 18;
 const int MUT_POWERUPS = 19;
 const int MUT_TOUCHEXPLODE = 20;
 const int MUT_WALLJUMP = 21;
-const int MUT_WEAPONARENA = 22;
+const int MUT_NO_START_WEAPONS = 22;
 const int MUT_NADES = 23;
 const int MUT_OFFHAND_BLASTER = 24;
 
