@@ -681,7 +681,7 @@ void m_draw(float width, float height)
 	{
 		if (autocvar_g_campaign)
 		{
-			if (connected_time && time - connected_time > 0)
+			if (connected_time && time - connected_time > 1)
 			{
 				// in the case player uses the disconnect command (in the console or with a key)
 				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
