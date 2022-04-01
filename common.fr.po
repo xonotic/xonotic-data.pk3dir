@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2022\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -3202,7 +3202,7 @@ msgstr "^BGVous ne pouvez pas aller dans une équipe plus grande"
 
 #: qcsrc/common/notifications/all.inc:436
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGVous n'avez pas le droit de changer d'équipe"
+msgstr "^BGVous n'êtes pas autorisé à changer d'équipe"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -4218,7 +4218,7 @@ msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
-"^F4ATTENTION :^BG vous ne pourrez pas rejoindre ce match après avoir été "
+"^F4ATTENTION :^BG vous ne pouvez plus rejoindre ce match après avoir été "
 "spectateur.\n"
 "Utilisez à nouveau la même commande pour devenir spectateur malgré tout."
 
@@ -4375,11 +4375,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1In^BG-portal created"
-msgstr "Portail ^K1entrant^BG créé"
+msgstr "^BGPortail ^K1entrant^BG créé"
 
 #: qcsrc/common/notifications/all.inc:738
 msgid "^F3Out^BG-portal created"
-msgstr "Portail ^F3sortant^BG créé"
+msgstr "^BGPortail ^F3sortant^BG créé"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^F1Portal creation failed"
