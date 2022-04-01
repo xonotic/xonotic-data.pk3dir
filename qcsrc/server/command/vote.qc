@@ -761,11 +761,11 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "restart": // re-direct all match restarting to resetmatch
-			vote_command = "resetmatch"; // fall-through
-		case "resetmatch":
+		case "restart":
 		{
-			vote_parsed_command = vote_command;
+			// add a delay so that vote result can be seen and announcer can be heard
+			// if the vote is accepted
+			vote_parsed_command = strcat("defer 1 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;
