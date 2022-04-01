@@ -22,12 +22,13 @@ string WeaponArenaString()
 	string s;
 	float n;
 	s = cvar_string("g_weaponarena");
-	if(s == "0")
-		return "";
-	if(s == "all" || s == "1")
-		return _("All Weapons Arena");
-	if(s == "most")
-		return _("Most Weapons Arena");
+	if(s == "0" || s == "") return "";
+	if(s == "all" || s == "1") return _("All Weapons Arena");
+	if(s == "all_available") return _("All Available Weapons Arena");
+	if(s == "most") return _("Most Weapons Arena");
+	if(s == "most_available") return _("Most Available Weapons Arena");
+	if(s == "devall") return "Dev All Weapons Arena"; // development option, do not translate
+	if(s == "devall_available") return "Dev All Available Weapons Arena"; // development option, do not translate
 	if(s == weaponarenastring_cvar)
 		return weaponarenastring;
 
@@ -43,7 +44,10 @@ string WeaponArenaString()
 			s = cons_mid(s, " & ", wep.m_name);
 		}
 	}
-	s = sprintf(_("%s Arena"), s);
+	if (s != "")
+		s = sprintf(_("%s Arena"), s);
+	else
+		s = _("No Weapons Arena");
 
 	strcpy(weaponarenastring, s);
 

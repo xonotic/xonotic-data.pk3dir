@@ -1323,11 +1323,11 @@ string translate_weaponarena(string s)
 {
 	if (s == "") return s;
 	if (s == "All Weapons Arena") return _("All Weapons Arena");
-	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
-	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
 	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
-	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
+	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
 	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
+	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
+	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
 	if (s == "No Weapons Arena") return _("No Weapons Arena");
 
 	int n = tokenizebyseparator(s, " & ");
@@ -1339,7 +1339,10 @@ string translate_weaponarena(string s)
 			LOG_INFO("^3Warning: ^7server sent an invalid weapon name\n");
 		wpn_list = cons_mid(wpn_list, " & ", wep.m_name);
 	}
-	return sprintf(_("%s Arena"), wpn_list);
+	if (wpn_list != "")
+		return sprintf(_("%s Arena"), wpn_list);
+	else
+		return _("No Weapons Arena");
 }
 
 string GetVersionMessage(string hostversion, bool version_mismatch, bool version_check)
