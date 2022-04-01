@@ -20,6 +20,7 @@ string AnnouncerOption()
 
 entity announcer_countdown;
 
+bool prev_inround;
 void Announcer_Countdown(entity this)
 {
 	float starttime = STAT(GAMESTARTTIME);
@@ -50,6 +51,7 @@ void Announcer_Countdown(entity this)
 	{
 		if(inround)
 		{
+			if(!prev_inround) centerprint_ClearTitle(); // clear title if we just started the match
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, STAT(ROUNDS_PLAYED) + 1, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
@@ -65,6 +67,8 @@ void Announcer_Countdown(entity this)
 			this.nextthink = (starttime - (countdown - 1));
 		}
 	}
+
+	prev_inround = inround;
 }
 
 /**
