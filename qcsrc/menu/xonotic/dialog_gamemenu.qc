@@ -42,5 +42,5 @@ void XonoticGameMenuDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticLeaveMatchButton('0 0 0', COMMANDBUTTON_CLOSE));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quit Xonotic"), '1 0 0', "echo ]quit; quit", 0));
+		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quit"), '1 0 0', "menu_showquitdialog", 0));
 }
