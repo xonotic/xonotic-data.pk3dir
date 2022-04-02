@@ -4,6 +4,7 @@
 	TITLE(_("Core Team")) \
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ant "Antibody" Zucaro) \
+		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
@@ -11,7 +12,6 @@
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
-		PERSON(Antonio "terencehill" Piu) \
 		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Freddy) \
@@ -23,14 +23,15 @@
 		PERSON(Nitroxis) \
 		PERSON(packer) \
 		PERSON(Severin "sev" Meyer) \
-		PERSON(SpiKe) \
 		PERSON(Thomas "illwieckz" Debesse) \
 		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 		PERSON(z411) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
 		PERSON(Ant "Antibody" Zucaro (web)) \
+		PERSON(Freddy) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Tyler "-z-" Mulligan (web / game)) \
 	NL() \
@@ -49,6 +50,9 @@
 	FUNCTION(_("Animation")) \
 		PERSON(Sahil "DiaboliK" Singhal) \
 		PERSON(nifrek) \
+	NL() \
+	FUNCTION(_("Campaign")) \
+		PERSON(Marvin "Mirio" Beck) \
 	NL() \
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
@@ -72,6 +76,7 @@
 		PERSON(Severin "sev" Meyer) \
 		PERSON(ShadoW) \
 		PERSON(t0uYK8Ne) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 	NL() \
 	FUNCTION(_("Music / Sound FX")) \
 		PERSON(AquaNova (Archer)) \
@@ -91,6 +96,8 @@
 	NL() \
 	FUNCTION(_("Game Code")) \
 		PERSON(Antonio "terencehill" Piu) \
+		PERSON(bones_was_here) \
+		PERSON(Dr. Jaska) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(martin-t) \
 		PERSON(Mattia "Melanosuchus" Basaglia) \
@@ -135,7 +142,6 @@
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
 		PERSON(slava) \
-		PERSON(Victor "LegendGuard" Jaume) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
