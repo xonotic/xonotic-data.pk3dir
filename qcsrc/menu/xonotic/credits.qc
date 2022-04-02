@@ -57,6 +57,7 @@
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
 		PERSON(Ben "MooKow" Banker) \
+		PERSON(cityy) \
 		PERSON(Cortez) \
 		PERSON(Cuinn "Cuinnton" Herrick) \
 		PERSON(Debugger) \
