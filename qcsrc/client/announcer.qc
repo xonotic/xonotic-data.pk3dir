@@ -72,6 +72,30 @@ void Announcer_Countdown(entity this)
 }
 
 /**
+ * Displays duel title; updates it if the players in-game have changed.
+ */
+void Announcer_Duel()
+{
+	static string prev_pl1_name;
+	static string prev_pl2_name;
+
+	entity pl1 = players.sort_next;
+	entity pl2 = pl1.sort_next;
+	string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
+	string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
+
+	if(pl1_name == prev_pl1_name && pl2_name == prev_pl2_name)
+		return; // Players haven't changed, stop here
+
+	prev_pl1_name = pl1_name;
+	prev_pl2_name = pl2_name;
+
+	// There are new duelers, update title
+	float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
+	centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2);
+}
+
+/**
  * Checks whether the server initiated a map restart (stat_game_starttime changed)
  *
  * TODO: Use a better solution where a common shared entitiy is used that contains
@@ -99,6 +123,9 @@ void Announcer_Gamestart()
 		return;
 	}
 
+	if(announcer_countdown && gametype.m_1v1)
+		Announcer_Duel();
+
 	if(previous_game_starttime != startTime)
 	{
 		if(time < startTime)
@@ -112,15 +139,7 @@ void Announcer_Gamestart()
 			if(!warmup_stage && time < STAT(GAMESTARTTIME))
 			{
 				if (gametype.m_1v1)
-				{
-					entity pl1 = players.sort_next;
-					entity pl2 = pl1.sort_next;
-					string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
-					string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
-
-					float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
-					centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2); // Show duelers in 1v1 game mode
-				}
+					Announcer_Duel();
 				else
 					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype)), 0); // Show game type as title
 
