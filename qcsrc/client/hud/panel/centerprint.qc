@@ -33,8 +33,8 @@ void HUD_CenterPrint_Export(int fh)
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
-const float CENTERPRINT_BASE_SIZE = 1.4;
-const float CENTERPRINT_SPACING = 0.5;
+const float CENTERPRINT_BASE_SIZE = 1.3;
+const float CENTERPRINT_SPACING = 0.3;
 const float CENTERPRINT_TITLE_SPACING = 0.35;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
