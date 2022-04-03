@@ -862,7 +862,7 @@ void trigger_race_checkpoint_verify(entity this)
 	if (have_verified) return;
 	have_verified = true;
 
-	bool qual = g_race_qualifying;
+	int qual = g_race_qualifying;
 
 	int pl_race_checkpoint = 0;
 	int pl_race_place = 0;
@@ -872,7 +872,7 @@ void trigger_race_checkpoint_verify(entity this)
 			pl_race_checkpoint = race_NextCheckpoint(i);
 
 			// race only (middle of the race)
-			g_race_qualifying = false;
+			g_race_qualifying = 0;
 			pl_race_place = 0;
 			if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for respawning in race) - bailing out"));
