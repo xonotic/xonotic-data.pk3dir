@@ -475,8 +475,6 @@ void race_deleteTime(string map, float pos)
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
-	float snew, l;
-
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
 
@@ -486,23 +484,15 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 	if(cp == race_timed_checkpoint) // finish line
 	if (!CS(e).race_completed)
 	{
-		float s;
-		if(g_race_qualifying)
+		int s = GameRules_scoring_add(e, RACE_FASTEST, 0);
+		if(!s || t < s)
+			GameRules_scoring_add(e, RACE_FASTEST, t - s);
+		if(!g_race_qualifying)
 		{
-			s = GameRules_scoring_add(e, RACE_FASTEST, 0);
-			if(!s || t < s)
-				GameRules_scoring_add(e, RACE_FASTEST, t - s);
-		}
-		else
-		{
-			s = GameRules_scoring_add(e, RACE_FASTEST, 0);
-			if(!s || t < s)
-				GameRules_scoring_add(e, RACE_FASTEST, t - s);
-
 			s = GameRules_scoring_add(e, RACE_TIME, 0);
-			snew = TIME_ENCODE(time - game_starttime);
+			int snew = TIME_ENCODE(time - game_starttime);
 			GameRules_scoring_add(e, RACE_TIME, snew - s);
-			l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
+			int l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
 
 			if(autocvar_fraglimit)
 				if(l >= autocvar_fraglimit)

@@ -203,7 +203,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	{
 		if(CS(p).latency_cnt)
 		{
-			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
+			float latency = max(0, CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
