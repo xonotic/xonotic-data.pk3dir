@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: qcsrc/client/announcer.qc:118
 msgid "  vs  "
-msgstr ""
+msgstr "vs"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -59,7 +59,7 @@ msgstr "^1No se pudo escribir a %s"
 #: qcsrc/client/hud/panel/centerprint.qc:192
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Título en %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
@@ -72,6 +72,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Mensaje de varias líneas en %s\n"
+"^BOLDdura más de lo normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:201
 #, c-format
@@ -1194,7 +1196,7 @@ msgstr "nudos"
 #: qcsrc/client/main.qc:1329 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Nivel %d:"
 
 #: qcsrc/client/main.qc:1331
 #, c-format
@@ -1208,15 +1210,15 @@ msgstr "Modo de juego:"
 
 #: qcsrc/client/main.qc:1350
 msgid "Active modifications:"
-msgstr ""
+msgstr "Modificaciones activas:"
 
 #: qcsrc/client/main.qc:1352
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Consejos especiales del juego:"
 
 #: qcsrc/client/main.qc:1355
 msgid "MOTD:"
-msgstr ""
+msgstr "MOTD:"
 
 #: qcsrc/client/main.qc:1417
 #, c-format
@@ -3625,20 +3627,20 @@ msgstr "^BG¡Objetivo destruido en ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:529
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BG¡Ya!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGEl juego empieza en"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGLa ronda %s comienza en"
 
 #: qcsrc/common/notifications/all.inc:532
 msgid "^F4Round cannot start"
-msgstr "^F4La ronda no puede empezar"
+msgstr "^F4La ronda no pudo iniciarse"
 
 #: qcsrc/common/notifications/all.inc:537
 msgid "^F2Don't camp!"
@@ -4229,7 +4231,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:701
 msgid "^F4Round will start in ^COUNT"
-msgstr "^F4La ronda iniciará en ^COUNT"
+msgstr "^F4La ronda comenzará en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:702
 msgid "^BGScanning frequency range..."
@@ -5926,7 +5928,7 @@ msgstr "Bienvenido/a"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 msgid "Main menu"
-msgstr ""
+msgstr "Menú principal"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:23
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -5950,7 +5952,7 @@ msgstr "Teclado/Ratón"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:34
 msgid "Quick menu"
-msgstr ""
+msgstr "Menú rápido"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
@@ -5960,16 +5962,16 @@ msgstr "¡Unirse!"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:39
 msgid "Spectate"
-msgstr ""
+msgstr "Observar"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
 msgid "Quit Xonotic"
-msgstr ""
+msgstr "Salir de Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:7
 msgid "Game menu"
-msgstr ""
+msgstr "Menú del juego"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -6978,7 +6980,7 @@ msgstr "Eliminar todos los mapas de tu selección"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "¡Jugar al modo multijugador!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -7665,11 +7667,11 @@ msgstr "Cancelar"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit / Leave match"
-msgstr ""
+msgstr "Salir / Abandonar la partida"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game / Leave current match"
-msgstr ""
+msgstr "Salir del juego / Abandonar la partida actual"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -9779,7 +9781,7 @@ msgstr "Difícil"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "¡Jugar al modo campaña!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9787,8 +9789,7 @@ msgstr "Un jugador"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr ""
-"Jugar campaña de un sólo jugador o acción instantánea de batalla contra bots"
+msgstr "Jugar al modo campaña o acción instantánea de batalla contra bots"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9987,7 +9988,7 @@ msgstr "entrar en la consola"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit / leave match"
-msgstr ""
+msgstr "salir / abandonar la partida"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
@@ -10027,31 +10028,32 @@ msgstr "menú del editor de puntos de encuentro"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Abandonar la partida actual"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Leave campaign"
-msgstr ""
+msgstr "Abandonar modo campaña"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Abandonar modo de un jugador"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Abandonar modo multijugador"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:26
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Abandonar nivel actual del modo campaña"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Abandonar partida actual de modo de un jugador"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current multiplayer match / Disconnect from the server"
 msgstr ""
+"Abandonar partida actual del modo multijugador / Desconectar del servidor"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"

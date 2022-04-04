@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #: qcsrc/client/announcer.qc:118
 msgid "  vs  "
-msgstr ""
+msgstr "対"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -42,7 +42,7 @@ msgstr "^1%sへの書き込みは失敗しました"
 #: qcsrc/client/hud/panel/centerprint.qc:192
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "%s 秒でタイトル"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
@@ -55,6 +55,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1%s 秒で複数行のメッセージが\n"
+"^BOLD通常より長くなります"
 
 #: qcsrc/client/hud/panel/centerprint.qc:201
 #, c-format
@@ -383,7 +385,7 @@ msgstr "QMCMD^武器を落とす、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "QMCMD^武器を落とした、アイコン"
+msgstr "QMCMD^武器を落とした、アイコン %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^drop flag/key, icon"
@@ -1167,7 +1169,7 @@ msgstr "ノット"
 #: qcsrc/client/main.qc:1329 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "レベル %d:"
 
 #: qcsrc/client/main.qc:1331
 #, c-format
@@ -1181,15 +1183,15 @@ msgstr "ゲームモード:"
 
 #: qcsrc/client/main.qc:1350
 msgid "Active modifications:"
-msgstr ""
+msgstr "活発な変更:"
 
 #: qcsrc/client/main.qc:1352
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "特別なゲームプレイのヒント:"
 
 #: qcsrc/client/main.qc:1355
 msgid "MOTD:"
-msgstr ""
+msgstr "MOTD:"
 
 #: qcsrc/client/main.qc:1417
 #, c-format
@@ -1252,7 +1254,7 @@ msgstr "error creating curl handle"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
-msgstr "突撃 (Assault)"
+msgstr "突撃 (ASSAULT)"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid ""
@@ -1342,7 +1344,7 @@ msgstr "勝つために全てのコントロールポイントを取れて、防
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
-msgstr "ドミネート (Domination)"
+msgstr "ドミネート (DOMINATION)"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
@@ -1384,7 +1386,7 @@ msgstr "殺された者のポイントを獲得するためにボールを保持
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
-msgstr "キープアウェイ (Keepaway)"
+msgstr "キープアウェイ (KEEPAWAY)"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
@@ -1392,7 +1394,7 @@ msgstr "ラウンドに勝つための全ての鍵を集まる"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
-msgstr "鍵の狩猟 (KeyHunt)"
+msgstr "鍵の狩猟 (KEYHUNT)"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
@@ -1412,7 +1414,7 @@ msgstr "命数:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
-msgstr "ネクスボール (Nexball)"
+msgstr "ネクスボール (NEXBALL)"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
@@ -1436,7 +1438,7 @@ msgstr "コントロールポイントを取れて、敵のジェネレーター
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Onslaught"
-msgstr "猛攻撃 (Onslaught)"
+msgstr "猛攻撃 (ONSLAUGHT)"
 
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:96
 msgid "Personal best"
@@ -3541,16 +3543,16 @@ msgstr "^F4%s^BG で^BG目的を破壊された"
 
 #: qcsrc/common/notifications/all.inc:529
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BG始め！"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGゲームを開始している:"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGラウンド %sを開始している:"
 
 #: qcsrc/common/notifications/all.inc:532
 msgid "^F4Round cannot start"
@@ -4014,7 +4016,7 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
-"不活発者であることを停止しろ!\n"
+"^K1不活発者であることを停止しろ!\n"
 "^BG^COUNT 後に切断してる..."
 
 #: qcsrc/common/notifications/all.inc:655
@@ -5482,32 +5484,32 @@ msgstr "%d 分"
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr "%s 秒"
+msgstr "CI_DEC^ %s 秒"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr "%d 秒"
+msgstr "CI_ZER^ %d 秒"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr "%d 秒"
+msgstr "CI_FIR^ %d 秒"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr "%d 秒"
+msgstr "CI_SEC^ %d 秒"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr "%d 秒"
+msgstr "CI_THI^ %d 秒"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr "%d 秒"
+msgstr "CI_MUL^ %d 秒"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
@@ -5838,7 +5840,7 @@ msgstr "ようこそ"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 msgid "Main menu"
-msgstr ""
+msgstr "メインメニュー"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:23
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -5862,7 +5864,7 @@ msgstr "インプット"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:34
 msgid "Quick menu"
-msgstr ""
+msgstr "クイックメニュー"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
@@ -5872,16 +5874,16 @@ msgstr "参加!"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:39
 msgid "Spectate"
-msgstr ""
+msgstr "観戦する"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
 msgid "Quit Xonotic"
-msgstr ""
+msgstr "XONOTICを終了する"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:7
 msgid "Game menu"
-msgstr ""
+msgstr "ゲームメニュー"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -6886,7 +6888,7 @@ msgstr "利用可能な全てのマップを選択から削除する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "マルチプレイヤーを始め！"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -7565,11 +7567,11 @@ msgstr "キャンセルする"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit / Leave match"
-msgstr ""
+msgstr "終了する / 試合を残す"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game / Leave current match"
-msgstr ""
+msgstr "ゲームを終了する / 現在の試合を残す"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -9650,7 +9652,7 @@ msgstr "難い"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "キャンペーンを遊ぶ！"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9857,7 +9859,7 @@ msgstr "コンソールを入力する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit / leave match"
-msgstr ""
+msgstr "終了する / 試合を残す"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
@@ -9897,31 +9899,31 @@ msgstr "ウェイポイント編集メニュー"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "現在の試合を残す"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Leave campaign"
-msgstr ""
+msgstr "キャンペーンレベルを残す"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "シングルプレイヤーを残す"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "マルチプレイヤーを残す"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:26
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "現在のキャンペーンレベルを残す"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "現在のシングルプレイヤー試合を残す"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "現在のマルチプレイヤー試合を残す / サーバーから切断する"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"

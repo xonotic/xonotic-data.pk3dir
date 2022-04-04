@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2022\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #: qcsrc/client/announcer.qc:118
 msgid "  vs  "
-msgstr ""
+msgstr "  vs  "
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -44,7 +44,7 @@ msgstr "^1Não foi possível escrever para %s"
 #: qcsrc/client/hud/panel/centerprint.qc:192
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Título em %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
@@ -57,6 +57,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Mensagem de multilinha em %s que\n"
+"^BOLDdura mais que o normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:201
 #, c-format
@@ -1182,7 +1184,7 @@ msgstr "nós"
 #: qcsrc/client/main.qc:1329 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Nível %d:"
 
 #: qcsrc/client/main.qc:1331
 #, c-format
@@ -1196,15 +1198,15 @@ msgstr "Modo de jogo:"
 
 #: qcsrc/client/main.qc:1350
 msgid "Active modifications:"
-msgstr ""
+msgstr "Modificações ativas:"
 
 #: qcsrc/client/main.qc:1352
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Dicas de jogo especial:"
 
 #: qcsrc/client/main.qc:1355
 msgid "MOTD:"
-msgstr ""
+msgstr "Mensagem do dia:"
 
 #: qcsrc/client/main.qc:1417
 #, c-format
@@ -3593,16 +3595,16 @@ msgstr "^BGObjetivo destruído em ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:529
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGComeçou!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGO jogo inicia em"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGA rodada %s inicia em"
 
 #: qcsrc/common/notifications/all.inc:532
 msgid "^F4Round cannot start"
@@ -5897,7 +5899,7 @@ msgstr "Bem-vindo(a)"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 msgid "Main menu"
-msgstr ""
+msgstr "Menu principal"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:23
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -5921,7 +5923,7 @@ msgstr "Entrada"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:34
 msgid "Quick menu"
-msgstr ""
+msgstr "Menu rápido"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
@@ -5931,16 +5933,16 @@ msgstr "Conectar!"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:39
 msgid "Spectate"
-msgstr ""
+msgstr "Assistir"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
 msgid "Quit Xonotic"
-msgstr ""
+msgstr "Sair do Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:7
 msgid "Game menu"
-msgstr ""
+msgstr "Menu do jogo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -6949,7 +6951,7 @@ msgstr "Remove todos os mapas da sua seleção"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Iniciar multijogador!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -7642,11 +7644,11 @@ msgstr "Cancelar"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit / Leave match"
-msgstr ""
+msgstr "Sair da partida"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game / Leave current match"
-msgstr ""
+msgstr "Sair do jogo ou da partida"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -9755,7 +9757,7 @@ msgstr "Difícil"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "Jogar campanha!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9966,7 +9968,7 @@ msgstr "abrir o console"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit / leave match"
-msgstr ""
+msgstr "sair da partida"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
@@ -10006,31 +10008,31 @@ msgstr "menu do editor de ponto de interesse"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Sair da partida"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Leave campaign"
-msgstr ""
+msgstr "Sair da campanha"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Sair do jogo"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Sair do multijogador"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:26
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Sair deste nível da campanha"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Sair desta partida de único jogador"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Sair desta partida de multijogador, ou desconectar do servidor"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"
