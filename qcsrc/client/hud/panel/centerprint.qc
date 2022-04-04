@@ -159,10 +159,7 @@ void centerprint_ClearTitle()
 void centerprint_SetTitle(string title, float offset)
 {
 	if(title != centerprint_title) {
-		if(centerprint_title)
-			strfree(centerprint_title);
-
-		centerprint_title = strzone(CCR(title));
+		strcpy(centerprint_title, CCR(title));
 		centerprint_title_offset = offset;
 	}
 }
