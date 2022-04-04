@@ -187,10 +187,10 @@
 		NL() \
 		FUNCTION(_("Czech")) \
 			PERSON(Adam "Admi335" Říha) \
-			PERSON(Jiří "Havro" Vrána) \
-			PERSON(gamingforyou875) \
 			PERSON(fasdasd " kitfildom" sdasd) \
+			PERSON(gamingforyou875) \
 			PERSON(Jan "kockahonza" Kocka) \
+			PERSON(Jiří "Havro" Vrána) \
 			PERSON(shogun assassin/woky) \
 			PERSON(Superovoce) \
 			PERSON(Tomáš "CZHeron" Volavka) \
@@ -371,11 +371,11 @@
 			PERSON(marcus256) \
 		NL() \
 		FUNCTION(_("Turkish")) \
-			PERSON(Gokdeniz.Kucukali) \
 			PERSON(Abdurrahman "akkus12345" AKKUŞ) \
 			PERSON(Ahmet "ahmetlii") \
 			PERSON(Çağlar "caglarturali" Turalı) \
 			PERSON(Demiray "tulliana" Muhterem) \
+			PERSON(Gokdeniz.Kucukali) \
 			PERSON(ibra kap) \
 			PERSON(yutyocraft) \
 		NL() \
