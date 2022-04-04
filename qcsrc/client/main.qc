@@ -490,7 +490,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
 	{
-		if (cvar("_menu_gamemenu_dialog_available"))
+		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
 			return true;
