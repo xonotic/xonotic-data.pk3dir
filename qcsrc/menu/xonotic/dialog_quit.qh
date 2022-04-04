@@ -3,8 +3,8 @@
 #include "dialog.qh"
 CLASS(XonoticQuitDialog, XonoticDialog)
 	METHOD(XonoticQuitDialog, fill, void(entity));
-	ATTRIB(XonoticQuitDialog, title, string, _("Quit / Leave match"));
-	ATTRIB(XonoticQuitDialog, tooltip, string, _("Quit the game / Leave current match"));
+	ATTRIB(XonoticQuitDialog, title, string, _("Quit"));
+	ATTRIB(XonoticQuitDialog, tooltip, string, _("Quit the game"));
 	ATTRIB(XonoticQuitDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
 	ATTRIB(XonoticQuitDialog, intendedWidth, float, 0.5);
 	ATTRIB(XonoticQuitDialog, rows, float, 3);
