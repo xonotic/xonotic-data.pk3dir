@@ -20,6 +20,36 @@ string AnnouncerOption()
 
 entity announcer_countdown;
 
+/**
+ * Displays duel title; updates it if the players in-game have changed.
+ */
+string prev_pl1_name;
+string prev_pl2_name;
+void Announcer_Duel()
+{
+	entity pl1 = players.sort_next;
+	entity pl2 = pl1.sort_next;
+	string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
+	string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
+
+	if(pl1_name == prev_pl1_name && pl2_name == prev_pl2_name)
+		return; // Players haven't changed, stop here
+
+	strcpy(prev_pl1_name, pl1_name);
+	strcpy(prev_pl2_name, pl2_name);
+
+	// There are new duelers, update title
+	float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
+	centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2);
+}
+
+void Announcer_ClearTitle()
+{
+	strfree(prev_pl1_name);
+	strfree(prev_pl2_name);
+	centerprint_ClearTitle();
+}
+
 bool prev_inround;
 void Announcer_Countdown(entity this)
 {
@@ -30,7 +60,7 @@ void Announcer_Countdown(entity this)
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		delete(this);
 		announcer_countdown = NULL;
-		centerprint_ClearTitle();
+		Announcer_ClearTitle();
 		return;
 	}
 
@@ -44,14 +74,14 @@ void Announcer_Countdown(entity this)
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
-		centerprint_ClearTitle();
+		Announcer_ClearTitle();
 		return;
 	}
 	else // countdown is still going
 	{
 		if(inround)
 		{
-			if(!prev_inround) centerprint_ClearTitle(); // clear title if we just started the match
+			if(!prev_inround) Announcer_ClearTitle(); // clear title if we just started the match
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, STAT(ROUNDS_PLAYED) + 1, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
@@ -69,30 +99,6 @@ void Announcer_Countdown(entity this)
 	}
 
 	prev_inround = inround;
-}
-
-/**
- * Displays duel title; updates it if the players in-game have changed.
- */
-void Announcer_Duel()
-{
-	static string prev_pl1_name;
-	static string prev_pl2_name;
-
-	entity pl1 = players.sort_next;
-	entity pl2 = pl1.sort_next;
-	string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
-	string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
-
-	if(pl1_name == prev_pl1_name && pl2_name == prev_pl2_name)
-		return; // Players haven't changed, stop here
-
-	prev_pl1_name = pl1_name;
-	prev_pl2_name = pl2_name;
-
-	// There are new duelers, update title
-	float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
-	centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2);
 }
 
 /**
