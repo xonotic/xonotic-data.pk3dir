@@ -1053,7 +1053,9 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		strcpy(teamscores_label(i), ReadString());
 		teamscores_flags(i) = ReadByte();
 	}
-	net_handle_ServerWelcome();
+	bool welcome_msg_too = ReadByte();
+	if (welcome_msg_too)
+		net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
 	Gamemode_Init();
