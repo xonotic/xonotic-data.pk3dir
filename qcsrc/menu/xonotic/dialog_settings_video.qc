@@ -59,24 +59,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 			e.applyButton = videoApplyButton;
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
-			_("Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate")));
+			_("Vsync prevents tearing, but increases latency and caps your fps at the screen refresh rate")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
+			setDependent(e, "vid_samples", 0, 1);
 
 	me.TR(me);
-		if(cvar("developer") > 0)
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "v_flipped", _("Flip view horizontally"),
-				_("Poor man's left handed mode")));
-		}
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("gl_texture_anisotropy",
-			_("Anisotropic filtering quality")));
-			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
-			e.addValue(e, _("2x"), "2");
-			e.addValue(e, _("4x"), "4");
-			e.addValue(e, _("8x"), "8");
-			e.addValue(e, _("16x"), "16");
-			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
 			setDependent(e, "r_viewfbo", 0, 0);
@@ -89,8 +77,15 @@ void XonoticVideoSettingsTab_fill(entity me)
 			setDependent(e, "r_viewfbo", 0, 0);
 			e.applyButton = videoApplyButton;
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
-			setDependent(e, "vid_samples", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("gl_texture_anisotropy",
+			_("Anisotropic filtering quality")));
+			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
+			e.addValue(e, _("2x"), "2");
+			e.addValue(e, _("4x"), "4");
+			e.addValue(e, _("8x"), "8");
+			e.addValue(e, _("16x"), "16");
+			e.configureXonoticTextSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
@@ -101,22 +96,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DF^World")), "1");
 			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-	if(cvar_type("gl_vbo") & CVAR_TYPEFLAG_ENGINE)
-	{
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "0", ZCTX(_("VBO^Off"))));
-		me.TD(me, 1, 1.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "3", _("Vertices, some Tris (compatible)"),
-			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "2", _("Vertices"),
-			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
-		me.TD(me, 1, 1.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "1", _("Vertices and Triangles"),
-			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
-	}
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));
@@ -165,6 +144,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 	}
 	if(cvar("developer") > 0)
 	{
+		me.TR(me);
+			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "v_flipped", _("Flip view horizontally"),
+				_("Poor man's left handed mode")));
 		me.TR(me);
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
 				setDependent(e, "vid_gl20", 1, 1);
