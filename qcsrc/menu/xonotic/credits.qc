@@ -169,11 +169,11 @@
 			PERSON(CodingJellyfish) \
 			PERSON(gee "Largee" Lar) \
 			PERSON(jiegushijia) \
+			PERSON(kalawore) \
 			PERSON(Liang "dxkliu" Liu) \
 			PERSON(Losier "losierb" Blackheath) \
 			PERSON(Matthew "wjjmatthew" Wu) \
 			PERSON(moetale) \
-			PERSON(kalawore) \
 			PERSON(sapphireliu) \
 		NL() \
 		FUNCTION(_("Chinese (Taiwan)")) \
@@ -245,6 +245,7 @@
 			PERSON_("Γιώργος Καρδάμης") \
 			PERSON(Hector "The_Smasher_1992" Champipis) \
 			PERSON(Konstantinos "LDinos" Mihalenas) \
+			PERSON(MasterWord) \
 			PERSON(Mensious Mensious) \
 			PERSON(Savoritias) \
 			PERSON(Vindex) \
@@ -279,8 +280,8 @@
 			PERSON(Артем "bystrov.arterm" Быстров) \
 		NL() \
 		FUNCTION(_("Korean")) \
-			PERSON(Jisoo "LimJiSoo0719" Lim) \
 			PERSON(BYEONGJIN "ahnkoon" AN) \
+			PERSON(Jisoo "LimJiSoo0719" Lim) \
 			PERSON(Kim "coughingmouse" Lee) \
 		NL() \
 		FUNCTION(_("Polish")) \
@@ -298,6 +299,7 @@
 			PERSON(Rafał "Okava" Szymański) \
 			PERSON(Robert "Szkodnix" Wolniak) \
 			PERSON(Saikuru "saikuru0" Zero) \
+			PERSON(Sertomas) \
 			PERSON(SFS Atlas) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
@@ -329,6 +331,7 @@
 			PERSON(Alexandr "zrg") \
 			PERSON(Andrei "adem4ik" Stepanov) \
 			PERSON(Andrey "dekrY" P.) \
+			PERSON(Artem Vorotnikov) \
 			PERSON(Blueberryy) \
 			PERSON(gravicappa) \
 			PERSON(Hot Dog) \
