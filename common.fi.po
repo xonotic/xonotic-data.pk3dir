@@ -6,7 +6,7 @@
 # Dr. Jaska <drjaska83@gmail.com>, 2020
 # Dr. Jaska <drjaska83@gmail.com>, 2020
 # Heidi Wenger, 2022
-# Heidi Wenger, 2022
+# heidi.wenger, 2022
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jaakko Saarikko <jaakko.saarikko@protonmail.com>, 2022
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
