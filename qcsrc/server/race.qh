@@ -9,7 +9,7 @@ const float ST_RACE_LAPS = 1;
 
 int autocvar_g_cts_send_rankings_cnt = 15;
 
-bool g_race_qualifying;
+int g_race_qualifying;
 
 float speedaward_lastsent;
 float speedaward_lastupdate;
