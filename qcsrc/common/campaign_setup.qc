@@ -18,4 +18,7 @@ void CampaignSetup(int n)
 		localcmd("\n");
 	localcmd("disconnect\nmaxplayers 16\n");
 	MapInfo_LoadMap(campaign_mapname[n], 1);
+	#ifdef MENUQC
+	makeServerSingleplayer();
+	#endif
 }

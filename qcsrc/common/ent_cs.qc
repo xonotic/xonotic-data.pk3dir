@@ -172,9 +172,9 @@ ENTCS_PROP(ACTIVEWEPID, false, activewepid, activewepid, ENTCS_SET_NORMAL,
 
 //LegendGuard adds ENTCS_PROP for MMM 20-02-2021
 // gamemode specific player mmm status (independent of score and frags)
-ENTCS_PROP(MMM_STATUS, true, mmm_status, mmm_status, ENTCS_SET_NORMAL,
-	{ WriteShort(chan, ent.mmm_status); },
-	{ ent.mmm_status = ReadShort(); })
+//ENTCS_PROP(MMM_STATUS, true, mmm_status, mmm_status, ENTCS_SET_NORMAL,
+//	{ WriteShort(chan, ent.mmm_status); },
+//	{ ent.mmm_status = ReadShort(); })
 
 #ifdef SVQC
 

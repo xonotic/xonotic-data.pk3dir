@@ -475,15 +475,8 @@ void updateCheck()
 	if(!_Nex_ExtResponseSystem_Queried)
 	{
 		_Nex_ExtResponseSystem_Queried = 1;
-		float startcnt;
-		string uri;
-
-		cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
-
-		// for privacy, munge the start count a little
-		startcnt = floor((floor(startcnt / 10) + random()) * 10);
-		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-		uri_get(uri, URI_GET_UPDATENOTIFICATION);
+		cvar_set("cl_startcount", ftos(cvar("cl_startcount") + 1));
+		uri_get("https://update.xonotic.org/checkupdate.txt", URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
@@ -697,8 +690,7 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
-	GAMETYPE(MAPINFO_TYPE_MMM) \
-	//LegendGuard adds GAMETYPE for menu for MMM 20-02-2021
+	/* GAMETYPE(MAPINFO_TYPE_MMM) */ \
 	/**/
 
 // hidden gametypes come last so indexing always works correctly
@@ -831,6 +823,18 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+bool isServerSingleplayer()
+{
+	return (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1");
+}
+
+void makeServerSingleplayer()
+{
+	// it doesn't allow clients to connect from different machines
+	localcmd("defer 0.1 \"sv_cmd settemp net_address 127.0.0.1\"\n");
+	localcmd("defer 0.1 \"sv_cmd settemp net_address_ipv6 ::1\"\n");
 }
 
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)

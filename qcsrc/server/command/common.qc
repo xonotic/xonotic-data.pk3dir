@@ -226,7 +226,8 @@ void timeout_handler_think(entity this)
 				game_timeout = false;
 				timeout_total_time += total_time;
 				game_starttime += total_time;
-				round_starttime += total_time;
+				if(round_starttime)
+					round_starttime += total_time;
 				if(round_handler && round_handler_GetEndTime() > 0)
 					round_handler.round_endtime += total_time;
 
@@ -689,6 +690,7 @@ void CommonCommand_timein(int request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEOUT);
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}

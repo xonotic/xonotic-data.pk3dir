@@ -248,6 +248,7 @@ void setplayermodel(entity e, string modelname)
 void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 {
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this, is_forced);
+	bool recount_ready = false;
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -262,7 +263,8 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		if(IS_REAL_CLIENT(this))
 		{
 			if (vote_called) { VoteCount(false); }
-			ReadyCount();
+			this.ready = false;
+			recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -311,12 +313,15 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 
+	TRANSMUTE(Observer, this);
+
+	if(recount_ready) ReadyCount();
+
 	WaypointSprite_PlayerDead(this);
+	accuracy_resend(this);
 
 	if (CS(this).killcount != FRAGS_SPECTATOR && !game_stopped && CHAT_NOSPECTATORS())
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-
-	accuracy_resend(this);
 
 	CS(this).spectatortime = time;
 	if(this.bot_attack)
@@ -326,7 +331,6 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		IL_REMOVE(g_monster_targets, this);
 	this.monster_attack = false;
 	STAT(HUD, this) = HUD_NORMAL;
-	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
 	if(this.damagedbycontents)
@@ -367,6 +371,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.revival_time = 0;
 	this.draggable = drag_undraggable;
 
+	player_powerups_remove_all(this);
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
 	this.drawonlytoclient = this;
@@ -1057,8 +1062,27 @@ string GetClientVersionMessage(entity this)
 	}
 }
 
-string getwelcomemessage(entity this)
+void SendWelcomemessage(entity this, bool force_centerprint)
 {
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
+	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
+}
+
+void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
+{
+	WriteByte(msg_type, boolean(autocvar_g_campaign));
+	if (boolean(autocvar_g_campaign))
+	{
+		WriteString(msg_type, Campaign_GetTitle());
+		WriteByte(msg_type, Campaign_GetLevelNum());
+		WriteString(msg_type, Campaign_GetMessage());
+		return;
+	}
+	WriteByte(msg_type, force_centerprint);
+	WriteString(msg_type, autocvar_hostname);
+	WriteString(msg_type, GetClientVersionMessage(this));
+
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
 
@@ -1079,14 +1103,7 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	//string versionmessage = GetClientVersionMessage(this);
-	//string s = strcat(versionmessage, "^8\n^9", (autocvar_hostname_full ? autocvar_hostname_full : autocvar_hostname));
-	string s = (autocvar_hostname_full != "" ? autocvar_hostname_full : autocvar_hostname);
-
-	s = strcat(s, "^8\n^7", gamemode_name);
-
-	if(modifications != "")
-		s = strcat(s, "^7 | ^3", modifications);
+	WriteString(msg_type, modifications);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1094,24 +1111,14 @@ string getwelcomemessage(entity this)
 		strcpy(cache_mutatormsg, cache_lastmutatormsg);
 	}
 
-	if (cache_mutatormsg != "") {
-		s = strcat(s, "\n^8tips: ^7", cache_mutatormsg);
-	}
+	WriteString(msg_type, cache_mutatormsg);
 
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
 
-	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
-
-	string motd = autocvar_sv_motd;
-	if (motd != "") {
-		s = strcat(s, "\n\n^7", strreplace("\\n", "\n", motd));
-	}
-	
-	// It's been a work, I want some credit for a while. Might remove later.
-	s = strcat(s, "\n\nUsing BaI mod by z411 - bienvenidoainternet.org");
-	return s;
+	WriteString(msg_type, mutator_msg); // trust that the mutator will do proper formatting
+	WriteString(msg_type, strreplace("\\n", "\n", autocvar_sv_motd));
 }
 
 /**
@@ -1220,14 +1227,8 @@ void ClientConnect(entity this)
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
-	if (IS_REAL_CLIENT(this))
-	{
-		if (!autocvar_g_campaign && !IS_PLAYER(this))
-		{
-			CS(this).motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
-		}
-	}
+	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
+		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
 /*
 =============
@@ -1479,21 +1480,25 @@ void respawn(entity this)
 void play_countdown(entity this, float finished, Sound samp)
 {
 	TC(Sound, samp);
-	if(IS_REAL_CLIENT(this))
-		if(floor(finished - time - frametime) != floor(finished - time))
-			if(finished - time < 6)
-				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
+	float time_left = finished - time;
+	if(IS_REAL_CLIENT(this) && time_left < 6 && floor(time_left - frametime) != floor(time_left))
+		sound(this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+// it removes special powerups not handled by StatusEffects
 void player_powerups_remove_all(entity this)
 {
-	if (this.items & IT_SUPERWEAPON)
+	if (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
-		if (time > game_starttime + 1 && IS_CLIENT(this))
+		if (time > game_starttime + 1 && IS_CLIENT(this)
+			&& !(start_items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS)))
+		{
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-		stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-		this.items -= (this.items & IT_SUPERWEAPON);
+		}
+		if (this.items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
+			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+		this.items -= (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS));
 	}
 }
 
@@ -2088,12 +2093,12 @@ void PrintWelcomeMessage(entity this)
 		if (autocvar_g_campaign) {
 			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_CAMPAIGN_MESSAGE, Campaign_GetMessage(), Campaign_GetLevelNum());
+				SendWelcomemessage(this, false);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
+				SendWelcomemessage(this, true);
 			}
 		}
 	}
@@ -2104,7 +2109,7 @@ void PrintWelcomeMessage(entity this)
 				CS(this).motd_actived_time = time;
 			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
 				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this))
@@ -2123,10 +2128,7 @@ void PrintWelcomeMessage(entity this)
 		{
 			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
-			if (autocvar_g_campaign)
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
-			else
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
 		else if (IS_PLAYER(this) || IS_SPEC(this))
 		{

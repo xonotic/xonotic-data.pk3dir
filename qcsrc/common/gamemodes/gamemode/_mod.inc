@@ -12,7 +12,7 @@
 #include <common/gamemodes/gamemode/keepaway/_mod.inc>
 #include <common/gamemodes/gamemode/keyhunt/_mod.inc>
 #include <common/gamemodes/gamemode/lms/_mod.inc>
-#include <common/gamemodes/gamemode/mmm/_mod.inc> //LegendGuard adds _mod.inc for Murder in Megaerebus Manor 20-02-2021
+//#include <common/gamemodes/gamemode/mmm/_mod.inc>
 #include <common/gamemodes/gamemode/mayhem/_mod.inc>
 #include <common/gamemodes/gamemode/nexball/_mod.inc>
 #include <common/gamemodes/gamemode/onslaught/_mod.inc>

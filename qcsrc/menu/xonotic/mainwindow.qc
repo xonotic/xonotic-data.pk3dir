@@ -43,6 +43,8 @@
 #include "dialog_multiplayer_create_mutators.qh"
 #include "dialog_sandboxtools.qh"
 #include "dialog_monstertools.qh"
+#include "dialog_gamemenu.qh"
+#include "dialog_welcome.qh"
 #include "dialog_teamselect.qh"
 #include "dialog_uid2name.qh"
 #include "dialog_singleplayer.qh"
@@ -50,10 +52,6 @@
 #include "dialog_settings.qh"
 #include "dialog_credits.qh"
 #include "dialog_quit.qh"
-
-#include "dialog_disconnect.qh"
-
-
 
 void MainWindow_draw(entity me)
 {
@@ -70,33 +68,6 @@ void MainWindow_draw(entity me)
 		
 		me.firstDraw = false;
 	}
-
-	//-------------------------------------
-	// Part of Disconnect Dialog button:
-	// In case of this function is recalling every time, need to use condition of visibility 
-	
-	if (me.disconnectDialogVisibility && !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) 
-	{
-		// If gamestate is not "ingame" (and it is a first "frame" of drawing (or dialog is visible)), 
-		// disconnect button is unnecessary, remove it
-		me.removeItem(me.mainNexposee, me.disconnectDialog);
-		me.disconnectDialogVisibility = 0;
-
-	} else if(!me.disconnectDialogVisibility && (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) {
-		
-		// If gamestate is "ingame" (and dialog is not visible), 
-		// make disconnect button visible
-		entity n, i;
-		n = me.mainNexposee;
-		i = me.disconnectDialog;
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, '0.5 1.2 0.0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		me.disconnectDialogVisibility = 1;
-	}
-
-	// I haven't found the best solution for making button visible. 
-	// Alpha channel is the worst thing, because dialog with alpha is also clickable
-	//-------------------------------------
 }
 
 void DemoButton_Click(entity me, entity other)
@@ -118,6 +89,10 @@ void MainWindow_configureMainWindow(entity me)
 
 	// dialog run upon startup
 	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticWelcomeDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
@@ -276,6 +251,10 @@ void MainWindow_configureMainWindow(entity me)
 
 
 	// miscellaneous dialogs
+	i = NEW(XonoticGameMenuDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	i = NEW(XonoticTeamSelectDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -325,14 +304,6 @@ void MainWindow_configureMainWindow(entity me)
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_CREDITS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
 
-		//Disconnect dialog at center of screen (between credits and quit)
-		i = NEW(XonoticDisconnectDialog);
-		i.configureDialog(i);
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, '0.5 1.2 0.0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
-		me.disconnectDialog = i;
-	
 		i = NEW(XonoticQuitDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -343,5 +314,4 @@ void MainWindow_configureMainWindow(entity me)
 	me.moveItemAfter(me, n, NULL);
 
 	me.initializeDialog(me, n);
-	me.disconnectDialogVisibility = 1;
 }

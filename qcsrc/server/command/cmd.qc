@@ -372,7 +372,7 @@ void ClientCommand_ready(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller) && caller.last_ready < time - 3) // anti-spam
+			if (IS_CLIENT(caller) && caller.last_ready < time - 3)
 			{
 				if (warmup_stage || g_race_qualifying == 2)
 				{

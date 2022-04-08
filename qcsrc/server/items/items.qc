@@ -1471,12 +1471,12 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != NULL)
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+			sound(e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != NULL)
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+			sound(e, ((snd_incr == SND_POWERUP) ? CH_TRIGGER_SINGLE : CH_TRIGGER), snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 

@@ -58,7 +58,6 @@ float sys_frametime;     // gets initialised in worldspawn, saves the value from
 float orig_slowmo;       // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
 float timeout_time;      // contains the time in seconds that the active timeout has left
 float timeout_leadtime;  // contains the number of seconds left of the leadtime (before the timeout starts)
-float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
 .vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 

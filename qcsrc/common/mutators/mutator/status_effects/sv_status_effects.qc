@@ -70,11 +70,20 @@ MUTATOR_HOOKFUNCTION(status_effects, PlayerDies)
 	StatusEffects_removeall(frag_target, STATUSEFFECT_REMOVE_NORMAL);
 }
 
+MUTATOR_HOOKFUNCTION(status_effects, ClientDisconnect)
+{
+	entity player = M_ARGV(0, entity);
+
+	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(status_effects, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
 	// no need to network updates, as there is no statuseffects object attached
+	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
 	StatusEffects_clearall(player.statuseffects_store);
 
 	// don't delete spectatee's effects!
@@ -86,6 +95,7 @@ MUTATOR_HOOKFUNCTION(status_effects, reset_map_global)
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && it.statuseffects,
 	{
+		StatusEffects_removeall(it, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
 		StatusEffects_clearall(it.statuseffects);
 		StatusEffects_update(it);
 	});
