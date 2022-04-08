@@ -1,7 +1,7 @@
 #pragma once
 
 int autocvar__termsofservice_accepted;
-const string termsofservice_url = "http://update.xonotic.org/tos.txt";
+const string termsofservice_url = "https://update.xonotic.org/tos.txt";
 
 #include "rootdialog.qh"
 CLASS(XonoticToSDialog, XonoticRootDialog)

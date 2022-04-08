@@ -475,15 +475,8 @@ void updateCheck()
 	if(!_Nex_ExtResponseSystem_Queried)
 	{
 		_Nex_ExtResponseSystem_Queried = 1;
-		float startcnt;
-		string uri;
-
-		cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
-
-		// for privacy, munge the start count a little
-		startcnt = floor((floor(startcnt / 10) + random()) * 10);
-		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-		uri_get(uri, URI_GET_UPDATENOTIFICATION);
+		cvar_set("cl_startcount", ftos(cvar("cl_startcount") + 1));
+		uri_get("https://update.xonotic.org/checkupdate.txt", URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
