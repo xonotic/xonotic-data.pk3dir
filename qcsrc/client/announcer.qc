@@ -40,7 +40,7 @@ void Announcer_Duel()
 
 	// There are new duelers, update title
 	float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
-	centerprint_SetTitle(sprintf("^BG%s^BG%s%s", pl1_name, _("  vs  "), pl2_name), offset / 2);
+	centerprint_SetTitle(sprintf("^BG%s^BG  %s  %s", pl1_name, _("vs"), pl2_name), offset / 2);
 }
 
 void Announcer_ClearTitle()
