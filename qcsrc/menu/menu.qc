@@ -672,6 +672,7 @@ void m_tooltip(vector pos)
 	}
 }
 
+const int MIN_DISCONNECTION_TIME = 1;
 float autocvar_menu_force_on_disconnection;
 bool autocvar_g_campaign;
 void m_draw(float width, float height)
@@ -681,7 +682,7 @@ void m_draw(float width, float height)
 	{
 		if (autocvar_g_campaign)
 		{
-			if (connected_time && time - connected_time > 1)
+			if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 			{
 				// in the case player uses the disconnect command (in the console or with a key)
 				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
@@ -692,11 +693,15 @@ void m_draw(float width, float height)
 		}
 		if (autocvar_menu_force_on_disconnection > 0)
 		{
-			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
+			if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 			{
 				m_toggle(true);
-				connected_time = 0;
 			}
+		}
+		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
+		{
+			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
+			connected_time = 0;
 		}
 	}
 	else
