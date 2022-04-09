@@ -1074,8 +1074,7 @@ spawnfunc(worldspawn)
 
 	WinningConditionHelper(this); // set worldstatus
 
-	if(!warmup_stage)
-		round_handler_Activate(true);
+	round_handler_Activate(!warmup_stage);
 	
 	// for RJZ
 	if (autocvar_rjz_count_shards && warmup_stage) {
