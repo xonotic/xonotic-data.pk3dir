@@ -116,10 +116,21 @@ void HUD_Timer()
 	}
 
 	// Timer text
-	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
-		timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
+	if (warmup_stage && timelimit == -1)
+	{
+		// Lock timer in infinite warmup
+		if (autocvar_hud_panel_timer_increment)
+			timer = seconds_tostring(0);
+		else
+			timer = seconds_tostring(STAT(TIMELIMIT) * 60);
+	}
 	else
-		timer = seconds_tostring(timeleft);
+	{
+		if (autocvar_hud_panel_timer_increment || timelimit <= 0)
+			timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
+		else
+			timer = seconds_tostring(timeleft);
+	}
 
 	// Secondary timer for round-based game modes
 	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
