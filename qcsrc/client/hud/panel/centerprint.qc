@@ -371,7 +371,7 @@ void HUD_CenterPrint()
 
 		if (time < centerprint_start_time[j]) continue;
 
-		float fade_in_time = autocvar_hud_panel_centerprint_fade_in;
+		float fade_in_time = 0;
 		float fade_out_time = autocvar_hud_panel_centerprint_fade_out;
 
 		if (centerprint_countdown_num[j]) {
@@ -405,7 +405,8 @@ void HUD_CenterPrint()
 		a *= panel_fg_alpha;
 
 		// finally set the size based on the alpha
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+		//sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+		sz = 1; // remove zoom;
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
