@@ -78,6 +78,7 @@ float W_WeaponRateFactor(entity this);
 float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
+float round_delaytime;
 float overtime_starttime; // z411 point in time where first overtime started
 
 float timeout_last;
@@ -125,6 +126,7 @@ REGISTER_STAT(VEHICLESTAT_W2MODE, int)
 REGISTER_STAT(NADE_TIMER, float)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
+REGISTER_STAT(ROUNDENDTIME, float, round_delaytime)
 REGISTER_STAT(OVERTIMES, int, overtimes)
 REGISTER_STAT(TIMEOUT_STATUS, int, timeout_status)
 REGISTER_STAT(NADE_BONUS, float)

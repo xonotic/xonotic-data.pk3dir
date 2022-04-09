@@ -140,11 +140,12 @@ void HUD_Timer()
 			subtimer = "--:--";
 			subtimer_color = '1 0 0';
 		} else {
-			float round_curtime, round_timelimit, round_timeleft;
+			float round_curtime, round_endtime, round_timelimit, round_timeleft;
 
 			// Use real or frozen time and get the time limit
-			round_curtime = (game_stopped_time ? game_stopped_time : time);
+			round_endtime = STAT(ROUNDENDTIME);
 			round_timelimit = STAT(ROUND_TIMELIMIT);
+			round_curtime = (round_endtime ? round_endtime : time);
 
 			// Calculate time left
 			round_timeleft = HUD_Timer_TimeLeft(round_curtime, STAT(ROUNDSTARTTIME), round_timelimit);

@@ -65,6 +65,7 @@ void round_handler_Think(entity this)
 		if (this.canRoundEnd())
 		{
 			// schedule a new round
+			round_delaytime = time;
 			this.wait = true;
 			this.nextthink = time + this.delay;
 		}
@@ -135,6 +136,7 @@ void round_handler_Reset(float next_think)
 	{
 		if (next_think <= game_starttime) rounds_played = 0;
 		round_starttime = next_think + this.count;
+		round_delaytime = 0;
 	}
 }
 
