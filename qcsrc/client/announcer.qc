@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/mutators/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
@@ -27,6 +28,8 @@ string prev_pl1_name;
 string prev_pl2_name;
 void Announcer_Duel()
 {
+	Scoreboard_UpdatePlayerTeams();
+
 	entity pl1 = players.sort_next;
 	entity pl2 = pl1.sort_next;
 	string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
