@@ -1080,7 +1080,7 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 		return;
 	}
 	WriteByte(msg_type, force_centerprint);
-	WriteString(msg_type, autocvar_hostname);
+	WriteString(msg_type, (autocvar_hostname_full != "" ? autocvar_hostname_full : autocvar_hostname));
 	WriteString(msg_type, GetClientVersionMessage(this));
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
