@@ -209,6 +209,11 @@ void Scoreboard_InitScores()
 //float lastpnum;
 void Scoreboard_UpdatePlayerTeams()
 {
+	static float update_time;
+	if (time <= update_time)
+		return;
+	update_time = time;
+
 	entity pl, tmp;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)

@@ -33,8 +33,8 @@ void HUD_CenterPrint_Export(int fh)
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
-const float CENTERPRINT_BASE_SIZE = 1.4;
-const float CENTERPRINT_SPACING = 0.5;
+const float CENTERPRINT_BASE_SIZE = 1.3;
+const float CENTERPRINT_SPACING = 0.3;
 const float CENTERPRINT_TITLE_SPACING = 0.35;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
@@ -86,9 +86,10 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 			j = 0;
 		if (new_id && new_id == centerprint_msgID[j])
 		{
-			if (strMessage == "" && centerprint_messages[j] != "" && centerprint_countdown_num[j] == 0)
+			if (strMessage == "" && centerprint_messages[j] != "")
 			{
 				// fade out the current msg (duration and countdown_num are ignored)
+				centerprint_start_time[j] = 0;
 				centerprint_time[j] = min(5, autocvar_hud_panel_centerprint_fade_out);
 				centerprint_expire_time[j] = -1; // don't use the variable time here!
 				return;
@@ -158,10 +159,7 @@ void centerprint_ClearTitle()
 void centerprint_SetTitle(string title, float offset)
 {
 	if(title != centerprint_title) {
-		if(centerprint_title)
-			strfree(centerprint_title);
-
-		centerprint_title = strzone(CCR(title));
+		strcpy(centerprint_title, CCR(title));
 		centerprint_title_offset = offset;
 	}
 }
@@ -303,7 +301,7 @@ void HUD_CenterPrint()
 		}
 		if (centerprint_expire_time[j] <= time)
 		{
-			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
+			if (centerprint_countdown_num[j] && centerprint_time[j] > 0 && centerprint_start_time[j])
 			{
 				centerprint_countdown_num[j] = centerprint_countdown_num[j] - 1;
 				if (centerprint_countdown_num[j] == 0)
@@ -321,7 +319,7 @@ void HUD_CenterPrint()
 		float fade_in_time = autocvar_hud_panel_centerprint_fade_in;
 		float fade_out_time = autocvar_hud_panel_centerprint_fade_out;
 
-		if (centerprint_countdown_num[j]) {
+		if (centerprint_countdown_num[j] && centerprint_start_time[j]) {
 			fade_in_time = 0;
 			fade_out_time = 0;
 		}
