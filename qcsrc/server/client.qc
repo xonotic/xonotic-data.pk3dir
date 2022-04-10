@@ -1227,6 +1227,9 @@ void ClientConnect(entity this)
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
+	if (player_count == 1)
+		localcmd("\nsv_hook_firstjoin\n");
+
 	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
 		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
@@ -1295,6 +1298,9 @@ void ClientDisconnect(entity this)
 	player_powerups_remove_all(this); // stop powerup sound
 
 	ONREMOVE(this);
+
+	if (player_count == 0)
+		localcmd("\nsv_hook_lastleave\n");
 }
 
 void ChatBubbleThink(entity this)

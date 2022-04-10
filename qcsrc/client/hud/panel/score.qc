@@ -77,7 +77,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		}
 		return;
 	}
-	
+
 	/*
 	if (team_count)
 	{
@@ -98,8 +98,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		pos.y += fontsize.y;
 		tm = teams.sort_next;
 	}*/
-	
-	
+
 	// z411 Basic team stats
 	if (team_count)
 	{
@@ -212,8 +211,7 @@ void HUD_Score()
 		if(MUTATOR_CALLHOOK(HUD_Score_show)) return;
 	}
 	
-	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
-		Scoreboard_UpdatePlayerTeams();
+	Scoreboard_UpdatePlayerTeams();
 	
 	// z411 : Don't display if we have the spectator HUD scores enabled
 	if(spectatee_status && autocvar_hud_panel_spect_scores) return;
