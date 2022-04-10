@@ -194,7 +194,6 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 }
 
-.bool welcome_msg_already_sent_on_connection;
 bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
@@ -209,14 +208,13 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
 	}
-	bool welcome_msg_too = (!to.welcome_msg_already_sent_on_connection);
+	// prevent sending the welcome message again when score types are sent again because the scoring system has changed
+	// it can happen in some game modes like Race when the qualyfing session ends and the race starts
+	bool welcome_msg_too = (time < CS(this).jointime + 5);
 	WriteByte(MSG_ENTITY, welcome_msg_too);
 	// welcome message is sent here because it needs to know the gametype
 	if (welcome_msg_too)
-	{
 		SendWelcomemessage_msg_type(this, false, MSG_ENTITY);
-		to.welcome_msg_already_sent_on_connection = true;
-	}
 	return true;
 }
 
