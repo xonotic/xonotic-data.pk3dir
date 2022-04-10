@@ -85,6 +85,8 @@ void XonoticWelcomeDialog_fill(entity me)
 	registercvar("_menu_welcome_dialog_available", "0", 0);
 	cvar_set("_menu_welcome_dialog_available", "1");
 
+	me.frame.allowColors = true; // allow color codes in the title
+
 	entity e;
 
 	me.TR(me);
