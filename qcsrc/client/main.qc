@@ -1368,7 +1368,7 @@ void Welcome_Message_Show_Try()
 
 	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
 	// if want dialog check if menu is initialized but for a short time
-	if (!want_dialog || cvar("_menu_initialized") || time > welcome_msg_menu_check_maxtime)
+	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
 	{
 		if (want_dialog && cvar("_menu_welcome_dialog_available"))
 		{
