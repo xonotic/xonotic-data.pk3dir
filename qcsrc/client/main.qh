@@ -103,6 +103,12 @@ float current_viewzoom;
 float zoomin_effect;
 bool warmup_stage;
 
+string hostname;
+string welcome_msg;
+float welcome_msg_menu_check_maxtime;
+bool welcome_msg_force_centerprint;
+void Welcome_Message_Show_Try();
+
 void Fog_Force();
 
 string _getcommandkey(string text, string command, bool forcename);

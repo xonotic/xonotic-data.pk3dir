@@ -1653,6 +1653,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		}
 	}
 
+	Welcome_Message_Show_Try();
+
 	Announcer();
 
 	View_CheckButtonStatus();
