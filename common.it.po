@@ -7680,11 +7680,11 @@ msgstr "Scegli lingua..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "Sei sicuro di voler uscire?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr ""
+msgstr "Esci dal gioco"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -9948,7 +9948,7 @@ msgstr "apri console"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit"
-msgstr ""
+msgstr "esci"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"

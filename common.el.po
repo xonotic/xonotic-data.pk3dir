@@ -7456,11 +7456,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "Είσαι σίγουρος-η ότι θες να βγεις από το παιχνίδι;"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr ""
+msgstr "Κλείστε το παιχνίδι"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -9672,7 +9672,7 @@ msgstr "εισέλθετε στην κονσόλα"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit"
-msgstr ""
+msgstr "έξοδος"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
