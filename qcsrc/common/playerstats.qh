@@ -86,6 +86,7 @@ void PlayerStats_GameReport(float finished);
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 
 .string playerstats_id;
+.float scoreboard_pos;
 
 //string autocvar_g_playerstats_uri;
 
