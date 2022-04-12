@@ -236,7 +236,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	bool forceplayercolors_enabled = false;
 	#define fpc autocvar_cl_forceplayercolors
-	if (ISGAMETYPE(DUEL))
+	if (gametype.m_1v1)
 	{
 		if ((myteam != NUM_SPECTATOR) && (fpc == 1 || fpc == 2 || fpc == 3 || fpc == 5))
 			forceplayercolors_enabled = true;
@@ -301,7 +301,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
-		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !ISGAMETYPE(DUEL))
+		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !gametype.m_1v1)
 		{
 			// Assign each enemy unique colors
 			// pick colors from 0 to 14 since 15 is the rainbow color

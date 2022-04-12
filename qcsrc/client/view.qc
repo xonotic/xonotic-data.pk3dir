@@ -770,7 +770,7 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(HITSOUND_DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
@@ -1540,7 +1540,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars_Check();
+	ReplicateVars(REPLICATEVARS_CHECK);
 
 	HUD_Scale_Disable();
 
@@ -1591,7 +1591,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
 
-	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 	if(!local_player)
 		local_player = this; // fall back!
@@ -1639,6 +1638,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(intermission && !intermission_time)
 		intermission_time = time;
 
+	if(STAT(GAME_STOPPED) && !game_stopped_time)
+		game_stopped_time = time;
+	else if(game_stopped_time && !STAT(GAME_STOPPED))
+		game_stopped_time = 0;
+
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
 		if(calledhooks & HOOK_START)
@@ -1652,6 +1656,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 			calledhooks |= HOOK_END;
 		}
 	}
+
+	Welcome_Message_Show_Try();
 
 	Announcer();
 
@@ -1673,7 +1679,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Draw the World (and sky)
 	setproperty(VF_DRAWWORLD, 1);
 
-	// Set the console size vars
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
@@ -1682,18 +1687,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	View_DemoCamera();
 
-	// Draw the Crosshair
-	setproperty(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-
-	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, 0);
-
-	// Update the mouse position
-	/*
-	   mousepos_x = vid_conwidth;
-	   mousepos_y = vid_conheight;
-	   mousepos = mousepos*0.5 + getmousepos();
-	 */
+	setproperty(VF_DRAWCROSSHAIR, 0); // hide engine crosshair
+	setproperty(VF_DRAWENGINESBAR, 0); // hide engine status bar
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 

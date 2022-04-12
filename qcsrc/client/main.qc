@@ -4,6 +4,7 @@
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/chat.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
@@ -57,7 +58,7 @@ void CSQC_Init()
 		maxclients = i;
 	}
 
-	ReplicateVars_Send_All();
+	ReplicateVars(REPLICATEVARS_SEND_ALL);
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -196,7 +197,7 @@ void Shutdown()
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 
-	ReplicateVars_Destroy();
+	ReplicateVars(REPLICATEVARS_DESTROY);
 }
 
 void AuditLists()
@@ -459,9 +460,12 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
 	bool override = false;
+
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
 	if (override)
 		return true;
+
+	override |= HUD_Panel_Chat_InputEvent(bInputType, nPrimary, nSecondary);
 
 	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
 
@@ -473,6 +477,32 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(override)
 		return true;
+
+	if(bInputType == 3 || bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+	}
+
+	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
+	{
+		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		{
+			localcmd("\nmenu_showgamemenudialog\n");
+			return true;
+		}
+	}
 
 	return false;
 }
@@ -1014,6 +1044,7 @@ void Fog_Force()
 		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
+bool net_handle_ServerWelcome();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
@@ -1029,6 +1060,9 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		strcpy(teamscores_label(i), ReadString());
 		teamscores_flags(i) = ReadByte();
 	}
+	bool welcome_msg_too = ReadByte();
+	if (welcome_msg_too)
+		net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
 	Gamemode_Init();
@@ -1287,6 +1321,80 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, weapon_id); break;
 		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, weapon_id); break;
 	}
+}
+
+bool net_handle_ServerWelcome()
+{
+	bool campaign = ReadByte();
+	if (campaign)
+	{
+		string campaign_title = ReadString();
+		int campaign_level = ReadByte();
+		string campaign_msg = ReadString();
+		string welcomedialog_args;
+		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		string key = getcommandkey(_("jump"), "+jump");
+		string msg = strcat(
+			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
+			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		return true;
+	}
+
+	welcome_msg_force_centerprint = ReadByte();
+	strcpy(hostname, ReadString());
+	string ver = ReadString();
+	string modifications = ReadString();
+	string cache_mutatormsg = ReadString();
+	string mutator_msg = ReadString();
+	string motd = ReadString();
+
+	string msg = "";
+	msg = strcat(msg, ver);
+	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+	if(modifications != "")
+		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
+	if (cache_mutatormsg != "")
+		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
+	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
+	if (motd != "")
+		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+
+	strcpy(welcome_msg, msg);
+	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
+	return true;
+}
+
+void Welcome_Message_Show_Try()
+{
+	if (!welcome_msg_menu_check_maxtime)
+		return;
+
+	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
+	// if want dialog check if menu is initialized but for a short time
+	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	{
+		if (want_dialog && cvar("_menu_welcome_dialog_available"))
+		{
+			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
+			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
+			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		}
+		else
+			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
+
+		strfree(welcome_msg);
+		welcome_msg_menu_check_maxtime = 0;
+	}
+}
+
+NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
+{
+	return net_handle_ServerWelcome();
 }
 
 string _getcommandkey(string cmd_name, string command, bool forcename)

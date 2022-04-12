@@ -1,1 +1,5 @@
 #pragma once
+
+#ifdef GAMEQC
+REPLICATE_INIT(int, cvar_cl_multijump);
+#endif

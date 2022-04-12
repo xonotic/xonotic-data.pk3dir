@@ -208,6 +208,14 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
 	}
+	// prevent sending the welcome message again when score types are sent again because the scoring system has changed
+	// it can happen in some game modes like Race when the qualyfing session ends and the race starts
+	// NOTE: CS(this) is not initialized yet when a local client connects to a local dedicated server
+	bool welcome_msg_too = (!CS(this) || time < CS(this).jointime + 5);
+	WriteByte(MSG_ENTITY, welcome_msg_too);
+	// welcome message is sent here because it needs to know the gametype
+	if (welcome_msg_too)
+		SendWelcomemessage_msg_type(this, false, MSG_ENTITY);
 	return true;
 }
 
@@ -434,6 +442,7 @@ void WinningConditionHelper(entity this)
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
 	s = strcat(s, ":F", ftos(serverflags));
+	s = strcat(s, ":T", sv_termsofservice_url_escaped);
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(NULL, (fullstatus ? 1 : 2)));
 
