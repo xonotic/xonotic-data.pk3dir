@@ -486,7 +486,7 @@ void ReadyRestart(bool forceWarmupEnd)
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
 
-	if(forceWarmupEnd)
+	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
 	else
 		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage
