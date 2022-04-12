@@ -11,6 +11,7 @@
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/banning.qh>
 #include <server/command/common.qh>
