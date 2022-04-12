@@ -221,6 +221,8 @@ void m_init_delayed()
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
+
+	cvar_set("_menu_initialized", "2");
 }
 
 void m_keyup(float key, float ascii)
@@ -672,6 +674,7 @@ void m_tooltip(vector pos)
 	}
 }
 
+const int MIN_DISCONNECTION_TIME = 1;
 float autocvar_menu_force_on_disconnection;
 bool autocvar_g_campaign;
 void m_draw(float width, float height)
@@ -679,9 +682,9 @@ void m_draw(float width, float height)
 	static float connected_time;
 	if (clientstate() == CS_DISCONNECTED)
 	{
-		if (autocvar_g_campaign)
+		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 		{
-			if (connected_time && time - connected_time > 1)
+			if (autocvar_g_campaign)
 			{
 				// in the case player uses the disconnect command (in the console or with a key)
 				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
@@ -689,14 +692,10 @@ void m_draw(float width, float height)
 				cvar_set("g_campaign", "0");
 				m_sync();
 			}
-		}
-		if (autocvar_menu_force_on_disconnection > 0)
-		{
-			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
-			{
+			if (autocvar_menu_force_on_disconnection > 0)
 				m_toggle(true);
-				connected_time = 0;
-			}
+			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
+			connected_time = 0;
 		}
 	}
 	else

@@ -1386,8 +1386,8 @@ bool net_handle_ServerWelcome()
 		return true;
 	}
 
-	bool force_centerprint = ReadByte();
-	string hostname = ReadString();
+	welcome_msg_force_centerprint = ReadByte();
+	strcpy(hostname, ReadString());
 
 	string hostversion = ReadString();
 	bool version_mismatch = ReadByte();
@@ -1417,17 +1417,33 @@ bool net_handle_ServerWelcome()
 	if (motd != "")
 		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
 
-	if (!force_centerprint && !isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
-	{
-		string welcomedialog_args;
-		welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
-		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
-		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-	}
-	else
-		centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", msg), -1, 0);
+	strcpy(welcome_msg, msg);
+	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
 	return true;
+}
+
+void Welcome_Message_Show_Try()
+{
+	if (!welcome_msg_menu_check_maxtime)
+		return;
+
+	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
+	// if want dialog check if menu is initialized but for a short time
+	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	{
+		if (want_dialog && cvar("_menu_welcome_dialog_available"))
+		{
+			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
+			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
+			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		}
+		else
+			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
+
+		strfree(welcome_msg);
+		welcome_msg_menu_check_maxtime = 0;
+	}
 }
 
 NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)

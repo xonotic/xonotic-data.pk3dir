@@ -9,8 +9,8 @@
 
 void welcomeDialog_resetStrings(entity me)
 {
-	strcpy(me.serverinfo_name, "<NO HOSTNAME>");
-	strcpy(me.serverinfo_MOTD, "<NO WELCOME MESSAGE>");
+	strcpy(me.serverinfo_name, _("Welcome"));
+	strcpy(me.serverinfo_MOTD, "");
 }
 
 float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shift)
@@ -56,6 +56,11 @@ void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 			strcpy(me.serverinfo_name, bufstr_get(argsbuf, ++i));
 		else if(s == "WELCOME")
 			strcpy(me.serverinfo_MOTD, bufstr_get(argsbuf, ++i));
+		else if(s == "RESET")
+		{
+			welcomeDialog_resetStrings(me);
+			break;
+		}
 		++i;
 	}
 	//me.serverinfo_name_ent.setText(me.serverinfo_name_ent, me.serverinfo_name);
@@ -63,10 +68,24 @@ void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 	me.frame.setText(me.frame, me.serverinfo_name);
 }
 
+void XonoticWelcomeDialog_draw(entity me)
+{
+	SUPER(XonoticWelcomeDialog).draw(me);
+	if(me.serverinfo_MOTD == "" && gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
+	{
+		// if serverinfo_MOTD is empty while connected it means we are connected to an old server
+		// in this case show the csqc welcome message and instantly close the dialog
+		localcmd("\n+show_info0; defer 2 -show_info0\n");
+		me.close(me);
+	}
+}
+
 void XonoticWelcomeDialog_fill(entity me)
 {
 	registercvar("_menu_welcome_dialog_available", "0", 0);
 	cvar_set("_menu_welcome_dialog_available", "1");
+
+	me.frame.allowColors = true; // allow color codes in the title
 
 	entity e;
 

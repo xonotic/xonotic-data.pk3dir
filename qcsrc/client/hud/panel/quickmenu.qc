@@ -766,6 +766,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 	if(teamplayers && !team_count)
 		return;
 
+	Scoreboard_UpdatePlayerTeams();
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players

@@ -4,6 +4,7 @@
 	TITLE(_("Core Team")) \
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ant "Antibody" Zucaro) \
+		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
@@ -11,7 +12,6 @@
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
-		PERSON(Antonio "terencehill" Piu) \
 		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Freddy) \
@@ -23,14 +23,15 @@
 		PERSON(Nitroxis) \
 		PERSON(packer) \
 		PERSON(Severin "sev" Meyer) \
-		PERSON(SpiKe) \
 		PERSON(Thomas "illwieckz" Debesse) \
 		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 		PERSON(z411) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
 		PERSON(Ant "Antibody" Zucaro (web)) \
+		PERSON(Freddy) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Tyler "-z-" Mulligan (web / game)) \
 	NL() \
@@ -50,9 +51,13 @@
 		PERSON(Sahil "DiaboliK" Singhal) \
 		PERSON(nifrek) \
 	NL() \
+	FUNCTION(_("Campaign")) \
+		PERSON(Marvin "Mirio" Beck) \
+	NL() \
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
 		PERSON(Ben "MooKow" Banker) \
+		PERSON(cityy) \
 		PERSON(Cortez) \
 		PERSON(Cuinn "Cuinnton" Herrick) \
 		PERSON(Debugger) \
@@ -72,6 +77,7 @@
 		PERSON(Severin "sev" Meyer) \
 		PERSON(ShadoW) \
 		PERSON(t0uYK8Ne) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 	NL() \
 	FUNCTION(_("Music / Sound FX")) \
 		PERSON(AquaNova (Archer)) \
@@ -91,6 +97,8 @@
 	NL() \
 	FUNCTION(_("Game Code")) \
 		PERSON(Antonio "terencehill" Piu) \
+		PERSON(bones_was_here) \
+		PERSON(Dr. Jaska) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(martin-t) \
 		PERSON(Mattia "Melanosuchus" Basaglia) \
@@ -135,7 +143,6 @@
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
 		PERSON(slava) \
-		PERSON(Victor "LegendGuard" Jaume) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -152,71 +159,102 @@
 			PERSON(Alexander "alex4o" Bonin) \
 			PERSON(ifohancroft) \
 			PERSON(lokster) \
+			PERSON(Nik "cozmo" Dim) \
 			PERSON(set_killer) \
 			PERSON(ubone) \
 		NL() \
 		FUNCTION(_("Chinese (China)")) \
 			PERSON(Antonidas) \
 			PERSON(Armcoon) \
+			PERSON(CodingJellyfish) \
+			PERSON(gee "Largee" Lar) \
+			PERSON(jiegushijia) \
 			PERSON(kalawore) \
+			PERSON(Liang "dxkliu" Liu) \
+			PERSON(Losier "losierb" Blackheath) \
+			PERSON(Matthew "wjjmatthew" Wu) \
+			PERSON(moetale) \
 			PERSON(sapphireliu) \
 		NL() \
 		FUNCTION(_("Chinese (Taiwan)")) \
 			PERSON(Alisha) \
 			PERSON(Armcoon) \
 			PERSON(Jeff "s8321414" Huang) \
+			PERSON(msn1018927464) \
 		NL() \
 		FUNCTION(_("Cornish")) \
 			PERSON(Nicky "nrowe" Rowe) \
 		NL() \
 		FUNCTION(_("Czech")) \
+			PERSON(Adam "Admi335" Říha) \
+			PERSON(fasdasd " kitfildom" sdasd) \
+			PERSON(gamingforyou875) \
+			PERSON(Jan "kockahonza" Kocka) \
+			PERSON(Jiří "Havro" Vrána) \
 			PERSON(shogun assassin/woky) \
 			PERSON(Superovoce) \
 			PERSON(Tomáš "CZHeron" Volavka) \
 		NL() \
 		FUNCTION(_("Dutch")) \
 			PERSON(Alexander "freefang" van Dam) \
+			PERSON(Contijn "Sojiro84" Buijs) \
 			PERSON(Joeke "Mappack" de Graaf) \
 			PERSON(Jonathan "Jonakeys" van der Steege) \
 			PERSON(PinkRobot) \
 			PERSON(vegiburger) \
 		NL() \
 		FUNCTION(_("English (Australia)")) \
+			PERSON(Matthew "matthewwu2003" Wu) \
 			PERSON(Laurene "sunflowers" Albrand) \
 			PERSON(Stuart "Cefiar" Young) \
 			PERSON(Zac "Mario" Jardine) \
 		NL() \
 		FUNCTION(_("Finnish")) \
-			PERSON(Jonas "PowaTree" Sahlberg) \
+			PERSON(Dr. Jaska) \
+			PERSON(Heidi Wenger) \
 			PERSON(Henry "Exitium" Sanmark) \
+			PERSON(Jaakko Saarikko) \
+			PERSON(Jonas "PowaTree" Sahlberg) \
+			PERSON(Oi Suomi On!) \
 			PERSON(Rasmus "FruitieX" Eskola) \
 		NL() \
 		FUNCTION(_("French")) \
+			PERSON(Gwlanbzh) \
 			PERSON(Hugo "Calinou" Locurcio) \
 			PERSON(Kim "coughingmouse" Lee) \
 			PERSON(Maxime "Taximus" Paradis) \
+			PERSON(Nicolas "signed" Formichella) \
 			PERSON(RedGuff) \
 			PERSON(Thomas "illwieckz" Debesse) \
 			PERSON(Yannick "SpiKe" Le Guen) \
 		NL() \
 		FUNCTION(_("German")) \
-			PERSON(Brot) \
 			PERSON(cvcxc) \
 			PERSON(Erik "Ablu" Schilling) \
 			PERSON(Jope "Sless" Withers) \
+			PERSON(Larson "skps" März) \
 			PERSON(Marvin "Mirio" Beck) \
 			PERSON(Paul "Snapper") \
+			PERSON(Robert "HbmMods" Katzinsky) \
 			PERSON(Rudolf "divVerent" Polzer) \
+			PERSON(TheTrueBrot) \
 			PERSON(Wuzzy) \
 			PERSON(Yepoleb) \
 		NL() \
 		FUNCTION(_("Greek")) \
-			PERSON_("Γιάννης \"Evropi\" Ανθυμίδης") \
+			PERSON_("Γιώργος Καρδάμης") \
+			PERSON(Hector "The_Smasher_1992" Champipis) \
 			PERSON(Konstantinos "LDinos" Mihalenas) \
+			PERSON(MasterWord) \
+			PERSON(Mensious Mensious) \
 			PERSON(Savoritias) \
 			PERSON(Vindex) \
+			PERSON(Yannis "Evropi" Anthymidis) \
 		NL() \
 		FUNCTION(_("Hungarian")) \
+			PERSON(Ács "acszoltan111" Zoltán) \
+			PERSON(MmAaXx500) \
+			PERSON(Peter "fpeterhu" Ferenczy) \
 			PERSON(Ruszkai "CuBe0wL" Ákos) \
 			PERSON(xaN1C4n3) \
 		NL() \
@@ -226,17 +264,24 @@
 		FUNCTION(_("Italian")) \
 			PERSON(Antonio "terencehill" Piu) \
 			PERSON(Felice "MaidenBeast" Sallustio) \
+			PERSON(Jessica Amoruso) \
 			PERSON(stdi) \
 			PERSON(XCostaX) \
 		NL() \
 		FUNCTION(_("Japanese")) \
+			PERSON(Antoni Das) \
+			PERSON(Lento) \
+			PERSON(Space Ace) \
+			PERSON(RYU "ryusho2523" N.) \
 			PERSON(Victor "LegendGuard" Jaume) \
+			PERSON(z411) \
 		NL() \
 		FUNCTION(_("Kazakh")) \
 			PERSON(Артем "bystrov.arterm" Быстров) \
 		NL() \
 		FUNCTION(_("Korean")) \
-			PERSON(Jisoo "s6e9x" Lim) \
+			PERSON(BYEONGJIN "ahnkoon" AN) \
+			PERSON(Jisoo "LimJiSoo0719" Lim) \
 			PERSON(Kim "coughingmouse" Lee) \
 		NL() \
 		FUNCTION(_("Polish")) \
@@ -244,18 +289,39 @@
 			PERSON(Alex "tiprogrammierer.alex" Progger) \
 			PERSON(Amadeusz "amade/proraide" Sławiński) \
 			PERSON(Artur "artur9010" Motyka) \
+			PERSON(Cris "Kshyso" Sus) \
+			PERSON(Jakub "_Mpcs" Niklas) \
 			PERSON(Jakub "KubeQ11" Pędziszewski) \
-			PERSON(Kriss7475) \
+			PERSON(John "Myran" Smith) \
+			PERSON(Karol "kRkk" Kosek) \
+			PERSON(Kriss "Kriss7475" Chr) \
+			PERSON(Piotr "vipkoza" Kozica) \
+			PERSON(Rafał "Okava" Szymański) \
+			PERSON(Robert "Szkodnix" Wolniak) \
+			PERSON(Saikuru "saikuru0" Zero) \
+			PERSON(Sertomas) \
+			PERSON(SFS Atlas) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
 			PERSON(Ivan Paulos "greylica" Tomé) \
 			PERSON(Jean Trindade "Muleke_Trairao" Pereira) \
-			PERSON(Ricardo Manuel "Hellgardia" da Cruz Coelho da Silva) \
+			PERSON(lecalam) \
+			PERSON(NotThatPrivate) \
+			PERSON(Ricardo Manuel "hellgardia" da Cruz Coelho da Silva) \
+			PERSON(Rui "xendez") \
 			PERSON(xXxCHAOTICxXx) \
+		NL() \
+		FUNCTION(_("Portuguese (Brazil)")) \
+			PERSON(Jean Trindade "Muleke_Trairao" Pereira) \
+			PERSON(Rui "xendez") \
+			PERSON(yy0zz) \
+			PERSON(zerowhy) \
 		NL() \
 		FUNCTION(_("Romanian")) \
 			PERSON(Adrian-Ciprian "adrian.tinjala" Tînjală) \
-			PERSON(BusterDBK) \
+			PERSON(busterdbk) \
+			PERSON(Cuzenco "andonis1616" Andrei Robert) \
+			PERSON(Iulian "ElektroBoom" Oancea) \
 			PERSON(Mircea "Taoki" Kitsune) \
 			PERSON(Sorin "unic_sorin" Botirla) \
 			PERSON(Tudor "TropiKo" Ionel) \
@@ -265,11 +331,15 @@
 			PERSON(Alexandr "zrg") \
 			PERSON(Andrei "adem4ik" Stepanov) \
 			PERSON(Andrey "dekrY" P.) \
+			PERSON(Artem Vorotnikov) \
+			PERSON(Blueberryy) \
 			PERSON(gravicappa) \
 			PERSON(Hot Dog) \
 			PERSON(Lord Canistra) \
+			PERSON(Morosophos) \
 			PERSON(Nikoli) \
 			PERSON(Sergej "Clearness High" Lutsyk) \
+			PERSON(Simple88) \
 		NL() \
 		FUNCTION(_("Scottish Gaelic")) \
 			PERSON_("GunChleoc") \
@@ -283,21 +353,38 @@
 		FUNCTION(_("Spanish")) \
 			PERSON_("0000simon") \
 			PERSON(Alan "aagp" Garcia) \
+			PERSON(Antonio "Antoniosirc" Sirera) \
 			PERSON(Ari_tent) \
 			PERSON(brunodeleo) \
+			PERSON(Damian "starfire24680" Kurek) \
+			PERSON(Excruciatus "crucesignatus" X) \
 			PERSON(Kammy) \
 			PERSON(roader_gentoo) \
 			PERSON(Rodrigo Mouton Laudin) \
 			PERSON(SouL) \
 			PERSON(Starfire24680) \
 			PERSON(Victor "LegendGuard" Jaume) \
+			PERSON(Vitama Piru Leta) \
+			PERSON(Yllelder) \
+			PERSON(z411) \
 		NL() \
 		FUNCTION(_("Swedish")) \
+			PERSON(Gustaf "Hanicef" Alhäll) \
 			PERSON(Karl-Oskar "machine" Rikås) \
 			PERSON(marcus256) \
 		NL() \
+		FUNCTION(_("Turkish")) \
+			PERSON(Abdurrahman "akkus12345" AKKUŞ) \
+			PERSON(Ahmet "ahmetlii") \
+			PERSON(Çağlar "caglarturali" Turalı) \
+			PERSON(Demiray "tulliana" Muhterem) \
+			PERSON(Gokdeniz.Kucukali) \
+			PERSON(ibra kap) \
+			PERSON(yutyocraft) \
+		NL() \
 		FUNCTION(_("Ukrainian")) \
 			PERSON(Dmitro "Gamebot" Sokhin) \
+			PERSON(Ihor "uandreew" Andreev) \
 			PERSON(Oleh "BlaXpirit" Prypin) \
 			PERSON(Vasyl "Harmata" Melnyk) \
 			PERSON(Yuriy "herrniemand" Ackermann) \
