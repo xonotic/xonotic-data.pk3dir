@@ -22,12 +22,13 @@ string WeaponArenaString()
 	string s;
 	float n;
 	s = cvar_string("g_weaponarena");
-	if(s == "0")
-		return "";
-	if(s == "all" || s == "1")
-		return _("All Weapons Arena");
-	if(s == "most")
-		return _("Most Weapons Arena");
+	if(s == "0" || s == "") return "";
+	if(s == "all" || s == "1") return _("All Weapons Arena");
+	if(s == "all_available") return _("All Available Weapons Arena");
+	if(s == "most") return _("Most Weapons Arena");
+	if(s == "most_available") return _("Most Available Weapons Arena");
+	if(s == "devall") return "Dev All Weapons Arena"; // development option, do not translate
+	if(s == "devall_available") return "Dev All Available Weapons Arena"; // development option, do not translate
 	if(s == weaponarenastring_cvar)
 		return weaponarenastring;
 
@@ -43,7 +44,10 @@ string WeaponArenaString()
 			s = cons_mid(s, " & ", wep.m_name);
 		}
 	}
-	s = sprintf(_("%s Arena"), s);
+	if (s != "")
+		s = sprintf(_("%s Arena"), s);
+	else
+		s = _("No Weapons Arena");
 
 	strcpy(weaponarenastring, s);
 
@@ -52,55 +56,9 @@ string WeaponArenaString()
 
 string XonoticMutatorsDialog_toString(entity me)
 {
-	string s = "";
-	if(cvar("g_dodging"))
-		s = cons_mid(s, ", ", _("Dodging"));
-	if(cvar("g_instagib"))
-		s = cons_mid(s, ", ", _("InstaGib"));
-	if(cvar("g_new_toys"))
-		s = cons_mid(s, ", ", _("New Toys"));
-	if(cvar("g_nix"))
-		s = cons_mid(s, ", ", _("NIX"));
-	if(cvar("g_rocket_flying"))
-		s = cons_mid(s, ", ", _("Rocket Flying"));
-	if(cvar("g_invincible_projectiles"))
-		s = cons_mid(s, ", ", _("Invincible Projectiles"));
+	string s = build_mutator_list("");
 	if(cvar_string("g_weaponarena") != "0")
 		s = cons_mid(s, ", ", WeaponArenaString());
-	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
-		s = cons_mid(s, ", ", _("No start weapons"));
-	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
-		s = cons_mid(s, ", ", _("Low gravity"));
-	if(cvar("g_cloaked"))
-		s = cons_mid(s, ", ", _("Cloaked"));
-	if(cvar("g_grappling_hook"))
-		s = cons_mid(s, ", ", _("Hook"));
-	if(cvar("g_midair"))
-		s = cons_mid(s, ", ", _("Midair"));
-	if(cvar("g_melee_only"))
-		s = cons_mid(s, ", ", _("Melee only"));
-	if(cvar("g_vampire"))
-		s = cons_mid(s, ", ", _("Vampire"));
-	if(cvar("g_pinata"))
-		s = cons_mid(s, ", ", _("Piñata"));
-	if(cvar("g_weapon_stay"))
-		s = cons_mid(s, ", ", _("Weapons stay"));
-	if(cvar("g_bloodloss") > 0)
-		s = cons_mid(s, ", ", _("Blood loss"));
-	if(cvar("g_jetpack"))
-		s = cons_mid(s, ", ", _("Jetpack"));
-	if(cvar("g_buffs") > 0)
-		s = cons_mid(s, ", ", _("Buffs"));
-	if(cvar("g_overkill"))
-		s = cons_mid(s, ", ", _("Overkill"));
-	if(cvar("g_powerups") == 0)
-		s = cons_mid(s, ", ", _("No powerups"));
-	if(cvar("g_powerups") > 0)
-		s = cons_mid(s, ", ", _("Powerups"));
-	if(cvar("g_touchexplode") > 0)
-		s = cons_mid(s, ", ", _("Touch explode"));
-	if(cvar("g_walljump"))
-		s = cons_mid(s, ", ", _("Wall jumping"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else
