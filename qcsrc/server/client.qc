@@ -1973,6 +1973,9 @@ bool ShowTeamSelection(entity this)
 }
 void Join(entity this)
 {
+	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
+		ReadyRestart(true);
+
 	TRANSMUTE(Player, this);
 
 	if(!this.team_selected)
@@ -2557,7 +2560,6 @@ void PlayerPreThink (entity this)
 			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
-			campaign_bots_may_start = true;
 			if(joinAllowed(this))
 				Join(this);
 			return;

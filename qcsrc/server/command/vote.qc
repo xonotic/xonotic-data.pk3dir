@@ -439,6 +439,8 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 	if(warmup_stage)
 		game_starttime = time; // Warmup: No countdown in warmup
+	else if (autocvar_g_campaign)
+		game_starttime = time + 3;
 	else
 		game_starttime = time + RESTART_COUNTDOWN; // Go into match mode
 
