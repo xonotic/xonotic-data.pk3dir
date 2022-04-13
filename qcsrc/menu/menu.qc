@@ -221,6 +221,8 @@ void m_init_delayed()
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
+
+	cvar_set("_menu_initialized", "2");
 }
 
 void m_keyup(float key, float ascii)

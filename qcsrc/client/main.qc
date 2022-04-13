@@ -1356,6 +1356,55 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
+string translate_modifications(string s)
+{
+	return build_mutator_list(s);
+}
+
+string translate_weaponarena(string s)
+{
+	if (s == "") return s;
+	if (s == "All Weapons Arena") return _("All Weapons Arena");
+	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
+	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
+	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
+	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
+	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
+	if (s == "No Weapons Arena") return _("No Weapons Arena");
+
+	int n = tokenizebyseparator(s, " & ");
+	string wpn_list = "";
+	for (int i = 0; i < n; i++)
+	{
+		Weapon wep = Weapon_from_name(argv(i));
+		if (wep == WEP_Null)
+			LOG_INFO("^3Warning: ^7server sent an invalid weapon name\n");
+		wpn_list = cons_mid(wpn_list, " & ", wep.m_name);
+	}
+	if (wpn_list != "")
+		return sprintf(_("%s Arena"), wpn_list);
+	else
+		return _("No Weapons Arena");
+}
+
+string GetVersionMessage(string hostversion, bool version_mismatch, bool version_check)
+{
+	string xonotic_hostversion = strcat("Xonotic ", hostversion);
+	if (version_mismatch)
+	{
+		if(!version_check)
+			return strcat(sprintf(_("This is %s"), xonotic_hostversion), "\n^3",
+				_("Your client version is outdated."), "\n\n\n",
+				_("### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"), "\n\n\n",
+				_("Please update!"));
+		else
+			return strcat(sprintf(_("This is %s"), xonotic_hostversion), "\n^3",
+				_("This server is using an outdated Xonotic version."), "\n\n\n",
+				_("### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"));
+	}
+	return sprintf(_("Welcome to %s"), xonotic_hostversion);
+}
+
 bool net_handle_ServerWelcome()
 {
 	bool campaign = ReadByte();
@@ -1377,36 +1426,64 @@ bool net_handle_ServerWelcome()
 		return true;
 	}
 
-	bool force_centerprint = ReadByte();
-	string hostname = ReadString();
-	string ver = ReadString();
-	string modifications = ReadString();
+	welcome_msg_force_centerprint = ReadByte();
+	strcpy(hostname, ReadString());
+
+	string hostversion = ReadString();
+	bool version_mismatch = ReadByte();
+	bool version_check = ReadByte();
+	string ver = GetVersionMessage(hostversion, version_mismatch, version_check);
+
+	string modifications = translate_modifications(ReadString());
+	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
-	string mutator_msg = ReadString();
 	string motd = ReadString();
 
 	string msg = "";
 	msg = strcat(msg, ver);
 	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+
+	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
 		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
+
 	if (cache_mutatormsg != "")
 		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = M_ARGV(0, string);
 	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
+
 	if (motd != "")
 		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
 
-	if (!force_centerprint && !isdemo() && cvar("_menu_welcome_dialog_available") && autocvar_cl_welcome_in_menu_dialog)
-	{
-		string welcomedialog_args;
-		welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
-		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
-		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-	}
-	else
-		centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", msg), -1, 0);
+	strcpy(welcome_msg, msg);
+	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
 	return true;
+}
+
+void Welcome_Message_Show_Try()
+{
+	if (!welcome_msg_menu_check_maxtime)
+		return;
+
+	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
+	// if want dialog check if menu is initialized but for a short time
+	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	{
+		if (want_dialog && cvar("_menu_welcome_dialog_available"))
+		{
+			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
+			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
+			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		}
+		else
+			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
+
+		strfree(welcome_msg);
+		welcome_msg_menu_check_maxtime = 0;
+	}
 }
 
 NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)

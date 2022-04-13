@@ -7456,7 +7456,7 @@ msgstr "Vybrat Jazyk..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "Jsi si jistý, že chceš odejít?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"

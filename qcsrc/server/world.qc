@@ -2033,25 +2033,25 @@ void readplayerstartcvars()
 	else if (s == "all" || s == "1")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "All Weapons";
+		g_weaponarena_list = "All Weapons Arena";
 		g_weaponarena_weapons = weapons_all();
 	}
 	else if (s == "devall")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Dev All Weapons";
+		g_weaponarena_list = "Dev All Weapons Arena";
 		g_weaponarena_weapons = weapons_devall();
 	}
 	else if (s == "most")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Most Weapons";
+		g_weaponarena_list = "Most Weapons Arena";
 		g_weaponarena_weapons = weapons_most();
 	}
 	else if (s == "all_available")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "All Available Weapons";
+		g_weaponarena_list = "All Available Weapons Arena";
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_all_update, INITPRIO_FINDTARGET);
@@ -2059,7 +2059,7 @@ void readplayerstartcvars()
 	else if (s == "devall_available")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Dev All Available Weapons";
+		g_weaponarena_list = "Dev All Available Weapons Arena";
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_devall_update, INITPRIO_FINDTARGET);
@@ -2067,7 +2067,7 @@ void readplayerstartcvars()
 	else if (s == "most_available")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Most Available Weapons";
+		g_weaponarena_list = "Most Available Weapons Arena";
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_most_update, INITPRIO_FINDTARGET);
@@ -2075,7 +2075,7 @@ void readplayerstartcvars()
 	else if (s == "none")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "No Weapons";
+		g_weaponarena_list = "No Weapons Arena";
 	}
 	else
 	{
@@ -2089,10 +2089,13 @@ void readplayerstartcvars()
 			if(wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
-				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
+				g_weaponarena_list = strcat(g_weaponarena_list, wep.netname, " & ");
 			}
 		}
-		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
+		if (g_weaponarena_list != "") // remove trailing " & "
+			g_weaponarena_list = substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3);
+		else // no valid weapon found
+			g_weaponarena_list = "No Weapons Arena";
 	}
 
 	if (g_weaponarena)
@@ -2100,6 +2103,7 @@ void readplayerstartcvars()
 		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena_weapons;
 		start_items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+		g_weaponarena_list = strzone(g_weaponarena_list);
 	}
 	else
 	{

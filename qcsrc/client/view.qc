@@ -1598,7 +1598,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
 
-	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 	if(!local_player)
 		local_player = this; // fall back!
@@ -1660,6 +1659,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		}
 	}
 
+	Welcome_Message_Show_Try();
+
 	Announcer();
 
 	View_CheckButtonStatus();
@@ -1680,7 +1681,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Draw the World (and sky)
 	setproperty(VF_DRAWWORLD, 1);
 
-	// Set the console size vars
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
@@ -1689,18 +1689,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	View_DemoCamera();
 
-	// Draw the Crosshair
-	setproperty(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-
-	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, 0);
-
-	// Update the mouse position
-	/*
-	   mousepos_x = vid_conwidth;
-	   mousepos_y = vid_conheight;
-	   mousepos = mousepos*0.5 + getmousepos();
-	 */
+	setproperty(VF_DRAWCROSSHAIR, 0); // hide engine crosshair
+	setproperty(VF_DRAWENGINESBAR, 0); // hide engine status bar
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 

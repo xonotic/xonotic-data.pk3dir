@@ -5,7 +5,6 @@
 bool autocvar_g_full_getstatus_responses;
 
 entity scores_initialized; // non-NULL when scores labels/rules have been set
-.float scoreboard_pos;
 
 /**
  * Attaches a PlayerScore entity to a player. Use that in ClientConnect.

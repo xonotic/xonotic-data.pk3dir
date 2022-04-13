@@ -30,11 +30,6 @@ MUTATOR_HOOKFUNCTION(hook, BuildMutatorsPrettyString)
     M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Hook");
 }
 
-MUTATOR_HOOKFUNCTION(hook, BuildGameplayTipsString)
-{
-    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3grappling hook^8 is enabled, press 'e' (+hook) to use it\n");
-}
-
 MUTATOR_HOOKFUNCTION(hook, SetStartItems)
 {
     if(autocvar_g_grappling_hook_useammo)
