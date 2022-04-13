@@ -10,6 +10,28 @@ void XonoticGameMenuDialog_destroy(entity me)
 	cvar_set("_menu_gamemenu_dialog_available", "0");
 }
 
+void XonoticGameMenuDialog_draw(entity me)
+{
+	entity btn = me.joinButton;
+	if(cvar("g_campaign"))
+	{
+		if (btn.toString(btn) == _("Join!"))
+		{
+			btn.setText(btn, _("Restart level"));
+			btn.onClickCommand = "resetmatch";
+		}
+	}
+	else
+	{
+		if (btn.toString(btn) == _("Restart level"))
+		{
+			btn.setText(btn, _("Join!"));
+			btn.onClickCommand = "join";
+		}
+	}
+	SUPER(XonoticGameMenuDialog).draw(me);
+}
+
 void XonoticGameMenuDialog_fill(entity me)
 {
 	registercvar("_menu_gamemenu_dialog_available", "0", 0);
@@ -34,7 +56,7 @@ void XonoticGameMenuDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quick menu"), '0 0 0', "quickmenu", COMMANDBUTTON_CLOSE));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Join!"), '0 0 0', "join", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, 1, e = me.joinButton = makeXonoticCommandButton(_("Join!"), '0 0 0', "join", COMMANDBUTTON_CLOSE));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Spectate"), '0 0 0', "spec", COMMANDBUTTON_CLOSE));
 	me.TR(me);
