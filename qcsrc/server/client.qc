@@ -400,7 +400,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	}
 	else
 	{
-		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in game modes without teams
 		this.frags = FRAGS_SPECTATOR;
 	}
 
@@ -760,7 +760,6 @@ void PutPlayerInServer(entity this)
 	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
-
 	{
 		string s = spot.target;
 		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
