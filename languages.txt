@@ -25,5 +25,5 @@ sr    "Serbian" "Српски" 60%
 uk    "Ukrainian" "Українська" 48%
 zh_CN "Chinese (China)" "中文" 58%
 zh_TW "Chinese (Taiwan)" "國語" 58%
-ja_JP "Japanese" "日本語" 99%
+ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 37%

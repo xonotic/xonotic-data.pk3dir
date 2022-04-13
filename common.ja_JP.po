@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-10 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -8249,12 +8249,12 @@ msgstr "全て"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "リアルタイムダイナミックライト"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
-msgstr ""
+msgstr "爆発、ロケット、パワーアップなどの一時的なリアルタイムライト源"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
@@ -8263,21 +8263,23 @@ msgstr "影"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "リアルタイムダイナミックライトによって投げかけられる影"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Realtime world lights"
-msgstr ""
+msgstr "リアルタイムワールドライト"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"特定のマップに含まれるリアルタイムライト源。 パフォーマンスに大きな影響を与え"
+"る可能性がある。"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "リアルタイムワールドライトによって投げかけられる影"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Use normal maps"
@@ -8288,6 +8290,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"リアルタイムライトとでこぼこの表面との相互作用をシミュレートするための特定の"
+"テクスチャの指向性シェーディング"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
@@ -8299,7 +8303,7 @@ msgstr "コロナの明るさ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights, default 1"
-msgstr ""
+msgstr "特定のライト周辺のフレア効果、デフォルト: 1"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -8307,7 +8311,7 @@ msgstr "可視性に応じてフェードコロナ"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
-msgstr ""
+msgstr "オクルージョンクエリを使用しているコロナフェージング"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
@@ -9121,15 +9125,15 @@ msgstr "パケットサイズとその他の情報のグラフを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "パケット損失補償"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "各パケットには前のメッセージのコピーが含まれている"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "動きの予測のエラー補償"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
@@ -9170,7 +9174,7 @@ msgstr "同時ダウロード:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "同時HTTPダウンロードの最大数"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -9406,6 +9410,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"VSYNCはティアリングを防ぎますが、レイテンシーを増加させ、画面のリフレッシュ"
+"レートでfpsを制限する"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
@@ -9446,6 +9452,8 @@ msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"画面またはウィンドウサイズの乗数、1xを超えるとアンチエイリアスが実行され、1x"
+"を下回るとGPUの速度が低下する可能性がある"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
