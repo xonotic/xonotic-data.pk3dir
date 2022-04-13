@@ -32,6 +32,7 @@ void round_handler_Think(entity this)
 		this.wait = false;
 		this.cnt = this.count + 1;  // init countdown
 		round_starttime = time + this.count;
+		round_delaytime = 0;
 		reset_map(true, false);
 	}
 
@@ -136,7 +137,6 @@ void round_handler_Reset(float next_think)
 	{
 		if (next_think <= game_starttime) rounds_played = 0;
 		round_starttime = next_think + this.count;
-		round_delaytime = 0;
 	}
 }
 
