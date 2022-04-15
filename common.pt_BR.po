@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-10 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2022\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -1293,7 +1293,7 @@ msgstr "Limite de pontos:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
-msgstr "Clã Arena"
+msgstr "Arena de Clãs"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
@@ -4077,7 +4077,7 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
-"^K1Pare de ficar AFK!\n"
+"^K1Mexa-se!\n"
 "^BGDesconectando em ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:655
@@ -4085,7 +4085,7 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
-"^K1Pare de ficar AFK!\n"
+"^K1Mexa-se!\n"
 "^BGIndo para os espectadores em ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:657
@@ -4128,7 +4128,7 @@ msgstr "^BGVocê foi automaticamente reanimado após %s segundos"
 
 #: qcsrc/common/notifications/all.inc:668
 msgid "^BGThe generator is under attack!"
-msgstr "^BGO gerador está sobre ataque!"
+msgstr "^BGO gerador está sob ataque!"
 
 #: qcsrc/common/notifications/all.inc:670
 msgid "^TC^TT^BG team loses the round"
@@ -7001,7 +7001,7 @@ msgstr "Arena com Maior Parte das Armas"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:46
 #, c-format
 msgid "%s Arena"
-msgstr "%s Arena"
+msgstr "Arena de %s"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:57
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:163
@@ -7147,7 +7147,7 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
-"Quantidade de saúde abaixo em que os jogadores começam a sangrar (a saúde "
+"Quantidade de saúde abaixo da qual os jogadores começam a sangrar (a saúde "
 "cai e os jogadores não podem pular)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
@@ -8389,11 +8389,11 @@ msgstr "Efeitos de clarão perto de certas luzes, por padrão 1"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
-msgstr "Desvanece as coronas de acordo com a visibilidade."
+msgstr "Desvanecer as coronas de acordo com a visibilidade"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
-msgstr "Esvaecer coronas consultando oclusões"
+msgstr "Desvanecer coronas por meio de consulta de oclusões"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
@@ -9148,7 +9148,7 @@ msgstr " Pressionar \"abrir console\" também o fecha"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
-msgstr "Permite que o atalho para abrir o console também feche-o"
+msgstr "Permite que o atalho para abrir o console também o feche"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
