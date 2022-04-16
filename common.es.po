@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-10 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yllelder, 2016\n"
+"Last-Translator: z 411 <winrar.hurr@gmail.com>, 2021-2022\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1101,7 +1101,7 @@ msgstr "Calentamiento"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr "Tiempo muerto"
+msgstr "Tiempo fuera"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
@@ -4384,7 +4384,7 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
-"^F2¡Ahora jugando en ^F4OVERTIME^F2!\n"
+"^F2¡Ahora jugando en ^F4TIEMPO EXTRA^F2!\n"
 "\n"
 "Los generadores están decayendo.\n"
 "Cuánto más puntos de control tenga tu equipo,\n"
@@ -4490,11 +4490,11 @@ msgstr "^K1Suicidio en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4Tiempo muerto comienza en ^COUNT"
+msgstr "^F4Tiempo fuera comienza en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:768
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Tiempo muerto en ^COUNT"
+msgstr "^F4Tiempo fuera termina en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:770
 msgid "^K1Cannot join given minigame session!"
@@ -4568,7 +4568,7 @@ msgstr "¡%s^K1 ha hecho TRIPLE ACIERTO! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 msgid "TRIPLE FRAG! "
-msgstr "¡ELIMINACIÓN TRIPLE!"
+msgstr "¡ELIMINACIÓN TRIPLE! "
 
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
