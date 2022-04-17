@@ -58,8 +58,6 @@ void CSQC_Init()
 		maxclients = i;
 	}
 
-	ReplicateVars(REPLICATEVARS_SEND_ALL);
-
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
@@ -667,6 +665,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	spectatee_status = newspectatee_status;
 
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
+
+	// this can't be called in CSQC_Init as it'd send cvars too early
+	ReplicateVars_Start();
 }
 
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
