@@ -1177,9 +1177,6 @@ void ClientConnect(entity this)
 
 	if (player_count == 1)
 		localcmd("\nsv_hook_firstjoin\n");
-
-	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
-		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
 /*
 =============
@@ -2038,62 +2035,6 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
-void PrintWelcomeMessage(entity this)
-{
-	if(CS(this).motd_actived_time == 0)
-	{
-		if (autocvar_g_campaign) {
-			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, false);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this)) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, true);
-			}
-		}
-	}
-	else if(CS(this).motd_actived_time > 0) // showing MOTD or campaign message
-	{
-		if (autocvar_g_campaign) {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if (time - CS(this).motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		}
-	}
-	else //if(CS(this).motd_actived_time < 0) // just connected, motd is active
-	{
-		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
-			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if (CS(this).motd_actived_time == -2)
-		{
-			// instantly hide MOTD
-			CS(this).motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-		}
-		else if (IS_PLAYER(this) || IS_SPEC(this))
-		{
-			// FIXME occasionally for some reason MOTD never goes away
-			// delay MOTD removal a little bit in the hope it fixes this bug
-			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
-				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
-			else //if (CS(this).motd_actived_time < -2)
-				CS(this).motd_actived_time++;
-		}
-	}
-}
-
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
@@ -2524,9 +2465,6 @@ void PlayerPreThink (entity this)
 	if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 		PlayerUseKey(this);
 	CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
-
-	if (IS_REAL_CLIENT(this))
-		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)

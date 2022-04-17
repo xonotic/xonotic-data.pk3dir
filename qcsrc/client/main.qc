@@ -1449,7 +1449,7 @@ void Welcome_Message_Show_Try()
 				localcmd("\ntogglemenu 0\n");
 		}
 		else
-			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
+			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), 15, 0);
 
 		strfree(welcome_msg);
 		welcome_msg_menu_check_maxtime = 0;
