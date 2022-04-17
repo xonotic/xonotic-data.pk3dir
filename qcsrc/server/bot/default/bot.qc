@@ -28,6 +28,7 @@
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
