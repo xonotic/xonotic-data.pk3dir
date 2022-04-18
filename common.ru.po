@@ -1191,7 +1191,7 @@ msgstr "Арена со всем оружием"
 #: qcsrc/client/main.qc:1329
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Арена со всем доступным оружием"
 
 #: qcsrc/client/main.qc:1330
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
@@ -1201,12 +1201,12 @@ msgstr "Арена с большинством оружия"
 #: qcsrc/client/main.qc:1331
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Арена с большинством доступного оружия"
 
 #: qcsrc/client/main.qc:1334 qcsrc/client/main.qc:1348
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Арена без оружия"
 
 #: qcsrc/client/main.qc:1346
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1217,32 +1217,32 @@ msgstr "%s Арена"
 #: qcsrc/client/main.qc:1357 qcsrc/client/main.qc:1362
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Это — %s"
 
 #: qcsrc/client/main.qc:1358
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Ваша версия клиента устарела."
 
 #: qcsrc/client/main.qc:1359
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### ВЫ НЕ СМОЖЕТЕ ИГРАТЬ НА ЭТОМ СЕРВЕРЕ ###"
 
 #: qcsrc/client/main.qc:1360
 msgid "Please update!"
-msgstr ""
+msgstr "Пожалуйста, обновитесь!"
 
 #: qcsrc/client/main.qc:1363
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Этот сервер использует устаревшую версию Xonotic."
 
 #: qcsrc/client/main.qc:1364
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### ЭТОТ СЕРВЕР НЕСОВМЕСТИМ, ТАК ЧТО ВЫ НЕ СМОЖЕТЕ ПОДКЛЮЧИТЬСЯ ###"
 
 #: qcsrc/client/main.qc:1366
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Добро пожаловать на %s"
 
 #: qcsrc/client/main.qc:1381 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -2018,7 +2018,7 @@ msgstr "ручной крюк"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3захватный крюк^8 включён, нажмите ^3%s^8, чтобы воспользоваться им"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2069,7 +2069,7 @@ msgstr "бросить оружие / гранату"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:127
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3гранаты^8 включены, нажмите ^3%s^8, чтобы использовать их"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2079,6 +2079,7 @@ msgstr "Граната"
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
 msgstr ""
+"^3вспомогательный бластер^8 включён, нажмите ^3%s^8, что воспользоваться им"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -5002,7 +5003,7 @@ msgstr "Воздушный бой"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Арена только с рукопашным боем"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5052,11 +5053,11 @@ msgstr "Без стартового оружия"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Гранаты"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Вспомогательный бластер"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -6087,7 +6088,7 @@ msgstr "Присоединиться!"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Перезапустить уровень"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
@@ -8425,7 +8426,7 @@ msgstr "Яркость корон:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Эффекты бликов вокруг определённых источников света"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -9993,7 +9994,7 @@ msgstr "Покинуть текущий матч"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Остановить демку"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"

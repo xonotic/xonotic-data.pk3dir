@@ -27,7 +27,7 @@ msgstr ""
 
 #: qcsrc/client/announcer.qc:45
 msgid "vs"
-msgstr ""
+msgstr "contro"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -1187,22 +1187,22 @@ msgstr "Arena con tutte le armi"
 #: qcsrc/client/main.qc:1329
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Arena con tutte le armi disponibili"
 
 #: qcsrc/client/main.qc:1330
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
-msgstr "Arena con la maggior parte delle armi"
+msgstr "Arena con molte armi"
 
 #: qcsrc/client/main.qc:1331
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Arena con molte armi disponibili"
 
 #: qcsrc/client/main.qc:1334 qcsrc/client/main.qc:1348
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Arena senza armi"
 
 #: qcsrc/client/main.qc:1346
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1213,32 +1213,32 @@ msgstr "Arena con %s"
 #: qcsrc/client/main.qc:1357 qcsrc/client/main.qc:1362
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Questo è %s"
 
 #: qcsrc/client/main.qc:1358
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "La tua versione client non è aggiornata."
 
 #: qcsrc/client/main.qc:1359
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### NON POTRAI GIOCARE IN QUESTO SERVER ###"
 
 #: qcsrc/client/main.qc:1360
 msgid "Please update!"
-msgstr ""
+msgstr "Aggiorna!"
 
 #: qcsrc/client/main.qc:1363
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Questo server sta usando una versiona di Xonotic non aggiornata."
 
 #: qcsrc/client/main.qc:1364
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### QUESTO SERVER E' INCOMPATIBILE E QUINDI NON PUOI GIOCARE ###"
 
 #: qcsrc/client/main.qc:1366
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Benvenuto a %s"
 
 #: qcsrc/client/main.qc:1381 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -2018,7 +2018,7 @@ msgstr "rampino immediato"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^8l'^3uncino^8 è abilitato, premi ^3%s^8 per usarlo"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2069,7 +2069,7 @@ msgstr "abbandona arma / lancia granata"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:127
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^8le ^3granate^8 sono abilitate, premi ^3%s^8 per usarle"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2078,7 +2078,7 @@ msgstr "Granata"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^8il^3blaster immediato^8 è abilitato, premi ^3%s^8 per usarlo"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -5065,7 +5065,7 @@ msgstr "A mezz'aria"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Arena solo melee"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5115,11 +5115,11 @@ msgstr "Senza armi all'inizio"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Granate"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Blaster immediato"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -5882,7 +5882,7 @@ msgstr "Animazione"
 
 #: qcsrc/menu/xonotic/credits.qc:54
 msgid "Campaign"
-msgstr ""
+msgstr "Campagna"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Level Design"
@@ -6010,7 +6010,7 @@ msgstr "Portoghese"
 
 #: qcsrc/menu/xonotic/credits.qc:314
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Portoghese (Brasile)"
 
 #: qcsrc/menu/xonotic/credits.qc:320
 msgid "Romanian"
@@ -6038,7 +6038,7 @@ msgstr "Svedese"
 
 #: qcsrc/menu/xonotic/credits.qc:376
 msgid "Turkish"
-msgstr ""
+msgstr "Turco"
 
 #: qcsrc/menu/xonotic/credits.qc:385
 msgid "Ukrainian"
@@ -6152,7 +6152,7 @@ msgstr "Entra!"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Riavvia livello"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
@@ -7350,7 +7350,7 @@ msgstr "Armi personalizzate"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:231
 msgid "Most weapons"
-msgstr "Maggior parte delle armi"
+msgstr "Molte armi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "All weapons"
@@ -8445,12 +8445,13 @@ msgstr "Tutti"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "Luci dinamiche in tempo reale"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
+"Luci dinamiche temporanee in tempo reale come esplosioni, razzi e powerup"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
@@ -8459,21 +8460,23 @@ msgstr "Ombre"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "Ombre proiettate da luci dinamiche in tempo reale"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Realtime world lights"
-msgstr ""
+msgstr "Luci globali in tempo reale"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"Sorgenti di luce in tempo reale in alcune mappe. Può avere un grande impatto "
+"sulla performance."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "Ombre proiettate da luci globali in tempo reale"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Use normal maps"
@@ -8484,6 +8487,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"Ombreggiatura direzionale di alcune texture per simulare l'interazione della "
+"luce in tempo reale con una superficie a sbalzi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
@@ -8491,11 +8496,11 @@ msgstr "Ombre morbide"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Corona brightness:"
-msgstr ""
+msgstr "Luminosità corone:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Effetti di bagliore attorno a certe luci"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -8503,7 +8508,7 @@ msgstr "Dissolvi corone rispetto a visibilità"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
-msgstr ""
+msgstr "Dissolvenza corona usando ricerca di occlusioni"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
@@ -9308,12 +9313,12 @@ msgstr "%d fps"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d KiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d MiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Network"
@@ -9330,15 +9335,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "Compensazione perdita pacchetti"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "Ogni pacchetto include una copia del messaggio precedente"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "Compensazione errore predizione movimento"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
@@ -9347,7 +9352,7 @@ msgstr "Usa crittografia (AES) quando disponibile"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Bandwidth limit:"
-msgstr ""
+msgstr "Limite banda:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
@@ -9371,15 +9376,15 @@ msgstr "Latenza locale:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr ""
+msgstr "Download HTTP:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
-msgstr ""
+msgstr "Simultanei:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "Massimo numero di download HTTP contemporanei"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -9621,6 +9626,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"La sincronizzazione verticale previene la lacerazione (tearing), ma aumenta "
+"la latenza e limita gli fps alla frequenza di aggiornamento dello schermo"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
@@ -9654,13 +9661,15 @@ msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Resolution scaling:"
-msgstr ""
+msgstr "Scala risoluzione:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"Moltiplicatore dimensione schermo o finestra, sopra 1x esegue "
+"l'antialiasing, sotto 1x può aiutare schede grafiche lente"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
@@ -10072,7 +10081,7 @@ msgstr "abbandona partita"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Interrompi demo"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"

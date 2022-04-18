@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yllelder, 2016\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1203,7 +1203,7 @@ msgstr "Arena con todas las Armas"
 #: qcsrc/client/main.qc:1329
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Todas las Armas Disponibles en la Arena"
 
 #: qcsrc/client/main.qc:1330
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
@@ -1213,12 +1213,12 @@ msgstr "Arena con la mayoría de las Armas"
 #: qcsrc/client/main.qc:1331
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "La mayoría de Armas Disponibles en la Arena"
 
 #: qcsrc/client/main.qc:1334 qcsrc/client/main.qc:1348
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Sin Armas en la Arena"
 
 #: qcsrc/client/main.qc:1346
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1229,32 +1229,32 @@ msgstr "%s Arena"
 #: qcsrc/client/main.qc:1357 qcsrc/client/main.qc:1362
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Esta es la versión %s"
 
 #: qcsrc/client/main.qc:1358
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Tu versión de cliente está desactualizada."
 
 #: qcsrc/client/main.qc:1359
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### NO PODRÁS JUGAR EN ESTE SERVIDOR ###"
 
 #: qcsrc/client/main.qc:1360
 msgid "Please update!"
-msgstr ""
+msgstr "¡Por favor, actualice!"
 
 #: qcsrc/client/main.qc:1363
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Este servidor está usando una versión desactualizada de Xonotic."
 
 #: qcsrc/client/main.qc:1364
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### ESTE SERVIDOR ES INCOMPATIBLE Y POR LO TANTO, NO PODRÁS ENTRAR ###"
 
 #: qcsrc/client/main.qc:1366
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Bienvenido a %s"
 
 #: qcsrc/client/main.qc:1381 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -2040,7 +2040,7 @@ msgstr "gancho"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3gancho de agarre^8 activado, pulsa ^3%s^8 para usarlo"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2091,7 +2091,7 @@ msgstr "soltar arma / tirar granada"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:127
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3granadas^8 activadas, pulsa ^3%s^8 para usarlas"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2100,7 +2100,7 @@ msgstr "Granada"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3blaster improvisado^8 activado, pulsa ^3%s^8 para usarlo"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -5060,7 +5060,7 @@ msgstr "En el aire"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Sólo Pelea de cuerpo a cuerpo en la Arena"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5110,11 +5110,11 @@ msgstr "Iniciar sin armas"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Granadas"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Blaster improvisado"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -6147,7 +6147,7 @@ msgstr "¡Unirse!"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Reiniciar nivel"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
@@ -8496,7 +8496,7 @@ msgstr "Brillo de destellos:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Efectos de bengala alrededor de ciertas luces"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -10078,7 +10078,7 @@ msgstr "Abandonar la partida actual"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Parar demo"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
