@@ -137,7 +137,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
-	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
+	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
+	                                sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
