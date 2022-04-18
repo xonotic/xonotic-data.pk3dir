@@ -51,8 +51,11 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 	}
 	void ReplicateVars_Start()
 	{
-		ReplicateVars_time = time;
-		ReplicateVars(REPLICATEVARS_SEND_ALL);
+		if (!ReplicateVars_time) // make sure it gets executed only once
+		{
+			ReplicateVars(REPLICATEVARS_SEND_ALL);
+			ReplicateVars_time = time;
+		}
 	}
 	#endif
 
