@@ -41,7 +41,7 @@ msgstr ""
 
 #: qcsrc/client/announcer.qc:45
 msgid "vs"
-msgstr ""
+msgstr "vs."
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -58,7 +58,7 @@ msgstr "^1Konnte nicht nach %s schreiben"
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Titel bei %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -71,6 +71,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Mehrzeilige Nachricht beim Zeitpunkt %s, welche\n"
+"^BOLDlänger als üblich bleibt"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
@@ -1200,7 +1202,7 @@ msgstr "Alle-Waffen-Arena"
 #: qcsrc/client/main.qc:1329
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Alle-Verfügbare-Waffen-Arena"
 
 #: qcsrc/client/main.qc:1330
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
@@ -1210,12 +1212,12 @@ msgstr "Viele-Waffen-Arena"
 #: qcsrc/client/main.qc:1331
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Meiste-Verfügbare-Waffen-Arena"
 
 #: qcsrc/client/main.qc:1334 qcsrc/client/main.qc:1348
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Keine-Waffen-Arena"
 
 #: qcsrc/client/main.qc:1346
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1226,37 +1228,38 @@ msgstr "%s-Arena"
 #: qcsrc/client/main.qc:1357 qcsrc/client/main.qc:1362
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Dies ist %s"
 
 #: qcsrc/client/main.qc:1358
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Deine Client-Version ist veraltet."
 
 #: qcsrc/client/main.qc:1359
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### DU WIRST AUF DIESEM SERVER NICHT SPIELEN KÖNNEN ###"
 
 #: qcsrc/client/main.qc:1360
 msgid "Please update!"
-msgstr ""
+msgstr "Bitte aktualisieren!"
 
 #: qcsrc/client/main.qc:1363
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Dieser Server benutzt eine veraltete Xonotic-Version."
 
 #: qcsrc/client/main.qc:1364
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr ""
+"### DIESER SERVER IST INKOMPATIBEL UND DU KANNST DAHER NICHT BEITRETEN ###"
 
 #: qcsrc/client/main.qc:1366
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Willkommen bei %s"
 
 #: qcsrc/client/main.qc:1381 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Level %d:"
 
 #: qcsrc/client/main.qc:1383
 #, c-format
@@ -1270,15 +1273,15 @@ msgstr "Spieltyp:"
 
 #: qcsrc/client/main.qc:1409
 msgid "Active modifications:"
-msgstr ""
+msgstr "Aktive Modifikationen:"
 
 #: qcsrc/client/main.qc:1412
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Besondere Spieltipps:"
 
 #: qcsrc/client/main.qc:1419
 msgid "MOTD:"
-msgstr ""
+msgstr "MOTD:"
 
 #: qcsrc/client/main.qc:1497
 #, c-format
@@ -2038,7 +2041,7 @@ msgstr "Enterhaken"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3Enterhaken^8 ist aktiviert, drücke ^3%s^8 zum Benutzen"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2089,7 +2092,7 @@ msgstr "Waffe wegwerfen / Granate werfen"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:127
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3Granaten^8 sind aktiviert, drücke ^3%s^8 zum Benutzen"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2098,7 +2101,7 @@ msgstr "Granate"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3Nebenhand-Blaster^8 ist aktiviert, drüche ^3%s^8 zum Benutzen"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -3146,7 +3149,7 @@ msgstr "^BG%s^F3 hat keine Leben mehr übrig"
 
 #: qcsrc/common/notifications/all.inc:394
 msgid "^BGMonsters are currently disabled"
-msgstr "^BGMonster sind im Moment deaktiviert "
+msgstr "^BGMonster sind im Moment deaktiviert"
 
 #: qcsrc/common/notifications/all.inc:396
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
@@ -3314,7 +3317,7 @@ msgid ""
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
 "^F2Du musst in den nächsten %s Spieler werden, oder du wirst gekickt, denn "
-"Zuschauen ist momentan nicht erlaubt."
+"Zuschauen ist momentan nicht erlaubt!"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
@@ -3719,16 +3722,16 @@ msgstr "^BGZiel in ^F4%s^BG zerstört!"
 
 #: qcsrc/common/notifications/all.inc:529
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGLos!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGSpiel startet in"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGRunde %s startet in"
 
 #: qcsrc/common/notifications/all.inc:532
 msgid "^F4Round cannot start"
@@ -4023,7 +4026,7 @@ msgstr "^K1Du wurdest etwas zu knusprig!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You fragged yourself!"
-msgstr "^K1Du hast dich selbst getötet"
+msgstr "^K1Du hast dich selbst getötet!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You need to be more careful!"
@@ -4346,6 +4349,9 @@ msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
+"^F4ACHTUNG:^BG: Du kannst diesem Spiel nicht erneut beitreten, sobald du "
+"zuschaust.\n"
+"Benutze den selben Befehl erneut, um trotzdem zuzuschauen."
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
@@ -5062,7 +5068,7 @@ msgstr "In der Luft"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Nur-Nahkampf-Arena"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5112,11 +5118,11 @@ msgstr "Ohne Waffen starten"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Granaten"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Nebenhand-Blaster"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -5879,7 +5885,7 @@ msgstr "Animation"
 
 #: qcsrc/menu/xonotic/credits.qc:54
 msgid "Campaign"
-msgstr ""
+msgstr "Kampagne"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Level Design"
@@ -6007,7 +6013,7 @@ msgstr "Portugiesisch"
 
 #: qcsrc/menu/xonotic/credits.qc:314
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Portugiesisch (Brasilien)"
 
 #: qcsrc/menu/xonotic/credits.qc:320
 msgid "Romanian"
@@ -6035,7 +6041,7 @@ msgstr "Schwedisch"
 
 #: qcsrc/menu/xonotic/credits.qc:376
 msgid "Turkish"
-msgstr ""
+msgstr "Türkisch"
 
 #: qcsrc/menu/xonotic/credits.qc:385
 msgid "Ukrainian"
@@ -6149,11 +6155,11 @@ msgstr "Verbinden!"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Level neu starten"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
-msgstr ""
+msgstr "Hauptmenü"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -6177,15 +6183,15 @@ msgstr "Eingabe"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr ""
+msgstr "Schnellmenü"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 msgid "Spectate"
-msgstr ""
+msgstr "Zuschauen"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
-msgstr ""
+msgstr "Spielmenü"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -7195,7 +7201,7 @@ msgstr "Alle Karten aus deiner Auswahl entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Mehrspieler starten!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -8458,12 +8464,12 @@ msgstr "Alle"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "Echtzeit-Dynamiklichter"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
-msgstr ""
+msgstr "Temporäre Echtzeitlichtquellen wie Explosionen, Raketen und Powerups"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
@@ -8472,21 +8478,23 @@ msgstr "Schatten"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "Von Echtzeitdynamiklichtern geworfene Schatten"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Realtime world lights"
-msgstr ""
+msgstr "Echtzeitweltlichter"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"Echtzeitlichtquellen werden in bestimmten Karten eingebunden. Kann einen "
+"großen Einschnitt auf die Performanz haben."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "Von Echtzeitweltlichtern geworfene Schatten"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Use normal maps"
@@ -8497,6 +8505,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"Gerichtetes Shading von bestimmten Texturen, um Interaktion des "
+"Echtzeitlichts mit einer unebenen Oberfläche zu simulieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
@@ -8504,11 +8514,11 @@ msgstr "Weiche Schatten"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Corona brightness:"
-msgstr ""
+msgstr "Korona-Helligkeit"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Flackereffekte um bestimmte Lichter"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -8516,7 +8526,7 @@ msgstr "Koronas anhand Sichtbarkeit verblassen lassen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
-msgstr ""
+msgstr "Koronaverblassung mittels Occlusion-Queries"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
@@ -9323,12 +9333,12 @@ msgstr "%d FPS"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d KiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d MiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Network"
@@ -9346,15 +9356,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "Paketverlustkompensation"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "Jedes Paket beeinhaltet eine Kopie der vorherigen Nachricht"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "Bewegungsvorhersagenfehlerkompensation"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
@@ -9363,7 +9373,7 @@ msgstr "Verschlüsselung (AES) benutzen, wenn verfügbar"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Bandwidth limit:"
-msgstr ""
+msgstr "Bandbreitenlimit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
@@ -9387,15 +9397,15 @@ msgstr "Simulierte Latenz:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr ""
+msgstr "HTTP-Downloads"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
-msgstr ""
+msgstr "Gleichzeitig:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "Maximale Anzahl von gleichzeitigen HTTP-Downloads"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -9640,6 +9650,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"VSync verhindert ein Auseinanderreißen, aber erhöht die Latenz und begrenzt "
+"deine FPS auf die Bildschirmwiederholungsrate"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
@@ -9673,13 +9685,15 @@ msgstr "4×"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Resolution scaling:"
-msgstr ""
+msgstr "Auflösungsskalierung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"Bildschirm- oder Fentergrößenfaktor; bei über 1× wird Anti-Aliasing "
+"angewendet, bei unter 1× könnte es langsamen GPUs helfen"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
@@ -9848,7 +9862,7 @@ msgstr "Schwer"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "Kampagne spielen!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9904,7 +9918,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr "Willkommen bei Xonotic! Bitte lese die folgenden Nutzungsbedingungen"
+msgstr "Willkommen bei Xonotic! Bitte lies die folgenden Nutzungsbedingungen:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
@@ -10088,35 +10102,35 @@ msgstr "Wegpunkteditormenü"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Aktuelles Spiel verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Demo stoppen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Kampagne verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Einzelspieler verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Mehrspieler verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Aktuellen Kampagnenlevel verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Aktuelles Einzelspielerspiel verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Aktuelles Mehrspielerspiel verlassen / Vom Server trennen"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"
