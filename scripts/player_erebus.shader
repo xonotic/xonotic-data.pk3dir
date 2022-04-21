@@ -24,3 +24,12 @@ shadowhead
 		rgbgen lightingDiffuse
 	}
 }
+
+shadowheadfb
+{
+	dpreflectcube cubemaps/default/sky
+	{
+		map textures/shadowheadfb.tga
+		rgbgen lightingDiffuse
+	}
+}
