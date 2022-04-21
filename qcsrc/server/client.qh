@@ -318,7 +318,7 @@ bool independent_players;
 .float nickspamtime; // time of last nick change
 .float nickspamcount;
 
-void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type);
+void SendWelcomemessage_msg_type(entity this, int msg_type);
 
 // respawning
 .int respawn_flags;

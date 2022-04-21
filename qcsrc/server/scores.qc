@@ -214,7 +214,7 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, welcome_msg_too);
 	// welcome message is sent here because it needs to know the gametype
 	if (welcome_msg_too)
-		SendWelcomemessage_msg_type(to, false, MSG_ENTITY);
+		SendWelcomemessage_msg_type(to, MSG_ENTITY);
 	return true;
 }
 

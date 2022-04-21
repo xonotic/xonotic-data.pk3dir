@@ -1019,17 +1019,10 @@ void ClientPreConnect(entity this)
 }
 #endif
 
-void SendWelcomemessage(entity this, bool force_centerprint)
-{
-	msg_entity = this;
-	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
-	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
-}
-
 // NOTE csqc uses the active mutators list sent by this function
 // to understand which mutators are enabled
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
-void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
+void SendWelcomemessage_msg_type(entity this, int msg_type)
 {
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
@@ -1039,7 +1032,6 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
-	WriteByte(msg_type, force_centerprint);
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
