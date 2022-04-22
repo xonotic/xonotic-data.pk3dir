@@ -11,6 +11,7 @@
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/banning.qh>
 #include <server/command/common.qh>
@@ -439,6 +440,8 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 	if(warmup_stage)
 		game_starttime = time; // Warmup: No countdown in warmup
+	else if (autocvar_g_campaign)
+		game_starttime = time + 3;
 	else
 		game_starttime = time + RESTART_COUNTDOWN; // Go into match mode
 
@@ -486,7 +489,7 @@ void ReadyRestart(bool forceWarmupEnd)
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
 
-	if(forceWarmupEnd)
+	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
 	else
 		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage

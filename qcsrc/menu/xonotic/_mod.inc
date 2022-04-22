@@ -93,6 +93,7 @@
 #include <menu/xonotic/inputbox.qc>
 #include <menu/xonotic/keybinder.qc>
 #include <menu/xonotic/languagelist.qc>
+#include <menu/xonotic/leavematchbutton.qc>
 #include <menu/xonotic/listbox.qc>
 #include <menu/xonotic/mainwindow.qc>
 #include <menu/xonotic/maplist.qc>
@@ -101,7 +102,6 @@
 #include <menu/xonotic/playerlist.qc>
 #include <menu/xonotic/playermodel.qc>
 #include <menu/xonotic/playlist.qc>
-#include <menu/xonotic/leavematchbutton.qc>
 #include <menu/xonotic/radiobutton.qc>
 #include <menu/xonotic/rootdialog.qc>
 #include <menu/xonotic/screenshotimage.qc>

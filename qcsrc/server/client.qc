@@ -137,7 +137,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
-	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
+	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
+	                                sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -400,7 +401,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	}
 	else
 	{
-		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in game modes without teams
 		this.frags = FRAGS_SPECTATOR;
 	}
 
@@ -760,7 +761,6 @@ void PutPlayerInServer(entity this)
 	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
-
 	{
 		string s = spot.target;
 		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
@@ -1018,21 +1018,6 @@ void ClientPreConnect(entity this)
 }
 #endif
 
-string GetClientVersionMessage(entity this)
-{
-	if (CS(this).version_mismatch) {
-		if(CS(this).version < autocvar_gameversion) {
-			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
-				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
-		} else {
-			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
-				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
-		}
-	} else {
-		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
-	}
-}
-
 void SendWelcomemessage(entity this, bool force_centerprint)
 {
 	msg_entity = this;
@@ -1040,6 +1025,9 @@ void SendWelcomemessage(entity this, bool force_centerprint)
 	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
 }
 
+// NOTE csqc uses the active mutators list sent by this function
+// to understand which mutators are enabled
+// also note that they aren't all registered mutators, e.g. jetpack, low gravity
 void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
 {
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
@@ -1052,29 +1040,26 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 	}
 	WriteByte(msg_type, force_centerprint);
 	WriteString(msg_type, autocvar_hostname);
-	WriteString(msg_type, GetClientVersionMessage(this));
+	WriteString(msg_type, autocvar_g_xonoticversion);
+	WriteByte(msg_type, CS(this).version_mismatch);
+	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
 
-	if(g_weaponarena)
-	{
-		if(g_weaponarena_random)
-			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
-		else
-			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
-	}
-	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
+	if (!g_weaponarena && cvar("g_balance_blaster_weaponstartoverride") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(autocvar_g_jetpack)
-		modifications = strcat(modifications, ", Jet pack");
+		modifications = strcat(modifications, ", Jetpack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	WriteString(msg_type, modifications);
+
+	WriteString(msg_type, g_weaponarena_list);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1084,11 +1069,6 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 
 	WriteString(msg_type, cache_mutatormsg);
 
-	string mutator_msg = "";
-	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
-	mutator_msg = M_ARGV(0, string);
-
-	WriteString(msg_type, mutator_msg); // trust that the mutator will do proper formatting
 	WriteString(msg_type, strreplace("\\n", "\n", autocvar_sv_motd));
 }
 
@@ -1973,6 +1953,9 @@ bool ShowTeamSelection(entity this)
 }
 void Join(entity this)
 {
+	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
+		ReadyRestart(true);
+
 	TRANSMUTE(Player, this);
 
 	if(!this.team_selected)
@@ -2557,7 +2540,6 @@ void PlayerPreThink (entity this)
 			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
-			campaign_bots_may_start = true;
 			if(joinAllowed(this))
 				Join(this);
 			return;
