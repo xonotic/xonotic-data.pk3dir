@@ -28,6 +28,7 @@
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
@@ -67,6 +68,12 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
+		if (IS_PLAYER(this))
+		{
+			.entity weaponentity = weaponentities[0];
+			if(this.(weaponentity).m_weapon == WEP_Null)
+				W_NextWeapon(this, 0, weaponentity);
+		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
@@ -106,6 +113,9 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
+		.entity weaponentity = weaponentities[0];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;

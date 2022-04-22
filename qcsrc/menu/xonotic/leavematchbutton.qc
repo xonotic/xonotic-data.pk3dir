@@ -10,6 +10,8 @@ string leaveMatchButton_getText(entity me)
 {
 	if (me.disabled)
 		return _("Leave current match");
+	else if(isdemo())
+		return _("Stop demo");
 	else if(cvar("g_campaign"))
 		return _("Leave campaign");
 	else if (isServerSingleplayer())
@@ -20,7 +22,7 @@ string leaveMatchButton_getText(entity me)
 
 string leaveMatchButton_getTooltip(entity me)
 {
-	if (me.disabled)
+	if (me.disabled || isdemo())
 		return "-";
 	else if(cvar("g_campaign"))
 		return _("Leave current campaign level");

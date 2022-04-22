@@ -211,7 +211,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Corona brightness:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1.5, 0.1, "r_coronas",
-			_("Flare effects around certain lights, default 1")));
+			_("Flare effects around certain lights")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "r_coronas_occlusionquery", _("Fade coronas according to visibility"),
