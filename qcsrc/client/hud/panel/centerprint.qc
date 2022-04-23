@@ -50,7 +50,8 @@ string centerprint_medal_icon;
 float centerprint_medal_times;
 
 string centerprint_title;
-float centerprint_title_offset;
+string centerprint_title_left;
+string centerprint_title_right;
 
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
@@ -169,18 +170,24 @@ void centerprint_Medal(string icon, float times)
 	centerprint_showing = true;
 }
 
+void centerprint_SetDuelTitle(string left, string right, string div)
+{
+	strcpy(centerprint_title_left, left);
+	strcpy(centerprint_title_right, right);
+	centerprint_SetTitle(sprintf("^BG%s^BG  %s  %s", left, div, right));
+}
+
+void centerprint_SetTitle(string title)
+{
+	if(title != centerprint_title)
+		strcpy(centerprint_title, CCR(title));
+}
+
 void centerprint_ClearTitle()
 {
 	strfree(centerprint_title);
-	centerprint_title_offset = 0;
-}
-
-void centerprint_SetTitle(string title, float offset)
-{
-	if(title != centerprint_title) {
-		strcpy(centerprint_title, CCR(title));
-		centerprint_title_offset = offset;
-	}
+	strfree(centerprint_title_left);
+	strfree(centerprint_title_right);
 }
 
 float hud_configure_cp_generation_time;
@@ -206,7 +213,7 @@ void HUD_CenterPrint()
 		{
 			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
 			{
-				centerprint_SetTitle(sprintf(_("Title at %s"), seconds_tostring(hud_configure_cp_generation_time)), 0);
+				centerprint_SetTitle(sprintf(_("Title at %s"), seconds_tostring(hud_configure_cp_generation_time)));
 
 				float r;
 				r = random();
@@ -324,8 +331,8 @@ void HUD_CenterPrint()
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= fontsize.y;
-		if (centerprint_title_offset && align == 0.5)
-			pos.x += centerprint_title_offset * CENTERPRINT_BASE_SIZE * autocvar_hud_panel_centerprint_fontscale_title;
+		if (centerprint_title_left != "" && align == 0.5) // Center line at the main word (for duels)
+			pos.x += (stringwidth(centerprint_title_right, true, fontsize) - stringwidth(centerprint_title_left, true, fontsize)) / 2;
 
 		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 

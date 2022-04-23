@@ -545,6 +545,7 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_showfps");
+		BADCVAR("sv_showspectators");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
@@ -872,10 +873,10 @@ spawnfunc(worldspawn)
 
 	if(autocvar_g_campaign)
 		CampaignPreInit();
+	else
+		PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	Map_MarkAsRecent(mapname);
-
-	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	InitGameplayMode();
 	static_init_late();
@@ -2296,7 +2297,7 @@ void readlevelcvars()
 
     MUTATOR_CALLHOOK(ReadLevelCvars);
 
-	if (!warmup_stage)
+	if (!warmup_stage && !autocvar_g_campaign)
 		game_starttime = time + cvar("g_start_delay");
 
 	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });

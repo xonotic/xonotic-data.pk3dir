@@ -42,8 +42,7 @@ void Announcer_Duel()
 	strcpy(prev_pl2_name, pl2_name);
 
 	// There are new duelers, update title
-	float offset = stringwidth(pl2_name, true, hud_fontsize) - stringwidth(pl1_name, true, hud_fontsize) - 1;
-	centerprint_SetTitle(sprintf("^BG%s^BG  %s  %s", pl1_name, _("vs"), pl2_name), offset / 2);
+	centerprint_SetDuelTitle(pl1_name, pl2_name, _("vs"));
 }
 
 void Announcer_ClearTitle()
@@ -154,7 +153,7 @@ void Announcer_Gamestart()
 				if (gametype.m_1v1)
 					Announcer_Duel();
 				else
-					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype)), 0); // Show game type as title
+					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Show game type as title
 
 				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 					if(teamplay)

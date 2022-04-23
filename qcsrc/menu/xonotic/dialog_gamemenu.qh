@@ -2,6 +2,7 @@
 
 #include "rootdialog.qh"
 CLASS(XonoticGameMenuDialog, XonoticRootDialog)
+	METHOD(XonoticGameMenuDialog, draw, void(entity));
 	METHOD(XonoticGameMenuDialog, destroy, void(entity));
 	METHOD(XonoticGameMenuDialog, fill, void(entity));
 	ATTRIB(XonoticGameMenuDialog, title, string, _("Game menu"));
@@ -11,4 +12,5 @@ CLASS(XonoticGameMenuDialog, XonoticRootDialog)
 	ATTRIB(XonoticGameMenuDialog, columns, float, 1);
 	ATTRIB(XonoticGameMenuDialog, name, string, "GameMenu");
 	ATTRIB(XonoticGameMenuDialog, requiresConnection, bool, true);
+	ATTRIB(XonoticGameMenuDialog, joinButton, entity, world);
 ENDCLASS(XonoticGameMenuDialog)

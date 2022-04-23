@@ -147,7 +147,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
-	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
+	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
+	                                sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -410,7 +411,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	}
 	else
 	{
-		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in game modes without teams
 		this.frags = FRAGS_SPECTATOR;
 	}
 
@@ -780,7 +781,6 @@ void PutPlayerInServer(entity this)
 	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
-
 	{
 		string s = spot.target;
 		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
@@ -1986,6 +1986,9 @@ bool ShowTeamSelection(entity this)
 }
 void Join(entity this)
 {
+	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
+		ReadyRestart(true);
+
 	TRANSMUTE(Player, this);
 
 	if(!this.team_selected)
@@ -2576,7 +2579,6 @@ void PlayerPreThink (entity this)
 			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
-			campaign_bots_may_start = true;
 			if(joinAllowed(this))
 				Join(this);
 			return;

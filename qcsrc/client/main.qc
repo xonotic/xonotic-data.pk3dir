@@ -58,8 +58,6 @@ void CSQC_Init()
 		maxclients = i;
 	}
 
-	ReplicateVars(REPLICATEVARS_SEND_ALL);
-
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
@@ -441,6 +439,9 @@ void PostInit()
 	playerchecker.nextthink = time + 0.2;
 
 	TrueAim_Init();
+
+	// this can't be called in CSQC_Init as it'd send cvars too early
+	ReplicateVars_Start();
 
 	postinit = true;
 }
