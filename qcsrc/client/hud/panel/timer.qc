@@ -145,7 +145,13 @@ void HUD_Timer()
 			// Use real or frozen time and get the time limit
 			round_endtime = STAT(ROUNDENDTIME);
 			round_timelimit = STAT(ROUND_TIMELIMIT);
-			round_curtime = (round_endtime ? round_endtime : time);
+
+			if(round_endtime)
+				round_curtime = round_endtime;
+			else if(timeout_last)
+				round_curtime = timeout_last;
+			else
+				round_curtime = time;
 
 			// Calculate time left
 			round_timeleft = HUD_Timer_TimeLeft(round_curtime, STAT(ROUNDSTARTTIME), round_timelimit);

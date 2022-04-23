@@ -1523,6 +1523,9 @@ void ClearWinners()
 
 void AnnounceNewLeader()
 {
+	// Don't announce if in warmup or just started
+	if(warmup_stage || time - game_starttime < 1) return;
+
 	if(teamplay) {
 		if (WinningConditionHelper_equality)
 			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TEAM_LEADS_TIED);
