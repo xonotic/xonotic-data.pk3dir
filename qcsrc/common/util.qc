@@ -1983,8 +1983,6 @@ void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
-	if (ent.aiment_classname)
-		strunzone(ent.classname);
 	// FIXME: engine bug?
 	// resetting aiment the engine will set orb's origin close to world's origin
 	//ent.aiment = NULL;
