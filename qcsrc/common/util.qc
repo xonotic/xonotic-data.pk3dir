@@ -1966,7 +1966,7 @@ void SetMovetypeFollow(entity ent, entity e)
 	ent.punchangle = e.angles; // the original angles of bmodel
 	ent.view_ofs = ent.origin - e.origin; // relative origin
 	ent.v_angle = ent.angles - e.angles; // relative angles
-	strcpy(ent.aiment_classname, e.classname);
+	ent.aiment_classname = e.classname;
 	ent.aiment_deadflag = e.deadflag;
 
 	if(IS_PLAYER(ent.aiment))
@@ -1982,7 +1982,7 @@ void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
-	strfree(ent.aiment_classname);
+	ent.aiment_classname = string_null;
 	// FIXME: engine bug?
 	// resetting aiment the engine will set orb's origin close to world's origin
 	//ent.aiment = NULL;
