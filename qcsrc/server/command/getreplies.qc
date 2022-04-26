@@ -59,7 +59,7 @@ string getrankings()
 
 		n = race_readName(map, i);
 		p = count_ordinal(i);
-		s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
+		s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t, false)), " ", n, "\n");
 	}
 
 	MapInfo_ClearTemps();
