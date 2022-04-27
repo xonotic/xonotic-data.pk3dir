@@ -1022,7 +1022,7 @@ void ClientPreConnect(entity this)
 // NOTE csqc uses the active mutators list sent by this function
 // to understand which mutators are enabled
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
-void SendWelcomemessage_msg_type(entity this, int msg_type)
+void SendWelcomeMessage(entity this, int msg_type)
 {
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
