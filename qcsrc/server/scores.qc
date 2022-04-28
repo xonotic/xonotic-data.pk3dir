@@ -210,12 +210,11 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	}
 	// prevent sending the welcome message again when score types are sent again because the scoring system has changed
 	// it can happen in some game modes like Race when the qualyfing session ends and the race starts
-	// NOTE: CS(this) is not initialized yet when a local client connects to a local dedicated server
-	bool welcome_msg_too = (!CS(this) || time < CS(this).jointime + 5);
+	bool welcome_msg_too = (!CS(to) || time < CS(to).jointime + 5);
 	WriteByte(MSG_ENTITY, welcome_msg_too);
 	// welcome message is sent here because it needs to know the gametype
 	if (welcome_msg_too)
-		SendWelcomemessage_msg_type(this, false, MSG_ENTITY);
+		SendWelcomemessage_msg_type(to, false, MSG_ENTITY);
 	return true;
 }
 
