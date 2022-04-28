@@ -1101,7 +1101,7 @@ msgstr "Calentamiento"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr "Tiempo fuera"
+msgstr "Tiempo muerto"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
@@ -4576,11 +4576,11 @@ msgstr "^K1Suicidio en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4Tiempo fuera comienza en ^COUNT"
+msgstr "^F4El tiempo muerto comienza en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:768
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Tiempo fuera termina en ^COUNT"
+msgstr "^F4Fin del tiempo muerto en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:770
 msgid "^K1Cannot join given minigame session!"
@@ -4645,7 +4645,7 @@ msgstr "tirar granada"
 #: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr "¡%s^K1 ha hecho una ELIMINACIÓN TRIPLE! %s^BG"
+msgstr "¡%s^K1 ha hecho una TRIPLE ELIMINACIÓN! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 #, c-format
@@ -4654,7 +4654,7 @@ msgstr "¡%s^K1 ha hecho TRIPLE ACIERTO! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 msgid "TRIPLE FRAG! "
-msgstr "¡ELIMINACIÓN TRIPLE! "
+msgstr "¡TRIPLE ELIMINACIÓN! "
 
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
