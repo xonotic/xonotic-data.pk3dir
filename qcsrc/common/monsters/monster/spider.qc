@@ -6,8 +6,6 @@
 
 #ifdef SVQC
 
-.float spider_slowness; // effect time of slowness inflicted by spiders
-
 .float spider_web_delay;
 
 float autocvar_g_monster_spider_attack_web_damagetime;
@@ -27,7 +25,7 @@ MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(time < player.spider_slowness)
+	if(StatusEffects_active(STATUSEFFECT_Webbed, player))
 		STAT(MOVEVARS_HIGHSPEED, player) *= 0.5;
 }
 
@@ -35,26 +33,11 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 {
     entity mon = M_ARGV(0, entity);
 
-	if(time < mon.spider_slowness)
+	if(StatusEffects_active(STATUSEFFECT_Webbed, mon))
 	{
 		M_ARGV(1, float) *= 0.5; // run speed
 		M_ARGV(2, float) *= 0.5; // walk speed
 	}
-}
-
-MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
-
-	player.spider_slowness = 0;
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
-{
-    entity mon = M_ARGV(0, entity);
-
-	mon.spider_slowness = 0;
 }
 
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
@@ -114,7 +97,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 
 		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterdef != MON_SPIDER,
 		{
-			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
+			StatusEffects_apply(STATUSEFFECT_Webbed, it, time + autocvar_g_monster_spider_attack_web_damagetime, 0);
 		});
 
 		delete(this);

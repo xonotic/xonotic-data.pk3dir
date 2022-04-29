@@ -130,7 +130,7 @@ sprite()
 		shift
 		shift
 		pngsprite "${name}_frame$frame" "$color" "$bgcolor" "$text"
-		convert "${name}_frame$frame.png" "${name}_frame$frame.tga"
+		convert "${name}_frame$frame.png" -auto-orient "${name}_frame$frame.tga"
 		rm -f "${name}_frame$frame.png"
 		args="$args -sprite ${name}_frame$frame.tga $(($sprwidth / 2)) $(($sprheight - 1)) $interval"
 		frame=$(($frame + 1))

@@ -12,6 +12,19 @@ REGISTRY_DEPENDS(Items, Models)
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
 
+#ifdef CSQC
+// Copy Items registry here before it gets sorted alphabetically by REGISTRY_SORT
+// so we can keep items sorted by categories (as they appear in the code)
+IntrusiveList default_order_items;
+STATIC_INIT(default_order_items)
+{
+	default_order_items = IL_NEW();
+	FOREACH(Items, true, {
+		IL_PUSH(default_order_items, it);
+	});
+}
+#endif
+
 REGISTRY_SORT(Items)
 REGISTRY_CHECK(Items)
 
@@ -28,7 +41,7 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_HELPF("Usage:^3 %s dumpitems", GetProgramCommandPrefix());
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpitems");
             return;
         }
     }

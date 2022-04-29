@@ -106,7 +106,6 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
 		string console_shortcut = strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE"));
 		KEYBIND_SPECIAL_DEF(console_shortcut, _("enter console"));
-	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_EMPTY_LINE();
 
@@ -390,6 +389,9 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 		case K_KP_DEL:
 		case K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
+			break;
+		case K_MOUSE2:
+			KeyBinder_Bind_Edit(me, me);
 			break;
 		default:
 			r = SUPER(XonoticKeyBinder).keyDown(me, key, ascii, shift);

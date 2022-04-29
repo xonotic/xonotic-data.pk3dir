@@ -8,6 +8,11 @@
 #include "charmap.qh"
 #include "commandbutton.qh"
 
+bool XonoticFirstRunDialog_shouldShow()
+{
+    return cvar_string("_cl_name") == cvar_defstring("_cl_name");
+}
+
 float CheckFirstRunButton(entity me)
 {
 	if(cvar_string("_cl_name") != cvar_defstring("_cl_name"))
@@ -82,6 +87,8 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", _("Yes")));
 	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "0", _("No")));
 	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "-1", _("Undecided")));
+	me.TR(me);
+	me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, _("Player statistics are enabled by default, you can change this in the Profile menu")));
 
 	// because of the language selector, this is a menu_restart!
 	me.gotoRC(me, me.rows - 1, 0);

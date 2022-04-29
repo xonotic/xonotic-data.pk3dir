@@ -71,6 +71,12 @@ float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);
 
+#ifdef GAMEQC
+REPLICATE_INIT(string, cvar_cl_physics);
+REPLICATE_INIT(bool, cvar_cl_jetpack_jump);
+REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
+#endif
+
 #define PHYS_PL_MAX(s)						STAT(PL_MAX, s)
 #define PHYS_PL_MIN(s)						STAT(PL_MIN, s)
 #define PHYS_PL_CROUCH_MAX(s)				STAT(PL_CROUCH_MAX, s)
@@ -81,8 +87,6 @@ bool IsFlying(entity a);
 
 #define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
 #define PHYS_HEALTH(s)						STAT(HEALTH, s)
-
-#define BUFFS_STAT(s)                       STAT(BUFFS, s)
 
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)
 #define PHYS_AIRACCELERATE(s)               STAT(MOVEVARS_AIRACCELERATE, s)
@@ -179,17 +183,17 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 // used for special commands and idle checking, not from the engine
 // TODO: cache
 #define PHYS_INPUT_BUTTON_MASK(s) ( \
-	  ((1 <<  0) * PHYS_INPUT_BUTTON_ATCK(s)) \
-	| ((1 <<  1) * PHYS_INPUT_BUTTON_JUMP(s)) \
-	| ((1 <<  2) * PHYS_INPUT_BUTTON_ATCK2(s)) \
-	| ((1 <<  3) * PHYS_INPUT_BUTTON_ZOOM(s)) \
-	| ((1 <<  4) * PHYS_INPUT_BUTTON_CROUCH(s)) \
-	| ((1 <<  5) * PHYS_INPUT_BUTTON_HOOK(s)) \
-	| ((1 <<  6) * PHYS_INPUT_BUTTON_USE(s)) \
-	| ((1 <<  7) * PHYS_INPUT_BUTTON_BACKWARD(s)) \
-	| ((1 <<  8) * PHYS_INPUT_BUTTON_FORWARD(s)) \
-	| ((1 <<  9) * PHYS_INPUT_BUTTON_LEFT(s)) \
-	| ((1 << 10) * PHYS_INPUT_BUTTON_RIGHT(s)) \
+	  (BIT(0) * PHYS_INPUT_BUTTON_ATCK(s)) \
+	| (BIT(1) * PHYS_INPUT_BUTTON_JUMP(s)) \
+	| (BIT(2) * PHYS_INPUT_BUTTON_ATCK2(s)) \
+	| (BIT(3) * PHYS_INPUT_BUTTON_ZOOM(s)) \
+	| (BIT(4) * PHYS_INPUT_BUTTON_CROUCH(s)) \
+	| (BIT(5) * PHYS_INPUT_BUTTON_HOOK(s)) \
+	| (BIT(6) * PHYS_INPUT_BUTTON_USE(s)) \
+	| (BIT(7) * PHYS_INPUT_BUTTON_BACKWARD(s)) \
+	| (BIT(8) * PHYS_INPUT_BUTTON_FORWARD(s)) \
+	| (BIT(9) * PHYS_INPUT_BUTTON_LEFT(s)) \
+	| (BIT(10) * PHYS_INPUT_BUTTON_RIGHT(s)) \
 	)
 
 #define IS_JUMP_HELD(s)                     (!((s).flags & FL_JUMPRELEASED))
@@ -327,7 +331,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
 
-	#define PHYS_CL_TRACK_CANJUMP(s)            (CS(s).cvar_cl_movement_track_canjump)
+	#define PHYS_CL_TRACK_CANJUMP(s)            (CS_CVAR(s).cvar_cl_movement_track_canjump)
 
 #endif
 

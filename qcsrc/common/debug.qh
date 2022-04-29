@@ -2,8 +2,8 @@
 
 #ifdef CSQC
 #include <client/draw.qh>
-#include <client/resources.qh>
 #include <client/view.qh>
+#include <common/resources/cl_resources.qh>
 #endif
 
 
@@ -213,7 +213,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get <bufhandle> <string_index>");
 			return;
 		}
 	}
@@ -346,11 +346,11 @@ GENERIC_COMMAND(findent, "Search through entities for matching classname", false
 			int entcnt = 0;
 			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
 			{
-				LOG_INFOF("%i (%s)", it, it.classname);
+				LOG_HELPF("%i (%s)", it, it.classname);
 				++entcnt;
 			});
 			if(entcnt)
-				LOG_INFOF("Found %d entities", entcnt);
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
@@ -358,8 +358,8 @@ GENERIC_COMMAND(findent, "Search through entities for matching classname", false
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find classname");
-			LOG_HELP("  Where 'classname' is the classname to search for.");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find <classname>");
+			LOG_HELP("  Where <classname> is the classname to search for.");
 			return;
 		}
 	}
@@ -372,8 +372,23 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
+			vector org = stov(argv(1));
+			float dist = stof(argv(2));
+			int entcnt = 0;
+			FOREACH_ENTITY_ORDERED(true,
+			{
+				if (dist > 0)
+				{
+					if (!vdist(it.origin - org, <, dist))
+						continue;
+				}
+				else if (it.origin != org)
+					continue;
+				LOG_HELPF("%i (%s)", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
@@ -381,7 +396,8 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat \"x y z\"");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat <position> [<dist>]");
+			LOG_HELP("  Where <position> is a vector \"x y z\"");
 			return;
 		}
 	}

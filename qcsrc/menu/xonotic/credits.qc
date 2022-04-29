@@ -4,47 +4,34 @@
 	TITLE(_("Core Team")) \
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ant "Antibody" Zucaro) \
+		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
-		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
-		PERSON(TimePath) \
 		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
-		PERSON(AllieWay) \
-		PERSON(Antonio "terencehill" Piu) \
-		PERSON(Archer) \
-		PERSON(BuddyFriendGuy) \
+		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
-		PERSON(Debugger) \
-		PERSON(Diomedes) \
 		PERSON(Freddy) \
-		PERSON(GATTS) \
 		PERSON(Halogene) \
 		PERSON(Jan "zykure" Behrens) \
-		PERSON(JH0nny) \
-		PERSON(Łukasz "kuniu the frogg" Polek) \
-		PERSON(martin-t) \
-		PERSON(Matthias "matthiaskrgr" Krüger) \
-		PERSON(Mattia "Melanosuchus" Basaglia) \
+		PERSON(Morosophos) \
 		PERSON(MrBougo) \
-		PERSON(Nick "bitbomb" Lucca) \
 		PERSON(nilyt/nyov) \
 		PERSON(Nitroxis) \
 		PERSON(packer) \
-		PERSON(Pearce "theShadow" Michal) \
-		PERSON(Rasmus "FruitieX" Eskola) \
-		PERSON(s1lence) \
 		PERSON(Severin "sev" Meyer) \
-		PERSON(Soelen) \
-		PERSON(Sydes) \
-		PERSON(unfa) \
+		PERSON(Thomas "illwieckz" Debesse) \
+		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(Yannick "SpiKe" Le Guen) \
+		PERSON(z411) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
 		PERSON(Ant "Antibody" Zucaro (web)) \
+		PERSON(Freddy) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Tyler "-z-" Mulligan (web / game)) \
 	NL() \
@@ -64,9 +51,13 @@
 		PERSON(Sahil "DiaboliK" Singhal) \
 		PERSON(nifrek) \
 	NL() \
+	FUNCTION(_("Campaign")) \
+		PERSON(Marvin "Mirio" Beck) \
+	NL() \
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
 		PERSON(Ben "MooKow" Banker) \
+		PERSON(cityy) \
 		PERSON(Cortez) \
 		PERSON(Cuinn "Cuinnton" Herrick) \
 		PERSON(Debugger) \
@@ -86,6 +77,7 @@
 		PERSON(Severin "sev" Meyer) \
 		PERSON(ShadoW) \
 		PERSON(t0uYK8Ne) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 	NL() \
 	FUNCTION(_("Music / Sound FX")) \
 		PERSON(AquaNova (Archer)) \
@@ -104,11 +96,19 @@
 		PERSON(unfa) \
 	NL() \
 	FUNCTION(_("Game Code")) \
-		PERSON(Samual "Ares" Lenks) \
-		PERSON(Rudolf "divVerent" Polzer) \
+		PERSON(Antonio "terencehill" Piu) \
+		PERSON(bones_was_here) \
+		PERSON(Dr. Jaska) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
+		PERSON(martin-t) \
+		PERSON(Mattia "Melanosuchus" Basaglia) \
+		PERSON(Matthias "matthiaskrgr" Krüger) \
 		PERSON(Rasmus "FruitieX" Eskola) \
+		PERSON(Rudolf "divVerent" Polzer) \
+		PERSON(Samual "Ares" Lenks) \
 		PERSON(TimePath) \
+		PERSON(Victor "LegendGuard" Jaume) \
+		PERSON(z411) \
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	FUNCTION(_("Marketing / PR")) \
@@ -140,9 +140,9 @@
 	NL() \
 	TITLE(_("Other Active Contributors")) \
 		PERSON(Jeff) \
-		PERSON(Lyberta) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
+		PERSON(slava) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -159,71 +159,102 @@
 			PERSON(Alexander "alex4o" Bonin) \
 			PERSON(ifohancroft) \
 			PERSON(lokster) \
+			PERSON(Nik "cozmo" Dim) \
 			PERSON(set_killer) \
 			PERSON(ubone) \
 		NL() \
 		FUNCTION(_("Chinese (China)")) \
 			PERSON(Antonidas) \
 			PERSON(Armcoon) \
+			PERSON(CodingJellyfish) \
+			PERSON(gee "Largee" Lar) \
+			PERSON(jiegushijia) \
 			PERSON(kalawore) \
+			PERSON(Liang "dxkliu" Liu) \
+			PERSON(Losier "losierb" Blackheath) \
+			PERSON(Matthew "wjjmatthew" Wu) \
+			PERSON(moetale) \
 			PERSON(sapphireliu) \
 		NL() \
 		FUNCTION(_("Chinese (Taiwan)")) \
 			PERSON(Alisha) \
 			PERSON(Armcoon) \
 			PERSON(Jeff "s8321414" Huang) \
+			PERSON(msn1018927464) \
 		NL() \
 		FUNCTION(_("Cornish")) \
 			PERSON(Nicky "nrowe" Rowe) \
 		NL() \
 		FUNCTION(_("Czech")) \
+			PERSON(Adam "Admi335" Říha) \
+			PERSON(fasdasd " kitfildom" sdasd) \
+			PERSON(gamingforyou875) \
+			PERSON(Jan "kockahonza" Kocka) \
+			PERSON(Jiří "Havro" Vrána) \
 			PERSON(shogun assassin/woky) \
 			PERSON(Superovoce) \
 			PERSON(Tomáš "CZHeron" Volavka) \
 		NL() \
 		FUNCTION(_("Dutch")) \
 			PERSON(Alexander "freefang" van Dam) \
+			PERSON(Contijn "Sojiro84" Buijs) \
 			PERSON(Joeke "Mappack" de Graaf) \
 			PERSON(Jonathan "Jonakeys" van der Steege) \
 			PERSON(PinkRobot) \
 			PERSON(vegiburger) \
 		NL() \
 		FUNCTION(_("English (Australia)")) \
+			PERSON(Matthew "matthewwu2003" Wu) \
 			PERSON(Laurene "sunflowers" Albrand) \
 			PERSON(Stuart "Cefiar" Young) \
 			PERSON(Zac "Mario" Jardine) \
 		NL() \
 		FUNCTION(_("Finnish")) \
-			PERSON(Jonas "PowaTree" Sahlberg) \
+			PERSON(Dr. Jaska) \
+			PERSON(Heidi Wenger) \
 			PERSON(Henry "Exitium" Sanmark) \
+			PERSON(Jaakko Saarikko) \
+			PERSON(Jonas "PowaTree" Sahlberg) \
+			PERSON(Oi Suomi On!) \
 			PERSON(Rasmus "FruitieX" Eskola) \
 		NL() \
 		FUNCTION(_("French")) \
+			PERSON(Gwlanbzh) \
 			PERSON(Hugo "Calinou" Locurcio) \
 			PERSON(Kim "coughingmouse" Lee) \
 			PERSON(Maxime "Taximus" Paradis) \
+			PERSON(Nicolas "signed" Formichella) \
 			PERSON(RedGuff) \
 			PERSON(Thomas "illwieckz" Debesse) \
 			PERSON(Yannick "SpiKe" Le Guen) \
 		NL() \
 		FUNCTION(_("German")) \
-			PERSON(Brot) \
 			PERSON(cvcxc) \
 			PERSON(Erik "Ablu" Schilling) \
 			PERSON(Jope "Sless" Withers) \
+			PERSON(Larson "skps" März) \
 			PERSON(Marvin "Mirio" Beck) \
 			PERSON(Paul "Snapper") \
+			PERSON(Robert "HbmMods" Katzinsky) \
 			PERSON(Rudolf "divVerent" Polzer) \
+			PERSON(TheTrueBrot) \
 			PERSON(Wuzzy) \
 			PERSON(Yepoleb) \
 		NL() \
 		FUNCTION(_("Greek")) \
-			PERSON_("Γιάννης \"Evropi\" Ανθυμίδης") \
+			PERSON_("Γιώργος Καρδάμης") \
+			PERSON(Hector "The_Smasher_1992" Champipis) \
 			PERSON(Konstantinos "LDinos" Mihalenas) \
+			PERSON(MasterWord) \
+			PERSON(Mensious Mensious) \
 			PERSON(Savoritias) \
 			PERSON(Vindex) \
+			PERSON(Yannis "Evropi" Anthymidis) \
 		NL() \
 		FUNCTION(_("Hungarian")) \
+			PERSON(Ács "acszoltan111" Zoltán) \
+			PERSON(MmAaXx500) \
+			PERSON(Peter "fpeterhu" Ferenczy) \
 			PERSON(Ruszkai "CuBe0wL" Ákos) \
 			PERSON(xaN1C4n3) \
 		NL() \
@@ -233,14 +264,24 @@
 		FUNCTION(_("Italian")) \
 			PERSON(Antonio "terencehill" Piu) \
 			PERSON(Felice "MaidenBeast" Sallustio) \
+			PERSON(Jessica Amoruso) \
 			PERSON(stdi) \
 			PERSON(XCostaX) \
 		NL() \
+		FUNCTION(_("Japanese")) \
+			PERSON(Antoni Das) \
+			PERSON(Lento) \
+			PERSON(Space Ace) \
+			PERSON(RYU "ryusho2523" N.) \
+			PERSON(Victor "LegendGuard" Jaume) \
+			PERSON(z411) \
+		NL() \
 		FUNCTION(_("Kazakh")) \
-			PERSON("Артем "bystrov.arterm" Быстров") \
+			PERSON(Артем "bystrov.arterm" Быстров) \
 		NL() \
 		FUNCTION(_("Korean")) \
-			PERSON(Jisoo "s6e9x" Lim) \
+			PERSON(BYEONGJIN "ahnkoon" AN) \
+			PERSON(Jisoo "LimJiSoo0719" Lim) \
 			PERSON(Kim "coughingmouse" Lee) \
 		NL() \
 		FUNCTION(_("Polish")) \
@@ -248,18 +289,39 @@
 			PERSON(Alex "tiprogrammierer.alex" Progger) \
 			PERSON(Amadeusz "amade/proraide" Sławiński) \
 			PERSON(Artur "artur9010" Motyka) \
+			PERSON(Cris "Kshyso" Sus) \
+			PERSON(Jakub "_Mpcs" Niklas) \
 			PERSON(Jakub "KubeQ11" Pędziszewski) \
-			PERSON(Kriss7475) \
+			PERSON(John "Myran" Smith) \
+			PERSON(Karol "kRkk" Kosek) \
+			PERSON(Kriss "Kriss7475" Chr) \
+			PERSON(Piotr "vipkoza" Kozica) \
+			PERSON(Rafał "Okava" Szymański) \
+			PERSON(Robert "Szkodnix" Wolniak) \
+			PERSON(Saikuru "saikuru0" Zero) \
+			PERSON(Sertomas) \
+			PERSON(SFS Atlas) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
 			PERSON(Ivan Paulos "greylica" Tomé) \
 			PERSON(Jean Trindade "Muleke_Trairao" Pereira) \
-			PERSON(Ricardo Manuel "Hellgardia" da Cruz Coelho da Silva) \
+			PERSON(lecalam) \
+			PERSON(NotThatPrivate) \
+			PERSON(Ricardo Manuel "hellgardia" da Cruz Coelho da Silva) \
+			PERSON(Rui "xendez") \
 			PERSON(xXxCHAOTICxXx) \
+		NL() \
+		FUNCTION(_("Portuguese (Brazil)")) \
+			PERSON(Jean Trindade "Muleke_Trairao" Pereira) \
+			PERSON(Rui "xendez") \
+			PERSON(yy0zz) \
+			PERSON(zerowhy) \
 		NL() \
 		FUNCTION(_("Romanian")) \
 			PERSON(Adrian-Ciprian "adrian.tinjala" Tînjală) \
-			PERSON(BusterDBK) \
+			PERSON(busterdbk) \
+			PERSON(Cuzenco "andonis1616" Andrei Robert) \
+			PERSON(Iulian "ElektroBoom" Oancea) \
 			PERSON(Mircea "Taoki" Kitsune) \
 			PERSON(Sorin "unic_sorin" Botirla) \
 			PERSON(Tudor "TropiKo" Ionel) \
@@ -269,11 +331,15 @@
 			PERSON(Alexandr "zrg") \
 			PERSON(Andrei "adem4ik" Stepanov) \
 			PERSON(Andrey "dekrY" P.) \
+			PERSON(Artem Vorotnikov) \
+			PERSON(Blueberryy) \
 			PERSON(gravicappa) \
 			PERSON(Hot Dog) \
 			PERSON(Lord Canistra) \
+			PERSON(Morosophos) \
 			PERSON(Nikoli) \
 			PERSON(Sergej "Clearness High" Lutsyk) \
+			PERSON(Simple88) \
 		NL() \
 		FUNCTION(_("Scottish Gaelic")) \
 			PERSON_("GunChleoc") \
@@ -287,20 +353,38 @@
 		FUNCTION(_("Spanish")) \
 			PERSON_("0000simon") \
 			PERSON(Alan "aagp" Garcia) \
+			PERSON(Antonio "Antoniosirc" Sirera) \
 			PERSON(Ari_tent) \
 			PERSON(brunodeleo) \
+			PERSON(Damian "starfire24680" Kurek) \
+			PERSON(Excruciatus "crucesignatus" X) \
 			PERSON(Kammy) \
 			PERSON(roader_gentoo) \
 			PERSON(Rodrigo Mouton Laudin) \
 			PERSON(SouL) \
 			PERSON(Starfire24680) \
+			PERSON(Victor "LegendGuard" Jaume) \
+			PERSON(Vitama Piru Leta) \
+			PERSON(Yllelder) \
+			PERSON(z411) \
 		NL() \
 		FUNCTION(_("Swedish")) \
+			PERSON(Gustaf "Hanicef" Alhäll) \
 			PERSON(Karl-Oskar "machine" Rikås) \
 			PERSON(marcus256) \
 		NL() \
+		FUNCTION(_("Turkish")) \
+			PERSON(Abdurrahman "akkus12345" AKKUŞ) \
+			PERSON(Ahmet "ahmetlii") \
+			PERSON(Çağlar "caglarturali" Turalı) \
+			PERSON(Demiray "tulliana" Muhterem) \
+			PERSON(Gokdeniz.Kucukali) \
+			PERSON(ibra kap) \
+			PERSON(yutyocraft) \
+		NL() \
 		FUNCTION(_("Ukrainian")) \
 			PERSON(Dmitro "Gamebot" Sokhin) \
+			PERSON(Ihor "uandreew" Andreev) \
 			PERSON(Oleh "BlaXpirit" Prypin) \
 			PERSON(Vasyl "Harmata" Melnyk) \
 			PERSON(Yuriy "herrniemand" Ackermann) \
@@ -316,11 +400,13 @@
 		PERSON(BigMac) \
 		PERSON(Braden "meoblast001" Walters) \
 		PERSON(Brain Younds) \
+		PERSON(BuddyFriendGuy) \
 		PERSON(Chris "amethyst7" Matz) \
 		PERSON(Christian Ice) \
 		PERSON(Clinton "Kaziganthe" Freeman) \
 		PERSON(Dan "Digger" Korostelev) \
 		PERSON(Dan "Wazat" Hale) \
+		PERSON(Diomedes) \
 		PERSON(Dokujisan) \
 		PERSON(Donkey) \
 		PERSON(dstrek) \
@@ -333,10 +419,12 @@
 		PERSON(Florian Paul "lda17h" Schmidt) \
 		PERSON(FrikaC) \
 		PERSON(Garth "Zombie" Hendy) \
+		PERSON(GATTS) \
 		PERSON(Gerd "Elysis" Raudenbusch) \
 		PERSON(Gottfried "Toddd" Hofmann) \
 		PERSON(Henning "Tymo" Janssen) \
 		PERSON(Innovati) \
+		PERSON(JH0nny) \
 		PERSON(Jitspoe) \
 		PERSON(Jody Gallagher) \
 		PERSON(Jope "Sless" Withers) \
@@ -350,6 +438,7 @@
 		PERSON(Lee David Ash) \
 		PERSON(Lee Vermeulen) \
 		PERSON(leileilol) \
+		PERSON(Lyberta) \
 		PERSON(magorian) \
 		PERSON(Marius "GreEn`mArine" Shekow) \
 		PERSON(Marko "Urre" Permanto) \
@@ -381,7 +470,9 @@
 		PERSON(Saulo "mand1nga" Gil) \
 		PERSON(Shaggy) \
 		PERSON(Shank) \
+		PERSON(s1lence) \
 		PERSON(Simon O’Callaghan) \
+		PERSON(Soelen) \
 		PERSON(SomeGuy) \
 		PERSON(SoulKeeper_p) \
 		PERSON(Spike) \
@@ -389,6 +480,7 @@
 		PERSON(Stephan "esteel" Stahl) \
 		PERSON(Steve Vermeulen) \
 		PERSON(Supajoe) \
+		PERSON(Sydes) \
 		PERSON(Tei) \
 		PERSON(The player with the unnecessarily long name) \
 		PERSON(Tomaz) \
@@ -401,21 +493,52 @@
 		PERSON(... and a goat) \
 		/**/
 
-int credits_get()
+
+int CREDITS_TYPE_TITLE = 2;
+int CREDITS_TYPE_FUNCTION = 1;
+int CREDITS_TYPE_PERSON = 0;
+int CREDITS_TYPE_NL = -1;
+void credits_add_line(int fh, int n, int type, string line)
 {
-	int n = buf_create();
-	#define CREDITS_TITLE(t) bufstr_add(n, strcat("**", t), 0);
-	#define CREDITS_FUNCTION(f) bufstr_add(n, strcat("*", f), 0);
-	#define CREDITS_PERSON(p) bufstr_add(n, p, 0);
+	if (type == CREDITS_TYPE_TITLE)
+		line = strcat("**", line);
+	else if (type == CREDITS_TYPE_FUNCTION)
+		line = strcat("*", line);
+
+	if (fh >= 0)
+		fputs(fh, strcat(line, "\n"));
+	if (n >= 0)
+		bufstr_add(n, line, 0);
+}
+
+void credits_build(int fh, int n)
+{
+	#define CREDITS_TITLE(t) credits_add_line(fh, n, CREDITS_TYPE_TITLE, t);
+	#define CREDITS_FUNCTION(f) credits_add_line(fh, n, CREDITS_TYPE_FUNCTION, f);
+	#define CREDITS_PERSON(p) credits_add_line(fh, n, CREDITS_TYPE_PERSON, p);
 	#define _CREDITS_PERSON(p) CREDITS_PERSON(#p)
-	#define CREDITS_NL() bufstr_add(n, "", 0);
-    CREDITS(CREDITS_TITLE, CREDITS_FUNCTION, _CREDITS_PERSON, CREDITS_PERSON, CREDITS_NL)
+	#define CREDITS_NL() credits_add_line(fh, n, CREDITS_TYPE_NL, "");
+	CREDITS(CREDITS_TITLE, CREDITS_FUNCTION, _CREDITS_PERSON, CREDITS_PERSON, CREDITS_NL)
 	#undef CREDITS_TITLE
 	#undef CREDITS_FUNCTION
 	#undef CREDITS_PERSON
 	#undef _CREDITS_PERSON
 	#undef CREDITS_NL
+}
+
+int credits_get()
+{
+	int n = buf_create();
+	credits_build(-1, n);
 	return n;
+}
+
+void credits_export()
+{
+	int fh = fopen("credits.txt", FILE_WRITE);
+	if(fh < 0)
+		return;
+	credits_build(fh, -1);
 }
 
 #undef CREDITS
@@ -430,8 +553,13 @@ entity makeXonoticCreditsList()
 void XonoticCreditsList_configureXonoticCreditsList(entity me)
 {
 	me.configureXonoticListBox(me);
-    me.bufferIndex = credits_get();
+	me.bufferIndex = credits_get();
 	me.nItems = buf_getsize(me.bufferIndex);
+	if (cvar("_menu_credits_export")) // set by the menu_credits_export alias
+	{
+		credits_export();
+		cvar_set("_menu_credits_export", "0");
+	}
 }
 void XonoticCreditsList_destroy(entity me)
 {

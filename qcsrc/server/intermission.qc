@@ -399,7 +399,7 @@ string GotoMap(string m)
 	if(!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
 	cvar_set("nextmap", m);
-	cvar_set("timelimit", "-1");
+	cvar_set("_endmatch", "1");
 	if(mapvote_initialized || alreadychangedlevel)
 	{
 		if(DoNextMapOverride(0))
@@ -424,14 +424,19 @@ void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && CS(this).cvar_cl_autoscreenshot);
-	float client_screenshot = (CS(this).cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && CS_CVAR(this).cvar_cl_autoscreenshot);
+	float client_screenshot = (CS_CVAR(this).cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
 	{
 		this.autoscreenshot = -1;
-		if(IS_REAL_CLIENT(this)) { stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
+		if(IS_REAL_CLIENT(this))
+		{
+			string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
+			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+		}
 		return;
 	}
 
@@ -450,11 +455,10 @@ void FixIntermissionClient(entity e)
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		SetResourceExplicit(e, RES_HEALTH, -2342);
-		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
+		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-		    .entity weaponentity = weaponentities[slot];
+			.entity weaponentity = weaponentities[slot];
 			if(e.(weaponentity))
 			{
 				e.(weaponentity).effects = EF_NODRAW;

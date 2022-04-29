@@ -58,7 +58,6 @@ float sys_frametime;     // gets initialised in worldspawn, saves the value from
 float orig_slowmo;       // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
 float timeout_time;      // contains the time in seconds that the active timeout has left
 float timeout_leadtime;  // contains the number of seconds left of the leadtime (before the timeout starts)
-float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
 .vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 
@@ -94,9 +93,6 @@ entity GetIndexedEntity(int argc, float start_index);
 
 // find a player which matches the input string, and return their entity
 entity GetFilteredEntity(string input);
-
-// same thing, but instead return their edict number
-float GetFilteredNumber(string input);
 
 // switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input);
@@ -156,7 +152,7 @@ COMMON_COMMAND(ladder, "Get information about top players if supported") { Commo
 COMMON_COMMAND(lsmaps, "List maps which can be used with the current game mode") { CommonCommand_lsmaps(request, caller); }
 COMMON_COMMAND(printmaplist, "Display full server maplist reply") { CommonCommand_printmaplist(request, caller); }
 COMMON_COMMAND(rankings, "Print information about rankings") { CommonCommand_rankings(request, caller); }
-COMMON_COMMAND(records, "List top 10 records for the current map") { CommonCommand_records(request, caller); }
+COMMON_COMMAND(records, "Print records for the current gametype") { CommonCommand_records(request, caller); }
 COMMON_COMMAND(teamstatus, "Show information about player and team scores") { CommonCommand_teamstatus(request, caller); }
 COMMON_COMMAND(time, "Print different formats/readouts of time") { CommonCommand_time(request, caller); }
 COMMON_COMMAND(timein, "Resume the game from being paused with a timeout") { CommonCommand_timein(request, caller); }

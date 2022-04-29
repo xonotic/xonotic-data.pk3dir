@@ -1,0 +1,95 @@
+#pragma once
+
+/// \file
+/// \brief Header file that describes the resource system.
+/// \author Lyberta
+/// \copyright GNU GPLv2 or any later version.
+
+#include <common/resources/resources.qh>
+
+// TODO: split resources into their own files, registry based
+float autocvar_g_balance_health_limit;
+int autocvar_g_balance_armor_limit;
+float autocvar_g_balance_fuel_limit;
+float autocvar_g_balance_armor_regen;
+float autocvar_g_balance_armor_regenlinear;
+int autocvar_g_balance_armor_regenstable;
+float autocvar_g_balance_armor_rot;
+float autocvar_g_balance_armor_rotlinear;
+int autocvar_g_balance_armor_rotstable;
+float autocvar_g_balance_fuel_regen;
+float autocvar_g_balance_fuel_regenlinear;
+int autocvar_g_balance_fuel_regenstable;
+float autocvar_g_balance_fuel_rot;
+float autocvar_g_balance_fuel_rotlinear;
+int autocvar_g_balance_fuel_rotstable;
+float autocvar_g_balance_health_regen;
+float autocvar_g_balance_health_regenlinear;
+float autocvar_g_balance_health_regenstable;
+float autocvar_g_balance_health_rot;
+float autocvar_g_balance_health_rotlinear;
+float autocvar_g_balance_health_rotstable;
+float autocvar_g_balance_pause_armor_rot;
+float autocvar_g_balance_pause_fuel_regen;
+float autocvar_g_balance_pause_fuel_rot;
+float autocvar_g_balance_pause_health_regen;
+float autocvar_g_balance_pause_health_rot;
+
+// ============================ Public API ====================================
+
+/// \brief Returns the maximum amount of the given resource.
+/// \param[in] e Entity to check.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \return Maximum amount of the given resource.
+float GetResourceLimit(entity e, Resource res_type);
+
+/// \brief Returns the current amount of resource the given entity has.
+/// \param[in] e Entity to check.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \return Current amount of resource the given entity has.
+float GetResource(entity e, Resource res_type);
+
+/// \brief Sets the resource amount of an entity without calling any hooks.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return Boolean for whether the ammo amount was changed
+bool SetResourceExplicit(entity e, Resource res_type, float amount);
+
+/// \brief Sets the current amount of resource the given entity will have
+/// but limited to the max amount allowed for the resource type.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return No return.
+void SetResource(entity e, Resource res_type, float amount);
+
+/// \brief Gives an entity some resource.
+/// \param[in,out] receiver Entity to give resource to.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to give.
+/// \return No return.
+void GiveResource(entity receiver, Resource res_type, float amount);
+
+/// \brief Gives an entity some resource but not more than a limit.
+/// \param[in,out] receiver Entity to give resource to.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to give.
+/// \param[in] limit Limit of resources to give.
+/// \return No return.
+void GiveResourceWithLimit(entity receiver, Resource res_type, float amount, float limit);
+
+/// \brief Takes an entity some resource.
+/// \param[in,out] receiver Entity to take resource from.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to take.
+/// \return No return.
+void TakeResource(entity receiver, Resource res_type, float amount);
+
+/// \brief Takes an entity some resource but not less than a limit.
+/// \param[in,out] receiver Entity to take resource from.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to take.
+/// \param[in] limit Limit of resources to take.
+/// \return No return.
+void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, float limit);

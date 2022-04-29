@@ -130,7 +130,7 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 	}
 	if(score)
 		if(teamscores_label(scorefield) != "")
-			s.SendFlags |= (2 ** scorefield);
+			s.SendFlags |= BIT(scorefield);
 	return (s.(teamscores(scorefield)) += score);
 }
 
@@ -208,6 +208,13 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
 	}
+	// prevent sending the welcome message again when score types are sent again because the scoring system has changed
+	// it can happen in some game modes like Race when the qualyfing session ends and the race starts
+	bool welcome_msg_too = (!CS(to) || time < CS(to).jointime + 5);
+	WriteByte(MSG_ENTITY, welcome_msg_too);
+	// welcome message is sent here because it needs to know the gametype
+	if (welcome_msg_too)
+		SendWelcomemessage_msg_type(to, false, MSG_ENTITY);
 	return true;
 }
 
@@ -277,7 +284,7 @@ float PlayerScore_Clear(entity player)
 	FOREACH(Scores, true, {
 		if(sk.(scores(it)) != 0)
 			if(scores_label(it) != "")
-				sk.SendFlags |= (2 ** (i % 16));
+				sk.SendFlags |= BIT(i % 16);
 		if(i != SP_ELO.m_id)
 			sk.(scores(it)) = 0;
 	});
@@ -295,7 +302,7 @@ void Score_ClearAll()
 		FOREACH(Scores, true, {
 			if(sk.(scores(it)) != 0)
 				if(scores_label(it) != "")
-					sk.SendFlags |= (2 ** (i % 16));
+					sk.SendFlags |= BIT(i % 16);
 			if(i != SP_ELO.m_id)
 				sk.(scores(it)) = 0;
 		});
@@ -309,7 +316,7 @@ void Score_ClearAll()
 		{
 			if(sk.(teamscores(j)) != 0)
 				if(teamscores_label(j) != "")
-					sk.SendFlags |= (2 ** j);
+					sk.SendFlags |= BIT(j);
 			sk.(teamscores(j)) = 0;
 		}
 	}
@@ -357,7 +364,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 		return s.(scores(scorefield));
 	}
 	if(scores_label(scorefield) != "")
-		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	if(!warmup_stage)
 		PlayerStats_GameReport_Event_Player(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
 	s.(scores(scorefield)) += score;
@@ -382,7 +389,7 @@ float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
 		return oldscore;
 
 	if(scores_label(scorefield) != "")
-		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+		s.SendFlags |= BIT(scorefield.m_id % 16);
 	s.(scores(scorefield)) = score;
 	return s.(scores(scorefield));
 }
@@ -434,6 +441,7 @@ void WinningConditionHelper(entity this)
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
 	s = strcat(s, ":F", ftos(serverflags));
+	s = strcat(s, ":T", sv_termsofservice_url_escaped);
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(NULL, (fullstatus ? 1 : 2)));
 
@@ -533,7 +541,8 @@ void WinningConditionHelper(entity this)
 			else
 				WinningConditionHelper_topscore = -999999999;
 		}
-		WinningConditionHelper_equality = 0;
+		if(player_count == 0) // special case: empty servers DO end the match at a 0:0 tie
+			WinningConditionHelper_equality = 0;
 	}
 
 	if(WinningConditionHelper_secondscore == 0)
@@ -555,12 +564,12 @@ void WinningConditionHelper(entity this)
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
-			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if(!(IS_PLAYER(it) || INGAME_JOINED(it)))
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if (IS_PLAYER(it) || INGAME_JOINED(it))
 				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";
@@ -763,7 +772,7 @@ entity PlayerScore_Sort(.float field, int teams, bool strict, bool nospectators)
 		pbest.chain = NULL;
 
 		++i;
-		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, false))
+		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, strict))
 			j = i;
 
 		pbest.(field) = j;

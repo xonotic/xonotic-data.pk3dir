@@ -28,6 +28,8 @@
 
 	float over_ClearButton(entity me, vector pos)
 	{
+		if (me.text == "")
+			return 0;
 		if (pos.x >= 1 + me.cb_offset - me.cb_width)
 			if (pos.x < 1 + me.cb_offset)
 				if (pos.y >= 0)
@@ -210,75 +212,52 @@
 		draw_SetClipRect(eX * me.keepspaceLeft, eX * (1 - me.keepspaceLeft - me.keepspaceRight) + eY);
 		if (me.editColorCodes)
 		{
-			string ch, ch2;
-			float i, n;
-			vector theColor;
-			float theAlpha;  // float theVariableAlpha;
-			vector p;
-			vector theTempColor;
-			float component;
+			vector p = me.realOrigin - eX * me.scrollPos;
+			vector theColor = '1 1 1';
+			float theAlpha = 1;
 
-			p = me.realOrigin - eX * me.scrollPos;
-			theColor = '1 1 1';
-			theAlpha = 1;  // theVariableAlpha = 1; // changes when ^ax found
-
-			n = strlen(me.text);
-			for (i = 0; i < n; ++i)
+			for (int i = 0, n = strlen(me.text); i < n; ++i)
 			{
-				ch = substring(me.text, i, 1);
+				string ch = substring(me.text, i, 1);
 				if (ch == "^")
 				{
 					float w;
-					ch2 = substring(me.text, i + 1, 1);
+					string ch2 = substring(me.text, i + 1, 1);
 					w = draw_TextWidth(strcat(ch, ch2), 0, me.realFontSize);
+					float fill_alpha = 0.4;
 					if (ch2 == "^")
 					{
-						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+						if (me.cursorPos > i && me.cursorPos <= i + 2)
+							fill_alpha = 0.6;
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 						draw_Text(p + eX * 0.25 * w, "^", me.realFontSize, theColor, theAlpha, 0);
 					}
-					else if (ch2 == "0" || stof(ch2))  // digit?
+					else if (IS_DIGIT(ch2))
 					{
+						theAlpha = 1;
 						switch (stof(ch2))
 						{
-							case 0: theColor = '0 0 0';
-								theAlpha = 1;
-								break;
-							case 1: theColor = '1 0 0';
-								theAlpha = 1;
-								break;
-							case 2: theColor = '0 1 0';
-								theAlpha = 1;
-								break;
-							case 3: theColor = '1 1 0';
-								theAlpha = 1;
-								break;
-							case 4: theColor = '0 0 1';
-								theAlpha = 1;
-								break;
-							case 5: theColor = '0 1 1';
-								theAlpha = 1;
-								break;
-							case 6: theColor = '1 0 1';
-								theAlpha = 1;
-								break;
-							case 7: theColor = '1 1 1';
-								theAlpha = 1;
-								break;
-							case 8: theColor = '1 1 1';
-								theAlpha = 0.5;
-								break;
-							case 9: theColor = '0.5 0.5 0.5';
-								theAlpha = 1;
-								break;
+							case 0: theColor = '0 0 0'; break;
+							case 1: theColor = '1 0 0'; break;
+							case 2: theColor = '0 1 0'; break;
+							case 3: theColor = '1 1 0'; break;
+							case 4: theColor = '0 0 1'; break;
+							case 5: theColor = '0 1 1'; break;
+							case 6: theColor = '1 0 1'; break;
+							case 7: theColor = '1 1 1'; break;
+							case 8: theColor = '1 1 1'; theAlpha = 0.5; break;
+							case 9: theColor = '0.5 0.5 0.5'; break;
 						}
-						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+						if (me.cursorPos > i && me.cursorPos <= i + 2)
+							fill_alpha = 0.6;
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 						draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 					}
 					else if (ch2 == "x")  // ^x found
 					{
+						vector theTempColor;
 						theColor = '1 1 1';
-
-						component = HEXDIGIT_TO_DEC(substring(me.text, i + 2, 1));
+						float component = HEXDIGIT_TO_DEC(substring(me.text, i + 2, 1));
 						if (component >= 0)  // ^xr found
 						{
 							theTempColor.x = component / 15;
@@ -295,15 +274,17 @@
 									theColor = theTempColor;
 									w = draw_TextWidth(substring(me.text, i, 5), 0, me.realFontSize);
 
-									draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
-									draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);  // theVariableAlpha instead of 1 using alpha tags ^ax
+									if (me.cursorPos > i && me.cursorPos <= i + 5)
+										fill_alpha = 0.8;
+									draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
+									draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);
 									i += 3;
 								}
 								else
 								{
 									// blue missing
 									w = draw_TextWidth(substring(me.text, i, 4), 0, me.realFontSize);
-									draw_Fill(p, eX * w + eY * me.realFontSize.y, eZ, 0.5);
+									draw_Fill(p, eX * w + eY * me.realFontSize.y, eZ, fill_alpha);
 									draw_Text(p, substring(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
 									i += 2;
 								}
@@ -312,7 +293,7 @@
 							{
 								// green missing
 								w = draw_TextWidth(substring(me.text, i, 3), 0, me.realFontSize);
-								draw_Fill(p, eX * w + eY * me.realFontSize.y, eY, 0.5);
+								draw_Fill(p, eX * w + eY * me.realFontSize.y, eY, fill_alpha);
 								draw_Text(p, substring(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
 								i += 1;
 							}
@@ -321,20 +302,20 @@
 						{
 							// red missing
 							// w = draw_TextWidth(substring(me.text, i, 2), 0) * me.realFontSize_x;
-							draw_Fill(p, eX * w + eY * me.realFontSize.y, eX, 0.5);
+							draw_Fill(p, eX * w + eY * me.realFontSize.y, eX, fill_alpha);
 							draw_Text(p, substring(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
 						}
 					}
 					else
 					{
-						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', fill_alpha);
 						draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 					}
 					p += w * eX;
 					++i;
 					continue;
 				}
-				draw_Text(p, ch, me.realFontSize, theColor, theAlpha, 0);  // TODO theVariableAlpha
+				draw_Text(p, ch, me.realFontSize, theColor, theAlpha, 0);
 				p += eX * draw_TextWidth(ch, 0, me.realFontSize);
 			}
 		}
@@ -343,17 +324,20 @@
 			draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
 		}
 
-		if (!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5) draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
+		if (!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
+			draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
 		draw_ClearClip();
 
-		if (me.enableClearButton)
-			if (me.text != "")
-			{
-				if (me.focused && me.cb_pressed) draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, me.cb_colorC, 1);
-				else if (me.focused && me.cb_focused) draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, me.cb_colorF, 1);
-				else draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, me.cb_color, 1);
-			}
+		if (me.enableClearButton && me.text != "")
+		{
+			if (me.focused && me.cb_pressed)
+				draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, me.cb_colorC, 1);
+			else if (me.focused && me.cb_focused)
+				draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, me.cb_colorF, 1);
+			else
+				draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, me.cb_color, 1);
+		}
 
 		// skipping SUPER(InputBox).draw(me);
 		MenuItem_draw(me);

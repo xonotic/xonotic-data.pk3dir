@@ -5,8 +5,10 @@
 #include <common/items/_mod.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
@@ -20,7 +22,6 @@
 #include <server/items/items.qh>
 #include <server/hook.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
@@ -95,9 +96,7 @@ void CL_Weaponentity_Think(entity this)
 		if (this.weaponchild) this.weaponchild.model = "";
 		return;
 	}
-	if (this.w_weaponname != this.weaponname
-	    || this.w_dmg != this.modelindex
-	    || this.w_deadflag != this.deadflag)
+	if (this.w_weaponname != this.weaponname || this.w_dmg != this.modelindex || this.w_deadflag != this.deadflag)
 	{
 		// owner changed weapons; update appearance
 		this.w_weaponname = this.weaponname;
@@ -135,8 +134,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 		this.model = "";
 		return;
 	}
-	if (this.weaponname != w_ent.weaponname || this.dmg != w_ent.modelindex
-	    || this.deadflag != w_ent.deadflag)
+	if (this.weaponname != w_ent.weaponname || this.dmg != w_ent.modelindex || this.deadflag != w_ent.deadflag)
 	{
 		this.weaponname = w_ent.weaponname;
 		this.dmg = w_ent.modelindex;
@@ -166,7 +164,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
 
-    Weapon wep = this.owner.(weaponentity).m_weapon;
+	Weapon wep = this.owner.(weaponentity).m_weapon;
 	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors, this.owner.(weaponentity));
 	this.colormap = this.owner.colormap;
 	this.skin = w_ent.skin;
@@ -177,19 +175,19 @@ void CL_ExteriorWeaponentity_Think(entity this)
 // spawning weaponentity for client
 void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 {
-	entity view = actor.(weaponentity) = new(weaponentity);
-	view.solid = SOLID_NOT;
-	view.owner = actor;
-	setmodel(view, MDL_Null);  // precision set when changed
-	setorigin(view, '0 0 0');
-	view.weaponentity_fld = weaponentity;
-	setthink(view, CL_Weaponentity_Think);
-	view.nextthink = time;
-	view.viewmodelforclient = actor;
-	view.draggable = drag_undraggable;
-	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
+	entity w_ent = actor.(weaponentity) = new(weaponentity);
+	w_ent.solid = SOLID_NOT;
+	w_ent.owner = actor;
+	setmodel(w_ent, MDL_Null);  // precision set when changed
+	setorigin(w_ent, '0 0 0');
+	w_ent.weaponentity_fld = weaponentity;
+	setthink(w_ent, CL_Weaponentity_Think);
+	w_ent.nextthink = time;
+	w_ent.viewmodelforclient = actor;
+	w_ent.draggable = drag_undraggable;
+	setcefc(w_ent, CL_Weaponentity_CustomizeEntityForClient);
 
-	wepent_link(view);
+	wepent_link(w_ent);
 
 	if (weaponentity == weaponentities[0]) // only one exterior model, thank you very much
 	{
@@ -209,20 +207,20 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 // Weapon subs
 void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	actor.(weaponentity).m_weapon = WEP_Null;
-	actor.(weaponentity).m_switchingweapon = WEP_Null;
-	entity this = actor.(weaponentity);
-	if (this)
+	entity w_ent = actor.(weaponentity);
+	if (w_ent)
 	{
-		this.state = WS_CLEAR;
-		this.effects = 0;
+		w_ent.m_weapon = WEP_Null;
+		w_ent.m_switchingweapon = WEP_Null;
+		w_ent.state = WS_CLEAR;
+		w_ent.effects = 0;
 	}
 }
 
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	entity this = actor.(weaponentity);
-	if (this) this.state = WS_READY;
+	entity w_ent = actor.(weaponentity);
+	if (w_ent) w_ent.state = WS_READY;
 	weapon_thinkf(actor, weaponentity, WFRAME_IDLE, 1000000, w_ready);
 }
 
@@ -260,17 +258,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	if (ammo_other)
 	{
 		if (time - actor.prevwarntime > 1)
-		{
-			Send_Notification(
-				NOTIF_ONE,
-				actor,
-				MSG_MULTI,
-				ITEM_WEAPON_PRIMORSEC,
-				thiswep.m_id,
-				secondary,
-				(1 - secondary)
-			                 );
-		}
+			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_WEAPON_PRIMORSEC, thiswep.m_id, secondary, (1 - secondary));
 		actor.prevwarntime = time;
 	}
 	else  // this weapon is totally unable to fire, switch to another one
@@ -314,7 +302,8 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 	if (this == NULL) return;
 	this.state = WS_INUSE;
 
-	actor.spawnshieldtime = min(actor.spawnshieldtime, time);  // kill spawn shield when you fire
+	if(StatusEffects_active(STATUSEFFECT_SpawnShield, actor)) // given this is performed often, perform a lighter check first
+		StatusEffects_remove(STATUSEFFECT_SpawnShield, actor, STATUSEFFECT_REMOVE_CLEAR); // kill spawn shield when you fire
 
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0)
@@ -383,10 +372,10 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-    this.wframe = fr;
+	this.wframe = fr;
 
-	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
-			"Tried to override initial weapon think function - should this really happen?");
+	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE)
+		backtrace("Tried to override initial weapon think function - should this really happen?");
 
 	t *= W_WeaponRateFactor(actor);
 
@@ -396,8 +385,8 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		this.weapon_nextthink = time;
 		// dprint("started firing at ", ftos(time), "\n");
 	}
-	if (this.weapon_nextthink < time - this.weapon_frametime * 1.5
-	    || this.weapon_nextthink > time + this.weapon_frametime * 1.5)
+	float w_frametime_limit = this.weapon_frametime * 1.5;
+	if (this.weapon_nextthink < time - w_frametime_limit || this.weapon_nextthink > time + w_frametime_limit)
 	{
 		this.weapon_nextthink = time;
 		// dprint("reset weapon animation timer at ", ftos(time), "\n");
@@ -418,10 +407,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (this.m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
 		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (this.m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
-		int act = (primary_melee || secondary_melee)
-			? ANIMACTION_MELEE
-			: ANIMACTION_SHOOT
-			;
+		int act = (primary_melee || secondary_melee) ? ANIMACTION_MELEE : ANIMACTION_SHOOT;
 		animdecide_setaction(actor, act, restartanim);
 	}
 	else if (actor.anim_upper_action == ANIMACTION_SHOOT || actor.anim_upper_action == ANIMACTION_MELEE)
@@ -509,6 +495,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 			this.m_switchweapon = WEP_Null;
 			this.state = WS_CLEAR;
 			this.weaponname = "";
+			this.clip_load = this.clip_size = this.old_clip_load = 0;
 			return;
 		}
 	}
@@ -521,6 +508,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		this.m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;
 		this.weaponname = "";
+		this.clip_load = this.clip_size = this.old_clip_load = 0;
 		return;
 	}
 
@@ -602,7 +590,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	{
 		if (w != WEP_Null && !(STAT(WEAPONS, actor) & WepSet_FromWeapon(w)))
 		{
-			if (this.m_weapon == this.m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+			if (this.m_weapon == this.m_switchweapon)
+				W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w = WEP_Null;
 		}
 
@@ -658,8 +647,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				v_right = ri;
 				v_up = up;
 				Weapon wpn = this.m_weapon;
-				this.weapon_think(wpn, actor, weaponentity,
-					button_atck | (button_atck2 << 1));
+				this.weapon_think(wpn, actor, weaponentity, button_atck | (button_atck2 << 1));
 			}
 			else
 			{
@@ -674,11 +662,11 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 	flash.owner = actor;
 	flash.angles_z = random() * 360;
 
-	entity view = actor.(weaponentity);
+	entity w_ent = actor.(weaponentity);
 	entity exterior = actor.exteriorweaponentity;
 
-	if (gettagindex(view, "shot")) setattachment(flash, view, "shot");
-	else setattachment(flash, view, "tag_shot");
+	if (gettagindex(w_ent, "shot")) setattachment(flash, w_ent, "shot");
+	else setattachment(flash, w_ent, "tag_shot");
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
@@ -686,10 +674,10 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 
 	flash.viewmodelforclient = actor;
 
-	if (view.oldorigin.x > 0)
+	if (w_ent.oldorigin.x > 0)
 	{
 		setattachment(xflash, exterior, "");
-		setorigin(xflash, view.oldorigin + offset);
+		setorigin(xflash, w_ent.oldorigin + offset);
 	}
 	else
 	{
@@ -722,12 +710,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 			backtrace(sprintf(
 				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
 				"Please notify the developers immediately with a copy of this backtrace!\n",
-				ammo_use,
-				wep.netname,
-				GetAmmoPicture(wep.ammo_type),
-				actor.netname,
-				ammo
-				             ));
+				ammo_use, wep.netname, GetAmmoPicture(wep.ammo_type), actor.netname, ammo));
 		}
 		SetResource(actor, wep.ammo_type, ammo - ammo_use);
 	}

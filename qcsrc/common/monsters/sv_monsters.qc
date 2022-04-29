@@ -7,6 +7,7 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/all.qh>
 #include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/movelib.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
@@ -103,7 +104,6 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
 	|| (game_stopped)
-	|| (targ.items & IT_INVISIBILITY)
 	|| (IS_SPEC(targ) || IS_OBSERVER(targ)) // don't attack spectators
 	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || GetResource(targ, RES_HEALTH) <= 0 || GetResource(this, RES_HEALTH) <= 0))
 	|| (this.monster_follow == targ || targ.monster_follow == this)
@@ -243,7 +243,7 @@ void Monster_Delay_Action(entity this)
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
 {
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
-	entity e = new(Monster_Delay);
+	entity e = new_pure(Monster_Delay);
 
 	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;
@@ -999,7 +999,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	//if(time < this.pain_finished && deathtype != DEATH_KILL.m_id)
 		//return;
 
-	if(time < this.spawnshieldtime && deathtype != DEATH_KILL.m_id)
+	if(StatusEffects_active(STATUSEFFECT_SpawnShield, this) && deathtype != DEATH_KILL.m_id)
 		return;
 
 	if(deathtype == DEATH_FALL.m_id && this.draggedby != NULL)
@@ -1095,7 +1095,7 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	bool reverse = false;
 	if(trace_fraction != 1.0)
 		reverse = true;
-	if(trace_ent && IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
+	if(trace_ent && IS_PLAYER(trace_ent))
 		reverse = false;
 	if(trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
@@ -1357,6 +1357,14 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	if(!this.monster_name || this.monster_name == "")
 		this.monster_name = mon.monster_name;
 
+	if(this.statuseffects && this.statuseffects.owner == this)
+	{
+		StatusEffects_clearall(this.statuseffects);
+		StatusEffects_update(this);
+	}
+	else
+		this.statuseffects = NULL;
+
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;
@@ -1375,7 +1383,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
 	set_movetype(this, MOVETYPE_WALK);
-	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, time + autocvar_g_monsters_spawnshieldtime, 0);
 	this.enemy				= NULL;
 	this.velocity			= '0 0 0';
 	this.moveto				= this.origin;

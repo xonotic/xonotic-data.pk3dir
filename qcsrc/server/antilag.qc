@@ -20,10 +20,10 @@ const int ANTILAG_MAX_ORIGINS = 64;
 
 void antilag_record(entity e, entity store, float t)
 {
-    if (e.vehicle) {
-        if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
-        antilag_record(e.vehicle, e.vehicle, t);
-    }
+	if (e.vehicle) {
+		if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
+		antilag_record(e.vehicle, e.vehicle, t);
+	}
 
 	if (time < store.antilag_times[store.antilag_index]) return;
 	store.antilag_index += 1;
@@ -86,9 +86,9 @@ vector antilag_takebackavgvelocity(entity e, entity store, float t0, float t1)
 void antilag_takeback(entity e, entity store, float t)
 {
 	if (e.vehicle) {
-	    if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
+		if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
 		antilag_takeback(e.vehicle, e.vehicle, t);
-    }
+	}
 
 	if (!store.antilag_takenback)
 		store.antilag_saved_origin = e.origin;
@@ -101,7 +101,7 @@ void antilag_takeback(entity e, entity store, float t)
 void antilag_restore(entity e, entity store)
 {
 	if (e.vehicle) {
-	    if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
+		if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
 		antilag_restore(e.vehicle, e.vehicle);
 	}
 
@@ -151,7 +151,7 @@ void antilag_restore_all(entity ignore)
 float antilag_getlag(entity e)
 {
 	float lag = ((IS_REAL_CLIENT(e)) ? ANTILAG_LATENCY(e) : 0);
-	bool noantilag = ((IS_CLIENT(e)) ? CS(e).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(e)) ? CS_CVAR(e).cvar_cl_noantilag : false);
 	if(autocvar_g_antilag == 0 || noantilag || lag < 0.001)
 		lag = 0;
 
@@ -202,14 +202,14 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
@@ -220,14 +220,14 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(source)) ? CS_CVAR(source).cvar_cl_noantilag : false);
 	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);

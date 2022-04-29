@@ -2,7 +2,7 @@
 
 CLASS(Hook, Weapon)
 /* spawnfunc */ ATTRIB(Hook, m_canonical_spawnfunc, string, "weapon_hook");
-/* ammotype  */ ATTRIB(Hook, ammo_type, int, RES_FUEL);
+/* ammotype  */ ATTRIB(Hook, ammo_type, Resource, RES_FUEL);
 /* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);

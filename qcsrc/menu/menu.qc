@@ -13,7 +13,7 @@
 #include "xonotic/serverlist.qh"
 #include "xonotic/slider_resolution.qh"
 
-.string cvarName;
+.string controlledCvar;
 
 #include "xonotic/util.qh"
 
@@ -221,6 +221,8 @@ void m_init_delayed()
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
+
+	cvar_set("_menu_initialized", "2");
 }
 
 void m_keyup(float key, float ascii)
@@ -481,7 +483,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		{
 			it = it.itemFromPoint(it, pos);
 			if (it.tooltip) best = it;
-			else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+			else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 			it = NULL;
 		}
 		else if (it.instanceOfModalController)
@@ -494,7 +496,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		}
 		if (!it) break;
 		if (it.tooltip) best = it;
-		else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+		else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
@@ -505,11 +507,14 @@ string gettooltip()
 	if (menu_tooltips == 2)
 	{
 		string s;
-		if (menuTooltipItem.cvarName)
+		if (menuTooltipItem.controlledCvar)
 		{
-			if (getCvarsMulti(menuTooltipItem)) s =
-				    strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
-			else s = strcat("[", menuTooltipItem.cvarName, "]");
+			string cvar_list = getCvarsMulti(menuTooltipItem);
+			if (cvar_list)
+				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
+			else
+				cvar_list = menuTooltipItem.controlledCvar;
+			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{
@@ -669,23 +674,32 @@ void m_tooltip(vector pos)
 	}
 }
 
+const int MIN_DISCONNECTION_TIME = 1;
 float autocvar_menu_force_on_disconnection;
+bool autocvar_g_campaign;
 void m_draw(float width, float height)
 {
-	if (autocvar_menu_force_on_disconnection > 0)
+	static float connected_time;
+	if (clientstate() == CS_DISCONNECTED)
 	{
-		static float connected_time;
-		if (clientstate() == CS_DISCONNECTED)
+		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 		{
-			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
+			if (autocvar_g_campaign)
 			{
-				m_toggle(true);
-				connected_time = 0;
+				// in the case player uses the disconnect command (in the console or with a key)
+				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
+				// see also LEAVEMATCH_CMD
+				cvar_set("g_campaign", "0");
+				m_sync();
 			}
+			if (autocvar_menu_force_on_disconnection > 0)
+				m_toggle(true);
+			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
+			connected_time = 0;
 		}
-		else
-			connected_time = time;
 	}
+	else
+		connected_time = time;
 
 	m_gamestatus();
 
@@ -957,12 +971,16 @@ void m_goto(string itemname)
 		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
 		{
 			m_hide();
+			return;
 		}
-		else
-		{
-			m_activate_window(main.mainNexposee);
-			m_display();
-		}
+		itemname = "nexposee";
+	}
+
+	if (itemname == "nexposee")
+	{
+		// unlike 'togglemenu 1', this closes modal and root dialogs if opened
+		m_activate_window(main.mainNexposee);
+		m_display();
 	}
 	else
 	{

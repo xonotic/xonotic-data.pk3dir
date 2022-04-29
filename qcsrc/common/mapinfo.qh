@@ -22,6 +22,7 @@ const int GAMETYPE_FLAG_PREFERRED       = BIT(2); // preferred (when available) 
 const int GAMETYPE_FLAG_PRIORITY        = BIT(3); // priority selection when preferred gametype isn't available in random selections
 const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); // don't display a score limit needed for winning the match in the scoreboard
 const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); // gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
+const int GAMETYPE_FLAG_1V1             = BIT(6); // 1v1 gameplay
 
 int MAPINFO_TYPE_ALL;
 .int m_flags;
@@ -44,6 +45,8 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, m_hidelimits, bool, false);
     /** does this gametype enforce its own weapon arena? */
     ATTRIB(Gametype, m_weaponarena, bool, false);
+    /** 1v1 gameplay? */
+    ATTRIB(Gametype, m_1v1, bool, false);
     /** game type defaults */
     ATTRIB(Gametype, model2, string);
     /** game type description */
@@ -111,6 +114,7 @@ CLASS(Gametype, Object)
         this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
         this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
         this.m_weaponarena = (gflags & GAMETYPE_FLAG_WEAPONARENA);
+        this.m_1v1 = (gflags & GAMETYPE_FLAG_1V1);
 
         // same as `1 << m_id`
         MAPINFO_TYPE_ALL |= this.items = this.m_flags = (MAPINFO_TYPE_ALL + 1);
@@ -126,7 +130,10 @@ REGISTRY_DEFINE_GET(Gametypes, NULL)
 STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
+#ifndef CSQC
+// NOTE: ISGAMETYPE in csqc (temporary hack)
 #define IS_GAMETYPE(NAME) (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
+#endif
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;

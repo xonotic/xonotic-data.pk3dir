@@ -15,6 +15,8 @@ const int TTT_TURN_TEAM  = 0x000f; // turn team mask
 const int TTT_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
 const int TTT_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.ttt_ai
 
+const int TTT_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
+
 const int TTT_LET_CNT = 3;
 const int TTT_NUM_CNT = 3;
 const int TTT_TILE_SIZE = 3;
@@ -161,7 +163,7 @@ int ttt_server_event(entity minigame, string event, ...)
 				return false;
 
 			// Don't allow more than 2 players
-			if(pl_num >= 2) { return false; }
+			if(pl_num >= 2) { return TTT_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -172,15 +174,23 @@ int ttt_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == TTT_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					ttt_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 				case "next":
+					if(event_blocked)
+						return true;
 					ttt_next_match(minigame,...(0,entity));
 					return true;
 				case "singleplayer":
+					if(event_blocked)
+						return true;
 					if ( minigame_count_players(minigame) == 1 )
 					{
 						minigame.ttt_ai = minigame_next_team(minigame.minigame_players.team, 2);
@@ -290,7 +300,7 @@ void ttt_hud_status(vector pos, vector mySize)
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != TTT_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			if ( e.team == 2 )
@@ -315,6 +325,9 @@ void ttt_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string ttt_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == TTT_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & TTT_TURN_DRAW )
 		return _("Draw");
 
@@ -565,13 +578,18 @@ int ttt_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if((minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & TTT_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & TTT_TURN_WIN) && !(minigame.minigame_flags & TTT_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
@@ -579,6 +597,8 @@ int ttt_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("c3");
 						else
@@ -586,6 +606,8 @@ int ttt_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a1");
 						else
@@ -593,6 +615,8 @@ int ttt_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
@@ -601,6 +625,8 @@ int ttt_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						ttt_make_move(minigame);
 						return true;
 				}
@@ -612,6 +638,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				ttt_client_event(minigame, "mouse_moved");
 				ttt_make_move(minigame);
 				return true;
 			}

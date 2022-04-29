@@ -10,7 +10,9 @@
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/player.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
@@ -25,7 +27,6 @@
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/race.qh>
-#include <server/resources.qh>
 #include <server/world.qh>
 
 #ifdef NOCHEATS
@@ -151,15 +152,12 @@ float CheatImpulse(entity this, int imp)
 			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
 			SetResource(this.personal, RES_ARMOR, GetResource(this, RES_ARMOR));
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
-			STAT(BUFFS, this.personal) = STAT(BUFFS, this);
-			STAT(BUFF_TIME, this.personal) = STAT(BUFF_TIME, this);
+			StatusEffects_copy(this.statuseffects, this.personal, 0);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
 			this.personal.pauserotfuel_finished = this.pauserotfuel_finished;
 			this.personal.pauseregen_finished = this.pauseregen_finished;
-			STAT(STRENGTH_FINISHED, this.personal) = STAT(STRENGTH_FINISHED, this);
-			STAT(INVINCIBLE_FINISHED, this.personal) = STAT(INVINCIBLE_FINISHED, this);
 			this.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
@@ -212,15 +210,13 @@ float CheatImpulse(entity this, int imp)
 				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
 				SetResource(this, RES_ARMOR, GetResource(this.personal, RES_ARMOR));
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
-				STAT(BUFFS, this) = STAT(BUFFS, this.personal);
-				STAT(BUFF_TIME, this) = STAT(BUFF_TIME, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;
 				this.pauserotfuel_finished = time + this.personal.pauserotfuel_finished - this.personal.teleport_time;
 				this.pauseregen_finished = time + this.personal.pauseregen_finished - this.personal.teleport_time;
-				STAT(STRENGTH_FINISHED, this) = time + STAT(STRENGTH_FINISHED, this.personal) - this.personal.teleport_time;
-				STAT(INVINCIBLE_FINISHED, this) = time + STAT(INVINCIBLE_FINISHED, this.personal) - this.personal.teleport_time;
+				StatusEffects_copy(this.personal, this.statuseffects, this.personal.teleport_time);
+				StatusEffects_update(this);
 
 				if(!autocvar_g_allow_checkpoints)
 					DID_CHEAT();
@@ -300,11 +296,6 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 5)
 			{
-				// arguments:
-				//   effectname
-				//   origin (0..1, on crosshair line)
-				//   velocity
-				//   howmany
 				f = stof(argv(2));
 				crosshair_trace(this);
 				start = (1-f) * this.origin + f * trace_endpos;
@@ -314,7 +305,9 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd pointparticles effectname position(0..1) velocityvector multiplier\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd pointparticles <effectname> <position> <velocity> <countmultiplier>\n");
+			sprint(this, "  Where <position> is a number from 0 to 1 representing distance on the crosshair line,\n");
+			sprint(this, "  and <velocity> is a vector \"x y z\"\n");
 			break;
 		case "trailparticles":
 			IS_CHEAT(this, 0, argc, 0);
@@ -329,14 +322,12 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles effectname\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles <effectname>\n");
 			break;
 		case "make":
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 3)
 			{
-				// arguments:
-				//   modelname mode
 				f = stof(argv(2));
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
@@ -346,7 +337,7 @@ float CheatCommand(entity this, int argc)
 				}
 				else
 				{
-					entity e = spawn();
+					entity e = new(func_breakable);
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
 					SetResourceExplicit(e, RES_HEALTH, 1000);
@@ -357,7 +348,7 @@ float CheatCommand(entity this, int argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					spawnfunc_func_breakable(e);
+					func_breakable_setup(e);
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -375,7 +366,10 @@ float CheatCommand(entity this, int argc)
 				}
 			}
 			else
-				sprint(this, "Usage: sv_cheats 1; restart; cmd make models/... 0/1/2\n");
+			{
+				sprint(this, "Usage:^3 sv_cheats 1; restart; cmd make <modelname> <mode>\n");
+				sprint(this, "  where <mode> can be 0, 1 or 2\n");
+			}
 			break;
 		case "penalty":
 			IS_CHEAT(this, 0, argc, 0);
@@ -385,7 +379,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd penalty <duration> <reason>))\n");
 			break;
 		case "dragbox_spawn": {
 			IS_CHEAT(this, 0, argc, 0);
@@ -510,7 +504,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_setcnt cnt\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_setcnt <cnt>\n");
 			break;
 		case "drag_save":
 			IS_CHEAT(this, 0, argc, 0);
@@ -530,7 +524,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
 			break;
 		case "drag_saveraceent":
 			IS_CHEAT(this, 0, argc, 0);
@@ -599,7 +593,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
 			break;
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);

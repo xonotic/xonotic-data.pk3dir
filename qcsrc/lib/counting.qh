@@ -117,10 +117,10 @@ string count_fill(float interval, string zeroth, string first, string second, st
 }
 
 ERASEABLE
-string process_time(float outputtype, float seconds)
+string process_time(float outputtype, int seconds)
 {
-	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
-	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
+	int tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
+	int tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
 
 	tmp_seconds = floor(seconds);
 
@@ -159,44 +159,17 @@ string process_time(float outputtype, float seconds)
 		case 2:
 		{
 			string output = "";
-
-			output = count_seconds(tmp_seconds);
-
-			if (tmp_minutes)
-			{
-				output = strcat(
-					count_minutes(tmp_minutes),
-					((output != "") ? strcat(", ", output) : ""));
-			}
-
-			if (tmp_hours)
-			{
-				output = strcat(
-					count_hours(tmp_hours),
-					((output != "") ? strcat(", ", output) : ""));
-			}
-
-			if (tmp_days)
-			{
-				output = strcat(
-					count_days(tmp_days),
-					((output != "") ? strcat(", ", output) : ""));
-			}
-
-			if (tmp_weeks)
-			{
-				output = strcat(
-					count_weeks(tmp_weeks),
-					((output != "") ? strcat(", ", output) : ""));
-			}
-
-			if (tmp_years)
-			{
-				output = strcat(
-					count_years(tmp_years),
-					((output != "") ? strcat(", ", output) : ""));
-			}
-
+			#define APPEND_TIME(unit) \
+				if (tmp_##unit) output = strcat(output, ((output != "") ? ", " : ""), count_##unit(tmp_##unit))
+			APPEND_TIME(years);
+			APPEND_TIME(weeks);
+			APPEND_TIME(days);
+			APPEND_TIME(hours);
+			APPEND_TIME(minutes);
+			APPEND_TIME(seconds);
+			#undef APPEND_TIME
+			if (output == "")
+				return count_seconds(0);
 			return output;
 		}
 		case 3:

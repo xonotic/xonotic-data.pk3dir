@@ -1,5 +1,7 @@
 #include "bugrigs.qh"
 
+#ifdef SVQC // NOTE: disabled on the client side until prediction can be fixed!
+
 #ifdef GAMEQC
 
 #ifdef SVQC
@@ -24,6 +26,7 @@ REGISTER_MUTATOR(bugrigs, true);
 #endif
 
 
+#if 0
 #define PHYS_BUGRIGS(s)                        STAT(BUGRIGS, s)
 #define PHYS_BUGRIGS_ACCEL(s)                  STAT(BUGRIGS_ACCEL, s)
 #define PHYS_BUGRIGS_AIR_STEERING(s)           STAT(BUGRIGS_AIR_STEERING, s)
@@ -39,6 +42,23 @@ REGISTER_MUTATOR(bugrigs, true);
 #define PHYS_BUGRIGS_SPEED_POW(s)              STAT(BUGRIGS_SPEED_POW, s)
 #define PHYS_BUGRIGS_SPEED_REF(s)              STAT(BUGRIGS_SPEED_REF, s)
 #define PHYS_BUGRIGS_STEER(s)                  STAT(BUGRIGS_STEER, s)
+#else
+#define PHYS_BUGRIGS(s) g_bugrigs
+#define PHYS_BUGRIGS_ACCEL(s) g_bugrigs_accel
+#define PHYS_BUGRIGS_AIR_STEERING(s) g_bugrigs_air_steering
+#define PHYS_BUGRIGS_ANGLE_SMOOTHING(s) g_bugrigs_angle_smoothing
+#define PHYS_BUGRIGS_CAR_JUMPING(s) g_bugrigs_planar_movement_car_jumping
+#define PHYS_BUGRIGS_FRICTION_AIR(s) g_bugrigs_friction_air
+#define PHYS_BUGRIGS_FRICTION_BRAKE(s) g_bugrigs_friction_brake
+#define PHYS_BUGRIGS_FRICTION_FLOOR(s) g_bugrigs_friction_floor
+#define PHYS_BUGRIGS_PLANAR_MOVEMENT(s) g_bugrigs_planar_movement
+#define PHYS_BUGRIGS_REVERSE_SPEEDING(s) g_bugrigs_reverse_speeding
+#define PHYS_BUGRIGS_REVERSE_SPINNING(s) g_bugrigs_reverse_spinning
+#define PHYS_BUGRIGS_REVERSE_STOPPING(s) g_bugrigs_reverse_stopping
+#define PHYS_BUGRIGS_SPEED_POW(s) g_bugrigs_speed_pow
+#define PHYS_BUGRIGS_SPEED_REF(s) g_bugrigs_speed_ref
+#define PHYS_BUGRIGS_STEER(s) g_bugrigs_steer
+#endif
 
 #if defined(SVQC)
 
@@ -332,6 +352,8 @@ MUTATOR_HOOKFUNCTION(bugrigs, BuildMutatorsPrettyString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Bug rigs");
 }
+
+#endif
 
 #endif
 

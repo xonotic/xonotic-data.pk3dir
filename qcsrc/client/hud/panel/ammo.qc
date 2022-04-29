@@ -4,6 +4,7 @@
 #include <client/items/items.qh>
 #include <client/view.qh>
 #include <common/mutators/mutator/nades/nades.qh>
+#include <common/resources/resources.qh>
 #include <common/wepent.qh>
 
 // Ammo (#1)
@@ -31,7 +32,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
+void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent, bool isInfinite)
 {
 	TC(bool, isCurrent); TC(bool, isInfinite);
 	if(ammoType == RES_NONE)
@@ -115,7 +116,7 @@ void HUD_Ammo()
 	{
 		if((!autocvar_hud_panel_ammo) || (spectatee_status == -1))
 			return;
-		if(STAT(HEALTH) < 1 && autocvar_hud_panel_ammo_hide_ondeath)
+		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_ammo_hide_ondeath)
 			return;
 	}
 
@@ -216,11 +217,12 @@ void HUD_Ammo()
 	}
 	else
 	{
-		int ammotype;
 		row = column = 0;
-		for(i = 0; i < AMMO_COUNT; ++i)
+		// disabling new-style loop for now to restore original order of ammo types
+		//FOREACH(Resources, it.instanceOfAmmoResource && !it.m_hidden,
+		for(int j = 0; j < AMMO_COUNT; ++j)
 		{
-			ammotype = GetAmmoTypeFromNum(i);
+			Resource ammotype = GetAmmoTypeFromNum(j);
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
 				ammo_size,

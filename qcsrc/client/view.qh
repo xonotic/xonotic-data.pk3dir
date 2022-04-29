@@ -15,6 +15,7 @@ float autocvar_camera_speed_chase;
 float autocvar_camera_speed_free;
 float autocvar_camera_speed_roll;
 int autocvar_chase_active;
+bool autocvar_chase_front;
 int autocvar_cl_gentle_damage;
 bool autocvar_cl_lockview;
 bool autocvar_cl_orthoview;
@@ -124,3 +125,4 @@ float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
 #endif
 
 float intermission_time;
+float game_stopped_time;

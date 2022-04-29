@@ -18,6 +18,7 @@ const int PONG_KEY_BOTH     = 0x03; // Player jamming keys at ramdom
 
 // fields
 const int PONG_MAX_PLAYERS = 4;
+const int PONG_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 .int    pong_score;                    // (minigame_player) number of goals
 .int    pong_keys;                     // (client) pressed keys
 .entity pong_paddles[PONG_MAX_PLAYERS];// (minigame) paddles
@@ -352,7 +353,7 @@ int pong_server_event(entity minigame, string event, ...)
 		{
 			// Don't allow joining a match that is already running
 			if ( minigame.minigame_flags & PONG_STATUS_PLAY )
-				return false;
+				return PONG_SPECTATOR_TEAM;
 
 			entity player = ...(0,entity);
 			int i;
@@ -365,7 +366,7 @@ int pong_server_event(entity minigame, string event, ...)
 				}
 			}
 
-			return false;
+			return PONG_SPECTATOR_TEAM;
 		}
 		case "part":
 		{
@@ -389,9 +390,12 @@ int pong_server_event(entity minigame, string event, ...)
 		case "cmd":
 		{
 			entity player = ...(0,entity);
+			bool event_blocked = (player.team == PONG_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "throw":
+					if(event_blocked)
+						return true;
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
 					{
 						minigame.minigame_flags = PONG_STATUS_PLAY |
@@ -410,23 +414,35 @@ int pong_server_event(entity minigame, string event, ...)
 					}
 					return true;
 				case "+movei":
+					if(event_blocked)
+						return true;
 					player.pong_keys |= PONG_KEY_INCREASE;
 					return true;
 				case "+moved":
+					if(event_blocked)
+						return true;
 					player.pong_keys |= PONG_KEY_DECREASE;
 					return true;
 				case "-movei":
+					if(event_blocked)
+						return true;
 					player.pong_keys &= ~PONG_KEY_INCREASE;
 					return true;
 				case "-moved":
+					if(event_blocked)
+						return true;
 					player.pong_keys &= ~PONG_KEY_DECREASE;
 					return true;
 				case "move":
+					if(event_blocked)
+						return true;
 					if(argv(1))
 						player.pong_keys = stoi(argv(1));
 					return true;
 				case "pong_aimore":
 				{
+					if(event_blocked)
+						return true;
 					// keep declaration here, moving it into for() reverses weapon order
 					// potentially compiler bug
 					int j;
@@ -445,6 +461,8 @@ int pong_server_event(entity minigame, string event, ...)
 				}
 				case "pong_ailess":
 				{
+					if(event_blocked)
+						return true;
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
 					{
 						entity paddle;
@@ -578,7 +596,7 @@ void pong_hud_status(vector pos, vector mySize)
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" || e.classname == "pong_ai" )
+		if ( (e.classname == "minigame_player" || e.classname == "pong_ai") && e.team != PONG_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
@@ -602,7 +620,9 @@ void pong_hud_status(vector pos, vector mySize)
 string pong_message(int mgflags)
 {
 	string rmessage = "";
-	if (mgflags & PONG_STATUS_WAIT)
+	if(minigame_self.team == PONG_SPECTATOR_TEAM)
+		rmessage = _("You are spectating");
+	else if (mgflags & PONG_STATUS_WAIT)
 		rmessage = _("Press ^1Start Match^7 to start the match with the current players");
 	return rmessage;
 }
@@ -620,42 +640,41 @@ int pong_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
-			switch ( ...(0,int) )
-			{
-				case K_UPARROW:
-				case K_KP_UPARROW:
-				case K_LEFTARROW:
-				case K_KP_LEFTARROW:
-					//minigame_cmd("+moved");
-					pong_keys_pressed |= PONG_KEY_DECREASE;
-					return true;
-				case K_DOWNARROW:
-				case K_KP_DOWNARROW:
-				case K_RIGHTARROW:
-				case K_KP_RIGHTARROW:
-					//minigame_cmd("+movei");
-					pong_keys_pressed |= PONG_KEY_INCREASE;
-					return true;
-			}
-			return false;
 		case "key_released":
-			switch ( ...(0,int) )
-			{
-				case K_UPARROW:
-				case K_KP_UPARROW:
-				case K_LEFTARROW:
-				case K_KP_LEFTARROW:
-					//minigame_cmd("-moved");
-					pong_keys_pressed &= ~PONG_KEY_DECREASE;
-					return true;
-				case K_DOWNARROW:
-				case K_KP_DOWNARROW:
-				case K_RIGHTARROW:
-				case K_KP_RIGHTARROW:
-					//minigame_cmd("-movei");
-					pong_keys_pressed &= ~PONG_KEY_INCREASE;
-					return true;
-			}
+			if ((minigame.minigame_flags & PONG_STATUS_PLAY) && minigame_self.team != PONG_SPECTATOR_TEAM)
+				switch ( ...(0,int) )
+				{
+					case K_UPARROW:
+					case K_KP_UPARROW:
+					case K_LEFTARROW:
+					case K_KP_LEFTARROW:
+						if (event == "key_pressed")
+						{
+							//minigame_cmd("+moved");
+							pong_keys_pressed |= PONG_KEY_DECREASE;
+						}
+						else
+						{
+							//minigame_cmd("-moved");
+							pong_keys_pressed &= ~PONG_KEY_DECREASE;
+						}
+						return true;
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+					case K_RIGHTARROW:
+					case K_KP_RIGHTARROW:
+						if (event == "key_pressed")
+						{
+							//minigame_cmd("+movei");
+							pong_keys_pressed |= PONG_KEY_INCREASE;
+						}
+						else
+						{
+							//minigame_cmd("-movei");
+							pong_keys_pressed &= ~PONG_KEY_INCREASE;
+						}
+						return true;
+				}
 			return false;
 		case "network_receive":
 		{

@@ -1,7 +1,7 @@
 gak
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/gak.tga
 		rgbgen lightingDiffuse
 	}
@@ -9,7 +9,7 @@ gak
 gakfullbright
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/gakfullbright.tga
 		rgbgen lightingDiffuse
 	}
@@ -18,7 +18,7 @@ gakfullbright
 gakarmor
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/gakarmor.tga
 		rgbgen lightingDiffuse
 	}
@@ -26,7 +26,7 @@ gakarmor
 gakarmorfb
 {
 	dpreflectcube cubemaps/default/sky
- 	{
+	{
 		map textures/gakarmorfb.tga
 		rgbgen lightingDiffuse
 	}

@@ -236,18 +236,35 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	if(MUTATOR_CALLHOOK(ForcePlayercolors_Skip, this, islocalplayer))
 		goto skipforcecolors;
 
+	bool forceplayercolors_enabled = false;
+	#define fpc autocvar_cl_forceplayercolors
+	if (gametype.m_1v1)
+	{
+		if ((myteam != NUM_SPECTATOR) && (fpc == 1 || fpc == 2 || fpc == 3 || fpc == 5))
+			forceplayercolors_enabled = true;
+	}
+	else if (teamplay)
+	{
+		if ((team_count == 2) && (myteam != NUM_SPECTATOR) && (fpc == 2 || fpc == 4 || fpc == 5))
+			forceplayercolors_enabled = true;
+	}
+	else
+	{
+		if (fpc == 1 || fpc == 2)
+			forceplayercolors_enabled = true;
+	}
+
 	// forceplayercolors too
 	if(teamplay)
 	{
 		// own team's color is never forced
-		int forcecolor_friend = 0;
-		int forcecolor_enemy = 0;
+		int forcecolor_friend = 0, forcecolor_enemy = 0;
 		entity tm;
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if((autocvar_cl_forceplayercolors == 2 && team_count == 2)
-			|| (autocvar_cl_forceplayercolors == 3 && IS_GAMETYPE(DUEL)))
+
+		if(forceplayercolors_enabled)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -282,11 +299,23 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 				this.colormap = forcecolor_enemy;
 		}
 	}
-	else
+	else // if(!teamplay)
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
-		else if(autocvar_cl_forceplayercolors)
+		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !gametype.m_1v1)
+		{
+			// Assign each enemy unique colors
+			// pick colors from 0 to 14 since 15 is the rainbow color
+			// pl01 0 1, pl02 1 2, ..., pl14 13 14, pl15 14 0
+			// pl16 0 2, pl17 1 3, ..., pl29 13  0, pl30 14 1
+			int num = this.entnum - 1;
+			int c1 = num % 15;
+			int q = floor(num / 15);
+			int c2 = (c1 + 1 + q) % 15;
+			this.colormap = 1024 + (c1 << 4) + c2;
+		}
+		else if(forceplayercolors_enabled)
 			this.colormap = player_localnum + 1;
 	}
 
@@ -742,6 +771,7 @@ void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islo
 	bool is_playermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
 							(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
+	this.csqcmodel_isdead = false; // workaround for dead players who become a spectator
 
 	// save values set by server
 	if((this.isplayermodel & ISPLAYER_MODEL))

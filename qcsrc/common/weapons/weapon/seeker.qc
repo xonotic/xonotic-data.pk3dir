@@ -86,23 +86,23 @@ void W_Seeker_Missile_Think(entity this)
 	{
 		if(dist <= WEP_CVAR(seeker, missile_proxy_maxrange))
 		{
-			if(this.autoswitch == 0)
+			if(this.cvar_cl_autoswitch == 0)
 			{
-				this.autoswitch = time + WEP_CVAR(seeker, missile_proxy_delay);
+				this.cvar_cl_autoswitch = time + WEP_CVAR(seeker, missile_proxy_delay);
 			}
 			else
 			{
-				if(this.autoswitch <= time)
+				if(this.cvar_cl_autoswitch <= time)
 				{
 					W_Seeker_Missile_Explode(this, NULL);
-					this.autoswitch = 0;
+					this.cvar_cl_autoswitch = 0;
 				}
 			}
 		}
 		else
 		{
-			if(this.autoswitch != 0)
-				this.autoswitch = 0;
+			if(this.cvar_cl_autoswitch != 0)
+				this.cvar_cl_autoswitch = 0;
 		}
 	}
 	///////////////

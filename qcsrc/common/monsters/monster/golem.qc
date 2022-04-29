@@ -286,7 +286,7 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 
     setanim(actor, actor.anim_spawn, false, true, true);
     actor.spawn_time = actor.animstate_endtime;
-    actor.spawnshieldtime = actor.spawn_time;
+    StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.monster_attackfunc = M_Golem_Attack;
 
     return true;

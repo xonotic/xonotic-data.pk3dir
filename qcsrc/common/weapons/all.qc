@@ -61,11 +61,11 @@ WepSet _WepSet_FromWeapon(int a)
 				if (a >= 24)
 				{
 					a -= 24;
-					return '0 0 1' * (2 ** a);
+					return '0 0 1' * BIT(a);
 				}
-			return '0 1 0' * (2 ** a);
+			return '0 1 0' * BIT(a);
 		}
-	return '1 0 0' * (2 ** a);
+	return '1 0 0' * BIT(a);
 }
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)
@@ -202,7 +202,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	return result;
 }
 
-string GetAmmoPicture(int ammotype)
+// TODO: registry handles for below functions
+string GetAmmoPicture(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -216,7 +217,7 @@ string GetAmmoPicture(int ammotype)
 	}
 }
 
-string GetAmmoName(int ammotype)
+string GetAmmoName(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -230,8 +231,25 @@ string GetAmmoName(int ammotype)
 	}
 }
 
+entity GetAmmoItem(Resource ammotype)
+{
+	switch (ammotype)
+	{
+		case RES_SHELLS:  return ITEM_Shells;
+		case RES_BULLETS: return ITEM_Bullets;
+		case RES_ROCKETS: return ITEM_Rockets;
+		case RES_CELLS:   return ITEM_Cells;
+		case RES_PLASMA:  return ITEM_Plasma;
+		case RES_FUEL:    return ITEM_JetpackFuel;
+	}
+	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
+	return NULL;
+	// WEAPONTODO: use this generic func to reduce duplication ?
+	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
+}
+
 #ifdef CSQC
-int GetAmmoTypeFromNum(int i)
+Resource GetAmmoTypeFromNum(int i)
 {
 	switch (i)
 	{
@@ -245,7 +263,7 @@ int GetAmmoTypeFromNum(int i)
 	}
 }
 
-int GetAmmoStat(int ammotype)
+int GetAmmoStat(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -654,8 +672,8 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 cl_cmd weapon_find weapon");
-			LOG_HELP("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
+			LOG_HELP("Usage:^3 cl_cmd weapon_find <weapon>");
+			LOG_HELP("  Where <weapon> is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
 	}
@@ -808,4 +826,36 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 
 #endif
 
+#endif
+
+#ifdef SVQC
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
+{
+	string o = W_FixWeaponOrder_ForceComplete(wo);
+	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
+	return o;
+}
+#endif
+
+#ifdef CSQC
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+#endif
+
+#ifdef GAMEQC
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
+REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
+REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
+REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[3], string, "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[4], string, "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[5], string, "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[6], string, "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 #endif

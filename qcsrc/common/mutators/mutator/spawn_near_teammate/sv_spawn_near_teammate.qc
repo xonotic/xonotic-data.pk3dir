@@ -19,8 +19,6 @@ REGISTER_MUTATOR(spawn_near_teammate, expr_evaluate(autocvar_g_spawn_near_teamma
 
 .float msnt_timer;
 
-.float cvar_cl_spawn_near_teammate;
-
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 {
 	if (!teamplay) return;
@@ -29,7 +27,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
 
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS_CVAR(player).cvar_cl_spawn_near_teammate))
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
@@ -56,6 +54,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	M_ARGV(2, vector) = spawn_score;
 }
 
+vector snt_ofs[6];
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
 	if (!teamplay) return;
@@ -79,7 +78,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
 
 	// Note: when entering this, fixangle is already set.
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS_CVAR(player).cvar_cl_spawn_near_teammate))
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
@@ -96,7 +95,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && GetResource(it, RES_HEALTH) < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
 			if (time < it.msnt_timer) continue;
-			if (time < it.spawnshieldtime) continue;
+			if (StatusEffects_active(STATUSEFFECT_SpawnShield, it)) continue;
 			if (weaponLocked(it)) continue;
 			if (it == player) continue;
 
@@ -118,30 +117,16 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			// test different spots close to mate - trace upwards so it works on uneven surfaces
 			// don't spawn in front of player or directly behind to avoid players shooting each other
 			// test the potential spots in pairs (first pair is better than second and so on) but don't prefer one side
+			snt_ofs[0] = up * 64 + right * 128 - forward * 64;
+			snt_ofs[1] = up * 64 - right * 128 - forward * 64;
+			snt_ofs[2] = up * 64 + right * 192;
+			snt_ofs[3] = up * 64 - right * 192;
+			snt_ofs[4] = up * 64 + right * 64 - forward * 128;
+			snt_ofs[5] = up * 64 - right * 64 - forward * 128;
 			RandomSelection_Init();
 			for(int i = 0; i < 6; ++i)
 			{
-				switch(i)
-				{
-					case 0:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 64 + right * 128 + up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 1:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 64 - right * 128 + up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 2:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin + right * 192 + up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 3:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - right * 192 + up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 4:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 128 + right * 64 + up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 5:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 128 - right * 64 + up * 64, MOVE_NOMONSTERS, it);
-						break;
-				}
+				tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin + snt_ofs[i], MOVE_NOMONSTERS, it);
 
 				vector horizontal_trace_endpos = trace_endpos;
 				//te_lightning1(NULL, it.origin, horizontal_trace_endpos);
@@ -181,7 +166,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				RandomSelection_Add(it, 0, string_null, vectical_trace_endpos, 1, 1);
 				//te_lightning1(NULL, vectical_trace_endpos, vectical_trace_endpos + forward * 10);
 
-LABEL(skip)
+				LABEL(skip)
 				if (i % 2 == 1 && RandomSelection_chosen_ent)
 				{
 					if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
@@ -228,5 +213,3 @@ LABEL(skip)
 		*/
 	}
 }
-
-REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");

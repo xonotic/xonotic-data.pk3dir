@@ -45,6 +45,11 @@ float QuickMenu_TimeOut;
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
+void QuickMenu_TimeOut_Set()
+{
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+}
+
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
@@ -184,9 +189,17 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
+	mouseClicked = 0;
 	hudShiftState = 0;
 
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	// we must unset the player's buttons, as they aren't released elsewhere
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
+
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -366,7 +379,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 		QuickMenu_Close();
 		return false;
 	}
-	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+	QuickMenu_TimeOut_Set();
 	return true;
 }
 
@@ -391,7 +404,7 @@ bool QuickMenu_ActionForNumber(int num)
 	{
 		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
-		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
+		QuickMenu_TimeOut_Set();
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -419,9 +432,6 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
-	// we only care for keyboard events
-	if(bInputType == 2)
-		return false;
 
 	if(!QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return false;
@@ -433,60 +443,58 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
+	if(bInputType == 2)
+		return false;
 
-	if(bInputType == 0) {
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
+	if(key_pressed)
+	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
-	else if(bInputType == 1) {
+	else
+	{
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 
-	if(nPrimary == K_ESCAPE)
+	if(nPrimary == K_ESCAPE && key_pressed)
 	{
-		if (bInputType == 1)
-			return true;
 		QuickMenu_Close();
 	}
-	else if(nPrimary >= '0' && nPrimary <= '9')
+	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
 	{
-		if (bInputType == 1)
-			return true;
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
-	if(nPrimary == K_MOUSE1)
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
 	{
-		if(bInputType == 0) // key pressed
-			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
-			mouseClicked -= (mouseClicked & S_MOUSE1);
-	}
-	else if(nPrimary == K_MOUSE2)
-	{
-		if(bInputType == 0) // key pressed
-			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
-			mouseClicked -= (mouseClicked & S_MOUSE2);
-	}
-	else if(hit_con_bind)
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+		if (key_pressed)
+			QuickMenu_Close();
 		return false;
+	}
 
 	return true;
 }
 
+int entry_num_prev = 0;
 void QuickMenu_Mouse()
 {
 	if(mv_active) return;
@@ -516,6 +524,11 @@ void QuickMenu_Mouse()
 	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
 		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
+		if (entry_num != entry_num_prev)
+		{
+			QuickMenu_TimeOut_Set();
+			entry_num_prev = entry_num;
+		}
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
@@ -753,6 +766,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 	if(teamplayers && !team_count)
 		return;
 
+	Scoreboard_UpdatePlayerTeams();
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players
@@ -761,7 +775,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;
-		QUICKMENU_ENTRY(entcs_GetName(pl.sv_entnum), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
+		QUICKMENU_ENTRY(strcat("^7", entcs_GetName(pl.sv_entnum)), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
 	}
 
 	return;

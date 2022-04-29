@@ -38,10 +38,17 @@ STATIC_INIT(Inventory)
 
 #ifdef CSQC
 Inventory g_inventory;
+void Inventory_remove(entity this)
+{
+    if(g_inventory == this)
+        g_inventory = NULL;
+}
+
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     g_inventory = this;
+    this.entremove = Inventory_remove;
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
@@ -131,11 +138,23 @@ void Inventory_new(PlayerState this)
 {
     Inventory inv = NEW(Inventory);
     setcefc(inv, Inventory_customize);
-    Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
+	this.inventory = inv;
+	inv.owner = this;
+	Net_LinkEntity(inv, false, 0, Inventory_Send);
 }
-void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
+void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 
+void Inventory_clear(entity store)
+{
+    // NOTE: you will need to perform Inventory_update after this to update the storage entity
+    // (unless store is the storage entity)
+    FOREACH(Items, true, {
+        .int fld = inv_items[it.m_id];
+        store.(fld) = 0;
+    });
+}
+
 void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
-void InventoryStorage_detach(entity e) { delete(e.inventory_store); }
+void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
 #endif

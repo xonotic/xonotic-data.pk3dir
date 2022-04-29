@@ -4,9 +4,8 @@ noref vector _vlen2;
 #define vlen2(v) (_vlen2 = (v), dotproduct(_vlen2, _vlen2))
 
 #if 1
-noref float _vdist_f;
 /** Vector distance comparison, avoids sqrt() */
-#define vdist(v, cmp, f) (vlen2(v) cmp (_vdist_f = (f), _vdist_f * _vdist_f))
+#define vdist(v, cmp, f) (vlen2(v) cmp ((f) ** 2))
 #else
 #define vdist(v, cmp, f) (vlen(v) cmp (f))
 #endif
@@ -76,6 +75,8 @@ float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= 
 /** requires the same as boxesoverlap, but is a stronger condition */
 ERASEABLE
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
+
+#define pointinsidebox(point, bmins, bmaxs) boxinsidebox(point, point, bmins, bmaxs)
 
 #define PITCH(v) ((v).x)
 #define YAW(v) ((v).y)
@@ -176,13 +177,23 @@ vector vec_epsilon(vector this, float eps)
 	ERASEABLE
 	vector NearestPointOnBox(entity box, vector org)
 	{
-		vector m1 = box.mins + box.origin;
-		vector m2 = box.maxs + box.origin;
+		vector mi = box.mins + box.origin;
+		vector ma = box.maxs + box.origin;
 
 		return vec3(
-			bound(m1.x, org.x, m2.x),
-			bound(m1.y, org.y, m2.y),
-			bound(m1.z, org.z, m2.z)
+			bound(mi.x, org.x, ma.x),
+			bound(mi.y, org.y, ma.y),
+			bound(mi.z, org.z, ma.z)
 		);
 	}
+
+ERASEABLE
+vector NearestPointOnBoundingBox(vector mi, vector ma, vector org)
+{
+	return vec3(
+		bound(mi.x, org.x, ma.x),
+		bound(mi.y, org.y, ma.y),
+		bound(mi.z, org.z, ma.z)
+	);
+}
 #endif

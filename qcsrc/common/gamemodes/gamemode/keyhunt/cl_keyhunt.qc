@@ -10,7 +10,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	mod_active = 1; // keyhunt should never hide the mod icons panel
 
 	// Read current state
-	int state = STAT(KH_KEYS);
+	int state = STAT(OBJECTIVE_STATUS);
 	if(!state) return;
 
 	int i, key_state;
@@ -85,6 +85,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			case NUM_TEAM_4: if(team4_keys == all_keys) alpha = blink; break;
 		}
 	}
+	alpha *= panel_fg_alpha;
 
 	// Draw icons
 

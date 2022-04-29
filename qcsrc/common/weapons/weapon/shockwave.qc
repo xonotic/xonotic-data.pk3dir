@@ -3,18 +3,6 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
-// enable when shockwave replaces shotgun
-#if 0
-METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
-{
-	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
-	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
-	{
-		return WEP_MACHINEGUN;
-	}
-	return this;
-}
-#endif
 
 const float MAX_SHOCKWAVE_HITS = 10;
 //#define DEBUG_SHOCKWAVE
@@ -311,7 +299,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	);
 
 	float lag = ((IS_REAL_CLIENT(actor)) ? ANTILAG_LATENCY(actor) : 0);
-	bool noantilag = ((IS_CLIENT(actor)) ? CS(actor).cvar_cl_noantilag : false);
+	bool noantilag = ((IS_CLIENT(actor)) ? CS_CVAR(actor).cvar_cl_noantilag : false);
 	if(lag < 0.001)
 		lag = 0;
 	if(autocvar_g_antilag == 0 || noantilag)
@@ -491,7 +479,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			// WEAPONTODO: replace with simpler method
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
-			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
+			vector nearest_to_attacker = NearestPointOnBoundingBox(center + head.mins, center + head.maxs, nearest_on_line);
 
 			if((vdist(head.WarpZone_findradius_dist, <=, WEP_CVAR(shockwave, blast_distance)))
 				&& (W_Shockwave_Attack_IsVisible(actor, head, nearest_on_line, w_shotorg, attack_endpos)))

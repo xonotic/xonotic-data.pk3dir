@@ -4,6 +4,9 @@
 #define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
 int autocvar_g_invasion_type;
 bool g_invasion;
+IntrusiveList g_invasion_roundends;
+IntrusiveList g_invasion_waves;
+IntrusiveList g_invasion_spawns;
 void invasion_Initialize();
 
 REGISTER_MUTATOR(inv, false)
@@ -11,6 +14,13 @@ REGISTER_MUTATOR(inv, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
+		g_invasion_roundends = IL_NEW();
+		g_invasion_waves = IL_NEW();
+		g_invasion_spawns = IL_NEW();
+		if (autocvar_g_invasion_teams >= 2) {
+			GameRules_teams(true);
+			GameRules_spawning_teams(autocvar_g_invasion_team_spawns);
+		}
         GameRules_limit_score(autocvar_g_invasion_point_limit);
 
 		g_invasion = true;

@@ -27,7 +27,7 @@ bool accuracy_send(entity this, entity to, int sf)
 	a = CS(a).accuracy;
 
 	if (to != a.owner)
-		if (!autocvar_sv_accuracy_data_share && !CS(a.owner).cvar_cl_accuracy_data_share)
+		if (!autocvar_sv_accuracy_data_share && !CS_CVAR(a.owner).cvar_cl_accuracy_data_share)
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
@@ -55,6 +55,21 @@ void accuracy_free(entity e)
 	delete(CS(e).accuracy);
 }
 
+void accuracy_reset(entity e)
+{
+	entity a = CS(e).accuracy;
+	if (!a) return;
+
+	for (int i = 0; i < REGISTRY_MAX(Weapons); i++)
+	{
+		a.accuracy_frags[i] = 0;
+		a.accuracy_hit[i] = 0;
+		a.accuracy_fired[i] = 0;
+		a.accuracy_cnt_hit[i] = 0;
+		a.accuracy_cnt_fired[i] = 0;
+	}
+}
+
 // force a resend of a player's accuracy stats
 void accuracy_resend(entity e)
 {
@@ -65,7 +80,7 @@ void accuracy_resend(entity e)
 //.float hit_time;
 .float fired_time;
 
-void accuracy_add(entity this, Weapon w, int fired, int hit)
+void accuracy_add(entity this, Weapon w, float fired, float hit)
 {
 	if (IS_INDEPENDENT_PLAYER(this)) return;
 	entity a = CS(this).accuracy;
@@ -98,8 +113,7 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 {
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
-	if (warmup_stage) return false;
-	if (game_stopped) return false;
+	if (warmup_stage || game_stopped) return false;
 
 	// damage to dead/frozen players is good only if it happens in the frame they get killed / frozen
 	// so that stats for weapons that shoot multiple projectiles per shot are properly counted
@@ -119,3 +133,6 @@ bool accuracy_canbegooddamage(entity attacker)
 {
 	return !warmup_stage && IS_CLIENT(attacker);
 }
+
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");

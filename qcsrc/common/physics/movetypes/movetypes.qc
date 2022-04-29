@@ -6,6 +6,8 @@ void set_movetype(entity this, int mt)
 	this.move_movetype = mt;
 	if (mt == MOVETYPE_PHYSICS) {
 		this.move_qcphysics = false;
+	} else if (autocvar_sv_qcphysics == 2) {
+		this.move_qcphysics = true;
 	}
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
@@ -177,6 +179,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		if(trace_fraction == 1)
 			break;
 
+		time_left *= 1 - trace_fraction;
+
 		float my_trace_fraction = trace_fraction;
 		vector my_trace_plane_normal = trace_plane_normal;
 
@@ -202,6 +206,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			// step - handle it immediately
 			vector org = this.origin;
 			vector steppush = '0 0 1' * stepheight;
+			push = this.velocity * time_left;
 
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
@@ -222,7 +227,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			}
 
 			// accept the new position if it made some progress...
-			if(fabs(this.origin_x - org.x) >= 0.03125 || fabs(this.origin_y - org.y) >= 0.03125)
+			// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
+			if(this.origin_x - org.x || this.origin_y - org.y)
 			{
 				trace_endpos = this.origin;
 				time_left *= 1 - trace2_fraction;
@@ -247,8 +253,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			original_velocity = this.velocity;
 			numplanes = 0;
 		}
-
-		time_left *= 1 - my_trace_fraction;
 
 		// clipped to another plane
 		if(numplanes >= MAX_CLIP_PLANES)
@@ -412,17 +416,61 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 	if(!this && !oth)
 		return;
 
+	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
+	bool save_trace_allsolid = trace_allsolid;
+	bool save_trace_startsolid = trace_startsolid;
+	float save_trace_fraction = trace_fraction;
+	bool save_trace_inwater = trace_inwater;
+	bool save_trace_inopen = trace_inopen;
+	vector save_trace_endpos = trace_endpos;
+	vector save_trace_plane_normal = trace_plane_normal;
+	float save_trace_plane_dist = trace_plane_dist;
+	entity save_trace_ent = trace_ent;
+	int save_trace_dpstartcontents = trace_dpstartcontents;
+	int save_trace_dphitcontents = trace_dphitcontents;
+	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
+	string save_trace_dphittexturename = trace_dphittexturename;
+
 	if(this.solid != SOLID_NOT && gettouch(this))
 		gettouch(this)(this, oth);
 
 	if(oth.solid != SOLID_NOT && gettouch(oth))
 		gettouch(oth)(oth, this);
+
+	trace_allsolid = save_trace_allsolid;
+	trace_startsolid = save_trace_startsolid;
+	trace_fraction = save_trace_fraction;
+	trace_inwater = save_trace_inwater;
+	trace_inopen = save_trace_inopen;
+	trace_endpos = save_trace_endpos;
+	trace_plane_normal = save_trace_plane_normal;
+	trace_plane_dist = save_trace_plane_dist;
+	trace_ent = save_trace_ent;
+	trace_dpstartcontents = save_trace_dpstartcontents;
+	trace_dphitcontents = save_trace_dphitcontents;
+	trace_dphitq3surfaceflags = save_trace_dphitq3surfaceflags;
+	trace_dphittexturename = save_trace_dphittexturename;
 }
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
 {
 	if(this.solid == SOLID_NOT)
 		return;
+
+	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
+	bool save_trace_allsolid = trace_allsolid;
+	bool save_trace_startsolid = trace_startsolid;
+	float save_trace_fraction = trace_fraction;
+	bool save_trace_inwater = trace_inwater;
+	bool save_trace_inopen = trace_inopen;
+	vector save_trace_endpos = trace_endpos;
+	vector save_trace_plane_normal = trace_plane_normal;
+	float save_trace_plane_dist = trace_plane_dist;
+	entity save_trace_ent = trace_ent;
+	int save_trace_dpstartcontents = trace_dpstartcontents;
+	int save_trace_dphitcontents = trace_dphitcontents;
+	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
+	string save_trace_dphittexturename = trace_dphittexturename;
 
     FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
@@ -446,6 +494,20 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			gettouch(it)(it, this);
 		}
     });
+
+	trace_allsolid = save_trace_allsolid;
+	trace_startsolid = save_trace_startsolid;
+	trace_fraction = save_trace_fraction;
+	trace_inwater = save_trace_inwater;
+	trace_inopen = save_trace_inopen;
+	trace_endpos = save_trace_endpos;
+	trace_plane_normal = save_trace_plane_normal;
+	trace_plane_dist = save_trace_plane_dist;
+	trace_ent = save_trace_ent;
+	trace_dpstartcontents = save_trace_dpstartcontents;
+	trace_dphitcontents = save_trace_dphitcontents;
+	trace_dphitq3surfaceflags = save_trace_dphitq3surfaceflags;
+	trace_dphittexturename = save_trace_dphittexturename;
 }
 
 bool autocvar__movetype_debug = false;
@@ -605,7 +667,7 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 	}
 }
 
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVelocity
+vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // ClipVelocity
 {
 	vel -= ((vel * norm) * norm) * f;
 
@@ -694,9 +756,6 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
-			if(wasfreed(this))
-				return;
-			_Movetype_LinkEdict(this, true);
 			break;
 		case MOVETYPE_PHYSICS:
 			break;

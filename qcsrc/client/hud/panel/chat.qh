@@ -5,7 +5,13 @@ bool autocvar_hud_panel_chat;
 
 bool autocvar__con_chat_maximized;
 bool autocvar_con_chat;
-bool autocvar_con_chatrect;
 float autocvar_con_chatsize;
 float autocvar_con_notify;
 float autocvar_con_notifysize;
+
+bool autocvar_con_chatrect;
+//float autocvar_con_chatrect_x;
+//float autocvar_con_chatrect_y;
+float autocvar_con_chatwidth;
+
+float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSecondary);

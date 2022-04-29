@@ -8,6 +8,11 @@ bool autocvar_cl_casings_sloppy = 1;
 float autocvar_cl_casings_ticrate = 0.1;
 #endif
 
+#ifdef GAMEQC
+REPLICATE_INIT(bool, cvar_cl_casings);
+REPLICATE_INIT(int, cvar_r_drawviewmodel);
+#endif
+
 #ifdef SVQC
 int autocvar_g_casings;
 

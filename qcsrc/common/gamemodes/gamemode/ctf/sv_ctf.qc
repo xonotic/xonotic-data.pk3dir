@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <server/command/vote.qh>
 #include <server/client.qh>
@@ -507,7 +508,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		{
 			makevectors((player.v_angle.y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
-			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & ITEM_Strength.m_itemid) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
+			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((StatusEffects_active(STATUSEFFECT_Strength, player)) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			navigation_dynamicgoal_set(flag, player);
@@ -2159,7 +2160,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 	bool b1 = false, b2 = false, b3 = false, b4 = false, b5 = false; // TODO: kill this, we WANT to show the other flags, somehow! (note: also means you don't see if you're FC)
 
 	// initially clear items so they can be set as necessary later.
-	STAT(CTF_FLAGSTATUS, player) &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
+	STAT(OBJECTIVE_STATUS, player) &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
 						   | CTF_BLUE_FLAG_CARRYING		| CTF_BLUE_FLAG_TAKEN		| CTF_BLUE_FLAG_LOST
 						   | CTF_YELLOW_FLAG_CARRYING	| CTF_YELLOW_FLAG_TAKEN 	| CTF_YELLOW_FLAG_LOST
 						   | CTF_PINK_FLAG_CARRYING 	| CTF_PINK_FLAG_TAKEN		| CTF_PINK_FLAG_LOST
@@ -2173,7 +2174,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 		if(flag.team == NUM_TEAM_2 && !b2) { b2 = true; t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_3 && !b3) { b3 = true; t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_4 && !b4) { b4 = true; t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
-		if(flag.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(CTF_FLAGSTATUS, player) |= CTF_FLAG_NEUTRAL; }
+		if(flag.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL; }
 
 		switch(flag.ctf_status)
 		{
@@ -2181,14 +2182,14 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 			case FLAG_CARRY:
 			{
 				if((flag.owner == player) || (flag.pass_sender == player))
-					STAT(CTF_FLAGSTATUS, player) |= t; // carrying: player is currently carrying the flag
+					STAT(OBJECTIVE_STATUS, player) |= t; // carrying: player is currently carrying the flag
 				else
-					STAT(CTF_FLAGSTATUS, player) |= t2; // taken: someone else is carrying the flag
+					STAT(OBJECTIVE_STATUS, player) |= t2; // taken: someone else is carrying the flag
 				break;
 			}
 			case FLAG_DROPPED:
 			{
-				STAT(CTF_FLAGSTATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
+				STAT(OBJECTIVE_STATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
 				break;
 			}
 		}
@@ -2196,10 +2197,10 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 	// item for stopping players from capturing the flag too often
 	if(player.ctf_captureshielded)
-		STAT(CTF_FLAGSTATUS, player) |= CTF_SHIELDED;
+		STAT(OBJECTIVE_STATUS, player) |= CTF_SHIELDED;
 
 	if(ctf_stalemate)
-		STAT(CTF_FLAGSTATUS, player) |= CTF_STALEMATE;
+		STAT(OBJECTIVE_STATUS, player) |= CTF_STALEMATE;
 
 	// update the health of the flag carrier waypointsprite
 	if(player.wps_flagcarrier)
@@ -2300,15 +2301,7 @@ MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
 
 	entity player = M_ARGV(0, entity);
 
-	if(IS_REAL_CLIENT(player))
-	{
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (int i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, true);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
@@ -2318,16 +2311,7 @@ MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
 
 	entity player = M_ARGV(0, entity);
 
-	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
-	{
-		if (!player.stored_netname)
-			player.stored_netname = strzone(uid2name(player.crypto_idfp));
-		if(player.stored_netname != player.netname)
-		{
-			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
-			strcpy(player.stored_netname, player.netname);
-		}
-	}
+	race_checkAndWriteName(player);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
@@ -2541,14 +2525,6 @@ MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ctf, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "ctf_team";
-}
-
-MUTATOR_HOOKFUNCTION(ctf, SpectateCopy)
-{
-	entity spectatee = M_ARGV(0, entity);
-	entity client = M_ARGV(1, entity);
-
-	STAT(CTF_FLAGSTATUS, client) = STAT(CTF_FLAGSTATUS, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GetRecords)
@@ -2843,6 +2819,8 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void ctf_Initialize()
 {
+	CTF_FLAG = NEW(Flag);
+	record_type = CTF_RECORD;
 	ctf_captimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;

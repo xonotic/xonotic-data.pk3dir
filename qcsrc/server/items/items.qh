@@ -1,12 +1,13 @@
 #pragma once
 
+#include <common/resources/resources.qh>
 #include <common/sounds/sound.qh>
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
-int autocvar_g_powerups;
 float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
+float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;
 bool autocvar_g_nodepthtestitems;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
@@ -29,6 +30,7 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float max_armorvalue;
 .float pickup_anyway;
+.int count;
 
 .float scheduledrespawntime;
 .float respawntime;
@@ -63,7 +65,7 @@ void Item_ScheduleInitialRespawn(entity e);
 /// \return No return.
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names, entity ammo_entity);
 
-bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
+bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammomax);
 
 bool Item_GiveTo(entity item, entity player);
 
@@ -109,9 +111,11 @@ spawnfunc(target_items);
 
 #define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
+#define PREGIVE_STATUSEFFECT(e,f) bool save_##f = StatusEffects_active(f, (e))
 #define PREGIVE_RESOURCE(e,f) float save_##f = GetResource((e), (f))
 #define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(STAT(WEAPONS, e) & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
+#define POSTGIVE_STATUSEFFECT(e,f,snd_incr,snd_decr) GiveSound((e), save_##f, StatusEffects_active(f, (e)), 0, snd_incr, snd_decr)
 #define POSTGIVE_RESOURCE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, GetResource((e), (f)), t, snd_incr, snd_decr)
 #define POSTGIVE_RES_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e),save_##f,GetResource((e),(f)),rotfield,rottime,regenfield,regentime);GiveSound((e),save_##f,GetResource((e),(f)),t,snd_incr,snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
