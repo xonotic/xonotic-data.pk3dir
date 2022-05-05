@@ -312,7 +312,11 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
-	newproj.death_time = this.death_time;
+	if(WEP_CVAR_SEC(electro, stick_lifetime) > 0){
+		newproj.death_time = time + WEP_CVAR_SEC(electro, stick_lifetime);
+	}else{
+		newproj.death_time = this.death_time;
+	}
 	newproj.use = this.use;
 	newproj.flags = this.flags;
 	IL_PUSH(g_projectiles, newproj);
@@ -351,8 +355,13 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_ELECTRO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 
-		if(WEP_CVAR_SEC(electro, stick))
-			W_Electro_Orb_Stick(this, toucher);
+		if(WEP_CVAR_SEC(electro, stick)){
+			if(WEP_CVAR_SEC(electro, stick_lifetime) == 0){
+				W_Electro_Explode(this, toucher);
+			} else {
+				W_Electro_Orb_Stick(this, toucher);
+			}
+		}
 	}
 }
 

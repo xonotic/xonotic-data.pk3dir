@@ -56,6 +56,8 @@ const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
 // delay map switch until this is set
 bool PlayerStats_GameReport_DelayMapVote;
 
+void PlayerStats_GameReport_Reset_All();
+
 // call at initialization
 void PlayerStats_GameReport_Init();
 
@@ -79,16 +81,17 @@ void PlayerStats_GameReport_Accuracy(entity p);
 void PlayerStats_GameReport_FinalizePlayer(entity p);
 
 // call this at the end of the match
-void PlayerStats_GameReport(float finished);
+void PlayerStats_GameReport(bool finished);
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 
 .string playerstats_id;
+.float scoreboard_pos;
 
 //string autocvar_g_playerstats_uri;
 
 string autocvar_g_playerstats_gamereport_ladder;
-string autocvar_g_playerstats_gamereport_uri = "http://stats.xonotic.org/stats/submit";
+string autocvar_g_playerstats_gamereport_uri = "https://stats.xonotic.org/stats/submit";
 
 const float PS_B_STATUS_ERROR = -2;
 const float PS_B_STATUS_IDLE = -1;
@@ -96,7 +99,7 @@ const float PS_B_STATUS_WAITING = 0;
 const float PS_B_STATUS_RECEIVED = 1;
 const float PS_B_STATUS_UPDATING = 2;
 .float playerstats_basicstatus;
-string autocvar_g_playerstats_playerbasic_uri = "http://stats.xonotic.org";
+string autocvar_g_playerstats_playerbasic_uri = "https://stats.xonotic.org";
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest);
 void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer);
@@ -110,9 +113,18 @@ const float PS_D_STATUS_IDLE = -1;
 const float PS_D_STATUS_WAITING = 0;
 const float PS_D_STATUS_RECEIVED = 1;
 float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
-string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
+string autocvar_g_playerstats_playerdetail_uri = "https://stats.xonotic.org/player/me";
 float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway
 void PlayerStats_PlayerDetail();
 void PlayerStats_PlayerDetail_CheckUpdate();
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
+
+#endif
+
+#ifdef GAMEQC
+
+REPLICATE_INIT(int, cvar_cl_allow_uid2name);
+REPLICATE_INIT(bool, cvar_cl_allow_uidranking);
+REPLICATE_INIT(int, cvar_cl_allow_uidtracking);
+
 #endif

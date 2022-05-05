@@ -3,6 +3,12 @@
 #include <common/mapobjects/_mod.qh>
 #include <common/viewloc.qh>
 
+#ifdef GAMEQC
+REPLICATE(cvar_cl_physics, string, "cl_physics");
+REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
+REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
+#endif
+
 #ifdef SVQC
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/trigger/viewloc.qh>

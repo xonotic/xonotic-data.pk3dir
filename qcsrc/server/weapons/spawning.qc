@@ -1,10 +1,10 @@
 #include "spawning.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <common/weapons/_all.qh>
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
@@ -108,6 +108,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
+	// TODO: registry handles
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
 	{
 		int ammo = 0;
@@ -151,6 +152,8 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 
 	if(!this.owner)
 		this.glowmod = wpn.wpcolor;
+	else
+		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true) * 2;
 
 	GameItem def = wpn.m_pickup;
 	_StartItem(

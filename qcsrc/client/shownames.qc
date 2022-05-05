@@ -2,11 +2,11 @@
 
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
-#include <client/resources.qh>
 #include <client/view.qh>
 #include <common/constants.qh>
 #include <common/ent_cs.qh>
 #include <common/net_linked.qh>
+#include <common/resources/cl_resources.qh>
 #include <common/teams.qh>
 #include <lib/csqcmodel/cl_model.qh>
 

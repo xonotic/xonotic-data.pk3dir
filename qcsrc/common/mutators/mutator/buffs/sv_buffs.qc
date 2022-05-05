@@ -963,13 +963,11 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 
 	if(StatusEffects_active(BUFF_MEDIC, player))
 	{
-		M_ARGV(2, float) = autocvar_g_buffs_medic_rot; // rot_mod
+		M_ARGV(3, float) = autocvar_g_buffs_medic_rot; // rot_mod
 		M_ARGV(4, float) = M_ARGV(1, float) = autocvar_g_buffs_medic_max; // limit_mod = max_mod
 		M_ARGV(2, float) = autocvar_g_buffs_medic_regen; // regen_mod
 	}
 }
-
-REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {

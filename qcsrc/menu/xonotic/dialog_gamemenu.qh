@@ -1,0 +1,16 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticGameMenuDialog, XonoticRootDialog)
+	METHOD(XonoticGameMenuDialog, draw, void(entity));
+	METHOD(XonoticGameMenuDialog, destroy, void(entity));
+	METHOD(XonoticGameMenuDialog, fill, void(entity));
+	ATTRIB(XonoticGameMenuDialog, title, string, _("Game menu"));
+	ATTRIB(XonoticGameMenuDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
+	ATTRIB(XonoticGameMenuDialog, intendedWidth, float, 0.3);
+	ATTRIB(XonoticGameMenuDialog, rows, float, 13);
+	ATTRIB(XonoticGameMenuDialog, columns, float, 1);
+	ATTRIB(XonoticGameMenuDialog, name, string, "GameMenu");
+	ATTRIB(XonoticGameMenuDialog, requiresConnection, bool, true);
+	ATTRIB(XonoticGameMenuDialog, joinButton, entity, world);
+ENDCLASS(XonoticGameMenuDialog)

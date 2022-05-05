@@ -221,6 +221,8 @@ void m_init_delayed()
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
+
+	cvar_set("_menu_initialized", "2");
 }
 
 void m_keyup(float key, float ascii)
@@ -672,23 +674,32 @@ void m_tooltip(vector pos)
 	}
 }
 
+const int MIN_DISCONNECTION_TIME = 1;
 float autocvar_menu_force_on_disconnection;
+bool autocvar_g_campaign;
 void m_draw(float width, float height)
 {
-	if (autocvar_menu_force_on_disconnection > 0)
+	static float connected_time;
+	if (clientstate() == CS_DISCONNECTED)
 	{
-		static float connected_time;
-		if (clientstate() == CS_DISCONNECTED)
+		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 		{
-			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
+			if (autocvar_g_campaign)
 			{
-				m_toggle(true);
-				connected_time = 0;
+				// in the case player uses the disconnect command (in the console or with a key)
+				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
+				// see also LEAVEMATCH_CMD
+				cvar_set("g_campaign", "0");
+				m_sync();
 			}
+			if (autocvar_menu_force_on_disconnection > 0)
+				m_toggle(true);
+			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
+			connected_time = 0;
 		}
-		else
-			connected_time = time;
 	}
+	else
+		connected_time = time;
 
 	m_gamestatus();
 
@@ -960,12 +971,16 @@ void m_goto(string itemname)
 		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
 		{
 			m_hide();
+			return;
 		}
-		else
-		{
-			m_activate_window(main.mainNexposee);
-			m_display();
-		}
+		itemname = "nexposee";
+	}
+
+	if (itemname == "nexposee")
+	{
+		// unlike 'togglemenu 1', this closes modal and root dialogs if opened
+		m_activate_window(main.mainNexposee);
+		m_display();
 	}
 	else
 	{

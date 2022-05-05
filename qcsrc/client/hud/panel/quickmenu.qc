@@ -189,7 +189,15 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
+	mouseClicked = 0;
 	hudShiftState = 0;
+
+	// we must unset the player's buttons, as they aren't released elsewhere
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
 
 	QuickMenu_TimeOut_Set();
 	return true;
@@ -441,58 +449,47 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
 	if(key_pressed)
 	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
 	else
 	{
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 
-	if(nPrimary == K_ESCAPE)
+	if(nPrimary == K_ESCAPE && key_pressed)
 	{
-		if (!key_pressed)
-			return true;
 		QuickMenu_Close();
 	}
-	else if(nPrimary >= '0' && nPrimary <= '9')
+	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
 	{
-		if (!key_pressed)
-			return true;
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
-	if(nPrimary == K_MOUSE1)
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
 	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE1;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE1);
-	}
-	else if(nPrimary == K_MOUSE2)
-	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE2;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE2);
-	}
-	else if(hit_con_bind)
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+		if (key_pressed)
+			QuickMenu_Close();
 		return false;
+	}
 
 	return true;
 }
@@ -769,6 +766,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 	if(teamplayers && !team_count)
 		return;
 
+	Scoreboard_UpdatePlayerTeams();
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players

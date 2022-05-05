@@ -4,3 +4,9 @@
 bool autocvar_hud_panel_timer;
 bool autocvar_hud_panel_timer_dynamichud        = true;
 bool autocvar_hud_panel_timer_increment;
+int autocvar_hud_panel_timer_secondary = 1;
+bool autocvar_hud_panel_timer_unbound;
+
+vector HUD_Timer_Color(float timeleft);
+float HUD_Timer_TimeElapsed(float curtime, float starttime);
+float HUD_Timer_TimeLeft(float curtime, float starttime, float timelimit);
