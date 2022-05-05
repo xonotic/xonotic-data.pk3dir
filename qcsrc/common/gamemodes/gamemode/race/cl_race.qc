@@ -53,7 +53,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(ISGAMETYPE(CTS))
+	if(ISGAMETYPE(CTS) || ISGAMETYPE(CTSCUP))
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;

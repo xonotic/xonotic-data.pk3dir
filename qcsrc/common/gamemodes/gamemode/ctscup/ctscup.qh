@@ -15,6 +15,14 @@ CLASS(RaceCTSCup, Gametype)
         if(v == "target_startTimer")
             MapInfo_Map_supportedGametypes |= this.m_flags;
     }
+    METHOD(RaceCTSCup, m_isForcedSupported, bool(Gametype this))
+    {
+        // if this is used, all CTS maps support CTS Cup too
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTS.m_flags))
+            return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+
+        return false;
+    }
     METHOD(RaceCTSCup, m_setTeams, void(string sa))
     {
         // this is the skill of the map
