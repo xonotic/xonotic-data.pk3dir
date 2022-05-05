@@ -1051,7 +1051,7 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
-	if(g_weapon_stay && !g_cts)
+	if(g_weapon_stay && !g_cts && !g_ctscup)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jetpack");
@@ -1508,7 +1508,7 @@ void player_powerups(entity this)
 				this.items = this.items | IT_SUPERWEAPON;
 				if(!(this.items & IT_UNLIMITED_SUPERWEAPONS))
 				{
-					if(!g_cts)
+					if(!g_cts && !g_ctscup)
 						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
 				}
@@ -1817,7 +1817,7 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			STAT(PRESSED_KEYS, this) = 0;
 		}
 		ClientData_Touch(this);
-		if (g_race || g_cts) race_InitSpectator();
+		if (g_race || g_cts || g_ctscup) race_InitSpectator();
 	}
 }
 

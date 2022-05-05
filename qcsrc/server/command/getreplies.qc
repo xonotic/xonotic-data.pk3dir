@@ -73,7 +73,7 @@ string getladder()
 	int i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 
-	rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
+	rr = ((g_cts || g_ctscup)) ? CTS_RECORD : RACE_RECORD;
 
 	for (k = 0; k < MapInfo_count; ++k)
 	{
@@ -266,7 +266,7 @@ string getlsmaps()
 				continue; // we still get the added count, but skip the actual processing
 
 			// todo: Check by play count of maps for other game types?
-			if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
+			if((g_race || g_cts || g_ctscup) && !race_readTime(MapInfo_Map_bspname, 1))
 			{
 				newmaps = true;
 				if (i % 2) col = "^4*"; else col = "^5*";

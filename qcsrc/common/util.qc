@@ -1045,7 +1045,7 @@ float isGametypeInFilter(Gametype gt, float tp, float ts, string pattern)
 		subpattern3 = ",teamspawns,";
 	else
 		subpattern3 = ",noteamspawns,";
-	if(gt == MAPINFO_TYPE_RACE || gt == MAPINFO_TYPE_CTS)
+	if(gt == MAPINFO_TYPE_RACE || gt == MAPINFO_TYPE_CTS || gt == MAPINFO_TYPE_CTSCUP)
 		subpattern4 = ",race,";
 	else
 		subpattern4 = string_null;

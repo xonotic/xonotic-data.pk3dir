@@ -249,7 +249,7 @@ void score_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(target_score)
 {
-	if(!g_cts) { delete(this); return; }
+	if(!g_cts && !g_ctscup) { delete(this); return; }
 
 	if(!this.count)
 		this.count = 1;
@@ -265,7 +265,7 @@ void fragsfilter_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(target_fragsFilter)
 {
-	if(!g_cts) { delete(this); return; }
+	if(!g_cts && !g_ctscup) { delete(this); return; }
 
 	if(!this.frags)
 		this.frags = 1;

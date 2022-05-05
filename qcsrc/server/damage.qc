@@ -142,7 +142,7 @@ void Obituary_SpecialDeath(
 		return;
 	}
 
-	if(g_cts && deathtype == DEATH_KILL.m_id)
+	if((g_cts || g_ctscup) && deathtype == DEATH_KILL.m_id)
 		return; // TODO: somehow put this in CTS gamemode file!
 
 	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;

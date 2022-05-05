@@ -1036,7 +1036,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity
 spawnfunc(trigger_race_checkpoint)
 {
 	vector o;
-	if(!g_race && !g_cts) { delete(this); return; }
+	if(!g_race && !g_cts && !g_ctscup) { delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 
@@ -1091,7 +1091,7 @@ spawnfunc(trigger_race_checkpoint)
 
 void target_checkpoint_setup(entity this)
 {
-	if(!g_race && !g_cts) { delete(this); return; }
+	if(!g_race && !g_cts && !g_ctscup) { delete(this); return; }
 	defrag_ents = 1;
 
 	// if this is targeted, then it probably isn't a trigger
@@ -1178,7 +1178,7 @@ void race_PreparePlayer(entity this)
 
 void race_RetractPlayer(entity this)
 {
-	if(!g_race && !g_cts)
+	if(!g_race && !g_cts && !g_ctscup)
 		return;
 	if(this.race_respawn_checkpoint == 0 || this.race_respawn_checkpoint == race_timed_checkpoint)
 		race_ClearTime(this);
@@ -1187,7 +1187,7 @@ void race_RetractPlayer(entity this)
 
 spawnfunc(info_player_race)
 {
-	if(!g_race && !g_cts) { delete(this); return; }
+	if(!g_race && !g_cts && !g_ctscup) { delete(this); return; }
 	++race_spawns;
 	spawnfunc_info_player_deathmatch(this);
 
@@ -1262,7 +1262,7 @@ void penalty_use(entity this, entity actor, entity trigger)
 spawnfunc(trigger_race_penalty)
 {
 	// TODO: find out why this wasnt done:
-	//if(!g_cts && !g_race) { remove(this); return; }
+	//if(!g_race && !g_cts && !g_ctscup) { remove(this); return; }
 
 	EXACTTRIGGER_INIT;
 

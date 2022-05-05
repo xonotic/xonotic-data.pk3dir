@@ -502,7 +502,7 @@ IMPULSE(waypoint_clear_personal)
 		delete(this.personal);
 		this.personal = NULL;
 
-		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+		if((g_race || g_cts || g_ctscup) && autocvar_g_allow_checkpoints)
 			ClientKill(this);
 	}
 	sprint(this, "personal waypoint cleared\n");
@@ -515,7 +515,7 @@ IMPULSE(waypoint_clear)
 	{
 		delete(this.personal);
 		this.personal = NULL;
-		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+		if((g_race || g_cts || g_ctscup) && autocvar_g_allow_checkpoints)
 			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");

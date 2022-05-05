@@ -271,6 +271,7 @@ void cvar_changes_init()
 		BADCVAR("g_conquest_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
+		BADCVAR("g_ctscup");
 		BADCVAR("g_dotc");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");

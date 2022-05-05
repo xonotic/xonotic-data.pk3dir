@@ -19,7 +19,7 @@ METHOD(Shield, m_apply, void(StatusEffects this, entity actor, float eff_time, f
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
     {
-        if(!g_cts)
+        if(!g_cts && !g_ctscup)
             Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, actor.netname);
         Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_POWERUP_SHIELD);
     }

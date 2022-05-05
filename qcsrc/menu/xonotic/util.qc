@@ -694,6 +694,7 @@ float updateCompression()
 #define HIDDEN_GAMETYPES \
 	GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_CTSCUP) \
 	/**/
 
 Gametype GameType_GetID(int cnt)

@@ -22,7 +22,7 @@ bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
 {
-	if(g_cts) // no gibs in CTS
+	if(g_cts || g_ctscup) // no gibs in CTS
 		return;
 
 	entity e = new_pure(gibsplash);
