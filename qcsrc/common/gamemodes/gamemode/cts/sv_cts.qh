@@ -4,6 +4,13 @@
 #include <server/race.qh>
 
 void cts_Initialize();
+void havocbot_role_cts(entity);
+void cts_ScoreRules();
+void cts_EventLog(string, entity);
+
+float autocvar_g_cts_finish_kill_delay;
+bool autocvar_g_cts_selfdamage;
+bool autocvar_g_cts_removeprojectiles;
 
 REGISTER_MUTATOR(cts, false)
 {

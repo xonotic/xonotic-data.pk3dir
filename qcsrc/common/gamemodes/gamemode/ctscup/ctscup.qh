@@ -1,0 +1,36 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+#if defined(CSQC)
+	#include <common/gamemodes/gamemode/race/cl_race.qh>
+#endif
+
+CLASS(RaceCTSCup, Gametype)
+    INIT(RaceCTSCup)
+    {
+        this.gametype_init(this, _("Race CTS Cup"),"ctscup","g_ctscup",0,"cloaked","timelimit=20",_("Race for fastest time."));
+    }
+    METHOD(RaceCTSCup, m_generate_mapinfo, void(Gametype this, string v))
+    {
+        if(v == "target_startTimer")
+            MapInfo_Map_supportedGametypes |= this.m_flags;
+    }
+    METHOD(RaceCTSCup, m_setTeams, void(string sa))
+    {
+        // this is the skill of the map
+        // not parsed by anything yet
+        // for map databases
+        //  cvar_set("fraglimit", sa);
+    }
+    METHOD(RaceCTSCup, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
+    }
+#ifdef CSQC
+    ATTRIB(RaceCTSCup, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
+#endif
+    ATTRIB(RaceCTSCup, m_legacydefaults, string, "20 0 0");
+ENDCLASS(RaceCTSCup)
+REGISTER_GAMETYPE(CTSCup, NEW(RaceCTSCup));
+#define g_ctscup IS_GAMETYPE(CTSCup)

@@ -1,0 +1,24 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <server/race.qh>
+#include <common/gamemodes/gamemode/cts/sv_cts.qh>
+
+//void ctscup_Initialize();
+
+REGISTER_MUTATOR(ctscup, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		g_race_qualifying = 1;
+		independent_players = 1;
+		GameRules_limit_score(0);
+		GameRules_limit_lead(0);
+
+		//ctscup_Initialize(); // commented due to not (yet) having
+		cts_Initialize();      // a reason to use its own init
+	}
+	return 0;
+}
+

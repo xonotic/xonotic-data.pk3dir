@@ -4,6 +4,7 @@
 #include <common/gamemodes/gamemode/clanarena/_mod.inc>
 #include <common/gamemodes/gamemode/ctf/_mod.inc>
 #include <common/gamemodes/gamemode/cts/_mod.inc>
+#include <common/gamemodes/gamemode/ctscup/_mod.inc>
 #include <common/gamemodes/gamemode/deathmatch/_mod.inc>
 #include <common/gamemodes/gamemode/domination/_mod.inc>
 #include <common/gamemodes/gamemode/duel/_mod.inc>

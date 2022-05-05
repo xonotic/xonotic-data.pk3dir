@@ -1,4 +1,4 @@
-#include "sv_cts.qh"
+#include "sv_ctscup.qh"
 
 #include <server/client.qh>
 #include <server/race.qh>
@@ -9,65 +9,7 @@
 #include <server/weapons/common.qh>
 #include <common/mapobjects/triggers.qh>
 
-// legacy bot roles
-.float race_checkpoint;
-void havocbot_role_cts(entity this)
-{
-	if(IS_DEAD(this))
-		return;
-
-	if (navigation_goalrating_timeout(this))
-	{
-		navigation_goalrating_start(this);
-
-		bool raw_touch_check = true;
-		int cp = this.race_checkpoint;
-
-		LABEL(search_racecheckpoints)
-		IL_EACH(g_racecheckpoints, true,
-		{
-			if(it.cnt == cp || cp == -1)
-			{
-				// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
-				// e.g. checkpoint in front of Stormkeep's warpzone
-				// the same workaround is applied in Race game mode
-				if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
-				{
-					cp = race_NextCheckpoint(cp);
-					raw_touch_check = false;
-					goto search_racecheckpoints;
-				}
-				navigation_routerating(this, it, 1000000, 5000);
-			}
-		});
-
-		navigation_goalrating_end(this);
-
-		navigation_goalrating_timeout_set(this);
-	}
-}
-
-void cts_ScoreRules()
-{
-    GameRules_score_enabled(false);
-    GameRules_scoring(0, 0, 0, {
-        if (g_race_qualifying) {
-            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else {
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        }
-    });
-}
-
-void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
-{
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
-}
-
-MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(ctscup, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
 	float dt = M_ARGV(1, float);
@@ -138,7 +80,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, reset_map_global)
+MUTATOR_HOOKFUNCTION(ctscup, reset_map_global)
 {
 	float s;
 
@@ -168,7 +110,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, ClientConnect)
+MUTATOR_HOOKFUNCTION(ctscup, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -178,7 +120,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	race_SendAll(player, false);
 }
 
-MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
+MUTATOR_HOOKFUNCTION(ctscup, AbortSpeedrun)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -186,20 +128,17 @@ MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
 		race_PreparePlayer(player); // nice try
 }
 
-MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
-	else
-		player.frags = FRAGS_SPECTATOR;
+	player.frags = FRAGS_SPECTATOR;
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
@@ -215,7 +154,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
 	player.race_place = 0;
 }
 
-MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
+MUTATOR_HOOKFUNCTION(ctscup, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -231,14 +170,14 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerDamaged)
+MUTATOR_HOOKFUNCTION(ctscup, PlayerDamaged)
 {
 	int frag_deathtype = M_ARGV(5, int);
 	if (frag_deathtype == DEATH_KILL.m_id)
 		return true; // forbid logging damage
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerDies)
+MUTATOR_HOOKFUNCTION(ctscup, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
@@ -254,7 +193,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
+MUTATOR_HOOKFUNCTION(ctscup, HavocBot_ChooseRole)
 {
 	entity bot = M_ARGV(0, entity);
 
@@ -262,7 +201,7 @@ MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
+MUTATOR_HOOKFUNCTION(ctscup, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -270,13 +209,13 @@ MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 	race_SpeedAwardFrame(player);
 }
 
-MUTATOR_HOOKFUNCTION(cts, ForbidThrowCurrentWeapon)
+MUTATOR_HOOKFUNCTION(ctscup, ForbidThrowCurrentWeapon)
 {
 	// no weapon dropping in CTS
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts, FilterItem)
+MUTATOR_HOOKFUNCTION(ctscup, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
@@ -286,7 +225,7 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
+MUTATOR_HOOKFUNCTION(ctscup, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -301,12 +240,7 @@ MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
-{
-	return true; // in CTS, you don't lose score by observing
-}
-
-MUTATOR_HOOKFUNCTION(cts, GetRecords)
+MUTATOR_HOOKFUNCTION(ctscup, GetRecords)
 {
 	int record_page = M_ARGV(0, int);
 	string ret_string = M_ARGV(1, string);
@@ -328,12 +262,12 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	M_ARGV(1, string) = ret_string;
 }
 
-MUTATOR_HOOKFUNCTION(cts, ClientKill)
+MUTATOR_HOOKFUNCTION(ctscup, ClientKill)
 {
 	M_ARGV(1, float) = 0; // kill delay
 }
 
-MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
+MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -342,32 +276,32 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
 }
 
-MUTATOR_HOOKFUNCTION(cts, HideTeamNagger)
+MUTATOR_HOOKFUNCTION(ctscup, HideTeamNagger)
 {
 	return true; // doesn't work so well (but isn't cts a teamless mode?)
 }
 
-MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
+MUTATOR_HOOKFUNCTION(ctscup, FixClientCvars)
 {
 	entity player = M_ARGV(0, entity);
 
 	stuffcmd(player, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 }
 
-MUTATOR_HOOKFUNCTION(cts, WantWeapon)
+MUTATOR_HOOKFUNCTION(ctscup, WantWeapon)
 {
 	M_ARGV(1, float) = (M_ARGV(0, entity) == WEP_SHOTGUN); // want weapon = weapon info
 	M_ARGV(3, bool) = true; // want mutator blocked
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts, ForbidDropCurrentWeapon)
+MUTATOR_HOOKFUNCTION(ctscup, ForbidDropCurrentWeapon)
 {
 	return true;
 }
 
-void cts_Initialize()
+// unused as of now, edit sv_ctscup.qh to use this if this becomes used
+void ctscup_Initialize()
 {
-	record_type = CTS_RECORD;
-	cts_ScoreRules();
+	cts_Initialize();
 }
