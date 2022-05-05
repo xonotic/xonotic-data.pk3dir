@@ -88,7 +88,7 @@ void ScoreInfo_SetLabel_PlayerScore(PlayerScoreField i, string label, float scor
  * Initialize the scores info for the given number of teams.
  * Set all labels right before this call.
  */
-void ScoreInfo_Init(float teams);
+void ScoreInfo_Init(int teams);
 
 /**
  * Clear ALL scores (for ready-restart).

@@ -366,6 +366,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * i: player index
 		 * n: nickname of the player (optional)
 		 * t: team ID
+		 * r: player ranking enabled / disabled
 		 * e: followed by an event name, a space, and the event count/score
 		 *  event names can be:
 		 *   alivetime: total playing time of the player
