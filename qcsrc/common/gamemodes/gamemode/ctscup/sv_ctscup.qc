@@ -128,32 +128,6 @@ MUTATOR_HOOKFUNCTION(ctscup, AbortSpeedrun)
 		race_PreparePlayer(player); // nice try
 }
 
-MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
-{
-	entity player = M_ARGV(0, entity);
-
-	player.frags = FRAGS_SPECTATOR;
-
-	race_PreparePlayer(player);
-	player.race_checkpoint = -1;
-}
-
-MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
-	entity spawn_spot = M_ARGV(1, entity);
-
-	if(spawn_spot.target == "")
-		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer(player);
-
-	// if we need to respawn, do it right
-	player.race_respawn_checkpoint = player.race_checkpoint;
-	player.race_respawn_spotref = spawn_spot;
-
-	player.race_place = 0;
-}
-
 MUTATOR_HOOKFUNCTION(ctscup, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
@@ -225,21 +199,6 @@ MUTATOR_HOOKFUNCTION(ctscup, FilterItem)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ctscup, Damage_Calculate)
-{
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(3, float);
-	float frag_damage = M_ARGV(4, float);
-
-	if(frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
-	if(!autocvar_g_cts_selfdamage)
-	{
-		frag_damage = 0;
-		M_ARGV(4, float) = frag_damage;
-	}
-}
-
 MUTATOR_HOOKFUNCTION(ctscup, GetRecords)
 {
 	int record_page = M_ARGV(0, int);
@@ -267,15 +226,6 @@ MUTATOR_HOOKFUNCTION(ctscup, ClientKill)
 	M_ARGV(1, float) = 0; // kill delay
 }
 
-MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
-{
-	entity player = M_ARGV(0, entity);
-
-	// useful to prevent cheating by running back to the start line and starting out with more speed
-	if(autocvar_g_cts_finish_kill_delay)
-		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
-}
-
 MUTATOR_HOOKFUNCTION(ctscup, HideTeamNagger)
 {
 	return true; // doesn't work so well (but isn't cts a teamless mode?)
@@ -300,8 +250,230 @@ MUTATOR_HOOKFUNCTION(ctscup, ForbidDropCurrentWeapon)
 	return true;
 }
 
-// unused as of now, edit sv_ctscup.qh to use this if this becomes used
+
+
+// ============================================================================
+//              END OF PURE CTS, START OF SHARED FUNCTIONS
+//=============================================================================
+
+
+
+int roundCounter;
+int roundPlayers;
+bool tournamentStarted;
+float roundFirstFinisherTime;
+
+float autocvar_g_ctscup_warmup; //how long is the warmup round after loading into a map
+float autocvar_g_ctscup_finishwait; //time before ending the round prematurely after first finish
+float autocvar_g_ctscup_maxroundlength; //round length unless it ends prematurely
+
+.bool tournamentParticipant;
+
+MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	entity spawn_spot = M_ARGV(1, entity);
+
+	if(spawn_spot.target == "")
+		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
+		race_PreparePlayer(player);
+
+	// if we need to respawn, do it right
+	player.race_respawn_checkpoint = player.race_checkpoint;
+	player.race_respawn_spotref = spawn_spot;
+
+	player.race_place = 0;
+
+	player.tournamentParticipant = true;
+}
+
+MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
+{
+	entity player = M_ARGV(0, entity);
+
+	player.frags = FRAGS_SPECTATOR;
+
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
+}
+
+MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
+{
+	//entity player = M_ARGV(0, entity);
+
+	// useful to prevent cheating by running back to the start line and starting out with more speed
+	//if(autocvar_g_cts_finish_kill_delay)
+	//	ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
+
+	// clear savestate
+
+	if (roundFirstFinisherTime == 0 && tournamentStarted) roundFirstFinisherTime = time;
+}
+
+MUTATOR_HOOKFUNCTION(ctscup, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+
+	if((frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id) && !autocvar_g_cts_selfdamage)
+	{
+		frag_damage = 0;
+		M_ARGV(4, float) = frag_damage;
+	}
+	// if the player were to be about to die, try to save them and restore a loadstate if possible
+//	else if (IS_PLAYER(frag_target))
+//		if (((GetResource(frag_target, RES_HEALTH) + GetResource(frag_target, RES_ARMOR)) - frag_damage) <= 0)
+//			if (LoadSaveState(frag_target))
+//			{
+				// if savestate loading was successful
+				// try to cheat death by offsetting the incoming damage
+//				frag_damage = 0;
+//				M_ARGV(4, float) = frag_damage;
+//			}
+}
+
+
+
+// ============================================================================
+//              END OF SHARED FUNCTIONS, START OF CTS CUP
+//=============================================================================
+
+
+
+int CTSCUP_AliveParticipants()
+{
+	roundPlayers = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_SPECTATOR,
+	{
+		roundPlayers++;
+	});
+	return roundPlayers;
+}
+
+bool CTSCUP_CanRoundStart()
+{
+	CTSCUP_AliveParticipants();
+	return boolean(roundPlayers);
+}
+
+void CTSCUP_RoundStart()
+{
+	CTSCUP_AliveParticipants();
+}
+
+bool CTSCUP_CheckRoundEnd()
+{
+	//tournament end conditions
+
+	if(roundFirstFinisherTime) //check if someone has finished
+		if(time>=(roundFirstFinisherTime + autocvar_g_ctscup_finishwait))
+		{
+			game_stopped = true;
+			round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
+			return true;
+		}
+
+	if(time > round_handler_GetEndTime())
+	{
+		game_stopped = true;
+		round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
+		return true;
+	}
+	return false;
+}
+
+void CTSCUP_TournamentStart()
+{
+	if(tournamentStarted)return;
+
+	float autocvar_g_start_delay = 0;
+	if (time >= (autocvar_g_start_delay + autocvar_g_ctscup_warmup))
+	{
+		roundCounter = 0;
+
+		tournamentStarted = true;
+
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_SPECTATOR,
+		{
+			it.tournamentParticipant = true;
+		});
+
+		return;
+	}
+
+	// case: if all players F4?
+}
+
+MUTATOR_HOOKFUNCTION(ctscup, reset_map_players)
+{
+	roundFirstFinisherTime = 0;
+
+	if (tournamentStarted) roundCounter++;
+	else CTSCUP_TournamentStart();
+
+	//foreach DeleteSaveState
+
+	FOREACH_CLIENT(true, {
+		if (it.tournamentParticipant)
+		{
+			TRANSMUTE(Player, it);
+		}
+		else
+		{
+			TRANSMUTE(Observer, it);
+			it.frags = FRAGS_SPECTATOR;
+		}
+		PutClientInServer(it);
+	});
+	return true;
+}
+
+//MUTATOR_HOOKFUNCTION(ctscup, reset_map_global) in CTS code
+
+// if player trying to spawn is not a valid tournament participant
+// don't allow spawning but move them to spectator
+MUTATOR_HOOKFUNCTION(ctscup, ForbidSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	bool canSpawn = false;
+	if (tournamentStarted && !player.tournamentParticipant)
+	{
+		TRANSMUTE(Observer, player);
+		player.frags = FRAGS_SPECTATOR;
+		canSpawn = true;
+	}
+
+	return canSpawn;
+}
+
+MUTATOR_HOOKFUNCTION(ctscup, ClientCommand_Spectate)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(tournamentStarted)
+		player.tournamentParticipant = false;
+
+	if (INGAME(player))
+	{
+		// they're going to spec, we can do other checks
+		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
+		//	Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_LEAVE);
+		return MUT_SPECCMD_FORCE;
+	}
+
+	return MUT_SPECCMD_CONTINUE;
+}
+
 void ctscup_Initialize()
 {
 	cts_Initialize();
+
+	tournamentStarted = false;
+
+	//arguments: can round start, can round end (prematurely), called when round starts
+	round_handler_Spawn(CTSCUP_CanRoundStart, CTSCUP_CheckRoundEnd, CTSCUP_RoundStart);
+	//arguments: time until this round starts, pre-round preparation time, round timelimit
+	round_handler_Init(5, 1, autocvar_g_ctscup_warmup);
 }

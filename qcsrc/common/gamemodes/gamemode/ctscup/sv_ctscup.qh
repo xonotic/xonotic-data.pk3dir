@@ -1,10 +1,12 @@
 #pragma once
 
+//#include "savestate.qh"
+
 #include <common/mutators/base.qh>
 #include <server/race.qh>
 #include <common/gamemodes/gamemode/cts/sv_cts.qh>
 
-//void ctscup_Initialize();
+void ctscup_Initialize();
 
 REGISTER_MUTATOR(ctscup, false)
 {
@@ -16,8 +18,7 @@ REGISTER_MUTATOR(ctscup, false)
 		GameRules_limit_score(0);
 		GameRules_limit_lead(0);
 
-		//ctscup_Initialize(); // commented due to not (yet) having
-		cts_Initialize();      // a reason to use its own init
+		ctscup_Initialize();
 	}
 	return 0;
 }

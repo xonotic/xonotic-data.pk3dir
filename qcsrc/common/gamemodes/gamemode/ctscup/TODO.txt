@@ -1,9 +1,9 @@
 CTS Cup TODO list:
 
 Round handler:
-- Warmup and tournament start
-- Round end conditions
+- End the match when there are no more participants playing
 - Move players to spectator after each tournament round
+- Clear times upon round reset
 
 Savestates:
 - Finish implementating savestates
