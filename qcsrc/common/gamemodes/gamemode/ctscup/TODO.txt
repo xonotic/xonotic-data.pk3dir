@@ -1,0 +1,27 @@
+CTS Cup TODO list:
+
+Round handler:
+- Warmup and tournament start
+- Round end conditions
+- Move players to spectator after each tournament round
+
+Savestates:
+- Finish implementating savestates
+- Hook up savestate saving to touching a checkpoint
+- Delete savestates upon round reset
+- I hope that loading a savestate from Damage_Calculate hook when player is about to die and setting incoming
+damage to 0 can still save them and dying (for example by suicide bind) isn't a hardcoded death :)
+
+HUD:
+- Display current round's players
+- Display splits
+- Display how many players are about to lose this round and show that on splits
+- Maybe show eliminated players on leaderboard, there should be a difference between 2nd place and Nth place for bragging rights
+- Medals for placements?
+
+Info messages:
+- tournament in progress
+- you survived the round and will continue to the next one
+- you lost the round and got eliminated from the tournament
+- upon elimination show placement
+- upon savestate load tell that savestate was loaded
