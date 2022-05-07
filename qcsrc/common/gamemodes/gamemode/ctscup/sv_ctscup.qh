@@ -1,6 +1,6 @@
 #pragma once
 
-//#include "savestate.qh"
+#include "savestate.qh"
 
 #include <common/mutators/base.qh>
 #include <server/race.qh>

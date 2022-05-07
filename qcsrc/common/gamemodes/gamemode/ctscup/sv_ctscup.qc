@@ -272,19 +272,31 @@ float autocvar_g_ctscup_maxroundlength; //round length unless it ends prematurel
 MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
-	entity spawn_spot = M_ARGV(1, entity);
-
-	if(spawn_spot.target == "")
-		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer(player);
-
-	// if we need to respawn, do it right
-	player.race_respawn_checkpoint = player.race_checkpoint;
-	player.race_respawn_spotref = spawn_spot;
-
-	player.race_place = 0;
+	//entity spawn_spot = M_ARGV(1, entity);
+	//player.race_place = 0;
 
 	player.tournamentParticipant = true;
+
+	// only spectators and connecting players do not have a savestate so here:
+	// newly connected player has spawned for the first time
+	// or during warmup a player who was spectating has joined (back)
+	// and as they're now a participant they're given a savestate
+	if (player.savestate == NULL)
+	{
+		player.savestate = new_pure(savestate);
+		SaveSaveState(player);
+	}
+
+	// upon spawning for a new round within 1s of the round starting, save a savestate
+	if ((time - 1) < (round_handler_GetEndTime() - autocvar_g_ctscup_maxroundlength))
+	{
+		SaveSaveState(player);
+	}
+	// if somehow dying during a round and respawning, load last savestate
+	else
+	{
+		LoadSaveState(player);
+	}
 }
 
 MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
@@ -295,6 +307,8 @@ MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
+
+	DeleteSaveState(player);
 }
 
 MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
@@ -305,8 +319,6 @@ MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
 	//if(autocvar_g_cts_finish_kill_delay)
 	//	ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
 
-	// clear savestate
-
 	if (roundFirstFinisherTime == 0 && tournamentStarted) roundFirstFinisherTime = time;
 }
 
@@ -316,22 +328,27 @@ MUTATOR_HOOKFUNCTION(ctscup, Damage_Calculate)
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
 	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(7, vector);
 
 	if((frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id) && !autocvar_g_cts_selfdamage)
 	{
 		frag_damage = 0;
+		frag_force = '0 0 0';
 		M_ARGV(4, float) = frag_damage;
+		M_ARGV(6, vector) = frag_force;
 	}
 	// if the player were to be about to die, try to save them and restore a loadstate if possible
-//	else if (IS_PLAYER(frag_target))
-//		if (((GetResource(frag_target, RES_HEALTH) + GetResource(frag_target, RES_ARMOR)) - frag_damage) <= 0)
-//			if (LoadSaveState(frag_target))
-//			{
+	else if (IS_PLAYER(frag_target))
+		if (((GetResource(frag_target, RES_HEALTH) + GetResource(frag_target, RES_ARMOR)) - frag_damage) <= 0)
+			if (LoadSaveState(frag_target))
+			{
 				// if savestate loading was successful
 				// try to cheat death by offsetting the incoming damage
-//				frag_damage = 0;
-//				M_ARGV(4, float) = frag_damage;
-//			}
+				frag_damage = 0;
+				frag_force = '0 0 0';
+				M_ARGV(4, float) = frag_damage;
+				M_ARGV(6, vector) = frag_force;
+			}
 }
 
 

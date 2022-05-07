@@ -1,0 +1,21 @@
+//#include <common/resources/cl_resources.qh>
+//#include <common/mutators/mutator/status_effects/status_effects.qh>
+//#include <lib/stats.qh>
+
+.entity savestate;
+
+void SaveSaveState(entity player);
+bool LoadSaveState(entity player);
+void DeleteSaveState(entity player);
+
+.vector origin;
+.vector v_angle;
+.vector angles;
+.bool fixangle;
+.vector velocity;
+.float items;
+.float pauserotarmor_finished;
+.float pauserothealth_finished;
+.float pauserotfuel_finished;
+.float pauseregen_finished;
+.float teleport_time;
