@@ -287,8 +287,15 @@ MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
 		SaveSaveState(player);
 	}
 
-	// upon spawning for a new round within 1s of the round starting, save a savestate
-	if ((time - 1) < (round_handler_GetEndTime() - autocvar_g_ctscup_maxroundlength))
+	//debug print
+	//print(sprintf("%f", time), " time \n");
+	//print(sprintf("%f", round_handler_GetEndTime()), " round_handler_GetEndTime() \n");
+	//print(sprintf("%f", (roundFirstFinisherTime + autocvar_g_ctscup_finishwait)), " (roundFirstFinisherTime + autocvar_g_ctscup_finishwait) \n\n");
+
+	// upon spawning for a new round, save a savestate instead of loading an old one
+	// for whatever reason on the frame players are reset and spawned for a new round to start
+	// round_handler_GetEndTime() still gives the end time for last round and time should be bigger than that
+	if ((time > round_handler_GetEndTime()) || (roundFirstFinisherTime && (time > (roundFirstFinisherTime + autocvar_g_ctscup_finishwait))))
 	{
 		SaveSaveState(player);
 	}
@@ -377,6 +384,8 @@ bool CTSCUP_CanRoundStart()
 
 void CTSCUP_RoundStart()
 {
+	roundFirstFinisherTime = 0;
+
 	CTSCUP_AliveParticipants();
 }
 
@@ -425,7 +434,7 @@ void CTSCUP_TournamentStart()
 
 MUTATOR_HOOKFUNCTION(ctscup, reset_map_players)
 {
-	roundFirstFinisherTime = 0;
+	// roundFirstFinisherTime = 0;
 
 	if (tournamentStarted) roundCounter++;
 	else CTSCUP_TournamentStart();
@@ -463,6 +472,13 @@ MUTATOR_HOOKFUNCTION(ctscup, ForbidSpawn)
 	}
 
 	return canSpawn;
+}
+
+MUTATOR_HOOKFUNCTION(ctscup, Race_Checkpoint)
+{
+	entity player = M_ARGV(0, entity);
+
+	SaveSaveState(player);
 }
 
 MUTATOR_HOOKFUNCTION(ctscup, ClientCommand_Spectate)

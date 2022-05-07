@@ -905,6 +905,11 @@ MUTATOR_HOOKABLE(DecodeLevelParms, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(GetRecords, EV_GetRecords);
 
+#define EV_Race_Checkpoint(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Race_Checkpoint, EV_Race_Checkpoint);
+
 #define EV_Race_FinalCheckpoint(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/

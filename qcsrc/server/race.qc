@@ -790,6 +790,8 @@ void checkpoint_passed(entity this, entity player)
 			}
 			fclose(fh);
 		}
+
+		MUTATOR_CALLHOOK(Race_Checkpoint, player);
 	}
 	else if(player.race_checkpoint == race_NextCheckpoint(this.race_checkpoint))
 	{

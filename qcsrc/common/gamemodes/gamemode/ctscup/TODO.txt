@@ -6,15 +6,14 @@ Round handler:
 - Clear times upon round reset
 
 Savestates:
-- Finish implementating savestates
-- Hook up savestate saving to touching a checkpoint
-- Delete savestates upon round reset
+- Softlock prevention
+- FIXME?: Splat damage is dealt AFTER health restoring of savestate loading if the player were to smash into something and die from another source during I think the same frame
 - I hope that loading a savestate from Damage_Calculate hook when player is about to die and setting incoming
 damage to 0 can still save them and dying (for example by suicide bind) isn't a hardcoded death :)
 
 HUD:
 - Display current round's players
-- Display splits
+- Display checkpoint splits
 - Display how many players are about to lose this round and show that on splits
 - Maybe show eliminated players on leaderboard, there should be a difference between 2nd place and Nth place for bragging rights
 - Medals for placements?

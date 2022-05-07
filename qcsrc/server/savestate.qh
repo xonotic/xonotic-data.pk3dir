@@ -1,6 +1,6 @@
-//#include <common/resources/cl_resources.qh>
-//#include <common/mutators/mutator/status_effects/status_effects.qh>
-//#include <lib/stats.qh>
+#include <common/resources/cl_resources.qh>
+#include <common/mutators/mutator/status_effects/status_effects.qh>
+#include <lib/stats.qh>
 
 .entity savestate;
 

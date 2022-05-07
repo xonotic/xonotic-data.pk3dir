@@ -21,6 +21,7 @@
 #include <server/portals.qh>
 #include <server/race.qh>
 #include <server/round_handler.qh>
+#include <server/savestate.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "savestate.qh"
-
 #include <common/mutators/base.qh>
 #include <server/race.qh>
+#include <server/savestate.qh>
 #include <common/gamemodes/gamemode/cts/sv_cts.qh>
 
 void ctscup_Initialize();
