@@ -875,7 +875,10 @@ void QuickMenu_Default(string target_submenu)
 	if (autocvar__hud_panel_quickmenu_file_from_server != "")
 	{
 	// TODO make it translatable
-	QUICKMENU_ENTRY("Server's custom quickmenu", "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	string entry_name = "Server's custom quickmenu";
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = "Waypoint editor quickmenu";
+	QUICKMENU_ENTRY(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
 	}
 
 	if(spectatee_status != 0)
