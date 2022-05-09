@@ -461,8 +461,10 @@ bool CTSCUP_CheckRoundEnd()
 	return false;
 }
 
+/*
 // When a tournament round ends find all the slowest players and
 // eliminate until we have the desired amount of players left
+// implementation #1
 void CTSCUP_EliminatePlayers()
 {
 	// 255 is engine limit on maxclients, 256 players
@@ -472,6 +474,7 @@ void CTSCUP_EliminatePlayers()
 	entity sortRoundParticipants[255];
 
 	CTSCUP_AliveParticipants(); // count players, not including spectators
+
 	int unsortedPlayers = roundPlayers; // how many players there still is left to sort into the array
 
 	// go through all entities which are clients, find players and store them in a new array
@@ -538,18 +541,73 @@ void CTSCUP_EliminatePlayers()
 		}
 	});
 
-	// Move players to spectator until we only have the allowed amount of players left
-	// int playersToEliminate = (roundPlayers - nextRoundPlayers);
-	for (int i = 0 ; i < (roundPlayers - nextRoundPlayers) ; i++)
+	// move players to spectator until we only have the allowed amount of players left
+	int amountOfPlayersToEliminate = (roundPlayers - nextRoundPlayers);
+
+	for (int i = amountOfPlayersToEliminate ; i > 0 ; i--)
 	{
 		// - 1 is index offset, if we have 2 players the 2nd player is in index 1
 		//int indexOfEliminatedPlayer = ((roundPlayers - i) - 1)
-		sortRoundParticipants[((roundPlayers - i) - 1)].tournamentParticipant = false;
-		sortRoundParticipants[((roundPlayers - i) - 1)].frags = FRAGS_PLAYER_OUT_OF_GAME;
-		TRANSMUTE(Observer, sortRoundParticipants[((roundPlayers - i) - 1)]);
+		sortRoundParticipants[indexOfEliminatedPlayer].tournamentParticipant = false;
+		sortRoundParticipants[indexOfEliminatedPlayer].frags = FRAGS_PLAYER_OUT_OF_GAME;
+		TRANSMUTE(Observer, sortRoundParticipants[indexOfEliminatedPlayer]);
 	}
 
 	return;
+}
+*/
+
+// When a tournament round ends find all the slowest players and
+// eliminate until we have the desired amount of players left
+// implementation #2
+// this implementation does not store a global array which has constant size and is useless 99.9999% of the server ticks
+// it would be more optimal to use a linked list which is round or looping, if starting at the fastest go
+// backwards one step to find slowest player and then the 2nd slowest etc. until all eliminations are done
+.entity chain;
+void CTSCUP_EliminatePlayers()
+{
+	// as we have a linked list and 3 or more eliminations(most likely meaning >20 players if 10% of them are eliminated)
+	// it would be the most efficient to go backwards in the linked list to find the wanted players
+	// fastest -> slowest -> 2nd slowest -> 3rd slowest etc.
+	// but current implementation only supports going forwards so currently following is done
+	// fastest -> 2nd fastest -> 3rd fastest -> ... -> 1st player to get eliminated -> 2nd player to get eliminated etc.
+	// until all eliminations are done. Difference between forwards and backwards is neglible for modern CPUs
+
+	// following loops will eliminate players like so with 9 players and 3 eliminations:
+	// 1st(fastest) 2nd 3rd 4th 5th 6th 7th 8th 9th(slowest)
+	// 1st(fastest) 2nd 3rd 4th 5th 6th elim 8th 9th(slowest)
+	// 1st(fastest) 2nd 3rd 4th 5th 6th elim elim 9th(slowest)
+	// 1st(fastest) 2nd 3rd 4th 5th 6th elim elim elim
+
+	entity fastestPlayer = PlayerScore_Sort(scoreboard_pos, 0, true, false);
+	entity index = fastestPlayer;
+
+	CTSCUP_AliveParticipants(); // count players, not including spectators
+	int amountOfPlayersToEliminate = (roundPlayers - nextRoundPlayers);
+
+	// find and move players to spectator until we only have the allowed amount of players left
+	for (int i = 0 ; i < amountOfPlayersToEliminate ; i++)
+	{
+		if ( i == 0)
+		{
+			// find the fastest player about to get eliminated
+			for (int j = 0 ; j < (roundPlayers - amountOfPlayersToEliminate) ; j++)
+			{
+				index = index.chain;
+			}
+		}
+		else
+		{
+			// only bump +1 towards the tail as we've found the fastest player about to get eliminated previously
+			// +1 bumps index to one player slower
+			index = index.chain;
+		}
+
+		index.tournamentParticipant = false;
+		index.frags = FRAGS_PLAYER_OUT_OF_GAME;
+		//PutObserverInServer(index, true, true);
+		TRANSMUTE(Observer, index);
+	}
 }
 
 // this is called when fake warmup ends
@@ -565,7 +623,7 @@ void CTSCUP_TournamentStart()
 
 		tournamentStarted = true;
 
-		print("Tournament started! GLHF! \n");
+		PrintToChatAll("^1Tournament started! ^2GLHF! \n");
 
 		// register every tournament participant here
 		FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER,
