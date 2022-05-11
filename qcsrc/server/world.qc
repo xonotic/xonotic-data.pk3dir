@@ -849,14 +849,12 @@ spawnfunc(worldspawn)
 	// changing the logic generating it is okay. But:
 	// it HAS to stay <= 64 chars
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
+	// strftime(false, "%s") isn't reliable, see strftime_s description
+	matchid = strzone(sprintf("%d.%s.%06d", autocvar_sv_eventlog_files_counter, strftime_s(), random() * 1000000));
 	if(autocvar_sv_eventlog)
 	{
-		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
-		matchid = strzone(s);
-
-		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
-		s = ":gameinfo:mutators:LIST";
+		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", matchid));
+		string s = ":gameinfo:mutators:LIST";
 
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = M_ARGV(0, string);
@@ -882,8 +880,6 @@ spawnfunc(worldspawn)
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}
-	else
-		matchid = strzone(ftos(random()));
 
 	cvar_set("nextmap", "");
 
