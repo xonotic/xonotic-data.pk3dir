@@ -3,6 +3,7 @@
 #include "tab.qh"
 CLASS(XonoticDemoBrowserTab, XonoticTab)
 	METHOD(XonoticDemoBrowserTab, fill, void(entity));
+	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticDemoBrowserTab, rows, float, 21);
 	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5);
 	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBrowser");
