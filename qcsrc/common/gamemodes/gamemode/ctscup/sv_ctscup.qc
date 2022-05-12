@@ -130,22 +130,6 @@ MUTATOR_HOOKFUNCTION(ctscup, AbortSpeedrun)
 		race_PreparePlayer(player); // nice try
 }
 
-MUTATOR_HOOKFUNCTION(ctscup, PutClientInServer)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(IS_PLAYER(player))
-	if(!game_stopped)
-	{
-		if(CS(player).killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
-			race_PreparePlayer(player);
-		else // respawn
-			race_RetractPlayer(player);
-
-		race_AbandonRaceCheck(player);
-	}
-}
-
 MUTATOR_HOOKFUNCTION(ctscup, PlayerDamaged)
 {
 	int frag_deathtype = M_ARGV(5, int);
@@ -269,19 +253,55 @@ int roundCounter; // unused?
 int roundPlayers; // amount of players currently in the game, does not include spectators
 int nextRoundPlayers; // how many players should participate in the next round
 bool tournamentStarted; // has the warmup ended
+// are we currently in a round?
+// checked by turning this to false on round end and true when first player
+// touches a checkpoint (a start trigger)
+bool roundStarted;
 float roundFirstFinisherTime; // time when the first finisher crossed the finish line
+int roundFinisherCount; // how many players have reached the finish line
 
 int autocvar_g_ctscup_minplayers; // how many players are required to start a tournament  
 float autocvar_g_ctscup_warmup; // how long is the warmup round after loading into a map
 float autocvar_g_ctscup_finishwait; // time before ending the round prematurely after first finish
 float autocvar_g_ctscup_maxroundlength; // round length unless it ends prematurely
 
-.bool tournamentParticipant; // is this player an active player? if not then they must be an eliminated player or a spectator
+// is this player an active player?
+// if not then they must be an eliminated player or a spectator
+.bool tournamentParticipant;
+
+// when a player or a bot connects, initialize their race values
+// if it's a bot which isn't a tournament participant and the tournament has started
+// override their forced join and keep them in spectator
+MUTATOR_HOOKFUNCTION(ctscup, PutClientInServer)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(IS_PLAYER(player))
+	{
+		if(!game_stopped)
+		{
+			if(CS(player).killcount == FRAGS_SPECTATOR /* initial spawn */ )
+				race_PreparePlayer(player);
+			else // respawn
+				// only reset player race state during warmup when respawning
+				if (!tournamentStarted)
+					race_RetractPlayer(player);
+
+			race_AbandonRaceCheck(player);
+		}
+
+		// override bot force join in PutClientInServer()
+		if (IS_BOT_CLIENT(player) && tournamentStarted && !player.tournamentParticipant)
+			TRANSMUTE(Observer, player);
+	}
+}
 
 MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	// if tournament has not started register the player for the tournament
+	// if they're a tournament player respawning make sure they still are in
 	if (!tournamentStarted || player.tournamentParticipant)
 	{
 		player.frags = FRAGS_PLAYER;
@@ -298,24 +318,23 @@ MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
 		SaveSaveState(player);
 	}
 
-	// debug print
-	//print(sprintf("%f", time), " time \n");
-	//print(sprintf("%f", round_handler_GetEndTime()), " round_handler_GetEndTime() \n");
-	//print(sprintf("%f", (roundFirstFinisherTime + autocvar_g_ctscup_finishwait)), " (roundFirstFinisherTime + autocvar_g_ctscup_finishwait) \n\n");
-
 	// upon spawning for a new round, save a savestate instead of loading an old one
 	// for whatever reason on the frame players are reset and spawned for a new round to start
 	// round_handler_GetEndTime() still gives the end time for last round and time should be bigger than that
 	if (tournamentStarted && player.tournamentParticipant)
 	{
-		if ((time > round_handler_GetEndTime()) || (roundFirstFinisherTime && (time > (roundFirstFinisherTime + autocvar_g_ctscup_finishwait))))
-		{
-			SaveSaveState(player);
-		}
-		// if somehow dying during a round and respawning, load last savestate
+		// if somehow dying during a round and respawning, try toload last savestate
+		if (roundStarted && player.savestate.loadCounter < 5)
+			LoadSaveState(player);
 		else
 		{
-			LoadSaveState(player);
+			// did loading fail due to exceeding load counter
+			if (player.savestate.loadCounter >= 5)
+				// frontend notification
+
+			// anyways as we couldn't load a savestate, save one here
+			race_PreparePlayer(player);
+			SaveSaveState(player);
 		}
 	}
 }
@@ -325,12 +344,17 @@ MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(tournamentStarted && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
+	// if the player wasn't an eliminated player
+	// give them frags which correspond to being a spec
+	if(player.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		player.frags = FRAGS_SPECTATOR;
+
+	// they're no longer a tournament participant
+	// if they were they've now forfeit
+	player.tournamentParticipant = false;
 
 	// race state reset
 	race_PreparePlayer(player);
-	player.race_checkpoint = -1;
 
 	// delete any savestate entities the player is associated with
 	DeleteSaveState(player);
@@ -339,18 +363,32 @@ MUTATOR_HOOKFUNCTION(ctscup, MakePlayerObserver)
 	// setting team to Spectator in PutObserverInServer, this is already handled here
 	// it turns out this also makes it impossible to see which players are spectating...
 	//return true;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
 {
-	//entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	// CTS comment: useful to prevent cheating by running back to the start line and starting out with more speed
 	// I don't think we want to respawn players who finish in CTS Cup? commented out next 2 lines for now
 	//if(autocvar_g_cts_finish_kill_delay)
 	//	ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
 
-	if (roundFirstFinisherTime == 0 && tournamentStarted) roundFirstFinisherTime = time;
+	if (tournamentStarted)
+	{
+		roundFinisherCount++;
+
+		// if there are no round finish times, log this one as the first one
+		if (roundFirstFinisherTime == 0)
+			roundFirstFinisherTime = time;
+	}
+	
+	// softlock player's race checkpoint progress
+	// until next round, prevents 2nd laps and
+	// registering the better time out of those 2
+	// while waiting for slow players
+	player.race_checkpoint = -3;
 }
 
 MUTATOR_HOOKFUNCTION(ctscup, Damage_Calculate)
@@ -406,6 +444,33 @@ int CTSCUP_AliveParticipants()
 	return roundPlayers;
 }
 
+// this is called when fake warmup ends
+void CTSCUP_TournamentStart()
+{
+	if(tournamentStarted)return; // double calls shouldn't ever happen but handle those just in case
+
+	tournamentStarted = true;
+
+	// tournament started, make timelimit infinite to make sure tournament can go its full length
+	// tournaments can not go on forever as at least 1 player has to get eliminated each round,
+	// no one can join mid-game and there is a max round length
+	// admins can override this timelimit as it's only set once at the start if they so please
+	cvar_set("timelimit", "0");
+
+	PrintToChatAll(" \n");
+	PrintToChatAll("^1Tournament started! ^2GLHF! \n");
+	PrintToChatAll(" \n");
+
+	// register every tournament participant here
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER,
+	{
+		it.tournamentParticipant = true;
+	});
+
+	return;
+	
+}
+
 // return true if we have any active players
 // increase required amount in the future when this is not as WIP
 bool CTSCUP_CanRoundStart()
@@ -415,9 +480,15 @@ bool CTSCUP_CanRoundStart()
 	// tournament started and there are 2 or more players
 	if (tournamentStarted && (roundPlayers >= 2))
 		return true;
+
 	// tournament has yet to start but there are enough players to start the warmup timer
 	if (!tournamentStarted && (roundPlayers >= autocvar_g_ctscup_minplayers))
+	{
+		PrintToChatAll(" \n");
+		PrintToChatAll("^3W A R M U P  started! \n");
+		PrintToChatAll(" \n");
 		return true;
+	}
 
 	return false;
 }
@@ -430,6 +501,7 @@ void CTSCUP_RoundStart()
 	// due to someone finishing and g_ctscup_finishwait time ending the current round before
 	// max roundtimelimit would end it)
 	roundFirstFinisherTime = 0;
+	roundFinisherCount = 0;
 
 	CTSCUP_AliveParticipants(); //count players, not including spectators
 	nextRoundPlayers = floor(roundPlayers * 0.9); // up to 90% of those players are allowed into the next round
@@ -437,204 +509,265 @@ void CTSCUP_RoundStart()
 
 bool CTSCUP_CheckRoundEnd()
 {
-	if(roundFirstFinisherTime) // check if someone has finished
-		// if g_ctscup_finishwait has passed since someone finished end the current round
-		if(time>=(roundFirstFinisherTime + autocvar_g_ctscup_finishwait))
+	if (roundFirstFinisherTime) // check if someone has finished in active tournament
+		// if g_ctscup_finishwait has passed since someone finished, end the current round
+		if (time>=(roundFirstFinisherTime + autocvar_g_ctscup_finishwait))
 		{
 			game_stopped = true;
 			round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
 			return true;
 		}
 
+	// 1 player or less left playing in tournament
+	CTSCUP_AliveParticipants();
+
 	// max timelimit for current round
-	if(time > round_handler_GetEndTime())
+	if (time > round_handler_GetEndTime())
+	{
+		// start the tournament if enough players are present as warmup ended
+		if (!tournamentStarted && (roundPlayers >= autocvar_g_ctscup_minplayers))
+		{
+			roundCounter = -1;
+			game_stopped = true;
+			round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
+			return true;
+		}
+
+		// not enough players present, restart warmup
+		if (!tournamentStarted && (roundPlayers < autocvar_g_ctscup_minplayers))
+		{
+			PrintToChatAll(" \n");
+			PrintToChatAll("^3Not enough players!  W A R M U P  restarted! \n");
+			PrintToChatAll(" \n");
+			game_stopped = true;
+			round_handler_Init(0, 0.5, autocvar_g_ctscup_warmup);
+			return true;
+		}
+
+		// to reach here the tournament has started and current round time has ended
+		// just restart another round
+		else
+		{
+			game_stopped = true;
+			round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
+			return true;
+		}
+	}
+
+	// when all players playing the round have a clear time
+	if (tournamentStarted && (roundPlayers == roundFinisherCount))
 	{
 		game_stopped = true;
 		round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
 		return true;
 	}
 
-	// 1 player or less
-	// optimize and move this to player changing teams and disconnecting?
-	CTSCUP_AliveParticipants();
+	// if tournament has yet to start
+	if (!tournamentStarted)
+	{
+		// if there are enough players to start a tournament
+		if (roundPlayers >= autocvar_g_ctscup_minplayers)
+		{
+			// if all players have a clear time start the tournament
+			bool everyoneHasAClearTime = true;
 
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_BOT_CLIENT(it) && it.frags == FRAGS_PLAYER && it.tournamentParticipant == true,
+			{
+				if (PlayerScore_Get(it, SP_RACE_FASTEST) == 0)
+				{
+					// found someone who is playing warmup and is without a clear time
+					everyoneHasAClearTime = false;
+				}
+			});
+
+			if (everyoneHasAClearTime)
+			{
+				PrintToChatAll(" \n");
+				PrintToChatAll("^3Everyone has a clear time! Ending warmup and starting the tournament! \n");
+				//PrintToChatAll(" \n");
+				CTSCUP_TournamentStart();
+				game_stopped = true;
+				round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
+				return true;
+			}
+		}
+	}
+
+	// condition recap:
+	// round continues if:
+	// early finish timer triggered by first finisher hasn't expired,
+	// 2 or more players,
+	// round's timelimit is not over,
+	// and not everyone playing has a clear time
 	return false;
 }
 
-/*
 // When a tournament round ends find all the slowest players and
 // eliminate until we have the desired amount of players left
-// implementation #1
-void CTSCUP_EliminatePlayers()
-{
-	// 255 is engine limit on maxclients, 256 players
-	// this global array could be smaller as it's very unlikely that 255 players would ever play on a server
-	// but array lengths have to be constants in QC which makes it very iffy
-	// To optimize and prevent this many players from playing at once or not to
-	entity sortRoundParticipants[255];
-
-	CTSCUP_AliveParticipants(); // count players, not including spectators
-
-	int unsortedPlayers = roundPlayers; // how many players there still is left to sort into the array
-
-	// go through all entities which are clients, find players and store them in a new array
-	// so we don't need to go through the whole entity list many, many times
-	FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER,
-	{
-		// when finding a player find their right spot
-		for (int k = 0 ; k < roundPlayers ; k++)
-		{
-			// if this index is empty, store them there and go find the next player
-			if (sortRoundParticipants[k] == NULL)
-			{
-				sortRoundParticipants[k] = it;
-				unsortedPlayers--;
-				break;
-			}
-			else // this index is not empty
-			{
-				// those who didn't finish, place them right at the end of the array
-
-				// the player we found did not finish, place them to the end of the array
-				if (PlayerScore_Get(it, SP_RACE_FASTEST) == 0)
-				{
-					sortRoundParticipants[roundPlayers - unsortedPlayers] = it;
-					unsortedPlayers--;
-					break;
-				}
-
-				// if this spot has a player who didn't finish push the old entries 1 further and place our new player in this spot
-				if (PlayerScore_Get(sortRoundParticipants[k], SP_RACE_FASTEST) == 0)
-				{
-					for (int j = (roundPlayers - unsortedPlayers) ; j >= k ; j--)
-					{
-						// j-1 is fine because this can not be reached with 0 players sorted
-						// reaching this with 1 players sorted would move index 0 to index 1 which is fine
-						sortRoundParticipants[j] = sortRoundParticipants[j-1];
-					}
-					sortRoundParticipants[k] = it;
-					unsortedPlayers--;
-					break;
-				}
-
-				// those players who did not finish have a time of 0
-				// those players who finished have a score which is LOWER the better they did
-				// this makes it so that comparing size only would place those who didn't finish as the fastest players
-				// thus previous 2 ifs are necessary
-
-				// after this only those who have a clear time are handled
-
-				// if new player is faster than current index push old entries 1 further and place our new player in this spot
-				if (PlayerScore_Get(it, SP_RACE_FASTEST) < PlayerScore_Get(sortRoundParticipants[k], SP_RACE_FASTEST))
-				{
-					for (int j = (roundPlayers - unsortedPlayers) ; j >= k ; j--)
-					{
-						// j-1 is fine because this can not be reached with 0 players sorted
-						// reaching this with 1 players sorted would move index 0 to index 1 which is fine
-						sortRoundParticipants[j] = sortRoundParticipants[j-1];
-					}
-					sortRoundParticipants[k] = it;
-					unsortedPlayers--;
-					break;
-				}
-			}
-		}
-	});
-
-	// move players to spectator until we only have the allowed amount of players left
-	int amountOfPlayersToEliminate = (roundPlayers - nextRoundPlayers);
-
-	for (int i = amountOfPlayersToEliminate ; i > 0 ; i--)
-	{
-		// - 1 is index offset, if we have 2 players the 2nd player is in index 1
-		//int indexOfEliminatedPlayer = ((roundPlayers - i) - 1)
-		sortRoundParticipants[indexOfEliminatedPlayer].tournamentParticipant = false;
-		sortRoundParticipants[indexOfEliminatedPlayer].frags = FRAGS_PLAYER_OUT_OF_GAME;
-		TRANSMUTE(Observer, sortRoundParticipants[indexOfEliminatedPlayer]);
-	}
-
-	return;
-}
-*/
-
-// When a tournament round ends find all the slowest players and
-// eliminate until we have the desired amount of players left
-// implementation #2
-// this implementation does not store a global array which has constant size and is useless 99.9999% of the server ticks
-// it would be more optimal to use a linked list which is round or looping, if starting at the fastest go
-// backwards one step to find slowest player and then the 2nd slowest etc. until all eliminations are done
+// implementation #3
+// improvements from #2:
+// spectators with scorekeeper entities are no longer kept in the linked list
+// non-finishers are eliminated at random instead of connection order
 .entity chain;
 void CTSCUP_EliminatePlayers()
 {
-	// as we have a linked list and 3 or more eliminations(most likely meaning >20 players if 10% of them are eliminated)
-	// it would be the most efficient to go backwards in the linked list to find the wanted players
-	// fastest -> slowest -> 2nd slowest -> 3rd slowest etc.
-	// but current implementation only supports going forwards so currently following is done
-	// fastest -> 2nd fastest -> 3rd fastest -> ... -> 1st player to get eliminated -> 2nd player to get eliminated etc.
-	// until all eliminations are done. Difference between forwards and backwards is neglible for modern CPUs
-
-	// following loops will eliminate players like so with 9 players and 3 eliminations:
-	// 1st(fastest) 2nd 3rd 4th 5th 6th 7th 8th 9th(slowest)
-	// 1st(fastest) 2nd 3rd 4th 5th 6th elim 8th 9th(slowest)
-	// 1st(fastest) 2nd 3rd 4th 5th 6th elim elim 9th(slowest)
-	// 1st(fastest) 2nd 3rd 4th 5th 6th elim elim elim
-
+	// sort scorekeeper entities into a forwards non-round linked list
 	entity fastestPlayer = PlayerScore_Sort(scoreboard_pos, 0, true, false);
 	entity index = fastestPlayer;
+
+	// abort, oh no how are we here
+	// 2 last players on the server disconnected at the same time?
+	// unknown if actually possible
+	if (fastestPlayer == NULL)return;
 
 	CTSCUP_AliveParticipants(); // count players, not including spectators
 	int amountOfPlayersToEliminate = (roundPlayers - nextRoundPlayers);
 
-	// find and move players to spectator until we only have the allowed amount of players left
-	for (int i = 0 ; i < amountOfPlayersToEliminate ; i++)
+	// rebuild the linked list as two new linked lists which do not have any spectators in them
+	// one list for those who finished and one for those who did not
+
+	entity lastFinishingPlayer = NULL, lastNonFinishingPlayer = NULL; // pointer storage entities
+	entity backwardsLinkedListHelperPointer = NULL;
+	entity finishers = NULL, nonFinishers = NULL; // linked lists' first entities
+	int finishersCheckerValue = 0; // this should always match roundFinisherCount
+	int nonFinishersCheckerValue = 0; // this should always match (roundPlayers - roundFinisherCount)
+
+	// while old linked list has entries in it
+	while (index)
 	{
-		if ( i == 0)
+		// is our current list entry a tournament participant?
+		if (index.tournamentParticipant)
 		{
-			// find the fastest player about to get eliminated
-			for (int j = 0 ; j < (roundPlayers - amountOfPlayersToEliminate) ; j++)
+			// do they have a finish time?
+			if (PlayerScore_Get(index, SP_RACE_FASTEST) == 0)
 			{
+				// we found a non-finisher
+				nonFinishersCheckerValue++;
+
+				// forwards linked list of non-finishers in connection
+				// order excluding reused disconnected player slots
+				if (nonFinishers)
+				{
+					// we found a +1 non-finisher
+					lastNonFinishingPlayer.chain = index;
+
+					// update our "last in the list" to be the latest entry
+					lastNonFinishingPlayer = lastNonFinishingPlayer.chain;
+				}
+				else
+				{
+					// we found our first non-finisher
+					lastNonFinishingPlayer = index;
+
+					// initialize our linked list
+					nonFinishers = lastNonFinishingPlayer;
+				}
+
+				// move the index over to the next list entry
 				index = index.chain;
+			}
+			else
+			{
+				// we found a finisher
+				finishersCheckerValue++;
+
+				// backwards linked list
+				// 1st -> 5th -> 4th -> 3rd -> 2nd -> 1st
+				if (finishers)
+				{
+					// we found a +1 finisher
+					backwardsLinkedListHelperPointer = index;
+
+					// move the index over to the next list entry
+					index = index.chain;
+
+					// reverse chain order
+					backwardsLinkedListHelperPointer.chain = lastFinishingPlayer;
+
+					// update our "laTEst in the list" to be the latest entry
+					lastFinishingPlayer = backwardsLinkedListHelperPointer;
+				}
+				else
+				{
+					// we found our first finisher
+					lastFinishingPlayer = index;
+
+					// initialize our linked list
+					finishers = lastFinishingPlayer;
+
+					// move the index over to the next list entry
+					index = index.chain;
+				}
 			}
 		}
 		else
 		{
-			// only bump +1 towards the tail as we've found the fastest player about to get eliminated previously
-			// +1 bumps index to one player slower
+			// found a spectator or etc., skip over them
 			index = index.chain;
 		}
-
-		index.tournamentParticipant = false;
-		index.frags = FRAGS_PLAYER_OUT_OF_GAME;
-		//PutObserverInServer(index, true, true);
-		TRANSMUTE(Observer, index);
 	}
-}
 
-// this is called when fake warmup ends
-void CTSCUP_TournamentStart()
-{
-	if(tournamentStarted)return; // double calls shouldn't ever happen but handle those just in case
+	// make the linked lists round
+	if (finishers) finishers.chain = lastFinishingPlayer;
 
-	// = 0 is for initialization which is for whatever reason required by compiler or it warns
-	float autocvar_g_start_delay = 0;
-	if (time >= (autocvar_g_start_delay + autocvar_g_ctscup_warmup))
+	if (nonFinishers) lastNonFinishingPlayer.chain = nonFinishers;
+
+	if (finishersCheckerValue != roundFinisherCount && tournamentStarted)
+		print("^1 ", sprintf("%f", finishersCheckerValue), " finishersCheckerValue != ", sprintf("%f", roundFinisherCount), " roundFinisherCount! \n");
+	if (nonFinishersCheckerValue != (roundPlayers - roundFinisherCount) && tournamentStarted)
+		print("^1 ", sprintf("%f", nonFinishersCheckerValue), " nonFinishersCheckerValue != ", sprintf("%f", (roundPlayers - roundFinisherCount)), " (roundPlayers - roundFinisherCount)! \n");
+
+	// find and move players to spectator until we only have the allowed amount of players left
+
+	if (amountOfPlayersToEliminate > 0 && (finishers || nonFinishers))
 	{
-		roundCounter = 0;
-
-		tournamentStarted = true;
-
-		PrintToChatAll("^1Tournament started! ^2GLHF! \n");
-
-		// register every tournament participant here
-		FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER,
+		// eliminate the non-finishers at random while they last
+		index = nonFinishers;
+		while (nonFinishers && amountOfPlayersToEliminate > 0)
 		{
-			it.tournamentParticipant = true;
-		});
+			// if we have more than 1 player who didn't finish
+			if (nonFinishersCheckerValue > 1)
+			{
+				// randomize who out of them gets eliminated
+				for (int i = 0; i < ((random() * roundPlayers)); i++)
+				{
+					index = index.chain;
+				}
+			}
 
-		return;
+			// elimination
+			index.chain.tournamentParticipant = false;
+			index.chain.frags = FRAGS_PLAYER_OUT_OF_GAME;
+			TRANSMUTE(Observer, index.chain);
+
+			// repair the linked list so it can be looped again in case we 
+			// would ever need to eliminate 2 or more random players
+			index.chain = index.chain.chain;
+			amountOfPlayersToEliminate--;
+		}
+
+		// if we've ran out of non-finishers move to slowest finishing player
+		// do not bother to check if they have the same time at decimal level 
+		// as it's far too unlikely to happen to matter
+
+		index = finishers.chain; // start with the slowest player
+		// finishers is fastest -> .chain slowest -> .chain.chain 2nd slowest etc.
+		while (finishers && amountOfPlayersToEliminate > 0)
+		{
+			// elimination
+			index.tournamentParticipant = false;
+			index.frags = FRAGS_PLAYER_OUT_OF_GAME;
+			TRANSMUTE(Observer, index);
+
+			index = index.chain;
+			amountOfPlayersToEliminate--;
+		}
+
+		if (amountOfPlayersToEliminate) 
+			print("^1TRIED TO ELIMINATE ",
+			sprintf("%f", amountOfPlayersToEliminate),
+			" MORE PLAYERS THAN IN LINKED LISTS \n");
 	}
-
-	// implement feature: skip warmup if all players ready up?
 }
 
 // upon map reset
@@ -643,21 +776,35 @@ void CTSCUP_TournamentStart()
 // always clear scores and reset and restart players
 MUTATOR_HOOKFUNCTION(ctscup, reset_map_players)
 {
-	if (tournamentStarted)
+	// reset rounds after warmup
+	if (tournamentStarted && roundCounter >= 0)
 	{
 		roundCounter++;
 
 		CTSCUP_EliminatePlayers();
+
+		Score_ClearAll();
 	}
-	else
+
+	// mark round as not started as it's being reset
+	roundStarted = false;
+
+	// reset warmup ending round
+	if (roundCounter == -1)
+	{
 		CTSCUP_TournamentStart();
+		roundCounter++;
+	}
 
-	Score_ClearAll();
-
+	// respawn players
 	FOREACH_CLIENT(true, {
 		if (it.tournamentParticipant)
 		{
 			TRANSMUTE(Player, it);
+		}
+		else
+		{
+			TRANSMUTE(Observer, it);
 		}
 		PutClientInServer(it);
 	});
@@ -679,12 +826,31 @@ MUTATOR_HOOKFUNCTION(ctscup, ForbidSpawn)
 	return blockSpawning;
 }
 
+// someone disconnected
+MUTATOR_HOOKFUNCTION(ctscup, ClientDisconnect)
+{
+	entity player = M_ARGV(0, entity);
+
+	// if the player disconnecting was a player who had finished
+	// redact one from the amount players waiting at the finish line
+	if (player.tournamentParticipant && PlayerScore_Get(player, SP_RACE_FASTEST))
+		roundFinisherCount--;
+
+	// delete possible savestate entities they may have had
+	DeleteSaveState(player);
+}
+
 // when a player touches any checkpoint update their savestate
 MUTATOR_HOOKFUNCTION(ctscup, Race_Checkpoint)
 {
 	entity player = M_ARGV(0, entity);
 
-	SaveSaveState(player);
+	// mark round as started
+	roundStarted = true;
+
+			// do not register savestates with corpses that hit checkpoints
+	if (tournamentStarted && (GetResource(player, RES_HEALTH) >= 1))
+		SaveSaveState(player);
 }
 
 // when a player changes their own team to spectator
@@ -692,7 +858,12 @@ MUTATOR_HOOKFUNCTION(ctscup, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(tournamentStarted && (player.frags == FRAGS_PLAYER_OUT_OF_GAME || player.frags == FRAGS_PLAYER))
+	// if the player moving to spectator was a player who had finished
+	// redact one from the amount players waiting at the finish line
+	if (player.tournamentParticipant && PlayerScore_Get(player, SP_RACE_FASTEST))
+		roundFinisherCount--;
+
+	if (tournamentStarted && (player.frags == FRAGS_PLAYER_OUT_OF_GAME || player.frags == FRAGS_PLAYER))
 	{
 		player.tournamentParticipant = false;
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
@@ -720,5 +891,5 @@ void ctscup_Initialize()
 	//arguments: can round start, can round end (prematurely), called when round starts
 	round_handler_Spawn(CTSCUP_CanRoundStart, CTSCUP_CheckRoundEnd, CTSCUP_RoundStart);
 	//arguments: time until this round starts, pre-round preparation time, round timelimit
-	round_handler_Init(5, 1, autocvar_g_ctscup_warmup);
+	round_handler_Init(5, 0.5, autocvar_g_ctscup_warmup);
 }

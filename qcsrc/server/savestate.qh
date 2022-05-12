@@ -8,6 +8,8 @@ void SaveSaveState(entity player);
 bool LoadSaveState(entity player);
 void DeleteSaveState(entity player);
 
+.int loadCounter;
+
 .vector origin;
 .vector v_angle;
 .vector angles;

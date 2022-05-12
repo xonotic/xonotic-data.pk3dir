@@ -1,15 +1,7 @@
 CTS Cup TODO list:
 
-Round handler:
-- End the match when there are no more participants playing
-- Move players to spectator after each tournament round
-- Clear times upon round reset
-
 Savestates:
-- Softlock prevention
-- FIXME?: Splat damage is dealt AFTER health restoring of savestate loading if the player were to smash into something and die from another source during I think the same frame
-- I hope that loading a savestate from Damage_Calculate hook when player is about to die and setting incoming
-damage to 0 can still save them and dying (for example by suicide bind) isn't a hardcoded death :)
+- FIXME?: Splat damage is dealt AFTER health restoring of savestate loading if the player were to first save a savestate with low speed, get to high speeds and then load the savestate
 
 HUD:
 - Display current round's players
@@ -19,7 +11,7 @@ HUD:
 - Medals for placements?
 
 Info messages:
-- tournament in progress
+- can not join, tournament in progress
 - you survived the round and will continue to the next one
 - you lost the round and got eliminated from the tournament
 - upon elimination show placement

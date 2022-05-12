@@ -4,23 +4,8 @@ void SaveSaveState(entity player)
 {
 	if (player.savestate)
 	{
-		if (g_race || g_cts || g_ctscup)
-		{
-			// store fields reset by race_PreparePlayer
-			player.savestate.race_place = player.race_place;
-			player.savestate.race_started = player.race_started;
-			player.savestate.race_respawn_checkpoint = player.race_respawn_checkpoint;
-			player.savestate.race_respawn_spotref = player.race_respawn_spotref;
-
-			// store fields reset by race_ClearTime
-			player.savestate.race_checkpoint = player.race_checkpoint;
-			player.savestate.race_laptime = player.race_laptime;
-			player.savestate.race_movetime = player.race_movetime;
-			player.savestate.race_movetime_frac = player.race_movetime_frac;
-			player.savestate.race_movetime_count = player.race_movetime_count;
-			player.savestate.race_penalty_accumulator = player.race_penalty_accumulator;
-			player.savestate.race_lastpenalty = player.race_lastpenalty;
-		}
+		// reset loads since last save counter
+		player.savestate.loadCounter = 0;
 
 		// fields stored by personal checkpoint, copy them to this implementation
 		player.savestate.origin = player.origin;
@@ -50,21 +35,10 @@ bool LoadSaveState(entity player)
 {
 	if (player.savestate)
 	{
-		if (g_race || g_cts || g_ctscup)
-		{
-			player.race_place = player.savestate.race_place;
-			player.race_started = player.savestate.race_started;
-			player.race_respawn_checkpoint = player.savestate.race_respawn_checkpoint;
-			player.race_respawn_spotref = player.savestate.race_respawn_spotref;
-			player.race_checkpoint = player.savestate.race_checkpoint;
-			player.race_laptime = player.savestate.race_laptime;
-			player.race_movetime = player.savestate.race_movetime;
-			player.race_movetime_frac = player.savestate.race_movetime_frac;
-			player.race_movetime_count = player.savestate.race_movetime_count;
-			player.race_penalty_accumulator = player.savestate.race_penalty_accumulator;
-			player.race_lastpenalty = player.savestate.race_lastpenalty;
-		}
+		// store a counterfor loads since last save
+		player.savestate.loadCounter++;
 
+		// restore player state
 		player.origin = player.savestate.origin;
 		player.v_angle = player.savestate.v_angle;
 		player.angles = player.savestate.angles;
@@ -87,8 +61,11 @@ bool LoadSaveState(entity player)
 		player.pauserotfuel_finished = time + player.savestate.pauserotfuel_finished - player.savestate.teleport_time;
 		player.pauseregen_finished = time + player.savestate.pauseregen_finished - player.savestate.teleport_time;
 
+		// successfully loaded savestate
 		return true;
 	}
+
+	// did not succeed in loading a savestate
 	return false;
 }
 
