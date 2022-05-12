@@ -243,7 +243,11 @@ void bot_setnameandstuff(entity this)
 	else bot_pants = ftos(floor(random() * 15));
 
 	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	{
 		this.bot_forced_team = stof(argv(5));
+		if (!Team_IsValidIndex(this.bot_forced_team))
+			this.bot_forced_team = 0;
+	}
 	else
 		this.bot_forced_team = 0;
 

@@ -540,13 +540,8 @@ void PutPlayerInServer(entity this)
 	PlayerState_attach(this);
 	accuracy_resend(this);
 
-	if (IS_BOT_CLIENT(this))
-	{
-		if (teamplay && Team_IsValidIndex(this.bot_forced_team))
-			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-		else
-			this.bot_forced_team = 0;
-	}
+	if (teamplay && this.bot_forced_team)
+		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
 
 	if (this.team < 0)
 		TeamBalance_JoinBestTeam(this);
