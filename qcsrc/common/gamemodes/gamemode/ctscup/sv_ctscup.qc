@@ -249,7 +249,7 @@ MUTATOR_HOOKFUNCTION(ctscup, ForbidPlayerScore_Clear)
 
 
 
-int roundCounter; // unused?
+int roundCounter; // how many rounds have there been
 int roundPlayers; // amount of players currently in the game, does not include spectators
 int nextRoundPlayers; // how many players should participate in the next round
 bool tournamentStarted; // has the warmup ended
@@ -337,6 +337,11 @@ MUTATOR_HOOKFUNCTION(ctscup, PlayerSpawn)
 			SaveSaveState(player);
 		}
 	}
+	else
+	{
+		race_PreparePlayer(player);
+		SaveSaveState(player);
+	}
 }
 
 // a player is made a spectator
@@ -383,7 +388,7 @@ MUTATOR_HOOKFUNCTION(ctscup, Race_FinalCheckpoint)
 		if (roundFirstFinisherTime == 0)
 			roundFirstFinisherTime = time;
 	}
-	
+
 	// softlock player's race checkpoint progress
 	// until next round, prevents 2nd laps and
 	// registering the better time out of those 2
@@ -410,7 +415,8 @@ MUTATOR_HOOKFUNCTION(ctscup, Damage_Calculate)
 	}
 
 	// if the player were to be about to die, try to save them and restore a loadstate if possible
-	else if (((GetResource(frag_target, RES_HEALTH) + GetResource(frag_target, RES_ARMOR)) - frag_damage) <= 0)
+	else if (tournamentStarted &&
+		(((GetResource(frag_target, RES_HEALTH) + GetResource(frag_target, RES_ARMOR)) - frag_damage) <= 0))
 			if (LoadSaveState(frag_target))
 			{
 				// if savestate loading was successful
@@ -539,6 +545,7 @@ bool CTSCUP_CheckRoundEnd()
 			PrintToChatAll(" \n");
 			PrintToChatAll("^3Not enough players!  W A R M U P  restarted! \n");
 			PrintToChatAll(" \n");
+			roundCounter = -1;
 			game_stopped = true;
 			round_handler_Init(0, 0.5, autocvar_g_ctscup_warmup);
 			return true;
@@ -585,7 +592,7 @@ bool CTSCUP_CheckRoundEnd()
 				PrintToChatAll(" \n");
 				PrintToChatAll("^3Everyone has a clear time! Ending warmup and starting the tournament! \n");
 				//PrintToChatAll(" \n");
-				CTSCUP_TournamentStart();
+				roundCounter = -1;
 				game_stopped = true;
 				round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);
 				return true;
@@ -794,6 +801,7 @@ MUTATOR_HOOKFUNCTION(ctscup, reset_map_players)
 	{
 		CTSCUP_TournamentStart();
 		roundCounter++;
+		Score_ClearAll();
 	}
 
 	// respawn players
@@ -845,8 +853,9 @@ MUTATOR_HOOKFUNCTION(ctscup, Race_Checkpoint)
 {
 	entity player = M_ARGV(0, entity);
 
-	// mark round as started
-	roundStarted = true;
+	// mark round as started if we're in a tournament
+	if (tournamentStarted)
+		roundStarted = true;
 
 			// do not register savestates with corpses that hit checkpoints
 	if (tournamentStarted && (GetResource(player, RES_HEALTH) >= 1))
