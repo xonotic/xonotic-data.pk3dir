@@ -448,16 +448,6 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
-	{
-		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-	}
-	else
-	{
-		this.bot_forced_team = 0;
-		TeamBalance_JoinBestTeam(this);
-	}
-
 	havocbot_setupbot(this);
 }
 
