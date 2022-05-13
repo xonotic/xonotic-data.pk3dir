@@ -1154,7 +1154,7 @@ MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
 MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
 
 /**
- * return true to restart the match instead of restarting the server, for modes that don't support readyrestart.
+ * return true to restart the server instead of restarting the match, for modes that don't support readyrestart.
  * NOTE: ReadyRestart support is mandatory in campaign
  */
 MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
