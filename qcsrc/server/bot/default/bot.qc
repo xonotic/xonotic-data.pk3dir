@@ -681,6 +681,7 @@ void bot_serverframe()
 	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
 	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
 	// either intentionally or automatically (sv_spectate 0)
+	// A working workaround for this bug was implemented in commit fbd145044, see entcs_attach
 	if (time < 2.5)
 	{
 		currentbots = -1;
