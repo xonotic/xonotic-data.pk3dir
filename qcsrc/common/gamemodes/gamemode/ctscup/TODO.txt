@@ -1,8 +1,5 @@
 CTS Cup TODO list:
 
-Savestates:
-- FIXME?: Splat damage is dealt AFTER health restoring of savestate loading if the player were to first save a savestate with low speed, get to high speeds and then load the savestate
-
 HUD:
 - Display current round's players
 - Display checkpoint splits

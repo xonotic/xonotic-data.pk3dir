@@ -12,6 +12,7 @@ void SaveSaveState(entity player)
 		player.savestate.v_angle = player.v_angle;
 		player.savestate.angles = player.angles;
 		player.savestate.velocity = player.velocity;
+		player.savestate.oldvelocity = player.oldvelocity;
 		SetResource(player.savestate, RES_ROCKETS, GetResource(player, RES_ROCKETS));
 		SetResource(player.savestate, RES_BULLETS, GetResource(player, RES_BULLETS));
 		SetResource(player.savestate, RES_CELLS, GetResource(player, RES_CELLS));
@@ -44,6 +45,7 @@ bool LoadSaveState(entity player)
 		player.angles = player.savestate.angles;
 		player.fixangle = true;
 		player.velocity = player.savestate.velocity;
+		player.oldvelocity = player.savestate.oldvelocity;
 		SetResource(player, RES_ROCKETS, GetResource(player.savestate, RES_ROCKETS));
 		SetResource(player, RES_BULLETS, GetResource(player.savestate, RES_BULLETS));
 		SetResource(player, RES_CELLS, GetResource(player.savestate, RES_CELLS));
