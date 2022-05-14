@@ -491,7 +491,7 @@ bool CTSCUP_CanRoundStart()
 	if (!tournamentStarted && (roundPlayers >= autocvar_g_ctscup_minplayers))
 	{
 		PrintToChatAll(" \n");
-		PrintToChatAll("^3W A R M U P  started! \n");
+		PrintToChatAll("^5W A R M U P  started! \n");
 		PrintToChatAll(" \n");
 		return true;
 	}
@@ -543,7 +543,7 @@ bool CTSCUP_CheckRoundEnd()
 		if (!tournamentStarted && (roundPlayers < autocvar_g_ctscup_minplayers))
 		{
 			PrintToChatAll(" \n");
-			PrintToChatAll("^3Not enough players!  W A R M U P  restarted! \n");
+			PrintToChatAll("^5Not enough players!  W A R M U P  restarted! \n");
 			PrintToChatAll(" \n");
 			roundCounter = -1;
 			game_stopped = true;
@@ -590,8 +590,7 @@ bool CTSCUP_CheckRoundEnd()
 			if (everyoneHasAClearTime)
 			{
 				PrintToChatAll(" \n");
-				PrintToChatAll("^3Everyone has a clear time! Ending warmup and starting the tournament! \n");
-				//PrintToChatAll(" \n");
+				PrintToChatAll("^1Everyone has a clear time! Ending warmup and starting the tournament! \n");
 				roundCounter = -1;
 				game_stopped = true;
 				round_handler_Init(5, 1, autocvar_g_ctscup_maxroundlength);

@@ -2,7 +2,7 @@
 
 void SaveSaveState(entity player)
 {
-	if (player.savestate)
+	if (player.savestate && !game_stopped)
 	{
 		// reset loads since last save counter
 		player.savestate.loadCounter = 0;
@@ -34,7 +34,7 @@ void SaveSaveState(entity player)
 
 bool LoadSaveState(entity player)
 {
-	if (player.savestate)
+	if (player.savestate && !game_stopped)
 	{
 		// store a counterfor loads since last save
 		player.savestate.loadCounter++;
@@ -52,7 +52,7 @@ bool LoadSaveState(entity player)
 		SetResource(player, RES_PLASMA, GetResource(player.savestate, RES_PLASMA));
 		SetResource(player, RES_SHELLS, GetResource(player.savestate, RES_SHELLS));
 		SetResource(player, RES_FUEL, GetResource(player.savestate, RES_FUEL));
-		SetResource(player, RES_HEALTH, GetResource(player.savestate, RES_HEALTH));
+		SetResource(player, RES_HEALTH, max(1, GetResource(player.savestate, RES_HEALTH)));
 		SetResource(player, RES_ARMOR, GetResource(player.savestate, RES_ARMOR));
 		STAT(WEAPONS, player) = STAT(WEAPONS, player.savestate);
 		StatusEffects_copy(player.savestate, player.statuseffects, player.savestate.teleport_time);
