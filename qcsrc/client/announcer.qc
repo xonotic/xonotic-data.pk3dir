@@ -132,6 +132,7 @@ void Announcer_Gamestart()
 		startTime = roundstarttime;
 	if(intermission)
 	{
+		Announcer_ClearTitle();
 		if(announcer_countdown)
 		{
 			centerprint_Kill(ORDINAL(CPID_ROUND));
