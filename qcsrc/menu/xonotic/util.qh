@@ -53,3 +53,6 @@ float _Nex_ExtResponseSystem_RecommendedServersNeedsRefresh;
 float _Nex_ExtResponseSystem_NewToS;
 
 void CheckSendCvars(entity me, string cvarnamestring);
+
+entity makeTeamButton_T(string theName, vector theColor, string commandtheName, string theTooltip);
+entity makeTeamButton(string theName, vector theColor, string commandtheName);

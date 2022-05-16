@@ -1,5 +1,6 @@
 #include "util.qh"
 #include "dialog.qh"
+#include "bigcommandbutton.qh"
 
 #include "../item.qh"
 
@@ -854,3 +855,16 @@ void CheckSendCvars(entity me, string cvarnamestring)
 		}
 	}
 }
+
+entity makeTeamButton_T(string theName, vector theColor, string commandtheName, string theTooltip)
+{
+	entity b;
+	b = makeXonoticBigCommandButton_T(theName, theColor, commandtheName, COMMANDBUTTON_CLOSE, theTooltip);
+	return b;
+}
+
+entity makeTeamButton(string theName, vector theColor, string commandtheName)
+{
+	return makeTeamButton_T(theName, theColor, commandtheName, string_null);
+}
+
