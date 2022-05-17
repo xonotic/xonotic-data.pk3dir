@@ -1,5 +1,6 @@
 #include "dialog_teamselect.qh"
 
+#include "bigcommandbutton.qh"
 #include "util.qh"
 
 void XonoticTeamSelectDialog_showNotify(entity me)

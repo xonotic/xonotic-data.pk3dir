@@ -5,6 +5,7 @@
 #include "textbox.qh"
 #include "radiobutton.qh"
 #include "commandbutton.qh"
+#include "leavematchbutton.qh"
 #include "slider.qh"
 #include "util.qh"
 
