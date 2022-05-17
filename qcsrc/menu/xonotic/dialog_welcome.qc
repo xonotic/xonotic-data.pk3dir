@@ -20,7 +20,7 @@ float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shif
 		case K_KP_ENTER:
 		case K_ENTER:
 		case K_SPACE:
-			me.close(me);
+			XonoticCommandButton_Click(me.joinButton_ent, me);
 			return true;
 		default:
 			return SUPER(XonoticWelcomeDialog).keyDown(me, key, ascii, shift);
@@ -95,8 +95,7 @@ void XonoticWelcomeDialog_fill(entity me)
 			me.serverinfo_MOTD_ent.allowColors = true;
 			me.serverinfo_MOTD_ent.escapedNewLines = true;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
-			e.preferredFocusPriority = 1;
+		me.TD(me, 1, me.columns / 2, me.joinButton_ent = makeXonoticCommandButton(_("join"), '0 1 0', "cmd join", COMMANDBUTTON_CLOSE));
+			me.joinButton_ent.preferredFocusPriority = 1;
+		me.TD(me, 1, me.columns / 2, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
 }
