@@ -168,17 +168,6 @@ entity GetFilteredEntity(string input)
 	return selection;
 }
 
-// same thing, but instead return their edict number
-float GetFilteredNumber(string input)
-{
-	entity selection = GetFilteredEntity(input);
-	float output;
-
-	output = etof(selection);
-
-	return output;
-}
-
 // switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input)
 {
@@ -675,6 +664,7 @@ void CommonCommand_timein(int request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEOUT);
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}

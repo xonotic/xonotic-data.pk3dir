@@ -28,6 +28,7 @@
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
@@ -67,6 +68,12 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
+		if (IS_PLAYER(this))
+		{
+			.entity weaponentity = weaponentities[0];
+			if(this.(weaponentity).m_weapon == WEP_Null)
+				W_NextWeapon(this, 0, weaponentity);
+		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
@@ -106,6 +113,9 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
+		.entity weaponentity = weaponentities[0];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;
@@ -233,7 +243,11 @@ void bot_setnameandstuff(entity this)
 	else bot_pants = ftos(floor(random() * 15));
 
 	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	{
 		this.bot_forced_team = stof(argv(5));
+		if (!Team_IsValidIndex(this.bot_forced_team))
+			this.bot_forced_team = 0;
+	}
 	else
 		this.bot_forced_team = 0;
 
@@ -438,16 +452,6 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
-	{
-		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-	}
-	else
-	{
-		this.bot_forced_team = 0;
-		TeamBalance_JoinBestTeam(this);
-	}
-
 	havocbot_setupbot(this);
 }
 
@@ -536,11 +540,8 @@ void bot_removenewest()
 
 void autoskill(float factor)
 {
-	float bestbot;
-	float bestplayer;
-
-	bestbot = -1;
-	bestplayer = -1;
+	int bestbot = -1;
+	int bestplayer = -1;
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
@@ -548,37 +549,37 @@ void autoskill(float factor)
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
 	});
 
-	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
-	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
+	string msg = strcat("autoskill: best player got ", ftos(bestplayer), ", ""best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		LOG_DEBUG("not doing anything");
+		msg = strcat(msg, "not doing anything");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			LOG_DEBUG("2 frags difference, increasing skill");
+			msg = strcat(msg, "2 frags difference, increasing skill");
 			cvar_set("skill", ftos(autocvar_skill + 1));
-			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
+			bprint("^2BOT SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else if(bestbot >= bestplayer * factor + 2)
 	{
 		if(autocvar_skill > 0)
 		{
-			LOG_DEBUG("2 frags difference, decreasing skill");
+			msg = strcat(msg, "2 frags difference, decreasing skill");
 			cvar_set("skill", ftos(autocvar_skill - 1));
-			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
+			bprint("^1BOT SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		LOG_DEBUG("not doing anything");
+		msg = strcat(msg, "not doing anything");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}
+	LOG_DEBUG(msg);
 
 	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
@@ -591,7 +592,7 @@ void bot_calculate_stepheightvec()
 	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }
 
-bool bot_fixcount()
+bool bot_fixcount(bool multiple_per_frame)
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
@@ -639,12 +640,16 @@ bool bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		if (currentbots < bots)
+		while (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
 				bprint("Can not add bot, server full.\n");
 				return false;
+			}
+			if (!multiple_per_frame)
+			{
+				break;
 			}
 		}
 		while (currentbots > bots && bots >= 0)
@@ -676,6 +681,7 @@ void bot_serverframe()
 	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
 	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
 	// either intentionally or automatically (sv_spectate 0)
+	// A working workaround for this bug was implemented in commit fbd145044, see entcs_attach
 	if (time < 2.5)
 	{
 		currentbots = -1;
@@ -716,7 +722,7 @@ void bot_serverframe()
 
 	if(time > botframe_nextthink)
 	{
-		if(!bot_fixcount())
+		if(!bot_fixcount(false))
 			botframe_nextthink = time + 10;
 	}
 

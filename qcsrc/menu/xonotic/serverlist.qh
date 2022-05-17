@@ -53,7 +53,6 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, sortButton4, entity);
 	ATTRIB(XonoticServerList, sortButton5, entity);
 	ATTRIB(XonoticServerList, connectButton, entity);
-	//ATTRIB(XonoticServerList, disconnectButton, entity);
 	ATTRIB(XonoticServerList, infoButton, entity);
 	ATTRIB(XonoticServerList, currentSortOrder, float, 0);
 	ATTRIB(XonoticServerList, currentSortField, float, -1);
@@ -125,14 +124,11 @@ const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
 
 // function declarations
 float IsServerInList(string list, string srv);
-#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
-#define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
-#define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
 
 entity RetrieveCategoryEnt(float catnum);
 
 float CategoryOverride(float cat);
-float m_gethostcachecategory(float entry) { return CategoryOverride(CategoryForEntry(entry)); }
+float m_gethostcachecategory(float entry);
 
 
 // fields for category entities

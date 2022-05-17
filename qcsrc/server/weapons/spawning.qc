@@ -1,10 +1,10 @@
 #include "spawning.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <common/weapons/_all.qh>
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
@@ -108,17 +108,27 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
+	// TODO: registry handles
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
 	{
-		switch (wpn.ammo_type)
+		int ammo = 0;
+		if (q3compat && this.count > 0)
+			ammo = this.count * GetAmmoConsumptionQ3(wpn.netname);
+			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
+		else
 		{
-			case RES_SHELLS:  SetResource(this, wpn.ammo_type, cvar("g_pickup_shells_weapon"));  break;
-			case RES_BULLETS: SetResource(this, wpn.ammo_type, cvar("g_pickup_nails_weapon"));   break;
-			case RES_ROCKETS: SetResource(this, wpn.ammo_type, cvar("g_pickup_rockets_weapon")); break;
-			case RES_CELLS:   SetResource(this, wpn.ammo_type, cvar("g_pickup_cells_weapon"));   break;
-			case RES_PLASMA:  SetResource(this, wpn.ammo_type, cvar("g_pickup_plasma_weapon"));  break;
-			case RES_FUEL:    SetResource(this, wpn.ammo_type, cvar("g_pickup_fuel_weapon"));    break;
+			switch (wpn.ammo_type)
+			{
+				case RES_SHELLS:  ammo = cvar("g_pickup_shells_weapon");  break;
+				case RES_BULLETS: ammo = cvar("g_pickup_nails_weapon");   break;
+				case RES_ROCKETS: ammo = cvar("g_pickup_rockets_weapon"); break;
+				case RES_CELLS:   ammo = cvar("g_pickup_cells_weapon");   break;
+				case RES_PLASMA:  ammo = cvar("g_pickup_plasma_weapon");  break;
+				case RES_FUEL:    ammo = cvar("g_pickup_fuel_weapon");    break;
+			}
 		}
+
+		SetResource(this, wpn.ammo_type, ammo);
 	}
 
 	#if 0 // WEAPONTODO
@@ -142,6 +152,8 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 
 	if(!this.owner)
 		this.glowmod = wpn.wpcolor;
+	else
+		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true) * 2;
 
 	GameItem def = wpn.m_pickup;
 	_StartItem(

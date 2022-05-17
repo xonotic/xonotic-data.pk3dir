@@ -5,7 +5,6 @@
 bool autocvar_g_full_getstatus_responses;
 
 entity scores_initialized; // non-NULL when scores labels/rules have been set
-.float scoreboard_pos;
 
 /**
  * Attaches a PlayerScore entity to a player. Use that in ClientConnect.
@@ -89,7 +88,7 @@ void ScoreInfo_SetLabel_PlayerScore(PlayerScoreField i, string label, float scor
  * Initialize the scores info for the given number of teams.
  * Set all labels right before this call.
  */
-void ScoreInfo_Init(float teams);
+void ScoreInfo_Init(int teams);
 
 /**
  * Clear ALL scores (for ready-restart).

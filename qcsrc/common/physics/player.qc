@@ -3,6 +3,12 @@
 #include <common/mapobjects/_mod.qh>
 #include <common/viewloc.qh>
 
+#ifdef GAMEQC
+REPLICATE(cvar_cl_physics, string, "cl_physics");
+REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
+REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
+#endif
+
 #ifdef SVQC
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -54,13 +60,13 @@ void Physics_UpdateStats(entity this)
             : 0;
           STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
         }
-	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
-	STAT(PL_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_mins;
-	STAT(PL_MAX, this) = (q3dfcompat) ? '15 15 36' : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = (q3dfcompat) ? '0 0 30' : autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this) = (q3dfcompat) ? '15 15 20' : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = (q3dfcompat) ? '0 0 16' : autocvar_sv_player_crouch_viewoffset;
+	bool q3hb = q3compat && autocvar_sv_q3compat_changehitbox;
+	STAT(PL_MIN, this) = (q3hb) ? '-15 -15 -20' : autocvar_sv_player_mins;
+	STAT(PL_MAX, this) = (q3hb) ? '15 15 36' : autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this) = (q3hb) ? '0 0 30' : autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this) = (q3hb) ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this) = (q3hb) ? '15 15 20' : autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = (q3hb) ? '0 0 16' : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings

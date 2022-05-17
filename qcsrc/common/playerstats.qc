@@ -15,10 +15,63 @@
 	#include <server/world.qh>
 #endif
 
+
+#ifdef GAMEQC
+REPLICATE(cvar_cl_allow_uid2name, int, "cl_allow_uid2name");
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
+REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
+#endif
+
+#ifdef SVQC
+REPLICATE_APPLYCHANGE("cl_allow_uidtracking", { PlayerStats_GameReport_AddPlayer(this); });
+#endif
+
 #ifdef SVQC
 void PlayerStats_Prematch()
 {
 	//foobar
+}
+
+// Deletes current playerstats DB, creates a new one and fully initializes it
+void PlayerStats_GameReport_Reset_All()
+{
+	strfree(PS_GR_OUT_TL);
+	strfree(PS_GR_OUT_PL);
+	strfree(PS_GR_OUT_EVL);
+
+	if (PS_GR_OUT_DB >= 0)
+	{
+		db_close(PS_GR_OUT_DB);
+		PlayerStats_GameReport_Init();
+	}
+	if(PS_GR_OUT_DB < 0)
+		return;
+
+	for (int i = 0; i < 16; i++)
+		if (teamscorekeepers[i])
+			PlayerStats_GameReport_AddTeam(i + 1);
+	FOREACH_CLIENT(true, {
+		// NOTE Adding back a player we are applying any cl_allow_uidtracking change
+		// usually only possible by reconnecting to the server
+		strfree(it.playerstats_id);
+		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
+		PlayerStats_GameReport_AddPlayer(it);
+	});
+	FOREACH(Scores, true, {
+		string label = scores_label(it);
+		if (label == "")
+			continue;
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	});
+	for(int i = 0; i < MAX_TEAMSCORE; ++i)
+	{
+		string label = teamscores_label(i);
+		if (label == "")
+			continue;
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
 }
 
 void PlayerStats_GameReport_AddPlayer(entity e)
@@ -152,7 +205,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	{
 		if(CS(p).latency_cnt)
 		{
-			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
+			float latency = max(0, CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
@@ -228,6 +281,10 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_DelayMapVote = true;
 
 		serverflags |= SERVERFLAG_PLAYERSTATS;
+		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
+		{
+			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
+		}
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -309,6 +366,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * i: player index
 		 * n: nickname of the player (optional)
 		 * t: team ID
+		 * r: player ranking enabled / disabled
 		 * e: followed by an event name, a space, and the event count/score
 		 *  event names can be:
 		 *   alivetime: total playing time of the player

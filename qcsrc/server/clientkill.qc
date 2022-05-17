@@ -12,6 +12,7 @@
 #include <server/damage.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/round_handler.qh>
 #include <server/teamplay.qh>
 
 void ClientKill_Now_TeamChange(entity this)
@@ -24,7 +25,7 @@ void ClientKill_Now_TeamChange(entity this)
 	{
 		if (blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		PutObserverInServer(this);
+		PutObserverInServer(this, false, true);
 	}
 	else
 	{
@@ -105,6 +106,9 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		return;
 	killtime = M_ARGV(1, float);
 
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		killtime = min(killtime, 1);
+
 	this.killindicator_teamchange = targetteam;
 
 	// this.killindicator.count == 1 means that the kill indicator was spawned by ClientKill_Silent
@@ -119,7 +123,10 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		if (!IS_DEAD(this))
 		{
 			killtime = max(killtime, this.clientkill_nexttime - time);
-			this.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
+			float antispam_delay = autocvar_g_balance_kill_antispam;
+			if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+				antispam_delay = min(antispam_delay, 2);
+			this.clientkill_nexttime = time + killtime + antispam_delay;
 		}
 
 		if (killtime <= 0 || !IS_PLAYER(this) || IS_DEAD(this))

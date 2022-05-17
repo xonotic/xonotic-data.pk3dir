@@ -53,9 +53,6 @@ REGISTER_ITEM(Speed, Powerup) {
 }
 
 SPAWNFUNC_ITEM(item_speed, ITEM_Speed)
-// compat
-SPAWNFUNC_ITEM(item_haste, ITEM_Speed)
-SPAWNFUNC_ITEM(item_scout, ITEM_Speed)
 
 CLASS(Speed, Powerups)
     ATTRIB(Speed, netname, string, "speed");

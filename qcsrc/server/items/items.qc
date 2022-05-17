@@ -12,6 +12,7 @@
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/resources.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
@@ -447,7 +448,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	}
 }
 
-bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
+bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammomax)
 {
 	float amount = GetResource(item, res_type);
 	if (amount == 0)
@@ -483,7 +484,7 @@ bool Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS_CVAR(player).autoswitch)
+	if(CS_CVAR(player).cvar_cl_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -981,7 +982,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
-		this.nextthink = time + 20;
+		this.nextthink = time + autocvar_g_items_dropped_lifetime;
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
@@ -1057,19 +1058,19 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		if(autocvar_spawn_debug >= 2)
 		{
-            // why not flags & fl_item?
-		    FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
-                LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
-                LOG_TRACE(" vs ", it.netname, vtos(it.origin));
-                error("Mapper sucks.");
-            });
+			// why not flags & fl_item?
+			FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
+				LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
+				LOG_TRACE(" vs ", it.netname, vtos(it.origin));
+				error("Mapper sucks.");
+			});
 			this.is_item = true;
 		}
 
 		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
 
-		if (   def.instanceOfPowerup
-			|| def.instanceOfWeaponPickup
+		if (	    def.instanceOfPowerup
+			||  def.instanceOfWeaponPickup
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
@@ -1093,7 +1094,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	// support skinned models for powerups
 	this.skin = def.m_skin;
-	this.glowmod = def.m_color;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
@@ -1109,6 +1109,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(Item_IsLoot(this))
 		this.gravity = 1;
+	else
+		this.glowmod = def.m_color;
 
 	if(def.instanceOfWeaponPickup)
 	{
@@ -1146,18 +1148,21 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 void StartItem(entity this, GameItem def)
 {
-    def = def.m_spawnfunc_hookreplace(def, this);
-    if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
-    {
-        delete(this);
-        return;
-    }
-    this.classname = def.m_canonical_spawnfunc;
-    _StartItem(
-    	this,
-    	this.itemdef = def,
-    	def.m_respawntime(), // defaultrespawntime
-    	def.m_respawntimejitter() // defaultrespawntimejitter
+	def = def.m_spawnfunc_hookreplace(def, this);
+
+	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+	{
+		delete(this);
+		return;
+	}
+
+	this.classname = def.m_canonical_spawnfunc;
+
+	_StartItem(
+		this,
+		this.itemdef = def,
+		def.m_respawntime(), // defaultrespawntime
+		def.m_respawntimejitter() // defaultrespawntimejitter
 	);
 }
 
@@ -1431,12 +1436,12 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != NULL)
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+			sound(e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != NULL)
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+			sound(e, ((snd_incr == SND_POWERUP) ? CH_TRIGGER_SINGLE : CH_TRIGGER), snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1447,7 +1452,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
-bool GiveResourceValue(entity e, int res_type, int op, int val)
+bool GiveResourceValue(entity e, Resource res_type, int op, int val)
 {
 	int v0 = GetResource(e, res_type);
 	float new_val = 0;
@@ -1509,7 +1514,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS_CVAR(e).autoswitch)
+	if(CS_CVAR(e).cvar_cl_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
