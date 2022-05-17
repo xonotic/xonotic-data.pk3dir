@@ -108,17 +108,22 @@ void XonoticWelcomeDialog_fill(entity me)
 		me.serverinfo_name_ent.allowColors = true;
 	me.TR(me);
 		me.TD(me, 2, 1, makeXonoticImage("/gfx/menu/luma/gametype_ca", 1));
-		me.TD(me, 1, 3, makeXonoticTextLabel(0, "Game type: Clan Arena"));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, "Game type: ^1Clan Arena"));
+		e.allowColors = true;
 	me.TR(me);
 		me.TDempty(me, 1);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Players: 4/24 (Warmup)"));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Players: 4/24 ^2(Warmup)"));
+		e.allowColors = true;
 	me.TR(me);
-		me.TD(me, 1, 2, makeXonoticTextLabel(0, "Frag limit: 0"));
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Point limit: ^50"));
+		e.allowColors = true;
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Time limit: 10"));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Time limit: ^510"));
+		e.allowColors = true;
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Active modifications: Test\nNew line test"));
-		e.escapedNewLines = true;
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Modifications: ^3Most Weapons Arena"));
+		e.allowColors = true;
+		e.allowWrap = true;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 2, 4, e = makeTeamButton_T(_("join"), '0 0 0', "cmd selectteam auto; cmd join",
@@ -132,7 +137,8 @@ void XonoticWelcomeDialog_fill(entity me)
 		me.TD(me, 2, 1, e = me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, 2, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, 2, e = makeXonoticLeaveMatchButton('1 0 0', COMMANDBUTTON_CLOSE));
 
 	me.gotoRC(me, 1, 4);
 		me.TD(me, me.rows - 1, 4, me.serverinfo_MOTD_ent = makeXonoticTextBox());
