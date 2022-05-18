@@ -71,6 +71,10 @@ void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 void XonoticWelcomeDialog_draw(entity me)
 {
 	SUPER(XonoticWelcomeDialog).draw(me);
+
+	if (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)))
+		me.close(me);
+
 	if(me.serverinfo_MOTD == "" && gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 	{
 		// if serverinfo_MOTD is empty while connected it means we are connected to an old server

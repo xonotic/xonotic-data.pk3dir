@@ -1438,6 +1438,8 @@ void Welcome_Message_Show_Try()
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
 			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+			if (intermission) // close it after it's been initialized so it can still be opened manually
+				localcmd("\ntogglemenu 0\n");
 		}
 		else
 			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
