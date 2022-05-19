@@ -192,7 +192,7 @@ void W_MineLayer_Think(entity this)
 	head = findradius(this.origin, WEP_CVAR(minelayer, proximityradius));
 	while(head)
 	{
-		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head))
+		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
 		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
 		if(!this.mine_time)
 		{
