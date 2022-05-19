@@ -70,6 +70,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()
 		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));

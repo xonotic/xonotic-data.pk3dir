@@ -136,13 +136,7 @@ void HUD_Radar_Mouse()
 	if ( !hud_panel_radar_mouse ) return;
 	if(mv_active) return;
 
-	if ( intermission )
-	{
-		HUD_Radar_Hide_Maximized();
-		return;
-	}
-
-	if(mouseClicked & S_MOUSE2)
+	if (intermission || scoreboard_ui_enabled || (mouseClicked & S_MOUSE2))
 	{
 		HUD_Radar_Hide_Maximized();
 		return;

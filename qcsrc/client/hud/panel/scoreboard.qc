@@ -333,7 +333,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 	}
 	else if(nPrimary == K_ENTER || nPrimary == K_SPACE || nPrimary == K_KP_ENTER)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
 		{
@@ -351,7 +351,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 	}
 	else if(nPrimary == 't' && (hudShiftState & S_CTRL))
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
 		{
@@ -367,7 +367,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 	}
 	else if(nPrimary == 'k' && (hudShiftState & S_CTRL))
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
 		{
@@ -1435,7 +1435,9 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 bool Scoreboard_WouldDraw()
 {
-	if (MUTATOR_CALLHOOK(DrawScoreboard))
+	if (scoreboard_ui_enabled)
+		return true;
+	else if (MUTATOR_CALLHOOK(DrawScoreboard))
 		return false;
 	else if (QuickMenu_IsOpened())
 		return false;
