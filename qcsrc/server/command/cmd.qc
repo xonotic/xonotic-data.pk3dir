@@ -114,7 +114,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 					else if (teamplay && !autocvar_sv_spectate && !(Player_GetForcedTeamIndex(caller) > 0))
 					{
 						TRANSMUTE(Observer, caller);  // really?
-						stuffcmd(caller, "menu_showteamselect\n");
+						stuffcmd(caller, "scoreboard_team_selection\n");
 					}
 				}
 
