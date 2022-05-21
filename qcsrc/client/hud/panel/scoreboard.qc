@@ -2194,14 +2194,10 @@ void Scoreboard_Draw()
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 
 	// Game Info: Game Type
-	str = MapInfo_Type_ToText(gametype);
 	if (scoreboard_ui_enabled == 2)
-	{
-		if (scoreboard_selected_team)
-			str = sprintf(_("^7Press ^3%s ^7to join the selected team"), getcommandkey(_("jump"), "+jump"));
-		else
-			str = sprintf(_("^7Press ^3%s ^7to join 'best' team (auto-select)"), getcommandkey(_("jump"), "+jump"));
-	}
+		str = _("Team Selection");
+	else
+		str = MapInfo_Type_ToText(gametype);
 	draw_beginBoldFont();
 	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
@@ -2210,6 +2206,13 @@ void Scoreboard_Draw()
 	// Game Info: Game Detail
 	if (scoreboard_ui_enabled == 2)
 	{
+		if (scoreboard_selected_team)
+			str = sprintf(_("^7Press ^3%s ^7to join the selected team"), getcommandkey(_("jump"), "+jump"));
+		else
+			str = sprintf(_("^7Press ^3%s ^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
+		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
 		str = sprintf(_("^7Press ^3%s ^7to select a specific team"), translate_key("TAB"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
