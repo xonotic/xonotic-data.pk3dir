@@ -26,6 +26,8 @@ float teamscores_flags_primary;
 
 vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, vector previous, bool strict) // returns: cmp value, best prio
 {
+	if(fieldflags & SFL_NOT_SORTABLE) // column does not sort
+		return previous;
 	if(!strict && !(fieldflags & SFL_SORT_PRIO_MASK)) // column does not sort
 		return previous;
 	if((fieldflags & SFL_SORT_PRIO_MASK) < previous.y)

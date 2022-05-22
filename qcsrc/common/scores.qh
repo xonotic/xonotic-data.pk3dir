@@ -117,15 +117,17 @@ const int SFL_RANK = BIT(5);
  */
 const int SFL_TIME = BIT(6);
 
+const int SFL_NOT_SORTABLE = BIT(7); // don't sort by this field
+
 // not an extra constant yet
 #define SFL_ZERO_IS_WORST SFL_TIME
 
 /**
  * Scoring priority (NOTE: PRIMARY is used for fraglimit)
  */
-const int SFL_SORT_PRIO_SECONDARY = 4;
-const int SFL_SORT_PRIO_PRIMARY = 8;
-const int SFL_SORT_PRIO_MASK = 12;
+const int SFL_SORT_PRIO_SECONDARY = BIT(2);
+const int SFL_SORT_PRIO_PRIMARY = BIT(3);
+const int SFL_SORT_PRIO_MASK = SFL_SORT_PRIO_PRIMARY | SFL_SORT_PRIO_SECONDARY;
 
 #define IS_INCREASING(x) ( (x) & SFL_LOWER_IS_BETTER )
 #define IS_DECREASING(x) ( !((x) & SFL_LOWER_IS_BETTER) )

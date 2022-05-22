@@ -176,6 +176,8 @@ void Scoreboard_InitScores()
 	ps_primary = ps_secondary = NULL;
 	ts_primary = ts_secondary = -1;
 	FOREACH(Scores, true, {
+		if(scores_flags(it) & SFL_NOT_SORTABLE)
+			continue;
 		f = (scores_flags(it) & SFL_SORT_PRIO_MASK);
 		if(f == SFL_SORT_PRIO_PRIMARY)
 			ps_primary = it;
