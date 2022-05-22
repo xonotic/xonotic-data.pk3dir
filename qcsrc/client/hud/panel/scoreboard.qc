@@ -412,7 +412,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 					team_name = "auto";
 				else
 					team_name = Static_Team_ColorName(scoreboard_selected_team.team);
-				localcmd(sprintf("cmd selectteam %s; cmd join", team_name));
+				localcmd(sprintf("cmd selectteam %s; cmd join\n", team_name));
 				HUD_Scoreboard_UI_Disable();
 			}
 			else if (!scoreboard_selected_player || (hudShiftState & S_SHIFT))
@@ -421,7 +421,34 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 				HUD_Scoreboard_UI_Disable();
 			}
 			else
-				localcmd(sprintf("spectate %d", scoreboard_selected_player.sv_entnum + 1));
+				localcmd(sprintf("spectate %d\n", scoreboard_selected_player.sv_entnum + 1));
+		}
+	}
+	else if(nPrimary == 'c' && (hudShiftState & S_CTRL))
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_ui_enabled == 1 && scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			switch (scoreboard_selected_columns_layout)
+			{
+				case 0:
+					if (autocvar_scoreboard_columns != "" && autocvar_scoreboard_columns != "all" && autocvar_scoreboard_columns != "default")
+					{
+						localcmd(sprintf("scoreboard_columns_set\n")); // sets the layout saved in scoreboard_columns
+						scoreboard_selected_columns_layout = 1;
+						break;
+					}
+					// fallthrough
+				case 1:
+					localcmd(sprintf("scoreboard_columns_set default\n"));
+					scoreboard_selected_columns_layout = 2;
+					break;
+				case 2:
+					localcmd(sprintf("scoreboard_columns_set all\n"));
+					scoreboard_selected_columns_layout = 0;
+					break;
+			}
 		}
 	}
 	else if(nPrimary == 't' && (hudShiftState & S_CTRL))
@@ -432,7 +459,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		{
 			if (scoreboard_selected_player)
 			{
-				localcmd(sprintf("commandmode tell \"%s^7\"", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+				localcmd(sprintf("commandmode tell \"%s^7\"\n", entcs_GetName(scoreboard_selected_player.sv_entnum)));
 				HUD_Scoreboard_UI_Disable();
 			}
 		}
@@ -444,7 +471,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
 		{
 			if (scoreboard_selected_player)
-				localcmd(sprintf("vcall kick \"%s^7\"", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+				localcmd(sprintf("vcall kick \"%s^7\"\n", entcs_GetName(scoreboard_selected_player.sv_entnum)));
 		}
 	}
 	else if(hit_con_bind || nPrimary == K_PAUSE)
@@ -2207,9 +2234,9 @@ void Scoreboard_Draw()
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
-			str = sprintf(_("^7Press ^3%s ^7to join the selected team"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), getcommandkey(_("jump"), "+jump"));
 		else
-			str = sprintf(_("^7Press ^3%s ^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;

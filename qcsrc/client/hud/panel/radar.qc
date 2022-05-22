@@ -1,6 +1,7 @@
 #include "radar.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/mapvoting.qh>
 #include <client/teamradar.qh>
 #include <common/ent_cs.qh>
