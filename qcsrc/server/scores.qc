@@ -23,6 +23,8 @@ var .float scores_primary;
 var .float teamscores_primary;
 float scores_flags_primary;
 float teamscores_flags_primary;
+var .float scores_secondary;
+float scores_flags_secondary;
 
 vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, vector previous, bool strict) // returns: cmp value, best prio
 {
@@ -145,13 +147,18 @@ float TeamScore_Compare(entity t1, entity t2, bool strict)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
+	// supporting MAX_TEAMSCORE > 2 requires keeping track of primary and secondary teamscore
+	if (MAX_TEAMSCORE > 2)
+		error("MAX_TEAMSCORE > 2 not supported");
+
+	// first compare primary, then others (don't check secondary flag since there are only 2 teamscores)
 	vector result = '0 0 0';
-	float i;
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	int i = boolean(teamscores_primary && teamscores_primary == teamscores(1));
+	result = ScoreField_Compare(t1, t2, teamscores(i), teamscores_flags(i), result, strict);
+	if (result.x == 0)
 	{
-		var .float f;
-		f = teamscores(i);
-		result = ScoreField_Compare(t1, t2, f, teamscores_flags(i), result, strict);
+		i = (i + 1) % MAX_TEAMSCORE;
+		result = ScoreField_Compare(t1, t2, teamscores(i), teamscores_flags(i), result, strict);
 	}
 
 	if (result.x == 0 && strict)
@@ -172,6 +179,11 @@ void ScoreInfo_SetLabel_PlayerScore(PlayerScoreField i, string label, float scor
 	{
 		scores_primary = scores(i);
 		scores_flags_primary = scoreflags;
+	}
+	else if((scoreflags & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
+	{
+		scores_secondary = scores(i);
+		scores_flags_secondary = scoreflags;
 	}
 	if(label != "")
 	{
@@ -410,10 +422,22 @@ float PlayerScore_Compare(entity t1, entity t2, bool strict)
 	if(!t1 || !t2) return (!t2) - !t1;
 
 	vector result = '0 0 0';
-	FOREACH(Scores, true, {
-		var .float f = scores(it);
-		result = ScoreField_Compare(t1, t2, f, scores_flags(it), result, strict);
-	});
+
+	result = ScoreField_Compare(t1, t2, scores_primary, scores_flags_primary, result, strict);
+	// NOTE: if (scores_secondary) doesn't work because it's a field pointer
+	if (result.x == 0 && scores_flags_secondary)
+		result = ScoreField_Compare(t1, t2, scores_secondary, scores_flags_secondary, result, strict);
+
+	if (result.x == 0)
+		FOREACH(Scores, true, {
+			if (scores_flags(it) & SFL_SORT_PRIO_MASK)
+				continue;
+			if (scores_label(it) == "")
+				continue;
+			var .float f = scores(it);
+			result = ScoreField_Compare(t1, t2, f, scores_flags(it), result, strict);
+			if (result.x) break;
+		});
 
 	if (result.x == 0 && strict)
 		result.x = t1.owner.playerid - t2.owner.playerid;
