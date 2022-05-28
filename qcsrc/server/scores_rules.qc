@@ -47,7 +47,8 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	if (!INDEPENDENT_PLAYERS)
 	{
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES, "suicides", SFL_LOWER_IS_BETTER);
-		ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS, "teamkills", SFL_LOWER_IS_BETTER);
+		if (teamplay)
+			ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS, "teamkills", SFL_LOWER_IS_BETTER);
 	}
 
 	if(score_enabled)
