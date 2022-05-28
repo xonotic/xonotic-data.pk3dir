@@ -6,21 +6,21 @@
 # Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>, 2019
 # Ahmet, 2022
 # Ahmet, 2022
-# Big Brother <tanakinci2002@gmail.com>, 2021
+# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
-# Big Brother <tanakinci2002@gmail.com>, 2021
+# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 # Gokdeniz.Kucukali, 2021
 # Gokdeniz.Kucukali, 2021
 # ibra kap <ibrakap@gmail.com>, 2019
-# Big Brother <tanakinci2002@gmail.com>, 2021
+# Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Big Brother <tanakinci2002@gmail.com>, 2021\n"
+"Last-Translator: Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
