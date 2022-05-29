@@ -230,6 +230,9 @@ void Announcer_Time()
 
 void Announcer()
 {
+	// announcer code sets gametype name as centerprint title
+	if(!gametype)
+		return;
 	Announcer_Gamestart();
 	Announcer_Time();
 }
