@@ -2110,8 +2110,7 @@ void Scoreboard_Draw()
 
 	// print information about respawn status
 	float respawn_time = STAT(RESPAWN_TIME);
-	if(!intermission)
-	if(respawn_time)
+	if(!intermission && respawn_time)
 	{
 		if(respawn_time < 0)
 		{
