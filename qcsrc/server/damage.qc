@@ -629,14 +629,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(IS_PLAYER(attacker))
 		{
 			// avoid dealing damage or force to other independent players
-			if(IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
-			{
-				damage = 0;
-				force = '0 0 0';
-			}
-			// avoid dealing damage or force to things owned by other independent players
-			if(targ.realowner)
-			if(IS_INDEPENDENT_PLAYER(targ.realowner) && attacker != targ.realowner)
+			// and avoid dealing damage or force to things owned by other independent players
+			if((IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ))) ||
+				(targ.realowner && IS_INDEPENDENT_PLAYER(targ.realowner) && attacker != targ.realowner))
 			{
 				damage = 0;
 				force = '0 0 0';
