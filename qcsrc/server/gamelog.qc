@@ -1,5 +1,7 @@
 #include "gamelog.qh"
-
+#include <server/intermission.qh>    // GetGametype(), GetMapname()
+#include <server/weapons/tracing.qh> // autocvar_g_norecoil
+#include <server/world.qh>           // matchid
 #include <server/main.qh>
 
 string GameLog_ProcessIP(string s)
@@ -41,8 +43,32 @@ void GameLogEcho(string s)
 
 void GameLogInit()
 {
-	logfile_open = false;
-	// will be opened later
+	GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", matchid));
+	string s = ":gameinfo:mutators:LIST";
+
+	MUTATOR_CALLHOOK(BuildMutatorsString, s);
+	s = M_ARGV(0, string);
+
+	// initialiation stuff, not good in the mutator system
+	if(!autocvar_g_use_ammunition)
+		s = strcat(s, ":no_use_ammunition");
+
+	// initialiation stuff, not good in the mutator system
+	if(autocvar_g_pickup_items == 0)
+		s = strcat(s, ":no_pickup_items");
+	if(autocvar_g_pickup_items > 0)
+		s = strcat(s, ":pickup_items");
+
+	// initialiation stuff, not good in the mutator system
+	if(autocvar_g_weaponarena != "0")
+		s = strcat(s, ":", autocvar_g_weaponarena, " arena");
+
+	// TODO to mutator system
+	if(autocvar_g_norecoil)
+		s = strcat(s, ":norecoil");
+
+	GameLogEcho(s);
+	GameLogEcho(":gameinfo:end");
 }
 
 void GameLogClose()
