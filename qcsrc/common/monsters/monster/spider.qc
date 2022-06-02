@@ -81,13 +81,6 @@ float autocvar_g_monster_spider_speed_stop;
 float autocvar_g_monster_spider_speed_run;
 float autocvar_g_monster_spider_speed_walk;
 
-/*
-const float spider_anim_idle		= 0;
-const float spider_anim_walk		= 1;
-const float spider_anim_attack		= 2;
-const float spider_anim_attack2		= 3;
-*/
-
 void M_Spider_Attack_Web_Explode(entity this)
 {
 	if(this)

@@ -1,0 +1,14 @@
+/*
+Generated framegroups file for wyvern
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 101 30 1 // wyvern idle
+102 101 30 1 // wyvern glide
+203 101 30 1 // wyvern fly
+304 26 30 0 // wyvern pain1
+330 26 30 0 // wyvern pain2
+356 51 30 0 // wyvern melee
+407 51 30 0 // wyvern fireball
+458 101 30 1 // wyvern dying
+559 26 30 0 // wyvern dead

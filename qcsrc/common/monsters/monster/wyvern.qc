@@ -57,14 +57,6 @@ float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
 float autocvar_g_monster_wyvern_speed_walk;
 
-/*
-const float wyvern_anim_hover	= 0;
-const float wyvern_anim_fly		= 1;
-const float wyvern_anim_magic	= 2;
-const float wyvern_anim_pain	= 3;
-const float wyvern_anim_death	= 4;
-*/
-
 void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);

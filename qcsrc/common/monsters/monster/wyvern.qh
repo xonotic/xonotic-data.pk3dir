@@ -3,7 +3,7 @@
 #include "../all.qh"
 
 #ifdef GAMEQC
-MODEL(MON_WYVERN, M_Model("dragon.dpm"));
+MODEL(MON_WYVERN, M_Model("wyvern.dpm"));
 #endif
 
 CLASS(Wyvern, Monster)

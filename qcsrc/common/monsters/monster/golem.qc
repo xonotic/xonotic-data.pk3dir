@@ -18,18 +18,6 @@ float autocvar_g_monster_golem_speed_stop;
 float autocvar_g_monster_golem_speed_run;
 float autocvar_g_monster_golem_speed_walk;
 
-/*
-const float golem_anim_stand		= 0;
-const float golem_anim_walk		= 1;
-const float golem_anim_run		= 2;
-const float golem_anim_smash		= 3;
-const float golem_anim_swingr	= 4;
-const float golem_anim_swingl	= 5;
-const float golem_anim_magic		= 6;
-const float golem_anim_pain		= 7;
-const float golem_anim_death		= 8;
-*/
-
 .float golem_lastattack; // delay attacks separately
 
 void M_Golem_Attack_Smash(entity this)

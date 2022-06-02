@@ -75,15 +75,6 @@ float autocvar_g_monster_mage_speed_stop;
 float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
-/*
-const float mage_anim_idle		= 0;
-const float mage_anim_walk		= 1;
-const float mage_anim_attack	= 2;
-const float mage_anim_pain		= 3;
-const float mage_anim_death		= 4;
-const float mage_anim_run		= 5;
-*/
-
 void M_Mage_Defend_Heal(entity this);
 void M_Mage_Defend_Shield(entity this);
 
