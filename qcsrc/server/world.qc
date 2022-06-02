@@ -1089,22 +1089,22 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
             continue;
 
 		// rule 4: we must "see" some spawnpoint or item
-	    entity sp = NULL;
-	    if(frompos)
-	    {
-	    	if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-	    		sp = e;
-	    }
-	    if(!sp)
-	    {
-		    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
-		    {
-		    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-		    	{
-		    		sp = it;
-		    		break;
-		    	}
-		    });
+		entity sp = NULL;
+		if(frompos)
+		{
+			if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				sp = e;
+		}
+		if(!sp)
+		{
+			IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+			{
+				if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				{
+					sp = it;
+					break;
+				}
+			});
 		}
 		if(!sp)
 		{
