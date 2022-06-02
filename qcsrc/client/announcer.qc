@@ -53,6 +53,8 @@ void Announcer_ClearTitle()
 }
 
 bool prev_inround;
+float prev_starttime;
+float prev_roundstarttime;
 void Announcer_Countdown(entity this)
 {
 	float starttime = STAT(GAMESTARTTIME);
@@ -70,6 +72,9 @@ void Announcer_Countdown(entity this)
 	float countdown = (inround ? roundstarttime - time : starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
 
+	if (starttime != prev_starttime || roundstarttime != prev_roundstarttime || prev_inround != inround)
+		this.skin = 0; // restart centerprint countdown
+
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
@@ -84,7 +89,8 @@ void Announcer_Countdown(entity this)
 		if(inround)
 		{
 			if(!prev_inround) Announcer_ClearTitle(); // clear title if we just started the match
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, STAT(ROUNDS_PLAYED) + 1, countdown_rounded);
+			if (!this.skin) // first tic
+				Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, STAT(ROUNDS_PLAYED) + 1, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
@@ -92,15 +98,22 @@ void Announcer_Countdown(entity this)
 		}
 		else
 		{
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
+			if (!this.skin) // first tic
+				Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
 			if(!roundstarttime && annce_num != NULL) // Don't announce game start in round based modes
 				Local_Notification(MSG_ANNCE, annce_num);
 			this.nextthink = (starttime - (countdown - 1));
 		}
+		// Don't call centerprint countdown in the remaining tics, it will continue automatically.
+		// It's an optimization but also fixes ^COUNT shown in the last tic because of high slowmo values (15+).
+		// Hopefully it fixes ^COUNT occasionally shown in online servers, probably due to lags.
+		this.skin = 1; // recycled field
 	}
 
 	prev_inround = inround;
+	prev_starttime = starttime;
+	prev_roundstarttime = roundstarttime;
 }
 
 /**
@@ -119,6 +132,7 @@ void Announcer_Gamestart()
 		startTime = roundstarttime;
 	if(intermission)
 	{
+		Announcer_ClearTitle();
 		if(announcer_countdown)
 		{
 			centerprint_Kill(ORDINAL(CPID_ROUND));
@@ -216,6 +230,9 @@ void Announcer_Time()
 
 void Announcer()
 {
+	// announcer code sets gametype name as centerprint title
+	if(!gametype)
+		return;
 	Announcer_Gamestart();
 	Announcer_Time();
 }

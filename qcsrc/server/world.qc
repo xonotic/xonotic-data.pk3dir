@@ -35,7 +35,6 @@
 #include <server/damage.qh>
 #include <server/gamelog.qh>
 #include <server/hook.qh>
-#include <server/intermission.qh>
 #include <server/ipban.qh>
 #include <server/items/items.qh>
 #include <server/main.qh>
@@ -46,7 +45,6 @@
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
-#include <server/weapons/common.qh>
 #include <server/weapons/weaponstats.qh>
 
 const float LATENCY_THINKRATE = 10;
@@ -844,46 +842,15 @@ spawnfunc(worldspawn)
 
 	WaypointSprite_Init();
 
-	GameLogInit(); // prepare everything
 	// NOTE for matchid:
 	// changing the logic generating it is okay. But:
 	// it HAS to stay <= 64 chars
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
+	// strftime(false, "%s") isn't reliable, see strftime_s description
+	matchid = strzone(sprintf("%d.%s.%06d", autocvar_sv_eventlog_files_counter, strftime_s(), random() * 1000000));
+
 	if(autocvar_sv_eventlog)
-	{
-		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
-		matchid = strzone(s);
-
-		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
-		s = ":gameinfo:mutators:LIST";
-
-		MUTATOR_CALLHOOK(BuildMutatorsString, s);
-		s = M_ARGV(0, string);
-
-		// initialiation stuff, not good in the mutator system
-		if(!autocvar_g_use_ammunition)
-			s = strcat(s, ":no_use_ammunition");
-
-		// initialiation stuff, not good in the mutator system
-		if(autocvar_g_pickup_items == 0)
-			s = strcat(s, ":no_pickup_items");
-		if(autocvar_g_pickup_items > 0)
-			s = strcat(s, ":pickup_items");
-
-		// initialiation stuff, not good in the mutator system
-		if(autocvar_g_weaponarena != "0")
-			s = strcat(s, ":", autocvar_g_weaponarena, " arena");
-
-		// TODO to mutator system
-		if(autocvar_g_norecoil)
-			s = strcat(s, ":norecoil");
-
-		GameLogEcho(s);
-		GameLogEcho(":gameinfo:end");
-	}
-	else
-		matchid = strzone(ftos(random()));
+		GameLogInit(); // requires matchid to be set
 
 	cvar_set("nextmap", "");
 
