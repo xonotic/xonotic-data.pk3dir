@@ -142,7 +142,7 @@ void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think(entity this)
 {
-	if (time > this.ltime || (this.enemy && GetResource(this.enemy, RES_HEALTH) <= 0) || GetResource(this.owner, RES_HEALTH) <= 0) {
+	if (time > this.ltime || (this.enemy && GetResource(this.enemy, RES_HEALTH) <= 0) || !this.owner || GetResource(this.owner, RES_HEALTH) <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode(this, NULL);
 	}
@@ -298,7 +298,7 @@ void M_Mage_Attack_Push(entity this)
 void M_Mage_Attack_Teleport(entity this, entity targ)
 {
 	if(!targ) return;
-	if(vdist(targ.origin - this.origin, >, 1500)) return;
+	if(vdist(targ.origin - this.origin, >, autocvar_g_monster_mage_attack_teleport_random_range)) return;
 
 	if(autocvar_g_monster_mage_attack_teleport_random && random() <= autocvar_g_monster_mage_attack_teleport_random)
 	{

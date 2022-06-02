@@ -1,8 +1,8 @@
-//TAG: shambler
-//death sound/monsters/shambler/death 0
-sight sound/monsters/shambler/sight 0
-//ranged sound/monsters/shambler/ranged 0
-//melee sound/monsters/shambler/melee 0
-//pain sound/monsters/shambler/pain 0
-//spawn sound/monsters/shambler/spawn 0
-idle sound/monsters/shambler/idle 2
+//TAG: golem
+//death sound/monsters/golem/death 0
+sight sound/monsters/golem/sight 0
+//ranged sound/monsters/golem/ranged 0
+//melee sound/monsters/golem/melee 0
+//pain sound/monsters/golem/pain 0
+//spawn sound/monsters/golem/spawn 0
+idle sound/monsters/golem/idle 2

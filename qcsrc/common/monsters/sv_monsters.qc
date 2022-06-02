@@ -452,6 +452,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if((!this || !targ)
 	|| (!this.monster_attackfunc)
+	|| (game_stopped)
 	|| (time < this.attack_finished_single[slot])
 	|| ((autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT)) && !monster_facing(this, targ))
 	) { return; }
