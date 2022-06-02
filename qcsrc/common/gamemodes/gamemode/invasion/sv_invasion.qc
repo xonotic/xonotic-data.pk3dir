@@ -475,7 +475,7 @@ void invasion_ScoreRules()
 {
 	GameRules_score_enabled(false);
 	GameRules_scoring(0, 0, 0, {
-	    field(SP_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	    field(SP_KILLS, "kills", SFL_SORT_PRIO_PRIMARY);
 	});
 }
 
