@@ -590,20 +590,6 @@ vector Monster_Move_Target(entity this, entity targ)
 	{
 		vector targ_origin = ((this.enemy.absmin + this.enemy.absmax) * 0.5);
 		targ_origin = WarpZone_RefSys_TransformOrigin(this.enemy, this, targ_origin); // origin of target as seen by the monster (us)
-		WarpZone_TraceLine(this.origin, targ_origin, MOVE_NOMONSTERS, this);
-
-		// cases where the enemy may have changed their state (don't need to check everything here)
-		if(    (IS_DEAD(this.enemy) || GetResource(this.enemy, RES_HEALTH) < 1)
-			|| (STAT(FROZEN, this.enemy))
-			|| (this.enemy.flags & FL_NOTARGET)
-			|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
-			|| (this.enemy.takedamage == DAMAGE_NO)
-			|| (vdist(this.origin - targ_origin, >, this.target_range))
-			|| ((trace_fraction < 1) && (trace_ent != this.enemy))
-			)
-		{
-			this.enemy = NULL;
-		}
 
 		if(this.enemy)
 		{
@@ -1202,7 +1188,28 @@ void Monster_Frozen_Think(entity this)
 void Monster_Enemy_Check(entity this)
 {
 	if(this.enemy)
-		return;
+	{
+		vector targ_origin = ((this.enemy.absmin + this.enemy.absmax) * 0.5);
+		targ_origin = WarpZone_RefSys_TransformOrigin(this.enemy, this, targ_origin); // origin of target as seen by the monster (us)
+		WarpZone_TraceLine(this.origin, targ_origin, MOVE_NOMONSTERS, this);
+
+		// cases where the enemy may have changed their state (don't need to check everything here)
+		if(    (IS_DEAD(this.enemy) || GetResource(this.enemy, RES_HEALTH) < 1)
+			|| (STAT(FROZEN, this.enemy))
+			|| (this.enemy.flags & FL_NOTARGET)
+			|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
+			|| (this.enemy.takedamage == DAMAGE_NO)
+			|| (vdist(this.origin - targ_origin, >, this.target_range))
+			|| ((trace_fraction < 1) && (trace_ent != this.enemy))
+			)
+		{
+			this.enemy = NULL;
+		}
+		else
+		{
+			return;
+		}
+	}
 
 	this.enemy = Monster_FindTarget(this);
 	if(this.enemy)
