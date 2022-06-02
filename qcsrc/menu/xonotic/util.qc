@@ -687,13 +687,13 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
-	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
 	/**/
 
 // hidden gametypes come last so indexing always works correctly
 #define HIDDEN_GAMETYPES \
 	GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/**/
 
 Gametype GameType_GetID(int cnt)

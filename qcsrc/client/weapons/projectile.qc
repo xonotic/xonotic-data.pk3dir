@@ -317,7 +317,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(SEEKER)             this.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
 
 			HANDLE(MAGE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
-			HANDLE(SHAMBLER_LIGHTNING) this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(GOLEM_LIGHTNING)    this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
 			HANDLE(RAPTORBOMB)         this.gravity = 1; this.avelocity = '0 0 180'; this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(RAPTORBOMBLET)      this.gravity = 1; this.avelocity = '0 0 180'; this.traileffect = EFFECT_Null.m_id; break;
@@ -379,7 +379,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 				this.bouncestop = WEP_CVAR(mortar, bouncestop);
 				break;
-			case PROJECTILE_SHAMBLER_LIGHTNING:
+			case PROJECTILE_GOLEM_LIGHTNING:
 				this.mins = '-8 -8 -8';
 				this.maxs = '8 8 8';
 				this.scale = 2.5;

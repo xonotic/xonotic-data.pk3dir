@@ -281,7 +281,7 @@ void walker_move_path(entity this)
 {
 #ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
-    if(turret_closetotarget(this, this.pathcurrent.origin))
+    if(turret_closetotarget(this, this.pathcurrent.origin, 64))
     {
         if (this.pathcurrent.path_next == NULL)
         {
@@ -312,7 +312,7 @@ void walker_move_path(entity this)
     walker_move_to(this, this.moveto, 0);
 
 #else
-    if(turret_closetotarget(this, this.pathcurrent.origin))
+    if(turret_closetotarget(this, this.pathcurrent.origin, 64))
         this.pathcurrent = this.pathcurrent.enemy;
 
     if(!this.pathcurrent)
