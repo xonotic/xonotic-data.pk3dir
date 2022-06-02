@@ -1,13 +1,17 @@
 #include "wyvern.qh"
 
 #ifdef SVQC
-
+float autocvar_g_monster_wyvern_health;
+float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
 float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
 float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
+float autocvar_g_monster_wyvern_speed_stop;
+float autocvar_g_monster_wyvern_speed_run;
+float autocvar_g_monster_wyvern_speed_walk;
 
 void M_Wyvern_Attack_Fireball_Explode(entity this);
 void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher);
@@ -50,12 +54,6 @@ METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entit
     TC(WyvernAttack, this);
 	return true;
 }
-
-float autocvar_g_monster_wyvern_health;
-float autocvar_g_monster_wyvern_damageforcescale = 0.6;
-float autocvar_g_monster_wyvern_speed_stop;
-float autocvar_g_monster_wyvern_speed_run;
-float autocvar_g_monster_wyvern_speed_walk;
 
 void M_Wyvern_Attack_Fireball_Explode(entity this)
 {

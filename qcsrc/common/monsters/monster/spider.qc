@@ -5,17 +5,20 @@
 #endif
 
 #ifdef SVQC
-
-.float spider_web_delay;
-
+float autocvar_g_monster_spider_health;
+float autocvar_g_monster_spider_damageforcescale = 0.6;
+float autocvar_g_monster_spider_attack_bite_damage;
+float autocvar_g_monster_spider_attack_bite_delay;
 float autocvar_g_monster_spider_attack_web_damagetime;
 float autocvar_g_monster_spider_attack_web_speed;
 float autocvar_g_monster_spider_attack_web_speed_up;
 float autocvar_g_monster_spider_attack_web_delay;
 float autocvar_g_monster_spider_attack_web_range = 800;
+float autocvar_g_monster_spider_speed_stop;
+float autocvar_g_monster_spider_speed_run;
+float autocvar_g_monster_spider_speed_walk;
 
-float autocvar_g_monster_spider_attack_bite_damage;
-float autocvar_g_monster_spider_attack_bite_delay;
+.float spider_web_delay;
 
 void M_Spider_Attack_Web(entity this);
 
@@ -74,12 +77,6 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
-
-float autocvar_g_monster_spider_health;
-float autocvar_g_monster_spider_damageforcescale = 0.6;
-float autocvar_g_monster_spider_speed_stop;
-float autocvar_g_monster_spider_speed_run;
-float autocvar_g_monster_spider_speed_walk;
 
 void M_Spider_Attack_Web_Explode(entity this)
 {

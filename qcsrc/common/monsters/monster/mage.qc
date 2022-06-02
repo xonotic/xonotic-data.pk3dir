@@ -1,6 +1,40 @@
 #include "mage.qh"
 
 #ifdef SVQC
+float autocvar_g_monster_mage_health;
+float autocvar_g_monster_mage_damageforcescale = 0.5;
+float autocvar_g_monster_mage_attack_spike_damage;
+float autocvar_g_monster_mage_attack_spike_radius;
+float autocvar_g_monster_mage_attack_spike_delay;
+float autocvar_g_monster_mage_attack_spike_accel;
+float autocvar_g_monster_mage_attack_spike_decel;
+float autocvar_g_monster_mage_attack_spike_chance = 0.45;
+float autocvar_g_monster_mage_attack_spike_turnrate;
+float autocvar_g_monster_mage_attack_spike_speed_max;
+float autocvar_g_monster_mage_attack_spike_smart;
+float autocvar_g_monster_mage_attack_spike_smart_trace_min;
+float autocvar_g_monster_mage_attack_spike_smart_trace_max;
+float autocvar_g_monster_mage_attack_spike_smart_mindist;
+float autocvar_g_monster_mage_attack_push_chance = 0.7;
+float autocvar_g_monster_mage_attack_push_damage;
+float autocvar_g_monster_mage_attack_push_radius;
+float autocvar_g_monster_mage_attack_push_delay;
+float autocvar_g_monster_mage_attack_push_force;
+float autocvar_g_monster_mage_attack_teleport_chance = 0.2;
+float autocvar_g_monster_mage_attack_teleport_delay = 2;
+float autocvar_g_monster_mage_attack_teleport_random = 0.4;
+float autocvar_g_monster_mage_attack_teleport_random_range = 1200;
+float autocvar_g_monster_mage_heal_self;
+float autocvar_g_monster_mage_heal_allies;
+float autocvar_g_monster_mage_heal_minhealth;
+float autocvar_g_monster_mage_heal_range;
+float autocvar_g_monster_mage_heal_delay;
+float autocvar_g_monster_mage_shield_time;
+float autocvar_g_monster_mage_shield_delay;
+float autocvar_g_monster_mage_shield_blockpercent;
+float autocvar_g_monster_mage_speed_stop;
+float autocvar_g_monster_mage_speed_run;
+float autocvar_g_monster_mage_speed_walk;
 
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
 void M_Mage_Attack_Spike(entity this, vector dir);
@@ -39,41 +73,6 @@ CLASS(OffhandMageTeleport, OffhandWeapon)
 ENDCLASS(OffhandMageTeleport)
 OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
 STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
-
-float autocvar_g_monster_mage_health;
-float autocvar_g_monster_mage_damageforcescale = 0.5;
-float autocvar_g_monster_mage_attack_spike_damage;
-float autocvar_g_monster_mage_attack_spike_radius;
-float autocvar_g_monster_mage_attack_spike_delay;
-float autocvar_g_monster_mage_attack_spike_accel;
-float autocvar_g_monster_mage_attack_spike_decel;
-float autocvar_g_monster_mage_attack_spike_chance = 0.45;
-float autocvar_g_monster_mage_attack_spike_turnrate;
-float autocvar_g_monster_mage_attack_spike_speed_max;
-float autocvar_g_monster_mage_attack_spike_smart;
-float autocvar_g_monster_mage_attack_spike_smart_trace_min;
-float autocvar_g_monster_mage_attack_spike_smart_trace_max;
-float autocvar_g_monster_mage_attack_spike_smart_mindist;
-float autocvar_g_monster_mage_attack_push_chance = 0.7;
-float autocvar_g_monster_mage_attack_push_damage;
-float autocvar_g_monster_mage_attack_push_radius;
-float autocvar_g_monster_mage_attack_push_delay;
-float autocvar_g_monster_mage_attack_push_force;
-float autocvar_g_monster_mage_attack_teleport_chance = 0.2;
-float autocvar_g_monster_mage_attack_teleport_delay = 2;
-float autocvar_g_monster_mage_attack_teleport_random = 0.4;
-float autocvar_g_monster_mage_attack_teleport_random_range = 1200;
-float autocvar_g_monster_mage_heal_self;
-float autocvar_g_monster_mage_heal_allies;
-float autocvar_g_monster_mage_heal_minhealth;
-float autocvar_g_monster_mage_heal_range;
-float autocvar_g_monster_mage_heal_delay;
-float autocvar_g_monster_mage_shield_time;
-float autocvar_g_monster_mage_shield_delay;
-float autocvar_g_monster_mage_shield_blockpercent;
-float autocvar_g_monster_mage_speed_stop;
-float autocvar_g_monster_mage_speed_run;
-float autocvar_g_monster_mage_speed_walk;
 
 void M_Mage_Defend_Heal(entity this);
 void M_Mage_Defend_Shield(entity this);
