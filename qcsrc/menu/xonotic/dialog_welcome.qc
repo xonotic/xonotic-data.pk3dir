@@ -5,7 +5,10 @@
 #include "textbox.qh"
 #include "radiobutton.qh"
 #include "commandbutton.qh"
+#include "leavematchbutton.qh"
 #include "slider.qh"
+#include "util.qh"
+
 
 void welcomeDialog_resetStrings(entity me)
 {
@@ -17,11 +20,11 @@ float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shif
 {
 	switch(key)
 	{
-		case K_KP_ENTER:
-		case K_ENTER:
-		case K_SPACE:
-			me.close(me);
-			return true;
+		//case K_KP_ENTER:
+		//case K_ENTER:
+		//case K_SPACE:
+		//	me.close(me);
+		//	return true;
 		default:
 			return SUPER(XonoticWelcomeDialog).keyDown(me, key, ascii, shift);
 	}
@@ -63,9 +66,21 @@ void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 		}
 		++i;
 	}
-	//me.serverinfo_name_ent.setText(me.serverinfo_name_ent, me.serverinfo_name);
+	me.serverinfo_name_ent.setText(me.serverinfo_name_ent, me.serverinfo_name);
 	me.serverinfo_MOTD_ent.setText(me.serverinfo_MOTD_ent, me.serverinfo_MOTD);
-	me.frame.setText(me.frame, me.serverinfo_name);
+	me.frame.setText(me.frame, "Welcome to Xonotic git");
+}
+
+void XonoticWelcomeDialog_showNotify(entity me)
+{
+	SUPER(XonoticWelcomeDialog).showNotify(me);
+	float teams, nTeams;
+	teams = cvar("_teams_available");
+	nTeams = 0;
+	me.team1.disabled = !(teams & 1); nTeams += boolean(teams & 1);
+	me.team2.disabled = !(teams & 2); nTeams += boolean(teams & 2);
+	me.team3.disabled = !(teams & 4); nTeams += boolean(teams & 4);
+	me.team4.disabled = !(teams & 8); nTeams += boolean(teams & 8);
 }
 
 void XonoticWelcomeDialog_draw(entity me)
@@ -94,13 +109,50 @@ void XonoticWelcomeDialog_fill(entity me)
 	entity e;
 
 	me.TR(me);
-		me.TD(me, me.rows - 1, me.columns, me.serverinfo_MOTD_ent = makeXonoticTextBox());
+		me.TD(me, 1, me.columns, me.serverinfo_name_ent = makeXonoticHeaderLabel("Server"));
+		me.serverinfo_name_ent.allowColors = true;
+	me.TR(me);
+		me.TD(me, 2, 1, makeXonoticImage("/gfx/menu/luma/gametype_ca", 1));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, "Game type: ^1Clan Arena"));
+		e.allowColors = true;
+	me.TR(me);
+		me.TDempty(me, 1);
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Players: 4/24 ^2(Warmup)"));
+		e.allowColors = true;
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Point limit: ^50"));
+		e.allowColors = true;
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Time limit: ^510"));
+		e.allowColors = true;
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Modifications: ^3Most Weapons Arena"));
+		e.allowColors = true;
+		e.allowWrap = true;
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 2, 4, e = makeTeamButton_T(_("join"), '0 0 0', "cmd selectteam auto; cmd join",
+			_("Autoselect team (recommended)")));
+			e.preferredFocusPriority = 1;
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 2, 1, e = me.team1 = makeTeamButton(_("red"), '1 0.5 0.5', "cmd selectteam red; cmd join"));
+		me.TD(me, 2, 1, e = me.team2 = makeTeamButton(_("blue"), '0.5 0.5 1', "cmd selectteam blue; cmd join"));
+		me.TD(me, 2, 1, e = me.team3 = makeTeamButton(_("yellow"), '1 1 0.5', "cmd selectteam yellow; cmd join"));
+		me.TD(me, 2, 1, e = me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join"));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 2, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, 2, e = makeXonoticLeaveMatchButton('1 0 0', COMMANDBUTTON_CLOSE));
+
+	me.gotoRC(me, 1, 4);
+		me.TD(me, me.rows - 1, 4, me.serverinfo_MOTD_ent = makeXonoticTextBox());
 			me.serverinfo_MOTD_ent.align = 0.5;
 			me.serverinfo_MOTD_ent.allowColors = true;
 			me.serverinfo_MOTD_ent.escapedNewLines = true;
-	me.gotoRC(me, me.rows - 1, 0);
+	/*me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-			e.preferredFocusPriority = 1;
+			e.preferredFocusPriority = 1;*/
 }
