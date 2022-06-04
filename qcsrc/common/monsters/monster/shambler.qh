@@ -14,7 +14,7 @@ CLASS(Shambler, Monster)
     ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
 #endif
     ATTRIB(Shambler, netname, string, "shambler");
-    ATTRIB(Shambler, monster_name, string, _("Shambler"));
+    ATTRIB(Shambler, monster_name, string, _("Golem"));
 ENDCLASS(Shambler)
 
 REGISTER_MONSTER(SHAMBLER, NEW(Shambler));
