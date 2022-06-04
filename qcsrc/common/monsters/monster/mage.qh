@@ -3,13 +3,13 @@
 #include "../all.qh"
 
 #ifdef GAMEQC
-MODEL(MON_MAGE, M_Model("mage.dpm"));
+MODEL(MON_MAGE, M_Model("nanomage.dpm"));
 #endif
 
 CLASS(Mage, Monster)
     ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Mage, m_mins, vector, '-36 -36 -24');
-    ATTRIB(Mage, m_maxs, vector, '36 36 50');
+    ATTRIB(Mage, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Mage, m_maxs, vector, '16 16 55');
 #ifdef GAMEQC
     ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
 #endif

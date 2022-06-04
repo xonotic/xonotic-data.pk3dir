@@ -23,8 +23,10 @@
 .int lodmodelindex0;
 .int lodmodelindex1;
 .int lodmodelindex2;
-void CSQCPlayer_LOD_Apply(entity this)
+void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 {
+	int detailreduction = ((isplayer) ? autocvar_cl_playerdetailreduction : autocvar_cl_modeldetailreduction);
+
 	// LOD model loading
 	if(this.lodmodelindex0 != this.modelindex)
 	{
@@ -63,19 +65,19 @@ void CSQCPlayer_LOD_Apply(entity this)
 	}
 
 	// apply LOD
-	if(autocvar_cl_playerdetailreduction <= 0)
+	if(detailreduction <= 0)
 	{
-		if(autocvar_cl_playerdetailreduction <= -2)
+		if(detailreduction <= -2)
 			this.modelindex = this.lodmodelindex2;
-		else if(autocvar_cl_playerdetailreduction <= -1)
+		else if(detailreduction <= -1)
 			this.modelindex = this.lodmodelindex1;
 		else
 			this.modelindex = this.lodmodelindex0;
 	}
 	else
 	{
-		float distance = vlen(this.origin - view_origin);
-		float f = (distance * current_viewzoom + 100.0) * autocvar_cl_playerdetailreduction;
+		float distance = vlen(((isplayer) ? this.origin : NearestPointOnBox(this, view_origin)) - view_origin); // TODO: perhaps it should just use NearestPointOnBox all the time, player hitbox can potentially be huge
+		float f = (distance * current_viewzoom + 100.0) * detailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
 		if(f > autocvar_cl_loddistance2)
 			this.modelindex = this.lodmodelindex2;
@@ -667,7 +669,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	if((this.isplayermodel & ISPLAYER_MODEL) && this.drawmask) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_ModelAppearance_Apply(this, (this.isplayermodel & ISPLAYER_LOCAL));
-		CSQCPlayer_LOD_Apply(this);
+		CSQCPlayer_LOD_Apply(this, true);
 
 		if(!isplayer)
 		{
@@ -745,6 +747,8 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 			}
 		}
 	}
+	else
+		CSQCPlayer_LOD_Apply(this, false);
 
 	CSQCModel_AutoTagIndex_Apply(this);
 

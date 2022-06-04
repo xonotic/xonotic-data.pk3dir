@@ -17,7 +17,7 @@ const int ewheel_anim_bck_fast = 4;
 void ewheel_move_path(entity this)
 {
     // Are we close enough to a path node to switch to the next?
-    if(turret_closetotarget(this, this.pathcurrent.origin))
+    if(turret_closetotarget(this, this.pathcurrent.origin, 64))
     {
 #ifdef EWHEEL_FANCYPATH
         if (this.pathcurrent.path_next == NULL)
