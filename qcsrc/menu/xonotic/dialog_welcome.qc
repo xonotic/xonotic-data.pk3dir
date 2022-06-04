@@ -95,7 +95,7 @@ void XonoticWelcomeDialog_fill(entity me)
 			me.serverinfo_MOTD_ent.allowColors = true;
 			me.serverinfo_MOTD_ent.escapedNewLines = true;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns / 2, me.joinButton_ent = makeXonoticCommandButton(_("join"), '0 1 0', "cmd join", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns / 2, me.joinButton_ent = makeXonoticCommandButton(_("Join"), '0 1 0', "cmd join", COMMANDBUTTON_CLOSE));
 			me.joinButton_ent.preferredFocusPriority = 1;
-		me.TD(me, 1, me.columns / 2, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns / 2, makeXonoticCommandButton(_("Spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
 }
