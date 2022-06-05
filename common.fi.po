@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-17 07:22+0200\n"
+"POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1041,17 +1041,17 @@ msgstr "Nopeuspalkinto: %d%s ^7(%s^7)"
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Kaikkien aikojen nopein: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2124
+#: qcsrc/client/hud/panel/scoreboard.qc:2123
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Virkoaminen tapahtuu ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2134
+#: qcsrc/client/hud/panel/scoreboard.qc:2133
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Olet kuollut, odota ^3%s^7 ennen uudelleenvirkoamista"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2143
+#: qcsrc/client/hud/panel/scoreboard.qc:2142
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Olet kuollut, paina ^2%s^7 virotaksesi uudelleen"
@@ -1263,7 +1263,7 @@ msgstr ""
 msgid "MOTD:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1499
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ei sidottu)"
@@ -1307,15 +1307,15 @@ msgstr "^1Virhe:^7 Ei löytynyt: pak index."
 msgid "Requesting preview..."
 msgstr "Pyydetään esikatselua..."
 
-#: qcsrc/client/view.qc:891
+#: qcsrc/client/view.qc:894
 msgid "Nade timer"
 msgstr "Naattiajastin"
 
-#: qcsrc/client/view.qc:896
+#: qcsrc/client/view.qc:899
 msgid "Capture progress"
 msgstr "Kaappauksen edistyminen"
 
-#: qcsrc/client/view.qc:901
+#: qcsrc/client/view.qc:904
 msgid "Revival progress"
 msgstr "Elpymisen edistyminen"
 
@@ -1646,6 +1646,7 @@ msgid "Create"
 msgstr "Luo"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
+#: qcsrc/menu/xonotic/dialog_welcome.qc:102
 msgid "Join"
 msgstr "Liity"
 
@@ -1886,8 +1887,8 @@ msgstr "Velhontähkä"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
-msgid "Shambler"
-msgstr "Värisyttäjä"
+msgid "Golem"
+msgstr ""
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2700,18 +2701,18 @@ msgstr "^BG%s^K1 joutui Velhon räjäyttämäksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
-msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1'n sisimmät tulivat ulos Värisyttäjän toimesta%s%s"
+msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
-msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr "^BG%s^K1 murskattiin Värisyttäjän toimesta%s%s"
+msgid "^BG%s^K1 was smashed by a Golem%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
-msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 sai kuolettavan sähköiskun Värisyttäjän toimesta%s%s"
+msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -6041,7 +6042,6 @@ msgstr "vain luku"
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
-#: qcsrc/menu/xonotic/dialog_welcome.qc:98
 msgid "OK"
 msgstr "OK"
 
@@ -6145,6 +6145,7 @@ msgid "Quick menu"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
+#: qcsrc/menu/xonotic/dialog_welcome.qc:104
 msgid "Spectate"
 msgstr ""
 
