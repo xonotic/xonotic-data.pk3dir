@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2022\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -1873,7 +1873,7 @@ msgstr "魔法使いのスパイク"
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "ゴーレム"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2675,17 +2675,17 @@ msgstr "^BG%s^K1 は魔法使い%s%sによって爆発された"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1の内臓はゴーレムによって外向きになった%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1はゴーレムによって破壊された%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1はゴーレムによって殺害された%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format

@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2022\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1908,7 +1908,7 @@ msgstr "Pointe de mage"
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2732,17 +2732,17 @@ msgstr "^BG%s^K1 a été explosé par un Mage%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 s'est retrouvé les tripes à l'air à cause d'un Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 a été démoli par un Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 a été supprimé par un Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
