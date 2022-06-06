@@ -325,7 +325,7 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 				continue;
 
 			string h = race_readName(MapInfo_Map_bspname, 1);
-			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
+			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r, false)), " ", h, "\n");
 		}
 	}
 

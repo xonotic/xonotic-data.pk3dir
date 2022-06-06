@@ -88,7 +88,7 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 
 const int TIME_DECIMALS = 2;
 const float TIME_FACTOR = 100;
-#define TIME_ENCODED_TOSTRING(n) mmssth(n)
+#define TIME_ENCODED_TOSTRING(n, compact) mmssth(n, compact)
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
 #define CTF_RECORD "/ctf100record/"

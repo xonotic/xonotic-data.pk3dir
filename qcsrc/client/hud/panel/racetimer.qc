@@ -67,12 +67,12 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		if(mytime >= theirtime)
 			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
 		else
-			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime));
+			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime), false);
 		col = "^3";
 		if(mytime >= othertime)
 			othertimestr = strcat("+", ftos_decimals(mytime - othertime, TIME_DECIMALS));
 		else
-			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime));
+			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime), false);
 		othercol = "^7";
 	}
 
@@ -172,7 +172,7 @@ void HUD_RaceTimer ()
 				else
 					s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
 				if(race_time)
-					forcetime = TIME_ENCODED_TOSTRING(race_time);
+					forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 			}
 		}
 		else
@@ -220,7 +220,7 @@ void HUD_RaceTimer ()
 
 		if(race_laptime && race_checkpoint != 255)
 		{
-			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
+			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime), false);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '0.6 0.6 0' * mySize.y));
 			drawstring(str_pos, s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
