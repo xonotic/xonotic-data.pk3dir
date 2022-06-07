@@ -3477,8 +3477,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s"
-msgstr ""
-"^BG%s^K1 machucaram seus próprios ouvidos com a @!#%%'n Klein Bottle%s%s"
+msgstr "^BG%s^K1 feriu seus próprios ouvidos com a @!#%%'n Klein Bottle%s%s"
 
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
@@ -3530,14 +3529,15 @@ msgstr "^BG%s^K1 se explodiu com o seu próprio Mortar%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr "^BG%s^K1%s%s atingiu ^BG%s%s^K1 com sua Metralhadora Pesada Suprema"
+msgstr ""
+"^BG%s%s^K1 foi atingido pela Metralhadora Pesada Suprema de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"A ^BG%sMetralhadora Pesada Suprema de ^K1%s%s deixou ^BG%s%s^K1 em pedacinhos"
+"^BG%s%s^K1 despedaçou-se pela Metralhadora Pesada Suprema de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:481
 #, c-format
