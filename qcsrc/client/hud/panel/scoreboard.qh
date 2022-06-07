@@ -26,7 +26,6 @@ bool Scoreboard_WouldDraw();
 void Scoreboard_UI_Enable(int mode);
 
 int scoreboard_ui_enabled;
-float scoreboard_ui_disabled_time;
 bool autocvar__scoreboard_team_selection;
 float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSecondary);
 

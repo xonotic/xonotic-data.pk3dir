@@ -173,7 +173,6 @@ void HUD_Scoreboard_UI_Disable()
 	scoreboard_selected_panel = 0;
 	scoreboard_selected_player = NULL;
 	scoreboard_selected_team = NULL;
-	scoreboard_ui_disabled_time = time;
 }
 
 // mode: 0 normal, 1 team selection
@@ -183,14 +182,11 @@ void Scoreboard_UI_Enable(int mode)
 	{
 		if (scoreboard_ui_enabled == 2 || !teamplay)
 			return;
-		// Do not allow reopening the team selection for some time after it has been closed.
-		// It works around a bug caused by the server sending scoreboard_team_selection every frame
-		// until client selects a team and joins: scoreboard_team_selection gets executed even
-		// after client already joined
-		// For the record, with the menu dialog this workaround is not needed because it takes
-		// some time to fade away
-		if (time < scoreboard_ui_disabled_time + 0.5)
-			return;
+
+		// release player's pressed keys as they aren't released elsewhere
+		// in particular jump needs to be released as it may open the team selection
+		// (when server detects jump has been pressed it sends the command to open the team selection)
+		Release_Common_Keys();
 		scoreboard_ui_enabled = 2;
 		scoreboard_selected_panel = SB_PANEL_SCOREBOARD;
 	}

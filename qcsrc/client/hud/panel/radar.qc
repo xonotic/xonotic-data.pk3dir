@@ -40,12 +40,7 @@ void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 		{
 			hud_panel_radar_mouse = 1;
 
-			// we must unset the player's buttons, as they aren't released elsewhere
-			localcmd("-fire\n");
-			localcmd("-fire2\n");
-			localcmd("-use\n");
-			localcmd("-hook\n");
-			localcmd("-jump\n");
+			Release_Common_Keys();
 		}
 	}
 	else if ( hud_panel_radar_mouse )

@@ -115,6 +115,8 @@ string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
 
+void Release_Common_Keys();
+
 string vote_called_vote;
 bool ready_waiting;
 bool ready_waiting_for_me;

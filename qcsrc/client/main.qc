@@ -443,6 +443,15 @@ void PostInit()
 	postinit = true;
 }
 
+void Release_Common_Keys()
+{
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
+}
+
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.
