@@ -180,7 +180,7 @@ void Scoreboard_UI_Enable(int mode)
 {
 	if (mode == 1)
 	{
-		if (scoreboard_ui_enabled == 2 || !teamplay)
+		if (scoreboard_ui_enabled == 2 || !teamplay || intermission)
 			return;
 
 		// release player's pressed keys as they aren't released elsewhere
@@ -1553,7 +1553,14 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 bool Scoreboard_WouldDraw()
 {
 	if (scoreboard_ui_enabled)
+	{
+		if (intermission && scoreboard_ui_enabled == 2)
+		{
+			HUD_Scoreboard_UI_Disable();
+			return false;
+		}
 		return true;
+	}
 	else if (MUTATOR_CALLHOOK(DrawScoreboard))
 		return false;
 	else if (QuickMenu_IsOpened())
