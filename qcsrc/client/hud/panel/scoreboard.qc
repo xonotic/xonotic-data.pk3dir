@@ -277,8 +277,8 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		++scoreboard_selected_panel;
 		if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
 			++scoreboard_selected_panel;
-		if (scoreboard_selected_panel >= SB_PANEL_MAX)
-			scoreboard_selected_panel = 1;
+		if (scoreboard_selected_panel > SB_PANEL_MAX)
+			scoreboard_selected_panel = SB_PANEL_FIRST;
 
 		scoreboard_selected_panel_time = time;
 	}
