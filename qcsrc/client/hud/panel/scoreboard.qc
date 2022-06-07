@@ -272,13 +272,29 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if (!key_pressed)
 			return true;
 		if (scoreboard_ui_enabled == 2)
-			goto downarrow_action;
+		{
+			if (hudShiftState & S_SHIFT)
+				goto uparrow_action;
+			else
+				goto downarrow_action;
+		}
 
-		++scoreboard_selected_panel;
-		if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
+		if (hudShiftState & S_SHIFT)
+		{
+			--scoreboard_selected_panel;
+			if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
+				--scoreboard_selected_panel;
+			if (scoreboard_selected_panel < SB_PANEL_FIRST)
+				scoreboard_selected_panel = SB_PANEL_MAX;
+		}
+		else
+		{
 			++scoreboard_selected_panel;
-		if (scoreboard_selected_panel > SB_PANEL_MAX)
-			scoreboard_selected_panel = SB_PANEL_FIRST;
+			if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
+				++scoreboard_selected_panel;
+			if (scoreboard_selected_panel > SB_PANEL_MAX)
+				scoreboard_selected_panel = SB_PANEL_FIRST;
+		}
 
 		scoreboard_selected_panel_time = time;
 	}
@@ -344,6 +360,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 	{
 		if (!key_pressed)
 			return true;
+		LABEL(uparrow_action);
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
 		{
 			if (scoreboard_ui_enabled == 2)
