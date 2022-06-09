@@ -213,6 +213,8 @@ void W_Arc_Beam_Think(entity this)
 		||
 		IS_DEAD(own)
 		||
+                STAT(FROZEN, own)
+                ||
 		game_stopped
 		||
 		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
