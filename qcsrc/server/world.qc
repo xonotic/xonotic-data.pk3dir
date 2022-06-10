@@ -346,6 +346,7 @@ void cvar_changes_init()
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_ca_round_timelimit");
 		BADCVAR("g_ca_spectate_enemies");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
