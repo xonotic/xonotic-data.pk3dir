@@ -207,7 +207,13 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 		{
 			float latency = max(0, CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency)
-				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
+			{
+				// if previous average latency exists (player disconnected and reconnected)
+				// make the average of previous and current average latency
+				float prev_latency = PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, 0);
+				float new_latency = !prev_latency ? latency : (prev_latency + latency) / 2;
+				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, -prev_latency + new_latency);
+			}
 		}
 
 		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));

@@ -2037,7 +2037,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 		str = count_ordinal(i+1);
 		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t, true), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
 			str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
@@ -2520,8 +2520,7 @@ void Scoreboard_Draw()
 
 	// print information about respawn status
 	float respawn_time = STAT(RESPAWN_TIME);
-	if(!intermission)
-	if(respawn_time)
+	if(!intermission && respawn_time)
 	{
 		if(respawn_time < 0)
 		{

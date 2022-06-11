@@ -1,6 +1,6 @@
 ast   "Asturian" "Asturianu" 75%
-de    "German" "Deutsch" 100%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
+de    "German" "Deutsch" 99%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 71%
 es    "Spanish" "Español" 100%
@@ -19,7 +19,7 @@ tr    "Turkish" "Türkçe" 51%
 cs    "Czech" "Čeština" 32%
 el    "Greek" "Ελληνική" 45%
 be    "Belarusian" "Беларуская" 50%
-bg    "Bulgarian" "Български" 60%
+bg    "Bulgarian" "Български" 59%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 60%
 uk    "Ukrainian" "Українська" 47%

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-17 07:22+0200\n"
+"POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Simple88, 2016\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1049,17 +1049,17 @@ msgstr "Награда за скорость: %d%s ^7(%s^7)"
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Рекорд скорости: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2124
+#: qcsrc/client/hud/panel/scoreboard.qc:2123
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Возрождение через ^3%s^1…"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2134
+#: qcsrc/client/hud/panel/scoreboard.qc:2133
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Вы мертвы, подождите ^3%s^7 до возрождения"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2143
+#: qcsrc/client/hud/panel/scoreboard.qc:2142
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Вы мертвы, нажмите ^2%s^7 для возрождения"
@@ -1271,7 +1271,7 @@ msgstr "Особые игровые советы:"
 msgid "MOTD:"
 msgstr "Сообщение дня:"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1499
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (не связаны)"
@@ -1315,15 +1315,15 @@ msgstr "^1Error:^7 Не удалось найти индекс пака."
 msgid "Requesting preview..."
 msgstr "Запрос эскиза…"
 
-#: qcsrc/client/view.qc:891
+#: qcsrc/client/view.qc:894
 msgid "Nade timer"
 msgstr "Таймер гранаты"
 
-#: qcsrc/client/view.qc:896
+#: qcsrc/client/view.qc:899
 msgid "Capture progress"
 msgstr "Прогресс захвата"
 
-#: qcsrc/client/view.qc:901
+#: qcsrc/client/view.qc:904
 msgid "Revival progress"
 msgstr "Прогресс оживления"
 
@@ -1651,6 +1651,7 @@ msgid "Create"
 msgstr "Создать игру"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
+#: qcsrc/menu/xonotic/dialog_welcome.qc:102
 msgid "Join"
 msgstr "Присоединиться"
 
@@ -1889,8 +1890,8 @@ msgstr "Маг-шип"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
-msgid "Shambler"
-msgstr "Шамблер"
+msgid "Golem"
+msgstr "Голем"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2701,18 +2702,18 @@ msgstr "^BG%s^K1 был подорван Магом%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
-msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1 вывернут наизнанку Шамблером%s%s"
+msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
+msgstr "^BG%s^K1 вывернут наизнанку Големом%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
-msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr "^BG%s^K1 был раздавлен Шамблером%s%s"
+msgid "^BG%s^K1 was smashed by a Golem%s%s"
+msgstr "^BG%s^K1 был разбит Големом%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
-msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 был стёрт в порошок Шамблером%s%s"
+msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
+msgstr "^BG%s^K1 был забит до смерти Големом%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -6016,7 +6017,6 @@ msgstr "только чтение"
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
-#: qcsrc/menu/xonotic/dialog_welcome.qc:98
 msgid "OK"
 msgstr "ОК"
 
@@ -6119,6 +6119,7 @@ msgid "Quick menu"
 msgstr "Горячее меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
+#: qcsrc/menu/xonotic/dialog_welcome.qc:104
 msgid "Spectate"
 msgstr "Наблюдать"
 
