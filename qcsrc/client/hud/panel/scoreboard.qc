@@ -166,9 +166,16 @@ string Label_getInfo(string label, int mode)
 	return label;
 }
 
+bool scoreboard_ui_disabling;
 void HUD_Scoreboard_UI_Disable()
 {
+	scoreboard_ui_disabling = true;
 	scoreboard_showscores = false;
+}
+
+void HUD_Scoreboard_UI_Disable_Instantly()
+{
+	scoreboard_ui_disabling = false;
 	scoreboard_ui_enabled = 0;
 	scoreboard_selected_panel = 0;
 	scoreboard_selected_player = NULL;
@@ -210,7 +217,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 {
 	string s;
 
-	if(!scoreboard_ui_enabled)
+	if(!scoreboard_ui_enabled || scoreboard_ui_disabling)
 		return false;
 
 	if(bInputType == 3)
@@ -1554,9 +1561,15 @@ bool Scoreboard_WouldDraw()
 {
 	if (scoreboard_ui_enabled)
 	{
+		if (scoreboard_ui_disabling)
+		{
+			if (scoreboard_fade_alpha == 0)
+				HUD_Scoreboard_UI_Disable_Instantly();
+			return false;
+		}
 		if (intermission && scoreboard_ui_enabled == 2)
 		{
-			HUD_Scoreboard_UI_Disable();
+			HUD_Scoreboard_UI_Disable_Instantly();
 			return false;
 		}
 		return true;
