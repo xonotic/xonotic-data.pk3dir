@@ -435,12 +435,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 				localcmd(sprintf("cmd selectteam %s; cmd join\n", team_name));
 				HUD_Scoreboard_UI_Disable();
 			}
-			else if (!scoreboard_selected_player || (hudShiftState & S_SHIFT))
-			{
-				localcmd("join\n");
-				HUD_Scoreboard_UI_Disable();
-			}
-			else
+			else if (scoreboard_selected_player)
 				localcmd(sprintf("spectate %d\n", scoreboard_selected_player.sv_entnum + 1));
 		}
 	}
