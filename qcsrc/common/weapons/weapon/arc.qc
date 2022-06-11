@@ -226,18 +226,20 @@ void W_Arc_Beam_Think(entity this)
 				cooldown_speed = this.beam_heat / WEP_CVAR(arc, beam_refire);
 			}
 
-			if ( cooldown_speed )
-			{
-				if ( WEP_CVAR(arc, cooldown_release) || (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max)) )
-					own.arc_overheat = time + this.beam_heat / cooldown_speed;
-				own.arc_cooldown = cooldown_speed;
-			}
-
-			if ( WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max) )
+			bool overheat = (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max));
+			if (overheat)
 			{
 				Send_Effect(EFFECT_ARC_OVERHEAT, this.beam_start, this.beam_wantdir, 1);
 				sound(this, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
 			}
+
+			if ( cooldown_speed )
+			{
+				if (WEP_CVAR(arc, cooldown_release) || overheat)
+					own.arc_overheat = time + this.beam_heat / cooldown_speed;
+				own.arc_cooldown = cooldown_speed;
+			}
+
 		}
 
 		if(this == own.(weaponentity).arc_beam) { own.(weaponentity).arc_beam = NULL; }
