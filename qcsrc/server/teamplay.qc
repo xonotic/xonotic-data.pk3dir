@@ -247,7 +247,6 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	{
 		KillPlayerForTeamChange(player);
 		PlayerScore_Clear(player); // works only in game modes without teams
-		CS(player).parm_idlesince = time;
 
 		if (!IS_BOT_CLIENT(player))
 			TeamBalance_AutoBalanceBots();
