@@ -1,6 +1,6 @@
 #include "sv_clanarena.qh"
 
-float autocvar_g_ca_damage2score_multiplier;
+float autocvar_g_ca_damage2score = 100;
 bool autocvar_g_ca_spectate_enemies;
 
 float autocvar_g_ca_start_health = 200;
@@ -11,6 +11,8 @@ float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
 float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
+
+.float ca_damage_counter;
 
 void CA_count_alive_players()
 {
@@ -155,6 +157,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
+	if (time <= game_starttime) // reset on game restart, not on round start
+		player.ca_damage_counter = 0;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -190,12 +194,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		if (!INGAME(it) && IS_BOT_CLIENT(it))
-		{
-			it.team = -1;
-			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
-		}
-		if (INGAME(it))
+		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
 			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
@@ -258,6 +257,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 		eliminatedPlayers.SendFlags |= 1;
 	return true;
 }
+
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
@@ -364,28 +364,42 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
-	//non-friendly fire
-	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+	if (autocvar_g_ca_damage2score <= 0 || frag_damage - excess == 0) return;
 
-	//friendly fire
-	if (SAME_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
+	entity scorer = NULL;
+	float scorer_damage = 0;
 
-	//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
-	//deathtypes:
-	//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
-	//camp = campcheck, lava = lava, slime = slime
-	//team change / rebalance suicides are currently not included
-	if (!IS_PLAYER(frag_attacker) && (
-		frag_deathtype == DEATH_KILL.m_id ||
-		frag_deathtype == DEATH_DROWN.m_id ||
-		frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-		frag_deathtype == DEATH_CAMP.m_id ||
-		frag_deathtype == DEATH_LAVA.m_id ||
-		frag_deathtype == DEATH_SLIME.m_id ||
-		frag_deathtype == DEATH_SWAMP.m_id))
-			GameRules_scoring_add_team(frag_target, SCORE, (-1 * (frag_damage - excess)) * autocvar_g_ca_damage2score_multiplier);
+	if (IS_PLAYER(frag_attacker))
+	{
+		if (DIFF_TEAM(frag_target, frag_attacker))
+			scorer_damage = frag_damage - excess;
+		else // friendly fire
+			scorer_damage = -(frag_damage - excess);
+
+		scorer = frag_attacker;
+	}
+	else
+	{
+		//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+		//deathtypes:
+		//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+		//camp = campcheck, lava = lava, slime = slime
+		//team change / rebalance suicides are currently not included
+		if (frag_deathtype == DEATH_KILL.m_id ||
+			frag_deathtype == DEATH_DROWN.m_id ||
+			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+			frag_deathtype == DEATH_CAMP.m_id ||
+			frag_deathtype == DEATH_LAVA.m_id ||
+			frag_deathtype == DEATH_SLIME.m_id ||
+			frag_deathtype == DEATH_SWAMP.m_id)
+		{
+			scorer_damage = -(frag_damage - excess);
+			scorer = frag_target;
+		}
+	}
+
+	if (scorer)
+		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, ca_damage_counter, autocvar_g_ca_damage2score);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)

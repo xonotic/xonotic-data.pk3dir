@@ -394,18 +394,26 @@ ENUMCLASS_END(WFRAME)
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 
+REPLICATE_INIT(int, cvar_cl_gunalign);
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_reload);
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_fallback_to_impulse);
+REPLICATE_INIT(int, cvar_cl_weaponimpulsemode);
+
+REPLICATE_INIT(string, cvar_cl_weaponpriority);
+REPLICATE_INIT(string, cvar_cl_weaponpriorities[10]);
+
 #ifdef CSQC
-bool cvar_cl_accuracy_data_share;
-REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
-bool cvar_cl_accuracy_data_receive;
-REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_share);
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_receive);
 #endif
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
+
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
+
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 
-#ifdef SVQC
-void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
-#endif
 #endif

@@ -11,6 +11,7 @@ float autocvar_g_nades_spread = 0.04;
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
+
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 REPLICATE(cvar_cl_tandemnade_type, int, "cl_tandemnade_type");
@@ -129,6 +130,17 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	else
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 }
+
+MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
+{
+	if (mut_is_active(MUT_NADES))
+	{
+		string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
+		M_ARGV(0, string) = strcat(M_ARGV(0, string),
+			"\n\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
+	}
+}
+
 bool Projectile_isnade(int p)
 {
 	return Nade_FromProjectile(p) != NADE_TYPE_Null;
@@ -2318,14 +2330,14 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(DARK_ORB_ALPHA, client) = STAT(DARK_ORB_ALPHA, spectatee);
 }
 
+MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
+{
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
+}
+
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
-}
-
-MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
-{
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' (dropweapon) to use them\n");
 }
 
 #endif

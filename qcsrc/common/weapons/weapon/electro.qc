@@ -10,6 +10,13 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 	{
 		if(e.classname == "electro_orb")
 		{
+			// check if the ball we are exploding is not owned by an
+			// independent player which is not the player who shot the ball
+			if(IS_INDEPENDENT_PLAYER(e.realowner) && own != e.realowner)
+			{
+				e = e.chain;
+				continue;
+			}
 			// do we allow thruwall triggering?
 			if(WEP_CVAR(electro, combo_comboradius_thruwall))
 			{
@@ -151,6 +158,13 @@ void W_Electro_Bolt_Think(entity this)
 		{
 			if(e.classname == "electro_orb")
 			{
+				// check if the ball we are exploding is not owned by an
+				// independent player which is not the player who shot the ball
+				if(IS_INDEPENDENT_PLAYER(e.realowner) && this.realowner != e.realowner)
+				{
+					e = e.chain;
+					continue;
+				}
 				bool explode;
 				if (this.owner == e.owner)
 				{

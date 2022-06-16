@@ -62,7 +62,6 @@ ENUMCLASS(CPID)
 	CASE(CPID, MISSING_TEAMS)
 	CASE(CPID, MISSING_PLAYERS)
 	CASE(CPID, INSTAGIB_FINDAMMO)
-	CASE(CPID, CAMPAIGN_MESSAGE)
 	CASE(CPID, MOTD)
 	CASE(CPID, NIX)
 	CASE(CPID, ONSLAUGHT)
@@ -359,8 +358,8 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	f1points: point or points depending on f1
 	f1ord: count_ordinal of f1
 	f1time: process_time of f1
-	f1race_time: mmssss of f1
-	f2race_time: mmssss of f2
+	f1race_time: TIME_ENCODED_TOSTRING of f1
+	f2race_time: TIME_ENCODED_TOSTRING of f2
 	race_col: color of race time/position (i.e. good or bad)
 	race_diff: show time difference between f2 and f3
 	missing_teams: show which teams still need players
@@ -419,11 +418,11 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) \
 	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) \
-	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) \
-	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   mmssss(f2)) \
-	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   mmssss(f3)) \
+	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   TIME_ENCODED_TOSTRING(f1, true)) \
+	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   TIME_ENCODED_TOSTRING(f2, true)) \
+	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   TIME_ENCODED_TOSTRING(f3, true)) \
 	ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
-	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
+	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), TIME_ENCODED_TOSTRING(f2 - f3, true)) : sprintf(CCR("^2[-%s]"), TIME_ENCODED_TOSTRING(f3 - f2, true)))) \
 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
 	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
 	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
@@ -634,6 +633,7 @@ string notif_arg_item_wepammo(float f1, float f2)
 {
 	string ammoitems = "";
 	Weapon wep = REGISTRY_GET(Weapons, f1);
+	// TODO: registry handles
 	switch (wep.ammo_type)
 	{
 		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;

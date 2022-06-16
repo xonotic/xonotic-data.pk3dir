@@ -155,6 +155,12 @@ Nade Nade_FromProjectile(int proj)
 .float orb_lifetime;
 .float orb_radius;
 
+#ifdef GAMEQC
+REPLICATE_INIT(int, cvar_cl_nade_type);
+REPLICATE_INIT(string, cvar_cl_pokenade_type);
+REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable for emerald nade 01-07-2021
+#endif
+
 #ifdef SVQC
 
 .entity nade;
@@ -203,9 +209,6 @@ REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING); //LegendGuard registers dark blinking n
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
 
-float cvar_cl_nade_type;
-string cvar_cl_pokenade_type;
-float cvar_cl_tandemnade_type; //LegendGuard adds new cl variable for emerald nade 01-07-2021
 //LegendGuard sets variables for dark nade 09-02-2021
 float dark_appeartime;
 float dark_fadetime;

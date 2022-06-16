@@ -72,6 +72,9 @@ void _GameRules_scoring_end();
 void GameRules_scoring_vip(entity player, bool value);
 bool GameRules_scoring_is_vip(entity player);
 
+#define GameRules_scoring_add_float2int(client, fld, value, float_field, score_factor) \
+	_GameRules_scoring_add_float2int(client, SP_##fld, value, float_field, score_factor)
+float _GameRules_scoring_add_float2int(entity client, entity sp, float value, .float field, float score_factor);
 #define GameRules_scoring_add(client, fld, value) _GameRules_scoring_add(client, SP_##fld, value)
 float _GameRules_scoring_add(entity client, entity sp, float value);
 #define GameRules_scoring_add_team(client, fld, value) _GameRules_scoring_add_team(client, SP_##fld, ST_##fld, value)

@@ -8,6 +8,11 @@
 #include "charmap.qh"
 #include "commandbutton.qh"
 
+bool XonoticFirstRunDialog_shouldShow()
+{
+    return cvar_string("_cl_name") == cvar_defstring("_cl_name");
+}
+
 float CheckFirstRunButton(entity me)
 {
 	if(cvar_string("_cl_name") != cvar_defstring("_cl_name"))

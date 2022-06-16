@@ -2,6 +2,7 @@
 
 #include "utils.qh"
 #include <server/intermission.qh>
+//#include <common/resources/resources.qh>
 #include <common/replicate.qh>
 #include <common/sounds/all.qh>
 
@@ -211,12 +212,11 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_clippedspectating, bool, this.cvar_cl_clippedspectating);
     ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
     ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);
-    ATTRIB(Client, cvar_cl_newusekeysupported, bool, this.cvar_cl_newusekeysupported);
     ATTRIB(Client, cvar_cl_noantilag, bool, this.cvar_cl_noantilag);
     ATTRIB(Client, cvar_cl_movement_track_canjump, bool, this.cvar_cl_movement_track_canjump);
     ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
-    ATTRIB(Client, autoswitch, bool, this.autoswitch);
+    ATTRIB(Client, cvar_cl_autoswitch, bool, this.cvar_cl_autoswitch);
     ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
     ATTRIB(Client, cvar_r_drawviewmodel, bool, this.cvar_r_drawviewmodel);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
@@ -320,6 +320,8 @@ bool independent_players;
 .float nickspamtime; // time of last nick change
 .float nickspamcount;
 
+void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type);
+
 // respawning
 .int respawn_flags;
 .float respawn_time;
@@ -376,7 +378,8 @@ STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
 void play_countdown(entity this, float finished, Sound samp);
 void player_powerups_remove_all(entity this);
 
-void RotRegen(entity this, float current, float limit_mod,
+// NOTE: current type is Resource (avoiding circular includes!)
+void RotRegen(entity this, entity current, float limit_mod,
 	float regenstable, float regenfactor, float regenlinear, float regenframetime,
 	float rotstable, float rotfactor, float rotlinear, float rotframetime);
 
@@ -384,7 +387,7 @@ bool Spectate(entity this, entity pl);
 
 void ClientInit_Spawn();
 
-void PutObserverInServer(entity this, bool is_forced);
+void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint);
 
 void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);

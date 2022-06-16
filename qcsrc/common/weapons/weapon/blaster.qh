@@ -2,7 +2,7 @@
 
 CLASS(Blaster, Weapon)
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
-/* ammotype  */ //ATTRIB(Blaster, ammo_type, int, RES_NONE);
+/* ammotype  */ //ATTRIB(Blaster, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);

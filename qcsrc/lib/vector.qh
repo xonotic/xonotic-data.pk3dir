@@ -177,13 +177,23 @@ vector vec_epsilon(vector this, float eps)
 	ERASEABLE
 	vector NearestPointOnBox(entity box, vector org)
 	{
-		vector m1 = box.mins + box.origin;
-		vector m2 = box.maxs + box.origin;
+		vector mi = box.mins + box.origin;
+		vector ma = box.maxs + box.origin;
 
 		return vec3(
-			bound(m1.x, org.x, m2.x),
-			bound(m1.y, org.y, m2.y),
-			bound(m1.z, org.z, m2.z)
+			bound(mi.x, org.x, ma.x),
+			bound(mi.y, org.y, ma.y),
+			bound(mi.z, org.z, ma.z)
 		);
 	}
+
+ERASEABLE
+vector NearestPointOnBoundingBox(vector mi, vector ma, vector org)
+{
+	return vec3(
+		bound(mi.x, org.x, ma.x),
+		bound(mi.y, org.y, ma.y),
+		bound(mi.z, org.z, ma.z)
+	);
+}
 #endif

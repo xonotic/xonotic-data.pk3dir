@@ -133,3 +133,6 @@ bool accuracy_canbegooddamage(entity attacker)
 {
 	return !warmup_stage && IS_CLIENT(attacker);
 }
+
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");

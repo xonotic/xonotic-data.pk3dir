@@ -352,6 +352,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string s;
 
 	string un_version = "";
+	string un_tosversion = "";
 	string un_download = "";
 	string un_url = "";
 	string un_bannedservers = "";
@@ -370,6 +371,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			case "V":
 			{
 				un_version = s;
+				break;
+			}
+			case "T":
+			{
+				un_tosversion = s;
 				break;
 			}
 			case "C":
@@ -432,6 +438,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		}
 	}
 
+	if(un_tosversion != "")
+	{
+		_Nex_ExtResponseSystem_NewToS = stof(un_tosversion);
+	}
+
 	if(un_bannedservers != "")
 	{
 		_Nex_ExtResponseSystem_BannedServers = strzone(un_bannedservers);
@@ -464,15 +475,8 @@ void updateCheck()
 	if(!_Nex_ExtResponseSystem_Queried)
 	{
 		_Nex_ExtResponseSystem_Queried = 1;
-		float startcnt;
-		string uri;
-
-		cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
-
-		// for privacy, munge the start count a little
-		startcnt = floor((floor(startcnt / 10) + random()) * 10);
-		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-		uri_get(uri, URI_GET_UPDATENOTIFICATION);
+		cvar_set("cl_startcount", ftos(cvar("cl_startcount") + 1));
+		uri_get("https://update.xonotic.org/checkupdate.txt", URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
@@ -582,6 +586,7 @@ void preMenuDraw()
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
+
 	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)
@@ -815,6 +820,18 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+bool isServerSingleplayer()
+{
+	return (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1");
+}
+
+void makeServerSingleplayer()
+{
+	// it doesn't allow clients to connect from different machines
+	localcmd("defer 0.1 \"sv_cmd settemp net_address 127.0.0.1\"\n");
+	localcmd("defer 0.1 \"sv_cmd settemp net_address_ipv6 ::1\"\n");
 }
 
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
