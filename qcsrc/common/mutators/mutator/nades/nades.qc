@@ -12,8 +12,8 @@ REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
-REPLICATE(cvar_cl_tandemnade_type, int, "cl_tandemnade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
+REPLICATE(cvar_cl_tandemnade_type, int, "cl_tandemnade_type");
 
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -769,8 +769,6 @@ void nade_emerald_randomweapons(entity e, vector org)
 		});
 		nade_emerald_SpawnWeapon(e, org, RandomSelection_chosen_ent);
 	}
-	else
-		return;
 }
 
 //LegendGuard adds vehicle spawn option for emerald nade 20-06-2021
@@ -779,8 +777,6 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	e.spawnflags = VHF_MULTISLOT;
 
 	if(!respwn) { e.spawnflags |= VHF_ISVEHICLE; }
-	//if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
-
 	setorigin(e, orig);
 	bool allow_any = boolean(vehicle == "anyrandom");
 
@@ -790,17 +786,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 		FOREACH(Vehicles, it != VEH_Null && (allow_any || !(it.spawnflags & VHF_MULTISLOT)),
 		{
 			RandomSelection_AddEnt(it, 1, 1);
-			//PrintToChatAll(sprintf("it.classname: ^1%s", it.classname));
 		});
-		/*FOREACH(Vehicles, it != VEH_Null && (!((it.spawnflags & VHF_MULTISLOT))),
-		{
-			if(it.spawnflags & VHF_MULTISLOT || it.classname == "Bumblebee") //No Bumblebee, please
-				continue;
-			float chanceveh = 1;
-			if(it.spawnflags & VHF_MOVE_FLY)
-				chanceveh = 0;
-			RandomSelection_AddEnt(it, chanceveh, 1);
-		});*/
 
 		veh = RandomSelection_chosen_ent;
 	}
@@ -824,17 +810,16 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 				delete(e);
 				return NULL; // no good
 			}
-			else
-			{
-				// select a random valid vehicle type if no valid vehicle was provided
-				return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
-			}
+			// select a random valid vehicle type if no valid vehicle was provided
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
 		}
 	}
 
 	e.realowner = spawnedby;
 
-	// TODO : Create a vehicle .entity moveflag
+	e.effects |= EF_DIMLIGHT;
+
+	// TODO: Create a vehicle .entity moveflag
 	//if(moveflag && e.vehicle_flags == VEH_FLAG_MOVE)
 	//	e.monster_moveflags = moveflag;
 
@@ -842,20 +827,14 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	{
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code
-
-		// TODO : Create a vehicle .entity moveflag
-		//if(autocvar_g_monsters_owners)
-		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
-
+		
 		e.angles_y = spawnedby.angles_y;
 	}
 
-	// TODO: Remove or or not?
-	//if(!(e.spawnflags & VHF_ISVEHICLE)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of vehicle
-	
-	e.effects &= EF_DIMLIGHT;
+	// TODO: Remove or not?
+	if(!(e.spawnflags & VHF_ISVEHICLE)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of vehicle
+
 	// e.angles = '0 0 0';
-	e.gravity = 1;
 	e.velocity = randomvec() * 150 + '0 0 325';
 	e.spawnfunc_checked = true;
 	time = 0.4;
@@ -868,10 +847,10 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 //LegendGuard adds turret spawn option for emerald nade 22-06-2021
 entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
 {
-	e.spawnflags = TSF_SUSPENDED; //MONSTERFLAG_SPAWNED;
+	e.spawnflags = TSF_SUSPENDED;
 
 	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
-	//if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
+	// if(invincible) { e.damage_flags |= TFL_DMG_NO; }
 
 	setorigin(e, orig);
 	bool allow_any = boolean(turret == "anyrandom");
@@ -879,7 +858,6 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 	if(turret == "random" || allow_any)
 	{
 		RandomSelection_Init();
-		//FOREACH(Turrets, it != MON_Null && (allow_any || !(it.spawnflags & MON_FLAG_HIDDEN)) && !(it.spawnflags & MONSTER_TYPE_PASSIVE),
 		FOREACH(Turrets, it != TUR_Null && (allow_any || !(it.spawnflags & TSF_SUSPENDED)),
 		{
 			RandomSelection_AddEnt(it, 1, 1);
@@ -907,17 +885,16 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 				delete(e);
 				return NULL; // no good
 			}
-			else
-			{
-				// select a random valid turret type if no valid turret was provided
-				return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
-			}
+			// select a random valid turret type if no valid turret was provided
+			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
 		}
 	}
 
 	e.realowner = spawnedby;
+	
+	e.effects |= EF_DIMLIGHT;
 
-	// TODO : Create a turret .entity moveflag
+	// TODO: Create a turret .entity moveflag
 	//if(moveflag && e.turret_flags == TUR_FLAG_MOVE)
 	//	e.monster_moveflags = moveflag;
 
@@ -926,17 +903,15 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code
 
-		// TODO : Create a turret .entity moveflag
+		// TODO: Create a turret .entity moveflag
 		//if(autocvar_g_monsters_owners)
 		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
 		
 		e.angles_y = spawnedby.angles_y;
 	}
 
-	// TODO: Remove or or not?
+	// TODO: Remove or not?
 	if(!(e.spawnflags & TSF_SUSPENDED)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of turret
-	
-	e.effects &= EF_DIMLIGHT;
 	
 	turret_initialize(e, tur);
 
@@ -1007,8 +982,7 @@ void nade_emerald_allammoitemdrop(entity e, vector org)
 		else
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
 	}
-	else
-		return;
+	return;
 }
 
 void nade_emerald_dropping(vector org)
@@ -1044,8 +1018,7 @@ void nade_emerald_dropping(vector org)
 
 void emerald_ball_think(entity this)
 {
-	if(round_handler_IsActive())
-	if(!round_handler_IsRoundStarted())
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
@@ -1062,8 +1035,8 @@ void emerald_ball_think(entity this)
 	{
 		this.velocity = this.velocity * 0.5;
 
-		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
-			{ this.velocity_z = 200; }
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER) 
+			this.velocity_z = 200;
 	}
 
 	this.angles = vectoangles(this.velocity);
@@ -1109,8 +1082,7 @@ void nade_emerald_ball(entity this)
 
 void emerald_fountain_think(entity this)
 {
-	if(round_handler_IsActive())
-	if(!round_handler_IsRoundStarted())
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
@@ -1131,7 +1103,7 @@ void emerald_fountain_think(entity this)
 		this.velocity = this.velocity * 0.5;
 
 		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
-			{ this.velocity_z = 200; }
+			this.velocity_z = 200;
 
 		UpdateCSQCProjectile(this);
 	}
@@ -1147,6 +1119,8 @@ void emerald_fountain_think(entity this)
 void nade_emerald_boom(entity this)
 {
 	entity e = spawn();
+	e.noalign = true; // don't drop to floor
+	e.gravity = 1;
 
 	switch (this.tandemnade_type)
 	{
@@ -1154,9 +1128,6 @@ void nade_emerald_boom(entity this)
 		{
 			if (vehspawncount < autocvar_g_nades_emerald_vehiclespawnlimit)
 			{
-				//PrintToChatAll(sprintf("^2BEFORE^7 vehspawncount: ^3%f", vehspawncount));
-				vehspawncount++;
-				//PrintToChatAll(sprintf("^1AFTER^7 vehspawncount: ^3%f", vehspawncount));
 				e = spawnvehicle(
 					e, 
 					"random", //this.tandemnade_type, 
@@ -1168,22 +1139,18 @@ void nade_emerald_boom(entity this)
 					false, 
 					1
 				);
+
+				vehspawncount++;
+				return;
 			}
-			else 
-				PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
+			
+			PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
 			return;
 		}
 		case 2:
 		{
-			e.noalign = true; // don't drop to floor
-			e.gravity = 1;
-			
 			if (turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
 			{
-				//PrintToChatAll(sprintf("^2BEFORE^7 turspawncount: ^3%f", turspawncount));
-				turspawncount++;
-				//PrintToChatAll(sprintf("^1AFTER^7 turspawncount: ^3%f", turspawncount));
-				
 				e = spawnturret(
 					e, 
 					"random", //this.tandemnade_type, 
@@ -1195,9 +1162,12 @@ void nade_emerald_boom(entity this)
 					false, 
 					1
 				);
+				
+				turspawncount++;
+				return;
 			}
-			else 
-				PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
+			
+			PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
 			return;
 		}
 		default:
