@@ -17,6 +17,7 @@ string autocvar__cl_playermodel;
 float autocvar_cl_deathglow;
 float autocvar_cl_deathglow_min = 0.5;
 float autocvar_cl_jetpack_attenuation = 2;
+float autocvar_r_hdr_glowintensity;
 
 // FEATURE: EF_NODRAW workalike
 const int EF_BRIGHTFIELD       = BIT(0);
