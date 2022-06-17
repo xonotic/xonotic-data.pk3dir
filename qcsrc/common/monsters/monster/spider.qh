@@ -8,8 +8,8 @@ MODEL(MON_SPIDER, M_Model("spider.dpm"));
 
 CLASS(Spider, Monster)
     ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Spider, m_mins, vector, '-18 -18 -25');
-    ATTRIB(Spider, m_maxs, vector, '18 18 30');
+    ATTRIB(Spider, m_mins, vector, '-30 -30 -25');
+    ATTRIB(Spider, m_maxs, vector, '30 30 30');
 #ifdef GAMEQC
     ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
 #endif

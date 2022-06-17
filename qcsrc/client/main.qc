@@ -178,7 +178,14 @@ void Shutdown()
 		if (!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart nop\n");
 		if (!(calledhooks & HOOK_END))
+		{
+			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
+		}
 	}
 
 	localcmd("\ncl_hook_shutdown\n");

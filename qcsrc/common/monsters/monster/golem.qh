@@ -1,0 +1,20 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_GOLEM, M_Model("golem.dpm"));
+#endif
+
+CLASS(Golem, Monster)
+    ATTRIB(Golem, spawnflags, int, MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Golem, m_mins, vector, '-24 -24 -20');
+    ATTRIB(Golem, m_maxs, vector, '24 24 88');
+#ifdef GAMEQC
+    ATTRIB(Golem, m_model, Model, MDL_MON_GOLEM);
+#endif
+    ATTRIB(Golem, netname, string, "golem");
+    ATTRIB(Golem, monster_name, string, _("Golem"));
+ENDCLASS(Golem)
+
+REGISTER_MONSTER(GOLEM, NEW(Golem));

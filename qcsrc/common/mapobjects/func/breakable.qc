@@ -354,6 +354,7 @@ void func_breakable_setup(entity this)
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
 		this.bot_attack = false;
+		this.monster_attack = false;
 	}
 
 	// precache all the models
@@ -373,6 +374,9 @@ void func_breakable_setup(entity this)
 
 	this.reset = func_breakable_reset;
 	this.reset(this);
+
+	if(this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
 
 	IL_PUSH(g_initforplayer, this);
 	this.init_for_player = func_breakable_init_for_player;

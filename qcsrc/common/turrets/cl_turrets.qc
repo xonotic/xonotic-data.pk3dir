@@ -10,7 +10,7 @@ void turret_remove(entity this)
 .vector glowmod;
 void turret_changeteam(entity this)
 {
-	this.glowmod = Team_ColorRGB(this.team - 1) * 2;
+	this.glowmod = Team_ColorRGB(this.team - 1);
 	this.teamradar_color = Team_ColorRGB(this.team - 1);
 
 	if(this.team)

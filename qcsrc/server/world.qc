@@ -277,7 +277,6 @@ void cvar_changes_init()
 		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
-		BADCVAR("g_invasion_teams");
 		BADCVAR("g_invasion_type");
 		BADCVAR("g_jailbreak");
 		BADCVAR("g_jailbreak_teams");
@@ -1001,7 +1000,7 @@ spawnfunc(light)
 	delete(this);
 }
 
-bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance)
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos)
 {
     float m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
@@ -1058,15 +1057,23 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
             continue;
 
 		// rule 4: we must "see" some spawnpoint or item
-	    entity sp = NULL;
-	    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
-	    {
-	    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-	    	{
-	    		sp = it;
-	    		break;
-	    	}
-	    });
+		entity sp = NULL;
+		if(frompos)
+		{
+			if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				sp = e;
+		}
+		if(!sp)
+		{
+			IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+			{
+				if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				{
+					sp = it;
+					break;
+				}
+			});
+		}
 		if(!sp)
 		{
 			int items_checked = 0;
@@ -1125,7 +1132,7 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
-	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance, false);
 }
 
 /*
