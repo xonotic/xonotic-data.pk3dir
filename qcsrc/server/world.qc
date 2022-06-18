@@ -518,13 +518,6 @@ void cvar_changes_init()
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
 
-		// temporary for testing
-		// TODO remove before 0.8.3 release
-		BADCVAR("g_ca_weaponarena");
-		BADCVAR("g_freezetag_weaponarena");
-		BADCVAR("g_lms_weaponarena");
-		BADCVAR("g_ctf_stalemate_time");
-
 #undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
