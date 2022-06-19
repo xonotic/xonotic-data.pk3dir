@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Mirio <opivy@hotmail.de>, 2014-2017,2019-2022\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -1914,7 +1914,7 @@ msgstr "Magierstachel"
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2735,17 +2735,17 @@ msgstr "^BG%s^K1 explodierte durch einen Magier%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1s Eingeweide wurden von einem Golem%s%s nach aussen gekehrt"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 wurde von einem Golem zerquetscht%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 wurde von einem Golem%s%s zu Tode geschockt"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -10107,7 +10107,7 @@ msgstr "Aktuelles Spiel verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr "Demo stoppen"
+msgstr "Wiederholung stoppen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
