@@ -8,6 +8,7 @@
 # Basil <cigariscigar@gmail.com>, 2011,2013
 # Ihor Andreev, 2021
 # Ihor Andreev <ihor@noleron.com>, 2021
+# Ihor Andreev <ihor@noleron.com>, 2021
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 msgid ""
 msgstr ""
