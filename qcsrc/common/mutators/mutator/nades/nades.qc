@@ -44,22 +44,22 @@ REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	// TODO: make a common orb state!
-	if (STAT(HEALING_ORB) > time)
+	if (STAT(NADE_ORB_TYPE) == 0 && STAT(NADE_ORB) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
-		M_ARGV(1, float) = STAT(HEALING_ORB_ALPHA);
+		M_ARGV(1, float) = STAT(NADE_ORB_ALPHA);
 		return true;
 	}
-	if (STAT(ENTRAP_ORB) > time)
+	if (STAT(NADE_ORB_TYPE) == 1 && STAT(NADE_ORB) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_ENTRAP.m_color;
-		M_ARGV(1, float) = STAT(ENTRAP_ORB_ALPHA);
+		M_ARGV(1, float) = STAT(NADE_ORB_ALPHA);
 		return true;
 	}
-	if (STAT(VEIL_ORB) > time)
+	if (STAT(NADE_ORB_TYPE) == 2 && STAT(NADE_ORB) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_VEIL.m_color;
-		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
+		M_ARGV(1, float) = STAT(NADE_ORB_ALPHA);
 		return true;
 	}
 	return false;
@@ -604,12 +604,13 @@ void nade_entrap_touch(entity this, entity toucher)
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
+		STAT(NADE_ORB_TYPE, show_tint) = 1;
+		STAT(NADE_ORB, show_tint) = time + 0.1;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
 			tint_alpha = 0.45;
-		STAT(ENTRAP_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+		STAT(NADE_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
 }
 
@@ -660,8 +661,9 @@ void nade_heal_touch(entity this, entity toucher)
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
 		entity show_red = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(HEALING_ORB, show_red) = time+0.1;
-		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
+		STAT(NADE_ORB_TYPE, show_red) = 0;
+		STAT(NADE_ORB, show_red) = time + 0.1;
+		STAT(NADE_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
 }
 
@@ -690,18 +692,20 @@ void nade_veil_touch(entity this, entity toucher)
 	{
 		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
+		STAT(NADE_ORB_TYPE, show_tint) = 2;
+
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
 		{
 			tint_alpha = 0.45;
-			if(!STAT(VEIL_ORB, show_tint))
+			if(!STAT(NADE_ORB, show_tint))
 			{
 				toucher.nade_veil_prevalpha = toucher.alpha;
 				toucher.alpha = -1;
 			}
 		}
-		STAT(VEIL_ORB, show_tint) = time + 0.1;
-		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+		STAT(NADE_ORB, show_tint) = time + 0.1;
+		STAT(NADE_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
 }
 
@@ -1343,9 +1347,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
 		}
 
-		if(STAT(VEIL_ORB, player) && STAT(VEIL_ORB, player) <= time)
+		// VEIL
+		if(STAT(NADE_ORB_TYPE, player) == 2 && STAT(NADE_ORB, player) && STAT(NADE_ORB, player) <= time)
 		{
-			STAT(VEIL_ORB, player) = 0;
+			STAT(NADE_ORB, player) = 0;
 			if(player.vehicle)
 				player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
 			else
@@ -1417,7 +1422,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(STAT(ENTRAP_ORB, player) > time)
+	// ENTRAP
+	if(STAT(NADE_ORB_TYPE, player) == 1 && STAT(NADE_ORB, player) > time)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nades_entrap_speed;
 }
 
@@ -1425,16 +1431,18 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 {
     entity mon = M_ARGV(0, entity);
 
-	if (STAT(ENTRAP_ORB, mon) > time)
+	// ENTRAP
+	if(STAT(NADE_ORB_TYPE, mon) == 1 && STAT(NADE_ORB, mon) > time)
 	{
 		M_ARGV(1, float) *= autocvar_g_nades_entrap_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_nades_entrap_speed; // walk speed
 	}
 
-	if (STAT(VEIL_ORB, mon) && STAT(VEIL_ORB, mon) <= time)
+	// VEIL
+	if(STAT(NADE_ORB_TYPE, mon) == 2 && STAT(NADE_ORB, mon) && STAT(NADE_ORB, mon) <= time)
 	{
 		mon.alpha = mon.nade_veil_prevalpha;
-		STAT(VEIL_ORB, mon) = 0;
+		STAT(NADE_ORB, mon) = 0;
 	}
 }
 
@@ -1567,12 +1575,9 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	client.pokenade_type = spectatee.pokenade_type;
 	STAT(NADE_BONUS, client) = STAT(NADE_BONUS, spectatee);
 	STAT(NADE_BONUS_SCORE, client) = STAT(NADE_BONUS_SCORE, spectatee);
-	STAT(HEALING_ORB, client) = STAT(HEALING_ORB, spectatee);
-	STAT(HEALING_ORB_ALPHA, client) = STAT(HEALING_ORB_ALPHA, spectatee);
-	STAT(ENTRAP_ORB, client) = STAT(ENTRAP_ORB, spectatee);
-	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
-	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
-	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
+	STAT(NADE_ORB, client) = STAT(NADE_ORB, spectatee);
+	STAT(NADE_ORB_ALPHA, client) = STAT(NADE_ORB_ALPHA, spectatee);
+	STAT(NADE_ORB_TYPE, client) = STAT(NADE_ORB_TYPE, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
