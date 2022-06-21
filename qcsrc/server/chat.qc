@@ -3,6 +3,7 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/mapobjects/target/location.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/weapons/weapon.qh>
@@ -24,6 +25,13 @@
  */
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
+	if(!autocvar_g_chat_allowed)
+	{
+		if(IS_REAL_CLIENT(source))
+			Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_DISABLED);
+		return 0; // force a rejection (TODO: support magic ear map objects?)
+	}
+
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
 		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 

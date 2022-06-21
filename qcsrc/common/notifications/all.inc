@@ -223,6 +223,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
 
 // MSG_INFO_NOTIFICATIONS
+    MSG_INFO_NOTIF(CHAT_DISABLED,                           N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGChat is currently disabled on this server"), "")
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
 
     MULTITEAM_INFO(CTF_CAPTURE,                             N_CONSOLE,  1, 0, "s1", "s1",                       "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag"), "", FLAG)
