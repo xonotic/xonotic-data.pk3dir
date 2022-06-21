@@ -834,33 +834,34 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			first_digit = 0;
 	}
 
+	// Key release events must be handled by the engine otherwise the on-press command such as +jump
+	// executed by pressing SPACE before entering the map voting screen won't be followed by the
+	// on-release command (-jump) on key release once entered the map voting screen, causing +jump
+	// to stay active even on the next map and automatically forcing the player to join
+	if (!key_pressed) return false;
+
 	int imp = 0;
 	switch(nPrimary)
 	{
 		case K_RIGHTARROW:
-			if (!key_pressed) return true;
 			mv_selection_keyboard = 1;
 			mv_selection = MapVote_MoveRight(mv_selection);
 			return true;
 		case K_LEFTARROW:
-			if (!key_pressed) return true;
 			mv_selection_keyboard = 1;
 			mv_selection = MapVote_MoveLeft(mv_selection);
 			return true;
 		case K_DOWNARROW:
-			if (!key_pressed) return true;
 			mv_selection_keyboard = 1;
 			mv_selection = MapVote_MoveDown(mv_selection);
 			return true;
 		case K_UPARROW:
-			if (!key_pressed) return true;
 			mv_selection_keyboard = 1;
 			mv_selection = MapVote_MoveUp(mv_selection);
 			return true;
 		case K_KP_ENTER:
 		case K_ENTER:
 		case K_SPACE:
-			if (!key_pressed) return true;
 			if ( mv_selection_keyboard )
 				MapVote_SendChoice(mv_selection);
 			return true;
@@ -880,8 +881,6 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	{
 		if (!first_digit)
 		{
-			if (!key_pressed)
-				return true;
 			first_digit = imp % 10;
 			return true;
 		}
@@ -891,8 +890,6 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if (nPrimary == K_MOUSE1)
 	{
-		if (!key_pressed)
-			return true;
 		mv_selection_keyboard = 0;
 		mv_selection = mv_mouse_selection;
 		if (mv_selection >= 0)
@@ -904,8 +901,6 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if (imp)
 	{
-		if (!key_pressed)
-			return true;
 		if (imp <= mv_num_maps)
 			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return true;
