@@ -275,8 +275,15 @@ void HUD_CenterPrint()
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= fontsize.y;
-		if (centerprint_title_left != "" && align == 0.5) // Center line at the main word (for duels)
-			pos.x += (stringwidth(centerprint_title_right, true, fontsize) - stringwidth(centerprint_title_left, true, fontsize)) / 2;
+		float right_width = 0;
+		float left_width = 0;
+		if (centerprint_title_left != "")
+		{
+			right_width = stringwidth(centerprint_title_right, true, fontsize);
+			left_width = stringwidth(centerprint_title_left, true, fontsize);
+			if (align == 0.5) // Center line at the main word (for duels)
+				pos.x += (right_width - left_width) / 2;
+		}
 
 		drawcolorcodedstring(pos, centerprint_title, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
@@ -285,7 +292,13 @@ void HUD_CenterPrint()
 		else
 			pos.y += fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING);
 
-		drawfill(pos, vec2(width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		if (centerprint_title_left != "")
+		{
+			drawfill(pos, vec2(left_width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + vec2(width - right_width, 1), vec2(right_width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		else
+			drawfill(pos, vec2(width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
