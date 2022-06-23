@@ -78,37 +78,47 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage), thiswep.m_id | HITTYPE_SECONDARY);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo), weaponentity);
 
-	missile = new(hlacbolt);
-	missile.owner = missile.realowner = actor;
-	missile.bot_dodge = true;
+	for(int j = WEP_CVAR_SEC(hlac, shots); j > 0; --j)
+	{
+		missile = new(hlacbolt);
+		missile.owner = missile.realowner = actor;
+		missile.bot_dodge = true;
 
-	missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
+		missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
 
-	set_movetype(missile, MOVETYPE_FLY);
-	PROJECTILE_MAKETRIGGER(missile);
+		set_movetype(missile, MOVETYPE_FLY);
+		PROJECTILE_MAKETRIGGER(missile);
 
-	setorigin(missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
+		setorigin(missile, w_shotorg);
+		setsize(missile, '0 0 0', '0 0 0');
 
-	W_SetupProjVelocity_Basic(missile, WEP_CVAR_SEC(hlac, speed), spread);
-	//missile.angles = vectoangles(missile.velocity); // csqc
+		W_SetupProjVelocity_Basic(missile, WEP_CVAR_SEC(hlac, speed), spread);
+		//missile.angles = vectoangles(missile.velocity); // csqc
 
-	settouch(missile, W_HLAC_Touch);
-	setthink(missile, SUB_Remove);
+		settouch(missile, W_HLAC_Touch);
+		setthink(missile, SUB_Remove);
 
-	missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
+		missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
-	missile.flags = FL_PROJECTILE;
-	IL_PUSH(g_projectiles, missile);
-	IL_PUSH(g_bot_dodge, missile);
-	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
-	missile.weaponentity_fld = weaponentity;
+		missile.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, missile);
+		IL_PUSH(g_bot_dodge, missile);
+		missile.missile_flags = MIF_SPLASH;
+		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
+		missile.weaponentity_fld = weaponentity;
 
-	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
+		CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+		MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+	}
+
+	if(!autocvar_g_norecoil)
+	{
+		actor.punchangle_x = random() - 0.5;
+		actor.punchangle_y = random() - 0.5;
+	}
 }
 
 // weapon frames
@@ -141,20 +151,6 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 	}
 }
 
-void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor, .entity weaponentity)
-{
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo), weaponentity);
-
-	for(float i = WEP_CVAR_SEC(hlac, shots); i > 0; --i)
-		W_HLAC_Attack2(thiswep, actor, weaponentity);
-
-	if(!autocvar_g_norecoil)
-	{
-		actor.punchangle_x = random() - 0.5;
-		actor.punchangle_y = random() - 0.5;
-	}
-}
-
 METHOD(HLAC, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
@@ -177,7 +173,7 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hlac, refire)))
         {
-            W_HLAC_Attack2_Frame(thiswep, actor, weaponentity);
+            W_HLAC_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
         }
     }
