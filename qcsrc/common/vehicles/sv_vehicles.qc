@@ -1292,10 +1292,11 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	return true;
 }
 
-entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
+entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid)
 {
 	e.spawnflags = VHF_MULTISLOT;
-
+	
+	// TODO: Make a respawn option, the following line isn't functional
 	if(!respwn) { e.spawnflags |= VHF_ISVEHICLE; }
 	setorigin(e, orig);
 	bool allow_any = boolean(vehicle == "anyrandom");
@@ -1331,7 +1332,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 				return NULL; // no good
 			}
 			// select a random valid vehicle type if no valid vehicle was provided
-			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid);
 		}
 	}
 

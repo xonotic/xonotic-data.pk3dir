@@ -1005,8 +1005,7 @@ void nade_emerald_boom(entity this)
 					this.realowner, 
 					this.origin, 
 					false, 
-					false, 
-					1
+					false
 				);
 
 				vehspawncount++;
@@ -1027,6 +1026,7 @@ void nade_emerald_boom(entity this)
 					this.realowner, 
 					this.realowner, 
 					this.origin, 
+					false,
 					false, 
 					false, 
 					1

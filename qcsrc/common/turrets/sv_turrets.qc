@@ -1416,12 +1416,12 @@ bool turret_initialize(entity this, Turret tur)
 	return true;
 }
 
-entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
+entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, bool removeifinvalid, int moveflag)
 {
 	e.spawnflags = TSF_SUSPENDED;
 
 	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
-	// if(invincible) { e.damage_flags |= TFL_DMG_NO; }
+	if(invincible) { e.damage_flags |= TFL_DMG_NO; }
 
 	setorigin(e, orig);
 	bool allow_any = boolean(turret == "anyrandom");
@@ -1457,22 +1457,21 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 				return NULL; // no good
 			}
 			// select a random valid turret type if no valid turret was provided
-			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
+			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, invincible, removeifinvalid, moveflag);
 		}
 	}
 
 	e.realowner = spawnedby;
 
-	// TODO: Create a turret .entity moveflag
-	//if(moveflag && e.turret_flags == TUR_FLAG_MOVE)
-	//	e.monster_moveflags = moveflag;
+	if(moveflag)
+		e.turret_flags = TUR_FLAG_MOVE;
 
 	if(IS_PLAYER(spawnedby))
 	{
 		if(teamplay)
 			e.team = spawnedby.team; // colors handled in spawn code
 
-		// TODO: Create a turret .entity moveflag
+		// TODO: Create a "following player" feature when turret has moveflag
 		//if(autocvar_g_monsters_owners)
 		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
 		

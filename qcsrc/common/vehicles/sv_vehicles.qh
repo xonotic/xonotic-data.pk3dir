@@ -103,6 +103,7 @@ float vehicles_exit_running;
 
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
+entity spawnvehicle(entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid);
 void vehicles_exit(entity vehic, int eject);
 bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
