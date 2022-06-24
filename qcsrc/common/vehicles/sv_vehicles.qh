@@ -82,6 +82,7 @@ const int MAX_AXH = 4;
 .float  lock_strength;
 .float  lock_time;
 .float  lock_soundtime;
+.bool optionalsetup;
 
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
