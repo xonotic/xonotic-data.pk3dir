@@ -1291,3 +1291,68 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	return true;
 }
+
+entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
+{
+	e.spawnflags = VHF_MULTISLOT;
+
+	if(!respwn) { e.spawnflags |= VHF_ISVEHICLE; }
+	setorigin(e, orig);
+	bool allow_any = boolean(vehicle == "anyrandom");
+
+	if(vehicle == "random" || allow_any)
+	{
+		RandomSelection_Init();
+		FOREACH(Vehicles, it != VEH_Null && (allow_any || !(it.spawnflags & VHF_MULTISLOT)),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+
+		veh = RandomSelection_chosen_ent;
+	}
+	else if(vehicle != "")
+	{
+		bool found = false;
+		FOREACH(Vehicles, it != VEH_Null,
+		{
+			if(it.netname == vehicle)
+			{
+				found = true;
+				veh = it; // we have the vehicle, old vehicle id is no longer required
+				break;
+			}
+		});
+
+		if(!found && veh == VEH_Null)
+		{
+			if(removeifinvalid)
+			{
+				delete(e);
+				return NULL; // no good
+			}
+			// select a random valid vehicle type if no valid vehicle was provided
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
+		}
+	}
+
+	e.realowner = spawnedby;
+
+	if(IS_PLAYER(spawnedby))
+	{
+		if(teamplay)
+			e.team = spawnedby.team; // colors handled in spawn code
+		
+		e.angles_y = spawnedby.angles_y;
+	}
+	
+	if(!(e.spawnflags & VHF_ISVEHICLE)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of vehicle
+
+	// e.angles = '0 0 0';
+	e.velocity = randomvec() * 150 + '0 0 325';
+	e.spawnfunc_checked = true;
+	time = 0.6;
+	
+	vehicle_initialize(e, veh, true);
+
+	return e;
+}

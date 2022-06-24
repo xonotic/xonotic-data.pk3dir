@@ -1415,4 +1415,74 @@ bool turret_initialize(entity this, Turret tur)
 
 	return true;
 }
+
+entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
+{
+	e.spawnflags = TSF_SUSPENDED;
+
+	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
+	// if(invincible) { e.damage_flags |= TFL_DMG_NO; }
+
+	setorigin(e, orig);
+	bool allow_any = boolean(turret == "anyrandom");
+
+	if(turret == "random" || allow_any)
+	{
+		RandomSelection_Init();
+		FOREACH(Turrets, it != TUR_Null && (allow_any || !(it.spawnflags & TSF_SUSPENDED)),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+
+		tur = RandomSelection_chosen_ent;
+	}
+	else if(turret != "")
+	{
+		bool found = false;
+		FOREACH(Turrets, it != TUR_Null,
+		{
+			if(it.netname == turret)
+			{
+				found = true;
+				tur = it; // we have the turret, old turret id is no longer required
+				break;
+			}
+		});
+
+		if(!found && tur == TUR_Null)
+		{
+			if(removeifinvalid)
+			{
+				delete(e);
+				return NULL; // no good
+			}
+			// select a random valid turret type if no valid turret was provided
+			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
+		}
+	}
+
+	e.realowner = spawnedby;
+
+	// TODO: Create a turret .entity moveflag
+	//if(moveflag && e.turret_flags == TUR_FLAG_MOVE)
+	//	e.monster_moveflags = moveflag;
+
+	if(IS_PLAYER(spawnedby))
+	{
+		if(teamplay)
+			e.team = spawnedby.team; // colors handled in spawn code
+
+		// TODO: Create a turret .entity moveflag
+		//if(autocvar_g_monsters_owners)
+		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
+		
+		e.angles_y = spawnedby.angles_y;
+	}
+	
+	if(!(e.spawnflags & TSF_SUSPENDED)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of turret
+	
+	turret_initialize(e, tur);
+
+	return e;
+}
 #endif
