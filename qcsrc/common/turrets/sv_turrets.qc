@@ -1416,9 +1416,10 @@ bool turret_initialize(entity this, Turret tur)
 	return true;
 }
 
-entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, bool removeifinvalid, int moveflag)
+entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, bool removeifinvalid, int moveflag, bool optional)
 {
 	e.spawnflags = TSF_SUSPENDED;
+	e.optionalsetup = optional;
 
 	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
 	if(invincible) { e.damage_flags |= TFL_DMG_NO; }
@@ -1457,7 +1458,7 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 				return NULL; // no good
 			}
 			// select a random valid turret type if no valid turret was provided
-			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, invincible, removeifinvalid, moveflag);
+			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, invincible, removeifinvalid, moveflag, optional);
 		}
 	}
 
@@ -1472,15 +1473,20 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 			e.team = spawnedby.team; // colors handled in spawn code
 
 		// TODO: Create a "following player" feature when turret has moveflag
-		//if(autocvar_g_monsters_owners)
+		//if(autocvar_g_monsters_owners && e.move_movetype == MOVETYPE_WALK)
 		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
 		
 		e.angles_y = spawnedby.angles_y;
 	}
 	
 	if(!(e.spawnflags & TSF_SUSPENDED)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of turret
-	
+
 	turret_initialize(e, tur);
+
+	//LOG_INFOF("^1tur.netname^3: %s", tur.netname);
+
+	if (e.optionalsetup)
+		e.tur_head.effects = (EF_DIMLIGHT | EF_FULLBRIGHT);
 
 	return e;
 }

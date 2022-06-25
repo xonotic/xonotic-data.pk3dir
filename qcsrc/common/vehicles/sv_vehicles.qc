@@ -424,7 +424,7 @@ void vehicles_reset_colors(entity this, entity player)
 	if (this.optionalsetup)
 		this.effects = EF_DIMLIGHT;
 	else 
-		this.effects   = eff;
+		this.effects = eff;
 
 	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_setcolors(info, this);
@@ -1295,10 +1295,10 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	return true;
 }
 
-entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid)
+entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, bool optional)
 {
 	e.spawnflags = VHF_MULTISLOT;
-	e.optionalsetup = true;
+	e.optionalsetup = optional;
 	
 	// TODO: Make a respawn option, the following line isn't functional
 	if(!respwn) { e.spawnflags |= VHF_ISVEHICLE; }
@@ -1336,7 +1336,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 				return NULL; // no good
 			}
 			// select a random valid vehicle type if no valid vehicle was provided
-			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid);
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid, optional);
 		}
 	}
 

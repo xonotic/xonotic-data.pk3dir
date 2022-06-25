@@ -82,7 +82,7 @@ const int MAX_AXH = 4;
 .float  lock_strength;
 .float  lock_time;
 .float  lock_soundtime;
-.bool optionalsetup;
+.bool 	optionalsetup;
 
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
@@ -104,7 +104,7 @@ float vehicles_exit_running;
 
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
-entity spawnvehicle(entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid);
+entity spawnvehicle(entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, bool optional);
 void vehicles_exit(entity vehic, int eject);
 bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
