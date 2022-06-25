@@ -995,6 +995,9 @@ void nade_emerald_boom(entity this)
 	{
 		case 1:
 		{
+			if(!autocvar_g_vehicles) 
+				return;
+
 			if (vehspawncount < autocvar_g_nades_emerald_vehiclespawnlimit)
 			{
 				e = spawnvehicle(
@@ -1009,6 +1012,9 @@ void nade_emerald_boom(entity this)
 					true
 				);
 
+				if(!e)
+					return; // vehicle failed to be spawned
+				
 				vehspawncount++;
 				return;
 			}
@@ -1018,6 +1024,9 @@ void nade_emerald_boom(entity this)
 		}
 		case 2:
 		{
+			if(!autocvar_g_turrets) 
+				return;
+
 			if (turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
 			{
 				e = spawnturret(
@@ -1033,6 +1042,9 @@ void nade_emerald_boom(entity this)
 					1,
 					true
 				);
+
+				if(!e)
+					return; // turret failed to be spawned
 				
 				turspawncount++;
 				return;
