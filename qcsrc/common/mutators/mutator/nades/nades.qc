@@ -675,9 +675,13 @@ void nade_heal_boom(entity this)
 
 void nade_monster_boom(entity this)
 {
+	if(!autocvar_g_monsters)
+		return;
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
 	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
+	if(!e)
+		return; // monster failed to be spawned
 
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
@@ -732,6 +736,11 @@ void nade_boom(entity this)
 			nade_blast = false;
 			break;
 		case NADE_TYPE_MONSTER:
+			if(!autocvar_g_monsters)
+			{
+				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
+				break; // fall back to a standard nade explosion
+			}
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
 			switch(this.realowner.team)
