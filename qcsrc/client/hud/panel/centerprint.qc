@@ -153,9 +153,10 @@ void centerprint_KillAll()
 
 void centerprint_SetDuelTitle(string left, string right, string div)
 {
-	strcpy(centerprint_title_left, left);
-	strcpy(centerprint_title_right, right);
-	centerprint_SetTitle(sprintf("^BG%s^BG  %s  %s", left, div, right));
+	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+	strcpy(centerprint_title_left, textShortenToWidth(left, namesize, hud_fontsize, stringwidth_colors));
+	strcpy(centerprint_title_right, textShortenToWidth(right, namesize, hud_fontsize, stringwidth_colors));
+	centerprint_SetTitle(sprintf("^BG%s^BG  %s  %s", centerprint_title_left, div, centerprint_title_right));
 }
 
 void centerprint_SetTitle(string title)
