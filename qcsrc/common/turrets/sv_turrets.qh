@@ -26,7 +26,6 @@ TR_PROPS_COMMON(X, , )
 .float shot_volly_refire; // refire after completed volly
 */
 
-.bool optionalsetup; // optional setup
 .float ticrate; // interal ai think rate
 .entity tur_head; // top part of the turret
 .entity tur_defend; // defend this entity

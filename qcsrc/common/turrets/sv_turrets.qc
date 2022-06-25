@@ -1419,7 +1419,6 @@ bool turret_initialize(entity this, Turret tur)
 entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, bool removeifinvalid, int moveflag, bool optional)
 {
 	e.spawnflags = TSF_SUSPENDED;
-	e.optionalsetup = optional;
 
 	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
 	if(invincible) { e.damage_flags |= TFL_DMG_NO; }
@@ -1464,16 +1463,15 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 
 	e.realowner = spawnedby;
 
-	if(moveflag)
-		e.turret_flags = TUR_FLAG_MOVE;
-
 	if(IS_PLAYER(spawnedby))
 	{
 		if(teamplay)
 			e.team = spawnedby.team; // colors handled in spawn code
 
 		// TODO: Create a "following player" feature when turret has moveflag
-		//if(autocvar_g_monsters_owners && e.move_movetype == MOVETYPE_WALK)
+		// if(moveflag) 
+		//	e.turret_flags = TUR_FLAG_MOVE; 
+		// if(autocvar_g_monsters_owners && e.move_movetype == MOVETYPE_WALK)
 		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
 		
 		e.angles_y = spawnedby.angles_y;
@@ -1485,7 +1483,7 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 
 	//LOG_INFOF("^1tur.netname^3: %s", tur.netname);
 
-	if (e.optionalsetup)
+	if (optional)
 		e.tur_head.effects = (EF_DIMLIGHT | EF_FULLBRIGHT);
 
 	return e;
