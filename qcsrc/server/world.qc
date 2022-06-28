@@ -2195,7 +2195,55 @@ void InitializeEntitiesRun()
 // deferred dropping
 void DropToFloor_Handler(entity this)
 {
-	WITHSELF(this, builtin_droptofloor());
+	if(!this || wasfreed(this))
+	{
+		// no modifying free entities
+		return;
+	}
+
+	vector end = this.origin - '0 0 256';
+
+	// NOTE: NudgeOutOfSolid support is not added as Xonotic's physics do not use it!
+	//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+		//SV_NudgeOutOfSolid(this);
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			this.groundentity = NULL;
+		}
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+				//SV_NudgeOutOfSolid(this);
+			setorigin(this, trace_endpos);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	else
+	{
+		if(!trace_allsolid && trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	SET_ONGROUND(this);
 	this.dropped_origin = this.origin;
 }
 
