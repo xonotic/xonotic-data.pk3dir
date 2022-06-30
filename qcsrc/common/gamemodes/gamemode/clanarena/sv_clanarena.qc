@@ -249,12 +249,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		if (!INGAME(it) && IS_BOT_CLIENT(it))
-		{
-			it.team = -1;
-			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
-		}
-		if (INGAME(it))
+		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
 			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);

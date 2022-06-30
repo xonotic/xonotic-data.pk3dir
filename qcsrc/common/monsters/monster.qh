@@ -4,7 +4,7 @@
 const int MONSTER_RESPAWN_DEATHPOINT = BIT(4); // re-spawn where we died
 const int MONSTER_TYPE_FLY = BIT(5);
 const int MONSTER_TYPE_SWIM = BIT(6);
-const int MONSTER_SIZE_BROKEN = BIT(7); // TODO: remove when bad models are replaced
+// bit 7 now unused
 const int MON_FLAG_SUPERMONSTER = BIT(8); // incredibly powerful monster
 const int MON_FLAG_RANGED = BIT(9); // monster shoots projectiles
 const int MON_FLAG_MELEE = BIT(10);
@@ -47,6 +47,8 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) logic to run every frame */
     METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    /** (SERVER) logic to run every frame after the monster has died */
+    METHOD(Monster, mr_deadthink, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster dies */
     METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster is damaged */

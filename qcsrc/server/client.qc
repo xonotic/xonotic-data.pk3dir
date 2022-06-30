@@ -584,6 +584,9 @@ void PutPlayerInServer(entity this)
 	PlayerState_attach(this);
 	accuracy_resend(this);
 
+	if (teamplay && this.bot_forced_team)
+		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+
 	if (this.team < 0)
 		TeamBalance_JoinBestTeam(this);
 
@@ -830,9 +833,7 @@ void PutPlayerInServer(entity this)
 /** Called when a client spawns in the server */
 void PutClientInServer(entity this)
 {
-	if (IS_BOT_CLIENT(this)) {
-		TRANSMUTE(Player, this);
-	} else if (IS_REAL_CLIENT(this)) {
+	if (IS_REAL_CLIENT(this)) {
 		msg_entity = this;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
@@ -2306,6 +2307,14 @@ void ObserverOrSpectatorThink(entity this)
 			CS(this).impulse = 0;
 			return;
 		}
+	}
+
+	if (IS_BOT_CLIENT(this) && !CS(this).autojoin_checked)
+	{
+		CS(this).autojoin_checked = true;
+		TRANSMUTE(Player, this);
+		PutClientInServer(this);
+		return;
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {

@@ -250,7 +250,7 @@ void HUD_Score()
 				pl = NULL;
 
 		score = me.(scores(ps_primary));
-		timer = TIME_ENCODED_TOSTRING(score);
+		timer = TIME_ENCODED_TOSTRING(score, false);
 
 		draw_beginBoldFont();
 		if (pl && ((!(scores_flags(ps_primary) & SFL_ZERO_IS_WORST)) || score)) {

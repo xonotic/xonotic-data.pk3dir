@@ -181,7 +181,14 @@ void Shutdown()
 		if (!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart nop\n");
 		if (!(calledhooks & HOOK_END))
+		{
+			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
+		}
 	}
 
 	localcmd("\ncl_hook_shutdown\n");
@@ -1478,6 +1485,8 @@ void Welcome_Message_Show_Try()
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
 			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+			if (intermission) // close it after it's been initialized so it can still be opened manually
+				localcmd("\ntogglemenu 0\n");
 		}
 		else
 			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);

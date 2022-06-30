@@ -49,7 +49,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
-	wep.glowmod = weaponentity_glowmod(info, own, own.clientcolors, own.(weaponentity));
+	// wep.glowmod will be set in weapon_defaultspawnfunc
 	navigation_dynamicgoal_init(wep, false);
 
 	W_DropEvent(wr_drop,own,wpn,wep,weaponentity);

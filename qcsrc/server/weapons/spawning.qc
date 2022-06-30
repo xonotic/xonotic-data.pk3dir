@@ -152,6 +152,8 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 
 	if(!this.owner)
 		this.glowmod = wpn.wpcolor;
+	else
+		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true) * 2;
 
 	GameItem def = wpn.m_pickup;
 	_StartItem(

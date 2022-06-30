@@ -1130,7 +1130,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	// support skinned models for powerups
 	this.skin = def.m_skin;
-	this.glowmod = def.m_color;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
@@ -1146,6 +1145,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(Item_IsLoot(this))
 		this.gravity = 1;
+	else
+		this.glowmod = def.m_color;
 
 	if(def.instanceOfWeaponPickup)
 	{

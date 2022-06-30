@@ -384,7 +384,7 @@ string ScoreString(int pFlags, float pValue)
 	else if(pFlags & SFL_RANK)
 		valstr = (pValue < 256 ? count_ordinal(pValue) : _("N/A"));
 	else if(pFlags & SFL_TIME)
-		valstr = TIME_ENCODED_TOSTRING(pValue);
+		valstr = TIME_ENCODED_TOSTRING(pValue, true);
 	else
 		valstr = ftos(pValue);
 
@@ -1960,14 +1960,13 @@ void unfollow_sameorigin(entity e)
 .float aiment_deadflag;
 void SetMovetypeFollow(entity ent, entity e)
 {
-	// FIXME this may not be warpzone aware
 	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
 	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
 	ent.aiment = e; // make the hole follow bmodel
 	ent.punchangle = e.angles; // the original angles of bmodel
 	ent.view_ofs = ent.origin - e.origin; // relative origin
 	ent.v_angle = ent.angles - e.angles; // relative angles
-	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_classname = e.classname;
 	ent.aiment_deadflag = e.deadflag;
 
 	if(IS_PLAYER(ent.aiment))
@@ -1983,8 +1982,7 @@ void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
-	if (ent.aiment_classname)
-		strunzone(ent.classname);
+	ent.aiment_classname = string_null;
 	// FIXME: engine bug?
 	// resetting aiment the engine will set orb's origin close to world's origin
 	//ent.aiment = NULL;
