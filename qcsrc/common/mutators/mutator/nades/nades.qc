@@ -998,28 +998,24 @@ void nade_emerald_boom(entity this)
 			if(!autocvar_g_vehicles) 
 				return;
 
-			if (vehspawncount < autocvar_g_nades_emerald_vehiclespawnlimit)
-			{
-				e = spawnvehicle(
-					e, 
-					"random", //this.tandemnade_type, 
-					VEH_Null, 
-					this.realowner, 
-					this.realowner, 
-					this.origin, 
-					false, 
-					false,
-					true
-				);
+			// looks like a bad practice
+			time = 0.7;
 
-				if(!e)
-					return; // vehicle failed to be spawned
-				
-				vehspawncount++;
-				return;
-			}
+			e = spawnvehicle(
+				e, 
+				"random", 
+				VEH_Null, 
+				this.realowner, 
+				this.realowner, 
+				this.origin, 
+				true, 
+				false, 
+				true
+			);
+
+			if(!e)
+				return; // vehicle failed to be spawned
 			
-			PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
 			return;
 		}
 		case 2:
@@ -1027,30 +1023,23 @@ void nade_emerald_boom(entity this)
 			if(!autocvar_g_turrets) 
 				return;
 
-			if (turspawncount < autocvar_g_nades_emerald_turretspawnlimit)
-			{
-				e = spawnturret(
-					e, 
-					"random", //this.tandemnade_type, 
-					TUR_Null, 
-					this.realowner, 
-					this.realowner, 
-					this.origin, 
-					false,
-					false, 
-					false, 
-					1,
-					true
-				);
+			e = spawnturret(
+				e, 
+				"random", //this.tandemnade_type, 
+				TUR_Null, 
+				this.realowner, 
+				this.realowner, 
+				this.origin, 
+				false,
+				false, 
+				false, 
+				1,
+				true
+			);
 
-				if(!e)
-					return; // turret failed to be spawned
-				
-				turspawncount++;
-				return;
-			}
+			if(!e)
+				return; // turret failed to be spawned
 			
-			PrintToChatAll("^1Someone tried to spawn more vehicles than the maximum allowed! Sorry, cannot be spawned, spawn limit has been reached!");
 			return;
 		}
 		default:
@@ -1091,6 +1080,7 @@ void nade_emerald_boom(entity this)
 			setsize(fountain, '-16 -16 -16', '16 16 16');
 			CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
 			nade_emerald_dropping(fountain.origin);
+			return;
 		}
 	}
 }
@@ -1200,8 +1190,7 @@ void dark_damage(entity this, float radius, float damage)
 
 void nade_dark_fountain_think(entity this)
 {
-	if(round_handler_IsActive())
-	if(!round_handler_IsRoundStarted())
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;

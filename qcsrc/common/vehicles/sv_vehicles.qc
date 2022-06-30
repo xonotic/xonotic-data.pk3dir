@@ -421,7 +421,7 @@ void vehicles_reset_colors(entity this, entity player)
 	this.alpha	 = 1;
 	this.avelocity = '0 0 0';
 	this.velocity  = '0 0 0';
-	if (this.optionalsetup)
+	if (this.optional_setup)
 		this.effects = EF_DIMLIGHT;
 	else 
 		this.effects = eff;
@@ -519,6 +519,11 @@ void vehicles_setreturn(entity veh)
 
 	if(IS_DEAD(veh))
 	{
+		if (veh.cannot_respawn) 
+		{
+			delete(veh);
+			return;
+		}
 		ret.cnt		 = time + veh.respawntime;
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 5);
 	}
@@ -1292,16 +1297,23 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	if(MUTATOR_CALLHOOK(VehicleInit, this))
 		return false;
 
+	if(this.no_respawn_option)
+		this.cannot_respawn = true;
+
 	return true;
 }
 
-entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, bool optional)
+entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool no_respwn, bool removeifinvalid, bool optional)
 {
 	e.spawnflags = VHF_MULTISLOT;
-	e.optionalsetup = optional;
-	
-	// TODO: Make a respawn option, the following line isn't functional
-	if(!respwn) { e.spawnflags |= VHF_ISVEHICLE; }
+
+	// if this spawnflag isn't, it won't be spawned
+	e.spawnflags |= VHF_ISVEHICLE;
+
+	e.optional_setup = optional;
+	e.no_respawn_option = no_respwn;
+	e.cannot_respawn = false;
+
 	setorigin(e, orig);
 	bool allow_any = boolean(vehicle == "anyrandom");
 
@@ -1336,7 +1348,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 				return NULL; // no good
 			}
 			// select a random valid vehicle type if no valid vehicle was provided
-			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, respwn, removeifinvalid, optional);
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, no_respwn, removeifinvalid, optional);
 		}
 	}
 
@@ -1352,11 +1364,10 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	
 	if(!(e.spawnflags & VHF_ISVEHICLE)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of vehicle
 
-	// e.angles = '0 0 0';
 	e.velocity = randomvec() * 150 + '0 0 325';
 	e.spawnfunc_checked = true;
-	time = 0.7;
-	
+
+	// spawn!
 	vehicle_initialize(e, veh, true);
 
 	return e;

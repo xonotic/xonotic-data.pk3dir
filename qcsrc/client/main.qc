@@ -80,6 +80,7 @@ void CSQC_Init()
 
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
+	registercvar("cl_tandemnade_type", "0");
 
 	registercvar("cl_jumpspeedcap_min", "");
 	registercvar("cl_jumpspeedcap_max", "");

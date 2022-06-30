@@ -74,8 +74,6 @@ float autocvar_g_nades_emerald_ball_count = 3;
 float autocvar_g_nades_emerald_fountain_lifetime = 1; //if much time, fountain will remain
 bool autocvar_g_nades_emerald_powerupjetpack_randomdrop = 0;
 int autocvar_g_nades_emerald_dropitemselect = 0; //admin/user selects which item wants to drop in-game, if not will be random
-int autocvar_g_nades_emerald_vehiclespawnlimit = 6; //LegendGuard adds new nade cvar of vehicle spawn count limit for the server 26-06-2021
-int autocvar_g_nades_emerald_turretspawnlimit = 4; // 26-06-2021
 float autocvar_g_nades_ammo_time = 5; //LegendGuard adds new nade cvars 13-02-2021
 float autocvar_g_nades_ammo_rate = 30;
 float autocvar_g_nades_ammo_friend = 1;
@@ -168,7 +166,7 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable
 .float nade_refire;
 .float nade_special_time;
 .string pokenade_type;
-.float tandemnade_type; //LegendGuard adds new cvar nade .variable 01-07-2021
+.int tandemnade_type; //LegendGuard adds new cvar nade .variable 01-07-2021
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
@@ -177,8 +175,6 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable
 .float nade_show_particles;
 .float nade_veil_prevalpha;
 .float nade_dark_prevalpha; //LegendGuard adds new nade .variable 08-02-2021
-int vehspawncount; //LegendGuard adds new .variable 22-06-2021
-int turspawncount; // 26-06-2021
 
 bool orb_send(entity this, entity to, int sf);
 
