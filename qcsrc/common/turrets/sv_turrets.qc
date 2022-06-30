@@ -1194,7 +1194,7 @@ void turret_use(entity this, entity actor, entity trigger)
 
 void turret_link(entity this)
 {
-	Net_LinkEntity(this, true, 0, turret_send);
+	Net_LinkEntity(this, true, 0.5, turret_send);
 	setthink(this, turret_think);
 	this.nextthink = time;
 	this.tur_head.effects = EF_NODRAW;
@@ -1469,16 +1469,20 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 			e.team = spawnedby.team; // colors handled in spawn code
 
 		// TODO: Create a "following player" feature when turret has moveflag
-		// if(moveflag) 
-		//	e.turret_flags = TUR_FLAG_MOVE; 
-		// if(autocvar_g_monsters_owners && e.move_movetype == MOVETYPE_WALK)
-		//	e.monster_follow = own; // using .owner makes the monster non-solid for its master
-		
+		// if(moveflag && (e.turret_flags & TUR_FLAG_MOVE))
+		//	// do something
+
 		e.angles_y = spawnedby.angles_y;
 	}
 	
 	if(!(e.spawnflags & TSF_SUSPENDED)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of turret
 
+	// don't spawn suspended in the air, spawn on the ground
+	setorigin(e, e.origin + '0 0 20');
+	tracebox(e.origin + '0 0 64', e.mins, e.maxs, e.origin - '0 0 10000', MOVE_WORLDONLY, e);
+	setorigin(e, trace_endpos);
+
+	// spawn!
 	turret_initialize(e, tur);
 
 	//LOG_INFOF("^1tur.netname^3: %s", tur.netname);
