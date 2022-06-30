@@ -313,11 +313,6 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-void DisableServerBackwardsCompatibility()
-{
-	cvar_set("gameversion_min", ftos(100 * floor(cvar("gameversion") / 100)));
-}
-
 void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 {
 	float n;
@@ -417,25 +412,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		}
 	}
 
-	if(un_version != "")
+	if(un_version != "" && vercmp(cvar_string("g_xonoticversion"), un_version) < 0)
 	{
-		if(vercmp(cvar_string("g_xonoticversion"), un_version) < 0)
-		{
-			// update needed
-			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { LOG_INFO(_("Update can be downloaded at:"), "\n", un_download); }
-			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
-			DisableServerBackwardsCompatibility();
-		}
-		else if(cvar_string("g_xonoticversion") == un_version)
-		{
-			if(un_compatexpire != "")
-			{
-				string curdate = strftime(false, "%Y%m%d%H%M%S");
-				if (strcmp(curdate, un_compatexpire) >= 0)
-					DisableServerBackwardsCompatibility();
-			}
-		}
+		// update needed
+		_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
+		if(un_download) { LOG_INFO(_("Update can be downloaded at:"), "\n", un_download); }
+		if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 	}
 
 	if(un_tosversion != "")
@@ -687,13 +669,13 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
-	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
 	/**/
 
 // hidden gametypes come last so indexing always works correctly
 #define HIDDEN_GAMETYPES \
 	GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/**/
 
 Gametype GameType_GetID(int cnt)

@@ -1,6 +1,6 @@
 ast   "Asturian" "Asturianu" 75%
-de    "German" "Deutsch" 99%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
+de    "German" "Deutsch" 100%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 71%
 es    "Spanish" "Español" 100%

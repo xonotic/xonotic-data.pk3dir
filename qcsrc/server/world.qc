@@ -277,7 +277,6 @@ void cvar_changes_init()
 		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
-		BADCVAR("g_invasion_teams");
 		BADCVAR("g_invasion_type");
 		BADCVAR("g_jailbreak");
 		BADCVAR("g_jailbreak_teams");
@@ -335,7 +334,6 @@ void cvar_changes_init()
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("condump_stripcolors");
-		BADCVAR("gameversion");
 		BADCVAR("fs_gamedir");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
@@ -395,7 +393,7 @@ void cvar_changes_init()
 		BADCVAR("w_prop_interval");
 		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
-		BADPREFIX("gameversion_");
+		BADPREFIX("gameversion");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_hats_");
@@ -518,13 +516,6 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
-
-		// temporary for testing
-		// TODO remove before 0.8.3 release
-		BADCVAR("g_ca_weaponarena");
-		BADCVAR("g_freezetag_weaponarena");
-		BADCVAR("g_lms_weaponarena");
-		BADCVAR("g_ctf_stalemate_time");
 
 #undef BADPRESUFFIX
 #undef BADPREFIX
@@ -1001,7 +992,7 @@ spawnfunc(light)
 	delete(this);
 }
 
-bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance)
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos)
 {
     float m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
@@ -1058,15 +1049,23 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
             continue;
 
 		// rule 4: we must "see" some spawnpoint or item
-	    entity sp = NULL;
-	    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
-	    {
-	    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-	    	{
-	    		sp = it;
-	    		break;
-	    	}
-	    });
+		entity sp = NULL;
+		if(frompos)
+		{
+			if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				sp = e;
+		}
+		if(!sp)
+		{
+			IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+			{
+				if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				{
+					sp = it;
+					break;
+				}
+			});
+		}
 		if(!sp)
 		{
 			int items_checked = 0;
@@ -1125,7 +1124,7 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
-	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance, false);
 }
 
 /*
