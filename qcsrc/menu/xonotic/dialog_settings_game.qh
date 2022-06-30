@@ -34,6 +34,7 @@ ENDCLASS(XonoticRegisteredSettingsList)
 #include "tab.qh"
 #include "scrollpanel.qh"
 CLASS(XonoticGameSettingsTab, XonoticTab)
+	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGameSettingsTab, rows, float, 15.5);
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5);
 	ATTRIB(XonoticGameSettingsTab, source, DataSource, NEW(SettingSource));

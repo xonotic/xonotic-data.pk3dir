@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-17 07:22+0200\n"
+"POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1060,17 +1060,17 @@ msgstr "Geschwindigkeitspreis: %d%s ^7(%s^7)"
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Rekordtempo: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2124
+#: qcsrc/client/hud/panel/scoreboard.qc:2123
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Erneut spawnen in ^3%s^1 …"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2134
+#: qcsrc/client/hud/panel/scoreboard.qc:2133
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Du bist tot, warte ^3%s^7 bis zum Respawn"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2143
+#: qcsrc/client/hud/panel/scoreboard.qc:2142
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Du bist tot, drücke ^2%s^7, um neu zu spawnen"
@@ -1283,7 +1283,7 @@ msgstr "Besondere Spieltipps:"
 msgid "MOTD:"
 msgstr "MOTD:"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1499
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (nicht zugewiesen)"
@@ -1327,15 +1327,15 @@ msgstr "^1Fehler:^7pak-Index konnte nicht gefunden werden."
 msgid "Requesting preview..."
 msgstr "Vorschau abfragen ..."
 
-#: qcsrc/client/view.qc:891
+#: qcsrc/client/view.qc:894
 msgid "Nade timer"
 msgstr "Granaten-Timer"
 
-#: qcsrc/client/view.qc:896
+#: qcsrc/client/view.qc:899
 msgid "Capture progress"
 msgstr "Eroberungsfortschritt"
 
-#: qcsrc/client/view.qc:901
+#: qcsrc/client/view.qc:904
 msgid "Revival progress"
 msgstr "Wiederbelebungsfortschritt"
 
@@ -1670,6 +1670,7 @@ msgid "Create"
 msgstr "Starten"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
+#: qcsrc/menu/xonotic/dialog_welcome.qc:102
 msgid "Join"
 msgstr "Verbinden"
 
@@ -1912,8 +1913,8 @@ msgstr "Magierstachel"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
-msgid "Shambler"
-msgstr "Shambler"
+msgid "Golem"
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2733,18 +2734,18 @@ msgstr "^BG%s^K1 explodierte durch einen Magier%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
-msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1s Eingeweide wurden von einem Shambler nach aussen gekehrt%s%s"
+msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
+msgstr "^BG%s^K1s Eingeweide wurden von einem Golem%s%s nach aussen gekehrt"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
-msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr "^BG%s^K1 wurde von einem Shambler zerquetscht%s%s"
+msgid "^BG%s^K1 was smashed by a Golem%s%s"
+msgstr "^BG%s^K1 wurde von einem Golem zerquetscht%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
-msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 wurde von einem Shambler geschockt%s%s"
+msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
+msgstr "^BG%s^K1 wurde von einem Golem%s%s zu Tode geschockt"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -6081,7 +6082,6 @@ msgstr "nur lesen"
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
-#: qcsrc/menu/xonotic/dialog_welcome.qc:98
 msgid "OK"
 msgstr "OK"
 
@@ -6186,6 +6186,7 @@ msgid "Quick menu"
 msgstr "Schnellmenü"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
+#: qcsrc/menu/xonotic/dialog_welcome.qc:104
 msgid "Spectate"
 msgstr "Zuschauen"
 
@@ -10106,7 +10107,7 @@ msgstr "Aktuelles Spiel verlassen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr "Demo stoppen"
+msgstr "Wiederholung stoppen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"

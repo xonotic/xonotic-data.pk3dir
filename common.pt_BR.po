@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-17 07:22+0200\n"
+"POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
@@ -25,7 +25,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #: qcsrc/client/announcer.qc:45
 msgid "vs"
@@ -1047,17 +1048,17 @@ msgstr "Prêmio de velocidade: %d%s ^7(%s^7)"
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "O mais rápido de todos: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2124
+#: qcsrc/client/hud/panel/scoreboard.qc:2123
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Ressurgindo em ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2134
+#: qcsrc/client/hud/panel/scoreboard.qc:2133
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Você morreu. Espere ^3%s^7 antes de ressurgir"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2143
+#: qcsrc/client/hud/panel/scoreboard.qc:2142
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
@@ -1271,7 +1272,7 @@ msgstr "Dicas de jogo especial:"
 msgid "MOTD:"
 msgstr "Mensagem do dia:"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1499
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (não tem atalho definido)"
@@ -1314,15 +1315,15 @@ msgstr "^1Erro:^7 Não foi possível encontrar o índice do pak."
 msgid "Requesting preview..."
 msgstr "Solicitando prévia..."
 
-#: qcsrc/client/view.qc:891
+#: qcsrc/client/view.qc:894
 msgid "Nade timer"
 msgstr "Temporizador de granada"
 
-#: qcsrc/client/view.qc:896
+#: qcsrc/client/view.qc:899
 msgid "Capture progress"
 msgstr "Progresso de captura"
 
-#: qcsrc/client/view.qc:901
+#: qcsrc/client/view.qc:904
 msgid "Revival progress"
 msgstr "Progresso de reanimação"
 
@@ -1651,6 +1652,7 @@ msgid "Create"
 msgstr "Criar"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
+#: qcsrc/menu/xonotic/dialog_welcome.qc:102
 msgid "Join"
 msgstr "Entrar"
 
@@ -1895,8 +1897,8 @@ msgstr "Espinho de mago"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
-msgid "Shambler"
-msgstr "Shambler"
+msgid "Golem"
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2703,20 +2705,18 @@ msgstr "^BG%s^K1 foi explodido por um Mago%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
-msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr ""
-"Os órgãos internos de ^BG%s^K1 se tornaram externos por causa de um Shambler "
-"%s%s"
+msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
+msgstr "^K1Saíram de ^BG%s^K1 as entranhas por causa de um Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
-msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr "^BG%s^K1 foi esmagado por um Shambler%s%s"
+msgid "^BG%s^K1 was smashed by a Golem%s%s"
+msgstr "^BG%s^K1 foi esmagado por um Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
-msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 foi eletrocutado até a morte por um Shambler%s%s"
+msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
+msgstr "^BG%s^K1 foi eletrocutado por um Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -3477,8 +3477,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s"
-msgstr ""
-"^BG%s^K1 machucaram seus próprios ouvidos com a @!#%%'n Klein Bottle%s%s"
+msgstr "^BG%s^K1 feriu seus próprios ouvidos com a @!#%%'n Klein Bottle%s%s"
 
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
@@ -3530,14 +3529,15 @@ msgstr "^BG%s^K1 se explodiu com o seu próprio Mortar%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr "^BG%s^K1%s%s atingiu ^BG%s%s^K1 com sua Metralhadora Pesada Suprema"
+msgstr ""
+"^BG%s%s^K1 foi atingido pela Metralhadora Pesada Suprema de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"A ^BG%sMetralhadora Pesada Suprema de ^K1%s%s deixou ^BG%s%s^K1 em pedacinhos"
+"^BG%s%s^K1 despedaçou-se pela Metralhadora Pesada Suprema de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:481
 #, c-format
@@ -4356,7 +4356,7 @@ msgid ""
 "^F2^COUNT^BG until weapon change...\n"
 "Next weapon: ^F1%s"
 msgstr ""
-"^F2^CONTAGEM^BG até a mudança de arma...\n"
+"^F2^COUNT^BG até a mudança de arma...\n"
 "Próxima arma: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:719
@@ -6043,7 +6043,6 @@ msgstr "somente leitura"
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
-#: qcsrc/menu/xonotic/dialog_welcome.qc:98
 msgid "OK"
 msgstr "OK"
 
@@ -6149,6 +6148,7 @@ msgid "Quick menu"
 msgstr "Menu rápido"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
+#: qcsrc/menu/xonotic/dialog_welcome.qc:104
 msgid "Spectate"
 msgstr "Assistir"
 

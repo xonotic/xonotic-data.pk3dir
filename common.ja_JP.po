@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-17 07:22+0200\n"
+"POT-Creation-Date: 2022-06-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
@@ -1034,17 +1034,17 @@ msgstr "速度の賞: %d%s ^7(%s^7)"
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "史上最速: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2124
+#: qcsrc/client/hud/panel/scoreboard.qc:2123
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^3%s^1 後に再び現れ中..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2134
+#: qcsrc/client/hud/panel/scoreboard.qc:2133
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "死んだ、再び現れる前に ^3%s ^7待ってください"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2143
+#: qcsrc/client/hud/panel/scoreboard.qc:2142
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "死んだ、^2%s ^7を押して再び現れてください"
@@ -1256,7 +1256,7 @@ msgstr "特別なゲームプレイのヒント:"
 msgid "MOTD:"
 msgstr "MOTD:"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1499
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s （割り当てられていない）"
@@ -1299,15 +1299,15 @@ msgstr "^1ERROR:^7 pak index が見つかりませんでした。"
 msgid "Requesting preview..."
 msgstr "プレビューをリクエスト中..."
 
-#: qcsrc/client/view.qc:891
+#: qcsrc/client/view.qc:894
 msgid "Nade timer"
 msgstr "手榴弾タイマー"
 
-#: qcsrc/client/view.qc:896
+#: qcsrc/client/view.qc:899
 msgid "Capture progress"
 msgstr "取れ進歩"
 
-#: qcsrc/client/view.qc:901
+#: qcsrc/client/view.qc:904
 msgid "Revival progress"
 msgstr "蘇生中"
 
@@ -1634,6 +1634,7 @@ msgid "Create"
 msgstr "作成する"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
+#: qcsrc/menu/xonotic/dialog_welcome.qc:102
 msgid "Join"
 msgstr "参加する"
 
@@ -1871,8 +1872,8 @@ msgstr "魔法使いのスパイク"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
-msgid "Shambler"
-msgstr "シャンブラー"
+msgid "Golem"
+msgstr "ゴーレム"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2673,18 +2674,18 @@ msgstr "^BG%s^K1 は魔法使い%s%sによって爆発された"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
-msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1 の内部がシャンブラー%s%sによって外側になった"
+msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
+msgstr "^BG%s^K1の内臓はゴーレムによって外向きになった%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
-msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr "^BG%s^K1 はシャンブラー%s%sによって砕かられた"
+msgid "^BG%s^K1 was smashed by a Golem%s%s"
+msgstr "^BG%s^K1はゴーレムによって破壊された%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
-msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 はシャンブラー%s%sによって感電死なれた"
+msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
+msgstr "^BG%s^K1はゴーレムによって殺害された%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -5985,7 +5986,6 @@ msgstr "読み取り専用"
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
-#: qcsrc/menu/xonotic/dialog_welcome.qc:98
 msgid "OK"
 msgstr "OK"
 
@@ -6090,6 +6090,7 @@ msgid "Quick menu"
 msgstr "クイックメニュー"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
+#: qcsrc/menu/xonotic/dialog_welcome.qc:104
 msgid "Spectate"
 msgstr "観戦する"
 

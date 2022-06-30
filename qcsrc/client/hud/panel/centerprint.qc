@@ -278,14 +278,14 @@ void HUD_CenterPrint()
 		if (centerprint_title_left != "" && align == 0.5) // Center line at the main word (for duels)
 			pos.x += (stringwidth(centerprint_title_right, true, fontsize) - stringwidth(centerprint_title_left, true, fontsize)) / 2;
 
-		drawcolorcodedstring(pos, centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos, centerprint_title, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
 		else
 			pos.y += fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING);
 
-		drawfill(pos, vec2(width, 1), '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawfill(pos, vec2(width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;

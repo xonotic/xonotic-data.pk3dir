@@ -5,6 +5,7 @@ CLASS(XonoticServerInfoTab, XonoticTab)
 	METHOD(XonoticServerInfoTab, fill, void(entity));
 	ATTRIB(XonoticServerInfoTab, title, string, _("Server Information"));
 	ATTRIB(XonoticServerInfoTab, color, vector, SKINCOLOR_DIALOG_SERVERINFO);
+	ATTRIB(XonoticServerInfoTab, intendedWidth, float, 0.8);
 	ATTRIB(XonoticServerInfoTab, rows, float, 17);
 	ATTRIB(XonoticServerInfoTab, columns, float, 6.2);
 
