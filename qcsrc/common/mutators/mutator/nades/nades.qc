@@ -887,7 +887,8 @@ void nade_emerald_dropping(vector org)
 
 void emerald_ball_think(entity this)
 {
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
@@ -951,7 +952,8 @@ void nade_emerald_ball(entity this)
 
 void emerald_fountain_think(entity this)
 {
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
@@ -1190,7 +1192,8 @@ void dark_damage(entity this, float radius, float damage)
 
 void nade_dark_fountain_think(entity this)
 {
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
