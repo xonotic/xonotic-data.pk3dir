@@ -563,3 +563,18 @@ MUTATOR_HOOKFUNCTION(tka, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 	M_ARGV(0, float) = tka_teams;
 	return true;
 }
+
+void tka_Initialize()
+{
+	tka_teams = autocvar_g_tka_teams_override;
+	if(tka_teams < 2)
+		tka_teams = cvar("g_tka_teams"); // read the cvar directly as it gets written earlier in the same frame
+	tka_teams = BITS(bound(2, tka_teams, 4));
+	GameRules_scoring(tka_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+		field(SP_TKA_PICKUPS, "pickups", 0);
+		field(SP_TKA_CARRIERKILLS, "bckills", 0);
+		field(SP_TKA_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
+	});
+
+	InitializeEntity(NULL, tka_DelayedInit, INITPRIO_GAMETYPE);
+}
