@@ -1012,7 +1012,8 @@ void nade_emerald_boom(entity this)
 				this.origin, 
 				true, 
 				false, 
-				true
+				true,
+				false
 			);
 
 			if(!e)

@@ -521,6 +521,9 @@ void vehicles_setreturn(entity veh)
 	{
 		if (veh.cannot_respawn) 
 		{
+			sound (veh, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+			Send_Effect(EFFECT_EXPLOSION_BIG, veh.origin + '0 0 100', '0 0 0', 1);
+
 			delete(veh);
 			return;
 		}
@@ -529,7 +532,8 @@ void vehicles_setreturn(entity veh)
 	}
 	else
 	{
-		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
+		if (!veh.cannot_respawn) // if true, don't respawn
+			ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
 	}
 
 	setorigin(ret, veh.pos1 + '0 0 96');
@@ -1303,7 +1307,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	return true;
 }
 
-entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool no_respwn, bool removeifinvalid, bool optional)
+entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool no_respwn, bool removeifinvalid, bool optional, bool nodrop)
 {
 	e.spawnflags = VHF_MULTISLOT;
 
@@ -1348,7 +1352,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 				return NULL; // no good
 			}
 			// select a random valid vehicle type if no valid vehicle was provided
-			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, no_respwn, removeifinvalid, optional);
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, no_respwn, removeifinvalid, optional, nodrop);
 		}
 	}
 
@@ -1368,7 +1372,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	e.spawnfunc_checked = true;
 
 	// spawn!
-	vehicle_initialize(e, veh, true);
+	vehicle_initialize(e, veh, nodrop);
 
 	return e;
 }
