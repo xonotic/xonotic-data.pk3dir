@@ -44,6 +44,40 @@ void wordwrap_cb(string s, float l, void(string) callback);
 #ifndef SVQC
 string draw_currentSkin;
 string draw_UseSkinFor(string pic);
+
+// NOTE they aren't all registered mutators, e.g. jetpack, low gravity
+// TODO add missing "mutators"
+const int MUT_DODGING = 0;
+const int MUT_INSTAGIB = 1;
+const int MUT_NEW_TOYS = 2;
+const int MUT_NIX = 3;
+const int MUT_ROCKET_FLYING = 4;
+const int MUT_INVINCIBLE_PROJECTILES = 5;
+const int MUT_GRAVITY = 6;
+const int MUT_CLOAKED = 7;
+const int MUT_GRAPPLING_HOOK = 8;
+const int MUT_MIDAIR = 9;
+const int MUT_MELEE_ONLY = 10;
+const int MUT_VAMPIRE = 11;
+const int MUT_PINATA = 12;
+const int MUT_WEAPON_STAY = 13;
+const int MUT_BLOODLOSS = 14;
+const int MUT_JETPACK = 15;
+const int MUT_BUFFS = 16;
+const int MUT_OVERKILL = 17;
+const int MUT_NO_POWERUPS = 18;
+const int MUT_POWERUPS = 19;
+const int MUT_TOUCHEXPLODE = 20;
+const int MUT_WALLJUMP = 21;
+const int MUT_NO_START_WEAPONS = 22;
+const int MUT_NADES = 23;
+const int MUT_OFFHAND_BLASTER = 24;
+
+const int MUT_MAX = 47;
+
+int active_mutators[2];
+bool mut_is_active(int mut);
+string build_mutator_list(string s);
 #endif
 
 // iterative depth-first search, with fields that go "up", "down left" and "right" in a tree
@@ -54,7 +88,7 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 
 const int TIME_DECIMALS = 2;
 const float TIME_FACTOR = 100;
-#define TIME_ENCODED_TOSTRING(n) mmssss(n)
+#define TIME_ENCODED_TOSTRING(n, compact) mmssth(n, compact)
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
 #define CTF_RECORD "/ctf100record/"
@@ -210,7 +244,7 @@ vector animfixfps(entity e, vector a, vector b);
 #ifdef GAMEQC
 const int CNT_NORMAL = 1;
 const int CNT_GAMESTART = 2;
-const int CNT_IDLE = 3;
+//const int CNT_IDLE = 3;
 const int CNT_KILL = 4;
 const int CNT_RESPAWN = 5;
 const int CNT_ROUNDSTART = 6;
@@ -229,16 +263,12 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 
 #ifdef SVQC
 void attach_sameorigin(entity e, entity to, string tag);
-
 void detach_sameorigin(entity e);
-
 void follow_sameorigin(entity e, entity to);
 
 void SetMovetypeFollow(entity ent, entity e);
-
 void UnsetMovetypeFollow(entity ent);
-
-float LostMovetypeFollow(entity ent);
+int LostMovetypeFollow(entity ent);
 #endif
 
 #ifdef GAMEQC

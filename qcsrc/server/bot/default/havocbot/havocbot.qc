@@ -7,6 +7,8 @@
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
@@ -41,6 +43,10 @@ void havocbot_ai(entity this)
 		this.bot_aimdir_executed = true;
 
 	if(bot_execute_commands(this))
+		return;
+
+	// after bot_execute_commands otherwise bots can't be unpaused
+	if (bot_ispaused(this))
 		return;
 
 	if (bot_strategytoken == this && !bot_strategytoken_taken)
@@ -565,8 +571,8 @@ void havocbot_movetogoal(entity this)
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
 		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
-			* ((STAT(STRENGTH_FINISHED, this) > time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
-			* ((STAT(INVINCIBLE_FINISHED, this) > time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
+			* ((StatusEffects_active(STATUSEFFECT_Strength, this)) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
+			* ((StatusEffects_active(STATUSEFFECT_Shield, this)) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
 		// save some CPU cycles by checking trigger_hurt after checking
 		// that something can be done to evade it (cheaper checks)

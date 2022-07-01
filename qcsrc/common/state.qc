@@ -1,5 +1,6 @@
 #include "state.qh"
 
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <server/command/getreplies.qh>
 
 void Inventory_new(PlayerState this);
@@ -58,6 +59,7 @@ void ClientState_attach(entity this)
 	anticheat_init(this);
 	W_HitPlotOpen(this);
 	InventoryStorage_attach(this);
+	StatusEffectsStorage_attach(this);
 }
 
 void bot_clientdisconnect(entity this);
@@ -77,6 +79,7 @@ void ClientState_detach(entity this)
     ClientData_Detach(this);
     entcs_detach(this);
     InventoryStorage_delete(this);
+    StatusEffectsStorage_delete(this);
 	delete(CS(this));
 	this._cs = NULL;
 

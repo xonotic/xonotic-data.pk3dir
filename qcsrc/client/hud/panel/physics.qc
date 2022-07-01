@@ -64,7 +64,6 @@ void HUD_Physics()
 
 	//compute speed
 	float speed, conversion_factor = GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
-	string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
 	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
@@ -178,6 +177,7 @@ void HUD_Physics()
 			tmp_size.x = panel_size.x * (1 - 0.75);
 			tmp_size.y = panel_size.y * 0.4 * text_scale;
 			tmp_offset.y = (panel_size.y * 0.4 - tmp_size.y) / 2;
+			string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}

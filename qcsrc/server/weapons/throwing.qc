@@ -3,7 +3,9 @@
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/subs.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
@@ -12,7 +14,6 @@
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
@@ -39,7 +40,7 @@ void thrown_wep_think(entity this)
 float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
 	Weapon info = REGISTRY_GET(Weapons, wpn);
-	int ammotype = info.ammo_type;
+	Resource ammotype = info.ammo_type;
 
 	entity wep = spawn();
 	Item_SetLoot(wep, true);
@@ -48,7 +49,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
-	wep.glowmod = weaponentity_glowmod(info, own, own.clientcolors, own.(weaponentity));
+	// wep.glowmod will be set in weapon_defaultspawnfunc
 	navigation_dynamicgoal_init(wep, false);
 
 	W_DropEvent(wr_drop,own,wpn,wep,weaponentity);
@@ -69,15 +70,20 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			});
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = STAT(SUPERWEAPONS_FINISHED, own);
-				STAT(SUPERWEAPONS_FINISHED, own) = 0;
+				wep.superweapons_finished = StatusEffects_gettime(STATUSEFFECT_Superweapons, own);
+				StatusEffects_remove(STATUSEFFECT_Superweapons, own, STATUSEFFECT_REMOVE_CLEAR);
 			}
 			else
 			{
-				float timeleft = STAT(SUPERWEAPONS_FINISHED, own) - time;
+				float timeleft = StatusEffects_gettime(STATUSEFFECT_Superweapons, own) - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
-				STAT(SUPERWEAPONS_FINISHED, own) -= weptimeleft;
+				if(own.statuseffects)
+				{
+					// TODO: this doesn't explicitly enable the effect, use apply here?
+					own.statuseffects.statuseffect_time[STATUSEFFECT_Superweapons.m_id] -= weptimeleft;
+					StatusEffects_update(own);
+				}
 			}
 		}
 	}

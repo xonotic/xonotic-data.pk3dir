@@ -239,9 +239,9 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
 		s = "???";
-	// NOTE the following string is equal to the one used in the campaign level notification
-	// (CAMPAIGN_MESSAGE) to avoid adding another duplicate string to translate
-	s = draw_TextShortenToWidth(strcat(sprintf(_("Level %s: "), itos(i+1)), s), me.columnNameSize, 0, me.realFontSize);
+	// NOTE the following string should be equal to the one used in the Welcome dialog
+	// to avoid adding a slightly different string to translate
+	s = draw_TextShortenToWidth(strcat(sprintf(_("Level %d:"), i+1), " ", s), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
 	if(i <= me.campaignIndex)

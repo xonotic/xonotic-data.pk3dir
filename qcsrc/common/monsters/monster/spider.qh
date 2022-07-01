@@ -8,8 +8,8 @@ MODEL(MON_SPIDER, M_Model("spider.dpm"));
 
 CLASS(Spider, Monster)
     ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Spider, m_mins, vector, '-18 -18 -25');
-    ATTRIB(Spider, m_maxs, vector, '18 18 30');
+    ATTRIB(Spider, m_mins, vector, '-30 -30 -25');
+    ATTRIB(Spider, m_maxs, vector, '30 30 30');
 #ifdef GAMEQC
     ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
 #endif
@@ -28,3 +28,19 @@ CLASS(SpiderAttack, PortoLaunch)
 /* wepname   */ ATTRIB(SpiderAttack, m_name, string, _("Spider attack"));
 ENDCLASS(SpiderAttack)
 REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
+
+#include <common/mutators/mutator/status_effects/all.qh>
+
+CLASS(Webbed, StatusEffects)
+    ATTRIB(Webbed, netname, string, "webbed");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(Webbed, m_name, string, _("Webbed"));
+    ATTRIB(Webbed, m_icon, string, "buff_disability");
+#endif
+    ATTRIB(Webbed, m_color, vector, '0.94 0.3 1');
+    ATTRIB(Webbed, m_hidden, bool, true);
+    ATTRIB(Webbed, m_lifetime, float, 10);
+ENDCLASS(Webbed)
+REGISTER_STATUSEFFECT(Webbed, NEW(Webbed));

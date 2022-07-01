@@ -13,7 +13,7 @@ bool rainsnow_SendEntity(entity this, entity to, float sf)
 	WriteShort(MSG_ENTITY, compressShortVector(this.dest));
 	WriteShort(MSG_ENTITY, this.count);
 	WriteByte(MSG_ENTITY, this.cnt);
-	WriteShort(MSG_ENTITY, bound(0, this.fade_end, 65535));
+	WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
 	return true;
 }
 

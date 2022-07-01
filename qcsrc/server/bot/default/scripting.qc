@@ -493,8 +493,8 @@ float bot_cmd_impulse(entity this)
 
 float bot_cmd_continue(entity this)
 {
-	bot_relinkplayerlist();
 	this.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
+	bot_relinkplayerlist();
 	return CMD_STATUS_FINISHED;
 }
 
@@ -1000,6 +1000,11 @@ float bot_cmd_releasekey(entity this)
 	return bot_cmd_keypress_handler(this, key,false);
 }
 
+bool bot_ispaused(entity this)
+{
+	return(this.bot_exec_status & BOT_EXEC_STATUS_PAUSED);
+}
+
 float bot_cmd_pause(entity this)
 {
 	PHYS_INPUT_BUTTON_DRAG(this) = false;
@@ -1014,8 +1019,8 @@ float bot_cmd_pause(entity this)
 	CS(this).movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
-	bot_clear(this);
 	this.bot_exec_status |= BOT_EXEC_STATUS_PAUSED;
+	bot_relinkplayerlist();
 	return CMD_STATUS_FINISHED;
 }
 

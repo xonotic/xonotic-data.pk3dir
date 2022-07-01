@@ -1,6 +1,8 @@
 #include "notify.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/view.qh>
 
 // Notifications (#4)
 
@@ -56,11 +58,27 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void HUD_Notify()
 {
-	if (!autocvar__hud_configure)
-		if (!autocvar_hud_panel_notify)
-			return;
+	if (!autocvar__hud_configure && !autocvar_hud_panel_notify)
+		return;
 
 	HUD_Panel_LoadCvars();
+
+	if (scoreboard_fade_alpha)
+	{
+		float minalpha = 1;
+		if (notify_count == 0)
+			minalpha = 0; // hide if empty
+		else if (boxesoverlap(panel_pos, panel_pos + panel_size,
+			eX * scoreboard_left + eY * scoreboard_top, eX * scoreboard_right + eY * scoreboard_bottom))
+		{
+			minalpha = 0.5; // transparent if it may overlap the scoreboard
+		}
+		float f = max(minalpha, (1 - scoreboard_fade_alpha));
+		if (f <= 0)
+			return;
+		panel_bg_alpha *= f;
+		panel_fg_alpha *= f;
+	}
 
 	if (autocvar_hud_panel_notify_dynamichud)
 		HUD_Scale_Enable();
@@ -68,9 +86,8 @@ void HUD_Notify()
 		HUD_Scale_Disable();
 	HUD_Panel_DrawBg();
 
-	if (!autocvar__hud_configure)
-		if (notify_count == 0)
-			return;
+	if (!autocvar__hud_configure && notify_count == 0)
+		return;
 
 	vector pos, size;
 	pos  = panel_pos;
@@ -83,6 +100,8 @@ void HUD_Notify()
 	}
 
 	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	if (intermission) // fade out in half the time
+		fade_start -= (time - intermission_time);
 	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
 	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 

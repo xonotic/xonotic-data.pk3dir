@@ -15,17 +15,20 @@ STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
  * Score indices
  */
 
-// game mode specific indices are not in common/, but in server/scores_rules.qc!
 #ifdef GAMEQC
+// fields not networked via the score system
 REGISTER_SP(END);
 
 REGISTER_SP(PING);
 REGISTER_SP(PL);
 REGISTER_SP(NAME);
-REGISTER_SP(KDRATIO);
-REGISTER_SP(SUM);
-
 REGISTER_SP(SEPARATOR);
+
+REGISTER_SP(KDRATIO); // kills / deaths
+REGISTER_SP(SUM); // kills - deaths
+REGISTER_SP(FRAGS); // kills - suicides
+
+// networked fields
 
 REGISTER_SP(SCORE);
 
@@ -36,7 +39,6 @@ REGISTER_SP(KILLS);
 REGISTER_SP(DEATHS);
 REGISTER_SP(SUICIDES);
 REGISTER_SP(TEAMKILLS);
-REGISTER_SP(FRAGS);
 
 REGISTER_SP(ELO);
 

@@ -26,7 +26,7 @@ void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
-	if (autocvar_sv_maxidle > 0) {
+	if (autocvar_sv_maxidle > 0 || autocvar_sv_maxidle_playertospectator > 0) {
 		if (buttons != CS(this).buttons_old
 		    || CS(this).movement != CS(this).movement_old
 		    || this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }

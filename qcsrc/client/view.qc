@@ -21,6 +21,8 @@
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
@@ -239,8 +241,7 @@ vector bobmodel_ofs(entity view)
 
 void viewmodel_animate(entity this)
 {
-	if (autocvar_chase_active) return;
-	if (STAT(HEALTH) <= 0) return;
+	if (autocvar_chase_active || STAT(HEALTH) <= 0) return;
 
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 
@@ -401,7 +402,7 @@ void fpscounter_update()
 
 		int channel = MSG_C2S;
 		WriteHeader(channel, fpsreport);
-		WriteShort(channel, bound(0, rint(fps), 65535)); // prevent insane fps values
+		WriteShort(channel, bound(0, rint(fps), 32767)); // prevent insane fps values
 	}
 }
 
@@ -769,7 +770,7 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(HITSOUND_DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
@@ -855,75 +856,6 @@ void HitSound()
 	}
 }
 
-const int MAX_SPECIALCOMMAND = 15;
-vector specialcommand_slots[MAX_SPECIALCOMMAND];
-vector specialcommand_colors[MAX_SPECIALCOMMAND];
-const float SPECIALCOMMAND_SPEED = 150;
-const float SPECIALCOMMAND_TURNSPEED = 2;
-const float SPECIALCOMMAND_SIZE = 0.025;
-const float SPECIALCOMMAND_CHANCE = 0.35;
-float sc_spawntime, sc_changetime;
-vector sc_color = '1 1 1';
-void SpecialCommand()
-{
-	if(!STAT(MOVEVARS_SPECIALCOMMAND))
-		return;
-
-	if(time >= sc_changetime)
-	{
-		sc_changetime = time + 1;
-		sc_color = randomvec() * 1.5;
-		sc_color.x = bound(0.2, sc_color.x, 0.75);
-		sc_color.y = bound(0.2, sc_color.y, 0.75);
-		sc_color.z = bound(0.2, sc_color.z, 0.75);
-	}
-	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), sc_color, autocvar_hud_colorflash_alpha * bound(0.1, sc_changetime - time, 0.3), DRAWFLAG_ADDITIVE);
-
-	if(!precache_pic("gfx/smile"))
-		return; // damn party poopers
-
-	for(int j = MAX_SPECIALCOMMAND - 1; j >= 0; --j)
-	{
-		vector slot = specialcommand_slots[j];
-		if(slot.y)
-			slot.y += SPECIALCOMMAND_SPEED * frametime;
-		//if(slot.z)
-			//slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
-		if(slot.y >= vid_conheight)
-			slot = '0 0 0';
-
-		if(slot == '0 0 0')
-		{
-			if(random() <= SPECIALCOMMAND_CHANCE && time > sc_spawntime) // low chance to spawn!
-			{
-				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
-				slot.y = 1; // start it off 0 so we can use it
-				slot.z = floor(random() * REGISTRY_MAX(Weapons));
-				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
-				vector newcolor = randomvec() * 2;
-				newcolor.x = bound(0.4, newcolor.x, 1);
-				newcolor.y = bound(0.4, newcolor.y, 1);
-				newcolor.z = bound(0.4, newcolor.z, 1);
-				specialcommand_colors[j] = newcolor;
-			}
-		}
-		else
-		{
-			vector splash_size = '0 0 0';
-			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			entity wep = REGISTRY_GET(Weapons, slot.z);
-			if(wep == WEP_Null)
-				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
-			else
-				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
-			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
-		}
-
-		specialcommand_slots[j] = slot;
-	}
-}
-
 void HUD_Draw(entity this)
 {
 	// if we don't know gametype and scores yet avoid drawing the scoreboard
@@ -936,41 +868,46 @@ void HUD_Draw(entity this)
 	Hud_Dynamic_Frame();
 
 	if(!intermission)
-	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
-	}
-	else if(STAT(FROZEN))
-	{
-		vector col = '0.25 0.90 1';
-		float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
-		float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
-		if(col_fade)
-			col += vec3(col_fade, -col_fade, -col_fade);
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
+		{
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+		}
+		else if(STAT(FROZEN))
+		{
+			vector col = '0.25 0.90 1';
+			float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
+			float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
+			if(col_fade)
+				col += vec3(col_fade, -col_fade, -col_fade);
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+		}
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
-	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(STAT(CAPTURE_PROGRESS))
-	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(STAT(REVIVE_PROGRESS))
-	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+		{
+			vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(STAT(CAPTURE_PROGRESS))
+		{
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(STAT(REVIVE_PROGRESS))
+		{
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
 	}
 	HUD_Scale_Disable();
 
 	if(autocvar_r_letterbox == 0)
+	{
 		if(autocvar_viewsize < 120)
 		{
 			if(!MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
@@ -979,9 +916,9 @@ void HUD_Draw(entity this)
 			HUD_Main();
 			HUD_Scale_Disable();
 		}
+	}
 
 	// crosshair goes VERY LAST
-	SpecialCommand();
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
@@ -1086,7 +1023,7 @@ void View_NightVision()
 	tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
 	//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
 	tc_11 = tc_01 + tc_10 - tc_00;
-	R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE, true);
+	R_BeginPolygon("gfx/nightvision-bg", DRAWFLAG_ADDITIVE, true);
 	R_PolygonVertex('0 0 0', tc_00, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
@@ -1100,7 +1037,7 @@ void View_NightVision()
 	tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
 	tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
 	tc_11 = tc_01 + tc_10 - tc_00;
-	R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE, true);
+	R_BeginPolygon("gfx/nightvision-fg", DRAWFLAG_ADDITIVE, true);
 	R_PolygonVertex('0 0 0', tc_00, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
@@ -1299,9 +1236,13 @@ void View_PostProcessing()
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = STAT(STRENGTH_FINISHED), invincible_finished = STAT(INVINCIBLE_FINISHED);
-		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
-		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		float sharpen_intensity = 0;
+		FOREACH(StatusEffect, it.instanceOfPowerups,
+		{
+			float powerup_finished = StatusEffects_gettime(it, g_statuseffects) - time;
+			if(powerup_finished > 0)
+				sharpen_intensity += powerup_finished;
+		});
 
 		sharpen_intensity = bound(0, ((STAT(HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 
@@ -1605,9 +1546,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars(false);
-	if (ReplicateVars_NOT_SENDING())
-		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+	ReplicateVars(REPLICATEVARS_CHECK);
 
 	HUD_Scale_Disable();
 
@@ -1658,7 +1597,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
 
-	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 	if(!local_player)
 		local_player = this; // fall back!
@@ -1706,14 +1644,26 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(intermission && !intermission_time)
 		intermission_time = time;
 
+	if(STAT(GAME_STOPPED) && !game_stopped_time)
+		game_stopped_time = time;
+	else if(game_stopped_time && !STAT(GAME_STOPPED))
+		game_stopped_time = 0;
+
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
 		if(calledhooks & HOOK_START)
 		{
+			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
 		}
 	}
+
+	Welcome_Message_Show_Try();
 
 	Announcer();
 
@@ -1735,7 +1685,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Draw the World (and sky)
 	setproperty(VF_DRAWWORLD, 1);
 
-	// Set the console size vars
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
@@ -1744,18 +1693,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	View_DemoCamera();
 
-	// Draw the Crosshair
-	setproperty(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-
-	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, 0);
-
-	// Update the mouse position
-	/*
-	   mousepos_x = vid_conwidth;
-	   mousepos_y = vid_conheight;
-	   mousepos = mousepos*0.5 + getmousepos();
-	 */
+	setproperty(VF_DRAWCROSSHAIR, 0); // hide engine crosshair
+	setproperty(VF_DRAWENGINESBAR, 0); // hide engine status bar
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 

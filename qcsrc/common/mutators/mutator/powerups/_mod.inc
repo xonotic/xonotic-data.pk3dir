@@ -1,0 +1,10 @@
+// generated file; do not modify
+#include <common/mutators/mutator/powerups/powerups.qc>
+#ifdef CSQC
+    #include <common/mutators/mutator/powerups/cl_powerups.qc>
+#endif
+#ifdef SVQC
+    #include <common/mutators/mutator/powerups/sv_powerups.qc>
+#endif
+
+#include <common/mutators/mutator/powerups/powerup/_mod.inc>

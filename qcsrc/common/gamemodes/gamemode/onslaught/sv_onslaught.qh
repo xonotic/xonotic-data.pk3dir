@@ -11,7 +11,6 @@ REGISTER_MUTATOR(ons, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		g_onsshields = IL_NEW();
 		GameRules_teams(true);
 		GameRules_limit_score(autocvar_g_onslaught_point_limit);
 

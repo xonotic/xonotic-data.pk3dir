@@ -1,0 +1,13 @@
+#pragma once
+
+#include <common/mutators/mutator/status_effects/all.qh>
+
+CLASS(Superweapons, StatusEffects)
+    ATTRIB(Superweapons, netname, string, "superweapons");
+    ATTRIB(Superweapons, m_name, string, _("Superweapons"));
+    ATTRIB(Superweapons, m_icon, string, "superweapons");
+#ifdef GAMEQC
+    ATTRIB(Superweapons, m_sound_rm, Sound, SND_POWEROFF);
+#endif
+ENDCLASS(Superweapons)
+REGISTER_STATUSEFFECT(Superweapons, NEW(Superweapons));

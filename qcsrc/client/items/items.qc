@@ -135,9 +135,9 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_LOCATION)
     {
-        this.origin = ReadVector();
-        setorigin(this, this.origin);
-        this.oldorigin = this.origin;
+        vector org = ReadVector();
+        setorigin(this, org);
+        this.oldorigin = org;
     }
 
     if(sf & ISF_ANGLES)
@@ -228,6 +228,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
+
+        this.skin = ReadByte();
 
         setsize(this, '-16 -16 0', '16 16 48');
     }

@@ -395,11 +395,12 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
 	TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
+	string text = isInfinite ? "\xE2\x88\x9E" : ftos(theTime); // Use infinity symbol (U+221E)
 
 	if (vertical)
 	{
@@ -437,7 +438,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string ic
 		// reduce only y to draw numbers with different number of digits with the same y size
 		numpos.y += newSize.y * ((1 - 0.7) / 2);
 		newSize.y *= 0.7;
-		drawstring_aspect(numpos, ftos(theTime), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(numpos, text, newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		return;
 	}
 
@@ -471,14 +472,14 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string ic
 
 	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
 	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
-	drawstring_aspect_expanding(numpos, ftos(theTime), '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawstring_aspect_expanding(numpos, text, '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, int icon_right_align, vector color, float theAlpha)
 {
 	TC(bool, vertical); TC(int, icon_right_align);
-	DrawNumIcon_expanding(myPos, mySize, theTime, icon, vertical, icon_right_align, color, theAlpha, 0);
+	DrawNumIcon_expanding(myPos, mySize, theTime, icon, vertical, isInfinite, icon_right_align, color, theAlpha, 0);
 }
 
 /*

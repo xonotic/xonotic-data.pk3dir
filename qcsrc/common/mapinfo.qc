@@ -627,7 +627,10 @@ string MapInfo_Type_ToText(Gametype t)
 void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse)
 {
 	string t;
-	float fh, o;
+	float o;
+	// tabs are invalid, treat them as "empty"
+	s = strreplace("\t", "", s);
+
 	t = car(s); s = cdr(s);
 
 	// limited support of "" and comments
@@ -661,7 +664,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	{
 		if(recurse > 0)
 		{
-			fh = fopen(s, FILE_READ);
+			float fh = fopen(s, FILE_READ);
 			if(fh < 0)
 			{
 				if(WARN_COND)
@@ -671,6 +674,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			{
 				while((s = fgets(fh)))
 				{
+					s = strreplace("\t", "", s); // treat tabs as "empty", perform here first to ensure coments are detected
 					// catch different sorts of comments
 					if(s == "")                    // empty lines
 						continue;

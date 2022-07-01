@@ -285,6 +285,13 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(rc, PlayerDamaged)
+{
+	int frag_deathtype = M_ARGV(5, int);
+	if (frag_deathtype == DEATH_KILL.m_id)
+		return true; // forbid logging damage
+}
+
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
@@ -343,7 +350,7 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 				continue;
 
 			string h = race_readName(MapInfo_Map_bspname, 1);
-			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
+			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r, false)), " ", h, "\n");
 		}
 	}
 
