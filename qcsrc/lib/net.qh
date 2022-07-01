@@ -1,6 +1,7 @@
 #pragma once
 
 #include "registry.qh"
+#include "self.qh"
 #include "sort.qh"
 #include "yenc.qh"
 
@@ -111,9 +112,18 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	const int MSG_ENTITY = 5;
 
 	.int SendFlags;
+	.bool(entity this, int sendflags) SendEntity;
 
 	IntrusiveList g_uncustomizables;
 	STATIC_INIT(g_uncustomizables) { g_uncustomizables = IL_NEW(); }
+
+	.bool(entity this, entity to, int sendflags) net_sendentity;
+
+	bool Net_SendEntity(entity to, int sendflags)
+	{
+		ENGINE_EVENT();
+		return this.net_sendentity(this, to, sendflags);
+	}
 
 	void Net_LinkEntity(entity e, bool docull, bool checkmodel, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
@@ -131,7 +141,8 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			setsize(e, mi, ma);
 		}
 
-		setSendEntity(e, sendfunc);
+		e.net_sendentity = sendfunc;
+		e.SendEntity = Net_SendEntity;
 		e.SendFlags = 0xFFFFFF;
 
 		if (!docull) e.effects |= EF_NODEPTHTEST;
@@ -145,7 +156,8 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void Net_UnlinkEntity(entity e)
 	{
-		setSendEntity(e, func_null);
+		e.net_sendentity = func_null;
+		e.SendEntity = func_null;
 	}
 
 	.void(entity this) uncustomizeentityforclient;
