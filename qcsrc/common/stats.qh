@@ -366,6 +366,7 @@ REGISTER_STAT(Q3COMPAT, int, q3compat)
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
 float round_limit;
+int rounds_played;
 #endif
 
 #ifdef SVQC
@@ -405,6 +406,7 @@ REGISTER_STAT(MOVEVARS_AIRCONTROL, float)
 REGISTER_STAT(FRAGLIMIT, float, autocvar_fraglimit)
 REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
 REGISTER_STAT(WARMUP_TIMELIMIT, float, warmup_limit)
+REGISTER_STAT(ROUNDS_PLAYED, int, rounds_played)
 REGISTER_STAT(ROUND_TIMELIMIT, float, round_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;

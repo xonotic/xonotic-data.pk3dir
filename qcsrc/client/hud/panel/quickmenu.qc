@@ -449,6 +449,8 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
 	if(key_pressed)
 	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
@@ -474,13 +476,12 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	{
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
-	else
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
 	{
 		// allow console bind to work
 		string con_keys = findkeysforcommand("toggleconsole", 0);
 		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		int i;
-		for (i = 0; i < keys; ++i)
+		for (int i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false; // hit console bind
@@ -765,6 +766,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 	if(teamplayers && !team_count)
 		return;
 
+	Scoreboard_UpdatePlayerTeams();
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players

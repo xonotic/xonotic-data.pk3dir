@@ -11,6 +11,7 @@
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/banning.qh>
 #include <server/command/common.qh>
@@ -439,6 +440,8 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 	if(warmup_stage)
 		game_starttime = time; // Warmup: No countdown in warmup
+	else if (autocvar_g_campaign)
+		game_starttime = time + 3;
 	else
 		game_starttime = time + RESTART_COUNTDOWN; // Go into match mode
 
@@ -483,10 +486,16 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 void ReadyRestart(bool forceWarmupEnd)
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing)
+	{
+		// NOTE: ReadyRestart support is mandatory in campaign
+		if (autocvar_g_campaign)
+			error("ReadyRestart must be supported in campaign mode!");
+		localcmd("restart\n"); // if ReadyRestart is denied, restart the server
+	}
 	else localcmd("\nsv_hook_readyrestart\n");
 
-	if(forceWarmupEnd)
+	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
 	else
 		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage
@@ -761,11 +770,11 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "restart": // re-direct all match restarting to resetmatch
-			vote_command = "resetmatch"; // fall-through
-		case "resetmatch":
+		case "restart":
 		{
-			vote_parsed_command = vote_command;
+			// add a delay so that vote result can be seen and announcer can be heard
+			// if the vote is accepted
+			vote_parsed_command = strcat("defer 1 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;
