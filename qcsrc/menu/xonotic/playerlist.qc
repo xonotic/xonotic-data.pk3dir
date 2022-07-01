@@ -2,11 +2,11 @@
 
 .float realUpperMargin2;
 
-const float PLAYERPARM_SCORE = 0;
-const float PLAYERPARM_PING = 1;
-const float PLAYERPARM_TEAM = 2;
-const float PLAYERPARM_NAME = 3;
-const float PLAYERPARM_COUNT = 4;
+const int PLAYERPARM_SCORE = 0;
+const int PLAYERPARM_PING = 1;
+const int PLAYERPARM_TEAM = 2;
+const int PLAYERPARM_NAME = 3;
+const int PLAYERPARM_COUNT = 4;
 
 entity makeXonoticPlayerList()
 {
@@ -33,7 +33,7 @@ void XonoticPlayerList_setPlayerList(entity me, string plist)
 		s = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
 		n = tokenize_console(s);
 
-		if(n == 4)
+		if(n == PLAYERPARM_COUNT)
 		{
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100

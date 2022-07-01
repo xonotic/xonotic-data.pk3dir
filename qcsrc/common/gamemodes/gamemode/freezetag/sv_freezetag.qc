@@ -1,7 +1,7 @@
 #include "sv_freezetag.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <server/elimination.qh>
-#include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
@@ -40,14 +40,10 @@ void freezetag_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
-			1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 
 	eliminatedPlayers.SendFlags |= 1;
@@ -87,31 +83,6 @@ bool freezetag_CheckTeams()
 	return false;
 }
 
-int freezetag_getWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no player left
-}
-
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
@@ -131,12 +102,10 @@ bool freezetag_CheckWinner()
 		return true;
 	}
 
-	if (Team_GetNumberOfAliveTeams() > 1)
-	{
+	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
 		return false;
-	}
 
-	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));

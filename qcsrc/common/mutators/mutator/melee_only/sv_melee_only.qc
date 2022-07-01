@@ -48,5 +48,5 @@ MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Melee Only Arena");
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Melee only Arena");
 }

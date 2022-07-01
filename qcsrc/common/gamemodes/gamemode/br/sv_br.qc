@@ -3,7 +3,7 @@
 
 #include "sv_br.qh"
 #include <server/elimination.qh>
-#include <server/resources.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/mutators/base.qh>
 
 #define BR_KILLS_INSTANTLY(pl, dt) \
@@ -849,12 +849,12 @@ MUTATOR_HOOKFUNCTION(br, ClientObituary)
 
 MUTATOR_HOOKFUNCTION(br, SetResource)
 {
-    entity player = M_ARGV(0, entity);
+    entity player = M_ARGV(7, entity);
     if(!IS_PLAYER(player))
         return false;
 
-    int res_type = M_ARGV(1, int);
-    float amount = M_ARGV(2, float);
+    entity res_type = M_ARGV(8, entity);
+    float amount = M_ARGV(9, float);
 
     if(STAT(BLEEDING, player) && (res_type == RES_HEALTH || res_type == RES_ARMOR))
     {
@@ -865,20 +865,20 @@ MUTATOR_HOOKFUNCTION(br, SetResource)
 
 MUTATOR_HOOKFUNCTION(br, GetResourceLimit)
 {
-    entity player = M_ARGV(0, entity);
+    entity player = M_ARGV(7, entity);
 
     if(!IS_PLAYER(player) || !STAT(BLEEDING, player))
         return false;
 
-    int res_type = M_ARGV(1, int);
+    entity res_type = M_ARGV(8, entity);
 
     switch(res_type)
     {
         case RES_HEALTH:
-            M_ARGV(2, float) *= max(autocvar_g_br_bleeding_health, 0);
+            M_ARGV(9, float) *= max(autocvar_g_br_bleeding_health, 0);
             break;
         case RES_ARMOR:
-            M_ARGV(2, float) = max(autocvar_g_br_bleeding_armor, 0);
+            M_ARGV(9, float) = max(autocvar_g_br_bleeding_armor, 0);
     }
 }
 
@@ -1097,7 +1097,7 @@ void br_Start(){
     cvar_set("fraglimit", "0");
     cvar_set("leadlimit", "0");
 
-    reset_map(true);
+    reset_map(true, false);
 
     ring = ring_initialize();
 

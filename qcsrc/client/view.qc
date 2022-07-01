@@ -770,7 +770,7 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(HITSOUND_DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
@@ -868,41 +868,46 @@ void HUD_Draw(entity this)
 	Hud_Dynamic_Frame();
 
 	if(!intermission)
-	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
-	}
-	else if(STAT(FROZEN))
-	{
-		vector col = '0.25 0.90 1';
-		float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
-		float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
-		if(col_fade)
-			col += vec3(col_fade, -col_fade, -col_fade);
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
+		{
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+		}
+		else if(STAT(FROZEN))
+		{
+			vector col = '0.25 0.90 1';
+			float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
+			float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
+			if(col_fade)
+				col += vec3(col_fade, -col_fade, -col_fade);
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+		}
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
-	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(STAT(CAPTURE_PROGRESS))
-	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(STAT(REVIVE_PROGRESS))
-	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+		{
+			vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(STAT(CAPTURE_PROGRESS))
+		{
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(STAT(REVIVE_PROGRESS))
+		{
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
 	}
 	HUD_Scale_Disable();
 
 	if(autocvar_r_letterbox == 0)
+	{
 		if(autocvar_viewsize < 120)
 		{
 			if(!MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
@@ -911,6 +916,7 @@ void HUD_Draw(entity this)
 			HUD_Main();
 			HUD_Scale_Disable();
 		}
+	}
 
 	// crosshair goes VERY LAST
 	UpdateDamage();
@@ -1540,9 +1546,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars(false);
-	if (ReplicateVars_NOT_SENDING())
-		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+	ReplicateVars(REPLICATEVARS_CHECK);
 
 	HUD_Scale_Disable();
 
@@ -1593,7 +1597,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
 
-	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 	if(!local_player)
 		local_player = this; // fall back!
@@ -1641,14 +1644,26 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(intermission && !intermission_time)
 		intermission_time = time;
 
+	if(STAT(GAME_STOPPED) && !game_stopped_time)
+		game_stopped_time = time;
+	else if(game_stopped_time && !STAT(GAME_STOPPED))
+		game_stopped_time = 0;
+
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
 		if(calledhooks & HOOK_START)
 		{
+			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
 		}
 	}
+
+	Welcome_Message_Show_Try();
 
 	Announcer();
 
@@ -1670,7 +1685,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Draw the World (and sky)
 	setproperty(VF_DRAWWORLD, 1);
 
-	// Set the console size vars
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
@@ -1679,18 +1693,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	View_DemoCamera();
 
-	// Draw the Crosshair
-	setproperty(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-
-	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, 0);
-
-	// Update the mouse position
-	/*
-	   mousepos_x = vid_conwidth;
-	   mousepos_y = vid_conheight;
-	   mousepos = mousepos*0.5 + getmousepos();
-	 */
+	setproperty(VF_DRAWCROSSHAIR, 0); // hide engine crosshair
+	setproperty(VF_DRAWENGINESBAR, 0); // hide engine status bar
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 

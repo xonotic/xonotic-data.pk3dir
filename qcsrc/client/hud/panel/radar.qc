@@ -2,10 +2,10 @@
 
 #include <client/draw.qh>
 #include <client/mapvoting.qh>
-#include <client/resources.qh>
 #include <client/teamradar.qh>
 #include <common/ent_cs.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
+#include <common/resources/cl_resources.qh>
 
 // Radar (#6)
 

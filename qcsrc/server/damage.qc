@@ -17,6 +17,7 @@
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -31,7 +32,6 @@
 #include <server/items/items.qh>
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/scores.qh>
 #include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
@@ -628,7 +628,10 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(deathtype != DEATH_TELEFRAG.m_id)
 		if(IS_PLAYER(attacker))
 		{
-			if(IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			// avoid dealing damage or force to other independent players
+			// and avoid dealing damage or force to things owned by other independent players
+			if((IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ))) ||
+				(targ.realowner && IS_INDEPENDENT_PLAYER(targ.realowner) && attacker != targ.realowner))
 			{
 				damage = 0;
 				force = '0 0 0';
@@ -790,7 +793,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 							if(PHYS_INPUT_BUTTON_CHAT(victim))
 								attacker.typehitsound += 1;
 							else
-								attacker.damage_dealt += damage;
+								attacker.hitsound_damage_dealt += damage;
 						}
 
 						impressive_hits += 1;
@@ -881,6 +884,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		return 0;
 	}
 
+	if (rad < 0) rad = 0;
+
 	RadiusDamage_running = 1;
 
 	tfloordmg = autocvar_g_throughfloor_damage;
@@ -912,27 +917,25 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if (((cantbe != targ) && !mustbe) || (mustbe == targ))
 		if (targ.takedamage)
 		{
-			vector nearest;
-			vector diff;
-			float power;
+			// measure distance from nearest point on target (not origin)
+			// to nearest point on inflictor (not origin)
+			vector nearest = targ.WarpZone_findradius_nearest;
+			vector inflictornearest = NearestPointOnBoundingBox(
+				inflictororigin - (inflictor.maxs - inflictor.mins) * 0.5,
+				inflictororigin + (inflictor.maxs - inflictor.mins) * 0.5,
+				nearest);
+			vector diff = inflictornearest - nearest;
 
-			// LordHavoc: measure distance to nearest point on target (not origin)
-			// (this guarentees 100% damage on a touch impact)
-			nearest = targ.WarpZone_findradius_nearest;
-			diff = targ.WarpZone_findradius_dist;
 			// round up a little on the damage to ensure full damage on impacts
 			// and turn the distance into a fraction of the radius
-			power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
-			//bprint(" ");
-			//bprint(ftos(power));
-			//if (targ == attacker)
-			//	print(ftos(power), "\n");
-			if (power > 0)
+			float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
+			if (dist <= rad)
 			{
-				float finaldmg;
-				if (power > 1)
-					power = 1;
-				finaldmg = coredamage * power + edgedamage * (1 - power);
+				float power = 1;
+				if (rad > 0)
+					power -= (dist / rad);
+				// at this point power can't be < 0 or > 1
+				float finaldmg = coredamage * power + edgedamage * (1 - power);
 				if (finaldmg > 0)
 				{
 					float a;
@@ -1197,12 +1200,12 @@ void Fire_ApplyDamage(entity e)
 	t = min(frametime, fireendtime - time);
 	d = e.fire_damagepersec * t;
 
-	hi = e.fire_owner.damage_dealt;
+	hi = e.fire_owner.hitsound_damage_dealt;
 	ty = e.fire_owner.typehitsound;
 	Damage(e, e, e.fire_owner, d, e.fire_deathtype, DMG_NOWEP, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
-		e.fire_owner.damage_dealt = hi;
+		e.fire_owner.hitsound_damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = true;

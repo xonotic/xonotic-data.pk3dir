@@ -15,7 +15,7 @@ entity dropship_initialize()
 
     for(int i = 0; i < 100; ++i) // try to find a dropship path multiple times
     {
-        if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 100, 8192, 1024))
+        if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 100, 8192, 1024, false))
             continue;
 
         vector mult;

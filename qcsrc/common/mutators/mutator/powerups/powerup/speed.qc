@@ -11,7 +11,6 @@ METHOD(Speed, m_remove, void(StatusEffects this, entity actor, int removal_type)
     }
     if(wasactive)
         stopsound(actor, CH_TRIGGER_SINGLE); // get rid of the pickup sound
-    actor.effects &= ~EF_STARDUST;
     SUPER(Speed).m_remove(this, actor, removal_type);
 }
 METHOD(Speed, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
@@ -28,7 +27,6 @@ METHOD(Speed, m_apply, void(StatusEffects this, entity actor, float eff_time, fl
 METHOD(Speed, m_tick, void(StatusEffects this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
-    actor.effects |= EF_STARDUST;
     SUPER(Speed).m_tick(this, actor);
 }
 #endif

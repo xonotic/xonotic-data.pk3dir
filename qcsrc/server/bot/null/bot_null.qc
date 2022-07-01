@@ -6,7 +6,7 @@ void bot_clientconnect(entity this) { }
 void bot_clientdisconnect(entity this) { }
 void bot_cmdhelp(string scmd) { }
 void bot_endgame() { }
-bool bot_fixcount() { return true; }
+bool bot_fixcount(bool multiple_per_frame) { return true; }
 void bot_list_commands() { }
 void bot_queuecommand(entity bot, string cmdstring) { }
 void bot_relinkplayerlist() { }

@@ -28,7 +28,7 @@ void round_handler_Think(entity this)
 		this.wait = false;
 		this.cnt = this.count + 1;  // init countdown
 		round_starttime = time + this.count;
-		reset_map(true);
+		reset_map(true, false);
 	}
 
 	if (this.cnt > 0)  // countdown running
@@ -42,6 +42,7 @@ void round_handler_Think(entity this)
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;
+				rounds_played++;
 				if (this.roundStart) this.roundStart();
 				return;
 			}
@@ -50,6 +51,7 @@ void round_handler_Think(entity this)
 		else
 		{
 			round_handler_Reset(0);
+			round_starttime = -1; // can't start
 		}
 		this.nextthink = time + 1;  // canRoundStart every second
 	}
@@ -75,6 +77,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	this.count = fabs(floor(the_count));
 	this.cnt = this.count + 1;
 	this.round_timelimit = (the_round_timelimit > 0) ? the_round_timelimit : 0;
+	round_limit = the_round_timelimit;
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1
@@ -111,7 +114,11 @@ void round_handler_Reset(float next_think)
 	if (this.count)
 		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
 	this.nextthink = next_think;
-	round_starttime = (next_think) ? (next_think + this.count) : -1;
+	if (next_think)
+	{
+		if (next_think <= game_starttime) rounds_played = 0;
+		round_starttime = next_think + this.count;
+	}
 }
 
 void round_handler_Remove()
