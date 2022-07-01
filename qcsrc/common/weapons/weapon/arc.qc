@@ -208,23 +208,11 @@ void W_Arc_Beam_Think(entity this)
 	Weapon thiswep = WEP_ARC;
 
 	// TODO: use standard weapon use checks here!
-	if(
-		!IS_PLAYER(own)
-		||
-		IS_DEAD(own)
-		||
-		game_stopped
-		||
-		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
-		||
-		own.(weaponentity).m_switchweapon != WEP_ARC
-		||
-		(!PHYS_INPUT_BUTTON_ATCK(own) && !burst )
-		||
-		own.vehicle
-		||
-		(WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max))
-	)
+	if(!IS_PLAYER(own) || IS_DEAD(own) || STAT(FROZEN, own) || game_stopped || own.vehicle
+		|| !weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
+		|| own.(weaponentity).m_switchweapon != WEP_ARC
+		|| (!PHYS_INPUT_BUTTON_ATCK(own) && !burst)
+		|| (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max)) )
 	{
 		if ( WEP_CVAR(arc, cooldown) > 0 )
 		{
@@ -238,19 +226,20 @@ void W_Arc_Beam_Think(entity this)
 				cooldown_speed = this.beam_heat / WEP_CVAR(arc, beam_refire);
 			}
 
+			bool overheat = (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max));
+			if (overheat)
+			{
+				Send_Effect(EFFECT_ARC_OVERHEAT, this.beam_start, this.beam_wantdir, 1);
+				sound(this, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+			}
+
 			if ( cooldown_speed )
 			{
-				if ( WEP_CVAR(arc, cooldown_release) || (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max)) )
+				if (WEP_CVAR(arc, cooldown_release) || overheat)
 					own.arc_overheat = time + this.beam_heat / cooldown_speed;
 				own.arc_cooldown = cooldown_speed;
 			}
 
-			if ( WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max) )
-			{
-				Send_Effect(EFFECT_ARC_OVERHEAT,
-					this.beam_start, this.beam_wantdir, 1 );
-				sound(this, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
-			}
 		}
 
 		if(this == own.(weaponentity).arc_beam) { own.(weaponentity).arc_beam = NULL; }
@@ -436,16 +425,9 @@ void W_Arc_Beam_Think(entity this)
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
-		bool is_player = (
-			IS_PLAYER(trace_ent)
-			||
-			trace_ent.classname == "body"
-			||
-			IS_MONSTER(trace_ent)
-		);
-
 		if(trace_ent)
 		{
+			bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 			if(SAME_TEAM(own, trace_ent))
 			{
 				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
@@ -938,7 +920,14 @@ void Draw_ArcBeam(entity this)
 		// into a weapon system for client code.
 
 		// find where we are aiming
-		vector myviewangle = ((autocvar_chase_active) ? warpzone_save_view_angles : view_angles);
+		vector myviewangle = view_angles;
+		if (autocvar_chase_active)
+		{
+			if (autocvar_cl_lockview)
+				myviewangle = eX * csqcplayer.v_angle.x + eY * csqcplayer.angles.y;
+			else
+				myviewangle = warpzone_save_view_angles;
+		}
 		vector forward, right, up;
 		MAKE_VECTORS(myviewangle, forward, right, up);
 		entity wepent = viewmodels[this.beam_slot];

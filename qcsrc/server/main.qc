@@ -331,8 +331,8 @@ void StartFrame()
 	CreatureFrame_All();
 	CheckRules_World();
 
-	if (warmup_stage && !game_stopped && warmup_limit > 0 && time >= warmup_limit) {
-		ReadyRestart();
+	if (warmup_stage && !game_stopped && warmup_limit > 0 && time - game_starttime >= warmup_limit) {
+		ReadyRestart(true);
 		return;
 	}
 

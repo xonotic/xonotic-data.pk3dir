@@ -2,7 +2,7 @@
 
 CLASS(Shotgun, Weapon)
 /* spawnfunc */ ATTRIB(Shotgun, m_canonical_spawnfunc, string, "weapon_shotgun");
-/* ammotype  */ ATTRIB(Shotgun, ammo_type, int, RES_SHELLS);
+/* ammotype  */ ATTRIB(Shotgun, ammo_type, Resource, RES_SHELLS);
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, 6000);

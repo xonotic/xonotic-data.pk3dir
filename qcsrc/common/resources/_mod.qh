@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <common/resources/resources.qh>
+#ifdef CSQC
+    #include <common/resources/cl_resources.qh>
+#endif
+#ifdef SVQC
+    #include <common/resources/sv_resources.qh>
+#endif

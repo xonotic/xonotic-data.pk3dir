@@ -7,6 +7,7 @@
 
 #include <common/command/_mod.qh>
 
+.void(entity me, int argsbuf) readInputArgs;
 .entity firstChild, nextSibling;
 
 string _dumptree_space;
@@ -97,6 +98,45 @@ void GameCommand(string theCommand)
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
 		}
+		else if(argc > 2 && !isdemo())
+		{
+			entity e = NULL;
+			float argsbuf = 0;
+			string s = strzone(argv(1)); // dialog name
+			for(int i = 0; (e = nextent(e)); )
+				if(e.classname != "vtbl" && e.name == strcat(filter, s))
+				{
+					argsbuf = buf_create();
+					if(argsbuf >= 0)
+					if(e.readInputArgs)
+					{
+						for(i = 2; i < argc; ++i)
+							bufstr_add(argsbuf, argv(i), 1);
+						e.readInputArgs(e, argsbuf);
+						m_goto(strcat(filter, s));
+					}
+					if(argsbuf >= 0)
+						buf_del(argsbuf);
+				}
+		}
+		return;
+	}
+
+	if (argv(0) == "nexposee")
+	{
+		m_goto("nexposee");
+		return;
+	}
+
+	if (argv(0) == "servers")
+	{
+		m_goto("servers");
+		return;
+	}
+
+	if (argv(0) == "profile")
+	{
+		m_goto("profile");
 		return;
 	}
 
@@ -109,6 +149,12 @@ void GameCommand(string theCommand)
 	if (argv(0) == "languageselect")
 	{
 		m_goto("languageselector");
+		return;
+	}
+
+	if (argv(0) == "inputsettings")
+	{
+		m_goto("inputsettings");
 		return;
 	}
 

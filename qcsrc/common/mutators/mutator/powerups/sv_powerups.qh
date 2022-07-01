@@ -5,6 +5,7 @@
 #include "powerups.qh"
 
 int autocvar_g_powerups;
+int autocvar_g_powerups_drop_ondeath;
 bool autocvar_g_powerups_stack;
 
 REGISTER_MUTATOR(powerups, true);

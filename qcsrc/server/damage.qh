@@ -69,7 +69,8 @@ int impressive_hits;
 
 .vector death_origin;
 
-.float damage_dealt, typehitsound, killsound;
+.float hitsound_damage_dealt;
+.int typehitsound, killsound;
 
 // used for custom deathtype
 string deathmessage;
@@ -134,7 +135,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
 
 .float damageforcescale;
-const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MIN_DAMAGEEXTRARADIUS = 0.1;
 const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
 
@@ -146,7 +147,6 @@ bool Heal(entity targ, entity inflictor, float amount, float limit);
 .float fire_deathtype;
 .entity fire_owner;
 .float fire_hitsound;
-.entity fire_burner;
 
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 

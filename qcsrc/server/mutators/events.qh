@@ -317,8 +317,17 @@ MUTATOR_HOOKABLE(PlayerPreThink, EV_PlayerPreThink);
     /**/
 MUTATOR_HOOKABLE(GetPressedKeys, EV_GetPressedKeys);
 
-/** is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client */
-// NOTE: requesting cvar values (get_cvars_f 0) is deprecated
+/**
+ * is meant to call GetCvars_handle* for cvars this mutator needs from the client, e.g.:
+	MUTATOR_HOOKFUNCTION(mymutator, GetCvars)
+	{
+		GetCvars_handleFloat(this, store, s, f, cvar_mycvar, "mycvar");
+		return false;
+	}
+ * Usually you can just use REPLICATE instead of this hook, e.g.:
+	REPLICATE(cvar_mycvar, int, "mycvar");
+ * NOTE: requesting cvar values (get_cvars_f 0) is deprecated
+ */
 #define EV_GetCvars(i, o) \
     /**/ i(float, get_cvars_f) \
     /**/ i(string, get_cvars_s) \
@@ -705,24 +714,27 @@ enum {
     /**/
 MUTATOR_HOOKABLE(ItemTouched, EV_ItemTouched);
 
+// The Resource hooks are often called by other hooks and to avoid conflicts
+// as much as possible their args start from ARGV_7
+
 /** Called when the amount of entity resources changes. Can be used to override
 resource limit. */
 #define EV_GetResourceLimit(i, o) \
-	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
-	/** limit */          i(float, MUTATOR_ARGV_2_float) \
-	/**/                  o(float, MUTATOR_ARGV_2_float) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/** limit */          i(float, MUTATOR_ARGV_9_float) \
+	/**/                  o(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(GetResourceLimit, EV_GetResourceLimit);
 
 /** Called when the amount of resource of an entity changes. See RES_*
 constants for resource types. Return true to forbid the change. */
 #define EV_SetResource(i, o) \
-	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
-	/**/                  o(int, MUTATOR_ARGV_1_int) \
-	/** amount */         i(float, MUTATOR_ARGV_2_float) \
-	/**/                  o(float, MUTATOR_ARGV_2_float) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/**/                  o(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */         i(float, MUTATOR_ARGV_9_float) \
+	/**/                  o(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(SetResource, EV_SetResource);
 
@@ -730,9 +742,9 @@ MUTATOR_HOOKABLE(SetResource, EV_SetResource);
 constants for resource types. Amount wasted is the amount of resource that is
 above resource limit so it was not given. */
 #define EV_ResourceAmountChanged(i, o) \
-	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
-	/** amount */         i(float, MUTATOR_ARGV_2_float) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */         i(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(ResourceAmountChanged, EV_ResourceAmountChanged);
 
@@ -740,9 +752,9 @@ MUTATOR_HOOKABLE(ResourceAmountChanged, EV_ResourceAmountChanged);
 limit. See RES_* constants for resource types. Amount wasted is the amount
 of resource that is above resource limit so it was not given. */
 #define EV_ResourceWasted(i, o) \
-	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
-	/** amount wasted */  i(float, MUTATOR_ARGV_2_float) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/** amount wasted */  i(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(ResourceWasted, EV_ResourceWasted);
 
@@ -750,24 +762,24 @@ MUTATOR_HOOKABLE(ResourceWasted, EV_ResourceWasted);
 for resource types. Return true to forbid giving.
 NOTE: This hook is also called by GiveResourceWithLimit */
 #define EV_GiveResource(i, o) \
-	/** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
-	/**/                 o(int, MUTATOR_ARGV_1_int) \
-	/** amount */        i(float, MUTATOR_ARGV_2_float) \
-	/**/                 o(float, MUTATOR_ARGV_2_float) \
+	/** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+	/**/                 o(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */        i(float, MUTATOR_ARGV_9_float) \
+	/**/                 o(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(GiveResource, EV_GiveResource);
 
 /** Called when entity is being given some resource with specified limit. See
 RES_* constants for resource types. Return true to forbid giving. */
 #define EV_GiveResourceWithLimit(i, o) \
-	/** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
-	/**/                 o(int, MUTATOR_ARGV_1_int) \
-	/** amount */        i(float, MUTATOR_ARGV_2_float) \
-	/**/                 o(float, MUTATOR_ARGV_2_float) \
-	/** limit */         i(float, MUTATOR_ARGV_3_float) \
-	/**/                 o(float, MUTATOR_ARGV_3_float) \
+	/** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+	/**/                 o(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */        i(float, MUTATOR_ARGV_9_float) \
+	/**/                 o(float, MUTATOR_ARGV_9_float) \
+	/** limit */         i(float, MUTATOR_ARGV_10_float) \
+	/**/                 o(float, MUTATOR_ARGV_10_float) \
 	/**/
 MUTATOR_HOOKABLE(GiveResourceWithLimit, EV_GiveResourceWithLimit);
 
@@ -775,26 +787,28 @@ MUTATOR_HOOKABLE(GiveResourceWithLimit, EV_GiveResourceWithLimit);
 for resource types. Return true to forbid giving.
 NOTE: This hook is also called by TakeResourceWithLimit */
 #define EV_TakeResource(i, o) \
-    /** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
-    /** resource type */ i(int, MUTATOR_ARGV_1_int) \
-    /**/                 o(int, MUTATOR_ARGV_1_int) \
-    /** amount */        i(float, MUTATOR_ARGV_2_float) \
-    /**/                 o(float, MUTATOR_ARGV_2_float) \
+    /** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+    /** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_8_entity) \
+    /** amount */        i(float, MUTATOR_ARGV_9_float) \
+    /**/                 o(float, MUTATOR_ARGV_9_float) \
     /**/
 MUTATOR_HOOKABLE(TakeResource, EV_TakeResource);
 
 /** Called when some resource is being taken from an entity, with a limit. See
 RES_* constants for resource types. Return true to forbid giving. */
 #define EV_TakeResourceWithLimit(i, o) \
-    /** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
-    /** resource type */ i(int, MUTATOR_ARGV_1_int) \
-    /**/                 o(int, MUTATOR_ARGV_1_int) \
-    /** amount */        i(float, MUTATOR_ARGV_2_float) \
-    /**/                 o(float, MUTATOR_ARGV_2_float) \
-    /** limit */         i(float, MUTATOR_ARGV_3_float) \
-    /**/                 o(float, MUTATOR_ARGV_3_float) \
+    /** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+    /** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_8_entity) \
+    /** amount */        i(float, MUTATOR_ARGV_9_float) \
+    /**/                 o(float, MUTATOR_ARGV_9_float) \
+    /** limit */         i(float, MUTATOR_ARGV_10_float) \
+    /**/                 o(float, MUTATOR_ARGV_10_float) \
     /**/
 MUTATOR_HOOKABLE(TakeResourceWithLimit, EV_TakeResourceWithLimit);
+
+// END Resource hooks
 
 /** called at when a player connect */
 #define EV_ClientConnect(i, o) \
@@ -1139,7 +1153,10 @@ MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
     /**/
 MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
 
-/** return true to just restart the match, for modes that don't support readyrestart */
+/**
+ * return true to restart the server instead of restarting the match, for modes that don't support readyrestart.
+ * NOTE: ReadyRestart support is mandatory in campaign
+ */
 MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
 
 /** called when a fusion reactor is validating its target */

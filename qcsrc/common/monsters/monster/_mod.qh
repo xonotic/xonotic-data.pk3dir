@@ -1,6 +1,6 @@
 // generated file; do not modify
+#include <common/monsters/monster/golem.qh>
 #include <common/monsters/monster/mage.qh>
-#include <common/monsters/monster/shambler.qh>
 #include <common/monsters/monster/spider.qh>
 #include <common/monsters/monster/wyvern.qh>
 #include <common/monsters/monster/zombie.qh>

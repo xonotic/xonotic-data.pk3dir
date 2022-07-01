@@ -308,14 +308,11 @@ WepSet WEPSET_SUPERWEAPONS;
 
 #include "all.inc"
 
-// TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
-#define WEP_HARDCODED_IMPULSES 20
-
 // TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
 #define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (REGISTRY_COUNT(Weapons) - 1) - 1, 253)
 
-REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
+REGISTRY_SORT(Weapons, 1)
 REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
@@ -350,7 +347,7 @@ STATIC_INIT(register_weapons_done)
 vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 {
     vector g;
-    if (!(g = wep.wr_glow(wep, actor, wepent))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+    if (!(g = wep.wr_glow(wep, actor, wepent))) g = colormapPaletteColor(c & 0x0F, true);
     return g;
 }
 
@@ -394,18 +391,26 @@ ENUMCLASS_END(WFRAME)
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 
+REPLICATE_INIT(int, cvar_cl_gunalign);
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_reload);
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_fallback_to_impulse);
+REPLICATE_INIT(int, cvar_cl_weaponimpulsemode);
+
+REPLICATE_INIT(string, cvar_cl_weaponpriority);
+REPLICATE_INIT(string, cvar_cl_weaponpriorities[10]);
+
 #ifdef CSQC
-bool cvar_cl_accuracy_data_share;
-REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
-bool cvar_cl_accuracy_data_receive;
-REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_share);
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_receive);
 #endif
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
+
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
+
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 
-#ifdef SVQC
-void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
-#endif
 #endif
