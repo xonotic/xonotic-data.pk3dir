@@ -191,8 +191,6 @@ void assault_wall_think(entity this)
 // reset objectives, toggle spawnpoints, reset triggers, ...
 void assault_new_round(entity this)
 {
-	//bprint("ASSAULT: new round\n");
-
 	// up round counter
 	this.winning = this.winning + 1;
 
@@ -212,7 +210,8 @@ void assault_new_round(entity this)
 
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - AS_ROUND_DELAY - game_starttime) / 60));
-	ReadyRestart_force(); // sets game_starttime
+	bprint("Starting second round...\n");
+	ReadyRestart_force(true); // sets game_starttime
 }
 
 entity as_round;
@@ -251,12 +250,12 @@ int WinningCondition_Assault()
 	{
 		if(ent.winning)	// round end has been triggered by attacking team
 		{
-			bprint("Assault: round completed.\n");
+			bprint(Team_ColoredFullName(assault_attacker_team), " destroyed the objective in ", process_time(2, ceil(time - game_starttime)), "\n");
 			SetWinners(team, assault_attacker_team);
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
+			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round or the only round in campaign
 			{
 				status = WINNING_YES;
 			}
@@ -631,5 +630,8 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 {
 	// readyrestart not supported (yet)
+	// it's supported only in campaign mode (single round mode), since campaign requires it
+	if (autocvar_g_campaign)
+		return false;
 	return true;
 }

@@ -9,6 +9,7 @@ ENDCLASS(XonoticCommandButton)
 
 entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, int theFlags, string theTooltip);
 entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, int theFlags);
+void XonoticCommandButton_Click(entity me, entity other);
 
 #ifndef COMMANDBUTTON_CLOSE
 # define COMMANDBUTTON_CLOSE 1

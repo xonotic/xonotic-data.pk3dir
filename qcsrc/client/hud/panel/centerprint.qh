@@ -10,15 +10,19 @@ float autocvar_hud_panel_centerprint_fade_subsequent_passone = 3;
 float autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha = 0.5;
 float autocvar_hud_panel_centerprint_fade_subsequent_passtwo = 10;
 float autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha = 0.5;
-float autocvar_hud_panel_centerprint_fade_subsequent_minfontsize = 0.75;
-float autocvar_hud_panel_centerprint_fade_minfontsize = 0;
+float autocvar_hud_panel_centerprint_fade_minfontsize = 1;
 bool autocvar_hud_panel_centerprint_flip;
-float autocvar_hud_panel_centerprint_fontscale;
+float autocvar_hud_panel_centerprint_fontscale = 1;
 float autocvar_hud_panel_centerprint_fontscale_bold = 1.4;
-bool autocvar_hud_panel_centerprint_dynamichud  = true;
+float autocvar_hud_panel_centerprint_fontscale_title = 1.8;
+bool autocvar_hud_panel_centerprint_dynamichud = true;
 float autocvar_hud_panel_centerprint_time;
 
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num);
 void centerprint_AddStandard(string strMessage);
 void centerprint_Kill(int id);
 void centerprint_KillAll();
+
+void centerprint_SetDuelTitle(string left, string right, string div);
+void centerprint_SetTitle(string title);
+void centerprint_ClearTitle();

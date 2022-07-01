@@ -1,11 +1,13 @@
 #pragma once
 
+#include <common/resources/resources.qh>
 #include <common/sounds/sound.qh>
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
 float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
+float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;
 bool autocvar_g_nodepthtestitems;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
@@ -63,7 +65,7 @@ void Item_ScheduleInitialRespawn(entity e);
 /// \return No return.
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names, entity ammo_entity);
 
-bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
+bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammomax);
 
 bool Item_GiveTo(entity item, entity player);
 

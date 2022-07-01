@@ -9,11 +9,11 @@ hlac_plasma
 
 hlac_metal
 {
-        cull none
-        {
-                map textures/hlac_metal.tga
-                rgbgen vertex
-        }
+	cull none
+	{
+		map textures/hlac_metal.tga
+		rgbgen vertex
+	}
 }
 hlac_glass
 {
@@ -27,7 +27,7 @@ hlac_glass
 		//rgbGen vertex
 		tcgen environment
 		tcmod scale 4 4
-	}	
+	}
 }
 hlac_bullet
 {
@@ -36,5 +36,5 @@ hlac_bullet
 	{
 		map models/hlac_bullet.tga
 		blendfunc add
-	}	
+	}
 }

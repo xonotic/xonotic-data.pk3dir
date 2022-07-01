@@ -11,7 +11,7 @@ const int PP_TURN_TEAM1 = 0x0001;
 const int PP_TURN_TEAM2 = 0x0002;
 const int PP_TURN_TEAM  = 0x000f; // turn team mask
 
-const int PP_BLOCKED_TEAM = 5; // there won't ever be a 5th team, so we can abuse this
+const int PP_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 const int PP_LET_CNT = 7;
 const int PP_NUM_CNT = 7;
@@ -225,7 +225,7 @@ int pp_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 2 players
-			if(pl_num >= 2) { return false; }
+			if(pl_num >= 2) { return PP_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -236,12 +236,18 @@ int pp_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == PP_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					pp_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 				case "next":
+					if(event_blocked)
+						return true;
 					pp_next_match(minigame,...(0,entity));
 					return true;
 			}
@@ -388,17 +394,20 @@ void pp_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	if ( (active_minigame.minigame_flags&PP_TURN_TEAM) == 2 )
-		mypos_y  += player_fontsize_y + ts_y;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != PP_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		if ( (active_minigame.minigame_flags&PP_TURN_TEAM) == 2 )
+			mypos_y  += player_fontsize_y + ts_y;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != PP_SPECTATOR_TEAM )
 		{
 			vector tile_color = '1 1 1';
 			switch(e.team)
@@ -434,6 +443,9 @@ void pp_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string pp_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == PP_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & PP_TURN_DRAW )
 		return _("Draw");
 
