@@ -112,7 +112,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	const int MSG_ENTITY = 5;
 
 	.int SendFlags;
-	.bool(entity this, int sendflags) SendEntity;
+	.bool(entity to, int sendflags) SendEntity;
 
 	IntrusiveList g_uncustomizables;
 	STATIC_INIT(g_uncustomizables) { g_uncustomizables = IL_NEW(); }
