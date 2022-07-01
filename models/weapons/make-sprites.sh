@@ -12,6 +12,7 @@ sprite()
 
 	# Text
 	exec {FD}< <(convert \
+	-auto-orient \
 	-size 185x120 \
 	-background transparent \
 	-fill "#$color" \
@@ -38,6 +39,7 @@ sprite()
 	yb2=$((yb1+15-1))
 
 	exec {FD}< <(convert \
+	-auto-orient \
 	-size 256x256 \
 	-background transparent \
 	-fill "#$color" \

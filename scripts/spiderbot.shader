@@ -6,5 +6,5 @@ darkvisor
 		rgbGen vertex
 		tcgen environment
 		tcmod scale 4 4
-	}	
+	}
 }

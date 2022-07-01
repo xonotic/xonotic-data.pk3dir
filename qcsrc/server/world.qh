@@ -3,6 +3,7 @@
 #include <common/weapons/_all.qh>
 
 bool autocvar__sv_init;
+bool autocvar__endmatch;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_jetpack;
 bool autocvar_g_warmup_allguns;
@@ -30,7 +31,7 @@ float autocvar_timelimit_suddendeath;
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
-float checkrules_overtimesadded; //how many overtimes have been already added
+int checkrules_overtimesadded; //how many overtimes have been already added
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
 bool server_is_dedicated;
@@ -46,6 +47,10 @@ string modname;
 string gamemode_name;
 
 string record_type;
+
+string autocvar_sv_termsofservice_url;
+// only escape the terms of service url on map change
+string sv_termsofservice_url_escaped;
 
 string clientstuff;
 
@@ -134,11 +139,11 @@ const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath 
 
 float WinningCondition_Scores(float limit, float leadlimit);
 void SetWinners(.float field, float value);
-void ReadyRestart();
+void ReadyRestart(bool forceWarmupEnd);
 
 void DumpStats(float final);
 
-bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 

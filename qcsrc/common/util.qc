@@ -210,6 +210,70 @@ string draw_UseSkinFor(string pic)
 	else
 		return strcat(draw_currentSkin, "/", pic);
 }
+
+void mut_set_active(int mut)
+{
+	if (mut >= 24)
+		active_mutators[1] |= BIT(mut - 24);
+	else
+		active_mutators[0] |= BIT(mut);
+}
+
+bool mut_is_active(int mut)
+{
+	if (mut >= 24)
+		return (active_mutators[1] & (BIT(mut - 24)));
+	else
+		return (active_mutators[0] & BIT(mut));
+}
+
+// if s == "" (MENUQC) builds the mutator list for the Mutators dialog based on local cvar values
+// otherwise (CSQC) translates the mutator list (s) that client has received from server
+// NOTE: this function merges MENUQC and CSQC code in order to avoid duplicating and separating strings
+string build_mutator_list(string s)
+{
+	int i = -1, n = 0; // allow only 1 iteration in the following for loop if (s == "")
+	if (s != "")
+	{
+		i = 0;
+		n = tokenizebyseparator(s, ", ");
+	}
+	string s2 = "";
+	for (string arg = ""; i < n; i++)
+	{
+		if (i >= 0) arg = argv(i);
+		// cond is the condition for showing the mutator enabled in the menu
+		#define X(name, translated_name, mut, cond) \
+			if(arg == name || (!n && (cond))) { s2 = cons_mid(s2, ", ", translated_name); mut_set_active(mut); }
+		X("Dodging"                   , _("Dodging")                   , MUT_DODGING                   , cvar("g_dodging"))
+		X("InstaGib"                  , _("InstaGib")                  , MUT_INSTAGIB                  , cvar("g_instagib"))
+		X("New Toys"                  , _("New Toys")                  , MUT_NEW_TOYS                  , cvar("g_new_toys"))
+		X("NIX"                       , _("NIX")                       , MUT_NIX                       , cvar("g_nix"))
+		X("Rocket Flying"             , _("Rocket Flying")             , MUT_ROCKET_FLYING             , cvar("g_rocket_flying"))
+		X("Invincible Projectiles"    , _("Invincible Projectiles")    , MUT_INVINCIBLE_PROJECTILES    , cvar("g_invincible_projectiles"))
+		X("Low gravity"               , _("Low gravity")               , MUT_GRAVITY                   , cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
+		X("Cloaked"                   , _("Cloaked")                   , MUT_CLOAKED                   , cvar("g_cloaked"))
+		X("Hook"                      , _("Hook")                      , MUT_GRAPPLING_HOOK            , cvar("g_grappling_hook"))
+		X("Midair"                    , _("Midair")                    , MUT_MIDAIR                    , cvar("g_midair"))
+		X("Melee only Arena"          , _("Melee only Arena")          , MUT_MELEE_ONLY                , cvar("g_melee_only"))
+		X("Vampire"                   , _("Vampire")                   , MUT_VAMPIRE                   , cvar("g_vampire"))
+		X("Piñata"                    , _("Piñata")                    , MUT_PINATA                    , cvar("g_pinata"))
+		X("Weapons stay"              , _("Weapons stay")              , MUT_WEAPON_STAY               , cvar("g_weapon_stay"))
+		X("Blood loss"                , _("Blood loss")                , MUT_BLOODLOSS                 , cvar("g_bloodloss") > 0)
+		X("Jetpack"                   , _("Jetpack")                   , MUT_JETPACK                   , cvar("g_jetpack"))
+		X("Buffs"                     , _("Buffs")                     , MUT_BUFFS                     , cvar("g_buffs") > 0)
+		X("Overkill"                  , _("Overkill")                  , MUT_OVERKILL                  , cvar("g_overkill"))
+		X("No powerups"               , _("No powerups")               , MUT_NO_POWERUPS               , cvar("g_powerups") == 0)
+		X("Powerups"                  , _("Powerups")                  , MUT_POWERUPS                  , cvar("g_powerups") > 0)
+		X("Touch explode"             , _("Touch explode")             , MUT_TOUCHEXPLODE              , cvar("g_touchexplode") > 0)
+		X("Wall jumping"              , _("Wall jumping")              , MUT_WALLJUMP                  , cvar("g_walljump"))
+		X("No start weapons"          , _("No start weapons")          , MUT_NO_START_WEAPONS          , cvar_string("g_weaponarena") == "0" && cvar("g_balance_blaster_weaponstartoverride") == 0)
+		X("Nades"                     , _("Nades")                     , MUT_NADES                     , cvar("g_nades"))
+		X("Offhand blaster"           , _("Offhand blaster")           , MUT_OFFHAND_BLASTER           , cvar("g_offhand_blaster"))
+		#undef X
+	}
+	return s2;
+}
 #endif
 
 void wordwrap_cb(string s, float l, void(string) callback)
@@ -318,9 +382,9 @@ string ScoreString(int pFlags, float pValue)
 	if((pValue == 0) && (pFlags & (SFL_HIDE_ZERO | SFL_RANK | SFL_TIME)))
 		valstr = "";
 	else if(pFlags & SFL_RANK)
-		valstr = count_ordinal(pValue);
+		valstr = (pValue < 256 ? count_ordinal(pValue) : _("N/A"));
 	else if(pFlags & SFL_TIME)
-		valstr = TIME_ENCODED_TOSTRING(pValue);
+		valstr = TIME_ENCODED_TOSTRING(pValue, true);
 	else
 		valstr = ftos(pValue);
 
@@ -1896,14 +1960,13 @@ void unfollow_sameorigin(entity e)
 .float aiment_deadflag;
 void SetMovetypeFollow(entity ent, entity e)
 {
-	// FIXME this may not be warpzone aware
 	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
 	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
 	ent.aiment = e; // make the hole follow bmodel
 	ent.punchangle = e.angles; // the original angles of bmodel
 	ent.view_ofs = ent.origin - e.origin; // relative origin
 	ent.v_angle = ent.angles - e.angles; // relative angles
-	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_classname = e.classname;
 	ent.aiment_deadflag = e.deadflag;
 
 	if(IS_PLAYER(ent.aiment))
@@ -1919,8 +1982,7 @@ void UnsetMovetypeFollow(entity ent)
 {
 	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
-	if (ent.aiment_classname)
-		strunzone(ent.classname);
+	ent.aiment_classname = string_null;
 	// FIXME: engine bug?
 	// resetting aiment the engine will set orb's origin close to world's origin
 	//ent.aiment = NULL;
