@@ -55,7 +55,7 @@ CLASS(TeamKeepaway, Gametype)
     ATTRIB(TeamKeepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_TeamKeepaway);
 #endif
 ENDCLASS(TeamKeepaway)
-REGISTER_GAMETYPE(TEAMKEEPAWAY, NEW(TeamKeepaway));
+REGISTER_GAMETYPE(TEAM_KEEPAWAY, NEW(TeamKeepaway));
 
 const int TKA_BALL_TAKEN_RED			= BIT(0);
 const int TKA_BALL_TAKEN_BLUE			= BIT(1);
