@@ -122,7 +122,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	bool Net_SendEntity(entity to, int sendflags)
 	{
 		ENGINE_EVENT();
-		return this.net_sendentity(this, to, sendflags);
+		return (this.net_sendentity) ? this.net_sendentity(this, to, sendflags) : false;
 	}
 
 	void Net_LinkEntity(entity e, bool docull, bool checkmodel, float dt, bool(entity this, entity to, int sendflags) sendfunc)

@@ -91,7 +91,7 @@ void ItemUpdate(entity this)
 
 void UpdateItemAfterTeleport(entity this)
 {
-	if(getSendEntity(this) == ItemSend)
+	if(this.net_sendentity == ItemSend)
 		ItemUpdate(this);
 }
 
