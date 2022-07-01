@@ -34,7 +34,7 @@
 #ifdef GAMEQC // menu doesn't use any globals
 
 // compile time switches in case perf is an issue
-#define DEGLOB_LOGGING 1
+#define DEGLOB_LOGGING 0
 #define DEGLOB_CLEAR 1
 
 const int DEGLOB_ORIGINAL = 1;

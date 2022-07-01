@@ -265,7 +265,7 @@ void MoveToLast(entity e)
 	AuditLists();
 }
 
-float RegisterTeam(entity Team)
+void RegisterTeam(entity Team)
 {
 	assert_once(Team.team, eprint(Team));
 	entity tm;
@@ -281,7 +281,6 @@ float RegisterTeam(entity Team)
 	if(Team.team && Team.team != NUM_SPECTATOR)
 		++team_count;
 	AuditLists();
-	return true;
 }
 
 void RemoveTeam(entity Team)
@@ -320,7 +319,7 @@ entity GetTeam(int Team, bool add)
 	return tm;
 }
 
-.float has_team;
+.bool has_team;
 bool SetTeam(entity o, int Team)
 {
 	TC(int, Team);
@@ -367,7 +366,7 @@ bool SetTeam(entity o, int Team)
 		{
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
-			o.has_team = 0;
+			o.has_team = false;
 			return true;
 		}
 	}
@@ -378,7 +377,7 @@ bool SetTeam(entity o, int Team)
 			o.team = Team;
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
-			o.has_team = 1;
+			o.has_team = true;
 			return true;
 		}
 		else if(Team != o.team)

@@ -53,7 +53,7 @@ void RemovePlayer(entity player);
 
 void MoveToLast(entity e);
 
-float RegisterTeam(entity Team);
+void RegisterTeam(entity Team);
 
 void RemoveTeam(entity Team);
 
