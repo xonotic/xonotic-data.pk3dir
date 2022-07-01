@@ -158,7 +158,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach(entity this)
 {
-	Net_LinkEntity(CS(this).clientdata = new_pure(clientdata), false, 0, ClientData_Send);
+	Net_LinkEntity(CS(this).clientdata = new_pure(clientdata), false, true, 0, ClientData_Send);
 	CS(this).clientdata.drawonlytoclient = this;
 	CS(this).clientdata.owner = this;
 }
@@ -665,7 +665,7 @@ void PutPlayerInServer(entity this)
 
 	entity spawnevent = new_pure(spawnevent);
 	spawnevent.owner = this;
-	Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
+	Net_LinkEntity(spawnevent, false, true, 0.5, SpawnEvent_Send);
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
@@ -896,7 +896,7 @@ void ClientInit_Spawn()
 {
 	entity e = new_pure(clientinit);
 	setthink(e, ClientInit_CheckUpdate);
-	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
+	Net_LinkEntity(e, false, true, 0, ClientInit_SendEntity);
 
 	ClientInit_CheckUpdate(e);
 }

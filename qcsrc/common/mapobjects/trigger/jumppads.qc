@@ -649,7 +649,7 @@ void target_push_use(entity this, entity actor, entity trigger)
 void target_push_link(entity this)
 {
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
-	Net_LinkEntity(this, false, 0, target_push_send);
+	Net_LinkEntity(this, false, true, 0, target_push_send);
 	//this.SendFlags |= 1; // update
 }
 

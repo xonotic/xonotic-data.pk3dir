@@ -228,7 +228,7 @@ bool Mutator_Add(Mutator mut)
         // good
         if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.m_name);
 #ifdef SVQC
-        Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
+        Net_LinkEntity(mut, false, true, 0, Mutator_SendEntity);
 #endif
         return true;
     }

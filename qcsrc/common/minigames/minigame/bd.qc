@@ -583,7 +583,7 @@ void bd_setup_pieces(entity minigame)
 		controller.owner = minigame;
 		controller.bd_tilelet = letter;
 	#ifdef SVQC
-		Net_LinkEntity(controller, false, 0, bd_controller_send);
+		Net_LinkEntity(controller, false, true, 0, bd_controller_send);
 	#endif
 	}
 

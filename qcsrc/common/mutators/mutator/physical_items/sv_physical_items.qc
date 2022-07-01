@@ -136,5 +136,5 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	item.effects |= EF_NODRAW; // hide the original weapon
 	set_movetype(item, MOVETYPE_FOLLOW);
 	item.aiment = wep; // attach the original weapon
-	setSendEntity(item, func_null);
+	Net_UnlinkEntity(item);
 }

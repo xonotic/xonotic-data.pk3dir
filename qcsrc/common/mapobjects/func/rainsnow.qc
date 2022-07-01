@@ -53,7 +53,7 @@ spawnfunc(func_rain)
 
 	this.state = RAINSNOW_RAIN;
 
-	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
+	Net_LinkEntity(this, false, true, 0, rainsnow_SendEntity);
 }
 
 
@@ -93,7 +93,7 @@ spawnfunc(func_snow)
 
 	this.state = RAINSNOW_SNOW;
 
-	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
+	Net_LinkEntity(this, false, true, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
 float autocvar_cl_rainsnow_maxdrawdist = 1000;

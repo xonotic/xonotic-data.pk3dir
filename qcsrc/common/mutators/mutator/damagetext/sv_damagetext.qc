@@ -85,5 +85,5 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     setthink(net_text, SUB_Remove);
     net_text.nextthink = (time > 10) ? (time + 0.5) : 10; // allow a buffer from start time for clients to load in
 
-    Net_LinkEntity(net_text, false, 0, write_damagetext);
+    Net_LinkEntity(net_text, false, true, 0, write_damagetext);
 }

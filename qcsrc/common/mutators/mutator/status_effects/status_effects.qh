@@ -143,7 +143,7 @@ void StatusEffects_new(entity this)
     if(this.statuseffects_store)
     {
         setcefc(eff, StatusEffects_customize);
-        Net_LinkEntity(eff, false, 0, StatusEffects_Send);
+        Net_LinkEntity(eff, false, true, 0, StatusEffects_Send);
     }
 }
 void StatusEffects_delete(entity e) { delete(e.statuseffects); e.statuseffects = NULL; }

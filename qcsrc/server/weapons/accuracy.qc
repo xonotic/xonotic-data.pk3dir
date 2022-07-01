@@ -47,7 +47,7 @@ void accuracy_init(entity e)
 	entity a = CS(e).accuracy = new_pure(accuracy);
 	a.owner = e;
 	a.drawonlytoclient = e;
-	Net_LinkEntity(a, false, 0, accuracy_send);
+	Net_LinkEntity(a, false, true, 0, accuracy_send);
 }
 
 void accuracy_free(entity e)

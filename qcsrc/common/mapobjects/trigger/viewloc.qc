@@ -104,7 +104,7 @@ void viewloc_init(entity this)
 	if(!this.goalentity)
 		this.goalentity = this.enemy; // make them match so CSQC knows what to do
 
-	Net_LinkEntity(this, false, 0, trigger_viewloc_send);
+	Net_LinkEntity(this, false, true, 0, trigger_viewloc_send);
 
 	setthink(this, viewloc_think);
 	this.nextthink = time;
@@ -137,7 +137,7 @@ void viewloc_link(entity this)
 {
 	if(this.angle)
 		this.angles_y = this.angle;
-	Net_LinkEntity(this, false, 0, viewloc_send);
+	Net_LinkEntity(this, false, true, 0, viewloc_send);
 }
 
 spawnfunc(target_viewlocation_start)

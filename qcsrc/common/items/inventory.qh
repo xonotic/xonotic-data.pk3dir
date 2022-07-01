@@ -140,7 +140,7 @@ void Inventory_new(PlayerState this)
     setcefc(inv, Inventory_customize);
 	this.inventory = inv;
 	inv.owner = this;
-	Net_LinkEntity(inv, false, 0, Inventory_Send);
+	Net_LinkEntity(inv, false, true, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }

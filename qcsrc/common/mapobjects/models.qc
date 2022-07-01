@@ -171,7 +171,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	else if(ent.solid < 0) ent.solid = SOLID_NOT; \
 	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; \
 	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
-	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); \
+	Net_LinkEntity(ent, true, true, 0, g_clientmodel_genericsendentity); \
 	ent.default_solid = sol;
 
 // non-solid model entities:

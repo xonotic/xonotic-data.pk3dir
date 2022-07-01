@@ -165,7 +165,7 @@ spawnfunc(trigger_music)
 	this.reset = trigger_music_reset;
 	this.reset(this);
 
-	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);
+	Net_LinkEntity(this, false, true, 0, trigger_music_SendEntity);
 }
 #elif defined(CSQC)
 

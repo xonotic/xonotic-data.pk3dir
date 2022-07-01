@@ -90,7 +90,7 @@ entity msle_spawn(entity minigame_session, entity e)
 	e.minigame_autoclean = 1;
 	#ifdef SVQC
 		setcefc(e, minigame_CheckSend);
-		Net_LinkEntity(e, false, 0, minigame_SendEntity);
+		Net_LinkEntity(e, false, true, 0, minigame_SendEntity);
 	#endif
 	return e;
 }

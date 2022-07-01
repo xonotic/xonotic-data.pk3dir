@@ -1084,7 +1084,7 @@ entity WaypointSprite_Spawn(
     wp.reset2 = WaypointSprite_Reset;
     wp.cnt = icon.m_id;
     wp.colormod = spr.m_color;
-    Net_LinkEntity(wp, false, 0, WaypointSprite_SendEntity);
+    Net_LinkEntity(wp, false, true, 0, WaypointSprite_SendEntity);
     return wp;
 }
 

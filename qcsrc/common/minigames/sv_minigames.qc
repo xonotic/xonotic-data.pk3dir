@@ -145,7 +145,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 		CS(player).active_minigame = minigame_session;
 		player.minigame_players = player_pointer;
 		setcefc(player_pointer, minigame_CheckSend);
-		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
+		Net_LinkEntity(player_pointer, false, true, 0, minigame_SendEntity);
 
 		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )
 			PutObserverInServer(player, true, true);
@@ -181,7 +181,7 @@ entity start_minigame(entity player, string minigame )
 			end_minigame(minig);
 			return NULL;
 		}
-		Net_LinkEntity(minig, false, 0, minigame_SendEntity);
+		Net_LinkEntity(minig, false, true, 0, minigame_SendEntity);
 
 		if ( !minigame_sessions )
 			minigame_sessions = minig;

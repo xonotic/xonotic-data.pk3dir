@@ -115,7 +115,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	IntrusiveList g_uncustomizables;
 	STATIC_INIT(g_uncustomizables) { g_uncustomizables = IL_NEW(); }
 
-	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
+	void Net_LinkEntity(entity e, bool docull, bool checkmodel, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "")
 		{
@@ -123,7 +123,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		    e.classname = "net_linked";
 		}
 
-		if (e.model == "" || e.modelindex == 0)
+		if (checkmodel && (e.model == "" || e.modelindex == 0))
 		{
 			vector mi = e.mins;
 			vector ma = e.maxs;

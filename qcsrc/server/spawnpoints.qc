@@ -87,7 +87,7 @@ void link_spawnpoint(entity this)
 	// and don't show non-team spawns in team matches.
 	// (Unless useallspawns is activated)
 	if(anypoint || !((teamplay && !Team_IsValidTeam(this.team)) || (!teamplay && Team_IsValidTeam(this.team))))
-		Net_LinkEntity(this, false, 0, SpawnPoint_Send);
+		Net_LinkEntity(this, false, true, 0, SpawnPoint_Send);
 }
 
 void relocate_spawnpoint(entity this)

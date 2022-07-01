@@ -294,7 +294,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 		setthink(note, W_Tuba_NoteThink);
 		note.nextthink = time;
 		note.spawnshieldtime = time;
-		Net_LinkEntity(note, false, 0, W_Tuba_NoteSendEntity);
+		Net_LinkEntity(note, false, true, 0, W_Tuba_NoteSendEntity);
 	}
 
 	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely

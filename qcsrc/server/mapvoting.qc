@@ -406,7 +406,7 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 
 void MapVote_Spawn()
 {
-	Net_LinkEntity(mapvote_ent = new(mapvote_ent), false, 0, MapVote_SendEntity);
+	Net_LinkEntity(mapvote_ent = new(mapvote_ent), false, true, 0, MapVote_SendEntity);
 }
 
 void MapVote_TouchMask()

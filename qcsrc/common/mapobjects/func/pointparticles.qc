@@ -113,7 +113,7 @@ spawnfunc(func_pointparticles)
 	//if(!this.cnt) this.cnt = _particleeffectnum(this.mdl);
 	this.setactive = generic_netlinked_setactive;
 
-	Net_LinkEntity(this, (this.spawnflags & PARTICLES_VISCULLING), 0, pointparticles_SendEntity);
+	Net_LinkEntity(this, (this.spawnflags & PARTICLES_VISCULLING), true, 0, pointparticles_SendEntity);
 
 	if(this.targetname && this.targetname != "")
 	{

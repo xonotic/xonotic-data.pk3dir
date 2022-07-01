@@ -1507,7 +1507,7 @@ void Kill_Notification(
 	net_notif.nent_client = client;
 	net_notif.nent_net_type = MSG_CENTER_KILL;
 	net_notif.nent_net_name = ORDINAL(net_cpid);
-	Net_LinkEntity(net_notif, false, autocvar_notification_lifetime_runtime, Net_Write_Notification);
+	Net_LinkEntity(net_notif, false, true, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 
 	IL_EACH(g_notifications,
 		(it.owner.nent_type == net_type || net_type == MSG_Null) && (it.owner.nent_cpid == net_cpid || net_cpid == CPID_Null),
@@ -1668,7 +1668,7 @@ void Send_Notification(
 			? (time + autocvar_notification_lifetime_runtime)
 			: autocvar_notification_lifetime_mapload;
 
-		Net_LinkEntity(net_notif, false, 0, Net_Write_Notification);
+		Net_LinkEntity(net_notif, false, true, 0, Net_Write_Notification);
 	}
 }
 

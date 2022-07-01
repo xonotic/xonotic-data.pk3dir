@@ -1133,7 +1133,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	else
 		Item_Reset(this);
 
-	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
+	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), true, 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
