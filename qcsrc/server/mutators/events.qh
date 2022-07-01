@@ -1011,6 +1011,11 @@ MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
     /**/
 MUTATOR_HOOKABLE(AddedPlayerScore, EV_AddPlayerScore);
 
+#define EV_GetPlayerStatus(i, o) \
+    /** player */    i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(GetPlayerStatus, EV_GetPlayerStatus);
+
 #define EV_SetWeaponArena(i, o) \
     /** arena */     i(string, MUTATOR_ARGV_0_string) \
     /**/             o(string, MUTATOR_ARGV_0_string) \
