@@ -529,7 +529,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
 	GameRules_scoring_add(joiningplayer, ELO, -1);
-	// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
+	// http://stats.xonotic.org/skill?hashkey=Cm5mzXa1Vn9VX0%2FySV4Pp8ca9CTZvklERDqrrNOUFZU%3D
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
@@ -541,11 +541,12 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 				PS_B_IN_DB = db_create();
 
 			// now request the information
-			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
+			uri = strcat(uri, "/skill?game_type_cd=", uri_escape(PlayerStats_GetGametype()));
+			uri = strcat(uri, "&hashkey=", uri_escape(joiningplayer.crypto_idfp));
 			LOG_DEBUG("Retrieving playerstats from URL: ", uri);
 			url_single_fopen(
 				uri,
-				FILE_APPEND,
+				FILE_READ,
 				PlayerStats_PlayerBasic_Handler,
 				joiningplayer
 			);
@@ -619,80 +620,34 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
+			// THIS should be never called
 			LOG_DEBUG("-- Sending data to player stats server");
-			/*url_fputs(fh, "V 1\n");
-			#ifdef WATERMARK
-			url_fputs(fh, sprintf("R %s\n", WATERMARK));
-			#endif
-			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
-			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
-			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
-			*/url_fputs(fh, "\n");
+			url_fputs(fh, "\n");
 			url_fclose(fh);
 			return;
 		}
 
 		case URL_READY_CANREAD:
 		{
-			bool handled = false;
-			string gt = string_null;
-			for (string s = ""; (s = url_fgets(fh)); ) {
-				int n = tokenizebyseparator(s, " "); // key value? data
-				if (n == 1) continue;
-				string key = "", value = "", data = "";
-				if (n == 2) {
-                    key = argv(0);
-                    data = argv(1);
-				} else if (n >= 3) {
-                    key = argv(0);
-                    value = argv(1);
-                    data = argv(2);
-				}
-                switch (key) {
-                    case "V":
-                        // PlayerInfo_AddItem(p, "_version", data);
-                        break;
-                    case "R":
-                        // PlayerInfo_AddItem(p, "_release", data);
-                        break;
-                    case "T":
-                        // PlayerInfo_AddItem(p, "_time", data);
-                        break;
-                    case "S":
-                        // PlayerInfo_AddItem(p, "_statsurl", data);
-                        break;
-                    case "P":
-                        // PlayerInfo_AddItem(p, "_hashkey", data);
-                        break;
-                    case "n":
-                        // PlayerInfo_AddItem(p, "_playernick", data);
-                        break;
-                    case "i":
-                        // PlayerInfo_AddItem(p, "_playerid", data);
-                        // p.xonstat_id = stof(data);
-                        break;
-                    case "G":
-                        gt = data;
-                        break;
-                    case "e":
-                        //LOG_TRACE("G: ", gt);
-                        //LOG_TRACE("e: ", data);
-                        if (gt == PlayerStats_GetGametype()) {
-                            handled = true;
-                            float e = stof(data);
-                            GameRules_scoring_add(p, ELO, +1 + e);
-                        }
-                        if (gt == "") {
-                            // PlayerInfo_AddItem(p, value, data);
-                        } else {
-                            // PlayerInfo_AddItem(p, sprintf("%s/%s", gt, value), data);
-                        }
-                        break;
-                }
+			string temp = "";
+			for (string s; (s = url_fgets(fh)); )
+			{
+				if (temp != "")
+					temp = strcat(temp, "\n", s);
+				else
+					temp = s;
 			}
 			url_fclose(fh);
-			if (handled) return;
+			int buf = json_parse(temp, _json_parse_array);
+			EXPECT_NE(-1, buf);
+			string gametype = PlayerStats_GetGametype();
+			if (json_get(buf, "0.game_type_cd") == gametype && gametype != "") {
+				float mu = stof(json_get(buf, "0.mu"));
+				float sigma = stof(json_get(buf, "0.sigma"));
+				float elo = mu - 3 * sigma;
+				GameRules_scoring_add(p, ELO, ((elo < 0) ? 0 : elo) + 1);
+				return;
+			}
 			break;
 		}
 		case URL_READY_CLOSED:
