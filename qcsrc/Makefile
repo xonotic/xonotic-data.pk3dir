@@ -38,6 +38,10 @@ QCCFLAGS_WERROR ?= \
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
+# By default Xonotic targets GMQCC, set to -Tdp for FTEQCC extended support
+QCCFLAGS_TARGET ?= \
+	-std=gmqcc
+
 QCCDEFS ?= \
 	-DXONOTIC=$(XONOTIC) \
 	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
@@ -50,7 +54,7 @@ QCCDEFS ?= \
 
 # -Ooverlap-locals is required
 QCCFLAGS ?= \
-	-std=gmqcc \
+	$(QCCFLAGS_TARGET) \
 	-Ooverlap-locals \
 	-O3 \
 	$(QCCFLAGS_WERROR) \
