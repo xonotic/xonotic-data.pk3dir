@@ -761,7 +761,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	string fn;
 	string s, t;
 	float fh;
-	int f, i;
+	int i;
 	float r, n, p;
 	string acl;
 
@@ -954,7 +954,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 			else
 			{
-				t = car(s); s = cdr(s); f = stof(t);
+				t = car(s); s = cdr(s); float tf = stof(t);
 				if(s != "")
 				{
 					if(WARN_COND)
@@ -962,7 +962,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 				}
 				else
 				{
-					if(a >= d || b >= e || c >= f)
+					if(a >= d || b >= e || c >= tf)
 					{
 						if(WARN_COND)
 							LOG_WARN("Map ", pFilename, " contains an incorrect size line, mins have to be < maxs");
@@ -974,7 +974,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 						MapInfo_Map_mins.z = c;
 						MapInfo_Map_maxs.x = d;
 						MapInfo_Map_maxs.y = e;
-						MapInfo_Map_maxs.z = f;
+						MapInfo_Map_maxs.z = tf;
 					}
 				}
 			}

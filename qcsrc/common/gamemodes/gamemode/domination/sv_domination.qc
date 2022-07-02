@@ -294,7 +294,7 @@ void dom_controlpoint_setup(entity this)
 	this.nextthink = time;
 	settouch(this, dompointtouch);
 	this.solid = SOLID_TRIGGER;
-	if(!this.flags & FL_ITEM)
+	if(!(this.flags & FL_ITEM))
 		IL_PUSH(g_items, this);
 	this.flags = FL_ITEM;
 	setsize(this, '-32 -32 -32', '32 32 32');
