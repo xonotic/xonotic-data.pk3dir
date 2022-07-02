@@ -18,8 +18,8 @@ float texmemsize(float s3tc)
 {
 	return
 	(
-		  2500 * (0.25 ** max(0, cvar("gl_picmip") + cvar("gl_picmip_other")))
-		+ 1500 * (0.25 ** max(0, cvar("gl_picmip") + cvar("gl_picmip_world")))
+		  2500 * pow(0.25, max(0, cvar("gl_picmip") + cvar("gl_picmip_other")))
+		+ 1500 * pow(0.25, max(0, cvar("gl_picmip") + cvar("gl_picmip_world")))
 	) * ((s3tc && (cvar("r_texture_dds_load") || cvar("gl_texturecompression"))) ? 0.2 : 1.0); // TC: normalmaps 50%, other 25%, few incompressible, guessing 40% as conservative average
 }
 void XonoticPicmipSlider_autofix(entity me)

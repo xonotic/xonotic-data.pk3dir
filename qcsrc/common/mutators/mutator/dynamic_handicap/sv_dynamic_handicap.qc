@@ -44,7 +44,7 @@ void DynamicHandicap_UpdateHandicap()
 		float score = PlayerScore_Get(it, SP_SCORE);
 		float handicap = fabs((score - mean_score) *
 			autocvar_g_dynamic_handicap_scale);
-		handicap = handicap ** autocvar_g_dynamic_handicap_exponent;
+		handicap = pow(handicap, autocvar_g_dynamic_handicap_exponent);
 		if (score < mean_score)
 		{
 			handicap = -handicap;

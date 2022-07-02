@@ -376,7 +376,7 @@ entity havocbot_select_an_item_of_group(entity this, int gr)
 	IL_EACH(g_items, it.item_group == gr && it.solid,
 	{
 		float dist2 = vlen2(this.origin - it.origin);
-		if (dist2 < 600 ** 2 && dist2 > selected_dist2)
+		if (dist2 < pow(600, 2) && dist2 > selected_dist2)
 		{
 			selected = it;
 			selected_dist2 = vlen2(this.origin - selected.origin);
@@ -447,7 +447,7 @@ void havocbot_movetogoal(entity this)
 			if(d < db || d < 500)
 			{
 				// Brake
-				if (vel2 > (maxspeed * 0.3) ** 2)
+				if (vel2 > pow((maxspeed * 0.3), 2))
 				{
 					CS(this).movement_x = dir * v_forward * -maxspeed;
 					return;
@@ -1333,7 +1333,7 @@ void havocbot_chooseenemy(entity this)
 	this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
 	vector eye = this.origin + this.view_ofs;
 	entity best = NULL;
-	float bestrating = autocvar_bot_ai_enemydetectionradius ** 2;
+	float bestrating = pow(autocvar_bot_ai_enemydetectionradius, 2);
 
 	// Backup hit flags
 	int hf = this.dphitcontentsmask;
@@ -1379,7 +1379,7 @@ LABEL(scan_targets)
 		{
 			scan_secondary_targets = true;
 			// restart the loop
-			bestrating = autocvar_bot_ai_enemydetectionradius ** 2;
+			bestrating = pow(autocvar_bot_ai_enemydetectionradius, 2);
 			goto scan_targets;
 		}
 
@@ -1479,7 +1479,7 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		this.lastcombotime = time;
 	}
 
-	distance *= (2 ** this.bot_rangepreference);
+	distance *= pow(2, this.bot_rangepreference);
 
 	// Custom weapon list based on distance to the enemy
 	if(bot_custom_weapon){

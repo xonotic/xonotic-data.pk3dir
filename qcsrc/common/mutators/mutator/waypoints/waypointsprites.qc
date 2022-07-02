@@ -470,7 +470,7 @@ vector fixrgbexcess(vector rgb)
 void Draw_WaypointSprite(entity this)
 {
     if (this.lifetime > 0)
-        this.alpha = (bound(0, (this.fadetime - time) / this.lifetime, 1) ** waypointsprite_timealphaexponent);
+        this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
     else
         this.alpha = 1;
 
@@ -535,7 +535,7 @@ void Draw_WaypointSprite(entity this)
     {
         // restrict maximum normal distance to the waypoint's maximum distance to prevent exploiting cvars
         float maxnormdistance = bound(0, waypointsprite_normdistance, this.maxdistance - 1);
-        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1) ** waypointsprite_distancealphaexponent);
+        a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1), waypointsprite_distancealphaexponent);
     }
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
@@ -626,7 +626,7 @@ void Draw_WaypointSprite(entity this)
     (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
     (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
-    float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
+    float crosshairdistance = sqrt( pow((o.x - vid_conwidth/2), 2) + pow((o.y - vid_conheight/2), 2) );
 
     t = waypointsprite_scale;
     a *= waypointsprite_alpha;

@@ -105,7 +105,7 @@ void HUD_Physics()
 	{
 		discrete_acceleration = acceleration;
 		// workaround for ftos_decimals returning a negative 0
-		if(discrete_acceleration > -1 / (10 ** acc_decimals) && discrete_acceleration < 0)
+		if(discrete_acceleration > -1 / pow(10, acc_decimals) && discrete_acceleration < 0)
 			discrete_acceleration = 0;
 		discrete_speed = speed;
 		physics_update_time += autocvar_hud_panel_physics_update_interval;

@@ -239,7 +239,7 @@ METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string sr
 		adding = false;
 		string before = (i > 0) ? substring(s, 0, argv_end_index(i - 1)) : "";
 		string after = (i < n - 1) ? substring(s, argv_start_index(i + 1), -1) : "";
-		s = strcat(before, (before != "" && after != "" ? " " : ""), after);
+		s = strcat(before, ((before != "" && after != "") ? " " : ""), after);
 		ret = s;
 		// keep searching
 		// TODO: why not break here?

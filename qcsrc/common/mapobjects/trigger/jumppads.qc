@@ -371,7 +371,7 @@ float trigger_push_get_push_time(entity this, vector endpos)
 			vector v = this.movedir;
 
 			float t = v.z / grav;
-			float jump_height = 1/2 * grav * (t ** 2);
+			float jump_height = 1/2 * grav * pow(t, 2);
 			float remaining_height = org.z + jump_height - endpos.z;
 			float v2_z = sqrt(2 * grav * remaining_height);
 

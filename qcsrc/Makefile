@@ -1,5 +1,6 @@
 CPP := cc -xc -E
 QCC ?= ../../../../gmqcc/gmqcc
+QCCIDENT ?= -DGMQCC
 
 PROGS_OUT ?= ..
 WORKDIR ?= ../.tmp
@@ -128,6 +129,7 @@ export CPP
 export QCC
 export QCCDEFS
 export QCCFLAGS
+export QCCIDENT
 
 $(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
 	@ echo make[1]: Entering directory \`$(CURDIR)/client\'

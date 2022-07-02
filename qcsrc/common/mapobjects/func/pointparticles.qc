@@ -324,7 +324,7 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 		if(!this.absolute)
 		{
 			v = this.maxs - this.mins;
-			this.impulse *= -v.x * v.y * v.z / (64**3); // relative: particles per 64^3 cube
+			this.impulse *= -v.x * v.y * v.z / pow(64, 3); // relative: particles per 64^3 cube
 		}
 	}
 

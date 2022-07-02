@@ -64,7 +64,7 @@
 #ifndef QCC_SUPPORT_POW
     #define pow(a, b) pow(a, b)
 #else
-    #define pow(a, b) ((a) ** (b))
+    #define pow(a, b) POW(a, b)
 #endif
 
 #include "self.qh"

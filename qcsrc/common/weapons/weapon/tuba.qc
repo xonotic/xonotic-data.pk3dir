@@ -454,23 +454,23 @@ void tubasound(entity e, bool restart)
 				if (restart) {
 					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
 				}
-				speed1 = (2.0 ** ((m - Tuba_PitchStep) / 12.0));
+				speed1 = pow(2.0, ((m - Tuba_PitchStep) / 12.0));
 			} else if (e.note - m + Tuba_PitchStep > TUBA_MAX) {
 				if (restart) {
 					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
 				}
-				speed1 = (2.0 ** (m / 12.0));
+				speed1 = pow(2.0, (m / 12.0));
 			} else {
 				if (restart) {
 					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
 				}
 				vol1 = cos(M_PI_2 * m / Tuba_PitchStep);
-				speed1 = (2.0 ** (m / 12.0));
+				speed1 = pow(2.0, (m / 12.0));
 				if (restart) {
 					snd2 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
 				}
 				vol2 = sin(M_PI_2 * m / Tuba_PitchStep);
-				speed2 = (2.0 ** ((m - Tuba_PitchStep) / 12.0));
+				speed2 = pow(2.0, ((m - Tuba_PitchStep) / 12.0));
 			}
 		} else if (restart) {
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);

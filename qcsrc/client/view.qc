@@ -500,7 +500,7 @@ vector GetCurrentFov(float fov)
 		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
 
 	if(zoomsensitivity < 1)
-		setsensitivityscale(current_viewzoom ** (1 - zoomsensitivity));
+		setsensitivityscale(pow(current_viewzoom, (1 - zoomsensitivity)));
 	else
 		setsensitivityscale(1);
 
@@ -1331,7 +1331,7 @@ void View_BlurTest()
 	{
 		float t = (time - blurtest_time0) / (blurtest_time1 - blurtest_time0);
 		float r = t * blurtest_radius;
-		float f = 1 / (t ** blurtest_power) - 1;
+		float f = 1 / pow(t, blurtest_power) - 1;
 
 		cvar_set("r_glsl_postprocess", "1");
 		cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(r), " ", ftos(f), " 0 0"));

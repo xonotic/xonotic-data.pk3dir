@@ -32,8 +32,8 @@ void Announcer_Duel()
 
 	entity pl1 = players.sort_next;
 	entity pl2 = pl1.sort_next;
-	string pl1_name = (pl1 && pl1.team != NUM_SPECTATOR ? entcs_GetName(pl1.sv_entnum) : "???");
-	string pl2_name = (pl2 && pl2.team != NUM_SPECTATOR ? entcs_GetName(pl2.sv_entnum) : "???");
+	string pl1_name = ((pl1 && pl1.team != NUM_SPECTATOR) ? entcs_GetName(pl1.sv_entnum) : "???");
+	string pl2_name = ((pl2 && pl2.team != NUM_SPECTATOR) ? entcs_GetName(pl2.sv_entnum) : "???");
 
 	if(pl1_name == prev_pl1_name && pl2_name == prev_pl2_name)
 		return; // Players haven't changed, stop here
