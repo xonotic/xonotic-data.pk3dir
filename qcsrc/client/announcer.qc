@@ -42,7 +42,7 @@ void Announcer_Duel()
 	strcpy(prev_pl2_name, pl2_name);
 
 	// There are new duelers, update title
-	centerprint_SetDuelTitle(pl1_name, pl2_name, _("vs"));
+	centerprint_SetDuelTitle(pl1_name, pl2_name);
 }
 
 void Announcer_ClearTitle()

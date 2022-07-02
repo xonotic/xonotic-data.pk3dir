@@ -80,7 +80,6 @@ float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_eliminated = 0.6;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
-float autocvar_hud_panel_scoreboard_namesize = 15;
 float autocvar_hud_panel_scoreboard_team_size_position = 0;
 float autocvar_hud_panel_scoreboard_spectators_position = 1;
 
