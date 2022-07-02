@@ -28,7 +28,7 @@
 	ACCUMULATE void REGISTRY_DEPENDS_(id) {} \
 	REGISTRY_BEGIN(id) {} \
 	REGISTRY_END(id) {} \
-	void _Register##id() {} \
+	ACCUMULATE void _Register##id() {} \
 	int id##_state = 0; \
 	void Register##id() { if (id##_state) return; id##_state = 1; REGISTRY_DEPENDS_(id); REGISTRY_BEGIN_(id); _Register##id(); id##_state = 2; REGISTRY_END_(id); } \
 	const int id##_MAX = max; \

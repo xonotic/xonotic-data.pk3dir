@@ -990,7 +990,7 @@ void havocbot_movetogoal(entity this)
 				float dist = vlen(vec2(this.origin + offset - destorg));
 				// if current and next goal are close to each other make sure
 				// actual_destorg isn't set beyond next_goal_org
-				if (dist ** 2 > vlen2(vec2(next_goal_org - destorg)))
+				if (pow(dist, 2) > vlen2(vec2(next_goal_org - destorg)))
 					actual_destorg = next_goal_org;
 				else
 					actual_destorg = vec2(destorg) + dist * next_dir;
