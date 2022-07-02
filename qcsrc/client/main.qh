@@ -123,7 +123,6 @@ bool vote_waiting_for_me;
 
 float current_zoomfraction;
 
-int cs_project_is_b0rked;
 int vid_width, vid_height;
 float vid_pixelheight;
 
