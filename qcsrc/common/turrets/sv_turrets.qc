@@ -1478,8 +1478,8 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 	if(!(e.spawnflags & TSF_SUSPENDED)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of turret
 
 	// don't spawn suspended in the air, spawn on the ground
-	setorigin(e, e.origin + '0 0 20');
-	tracebox(e.origin + '0 0 64', e.mins, e.maxs, e.origin - '0 0 10000', MOVE_WORLDONLY, e);
+	setorigin(e, e.origin);
+	tracebox(e.origin + '0 0 100', tur.m_mins, tur.m_maxs, e.origin - '0 0 10000', MOVE_WORLDONLY, e);
 	setorigin(e, trace_endpos);
 
 	// spawn!
