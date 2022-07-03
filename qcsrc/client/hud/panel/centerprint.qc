@@ -269,11 +269,9 @@ void HUD_CenterPrint()
 	// Show title if available
 	if(centerprint_title != "" || centerprint_title_left != "") {
 		vector fontsize = cp_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
-		float width = 0, right_width = 0, left_width = 0,  max_rl_width = 0;
+		float width = 0, right_width = 0, left_width = 0, max_rl_width = 0;
 		if (centerprint_title != "")
-		{
 			width = stringwidth(centerprint_title, true, fontsize);
-		}
 		else
 		{
 			right_width = stringwidth(centerprint_title_right, true, fontsize);
@@ -327,7 +325,7 @@ void HUD_CenterPrint()
 			drawfill(pos + vec2(width - max_rl_width - padding * 2, 0), vec2(max_rl_width + padding * 2, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
-			drawfill(pos, vec2(width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos - eX * padding, vec2(width + 2 * padding, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
