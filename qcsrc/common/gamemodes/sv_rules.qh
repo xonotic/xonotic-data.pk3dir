@@ -4,10 +4,19 @@
 int autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 
+bool autocvar_g_mayhem;
+float autocvar_g_mayhem_fraglimit;
+float autocvar_g_mayhem_visual_score_limit;
+int autocvar_g_mayhem_scoringmethod;
+float autocvar_g_mayhem_scoringmethod_1_damage_weight;
+float autocvar_g_mayhem_scoringmethod_1_frag_weight;
+bool autocvar_g_mayhem_scoringmethod_1_disable_selfdamage2score;
+
 // TODO: find a better location for these?
 int total_players;
 
 .int ingame;
+.float total_damage_dealt;
 #define INGAME_STATUS_NONE 0
 #define INGAME_STATUS_JOINING 0.5
 #define INGAME_STATUS_JOINED 1
@@ -63,6 +72,10 @@ void _GameRules_scoring_begin(int teams, float spprio, float stprio);
 void _GameRules_scoring_field(entity i, string label, int scoreflags);
 void _GameRules_scoring_field_team(float i, string label, int scoreflags);
 void _GameRules_scoring_end();
+
+void Mayhem_FragLimit_Override();
+void FFAMayhemCalculatePlayerScore(entity scorer);
+void Mayhem_Scoring_Method(entity frag_attacker, entity frag_target, float dmg_taken, float dmg_saved, float frag_deathtype, float frag_damage);
 
 /**
  * Mark a player as being 'important' (flag carrier, ball carrier, etc)

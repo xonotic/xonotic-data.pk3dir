@@ -284,6 +284,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
+		BADCVAR("g_mayhem");
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
@@ -364,6 +365,7 @@ void cvar_changes_init()
 		BADCVAR("g_keepaway_ballcarrier_effects");
 		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
+		BADPREFIX("g_mayhem_");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
