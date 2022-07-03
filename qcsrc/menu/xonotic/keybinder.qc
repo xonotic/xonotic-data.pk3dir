@@ -33,8 +33,8 @@ void KeyBinds_BuildList()
 	#define KEYBIND_SPECIAL_DEF(key, desc) KEYBIND_DEF(strcat("*", key), desc)
 
 	KEYBIND_HEADER(_("Moving"));
-	KEYBIND_DEF("+forward"                              , _("forward"));
-	KEYBIND_DEF("+back"                                 , _("backpedal"));
+	KEYBIND_DEF("+forward"                              , _("move forwards"));
+	KEYBIND_DEF("+back"                                 , _("move backwards"));
 	KEYBIND_DEF("+moveleft"                             , _("strafe left"));
 	KEYBIND_DEF("+moveright"                            , _("strafe right"));
 	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
