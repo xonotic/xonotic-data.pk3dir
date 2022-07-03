@@ -38,7 +38,7 @@ QCCFLAGS_WERROR ?= \
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
-# By default Xonotic targets GMQCC, set to -Tdp for FTEQCC extended support
+# By default Xonotic targets GMQCC, set to empty string for FTEQCC debugging
 QCCFLAGS_TARGET ?= \
 	-std=gmqcc
 
