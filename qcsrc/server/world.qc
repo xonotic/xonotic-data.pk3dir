@@ -313,6 +313,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
+		BADCVAR("sv_termsofservice_url");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
