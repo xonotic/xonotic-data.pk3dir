@@ -11,6 +11,7 @@
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jaakko Saarikko <jaakko.saarikko@protonmail.com>, 2022
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
+# LINUX SAUNA, 2022
 # Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022\n"
+"Last-Translator: LINUX SAUNA, 2022\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -42,7 +43,7 @@ msgstr "^1Ei voitu kirjoittaa kohteeseen %s"
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Nimike %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -55,6 +56,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Moniriviviesti ajassa %s joka\n"
+"^BOLDkestää pidempään kuin yleensä"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
@@ -68,7 +71,7 @@ msgstr "Yleisluontoinen viesti"
 #: qcsrc/client/hud/panel/centerprint.qc:295
 #: qcsrc/client/hud/panel/centerprint.qc:305
 msgid "vs"
-msgstr ""
+msgstr "vastaan"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -1184,7 +1187,7 @@ msgstr "Kaikkien aseiden taistelukenttä"
 #: qcsrc/client/main.qc:1336
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Kaikkien aseiden taistelukenttä"
 
 #: qcsrc/client/main.qc:1337
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
@@ -1194,12 +1197,12 @@ msgstr "Suurimman osan aseiden taistelukenttä"
 #: qcsrc/client/main.qc:1338
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Taistelukenttä jossa suurin osa aseista käytössä"
 
 #: qcsrc/client/main.qc:1341 qcsrc/client/main.qc:1355
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Taistelukenttä jossa ei käytetä aseita"
 
 #: qcsrc/client/main.qc:1353
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1210,37 +1213,37 @@ msgstr "%s taistelukenttä"
 #: qcsrc/client/main.qc:1364 qcsrc/client/main.qc:1369
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Tämä on %s"
 
 #: qcsrc/client/main.qc:1365
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Käyttämäsi asiakasohjelmajulkaisu on vanhentunut."
 
 #: qcsrc/client/main.qc:1366
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### ET VOI PELATA TÄLLÄ PALVELIMELLA ###"
 
 #: qcsrc/client/main.qc:1367
 msgid "Please update!"
-msgstr ""
+msgstr "Ole hyvä ja päivitä!"
 
 #: qcsrc/client/main.qc:1370
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Tämä palvelin käyttää Xonotic:in vanhentunutta julkaisua."
 
 #: qcsrc/client/main.qc:1371
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### TÄMÄ PALVELIN ON YHTEENSOPIMATON ETKÄ TÄTEN VOI LIITTYÄ ###"
 
 #: qcsrc/client/main.qc:1373
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Tervetuloa kohteeseen %s"
 
 #: qcsrc/client/main.qc:1388 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Taso %d:"
 
 #: qcsrc/client/main.qc:1390
 #, c-format
@@ -1254,15 +1257,15 @@ msgstr "Pelityyppi"
 
 #: qcsrc/client/main.qc:1416
 msgid "Active modifications:"
-msgstr ""
+msgstr "Toimessa olevat muunnokset:"
 
 #: qcsrc/client/main.qc:1419
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Erityisvinkit pelaamiseen:"
 
 #: qcsrc/client/main.qc:1426
 msgid "MOTD:"
-msgstr ""
+msgstr "MOTD:"
 
 #: qcsrc/client/main.qc:1506
 #, c-format
@@ -1880,7 +1883,7 @@ msgstr "Yksinpeli"
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2018,6 +2021,8 @@ msgstr "toisenkäden koukku"
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
 msgstr ""
+"^3tarttumiskoukku^8 tarjolla käytettäväksi, paina ^3%s^8 ottaaksesi sen "
+"käyttöön"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2069,6 +2074,7 @@ msgstr "pudota ase / heitä naatti"
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
+"^3naattia^8 tarjolla käytettäväksi, paina ^3%s^8 ottaaksesi ne käyttöön"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2078,6 +2084,8 @@ msgstr "Kranaatti"
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
 msgstr ""
+"^3toiskäden läjäytin^8 tarjolla käytettäväksi, paina ^3%s^8 ottaaksesi sen "
+"käyttöön"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -2703,17 +2711,17 @@ msgstr "^BG%s^K1 joutui Velhon räjäyttämäksi%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1's sisukset muuttuivat ulkoisiksi Golemin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 murskattiin Golemin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sähköistettiin kuolemaansa Golemin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -3344,7 +3352,7 @@ msgstr "^BG%s%s^K1 joutui läjäytetyksi ^BG%s^K1'n Arc-salamoista%s%s"
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 leikitteli arkkisalamoilla%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -3687,16 +3695,16 @@ msgstr "^BGKohde tuhottu ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGAloita!"
 
 #: qcsrc/common/notifications/all.inc:531
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGPeli alkaa ajassa"
 
 #: qcsrc/common/notifications/all.inc:532
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGErä %s alkaa ajassa"
 
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Round cannot start"
@@ -5035,7 +5043,7 @@ msgstr "Jalat irti maasta"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Taistelukenttä jossa vain lähiaseet"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5085,11 +5093,11 @@ msgstr "Ei aloitusasetta"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Naatit"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Toiskäden läjäytin"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -5852,7 +5860,7 @@ msgstr "Animaatio"
 
 #: qcsrc/menu/xonotic/credits.qc:54
 msgid "Campaign"
-msgstr ""
+msgstr "Kampanja"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Level Design"
@@ -5980,7 +5988,7 @@ msgstr "Portugali"
 
 #: qcsrc/menu/xonotic/credits.qc:314
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Portugali (Brasilia)"
 
 #: qcsrc/menu/xonotic/credits.qc:320
 msgid "Romanian"
@@ -6008,7 +6016,7 @@ msgstr "Ruotsi"
 
 #: qcsrc/menu/xonotic/credits.qc:376
 msgid "Turkish"
-msgstr ""
+msgstr "Turkki"
 
 #: qcsrc/menu/xonotic/credits.qc:385
 msgid "Ukrainian"
@@ -6120,11 +6128,11 @@ msgstr "Liity!"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Aloita taso uudelleen"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
-msgstr ""
+msgstr "Päävalikko"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -6148,16 +6156,16 @@ msgstr "Ohjaus"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr ""
+msgstr "Pikavalikko"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:104
 msgid "Spectate"
-msgstr ""
+msgstr "Katsele"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
-msgstr ""
+msgstr "Pelivalikko"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -7165,7 +7173,7 @@ msgstr "Poista kaikki kartat valinnastasi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Aloita moninpeli!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -8419,12 +8427,13 @@ msgstr "DMGFX^Kaikki"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "Täsmäajallinen vaihteleva valaistus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
+"Väliaikaiset täsmäaikavalolähteet kuten räjähdykset, raketit ja voimistukset "
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
@@ -8433,21 +8442,23 @@ msgstr "Varjot"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "Varjot lankeavat täsmäaikavalojen mukaisesti"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Realtime world lights"
-msgstr ""
+msgstr "Maailmassa täsmäaikaiset valot"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"Täsmäaikavalolähteet sisällytetty tiettyihin karttoihin. Saattaa vaikuttaa "
+"merkittävästi suorituskykyyn."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "Varjot lankeavat maailmallisten täsmäaikavalojen mukaisesti"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Use normal maps"
@@ -8458,6 +8469,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"Suuntavarjostus tietyille pinnoitteille mallintaakseen kanssakäyntiä "
+"täsmäajallisten valojen suhteen muhkuraisella pinnalla"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
@@ -8465,11 +8478,11 @@ msgstr "Pehmeät varjot"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Corona brightness:"
-msgstr ""
+msgstr "Koronan kirkkaus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Pyöröheijastukset tiettyjen valojen ympärille"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -8477,7 +8490,7 @@ msgstr "Himmennä pyörövaloheijastuksia näkyvyyteen nähden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
-msgstr ""
+msgstr "Koronahäivennys käyttäen okluusiokyselyjä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
@@ -9280,12 +9293,12 @@ msgstr "%d fps-ruudunpäivitys"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d Kt/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d Mt/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Network"
@@ -9301,15 +9314,15 @@ msgstr "Näytä pakettikokojen- ja muiden tietojen kuvaus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "Pakettihäviöhyvitys"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "Jokainen paketti sisältää tallenteen edellisestä viestistä"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "Liikevirhe-ennakoinnin hyvitys"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
@@ -9318,7 +9331,7 @@ msgstr "Käytä salausta (AES) kun se on saatavissa"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Bandwidth limit:"
-msgstr ""
+msgstr "Kaistaleveyden raja:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
@@ -9342,15 +9355,15 @@ msgstr "Paikallinen viive"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr ""
+msgstr "HTTP lataukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
-msgstr ""
+msgstr "Yhtäaikaisesti:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "Rinnakkaisten HTTP-latausten enimmäismäärä"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -9595,6 +9608,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"Vsync estää kuvanäkymän revintää, mutta lisää viivettä sekä asettaa katon "
+"ruudunpäivitykselle ruudun virkistysvasteessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
@@ -9628,13 +9643,15 @@ msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Resolution scaling:"
-msgstr ""
+msgstr "Ruututarkkuuden mitoitus"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"Ruudun tai ikkunan koko moninpelatessa, yli 1x tuo antialiasoinnin, alle 1x "
+"voi auttaa hitaampien suorittimien kohdalla"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
@@ -9803,7 +9820,7 @@ msgstr "CSKL^Vaikea"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "Pelaa kampanja!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -10042,35 +10059,35 @@ msgstr "välietapin muokkausvalikko"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Poistu nykyisestä kamppailusta"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Lopeta näyte"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Poistu kampanjasta"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Poistu yksinpelistä"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Poistu moninpelistä"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Poistu nykyisestä kampanjan tasosta"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Poistu nykyisestä yksinpeliottelusta"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Poistu nykyisestä moninpeliottelusta / katkaise yhteys palvelimeen"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"
