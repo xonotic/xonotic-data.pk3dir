@@ -4,6 +4,8 @@
 
 bool autocvar_g_turrets;
 float autocvar_g_turrets_aimidle_delay;
+int autocvar_g_turrets_max;
+int autocvar_g_turrets_max_perplayer;
 bool autocvar_g_turrets_nofire;
 bool autocvar_g_turrets_reloadcvars;
 float autocvar_g_turrets_targetscan_maxdelay;
@@ -36,8 +38,8 @@ TR_PROPS_COMMON(X, , )
 .float tur_dist_enemy; // distance to enemy
 .float tur_dist_aimpos; // distance to aim location
 .float tur_dist_impact_to_aimpos; // distance impact<->aim
+.bool tur_spawned; // spawned turret using spawnturret
 .float volly_counter; // decrement counter from .shot_volly to 0
-
 .float target_select_time; // last time turret had a valid target
 .float target_validate_time; // throttle re-validation of current target
 
@@ -89,6 +91,7 @@ bool turret_closetotarget(entity this, vector targ, float range);
 
 .entity pathgoal;
 
+int tmp_turcount;
 float turret_count;
 
 // debugging

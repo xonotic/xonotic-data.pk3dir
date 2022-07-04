@@ -519,10 +519,12 @@ void vehicles_setreturn(entity veh)
 
 	if(IS_DEAD(veh))
 	{
-		if (veh.cannot_respawn) 
+		if (veh.cannot_respawn)
 		{
 			sound (veh, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_BIG, veh.origin + '0 0 100', '0 0 0', 1);
+
+			tmp_vehcount--;
 
 			delete(veh);
 			return;
@@ -1309,6 +1311,12 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool no_respwn, bool removeifinvalid, bool optional, bool nodrop)
 {
+	if (autocvar_g_vehicles_max <= 0 || autocvar_g_vehicles_max_perplayer <= 0) { print_to(own, "Vehicle spawning is disabled"); return NULL; }
+
+	if (tmp_vehcount >= autocvar_g_vehicles_max) { print_to(own, "The maximum vehicle count has been reached"); return NULL; }
+
+	if (tmp_vehcount >= autocvar_g_vehicles_max_perplayer) { print_to(own, "You can't spawn any more vehicles"); return NULL; }
+
 	e.spawnflags = VHF_MULTISLOT;
 
 	// if this spawnflag isn't, it won't be spawned
@@ -1373,6 +1381,8 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 
 	// spawn!
 	vehicle_initialize(e, veh, nodrop);
+
+	tmp_vehcount++;
 
 	return e;
 }

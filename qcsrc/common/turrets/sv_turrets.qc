@@ -203,6 +203,9 @@ void turret_die(entity this)
 		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
+		if (this.tur_spawned)
+			tmp_turcount--;
+
 		tur.tr_death(tur, this);
 
 		delete(this.tur_head);
@@ -228,6 +231,14 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	// Inactive turrets take no damage. (hm..)
 	if(!this.active)
 		return;
+
+	if(this.realowner == attacker)
+	{
+		if(autocvar_g_friendlyfire)
+			damage = damage * autocvar_g_friendlyfire;
+		else
+			return;
+	}
 
 	if(SAME_TEAM(this, attacker))
 	{
@@ -1116,6 +1127,9 @@ void turret_think(entity this)
 
 		// Check if we have a vailid enemy, and try to find one if we dont.
 
+		// Don't attack against owner
+		if (turret_select_target(this) == this.realowner) return;
+
 		// g_turrets_targetscan_maxdelay forces a target re-scan at least this often
 		float do_target_scan = 0;
 		if((this.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
@@ -1137,6 +1151,8 @@ void turret_think(entity this)
 		if(do_target_scan)
 		{
 			this.enemy = turret_select_target(this);
+			// Don't attack against owner
+			if (this.enemy == this.realowner) return;
 			this.target_select_time = time;
 		}
 
@@ -1418,7 +1434,14 @@ bool turret_initialize(entity this, Turret tur)
 
 entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, bool removeifinvalid, int moveflag, bool optional)
 {
+	if (autocvar_g_turrets_max <= 0 || autocvar_g_turrets_max_perplayer <= 0) { print_to(own, "Turret spawning is disabled"); return NULL; }
+
+	if (tmp_turcount >= autocvar_g_turrets_max) { print_to(own, "The maximum turret count has been reached"); return NULL; }
+
+	if (tmp_turcount >= autocvar_g_turrets_max_perplayer) { print_to(own, "You can't spawn any more turrets"); return NULL; }
+
 	e.spawnflags = TSF_SUSPENDED;
+	e.tur_spawned = true;
 
 	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
 	if(invincible) { e.damage_flags |= TFL_DMG_NO; }
@@ -1484,6 +1507,8 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 
 	// spawn!
 	turret_initialize(e, tur);
+
+	tmp_turcount++;
 
 	//LOG_INFOF("^1tur.netname^3: %s", tur.netname);
 

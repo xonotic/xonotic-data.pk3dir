@@ -15,6 +15,8 @@ float autocvar_g_vehicles_crush_force = 50;
 float autocvar_g_vehicles_crush_minspeed = 100;
 bool autocvar_g_vehicles_delayspawn = true;
 float autocvar_g_vehicles_delayspawn_jitter = 10;
+int autocvar_g_vehicles_max;
+int autocvar_g_vehicles_max_perplayer;
 float autocvar_g_vehicles_allow_bots;
 int autocvar_g_vehicles_exit_attempts = 25;
 float autocvar_g_vehicles_thinkrate = 0.1;
@@ -95,6 +97,7 @@ const int VHEF_NORMAL = 0;  /// User pressed exit key
 const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehicle is dying
 const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
 
+int tmp_vehcount;
 float vehicles_exit_running;
 
 // macros
