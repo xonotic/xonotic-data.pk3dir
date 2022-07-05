@@ -87,6 +87,7 @@ const int MAX_AXH = 4;
 .bool 	optional_setup;
 .bool	no_respawn_option;
 .bool	cannot_respawn;
+.bool	summoned;
 
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns

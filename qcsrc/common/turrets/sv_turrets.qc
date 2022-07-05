@@ -1509,8 +1509,8 @@ entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entit
 	turret_initialize(e, tur);
 
 	tmp_turcount++;
-
-	//LOG_INFOF("^1tur.netname^3: %s", tur.netname);
+	
+	// LOG_INFOF("^1tur.netname^3: %s", tur.netname);
 
 	if (optional)
 		e.tur_head.effects = (EF_DIMLIGHT | EF_FULLBRIGHT);

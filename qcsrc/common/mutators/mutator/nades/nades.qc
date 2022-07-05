@@ -771,7 +771,7 @@ void nade_emerald_randomweapons(entity e, vector org)
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null && (!((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) || autocvar_g_nades_emerald_randomweapons_includespecial),
 		{
-			if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+			if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // && (it.spawnflags & WEP_TYPE_OTHER))
 				continue;
 			float chancewep = 1;
 			if(it.spawnflags & WEP_FLAG_SPECIALATTACK) //LegendGuard fixes the strange part of the code
@@ -1000,12 +1000,9 @@ void nade_emerald_boom(entity this)
 			if(!autocvar_g_vehicles) 
 				return;
 
-			// looks like a bad practice
-			time = 0.7;
-
 			e = spawnvehicle(
 				e, 
-				"random", 
+				this.pokenade_type, 
 				VEH_Null, 
 				this.realowner, 
 				this.realowner, 
@@ -1028,7 +1025,7 @@ void nade_emerald_boom(entity this)
 
 			e = spawnturret(
 				e, 
-				"random", //this.tandemnade_type, 
+				this.pokenade_type, 
 				TUR_Null, 
 				this.realowner, 
 				this.realowner, 

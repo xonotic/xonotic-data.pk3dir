@@ -978,6 +978,17 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.owner)
 		return; // got here and didn't enter the gunner, return
 
+	if(!teamplay)
+	if(!veh.realowner)
+	if(veh.realowner != pl && autocvar_g_vehicles_steal)
+	{
+		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_OWNER, veh.realowner.netname);
+
+		veh.vehicle_shield = 0;
+		veh.old_vehicle_flags = veh.vehicle_flags; // make a backup just so we're not permanently crippling this vehicle
+		veh.vehicle_flags &= ~VHF_SHIELDREGEN;
+	}
+
 	if(teamplay)
 	if(veh.team)
 	if(DIFF_TEAM(pl, veh))
@@ -1295,8 +1306,10 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	if(this.active == ACTIVE_NOT)
 		this.nextthink = 0; // wait until activated
-	else if(autocvar_g_vehicles_delayspawn)
+	else if(autocvar_g_vehicles_delayspawn && !this.summoned)
 		this.nextthink = time + this.respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+	else if(this.summoned)
+		this.nextthink = time;
 	else
 		this.nextthink = time + game_starttime;
 
@@ -1324,7 +1337,7 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 
 	e.optional_setup = optional;
 	e.no_respawn_option = no_respwn;
-	e.cannot_respawn = false;
+	e.summoned = true;
 
 	setorigin(e, orig);
 	bool allow_any = boolean(vehicle == "anyrandom");
@@ -1365,6 +1378,8 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	}
 
 	e.realowner = spawnedby;
+	e.colormod = spawnedby.colormod;
+	e.colormap = spawnedby.colormap;
 
 	if(IS_PLAYER(spawnedby))
 	{
@@ -1383,6 +1398,8 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	vehicle_initialize(e, veh, nodrop);
 
 	tmp_vehcount++;
+
+	// LOG_INFOF("^4veh.netname^3: %s", veh.netname);
 
 	return e;
 }
