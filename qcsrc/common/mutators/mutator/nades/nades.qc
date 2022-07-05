@@ -991,6 +991,46 @@ void emerald_fountain_think(entity this)
 	}
 }
 
+void emerald_fountain_explode(entity this)
+{
+	for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
+		nade_emerald_ball(this);
+	
+	entity fountain = new(nade_emerald_fountain);
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
+	setorigin(fountain, fountain.origin);
+	setthink(fountain, emerald_fountain_think);
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
+	fountain.pushltime = fountain.ltime;
+	fountain.team = this.team;
+	
+	//nade model maintaining
+	setmodel(fountain, MDL_PROJECTILE_GRENADE);
+	entity timer = new(nade_timer);
+	setmodel(timer, MDL_NADE_TIMER);
+	setattachment(timer, fountain, "");
+	timer.colormap = this.colormap;
+	timer.glowmod = this.glowmod;
+	setthink(timer, nade_timer_think);
+	timer.nextthink = time;
+	timer.wait = fountain.ltime;
+	timer.owner = fountain;
+	timer.skin = 10;
+	
+	set_movetype(fountain, MOVETYPE_TOSS);
+	fountain.bot_dodge = true;
+	fountain.nade_special_time = time;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
+	nade_emerald_dropping(fountain.origin);
+}
+
 void nade_emerald_boom(entity this)
 {
 	entity e = spawn();
@@ -1048,42 +1088,7 @@ void nade_emerald_boom(entity this)
 		}
 		default:
 		{
-			for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
-				nade_emerald_ball(this);
-			
-			entity fountain = new(nade_emerald_fountain);
-			fountain.owner = this.owner;
-			fountain.realowner = this.realowner;
-			fountain.origin = this.origin;
-			fountain.flags = FL_PROJECTILE;
-			IL_PUSH(g_projectiles, fountain);
-			IL_PUSH(g_bot_dodge, fountain);
-			setorigin(fountain, fountain.origin);
-			setthink(fountain, emerald_fountain_think);
-			fountain.nextthink = time;
-			fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
-			fountain.pushltime = fountain.ltime;
-			fountain.team = this.team;
-			
-			//nade model maintaining
-			setmodel(fountain, MDL_PROJECTILE_GRENADE);
-			entity timer = new(nade_timer);
-			setmodel(timer, MDL_NADE_TIMER);
-			setattachment(timer, fountain, "");
-			timer.colormap = this.colormap;
-			timer.glowmod = this.glowmod;
-			setthink(timer, nade_timer_think);
-			timer.nextthink = time;
-			timer.wait = fountain.ltime;
-			timer.owner = fountain;
-			timer.skin = 10;
-			
-			set_movetype(fountain, MOVETYPE_TOSS);
-			fountain.bot_dodge = true;
-			fountain.nade_special_time = time;
-			setsize(fountain, '-16 -16 -16', '16 16 16');
-			CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
-			nade_emerald_dropping(fountain.origin);
+			emerald_fountain_explode(this);
 			return;
 		}
 	}

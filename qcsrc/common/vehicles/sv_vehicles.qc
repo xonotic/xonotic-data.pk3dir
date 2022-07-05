@@ -1378,8 +1378,6 @@ entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, en
 	}
 
 	e.realowner = spawnedby;
-	e.colormod = spawnedby.colormod;
-	e.colormap = spawnedby.colormap;
 
 	if(IS_PLAYER(spawnedby))
 	{
