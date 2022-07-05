@@ -77,13 +77,13 @@ int WinningCondition_LMS()
 			// exactly one player?
 
 			ClearWinners();
-			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
 
 			if (LMS_NewPlayerLives())
 			{
 				if (totalplayed && game_starttime > 0 && time > game_starttime + autocvar_g_lms_forfeit_min_match_time) // give players time to join
 				{
 					GameRules_scoring_add(first_player, LMS_RANK, 1);
+					first_player.winning = 1;
 					return WINNING_YES;
 				}
 				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
@@ -94,6 +94,7 @@ int WinningCondition_LMS()
 				// a winner!
 				// and assign him his first place
 				GameRules_scoring_add(first_player, LMS_RANK, 1);
+				first_player.winning = 1;
 				return WINNING_YES;
 			}
 		}
