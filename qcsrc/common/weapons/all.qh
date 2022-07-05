@@ -308,11 +308,14 @@ WepSet WEPSET_SUPERWEAPONS;
 
 #include "all.inc"
 
-// TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
+// TODO: remove after 0.8.5. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
+#define WEP_HARDCODED_IMPULSES 20
+
+// TODO: invert after 0.8.5. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
 #define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (REGISTRY_COUNT(Weapons) - 1) - 1, 253)
 
-REGISTRY_SORT(Weapons, 1)
+REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
 REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
@@ -329,7 +332,7 @@ STATIC_INIT(register_weapons_done)
         else
         	inaccessible = strcat(inaccessible, "\n", it.netname);
     });
-    if (inaccessible && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
+    if (inaccessible != "" && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
     #ifdef CSQC
     FOREACH(Weapons, true, it.wr_init(it));
     #endif
