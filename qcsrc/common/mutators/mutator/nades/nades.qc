@@ -770,49 +770,80 @@ void nade_emerald_SpawnWeapon(entity ent, vector org, entity wep)
 //LegendGuard adds random weapon item spawn function for emerald nade 25-05-2021
 void nade_emerald_randomweapons(entity e, vector org)
 {
-	if (random() > 0.5)
+	RandomSelection_Init();
+	FOREACH(Weapons, 
+			it != WEP_Null 
+			&& (!((it.spawnflags & WEP_FLAG_HIDDEN) 
+			|| (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) 
+			|| (it.spawnflags & WEP_FLAG_SPECIALATTACK) 
+			|| (it.spawnflags & WEP_FLAG_SUPERWEAPON))
+			|| autocvar_g_nades_emerald_randomweapons_includespecial),
 	{
-		RandomSelection_Init();
-		FOREACH(Weapons, it != WEP_Null && (!((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) || autocvar_g_nades_emerald_randomweapons_includespecial),
-		{
-			if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // && (it.spawnflags & WEP_TYPE_OTHER))
-				continue;
-			float chancewep = 1;
-			if(it.spawnflags & WEP_FLAG_SPECIALATTACK) //LegendGuard fixes the strange part of the code
-				chancewep = 0;
-			if (W_IsWeaponThrowable(e, it.m_id))
-				RandomSelection_AddEnt(it, chancewep, 1);
-		});
-		nade_emerald_SpawnWeapon(e, org, RandomSelection_chosen_ent);
-	}
+		if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+			continue;
+		if(it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			continue;
+		if(it.spawnflags & WEP_FLAG_SPECIALATTACK) //LegendGuard fixes the strange part of the code
+			continue;
+		if(it.spawnflags & WEP_TYPE_OTHER)
+			continue;
+		if (W_IsWeaponThrowable(e, it.m_id))
+			RandomSelection_AddEnt(it, 1, 1);
+	});
+	nade_emerald_SpawnWeapon(e, org, RandomSelection_chosen_ent);
 }
 
 //LegendGuard adds vehicle spawn option for emerald nade 20-06-2021
 
 //LegendGuard adds turret spawn option for emerald nade 22-06-2021
 
+void nade_emerald_allammoitemdrop(entity e, vector org)
+{
+	float wa = random();
+	float wb = random();
+
+	if (wa > wb)
+		nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+	else
+		nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
+
+	return;
+}
+
 void nade_emerald_randomitem(entity e, vector org)
 {
-	float a = random();
-	float b = random();
-	float c = random();
-	float d = random();
-	
-	if (a > b)
+	float a = random(),
+		  b = random(),
+		  c = random(),
+		  d = random();
+
+	if (!autocvar_g_nades_emerald_powerupjetpack_randomdrop)
 	{
-		if (a > 0.5)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
-		else if (d < 0.2)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
+		if (a > b)
+		{
+			if (a > 0.5)
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+			else if (d < 0.2)
+				nade_emerald_allammoitemdrop(e, org);
+		}
+		else if (c > d)
+			nade_emerald_allammoitemdrop(e, org);
+		else
+		{
+			if (a > 0.5)
+				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+			else if (d < 0.2)
+				nade_emerald_allammoitemdrop(e, org);
+			else
+			{
+				if(IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS))
+					nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
+				else
+					nade_emerald_randomweapons(e, org);
+			}
+		}
 	}
-	else if (c > d)
-	{
-		if (c > 0.5)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
-		else if (b < 0.2)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Cells : ITEM_Shells));
-	}
-	else if (autocvar_g_nades_emerald_powerupjetpack_randomdrop)
+	else
 	{
 		if (a < 0.5)
 			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Jetpack : ITEM_JetpackFuel));
@@ -826,65 +857,41 @@ void nade_emerald_randomitem(entity e, vector org)
 				nade_emerald_randomweapons(e, org);
 		}
 	}
-	else
-	{
-		if (a > 0.5)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
-		else if (d < 0.2)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Rockets));
-		else
-		{
-			if(IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS))
-				nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall));
-			else
-				nade_emerald_randomweapons(e, org);
-		}
-		return;
-	}
 }
 
-void nade_emerald_allammoitemdrop(entity e, vector org)
-{
-	float wa = random();
-	float wb = random();
-	
-	if (wa > wb)
-	{
-		if (wa > 0.5)
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Shells : ITEM_Bullets));
-		else
-			nade_emerald_dropitem(e, org, ((random() > 0.5) ? ITEM_Rockets : ITEM_Cells));
-	}
-	return;
-}
-
-void nade_emerald_dropping(vector org)
+void nade_emerald_dropping(entity this, vector org)
 {
 	//look item MACROS in qcsrc/server/items/items.qc
 	//ITEM_Shells; ITEM_Bullets; ITEM_Rockets; ITEM_Cells; ITEM_Plasma; ITEM_JetpackFuel;
 	//ITEM_Strength; ITEM_Shield;
-	int itemcount = autocvar_g_nades_emerald_spawncount;
 	entity e = spawn();
 	e.spawnfunc_checked = true;
 	if(!IS_GAMETYPE(CA) && !autocvar_g_instagib)
 	{
-		//int cvar which manages the ONLY dropping per each item type 14-03-2021
-		switch (autocvar_g_nades_emerald_dropitemselect)
+		switch (this.pokenade_type)
 		{
-			case 0: for(int j = 0; j < itemcount; ++j){	nade_emerald_randomitem(e, org); return;}
+			case "health"	: { nade_emerald_dropitem(e, org, ITEM_HealthSmall); return; }
+			case "armor"	: { nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return; }
+			case "ammo"		: { nade_emerald_allammoitemdrop(e, org); return; }
+			case "jetpack"	: {	nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return; }
+			case "weapon" 	: { nade_emerald_randomweapons(e, org); return; }
+			default			: { nade_emerald_randomitem(e, org); return; }
+
+			/*
 			case 1: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_HealthSmall); return;}
 			case 2: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_ArmorSmall); return;}
 			case 3: for(int j = 0; j < itemcount; ++j){	nade_emerald_allammoitemdrop(e, org); return;}
 			case 4: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Shells); return;}
 			case 5: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Bullets); return;}
 			case 6: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Rockets); return;}
-			case 7: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Cells); return;}
+			case 7: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Cells); return;} // ITEM_Plasma
 			case 8: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_Jetpack); return;}
 			case 9: for(int j = 0; j < itemcount; ++j){	nade_emerald_dropitem(e, org, ITEM_JetpackFuel); return;}
 			case 10: for(int j = 0; j < itemcount; ++j){ nade_emerald_dropitem(e, org, ITEM_Shield); return;}
 			case 11: for(int j = 0; j < itemcount; ++j){ nade_emerald_dropitem(e, org, ITEM_Strength); return;}
 			case 12: for(int j = 0; j < itemcount; ++j){ nade_emerald_randomweapons(e, org); return;}
 			default: for(int j = 0; j < itemcount; ++j){ nade_emerald_randomitem(e, org); return;}
+			*/
 		}
 	}
 }
@@ -915,7 +922,11 @@ void emerald_ball_think(entity this)
 
 	this.angles = vectoangles(this.velocity);
 
-	nade_emerald_dropping(this.origin);
+	if (this.nade_item_spawncount < autocvar_g_nades_emerald_spawncount)
+	{
+		this.nade_item_spawncount++;
+		nade_emerald_dropping(this, this.origin);
+	}
 
 	this.nextthink = time + 0.1;
 }
@@ -929,6 +940,7 @@ void nade_emerald_ball(entity this)
 
 	proj = new(grenade);
 	proj.bot_dodge = true;
+	proj.pokenade_type = this.pokenade_type;
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	setmodel(proj, MDL_Null);
 	proj.scale = 1; //0.5;
@@ -940,7 +952,7 @@ void nade_emerald_ball(entity this)
 
 	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
 	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
-	kick.z = (random()/2+0.5) * autocvar_g_nades_emerald_ball_spread;
+	kick.z = (random() / 2 + 0.5) * autocvar_g_nades_emerald_ball_spread;
 	proj.velocity = kick;
 
 	proj.pushltime = time + autocvar_g_nades_emerald_ball_lifetime;
@@ -988,18 +1000,17 @@ void emerald_fountain_think(entity this)
 	{
 		this.nade_special_time = time + autocvar_g_nades_emerald_fountain_delay;
 		nade_emerald_ball(this);
+		Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
 	}
 }
 
 void emerald_fountain_explode(entity this)
 {
-	for (int c = 0; c < autocvar_g_nades_emerald_ball_count; c++)
-		nade_emerald_ball(this);
-	
 	entity fountain = new(nade_emerald_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.pokenade_type = this.pokenade_type;
 	fountain.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, fountain);
 	IL_PUSH(g_bot_dodge, fountain);
@@ -1028,7 +1039,6 @@ void emerald_fountain_explode(entity this)
 	fountain.nade_special_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
-	nade_emerald_dropping(fountain.origin);
 }
 
 void nade_emerald_boom(entity this)
@@ -1036,6 +1046,8 @@ void nade_emerald_boom(entity this)
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
 	e.gravity = 1;
+
+	this.nade_item_spawncount = 0;
 
 	switch (this.tandemnade_type)
 	{

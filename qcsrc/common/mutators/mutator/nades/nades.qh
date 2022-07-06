@@ -70,10 +70,8 @@ float autocvar_g_nades_emerald_spawncount = 1;
 float autocvar_g_nades_emerald_ball_spread = 0.5;
 float autocvar_g_nades_emerald_ball_lifetime = 1; //if much time, many items will spawn
 float autocvar_g_nades_emerald_fountain_delay = 5;
-float autocvar_g_nades_emerald_ball_count = 3;
 float autocvar_g_nades_emerald_fountain_lifetime = 1; //if much time, fountain will remain
 bool autocvar_g_nades_emerald_powerupjetpack_randomdrop = 0;
-int autocvar_g_nades_emerald_dropitemselect = 0; //admin/user selects which item wants to drop in-game, if not will be random
 float autocvar_g_nades_ammo_time = 5; //LegendGuard adds new nade cvars 13-02-2021
 float autocvar_g_nades_ammo_rate = 30;
 float autocvar_g_nades_ammo_friend = 1;
@@ -172,6 +170,7 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable
 .string cvar_cl_pokenade_type;
 .int cvar_cl_tandemnade_type; //LegendGuard adds new cvar nade .variable 01-07-2021
 .float toss_time;
+.int nade_item_spawncount;
 .float nade_show_particles;
 .float nade_veil_prevalpha;
 .float nade_dark_prevalpha; //LegendGuard adds new nade .variable 08-02-2021
