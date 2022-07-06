@@ -19,6 +19,7 @@ bool autocvar__hud_showbinds_reload;
 bool autocvar_developer_csqcentities;
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
+bool autocvar_cl_welcome_in_menu_dialog = true;
 
 // Map coordinate base calculations need these
 vector mi_center;
@@ -102,6 +103,12 @@ float current_viewzoom;
 float zoomin_effect;
 bool warmup_stage;
 
+string hostname;
+string welcome_msg;
+float welcome_msg_menu_check_maxtime;
+bool welcome_msg_force_centerprint;
+void Welcome_Message_Show_Try();
+
 void Fog_Force();
 
 string _getcommandkey(string text, string command, bool forcename);
@@ -116,7 +123,6 @@ bool vote_waiting_for_me;
 
 float current_zoomfraction;
 
-int cs_project_is_b0rked;
 int vid_width, vid_height;
 float vid_pixelheight;
 

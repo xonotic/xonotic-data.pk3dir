@@ -20,10 +20,8 @@
 
 float autocvar_sv_accuracy_data_share = 1;
 
-.bool cvar_cl_accuracy_data_share;
-REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
-.bool cvar_cl_accuracy_data_receive;
-REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_share);
+REPLICATE_INIT(bool, cvar_cl_accuracy_data_receive);
 
 .entity accuracy;
 .float accuracy_frags[REGISTRY_MAX(Weapons)];
@@ -37,6 +35,8 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 // init/free
 void accuracy_init(entity e);
 void accuracy_free(entity e);
+
+void accuracy_reset(entity e);
 
 // force a resend of a player's accuracy stats
 void accuracy_resend(entity e);

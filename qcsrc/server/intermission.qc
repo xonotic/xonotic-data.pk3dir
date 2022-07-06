@@ -399,7 +399,7 @@ string GotoMap(string m)
 	if(!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
 	cvar_set("nextmap", m);
-	cvar_set("timelimit", "-1");
+	cvar_set("_endmatch", "1");
 	if(mapvote_initialized || alreadychangedlevel)
 	{
 		if(DoNextMapOverride(0))

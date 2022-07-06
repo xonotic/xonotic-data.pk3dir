@@ -11,6 +11,7 @@ float autocvar_g_nades_spread = 0.04;
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
+
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
@@ -116,6 +117,17 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	else
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 }
+
+MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
+{
+	if (mut_is_active(MUT_NADES))
+	{
+		string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
+		M_ARGV(0, string) = strcat(M_ARGV(0, string),
+			"\n\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
+	}
+}
+
 bool Projectile_isnade(int p)
 {
 	return Nade_FromProjectile(p) != NADE_TYPE_Null;
@@ -589,9 +601,9 @@ void nade_entrap_touch(entity this, entity toucher)
 	#endif
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
 
 		float tint_alpha = 0.75;
@@ -645,9 +657,9 @@ void nade_heal_touch(entity this, entity toucher)
 
 	}
 
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_red = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_red = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		STAT(HEALING_ORB, show_red) = time+0.1;
 		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -663,9 +675,13 @@ void nade_heal_boom(entity this)
 
 void nade_monster_boom(entity this)
 {
+	if(!autocvar_g_monsters)
+		return;
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
 	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
+	if(!e)
+		return; // monster failed to be spawned
 
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
@@ -674,9 +690,9 @@ void nade_monster_boom(entity this)
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
@@ -720,6 +736,11 @@ void nade_boom(entity this)
 			nade_blast = false;
 			break;
 		case NADE_TYPE_MONSTER:
+			if(!autocvar_g_monsters)
+			{
+				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
+				break; // fall back to a standard nade explosion
+			}
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
 			switch(this.realowner.team)
@@ -1563,14 +1584,14 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 }
 
+MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
+{
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
+}
+
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
-}
-
-MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
-{
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' (dropweapon) to use them\n");
 }
 
 #endif

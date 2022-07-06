@@ -33,8 +33,8 @@ void KeyBinds_BuildList()
 	#define KEYBIND_SPECIAL_DEF(key, desc) KEYBIND_DEF(strcat("*", key), desc)
 
 	KEYBIND_HEADER(_("Moving"));
-	KEYBIND_DEF("+forward"                              , _("forward"));
-	KEYBIND_DEF("+back"                                 , _("backpedal"));
+	KEYBIND_DEF("+forward"                              , _("move forwards"));
+	KEYBIND_DEF("+back"                                 , _("move backwards"));
 	KEYBIND_DEF("+moveleft"                             , _("strafe left"));
 	KEYBIND_DEF("+moveright"                            , _("strafe right"));
 	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
@@ -106,7 +106,6 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
 		string console_shortcut = strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE"));
 		KEYBIND_SPECIAL_DEF(console_shortcut, _("enter console"));
-	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_EMPTY_LINE();
 

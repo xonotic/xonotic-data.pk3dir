@@ -7,6 +7,7 @@ const int URI_GET_IPBAN_END = 16;
 const int URI_GET_CURL = 17;
 const int URI_GET_CURL_END = 32;
 const int URI_GET_UPDATENOTIFICATION = 33;
+const int URI_GET_TOS = 34;
 const int URI_GET_URLLIB = 128;
 const int URI_GET_URLLIB_END = 191;
 

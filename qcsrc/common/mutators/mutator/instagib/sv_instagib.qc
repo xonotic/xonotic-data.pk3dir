@@ -221,8 +221,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 				armor -= 1;
 				SetResource(frag_target, RES_ARMOR, armor);
 				frag_damage = 0;
-				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1;
+				frag_target.hitsound_damage_dealt += 1;
+				frag_attacker.hitsound_damage_dealt += 1;
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			}
 		}
@@ -258,7 +258,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 			armor -= 1;
 			SetResource(frag_attacker, RES_ARMOR, armor);
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
-			frag_attacker.damage_dealt += frag_mirrordamage;
+			frag_attacker.hitsound_damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
 	}
@@ -453,7 +453,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", instagib");
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", InstaGib");
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)

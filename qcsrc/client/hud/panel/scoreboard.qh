@@ -3,6 +3,7 @@
 
 bool autocvar_cl_deathscoreboard;
 string autocvar_scoreboard_columns;
+float autocvar_hud_panel_scoreboard_namesize = 15;
 
 bool scoreboard_showscores;
 

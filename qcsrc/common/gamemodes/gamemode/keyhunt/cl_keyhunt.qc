@@ -85,6 +85,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			case NUM_TEAM_4: if(team4_keys == all_keys) alpha = blink; break;
 		}
 	}
+	alpha *= panel_fg_alpha;
 
 	// Draw icons
 

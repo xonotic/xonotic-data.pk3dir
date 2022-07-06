@@ -347,7 +347,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					string mon_oldname = mon.monster_name;
 
 					mon.monster_name = argument;
-					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null);
+					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
 					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
 					return;
 				}
@@ -664,6 +664,7 @@ void CommonCommand_timein(int request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEOUT);
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}

@@ -10,7 +10,7 @@ REGISTER_MUTATOR(cts, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		g_race_qualifying = true;
+		g_race_qualifying = 1;
 		independent_players = 1;
         GameRules_limit_score(0);
         GameRules_limit_lead(0);

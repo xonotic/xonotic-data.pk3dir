@@ -2,25 +2,10 @@
 
 #include "pickup.qh"
 #include <common/items/all.qh>
+#include <common/resources/resources.qh>
 #ifdef SVQC
-    #include <common/stats.qh>
+    #include <common/resources/sv_resources.qh>
     #include <server/items/items.qh>
-    #include <server/resources.qh>
-#endif
-
-#if 1
-.int ammo_none;
-.int ammo_shells;
-.int ammo_nails;
-.int ammo_rockets;
-.int ammo_cells;
-#ifdef SVQC
-const .int ammo_plasma = _STAT(PLASMA);
-const .int ammo_fuel = _STAT(FUEL);
-#else
-.int ammo_plasma;
-.int ammo_fuel;
-#endif
 #endif
 
 #ifdef GAMEQC
