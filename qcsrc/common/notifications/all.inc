@@ -705,6 +705,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(LMS_NOLIVES,                       N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGYou have no lives left, you must wait until the next match"), "")
     MSG_CENTER_NOTIF(LMS_SPECWARN,                      N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^F4WARNING:^BG you can't rejoin this match after spectating.\nUse the same command again to spectate anyway."), "")
+    MSG_CENTER_NOTIF(LMS_VISIBLE_LEADER,                N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGEnemies can now see you on radar!"), "")
+    MSG_CENTER_NOTIF(LMS_VISIBLE_OTHER,                 N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGLeaders can now be seen by enemies on radar!"), "")
 
     MSG_CENTER_NOTIF(MISSING_TEAMS,                     N_ENABLE,    0, 1, "missing_teams",  CPID_MISSING_TEAMS,     "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "")
     MSG_CENTER_NOTIF(MISSING_PLAYERS,                   N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "-1 0", _("^BGWaiting for %s player(s) to join..."), "")
