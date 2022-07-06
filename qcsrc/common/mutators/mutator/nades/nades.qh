@@ -66,12 +66,12 @@ float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
 float autocvar_g_nades_emerald_lifetime = 5; //LegendGuard adds new nade cvars 28-02-2021
 bool autocvar_g_nades_emerald_randomweapons_includespecial = false;
+bool autocvar_g_nades_emerald_items_includespecial = false;
 float autocvar_g_nades_emerald_spawncount = 1;
 float autocvar_g_nades_emerald_ball_spread = 0.5;
 float autocvar_g_nades_emerald_ball_lifetime = 1; //if much time, many items will spawn
 float autocvar_g_nades_emerald_fountain_delay = 5;
 float autocvar_g_nades_emerald_fountain_lifetime = 1; //if much time, fountain will remain
-bool autocvar_g_nades_emerald_powerupjetpack_randomdrop = 0;
 float autocvar_g_nades_ammo_time = 5; //LegendGuard adds new nade cvars 13-02-2021
 float autocvar_g_nades_ammo_rate = 30;
 float autocvar_g_nades_ammo_friend = 1;
@@ -247,10 +247,11 @@ bool darkblink;
 
 REGISTER_MUTATOR(cl_darkblink, true);
 
-MUTATOR_HOOKFUNCTION(cl_darkblink, DrawScoreboard)
+// TODO: Shouldn't draw in scoreboard HUD?
+/*MUTATOR_HOOKFUNCTION(cl_darkblink, DrawScoreboard)
 {
 	return darkblink;
-}
+}*/
 
 MUTATOR_HOOKFUNCTION(cl_darkblink, HUD_Draw_overlay)
 {
