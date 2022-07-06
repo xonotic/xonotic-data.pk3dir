@@ -220,7 +220,7 @@ void HUD_DarkBlinking()
 	drawfill function parameters (qcsrc/dpdefs/menudefs.qc):
 	float drawfill(vector position, vector size, vector rgb, float alpha, float flag)
 	*/
-	drawfill('0 0 0', bottomright, '0.23 0 0.23', 0.98, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', bottomright, '0.23 0 0.23', 0.986, DRAWFLAG_NORMAL);
 }
 
 #elif defined(SVQC)
@@ -246,12 +246,6 @@ void DarkBlinking(entity e)
 bool darkblink;
 
 REGISTER_MUTATOR(cl_darkblink, true);
-
-// TODO: Shouldn't draw in scoreboard HUD?
-/*MUTATOR_HOOKFUNCTION(cl_darkblink, DrawScoreboard)
-{
-	return darkblink;
-}*/
 
 MUTATOR_HOOKFUNCTION(cl_darkblink, HUD_Draw_overlay)
 {
