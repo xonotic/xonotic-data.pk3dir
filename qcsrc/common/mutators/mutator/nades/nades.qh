@@ -64,22 +64,22 @@ float autocvar_g_nades_entrap_radius = 500;
 float autocvar_g_nades_entrap_time = 10;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
-float autocvar_g_nades_emerald_lifetime = 5; //LegendGuard adds new nade cvars 28-02-2021
-bool autocvar_g_nades_emerald_randomweapons_includespecial = false;
-bool autocvar_g_nades_emerald_items_includespecial = false;
-float autocvar_g_nades_emerald_spawncount = 1;
-float autocvar_g_nades_emerald_ball_spread = 0.5;
-float autocvar_g_nades_emerald_ball_lifetime = 1; //if much time, many items will spawn
-float autocvar_g_nades_emerald_fountain_delay = 5;
-float autocvar_g_nades_emerald_fountain_lifetime = 1; //if much time, fountain will remain
-float autocvar_g_nades_ammo_time = 5; //LegendGuard adds new nade cvars 13-02-2021
-float autocvar_g_nades_ammo_rate = 30;
-float autocvar_g_nades_ammo_friend = 1;
-float autocvar_g_nades_ammo_foe = -2;
-float autocvar_g_nades_dark_damage = 25; //LegendGuard adds new nade cvars 08-02-2021
-float autocvar_g_nades_dark_time = 13;
-float autocvar_g_nades_dark_radius = 700;
-string autocvar_g_nades_pokenade_monster_type;
+float autocvar_g_nades_tandem_item_lifetime; //LegendGuard adds new nade cvars 28-02-2021
+bool autocvar_g_nades_tandem_randomweapon_includespecial = false;
+bool autocvar_g_nades_tandem_item_includespecial;
+float autocvar_g_nades_tandem_ball_item_spawncount = 1;
+float autocvar_g_nades_tandem_ball_spread;
+float autocvar_g_nades_tandem_ball_lifetime = 1; //if much time, ball will stay longer
+float autocvar_g_nades_tandem_fountain_delay = 5;
+float autocvar_g_nades_tandem_fountain_lifetime;
+float autocvar_g_nades_ammo_time; //LegendGuard adds new nade cvars 13-02-2021
+float autocvar_g_nades_ammo_rate;
+float autocvar_g_nades_ammo_friend;
+float autocvar_g_nades_ammo_foe;
+float autocvar_g_nades_dark_damage; //LegendGuard adds new nade cvars 08-02-2021
+float autocvar_g_nades_dark_time;
+float autocvar_g_nades_dark_radius;
+string autocvar_g_nades_pokenade_type;
 int autocvar_g_nades_tandemnade_type; //LegendGuard adds new nade cvar for emerald nade options 01-07-2021
 float autocvar_g_nades_pokenade_monster_lifetime;
 #endif
@@ -96,8 +96,8 @@ const int PROJECTILE_NADE_TRANSLOCATE = 78;
 const int PROJECTILE_NADE_SPAWN = 79;
 const int PROJECTILE_NADE_HEAL = 80;
 const int PROJECTILE_NADE_HEAL_BURN = 81;
-const int PROJECTILE_NADE_MONSTER = 82;
-const int PROJECTILE_NADE_MONSTER_BURN = 83;
+const int PROJECTILE_NADE_TANDEM = 82;
+const int PROJECTILE_NADE_TANDEM_BURN = 83;
 const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 const int PROJECTILE_NADE_VEIL = 86;

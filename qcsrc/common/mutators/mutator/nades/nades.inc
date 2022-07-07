@@ -63,13 +63,13 @@ REGISTER_NADE(HEAL) {
 #endif
 }
 
-REGISTER_NADE(MONSTER) {
-    this.m_color = '0.25 0.75 0';
-    this.m_name = _("Monster grenade");
-    this.m_icon = "nade_monster";
+REGISTER_NADE(TANDEM) {
+    this.m_color = '0.33 1 0.67';
+    this.m_name = _("Tandem grenade");
+    this.m_icon = "nade_tandem";
 #ifdef GAMEQC
-    NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, EFFECT_NADE_TRAIL_RED);
-    NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, EFFECT_NADE_TRAIL_BURN_RED);
+    NADE_PROJECTILE(0, PROJECTILE_NADE_TANDEM, EFFECT_NADE_TRAIL_GREEN);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_TANDEM_BURN, EFFECT_NADE_TRAIL_BURN_GREEN);
 #endif
 }
 
@@ -94,18 +94,6 @@ REGISTER_NADE(VEIL) {
 #endif
 }
 
-//LegendGuard writes Emerald nade code 01-03-2021
-REGISTER_NADE(EMERALD) {
-    this.m_color = '0.33 1 0.66';
-    this.m_name = _("Emerald grenade");
-    this.m_icon = "nade_emerald";
-#ifdef GAMEQC
-    NADE_PROJECTILE(0, PROJECTILE_NADE_EMERALD, EFFECT_NADE_TRAIL_GREEN);
-    NADE_PROJECTILE(1, PROJECTILE_NADE_EMERALD_BURN, EFFECT_NADE_TRAIL_BURN_GREEN);
-#endif
-}
-
-//LegendGuard writes Ammo nade code 13-02-2021
 REGISTER_NADE(AMMO) {
     this.m_color = '0.66 0.33 0';
     this.m_name = _("Ammo grenade");
@@ -116,13 +104,12 @@ REGISTER_NADE(AMMO) {
 #endif
 }
 
-//LegendGuard writes Dark nade code 08-02-2021
 REGISTER_NADE(DARK) {
     this.m_color = '0.23 0 0.23';
     this.m_name = _("Dark grenade");
     this.m_icon = "nade_dark";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_DARK, EFFECT_NADE_TRAIL_PURPLE);
-    NADE_PROJECTILE(1, PROJECTILE_NADE_DARK_BURN, EFFECT_Null);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_DARK_BURN, EFFECT_NADE_TRAIL_BURN_PURPLE);
 #endif
 }

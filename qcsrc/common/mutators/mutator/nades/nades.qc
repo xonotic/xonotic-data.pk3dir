@@ -187,9 +187,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
-//LegendGuard adds include for spawning vehicles 20-06-2021
 #include <common/vehicles/all.qh>
-//LegendGuard adds include for spawning turrets 22-06-2021
 #include <common/turrets/all.qh>
 
 .float nade_time_primed;
@@ -689,58 +687,7 @@ void nade_heal_boom(entity this)
 	settouch(orb, nade_heal_touch);
 	orb.colormod = '1 0 0';
 }
-
-void nade_monster_boom(entity this)
-{
-	if(!autocvar_g_monsters)
-		return;
-	entity e = spawn();
-	e.noalign = true; // don't drop to floor
-	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
-	if(!e)
-		return; // monster failed to be spawned
-
-	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
-		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
-	e.monster_skill = MONSTER_SKILL_INSANE;
-}
-
-void nade_veil_touch(entity this, entity toucher)
-{
-	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
-	{
-		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-
-		float tint_alpha = 0.75;
-		if(SAME_TEAM(toucher, this.realowner))
-		{
-			tint_alpha = 0.45;
-			if(!STAT(VEIL_ORB, show_tint))
-			{
-				toucher.nade_veil_prevalpha = toucher.alpha;
-				toucher.alpha = -1;
-			}
-		}
-		STAT(VEIL_ORB, show_tint) = time + 0.1;
-		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
-	}
-}
-
-void nade_veil_boom(entity this)
-{
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius);
-
-	settouch(orb, nade_veil_touch);
-	orb.colormod = NADE_TYPE_VEIL.m_color;
-}
-/**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
-// All nade icons are in these directories, samples: gfx/hud/default/nade_emerald.tga and gfx/hud/luma/nade_emerald.tga 02-03-2021
-// Mario suggests to rename itemdrop nade name to "emerald" nade 02-03-2021
-
-//LegendGuard adds weapon item spawn option for emerald nade 25-05-2021
-
-//LegendGuard adds random weapon item spawn function for emerald nade 25-05-2021
-void nade_emerald_randomweapon(entity e, vector org)
+void nade_tandem_randomweapon(entity e, vector org)
 {
 	RandomSelection_Init();
 	FOREACH(Weapons, 
@@ -749,7 +696,7 @@ void nade_emerald_randomweapon(entity e, vector org)
 			|| (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) 
 			|| (it.spawnflags & WEP_FLAG_SPECIALATTACK) 
 			|| (it.spawnflags & WEP_FLAG_SUPERWEAPON))
-			|| autocvar_g_nades_emerald_randomweapons_includespecial),
+			|| autocvar_g_nades_tandem_randomweapon_includespecial),
 	{
 		if((it.spawnflags & WEP_FLAG_HIDDEN)
 			&& (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
@@ -772,11 +719,7 @@ void nade_emerald_randomweapon(entity e, vector org)
 	weapon_defaultspawnfunc(e, RandomSelection_chosen_ent);
 }
 
-//LegendGuard adds vehicle spawn option for emerald nade 20-06-2021
-
-//LegendGuard adds turret spawn option for emerald nade 22-06-2021
-
-entity nade_emerald_randomitem()
+entity nade_tandem_randomitem()
 {
 	RandomSelection_Init();
 	FOREACH(Items, 
@@ -788,7 +731,7 @@ entity nade_emerald_randomitem()
 			&& !(it.m_itemid & IT_INVINCIBLE)
 			&& !(it.m_itemid & IT_INVISIBILITY)
 			&& !(it.m_itemid & IT_SPEED)
-			|| autocvar_g_nades_emerald_items_includespecial),
+			|| autocvar_g_nades_tandem_item_includespecial),
 	{
 		if(it.m_canonical_spawnfunc == "item_armor_mega" 
 		|| it.m_canonical_spawnfunc == "item_health_mega" 
@@ -805,7 +748,7 @@ entity nade_emerald_randomitem()
 	return RandomSelection_chosen_ent;
 }
 
-void nade_emerald_spawnitem(entity e, vector org)
+void nade_tandem_spawnitem(entity e, vector org)
 {
 	entity itm;
 
@@ -823,12 +766,12 @@ void nade_emerald_spawnitem(entity e, vector org)
 		}
 		case "jetpack" : 
 		{ 
-			itm = (!autocvar_g_nades_emerald_items_includespecial) ? 
+			itm = (!autocvar_g_nades_tandem_item_includespecial) ? 
 			ITEM_JetpackFuel : (random() < 0.5) ? 
 			ITEM_JetpackFuel : ITEM_Jetpack; 
 			break; 
 		}
-		default: { itm = nade_emerald_randomitem(); break; }
+		default: { itm = nade_tandem_randomitem(); break; }
 	}
 
 	if((IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS)) 
@@ -847,10 +790,10 @@ void nade_emerald_spawnitem(entity e, vector org)
 	setorigin(e, org);
 	e.velocity = randomvec() * 175 + '0 0 325';
 	e.item_spawnshieldtime = time + 0.7;
-	SUB_SetFade(e, time + autocvar_g_nades_emerald_lifetime, 1);
+	SUB_SetFade(e, time + autocvar_g_nades_tandem_item_lifetime, 1);
 }
 
-void nade_emerald_dropping(entity this, vector org)
+void nade_tandem_dropping(entity this, vector org)
 {
 	entity e = spawn();
 	e.spawnfunc_checked = true;
@@ -860,18 +803,18 @@ void nade_emerald_dropping(entity this, vector org)
 	{
 		switch (this.pokenade_type)
 		{
-			case "weapon" 	: { nade_emerald_randomweapon(e, org); return; }
+			case "weapon" 	: { nade_tandem_randomweapon(e, org); return; }
 			case "health"	: 
 			case "armor"	: 
 			case "ammo"		: 
 			case "jetpack"	: 
-			default			: { nade_emerald_spawnitem(e, org); return; }
+			default			: { nade_tandem_spawnitem(e, org); return; }
 		}
 	}
 	else print_to(this, "Items can't be spawned on CA and Instagib");
 }
 
-void emerald_ball_think(entity this)
+void tandem_ball_think(entity this)
 {
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -897,16 +840,16 @@ void emerald_ball_think(entity this)
 
 	this.angles = vectoangles(this.velocity);
 
-	if (this.nade_item_spawncount < autocvar_g_nades_emerald_spawncount)
+	if (this.nade_item_spawncount < autocvar_g_nades_tandem_ball_item_spawncount)
 	{
 		this.nade_item_spawncount++;
-		nade_emerald_dropping(this, this.origin);
+		nade_tandem_dropping(this, this.origin);
 	}
 
 	this.nextthink = time + 0.1;
 }
 
-void nade_emerald_ball(entity this)
+void nade_tandem_ball(entity this)
 {
 	entity proj;
 	vector kick;
@@ -921,16 +864,16 @@ void nade_emerald_ball(entity this)
 	proj.scale = 1; //0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, this.origin);
-	setthink(proj, emerald_ball_think);
+	setthink(proj, tandem_ball_think);
 	proj.nextthink = time;
 	proj.effects = EF_LOWPRECISION;
 
-	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
-	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_emerald_ball_spread;
-	kick.z = (random() / 2 + 0.5) * autocvar_g_nades_emerald_ball_spread;
+	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_tandem_ball_spread;
+	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_tandem_ball_spread;
+	kick.z = (random() / 2 + 0.5) * autocvar_g_nades_tandem_ball_spread;
 	proj.velocity = kick;
 
-	proj.pushltime = time + autocvar_g_nades_emerald_ball_lifetime;
+	proj.pushltime = time + autocvar_g_nades_tandem_ball_lifetime;
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
@@ -939,7 +882,7 @@ void nade_emerald_ball(entity this)
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 }
 
-void emerald_fountain_think(entity this)
+void tandem_fountain_think(entity this)
 {
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -971,15 +914,15 @@ void emerald_fountain_think(entity this)
 	this.nextthink = time + 0.1;
 	if(time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + autocvar_g_nades_emerald_fountain_delay;
-		nade_emerald_ball(this);
+		this.nade_special_time = time + autocvar_g_nades_tandem_fountain_delay;
+		nade_tandem_ball(this);
 		Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
 	}
 }
 
-void emerald_item_fountain_explode(entity this)
+void tandem_item_fountain_explode(entity this)
 {
-	entity fountain = new(nade_emerald_fountain);
+	entity fountain = new(nade_tandem_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
@@ -988,9 +931,9 @@ void emerald_item_fountain_explode(entity this)
 	IL_PUSH(g_projectiles, fountain);
 	IL_PUSH(g_bot_dodge, fountain);
 	setorigin(fountain, fountain.origin);
-	setthink(fountain, emerald_fountain_think);
+	setthink(fountain, tandem_fountain_think);
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_emerald_fountain_lifetime;
+	fountain.ltime = time + autocvar_g_nades_tandem_fountain_lifetime;
 	fountain.pushltime = fountain.ltime;
 	fountain.team = this.team;
 	
@@ -1011,10 +954,10 @@ void emerald_item_fountain_explode(entity this)
 	fountain.bot_dodge = true;
 	fountain.nade_special_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
-	CSQCProjectile(fountain, true, PROJECTILE_NADE_EMERALD_BURN, true);
+	CSQCProjectile(fountain, true, PROJECTILE_NADE_TANDEM_BURN, true);
 }
 
-void nade_emerald_boom(entity this)
+void nade_tandem_boom(entity this)
 {
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
@@ -1026,7 +969,7 @@ void nade_emerald_boom(entity this)
 	{
 		case 1:
 		{
-			emerald_item_fountain_explode(this);
+			tandem_item_fountain_explode(this);
 			return;
 		}
 		case 2:
@@ -1081,7 +1024,17 @@ void nade_emerald_boom(entity this)
 			if(!autocvar_g_monsters)
 				return;
 
-			e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
+			e = spawnmonster(
+				e, 
+				this.pokenade_type, 
+				MON_Null, 
+				this.realowner, 
+				this.realowner, 
+				this.origin, 
+				false, 
+				false, 
+				1
+			);
 
 			if(!e)
 				return; // monster failed to be spawned
@@ -1093,7 +1046,46 @@ void nade_emerald_boom(entity this)
 	}
 }
 
-/***********************************************************************************/
+void nade_veil_touch(entity this, entity toucher)
+{
+	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
+	{
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+
+		float tint_alpha = 0.75;
+		if(SAME_TEAM(toucher, this.realowner))
+		{
+			tint_alpha = 0.45;
+			if(!STAT(VEIL_ORB, show_tint))
+			{
+				toucher.nade_veil_prevalpha = toucher.alpha;
+				toucher.alpha = -1;
+			}
+		}
+		STAT(VEIL_ORB, show_tint) = time + 0.1;
+		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_veil_boom(entity this)
+{
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius);
+
+	settouch(orb, nade_veil_touch);
+	orb.colormod = NADE_TYPE_VEIL.m_color;
+}
+/**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
+// All nade icons are in these directories, samples: gfx/hud/default/nade_emerald.tga and gfx/hud/luma/nade_emerald.tga 02-03-2021
+// Mario suggests to rename itemdrop nade name to "emerald" (funny suggestion lol) nade 02-03-2021
+
+//LegendGuard adds weapon item spawn option for tandem nade 25-05-2021
+
+//LegendGuard adds random weapon item spawn function for tandem nade 25-05-2021
+
+//LegendGuard adds vehicle spawn option for tandem nade 20-06-2021
+
+//LegendGuard adds turret spawn option for tandem nade 22-06-2021
+
 //LegendGuard develops ammo nade 13-02-2021
 void nade_ammo_touch(entity this, entity toucher)
 {
@@ -1319,8 +1311,18 @@ void nade_boom(entity this)
 		case NADE_TYPE_TRANSLOCATE:
 			nade_blast = false;
 			break;
-		case NADE_TYPE_MONSTER:
+		case NADE_TYPE_TANDEM:
 			if(!autocvar_g_monsters)
+			{
+				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
+				break; // fall back to a standard nade explosion
+			}
+			if(!autocvar_g_vehicles)
+			{
+				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
+				break; // fall back to a standard nade explosion
+			}
+			if(!autocvar_g_turrets)
 			{
 				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
 				break; // fall back to a standard nade explosion
@@ -1349,11 +1351,6 @@ void nade_boom(entity this)
 		case NADE_TYPE_VEIL:
 			nade_blast = false;
 			expef = EFFECT_SPAWN_NEUTRAL;
-			break;
-		
-		case NADE_TYPE_EMERALD: //LegendGuard adds nade case 11-02-2021
-			nade_blast = false;
-			expef = EFFECT_EXPLOSION_SMALL;
 			break;
 
 		case NADE_TYPE_AMMO: //LegendGuard adds nade case 13-02-2021
@@ -1395,10 +1392,9 @@ void nade_boom(entity this)
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(this); break;
 		case NADE_TYPE_SPAWN: nade_spawn_boom(this); break;
 		case NADE_TYPE_HEAL: nade_heal_boom(this); break;
-		case NADE_TYPE_MONSTER: nade_monster_boom(this); break;
+		case NADE_TYPE_TANDEM: nade_tandem_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
-		case NADE_TYPE_EMERALD: nade_emerald_boom(this); break; //LegendGuard adds the register of new nade 11-02-2021
 		case NADE_TYPE_AMMO: nade_ammo_boom(this); break; //LegendGuard adds the register of new nade 13-02-2021
 		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
 	}
@@ -1777,7 +1773,7 @@ void nade_prime(entity this)
 	else
 	{
 		ntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_type);
 		tntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_tandemnade_type : autocvar_g_nades_tandemnade_type);
 	}
 
@@ -1946,7 +1942,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			else
 			{
 				STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
-				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
+				player.pokenade_type = autocvar_g_nades_pokenade_type;
 				player.tandemnade_type = autocvar_g_nades_tandemnade_type;
 			}
 
