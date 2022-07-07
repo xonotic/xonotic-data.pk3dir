@@ -292,6 +292,9 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	}
 }
 
+int last_forfeiter_lives;
+float last_forfeiter_health;
+float last_forfeiter_armorvalue;
 MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -306,6 +309,11 @@ MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 		int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
 		float min_health = start_health;
 		float min_armorvalue = start_armorvalue;
+		if (last_forfeiter_lives == pl_lives)
+		{
+			min_health = last_forfeiter_health;
+			min_armorvalue = last_forfeiter_armorvalue;
+		}
 		FOREACH_CLIENT(it != player && IS_PLAYER(it) && !IS_DEAD(it) && GameRules_scoring_add(it, LMS_LIVES, 0) == pl_lives, {
 			if (GetResource(it, RES_HEALTH) < min_health)
 				min_health = GetResource(it, RES_HEALTH);
@@ -357,7 +365,22 @@ void lms_RemovePlayer(entity player)
 			int rank = GameRules_scoring_add(player, LMS_RANK, 0);
 			GameRules_scoring_add(player, LMS_RANK, -rank);
 			if(!warmup_stage)
-				GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
+			{
+				int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+				if (!last_forfeiter_lives || pl_lives < last_forfeiter_lives)
+				{
+					last_forfeiter_lives = pl_lives;
+					last_forfeiter_health = GetResource(player, RES_HEALTH);
+					last_forfeiter_armorvalue = GetResource(player, RES_ARMOR);
+				}
+				else if (pl_lives == last_forfeiter_lives)
+				{
+					// these values actually can belong to a different forfeiter
+					last_forfeiter_health = min(last_forfeiter_health, GetResource(player, RES_HEALTH));
+					last_forfeiter_armorvalue = min(last_forfeiter_armorvalue, GetResource(player, RES_ARMOR));
+				}
+				GameRules_scoring_add(player, LMS_LIVES, -pl_lives);
+			}
 			player.frags = FRAGS_SPECTATOR;
 			TRANSMUTE(Observer, player);
 			INGAME_STATUS_CLEAR(player);
