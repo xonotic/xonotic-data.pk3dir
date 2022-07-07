@@ -41,7 +41,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
 #endif
 
 #ifdef CSQC
-REGISTER_MUTATOR(cl_nades, true);
+REGISTER_MUTATOR(cl_nades, true); // TODO: Remove this MUTATOR_HOOKFUNCTION after merging Mario/nade_orb_overlay into master branch
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	// TODO: make a common orb state!
@@ -811,9 +811,9 @@ void nade_emerald_spawnitem(entity e, vector org)
 
 	switch (e.pokenade_type)
 	{
-		case "health"	: { itm = ITEM_HealthSmall; break; }
-		case "armor"	: { itm = ITEM_ArmorSmall; break; }
-		case "ammo"		: 
+		case "health": { itm = ITEM_HealthSmall; break; }
+		case "armor" : { itm = ITEM_ArmorSmall; break; }
+		case "ammo"	 : 
 		{
 			itm = (random() > 0.5) ? 
 			ITEM_Shells  : (random() > 0.5) ? 
@@ -821,14 +821,14 @@ void nade_emerald_spawnitem(entity e, vector org)
 			ITEM_Rockets : ITEM_Plasma;
 			break;
 		}
-		case "jetpack"	: 
+		case "jetpack" : 
 		{ 
 			itm = (!autocvar_g_nades_emerald_items_includespecial) ? 
 			ITEM_JetpackFuel : (random() < 0.5) ? 
 			ITEM_JetpackFuel : ITEM_Jetpack; 
 			break; 
 		}
-		default			: { itm = nade_emerald_randomitem(); break; }
+		default: { itm = nade_emerald_randomitem(); break; }
 	}
 
 	if((IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS)) 
@@ -1160,9 +1160,11 @@ void nade_ammo_touch(entity this, entity toucher)
 
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_brown = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(AMMUNITIONING_ORB, show_brown) = time+0.1;
-		STAT(AMMUNITIONING_ORB_ALPHA, show_brown) = 0.75 * (this.ltime - time) / this.orb_lifetime;
+		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+		// TODO: remove STAT and use the following line after merging Mario/nade_orb_overlay into master branch:
+		// show_tint.nade_ammo_time = time + 0.1;
+		STAT(AMMUNITIONING_ORB, show_tint) = time + 0.1;
+		STAT(AMMUNITIONING_ORB_ALPHA, show_tint) = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
 }
 
@@ -1245,6 +1247,8 @@ void nade_dark_touch(entity this, entity toucher)
 		if(SAME_TEAM(toucher, this.realowner) || SAME_TEAM(toucher, this))
 		{
 			tint_alpha = 0.45;
+			// TODO: remove if(!STAT... line and use the following line after merging Mario/nade_orb_overlay into master branch:
+			// if(!show_tint.nade_dark_time)
 			if(!STAT(DARK_ORB, show_tint))
 			{
 				toucher.nade_dark_prevalpha = toucher.alpha;
@@ -1254,6 +1258,8 @@ void nade_dark_touch(entity this, entity toucher)
 		else
 		{
 			tint_alpha = 0.45;
+			// TODO: remove if(!STAT... line and use the following line after merging Mario/nade_orb_overlay into master branch:
+			// if(!show_tint.nade_dark_time)
 			if(!STAT(DARK_ORB, show_tint))
 			{
 				DarkBlinking(toucher);
@@ -1261,6 +1267,8 @@ void nade_dark_touch(entity this, entity toucher)
 			}
 		}
 
+		// TODO: remove these 2 lines and use the following line after merging Mario/nade_orb_overlay into master branch:
+		// show_tint.nade_dark_time = time + 0.1;
 		STAT(DARK_ORB, show_tint) = time + 0.1;
 		STAT(DARK_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -1961,8 +1969,12 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 				player.alpha = player.nade_veil_prevalpha;
 		}
 		//LegendGuard adds nade if STAT DARK_ORB 08-02-2021
+		// TODO: remove these 2 lines and use the following line after merging Mario/nade_orb_overlay into master branch:
+		// if(player.nade_dark_time && player.nade_dark_time <= time)
 		if(STAT(DARK_ORB, player) && STAT(DARK_ORB, player) <= time)
 		{
+			// TODO: remove STAT declaration line and use the following line after merging Mario/nade_orb_overlay into master branch:
+			// player.nade_dark_time = 0;
 			STAT(DARK_ORB, player) = 0;
 			if(player.vehicle)
 				player.vehicle.alpha = player.vehicle.nade_dark_prevalpha;
@@ -2055,9 +2067,13 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 		STAT(VEIL_ORB, mon) = 0;
 	}
 	//LegendGuard adds nade if STAT ORB 08-02-2021
+	// TODO: remove this line and use the following line after merging Mario/nade_orb_overlay into master branch:
+	// if (mon.nade_dark_time && mon.nade_dark_time <= time)
 	if (STAT(DARK_ORB, mon) && STAT(DARK_ORB, mon) <= time)
 	{
 		mon.alpha = mon.nade_dark_prevalpha;
+		// TODO: remove this line and use the following line after merging Mario/nade_orb_overlay into master branch:
+		// mon.nade_dark_time = 0;
 		STAT(DARK_ORB, mon) = 0;
 	}
 }
@@ -2198,6 +2214,7 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
+	// TODO: remove STATs after merging Mario/nade_orb_overlay into master branch:
 	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee); //LegendGuard adds nade STAT client 13-02-2021
 	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
 	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021

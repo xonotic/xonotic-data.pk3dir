@@ -138,6 +138,7 @@ REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
 REGISTER_STAT(VEIL_ORB, float)
 REGISTER_STAT(VEIL_ORB_ALPHA, float)
+// TODO: remove the following STATs after merging Mario/nade_orb_overlay into master branch:
 REGISTER_STAT(AMMUNITIONING_ORB, float) //LegendGuard registers new STAT 11-02-2021
 REGISTER_STAT(AMMUNITIONING_ORB_ALPHA, float)
 REGISTER_STAT(DARK_ORB, float) //LegendGuard registers new STAT 08-02-2021

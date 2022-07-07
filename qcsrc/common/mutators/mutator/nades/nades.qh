@@ -173,6 +173,9 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable
 .int nade_item_spawncount;
 .float nade_show_particles;
 .float nade_veil_prevalpha;
+// TODO: use these .variables after merging Mario/nade_orb_overlay into master branch
+.float nade_ammo_time;
+.float nade_dark_time;
 .float nade_dark_prevalpha; //LegendGuard adds new nade .variable 08-02-2021
 
 bool orb_send(entity this, entity to, int sf);
