@@ -402,7 +402,7 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 	}
 	else
 	{
-		if (is_forced)
+		if (is_forced || player.killindicator_teamchange == -2) // player is forced or wants to spectate
 			player.lms_spectate = true;
 		if (!GameRules_scoring_add(player, LMS_RANK, 0))
 			lms_RemovePlayer(player);
@@ -686,10 +686,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 	if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
-	{
-		player.lms_spectate = true;
 		return MUT_SPECCMD_CONTINUE;
-	}
 	// ranked players (out of game) can no longer become real spectators
 	return MUT_SPECCMD_RETURN;
 }
