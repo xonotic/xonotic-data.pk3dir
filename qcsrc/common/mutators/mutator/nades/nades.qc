@@ -992,7 +992,9 @@ void nade_tandem_boom(entity this)
 
 			if(!e)
 				return; // vehicle failed to be spawned
-			
+
+			if(autocvar_g_nades_pokenade_vehicle_lifetime > 0)
+				e.vehicle_lifetime = time + autocvar_g_nades_pokenade_vehicle_lifetime;
 			return;
 		}
 		case 3:
@@ -1017,6 +1019,8 @@ void nade_tandem_boom(entity this)
 			if(!e)
 				return; // turret failed to be spawned
 			
+			if(autocvar_g_nades_pokenade_turret_lifetime > 0)
+				e.turret_lifetime = time + autocvar_g_nades_pokenade_turret_lifetime;
 			return;
 		}
 		default:

@@ -978,6 +978,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.owner)
 		return; // got here and didn't enter the gunner, return
 
+
 	if(!teamplay)
 	if(!veh.realowner)
 	if(veh.realowner != pl && autocvar_g_vehicles_steal)
@@ -1110,6 +1111,22 @@ void vehicles_enter(entity pl, entity veh)
 
 void vehicles_think(entity this)
 {
+	if(this.summoned && this.vehicle_lifetime != 0)
+	if(time >= this.vehicle_lifetime)
+	{
+		Send_Effect(EFFECT_TELEPORT, this.origin + '0 0 100', '0 0 0', 1);
+
+		tmp_vehcount--;
+
+		// to avoid weird entity assignments to other stuff like projectiles
+		delete(this.vehicle_shieldent);
+		delete(this.vehicle_hudmodel);
+		delete(this.tur_head);
+		delete(this.vehicle);
+		delete(this);
+		return;
+	}
+
 	this.nextthink = time + autocvar_g_vehicles_thinkrate;
 
 	if(this.owner)

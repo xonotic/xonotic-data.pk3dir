@@ -1030,6 +1030,15 @@ void turret_fire(entity this)
 
 void turret_think(entity this)
 {
+	if(this.tur_spawned && this.turret_lifetime != 0)
+	if(time >= this.turret_lifetime)
+	{
+		tmp_vehcount--;
+
+		turret_die(this);
+		return;
+	}
+
 	this.nextthink = time + this.ticrate;
 
 	MUTATOR_CALLHOOK(TurretThink, this);
@@ -1128,7 +1137,7 @@ void turret_think(entity this)
 		// Check if we have a vailid enemy, and try to find one if we dont.
 
 		// Don't attack against owner
-		if (turret_select_target(this) == this.realowner) return;
+		if(turret_select_target(this) == this.realowner) return;
 
 		// g_turrets_targetscan_maxdelay forces a target re-scan at least this often
 		float do_target_scan = 0;
@@ -1152,7 +1161,7 @@ void turret_think(entity this)
 		{
 			this.enemy = turret_select_target(this);
 			// Don't attack against owner
-			if (this.enemy == this.realowner) return;
+			if(this.enemy == this.realowner) return;
 			this.target_select_time = time;
 		}
 

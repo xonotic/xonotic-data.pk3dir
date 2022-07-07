@@ -39,6 +39,7 @@ TR_PROPS_COMMON(X, , )
 .float tur_dist_aimpos; // distance to aim location
 .float tur_dist_impact_to_aimpos; // distance impact<->aim
 .bool tur_spawned; // spawned turret using spawnturret
+.float turret_lifetime; // turret disappears instantly after this delay, set from spawn
 .float volly_counter; // decrement counter from .shot_volly to 0
 .float target_select_time; // last time turret had a valid target
 .float target_validate_time; // throttle re-validation of current target

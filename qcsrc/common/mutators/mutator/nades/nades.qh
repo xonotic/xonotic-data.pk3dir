@@ -82,6 +82,8 @@ float autocvar_g_nades_dark_radius;
 string autocvar_g_nades_pokenade_type;
 int autocvar_g_nades_tandemnade_type; //LegendGuard adds new nade cvar for emerald nade options 01-07-2021
 float autocvar_g_nades_pokenade_monster_lifetime;
+float autocvar_g_nades_pokenade_turret_lifetime;
+float autocvar_g_nades_pokenade_vehicle_lifetime;
 #endif
 
 // use slots 70-100

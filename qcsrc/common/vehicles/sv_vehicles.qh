@@ -88,6 +88,7 @@ const int MAX_AXH = 4;
 .bool	no_respawn_option;
 .bool	cannot_respawn;
 .bool	summoned;
+.float	vehicle_lifetime; // vehicle disappears instantly after this delay, set from spawn
 
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
