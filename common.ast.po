@@ -8,7 +8,7 @@
 # Ḷḷumex03, 2014
 # Ḷḷumex03, 2014
 # Ḷḷumex03, 2014-2015
-# Tornes Ḷḷume <tornes.llume@openmailbox.org>, 2015-2017,2020-2021
+# Tornes Ḷḷume <tornes.llume@openmailbox.org>, 2015-2017,2020-2022
 # Ximielga <dorian@openmailbox.org>, 2014
 msgid ""
 msgstr ""
@@ -16,7 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ximielga <dorian@openmailbox.org>, 2014\n"
+"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>, "
+"2015-2017,2020-2022\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -28,12 +29,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2¡Esportóse con ésitu a %s! (Nota: Guardóse en data/data/)"
+msgstr "^2¡Esportóse correutamente a %s! (Nota: guardóse en data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr "^1Nun pudo escribise en %s"
+msgstr "^1Nun se pudo escribir en %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
@@ -537,11 +538,11 @@ msgstr "puntu de control saltáu"
 
 #: qcsrc/client/hud/panel/radar.qc:349
 msgid "Click to select teleport destination"
-msgstr "Calca pa esbillar el destín del teletresporte"
+msgstr "Calca pa seleicionar el destín del teletresporte"
 
 #: qcsrc/client/hud/panel/radar.qc:353
 msgid "Click to select spawn location"
-msgstr "Calca pa esbillar l'allugamientu d'aprucida"
+msgstr "Calca pa seleicionar el llugar d'aprucida"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of ball carrier kills"
@@ -1066,12 +1067,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "Tiempu adicional"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Tiempu adicional #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1189,11 +1190,11 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1365
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "La versión del veceru ta ensin anovar."
 
 #: qcsrc/client/main.qc:1366
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### NUN YES A XUGAR NESTI SIRVIDOR ###"
 
 #: qcsrc/client/main.qc:1367
 msgid "Please update!"
@@ -1201,21 +1202,21 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1370
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Esti sirvidor usa una versión de Xonotic ensin anovar."
 
 #: qcsrc/client/main.qc:1371
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### ESTI SIRVIDOR YE INCOMPATIBLE Y NUN TE PUES XUNIR ###"
 
 #: qcsrc/client/main.qc:1373
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Afáyate en %s"
 
 #: qcsrc/client/main.qc:1388 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Nivel %d:"
 
 #: qcsrc/client/main.qc:1390
 #, c-format
@@ -1337,7 +1338,7 @@ msgstr "Llende d'asesinatos"
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "El númberu d'asesinatos precisos p'acabar la partida"
+msgstr "El númberu d'asesinatos necesarios p'acabar la partida"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1361,7 +1362,7 @@ msgstr "Llende de captures"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "El númberu de captures precises p'acabar la partida"
+msgstr "El númberu de captures necesaries p'acabar la partida"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1396,7 +1397,7 @@ msgstr "Dominación"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "El puntos de goles precisos p'acabar la partida"
+msgstr "El puntos de goles necesarios p'acabar la partida"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1473,7 +1474,7 @@ msgstr "Goles:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "El númberu de goles precisos p'acabar la partida"
+msgstr "El númberu de goles necesarios p'acabar la partida"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1747,12 +1748,13 @@ msgstr "Xuegu del molín"
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
-msgstr "Pues esbillar una de les tos pieces pa movela a un llugar d'alredor"
+msgstr "Pues seleicionar una de les tos pieces pa movela a un llugar d'alredor"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
-"Pues esbillar una de les tos pieces pa movela a cualesquier parte del tableru"
+"Pues seleicionar una de les tos pieces pa movela a cualesquier parte del "
+"tableru"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can take one of the opponent's pieces"
@@ -1791,14 +1793,14 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "¡Esbilla \"^1Partida siguiente^7\" pa pidir la revancha!"
+msgstr "¡Seleiciona \"^1Partida siguiente^7\" pa pidir la revancha!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/pp.qc:463
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 #: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr "¡Esbilla \"^1Partida siguiente^7\" p'aniciar una partida nueva!"
+msgstr "¡Seleiciona \"^1Partida siguiente^7\" p'aniciar una partida nueva!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:464
 #: qcsrc/common/minigames/minigame/ttt.qc:347
@@ -3538,7 +3540,7 @@ msgstr "^BG%s%s^K1 morrió pol lloviu de bales del rifle de ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
-"^BG%s%s^K1 nun pudo abellugase del lloviu de bales del rifle de ^BG%s^K1%s%s"
+"^BG%s%s^K1 nun pudo escondese del lloviu de bales del rifle de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
@@ -5773,7 +5775,7 @@ msgstr "Música y efeutos de soníu"
 
 #: qcsrc/menu/xonotic/credits.qc:98
 msgid "Game Code"
-msgstr ""
+msgstr "Códigu del xuegu"
 
 #: qcsrc/menu/xonotic/credits.qc:114
 msgid "Marketing / PR"
@@ -5889,7 +5891,7 @@ msgstr "Portugués"
 
 #: qcsrc/menu/xonotic/credits.qc:314
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Portugués (Brasil)"
 
 #: qcsrc/menu/xonotic/credits.qc:320
 msgid "Romanian"
@@ -5917,7 +5919,7 @@ msgstr "Suecu"
 
 #: qcsrc/menu/xonotic/credits.qc:376
 msgid "Turkish"
-msgstr ""
+msgstr "Turcu"
 
 #: qcsrc/menu/xonotic/credits.qc:385
 msgid "Ukrainian"
@@ -5974,8 +5976,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Afáyate en Xonotic. Esbilla la to llingua ya introduz un nome de xugador pa "
-"entamar. Pues camudar estos axustes dempués, na configuración del xuegu."
+"Afáyate en Xonotic. Seleiciona la to llingua ya introduz un nome de xugador "
+"pa entamar. Pues camudar estos axustes dempués, na configuración del xuegu."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -6032,7 +6034,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
-msgstr ""
+msgstr "Menú principal"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -6056,7 +6058,7 @@ msgstr "Controles"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr ""
+msgstr "Menú rápidu"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:104
@@ -6175,7 +6177,7 @@ msgstr "Panel pa charrar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
 msgid "Engine info:"
-msgstr ""
+msgstr "Información del motor:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
@@ -6610,7 +6612,7 @@ msgstr "Amosar el tiempu que trescurrió"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr ""
+msgstr "Temporizador secondariu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
@@ -7389,7 +7391,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Términos del serviciu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
@@ -7614,7 +7616,7 @@ msgstr "Permitir que les estadístiques te clasifiquen na tabla de líderes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
-msgstr "Esbillar una llingua..."
+msgstr "Seleicionar una llingua..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
@@ -7622,7 +7624,7 @@ msgstr "¿De xuru que quies colar?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr "Cola del xuegu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -8661,7 +8663,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
 msgstr ""
-"Amestar l'allugamientu de los asesinatos nos mensaxes de muerte si ye posible"
+"Amestar la llocalización de los asesinatos nos mensaxes de muerte si ye "
+"posible"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
@@ -9131,12 +9134,12 @@ msgstr "%d FPS"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d KiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d MiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Network"
@@ -9152,11 +9155,11 @@ msgstr "Amuesa un gráficu colos tamaños de los paquetes y otra información"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "Compensación de la perda de paquetes"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "Cada paquete inclúi una copia del mensaxe anterior"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
@@ -9164,7 +9167,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
-msgstr "Usa'l cifráu (AES) cuando tea disponible"
+msgstr "Usar el cifráu (AES) cuando tea disponible"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
@@ -9654,7 +9657,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr "Xunise al «meyor» equipu (esbilla automática)"
+msgstr "Xunise al «meyor» equipu (seleición automática)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
@@ -9687,19 +9690,19 @@ msgstr "Esbilla d'un equipu"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
-msgstr ""
+msgstr "Los términos del serviciu anováronse. Lléilos enantes de siguir:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "¡Afáyate en Xonotic! Llei los términos del serviciu que tán darréu:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
-msgstr ""
+msgstr "Aceptar"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Refugar (el xuegu zárrase)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -9835,7 +9838,7 @@ msgstr "Abrir la consola"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit"
-msgstr "Colar"
+msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
