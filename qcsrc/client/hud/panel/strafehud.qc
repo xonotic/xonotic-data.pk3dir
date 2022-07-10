@@ -22,18 +22,6 @@ void HUD_StrafeHUD_Export(int fh)
 
 float hidden_width;
 int direction;
-float demo_angle = -37;
-float demo_direction = 1;
-float demo_time = 0;
-bool state_onground = false;
-float state_onground_time = 0;
-bool state_strafekeys = false;
-float state_strafekeys_time = 0;
-bool turn = false;
-float turnangle;
-float turnspeed;
-float turnaccel;
-bool fwd = true;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -93,6 +81,20 @@ void HUD_StrafeHUD()
     // draw strafehud
     if(csqcplayer && strafeplayer)
     {
+        // presistent
+        static float demo_angle = -37;
+        static float demo_direction = 1;
+        static float demo_time = 0;
+        static bool state_onground = false;
+        static float state_onground_time = 0;
+        static bool state_strafekeys = false;
+        static float state_strafekeys_time = 0;
+        static bool turn = false;
+        static float turnangle;
+        static float turnspeed;
+        static float turnaccel;
+        static bool fwd = true;
+
         // physics
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         bool   strafekeys;
