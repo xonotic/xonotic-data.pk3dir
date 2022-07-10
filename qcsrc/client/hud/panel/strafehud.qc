@@ -860,23 +860,28 @@ void HUD_StrafeHUD()
         }
 
         // show height achieved by a single jump
+        // FIXME: checking z position differences is unreliable (warpzones, teleporter, kill, etc) but using velocity to calculate jump height would be
+        //        inaccurate in hud code (possibly different tick rate, doesn't run when hud isn't drawn, rounding errors)
         if(autocvar_hud_panel_strafehud_jumpheight_fade > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
         {
             static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
             static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
-            // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
-            if((strafeplayer.velocity.z <= 0 && height_max >= strafeplayer.origin.z) || onground || swimming || IS_DEAD(strafeplayer) || spectating)
+            // tries to catch kill and spectate but those are not reliable
+            if((strafeplayer.velocity.z <= 0) || onground || swimming || IS_DEAD(strafeplayer) || spectating)
             {
                 height_min = height_max = strafeplayer.origin.z;
             }
             else if(strafeplayer.origin.z > height_max)
             {
                 height_max = strafeplayer.origin.z;
-                jumpheight = (height_max - height_min) * length_conversion_factor;
+                float jumpheight_new = (height_max - height_min) * length_conversion_factor;
 
-                if(jumpheight > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
+                if(jumpheight_new > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
+                {
+                    jumpheight = jumpheight_new;
                     jumptime = time;
+                }
             }
 
             if((time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade)
