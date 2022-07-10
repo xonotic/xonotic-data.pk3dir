@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-03 07:22+0200\n"
+"POT-Creation-Date: 2022-07-10 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
@@ -63,8 +63,8 @@ msgstr "時刻 %s でメッセージ"
 msgid "Generic message"
 msgstr "一般的なメッセージ"
 
-#: qcsrc/client/hud/panel/centerprint.qc:295
-#: qcsrc/client/hud/panel/centerprint.qc:305
+#: qcsrc/client/hud/panel/centerprint.qc:293
+#: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
 msgstr "対"
 
@@ -1464,15 +1464,15 @@ msgstr "鍵の狩猟 (KEYHUNT)"
 msgid "^1You have no more lives left"
 msgstr "^1命を使い果たです"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:8
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
 msgstr "ラストマンスタンディング (LMS)"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:8
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
 msgstr "敵の命がなくなるまで生き残って、殺して"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:17
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
 msgstr "命数:"
 
@@ -2216,9 +2216,9 @@ msgstr "ここに旗を返して"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:36
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:54
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:56
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Control point"
 msgstr "コントロールポイント"
 
@@ -2239,7 +2239,7 @@ msgid "Run here"
 msgstr "ここに走って"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Ball"
 msgstr "ボール"
 
@@ -2247,32 +2247,36 @@ msgstr "ボール"
 msgid "Ball carrier"
 msgstr "ボール持ち"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:52
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+msgid "Leader"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
 msgstr "目的 / ゴール"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:59
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
 msgid "Generator"
 msgstr "発生器"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Weapon"
 msgstr "武器"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Monster"
 msgstr "モンスター"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Vehicle"
 msgstr "乗り物"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:65
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:67
 msgid "Intruder!"
 msgstr "侵入者!"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:67
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:69
 msgid "Tagged"
 msgstr "タグ付った"
 
@@ -3446,7 +3450,7 @@ msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
 msgstr "^BG%s%s^K1 は ^BG%s^K1 の機関銃%s%sによって穴だらけになられた"
 
 #: qcsrc/common/notifications/all.inc:473
-#: qcsrc/common/notifications/all.inc:779
+#: qcsrc/common/notifications/all.inc:781
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
 msgstr "^BG一度に ^F2%s^BG 以上の鉱山を置けません"
@@ -3805,6 +3809,7 @@ msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr "^BGあなたの%sチームメイト (^BG %s%s)^BG は旗を手に入れた! 守れ!"
 
 #: qcsrc/common/notifications/all.inc:570
+#: qcsrc/common/notifications/all.inc:708
 msgid "^BGEnemies can now see you on radar!"
 msgstr "^BG敵はレーダーであなたを見ることができる!"
 
@@ -4265,6 +4270,10 @@ msgstr ""
 "とにかく、同じコマンドをもう一度使用して、観客モードに入ってください。"
 
 #: qcsrc/common/notifications/all.inc:709
+msgid "^BGLeaders can now be seen by enemies on radar!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.inc:711
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
@@ -4273,33 +4282,33 @@ msgstr ""
 "^BG選手の参加を待ち中...\n"
 "必要活発な選手: %s"
 
-#: qcsrc/common/notifications/all.inc:710
+#: qcsrc/common/notifications/all.inc:712
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
 msgstr "^BG%s 選手の参加を待ち中..."
 
-#: qcsrc/common/notifications/all.inc:712
+#: qcsrc/common/notifications/all.inc:714
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
 msgstr "^BG弾薬がいくつか見つかるまで、あなたの武器が格下げされた!"
 
-#: qcsrc/common/notifications/all.inc:713
+#: qcsrc/common/notifications/all.inc:715
 msgid "^F4^COUNT^BG left to find some ammo!"
 msgstr "^F4残り ^COUNT^BG で弾薬が見つかる!"
 
-#: qcsrc/common/notifications/all.inc:714
+#: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
 msgstr "^BG弾薬を入手しないと ^F4^COUNT^BG で死んでしまいる!"
 
-#: qcsrc/common/notifications/all.inc:714
+#: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
 msgstr "^BG弾薬を入手しろ! ^F4残り ^COUNT^BG !"
 
-#: qcsrc/common/notifications/all.inc:715
+#: qcsrc/common/notifications/all.inc:717
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2残りの余分な命: ^K1%s"
 
-#: qcsrc/common/notifications/all.inc:719
+#: qcsrc/common/notifications/all.inc:721
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
@@ -4308,34 +4317,34 @@ msgstr ""
 "^F2^COUNT^BG 、武器が変更されるまで...\n"
 "次の武器: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:720
+#: qcsrc/common/notifications/all.inc:722
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
 msgstr "^F2活発な武器: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:722
+#: qcsrc/common/notifications/all.inc:724
 #, c-format
 msgid "^BGYou captured %s^BG control point"
 msgstr "^BG %s^BG コントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:723
+#: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou captured a control point"
 msgstr "^BGコントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:724
+#: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
 msgstr "^TC^TT^BG チームは %s^BG コントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:725
+#: qcsrc/common/notifications/all.inc:727
 msgid "^TC^TT^BG team captured a control point"
 msgstr "^TC^TT^BG チームはコントロールポイントを取れた"
 
-#: qcsrc/common/notifications/all.inc:726
+#: qcsrc/common/notifications/all.inc:728
 msgid "^BGThis control point currently cannot be captured"
 msgstr "^BGこのコントロールポイントは現在取られない"
 
-#: qcsrc/common/notifications/all.inc:727
+#: qcsrc/common/notifications/all.inc:729
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
@@ -4343,11 +4352,11 @@ msgstr ""
 "^BG敵の発生器はまだ破壊できない\n"
 "^F2いくつかのコントロールポイントを取れて、非シールドする"
 
-#: qcsrc/common/notifications/all.inc:728
+#: qcsrc/common/notifications/all.inc:730
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
 msgstr "^BG ^TC 敵^BGの発生器はシールドされなくなった!"
 
-#: qcsrc/common/notifications/all.inc:729
+#: qcsrc/common/notifications/all.inc:731
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
@@ -4355,17 +4364,17 @@ msgstr ""
 "^K1あなたの発生器はシールドされていない!\n"
 "^BGコントロールポイントを再取れてシールドして!"
 
-#: qcsrc/common/notifications/all.inc:730
+#: qcsrc/common/notifications/all.inc:732
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
 msgstr "^BG ^F2%s^BG を押してテレポートする"
 
-#: qcsrc/common/notifications/all.inc:731
+#: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "^BGTeleporting disabled for %s"
 msgstr "^BGテレポートは %s 間無効"
 
-#: qcsrc/common/notifications/all.inc:733
+#: qcsrc/common/notifications/all.inc:735
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
@@ -4373,7 +4382,7 @@ msgstr ""
 "^F4残業中^F2!\n"
 "^F2勝者が出るまで削除を立て続けて!"
 
-#: qcsrc/common/notifications/all.inc:733
+#: qcsrc/common/notifications/all.inc:735
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
@@ -4381,7 +4390,7 @@ msgstr ""
 "^F4残業中^F2!\n"
 "^F2勝者が出るまで得点を立て続けて!"
 
-#: qcsrc/common/notifications/all.inc:734
+#: qcsrc/common/notifications/all.inc:736
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "\n"
@@ -4395,7 +4404,7 @@ msgstr ""
 "チームが保持するコントロールポイントが多いほど、\n"
 "敵の発生器の減衰が速くなる"
 
-#: qcsrc/common/notifications/all.inc:735
+#: qcsrc/common/notifications/all.inc:737
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
@@ -4404,123 +4413,123 @@ msgstr ""
 "^F2残業中!\n"
 "^BG F4%s^BG がゲームに追加された!"
 
-#: qcsrc/common/notifications/all.inc:737
+#: qcsrc/common/notifications/all.inc:739
 msgid "^K1In^BG-portal created"
 msgstr "^BGポータル^K1内^BGが作成された"
 
-#: qcsrc/common/notifications/all.inc:738
+#: qcsrc/common/notifications/all.inc:740
 msgid "^F3Out^BG-portal created"
 msgstr "^BGポータル^F3外^BGが作成された"
 
-#: qcsrc/common/notifications/all.inc:739
+#: qcsrc/common/notifications/all.inc:741
 msgid "^F1Portal creation failed"
 msgstr "^F1ポータルの作成に失敗した"
 
-#: qcsrc/common/notifications/all.inc:741
+#: qcsrc/common/notifications/all.inc:743
 msgid "^F2Strength infuses your weapons with devastating power"
 msgstr "^F2「力」はあなたの武器に壊滅的な力を吹き込みる"
 
-#: qcsrc/common/notifications/all.inc:742
+#: qcsrc/common/notifications/all.inc:744
 msgid "^F2Strength has worn off"
 msgstr "^F2「力」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:744
+#: qcsrc/common/notifications/all.inc:746
 msgid "^F2Shield surrounds you"
 msgstr "^F2「寿」があなたを囲んでいる"
 
-#: qcsrc/common/notifications/all.inc:745
+#: qcsrc/common/notifications/all.inc:747
 msgid "^F2Shield has worn off"
 msgstr "^F2「寿」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:747
+#: qcsrc/common/notifications/all.inc:749
 msgid "^F2You are on speed"
 msgstr "^F2「速度」に乗っている"
 
-#: qcsrc/common/notifications/all.inc:748
+#: qcsrc/common/notifications/all.inc:750
 msgid "^F2Speed has worn off"
 msgstr "^F2「速度」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:750
+#: qcsrc/common/notifications/all.inc:752
 msgid "^F2You are invisible"
 msgstr "^F2あなたには「不可視」がある"
 
-#: qcsrc/common/notifications/all.inc:751
+#: qcsrc/common/notifications/all.inc:753
 msgid "^F2Invisibility has worn off"
 msgstr "^F2「不可視」がすり減った"
 
-#: qcsrc/common/notifications/all.inc:753
+#: qcsrc/common/notifications/all.inc:755
 msgid "^F2The race is over, finish your lap!"
 msgstr "^F2レースが終わった、ラップを終了して!"
 
-#: qcsrc/common/notifications/all.inc:755
+#: qcsrc/common/notifications/all.inc:757
 msgid "^BGSequence completed!"
 msgstr "^BG順序完了!"
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:758
 msgid "^BGThere are more to go..."
 msgstr "^BG続行するにはさらに必要がある..."
 
-#: qcsrc/common/notifications/all.inc:757
+#: qcsrc/common/notifications/all.inc:759
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
 msgstr "^BG後 ^BG%s だけ..."
 
-#: qcsrc/common/notifications/all.inc:759
+#: qcsrc/common/notifications/all.inc:761
 msgid "^F2Superweapons have broken down"
 msgstr "^F2スーパー武器が壊れられた"
 
-#: qcsrc/common/notifications/all.inc:760
+#: qcsrc/common/notifications/all.inc:762
 msgid "^F2Superweapons have been lost"
 msgstr "^F2スーパー武器は失われた"
 
-#: qcsrc/common/notifications/all.inc:761
+#: qcsrc/common/notifications/all.inc:763
 msgid "^F2You now have a superweapon"
 msgstr "^F2今、あなたはスーパー武器がある"
 
-#: qcsrc/common/notifications/all.inc:763
+#: qcsrc/common/notifications/all.inc:765
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
 msgstr "^K1 ^COUNT に ^TC^TT^K1 に変更中"
 
-#: qcsrc/common/notifications/all.inc:764
+#: qcsrc/common/notifications/all.inc:766
 msgid "^K1Changing team in ^COUNT"
 msgstr "^K1 ^COUNT にチームに変更中"
 
-#: qcsrc/common/notifications/all.inc:765
+#: qcsrc/common/notifications/all.inc:767
 msgid "^K1Spectating in ^COUNT"
 msgstr "^K1 ^COUNT に観戦中"
 
-#: qcsrc/common/notifications/all.inc:766
+#: qcsrc/common/notifications/all.inc:768
 msgid "^K1Suicide in ^COUNT"
 msgstr "^K1 ^COUNT に自殺中"
 
-#: qcsrc/common/notifications/all.inc:768
+#: qcsrc/common/notifications/all.inc:770
 msgid "^F4Timeout begins in ^COUNT"
 msgstr "^F4タイムアウトは ^COUNT から開始します"
 
-#: qcsrc/common/notifications/all.inc:769
+#: qcsrc/common/notifications/all.inc:771
 msgid "^F4Timeout ends in ^COUNT"
 msgstr "^F4タイムアウトは ^COUNT で終了します"
 
-#: qcsrc/common/notifications/all.inc:771
+#: qcsrc/common/notifications/all.inc:773
 msgid "^K1Cannot join given minigame session!"
 msgstr "^K1特定のミニゲームセッションに参加できない!"
 
-#: qcsrc/common/notifications/all.inc:773
+#: qcsrc/common/notifications/all.inc:775
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
 msgstr "^BG乗り物に出入りするために ^F2%s^BG を押して"
 
-#: qcsrc/common/notifications/all.inc:774
+#: qcsrc/common/notifications/all.inc:776
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
 msgstr "^BG乗り物の砲手に入るために ^F2%s^BG を押して"
 
-#: qcsrc/common/notifications/all.inc:775
+#: qcsrc/common/notifications/all.inc:777
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
 msgstr "^BGこの乗り物を盗むために ^F2%s^BG を押して"
 
-#: qcsrc/common/notifications/all.inc:776
+#: qcsrc/common/notifications/all.inc:778
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
@@ -4528,7 +4537,7 @@ msgstr ""
 "^F2敵はあなたの乗り物を盗んでいる!\n"
 "^F4彼らを止めて!"
 
-#: qcsrc/common/notifications/all.inc:777
+#: qcsrc/common/notifications/all.inc:779
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2侵入者を検出した、シールドを無効中!"
 
@@ -9800,12 +9809,12 @@ msgid "Moving"
 msgstr "移動"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
-msgid "forward"
-msgstr "前方"
+msgid "move forwards"
+msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
-msgid "backpedal"
-msgstr "後方"
+msgid "move backwards"
+msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"

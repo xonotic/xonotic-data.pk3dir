@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-03 07:22+0200\n"
+"POT-Creation-Date: 2022-07-10 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yllelder, 2016\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
@@ -81,8 +81,8 @@ msgstr "Mensaje a la hora %s"
 msgid "Generic message"
 msgstr "Mensaje genérico"
 
-#: qcsrc/client/hud/panel/centerprint.qc:295
-#: qcsrc/client/hud/panel/centerprint.qc:305
+#: qcsrc/client/hud/panel/centerprint.qc:293
+#: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
 msgstr "vs"
 
@@ -1494,15 +1494,15 @@ msgstr "Caza de llaves"
 msgid "^1You have no more lives left"
 msgstr "^1No tienes ninguna vida restante"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:8
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
 msgstr "Último Superviviente"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:8
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
 msgstr "Sobrevive y mata hasta que a los enemigos no les queden vidas"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:17
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
 msgstr "Vidas:"
 
@@ -2257,9 +2257,9 @@ msgstr "Regresa la bandera aquí"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:36
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:54
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:56
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Control point"
 msgstr "Punto de control"
 
@@ -2280,7 +2280,7 @@ msgid "Run here"
 msgstr "Corre aquí"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Ball"
 msgstr "Pelota"
 
@@ -2288,32 +2288,36 @@ msgstr "Pelota"
 msgid "Ball carrier"
 msgstr "Portador de la pelota"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:52
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+msgid "Leader"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
 msgstr "Objetivo"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:59
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
 msgid "Generator"
 msgstr "Generador"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Weapon"
 msgstr "Arma"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Monster"
 msgstr "Monstruo"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Vehicle"
 msgstr "Vehículo"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:65
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:67
 msgid "Intruder!"
 msgstr "¡Intruso!"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:67
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:69
 msgid "Tagged"
 msgstr "Marcado"
 
@@ -3522,7 +3526,7 @@ msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
 msgstr "^BG%s%s^K1 fue acribillado por la Ametralladora de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:473
-#: qcsrc/common/notifications/all.inc:779
+#: qcsrc/common/notifications/all.inc:781
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
 msgstr "^BGNo puedes colocar más de ^F2%s^BG minas a la vez"
@@ -3891,6 +3895,7 @@ msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr "^BG¡Tu compañero %s (^BG%s%s)^BG tiene la bandera! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:570
+#: qcsrc/common/notifications/all.inc:708
 msgid "^BGEnemies can now see you on radar!"
 msgstr "^BG¡Los enemigos ahora pueden verte en el radar!"
 
@@ -4354,6 +4359,10 @@ msgstr ""
 "modos."
 
 #: qcsrc/common/notifications/all.inc:709
+msgid "^BGLeaders can now be seen by enemies on radar!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.inc:711
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
@@ -4362,33 +4371,33 @@ msgstr ""
 "^BGEsperando a que se unan jugadores...\n"
 "Se necesitan jugadores activos para: %s"
 
-#: qcsrc/common/notifications/all.inc:710
+#: qcsrc/common/notifications/all.inc:712
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
 msgstr "^BGEsperando a que %s jugador(es) se unan..."
 
-#: qcsrc/common/notifications/all.inc:712
+#: qcsrc/common/notifications/all.inc:714
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
 msgstr "^BG¡Tu arma ha sido degradada hasta que encuentres algo de munición!"
 
-#: qcsrc/common/notifications/all.inc:713
+#: qcsrc/common/notifications/all.inc:715
 msgid "^F4^COUNT^BG left to find some ammo!"
 msgstr "^F4¡^COUNT^BG restante para encontrar algunas municiones!"
 
-#: qcsrc/common/notifications/all.inc:714
+#: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
 msgstr "^BG¡Consigue algunas municiones o morirás en ^F4^COUNT^BG!"
 
-#: qcsrc/common/notifications/all.inc:714
+#: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
 msgstr "^BG¡Consigue algunas municiones! ¡Te queda ^F4^COUNT^BG!"
 
-#: qcsrc/common/notifications/all.inc:715
+#: qcsrc/common/notifications/all.inc:717
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2Vidas sobrantes: ^K1%s"
 
-#: qcsrc/common/notifications/all.inc:719
+#: qcsrc/common/notifications/all.inc:721
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
@@ -4397,34 +4406,34 @@ msgstr ""
 "^F2^COUNT^BG hasta el cambio de arma...\n"
 "Siguiente arma: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:720
+#: qcsrc/common/notifications/all.inc:722
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
 msgstr "^F2Arma activa: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:722
+#: qcsrc/common/notifications/all.inc:724
 #, c-format
 msgid "^BGYou captured %s^BG control point"
 msgstr "^BGHas capturado el punto de control de %s^BG"
 
-#: qcsrc/common/notifications/all.inc:723
+#: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou captured a control point"
 msgstr "^BGHas capturado un punto de control"
 
-#: qcsrc/common/notifications/all.inc:724
+#: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
 msgstr "El equipo ^TC^TT^BG capturó el punto de control de %s^BG"
 
-#: qcsrc/common/notifications/all.inc:725
+#: qcsrc/common/notifications/all.inc:727
 msgid "^TC^TT^BG team captured a control point"
 msgstr "El equipo ^TC^TT^BG capturó un punto de control"
 
-#: qcsrc/common/notifications/all.inc:726
+#: qcsrc/common/notifications/all.inc:728
 msgid "^BGThis control point currently cannot be captured"
 msgstr "^BGEl punto de control no puede ser capturado en este momento"
 
-#: qcsrc/common/notifications/all.inc:727
+#: qcsrc/common/notifications/all.inc:729
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
@@ -4432,11 +4441,11 @@ msgstr ""
 "^BGEl generador enemigo no puede ser destruido ahora\n"
 "^F2Captura puntos de control para desprotegerlo"
 
-#: qcsrc/common/notifications/all.inc:728
+#: qcsrc/common/notifications/all.inc:730
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
 msgstr "^BG¡El generador ^TCenemigo^BG ya no está protegido!"
 
-#: qcsrc/common/notifications/all.inc:729
+#: qcsrc/common/notifications/all.inc:731
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
@@ -4444,17 +4453,17 @@ msgstr ""
 "^K1¡Tu generador NO está protegido!\n"
 "^BG¡Vuelve a capturar puntos de control para protegerlo!"
 
-#: qcsrc/common/notifications/all.inc:730
+#: qcsrc/common/notifications/all.inc:732
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
 msgstr "^BGPulsa ^F2%s^BG para teletransportarse"
 
-#: qcsrc/common/notifications/all.inc:731
+#: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "^BGTeleporting disabled for %s"
 msgstr "^BGTeletransportación deshabilitada por %s"
 
-#: qcsrc/common/notifications/all.inc:733
+#: qcsrc/common/notifications/all.inc:735
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
@@ -4462,7 +4471,7 @@ msgstr ""
 "^F2¡Ahora jugando en ^F4TIEMPO EXTRA^F2!\n"
 "¡Sigue eliminando hasta que tengamos un ganador!"
 
-#: qcsrc/common/notifications/all.inc:733
+#: qcsrc/common/notifications/all.inc:735
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
@@ -4470,7 +4479,7 @@ msgstr ""
 "^F2¡Ahora jugando en ^F4TIEMPO EXTRA^F2!\n"
 "¡Sigue acertando hasta que tengamos un ganador!"
 
-#: qcsrc/common/notifications/all.inc:734
+#: qcsrc/common/notifications/all.inc:736
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "\n"
@@ -4484,7 +4493,7 @@ msgstr ""
 "Cuánto más puntos de control tenga tu equipo,\n"
 "más rápido decaerá el generador enemigo"
 
-#: qcsrc/common/notifications/all.inc:735
+#: qcsrc/common/notifications/all.inc:737
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
@@ -4493,123 +4502,123 @@ msgstr ""
 "^F2¡Ahora jugando en ^F4TIEMPO EXTRA^F2!\n"
 "^BG¡Se ha añadido ^F4%s^BG al juego!"
 
-#: qcsrc/common/notifications/all.inc:737
+#: qcsrc/common/notifications/all.inc:739
 msgid "^K1In^BG-portal created"
 msgstr "^K1Portal de entrada^BG creado"
 
-#: qcsrc/common/notifications/all.inc:738
+#: qcsrc/common/notifications/all.inc:740
 msgid "^F3Out^BG-portal created"
 msgstr "^F3Portal de salida^BG creado"
 
-#: qcsrc/common/notifications/all.inc:739
+#: qcsrc/common/notifications/all.inc:741
 msgid "^F1Portal creation failed"
 msgstr "^F1Creación de portal ha fallado"
 
-#: qcsrc/common/notifications/all.inc:741
+#: qcsrc/common/notifications/all.inc:743
 msgid "^F2Strength infuses your weapons with devastating power"
 msgstr "^F2La fuerza infunde tus armas con poder devastador"
 
-#: qcsrc/common/notifications/all.inc:742
+#: qcsrc/common/notifications/all.inc:744
 msgid "^F2Strength has worn off"
 msgstr "^F2La fuerza se ha agotado"
 
-#: qcsrc/common/notifications/all.inc:744
+#: qcsrc/common/notifications/all.inc:746
 msgid "^F2Shield surrounds you"
 msgstr "^F2Un escudo te rodea"
 
-#: qcsrc/common/notifications/all.inc:745
+#: qcsrc/common/notifications/all.inc:747
 msgid "^F2Shield has worn off"
 msgstr "^F2El escudo se ha agotado"
 
-#: qcsrc/common/notifications/all.inc:747
+#: qcsrc/common/notifications/all.inc:749
 msgid "^F2You are on speed"
 msgstr "^F2Tienes la velocidad"
 
-#: qcsrc/common/notifications/all.inc:748
+#: qcsrc/common/notifications/all.inc:750
 msgid "^F2Speed has worn off"
 msgstr "^F2La velocidad se ha agotado"
 
-#: qcsrc/common/notifications/all.inc:750
+#: qcsrc/common/notifications/all.inc:752
 msgid "^F2You are invisible"
 msgstr "^F2Eres invisible"
 
-#: qcsrc/common/notifications/all.inc:751
+#: qcsrc/common/notifications/all.inc:753
 msgid "^F2Invisibility has worn off"
 msgstr "^F2La invisibilidad se ha agotado"
 
-#: qcsrc/common/notifications/all.inc:753
+#: qcsrc/common/notifications/all.inc:755
 msgid "^F2The race is over, finish your lap!"
 msgstr "^F2¡La carrera se ha terminado, completa tu vuelta!"
 
-#: qcsrc/common/notifications/all.inc:755
+#: qcsrc/common/notifications/all.inc:757
 msgid "^BGSequence completed!"
 msgstr "^BG¡Secuencia completada!"
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:758
 msgid "^BGThere are more to go..."
 msgstr "^BGHacen falta más para continuar..."
 
-#: qcsrc/common/notifications/all.inc:757
+#: qcsrc/common/notifications/all.inc:759
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
 msgstr "^BGSolo %s^BG mas para continuar..."
 
-#: qcsrc/common/notifications/all.inc:759
+#: qcsrc/common/notifications/all.inc:761
 msgid "^F2Superweapons have broken down"
 msgstr "^F2Las superarmas se han descompuesto"
 
-#: qcsrc/common/notifications/all.inc:760
+#: qcsrc/common/notifications/all.inc:762
 msgid "^F2Superweapons have been lost"
 msgstr "^F2Se han perdido las superarmas"
 
-#: qcsrc/common/notifications/all.inc:761
+#: qcsrc/common/notifications/all.inc:763
 msgid "^F2You now have a superweapon"
 msgstr "^F2Ahora tienes una superarma"
 
-#: qcsrc/common/notifications/all.inc:763
+#: qcsrc/common/notifications/all.inc:765
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
 msgstr "^K1Cambiando a ^TC^TT^K1 en ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:764
+#: qcsrc/common/notifications/all.inc:766
 msgid "^K1Changing team in ^COUNT"
 msgstr "^K1Cambiando equipo en ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:765
+#: qcsrc/common/notifications/all.inc:767
 msgid "^K1Spectating in ^COUNT"
 msgstr "^K1Cambiando a modo espectador en ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:766
+#: qcsrc/common/notifications/all.inc:768
 msgid "^K1Suicide in ^COUNT"
 msgstr "^K1Suicidio en ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:768
+#: qcsrc/common/notifications/all.inc:770
 msgid "^F4Timeout begins in ^COUNT"
 msgstr "^F4El tiempo muerto comienza en ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:769
+#: qcsrc/common/notifications/all.inc:771
 msgid "^F4Timeout ends in ^COUNT"
 msgstr "^F4Fin del tiempo muerto en ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:771
+#: qcsrc/common/notifications/all.inc:773
 msgid "^K1Cannot join given minigame session!"
 msgstr "^K1¡No se puede unir a la sesión del minijuego que se ha dado!"
 
-#: qcsrc/common/notifications/all.inc:773
+#: qcsrc/common/notifications/all.inc:775
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
 msgstr "^BGPulsa ^F2%s^BG para entrar/salir del vehículo"
 
-#: qcsrc/common/notifications/all.inc:774
+#: qcsrc/common/notifications/all.inc:776
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
 msgstr "^BGPulsa ^F2%s^BG para entrar en el artillero del vehículo"
 
-#: qcsrc/common/notifications/all.inc:775
+#: qcsrc/common/notifications/all.inc:777
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
 msgstr "^BGPulsa ^F2%s^BG para robar este vehículo"
 
-#: qcsrc/common/notifications/all.inc:776
+#: qcsrc/common/notifications/all.inc:778
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
@@ -4617,7 +4626,7 @@ msgstr ""
 "^F2¡El enemigo está robando uno de tus vehículos!\n"
 "^F4¡Deténganlos!"
 
-#: qcsrc/common/notifications/all.inc:777
+#: qcsrc/common/notifications/all.inc:779
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2¡Intruso detectado, desactivando escudos!"
 
@@ -9929,12 +9938,12 @@ msgid "Moving"
 msgstr "Mover"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
-msgid "forward"
-msgstr "adelante"
+msgid "move forwards"
+msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
-msgid "backpedal"
-msgstr "atrás"
+msgid "move backwards"
+msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
