@@ -34,8 +34,6 @@ float turnangle;
 float turnspeed;
 float turnaccel;
 bool fwd = true;
-float starttime = 0;
-float startspeed = -1;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -812,7 +810,8 @@ void HUD_StrafeHUD()
         // show speed when crossing the start trigger
         if(autocvar_hud_panel_strafehud_startspeed_fade > 0)
         {
-            float text_alpha = 0;
+            static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
+
             if((race_nextcheckpoint == 1) || (race_checkpoint == 254 && race_nextcheckpoint == 255)) // check if the start trigger was hit (will also trigger if the finish trigger was hit if those have the same ID)
             {
                 if(starttime != race_checkpointtime)
@@ -821,16 +820,10 @@ void HUD_StrafeHUD()
                     startspeed = speed;
                 }
             }
-            if(startspeed >= 0)
+
+            if((starttime > 0) && ((time - starttime) <= autocvar_hud_panel_strafehud_startspeed_fade) && autocvar_hud_panel_strafehud_startspeed_size > 0)
             {
-                text_alpha = cos(((time - starttime) / autocvar_hud_panel_strafehud_startspeed_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
-                if((time - starttime) > autocvar_hud_panel_strafehud_startspeed_fade)
-                {
-                    startspeed = -1;
-                }
-            }
-            if(startspeed >= 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
-            {
+                float text_alpha = cos(((time - starttime) / autocvar_hud_panel_strafehud_startspeed_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
                 vector startspeed_size = panel_size;
                 startspeed_size.y = autocvar_hud_panel_strafehud_startspeed_size;
                 if(!autocvar_hud_panel_strafehud_uncapped)
@@ -852,11 +845,6 @@ void HUD_StrafeHUD()
                 string speed_unit = GetSpeedUnit(autocvar_hud_panel_strafehud_unit);
                 drawstring_aspect(panel_pos + eY * (panel_size.y + text_offset), strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
-        }
-        else
-        {
-            starttime = 0;
-            startspeed = -1;
         }
 
         // show height achieved by a single jump
@@ -884,7 +872,7 @@ void HUD_StrafeHUD()
                 }
             }
 
-            if((time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade)
+            if((jumptime > 0) && (time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade)
             {
                 float text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
                 vector jumpheight_size = panel_size;
