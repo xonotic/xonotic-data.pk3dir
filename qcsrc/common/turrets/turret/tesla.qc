@@ -62,6 +62,7 @@ bool turret_tesla_firecheck(entity this)
     if (turret_validate_target(this, this.enemy, this.target_validate_flags) <= 0)
     {
         this.enemy = NULL;
+        if(turret_select_target(this) == this.realowner) return false;
         this.target_validate_time = time + 0.5;
         do_target_scan = 1;
     }
