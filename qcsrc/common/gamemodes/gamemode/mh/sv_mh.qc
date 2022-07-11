@@ -354,13 +354,17 @@ void MH_count_players()
 	total_players = 0;
 	for (int i = 1; i <= 2; ++i){
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
-		Team_SetNumberOfTotalPlayers(Team_GetTeamFromIndex(i), 0);
+		// TOFIX: After merging master, this function has been removed
+		//Team_SetNumberOfTotalPlayers(Team_GetTeamFromIndex(i), 0);
 	}
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),{
 		entity team_ = Entity_GetTeam(it);
-		int num_total = Team_GetNumberOfTotalPlayers(team_);
+		// TOFIX: After merging master, this function (Team_GetNumberOfTotalPlayers()) has been removed
+		//int num_total = Team_GetNumberOfTotalPlayers(team_);
+		int num_total = 1;
 		++num_total;
-		Team_SetNumberOfTotalPlayers(team_, num_total);
+		// TOFIX: After merging master, this function has been removed
+		//Team_SetNumberOfTotalPlayers(team_, num_total);
 		++total_players;
 		if (IS_DEAD(it)){
 			continue;
@@ -396,12 +400,16 @@ void MH_count_players()
 int MH_GetWinnerTeam()
 {
 	//both teams have players
-	if ((Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1)){
+	// TOFIX: After merging master, this function (Team_GetNumberOfTotalPlayers()) has been removed
+	//if ((Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(1)) >= 1) && 
+	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) >= 1){
 		return Team_IndexToTeam(2);
 	}
 	
 	//only hunters were alive
-	if ((Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(1)) >= 1) && (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) == 0)){
+	// TOFIX: After merging master, this function (Team_GetNumberOfTotalPlayers()) has been removed
+	//if ((Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(1)) >= 1) && 
+	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) == 0){
 		return Team_IndexToTeam(1);
 	}
 	
@@ -431,7 +439,8 @@ float MH_CheckWinner()
 		//(9 total players / 3 total runners) / 2 = 1.5 score per second (5v4 in the beginning and only 1 person has been tagged making it 6v3)
 		//(10 total players / 1 total runner) / 2 = 5 score per second (5v5 in which only 1 runner is alive, they gain 5 score per second as last alive)
 		//(10 total players / 9 total runners) / 2 = 0.55556 score per second(1 hunter and 9 runners, doesn't really award runners for stacking for that team)
-		float survivalscore = (((total_players/(Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(2))))/2)/(1/cvar("sys_ticrate")));
+		// TOFIX: After merging master, this function (Team_GetNumberOfTotalPlayers()) has been removed
+		float survivalscore = (((total_players)/2)/(1/cvar("sys_ticrate")));
 		FOREACH_CLIENT(IS_PLAYER(it) && it.team == 14, 
 			{ GameRules_scoring_add_team(it, SCORE, (survivalscore)); }); //add 1 score to each runner's score per second at 60 tickrate
 	}
@@ -487,7 +496,9 @@ bool MH_CheckTeams()
 	static int prev_missing_teams_mask;
 	allowed_to_spawn_untagged = true;
 	MH_count_players();
-	if (Team_GetNumberOfTotalTeams() == NumTeams(mh_teams)){
+	// TOFIX: After merging master, this function has been removed
+	if ((Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) + 
+		Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2))) == NumTeams(mh_teams)){
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
@@ -501,8 +512,9 @@ bool MH_CheckTeams()
 	}
 	int missing_teams_mask = 0;
 	for (int i = 1; i <= 2; ++i){
-		if ((mh_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(i)) == 0)){
+		if (mh_teams & Team_IndexToBit(i)) { // &&
+			// TOFIX: After merging master, this function (Team_GetNumberOfTotalPlayers()) has been removed
+			//(Team_GetNumberOfTotalPlayers(Team_GetTeamFromIndex(i)) == 0)){
 			missing_teams_mask |= Team_IndexToBit(i);
 		}
 	}

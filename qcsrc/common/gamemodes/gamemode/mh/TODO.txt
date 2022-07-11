@@ -2,6 +2,7 @@ add g_mh_startitem cvars to the balance files
 
 +2 waypoint modes, 
 waypoints for runners on round start always and waypoints for hunters when there are 3 or more hunters
+only runners can see other runners but hunters don't see others
 
 rename teams as far as possible
 
@@ -15,6 +16,15 @@ more dynamicity for the code :)
 
 add more TODO: notes
 
-if player(runner) taunts, his autotaunt time is restarted. something similar to "voice taunt"
-
 fix waypoint visibility, currently they are always visible to everyone. Fix them to not be visible for spectators of that player.
+
+
+Message for Jaska:
+
+Hi, Jaska, thank you for the great work, I returned the stuff as should. 
+I was doing 'Prop Hunt' experiments after MH was completed, I shouldn't have touched the branch too much. 
+I consider leaving MH as completed, feel free to open a MR about that. The gamemode looks standardized.
+Apologies for my experiments.
+
+Sincerely, 
+LegendGuard
