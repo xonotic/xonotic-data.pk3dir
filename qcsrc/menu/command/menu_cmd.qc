@@ -93,12 +93,12 @@ void GameCommand(string theCommand)
 				LOG_HELP(" ", s);
 			});
 		}
-		else if (argc == 2 && !isdemo())     // don't allow this command in demos
+		else if (argc == 2 && (!isdemo() || argv(1) == "Welcome")) // don't allow this command in demos
 		{
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
 		}
-		else if(argc > 2 && !isdemo())
+		else if(argc > 2 && (!isdemo() || argv(1) == "Welcome"))
 		{
 			entity e = NULL;
 			float argsbuf = 0;
