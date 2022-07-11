@@ -24,7 +24,12 @@ Message for Jaska:
 Hi, Jaska, thank you for the great work, I returned the stuff as should. 
 I was doing 'Prop Hunt' experiments after MH was completed, I shouldn't have touched the branch too much. 
 I consider leaving MH as completed, feel free to open a MR about that. The gamemode looks standardized.
-Apologies for my experiments.
+There are a lot of stuff changed, maybe can break something and needs to be updated. 
+Look TOFIX notes in sv_mh.qc; teamplay.qc changed many of them and some logic isn't the same.
+I tried to revert the commits before Prop hunt experiments, it was kinda messy...
+
+Apologies for my experiments and I no longer maintain this code.
+Sorry for the inconvenience that has been caused.
 
 Sincerely, 
 LegendGuard
