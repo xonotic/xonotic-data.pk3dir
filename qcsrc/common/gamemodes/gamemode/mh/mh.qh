@@ -105,7 +105,7 @@ MUTATOR_HOOKFUNCTION(cl_hunteryes, HUD_Draw_overlay)
 
 	if(!STAT(GAME_STOPPED) && !warmup_stage && STAT(MH_ROUNDTIMER) > 0)
 		eyesblinded = false;
-
+	
 	if(time <= huntereyes_fadetime)
 	{
 		HUD_HunterEyes();

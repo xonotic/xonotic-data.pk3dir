@@ -4,6 +4,11 @@
 .vector taggedplayerlocation;
 .vector taggedplayervelocity;
 .vector taggedplayerviewangles;
+.float RunnerSoundTaunt_time;
+.entity mh_prop; // TODO: to be checked
+.bool modelchecked;
+
+bool first_time_props_spawn;
 
 void MH_FakeTimeLimit(entity e, float t)
 {
@@ -22,6 +27,70 @@ void MH_FakeTimeLimit(entity e, float t)
 #endif
 }
 
+void prop_think(entity this)
+{
+	this.nextthink = time + 0.15; // don't need to update often, very unlikely for these to move
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
+void PropSetup(entity ent)
+{
+	setmodel(ent, MDL_RUNNER_PROP_RANDOM());
+	setsize(ent, '-16 -16 -16', '16 16 16'); //ent.mins, ent.maxs);
+	setthink(ent, prop_think);
+	ent.nextthink = time + 0.25;
+	CSQCMODEL_AUTOINIT(ent);
+
+	if(!ent.bot_attack)
+		IL_PUSH(g_bot_targets, ent);
+	ent.bot_attack = true;
+	
+	//ent.pickup_anyway = true;
+	ent.scale = 1.4;
+	ent.angles_y = floor(random() * 180);
+	//ent.takedamage = DAMAGE_AIM;
+	//SetResourceExplicit(ent, RES_HEALTH, 100);
+
+	ent.solid = SOLID_BBOX;
+	ent.mass = 5;
+	ent.bouncefactor = 0.2;
+	ent.bouncestop = 0.3;
+	ent.friction = 1;
+	set_movetype(ent, MOVETYPE_STEP); //test with MOVETYPE_TOSS or MOVETYPE_WALK (it's like sliding object) or MOVETYPE_BOUNCE (maybe not good)
+	//setorigin(ent, org);
+	ent.velocity = randomvec() * 150 + '0 0 325';
+	ent.reset = SUB_Remove;
+}
+
+void prop_droptofloor(entity e)
+{
+	float max_depth = ((autocvar_g_mh_random_props_droptofloor_maxdepth < 0) ? max_shot_distance : autocvar_g_mh_random_props_droptofloor_maxdepth);
+	tracebox(e.origin, e.mins, e.maxs, e.origin - ('0 0 1' * max_depth), MOVE_NORMAL, e);
+	setorigin(e, trace_endpos);
+}
+
+void SpawnProps(int pcount)
+{
+	for(int j = 0; j < pcount; ++j)
+	{
+		entity e = spawn();
+		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, autocvar_g_mh_random_props_tries, 1024, 256))
+		{
+			if(autocvar_g_mh_random_props_droptofloor)
+				droptofloor(e);
+			else
+				prop_droptofloor(e);
+
+			e.angles = '0 0 0';
+			e.gravity = 1;
+			e.spawnfunc_checked = true;
+			PropSetup(e);
+		}
+		else
+			delete(e); // removes entity
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "mh_team";
@@ -33,6 +102,43 @@ MUTATOR_HOOKFUNCTION(mh, Scores_CountFragsRemaining)
 	return true;
 }
 
+// Prop feature
+MUTATOR_HOOKFUNCTION(mh, FixPlayermodel)
+{
+	entity player = M_ARGV(2, entity);
+
+	if(autocvar_g_mh_propmode)
+	{
+		if (player.team == Team_IndexToTeam(2))
+		{
+			//string defaultmodel = M_ARGV(0, string);
+			// TODO: to be checked
+			if (!player.mh_prop && !IS_DEAD(player.mh_prop) && !player.mh_prop.modelchecked) // to brake the loop
+			{
+				player.mh_prop = spawn();
+
+				player.mh_prop.model = MDL_RUNNER_PROP_RANDOM().model_str();
+
+				player.mh_prop.solid = SOLID_BBOX;
+				setsize(player, '-16 -16 -16', '16 16 16');
+				//setsize(player.mh_prop, '-16 -16 -16', '16 16 16');
+
+				M_ARGV(0, string) = player.mh_prop.model;
+				M_ARGV(1, int) = player.mh_prop.skin;
+
+				//setmodel(player, MDL_RUNNER_PROP_RANDOM());
+				player.playermodel = M_ARGV(0, string);
+
+				player.mh_prop.modelchecked = true;
+			}
+
+			// is this necessary? I just checked it does nothing or isn't noticeable
+			/*if(IS_DEAD(player) && player.mh_prop)
+				player.mh_prop = NULL;*/
+		}
+	}
+}
+
 // ===================
 //  weaponarena hooks
 // ===================
@@ -42,7 +148,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(autocvar_g_mh_enable_tagging_on_touch && round_handler_IsRoundStarted() && player.team == Team_IndexToTeam(1) && !game_stopped && !IS_DEAD(player) && IS_PLAYER(player) && !IS_INDEPENDENT_PLAYER(player))
+	if(!autocvar_g_mh_propmode && autocvar_g_mh_enable_tagging_on_touch && round_handler_IsRoundStarted() && player.team == Team_IndexToTeam(1) && !game_stopped && !IS_DEAD(player) && IS_PLAYER(player) && !IS_INDEPENDENT_PLAYER(player))
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player && it.team == Team_IndexToTeam(2), {
 			if(!IS_DEAD(it) && !IS_INDEPENDENT_PLAYER(it))
@@ -69,6 +175,41 @@ MUTATOR_HOOKFUNCTION(mh, PlayerPreThink)
 		player.mh_status = MH_STATUS_HUNTER;
 	else if(player.team == Team_IndexToTeam(2))
 		player.mh_status = MH_STATUS_RUNNER;
+	
+	// TODO: Runners using prop must select an object in the map
+	/*if(!IS_DEAD(player) && player.team == Team_IndexToTeam(2))
+		traceline_antilag(
+			player, 
+			CS(player).cursor_trace_start, 
+			CS(player).cursor_trace_start + normalize(CS(player).cursor_trace_endpos - CS(player).cursor_trace_start) * max_shot_distance, 
+			MOVE_NORMAL, 
+			player, 
+			ANTILAG_LATENCY(player)
+		); crosshair_trace(player);*/
+	
+	// Autotaunt feature
+	if(autocvar_g_mh_autotaunt_runner)
+	{
+		if(!game_stopped && !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
+		{
+			if(time > player.RunnerSoundTaunt_time)
+			{
+				if(player.team == Team_IndexToTeam(2))
+				{
+					// play sound to make hunter notice
+					sound(player, CH_SHOTS, SND_RUNNER_TAUNT_RANDOM(), VOL_BASEVOICE, ATTEN_NORM);
+					player.RunnerSoundTaunt_time = time + autocvar_g_mh_autotaunt_runner_time;
+					STAT(MH_RUNNER_TAUNTTIMER, player) = player.RunnerSoundTaunt_time;
+				}
+			}
+		}
+		else
+		{
+			// LOG_INFOF("^2RESTARTED RUNNER TAUNT TIMER!");
+			player.RunnerSoundTaunt_time = time + autocvar_g_mh_autotaunt_runner_time;
+			STAT(MH_RUNNER_TAUNTTIMER, player) = player.RunnerSoundTaunt_time;
+		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
@@ -84,7 +225,7 @@ MUTATOR_HOOKFUNCTION(mh, Damage_Calculate)
 		return;
 	}
 	
-	if(frag_deathtype==DEATH_CAMP.m_id || !IS_PLAYER(frag_attacker)) return;
+	if(frag_deathtype == DEATH_CAMP.m_id || !IS_PLAYER(frag_attacker)) return;
 
 	
 	if(IS_PLAYER(frag_target) && !IS_DEAD(frag_target)){ //check that the target is a player and not dead, allows anyone to knock around corpses for funsies
@@ -322,7 +463,7 @@ MUTATOR_HOOKFUNCTION(mh, MakePlayerObserver)
 
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		mh_LastPlayerForTeam_Notify(player);
-		
+	
 	player.mh_status = 0;
 	MH_FakeTimeLimit(player, -1); // restore original timelimit
 	return false;  // allow team reset
@@ -465,7 +606,7 @@ float MH_CheckWinner()
 		shuffleteams_on_reset_map = !allowed_to_spawn_untagged;
 	++round_counter_for_teamchanging;
 	//FOREACH_CLIENT(IS_PLAYER(it), { CS(it).killcount = 0; nades_Clear(it); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); MH_FakeTimeLimit(it, -1); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
+	FOREACH_CLIENT(IS_PLAYER(it), { delete(it.mh_prop); nades_Clear(it); MH_FakeTimeLimit(it, -1); }); //hopefully "{ CS(it).killcount = 0; nades_Clear(it); }" works and doesn't cut off nades_Clear, untested
 
 	return did_the_round_end;
 }
@@ -573,6 +714,16 @@ MUTATOR_HOOKFUNCTION(mh, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 	
+	// if it's the first time that starts the gamemode for the props
+	if (autocvar_g_mh_propmode)
+	{
+		if (!first_time_props_spawn)
+		{
+			SpawnProps(autocvar_g_mh_random_props_count);
+			first_time_props_spawn = true;
+		}
+	}
+	
 	if (!allowed_to_spawn_untagged && IS_PLAYER(player) && round_handler_IsRoundStarted()){ // this can be true even when player is trying to join
 		if (CS(player).jointime != time){ // not when connecting
 			MH_FakeTimeLimit(player, round_handler_GetEndTime() - CS(player).jointime); // set HUD with current round time
@@ -618,7 +769,7 @@ MUTATOR_HOOKFUNCTION(mh, PlayerDies)
 	if (!allowed_to_spawn_untagged)
 	{
 		frag_target.respawn_flags = RESPAWN_SILENT; //idk what this exactly does yet, below comment was there for respawn time = time + 2 and this line inside the backets
-		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera	
 	}
 	frag_target.respawn_time = time;
 	frag_target.respawn_flags |= RESPAWN_FORCE;
@@ -655,13 +806,32 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	player.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	MH_count_players();
-	
+
 	if(autocvar_g_mh_hunterblind)
 	{
 		if(player.team == Team_IndexToTeam(1))
 			HunterEyesStart(player); // Hunters can't see anything until round starts
 	}
-	
+
+	if(autocvar_g_mh_propmode)
+	{
+		if(player.team == Team_IndexToTeam(1)) // Hunter needs weapons
+		{
+			//GiveWeapon(player, WEP_BLASTER.m_id, OP_PLUS, 1);
+			GiveWeapon(player, WEP_SHOTGUN.m_id, OP_PLUS, 1);
+			GiveWeapon(player, WEP_SHOCKWAVE.m_id, OP_PLUS, 1);
+			GiveWeapon(player, WEP_MACHINEGUN.m_id, OP_PLUS, 1);
+			GiveWeapon(player, WEP_MORTAR.m_id, OP_PLUS, 1);
+		}
+
+		if(player.team == Team_IndexToTeam(2) && !IS_DEAD(player))
+		{
+			LOG_INFOF("Spawned prop");
+			if(player.mh_prop.modelchecked)
+				player.mh_prop.modelchecked = false;
+		}
+	}
+
 	if(player.team == Team_IndexToTeam(2) && !allowed_to_spawn_untagged && Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2)) > 1 && round_handler_IsActive() && round_handler_IsRoundStarted()){
 		player.mh_status = MH_STATUS_RUNNER;
 		player.deadflag = 1; // avoid a crash when a spectator joins runners mid-round and gets sent to hunters
@@ -686,13 +856,16 @@ MUTATOR_HOOKFUNCTION(mh, PlayerSpawn)
 			vector pl_color = colormapPaletteColor(player.clientcolors & 0x0F, false);
 			WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
 			WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
-		};
+		}
 	}
 }
 
 //reset kill streaks and respawn players on round reset
 MUTATOR_HOOKFUNCTION(mh, reset_map_players)
 {
+	if (autocvar_g_mh_propmode)
+		SpawnProps(autocvar_g_mh_random_props_count);
+	
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		MH_FakeTimeLimit(it, -1);
@@ -713,8 +886,6 @@ MUTATOR_HOOKFUNCTION(mh, reset_map_players)
 // ===========
 //  to change
 // ===========
-
-
 
 //idk if this function is needed
 MUTATOR_HOOKFUNCTION(mh, reset_map_global)

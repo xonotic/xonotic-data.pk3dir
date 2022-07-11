@@ -45,6 +45,27 @@ void HUD_Mod_MH(vector pos, vector mySize)
 			timer_color = '1 0 0'; //red
 	}
 
+	// Autotaunt feature
+	string timerrunnertaunt_text = string_null;
+	vector timerrunnertaunt_color = '1 1 1';
+	if(!STAT(GAME_STOPPED) && !warmup_stage && STAT(MH_ROUNDTIMER) > 0)
+	{
+		float timeleft_runnertaunt = max(0, STAT(MH_RUNNER_TAUNTTIMER) - time);
+		timeleft_runnertaunt = ceil(timeleft_runnertaunt);
+		timerrunnertaunt_text = strcat("Taunt: ", seconds_tostring(timeleft_runnertaunt));
+		float secondsLeft = timeleft_runnertaunt;
+		if(intermission_time || secondsLeft >= 20 || warmup_stage || STAT(MH_RUNNER_TAUNTTIMER) == 0)
+			timerrunnertaunt_color = '1 1 1'; //white
+		else if(secondsLeft >= 10)
+			timerrunnertaunt_color = '1 1 0'; //yellow
+		else
+			timerrunnertaunt_color = '1 0 0'; //red
+	}
+
+	// Autotaunt feature
+	if(mystatus == MH_STATUS_RUNNER)
+		drawstring_aspect(pos + eX * (0.3 * mySize.x) + eY * (0.7 * mySize.y), timerrunnertaunt_text, vec2(0.3 * mySize.x, mySize.y), timerrunnertaunt_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+
 	//drawpic_aspect_skin(pos, player_icon, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	if(!time_text)
 		drawstring_aspect(pos, player_text, vec2(mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
