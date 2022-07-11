@@ -492,15 +492,10 @@ void updateCheck()
 
 }
 
-bool show_propermenu = false;
-
 float preMenuInit()
 {
 	vector sz;
 	vector boxA, boxB;
-
-	if(random() < 0.1)
-		show_propermenu = true;
 
 	updateCheck();
 
@@ -546,10 +541,7 @@ void preMenuDraw()
 		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
 		line = eY * fs.y;
 		string l1, l2;
-		if(show_propermenu)
-			l1 = sprintf("Jeff pay 4 new weapons for %s", _Nex_ExtResponseSystem_UpdateTo);
-		else
-			l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
+		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
 		l2 = "http://www.xonotic.org/";
 		if(_Nex_ExtResponseSystem_UpdateToURL)
 			l2 = _Nex_ExtResponseSystem_UpdateToURL;
