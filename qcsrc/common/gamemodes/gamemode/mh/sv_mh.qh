@@ -15,13 +15,6 @@ int autocvar_g_mh_weapons_damage;
 int autocvar_g_mh_weapons_force;
 bool autocvar_g_mh_limited_ammunition;
 bool autocvar_g_mh_hunterblind;
-bool autocvar_g_mh_propmode;
-bool autocvar_g_mh_autotaunt_runner;
-float autocvar_g_mh_autotaunt_runner_time;
-int autocvar_g_mh_random_props_count;
-int autocvar_g_mh_random_props_tries;
-bool autocvar_g_mh_random_props_droptofloor;
-float autocvar_g_mh_random_props_droptofloor_maxdepth;
 
 int mh_teams;
 bool allowed_to_spawn_untagged = 1;
@@ -34,28 +27,6 @@ bool autocvar_g_mh_enable_tagging_on_touch;
 float autocvar_g_mh_player_waypoints;
 
 const int ST_MH_ROUNDS = 1;
-
-// Autotaunt feature
-SOUND(RUNNER_TAUNT1, "sound/mh/taunt1");
-SOUND(RUNNER_TAUNT2, "sound/mh/taunt2");
-SOUND(RUNNER_TAUNT3, "sound/mh/taunt3");
-SOUND(RUNNER_TAUNT4, "sound/mh/taunt4");
-SOUND(RUNNER_TAUNT5, "sound/mh/taunt5");
-SOUND(RUNNER_TAUNT6, "sound/mh/taunt6");
-SOUND(RUNNER_TAUNT7, "sound/mh/taunt7");
-SOUND(RUNNER_TAUNT8, "sound/mh/taunt8");
-SOUND(RUNNER_TAUNT9, "sound/mh/taunt9");
-SOUND(RUNNER_TAUNT10, "sound/mh/taunt10");
-Sound SND_RUNNER_TAUNT_RANDOM() {
-    return REGISTRY_GET(Sounds, SND_RUNNER_TAUNT1.m_id + floor(prandom() * 10));
-}
-
-// Prop feature
-MODEL(RUNNER_PROP1, "models/props/barrel01.iqm");
-MODEL(RUNNER_PROP2, "models/props/crate01.iqm");
-Model MDL_RUNNER_PROP_RANDOM() {
-    return REGISTRY_GET(Models, MDL_RUNNER_PROP1.m_id + floor(prandom() * 2));
-}
 
 bool MH_CheckTeams();
 bool MH_CheckWinner();
