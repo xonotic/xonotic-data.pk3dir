@@ -103,6 +103,9 @@ MUTATOR_HOOKFUNCTION(cl_hunteryes, HUD_Draw_overlay)
 	if(!eyesblinded)
 		return false;
 
+	if(!STAT(GAME_STOPPED) && !warmup_stage && STAT(MH_ROUNDTIMER) > 0)
+		eyesblinded = false;
+
 	if(time <= huntereyes_fadetime)
 	{
 		HUD_HunterEyes();
@@ -123,22 +126,6 @@ NET_HANDLE(TE_CSQC_HUNTEREYES, bool isNew)
 
 	eyesblinded = true;
 	huntereyes_appeartime = time;
-	float time_mh_roundstart = (time * 2 + cvar("g_mh_warmup")) / 1.655;
-	if(time <= cvar("g_mh_warmup")) // if it's the first time round starts
-	{
-		huntereyes_fadetime = time_mh_roundstart;
-		// LOG_INFOF("if ENTERED time: %f", time);
-	}
-	else
-	{
-		huntereyes_fadetime = time + cvar("g_mh_warmup");
-		// LOG_INFOF("else ENTERED time: %f", time);
-	}
-	
-	// just another test
-	// if(huntereyes_fadetime > time)
-	//	huntereyes_fadetime = time; LOG_INFOF("time: %f", time);
-
-	// LOG_INFOF("huntereyes_fadetime: %f", huntereyes_fadetime);
+	huntereyes_fadetime = time + cvar("g_mh_warmup");
 }
 #endif
