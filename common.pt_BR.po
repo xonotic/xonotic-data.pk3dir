@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-10 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2022\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2274,7 +2274,7 @@ msgstr "Portador da bola"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Líder"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -4328,7 +4328,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGLíderes agora são vistos por inimigos no radar!"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -9918,11 +9918,11 @@ msgstr "Movimento"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "move forwards"
-msgstr ""
+msgstr "mover-se para frente"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "move backwards"
-msgstr ""
+msgstr "mover-se para trás"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"

@@ -2268,7 +2268,7 @@ msgstr "Носитель мяча"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Лидер"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -3854,7 +3854,7 @@ msgstr "^BGПат! Теперь противники могут видеть в�
 #: qcsrc/common/notifications/all.inc:573
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
-"^BGПат! Теперь противники могут видеть тех, кто забрал их флаг на радаре!"
+"^BGПат! Теперь противники могут видеть тех, кто забрал их флаг, на радаре!"
 
 #: qcsrc/common/notifications/all.inc:577
 #, c-format
@@ -4302,7 +4302,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGТеперь противники могут видеть лидеров на радаре!"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -9854,11 +9854,11 @@ msgstr "Движение"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "move forwards"
-msgstr ""
+msgstr "вперёд"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "move backwards"
-msgstr ""
+msgstr "назад"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
