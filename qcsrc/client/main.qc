@@ -1394,7 +1394,6 @@ bool net_handle_ServerWelcome()
 		return true;
 	}
 
-	welcome_msg_force_centerprint = ReadByte();
 	strcpy(hostname, ReadString());
 
 	string hostversion = ReadString();
@@ -1435,21 +1434,19 @@ void Welcome_Message_Show_Try()
 	if (!welcome_msg_menu_check_maxtime)
 		return;
 
-	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
 	// if want dialog check if menu is initialized but for a short time
-	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	if (cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
 	{
-		if (want_dialog && cvar("_menu_welcome_dialog_available"))
+		if (cvar("_menu_welcome_dialog_available"))
 		{
 			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
 			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-			if (intermission) // close it after it's been initialized so it can still be opened manually
+			if (intermission || isdemo() || !autocvar_cl_welcome)
+				// close it after it's been initialized so it can still be opened manually
 				localcmd("\ntogglemenu 0\n");
 		}
-		else
-			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
 
 		strfree(welcome_msg);
 		welcome_msg_menu_check_maxtime = 0;
