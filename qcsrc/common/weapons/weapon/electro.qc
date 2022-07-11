@@ -10,6 +10,13 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 	{
 		if(e.classname == "electro_orb")
 		{
+			// check if the ball we are exploding is not owned by an
+			// independent player which is not the player who shot the ball
+			if(IS_INDEPENDENT_PLAYER(e.realowner) && own != e.realowner)
+			{
+				e = e.chain;
+				continue;
+			}
 			// do we allow thruwall triggering?
 			if(WEP_CVAR(electro, combo_comboradius_thruwall))
 			{
@@ -151,6 +158,13 @@ void W_Electro_Bolt_Think(entity this)
 		{
 			if(e.classname == "electro_orb")
 			{
+				// check if the ball we are exploding is not owned by an
+				// independent player which is not the player who shot the ball
+				if(IS_INDEPENDENT_PLAYER(e.realowner) && this.realowner != e.realowner)
+				{
+					e = e.chain;
+					continue;
+				}
 				bool explode;
 				if (this.owner == e.owner)
 				{
@@ -312,7 +326,11 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
-	newproj.death_time = this.death_time;
+	if(WEP_CVAR_SEC(electro, stick_lifetime) > 0){
+		newproj.death_time = time + WEP_CVAR_SEC(electro, stick_lifetime);
+	}else{
+		newproj.death_time = this.death_time;
+	}
 	newproj.use = this.use;
 	newproj.flags = this.flags;
 	IL_PUSH(g_projectiles, newproj);
@@ -351,8 +369,13 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_ELECTRO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 
-		if(WEP_CVAR_SEC(electro, stick))
-			W_Electro_Orb_Stick(this, toucher);
+		if(WEP_CVAR_SEC(electro, stick)){
+			if(WEP_CVAR_SEC(electro, stick_lifetime) == 0){
+				W_Electro_Explode(this, toucher);
+			} else {
+				W_Electro_Orb_Stick(this, toucher);
+			}
+		}
 	}
 }
 

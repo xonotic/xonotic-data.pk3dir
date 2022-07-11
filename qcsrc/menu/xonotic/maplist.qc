@@ -79,7 +79,8 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
-		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems));
+		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems)
+			|| (gamestatus & (GAME_ISSERVER | GAME_CONNECTED) && cvar("g_campaign")));
 	SUPER(XonoticMapList).draw(me);
 }
 

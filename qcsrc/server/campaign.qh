@@ -10,6 +10,7 @@ int autocvar_g_campaign_skill;
 // this must be included BEFORE campaign_common.h to make this a memory saving
 #define CAMPAIGN_MAX_ENTRIES 2
 
+string Campaign_GetTitle();
 int Campaign_GetLevelNum();
 string Campaign_GetMessage();
 

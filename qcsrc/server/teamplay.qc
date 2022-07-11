@@ -35,8 +35,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
-.int m_num_players_total; ///< Number of total players in a team.
-.int m_num_control_points; ///< Number of control points owned by a team.
+.int m_num_owned_items; ///< Number of items owned by a team.
 
 string autocvar_g_forced_team_red;
 string autocvar_g_forced_team_blue;
@@ -93,14 +92,19 @@ void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
 	team_ent.m_num_players_alive = number;
 }
 
-int Team_GetNumberOfTotalPlayers(entity team_ent)
+int Team_GetWinnerAliveTeam()
 {
-	return team_ent.m_num_players_total;
-}
-
-void Team_SetNumberOfTotalPlayers(entity team_ent, int number)
-{
-	team_ent.m_num_players_total = number;
+	int winner = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		if (g_team_entities[i].m_num_players_alive > 0)
+		{
+			if (winner)
+				return 0;
+			winner = Team_IndexToTeam(i + 1);
+		}
+	}
+	return (winner ? winner : -1);
 }
 
 int Team_GetNumberOfAliveTeams()
@@ -116,35 +120,37 @@ int Team_GetNumberOfAliveTeams()
 	return result;
 }
 
-int Team_GetNumberOfTotalTeams()
+int Team_GetWinnerTeam_WithOwnedItems(int min_control_points)
 {
-	int result = 0;
+	int winner = 0;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		if (g_team_entities[i].m_num_players_total > 0)
+		if (g_team_entities[i].m_num_owned_items >= min_control_points)
 		{
-			++result;
+			if (winner)
+				return 0;
+			winner = Team_IndexToTeam(i + 1);
 		}
 	}
-	return result;
+	return (winner ? winner : -1);
 }
 
-int Team_GetNumberOfControlPoints(entity team_ent)
+int Team_GetNumberOfOwnedItems(entity team_ent)
 {
-	return team_ent.m_num_control_points;
+	return team_ent.m_num_owned_items;
 }
 
-void Team_SetNumberOfControlPoints(entity team_ent, int number)
+void Team_SetNumberOfOwnedItems(entity team_ent, int number)
 {
-	team_ent.m_num_control_points = number;
+	team_ent.m_num_owned_items = number;
 }
 
-int Team_GetNumberOfTeamsWithControlPoints()
+int Team_GetNumberOfTeamsWithOwnedItems()
 {
 	int result = 0;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		if (g_team_entities[i].m_num_control_points > 0)
+		if (g_team_entities[i].m_num_owned_items > 0)
 		{
 			++result;
 		}
@@ -240,8 +246,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	if (team_index != old_team_index)
 	{
 		KillPlayerForTeamChange(player);
-		PlayerScore_Clear(player);
-		CS(player).parm_idlesince = time;
+		PlayerScore_Clear(player); // works only in game modes without teams
 
 		if (!IS_BOT_CLIENT(player))
 			TeamBalance_AutoBalanceBots();
@@ -708,7 +713,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
-			if (IS_CLIENT(it) || (it.caplayer))
+			if (IS_CLIENT(it) || INGAME(it))
 			{
 				team_num = it.team;
 			}
