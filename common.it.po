@@ -2268,7 +2268,7 @@ msgstr "Portapalla"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Leader"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -3384,7 +3384,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ha giocato con le saette dell'Arc%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -4366,7 +4366,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGI leader ora possono essere visti dai nemici nel radar!"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -9941,19 +9941,19 @@ msgstr "Movimento"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "move forwards"
-msgstr ""
+msgstr "Vai avanti"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "move backwards"
-msgstr ""
+msgstr "Vai indietro"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
-msgstr "a sinistra"
+msgstr "vai a sinistra"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "strafe right"
-msgstr "a destra"
+msgstr "vai a destra"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "jump / swim"
