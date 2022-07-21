@@ -56,7 +56,7 @@ string vote_parsed_display; // visual string which is fixed after being parsed
 
 // allow functions to be used in other code like world.qc and teamplay.qc
 void VoteThink();
-void VoteReset();
+void VoteReset(bool verbose);
 void VoteCommand(int request, entity caller, int argc, string vote_command);
 
 // warmup and nagger stuff
