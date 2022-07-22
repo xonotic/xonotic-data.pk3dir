@@ -24,3 +24,20 @@ void Scoreboard_UpdatePlayerTeams();
 void Scoreboard_UpdatePlayerPos(entity pl);
 void Scoreboard_UpdateTeamPos(entity Team);
 bool Scoreboard_WouldDraw();
+void Scoreboard_UI_Enable(int mode);
+
+int scoreboard_ui_enabled;
+bool autocvar__scoreboard_team_selection;
+float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSecondary);
+
+int scoreboard_selected_panel;
+float scoreboard_selected_panel_time;
+entity scoreboard_selected_player;
+entity scoreboard_selected_team;
+int scoreboard_selected_columns_layout;
+
+// start from 1
+int SB_PANEL_FIRST = 1;
+int SB_PANEL_SCOREBOARD = 1;
+int SB_PANEL_RANKINGS = 2;
+int SB_PANEL_MAX = 2;

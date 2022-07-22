@@ -111,7 +111,7 @@ void KeyBinds_BuildList()
 
 	KEYBIND_HEADER(_("Teamplay"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
-	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
+	KEYBIND_DEF("scoreboard_team_selection"             , _("team selection"));
 	KEYBIND_DEF("spec"                                  , _("spectate"));
 	KEYBIND_EMPTY_LINE();
 

@@ -1711,6 +1711,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Debug_Draw();
 #endif
 
+	if (autocvar__scoreboard_team_selection)
+	{
+		Scoreboard_UI_Enable(1);
+		cvar_set("_scoreboard_team_selection", "0");
+	}
 	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
