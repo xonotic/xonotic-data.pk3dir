@@ -1938,7 +1938,8 @@ bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
-	stuffcmd(this, "menu_showteamselect\n");
+	if (frametime) // once per frame is more than enough
+		stuffcmd(this, "scoreboard_team_selection\n");
 	return true;
 }
 void Join(entity this)

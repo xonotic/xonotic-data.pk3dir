@@ -1,6 +1,7 @@
 #include "radar.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <client/mapvoting.qh>
 #include <client/teamradar.qh>
 #include <common/ent_cs.qh>
@@ -39,12 +40,7 @@ void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 		{
 			hud_panel_radar_mouse = 1;
 
-			// we must unset the player's buttons, as they aren't released elsewhere
-			localcmd("-fire\n");
-			localcmd("-fire2\n");
-			localcmd("-use\n");
-			localcmd("-hook\n");
-			localcmd("-jump\n");
+			Release_Common_Keys();
 		}
 	}
 	else if ( hud_panel_radar_mouse )
@@ -136,13 +132,7 @@ void HUD_Radar_Mouse()
 	if ( !hud_panel_radar_mouse ) return;
 	if(mv_active) return;
 
-	if ( intermission )
-	{
-		HUD_Radar_Hide_Maximized();
-		return;
-	}
-
-	if(mouseClicked & S_MOUSE2)
+	if (intermission || scoreboard_ui_enabled || (mouseClicked & S_MOUSE2))
 	{
 		HUD_Radar_Hide_Maximized();
 		return;
