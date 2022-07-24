@@ -184,6 +184,8 @@ void HUD_Scoreboard_UI_Disable_Instantly()
 // mode: 0 normal, 1 team selection
 void Scoreboard_UI_Enable(int mode)
 {
+	if(isdemo()) return;
+
 	if (mode == 1)
 	{
 		if (scoreboard_ui_enabled == 2 || !teamplay || intermission)
