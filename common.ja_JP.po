@@ -204,7 +204,7 @@ msgstr " 調整するために ^3%s%s を押して"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "チームの選択"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -1006,17 +1006,17 @@ msgstr "チームの選択"
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7選択されたチームを参加するために ^3%s ^7を押して"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7チームを自動選択して参加するために ^3%s ^7を押して"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2270
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7固有のチームを参加するために ^3%s ^7を押して"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
@@ -3376,7 +3376,7 @@ msgstr "^BG%s^K1 はデーバーステーター%s%sで自分自身を爆破し�
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 は ^BG%s^ K1 のエレクトロボルト%s%sによって爆破された"
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のエレクトロボルト%s%sによって爆破された"
 
 #: qcsrc/common/notifications/all.inc:455
 #, c-format
@@ -8617,7 +8617,7 @@ msgstr "ウェイポイントの透明度のコントロール"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Font size:"
-msgstr ""
+msgstr "フォントサイズ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"

@@ -223,7 +223,7 @@ msgstr " Pulsa ^3%s%s para ajustar"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "selección de equipo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -1033,17 +1033,17 @@ msgstr "Selección de equipo"
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Pulsa ^3%s^7 para unirte al equipo seleccionado"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7Pulsa ^3%s^7 para seleccionar automáticamente un equipo y unirte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2270
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Pulsa ^3%s^7 para seleccionar un equipo específico"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
@@ -8727,7 +8727,7 @@ msgstr "Transparencia del control de los puntos de encuentro"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Font size:"
-msgstr ""
+msgstr "Tamaño del texto:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
