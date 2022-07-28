@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Ács Zoltán <acszoltan111@gmail.com>, 2021
+# c2e331a438add123670fbf39846b5de3_8c31b08 <d7888a78469511cd116b0058dd23f760_811520>, 2021
 # Ákos RUSZKAI, 2012
 # divVerent <divVerent@xonotic.org>, 2011
 # MmAaXx500 <viktor.balogh2000@gmail.com>, 2018
