@@ -152,6 +152,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if (argv(0) == "settings")
+	{
+		m_goto("settings");
+		return;
+	}
+
 	if (argv(0) == "inputsettings")
 	{
 		m_goto("inputsettings");
