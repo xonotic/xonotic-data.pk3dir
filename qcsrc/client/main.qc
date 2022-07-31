@@ -397,6 +397,29 @@ bool SetTeam(entity o, int Team)
 	return false;
 }
 
+// FIXME: this is hack to lock cl_netfps in [40, 300] range
+void ValidateNetfps() {
+	if (spectatee_status == 0 && !isdemo()) {
+		if (cvar("cl_netfps") < 40) {
+			cvar_set("cl_netfps",  "40");
+		} else if (cvar("cl_netfps") > 300) {
+			cvar_set("cl_netfps", "300");
+		}
+	}
+}
+
+// FIXME: this is hack to prevent people abusing PL for cheating
+void NullifyNetPacketLoss() {
+	if (spectatee_status == 0 && !isdemo()) {
+		if (cvar("cl_netpacketloss_send") > 0) {
+			cvar_set("cl_netpacketloss_send", "0");
+		}
+		if (cvar("cl_netpacketloss_receive") > 0) {
+			cvar_set("cl_netpacketloss_receive", "0");
+		}
+	}
+}
+
 void Playerchecker_Think(entity this)
 {
 	int i;
@@ -436,6 +459,8 @@ void Playerchecker_Think(entity this)
 			}
 		}
 	}
+	ValidateNetfps();
+	NullifyNetPacketLoss();
 	this.nextthink = time + 0.2;
 }
 
