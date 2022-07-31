@@ -253,7 +253,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     }
     if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(WEP_CVAR(shotgun, secondary) == 1)
-    if(((fire & 1) && GetResource(actor, thiswep.ammo_type) <= 0 && !(actor.items & IT_UNLIMITED_AMMO)) || (fire & 2))
+    if(((fire & 1) && !IS_BOT_CLIENT(actor) && GetResource(actor, thiswep.ammo_type) <= 0 && !(actor.items & IT_UNLIMITED_AMMO)) || (fire & 2))
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
     {
         // attempt forcing playback of the anim by switching to another anim (that we never play) here...
@@ -268,9 +268,6 @@ METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapon
 }
 METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(IS_BOT_CLIENT(actor))
-    if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
-        return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
     switch(WEP_CVAR(shotgun, secondary))
     {
         case 1: return true; // melee does not use ammo
