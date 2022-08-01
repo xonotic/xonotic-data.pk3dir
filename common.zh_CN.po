@@ -15,6 +15,7 @@
 # Matthew Wu, 2021
 # moetale <moetale@outlook.com>, 2021
 # Nait Lee, 2022
+# Nait Lee, 2022
 # sapphireliu <balancedliu@gmail.com>, 2014
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Nait Lee, 2022\n"
+"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
