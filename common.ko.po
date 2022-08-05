@@ -12,6 +12,7 @@
 # Iso Lee, 2016-2017
 # Iso Lee, 2016
 # Seokho Son, 2022
+# Seokho Son, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
