@@ -38,7 +38,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2已导出至 %s！ （小贴士：它被保存到 data/data/）"
+msgstr "^2已导出至 %s！（小贴士：它被保存到 data/data/）"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -48,12 +48,12 @@ msgstr "^1无法写入到 %s"
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "在 %s的标题"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr "^3倒计时时间 %s, 剩余秒数：^COUNT"
+msgstr "^3在 %s的倒计时, 剩余 ^COUNT 秒"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -61,6 +61,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1在 %s的多行消息\n"
+"^BOLD持续时间比一般情况长些"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
@@ -74,11 +76,11 @@ msgstr "基本消息"
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "对战"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
-msgstr "^3玩家^7: 这里是聊天区."
+msgstr "^3玩家^7：这里是聊天区。"
 
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
@@ -92,17 +94,17 @@ msgstr "^1观察中"
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1正在观看: ^7%s"
+msgstr "^1正在观察：^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1按下 ^3%s^1 来进行观看"
+msgstr "^1按下 ^3%s^1 以观察"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:47
 msgid "primary fire"
-msgstr "主要攻击"
+msgstr "主火力"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
@@ -127,7 +129,7 @@ msgstr "^1使用 ^3%s^1 或 ^3%s^1 来改变速度"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1按下 ^3%s^1观察, 按下^3%s^1改变观察模式"
+msgstr "^1按 ^3%s^1 以观察, 按 ^3%s^1 以改变观察模式"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
@@ -142,7 +144,7 @@ msgstr "次要攻击"
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1按下 ^3%s^1 获取游戏模式信息"
+msgstr "^1按 ^3%s^1 获取游戏模式信息"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/menu/xonotic/keybinder.qc:103
@@ -152,7 +154,7 @@ msgstr "服务器信息"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1按下 ^3%s^1加入"
+msgstr "^1按^3%s^1加入"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
@@ -164,7 +166,7 @@ msgstr "跳跃"
 #: qcsrc/client/hud/panel/infomessages.qc:137
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1游戏在 ^3%d^1后开始"
+msgstr "^1游戏在 ^3%d^1 后开始"
 
 #: qcsrc/client/hud/panel/infomessages.qc:143
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -173,7 +175,7 @@ msgstr "^2现在正在 ^1热身^2 阶段!"
 #: qcsrc/client/hud/panel/infomessages.qc:158
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%s按下 ^3%s%s 来结束暖身"
+msgstr "%s按 ^3%s%s 以结束热身"
 
 #: qcsrc/client/hud/panel/infomessages.qc:158
 #: qcsrc/client/hud/panel/infomessages.qc:160
@@ -185,15 +187,15 @@ msgstr "准备"
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%s准备好后按下^3%s%s"
+msgstr "%s准备好后，按 ^3%s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr "^2等待其他人完成加载..."
+msgstr "^2等待其他人完成热身……"
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up..."
-msgstr "^2等待其他人准备"
+msgstr "^2等待其他人准备完毕……"
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
@@ -216,19 +218,19 @@ msgstr "选择团队"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
-msgstr "^1观看这个玩家："
+msgstr "^1观察这个玩家："
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating you:"
-msgstr "^1观看你自己："
+msgstr "^1观察你自己："
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7按下 ^3ESC ^7来显示HUD设置。"
+msgstr "^7按 ^3ESC ^7显示 HUD 设置。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr "^3双击 ^7面板以获取面板特定选项。"
+msgstr "^3双击^7一个面板以获取面板特定选项。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -257,7 +259,7 @@ msgstr "指令%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:637
 msgid "Continue..."
-msgstr "继续..."
+msgstr "继续……"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 #: qcsrc/client/hud/panel/quickmenu.qc:802
@@ -266,246 +268,246 @@ msgstr "聊天"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^Send public message to"
-msgstr "QMCMD^发送公共短信给"
+msgstr "发送公共消息给"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^:-) / nice one"
-msgstr "QMCMD^:-) / 干的漂亮"
+msgstr ":-) / 干的漂亮"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^nice one"
-msgstr "QMCMD^干的漂亮"
+msgstr "干的漂亮"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^good game"
-msgstr "QMCMD^好游戏"
+msgstr "好游戏"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^hi / 祝你好运"
+msgstr "hi / 祝你好运"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^hi / 祝你好运，玩的开心"
+msgstr "hi / 祝你好运，玩的开心"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^英文发送"
+msgstr "英文发送"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^Team chat"
-msgstr "QMCMD^团队对话"
+msgstr "团队对话"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^strength soon"
-msgstr "QMCMD^强壮敏捷"
+msgstr "神力即将出现"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr "QMCMD^免费物品 %x^7 (l:%y^7)"
+msgstr "免费物品 %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^free item, icon"
-msgstr "QMCMD^免费物品, icon"
+msgstr "免费物品, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^took item (l:%l^7)"
-msgstr "QMCMD^捡起物品 (l:%l^7)"
+msgstr "捡起物品 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^took item, icon"
-msgstr "QMCMD^物品已取走, icon"
+msgstr "物品已取走, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^negative"
-msgstr "QMCMD^反对"
+msgstr "反对"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^positive"
-msgstr "QMCMD^赞成"
+msgstr "赞成"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^需要帮忙 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "需要帮忙 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^need help, icon"
-msgstr "QMCMD^需要帮忙, icon"
+msgstr "需要帮忙, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr "QMCMD^发现敌人 (l:%y^7)"
+msgstr "发现敌人 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^enemy seen, icon"
-msgstr "QMCMD^发现敌人, icon"
+msgstr "发现敌人, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr "QMCMD^找到旗帜 (l:%y^7)"
+msgstr "找到旗帜 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^flag seen, icon"
-msgstr "QMCMD^找到旗帜, icon"
+msgstr "找到旗帜, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^防守中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "防守中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^defending, icon"
-msgstr "QMCMD^防守中, icon"
+msgstr "防守中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^漫游中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "漫游中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming, icon"
-msgstr "QMCMD^漫游中, icon"
+msgstr "漫游中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^攻击中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "攻击中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking, icon"
-msgstr "QMCMD^攻击中, icon"
+msgstr "攻击中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "QMCMD^killed flagcarrier (l:%y^7)"
+msgstr "夺旗人已被干掉 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "QMCMD^夺旗人已被干掉, icon"
+msgstr "夺旗人已被干掉, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr "QMCMD^已弃旗 (l:%d^7)"
+msgstr "已弃旗 (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^dropped flag, icon"
-msgstr "QMCMD^已弃旗, icon"
+msgstr "已弃旗, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^drop weapon, icon"
-msgstr "QMCMD^掉落武器, icon"
+msgstr "掉落武器, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "QMCMD^掉落武器 %w^7 (l:%l^7)"
+msgstr "掉落武器 %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^drop flag/key, icon"
-msgstr "QMCMD^掉落旗帜/钥匙, icon"
+msgstr "掉落旗帜/钥匙, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "QMCMD^掉落旗子 / 钥匙 %w^7（l:%l^7）"
+msgstr "掉落旗子 / 钥匙 %w^7（l:%l^7）"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Send private message to"
-msgstr "QMCMD^发送私人短信给"
+msgstr "发送私人短信给"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Settings"
-msgstr "QMCMD^设定"
+msgstr "设定"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^View/HUD settings"
-msgstr "QMCMD^视角/HUD设置"
+msgstr "视角/HUD设置"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
-msgstr "QMCMD^第三人称视角"
+msgstr "第三人称视角"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Player models like mine"
-msgstr "QMCMD^像我一样的玩家模型"
+msgstr "像我一样的玩家模型"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^Names above players"
-msgstr "QMCMD^名字显示在玩家上方"
+msgstr "名字显示在玩家上方"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^Crosshair per weapon"
-msgstr "QMCMD^每个武器的十字准线"
+msgstr "每个武器的十字准线"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^FPS"
-msgstr "QMCMD^FPS"
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Net graph"
-msgstr "QMCMD^网络图"
+msgstr "网络图"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Sound settings"
-msgstr "QMCMD^音效设定"
+msgstr "音效设定"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^Hit sound"
-msgstr "QMCMD^击打声"
+msgstr "击打声"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^Chat sound"
-msgstr "QMCMD^对话音效"
+msgstr "对话音效"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Change spectator camera"
-msgstr "QMCMD^更改观察者视角"
+msgstr "更改观察者视角"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Observer camera"
-msgstr "QMCMD^观察者视角"
+msgstr "观察者视角"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Increase speed"
-msgstr "QMCMD^增加速度"
+msgstr "增加速度"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Decrease speed"
-msgstr "QMCMD^减少速度"
+msgstr "减少速度"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision"
-msgstr "QMCMD^墙壁碰撞"
+msgstr "墙壁碰撞"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Fullscreen"
-msgstr "QMCMD^全屏"
+msgstr "全屏"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 #: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^Call a vote"
-msgstr "QMCMD^发起投票"
+msgstr "发起投票"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Restart the map"
-msgstr "QMCMD^重启地图"
+msgstr "重启地图"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^End match"
-msgstr "QMCMD^结束比赛"
+msgstr "结束比赛"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^Reduce match time"
-msgstr "QMCMD^减少比赛时间"
+msgstr "减少比赛时间"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Extend match time"
-msgstr "QMCMD^延长比赛时间"
+msgstr "延长比赛时间"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Shuffle teams"
-msgstr "QMCMD^随机组队"
+msgstr "随机组队"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^Spectate a player"
@@ -534,7 +536,7 @@ msgstr "终点线"
 #: qcsrc/client/hud/panel/racetimer.qc:153
 #, c-format
 msgid "Intermediate %d"
-msgstr "中间的 %d"
+msgstr "第 %d 中间点"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156
 #: qcsrc/client/hud/panel/racetimer.qc:203
@@ -561,11 +563,11 @@ msgstr "带球人击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^bckills"
-msgstr ""
+msgstr "杀死带球人"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^bctime"
-msgstr ""
+msgstr "持球时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total amount of time holding the ball in Keepaway"
@@ -577,11 +579,11 @@ msgstr "夺取旗帜或猎取钥匙的频率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^caps"
-msgstr "SCO^占领"
+msgstr "夺取"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^captime"
-msgstr "SCO^captime"
+msgstr "夺取时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Time of fastest capture (CTF)"
@@ -593,7 +595,7 @@ msgstr "死亡次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^deaths"
-msgstr "SCO^死亡"
+msgstr "死亡"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of keys destroyed by pushing them into void"
@@ -601,11 +603,11 @@ msgstr "被推入虚空而销毁的钥匙数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^destroyed"
-msgstr "SCO^销毁"
+msgstr "销毁"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^damage"
-msgstr "SCO^伤害"
+msgstr "伤害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage done"
@@ -613,7 +615,7 @@ msgstr "造成的总伤害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^dmgtaken"
-msgstr "SCO^受伤"
+msgstr "受伤"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "The total damage taken"
@@ -625,19 +627,19 @@ msgstr "掉落旗帜数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^drops"
-msgstr "SCO^掉落"
+msgstr "掉旗"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Player ELO"
-msgstr "玩家ELO分数"
+msgstr "玩家 ELO 分数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^elo"
-msgstr ""
+msgstr "elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^fastest"
-msgstr "SCO^最快"
+msgstr "最快"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Time of fastest lap (Race/CTS)"
@@ -649,7 +651,7 @@ msgstr "提交的错误数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^faults"
-msgstr "SCO^故障"
+msgstr "故障"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
@@ -665,7 +667,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^fps"
-msgstr "SCO^fps"
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
@@ -673,7 +675,7 @@ msgstr "除自杀外击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^frags"
-msgstr "SCO^杀敌"
+msgstr "杀敌"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of goals scored"
@@ -681,7 +683,7 @@ msgstr "进球数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^goals"
-msgstr "SCO^进球"
+msgstr "进球"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of keys carrier kills"
@@ -693,7 +695,7 @@ msgstr "杀死携钥者"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^k/d"
-msgstr "SCO^击杀/死亡"
+msgstr "击杀/死亡"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 #: qcsrc/client/hud/panel/scoreboard.qc:139
@@ -703,11 +705,11 @@ msgstr "击杀数与死亡数的比例"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^kdr"
-msgstr "SCO^击杀/死亡比"
+msgstr "击杀/死亡比"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^kdratio"
-msgstr "SCO^击杀/死亡比"
+msgstr "击杀/死亡比"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of kills"
@@ -715,7 +717,7 @@ msgstr "击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^kills"
-msgstr "SCO^击杀"
+msgstr "击杀"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
@@ -723,7 +725,7 @@ msgstr "完成圈数（竞速 / CTS）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
-msgstr "SCO^圈数"
+msgstr "圈数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
@@ -731,7 +733,7 @@ msgstr "存活人数（最后的生存者）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
-msgstr "SCO^生命"
+msgstr "生命"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of times a key was lost"
@@ -739,7 +741,7 @@ msgstr "钥匙丢失次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^losses"
-msgstr "SCO^失败"
+msgstr "失败"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 #: qcsrc/client/hud/panel/scoreboard.qc:146
@@ -748,11 +750,11 @@ msgstr "玩家名称"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^name"
-msgstr "SCO^名字"
+msgstr "名字"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^nick"
-msgstr "SCO^昵称"
+msgstr "昵称"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
@@ -760,7 +762,7 @@ msgstr "摧毁的目标数量"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^objectives"
-msgstr "SCO^目标"
+msgstr "目标"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid ""
@@ -769,7 +771,7 @@ msgstr "旗子（夺旗战）或钥匙（钥匙猎取）或球（远离）被捡
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^pickups"
-msgstr "SCO^拾起"
+msgstr "拾起"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Ping time"
@@ -777,7 +779,7 @@ msgstr "Ping 时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^ping"
-msgstr "SCO^延迟"
+msgstr "延迟"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Packet loss"
@@ -785,7 +787,7 @@ msgstr "丢包"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^pl"
-msgstr "SCO^丢包"
+msgstr "丢包"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
@@ -793,7 +795,7 @@ msgstr "被推入虚空的玩家数量"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^pushes"
-msgstr "SCO^推下"
+msgstr "推下"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Player rank"
@@ -801,7 +803,7 @@ msgstr "玩家排名"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^rank"
-msgstr "SCO^排名"
+msgstr "排名"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of flag returns"
@@ -809,7 +811,7 @@ msgstr "归还旗帜数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^returns"
-msgstr "SCO^归还"
+msgstr "归还"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of revivals"
@@ -817,7 +819,7 @@ msgstr "复活次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^revivals"
-msgstr "SCO^重生"
+msgstr "重生"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of rounds won"
@@ -825,11 +827,11 @@ msgstr "赢得场数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^rounds won"
-msgstr "SCO^赢局"
+msgstr "赢局"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^score"
-msgstr "SCO^分数"
+msgstr "分数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Total score"
@@ -841,7 +843,7 @@ msgstr "自杀次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^suicides"
-msgstr "SCO^自杀"
+msgstr "自杀"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of kills minus deaths"
@@ -849,7 +851,7 @@ msgstr "杀敌数减去死亡数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^sum"
-msgstr "SCO^总和"
+msgstr "总和"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
@@ -865,7 +867,7 @@ msgstr "击杀队友数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^teamkills"
-msgstr "SCO^杀死队友"
+msgstr "杀死队友"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of ticks (Domination)"
@@ -873,11 +875,11 @@ msgstr "刻数量（统治模式）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^ticks"
-msgstr "SCO^刻"
+msgstr "刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^time"
-msgstr "SCO^时间"
+msgstr "时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Total time raced (Race/CTS)"
@@ -894,33 +896,37 @@ msgstr "用法："
 
 #: qcsrc/client/hud/panel/scoreboard.qc:697
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3域1 域2 ..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:698
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"^2scoreboard_columns_set ^7不含参数时会从 cvar scroreboard_columns 读取参数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:699
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+"  ^5注意：^7不含参数的 scoreboard_columns_set 在每次开始地图前都会执行一次"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:700
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7加载默认布局并将它扩展到 cvar "
+"scoreboard_columns 以便你更改"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:701
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "你可以用 ^3|^7 开头来开始右对齐的域"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:702
 msgid "The following field names are recognized (case insensitive):"
-msgstr ""
+msgstr "可识别以下域名称（大小写不敏感）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid ""
@@ -929,30 +935,32 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"在域前你可以放一个 + 或 - 号，后跟一个以逗号分割的游戏类型列表，\n"
+"之后一个斜杠，以使此域仅显示在这些或除了这些游戏类型中。你也可以指定‘all’为一"
+"个域以显示当前游戏模式可用的所有域。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:714
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"特殊游戏模式‘teams’和‘noteams’可用于包含/除去所有团队合作/非团队的游戏模式。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:718
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
+msgstr "如：scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:719
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
-msgstr ""
+msgstr "会左对齐显示名称、延迟和丢包，右对齐显示竖杠符号右侧的域。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
-msgstr ""
-"“域3”将只在夺旗战显示，“域4”将在\n"
-"除死亡竞赛的所有游戏模式显示。"
+msgstr "“field3”将只在夺旗战显示，“field4”将在除死亡竞赛的所有游戏模式显示。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1000
 #: qcsrc/client/hud/panel/scoreboard.qc:1007
@@ -969,7 +977,7 @@ msgstr "无"
 #: qcsrc/client/hud/panel/scoreboard.qc:1632
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr "精准度 (平均 %d%%)"
+msgstr "精准度（平均 %d%%）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1789
 msgid "Item stats"
@@ -977,15 +985,15 @@ msgstr "物品统计"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1900
 msgid "Map stats:"
-msgstr "地图统计:"
+msgstr "地图统计："
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1930
 msgid "Monsters killed:"
-msgstr "怪物击杀:"
+msgstr "怪物击杀："
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1937
 msgid "Secrets found:"
-msgstr "发现秘密:"
+msgstr "发现秘密："
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2147
 #, c-format
@@ -1028,7 +1036,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2317
 #: qcsrc/client/hud/panel/scoreboard.qc:2324
 msgid "SCO^points"
-msgstr "SCO^分"
+msgstr "分"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2316
 #: qcsrc/client/hud/panel/scoreboard.qc:2323
@@ -1044,7 +1052,7 @@ msgstr "^7地图：^2%s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2494
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr "速度奖励: %d%s ^7(%s^7)"
+msgstr "速度奖励：%d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2498
 #, c-format
@@ -1054,7 +1062,7 @@ msgstr "一直领先：%d%s ^7(%s^7)"
 #: qcsrc/client/hud/panel/scoreboard.qc:2532
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr "^1在 ^3%s^1 后重生..."
+msgstr "^1在 ^3%s^1 后重生……"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2542
 #, c-format
@@ -1068,23 +1076,23 @@ msgstr "你死了, 按下 ^2%s^7 重生"
 
 #: qcsrc/client/hud/panel/strafehud.qc:879
 msgid "qu"
-msgstr ""
+msgstr "单位"
 
 #: qcsrc/client/hud/panel/strafehud.qc:880
 msgid "m"
-msgstr ""
+msgstr "米"
 
 #: qcsrc/client/hud/panel/strafehud.qc:881
 msgid "km"
-msgstr ""
+msgstr "千米"
 
 #: qcsrc/client/hud/panel/strafehud.qc:882
 msgid "mi"
-msgstr ""
+msgstr "英里"
 
 #: qcsrc/client/hud/panel/strafehud.qc:883
 msgid "nmi"
-msgstr ""
+msgstr "海里"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
@@ -1167,54 +1175,54 @@ msgstr "正在移除不在队伍表的队伍！"
 
 #: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
-msgstr ""
+msgstr "单位每秒"
 
 #: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
-msgstr "m/s"
+msgstr "米每秒"
 
 #: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr "km/h"
+msgstr "千米每秒"
 
 #: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
-msgstr "mph"
+msgstr "英里每时"
 
 #: qcsrc/client/main.qc:1149 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
-msgstr ""
+msgstr "海里每时"
 
 #: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
-msgstr "所有武器竞技场"
+msgstr "所有武器竞技"
 
 #: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr "所有可用武器的竞技场"
+msgstr "所有可用武器的竞技"
 
 #: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
-msgstr "多数武器竞技场"
+msgstr "多数武器竞技"
 
 #: qcsrc/client/main.qc:1363
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr "多数可用武器的竞技场"
+msgstr "多数可用武器的竞技"
 
 #: qcsrc/client/main.qc:1366 qcsrc/client/main.qc:1380
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr "无武器竞技场"
+msgstr "无武器竞技"
 
 #: qcsrc/client/main.qc:1378
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
-msgstr "%s 竞技场"
+msgstr "%s 竞技"
 
 #: qcsrc/client/main.qc:1389 qcsrc/client/main.qc:1394
 #, c-format
@@ -1306,7 +1314,7 @@ msgstr "剩余 %d 秒"
 
 #: qcsrc/client/mapvoting.qc:513
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
-msgstr ""
+msgstr "mv_mapdownload: ^3你不可以自行使用此命令！"
 
 #: qcsrc/client/mapvoting.qc:523
 msgid "^1Error:^7 Couldn't find pak index."
@@ -1314,7 +1322,7 @@ msgstr "^1错误：^7 无法找到数据包索引。"
 
 #: qcsrc/client/mapvoting.qc:532
 msgid "Requesting preview..."
-msgstr "正在请求预览..."
+msgstr "正在请求预览……"
 
 #: qcsrc/client/view.qc:889
 msgid "Nade timer"
@@ -1330,7 +1338,7 @@ msgstr "重生进度"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "创建 curl 句柄失败"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
@@ -2307,7 +2315,7 @@ msgstr "^F4注意：^BG比赛过程中旁观者的聊天不会被发送给玩家
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr "^BG%s^BG 夺取了^TC^TT^BG队旗帜"
+msgstr "^BG%s^BG 夺取了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:229
 #, c-format
@@ -2315,8 +2323,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG 夺取^TC^TT^BG队旗帜用了 ^F1%s^BG 秒，打破了原来 ^BG%s^BG ^F2%s^BG 秒"
-"的记录"
+"^BG%s^BG 夺取^TC^TT^BG旗帜用了 ^F1%s^BG 秒，打破了原来 ^BG%s^BG ^F2%s^BG 秒的"
+"记录"
 
 #: qcsrc/common/notifications/all.inc:230
 #, c-format
@@ -2326,7 +2334,7 @@ msgstr "^BG%s^BG 夺取了旗帜"
 #: qcsrc/common/notifications/all.inc:231
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr "^BG%s^BG 夺取^TC^TT^BG队旗帜用了 ^F1%s^BG 秒"
+msgstr "^BG%s^BG 夺取^TC^TT^BG旗帜用了 ^F1%s^BG 秒"
 
 #: qcsrc/common/notifications/all.inc:232
 #, c-format
@@ -2334,12 +2342,12 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
-"^BG%s^BG 夺取^TC^TT^BG队旗帜用了 ^F2%s^BG 秒，未能打破原来 ^BG%s^BG ^F1%s^BG "
-"秒的记录"
+"^BG%s^BG 夺取^TC^TT^BG旗帜用了 ^F2%s^BG 秒，未能打破原来 ^BG%s^BG ^F1%s^BG 秒"
+"的记录"
 
 #: qcsrc/common/notifications/all.inc:233
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BG^TC^TT^BG队旗帜被它的所有者带回基地"
+msgstr "^BG^TC^TT^BG旗帜被它的所有者带回基地"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^BGThe flag was returned by its owner"
@@ -2347,7 +2355,7 @@ msgstr "^BG旗帜被它的所有者带回"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr "^BG^TC^TT^BG队旗帜被摧毁并回到基地"
+msgstr "^BG^TC^TT^BG旗帜被摧毁并回到基地"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^BGThe flag was destroyed and returned to base"
@@ -2365,7 +2373,7 @@ msgstr "^BG旗帜掉落在基地并自己返回"
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
-msgstr "^BG^TC^TT^BG队旗帜掉落在无法到达的地方而自动回到基地"
+msgstr "^BG^TC^TT^BG旗帜掉落在无法到达的地方而自动回到基地"
 
 #: qcsrc/common/notifications/all.inc:240
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
@@ -2376,7 +2384,7 @@ msgstr "^BG旗帜掉落在无法到达的地方而自动回到基地"
 msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
-msgstr "^BG^TC^TT^BG队旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
+msgstr "^BG^TC^TT^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2386,7 +2394,7 @@ msgstr "^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
 
 #: qcsrc/common/notifications/all.inc:243
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr "^BG^TC^TT^BG队旗帜已回到基地"
+msgstr "^BG^TC^TT^BG旗帜已回到基地"
 
 #: qcsrc/common/notifications/all.inc:244
 msgid "^BGThe flag has returned to the base"
@@ -2395,7 +2403,7 @@ msgstr "^BG旗帜已回到基地"
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr "^BG%s^BG失去了^TC^TT^BG队旗帜"
+msgstr "^BG%s^BG失去了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:246
 #, c-format
@@ -2405,7 +2413,7 @@ msgstr "^BG%s^BG 丢掉了旗帜"
 #: qcsrc/common/notifications/all.inc:247
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr "^BG%s^BG 拿到了^TC^TT^BG队旗帜"
+msgstr "^BG%s^BG 拿到了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:248
 #, c-format
@@ -2416,7 +2424,7 @@ msgstr "^BG%s^BG 拿到了旗帜"
 #: qcsrc/common/notifications/all.inc:250
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr "^BG%s^BG 带回^TC^TT^BG队旗帜"
+msgstr "^BG%s^BG 带回^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:252
 #: qcsrc/common/notifications/all.inc:540
@@ -2448,7 +2456,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的^BG%s^K1增益杀死 ^K1%s%s"
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用^BG%s^K1增益赚取分数 ^K1%s%s"
+msgstr "^BG%s%s^K1 让 ^BG%s^K1 用^BG%s^K1增益得分 ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:262
 #, c-format
@@ -2807,7 +2815,7 @@ msgstr "^BG%s^K1 被电轮炮塔炸飞了%s%s"
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr "^BG%s^K1 被 FLAC 炮塔的炮弹追逐%s%s"
+msgstr "^BG%s^K1 被笼罩在 FLAC 炮塔的炮弹中%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -2827,12 +2835,12 @@ msgstr "^BG%s^K1 被机枪炮塔扫射到满身疮痍%s%s"
 #: qcsrc/common/notifications/all.inc:329
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
+msgstr "^BG%s^K1 被一个 MLRS 炮塔变成了烤焦的肢体%s%s"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被炮塔相位移出%s%s"
 
 #: qcsrc/common/notifications/all.inc:331
 #, c-format
@@ -2842,67 +2850,67 @@ msgstr "^BG%s^K1 被炮台发出的高温离子弹教会做人%s%s"
 #: qcsrc/common/notifications/all.inc:332
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被特斯拉炮塔电击%s%s"
 
 #: qcsrc/common/notifications/all.inc:333
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被行走者炮塔发出的浓缩重金属教会做人%s%s"
 
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被行走者炮塔给予恐惧%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被行走者炮塔炸飞了%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被笼罩在野峰的爆炸中%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
 msgid "^BG%s^K1 was crushed by a vehicle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被一辆载具压扁了%s%s"
 
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
 msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被笼罩在猛枭的集束炸弹中%s%s"
 
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被笼罩在猛枭的爆炸中%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被笼罩在蜘蛛机器人的爆炸中%s%s"
 
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被蜘蛛机器人的火箭弹炸成碎片%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s"
-msgstr "^BG%s^K1被爆炸的火箭弹打中了%s%s"
+msgstr "^BG%s^K1 被笼罩在竞速者的爆炸中%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr "^BG%s^K1来不及躲闪火箭弹%s%s"
+msgstr "^BG%s^K1 来不及躲闪竞速者的火箭弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr "^BG%s^K1被^BG%s^K1背叛%s%s"
+msgstr "^BG%s^K1 被 ^BG%s^K1 背叛%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
@@ -2912,27 +2920,27 @@ msgstr "^BG%s^BG%s^BG（%s %s每%s秒）"
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr "^BG%s^K1被^BG%s^K1封冻"
+msgstr "^BG%s^K1 被 ^BG%s^K1 封冻"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr "^BG%s^K3被^BG%s^K3复活"
+msgstr "^BG%s^K3 被 ^BG%s^K3 复活"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr "^BG%s^K3由于跌落而复活"
+msgstr "^BG%s^K3 通过跌落而复活"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr ""
+msgstr "^BG%s^K3 被他的榴弹爆炸复活"
 
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 在 %s 秒后自动复活"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
@@ -2963,70 +2971,70 @@ msgstr "^BG这一局结束，没有赢家"
 #: qcsrc/common/notifications/all.inc:362
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr ""
+msgstr "^BG上帝模式削掉了对你的 %s 点伤害，作弊者！"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG 获得了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG 失去了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:366
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr ""
+msgstr "^BG你丢掉了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:367
 #: qcsrc/common/notifications/all.inc:681
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr ""
+msgstr "^BG你获得了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:369
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr "^BG你没有 ^F1%s"
+msgstr "^BG你没有^F1%s"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BG你丢掉了 ^F1%s^BG%s"
+msgstr "^BG你丢掉了^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr "^BG你得到了 ^F1%s"
+msgstr "^BG你得到了^F1%s"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BG你没有足够的弹药来使用 ^F1%s"
+msgstr "^BG你没有足够的弹药来使用^F1%s"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:688
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG无法使用,但是 ^F1%s^BG 可以"
+msgstr "^BG无法发动^F1%s^BG的^F1%s^BG，但是^F1%s^BG可以"
 
 #: qcsrc/common/notifications/all.inc:374
 #: qcsrc/common/notifications/all.inc:689
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr "^F1%s^BG is ^F4在该地图不可用^BG"
+msgstr "^F1%s^BG^F4在此地图不可用^BG"
 
 #: qcsrc/common/notifications/all.inc:376
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG 正在连接……"
 
 #: qcsrc/common/notifications/all.inc:377
 #, c-format
@@ -3041,7 +3049,7 @@ msgstr "^BG%s^F3 已加入"
 #: qcsrc/common/notifications/all.inc:379
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr "^BG%s^F3 加入^TC^TT队^BG游戏"
+msgstr "^BG%s^F3 加入^TC^TT^BG游戏"
 
 #: qcsrc/common/notifications/all.inc:381
 #: qcsrc/common/notifications/all.inc:694
@@ -3058,32 +3066,32 @@ msgstr "^BG%s^BG 拾起了球"
 #: qcsrc/common/notifications/all.inc:384
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr "^BG%s^BG 夺取了^TC^TT队钥匙 "
+msgstr "^BG%s^BG 夺取了^TC^TT钥匙 "
 
 #: qcsrc/common/notifications/all.inc:385
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr "^BG%s^BG 掉落了^TC^TT队钥匙 "
+msgstr "^BG%s^BG 掉落了^TC^TT钥匙 "
 
 #: qcsrc/common/notifications/all.inc:386
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr "^BG%s^BG 丢失了^TC^TT队钥匙 "
+msgstr "^BG%s^BG 丢失了^TC^TT钥匙 "
 
 #: qcsrc/common/notifications/all.inc:387
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr "^BG%s^BG 把 %s^BG 推了下去，毁坏了^TC^TT队钥匙"
+msgstr "^BG%s^BG 把 %s^BG 推了下去，毁坏了^TC^TT钥匙"
 
 #: qcsrc/common/notifications/all.inc:388
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr "^BG%s^BG 毁坏了^TC^TT队钥匙"
+msgstr "^BG%s^BG 毁坏了^TC^TT钥匙"
 
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr "^BG%s^BG 拾起了^TC^TT队钥匙"
+msgstr "^BG%s^BG 拾起了^TC^TT钥匙"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
@@ -3101,7 +3109,7 @@ msgstr "^BG怪物已经关闭"
 
 #: qcsrc/common/notifications/all.inc:396
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr "^TC^TT^BG队持球时间过长"
+msgstr "^TC^TT^BG持球时间过长"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
@@ -3116,20 +3124,20 @@ msgstr "^BG%s^BG 占领了一个控制点"
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr ""
+msgstr "^TC^TT^BG%s^BG控制点被 %s^BG 摧毁"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "^TC^TT^BG控制点被 %s^BG 摧毁"
 
 #: qcsrc/common/notifications/all.inc:402
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^TC^TT^BG发电机被摧毁"
 
 #: qcsrc/common/notifications/all.inc:403
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr ""
+msgstr "^TC^TT^BG发电机因超时而自然燃尽！"
 
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
@@ -3159,77 +3167,77 @@ msgstr "^BG%s^F3 已下线"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 在挂机 %s 秒后被踢出"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 在挂机 %s 秒后被移动到^BG旁观者^F3中"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
-msgstr ""
+msgstr "^F2因为你是旁观者、而服务器此时不允许旁观，你被踢出服务器。"
 
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 因为杀死太多队友而被踢出"
 
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 现在正在^BG旁观"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG 放弃了竞速"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG 没有打破其 %s%s^BG %s%s %s 的记录"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG 没有打破 %s%s^BG %s%s %s 的记录"
 
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG 竞速结束"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG 打破了 %s^BG 的 %s%s^BG 记录：%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG 打破了自己 %s%s^BG 记录：%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
 msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
-msgstr ""
+msgstr "^BG%s^BG 以 ^F2%s^BG 创造了新纪录，但不幸因为缺少 UID 而将丢失。"
 
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
-msgstr ""
+msgstr "^BG%s^BG 以 ^F2%s^BG 创造了新纪录，但因其匿名而将丢失。"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
 msgid "^BG%s^BG set the %s%s^BG place record with %s%s"
-msgstr ""
+msgstr "^BG%s^BG 为 %s%s^BG 创造了记录：%s%s"
 
 #: qcsrc/common/notifications/all.inc:427
 #, c-format
@@ -3240,7 +3248,7 @@ msgstr "^BG%s^F4 邀请你加入游戏 ^F2%s^F4 (^F1%s^F4)"
 
 #: qcsrc/common/notifications/all.inc:429
 msgid "^TC^TT ^BGteam scores!"
-msgstr ""
+msgstr "^TC^TT^BG得分！"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3256,7 +3264,7 @@ msgstr "^BG%s^K1 拾起了超级武器"
 
 #: qcsrc/common/notifications/all.inc:435
 msgid "^BGYou cannot change to a larger team"
-msgstr ""
+msgstr "^BG你不可以切换至更大的队伍"
 
 #: qcsrc/common/notifications/all.inc:436
 msgid "^BGYou are not allowed to change teams"
@@ -3299,17 +3307,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:444
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光电击%s%s"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光电束爆破了%s%s"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 玩耍弧光电束%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -3324,92 +3332,92 @@ msgstr "^BG%s^K1 被自己的镭射枪送进地狱%s%s"
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"
-msgstr "^BG%s%s^K1 感受到 ^BG%s^K1手里的紫电的强大推力%s%s"
+msgstr "^BG%s%s^K1 感受到 ^BG%s^K1 手中紫电的强大吸力%s%s"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr "^BG%s^K1 感受到自己手里的紫电的强大推力%s%s"
+msgstr "^BG%s^K1 感受到自己手中紫电的强大吸力%s%s"
 
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 吃了 ^BG%s^K1 的火箭弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 离 ^BG%s^K1 的火箭弹太近%s%s"
 
 #: qcsrc/common/notifications/all.inc:453
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被自己的灭世炸上天%s%s"
 
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的电射枪光束爆破了%s%s"
 
 #: qcsrc/common/notifications/all.inc:455
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 从 ^BG%s^K1 的电射枪连击感受到震摄力%s%s"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Electro orb%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 离 ^BG%s^K1 的电射球太近%s%s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 玩耍电射枪光束%s%s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 没想起自己把电射球放在了哪里%s%s"
 
 #: qcsrc/common/notifications/all.inc:459
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's fireball%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 离 ^BG%s^K1 的火球太近%s%s"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
 msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的火雷烧着了%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr ""
+msgstr "^BG%s^K1 应该去用一把更小的枪%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 忘记自己放置了火雷%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的哈格火箭弹溅射痛击%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的哈格火箭弹痛击%s%s"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s^K1 玩耍小哈格火箭弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 HLAC 切成了两半%s%s"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -3419,7 +3427,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:468
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 没能逃过 ^BG%s^K1 的钩爪重力炸弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
@@ -3435,48 +3443,48 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的机枪狙击了%s%s"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的机枪扫射得满身疮痍%s%s"
 
 #: qcsrc/common/notifications/all.inc:473
 #: qcsrc/common/notifications/all.inc:779
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr ""
+msgstr "^BG你不可以一次性放置超过 ^F2%s^BG 颗地雷"
 
 #: qcsrc/common/notifications/all.inc:474
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's mine%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 离 ^BG%s^K1 的地雷太近%s%s"
 
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s^K1 forgot about their mine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 忘记自己放置了地雷%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr "^BG%s%s^K1离^BG%s^K1打出的榴弹太近了%s%s"
+msgstr "^BG%s%s^K1 离 ^BG%s^K1 打出的榴弹太近了%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"
-msgstr "^BG%s%s^K1 吃了一记 ^BG%s^K1的榴弹%s%s"
+msgstr "^BG%s%s^K1 吃了一记 ^BG%s^K1 的榴弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:478
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr "^BG%s^K1 没看到他们自己的榴弹%s%s"
+msgstr "^BG%s^K1 没看到自己的榴弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr "^BG%s^K1 被他们自己的榴弹枪炸成碎尸%s%s"
+msgstr "^BG%s^K1 被自己的榴弹枪炸成碎尸%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -3533,57 +3541,57 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用步枪狙击%s%s"
 
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 死在了 ^BG%s^K1 的步枪弹下%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 没有逃过 ^BG%s^K1 的步枪弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 没有逃过 ^BG%s^K1 的步枪攻击%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的跟踪火箭无情追赶%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的瞄准者盯住了%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr ""
+msgstr "^BG%s^K1 玩耍小跟踪火箭%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的脉冲波击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 用脉冲波枪把 ^BG%s^K1 搧得再起不能%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的霰弹枪击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 用大霰弹枪把 ^BG%s^K1 搧得再起不能%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3603,20 +3611,20 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的汽化者刺得升华为微粒子%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用汽化者刺得升华为微粒子%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的星旋枪刺得从人间蒸发%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用星旋枪刺得从人间蒸发%s%s"
 
 #: qcsrc/common/notifications/all.inc:524
 msgid "^F4You are now alone!"
-msgstr ""
+msgstr "^F4你现在孤身一人！"
 
 #: qcsrc/common/notifications/all.inc:526
 msgid "^BGYou are attacking!"
-msgstr "^BG你是攻击方！"
+msgstr "^BG你是进攻方！"
 
 #: qcsrc/common/notifications/all.inc:527
 msgid "^BGYou are defending!"
@@ -3625,28 +3633,28 @@ msgstr "^BG你是防守方！"
 #: qcsrc/common/notifications/all.inc:528
 #, c-format
 msgid "^BGObjective destroyed in ^F4%s^BG!"
-msgstr ""
+msgstr "^BG在 ^F4%s^BG 内摧毁了目标！"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BG开始！"
 
 #: qcsrc/common/notifications/all.inc:531
 msgid "^BGGame starts in"
-msgstr "^BG游戏开始在"
+msgstr "^BG游戏即将开始"
 
 #: qcsrc/common/notifications/all.inc:532
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BG第 %s 轮即将开始"
 
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Round cannot start"
-msgstr ""
+msgstr "^F4此轮无法开始"
 
 #: qcsrc/common/notifications/all.inc:538
 msgid "^F2Don't camp!"
-msgstr "^F2别做伏地魔！"
+msgstr "^F2不要扎营！"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid ""
@@ -3660,7 +3668,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:543
 msgid "^BGThis flag is currently inactive"
-msgstr ""
+msgstr "^BG此旗帜当前不活跃"
 
 #: qcsrc/common/notifications/all.inc:544
 msgid ""
@@ -3683,132 +3691,132 @@ msgstr "^BG你夺取了旗帜！"
 #: qcsrc/common/notifications/all.inc:547
 #, c-format
 msgid "^BGToo many flag throws! Throwing disabled for %s."
-msgstr ""
+msgstr "^BG丢旗过多！在 %s内不能再丢弃。"
 
 #: qcsrc/common/notifications/all.inc:548
 #, c-format
 msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BG%s^BG 把^TC^TT^BG旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:549
 #, c-format
 msgid "^BG%s^BG passed the flag to %s"
-msgstr ""
+msgstr "^BG%s^BG 把旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:550
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
-msgstr ""
+msgstr "^BG你从 ^BG%s^BG 接到了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr ""
+msgstr "^BG你从 %s^BG 接到了旗帜"
 
 #: qcsrc/common/notifications/all.inc:552
 #, c-format
 msgid "^BGPress ^F2%s^BG to receive the flag from %s^BG"
-msgstr ""
+msgstr "^BG按 ^F2%s^BG 以接到 %s^BG 的旗帜"
 
 #: qcsrc/common/notifications/all.inc:553
 #, c-format
 msgid "^BGRequesting %s^BG to pass you the flag"
-msgstr ""
+msgstr "^BG正在请求 %s^BG 传给你旗帜"
 
 #: qcsrc/common/notifications/all.inc:554
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BG你把^TC^TT^BG旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:555
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr "^BG你把旗帜交给了 %s"
+msgstr "^BG你把旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:556
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BG你获得了^TC^TT^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:557
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BG你获得了旗帜！"
 
 #: qcsrc/common/notifications/all.inc:558
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr "^BG你拿到你们 %s队^BG的旗帜，带回它！"
+msgstr "^BG你拿到你们%s队伍^BG的旗帜，带回它！"
 
 #: qcsrc/common/notifications/all.inc:559
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr "^BG你拿到了敌人%s队^BG的旗帜，带回它！"
+msgstr "^BG你拿到了%s敌人^BG的旗帜，带回它！"
 
 #: qcsrc/common/notifications/all.inc:560
 #, c-format
 msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敌人^BG拿到了你的旗帜！夺回它！"
 
 #: qcsrc/common/notifications/all.inc:561
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敌人（^BG%s%s）^BG拿到了你的旗帜！夺回它！"
 
 #: qcsrc/common/notifications/all.inc:562
 #, c-format
 msgid "^BGThe %senemy^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敌人^BG拿到了旗帜！夺回它！"
 
 #: qcsrc/common/notifications/all.inc:563
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敌人（^BG%s%s）^BG拿到了旗帜！夺回它！"
 
 #: qcsrc/common/notifications/all.inc:564
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敌人^BG拿到了自己的旗帜！夺回它！"
 
 #: qcsrc/common/notifications/all.inc:565
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敌人（^BG%s%s）^BG拿到了自己的旗帜！夺回它！"
 
 #: qcsrc/common/notifications/all.inc:566
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BG你的%s队友^BG拿到了^TC^TT^BG旗帜！保护他！"
 
 #: qcsrc/common/notifications/all.inc:567
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BG你的%s队友（^BG%s%s）^BG拿到了^TC^TT^BG旗帜！保护他！"
 
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
 msgid "^BGYour %steam mate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BG你的%s队友^BG拿到了旗帜！保护他！"
 
 #: qcsrc/common/notifications/all.inc:569
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BG你的%s队友（^BG%s%s）^BG拿到了旗帜！保护他！"
 
 #: qcsrc/common/notifications/all.inc:570
 #: qcsrc/common/notifications/all.inc:708
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BG敌人现在可以在雷达上看到你！"
 
 #: qcsrc/common/notifications/all.inc:571
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr "^BG你带回了^TC^TT^BG旗帜！"
+msgstr "^BG你归还了^TC^TT^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:572
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr ""
+msgstr "^BG停滞！敌人现在可以在雷达上看到你！"
 
 #: qcsrc/common/notifications/all.inc:573
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BG停滞！带旗人现在可在雷达上被敌人看到！"
 
 #: qcsrc/common/notifications/all.inc:577
 #, c-format
@@ -3820,68 +3828,68 @@ msgstr "^K3%s你杀死了 ^BG%s"
 #: qcsrc/common/notifications/all.inc:596
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
-msgstr ""
+msgstr "^K3%s^BG%s^K3 让你得分^BG"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr "^K1%s你被 ^BG%s^K1 杀死了"
+msgstr "^K1%s你被 ^BG%s^K1 杀死了^BG"
 
 #: qcsrc/common/notifications/all.inc:580
 #: qcsrc/common/notifications/all.inc:589
 #: qcsrc/common/notifications/all.inc:598
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr ""
+msgstr "^K3%s你让 ^BG%s^K3 得分^BG"
 
 #: qcsrc/common/notifications/all.inc:586
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr ""
+msgstr "^K3%s你让 ^BG%s^K3 烧了起来^BG"
 
 #: qcsrc/common/notifications/all.inc:588
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr ""
+msgstr "^K1%s你被 ^BG%s^K1 点着了^BG"
 
 #: qcsrc/common/notifications/all.inc:595
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr ""
+msgstr "^K3%s你冻结了 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:597
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr ""
+msgstr "^K1%s你被 ^BG%s^K1 冻结了^BG"
 
 #: qcsrc/common/notifications/all.inc:604
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr ""
+msgstr "^K1%s你杀死了正在打字的 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:605
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr ""
+msgstr "^K1%s^BG%s^K1 在打字时让你得分"
 
 #: qcsrc/common/notifications/all.inc:606
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr ""
+msgstr "^K1%s正在打字的你被 ^BG%s^K1 杀死了"
 
 #: qcsrc/common/notifications/all.inc:607
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr ""
+msgstr "^K1%s你在打字时让 ^BG%s^K1 得分^BG"
 
 #: qcsrc/common/notifications/all.inc:613
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr ""
+msgstr "^BG再按一次 ^F2%s^BG 来扔出榴弹！"
 
 #: qcsrc/common/notifications/all.inc:614
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr ""
+msgstr "^F2你得到了一个^K1奖励手榴弹^F2！"
 
 #: qcsrc/common/notifications/all.inc:616
 #, c-format
@@ -3889,224 +3897,230 @@ msgid ""
 "^BGYou have been moved into a different team\n"
 "You are now on: %s"
 msgstr ""
+"^BG你被移动至另一团队\n"
+"你当前在：%s"
 
 #: qcsrc/common/notifications/all.inc:617
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1你因为攻击队友而受到惩罚！"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^K1Die camper!"
-msgstr ""
+msgstr "^K1去死，扎营者！"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^K1Reconsider your tactics, camper!"
-msgstr ""
+msgstr "^K1再考虑考虑战术，扎营者！"
 
 #: qcsrc/common/notifications/all.inc:619
 msgid "^K1You unfairly eliminated yourself!"
-msgstr ""
+msgstr "^K1你不公平地消灭了自己！"
 
 #: qcsrc/common/notifications/all.inc:620
 #, c-format
 msgid "^K1You were %s"
-msgstr ""
+msgstr "^K1你"
 
 #: qcsrc/common/notifications/all.inc:621
 msgid "^K1You couldn't catch your breath!"
-msgstr ""
+msgstr "^K1你跟不上呼吸！"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1You hit the ground with a crunch!"
-msgstr ""
+msgstr "^K1你落地过猛！"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You felt a little too hot!"
-msgstr ""
+msgstr "^K1你觉得太热了！"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1你变得酥脆！"
 
 #: qcsrc/common/notifications/all.inc:624
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1你杀死了自己！"
 
 #: qcsrc/common/notifications/all.inc:624
 msgid "^K1You need to be more careful!"
-msgstr ""
+msgstr "^K1你要再小心一些！"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You couldn't stand the heat!"
-msgstr ""
+msgstr "^K1你承受不了酷热！"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You need to watch out for monsters!"
-msgstr ""
+msgstr "^K1要当心怪物！"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You were killed by a monster!"
-msgstr ""
+msgstr "^K1你被怪物杀死了！"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1Tastes like chicken!"
-msgstr ""
+msgstr "^K1尝起来像鸡肉！"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You forgot to put the pin back in!"
-msgstr ""
+msgstr "^K1你忘记把拉环塞回榴弹了！"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr ""
+msgstr "^K1不要在烈焰弹爆炸范围转悠！"
 
 #: qcsrc/common/notifications/all.inc:629
 msgid "^K1You felt a little chilly!"
-msgstr ""
+msgstr "^K1你觉得有点冷！"
 
 #: qcsrc/common/notifications/all.inc:629
 msgid "^K1You got a little bit too cold!"
-msgstr ""
+msgstr "^K1你变得有些冷！"
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr ""
+msgstr "^K1你的治愈榴弹有点不管用！"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You are respawning for running out of ammo..."
-msgstr ""
+msgstr "^K1你因弹药耗尽而重生……"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You were killed for running out of ammo..."
-msgstr "^K1你因弹药耗尽而死..."
+msgstr "^K1你因弹药耗尽而死……"
 
 #: qcsrc/common/notifications/all.inc:632
 msgid "^K1You grew too old without taking your medicine"
-msgstr ""
+msgstr "^K1你直到老死也没有吃药"
 
 #: qcsrc/common/notifications/all.inc:632
 msgid "^K1You need to preserve your health"
-msgstr ""
+msgstr "^K1你需要留着点寿命"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You became a shooting star!"
-msgstr ""
+msgstr "^K1你变成了一颗流星！"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1You melted away in slime!"
-msgstr ""
+msgstr "^K1你融化在了史莱姆中！"
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1You committed suicide!"
-msgstr ""
+msgstr "^K1你自杀了！"
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1You ended it all!"
-msgstr ""
+msgstr "^K1你一死了之！"
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You got stuck in a swamp!"
-msgstr ""
+msgstr "^K1你陷入了沼泽里！"
 
 #: qcsrc/common/notifications/all.inc:637
 #, c-format
 msgid "^BGYou are now on: %s"
-msgstr ""
+msgstr "^BG你当前在："
 
 #: qcsrc/common/notifications/all.inc:638
 msgid "^K1You died in an accident!"
-msgstr ""
+msgstr "^K1你意外地死了！"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You had an unfortunate run in with a turret!"
-msgstr ""
+msgstr "^K1你不幸地跑到了炮塔前面！"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You were fragged by a turret!"
-msgstr ""
+msgstr "^K1你被炮塔杀死了！"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr ""
+msgstr "^K1你不幸被电轮炮塔追逐！"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr ""
+msgstr "^K1你被电轮炮塔杀死了！"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr ""
+msgstr "^K1你不幸被行走者炮塔追逐！"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You were fragged by a Walker turret!"
-msgstr ""
+msgstr "^K1你被行走者炮塔杀死了！"
 
 #: qcsrc/common/notifications/all.inc:642
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr ""
+msgstr "^K1你被笼罩在野峰的爆炸中！"
 
 #: qcsrc/common/notifications/all.inc:643
 msgid "^K1You were crushed by a vehicle!"
-msgstr ""
+msgstr "^K1你被载具压扁了！"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr ""
+msgstr "^K1你被笼罩在猛枭的集束爆破中！"
 
 #: qcsrc/common/notifications/all.inc:645
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr ""
+msgstr "^K1你被笼罩在猛枭的爆炸中！"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr ""
+msgstr "^K1你被笼罩在蜘蛛机器人的爆炸中！"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr ""
+msgstr "^K1你被蜘蛛机器人炸成了碎片！"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr "^K1你被爆炸的火箭弹给打中了！"
+msgstr "^K1你被笼罩在竞速者的爆炸中！"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You couldn't find shelter from a Racer rocket!"
-msgstr "^K1你没能躲过火箭弹！"
+msgstr "^K1你没能躲过竞速者的火箭弹！"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1Watch your step!"
-msgstr ""
+msgstr "^K1当心脚下！"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1背叛者！你出卖了队友 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1背叛者！你杀死了队友 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:653
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1你被队友 ^BG%s^K1 出卖了"
 
 #: qcsrc/common/notifications/all.inc:653
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1你被队友 ^BG%s^K1 杀死了"
 
 #: qcsrc/common/notifications/all.inc:655
 msgid ""
 "^K1Stop idling!\n"
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
+"^K1别再挂机！\n"
+"^BG将于 ^COUNT 秒后断开连接……"
 
 #: qcsrc/common/notifications/all.inc:656
 msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1别再挂机！\n"
+"^BG将于 ^COUNT 秒后转为旁观者……"
 
 #: qcsrc/common/notifications/all.inc:658
 #, c-format
@@ -4125,7 +4139,7 @@ msgstr "^BG门已解锁！"
 #: qcsrc/common/notifications/all.inc:662
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2获得的额外生命：^K1%s"
 
 #: qcsrc/common/notifications/all.inc:664
 #, c-format
@@ -4139,12 +4153,12 @@ msgstr "^K3你复活了自己"
 #: qcsrc/common/notifications/all.inc:666
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3你被 ^BG%s^K3复活了"
+msgstr "^K3你被 ^BG%s^K3 复活了"
 
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG你在 %s 秒后被自动复活"
 
 #: qcsrc/common/notifications/all.inc:669
 msgid "^BGThe generator is under attack!"
@@ -4152,7 +4166,7 @@ msgstr "^BG发电机正在被攻击！"
 
 #: qcsrc/common/notifications/all.inc:671
 msgid "^TC^TT^BG team loses the round"
-msgstr "^TC^TT^BG 队伍输了这一轮"
+msgstr "^TC^TT^BG输了这一轮"
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^K1You froze yourself"
@@ -4160,26 +4174,28 @@ msgstr "^K1你把自己封冻了"
 
 #: qcsrc/common/notifications/all.inc:676
 msgid "^K1Round already started, you spawn as frozen"
-msgstr ""
+msgstr "^K1此轮已经开始，你以冻结状态生成"
 
 #: qcsrc/common/notifications/all.inc:678
 #, c-format
 msgid "^K1A %s has arrived!"
-msgstr "^K1A %s 到了！"
+msgstr "^K1一只%s来袭！"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BG你得到了 ^F1燃料重生成器"
+msgstr "^BG你得到了^F1燃料再生器"
 
 #: qcsrc/common/notifications/all.inc:683
 msgid "^BGYou got the ^F1Jetpack"
-msgstr ""
+msgstr "^BG你得到了^F1喷气背包"
 
 #: qcsrc/common/notifications/all.inc:691
 msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
+"^K1没有可用的生成点！\n"
+"希望你的团队可以修复它……"
 
 #: qcsrc/common/notifications/all.inc:692
 msgid ""
@@ -4191,41 +4207,47 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:696
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BG你拾起了球"
 
 #: qcsrc/common/notifications/all.inc:697
 msgid "^BGKilling people while you don't have the ball gives no points!"
-msgstr ""
+msgstr "^BG在不持球时杀敌不会得分！"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
+"^BG所有钥匙都在你的队伍手中！\n"
+"帮助带钥匙的队友会面！"
 
 #: qcsrc/common/notifications/all.inc:700
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
+"^BG所有钥匙都在^TC^TT^BG手中！\n"
+"现在去^F4妨碍他们^BG！"
 
 #: qcsrc/common/notifications/all.inc:701
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
+"^BG所有钥匙都在你的队伍手中！\n"
+"^F4现在^BG去会见其他带钥匙的队友！"
 
 #: qcsrc/common/notifications/all.inc:702
 msgid "^F4Round will start in ^COUNT"
-msgstr ""
+msgstr "^F4此轮在 ^COUNT 秒后开始"
 
 #: qcsrc/common/notifications/all.inc:703
 msgid "^BGScanning frequency range..."
-msgstr ""
+msgstr "^BG正在搜索频率范围……"
 
 #: qcsrc/common/notifications/all.inc:704
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr ""
+msgstr "^BG你带着^TC^TT^BG钥匙开局"
 
 #: qcsrc/common/notifications/all.inc:706
 msgid "^BGYou have no lives left, you must wait until the next match"
@@ -4241,7 +4263,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BG敌人现在可在雷达上看到领导者！"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -4249,32 +4271,34 @@ msgid ""
 "^BGWaiting for players to join...\n"
 "Need active players for: %s"
 msgstr ""
+"^BG等待玩家加入……\n"
+"需要活跃玩家："
 
 #: qcsrc/common/notifications/all.inc:712
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
-msgstr ""
+msgstr "^BG等待 %s 位玩家加入……"
 
 #: qcsrc/common/notifications/all.inc:714
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr ""
+msgstr "^BG你的武器被降级，找到一些弹药以恢复！"
 
 #: qcsrc/common/notifications/all.inc:715
 msgid "^F4^COUNT^BG left to find some ammo!"
-msgstr "^F4^COUNT^BG 内找到弹药!"
+msgstr "^BG在 ^F4^COUNT^BG 内找到弹药!"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr "^BG找到弹药否则你将在 ^F4^COUNT^BG后死亡!"
+msgstr "^BG去找些弹药，不然你将在 ^F4^COUNT^BG 秒后死亡!"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
-msgstr "^BG找到弹药 ^BG还有^F4^COUNT !"
+msgstr "^BG找些弹药！还有 ^F4^COUNT^BG 秒！"
 
 #: qcsrc/common/notifications/all.inc:717
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
-msgstr ""
+msgstr "^F2剩余生命：^K1%s"
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
@@ -4282,13 +4306,13 @@ msgid ""
 "^F2^COUNT^BG until weapon change...\n"
 "Next weapon: ^F1%s"
 msgstr ""
-"^BG将在 ^F2^COUNT^BG 秒后更换武器…\n"
+"^BG将在 ^F2^COUNT^BG 秒后更换武器……\n"
 "下一把武器：^F1%s"
 
 #: qcsrc/common/notifications/all.inc:720
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
-msgstr ""
+msgstr "^F2活动武器：^F1%s"
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4302,15 +4326,15 @@ msgstr "^BG你占领了一个控制点"
 #: qcsrc/common/notifications/all.inc:724
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr "^TC^TT^BG队占领了%s^BG控制点"
+msgstr "^TC^TT^BG占领了%s^BG控制点"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^TC^TT^BG team captured a control point"
-msgstr "^TC^TT^BG队占领了一个控制点"
+msgstr "^TC^TT^BG占领了一个控制点"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGThis control point currently cannot be captured"
-msgstr "^BG此控制点当前不能被占领"
+msgstr "^BG此控制点还不能被占领"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid ""
@@ -4322,25 +4346,25 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
-msgstr ""
+msgstr "^TC敌方^BG发电机不再受保护！"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
 msgstr ""
-"^K1你的发电机没有了护盾！\n"
+"^K1你的发电机不再受保护！\n"
 "^BG重新占领控制点以保护它！"
 
 #: qcsrc/common/notifications/all.inc:730
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr ""
+msgstr "^BG按 ^F2%s^BG 以传送"
 
 #: qcsrc/common/notifications/all.inc:731
 #, c-format
 msgid "^BGTeleporting disabled for %s"
-msgstr ""
+msgstr "^BG在 %s内不可传送"
 
 #: qcsrc/common/notifications/all.inc:733
 msgid ""
@@ -4383,15 +4407,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1In^BG-portal created"
-msgstr ""
+msgstr "^BG创建了K1入口^BG传送门"
 
 #: qcsrc/common/notifications/all.inc:738
 msgid "^F3Out^BG-portal created"
-msgstr ""
+msgstr "^BG创建了K1出口^BG传送门"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^F1Portal creation failed"
-msgstr ""
+msgstr "^F1传送门创建失败"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^F2Strength infuses your weapons with devastating power"
@@ -4403,52 +4427,52 @@ msgstr "^F2神力已失效"
 
 #: qcsrc/common/notifications/all.inc:744
 msgid "^F2Shield surrounds you"
-msgstr ""
+msgstr "^F2护盾环绕着你"
 
 #: qcsrc/common/notifications/all.inc:745
 msgid "^F2Shield has worn off"
-msgstr ""
+msgstr "^F2护盾已失效"
 
 #: qcsrc/common/notifications/all.inc:747
 msgid "^F2You are on speed"
-msgstr ""
+msgstr "^F2你获得了速度提升"
 
 #: qcsrc/common/notifications/all.inc:748
 msgid "^F2Speed has worn off"
-msgstr ""
+msgstr "^F2速度已失效"
 
 #: qcsrc/common/notifications/all.inc:750
 msgid "^F2You are invisible"
-msgstr ""
+msgstr "^F2你现在隐身"
 
 #: qcsrc/common/notifications/all.inc:751
 msgid "^F2Invisibility has worn off"
-msgstr ""
+msgstr "^F2隐身已失效"
 
 #: qcsrc/common/notifications/all.inc:753
 msgid "^F2The race is over, finish your lap!"
-msgstr ""
+msgstr "^F2竞速已结束，完成这一圈！"
 
 #: qcsrc/common/notifications/all.inc:755
 msgid "^BGSequence completed!"
-msgstr ""
+msgstr "^BG成功按次序完成！"
 
 #: qcsrc/common/notifications/all.inc:756
 msgid "^BGThere are more to go..."
-msgstr ""
+msgstr "^BG还有更多……"
 
 #: qcsrc/common/notifications/all.inc:757
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
-msgstr ""
+msgstr "^BG仅还剩 %s^BG 个……"
 
 #: qcsrc/common/notifications/all.inc:759
 msgid "^F2Superweapons have broken down"
-msgstr ""
+msgstr "^F2超级武器已分解"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^F2Superweapons have been lost"
-msgstr ""
+msgstr "^F2超级武器已丢失"
 
 #: qcsrc/common/notifications/all.inc:761
 msgid "^F2You now have a superweapon"
@@ -4456,27 +4480,27 @@ msgstr "^F2你现在拥有一把超级武器"
 
 #: qcsrc/common/notifications/all.inc:763
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
-msgstr ""
+msgstr "^K1在 ^COUNT 秒后切换至^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:764
 msgid "^K1Changing team in ^COUNT"
-msgstr ""
+msgstr "^K1在 ^COUNT 秒后切换队伍"
 
 #: qcsrc/common/notifications/all.inc:765
 msgid "^K1Spectating in ^COUNT"
-msgstr ""
+msgstr "^K1在 ^COUNT 秒后旁观"
 
 #: qcsrc/common/notifications/all.inc:766
 msgid "^K1Suicide in ^COUNT"
-msgstr ""
+msgstr "^K1在 ^COUNT 秒后自杀"
 
 #: qcsrc/common/notifications/all.inc:768
 msgid "^F4Timeout begins in ^COUNT"
-msgstr ""
+msgstr "^F4超时在 ^COUNT 秒后开始"
 
 #: qcsrc/common/notifications/all.inc:769
 msgid "^F4Timeout ends in ^COUNT"
-msgstr ""
+msgstr "^F4超时在 ^COUNT 秒后结束"
 
 #: qcsrc/common/notifications/all.inc:771
 msgid "^K1Cannot join given minigame session!"
@@ -4485,80 +4509,82 @@ msgstr "^K1无法加入指定的小游戏！"
 #: qcsrc/common/notifications/all.inc:773
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr ""
+msgstr "^BG按 ^F2%s^BG 以进入/离开载具"
 
 #: qcsrc/common/notifications/all.inc:774
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
-msgstr ""
+msgstr "^BG按 ^F2%s^BG 以进入载具炮架"
 
 #: qcsrc/common/notifications/all.inc:775
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
-msgstr ""
+msgstr "^BG按 ^F2%s^BG 以偷取此载具"
 
 #: qcsrc/common/notifications/all.inc:776
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
 msgstr ""
+"^F2敌人在偷取你的载具！\n"
+"^F4阻止他们！"
 
 #: qcsrc/common/notifications/all.inc:777
 msgid "^F2Intruder detected, disabling shields!"
-msgstr ""
+msgstr "^F2检测到入侵者，正在禁用护盾！"
 
 #: qcsrc/common/notifications/all.qh:406 qcsrc/common/notifications/all.qh:407
 #, c-format
 msgid " (near %s)"
-msgstr ""
+msgstr "（在 %s 旁）"
 
 #: qcsrc/common/notifications/all.qh:414 qcsrc/common/notifications/all.qh:415
 msgid "primary"
-msgstr "主要"
+msgstr "主火力"
 
 #: qcsrc/common/notifications/all.qh:414 qcsrc/common/notifications/all.qh:415
 msgid "secondary"
-msgstr "次要"
+msgstr "副火力"
 
 #: qcsrc/common/notifications/all.qh:417
 msgid "point"
-msgstr ""
+msgstr "点"
 
 #: qcsrc/common/notifications/all.qh:417
 msgid "points"
-msgstr ""
+msgstr "点"
 
 #: qcsrc/common/notifications/all.qh:426
 msgid "drop flag"
-msgstr ""
+msgstr "掉旗"
 
 #: qcsrc/common/notifications/all.qh:427
 msgid "throw nade"
-msgstr ""
+msgstr "扔榴弹"
 
 #: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr ""
+msgstr "%s^K1 获得了【三连杀】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了三分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:453
 msgid "TRIPLE FRAG! "
-msgstr ""
+msgstr "三连杀！"
 
 #: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了五分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr ""
+msgstr "%s^K1 解锁了【狂怒】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 msgid "RAGE! "
@@ -4567,82 +4593,82 @@ msgstr "狂怒！"
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了十分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
-msgstr ""
+msgstr "%s^K1 开始【杀戮】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:455
 msgid "MASSACRE! "
-msgstr ""
+msgstr "杀戮！"
 
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr ""
+msgstr "%s^K1 取得了【混乱】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了十五分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:456
 msgid "MAYHEM! "
-msgstr "伤害！"
+msgstr "混乱！"
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr ""
+msgstr "%s^K1 成为【暴怒者】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了二十分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:457
 msgid "BERSERKER! "
-msgstr ""
+msgstr "暴怒者！"
 
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr ""
+msgstr "%s^K1 成为【修罗者】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了二十五分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:458
 msgid "CARNAGE! "
-msgstr ""
+msgstr "修罗者！"
 
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了三十分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr ""
+msgstr "%s^K1 解封【大决战】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 msgid "ARMAGEDDON! "
-msgstr ""
+msgstr "大决战！"
 
 #: qcsrc/common/notifications/all.qh:466
 #, c-format
 msgid "%s(^F1Bot^BG)"
-msgstr ""
+msgstr "%s(^F1机器人^BG)"
 
 #: qcsrc/common/notifications/all.qh:468
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr ""
+msgstr "%s(延迟 ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:475
 #, c-format
@@ -4650,6 +4676,8 @@ msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
+"\n"
+"(生命 ^1%d^BG / 护甲 ^2%d^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:477
 #, c-format
@@ -4657,16 +4685,18 @@ msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
+"\n"
+"(^F4死亡^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:498 qcsrc/common/notifications/all.qh:511
 #, c-format
 msgid "%d score spree! "
-msgstr ""
+msgstr "%d 次连续得分！"
 
 #: qcsrc/common/notifications/all.qh:510
 #, c-format
 msgid "%d frag spree! "
-msgstr ""
+msgstr "%d 连杀！"
 
 #: qcsrc/common/notifications/all.qh:523
 msgid "First blood! "
@@ -4687,63 +4717,63 @@ msgstr "第一个牺牲者！"
 #: qcsrc/common/notifications/all.qh:568
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr ""
+msgstr "%s^K1 获得 %d 连杀！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:569
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr ""
+msgstr "%s^K1 连续得了 %d 分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:587
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
-msgstr ""
+msgstr "%s^K1 得到第一滴血！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:588
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
-msgstr ""
+msgstr "%s^K1 得到第一分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:604
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ""
+msgstr "，终结了其 %d 连杀"
 
 #: qcsrc/common/notifications/all.qh:605
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ""
+msgstr "，结束了他的 %d 次连续得分"
 
 #: qcsrc/common/notifications/all.qh:619
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr ""
+msgstr "，丢失了其 %d 连杀"
 
 #: qcsrc/common/notifications/all.qh:620
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ""
+msgstr "，丢掉了他的 %d 次连续得分"
 
 #: qcsrc/common/notifications/all.qh:646
 #, c-format
 msgid " with %d %s"
-msgstr ""
+msgstr "，其中带有 %d 个%s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
-msgstr "TEAM^红"
+msgstr "红队"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Blue"
-msgstr "TEAM^蓝"
+msgstr "蓝队"
 
 #: qcsrc/common/teams.qh:33
 msgid "TEAM^Yellow"
-msgstr "TEAM^黄"
+msgstr "黄队"
 
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
-msgstr "TEAM^粉"
+msgstr "粉队"
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
@@ -4755,51 +4785,51 @@ msgstr "中立"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
-msgstr "KEY^红"
+msgstr "红队"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Blue"
-msgstr "KEY^蓝"
+msgstr "蓝队"
 
 #: qcsrc/common/teams.qh:41
 msgid "KEY^Yellow"
-msgstr "KEY^黄"
+msgstr "黄队"
 
 #: qcsrc/common/teams.qh:42
 msgid "KEY^Pink"
-msgstr "KEY^粉"
+msgstr "粉队"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Red"
-msgstr "FLAG^红"
+msgstr "红队"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Blue"
-msgstr "FLAG^蓝"
+msgstr "蓝队"
 
 #: qcsrc/common/teams.qh:45
 msgid "FLAG^Yellow"
-msgstr "FLAG^黄"
+msgstr "黄队"
 
 #: qcsrc/common/teams.qh:46
 msgid "FLAG^Pink"
-msgstr "FLAG^粉"
+msgstr "粉队"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Red"
-msgstr "GENERATOR^红"
+msgstr "红队"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Blue"
-msgstr "GENERATOR^蓝"
+msgstr "蓝队"
 
 #: qcsrc/common/teams.qh:49
 msgid "GENERATOR^Yellow"
-msgstr "GENERATOR^黄"
+msgstr "黄队"
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
-msgstr "GENERATOR^粉"
+msgstr "粉队"
 
 #: qcsrc/common/turrets/cl_turrets.qc:126
 #, c-format
@@ -4812,15 +4842,15 @@ msgstr "炮塔"
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
-msgstr "eWheel炮塔"
+msgstr "电轮炮塔"
 
 #: qcsrc/common/turrets/turret/ewheel_weapon.qh:7
 msgid "eWheel"
-msgstr ""
+msgstr "电轮"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
-msgstr "FLAC炮塔"
+msgstr "FLAC 炮塔"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
@@ -4828,19 +4858,19 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
-msgstr ""
+msgstr "融合反应堆"
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
-msgstr ""
+msgstr "地狱离子炮塔"
 
 #: qcsrc/common/turrets/turret/hellion_weapon.qh:7
 msgid "Hellion"
-msgstr "海龙"
+msgstr "地狱离子"
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
-msgstr ""
+msgstr "猎手炮塔"
 
 #: qcsrc/common/turrets/turret/hk_weapon.qh:7
 msgid "Hunter-Killer"
@@ -4856,7 +4886,7 @@ msgstr "机枪"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
-msgstr ""
+msgstr "MLRS 炮塔"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
@@ -4864,11 +4894,11 @@ msgstr "MLRS"
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
-msgstr "飞射炮"
+msgstr "相位炮塔"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr "飞射"
+msgstr "相位炮"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -4884,16 +4914,16 @@ msgstr "双离子炮"
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr "离子枪"
+msgstr "等离子"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "特斯拉线圈"
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
-msgstr ""
+msgstr "行走者炮塔"
 
 #: qcsrc/common/turrets/turret/walker_weapon.qh:7
 msgid "Walker"
@@ -4907,17 +4937,17 @@ msgstr "躲避"
 #: qcsrc/common/util.qc:249
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:241
 msgid "InstaGib"
-msgstr ""
+msgstr "InstaGib（瞬杀）"
 
 #: qcsrc/common/util.qc:250
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:182
 msgid "New Toys"
-msgstr "新的玩具"
+msgstr "新玩意"
 
 #: qcsrc/common/util.qc:251
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid "NIX"
-msgstr ""
+msgstr "NIX（无物品 Xonotic）"
 
 #: qcsrc/common/util.qc:252
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:187
@@ -4941,7 +4971,7 @@ msgstr "隐形"
 
 #: qcsrc/common/util.qc:256
 msgid "Hook"
-msgstr ""
+msgstr "钩爪"
 
 #: qcsrc/common/util.qc:257
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
@@ -4950,7 +4980,7 @@ msgstr "半空中"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "仅近战竞技场"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -4978,11 +5008,11 @@ msgstr "重复命中"
 
 #: qcsrc/common/util.qc:266
 msgid "No powerups"
-msgstr "无能力提升"
+msgstr "无加成物品"
 
 #: qcsrc/common/util.qc:267
 msgid "Powerups"
-msgstr "能力提升"
+msgstr "加成物品"
 
 #: qcsrc/common/util.qc:268
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
@@ -4991,7 +5021,7 @@ msgstr "触摸爆炸"
 
 #: qcsrc/common/util.qc:269
 msgid "Wall jumping"
-msgstr ""
+msgstr "蹬墙跳"
 
 #: qcsrc/common/util.qc:270
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:256
@@ -5000,7 +5030,7 @@ msgstr "无初始武器"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "榴弹"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
@@ -5016,148 +5046,148 @@ msgstr "女性"
 
 #: qcsrc/common/util.qc:1399
 msgid "Undisclosed"
-msgstr ""
+msgstr "保密"
 
 #: qcsrc/common/util.qc:1446
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<找不到键位>"
 
 #: qcsrc/common/util.qc:1447
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<未知键位编号>"
 
 #: qcsrc/common/util.qc:1452
 msgid "TAB"
-msgstr ""
+msgstr "Tab"
 
 #: qcsrc/common/util.qc:1453 qcsrc/common/util.qc:1524
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "回车"
 
 #: qcsrc/common/util.qc:1454
 msgid "ESCAPE"
-msgstr ""
+msgstr "Esc"
 
 #: qcsrc/common/util.qc:1455
 msgid "SPACE"
-msgstr ""
+msgstr "空格"
 
 #: qcsrc/common/util.qc:1457
 msgid "BACKSPACE"
-msgstr ""
+msgstr "退格"
 
 #: qcsrc/common/util.qc:1458 qcsrc/common/util.qc:1515
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "上箭头"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1510
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "下箭头"
 
 #: qcsrc/common/util.qc:1460 qcsrc/common/util.qc:1512
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "左箭头"
 
 #: qcsrc/common/util.qc:1461 qcsrc/common/util.qc:1513
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "右箭头"
 
 #: qcsrc/common/util.qc:1463
 msgid "ALT"
-msgstr ""
+msgstr "Alt"
 
 #: qcsrc/common/util.qc:1464
 msgid "CTRL"
-msgstr ""
+msgstr "Ctrl"
 
 #: qcsrc/common/util.qc:1465
 msgid "SHIFT"
-msgstr ""
+msgstr "Shift"
 
 #: qcsrc/common/util.qc:1467 qcsrc/common/util.qc:1508
 #, c-format
 msgid "INS"
-msgstr ""
+msgstr "Insert 键"
 
 #: qcsrc/common/util.qc:1468 qcsrc/common/util.qc:1518
 #, c-format
 msgid "DEL"
-msgstr ""
+msgstr "Delete 键"
 
 #: qcsrc/common/util.qc:1469 qcsrc/common/util.qc:1511
 #, c-format
 msgid "PGDN"
-msgstr ""
+msgstr "PageDown 键"
 
 #: qcsrc/common/util.qc:1470 qcsrc/common/util.qc:1516
 #, c-format
 msgid "PGUP"
-msgstr ""
+msgstr "PageUp 键"
 
 #: qcsrc/common/util.qc:1471 qcsrc/common/util.qc:1514
 #, c-format
 msgid "HOME"
-msgstr ""
+msgstr "Home 键"
 
 #: qcsrc/common/util.qc:1472 qcsrc/common/util.qc:1509
 #, c-format
 msgid "END"
-msgstr ""
+msgstr "End 键"
 
 #: qcsrc/common/util.qc:1474
 msgid "PAUSE"
-msgstr ""
+msgstr "Pause 键"
 
 #: qcsrc/common/util.qc:1476
 msgid "NUMLOCK"
-msgstr ""
+msgstr "小键盘切换键"
 
 #: qcsrc/common/util.qc:1477
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "大写锁定键"
 
 #: qcsrc/common/util.qc:1478
 msgid "SCROLLOCK"
-msgstr ""
+msgstr "ScrollLock 键"
 
 #: qcsrc/common/util.qc:1480
 msgid "SEMICOLON"
-msgstr ""
+msgstr "分号"
 
 #: qcsrc/common/util.qc:1481
 msgid "TILDE"
-msgstr ""
+msgstr "波浪号"
 
 #: qcsrc/common/util.qc:1482
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "反撇号"
 
 #: qcsrc/common/util.qc:1483
 msgid "QUOTE"
-msgstr ""
+msgstr "双引号"
 
 #: qcsrc/common/util.qc:1484
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "单引号"
 
 #: qcsrc/common/util.qc:1485
 msgid "BACKSLASH"
-msgstr ""
+msgstr "反斜杠"
 
 #: qcsrc/common/util.qc:1493
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1503
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "KP_%d"
 
 #: qcsrc/common/util.qc:1508 qcsrc/common/util.qc:1509
 #: qcsrc/common/util.qc:1510 qcsrc/common/util.qc:1511
@@ -5170,64 +5200,64 @@ msgstr ""
 #: qcsrc/common/util.qc:1524 qcsrc/common/util.qc:1525
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "%s"
 
 #: qcsrc/common/util.qc:1517
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "点号"
 
 #: qcsrc/common/util.qc:1519
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "除号"
 
 #: qcsrc/common/util.qc:1520
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "斜杠"
 
 #: qcsrc/common/util.qc:1521
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "乘号"
 
 #: qcsrc/common/util.qc:1522
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "减号"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "加号"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "等号"
 
 #: qcsrc/common/util.qc:1530
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "PrintScreen 键"
 
 #: qcsrc/common/util.qc:1533
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "鼠标按键 %d"
 
 #: qcsrc/common/util.qc:1535
 msgid "MWHEELUP"
-msgstr ""
+msgstr "鼠标向上滚轮"
 
 #: qcsrc/common/util.qc:1536
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "鼠标向下滚轮"
 
 #: qcsrc/common/util.qc:1539
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "操纵杆按键 %d"
 
 #: qcsrc/common/util.qc:1542
 #, c-format
@@ -5357,22 +5387,22 @@ msgstr ""
 #: qcsrc/common/util.qc:1578
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "上"
 
 #: qcsrc/common/util.qc:1579
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "下"
 
 #: qcsrc/common/util.qc:1580
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "左"
 
 #: qcsrc/common/util.qc:1581
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "右"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
@@ -5386,23 +5416,23 @@ msgstr "按 %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No right gunner!"
-msgstr ""
+msgstr "没有右舷炮架！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:962
 msgid "No left gunner!"
-msgstr ""
+msgstr "没有左舷炮架！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
-msgstr "黄蜂"
+msgstr "野峰"
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:21
 msgid "Racer"
-msgstr "赛车"
+msgstr "竞速者"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr "赛车大炮"
+msgstr "竞速者大炮"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -5410,19 +5440,19 @@ msgstr "猛枭"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "猛枭大炮"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
-msgstr ""
+msgstr "猛枭炸弹"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:25
 msgid "Raptor flare"
-msgstr ""
+msgstr "猛枭烈火"
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:21
 msgid "Spiderbot"
-msgstr ""
+msgstr "蜘蛛机器人"
 
 #: qcsrc/common/weapons/weapon/arc.qh:20
 msgid "Arc"
@@ -5475,7 +5505,7 @@ msgstr "榴弹枪"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
-msgstr ""
+msgstr "传送门放置器"
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
@@ -5483,7 +5513,7 @@ msgstr "步枪"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:20
 msgid "T.A.G. Seeker"
-msgstr ""
+msgstr "T.A.G. 瞄准者"
 
 #: qcsrc/common/weapons/weapon/shockwave.qh:18
 msgid "Shockwave"
@@ -5689,22 +5719,22 @@ msgstr "CI_MUL^%d 秒"
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr "第%d名"
+msgstr "第 %d 名"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr "第%d名"
+msgstr "第 %d 名"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr "第%d名"
+msgstr "第 %d 名"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr "第%d名"
+msgstr "第 %d 名"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
@@ -5715,12 +5745,12 @@ msgstr "无说明"
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
 "please file an issue."
-msgstr ""
+msgstr "实体域 %s.%s (%s) 未列入白名单。如果你确认这是一个错误，请报告问题"
 
 #: qcsrc/lib/string.qh:186
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr "%d天，%02d:%02d:%02d"
+msgstr "%d 天，%02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:187
 #, c-format
@@ -5793,11 +5823,11 @@ msgstr "游戏引擎"
 
 #: qcsrc/menu/xonotic/credits.qc:129
 msgid "Engine Additions"
-msgstr ""
+msgstr "引擎增强"
 
 #: qcsrc/menu/xonotic/credits.qc:135
 msgid "Compiler"
-msgstr ""
+msgstr "编译器"
 
 #: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
@@ -5809,7 +5839,7 @@ msgstr "翻译者"
 
 #: qcsrc/menu/xonotic/credits.qc:150
 msgid "Asturian"
-msgstr ""
+msgstr "阿斯图里亚斯语"
 
 #: qcsrc/menu/xonotic/credits.qc:155
 msgid "Belarusian"
@@ -5873,7 +5903,7 @@ msgstr "意大利语"
 
 #: qcsrc/menu/xonotic/credits.qc:271
 msgid "Japanese"
-msgstr ""
+msgstr "日语"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Kazakh"
@@ -5893,7 +5923,7 @@ msgstr "葡萄牙语"
 
 #: qcsrc/menu/xonotic/credits.qc:314
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "葡萄牙语（巴西）"
 
 #: qcsrc/menu/xonotic/credits.qc:320
 msgid "Romanian"
@@ -5901,7 +5931,7 @@ msgstr "罗马尼亚语"
 
 #: qcsrc/menu/xonotic/credits.qc:329
 msgid "Russian"
-msgstr "俄文"
+msgstr "俄语"
 
 #: qcsrc/menu/xonotic/credits.qc:344
 msgid "Scottish Gaelic"
@@ -5921,7 +5951,7 @@ msgstr "瑞典语"
 
 #: qcsrc/menu/xonotic/credits.qc:376
 msgid "Turkish"
-msgstr ""
+msgstr "土耳其语"
 
 #: qcsrc/menu/xonotic/credits.qc:385
 msgid "Ukrainian"
@@ -5933,7 +5963,7 @@ msgstr "过去的贡献者"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr "强制保存到config.cfg"
+msgstr "强制保存到 config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
@@ -5941,11 +5971,11 @@ msgstr "将不会被保存"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr "将被保存到config.cfg"
+msgstr "将被保存到 config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "私有"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
@@ -5953,7 +5983,7 @@ msgstr "引擎设定"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
-msgstr ""
+msgstr "只读"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
@@ -5962,11 +5992,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr "好的"
+msgstr "完成"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr ""
+msgstr "鸣谢"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
@@ -5978,7 +6008,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"欢迎来到 Xonotic，请选择你的语言、输入玩家名称以开始。之后可以在主菜单更改。"
+"欢迎来到 Xonotic，请选择你的语言、输入玩家名称以开始。之后也可以在主菜单更"
+"改。"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -5996,7 +6027,7 @@ msgstr "文本语言："
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr "允许stats.xonotic.org使用你的昵称做玩家统计？"
+msgstr "允许 stats.xonotic.org 使用你的昵称做玩家统计？"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:89
 msgid "Undecided"
@@ -6006,7 +6037,7 @@ msgstr "未决定"
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
-msgstr ""
+msgstr "玩家统计默认启用，你可以在“用户档案”菜单更改"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:95
 msgid "Save settings"
@@ -6070,7 +6101,7 @@ msgstr "游戏菜单"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
-msgstr "弹药显示:"
+msgstr "弹药显示："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 msgid "Show only current ammo type"
@@ -6079,17 +6110,17 @@ msgstr "仅显示所需弹药"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:46
 msgid "Noncurrent alpha:"
-msgstr ""
+msgstr "未选择时的透明度："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "未选择时的大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Align icon:"
-msgstr ""
+msgstr "图标对齐："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
@@ -6117,19 +6148,19 @@ msgstr "右"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
-msgstr "弹药界面"
+msgstr "弹药栏"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:19
 msgid "Message duration:"
-msgstr ""
+msgstr "消息持续时间："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
 msgid "Fade time:"
-msgstr ""
+msgstr "淡出时间："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 msgid "Flip messages order"
-msgstr ""
+msgstr "翻转消息顺序"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
@@ -6144,27 +6175,27 @@ msgstr "中心"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Font scale:"
-msgstr ""
+msgstr "字体大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "粗体字大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr ""
+msgstr "中心消息面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
 msgid "Chat entries:"
-msgstr ""
+msgstr "聊天内容："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
-msgstr "对话大小"
+msgstr "对话大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
-msgstr "对话时间"
+msgstr "显示时长："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat beep sound"
@@ -6172,34 +6203,34 @@ msgstr "对话提示音效"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr "对话界面"
+msgstr "聊天面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
 msgid "Engine info:"
-msgstr ""
+msgstr "引擎信息："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
-msgstr ""
+msgstr "使用平均算法求 fps"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
-msgstr ""
+msgstr "引擎信息面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 msgid "Combine health and armor"
-msgstr ""
+msgstr "合并生命与护甲"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Enable status bar"
-msgstr ""
+msgstr "启用状态栏"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:19
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "状态栏对齐："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:39
@@ -6218,27 +6249,27 @@ msgstr "向外"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:32
 msgid "Icon alignment:"
-msgstr ""
+msgstr "图标对齐："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
 msgid "Flip health and armor positions"
-msgstr ""
+msgstr "调换生命与护甲位置"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr ""
+msgstr "生命/护甲面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
 msgid "Info messages:"
-msgstr ""
+msgstr "提示消息："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:19
 msgid "Flip align"
-msgstr ""
+msgstr "对齐到另一边"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
-msgstr ""
+msgstr "提示消息面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
@@ -6258,7 +6289,7 @@ msgstr "禁用"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr ""
+msgstr "启用观察"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
@@ -6266,51 +6297,51 @@ msgstr "在热身阶段也启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
-msgstr ""
+msgstr "降低的"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "文字/图标比例："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
-msgstr ""
+msgstr "隐藏生成的物品"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
-msgstr ""
+msgstr "隐藏大护甲和大血包"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
-msgstr ""
+msgstr "动态大小"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "物品时间面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr ""
+msgstr "模式图标面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:17
 msgid "Notifications:"
-msgstr ""
+msgstr "通知："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
 msgid "Also print notifications to the console"
-msgstr ""
+msgstr "也将通知打印至控制台"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:23
 msgid "Flip notify order"
-msgstr ""
+msgstr "翻转通知顺序"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:26
 msgid "Entry lifetime:"
-msgstr ""
+msgstr "项目显示时间："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:30
 msgid "Entry fadetime:"
-msgstr ""
+msgstr "项目淡出时间："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
@@ -6321,17 +6352,17 @@ msgstr "通知面板"
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
 #: qcsrc/menu/xonotic/util.qc:737
 msgid "Enable"
-msgstr ""
+msgstr "启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
 msgid "Enable even observing"
-msgstr ""
+msgstr "在旁观时也启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Enable only in Race/CTS"
-msgstr ""
+msgstr "仅在竞速/CTS中启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -6357,19 +6388,19 @@ msgstr "向外对齐"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
-msgstr ""
+msgstr "调换速度条/加速度条的位置"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr "速度:"
+msgstr "速度："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
-msgstr ""
+msgstr "包括垂直速度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Speed unit:"
-msgstr "速度单位:"
+msgstr "速度单位："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
@@ -6385,44 +6416,44 @@ msgstr "加速度："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
-msgstr ""
+msgstr "包括垂直加速度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "物理面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "加成物品面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "总是启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
-msgstr ""
+msgstr "固定比例："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr ""
+msgstr "按键面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr "快捷菜单界面"
+msgstr "快捷菜单面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "竞速计时面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr "在团队游戏时启用"
+msgstr "在团队游戏中启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
-msgstr "雷达:"
+msgstr "雷达："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
@@ -6435,11 +6466,11 @@ msgstr "雷达:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
 #: qcsrc/menu/xonotic/util.qc:771
 msgid "Alpha:"
-msgstr ""
+msgstr "透明度："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
 msgid "Rotation:"
-msgstr "旋转:"
+msgstr "旋转："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
 msgid "Forward"
@@ -6483,7 +6514,7 @@ msgstr "总是缩放"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr "永不缩放"
+msgstr "从不缩放"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -6500,106 +6531,106 @@ msgstr "排名："
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
 msgid "Off"
-msgstr "关"
+msgstr "无"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:22
 msgid "And me"
-msgstr "以及我"
+msgstr "包含我"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:23
 msgid "Pure"
-msgstr "纯净"
+msgstr "开"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr "评分小组"
+msgstr "得分面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "StrafeHUD mode:"
-msgstr ""
+msgstr "目标概览模式："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "View angle centered"
-msgstr ""
+msgstr "视场角放在中央"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Velocity angle centered"
-msgstr ""
+msgstr "动力角放在中央"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr ""
+msgstr "目标概览风格："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
-msgstr ""
+msgstr "无风格"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "progress bar"
-msgstr ""
+msgstr "进度条"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "gradient"
-msgstr ""
+msgstr "渐变"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
 msgid "Demo mode"
-msgstr ""
+msgstr "演示模式"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
 msgid "Range:"
-msgstr ""
+msgstr "范围："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
 msgid "Center panel"
-msgstr ""
+msgstr "面板放在中央"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Reset colors"
-msgstr ""
+msgstr "重置颜色"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Strafe bar:"
-msgstr ""
+msgstr "概览条："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
 msgid "Angle indicator:"
-msgstr ""
+msgstr "角度指示："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:85
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:93
 msgid "Neutral:"
-msgstr ""
+msgstr "平衡："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:87
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:95
 msgid "Good:"
-msgstr ""
+msgstr "好："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:89
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:97
 msgid "Overturn:"
-msgstr ""
+msgstr "过度转向："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "Switch indicators:"
-msgstr ""
+msgstr "掉头指示："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Direction caps:"
-msgstr ""
+msgstr "方向指示："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Active:"
-msgstr ""
+msgstr "活跃："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:134
 msgid "Inactive:"
-msgstr ""
+msgstr "不活跃"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr ""
+msgstr "目标概览面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"
@@ -6611,11 +6642,11 @@ msgstr "显示累计时间"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr ""
+msgstr "第二计时器："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
-msgstr ""
+msgstr "调换"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -6623,39 +6654,39 @@ msgstr "计时器面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr ""
+msgstr "投票后的透明度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr "投票小组"
+msgstr "投票面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 msgid "Fade out after:"
-msgstr ""
+msgstr "淡出延迟："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "Never"
-msgstr "永不"
+msgstr "从不"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:26
 #, c-format
 msgid "%ds"
-msgstr ""
+msgstr "%d 秒"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:30
 msgid "Fade effect:"
-msgstr ""
+msgstr "淡出效果："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "EF^None"
-msgstr ""
+msgstr "无"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
-msgstr "阿尔法"
+msgstr "透明度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "Slide"
@@ -6663,7 +6694,7 @@ msgstr "滑动"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
 msgid "EF^Both"
-msgstr "EF^都用"
+msgstr "都有"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Weapon icons:"
@@ -6675,23 +6706,23 @@ msgstr "仅显示拥有的武器"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show weapon ID as:"
-msgstr "显示武器ID为："
+msgstr "显示武器 ID："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "SHOWAS^None"
-msgstr ""
+msgstr "无"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:56
 msgid "Number"
-msgstr "数字"
+msgstr "编号"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:57
 msgid "Bind"
-msgstr "绑定"
+msgstr "按键"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Weapon ID scale:"
-msgstr ""
+msgstr "武器 ID 大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
@@ -6740,11 +6771,11 @@ msgstr "设置皮肤"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
-msgstr "储存当前皮肤"
+msgstr "保存当前皮肤"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
-msgstr "背景界面默认:"
+msgstr "背景界面默认值："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
 #: qcsrc/menu/xonotic/util.qc:746
@@ -6769,27 +6800,27 @@ msgstr "在配置模式下测试团队的颜色"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
 #: qcsrc/menu/xonotic/util.qc:791
 msgid "Padding:"
-msgstr "填充："
+msgstr "垫边："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:93
 msgid "HUD Dock:"
-msgstr ""
+msgstr "HUD 容器效果："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
-msgstr ""
+msgstr "禁用"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:96
 msgid "DOCK^Small"
-msgstr ""
+msgstr "小"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:97
 msgid "DOCK^Medium"
-msgstr ""
+msgstr "中"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:98
 msgid "DOCK^Large"
-msgstr ""
+msgstr "大"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:121
 msgid "Grid settings:"
@@ -6813,15 +6844,15 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 msgid "Exit setup"
-msgstr "退出安装程序"
+msgstr "退出配置"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:6
 msgid "Panel HUD Setup"
-msgstr "HUD界面设置"
+msgstr "HUD 配置面板"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
-msgstr "怪物:"
+msgstr "怪物："
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
@@ -6842,7 +6873,7 @@ msgstr "跟随"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wander"
-msgstr ""
+msgstr "浮游"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
@@ -6867,7 +6898,7 @@ msgstr "怪物工具"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Find servers to play on"
-msgstr ""
+msgstr "搜寻可供游玩的服务器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Host your own game"
@@ -6885,7 +6916,7 @@ msgstr "多人游戏"
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
-msgstr ""
+msgstr "在线游戏，与局域网中的朋友比拼，观看演示或更改玩家设置"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
@@ -6898,7 +6929,7 @@ msgstr "默认"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:42
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Unlimited"
-msgstr "无限"
+msgstr "无限制"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:76
 msgid "Gametype"
@@ -6919,7 +6950,7 @@ msgstr "%d 分钟"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "TIMLIM^Default"
-msgstr "TIMLIM^默认"
+msgstr "默认"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:171
@@ -6928,23 +6959,23 @@ msgstr "1 分钟"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
-msgstr "TIMLIM^无限时间"
+msgstr "无限时间"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
 msgid "Teams:"
-msgstr "团队："
+msgstr "团队数："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "2 teams"
-msgstr "2支小队"
+msgstr "2 支"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "3 teams"
-msgstr "3支小队"
+msgstr "3 支"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "4 teams"
-msgstr "4支小队"
+msgstr "4 支"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
@@ -6954,7 +6985,7 @@ msgstr "最大玩家数量："
 msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
-msgstr ""
+msgstr "可同时连接到你服务器的玩家或机器人的最大数量"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
@@ -6962,7 +6993,7 @@ msgstr "机器人数量："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Amount of bots on your server"
-msgstr "服务器上的机器人数量："
+msgstr "服务器上的机器人数量"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Bot skill:"
@@ -6970,7 +7001,7 @@ msgstr "机器人水平："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "Specify how experienced the bots will be"
-msgstr ""
+msgstr "指定机器人的作战实力"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Botlike"
@@ -6982,15 +7013,15 @@ msgstr "新手"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "You will win"
-msgstr "你会赢的"
+msgstr "你会赢"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You can win"
-msgstr "你能赢的"
+msgstr "你能赢"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You might win"
-msgstr "你可能会赢"
+msgstr "你可能赢"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "Advanced"
@@ -7018,7 +7049,7 @@ msgstr "超神"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
 msgid "Mutators..."
-msgstr "插件..."
+msgstr "插件……"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Mutators and weapon arenas"
@@ -7033,6 +7064,7 @@ msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
+"点这里或按 Ctrl-F 并输入关键字以过滤地图。按 Ctrl-Delete 清除；当完成时回车"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
 msgid "Add shown"
@@ -7056,7 +7088,7 @@ msgstr "添加全部"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Add every available map to your selection"
-msgstr ""
+msgstr "将所有可用地图添加到你的选择中"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:204
 msgid "Remove all"
@@ -7068,7 +7100,7 @@ msgstr "移除所有你所选择的地图"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "开始多人游戏！"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -7089,7 +7121,7 @@ msgstr "关闭"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:88
 msgid "MAP^Play"
-msgstr "MAP^开始"
+msgstr "开始"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qh:7
 msgid "Map Information"
@@ -7097,7 +7129,7 @@ msgstr "地图信息"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr ""
+msgstr "无"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -7107,21 +7139,21 @@ msgstr "游戏插件："
 msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
-msgstr ""
+msgstr "启用闪避（往指定方向快速移动）。双击一个方向键以闪避"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "当两个玩家相碰撞时发生爆炸"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid "All players are almost invisible"
-msgstr ""
+msgstr "所有玩家都近乎隐身"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
-msgstr ""
+msgstr "在支持的地图上启用可拾取的增益物品（像治愈、隐身等的随机奖励）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -7135,39 +7167,39 @@ msgstr "对敌人造成的伤害会转为自己的生命值"
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
-msgstr ""
+msgstr "生命值在此之下的玩家开始流血（生命值腐败、无法跳跃）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:157
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
-msgstr ""
+msgstr "让事物下落得慢些（相对正常重力的百分比）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:166
 msgid "Weapon & item mutators:"
-msgstr "武器 & 项目的插件："
+msgstr "武器与物品插件："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr ""
+msgstr "玩家生成时携带钩爪。按下“钩爪”按键以使用"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:174
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
-msgstr ""
+msgstr "玩家生成时携带喷气背包。双击“跳跃”键或按下“喷气背包”按键以使用"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
-msgstr ""
+msgstr "射弹不会被破坏。不过，你仍然可以用电射枪的主攻击爆破电射球"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
-"一些武器在生成时会被随机替换为新武器：重型镭射突击大炮、地雷放置者、步枪、T."
-"A.G. 瞄准者"
+"一些武器在生成时会被随机替换为新武器：\n"
+"重型镭射突击大炮、地雷放置者、步枪、T.A.G. 瞄准者"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
 msgid ""
@@ -7175,24 +7207,26 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"灭世的火箭弹可被迅速引爆（一般有一小段延迟）。这使得玩家在空中时可以打出并引"
+"爆灭世火箭弹以获得强大的加速度"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:193
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr ""
+msgstr "在玩家被杀死时会掉落他所捡起过的所有武器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
 msgid "Weapons stay after they are picked up"
-msgstr "武器在被捡起时不消失"
+msgstr "武器在被捡起时不消失（其他玩家可立即再次捡取）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:203
 msgid "Regular (no arena)"
-msgstr "常规 (无竞技场)"
+msgstr "常规（无竞技）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:204
 msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
-msgstr ""
+msgstr "玩家在生成时会携带一些武器及无限弹药，而不捡取武器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:206
 msgid "Weapon arenas:"
@@ -7212,7 +7246,7 @@ msgstr "全部武器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:238
 msgid "Special arenas:"
-msgstr "特殊竞技场："
+msgstr "特殊竞技："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:242
 msgid ""
@@ -7247,11 +7281,11 @@ msgstr "插件"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
-msgstr "SRVS^分类"
+msgstr "分类"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
 msgid "SRVS^Empty"
-msgstr "SRVS^空"
+msgstr "空"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:43
 msgid "Show empty servers"
@@ -7259,7 +7293,7 @@ msgstr "显示空服务器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:47
 msgid "SRVS^Full"
-msgstr "SRVS^满员"
+msgstr "满员"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
 msgid "Show full servers that have no slots available"
@@ -7267,7 +7301,7 @@ msgstr "显示没有多余空位的满员服务器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr "SRVS^卡顿"
+msgstr "卡顿"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
@@ -7284,7 +7318,7 @@ msgstr "暂停"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
-msgstr ""
+msgstr "暂停刷新服务器列表以固定选项位置、便于点击"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:30
@@ -7293,7 +7327,7 @@ msgstr "地址："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Info..."
-msgstr "信息..."
+msgstr "信息……"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
 msgid "Show more information about the currently highlighted server"
@@ -7302,12 +7336,12 @@ msgstr "显示当前高亮服务器的更多信息"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "未指定服务条款"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "MOD^Default"
-msgstr "MOD^默认"
+msgstr "默认"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
@@ -7320,11 +7354,11 @@ msgstr "官方"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
-msgstr "N/A （缺失验证库，无法连接）"
+msgstr "N/A（缺失验证库，无法连接）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "N/A (auth library missing)"
-msgstr "N/A （缺失验证库）"
+msgstr "N/A（缺失验证库）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:167
 msgid "Not supported (can't connect)"
@@ -7344,28 +7378,28 @@ msgstr "支持（不加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:179
 msgid "Requested (will encrypt)"
-msgstr ""
+msgstr "请求（将会加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:181
 msgid "Requested (won't encrypt)"
-msgstr ""
+msgstr "请求（将不加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:185
 msgid "Required (can't connect)"
-msgstr ""
+msgstr "需要（不会连接）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:187
 msgid "Required (will encrypt)"
-msgstr ""
+msgstr "需要（将会加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr ""
+msgstr "使用 cvar `crypto_aeslevel` 以设置你的偏好"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "custom stats server"
-msgstr ""
+msgstr "自定义统计服务器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1055
@@ -7379,17 +7413,17 @@ msgstr "启动统计"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "服务条款"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "服务器信息"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7430,7 +7464,7 @@ msgstr "加密："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:86
 msgid "ID:"
-msgstr "ID:"
+msgstr "ID："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:91
 msgid "Key:"
@@ -7438,7 +7472,7 @@ msgstr "密码："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
-msgstr ""
+msgstr "状态："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
@@ -7470,7 +7504,7 @@ msgstr "对你的电脑播放所选演示的速度进行基准测试"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
-msgstr "DEMO^播放"
+msgstr "播放"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
@@ -7492,11 +7526,11 @@ msgstr "定时演示将断开你当前的比赛"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
-msgstr "MUSICPL^添加"
+msgstr "添加"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:40
 msgid "MUSICPL^Add all"
-msgstr "MUSICPL^添加全部"
+msgstr "添加全部"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:44
 msgid "Set as menu track"
@@ -7516,31 +7550,31 @@ msgstr "随机顺序"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "MUSICPL^Stop"
-msgstr "MUSICPL^停止"
+msgstr "停止"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:63
 msgid "MUSICPL^Play"
-msgstr "MUSICPL^播放"
+msgstr "播放"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:66
 msgid "MUSICPL^Pause"
-msgstr "MUSICPL^暂停"
+msgstr "暂停"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:69
 msgid "MUSICPL^Prev"
-msgstr "MUSICPL^上一首"
+msgstr "上一首"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:72
 msgid "MUSICPL^Next"
-msgstr "MUSICPL^下一首"
+msgstr "下一首"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:76
 msgid "MUSICPL^Remove"
-msgstr "MUSICPL^移除"
+msgstr "移除"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:79
 msgid "MUSICPL^Remove all"
-msgstr "MUSICPL^全部移除"
+msgstr "全部移除"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
 msgid "Auto screenshot scoreboard"
@@ -7641,19 +7675,19 @@ msgstr "骨骼："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:31
 msgid "Set * as child"
-msgstr ""
+msgstr "把 * 设为子节点"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:32
 msgid "Attach to *"
-msgstr ""
+msgstr "附加至 *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:34
 msgid "Detach from *"
-msgstr ""
+msgstr "从 * 分离"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:37
 msgid "Visual object properties for *:"
-msgstr ""
+msgstr "* 的视觉对象参数："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:41
 msgid "Set alpha:"
@@ -7673,7 +7707,7 @@ msgstr "设置框架："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:54
 msgid "Physical object properties for *:"
-msgstr ""
+msgstr "* 的物理对象参数："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:56
 msgid "Set material:"
@@ -7681,55 +7715,55 @@ msgstr "设定材质"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:62
 msgid "Set solidity:"
-msgstr ""
+msgstr "设置实心性："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:63
 msgid "Non-solid"
-msgstr ""
+msgstr "非实心"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:64
 msgid "Solid"
-msgstr ""
+msgstr "实心"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:65
 msgid "Set physics:"
-msgstr ""
+msgstr "设置物理："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:66
 msgid "Static"
-msgstr ""
+msgstr "静态"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:67
 msgid "Movable"
-msgstr ""
+msgstr "可移动"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:68
 msgid "Physical"
-msgstr ""
+msgstr "物理的"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:70
 msgid "Set scale:"
-msgstr ""
+msgstr "设置大小："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:72
 msgid "Set force:"
-msgstr ""
+msgstr "设置力度："
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:76
 msgid "Claim *"
-msgstr ""
+msgstr "回收 *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
 msgid "* object info"
-msgstr ""
+msgstr "* 对象信息"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "* mesh info"
-msgstr ""
+msgstr "* 纹理信息"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:80
 msgid "* attachment info"
-msgstr ""
+msgstr "* 附件信息"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
@@ -7737,7 +7771,7 @@ msgstr "显示帮助"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
 msgid "* is the object you are facing"
-msgstr ""
+msgstr "* 是你所面前的对象"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qh:6
 msgid "Sandbox Tools"
@@ -7782,7 +7816,7 @@ msgstr "音乐："
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:44
 msgid "VOL^Ambient:"
-msgstr "VOL^环境："
+msgstr "环境："
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:51
 msgid "Info:"
@@ -7928,7 +7962,7 @@ msgstr "当你成功击中敌人时播放提示音效"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "SND^Fixed"
-msgstr "SND^固定"
+msgstr "固定"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
@@ -7972,7 +8006,7 @@ msgstr "时间提醒："
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:170
 msgid "WRN^Disabled"
-msgstr "WRN^已禁用"
+msgstr "已禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:172
 msgid "5 minutes"
@@ -7980,7 +8014,7 @@ msgstr "5 分钟"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:173
 msgid "WRN^Both"
-msgstr "WRN^都有"
+msgstr "都有"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:176
 msgid "Automatic taunts:"
@@ -8022,31 +8056,31 @@ msgstr "质量预设："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
-msgstr "PRE^我的天!"
+msgstr "我的天!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:48
 msgid "PRE^Low"
-msgstr "PRE^低阶"
+msgstr "低阶"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:50
 msgid "PRE^Medium"
-msgstr "PRE^中阶"
+msgstr "中阶"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:52
 msgid "PRE^Normal"
-msgstr "PRE^标准"
+msgstr "标准"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:54
 msgid "PRE^High"
-msgstr "PRE^高阶"
+msgstr "高阶"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:56
 msgid "PRE^Ultra"
-msgstr "PRE^超级"
+msgstr "超级"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:60
 msgid "PRE^Ultimate"
-msgstr "PRE^极限"
+msgstr "极限"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
 msgid "Geometry detail:"
@@ -8058,27 +8092,27 @@ msgstr "更改地图中的曲线圆滑度"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
-msgstr "DET^极低"
+msgstr "极低"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "DET^Low"
-msgstr "DET^低"
+msgstr "低"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr "DET^正常"
+msgstr "正常"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
-msgstr "DET^好"
+msgstr "好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "DET^Best"
-msgstr "DET^最好"
+msgstr "最好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr "DET^疯狂"
+msgstr "疯狂"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
@@ -8086,23 +8120,23 @@ msgstr "玩家身体细节："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr "PDET^低阶"
+msgstr "低阶"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
-msgstr "PDET^中阶"
+msgstr "中阶"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr "PDET^标准"
+msgstr "标准"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
-msgstr "PDET^好"
+msgstr "好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr "PDET^最好"
+msgstr "最好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
@@ -8110,31 +8144,31 @@ msgstr "纹理分辨率："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
 msgid "RES^Leet"
-msgstr "RES^单像素"
+msgstr "单像素"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "RES^Lowest"
-msgstr "RES^极低"
+msgstr "极低"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:93
 msgid "RES^Very low"
-msgstr "RES^超低"
+msgstr "超低"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:94
 msgid "RES^Low"
-msgstr "RES^低"
+msgstr "低"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
 msgid "RES^Normal"
-msgstr "RES^标准"
+msgstr "标准"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
 msgid "RES^Good"
-msgstr "RES^好"
+msgstr "好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "RES^Best"
-msgstr "RES^最好"
+msgstr "最好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
@@ -8225,7 +8259,7 @@ msgstr "模糊"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "REFL^Good"
-msgstr "REFL^好"
+msgstr "好"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Sharp"
@@ -8266,7 +8300,7 @@ msgstr "伤害效果："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "DMGFX^Disabled"
-msgstr "DMGFX^禁用"
+msgstr "禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
 msgid "Skeletal"
@@ -8274,7 +8308,7 @@ msgstr "骨骼肌"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:188
 msgid "DMGFX^All"
-msgstr "DMGFX^全部"
+msgstr "全部"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
@@ -8387,11 +8421,11 @@ msgstr "品质："
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
-msgstr ""
+msgstr "增倍粒子数量。值越小，粒子越少、性能越高"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
 msgid "Particles further away than this will not be drawn"
-msgstr ""
+msgstr "将不绘制距离远于此值的粒子"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
@@ -8406,25 +8440,25 @@ msgstr "按武器"
 msgid ""
 "Set a different crosshair for each weapon, good if you play without weapon "
 "models"
-msgstr ""
+msgstr "为各个武器设置不同的准星，在不启用武器模型时会很有帮助"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:97
 msgid "Size:"
-msgstr ""
+msgstr "大小："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
-msgstr ""
+msgstr "按生命值"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
-msgstr "环状表示武器状态"
+msgstr "使用环圈表示武器状态"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:93
 msgid "Enable center crosshair dot"
-msgstr "启用中心准星圆点"
+msgstr "启用准星中心圆点"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:111
 msgid "Use normal crosshair color"
@@ -8432,23 +8466,23 @@ msgstr "使用正常的准星颜色"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:122
 msgid "Smooth effects of crosshairs"
-msgstr ""
+msgstr "准星平滑效果"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Perform hit tests for the crosshair"
-msgstr ""
+msgstr "对准星进行击中测试"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "Blur if obstructed by an obstacle"
-msgstr ""
+msgstr "在被障碍物阻挡时模糊"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid "Blur if obstructed by a teammate"
-msgstr ""
+msgstr "在被队友阻挡时模糊"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
 msgid "Shrink if obstructed by a teammate"
-msgstr ""
+msgstr "在被队友阻挡时缩小"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Animate crosshair when hitting an enemy"
@@ -8472,29 +8506,31 @@ msgstr "渐变速度："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
-msgstr ""
+msgstr "启用行/列高亮"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:53
 msgid "Show accuracy underneath scoreboard"
-msgstr ""
+msgstr "在记分板下方展示精准度统计"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
-msgstr ""
+msgstr "展示团队大小："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"团队大小位置：关=不展示；左=在记分板左侧，并将团队分数放在右侧；右=在记分板右"
+"侧"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
-msgstr ""
+msgstr "路径点"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Display waypoint markers for objectives on the map"
-msgstr ""
+msgstr "在地图中显示路径点标记"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
@@ -8502,7 +8538,7 @@ msgstr "显示不同游戏模式下的路径点"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
-msgstr ""
+msgstr "控制路径点的透明度"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
@@ -8511,15 +8547,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
-msgstr "边缘偏移量:"
+msgstr "边缘偏移："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:91
 msgid "Fade when near the crosshair"
-msgstr ""
+msgstr "离准星较近时淡出"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:95
 msgid "Display names instead of icons"
-msgstr ""
+msgstr "显示名称而非图标"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:100
 msgid "Damage"
@@ -8551,7 +8587,7 @@ msgstr "最大距离："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:142
 msgid "Decolorize:"
-msgstr ""
+msgstr "去掉颜色："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:146
 #: qcsrc/menu/xonotic/keybinder.qc:112
@@ -8572,20 +8608,20 @@ msgstr "伤害层："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "Dynamic HUD"
-msgstr ""
+msgstr "HUD 动效"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "HUD moves around following player's movement"
-msgstr ""
+msgstr "HUD 跟随玩家视角而移动"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "Shake the HUD when hurt"
-msgstr ""
+msgstr "在受伤时震动 HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr "进入HUD编辑器"
+msgstr "进入 HUD 编辑器"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
@@ -8593,7 +8629,7 @@ msgstr "HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr "要展示HUD编辑器，你需要先进入游戏。"
+msgstr "要展示 HUD 编辑器，你需要先进入游戏。"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
@@ -8601,31 +8637,31 @@ msgstr "你是否想开始本地游戏，以在其中配置 HUD？"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
-msgstr ""
+msgstr "杀敌信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Display information about killing sprees"
-msgstr ""
+msgstr "显示连杀信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
 msgid "Only display sprees if they are achievements"
-msgstr ""
+msgstr "仅在连杀为取得成就时显示"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
-msgstr ""
+msgstr "在屏幕中心消息显示连杀信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
 msgid "Show spree information in death messages"
-msgstr ""
+msgstr "在死亡消息中显示连杀信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:43
 msgid "Sprees in info messages:"
-msgstr ""
+msgstr "在提示消息中显示连杀："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:46
 msgid "SPREES^Disabled"
-msgstr ""
+msgstr "禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:47
 msgid "Target"
@@ -8637,19 +8673,19 @@ msgstr "攻击者"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:49
 msgid "SPREES^Both"
-msgstr ""
+msgstr "都有"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
 msgid "Print on a seperate line"
-msgstr ""
+msgstr "打印在单独的一行"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
-msgstr ""
+msgstr "当可用时在中心消息显示额外杀敌信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
-msgstr ""
+msgstr "当可用时在死亡消息显示杀敌信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
@@ -8671,7 +8707,7 @@ msgstr "其它"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
-msgstr ""
+msgstr "在左上角显示控制台消息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 msgid "Display all info messages in the chatbox"
@@ -8683,7 +8719,7 @@ msgstr "在聊天框中显示玩家状态"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:86
 msgid "Powerup notifications"
-msgstr ""
+msgstr "加成物品提醒"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Weapon centerprint notifications"
@@ -8731,23 +8767,23 @@ msgstr "不可用颜色："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "GHOITEMS^Black"
-msgstr "GHOITEMS^黑色"
+msgstr "黑色"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:40
 msgid "GHOITEMS^Dark"
-msgstr "GHOITEMS^深黑"
+msgstr "深黑"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Tinted"
-msgstr "GHOITEMS^有色"
+msgstr "有色"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Normal"
-msgstr "GHOITEMS^标准"
+msgstr "标准"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Blue"
-msgstr "GHOITEMS^蓝色"
+msgstr "蓝色"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:757
@@ -8756,11 +8792,11 @@ msgstr "玩家"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
-msgstr ""
+msgstr "使所有玩家模型与我相同"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player colors to mine"
-msgstr ""
+msgstr "使所有玩家颜色与我相同"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid ""
@@ -8774,7 +8810,7 @@ msgstr "除了团队游戏"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr ""
+msgstr "仅在淘汰赛"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
@@ -8786,27 +8822,27 @@ msgstr "在团队游戏和淘汰赛"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
-msgstr ""
+msgstr "尸体褪出："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "Gibs:"
-msgstr ""
+msgstr "肢体："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
 msgid "GIBS^None"
-msgstr "GIBS^无"
+msgstr "无"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
 msgid "GIBS^Few"
-msgstr "GIBS^少许"
+msgstr "少许"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:71
 msgid "GIBS^Many"
-msgstr "GIBS^多"
+msgstr "多"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
 msgid "GIBS^Lots"
-msgstr "GIBS^很多"
+msgstr "很多"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
 msgid "Models"
@@ -8826,19 +8862,19 @@ msgstr "死亡时切换到第三人称视角"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:33
 msgid "Smooth the view when landing from a jump"
-msgstr ""
+msgstr "在落地时平滑视角"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:37
 msgid "Smooth the view while crouching"
-msgstr ""
+msgstr "当蹲下时平滑视角"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:41
 msgid "View waving while idle"
-msgstr ""
+msgstr "站立不动时的视角起伏"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:45
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "四处移动时的视角摇晃"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:50
 msgid "3rd person perspective"
@@ -8862,19 +8898,19 @@ msgstr "视野："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 msgid "Field of vision in degrees"
-msgstr ""
+msgstr "以度计的视场角度"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:75
 msgid "ZOOM^Zoom factor:"
-msgstr "ZOOM^缩放指数："
+msgstr "缩放指数："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr ""
+msgstr "在按下缩放键时的缩放指数"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "ZOOM^Zoom speed:"
-msgstr "ZOOM^缩放速度："
+msgstr "缩放速度："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "How fast the view will be zoomed, disable to zoom instantly"
@@ -8882,17 +8918,17 @@ msgstr "视角缩放速度，禁用以瞬间缩放"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Instant"
-msgstr "ZOOM^即时"
+msgstr "即时"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:95
 msgid "ZOOM^Zoom sensitivity:"
-msgstr ""
+msgstr "缩放敏感度："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:97
 msgid ""
 "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no "
 "sensitivity change)"
-msgstr ""
+msgstr "缩放如何影响鼠标敏感度，从 0（低敏感）到 1（无改变）"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
 msgid "Velocity zoom"
@@ -8908,15 +8944,15 @@ msgstr "指数"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
 msgid "Display reticle 2D overlay while zooming"
-msgstr ""
+msgstr "在缩放时显示瞄准的 2D 覆盖层"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
 msgid "Release zoom when you die or respawn"
-msgstr "在你死亡或重生时释放缩放"
+msgstr "在你死亡或重生时松开缩放"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:119
 msgid "Release zoom when you switch weapons"
-msgstr "在你切换武器时释放缩放"
+msgstr "在你切换武器时松开缩放"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:83
@@ -8999,7 +9035,7 @@ msgstr "按键绑定"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:38
 msgid "Change key..."
-msgstr "更改按键..."
+msgstr "更改按键……"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:42
 msgid "Edit..."
@@ -9027,11 +9063,11 @@ msgstr "鼠标加速"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr "圆滑瞄准"
+msgstr "平滑瞄准"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
-msgstr "使鼠标运动圆滑，但会使瞄准变得不太可靠"
+msgstr "使鼠标运动平滑，但会使瞄准变得不太可靠"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert aiming"
@@ -9077,7 +9113,7 @@ msgstr "起跳时使用喷气背包："
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
-msgstr "JPJUMP^不使用"
+msgstr "不使用"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
@@ -9150,7 +9186,7 @@ msgstr "移动预测错误补偿"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
-msgstr "当可用时使用加密(AES)"
+msgstr "当可用时使用加密 (AES)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
@@ -9163,11 +9199,11 @@ msgstr "指定你的网速"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "低速 ADSL"
+msgstr "低速拨号"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "高速 ADSL"
+msgstr "高速拨号"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
@@ -9207,7 +9243,7 @@ msgstr "最大值："
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:96
 msgid "MAXFPS^Unlimited"
-msgstr "MAXFPS^无限制"
+msgstr "无限制"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:99
 msgid "Target:"
@@ -9215,7 +9251,7 @@ msgstr "目标值："
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:101
 msgid "TRGT^Disabled"
-msgstr "TRGT^已禁用"
+msgstr "已禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:112
 msgid "Idle limit:"
@@ -9223,11 +9259,11 @@ msgstr "空余时间限制："
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:118
 msgid "IDLFPS^Unlimited"
-msgstr "IDLFPS^无限制"
+msgstr "无限制"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:124
 msgid "Menu tooltips:"
-msgstr "菜单工具提示:"
+msgstr "菜单工具提示："
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:126
 msgid ""
@@ -9238,15 +9274,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:127
 msgid "TLTIP^Disabled"
-msgstr "TLTIP^已禁用"
+msgstr "已禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:128
 msgid "TLTIP^Standard"
-msgstr "TLTIP^标准"
+msgstr "标准"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "TLTIP^Advanced"
-msgstr "TLTIP^高级"
+msgstr "高级"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:132
 msgid "Show current date and time"
@@ -9262,7 +9298,7 @@ msgstr "启用开发人员模式"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:141
 msgid "Advanced settings..."
-msgstr "高级设置..."
+msgstr "高级设置……"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:142
 msgid "Advanced settings where you can tweak every single variable of the game"
@@ -9275,7 +9311,7 @@ msgstr "还原默认设置"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
-msgstr "Cvar 筛选:"
+msgstr "Cvar 筛选："
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
@@ -9359,39 +9395,39 @@ msgstr "字体/界面大小："
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "SZ^Unreadable"
-msgstr "SZ^看不见"
+msgstr "看不见"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:40
 msgid "SZ^Tiny"
-msgstr "SZ^极小"
+msgstr "极小"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:41
 msgid "SZ^Little"
-msgstr "SZ^小"
+msgstr "小"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:42
 msgid "SZ^Small"
-msgstr "SZ^中小"
+msgstr "中小"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:43
 msgid "SZ^Medium"
-msgstr "SZ^中"
+msgstr "中"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:44
 msgid "SZ^Large"
-msgstr "SZ^大"
+msgstr "大"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:45
 msgid "SZ^Huge"
-msgstr "SZ^巨大"
+msgstr "巨大"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:46
 msgid "SZ^Gigantic"
-msgstr "SZ^极大"
+msgstr "极大"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:47
 msgid "SZ^Colossal"
-msgstr "SZ^超大"
+msgstr "超大"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:51
 msgid "Color depth:"
@@ -9399,7 +9435,7 @@ msgstr "色彩深度："
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
-msgstr "以每像素多少位(BPP)渲染，推荐值为32"
+msgstr "以每像素多少位 (BPP) 渲染，推荐值为 32"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
@@ -9439,7 +9475,7 @@ msgstr "启用抗锯齿，可以平滑 3D 几何的边缘。注意这可能极�
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:76
 msgid "AA^Disabled"
-msgstr "AA^已禁用"
+msgstr "已禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:94
@@ -9471,7 +9507,7 @@ msgstr "各向异性过滤质量"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:93
 msgid "ANISO^Disabled"
-msgstr "ANISO^已禁用"
+msgstr "已禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:96
 msgid "8x"
@@ -9493,15 +9529,15 @@ msgstr "通过在正常渲染开始前绘制一份场景的仅深度版本来防
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:105
 msgid "DF^Disabled"
-msgstr "DF^已禁用"
+msgstr "已禁用"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:106
 msgid "DF^World"
-msgstr "DF^世界"
+msgstr "世界"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:107
 msgid "DF^All"
-msgstr "DF^全部"
+msgstr "全部"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:111
 msgid "Brightness:"
@@ -9549,7 +9585,7 @@ msgstr "饱和度调整（0 为灰阶，1 为正常，2 为过度饱和），需
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:144
 msgid "LIT^Ambient:"
-msgstr "LIT^环境:"
+msgstr "环境："
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid ""
@@ -9597,7 +9633,7 @@ msgstr "摇晃的物件（彩蛋）"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action! (random map with bots)"
-msgstr "即刻行动！(与机器人随机游戏)"
+msgstr "即刻行动！（与机器人随机游戏）"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
@@ -9605,15 +9641,15 @@ msgstr "任务难度："
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "CSKL^Easy"
-msgstr "CSKL^容易"
+msgstr "容易"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:171
 msgid "CSKL^Medium"
-msgstr "CSKL^中等"
+msgstr "中等"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:172
 msgid "CSKL^Hard"
-msgstr "CSKL^困难"
+msgstr "困难"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
@@ -9633,11 +9669,11 @@ msgstr "获胜者"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr "加入“最好”的团队 (自动选择)"
+msgstr "加入“最好”的团队（自动选择）"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr "自动选择团队(建议)"
+msgstr "自动选择团队（建议）"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -9730,19 +9766,19 @@ msgstr "攻击"
 
 #: qcsrc/menu/xonotic/keybinder.qc:52
 msgid "WEAPON^previous"
-msgstr "WEAPON^前一个"
+msgstr "前一个"
 
 #: qcsrc/menu/xonotic/keybinder.qc:53
 msgid "WEAPON^next"
-msgstr "WEAPON^后一个"
+msgstr "后一个"
 
 #: qcsrc/menu/xonotic/keybinder.qc:54
 msgid "WEAPON^previously used"
-msgstr "WEAPON^上次使用的"
+msgstr "上次使用的"
 
 #: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^best"
-msgstr "WEAPON^最佳"
+msgstr "最佳"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
@@ -9910,7 +9946,7 @@ msgstr "<未找到模型>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid "SERVER^Remove favorite"
-msgstr "SERVER^移除收藏"
+msgstr "移除收藏"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "Remove the currently highlighted server from bookmarks"
@@ -9918,7 +9954,7 @@ msgstr "从书签中移除所选择的服务器"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"
-msgstr "SERVER^收藏"
+msgstr "收藏"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid ""
@@ -9949,7 +9985,7 @@ msgstr "AES 等级 %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1050
 msgid "ENC^none"
-msgstr "ENC^无"
+msgstr "无"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1050
 msgid "encryption:"
@@ -9972,27 +10008,27 @@ msgstr "官方设定"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
-msgstr "SLCAT^收藏"
+msgstr "收藏"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr "SLCAT^推荐"
+msgstr "推荐"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
-msgstr "SLCAT^一般服务器"
+msgstr "一般服务器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Servers"
-msgstr "SLCAT^服务器"
+msgstr "服务器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr "SLCAT^竞争模式"
+msgstr "竞争模式"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr "SLCAT^模组服务器"
+msgstr "模组服务器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
@@ -10000,7 +10036,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
-msgstr ""
+msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
@@ -10016,11 +10052,11 @@ msgstr "<作者>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
-msgstr "VOL^最大"
+msgstr "最大"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:74
 msgid "VOL^OFF"
-msgstr "VOL^关"
+msgstr "关"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
@@ -10029,31 +10065,31 @@ msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
-msgstr "PART^我的天"
+msgstr "我的天"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "低"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "中"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "正常"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "高"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "很高"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "极高"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -10068,19 +10104,19 @@ msgstr "屏幕分辨率"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "慢"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "正常"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "快"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "瞬间"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
@@ -10133,7 +10169,7 @@ msgstr "十二月"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "DATE^%Y 年 %m %d日"
+msgstr "%Y 年 %m %d日"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
@@ -10192,7 +10228,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
 msgid "%d (unranked)"
-msgstr "%d (未评级)"
+msgstr "%d（未评级）"
 
 #: qcsrc/menu/xonotic/util.qc:419
 msgid "Update can be downloaded at:"
@@ -10200,7 +10236,7 @@ msgstr "更新可从此网址下载："
 
 #: qcsrc/menu/xonotic/util.qc:509
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "正在自动生成新增地图的地图信息......"
+msgstr "正在自动生成新增地图的地图信息..."
 
 #: qcsrc/menu/xonotic/util.qc:544
 #, c-format
