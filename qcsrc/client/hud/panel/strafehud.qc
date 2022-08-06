@@ -94,6 +94,10 @@ void HUD_StrafeHUD()
         static float turnspeed;
         static float turnaccel;
         static bool fwd = true;
+        static float strafe_dt_time = 0;
+        static int strafe_dt_count = 0;
+        static float strafe_dt_sum = 0;
+        static float strafe_dt_avg = 0;
 
         // physics
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
@@ -106,8 +110,10 @@ void HUD_StrafeHUD()
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * crouch_mod * water_mod : 320;
         float  movespeed;
+        float  bestspeed;
         float  maxaccel_phys                 = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
         float  maxaccel                      = !autocvar__hud_configure ? maxaccel_phys * crouch_mod * water_mod : 1;
+        float  frametime_phys;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
         float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
@@ -159,6 +165,27 @@ void HUD_StrafeHUD()
 
         if(!autocvar_hud_panel_strafehud_uncapped)
             arrow_size = max(arrow_size, 1);
+
+        // determine frametime
+        if((csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED) && (input_timelength > 0))
+            frametime_phys = input_timelength;
+        else
+            frametime_phys = ticrate;
+
+        if(frametime_phys > .05) // server splits frames longer than 50 ms into two moves
+            frametime_phys /= 2;
+
+        // calculate average frametime
+        strafe_dt_sum += frametime_phys;
+        ++strafe_dt_count;
+
+        if(((time - strafe_dt_time) > autocvar_hud_panel_strafehud_fps_update) || (strafe_dt_time == 0))
+        {
+            strafe_dt_avg = strafe_dt_sum / strafe_dt_count;
+
+            strafe_dt_time = time;
+            strafe_dt_count = strafe_dt_sum = 0;
+        }
 
         // determine whether the player is pressing forwards or backwards keys
         if(islocal) // if entity is local player
@@ -367,7 +394,9 @@ void HUD_StrafeHUD()
             }
         }
 
-        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? (movespeed - maxaccel) + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
+        maxaccel *= strafe_dt_avg * movespeed;
+        bestspeed = max(movespeed - maxaccel, 0);
+        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? bestspeed : autocvar_hud_panel_strafehud_switch_minspeed;
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -469,8 +498,8 @@ void HUD_StrafeHUD()
         }
 
         // best angle to strafe at
-        bestangle = (speed > fabs(movespeed - maxaccel) ? acos(fabs(movespeed - maxaccel) / speed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
-        prebestangle = (speed > fabs(movespeed) ? acos(fabs(movespeed) / speed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
+        bestangle = (speed > bestspeed ? acos(bestspeed / speed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
+        prebestangle = (speed > movespeed ? acos(movespeed / speed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
         odd_bestangle = -bestangle - wishangle;
         bestangle -= wishangle;
         prebestangle -= wishangle;
@@ -696,7 +725,7 @@ void HUD_StrafeHUD()
             drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
 
-        if(speed <= (fabs(movespeed - maxaccel) + antiflicker_speed) && !immobile)
+        if(speed <= bestspeed && !immobile)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
         }
