@@ -4,6 +4,7 @@
 #
 # Translators:
 # 411370735b8ef90fa32c21e58a50941e_d905c03 <7784313cf022f885419b74f26eaf98f3_541595>, 2016-2017
+# Krasimir Mikov, 2022
 # set_killer <mettall@abv.bg>, 2014
 # Nik Dim <lilo@abv.bg>, 2020
 # ubone <van_ds_ff@mail.bg>, 2016
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: ubone <van_ds_ff@mail.bg>, 2016\n"
+"Last-Translator: Krasimir Mikov, 2022\n"
 "Language-Team: Bulgarian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/bg/)\n"
 "Language: bg\n"
@@ -27,22 +28,22 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Успешно записан в %s! (Бележка: Запазено е в data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Не може да пише в %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Заглавие в %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Съобщение за обратно броене във време %s, оставащи секунди: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -50,20 +51,22 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Многоредово съобщение във време %s което\n"
+"^BOLDсе задържа по-дълго от нормалното"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Съобщение във време %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "Общо съобщение"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "срещу"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -116,7 +119,7 @@ msgstr "^1Използвайте ^3%s^1 или ^3%s^1 за да променит
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Използвайте ^3%s^1 или ^3%s^1 за да промените режима на камерата"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
@@ -201,7 +204,7 @@ msgstr "Натиснете ^3%s%s за да нагласите"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "избор на отбор"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -255,15 +258,15 @@ msgstr "Чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Изпрати публично съобщение до"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / много добре"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^много добре"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^good game"
@@ -271,15 +274,15 @@ msgstr "QMCMD^добра игра"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^здрасти / пожелавам ти късмет"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^здрасти / пожелавам ти късмет и се забавлявай"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Изпрати на Английски"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 #: qcsrc/client/hud/panel/quickmenu.qc:822
@@ -288,23 +291,23 @@ msgstr "QMCMD^Отборен чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^сила скоро"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^свободен предмет %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^свободен предмет, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^взет предмет (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^взет предмет, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^negative"
@@ -316,84 +319,84 @@ msgstr "QMCMD^положителен"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^нужда от помощ (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "QMCMD^нужда от помощ, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^враг забелязан (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^enemy seen, icon"
-msgstr ""
+msgstr "QMCMD^враг забелязан, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^флаг забелязан (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^flag seen, icon"
-msgstr ""
+msgstr "QMCMD^флаг забелязан, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^защитава (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "QMCMD^защитава, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^обикаля (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming, icon"
-msgstr ""
+msgstr "QMCMD^обикаля, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^атакува (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking, icon"
-msgstr ""
+msgstr "QMCMD^атакува, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^убит знаменосец (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^убит знаменосец, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr ""
+msgstr "QMCMD^изпуснато знаме (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^изпуснато знаме, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^пусни оръжие, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^изпуснато оръжие %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^drop flag/key, icon"
-msgstr ""
+msgstr "QMCMD^изпусни знаме/ключ, икона"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^изпуснат флаг/ключ %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Send private message to"
@@ -407,53 +410,53 @@ msgstr "QMCMD^Настройки"
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "QMCMD^Изглед/HUD настройки"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^Изглед от 3то лице"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "QMCMD^Модели на играчите подобни на моя"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "QMCMD^Показване имената над играчите"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^Crosshair per weapon"
-msgstr ""
+msgstr "QMCMD^Мерник на оръжие"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^FPS"
-msgstr ""
+msgstr "QMCMD^К/С"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Net graph"
-msgstr ""
+msgstr "QMCMD^Мрежова графика"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Sound settings"
-msgstr ""
+msgstr "QMCMD^Звукови настройки"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^Hit sound"
-msgstr ""
+msgstr "QMCMD^Звук при удар"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^Chat sound"
-msgstr ""
+msgstr "QMCMD^Звук на чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Смени наблюдателската камера"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "QMCMD^Наблюдателска камера"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Increase speed"
@@ -465,7 +468,7 @@ msgstr "QMCMD^Намали скоростта"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Допир до стена"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Fullscreen"
@@ -474,7 +477,7 @@ msgstr "QMCMD^Цял екран"
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 #: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "QMCMD^Призови за гласуване"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Restart the map"
@@ -482,23 +485,23 @@ msgstr "QMCMD^Рестартиране на картата"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "QMCMD^Прекрати мача"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "QMCMD^Намали времето на мача"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "QMCMD^Удължи времето на мача"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "QMCMD^Разбъркай отборите"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Наблюдавай играч"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
@@ -530,7 +533,7 @@ msgstr "Междинен %d"
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "НАКАЗАНИЕ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1243
 msgid "missing a checkpoint"
@@ -538,15 +541,15 @@ msgstr "пропуснат чекпойнт"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Цъкни за да избереш дестинация за телепортиране"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Цъкни за да избереш място за прераждане"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Брой убийства на носителя на топката"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^bckills"
@@ -558,11 +561,11 @@ msgstr "SCO^bcвреме"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Общо време за притежание на топка в Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr ""
+msgstr "Колко често е пленявано знаме (CTF) или ключ (KeyHunt)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^caps"
@@ -574,7 +577,7 @@ msgstr "SCO^capвреме"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Време за най-бързо пленяване (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of deaths"
@@ -586,7 +589,7 @@ msgstr "SCO^умирания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "Брой на унищожени ключове, избутани в безкрайността"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^destroyed"
@@ -594,7 +597,7 @@ msgstr "SCO^унищожавания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^щети"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage done"
@@ -602,15 +605,15 @@ msgstr "Общa нанесена щета"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^dmgtaken"
-msgstr ""
+msgstr "SCO^поети_щети"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "The total damage taken"
-msgstr ""
+msgstr "Общa поета щета"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Брой изпускания на знамето"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^drops"
@@ -618,23 +621,23 @@ msgstr "SCO^изпускания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Player ELO"
-msgstr ""
+msgstr "Играч ELO:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^elo"
-msgstr ""
+msgstr "SCO^elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^fastest"
-msgstr ""
+msgstr "SCO^най-бързо"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Време за най-бърза обиколка (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Брой извършени фалове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^faults"
@@ -642,7 +645,7 @@ msgstr "SCO^фалове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Брой убийства на знаменосеца"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fckills"
@@ -650,11 +653,11 @@ msgstr "SCO^знаменосци"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "FPS"
-msgstr ""
+msgstr "К/С"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^к/с"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
@@ -662,11 +665,11 @@ msgstr "Брой убийства без самоубийствата"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^frags"
-msgstr ""
+msgstr "SCO^фрагове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Брой голове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^goals"
@@ -674,7 +677,7 @@ msgstr "SCO^голове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Брой убийства на носителя на ключове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^kckills"
@@ -688,7 +691,7 @@ msgstr "SCO^k/d"
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Съотношението убийства-умирания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^kdr"
@@ -708,7 +711,7 @@ msgstr "SCO^убийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Брой завършени обиколки (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
@@ -716,7 +719,7 @@ msgstr "SCO^обиколки"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Брой животи (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
@@ -755,6 +758,7 @@ msgstr "SCO^цели"
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
+"Колко често е задигано знаме (CTF), ключ (KeyHunt) или топка (Keepaway)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^pickups"
@@ -762,7 +766,7 @@ msgstr "SCO^задигания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Ping time"
-msgstr ""
+msgstr "Пинг време"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^ping"
@@ -778,7 +782,7 @@ msgstr "SCO^зп"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Брой играчи избутани в безкрайността"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^pushes"
@@ -786,7 +790,7 @@ msgstr "SCO^избутвания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Player rank"
-msgstr ""
+msgstr "Ранг на играча"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^rank"

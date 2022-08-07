@@ -19,7 +19,7 @@ tr    "Turkish" "Türkçe" 50%
 cs    "Czech" "Čeština" 32%
 el    "Greek" "Ελληνική" 45%
 be    "Belarusian" "Беларуская" 50%
-bg    "Bulgarian" "Български" 59%
+bg    "Bulgarian" "Български" 63%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 59%
 uk    "Ukrainian" "Українська" 47%
