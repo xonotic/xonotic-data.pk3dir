@@ -1029,7 +1029,7 @@ msgstr "^3%1.0f 分钟"
 #: qcsrc/client/hud/panel/scoreboard.qc:2297
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2291
 #: qcsrc/client/hud/panel/scoreboard.qc:2298
@@ -1042,7 +1042,7 @@ msgstr "分"
 #: qcsrc/client/hud/panel/scoreboard.qc:2323
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2332
 #, c-format
@@ -1358,7 +1358,7 @@ msgstr "在一定时间内摧毁障碍物以寻找并摧毁敌方能量核心"
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "Point limit:"
-msgstr "点数限制："
+msgstr "得分限制："
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1625,7 +1625,7 @@ msgstr "恢复燃料"
 #: qcsrc/common/mapinfo.qc:624
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr ""
+msgstr "扔乱音大号"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -1697,11 +1697,11 @@ msgstr "祝你下次好运！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1189
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "简直完美！按“下一关”继续！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "棒极了！按“下一关”继续！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1195
 msgid "Press the space bar to change your currently selected tile"
@@ -1730,7 +1730,7 @@ msgstr "保存"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "四子连线"
 
 #: qcsrc/common/minigames/minigame/c4.qc:316
 #: qcsrc/common/minigames/minigame/c4.qc:322
@@ -1740,7 +1740,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr "%s^7 赢了这场游戏！"
+msgstr "%s^7 此局获胜！"
 
 #: qcsrc/common/minigames/minigame/c4.qc:384
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1753,7 +1753,7 @@ msgstr "平局"
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "You lost the game!"
-msgstr "你输了这场比赛！"
+msgstr "你输了！"
 
 #: qcsrc/common/minigames/minigame/c4.qc:390
 #: qcsrc/common/minigames/minigame/nmm.qc:611
@@ -1778,20 +1778,20 @@ msgstr "点击游戏棋盘来放置标签"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "九子棋"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
-msgstr ""
+msgstr "你可以选一颗棋子，把它移到周围的位置"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid "You can select one of your pieces to move it anywhere on the board"
-msgstr ""
+msgstr "你可以选一颗棋子，把它移到棋盘任意位置"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can take one of the opponent's pieces"
-msgstr ""
+msgstr "你可以拿走对方的一颗棋子"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
@@ -1800,11 +1800,11 @@ msgstr "乒乓"
 #: qcsrc/common/minigames/minigame/pong.qc:607
 #: qcsrc/common/minigames/minigame/ttt.qc:309
 msgid "AI"
-msgstr "AI"
+msgstr "电脑"
 
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
-msgstr "按下 ^1开始比赛^7 来与当前玩家开始比赛"
+msgstr "按^1开始比赛^7来与当前玩家开始比赛"
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
@@ -1812,15 +1812,15 @@ msgstr "开始比赛"
 
 #: qcsrc/common/minigames/minigame/pong.qc:699
 msgid "Add AI player"
-msgstr "增加AI玩家"
+msgstr "添加电脑玩家"
 
 #: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Remove AI player"
-msgstr "删除AI玩家"
+msgstr "删除电脑玩家"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "推拉"
 
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
@@ -1842,28 +1842,28 @@ msgstr "等待对方玩家确认再次比赛"
 #: qcsrc/common/minigames/minigame/pp.qc:613
 #: qcsrc/common/minigames/minigame/ttt.qc:698
 msgid "Next Match"
-msgstr "下场比赛"
+msgstr "下一轮"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "孔明棋"
 
 #: qcsrc/common/minigames/minigame/ps.qc:418
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "吃掉了所有棋子！"
 
 #: qcsrc/common/minigames/minigame/ps.qc:420
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "剩余棋子："
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "剩余棋子：%s 颗"
 
 #: qcsrc/common/minigames/minigame/ps.qc:501
 msgid "No more valid moves"
-msgstr ""
+msgstr "没有有效的移动了"
 
 #: qcsrc/common/minigames/minigame/ps.qc:504
 msgid "Well done, you win!"
@@ -1871,7 +1871,7 @@ msgstr "非常好，你赢了！"
 
 #: qcsrc/common/minigames/minigame/ps.qc:507
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "用一颗棋子越过另一颗来吃掉它"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
@@ -2085,23 +2085,23 @@ msgstr "^3非手持型镭射枪^8已启用，按 ^3%s^8 使用它"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
-msgstr "Overkill版重机枪"
+msgstr "绝灭重机枪"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:20
 msgid "Overkill MachineGun"
-msgstr "Overkill版机枪"
+msgstr "绝灭机枪"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr "Overkill版激光狙击枪"
+msgstr "绝灭星旋枪"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr "Overkill版火箭筒"
+msgstr "绝灭火箭弹链锯"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr "Overkill版霰弹枪"
+msgstr "绝灭霰弹枪"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -2302,7 +2302,7 @@ msgstr "标记"
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
 #, c-format
 msgid "%s needing help!"
-msgstr "%s 需要帮助！"
+msgstr "%s需要支援！"
 
 #: qcsrc/common/net_notice.qc:90
 msgid "^1Server notices:"
@@ -2950,13 +2950,13 @@ msgstr "^BG%s^K1 把自己冰冻了"
 #: qcsrc/common/notifications/all.inc:357
 #: qcsrc/common/notifications/all.inc:672
 msgid "^TC^TT^BG team wins the round"
-msgstr "^TC^TT^BG赢了这一局"
+msgstr "^TC^TT^BG此局获胜"
 
 #: qcsrc/common/notifications/all.inc:358
 #: qcsrc/common/notifications/all.inc:673
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr "^BG%s^BG赢了这一局"
+msgstr "^BG%s^BG 此局获胜"
 
 #: qcsrc/common/notifications/all.inc:359
 #: qcsrc/common/notifications/all.inc:535
@@ -3297,12 +3297,12 @@ msgstr ""
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 死于 ^BG%s^K1 用乱音手风琴演奏的美妙乐曲%s%s"
 
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"
-msgstr ""
+msgstr "^BG%s^K1 用乱音手风琴伤到了自己的耳朵%s%s"
 
 #: qcsrc/common/notifications/all.inc:444
 #, c-format
@@ -3317,7 +3317,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光电束爆破了%s%s"
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr "^BG%s^K1 玩耍弧光电束%s%s"
+msgstr "^BG%s^K1 试图把玩弧光电束%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -3372,7 +3372,7 @@ msgstr "^BG%s%s^K1 离 ^BG%s^K1 的电射球太近%s%s"
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr "^BG%s^K1 玩耍电射枪光束%s%s"
+msgstr "^BG%s^K1 试图把玩电射枪光束%s%s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
@@ -3412,17 +3412,17 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的哈格火箭弹痛击%s%s"
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s"
-msgstr "^BG%s^K1 玩耍小哈格火箭弹%s%s"
+msgstr "^BG%s^K1 试图把玩小哈格火箭弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 HLAC 切成了两半%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的重型镭射突击大炮切成了两半%s%s"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被自己的重型镭射突击大炮打到飞起%s%s"
 
 #: qcsrc/common/notifications/all.inc:468
 #, c-format
@@ -3433,12 +3433,12 @@ msgstr "^BG%s%s^K1 没能逃过 ^BG%s^K1 的钩爪重力炸弹%s%s"
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 死于 ^BG%s^K1 用乱音克莱因瓶演奏的美妙乐曲%s%s"
 
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 用乱音克莱因瓶伤到了自己的耳朵%s%s"
 
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
@@ -3479,7 +3479,7 @@ msgstr "^BG%s%s^K1 吃了一记 ^BG%s^K1 的榴弹%s%s"
 #: qcsrc/common/notifications/all.inc:478
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr "^BG%s^K1 没看到自己的榴弹%s%s"
+msgstr "^BG%s^K1 没躲过自己的榴弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
@@ -3489,54 +3489,54 @@ msgstr "^BG%s^K1 被自己的榴弹枪炸成碎尸%s%s"
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭重机枪狙杀%s%s"
 
 #: qcsrc/common/notifications/all.inc:481
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的绝灭重机枪撕成碎片%s%s"
 
 #: qcsrc/common/notifications/all.inc:482
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭重机枪扫射得满身疮痍%s%s"
 
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的绝灭星旋枪刺到人间蒸发%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭火箭炮链锯锯成两份%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 差一点躲过 ^BG%s^K1 的绝灭火箭炮链锯%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被自己的绝灭火箭炮链锯锯成两份%s%s"
 
 #: qcsrc/common/notifications/all.inc:487
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被自己的绝灭火箭炮链锯炸飞了%s%s"
 
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭霰弹枪击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -3571,7 +3571,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的瞄准者盯住了%s%s"
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr "^BG%s^K1 玩耍小跟踪火箭%s%s"
+msgstr "^BG%s^K1 试图把玩小跟踪火箭%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
@@ -3581,7 +3581,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的脉冲波击倒%s%s"
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr "^BG%s%s^K1 用脉冲波枪把 ^BG%s^K1 搧得再起不能%s%s"
+msgstr "^BG%s%s^K1 用脉冲枪把 ^BG%s^K1 搧得再起不能%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
@@ -3596,17 +3596,17 @@ msgstr "^BG%s%s^K1 用大霰弹枪把 ^BG%s^K1 搧得再起不能%s%s"
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s"
-msgstr ""
+msgstr "^BG%s^K1 无法逃出传送门%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 死于 ^BG%s^K1 用乱音大号演奏的美妙乐曲%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"
-msgstr ""
+msgstr "^BG%s^K1 用乱音大号伤到了自己的耳朵%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
@@ -4850,11 +4850,11 @@ msgstr "电轮"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
-msgstr "FLAC 炮塔"
+msgstr "镭射炮塔"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
-msgstr ""
+msgstr "重型镭射突击炮"
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -4878,7 +4878,7 @@ msgstr "猎手"
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr "机枪炮台"
+msgstr "机枪炮塔"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
@@ -4886,11 +4886,11 @@ msgstr "机枪"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
-msgstr "MLRS 炮塔"
+msgstr "多重火箭炮塔"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
-msgstr "MLRS"
+msgstr "多重火箭炮"
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
@@ -4985,7 +4985,7 @@ msgstr "仅近战竞技场"
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
 msgid "Piñata"
-msgstr "皮纳塔"
+msgstr "大礼包"
 
 #: qcsrc/common/util.qc:261
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:197
@@ -5004,7 +5004,7 @@ msgstr "增益"
 
 #: qcsrc/common/util.qc:265
 msgid "Overkill"
-msgstr "重复命中"
+msgstr "绝灭武器"
 
 #: qcsrc/common/util.qc:266
 msgid "No powerups"
@@ -5017,7 +5017,7 @@ msgstr "加成物品"
 #: qcsrc/common/util.qc:268
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Touch explode"
-msgstr "触摸爆炸"
+msgstr "接触爆炸"
 
 #: qcsrc/common/util.qc:269
 msgid "Wall jumping"
@@ -5262,12 +5262,12 @@ msgstr "操纵杆按键 %d"
 #: qcsrc/common/util.qc:1542
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1549
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "DPad 上"
 
 #: qcsrc/common/util.qc:1549 qcsrc/common/util.qc:1550
 #: qcsrc/common/util.qc:1551 qcsrc/common/util.qc:1552
@@ -5281,32 +5281,32 @@ msgstr ""
 #: qcsrc/common/util.qc:1567 qcsrc/common/util.qc:1568
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1550
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "DPad 下"
 
 #: qcsrc/common/util.qc:1551
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "DPad 左"
 
 #: qcsrc/common/util.qc:1552
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "DPad 右"
 
 #: qcsrc/common/util.qc:1553
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "开始键"
 
 #: qcsrc/common/util.qc:1554
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "返回键"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
@@ -5382,7 +5382,7 @@ msgstr ""
 #: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "操纵杆 %s"
 
 #: qcsrc/common/util.qc:1578
 #, c-format
@@ -5407,7 +5407,7 @@ msgstr "右"
 #: qcsrc/common/util.qc:1587
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "Midi 音符 %d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 #, c-format
@@ -5517,7 +5517,7 @@ msgstr "T.A.G. 瞄准者"
 
 #: qcsrc/common/weapons/weapon/shockwave.qh:18
 msgid "Shockwave"
-msgstr "脉冲波枪"
+msgstr "脉冲枪"
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:20
 msgid "Shotgun"
@@ -5526,7 +5526,7 @@ msgstr "霰弹枪"
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr ""
+msgstr "乱音大号"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:21
 msgid "Vaporizer"
@@ -10032,15 +10032,15 @@ msgstr "模组服务器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr ""
+msgstr "绝灭武器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
-msgstr "InstaGib"
+msgstr "InstaGib（瞬杀）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr ""
+msgstr "无杀戮模式"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
@@ -10215,7 +10215,7 @@ msgstr "击杀比："
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
-msgstr ""
+msgstr "实力评分："
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
@@ -10223,7 +10223,7 @@ msgstr "排名："
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
-msgstr ""
+msgstr "百分比："
 
 #: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format

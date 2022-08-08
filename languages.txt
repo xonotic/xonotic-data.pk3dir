@@ -19,11 +19,11 @@ tr    "Turkish" "Türkçe" 50%
 cs    "Czech" "Čeština" 32%
 el    "Greek" "Ελληνική" 45%
 be    "Belarusian" "Беларуская" 50%
-bg    "Bulgarian" "Български" 63%
+bg    "Bulgarian" "Български" 67%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 59%
 uk    "Ukrainian" "Українська" 47%
-zh_CN "Chinese (China)" "中文" 96%
+zh_CN "Chinese (China)" "中文" 99%
 zh_TW "Chinese (Taiwan)" "國語" 57%
 ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 36%
