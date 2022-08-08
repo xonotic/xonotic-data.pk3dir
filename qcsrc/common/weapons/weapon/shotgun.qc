@@ -203,11 +203,13 @@ METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 
 METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(shotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
+    // force reload weapon when clip is empty or insufficent
+    if(WEP_CVAR(shotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(shotgun, ammo))
     {
-        // don't force reload an empty shotgun if its melee attack is active
-        if(WEP_CVAR(shotgun, secondary) < 2) {
+        if(actor.(weaponentity).clip_load >= 0 && GetResource(actor, thiswep.ammo_type) > 0)
+        {
             thiswep.wr_reload(thiswep, actor, weaponentity);
+            return;
         }
     }
     else
