@@ -9861,7 +9861,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit"
-msgstr ""
+msgstr "изход"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
@@ -10246,7 +10246,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:419
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "Актуализацията може да бъде свалена на:"
 
 #: qcsrc/menu/xonotic/util.qc:509
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -10262,6 +10262,8 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1ГРЕШКА: Компресията на текстури се изисква, но не се поддържа.\n"
+"^1Очаквайте визуални проблеми."
 
 #: qcsrc/menu/xonotic/util.qc:759
 msgid "Use default"
