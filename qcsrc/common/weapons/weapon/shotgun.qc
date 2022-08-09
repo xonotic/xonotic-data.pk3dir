@@ -212,7 +212,8 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             return;
         }
     }
-    else
+
+    if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     {
         if(fire & 1)
         {
