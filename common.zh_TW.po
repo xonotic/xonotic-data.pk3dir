@@ -7,6 +7,7 @@
 # 黃柏諺 <s8321414@gmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
+# Simon Chow, 2022
 # 黃柏諺 <s8321414@gmail.com>, 2015
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
+"Last-Translator: Simon Chow, 2022\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -26,22 +27,22 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2成功匯出到 %s！（備註：它被保存到 data/data/）"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1無法寫入到 %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "在 %s 的標題"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3在 %s 的倒數訊息，剩餘 ^COUNT 秒"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -49,20 +50,22 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1在 %s 的多行訊息\n"
+"^BOLD持續時間比一般情況長"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "在 %s 的訊息"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "一般訊息"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "對戰"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -152,7 +155,7 @@ msgstr "跳躍"
 #: qcsrc/client/hud/panel/infomessages.qc:137
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "1遊戲將在 ^3%d^1 秒后開始"
+msgstr "^1遊戲將在 ^3%d^1 秒後開始"
 
 #: qcsrc/client/hud/panel/infomessages.qc:143
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -200,7 +203,7 @@ msgstr " 按下 ^3%s%s 來調整"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "選擇團隊"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -250,7 +253,7 @@ msgstr "繼續..."
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "Chat"
-msgstr ""
+msgstr "聊天"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^Send public message to"
@@ -878,7 +881,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:695
 msgid "Usage:"
-msgstr ""
+msgstr "用法："
 
 #: qcsrc/client/hud/panel/scoreboard.qc:697
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -1040,7 +1043,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2532
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr "^1將在 ^3%s^1 秒后重生..."
+msgstr "^1將在 ^3%s^1 秒後重生..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2542
 #, c-format
@@ -4192,7 +4195,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:702
 msgid "^F4Round will start in ^COUNT"
-msgstr "^F4回合開始將在 ^COUNT 秒后"
+msgstr "^F4這回合將在 ^COUNT 秒後開始"
 
 #: qcsrc/common/notifications/all.inc:703
 msgid "^BGScanning frequency range..."
@@ -5103,17 +5106,17 @@ msgstr ""
 
 #: qcsrc/common/util.qc:1485
 msgid "BACKSLASH"
-msgstr ""
+msgstr "反斜槓"
 
 #: qcsrc/common/util.qc:1493
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1503
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "KP_%d"
 
 #: qcsrc/common/util.qc:1508 qcsrc/common/util.qc:1509
 #: qcsrc/common/util.qc:1510 qcsrc/common/util.qc:1511
@@ -5126,42 +5129,42 @@ msgstr ""
 #: qcsrc/common/util.qc:1524 qcsrc/common/util.qc:1525
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "KP_%s"
 
 #: qcsrc/common/util.qc:1517
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "句點"
 
 #: qcsrc/common/util.qc:1519
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "除號"
 
 #: qcsrc/common/util.qc:1520
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "斜槓"
 
 #: qcsrc/common/util.qc:1521
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "乘號"
 
 #: qcsrc/common/util.qc:1522
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "減號"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "加號"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "等號"
 
 #: qcsrc/common/util.qc:1530
 msgid "PRINTSCREEN"

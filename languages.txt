@@ -24,6 +24,6 @@ ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 59%
 uk    "Ukrainian" "Українська" 47%
 zh_CN "Chinese (China)" "中文" 99%
-zh_TW "Chinese (Taiwan)" "國語" 57%
+zh_TW "Chinese (Taiwan)" "國語" 58%
 ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 36%
