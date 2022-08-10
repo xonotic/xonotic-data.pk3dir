@@ -44,9 +44,6 @@
 
 void CSQC_Init()
 {
-	cvar_set("_scoreboard_team_selection_available", "1");
-	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
-
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
@@ -103,6 +100,10 @@ void CSQC_Init()
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
+	if (cvar_type("_scoreboard_team_selection_available") & CVAR_TYPEFLAG_EXISTS)
+		cvar_settemp("_scoreboard_team_selection_available", "1");
+	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
+
 	gametype = NULL;
 
 	postinit = false;
@@ -152,7 +153,6 @@ void CSQC_Init()
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void Shutdown()
 {
-	cvar_set("_scoreboard_team_selection_available", "0");
 	WarpZone_Shutdown();
 
 	delete(teams);
