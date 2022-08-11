@@ -8,6 +8,7 @@
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
 # Simon Chow, 2022
+# Simon Chow, 2022
 # 黃柏諺 <s8321414@gmail.com>, 2015
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Simon Chow, 2022\n"
+"Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
