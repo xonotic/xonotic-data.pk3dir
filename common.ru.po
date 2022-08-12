@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Simple88, 2016\n"
+"Last-Translator: Andrei Stepanov, 2014-2022\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -122,12 +122,12 @@ msgstr "пред. оружие"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Нажмите ^3%s^1 или ^3%s^1 для смены скорости"
+msgstr "^1Для смены скорости нажмите ^3%s^1 или ^3%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Нажмите ^3%s^1 для свободного обзора, ^3%s^1 — для смены вида"
+msgstr "^1Для свободного обзора нажмите ^3%s^1, для смены вида — ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
@@ -6154,7 +6154,7 @@ msgstr "Управление"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr "Горячее меню"
+msgstr "Быстрое меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:115
@@ -6507,7 +6507,7 @@ msgstr "Панель нажатых кнопок"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr "Панель горячего меню"
+msgstr "Панель быстрого меню"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
@@ -10001,7 +10001,7 @@ msgstr "суицид / возрождение"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "quick menu"
-msgstr "горячее меню"
+msgstr "быстрое меню"
 
 #: qcsrc/menu/xonotic/keybinder.qc:124
 msgid "User defined"
