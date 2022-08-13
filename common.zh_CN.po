@@ -14,8 +14,9 @@
 # Matthew Wu, 2021
 # Matthew Wu, 2021
 # moetale <moetale@outlook.com>, 2021
+# NaitLee, 2022
 # Nait Lee, 2022
-# Nait Lee, 2022
+# NaitLee, 2022
 # sapphireliu <balancedliu@gmail.com>, 2014
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018
@@ -38,7 +39,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2已导出至 %s！（小贴士：它被保存到 data/data/）"
+msgstr "^2成功导出至 %s！（提示：它被保存到 data/data/）"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -114,12 +115,12 @@ msgstr "^1按下^3%s^1 或 ^3%s^1 切换到前一个或后一个人"
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
 msgid "next weapon"
-msgstr "下一个武器"
+msgstr "下一把武器"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
 msgid "previous weapon"
-msgstr "上一个武器"
+msgstr "上一把武器"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -134,12 +135,12 @@ msgstr "^1按 ^3%s^1 以观察, 按 ^3%s^1 以改变观察模式"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
-msgstr "武器掉落"
+msgstr "丢出武器"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:48
 msgid "secondary fire"
-msgstr "次要攻击"
+msgstr "副火力"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
@@ -154,7 +155,7 @@ msgstr "服务器信息"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1按^3%s^1加入"
+msgstr "^1按 ^3%s^1 以加入"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
@@ -166,11 +167,11 @@ msgstr "跳跃"
 #: qcsrc/client/hud/panel/infomessages.qc:137
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1游戏在 ^3%d^1 后开始"
+msgstr "^1游戏将在 ^3%d^1 秒后开始"
 
 #: qcsrc/client/hud/panel/infomessages.qc:143
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2现在正在 ^1热身^2 阶段!"
+msgstr "^2现在是^1热身^2阶段!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:158
 #, c-format
@@ -200,7 +201,7 @@ msgstr "^2等待其他人准备完毕……"
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2按下 ^3%s^2 来结束暖身"
+msgstr "^2按下 ^3%s^2 来结束热身"
 
 #: qcsrc/client/hud/panel/infomessages.qc:194
 msgid "Teamnumbers are unbalanced!"
@@ -218,11 +219,11 @@ msgstr "选择团队"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
-msgstr "^1观察这个玩家："
+msgstr "^1正在观察此玩家："
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating you:"
-msgstr "^1观察你自己："
+msgstr "^1正在观察你："
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -386,31 +387,31 @@ msgstr "夺旗人已被干掉, icon"
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr "已弃旗 (l:%d^7)"
+msgstr "已丢出旗帜 (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^dropped flag, icon"
-msgstr "已弃旗, icon"
+msgstr "已丢出旗帜, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^drop weapon, icon"
-msgstr "掉落武器, icon"
+msgstr "丢出武器, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "掉落武器 %w^7 (l:%l^7)"
+msgstr "已丢出武器 %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^drop flag/key, icon"
-msgstr "掉落旗帜/钥匙, icon"
+msgstr "丢出旗帜/钥匙, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "掉落旗子 / 钥匙 %w^7（l:%l^7）"
+msgstr "已丢出旗帜/钥匙 %w^7（l:%l^7）"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Send private message to"
-msgstr "发送私人短信给"
+msgstr "发送私人消息给"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 #: qcsrc/client/hud/panel/quickmenu.qc:857
@@ -420,7 +421,7 @@ msgstr "设定"
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^View/HUD settings"
-msgstr "视角/HUD设置"
+msgstr "视角/HUD 设置"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
@@ -1454,7 +1455,7 @@ msgstr "冻结式对战"
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
-msgstr "杀死敌人以将他们封冻，站在被封冻的队友边以复活他们；封冻所有敌人即胜利"
+msgstr "杀死敌人以将他们冰冻，站在被冰冻的队友边以复活他们；冰冻所有敌人即胜利"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
@@ -1884,7 +1885,7 @@ msgstr "单人游戏"
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr "石像巨人"
+msgstr "钢铁巨人"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2315,7 +2316,7 @@ msgstr "^F4注意：^BG比赛过程中旁观者的聊天不会被发送给玩家
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr "^BG%s^BG 夺取了^TC^TT^BG旗帜"
+msgstr "^BG%s^BG 夺取了^TC^TT队^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:229
 #, c-format
@@ -2323,8 +2324,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG 夺取^TC^TT^BG旗帜用了 ^F1%s^BG 秒，打破了原来 ^BG%s^BG ^F2%s^BG 秒的"
-"记录"
+"^BG%s^BG 夺取^TC^TT队^BG旗帜用了 ^F1%s^BG 秒，打破了原来 ^BG%s^BG ^F2%s^BG 秒"
+"的记录"
 
 #: qcsrc/common/notifications/all.inc:230
 #, c-format
@@ -2334,7 +2335,7 @@ msgstr "^BG%s^BG 夺取了旗帜"
 #: qcsrc/common/notifications/all.inc:231
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr "^BG%s^BG 夺取^TC^TT^BG旗帜用了 ^F1%s^BG 秒"
+msgstr "^BG%s^BG 夺取^TC^TT队^BG旗帜用了 ^F1%s^BG 秒"
 
 #: qcsrc/common/notifications/all.inc:232
 #, c-format
@@ -2342,12 +2343,12 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
-"^BG%s^BG 夺取^TC^TT^BG旗帜用了 ^F2%s^BG 秒，未能打破原来 ^BG%s^BG ^F1%s^BG 秒"
-"的记录"
+"^BG%s^BG 夺取^TC^TT队^BG旗帜用了 ^F2%s^BG 秒，未能打破原来 ^BG%s^BG ^F1%s^BG "
+"秒的记录"
 
 #: qcsrc/common/notifications/all.inc:233
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BG^TC^TT^BG旗帜被它的所有者带回基地"
+msgstr "^BG^TC^TT队^BG旗帜被它的所有者带回基地"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^BGThe flag was returned by its owner"
@@ -2355,7 +2356,7 @@ msgstr "^BG旗帜被它的所有者带回"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr "^BG^TC^TT^BG旗帜被摧毁并回到基地"
+msgstr "^BG^TC^TT队^BG旗帜被摧毁并回到基地"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^BGThe flag was destroyed and returned to base"
@@ -2363,7 +2364,7 @@ msgstr "^BG旗帜被摧毁并回到基地"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr "^BG^TC^TT^BG旗帜掉落在基地并自己返回"
+msgstr "^BG^TC^TT队^BG旗帜掉落在基地并自己返回"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^BGThe flag was dropped in the base and returned itself"
@@ -2373,7 +2374,7 @@ msgstr "^BG旗帜掉落在基地并自己返回"
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
-msgstr "^BG^TC^TT^BG旗帜掉落在无法到达的地方而自动回到基地"
+msgstr "^BG^TC^TT队^BG旗帜掉落在无法到达的地方而自动回到基地"
 
 #: qcsrc/common/notifications/all.inc:240
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
@@ -2384,7 +2385,7 @@ msgstr "^BG旗帜掉落在无法到达的地方而自动回到基地"
 msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
-msgstr "^BG^TC^TT^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
+msgstr "^BG^TC^TT队^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2394,7 +2395,7 @@ msgstr "^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
 
 #: qcsrc/common/notifications/all.inc:243
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr "^BG^TC^TT^BG旗帜已回到基地"
+msgstr "^BG^TC^TT队^BG旗帜已回到基地"
 
 #: qcsrc/common/notifications/all.inc:244
 msgid "^BGThe flag has returned to the base"
@@ -2403,7 +2404,7 @@ msgstr "^BG旗帜已回到基地"
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr "^BG%s^BG失去了^TC^TT^BG旗帜"
+msgstr "^BG%s^BG丢失了^TC^TT队^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:246
 #, c-format
@@ -2413,7 +2414,7 @@ msgstr "^BG%s^BG 丢掉了旗帜"
 #: qcsrc/common/notifications/all.inc:247
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr "^BG%s^BG 拿到了^TC^TT^BG旗帜"
+msgstr "^BG%s^BG 拿到了^TC^TT队^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:248
 #, c-format
@@ -2424,7 +2425,7 @@ msgstr "^BG%s^BG 拿到了旗帜"
 #: qcsrc/common/notifications/all.inc:250
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr "^BG%s^BG 带回^TC^TT^BG旗帜"
+msgstr "^BG%s^BG 返还了^TC^TT队^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:252
 #: qcsrc/common/notifications/all.inc:540
@@ -2572,7 +2573,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 压扁了%s%s"
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的猛枭集束爆炸%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用猛枭集束炸弹爆破%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -2693,17 +2694,17 @@ msgstr "^BG%s^K1 被一个魔法师引爆%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr "^BG%s^K1 的内脏被石像巨人扯了出来%s%s"
+msgstr "^BG%s^K1 的内脏被钢铁巨人扯了出来%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr "^BG%s^K1 被石像巨人碾碎了%s%s"
+msgstr "^BG%s^K1 被钢铁巨人碾碎了%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr "^BG%s^K1 被石像巨人电击而亡%s%s"
+msgstr "^BG%s^K1 被钢铁巨人电击而亡%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -2920,7 +2921,7 @@ msgstr "^BG%s^BG%s^BG（%s %s每%s秒）"
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr "^BG%s^K1 被 ^BG%s^K1 封冻"
+msgstr "^BG%s^K1 被 ^BG%s^K1 冰冻"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
@@ -2950,7 +2951,7 @@ msgstr "^BG%s^K1 把自己冰冻了"
 #: qcsrc/common/notifications/all.inc:357
 #: qcsrc/common/notifications/all.inc:672
 msgid "^TC^TT^BG team wins the round"
-msgstr "^TC^TT^BG此局获胜"
+msgstr "^TC^TT队^BG此局获胜"
 
 #: qcsrc/common/notifications/all.inc:358
 #: qcsrc/common/notifications/all.inc:673
@@ -3017,7 +3018,7 @@ msgstr "^BG你得到了^F1%s"
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BG你没有足够的弹药来使用^F1%s"
+msgstr "^F1%s^BG弹药不足"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:688
@@ -3029,7 +3030,7 @@ msgstr "^BG无法发动^F1%s^BG的^F1%s^BG，但是^F1%s^BG可以"
 #: qcsrc/common/notifications/all.inc:689
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr "^F1%s^BG^F4在此地图不可用^BG"
+msgstr "^F1%s^BG在此地图^F4不可用^BG"
 
 #: qcsrc/common/notifications/all.inc:376
 #, c-format
@@ -3044,12 +3045,12 @@ msgstr "^BG%s^F3 已连接"
 #: qcsrc/common/notifications/all.inc:378
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr "^BG%s^F3 已加入"
+msgstr "^BG%s^F3 加入了游戏"
 
 #: qcsrc/common/notifications/all.inc:379
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr "^BG%s^F3 加入^TC^TT^BG游戏"
+msgstr "^BG%s^F3 加入^TC^TT队^BG游戏"
 
 #: qcsrc/common/notifications/all.inc:381
 #: qcsrc/common/notifications/all.inc:694
@@ -3066,32 +3067,32 @@ msgstr "^BG%s^BG 拾起了球"
 #: qcsrc/common/notifications/all.inc:384
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr "^BG%s^BG 夺取了^TC^TT钥匙 "
+msgstr "^BG%s^BG 夺取了^TC^TT队钥匙 "
 
 #: qcsrc/common/notifications/all.inc:385
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr "^BG%s^BG 掉落了^TC^TT钥匙 "
+msgstr "^BG%s^BG 丢出了^TC^TT队钥匙 "
 
 #: qcsrc/common/notifications/all.inc:386
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr "^BG%s^BG 丢失了^TC^TT钥匙 "
+msgstr "^BG%s^BG 失去了^TC^TT队钥匙 "
 
 #: qcsrc/common/notifications/all.inc:387
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr "^BG%s^BG 把 %s^BG 推了下去，毁坏了^TC^TT钥匙"
+msgstr "^BG%s^BG 把 %s^BG 推了下去，毁坏了^TC^TT队^BG钥匙"
 
 #: qcsrc/common/notifications/all.inc:388
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr "^BG%s^BG 毁坏了^TC^TT钥匙"
+msgstr "^BG%s^BG 毁坏了^TC^TT队钥匙"
 
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr "^BG%s^BG 拾起了^TC^TT钥匙"
+msgstr "^BG%s^BG 拾起了^TC^TT队钥匙"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
@@ -3109,7 +3110,7 @@ msgstr "^BG怪物已经关闭"
 
 #: qcsrc/common/notifications/all.inc:396
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr "^TC^TT^BG持球时间过长"
+msgstr "^TC^TT队^BG持球时间过长"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
@@ -3124,20 +3125,20 @@ msgstr "^BG%s^BG 占领了一个控制点"
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr "^TC^TT^BG%s^BG控制点被 %s^BG 摧毁"
+msgstr "^TC^TT队^BG%s^BG控制点被 %s^BG 摧毁"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr "^TC^TT^BG控制点被 %s^BG 摧毁"
+msgstr "^TC^TT队^BG控制点被 %s^BG 摧毁"
 
 #: qcsrc/common/notifications/all.inc:402
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr "^TC^TT^BG发电机被摧毁"
+msgstr "^TC^TT队^BG发电机被摧毁"
 
 #: qcsrc/common/notifications/all.inc:403
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr "^TC^TT^BG发电机因超时而自然燃尽！"
+msgstr "^TC^TT队^BG发电机因超时而自然燃尽！"
 
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
@@ -3172,7 +3173,7 @@ msgstr "^BG%s^F3 在挂机 %s 秒后被踢出"
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
-msgstr "^BG%s^F3 在挂机 %s 秒后被移动到^BG旁观者^F3中"
+msgstr "^BG%s^F3 在挂机 %s 秒后被移到^BG旁观者^F3中"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid ""
@@ -3248,7 +3249,7 @@ msgstr "^BG%s^F4 邀请你加入游戏 ^F2%s^F4 (^F1%s^F4)"
 
 #: qcsrc/common/notifications/all.inc:429
 msgid "^TC^TT ^BGteam scores!"
-msgstr "^TC^TT^BG得分！"
+msgstr "^TC^TT队^BG得分！"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3307,12 +3308,12 @@ msgstr "^BG%s^K1 用乱音手风琴伤到了自己的耳朵%s%s"
 #: qcsrc/common/notifications/all.inc:444
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光电击%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用弧光电击%s%s"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光电束爆破了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用弧光电束爆破了%s%s"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
@@ -3357,7 +3358,7 @@ msgstr "^BG%s^K1 被自己的灭世炸上天%s%s"
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的电射枪光束爆破了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用电射枪光束爆破了%s%s"
 
 #: qcsrc/common/notifications/all.inc:455
 #, c-format
@@ -3417,7 +3418,7 @@ msgstr "^BG%s^K1 试图把玩小哈格火箭弹%s%s"
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的重型镭射突击大炮切成了两半%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用重型镭射突击大炮切成了两半%s%s"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -3443,12 +3444,12 @@ msgstr "^BG%s^K1 用乱音克莱因瓶伤到了自己的耳朵%s%s"
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的机枪狙击了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用机枪狙击了%s%s"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的机枪扫射得满身疮痍%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用机枪扫射得满身疮痍%s%s"
 
 #: qcsrc/common/notifications/all.inc:473
 #: qcsrc/common/notifications/all.inc:779
@@ -3495,7 +3496,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭重机枪狙杀%s%s"
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的绝灭重机枪撕成碎片%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭重机枪撕成碎片%s%s"
 
 #: qcsrc/common/notifications/all.inc:482
 #, c-format
@@ -3506,7 +3507,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭重机枪扫射得满身疮痍%s%s"
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的绝灭星旋枪刺到人间蒸发%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭星旋枪刺到人间蒸发%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
@@ -3561,12 +3562,12 @@ msgstr "^BG%s%s^K1 没有逃过 ^BG%s^K1 的步枪攻击%s%s"
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的跟踪火箭无情追赶%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用跟踪火箭无情追赶%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的瞄准者盯住了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用瞄准者盯住了%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
@@ -3586,7 +3587,7 @@ msgstr "^BG%s%s^K1 用脉冲枪把 ^BG%s^K1 搧得再起不能%s%s"
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的霰弹枪击倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用霰弹枪击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
@@ -3633,7 +3634,7 @@ msgstr "^BG你是防守方！"
 #: qcsrc/common/notifications/all.inc:528
 #, c-format
 msgid "^BGObjective destroyed in ^F4%s^BG!"
-msgstr "^BG在 ^F4%s^BG 内摧毁了目标！"
+msgstr "^BG在 ^F4%s^BG内摧毁了目标！"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGBegin!"
@@ -3682,7 +3683,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:545
 msgid "^BGYou captured the ^TC^TT^BG flag!"
-msgstr "^BG你夺取了^TC^TT^BG旗帜！"
+msgstr "^BG你夺取了^TC^TT队^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:546
 msgid "^BGYou captured the flag!"
@@ -3696,7 +3697,7 @@ msgstr "^BG丢旗过多！在 %s内不能再丢弃。"
 #: qcsrc/common/notifications/all.inc:548
 #, c-format
 msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
-msgstr "^BG%s^BG 把^TC^TT^BG旗帜传递给了 %s"
+msgstr "^BG%s^BG 把^TC^TT队^BG旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:549
 #, c-format
@@ -3706,7 +3707,7 @@ msgstr "^BG%s^BG 把旗帜传递给了 %s"
 #: qcsrc/common/notifications/all.inc:550
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
-msgstr "^BG你从 ^BG%s^BG 接到了^TC^TT^BG旗帜"
+msgstr "^BG你从 ^BG%s^BG 接到了^TC^TT队^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
@@ -3726,7 +3727,7 @@ msgstr "^BG正在请求 %s^BG 传给你旗帜"
 #: qcsrc/common/notifications/all.inc:554
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr "^BG你把^TC^TT^BG旗帜传递给了 %s"
+msgstr "^BG你把^TC^TT队^BG旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:555
 #, c-format
@@ -3735,11 +3736,11 @@ msgstr "^BG你把旗帜传递给了 %s"
 
 #: qcsrc/common/notifications/all.inc:556
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr "^BG你获得了^TC^TT^BG旗帜！"
+msgstr "^BG你得到了^TC^TT队^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:557
 msgid "^BGYou got the flag!"
-msgstr "^BG你获得了旗帜！"
+msgstr "^BG你得到了旗帜！"
 
 #: qcsrc/common/notifications/all.inc:558
 #, c-format
@@ -3784,12 +3785,12 @@ msgstr "^BG%s敌人（^BG%s%s）^BG拿到了自己的旗帜！夺回它！"
 #: qcsrc/common/notifications/all.inc:566
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BG你的%s队友^BG拿到了^TC^TT^BG旗帜！保护他！"
+msgstr "^BG你的%s队友^BG拿到了^TC^TT队^BG旗帜！保护他！"
 
 #: qcsrc/common/notifications/all.inc:567
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BG你的%s队友（^BG%s%s）^BG拿到了^TC^TT^BG旗帜！保护他！"
+msgstr "^BG你的%s队友（^BG%s%s）^BG拿到了^TC^TT队^BG旗帜！保护他！"
 
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
@@ -3808,7 +3809,7 @@ msgstr "^BG敌人现在可以在雷达上看到你！"
 
 #: qcsrc/common/notifications/all.inc:571
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr "^BG你归还了^TC^TT^BG旗帜！"
+msgstr "^BG你归还了^TC^TT队^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:572
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -4089,12 +4090,12 @@ msgstr "^K1当心脚下！"
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr "^K1背叛者！你出卖了队友 ^BG%s"
+msgstr "^K1叛徒！你出卖了队友 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr "^K1背叛者！你杀死了队友 ^BG%s"
+msgstr "^K1叛徒！你杀死了队友 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:653
 #, c-format
@@ -4166,11 +4167,11 @@ msgstr "^BG发电机正在被攻击！"
 
 #: qcsrc/common/notifications/all.inc:671
 msgid "^TC^TT^BG team loses the round"
-msgstr "^TC^TT^BG输了这一轮"
+msgstr "^TC^TT队^BG输了这一轮"
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^K1You froze yourself"
-msgstr "^K1你把自己封冻了"
+msgstr "^K1你把自己冰冻了"
 
 #: qcsrc/common/notifications/all.inc:676
 msgid "^K1Round already started, you spawn as frozen"
@@ -4226,7 +4227,7 @@ msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
-"^BG所有钥匙都在^TC^TT^BG手中！\n"
+"^BG所有钥匙都在^TC^TT队^BG手中！\n"
 "现在去^F4妨碍他们^BG！"
 
 #: qcsrc/common/notifications/all.inc:701
@@ -4247,7 +4248,7 @@ msgstr "^BG正在搜索频率范围……"
 
 #: qcsrc/common/notifications/all.inc:704
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr "^BG你带着^TC^TT^BG钥匙开局"
+msgstr "^BG你带着^TC^TT队^BG钥匙开局"
 
 #: qcsrc/common/notifications/all.inc:706
 msgid "^BGYou have no lives left, you must wait until the next match"
@@ -4272,7 +4273,7 @@ msgid ""
 "Need active players for: %s"
 msgstr ""
 "^BG等待玩家加入……\n"
-"需要活跃玩家："
+"需要更多%s玩家"
 
 #: qcsrc/common/notifications/all.inc:712
 #, c-format
@@ -4326,11 +4327,11 @@ msgstr "^BG你占领了一个控制点"
 #: qcsrc/common/notifications/all.inc:724
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr "^TC^TT^BG占领了%s^BG控制点"
+msgstr "^TC^TT队^BG占领了%s^BG控制点"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^TC^TT^BG team captured a control point"
-msgstr "^TC^TT^BG占领了一个控制点"
+msgstr "^TC^TT队^BG占领了一个控制点"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGThis control point currently cannot be captured"
@@ -4480,7 +4481,7 @@ msgstr "^F2你现在拥有一把超级武器"
 
 #: qcsrc/common/notifications/all.inc:763
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
-msgstr "^K1在 ^COUNT 秒后切换至^TC^TT"
+msgstr "^K1在 ^COUNT 秒后切换至^TC^TT队"
 
 #: qcsrc/common/notifications/all.inc:764
 msgid "^K1Changing team in ^COUNT"
@@ -4761,23 +4762,23 @@ msgstr "，其中带有 %d 个%s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
-msgstr "红队"
+msgstr "红"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Blue"
-msgstr "蓝队"
+msgstr "蓝"
 
 #: qcsrc/common/teams.qh:33
 msgid "TEAM^Yellow"
-msgstr "黄队"
+msgstr "黄"
 
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
-msgstr "粉队"
+msgstr "粉"
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
-msgstr "团队"
+msgstr "队"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
@@ -4785,51 +4786,51 @@ msgstr "中立"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
-msgstr "红队"
+msgstr "红"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Blue"
-msgstr "蓝队"
+msgstr "蓝"
 
 #: qcsrc/common/teams.qh:41
 msgid "KEY^Yellow"
-msgstr "黄队"
+msgstr "黄"
 
 #: qcsrc/common/teams.qh:42
 msgid "KEY^Pink"
-msgstr "粉队"
+msgstr "粉"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Red"
-msgstr "红队"
+msgstr "红"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Blue"
-msgstr "蓝队"
+msgstr "蓝"
 
 #: qcsrc/common/teams.qh:45
 msgid "FLAG^Yellow"
-msgstr "黄队"
+msgstr "黄"
 
 #: qcsrc/common/teams.qh:46
 msgid "FLAG^Pink"
-msgstr "粉队"
+msgstr "粉"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Red"
-msgstr "红队"
+msgstr "红"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Blue"
-msgstr "蓝队"
+msgstr "蓝"
 
 #: qcsrc/common/teams.qh:49
 msgid "GENERATOR^Yellow"
-msgstr "黄队"
+msgstr "黄"
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
-msgstr "粉队"
+msgstr "粉"
 
 #: qcsrc/common/turrets/cl_turrets.qc:126
 #, c-format
@@ -8957,7 +8958,7 @@ msgstr "在你切换武器时松开缩放"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:83
 msgid "View"
-msgstr "查看"
+msgstr "视角"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:33
 msgid "Weapon Priority List (* = mutator weapon)"
@@ -9617,7 +9618,7 @@ msgstr "使用 OpenGL 2.0 着色器 (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "Flip view horizontally"
-msgstr "翻转横向视图"
+msgstr "横向翻转视图"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:165
 msgid "Poor man's left handed mode"
