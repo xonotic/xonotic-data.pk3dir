@@ -367,29 +367,24 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets
-        float edgedamage, coredamage, edgeradius, recipricoledgeradius;
-        float selfdamage, teamdamage, enemydamage;
-        edgedamage = WEP_CVAR(devastator, edgedamage);
-        coredamage = WEP_CVAR(devastator, damage);
-        edgeradius = WEP_CVAR(devastator, radius);
-        recipricoledgeradius = 1 / edgeradius;
-        selfdamage = 0;
-        teamdamage = 0;
-        enemydamage = 0;
+        float selfdamage = 0, teamdamage = 0, enemydamage = 0;
+        float edgedamage = WEP_CVAR(devastator, edgedamage);
+        float coredamage = WEP_CVAR(devastator, damage);
+        float edgeradius = WEP_CVAR(devastator, radius);
         IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
         {
             entity rocket = it;
             IL_EACH(g_bot_targets, it.bot_attack,
             {
-            	float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - rocket.origin);
-            	d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
+            	float dist = vlen(it.origin + (it.mins + it.maxs) * 0.5 - rocket.origin);
+            	float dmg = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - dist / edgeradius), 10000);
             	// count potential damage according to type of target
             	if(it == actor)
-            		selfdamage = selfdamage + d;
+            		selfdamage = selfdamage + dmg;
             	else if(SAME_TEAM(it, actor))
-            		teamdamage = teamdamage + d;
+            		teamdamage = teamdamage + dmg;
             	else if(bot_shouldattack(actor, it))
-            		enemydamage = enemydamage + d;
+            		enemydamage = enemydamage + dmg;
             });
         });
         float desirabledamage;
@@ -431,10 +426,8 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         // but don't fire a new shot at the same time!
         if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-        if((skill > 6.5) && (selfdamage > GetResource(actor, RES_HEALTH)))
+        if(skill >= 7 && selfdamage > GetResource(actor, RES_HEALTH))
             PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-        //if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
-        //	dprint(ftos(desirabledamage),"\n");
         if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
     }
 }
