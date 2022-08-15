@@ -49,12 +49,12 @@ msgstr "^1无法写入到 %s"
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr "在 %s的标题"
+msgstr "在 %s 的标题"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr "^3在 %s的倒计时, 剩余 ^COUNT 秒"
+msgstr "^3在 %s 的倒计时, 剩余 ^COUNT 秒"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -62,7 +62,7 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
-"^1在 %s的多行消息\n"
+"^1在 %s 的多行消息\n"
 "^BOLD持续时间比一般情况长些"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
@@ -110,7 +110,7 @@ msgstr "主火力"
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^1按下^3%s^1 或 ^3%s^1 切换到前一个或后一个人"
+msgstr "^1按 ^3%s^1 或 ^3%s^1 切换到前一位或后一位玩家"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
@@ -4557,7 +4557,7 @@ msgstr "点"
 
 #: qcsrc/common/notifications/all.qh:426
 msgid "drop flag"
-msgstr "掉旗"
+msgstr "丢出旗帜"
 
 #: qcsrc/common/notifications/all.qh:427
 msgid "throw nade"
@@ -6306,7 +6306,7 @@ msgstr "文字/图标比例："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
-msgstr "隐藏生成的物品"
+msgstr "隐藏已生成的物品"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
@@ -6372,20 +6372,20 @@ msgstr "状态栏"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:67
 msgid "Left align"
-msgstr "向左对齐"
+msgstr "靠左"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:73
 msgid "Right align"
-msgstr "向右对齐"
+msgstr "靠右"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
-msgstr "向内对齐"
+msgstr "靠内"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "Outward align"
-msgstr "向外对齐"
+msgstr "靠外"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
@@ -7332,7 +7332,7 @@ msgstr "信息……"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
 msgid "Show more information about the currently highlighted server"
-msgstr "显示当前高亮服务器的更多信息"
+msgstr "显示当前所选服务器的更多信息"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
@@ -7355,27 +7355,27 @@ msgstr "官方"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
-msgstr "N/A（缺失验证库，无法连接）"
+msgstr "无（验证库缺失，无法连接）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "N/A (auth library missing)"
-msgstr "N/A（缺失验证库）"
+msgstr "无（验证库缺失）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:167
 msgid "Not supported (can't connect)"
-msgstr "不支持（无法连接）"
+msgstr "不支持（不能连接）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "Not supported (won't encrypt)"
-msgstr "不支持（不加密）"
+msgstr "不支持（将不加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:173
 msgid "Supported (will encrypt)"
-msgstr "支持（加密）"
+msgstr "支持（将会加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:175
 msgid "Supported (won't encrypt)"
-msgstr "支持（不加密）"
+msgstr "支持（将不加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:179
 msgid "Requested (will encrypt)"
@@ -7387,7 +7387,7 @@ msgstr "请求（将不加密）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:185
 msgid "Required (can't connect)"
-msgstr "需要（不会连接）"
+msgstr "需要（不能连接）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:187
 msgid "Required (will encrypt)"
@@ -7400,17 +7400,17 @@ msgstr "使用 cvar `crypto_aeslevel` 以设置你的偏好"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "custom stats server"
-msgstr "自定义统计服务器"
+msgstr "自定义的统计服务器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "stats disabled"
-msgstr "禁用统计"
+msgstr "禁用了统计"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "stats enabled"
-msgstr "启动统计"
+msgstr "启用了统计"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
@@ -7428,7 +7428,7 @@ msgstr "服务器信息"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
-msgstr "主机名称："
+msgstr "服务器名称："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
@@ -7457,7 +7457,7 @@ msgstr "机器人："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:75
 msgid "Free slots:"
-msgstr "任意位置："
+msgstr "空位："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:81
 msgid "Encryption:"
@@ -7469,7 +7469,7 @@ msgstr "ID："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:91
 msgid "Key:"
-msgstr "密码："
+msgstr "密钥："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:96
 msgid "Stats:"
@@ -8580,7 +8580,7 @@ msgstr "玩家名称"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:120
 msgid "Show names above players"
-msgstr "显示名字在玩家的上方"
+msgstr "在玩家的上方显示名字"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
