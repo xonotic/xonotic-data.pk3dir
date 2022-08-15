@@ -362,6 +362,18 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    if (!WEP_CVAR(devastator, guidestop) && !actor.(weaponentity).rl_release)
+    {
+        int fired_rockets = 0;
+        IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
+        {
+            fired_rockets++;
+        });
+        // release PHYS_INPUT_BUTTON_ATCK after all fired rocket exploded otherwise bot can't fire again
+        if (!fired_rockets)
+            return;
+    }
+
     // aim and decide to fire if appropriate
     PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
