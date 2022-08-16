@@ -2404,7 +2404,7 @@ msgstr "^BG旗帜已回到基地"
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr "^BG%s^BG丢失了^TC^TT队^BG旗帜"
+msgstr "^BG%s^BG丢掉了^TC^TT队^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:246
 #, c-format
@@ -3077,7 +3077,7 @@ msgstr "^BG%s^BG 丢出了^TC^TT队钥匙 "
 #: qcsrc/common/notifications/all.inc:386
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr "^BG%s^BG 失去了^TC^TT队钥匙 "
+msgstr "^BG%s^BG 丢失了^TC^TT队钥匙 "
 
 #: qcsrc/common/notifications/all.inc:387
 #, c-format
@@ -3106,7 +3106,7 @@ msgstr "^BG%s^F3 没有更多生命了"
 
 #: qcsrc/common/notifications/all.inc:394
 msgid "^BGMonsters are currently disabled"
-msgstr "^BG怪物已经关闭"
+msgstr "^BG怪物当前被禁用"
 
 #: qcsrc/common/notifications/all.inc:396
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
@@ -4408,11 +4408,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1In^BG-portal created"
-msgstr "^BG创建了K1入口^BG传送门"
+msgstr "^BG创建了^K1入口^BG传送门"
 
 #: qcsrc/common/notifications/all.inc:738
 msgid "^F3Out^BG-portal created"
-msgstr "^BG创建了K1出口^BG传送门"
+msgstr "^BG创建了^K1出口^BG传送门"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^F1Portal creation failed"
@@ -4473,7 +4473,7 @@ msgstr "^F2超级武器已分解"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^F2Superweapons have been lost"
-msgstr "^F2超级武器已丢失"
+msgstr "^F2超级武器已消失"
 
 #: qcsrc/common/notifications/all.inc:761
 msgid "^F2You now have a superweapon"
@@ -4748,7 +4748,7 @@ msgstr "，结束了他的 %d 次连续得分"
 #: qcsrc/common/notifications/all.qh:619
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr "，丢失了其 %d 连杀"
+msgstr "，丢掉了其 %d 连杀"
 
 #: qcsrc/common/notifications/all.qh:620
 #, c-format
@@ -5780,7 +5780,7 @@ msgstr "扩展团队"
 
 #: qcsrc/menu/xonotic/credits.qc:32
 msgid "Website"
-msgstr "网址"
+msgstr "网站"
 
 #: qcsrc/menu/xonotic/credits.qc:38
 msgid "Stats"
@@ -5808,7 +5808,7 @@ msgstr "音乐/音效FX"
 
 #: qcsrc/menu/xonotic/credits.qc:98
 msgid "Game Code"
-msgstr "游戏编码"
+msgstr "游戏代码"
 
 #: qcsrc/menu/xonotic/credits.qc:114
 msgid "Marketing / PR"
@@ -5816,7 +5816,7 @@ msgstr "销售 / 人力资源"
 
 #: qcsrc/menu/xonotic/credits.qc:120
 msgid "Legal"
-msgstr "法律信息"
+msgstr "法律"
 
 #: qcsrc/menu/xonotic/credits.qc:125
 msgid "Game Engine"
@@ -7347,7 +7347,7 @@ msgstr "默认"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
 msgid "%d modified"
-msgstr "%d 修改"
+msgstr "有 %d 项修改"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
@@ -7444,7 +7444,7 @@ msgstr "版本："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:58
 msgid "Settings:"
-msgstr "设置："
+msgstr "配置："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:102

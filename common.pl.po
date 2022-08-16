@@ -30,6 +30,7 @@
 # SFS Atlas, 2022
 # SFS Atlas, 2022
 # Wojciech Sikora, 2022
+# Wojciech Sikora, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"

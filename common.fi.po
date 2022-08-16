@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022\n"
+"Last-Translator: LINUX SAUNA, 2022\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -211,7 +211,7 @@ msgstr " Paina ^3%s%s säätääksesi"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "joukkuevalinta"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -1017,17 +1017,18 @@ msgstr "Joukkueen valinta"
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Paina ^3%s^7 liittyäksesi valittuun joukkueeseen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
+"^7Paina ^3%s^7 automaattista valintaa varten ja liittyäksesi tuohon valintaan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2270
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Paina ^3%s ^7valitaksesi määrätyn joukkueen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
@@ -2295,7 +2296,7 @@ msgstr "Pallonkantaja"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Johtaja"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -4353,7 +4354,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGViholliset voivat nyt nähdä johtajat tutkassa!"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -8703,7 +8704,7 @@ msgstr "Hallinnoi välietappien läpinäkyvyyttä"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Font size:"
-msgstr ""
+msgstr "Kirjasimen koko:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
@@ -9935,11 +9936,11 @@ msgstr "Liikkeet"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "move forwards"
-msgstr ""
+msgstr "liiku eteenpäin"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "move backwards"
-msgstr ""
+msgstr "liiku taaksepäin"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
