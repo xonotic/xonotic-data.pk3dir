@@ -64,23 +64,23 @@ float autocvar_g_nades_entrap_radius = 500;
 float autocvar_g_nades_entrap_time = 10;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
-float autocvar_g_nades_tandem_item_lifetime; //LegendGuard adds new nade cvars 28-02-2021
+float autocvar_g_nades_tandem_item_lifetime;
 bool autocvar_g_nades_tandem_randomweapon_includespecial = false;
 bool autocvar_g_nades_tandem_item_includespecial;
 float autocvar_g_nades_tandem_ball_item_spawncount = 1;
 float autocvar_g_nades_tandem_ball_spread;
-float autocvar_g_nades_tandem_ball_lifetime = 1; //if much time, ball will stay longer
+float autocvar_g_nades_tandem_ball_lifetime = 1;
 float autocvar_g_nades_tandem_fountain_delay = 5;
 float autocvar_g_nades_tandem_fountain_lifetime;
-float autocvar_g_nades_ammo_time; //LegendGuard adds new nade cvars 13-02-2021
+float autocvar_g_nades_ammo_time;
 float autocvar_g_nades_ammo_rate;
 float autocvar_g_nades_ammo_friend;
 float autocvar_g_nades_ammo_foe;
-float autocvar_g_nades_dark_damage; //LegendGuard adds new nade cvars 08-02-2021
+float autocvar_g_nades_dark_damage;
 float autocvar_g_nades_dark_time;
 float autocvar_g_nades_dark_radius;
 string autocvar_g_nades_pokenade_type;
-int autocvar_g_nades_tandemnade_type; //LegendGuard adds new nade cvar for emerald nade options 01-07-2021
+int autocvar_g_nades_tandemnade_type;
 float autocvar_g_nades_pokenade_monster_lifetime;
 float autocvar_g_nades_pokenade_turret_lifetime;
 float autocvar_g_nades_pokenade_vehicle_lifetime;
@@ -104,11 +104,11 @@ const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
-const int PROJECTILE_NADE_EMERALD = 88; //LegendGuard adds new nade MACROS 11-02-2021
+const int PROJECTILE_NADE_EMERALD = 88;
 const int PROJECTILE_NADE_EMERALD_BURN = 89;
-const int PROJECTILE_NADE_AMMO = 90; //LegendGuard adds new nade MACROS 13-02-2021
+const int PROJECTILE_NADE_AMMO = 90;
 const int PROJECTILE_NADE_AMMO_BURN = 91;
-const int PROJECTILE_NADE_DARK = 92; //LegendGuard adds new nade MACROS 08-02-2021
+const int PROJECTILE_NADE_DARK = 92;
 const int PROJECTILE_NADE_DARK_BURN = 93;
 
 REGISTRY(Nades, BITS(4))
@@ -156,7 +156,7 @@ Nade Nade_FromProjectile(int proj)
 #ifdef GAMEQC
 REPLICATE_INIT(int, cvar_cl_nade_type);
 REPLICATE_INIT(string, cvar_cl_pokenade_type);
-REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable for emerald nade 01-07-2021
+REPLICATE_INIT(int, cvar_cl_tandemnade_type);
 #endif
 
 #ifdef SVQC
@@ -166,11 +166,11 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable
 .float nade_refire;
 .float nade_special_time;
 .string pokenade_type;
-.int tandemnade_type; //LegendGuard adds new cvar nade .variable 01-07-2021
+.int tandemnade_type;
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
-.int cvar_cl_tandemnade_type; //LegendGuard adds new cvar nade .variable 01-07-2021
+.int cvar_cl_tandemnade_type;
 .float toss_time;
 .int nade_item_spawncount;
 .float nade_show_particles;
@@ -178,7 +178,7 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type); //LegendGuard adds new cl variable
 // TODO: use these .variables after merging Mario/nade_orb_overlay into master branch
 .float nade_ammo_time;
 .float nade_dark_time;
-.float nade_dark_prevalpha; //LegendGuard adds new nade .variable 08-02-2021
+.float nade_dark_prevalpha;
 
 bool orb_send(entity this, entity to, int sf);
 
@@ -203,28 +203,19 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
 #endif
 
-REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING); //LegendGuard registers dark blinking nade feature 09-02-2021
+REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING);
 
 #ifdef CSQC
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
 
-//LegendGuard sets variables for dark nade 09-02-2021
 float dark_appeartime;
 float dark_fadetime;
-/***************************************************************/
+
 void HUD_DarkBlinking()
 {
-	// vectors for top right, bottom right, bottom and bottom left corners
-	//vector topright = vec2(vid_conwidth, 0);
-	//vector bottom = vec2(vid_conwidth / 2, vid_conheight);
 	vector bottomright = vec2(vid_conwidth, vid_conheight);
-	//vector bottomleft = vec2(0, vid_conheight);
 
-	/*
-	drawfill function parameters (qcsrc/dpdefs/menudefs.qc):
-	float drawfill(vector position, vector size, vector rgb, float alpha, float flag)
-	*/
 	drawfill('0 0 0', bottomright, '0.23 0 0.23', 0.986, DRAWFLAG_NORMAL);
 }
 
@@ -287,7 +278,7 @@ NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
 	dark_fadetime = time + 7;
 }
 #endif
-/***************************************************************/
+
 #ifdef CSQC
 bool Projectile_isnade(int proj); // TODO: remove
 

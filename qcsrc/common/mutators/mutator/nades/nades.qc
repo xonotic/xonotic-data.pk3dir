@@ -41,7 +41,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
 #endif
 
 #ifdef CSQC
-REGISTER_MUTATOR(cl_nades, true); // TODO: Remove this MUTATOR_HOOKFUNCTION after merging Mario/nade_orb_overlay into master branch
+REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	// TODO: make a common orb state!
@@ -63,13 +63,13 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
 		return true;
 	}
-	if (STAT(AMMUNITIONING_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 13-02-2021
+	if (STAT(AMMUNITIONING_ORB) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_AMMO.m_color;
 		M_ARGV(1, float) = STAT(AMMUNITIONING_ORB_ALPHA);
 		return true;
 	}
-	if (STAT(DARK_ORB) > time) //LegendGuard adds new nade STAT ORB (keep in mind: qcsrc/common/stats.qh) 08-02-2021
+	if (STAT(DARK_ORB) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_DARK.m_color;
 		M_ARGV(1, float) = STAT(DARK_ORB_ALPHA);
@@ -702,7 +702,7 @@ void nade_tandem_randomweapon(entity e, vector org)
 			&& (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 			continue;
 		if(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) continue;
-		if(it.spawnflags & WEP_FLAG_SPECIALATTACK) continue; //LegendGuard fixes the strange part of the code
+		if(it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
 		if(it.spawnflags & WEP_TYPE_OTHER) continue;
 		if (W_IsWeaponThrowable(e, it.m_id))
 			RandomSelection_AddEnt(it, 1, 1);
@@ -1078,19 +1078,7 @@ void nade_veil_boom(entity this)
 	settouch(orb, nade_veil_touch);
 	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
-/**************LEGENDGUARD NEW NADES: EMERALD, AMMO AND DARK NADES functions "cl_nade_type 10", "cl_nade_type 11" and "cl_nade_type 12" *** //more ideas: SPAWNING MINI SPIDERS NADE, SPARKING NADE ***********************/
-// All nade icons are in these directories, samples: gfx/hud/default/nade_emerald.tga and gfx/hud/luma/nade_emerald.tga 02-03-2021
-// Mario suggests to rename itemdrop nade name to "emerald" (funny suggestion lol) nade 02-03-2021
 
-//LegendGuard adds weapon item spawn option for tandem nade 25-05-2021
-
-//LegendGuard adds random weapon item spawn function for tandem nade 25-05-2021
-
-//LegendGuard adds vehicle spawn option for tandem nade 20-06-2021
-
-//LegendGuard adds turret spawn option for tandem nade 22-06-2021
-
-//LegendGuard develops ammo nade 13-02-2021
 void nade_ammo_touch(entity this, entity toucher)
 {
 	float maxammo = 999;
@@ -1357,12 +1345,12 @@ void nade_boom(entity this)
 			expef = EFFECT_SPAWN_NEUTRAL;
 			break;
 
-		case NADE_TYPE_AMMO: //LegendGuard adds nade case 13-02-2021
+		case NADE_TYPE_AMMO:
 			nade_blast = false;
 			expef = EFFECT_SPAWN_BROWN;
 			break;
 
-		case NADE_TYPE_DARK: //LegendGuard adds nade case 08-02-2021
+		case NADE_TYPE_DARK:
 			nade_blast = false;
 			expef = EFFECT_EXPLOSION_MEDIUM;
 			break;
@@ -1399,8 +1387,8 @@ void nade_boom(entity this)
 		case NADE_TYPE_TANDEM: nade_tandem_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
-		case NADE_TYPE_AMMO: nade_ammo_boom(this); break; //LegendGuard adds the register of new nade 13-02-2021
-		case NADE_TYPE_DARK: nade_dark_boom(this); break; //LegendGuard adds the register of new nade 08-02-2021
+		case NADE_TYPE_AMMO: nade_ammo_boom(this); break;
+		case NADE_TYPE_DARK: nade_dark_boom(this); break;
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -2215,9 +2203,9 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 	// TODO: remove STATs after merging Mario/nade_orb_overlay into master branch:
-	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee); //LegendGuard adds nade STAT client 13-02-2021
+	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee);
 	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
-	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee); //LegendGuard adds nade STAT client 08-02-2021
+	STAT(DARK_ORB, client) = STAT(DARK_ORB, spectatee);
 	STAT(DARK_ORB_ALPHA, client) = STAT(DARK_ORB_ALPHA, spectatee);
 }
 
