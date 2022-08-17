@@ -375,7 +375,12 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
     }
 
     // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
+    float spd = WEP_CVAR(devastator, speed);
+    // simulate rocket guide by calculating rocket trajectory with higher speed
+    // 20 times faster at 90 degrees guide rate
+    if (actor.bot_aimtarg && WEP_CVAR(devastator, guiderate) > 0)
+        spd *= sqrt(WEP_CVAR(devastator, guiderate)) * (20 / 9.489); // 9.489 ~= sqrt(90)
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, spd, 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets
