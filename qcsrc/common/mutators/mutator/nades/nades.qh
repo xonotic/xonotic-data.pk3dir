@@ -174,7 +174,9 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type);
 .float toss_time;
 .int nade_item_spawncount;
 .float nade_show_particles;
+.float nade_veil_time;
 .float nade_veil_prevalpha;
+.float nade_entrap_time;
 // TODO: use these .variables after merging Mario/nade_orb_overlay into master branch
 .float nade_ammo_time;
 .float nade_dark_time;

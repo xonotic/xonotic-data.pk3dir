@@ -42,41 +42,6 @@ entity Nade_TrailEffect(int proj, int nade_team)
 
 #ifdef CSQC
 REGISTER_MUTATOR(cl_nades, true);
-MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
-{
-	// TODO: make a common orb state!
-	if (STAT(HEALING_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
-		M_ARGV(1, float) = STAT(HEALING_ORB_ALPHA);
-		return true;
-	}
-	if (STAT(ENTRAP_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_ENTRAP.m_color;
-		M_ARGV(1, float) = STAT(ENTRAP_ORB_ALPHA);
-		return true;
-	}
-	if (STAT(VEIL_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_VEIL.m_color;
-		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
-		return true;
-	}
-	if (STAT(AMMUNITIONING_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_AMMO.m_color;
-		M_ARGV(1, float) = STAT(AMMUNITIONING_ORB_ALPHA);
-		return true;
-	}
-	if (STAT(DARK_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_DARK.m_color;
-		M_ARGV(1, float) = STAT(DARK_ORB_ALPHA);
-		return true;
-	}
-	return false;
-}
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
 	entity proj = M_ARGV(0, entity);
@@ -619,12 +584,7 @@ void nade_entrap_touch(entity this, entity toucher)
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
-
-		float tint_alpha = 0.75;
-		if(SAME_TEAM(toucher, this.realowner))
-			tint_alpha = 0.45;
-		STAT(ENTRAP_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+		show_tint.nade_entrap_time = time + 0.1;
 	}
 }
 
@@ -671,13 +631,8 @@ void nade_heal_touch(entity this, entity toucher)
 		}
 
 	}
-
-	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
-	{
-		entity show_red = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(HEALING_ORB, show_red) = time + 0.1;
-		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
-	}
+=======
+>>>>>>> Mario/nade_orb_overlay
 }
 
 void nade_heal_boom(entity this)
@@ -1060,14 +1015,13 @@ void nade_veil_touch(entity this, entity toucher)
 		if(SAME_TEAM(toucher, this.realowner))
 		{
 			tint_alpha = 0.45;
-			if(!STAT(VEIL_ORB, show_tint))
+			if(!show_tint.nade_veil_time)
 			{
 				toucher.nade_veil_prevalpha = toucher.alpha;
 				toucher.alpha = -1;
 			}
 		}
-		STAT(VEIL_ORB, show_tint) = time + 0.1;
-		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+		show_tint.nade_veil_time = time + 0.1;
 	}
 }
 
@@ -1948,9 +1902,9 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
 		}
 
-		if(STAT(VEIL_ORB, player) && STAT(VEIL_ORB, player) <= time)
+		if(player.nade_veil_time && player.nade_veil_time <= time)
 		{
-			STAT(VEIL_ORB, player) = 0;
+			player.nade_veil_time = 0;
 			if(player.vehicle)
 				player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
 			else
@@ -2035,7 +1989,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(STAT(ENTRAP_ORB, player) > time)
+	if(player.nade_entrap_time > time)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nades_entrap_speed;
 }
 
@@ -2043,16 +1997,16 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 {
     entity mon = M_ARGV(0, entity);
 
-	if (STAT(ENTRAP_ORB, mon) > time)
+	if (mon.nade_entrap_time > time)
 	{
 		M_ARGV(1, float) *= autocvar_g_nades_entrap_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_nades_entrap_speed; // walk speed
 	}
 
-	if (STAT(VEIL_ORB, mon) && STAT(VEIL_ORB, mon) <= time)
+	if (mon.nade_veil_time && mon.nade_veil_time <= time)
 	{
 		mon.alpha = mon.nade_veil_prevalpha;
-		STAT(VEIL_ORB, mon) = 0;
+		mon.nade_veil_time = 0;
 	}
 	//LegendGuard adds nade if STAT ORB 08-02-2021
 	// TODO: remove this line and use the following line after merging Mario/nade_orb_overlay into master branch:
@@ -2196,12 +2150,6 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	client.tandemnade_type = spectatee.tandemnade_type;
 	STAT(NADE_BONUS, client) = STAT(NADE_BONUS, spectatee);
 	STAT(NADE_BONUS_SCORE, client) = STAT(NADE_BONUS_SCORE, spectatee);
-	STAT(HEALING_ORB, client) = STAT(HEALING_ORB, spectatee);
-	STAT(HEALING_ORB_ALPHA, client) = STAT(HEALING_ORB_ALPHA, spectatee);
-	STAT(ENTRAP_ORB, client) = STAT(ENTRAP_ORB, spectatee);
-	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
-	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
-	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 	// TODO: remove STATs after merging Mario/nade_orb_overlay into master branch:
 	STAT(AMMUNITIONING_ORB, client) = STAT(AMMUNITIONING_ORB, spectatee);
 	STAT(AMMUNITIONING_ORB_ALPHA, client) = STAT(AMMUNITIONING_ORB_ALPHA, spectatee);
