@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Simple88, 2016\n"
+"Last-Translator: Andrei Stepanov, 2014-2022\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -8083,7 +8083,7 @@ msgstr "Проигрывать звуки при нажатиях в меню"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:163
 msgid "Focus sounds"
-msgstr "Звуки в фокусе"
+msgstr "Звуки при фокусе"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:164
 msgid "Play sounds when hovering over menu items too"
@@ -8657,7 +8657,7 @@ msgstr "Размер шрифта:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
-msgstr "Смещение краёв:"
+msgstr "Отступы:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:91
 msgid "Fade when near the crosshair"
