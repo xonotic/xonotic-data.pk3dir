@@ -679,6 +679,7 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	cvar_set("_endmatch", "0");
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
 	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")

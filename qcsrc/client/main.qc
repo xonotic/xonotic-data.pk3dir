@@ -101,6 +101,10 @@ void CSQC_Init()
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
+	if (cvar_type("_scoreboard_team_selection_available") & CVAR_TYPEFLAG_EXISTS)
+		cvar_settemp("_scoreboard_team_selection_available", "1");
+	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
+
 	gametype = NULL;
 
 	postinit = false;
@@ -451,6 +455,15 @@ void PostInit()
 	postinit = true;
 }
 
+void Release_Common_Keys()
+{
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
+}
+
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.
@@ -462,6 +475,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
 	bool override = false;
+
+	override |= HUD_Scoreboard_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
 
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
 	if (override)
@@ -490,15 +507,23 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
 	}
 
+	// NOTE: Shift-Escape must be filtered out because it's the hardcoded console shortcut
 	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
 	{
+		if (hudShiftState & S_TAB)
+		{
+			Scoreboard_UI_Enable(0);
+			return true;
+		}
 		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
@@ -1395,7 +1420,6 @@ bool net_handle_ServerWelcome()
 		return true;
 	}
 
-	welcome_msg_force_centerprint = ReadByte();
 	strcpy(hostname, ReadString());
 
 	string hostversion = ReadString();
@@ -1436,21 +1460,19 @@ void Welcome_Message_Show_Try()
 	if (!welcome_msg_menu_check_maxtime)
 		return;
 
-	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
 	// if want dialog check if menu is initialized but for a short time
-	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	if (cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
 	{
-		if (want_dialog && cvar("_menu_welcome_dialog_available"))
+		if (cvar("_menu_welcome_dialog_available"))
 		{
 			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
 			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-			if (intermission) // close it after it's been initialized so it can still be opened manually
+			if (intermission || isdemo() || !autocvar_cl_welcome)
+				// close it after it's been initialized so it can still be opened manually
 				localcmd("\ntogglemenu 0\n");
 		}
-		else
-			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
 
 		strfree(welcome_msg);
 		welcome_msg_menu_check_maxtime = 0;
