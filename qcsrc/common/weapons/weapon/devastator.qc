@@ -381,10 +381,12 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
     if (actor.bot_aimtarg && WEP_CVAR(devastator, guiderate) > 0)
         spd *= sqrt(WEP_CVAR(devastator, guiderate)) * (20 / 9.489); // 9.489 ~= sqrt(90)
     PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, spd, 0, WEP_CVAR(devastator, lifetime), false);
+    float pred_time = bound(0.02, 0.02 + (8 - skill) * 0.01, 0.1);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets
         float selfdamage = 0, teamdamage = 0, enemydamage = 0;
+        float pred_selfdamage = 0, pred_teamdamage = 0, pred_enemydamage = 0;
         float edgedamage = WEP_CVAR(devastator, edgedamage);
         float coredamage = WEP_CVAR(devastator, damage);
         float edgeradius = WEP_CVAR(devastator, radius);
@@ -393,58 +395,82 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
             entity rocket = it;
             IL_EACH(g_bot_targets, it.bot_attack,
             {
-            	float dist = vlen(it.origin + (it.mins + it.maxs) * 0.5 - rocket.origin);
-            	float dmg = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - dist / edgeradius), 10000);
-            	// count potential damage according to type of target
-            	if(it == actor)
-            		selfdamage = selfdamage + dmg;
-            	else if(SAME_TEAM(it, actor))
-            		teamdamage = teamdamage + dmg;
-            	else if(bot_shouldattack(actor, it))
-            		enemydamage = enemydamage + dmg;
+                // code to calculate damage is similar to the one used in RadiusDamageForSource with some simplifications
+                vector target_pos = it.origin + (it.maxs - it.mins) * 0.5;
+
+                float dist = vlen(target_pos - rocket.origin);
+                float dmg = 0;
+                if (dist <= edgeradius)
+                {
+                    float f = (edgeradius > 0) ? max(0, 1 - (dist / edgeradius)) : 1;
+                    dmg = coredamage * f + edgedamage * (1 - f);
+                }
+
+                float pred_dist = vlen(target_pos + it.velocity * pred_time - (rocket.origin + rocket.velocity * pred_time));
+                float pred_dmg = 0;
+                if (pred_dist <= edgeradius)
+                {
+                    float f = (edgeradius > 0) ? max(0, 1 - (pred_dist / edgeradius)) : 1;
+                    pred_dmg = coredamage * f + edgedamage * (1 - f);
+                }
+
+                // count potential damage according to type of target
+                if(it == actor)
+                {
+                    if(StatusEffects_active(STATUSEFFECT_Strength, it))
+                        dmg *= autocvar_g_balance_powerup_strength_damage;
+                    if(StatusEffects_active(STATUSEFFECT_Shield, it))
+                        dmg *= autocvar_g_balance_powerup_invincible_takedamage;
+                    // self damage reduction factor will be applied later to the total damage
+                    selfdamage += dmg;
+                    pred_selfdamage += pred_dmg;
+                }
+                else if(SAME_TEAM(it, actor))
+                {
+                    if(StatusEffects_active(STATUSEFFECT_Shield, it))
+                        dmg *= autocvar_g_balance_powerup_invincible_takedamage;
+                    // bot strength factor will be applied later to the total damage
+                    teamdamage += dmg;
+                    pred_teamdamage += pred_dmg;
+                }
+                else if(bot_shouldattack(actor, it))
+                {
+                    if(StatusEffects_active(STATUSEFFECT_Shield, it))
+                        dmg *= autocvar_g_balance_powerup_invincible_takedamage;
+                    // bot strength factor will be applied later to the total damage
+                    enemydamage += dmg;
+                    pred_enemydamage += pred_dmg;
+                }
             });
         });
-        float desirabledamage;
-        desirabledamage = enemydamage;
-        if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
-            desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-        if(teamplay && actor.team)
-            desirabledamage = desirabledamage - teamdamage;
 
-        makevectors(actor.v_angle);
-        IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
+        selfdamage *= autocvar_g_balance_selfdamagepercent;
+        pred_selfdamage *= autocvar_g_balance_selfdamagepercent;
+        if(StatusEffects_active(STATUSEFFECT_Strength, actor))
         {
-            if(skill > 9) // normal players only do this for the target they are tracking
-            {
-	            entity rocket = it;
-	            IL_EACH(g_bot_targets, it.bot_attack,
-	            {
-	            	if((v_forward * normalize(rocket.origin - it.origin) < 0.1)
-	                    && desirabledamage > 0.1 * coredamage
-	                    ) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-	            });
-	        }
-	        else
-	        {
-                //As the distance gets larger, a correct detonation gets near imposible
-                //Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
-                if((v_forward * normalize(it.origin - actor.enemy.origin) < 0.1)
-                	&& IS_PLAYER(actor.enemy)
-                	&& (desirabledamage >= 0.1 * coredamage)
-                	)
-                {
-                	float distance = bound(300, vlen(actor.origin - actor.enemy.origin), 30000);
-                	if(random() / distance * 300 > frametime * bound(0, (10 - skill) * 0.2, 1))
-                		PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-                }
-	        }
-        });
-        // if we would be doing at X percent of the core damage, detonate it
-        // but don't fire a new shot at the same time!
-        if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
+            // FIXME bots don't know whether team damage is enabled or not
+            teamdamage *= autocvar_g_balance_powerup_strength_damage;
+            pred_teamdamage *= autocvar_g_balance_powerup_strength_damage;
+            enemydamage *= autocvar_g_balance_powerup_strength_damage;
+            pred_enemydamage *= autocvar_g_balance_powerup_strength_damage;
+        }
+
+        float good_damage = enemydamage;
+        float pred_good_damage = pred_enemydamage;
+        float bad_damage = selfdamage + teamdamage;
+        float pred_bad_damage = pred_selfdamage + pred_teamdamage;
+
+        // detonate if predicted good damage is lower (current good damage is maximum)
+        // or if predicted bad damage is too much
+        if(good_damage > coredamage * 0.1 && good_damage > bad_damage * 1.5
+            && (pred_good_damage < good_damage + 2 || pred_good_damage < pred_bad_damage * 1.5))
+        {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+        }
         if(skill >= 7 && selfdamage > GetResource(actor, RES_HEALTH))
             PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+
+        // don't fire a new shot at the same time!
         if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
     }
 }
