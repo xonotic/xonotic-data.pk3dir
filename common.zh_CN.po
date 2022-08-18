@@ -17,6 +17,7 @@
 # NaitLee, 2022
 # Nait Lee, 2022
 # NaitLee, 2022
+# NaitLee, 2022
 # sapphireliu <balancedliu@gmail.com>, 2014
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
+"Last-Translator: NaitLee, 2022\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -8544,7 +8545,7 @@ msgstr "控制路径点的透明度"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Font size:"
-msgstr ""
+msgstr "字体大小："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
@@ -9200,11 +9201,11 @@ msgstr "指定你的网速"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "低速拨号"
+msgstr "低速 ADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "高速拨号"
+msgstr "高速 ADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
