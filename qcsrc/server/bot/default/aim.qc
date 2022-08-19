@@ -309,27 +309,11 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//this.v_angle = this.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
 	r = bound(delta_t, r * delta_t * (2 + ((skill + this.bot_mouseskill) ** 3) * 0.005 - random()), 1);
 	this.v_angle += diffang * (r + (1 - r) * bound(0, 1 - autocvar_bot_ai_aimskill_mouse, 1));
-
 	this.v_angle_z = 0;
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	//dprint(" turn:", vtos(this.v_angle));
 
-	makevectors(this.v_angle);
-	shotorg = this.origin + this.view_ofs;
-	shotdir = v_forward;
-
-	//dprint(" dir:", vtos(v_forward));
-	//te_lightning2(NULL, shotorg, shotorg + shotdir * 100);
-
-	// calculate turn angles again
-	//diffang = desiredang - this.v_angle;
-	//diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	//if (diffang_y >= 180)
-	//	diffang_y = diffang_y - 360;
-
 	skill = skill_save;
-
-	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	if (maxfiredeviation <= 0)
 		return;
@@ -340,8 +324,18 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 		return;
 	}
 
+	makevectors(this.v_angle);
+	shotorg = this.origin + this.view_ofs;
+	shotdir = v_forward;
+
 	// decide whether to fire this time
-	if (v * shotdir > cos(maxfiredeviation * DEG2RAD))
+	// v is the calculated trajectory, shotdir is bot view direction
+	// NOTE: checking if (v * shotdir > cos(maxfiredeviation * DEG2RAD)) would be cheaper
+	// but it gets evaluated to true even if v and shotdir have nearly opposite direction
+	vector deviation = vectoangles(v) - vectoangles(shotdir);
+	while (deviation.x < -180) deviation.x += 360; while (deviation.x > 180) deviation.x -= 360;
+	while (deviation.y < -180) deviation.y += 360; while (deviation.y > 180) deviation.y -= 360;
+	if (fabs(deviation.x) < maxfiredeviation && fabs(deviation.y) < maxfiredeviation)
 	{
 		traceline(shotorg, shotorg + shotdir * 1000, false, NULL);
 		if (vdist(trace_endpos - shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10))
@@ -350,8 +344,6 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 			this.bot_firetimer = time + bound(0.1, 0.5 - (skill + this.bot_aggresskill) * 0.05, 0.5);
 		}
 	}
-	//dprint(ftos(maxfiredeviation),"\n");
-	//dprint(" diff:", vtos(diffang), "\n");
 }
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
