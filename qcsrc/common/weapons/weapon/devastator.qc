@@ -380,7 +380,9 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
     // 20 times faster at 90 degrees guide rate
     if (actor.bot_aimtarg && WEP_CVAR(devastator, guiderate) > 0)
         spd *= sqrt(WEP_CVAR(devastator, guiderate)) * (20 / 9.489); // 9.489 ~= sqrt(90)
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, spd, 0, WEP_CVAR(devastator, lifetime), false);
+    // no need to fire with high accuracy on large distances if rockets can be guided
+    bool shot_accurate = (WEP_CVAR(devastator, guiderate) < 50);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, spd, 0, WEP_CVAR(devastator, lifetime), false, shot_accurate);
     float pred_time = bound(0.02, 0.02 + (8 - skill) * 0.01, 0.1);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {

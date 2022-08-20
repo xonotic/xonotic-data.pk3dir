@@ -352,9 +352,9 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
 }
 
-bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
+bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity, bool shot_accurate)
 {
-	float r, hf, distanceratio;
+	float hf, distanceratio;
 	vector v;
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -376,10 +376,18 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 	shotorg = this.origin + this.view_ofs;
 	shotdir = v_forward;
 	v = bot_shotlead(this.bot_aimtargorigin, this.bot_aimtargvelocity, shotspeed, this.bot_aimlatency);
+
 	distanceratio = sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
 	distanceratio = bound(0,distanceratio,1);
-	r =  (autocvar_bot_ai_aimskill_firetolerance_maxdegrees-autocvar_bot_ai_aimskill_firetolerance_mindegrees)
-		* (1-distanceratio) + autocvar_bot_ai_aimskill_firetolerance_mindegrees;
+	float mindegrees = autocvar_bot_ai_aimskill_firetolerance_mindegrees;
+	float diffdegrees = autocvar_bot_ai_aimskill_firetolerance_maxdegrees - mindegrees;
+	if (!shot_accurate) // this shot doesn't require too much accuracy
+		mindegrees += diffdegrees * 0.25;
+	else // less skilled bots shoot even if they aren't aiming accurately
+		mindegrees += (random() > 0.3) ? 0 : diffdegrees * 0.25 * (1 - bound(0, skill / 10, 1));
+	diffdegrees = autocvar_bot_ai_aimskill_firetolerance_maxdegrees - mindegrees;
+	float maxfiredeviation = diffdegrees * (1 - distanceratio) + mindegrees;
+
 	if (applygravity && this.bot_aimtarg)
 	{
 		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, this))
@@ -388,11 +396,11 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 			return false;
 		}
 
-		bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
+		bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', maxfiredeviation);
 	}
 	else
 	{
-		bot_aimdir(this, v - shotorg, r);
+		bot_aimdir(this, v - shotorg, maxfiredeviation);
 		//dprint("AIM: ");dprint(vtos(this.bot_aimtargorigin));dprint(" + ");dprint(vtos(this.bot_aimtargvelocity));dprint(" * ");dprint(ftos(this.bot_aimlatency + vlen(this.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
 		//traceline(shotorg, shotorg + shotdir * 10000, false, this);
 		//if (trace_ent.takedamage)
