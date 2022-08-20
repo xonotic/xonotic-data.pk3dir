@@ -1,7 +1,4 @@
 #include <common/effects/all.qh>
-//LegendGuard adds purple nade parts 08-02-2021
-//LegendGuard adds green nade parts 11-02-2021
-//LegendGuard adds brown nade parts 13-02-2021
 EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
 EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
 EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")
