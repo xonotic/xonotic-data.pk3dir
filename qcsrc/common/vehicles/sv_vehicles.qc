@@ -374,6 +374,35 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	return vtag;
 }
 
+void vehicles_remove(entity this)
+{
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
+	info.vr_death(info, this);
+
+	// to avoid weird entity assignments to other stuff like projectiles
+	this.active = ACTIVE_NOT;
+	vehicles_reset(this);
+	this.classname = "";
+
+	this.tur_head.exteriormodeltoclient = NULL;
+
+	CSQCModel_UnlinkEntity(this);
+
+	delete(this.wp00);
+	delete(this.gun1);
+	delete(this.gun2);
+	delete(this.gun3);
+	delete(this.gunner1);
+	delete(this.gunner2);
+	delete(this.vehicle_viewport);
+	delete(this.vehicle_controller);
+	delete(this.vehicle_shieldent);
+	delete(this.vehicle_hudmodel);
+	delete(this.tur_head);
+	delete(this.vehicle);
+	delete(this);
+}
+
 void vehicles_reset_colors(entity this, entity player)
 {
 	int eff = 0, cmap;
@@ -521,12 +550,19 @@ void vehicles_setreturn(entity veh)
 	{
 		if (veh.cannot_respawn)
 		{
+			RadiusDamage (veh, veh.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_CRUSH.m_id, DMG_NOWEP, NULL);
 			sound (veh, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_BIG, veh.origin + '0 0 100', '0 0 0', 1);
 
 			tmp_vehcount--;
 
-			delete(veh);
+			vehicles_clearreturn(ret);
+
+			antilag_clear(veh, veh);
+			
+			vehicles_remove(veh);
+			delete(ret);
+
 			return;
 		}
 		ret.cnt		 = time + veh.respawntime;
@@ -1117,13 +1153,11 @@ void vehicles_think(entity this)
 		Send_Effect(EFFECT_TELEPORT, this.origin + '0 0 100', '0 0 0', 1);
 
 		tmp_vehcount--;
+		
+		antilag_clear(this, this);
+		
+		vehicles_remove(this);
 
-		// to avoid weird entity assignments to other stuff like projectiles
-		delete(this.vehicle_shieldent);
-		delete(this.vehicle_hudmodel);
-		delete(this.tur_head);
-		delete(this.vehicle);
-		delete(this);
 		return;
 	}
 

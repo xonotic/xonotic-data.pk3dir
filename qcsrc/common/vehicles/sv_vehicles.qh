@@ -117,6 +117,8 @@ bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 void vehicles_enter(entity pl, entity veh);
+void vehicles_reset(entity this);
+void vehicles_remove(entity this);
 
 IntrusiveList g_vehicle_returners;
 STATIC_INIT(g_vehicle_returners) { g_vehicle_returners = IL_NEW(); }
