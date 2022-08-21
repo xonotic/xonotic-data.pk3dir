@@ -156,14 +156,6 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;
 	this.bot_aimtargvelocity = v4;
-	if(skill <= 0)
-		this.bot_canfire = (random() < 0.8);
-	else if(skill <= 1)
-		this.bot_canfire = (random() < 0.9);
-	else if(skill <= 2)
-		this.bot_canfire = (random() < 0.95);
-	else
-		this.bot_canfire = 1;
 }
 
 // this function should be called after bot_aim so the aim is reset the next frame
