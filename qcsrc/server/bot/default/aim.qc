@@ -377,16 +377,18 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 	shotdir = v_forward;
 	v = bot_shotlead(this.bot_aimtargorigin, this.bot_aimtargvelocity, shotspeed, this.bot_aimlatency);
 
-	distanceratio = sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
-	distanceratio = bound(0,distanceratio,1);
-	float mindegrees = autocvar_bot_ai_aimskill_firetolerance_mindegrees;
-	float diffdegrees = autocvar_bot_ai_aimskill_firetolerance_maxdegrees - mindegrees;
-	if (!shot_accurate) // this shot doesn't require too much accuracy
-		mindegrees += diffdegrees * 0.25;
-	else // less skilled bots shoot even if they aren't aiming accurately
-		mindegrees += (random() > 0.3) ? 0 : diffdegrees * 0.25 * (1 - bound(0, skill / 10, 1));
-	diffdegrees = autocvar_bot_ai_aimskill_firetolerance_maxdegrees - mindegrees;
-	float maxfiredeviation = diffdegrees * (1 - distanceratio) + mindegrees;
+	// this formula was created starting from empiric values of distance and max hit angle
+	// with a player as target (32 qu wide) from the center of it right in front of the bot
+	//  distance: 32  50    75   100  150  200  300  400  500
+	//   max ang: 44  24  15.1  10.5  6.5  4.9  3.1  2.3  1.8
+	float dist = max(10, vlen(v - shotorg));
+	float maxfiredeviation = 1000 / (dist - 9) - 0.35;
+
+	if (!shot_accurate)
+		maxfiredeviation *= 1.6;
+	else
+		maxfiredeviation *= 1 + bound(0, (10 - (skill + this.bot_aimskill)) * 0.3, 3);
+	maxfiredeviation = min(autocvar_bot_ai_aimskill_firetolerance_maxdegrees, maxfiredeviation);
 
 	if (applygravity && this.bot_aimtarg)
 	{
