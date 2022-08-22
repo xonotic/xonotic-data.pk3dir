@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
+"Last-Translator: NaitLee, 2022\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -1185,7 +1185,7 @@ msgstr "米每秒"
 
 #: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr "千米每秒"
+msgstr "千米每时"
 
 #: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
@@ -5259,7 +5259,7 @@ msgstr "鼠标向下滚轮"
 #: qcsrc/common/util.qc:1539
 #, c-format
 msgid "JOY%d"
-msgstr "操纵杆按键 %d"
+msgstr "操纵杆 %d"
 
 #: qcsrc/common/util.qc:1542
 #, c-format
