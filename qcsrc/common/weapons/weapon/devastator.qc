@@ -378,7 +378,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
     float spd = WEP_CVAR(devastator, speed);
     // simulate rocket guide by calculating rocket trajectory with higher speed
     // 20 times faster at 90 degrees guide rate
-    if (actor.bot_aimtarg && WEP_CVAR(devastator, guiderate) > 0)
+    if (WEP_CVAR(devastator, guiderate) > 0)
         spd *= sqrt(WEP_CVAR(devastator, guiderate)) * (20 / 9.489); // 9.489 ~= sqrt(90)
     // no need to fire with high accuracy on large distances if rockets can be guided
     bool shot_accurate = (WEP_CVAR(devastator, guiderate) < 50);
