@@ -1275,26 +1275,6 @@ void havocbot_movetogoal(entity this)
 	}
 }
 
-entity havocbot_gettarget(entity this, bool secondary)
-{
-	entity best = NULL;
-	vector eye = CENTER_OR_VIEWOFS(this);
-	IL_EACH(g_bot_targets, boolean((secondary) ? it.classname == "misc_breakablemodel" : it.classname != "misc_breakablemodel"),
-	{
-		vector v = CENTER_OR_VIEWOFS(it);
-		if(vdist(v - eye, <, autocvar_bot_ai_enemydetectionradius))
-		if(!best || vlen2(CENTER_OR_VIEWOFS(best) - eye) > vlen2(v - eye))
-		if(bot_shouldattack(this, it))
-		{
-			traceline(eye, v, true, this);
-			if (trace_ent == it || trace_fraction >= 1)
-				best = it;
-		}
-	});
-
-	return best;
-}
-
 void havocbot_chooseenemy(entity this)
 {
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
@@ -1348,7 +1328,7 @@ void havocbot_chooseenemy(entity this)
 	while(true)
 	{
 		scan_secondary_targets = false;
-LABEL(scan_targets)
+		LABEL(scan_targets)
 		IL_EACH(g_bot_targets, it.bot_attack,
 		{
 			if(!scan_secondary_targets)
