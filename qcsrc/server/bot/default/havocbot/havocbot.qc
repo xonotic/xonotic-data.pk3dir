@@ -1508,9 +1508,13 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 
 void havocbot_aim(entity this)
 {
-	if (time < this.nextaim)
+	// if aim rate is a multiple of think rate due to precision errors the sum of multiple think times
+	// can be slightly greater than aim time and cause a jump of a whole think time (bot_netxtthink)
+	// in that case this small tolerance time makes so that aim time snaps to think time
+	if (time < this.nextaim - 0.01)
 		return;
 	this.nextaim = time + 0.1;
+
 	vector myvel = this.velocity;
 	if (!this.waterlevel)
 		myvel.z = 0;
