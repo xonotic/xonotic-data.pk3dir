@@ -376,10 +376,8 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 
 void vehicles_remove(entity this)
 {
-	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
-	info.vr_death(info, this);
-
 	// to avoid weird entity assignments to other stuff like projectiles
+    this.deadflag = DEAD_DEAD;
 	this.active = ACTIVE_NOT;
 	vehicles_reset(this);
 	this.classname = "";
@@ -451,7 +449,7 @@ void vehicles_reset_colors(entity this, entity player)
 	this.avelocity = '0 0 0';
 	this.velocity  = '0 0 0';
 	if (this.optional_setup)
-		this.effects = EF_DIMLIGHT;
+		this.effects |= EF_DIMLIGHT;
 	else 
 		this.effects = eff;
 
@@ -550,6 +548,9 @@ void vehicles_setreturn(entity veh)
 	{
 		if (veh.cannot_respawn)
 		{
+			Vehicle info = veh.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
+			info.vr_death(info, veh);
+			
 			RadiusDamage (veh, veh.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_CRUSH.m_id, DMG_NOWEP, NULL);
 			sound (veh, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_BIG, veh.origin + '0 0 100', '0 0 0', 1);
