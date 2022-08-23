@@ -221,7 +221,7 @@ msgstr " Drücke ^3%s%s zum Anpassen"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "Teamauswahl"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -1032,17 +1032,17 @@ msgstr "Teamauswahl"
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Drücke ^3%s^7, um dem ausgewählten Team beizutreten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7Drücke ^3%s^7, um ein Team automatisch auszuwählen und beizutreten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2270
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Drücke ^3%s^7, um einem bestimmten Team beizutreten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
@@ -1695,7 +1695,7 @@ msgstr "Starten"
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
 #: qcsrc/menu/xonotic/dialog_welcome.qc:113
 msgid "Join"
-msgstr "Verbinden"
+msgstr "Beitreten"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:521
 msgid "Minigames"
@@ -2312,7 +2312,7 @@ msgstr "Ballbesitzer"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Anführer"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -3412,7 +3412,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Arcblitzen zerfetzt%s%s"
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 hat mit Arc-Blitzen gespielt%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -4389,7 +4389,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGAnführer können nun von den Feinden auf dem Radar gesehen werden!"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -6187,7 +6187,7 @@ msgstr "Willkommen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
-msgstr "Verbinden!"
+msgstr "Beitreten!"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
@@ -9984,11 +9984,11 @@ msgstr "Bewegung"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "move forwards"
-msgstr ""
+msgstr "vorwärts bewegen"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "move backwards"
-msgstr ""
+msgstr "rückwärts bewegen"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"

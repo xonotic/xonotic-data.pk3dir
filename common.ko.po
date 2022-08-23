@@ -11,13 +11,15 @@
 # Iso Lee, 2016-2017
 # Iso Lee, 2016-2017
 # Iso Lee, 2016
+# Seokho Son, 2022
+# Seokho Son, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Iso Lee, 2016\n"
+"Last-Translator: Seokho Son, 2022\n"
 "Language-Team: Korean (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ko/)\n"
 "Language: ko\n"
@@ -203,7 +205,7 @@ msgstr "조정하려면 ^3%s%s를 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "팀 선택"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -1237,7 +1239,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1392
 msgid "Please update!"
-msgstr ""
+msgstr "업데이트가 필요합니다!"
 
 #: qcsrc/client/main.qc:1395
 msgid "This server is using an outdated Xonotic version."
@@ -1506,7 +1508,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goals:"
-msgstr ""
+msgstr "목표:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"

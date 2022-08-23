@@ -19,6 +19,8 @@
 # Karol Kosek, 2020
 # Karol Kosek, 2020
 # Kriss Chr <kriss7475@gmail.com>, 2017
+# Marcin Nogaj, 2022
+# Marcin Nogaj, 2022
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
 # Robert Wolniak <robert.wolniak@gmail.com>, 2015,2018
@@ -27,13 +29,15 @@
 # Sertomas, 2014
 # SFS Atlas, 2022
 # SFS Atlas, 2022
+# Wojciech Sikora, 2022
+# Wojciech Sikora, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: SFS Atlas, 2022\n"
+"Last-Translator: Wojciech Sikora, 2022\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -83,7 +87,7 @@ msgstr "Ogólna wiadomość"
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "vs"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -551,7 +555,7 @@ msgstr "Pośredni %d"
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr "KARA: %.1f %s"
+msgstr "KARA: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1243
 msgid "missing a checkpoint"
@@ -745,7 +749,7 @@ msgstr "SCO^życia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of times a key was lost"
-msgstr "Ile razy klucz został zgubiony"
+msgstr "Ilość zgubionych kluczy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^losses"
@@ -897,6 +901,7 @@ msgstr "Łączny czas ścigania (Race/CTS)"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
+" Możesz edytować tablicę wyników używając komendy ^2scoreboard_columns_set ."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:695
 msgid "Usage:"
@@ -1010,17 +1015,18 @@ msgstr "Wybór drużyny "
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Naciśnij ^3%s^7 żeby dołączyć do wybranej drużyny"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
+"^7Naciśnij ^3 %s^7 żeby automatycznie wybrać drużynę i do niej dołączyć"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2270
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Naciśnij ^3 %s^7żeby wybrać jedną z drużyn "
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
@@ -1049,7 +1055,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2332
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Mapa: ^2 %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2494
 #, c-format
@@ -1098,7 +1104,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr "Rozgrewka"
+msgstr "Rozgrzewka"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1110,12 +1116,12 @@ msgstr "Nagła śmierć"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "Dodatkowy czas"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Dodatkowy czas #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1203,7 +1209,7 @@ msgstr "Arena Wszystkich Broni"
 #: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Arena wszystkich dostępnych broni"
 
 #: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
@@ -1213,12 +1219,12 @@ msgstr "Arena Większości Broni"
 #: qcsrc/client/main.qc:1363
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Arena najbardziej dostępnych broni"
 
 #: qcsrc/client/main.qc:1366 qcsrc/client/main.qc:1380
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Arena bez broni"
 
 #: qcsrc/client/main.qc:1378
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1229,37 +1235,39 @@ msgstr "%s Arena"
 #: qcsrc/client/main.qc:1389 qcsrc/client/main.qc:1394
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Jest to %s"
 
 #: qcsrc/client/main.qc:1390
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Używasz przestarzałej wersji gry."
 
 #: qcsrc/client/main.qc:1391
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### NIE BĘDZIESZ MÓGŁ ZAGRAĆ NA TYM SERWERZE ###"
 
 #: qcsrc/client/main.qc:1392
 msgid "Please update!"
-msgstr ""
+msgstr "Uaktualnij grę!"
 
 #: qcsrc/client/main.qc:1395
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Ten serwer używa przestarzałej wersji Xonotic."
 
 #: qcsrc/client/main.qc:1396
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr ""
+"### TEN SERWER JEST NIEKOMPATYBILNY I W ZWIĄZKU Z TYM NIE MOŻESZ DOŁĄCZYĆ DO "
+"GRY ###"
 
 #: qcsrc/client/main.qc:1398
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Witaj na %s"
 
 #: qcsrc/client/main.qc:1413 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Poziom %d :"
 
 #: qcsrc/client/main.qc:1415
 #, c-format
@@ -1273,15 +1281,15 @@ msgstr "Rodzaj gry:"
 
 #: qcsrc/client/main.qc:1440
 msgid "Active modifications:"
-msgstr ""
+msgstr "Aktywne modyfikacje:"
 
 #: qcsrc/client/main.qc:1443
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Specjalne wskazówki dotyczące rozgrywki:"
 
 #: qcsrc/client/main.qc:1450
 msgid "MOTD:"
-msgstr ""
+msgstr "Wiadomość dnia:"
 
 #: qcsrc/client/main.qc:1528
 #, c-format
@@ -1340,7 +1348,7 @@ msgstr "Postęp rozmrażania"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "błąd przy tworzeniu curl handle"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
@@ -1362,7 +1370,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "Point limit:"
-msgstr "Limit punktów"
+msgstr "Limit punktów:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1383,7 +1391,7 @@ msgstr "Limit zabójstw:"
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "Ilość zabójstw potrzebnych przed końcem meczu"
+msgstr "Ilość zabójstw potrzebnych do zakończenia meczu"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1399,7 +1407,7 @@ msgid ""
 "from the other team"
 msgstr ""
 "Znajdź i przynieś flagę wroga do swojej bazy by ją przejąć, broń swojej bazy "
-"przed drugą drużyną"
+"przed drużyną przeciwną"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
@@ -1407,7 +1415,7 @@ msgstr "Limit przejęć:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "Ilość przejęć potrzebnych do zakończenia meczu"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1442,7 +1450,7 @@ msgstr "Dominacja"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "Ilość punktów potrzebna przed końcem meczu"
+msgstr "Ilość punktów potrzebnych do zakończenia meczu"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1450,7 +1458,7 @@ msgstr "Pojedynek"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Walcz na arenie przeznaczonej do pojedynku by wyłonić zwyciężce"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
@@ -1494,7 +1502,7 @@ msgstr "^1Nie masz więcej żyć"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
-msgstr "Last Man Standing"
+msgstr "Ostatni ocalały"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
@@ -1518,7 +1526,7 @@ msgstr "Cele:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr ""
+msgstr "Ilość celów potrzebnych do zakończenia meczu"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1526,7 +1534,7 @@ msgstr "Złodziej Kuli"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
-msgstr "Zdobądź punkty kontroli, by dosięgnąć i zniszczyć wrog generator"
+msgstr "Zdobądź punkty kontrolne, by dosięgnąć i zniszczyć generator wroga"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Onslaught"
@@ -1562,7 +1570,7 @@ msgstr "Drużynowy Deathmatch"
 
 #: qcsrc/common/items/item/ammo.qh:52
 msgid "bullets"
-msgstr ""
+msgstr "pociski"
 
 #: qcsrc/common/items/item/ammo.qh:82
 msgid "cells"
@@ -1570,11 +1578,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:112
 msgid "plasma"
-msgstr ""
+msgstr "plazma"
 
 #: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
-msgstr ""
+msgstr "rakiety"
 
 #: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
@@ -1582,11 +1590,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Mała zbroja"
 
 #: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
-msgstr ""
+msgstr "Średnia zbroja"
 
 #: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
 msgid "Big armor"
@@ -1598,11 +1606,11 @@ msgstr "Mega zbroja"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Małe życie"
 
 #: qcsrc/common/items/item/health.qh:84
 msgid "Medium health"
-msgstr ""
+msgstr "Średnie życie"
 
 #: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
 msgid "Big health"
@@ -1616,15 +1624,15 @@ msgstr "Mega życie"
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Jetpack"
-msgstr ""
+msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "paliwo"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Regenerator paliwa"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -1637,7 +1645,7 @@ msgstr "@!#% Rzut Tubą"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
-msgstr "Twór ruch"
+msgstr "Twoja kolej"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
@@ -1677,7 +1685,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Buldożer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
@@ -1687,7 +1695,7 @@ msgstr "Koniec gry!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Nieźle! Kliknij \"Następny Poziom\" żeby kontynuować!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -1697,7 +1705,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Obserwujesz"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
@@ -1705,11 +1713,11 @@ msgstr "Więcej szczęścia następnym razem!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1189
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Bomba! Naciśnij \"Następny Poziom\" by kontynuować!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Ostro! Naciśnij \"Następny Poziom\" by kontynuować!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1195
 msgid "Press the space bar to change your currently selected tile"
@@ -1717,7 +1725,7 @@ msgstr "Wciśnij spację aby zmienić zaznaczone pole"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1198
 msgid "Push the boulders onto the targets"
-msgstr ""
+msgstr "Zepchnij głazy na cele"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1434
 msgid "Next Level"
@@ -1738,7 +1746,7 @@ msgstr "Zapisz"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Połącz Czwórkę"
 
 #: qcsrc/common/minigames/minigame/c4.qc:316
 #: qcsrc/common/minigames/minigame/c4.qc:322
@@ -1748,7 +1756,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 wygrał rozgrywkę!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:384
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1792,6 +1800,8 @@ msgstr ""
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
+"Możesz zaznaczyć jeden ze swoich elementów by przesunąć go na okoliczne "
+"miejsca"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid "You can select one of your pieces to move it anywhere on the board"
@@ -1854,7 +1864,7 @@ msgstr "Następna Runda"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Pasjans"
 
 #: qcsrc/common/minigames/minigame/ps.qc:418
 msgid "All pieces cleared!"
@@ -1862,16 +1872,16 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ps.qc:420
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Pozostałe elementy:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "Pozostało elementów: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:501
 msgid "No more valid moves"
-msgstr ""
+msgstr "Koniec możliwych ruchów"
 
 #: qcsrc/common/minigames/minigame/ps.qc:504
 msgid "Well done, you win!"
@@ -1892,7 +1902,7 @@ msgstr "Jeden gracz"
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -1910,11 +1920,11 @@ msgstr "Pająk"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr ""
+msgstr "Atak Pająka"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
-msgstr ""
+msgstr "Owinięty w sieć"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -1923,7 +1933,7 @@ msgstr "Wywerna"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr ""
+msgstr "Atak Wywerny"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -2029,11 +2039,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3hak^8 jest włączony, naciśnij ^3 %s by go użyć"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Amunicja Vaporizera"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
@@ -2062,15 +2072,15 @@ msgstr "Leczący granat"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:68
 msgid "Monster grenade"
-msgstr ""
+msgstr "Granat z potworem"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:78
 msgid "Entrap grenade"
-msgstr ""
+msgstr "Granat krępujący"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr ""
+msgstr "Granat maskujący"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:125
 #: qcsrc/menu/xonotic/keybinder.qc:57
@@ -2080,7 +2090,7 @@ msgstr "upuść broń / rzuć granat"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:127
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3Granaty^8 są aktywne, wciśnij ^3 %s^8 by ich użyć"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2141,11 +2151,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Tarcza przy wskrzeszeniu"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Superbronie"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2169,7 +2179,7 @@ msgstr "Zamrożone!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Przywracanie"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -2276,7 +2286,7 @@ msgstr "Niosący kulę"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Lider"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"

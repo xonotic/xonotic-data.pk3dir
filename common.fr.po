@@ -1600,7 +1600,7 @@ msgstr "roquettes"
 
 #: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
-msgstr "carapaces"
+msgstr "cartouches"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"

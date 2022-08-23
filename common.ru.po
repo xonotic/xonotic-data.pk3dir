@@ -122,12 +122,12 @@ msgstr "пред. оружие"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Нажмите ^3%s^1 или ^3%s^1 для смены скорости"
+msgstr "^1Для смены скорости нажмите ^3%s^1 или ^3%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Нажмите ^3%s^1 для свободного обзора, ^3%s^1 — для смены вида"
+msgstr "^1Для свободного обзора нажмите ^3%s^1, для смены вида — ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
@@ -3876,7 +3876,8 @@ msgstr "^BGПат! Теперь противники могут видеть в�
 #: qcsrc/common/notifications/all.inc:573
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
-"^BGПат! Теперь противники могут видеть тех, кто забрал их флаг, на радаре!"
+"^BGПатовая ситуация! Теперь противники могут видеть тех, кто забрал их флаг, "
+"на радаре!"
 
 #: qcsrc/common/notifications/all.inc:577
 #, c-format
@@ -6153,7 +6154,7 @@ msgstr "Управление"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr "Горячее меню"
+msgstr "Быстрое меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:115
@@ -6506,7 +6507,7 @@ msgstr "Панель нажатых кнопок"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr "Панель горячего меню"
+msgstr "Панель быстрого меню"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
@@ -6994,7 +6995,7 @@ msgstr "Стандартно"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:42
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Unlimited"
-msgstr "Неограниченно"
+msgstr "Бесконечно"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:76
 msgid "Gametype"
@@ -7060,7 +7061,7 @@ msgstr "Число ботов:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Amount of bots on your server"
-msgstr "Количество ботов на сервере"
+msgstr "Количество ботов на вашем сервере"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Bot skill:"
@@ -8082,7 +8083,7 @@ msgstr "Проигрывать звуки при нажатиях в меню"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:163
 msgid "Focus sounds"
-msgstr "Звуки в фокусе"
+msgstr "Звуки при фокусе"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:164
 msgid "Play sounds when hovering over menu items too"
@@ -8656,7 +8657,7 @@ msgstr "Размер шрифта:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
-msgstr "Смещение краёв:"
+msgstr "Отступы:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:91
 msgid "Fade when near the crosshair"
@@ -9352,7 +9353,7 @@ msgstr "Показывать счётчик кадров (FPS)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
 msgid "Show your rendered frames per second"
-msgstr "Показывать количество отрисованных кадров в секунду"
+msgstr "Показывать число отрисованных кадров в секунду"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Maximum:"
@@ -9360,7 +9361,7 @@ msgstr "Предельная:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:96
 msgid "MAXFPS^Unlimited"
-msgstr "Неограниченно"
+msgstr "Бесконечно"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:99
 msgid "Target:"
@@ -9376,7 +9377,7 @@ msgstr "При бездействии:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:118
 msgid "IDLFPS^Unlimited"
-msgstr "Неограниченно"
+msgstr "Бесконечно"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:124
 msgid "Menu tooltips:"
@@ -10000,7 +10001,7 @@ msgstr "суицид / возрождение"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "quick menu"
-msgstr "горячее меню"
+msgstr "быстрое меню"
 
 #: qcsrc/menu/xonotic/keybinder.qc:124
 msgid "User defined"
