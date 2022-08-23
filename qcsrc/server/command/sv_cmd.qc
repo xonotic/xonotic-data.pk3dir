@@ -26,6 +26,7 @@
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
+#include <lib/misc.qh>
 
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
@@ -1150,6 +1151,38 @@ void GameCommand_nospectators(int request)
 	}
 }
 
+void GameCommand_printplayer(int request, int argc)
+{
+	switch (request)
+        {
+        	case CMD_REQUEST_COMMAND:
+                {
+			entity player = GetIndexedEntity(argc, 1);
+                        if (player.playerid)
+                        {
+                        	GameLogEcho(strcat(
+                                                   strcat(
+                                                          ":playerinfo:", ftos(player.playerid),
+                                                          ":", ftos(etof(player)),
+                                                          ":", ftos(CS_CVAR(player).cvar_cl_allow_uidtracking),
+                                                          ":", ftos(CS_CVAR(player).cvar_cl_allow_uid2name)),
+                                                   strcat(
+                                                          ":", ftos(CS_CVAR(player).cvar_cl_allow_uidranking),
+                                                          ":", ((IS_REAL_CLIENT(player)) ? GameLog_ProcessIP(player.netaddress) : "bot"),
+                                                          ":", player.crypto_idfp,
+                                                          ":", playername(player.netname, player.team, false))));
+                        }
+                	return;
+                }
+        	default:
+                case CMD_REQUEST_USAGE:
+                {
+                	LOG_HELP("Usage:^3 sv_cmd printplayer <player_entity_id>");
+                        return;
+                }
+        }
+}
+
 void GameCommand_printstats(int request)
 {
 	switch (request)
@@ -1622,6 +1655,36 @@ void GameCommand_warp(int request, int argc)
 	}
 }
 
+void IRCSay(string msgstr)
+{
+	if(msgstr == "")
+		return;
+
+	string prefix;
+	if(substring(msgstr, 0, 3) == "^4*") // actions
+		prefix = "\{3}";
+	else
+		prefix = "\{1}";
+
+	msgstr = strcat(prefix, strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+
+	FOREACH_CLIENTSLOT(true,
+	{
+		if(!intermission_running)
+		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || game_stopped)))
+		if(IS_PLAYER(it))
+			continue;
+		if(IS_REAL_CLIENT(it))
+			sprint(it, msgstr);
+	});
+}
+
+void GameCommand_ircmsg(int request, int argc, string command)
+{
+	IRCSay(substring(command, strlen(argv(0))+1, strlen(command)));
+        return;
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void GameCommand_(int request)
@@ -1668,10 +1731,12 @@ SERVER_COMMAND(extendmatchtime, "Increase the timelimit value incrementally") { 
 SERVER_COMMAND(gametype, "Simple command to change the active gametype") { GameCommand_gametype(request, arguments); }
 SERVER_COMMAND(gettaginfo, "Get specific information about a weapon model") { GameCommand_gettaginfo(request, arguments); }
 SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand_gotomap(request, arguments); }
+SERVER_COMMAND(ircmsg, "Utility function to forward chat messages from IRC/discord/whatever") { GameCommand_ircmsg(request, arguments, command); }
 SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
+SERVER_COMMAND(printplayer, "Print information about a player") { GameCommand_printplayer(request, arguments); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
