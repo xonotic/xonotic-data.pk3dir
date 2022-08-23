@@ -376,11 +376,9 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 	float dist = max(10, vlen(v - shotorg));
 	float maxfiredeviation = 1000 / (dist - 9) - 0.35;
 
-	if (!shot_accurate)
-		maxfiredeviation *= 1.6;
-	else
-		maxfiredeviation *= 1 + bound(0, (10 - (skill + this.bot_aimskill)) * 0.3, 3);
-	maxfiredeviation = min(autocvar_bot_ai_aimskill_firetolerance_maxdegrees, maxfiredeviation);
+	float f = (shot_accurate) ? 1 : 1.6;
+	f += bound(0, (10 - (skill + this.bot_aimskill)) * 0.3, 3);
+	maxfiredeviation = min(90, maxfiredeviation * f);
 
 	if (applygravity && this.bot_aimtarg)
 	{

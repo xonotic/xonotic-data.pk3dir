@@ -2,7 +2,6 @@
 
 float autocvar_bot_ai_aimskill_blendrate;
 int autocvar_bot_ai_aimskill_firetolerance;
-float autocvar_bot_ai_aimskill_firetolerance_maxdegrees;
 float autocvar_bot_ai_aimskill_fixedrate;
 float autocvar_bot_ai_aimskill_mouse;
 float autocvar_bot_ai_aimskill_offset;
