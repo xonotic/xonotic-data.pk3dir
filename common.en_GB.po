@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
@@ -10,11 +10,12 @@ msgstr ""
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: English (United Kingdom) (http://www.transifex.com/team-xonotic/xonotic/language/en_GB/)\n"
+"Language-Team: English (United Kingdom) (http://www.transifex.com/team-"
+"xonotic/xonotic/language/en_GB/)\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_GB\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: qcsrc/client/hud/hud_config.qc:80
@@ -892,8 +893,8 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:700
 msgid ""
-"^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands"
-" it into the cvar scoreboard_columns so you can edit it"
+"^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
+"it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:701
@@ -1754,8 +1755,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid ""
-"You can select one of your pieces to move it in one of the surrounding "
-"places"
+"You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
@@ -2293,8 +2293,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:229
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
-"^BG%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
+"%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:230
@@ -2351,8 +2351,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned"
-" itself"
+"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
+"itself"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:242
@@ -3477,8 +3477,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
-"Chainsaw%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
+"%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:485
@@ -3490,8 +3490,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
 msgid ""
-"^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled "
-"Chainsaw%s%s"
+"^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:487
@@ -5661,8 +5660,8 @@ msgstr ""
 #: qcsrc/lib/spawnfunc.qh:259
 #, c-format
 msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error,"
-" please file an issue."
+"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
+"please file an issue."
 msgstr ""
 
 #: qcsrc/lib/string.qh:186
@@ -5951,8 +5950,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:91
 msgid ""
-"Player statistics are enabled by default, you can change this in the Profile"
-" menu"
+"Player statistics are enabled by default, you can change this in the Profile "
+"menu"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:95
@@ -7066,8 +7065,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
-"Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps"
-" that support it"
+"Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
+"that support it"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
@@ -7098,8 +7097,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:174
 msgid ""
-"Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key"
-" to use it"
+"Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
+"to use it"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
@@ -7161,9 +7160,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:242
 msgid ""
-"Players will be given only one weapon, which can instantly kill the opponent"
-" with a single shot. If the player runs out of ammo, he will have 10 seconds"
-" to find some or if he fails to do so, face death. The secondary fire mode "
+"Players will be given only one weapon, which can instantly kill the opponent "
+"with a single shot. If the player runs out of ammo, he will have 10 seconds "
+"to find some or if he fails to do so, face death. The secondary fire mode "
 "does not inflict any damage but is good for doing trickjumps."
 msgstr ""
 
@@ -7223,7 +7222,8 @@ msgid "Pause"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
-msgid "Pause updating the server list to prevent servers from \"jumping around\""
+msgid ""
+"Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
@@ -7854,8 +7854,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
-"Enable spatialization (blend the right and left channel slightly to decrease"
-" stereo separation a bit for headphones)"
+"Enable spatialization (blend the right and left channel slightly to decrease "
+"stereo separation a bit for headphones)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
@@ -8132,8 +8132,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:147
 msgid ""
-"Offset mapping effect that will make textures with bumpmaps appear like they"
-" \"pop out\" of the flat 2D surface"
+"Offset mapping effect that will make textures with bumpmaps appear like they "
+"\"pop out\" of the flat 2D surface"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
@@ -8325,8 +8325,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 #: qcsrc/menu/xonotic/slider_particles.qc:13
 msgid ""
-"Multiplier for amount of particles. Less means less particles, which in turn"
-" gives for better performance"
+"Multiplier for amount of particles. Less means less particles, which in turn "
+"gives for better performance"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
@@ -8424,8 +8424,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid ""
-"Team size position: Off=do not show; Left=on the left side of the scoreboard"
-" and move team scores to the right; Right=on the right of the scoreboard"
+"Team size position: Off=do not show; Left=on the left side of the scoreboard "
+"and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
@@ -8894,8 +8894,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid ""
-"Automatically switch to newly picked up weapons if they are better than what"
-" you are carrying"
+"Automatically switch to newly picked up weapons if they are better than what "
+"you are carrying"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
@@ -9204,8 +9204,7 @@ msgid "Advanced settings..."
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:142
-msgid ""
-"Advanced settings where you can tweak every single variable of the game"
+msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:148
@@ -9266,8 +9265,7 @@ msgid "Disable gore effects and harsh language"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:73
-msgid ""
-"Replace blood and gibs with content that does not have any gore effects"
+msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
@@ -9428,8 +9426,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:104
 msgid ""
-"Eliminate overdraw by rendering a depth-only version of the scene before the"
-" normal rendering starts"
+"Eliminate overdraw by rendering a depth-only version of the scene before the "
+"normal rendering starts"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:105
@@ -9602,8 +9600,7 @@ msgid "spectate"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
-msgid ""
-"Terms of Service have been updated. Please read them before continuing:"
+msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
@@ -9864,8 +9861,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid ""
-"Bookmark the currently highlighted server so that it's faster to find in the"
-" future"
+"Bookmark the currently highlighted server so that it's faster to find in the "
+"future"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:753

@@ -17,6 +17,7 @@
 # Simple88, 2016
 # Simple88, 2016
 # Артём Котлубай, 2022
+# Артём Котлубай, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
