@@ -4,6 +4,7 @@
 #
 # Translators:
 # oblector o, 2022
+# oblector o, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
@@ -175,7 +176,7 @@ msgstr "%s^3%s%s preme cum te paraveris"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr "^2Alios parantes exspecta quos exercitia finient..."
+msgstr "^2Alios parantes qui exercitia finient exspecta..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up..."
@@ -491,11 +492,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "QMCMD^Manus miscere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Ludentem spectare"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
@@ -965,21 +966,21 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1930
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Beluae occisae:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1937
 msgid "Secrets found:"
-msgstr ""
+msgstr "Arcana inventa:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2147
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Spectatores"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2252
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr ""
+msgstr "Manus Selectio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
@@ -999,7 +1000,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f minuta"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2290
 #: qcsrc/client/hud/panel/scoreboard.qc:2297
@@ -1038,41 +1039,41 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2532
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Renasceris ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2542
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Mortuus es, ^3%s^7 exspecta renaturus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2551
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Mortuus es, ^2%s^7 preme ut renascaris"
 
 #: qcsrc/client/hud/panel/strafehud.qc:879
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:880
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: qcsrc/client/hud/panel/strafehud.qc:881
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: qcsrc/client/hud/panel/strafehud.qc:882
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud.qc:883
 msgid "nmi"
-msgstr ""
+msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:132
 msgid "Warmup"
-msgstr ""
+msgstr "Exercitium"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1080,16 +1081,16 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "Mors Subita"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
-msgstr ""
+msgstr "Prorogatio"
 
 #: qcsrc/client/hud/panel/timer.qc:140
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Prorogatio %da"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1105,7 +1106,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Moderatra nomen tuum meminisse et nuntiare sinis?"
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
@@ -1120,7 +1121,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Iubeo"
 
 #: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1131,7 +1132,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Non sino"
 
 #: qcsrc/client/hud/panel/weapons.qc:631
 msgid "Out of ammo"
@@ -1139,7 +1140,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/weapons.qc:635
 msgid "Don't have"
-msgstr ""
+msgstr "Non habes"
 
 #: qcsrc/client/hud/panel/weapons.qc:639
 msgid "Unavailable"
@@ -1147,27 +1148,27 @@ msgstr ""
 
 #: qcsrc/client/main.qc:301
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr ""
+msgstr "Manum quae in indicem non est excipere non potes!"
 
 #: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
-msgstr ""
+msgstr "mi/h"
 
 #: qcsrc/client/main.qc:1149 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
-msgstr ""
+msgstr "nmi/h"
 
 #: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
