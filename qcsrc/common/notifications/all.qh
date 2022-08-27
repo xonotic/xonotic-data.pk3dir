@@ -44,7 +44,6 @@ string Get_Notif_TypeName(MSG net_type)
 	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";
 }
-//LegendGuard adds CASE(CPID, MMM) after TIMEIN for MMM 20-02-2021
 ENUMCLASS(CPID)
 	CASE(CPID, ASSAULT_ROLE)
 	CASE(CPID, ROUND)
@@ -75,7 +74,6 @@ ENUMCLASS(CPID)
 	CASE(CPID, TEAMCHANGE)
 	CASE(CPID, TIMEOUT)
 	CASE(CPID, TIMEIN)
-	CASE(CPID, MMM)
 	CASE(CPID, VEHICLES)
 	CASE(CPID, VEHICLES_OTHER)
 	/** always last */

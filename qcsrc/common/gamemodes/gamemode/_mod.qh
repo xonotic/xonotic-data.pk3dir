@@ -12,7 +12,6 @@
 #include <common/gamemodes/gamemode/keepaway/_mod.qh>
 #include <common/gamemodes/gamemode/keyhunt/_mod.qh>
 #include <common/gamemodes/gamemode/lms/_mod.qh>
-//#include <common/gamemodes/gamemode/mmm/_mod.qh>
 #include <common/gamemodes/gamemode/mayhem/_mod.qh>
 #include <common/gamemodes/gamemode/nexball/_mod.qh>
 #include <common/gamemodes/gamemode/onslaught/_mod.qh>
