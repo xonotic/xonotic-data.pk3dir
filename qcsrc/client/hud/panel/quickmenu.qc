@@ -88,10 +88,9 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 	if(mode == "")
 	{
-		if(file == "" || file == "0")
-			mode = "default";
-		else
-			mode = "file";
+		// z411 Load quickmenu.txt by default
+		mode = "file";
+		file = "quickmenu.txt";
 	}
 
 	if(mode == "file")
