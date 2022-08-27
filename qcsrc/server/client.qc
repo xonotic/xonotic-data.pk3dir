@@ -1048,17 +1048,10 @@ void ClientPreConnect(entity this)
 }
 #endif
 
-void SendWelcomemessage(entity this, bool force_centerprint)
-{
-	msg_entity = this;
-	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
-	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
-}
-
 // NOTE csqc uses the active mutators list sent by this function
 // to understand which mutators are enabled
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
-void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
+void SendWelcomeMessage(entity this, int msg_type)
 {
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
@@ -1068,7 +1061,6 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
-	WriteByte(msg_type, force_centerprint);
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
@@ -1210,9 +1202,6 @@ void ClientConnect(entity this)
 
 	if (player_count == 1)
 		localcmd("\nsv_hook_firstjoin\n");
-
-	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
-		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
 /*
 =============
@@ -1982,7 +1971,8 @@ bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
-	stuffcmd(this, "menu_showteamselect\n");
+	if (frametime) // once per frame is more than enough
+		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
 void Join(entity this)
@@ -2074,62 +2064,6 @@ int nJoinAllowed(entity this, entity ignore)
 	}
 
 	return free_slots;
-}
-
-void PrintWelcomeMessage(entity this)
-{
-	if(CS(this).motd_actived_time == 0)
-	{
-		if (autocvar_g_campaign) {
-			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, false);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this)) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, true);
-			}
-		}
-	}
-	else if(CS(this).motd_actived_time > 0) // showing MOTD or campaign message
-	{
-		if (autocvar_g_campaign) {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if (time - CS(this).motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		}
-	}
-	else //if(CS(this).motd_actived_time < 0) // just connected, motd is active
-	{
-		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
-			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if (CS(this).motd_actived_time == -2)
-		{
-			// instantly hide MOTD
-			CS(this).motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-		}
-		else if (IS_PLAYER(this) || IS_SPEC(this))
-		{
-			// FIXME occasionally for some reason MOTD never goes away
-			// delay MOTD removal a little bit in the hope it fixes this bug
-			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
-				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
-			else //if (CS(this).motd_actived_time < -2)
-				CS(this).motd_actived_time++;
-		}
-	}
 }
 
 bool joinAllowed(entity this)
@@ -2563,9 +2497,6 @@ void PlayerPreThink (entity this)
 	if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 		PlayerUseKey(this);
 	CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
-
-	if (IS_REAL_CLIENT(this))
-		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)

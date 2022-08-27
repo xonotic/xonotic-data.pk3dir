@@ -170,11 +170,11 @@ void centerprint_Medal(string icon, float times)
 	centerprint_showing = true;
 }
 
-void centerprint_SetDuelTitle(string left, string right, string div)
+void centerprint_SetDuelTitle(string left, string right)
 {
-	strcpy(centerprint_title_left, left);
-	strcpy(centerprint_title_right, right);
-	centerprint_SetTitle(sprintf("^BG%s^BG  %s  %s", left, div, right));
+	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+	strcpy(centerprint_title_left, textShortenToWidth(left, namesize, hud_fontsize, stringwidth_colors));
+	strcpy(centerprint_title_right, textShortenToWidth(right, namesize, hud_fontsize, stringwidth_colors));
 }
 
 void centerprint_SetTitle(string title)
@@ -323,25 +323,65 @@ void HUD_CenterPrint()
 	}
 
 	// Show title if available
-	if(centerprint_title) {
+	if(centerprint_title != "" || centerprint_title_left != "") {
 		vector fontsize = cp_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
-		float width = stringwidth(centerprint_title, true, fontsize);
-
-		pos.x = panel_pos.x + (panel_size.x - width) * align;
+		float width = 0, right_width = 0, left_width = 0, max_rl_width = 0;
+		if (centerprint_title != "")
+			width = stringwidth(centerprint_title, true, fontsize);
+		else
+		{
+			right_width = stringwidth(centerprint_title_right, true, fontsize);
+			left_width = stringwidth(centerprint_title_left, true, fontsize);
+		}
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= fontsize.y;
-		if (centerprint_title_left != "" && align == 0.5) // Center line at the main word (for duels)
-			pos.x += (stringwidth(centerprint_title_right, true, fontsize) - stringwidth(centerprint_title_left, true, fontsize)) / 2;
 
-		drawcolorcodedstring(pos, centerprint_title, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		vector duel_title_pos = '0 0 0';
+		float padding = stringwidth(" ", false, fontsize) * 2;
+		if (centerprint_title_left != "")
+		{
+			if (left_width > right_width)
+				max_rl_width = left_width;
+			else
+				max_rl_width = right_width;
+
+			width = max_rl_width * 2 + padding * 6 + stringwidth(_("vs"), false, fontsize);
+			pos.x += (panel_size.x - width) * align;
+			duel_title_pos = pos;
+
+			pos.x += padding;
+			if (left_width < right_width)
+				pos.x += (max_rl_width - left_width) * 0.5;
+			drawcolorcodedstring(pos, centerprint_title_left, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+
+			pos.x = duel_title_pos.x + max_rl_width + padding * 3;
+			drawstring(pos, _("vs"), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+			pos.x = duel_title_pos.x + width - padding - max_rl_width;
+			if (left_width >= right_width)
+				pos.x += (max_rl_width - right_width) * 0.5;
+			drawcolorcodedstring(pos, centerprint_title_right, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		else
+		{
+			pos.x = panel_pos.x + (panel_size.x - width) * align;
+			drawcolorcodedstring(pos, centerprint_title, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;
 		else
 			pos.y += fontsize.y + (hud_fontsize.y * CENTERPRINT_TITLE_SPACING);
 
-		drawfill(pos, vec2(width, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		if (centerprint_title_left != "")
+		{
+			pos.x = duel_title_pos.x;
+			drawfill(pos, vec2(max_rl_width + padding * 2, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + vec2(width - max_rl_width - padding * 2, 0), vec2(max_rl_width + padding * 2, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		else
+			drawfill(pos - eX * padding, vec2(width + 2 * padding, 1), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_centerprint_flip)
 			pos.y -= cp_fontsize.y * CENTERPRINT_TITLE_SPACING;

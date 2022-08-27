@@ -540,6 +540,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(WEAPON_ACCORDEON_SUICIDE,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapontuba",               _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ARC_MURDER,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponarc",                _("^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ARC_MURDER_SPRAY,                 N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponarc",                _("^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_ARC_SUICIDE_BOLT,                 N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponarc",                _("^BG%s^K1 played with Arc bolts%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_BLASTER_MURDER,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponlaser",              _("^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_BLASTER_SUICIDE,                  N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponlaser",              _("^BG%s^K1 shot themself to hell with their Blaster%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_CRYLINK_MURDER,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponcrylink",            _("^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"), "")
@@ -806,6 +807,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(LMS_NOLIVES,                       N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGYou have no lives left, you must wait until the next match"), "")
     MSG_CENTER_NOTIF(LMS_SPECWARN,                      N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^F4WARNING:^BG you can't rejoin this match after spectating.\nUse the same command again to spectate anyway."), "")
+    MSG_CENTER_NOTIF(LMS_VISIBLE_LEADER,                N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGEnemies can now see you on radar!"), "")
+    MSG_CENTER_NOTIF(LMS_VISIBLE_OTHER,                 N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGLeaders can now be seen by enemies on radar!"), "")
 
     MSG_CENTER_NOTIF(MISSING_TEAMS,                     N_ENABLE,    0, 1, "missing_teams",  CPID_MISSING_TEAMS,     "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "")
     MSG_CENTER_NOTIF(MISSING_PLAYERS,                   N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "-1 0", _("^BGWaiting for %s player(s) to join..."), "")
@@ -815,8 +818,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(INSTAGIB_FINDAMMO,                 N_ENABLE,    0, 0, "",               CPID_INSTAGIB_FINDAMMO, "1 9",  _("^F4^COUNT^BG left to find some ammo!"), "")
     MSG_CENTER_NOTIF(INSTAGIB_FINDAMMO_FIRST,           N_ENABLE,    0, 0, "",               CPID_INSTAGIB_FINDAMMO, "1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!"))
     MSG_CENTER_NOTIF(INSTAGIB_LIVES_REMAINING,          N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Extra lives remaining: ^K1%s"), "")
-
-    MSG_CENTER_NOTIF(MOTD,                              N_ENABLE,    1, 0, "s1",             CPID_MOTD,              "-1 0", "^BG%s", "")
 
     MSG_CENTER_NOTIF(NIX_COUNTDOWN,                     N_ENABLE,    0, 2, "item_wepname",   CPID_NIX,               "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "")
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     N_ENABLE,    0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
@@ -1007,6 +1008,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_SUICIDE,           N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_SUICIDE,          CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_ARC_MURDER,                  N_ENABLE,  NULL,           INFO_WEAPON_ARC_MURDER,                 NULL)
     MSG_MULTI_NOTIF(WEAPON_ARC_MURDER_SPRAY,            N_ENABLE,  NULL,           INFO_WEAPON_ARC_MURDER_SPRAY,           NULL)
+    MSG_MULTI_NOTIF(WEAPON_ARC_SUICIDE_BOLT,            N_ENABLE,  NULL,           INFO_WEAPON_ARC_SUICIDE_BOLT,           CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_BLASTER_MURDER,              N_ENABLE,  NULL,           INFO_WEAPON_BLASTER_MURDER,             NULL)
     MSG_MULTI_NOTIF(WEAPON_BLASTER_SUICIDE,             N_ENABLE,  NULL,           INFO_WEAPON_BLASTER_SUICIDE,            CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_CRYLINK_MURDER,              N_ENABLE,  NULL,           INFO_WEAPON_CRYLINK_MURDER,             NULL)
