@@ -170,6 +170,11 @@ ENTCS_PROP(ACTIVEWEPID, false, activewepid, activewepid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.activewepid); },
 	{ ent.activewepid = ReadByte(); })
 
+// gamemode specific player survival status (independent of score and frags)
+ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NORMAL,
+	{ WriteShort(chan, ent.survival_status); },
+	{ ent.survival_status = ReadShort(); })
+
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0, ENTCS_PRIVATEMASK = 0;
