@@ -253,154 +253,154 @@ msgstr "Fabula"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "Nuntium publicum mittere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr ":-) / iucundum"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "iucundum"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^good game"
-msgstr "QMCMD^ludus bonus"
+msgstr "ludus bonus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^ave / bonam fortunam"
+msgstr "ave / bonam fortunam"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^ave / bonam fortunam gaudiumque"
+msgstr "ave / bonam fortunam gaudiumque"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Anglice nuntiare"
+msgstr "Anglice nuntiare"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^Team chat"
-msgstr "QMCMD^Manus fabula"
+msgstr "Manus fabula"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^strength soon"
-msgstr "QMCMD^mox vis"
+msgstr "mox vis"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "utile %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "utile, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "utile cepi (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "utile cepi, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^negative"
-msgstr "QMCMD^negativum"
+msgstr "negativum"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^positive"
-msgstr "QMCMD^affirmativum"
+msgstr "affirmativum"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^me iuvate (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "me iuvate (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^need help, icon"
-msgstr "QMCMD^me iuvate, imago"
+msgstr "me iuvate, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr "QMCMD^hostem vidi (l:%y^7)"
+msgstr "hostem vidi (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^enemy seen, icon"
-msgstr "QMCMD^hostem vidi, imago"
+msgstr "hostem vidi, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr "QMCMD^vexillum vidi (l:%y^7)"
+msgstr "vexillum vidi (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^flag seen, icon"
-msgstr "QMCMD^vexillum vidi, imago"
+msgstr "vexillum vidi, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^defendo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "defendo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^defending, icon"
-msgstr "QMCMD^defendo, imago"
+msgstr "defendo, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^perambulo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "perambulo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming, icon"
-msgstr "QMCMD^perambulo, imago"
+msgstr "perambulo, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^impeto (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "impeto (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking, icon"
-msgstr "QMCMD^impeto, imago"
+msgstr "impeto, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "QMCMD^vexillum portans occisus (l:%y^7)"
+msgstr "vexillum portans occisus (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "QMCMD^vexillum portans occisus, imago"
+msgstr "vexillum portans occisus, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr "QMCMD^vexillum demissum (l:%d^7)"
+msgstr "vexillum demissum (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^dropped flag, icon"
-msgstr "QMCMD^vexillum demissum, imago"
+msgstr "vexillum demissum, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^drop weapon, icon"
-msgstr "QMCMD^arma demissa, imago"
+msgstr "arma demissa, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "QMCMD^arma demissa %w^7 (l:%l^7)"
+msgstr "arma demissa %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^drop flag/key, icon"
-msgstr "QMCMD^vex./clavis demissa, imago"
+msgstr "vex./clavis demissa, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "QMCMD^vex./clavis demissa %w^7 (l:%l^7)"
+msgstr "vex./clavis demissa %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "Nuntium privatum mittere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Settings"
-msgstr "QMCMD^Optiones"
+msgstr "Optiones"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 #: qcsrc/client/hud/panel/quickmenu.qc:835
@@ -409,65 +409,65 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
-msgstr "QMCMD^3ae personae visio"
+msgstr "3ae personae visio"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Player models like mine"
-msgstr "QMCMD^Ludentium formae similes meae"
+msgstr "Ludentium formae similes meae"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^Names above players"
-msgstr "QMCMD^Nomina super ludentes"
+msgstr "Nomina super ludentes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^Crosshair per weapon"
-msgstr "QMCMD^Armorum singula reticula"
+msgstr "Armorum singula reticula"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^FPS"
-msgstr "QMCMD^QIS"
+msgstr "QIS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Net graph"
-msgstr "QMCMD^Retis graphicus"
+msgstr "Retis graphicus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:837
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Sound settings"
-msgstr "QMCMD^Sonorum optiones"
+msgstr "Sonorum optiones"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^Hit sound"
-msgstr "QMCMD^Vulnerum soni"
+msgstr "Vulnerum soni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^Chat sound"
-msgstr "QMCMD^Fabulae soni"
+msgstr "Fabulae soni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Change spectator camera"
-msgstr "QMCMD^Spectatoris photographicam mutare"
+msgstr "Spectatoris photographicam mutare"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Observer camera"
-msgstr "QMCMD^Photographica speciendo"
+msgstr "Photographica speciendo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Increase speed"
-msgstr "QMCMD^Velocitatem addere"
+msgstr "Velocitatem addere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Decrease speed"
-msgstr "QMCMD^Velocitatem minuere"
+msgstr "Velocitatem minuere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision"
-msgstr "QMCMD^Parietes non transire"
+msgstr "Parietes non transire"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Fullscreen"
-msgstr "QMCMD^Totum quadrum"
+msgstr "Totum quadrum"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 #: qcsrc/client/hud/panel/quickmenu.qc:869
@@ -492,21 +492,21 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Shuffle teams"
-msgstr "QMCMD^Manus miscere"
+msgstr "Manus miscere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^Spectate a player"
-msgstr "QMCMD^Ludentem spectare"
+msgstr "Ludentem spectare"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:80
 msgid "Start line"
@@ -1098,7 +1098,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Nomen^7 non \"^1Ludens anonymus^7\" in statisticis"
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
@@ -1173,63 +1173,63 @@ msgstr "nmi/h"
 #: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
-msgstr ""
+msgstr "Harena cum Omnibus Armis"
 
 #: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Harena cum Omnibus Armis Praesentibus"
 
 #: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
-msgstr ""
+msgstr "Harena cum Plurimis Armis"
 
 #: qcsrc/client/main.qc:1363
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Harena cum Plurimis Armis Praesentibus"
 
 #: qcsrc/client/main.qc:1366 qcsrc/client/main.qc:1380
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Harena sine Armis"
 
 #: qcsrc/client/main.qc:1378
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
-msgstr ""
+msgstr "Harena cum %s"
 
 #: qcsrc/client/main.qc:1389 qcsrc/client/main.qc:1394
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Est %s"
 
 #: qcsrc/client/main.qc:1390
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Nimis vetus cliens computatralis tuum est."
 
 #: qcsrc/client/main.qc:1391
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### MODERATRO HOC LUDERE NON POTES ###"
 
 #: qcsrc/client/main.qc:1392
 msgid "Please update!"
-msgstr ""
+msgstr "Novius inveni!"
 
 #: qcsrc/client/main.qc:1395
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Moderatrum hoc Xonoticum veterem habet."
 
 #: qcsrc/client/main.qc:1396
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### MODERATRUM HOC NON INTELLEGIT PROPTEREA LUDERE NON POTES ###"
 
 #: qcsrc/client/main.qc:1398
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Salve, es in %s"
 
 #: qcsrc/client/main.qc:1413 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -1239,7 +1239,7 @@ msgstr ""
 #: qcsrc/client/main.qc:1415
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^F2%s^BG preme ut ludas"
 
 #: qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
@@ -1256,7 +1256,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1450
 msgid "MOTD:"
-msgstr ""
+msgstr "Nuntium hodie:"
 
 #: qcsrc/client/main.qc:1528
 #, c-format
@@ -1962,19 +1962,19 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
-msgstr ""
+msgstr "Vulneris scriptum"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
-msgstr ""
+msgstr "Vulneris numerum scribere"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Litterae magnitudo minima:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Litterae magnitudo maxima:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
@@ -1983,7 +1983,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
 #: qcsrc/menu/xonotic/util.qc:754
 msgid "Color:"
-msgstr ""
+msgstr "Color:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Draw damage numbers for friendly fire"
@@ -2434,17 +2434,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:262
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 iniuste a ^BG%s^K1 trucidatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:263
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 summersus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 in solum iactus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
