@@ -2449,239 +2449,239 @@ msgstr "^BG%s%s^K1 a ^BG%s^K1 in solum iactus est%s%s"
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 se calidulum, igne ^BG%s^K1, sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 frictus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:266
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 coctus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:267
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad beluam a ^BG%s^K1 pulsus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:268
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, granata ^BG%s^K1, ruptus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:269
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 nimis prope Napalm eruptionem fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:269
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 crematus, Napalm granata ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:270
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, granata gelata ^BG%s^K1, ruptus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:271
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 congelatus, granata gelata ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:272
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, granata sanante ^BG%s^K1, sanatus non est%s%s"
 
 #: qcsrc/common/notifications/all.inc:273
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 ex orbe iactus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 in mucum commutatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 corpus a ^BG%s^K1 conditum est%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 in exitu ^BG%s^K1 teleportati stare conatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 exiente teleportatrum occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 temere ad ^BG%s^K1 mortuus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, eruptione Bombi Apis ^BG%s^K1, offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 luces pulchras, armorum Bombi Apis ^BG%s^K1, vidit%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a ^BG%s^K1 compressus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, iactatis Raptoris ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, rebus purpureis ^BG%s^K1, non restitit%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, eruptione Raptoris ^BG%s^K1, offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, eruptione Araneae Automatae ^BG%s^K1, offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s, ab Aranea Automata ^BG%s^K1, laniatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ab Aranea Automata ^BG%s^K1, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, eruptione Cursoris ^BG%s^K1, offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, pessulis Cursoris ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Cursorem ^BG%s^K1, confugere non potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 in doloris mundum a ^BG%s^K1 iactus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
 msgid "^BG%s^K1 was moved into the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 motus est in: %s%s"
 
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr ""
+msgstr "^BG%s^K1 cum Coniunti Operis Duce inimicus factus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
 msgid "^BG%s^K1 thought they found a nice camping ground%s%s"
-msgstr ""
+msgstr "^BG%s^K1 locum castra bona esse putabat%s%s"
 
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s"
-msgstr ""
+msgstr "^BG%s^K1 iniuste se exclusit%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s"
-msgstr ""
+msgstr "^BG%s^K1 non inspirabat%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid "^BG%s^K1 was in the water for too long%s%s"
-msgstr ""
+msgstr "^BG%s^K1 tempus magnum immersus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr ""
+msgstr "^BG%s^K1 in solum concidit%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s"
-msgstr ""
+msgstr "^BG%s^K1 in solum crepitans cecidit%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr ""
+msgstr "^BG%s^K1 frictulus factus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se calidulum sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr ""
+msgstr "^BG%s^K1 mortuus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 locum calidum invenit%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s"
-msgstr ""
+msgstr "^BG%s^K1 scoria calida factus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr ""
+msgstr "^BG%s^K1 a Mago eruptus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 viscera a Goleme emota est%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 a Goleme compressus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 electricis Golemis occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ab aranea morsus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
