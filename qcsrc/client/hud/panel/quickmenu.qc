@@ -70,6 +70,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()
 		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));
@@ -192,12 +193,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	mouseClicked = 0;
 	hudShiftState = 0;
 
-	// we must unset the player's buttons, as they aren't released elsewhere
-	localcmd("-fire\n");
-	localcmd("-fire2\n");
-	localcmd("-use\n");
-	localcmd("-hook\n");
-	localcmd("-jump\n");
+	Release_Common_Keys();
 
 	QuickMenu_TimeOut_Set();
 	return true;
