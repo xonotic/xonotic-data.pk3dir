@@ -171,11 +171,6 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(bot_aim(actor, weaponentity, 1000000, 0, 1, false, true))
         PHYS_INPUT_BUTTON_ATCK(actor) = true;
-    else
-    {
-        if(WEP_CVAR(vortex, charge))
-            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-    }
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
