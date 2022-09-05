@@ -2469,7 +2469,7 @@ msgstr "^BG%s%s^K1 ad beluam a ^BG%s^K1 pulsus est%s%s"
 #: qcsrc/common/notifications/all.inc:268
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1, granata ^BG%s^K1, ruptus est%s%s"
+msgstr "^BG%s%s^K1, Granata ^BG%s^K1, ruptus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:269
 #, c-format
@@ -2479,22 +2479,22 @@ msgstr "^BG%s%s^K1 nimis prope Napalm eruptionem fuit%s%s"
 #: qcsrc/common/notifications/all.inc:269
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr "^BG%s%s^K1 crematus, Napalm granata ^BG%s^K1, occisus est%s%s"
+msgstr "^BG%s%s^K1 crematus, Napalm Granata ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:270
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1, granata gelata ^BG%s^K1, ruptus est%s%s"
+msgstr "^BG%s%s^K1, Granata Gelata ^BG%s^K1, ruptus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:271
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 congelatus, granata gelata ^BG%s^K1, occisus est%s%s"
+msgstr "^BG%s%s^K1 congelatus, Granata Gelata ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:272
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr "^BG%s%s^K1, granata sanante ^BG%s^K1, sanatus non est%s%s"
+msgstr "^BG%s%s^K1, Granata Sanante ^BG%s^K1, sanatus non est%s%s"
 
 #: qcsrc/common/notifications/all.inc:273
 #, c-format
@@ -2601,7 +2601,7 @@ msgstr "^BG%s^K1 motus est in: %s%s"
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr "^BG%s^K1 cum Coniunti Operis Duce inimicus factus est%s%s"
+msgstr "^BG%s^K1 cum Coniuncti Operis Duce inimicus factus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
@@ -2681,7 +2681,7 @@ msgstr "^BG%s^K1 electricis Golemis occisus est%s%s"
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr "^BG%s^K1 ab aranea morsus est%s%s"
+msgstr "^BG%s^K1 ab Aranea morsus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
@@ -2702,33 +2702,33 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr ""
+msgstr "^BG%s^K1 in se granatae iactandae peritus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sequentia Napalm eruptionem suam specere statuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Napalm Granata sua crematus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
 msgid "^BG%s^K1 felt a little chilly%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se frigidulus sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 congelatus, Granata Gelata sua, mortuus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Granata Sanante se non sanavit%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
@@ -2743,42 +2743,42 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1 rotted away%s%s"
-msgstr ""
+msgstr "^BG%s^K1 putruit%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 became a shooting star%s%s"
-msgstr ""
+msgstr "^BG%s^K1 stella labens factus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 was slimed%s%s"
-msgstr ""
+msgstr "^BG%s^K1 in mucum commutatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 couldn't take it anymore%s%s"
-msgstr ""
+msgstr "^BG%s^K1 tolerare non potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s"
-msgstr ""
+msgstr "^BG%s^K1 corpus conditum saecula manebit%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 iit in: %s%s"
 
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 died in an accident%s%s"
-msgstr ""
+msgstr "^BG%s^K1 temere mortuus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 turriolae occurrit%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
@@ -2843,27 +2843,27 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 eruptione Bombi Apis offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
 msgid "^BG%s^K1 was crushed by a vehicle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 vehiculo compressus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
 msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 iactatis Raptoris occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 eruptione Raptoris offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 eruptione Araneae Automatae offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
@@ -2873,7 +2873,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 eruptione Cursoris offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
@@ -2883,17 +2883,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s^K1 a ^BG%s^K1 traditus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr ""
+msgstr "^BG%s^BG%s^BG (%s %s %snis secundis)"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K1 a ^BG%s^K1 congelatus est"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
@@ -2918,7 +2918,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
 msgid "^BG%s^K1 froze themself"
-msgstr ""
+msgstr "^BG%s^K1 a se congelatus est"
 
 #: qcsrc/common/notifications/all.inc:357
 #: qcsrc/common/notifications/all.inc:672
@@ -4682,23 +4682,23 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
-msgstr ""
+msgstr "Rubra"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Blue"
-msgstr ""
+msgstr "Caerulea"
 
 #: qcsrc/common/teams.qh:33
 msgid "TEAM^Yellow"
-msgstr ""
+msgstr "Flava"
 
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
-msgstr ""
+msgstr "Rosea"
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
-msgstr ""
+msgstr "Manus"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
@@ -4706,35 +4706,35 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
-msgstr ""
+msgstr "Rubra"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Blue"
-msgstr ""
+msgstr "Caerulea"
 
 #: qcsrc/common/teams.qh:41
 msgid "KEY^Yellow"
-msgstr ""
+msgstr "Flava"
 
 #: qcsrc/common/teams.qh:42
 msgid "KEY^Pink"
-msgstr ""
+msgstr "Rosea"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Red"
-msgstr ""
+msgstr "Rubrum"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Blue"
-msgstr ""
+msgstr "Caeruleum"
 
 #: qcsrc/common/teams.qh:45
 msgid "FLAG^Yellow"
-msgstr ""
+msgstr "Flavum"
 
 #: qcsrc/common/teams.qh:46
 msgid "FLAG^Pink"
-msgstr ""
+msgstr "Roseum"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Red"
@@ -4959,11 +4959,11 @@ msgstr ""
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
-msgstr ""
+msgstr "Mas"
 
 #: qcsrc/common/util.qc:1398
 msgid "Female"
-msgstr ""
+msgstr "Femina"
 
 #: qcsrc/common/util.qc:1399
 msgid "Undisclosed"
@@ -5460,202 +5460,202 @@ msgstr ""
 #: qcsrc/lib/counting.qh:9
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "%s anni"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "%d annus"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "%d annus"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "%d anni"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "%d anni"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "%d anni"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "%s hebdomades"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "%d hebdomas"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "%d hebdomas"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "%d hebdomades"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "%d hebdomades"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "%d hebdomades"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "%s dies"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "%d dies"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "%d dies"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "%d dies"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "%d dies"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "%d dies"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "%s horae"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "%d hora"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "%d hora"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "%d horae"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "%d horae"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "%d horae"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "%s minuta"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "%d minutum"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "%d minutum"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "%d minuta"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "%d minuta"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "%d minuta"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "%s secunda"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "%d secundum"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "%d secundum"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "%d secunda"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr ""
+msgstr "%d secunda"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr ""
+msgstr "%d secunda"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%dus"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%dus"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%dus"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%dus"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
