@@ -201,14 +201,18 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
-	v = normalize(v);
+	//v = normalize(v);
 	//te_lightning2(NULL, this.origin + this.view_ofs, this.origin + this.view_ofs + v * 200);
 	if (time >= this.bot_badaimtime)
 	{
-		this.bot_badaimtime = max(this.bot_badaimtime + 0.3, time);
-		this.bot_badaimoffset = randomvec() * bound(0, 5 - 0.5 * (skill+this.bot_offsetskill), 5) * autocvar_bot_ai_aimskill_offset;
+		this.bot_badaimtime = max(this.bot_badaimtime + 0.2 + 0.3 * random(), time);
+		int f = bound(0, 1 - 0.1 * (skill + this.bot_offsetskill), 1);
+		this.bot_badaimoffset = randomvec() * f * autocvar_bot_ai_aimskill_offset;
+		this.bot_badaimoffset.x *= 0.7; // smaller vertical offset
 	}
-	desiredang = vectoangles(v) + this.bot_badaimoffset;
+	float enemy_factor = ((this.bot_aimtarg) ? 5 : 2);
+	// apply enemy_factor every frame so that the bigger offset is applied instantly when the bot aims to a new target
+	desiredang = vectoangles(v) + this.bot_badaimoffset * enemy_factor;
 	//dprint(" desired:", vtos(desiredang));
 	if (desiredang.x >= 180)
 		desiredang.x = desiredang.x - 360;
