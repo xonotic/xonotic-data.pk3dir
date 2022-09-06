@@ -13,6 +13,7 @@
 # Gokdeniz.Kucukali, 2021
 # Gokdeniz.Kucukali, 2021
 # ibra kap <ibrakap@gmail.com>, 2019
+# Lucifer Morningstar, 2022
 # Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021\n"
+"Last-Translator: Lucifer Morningstar, 2022\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -68,7 +69,7 @@ msgstr "Genel mesaj"
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "vs"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -207,7 +208,7 @@ msgstr "Ayarlamak için ^3%s%s basın"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "takım seçimi"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -540,7 +541,7 @@ msgstr "CEZA:%.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1243
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "kontrol noktası eksik"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
@@ -548,11 +549,11 @@ msgstr "Işınlanacağınız yeri seçmek için dokunun"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Yeniden doğma konumunu seçmek için tıklayın"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Top taşıyıcı öldürme sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^bckills"
@@ -564,7 +565,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Keepaway'de topu tutma süresi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -580,7 +581,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "En hızlı yakalama süresi (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of deaths"
@@ -592,7 +593,7 @@ msgstr "ölümler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "Boşluğa itilerek yok edilen anahtar sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^destroyed"
@@ -636,11 +637,11 @@ msgstr "en hızlı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "En hızlı tur zamanı (Yarış/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of faults committed"
-msgstr ""
+msgstr "İşlenen hata sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^faults"
@@ -648,7 +649,7 @@ msgstr "hatalar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Bayrak taşıyıcı öldürme sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fckills"
@@ -664,7 +665,7 @@ msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Öldürme sayısı eksi intiharlar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^frags"
@@ -680,7 +681,7 @@ msgstr "goller"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Taşıyıcının öldürdüğü anahtar sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^kckills"
@@ -714,7 +715,7 @@ msgstr "öldürmeler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Biten tur sayısı (Yarış/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
@@ -722,7 +723,7 @@ msgstr "turlar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Yaşam sayısı (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
@@ -730,7 +731,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Bir anahtarın kaybolma sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^losses"
@@ -751,7 +752,7 @@ msgstr "takma ad"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Yok edilen hedef sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^objectives"
@@ -784,7 +785,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Boşluğa itilen oyuncu sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^pushes"
@@ -848,7 +849,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Alınan hakimiyet puanı sayısı (Hakimiyet)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^takes"
@@ -1089,7 +1090,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr ""
+msgstr "Ani ölüm"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
