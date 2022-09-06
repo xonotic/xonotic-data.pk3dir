@@ -115,7 +115,6 @@ void havocbot_ai(entity this)
 		if (this.goalcurrent)
 			navigation_clearroute(this);
 		this.enemy = NULL;
-		this.bot_aimtarg = NULL;
 		return;
 	}
 
@@ -132,9 +131,8 @@ void havocbot_ai(entity this)
 		}
 	}
 	havocbot_aim(this);
-	lag_update(this);
 
-	if (this.bot_aimtarg)
+	if (this.enemy)
 	{
 		this.aistatus |= AI_STATUS_ATTACKING;
 		this.aistatus &= ~AI_STATUS_ROAMING;
@@ -162,8 +160,8 @@ void havocbot_ai(entity this)
 		}
 		else
 		{
-			if(IS_PLAYER(this.bot_aimtarg))
-				bot_aimdir(this, this.bot_aimtarg.origin + this.bot_aimtarg.view_ofs - this.origin - this.view_ofs, 0);
+			if(IS_PLAYER(this.enemy))
+				bot_aimdir(this, this.enemy.origin + this.enemy.view_ofs - this.origin - this.view_ofs, 0);
 		}
 	}
 	else if (this.goalcurrent)
@@ -1524,10 +1522,7 @@ void havocbot_aim(entity this)
 		vector enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
-		lag_additem(this, time + CS(this).ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
 	}
-	else
-		lag_additem(this, time + CS(this).ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
 bool havocbot_moveto_refresh_route(entity this)

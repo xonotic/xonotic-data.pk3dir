@@ -1758,7 +1758,7 @@ void havocbot_role_ctf_carrier(entity this)
 
 		entity goal = this.goalentity;
 		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
-			this.goalentity_lock_timeout = time + ((this.bot_aimtarg) ? 2 : 3);
+			this.goalentity_lock_timeout = time + ((this.enemy) ? 2 : 3);
 
 		if (goal)
 			this.havocbot_cantfindflag = time + 10;

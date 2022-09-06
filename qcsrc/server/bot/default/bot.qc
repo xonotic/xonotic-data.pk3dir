@@ -442,7 +442,6 @@ void bot_clientconnect(entity this)
 	if (!IS_BOT_CLIENT(this)) return;
 	this.bot_preferredcolors = this.clientcolors;
 	this.bot_nextthink = time - random();
-	this.lag_func = bot_lagfunc;
 	this.isbot = true;
 	this.createdtime = this.bot_nextthink;
 
