@@ -1442,7 +1442,7 @@ msgstr "此轮比赛结束所需要的分数"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr "淘汰赛"
+msgstr "决斗场"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -8812,7 +8812,7 @@ msgstr "除了团队游戏"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr "仅在淘汰赛"
+msgstr "仅在决斗场"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
@@ -8820,7 +8820,7 @@ msgstr "仅在团队游戏"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr "在团队游戏和淘汰赛"
+msgstr "在团队游戏和决斗场"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
