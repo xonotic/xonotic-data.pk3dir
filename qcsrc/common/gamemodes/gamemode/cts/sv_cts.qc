@@ -145,7 +145,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 				CS(player).movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	player.strafe_efficiency_sum += calculate_strafe_efficiency(player, CS(player).movement);
+	player.strafe_efficiency_sum += calculate_strafe_efficiency(player, CS(player).movement, dt) * dt;
 	if(!player.race_started) player.startspeed_recorded = false;
 	if(player.race_started && !player.startspeed_recorded && player.race_checkpoint != 0 && player.race_oldcheckpoint == 0)
 	{
@@ -202,7 +202,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
-	player.strafe_efficiency_sum = player.strafe_efficiency_tics = 0;
+	player.strafe_efficiency_sum = player.strafe_efficiency_time = 0;
 	player.strafe_efficiency_best = -2;
 	PlayerScore_Set(player, SP_CTS_STRAFE, -20000);
 	player.startspeed_recorded = false;
@@ -279,7 +279,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
 
-	frag_target.strafe_efficiency_sum = frag_target.strafe_efficiency_tics = 0;
+	frag_target.strafe_efficiency_sum = frag_target.strafe_efficiency_time = 0;
 	frag_target.startspeed_recorded = false;
 
 	if(autocvar_g_cts_removeprojectiles)
@@ -373,7 +373,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 {
 	entity player = M_ARGV(0, entity);
-	float strafe_efficiency_average = player.strafe_efficiency_sum / player.strafe_efficiency_tics;
+	float strafe_efficiency_average = player.strafe_efficiency_sum / player.strafe_efficiency_time;
 
 	if(player.strafe_efficiency_best < strafe_efficiency_average)
 	{
