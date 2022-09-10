@@ -55,7 +55,6 @@ float autocvar_hud_panel_strafehud_timeout_air = 0.1;
 float autocvar_hud_panel_strafehud_timeout_ground = 0.03333333;
 float autocvar_hud_panel_strafehud_timeout_turn = 0.1;
 float autocvar_hud_panel_strafehud_antiflicker_angle = 0.01;
-float autocvar_hud_panel_strafehud_antiflicker_speed = 0.0001;
 float autocvar_hud_panel_strafehud_fps_update = 0.5;
 
 void HUD_Panel_DrawStrafeHUD(float, float, vector, float, int, int);
