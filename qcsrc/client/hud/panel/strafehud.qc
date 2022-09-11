@@ -115,10 +115,10 @@ void HUD_StrafeHUD()
         static float turnspeed;
         static float turnaccel;
         static bool fwd = true;
-        static float strafe_dt_time = 0;
-        static int strafe_dt_count = 0;
-        static float strafe_dt_sum = 0;
-        static float strafe_dt_avg = 0;
+        static float dt_update = 0;
+        static int dt_time = 0;
+        static float dt_sum = 0;
+        static float dt = 0;
 
         // physics
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
@@ -186,23 +186,27 @@ void HUD_StrafeHUD()
 
         // determine frametime
         if((csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED) && (input_timelength > 0))
-            frametime_phys = input_timelength;
-        else
-            frametime_phys = ticrate;
-
-        if(frametime_phys > .05) // server splits frames longer than 50 ms into two moves
-            frametime_phys /= 2; // doesn't ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
-
-        // calculate average frametime
-        strafe_dt_sum += frametime_phys;
-        ++strafe_dt_count;
-
-        if(((time - strafe_dt_time) > autocvar_hud_panel_strafehud_fps_update) || (strafe_dt_time == 0))
         {
-            strafe_dt_avg = strafe_dt_sum / strafe_dt_count;
+            float dt_client = input_timelength;
 
-            strafe_dt_time = time;
-            strafe_dt_count = strafe_dt_sum = 0;
+            if(dt_client > .05) // server splits frames longer than 50 ms into two moves
+                dt_client /= 2; // doesn't ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
+
+            // calculate average frametime
+            dt_sum += dt_client*dt_client;
+            dt_time += dt_client;
+
+            if(((time - dt_update) > autocvar_hud_panel_strafehud_fps_update) || (dt_update == 0))
+            {
+                dt = dt_sum / dt_time;
+                dt_update = time;
+                dt_time = dt_sum = 0;
+            }
+        }
+        else
+        {
+            dt = ticrate;
+            dt_update = dt_time = dt_sum = 0;
         }
 
         // determine whether the player is pressing forwards or backwards keys
@@ -405,7 +409,7 @@ void HUD_StrafeHUD()
             }
         }
 
-        maxaccel *= strafe_dt_avg * movespeed;
+        maxaccel *= dt * movespeed;
         bestspeed = max(movespeed - maxaccel, 0); // target speed to gain maximum acceleration
 
         float frictionspeed; // speed lost from friction
@@ -415,7 +419,7 @@ void HUD_StrafeHUD()
         {
             float strafefriction = IS_ONSLICK(strafeplayer) ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
 
-            frictionspeed = speed * strafe_dt_avg * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
+            frictionspeed = speed * dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
             strafespeed = max(speed - frictionspeed, 0);
         }
         else
