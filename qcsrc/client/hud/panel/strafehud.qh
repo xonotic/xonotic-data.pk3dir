@@ -28,7 +28,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud_angle_accel_color, vector, '0 1 1', "color of 
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_overturn_color, vector, '1 0 1', "color of the indicator showing the player's current angle if it is within the overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow, int, 1, "set the angle indicator's arrow style: 0 = none, 1 = top, 2 = bottom, 3 = both");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_size, float, 0.5, "size of the arrow (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_bestangle, bool, false, "set to \"1\" to enable a ghost angle indicator showing the best angle to gain maximum acceleration");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle, bool, true, "set to \"1\" to enable a ghost angle indicator showing the best angle to gain maximum acceleration");
 AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_color, vector, '1 1 1', "color of the indicator showing the best angle to gain maximum acceleration");
 AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_alpha, float, 0.5, "opacity of the indicator showing the best angle to gain maximum acceleration");
 AUTOCVAR_SAVE(hud_panel_strafehud_switch_minspeed, float, -1, "minimum speed in qu/s at which switch indicator(s) which are used to aid changing strafe direction will be shown (set to -1 for dynamic minspeed)");
