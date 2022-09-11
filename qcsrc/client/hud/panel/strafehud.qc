@@ -95,7 +95,7 @@ void HUD_StrafeHUD()
     {
         float strafe_waterlevel;
 
-        // get the player waterlevel without affecting the player entity
+        // get the player waterlevel without affecting the player entity, this way we can fetch waterlevel even if client prediction is disabled
         {
             // store old values
             void old_contentstransition(int, int) = strafeplayer.contentstransition;
@@ -125,10 +125,10 @@ void HUD_StrafeHUD()
         static float turnspeed;
         static float turnaccel;
         static bool fwd = true;
-        static float strafe_dt_time = 0;
-        static int strafe_dt_count = 0;
-        static float strafe_dt_sum = 0;
-        static float strafe_dt_avg = 0;
+        static float dt_update = 0;
+        static int dt_time = 0;
+        static float dt_sum = 0;
+        static float dt = 0;
 
         // physics
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
@@ -143,7 +143,6 @@ void HUD_StrafeHUD()
         float  bestspeed;
         float  maxaccel_phys                 = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
         float  maxaccel                      = !autocvar__hud_configure ? maxaccel_phys : 1;
-        float  frametime_phys;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
         float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
@@ -197,23 +196,27 @@ void HUD_StrafeHUD()
 
         // determine frametime
         if((csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED) && (input_timelength > 0))
-            frametime_phys = input_timelength;
-        else
-            frametime_phys = ticrate;
-
-        if(frametime_phys > .05) // server splits frames longer than 50 ms into two moves
-            frametime_phys /= 2; // doesn't ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
-
-        // calculate average frametime
-        strafe_dt_sum += frametime_phys;
-        ++strafe_dt_count;
-
-        if(((time - strafe_dt_time) > autocvar_hud_panel_strafehud_fps_update) || (strafe_dt_time == 0))
         {
-            strafe_dt_avg = strafe_dt_sum / strafe_dt_count;
+            float dt_client = input_timelength;
 
-            strafe_dt_time = time;
-            strafe_dt_count = strafe_dt_sum = 0;
+            if(dt_client > .05) // server splits frames longer than 50 ms into two moves
+                dt_client /= 2; // doesn't ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
+
+            // calculate average frametime
+            dt_sum += dt_client*dt_client;
+            dt_time += dt_client;
+
+            if(((time - dt_update) > autocvar_hud_panel_strafehud_fps_update) || (dt_update == 0))
+            {
+                dt = dt_sum / dt_time;
+                dt_update = time;
+                dt_time = dt_sum = 0;
+            }
+        }
+        else
+        {
+            dt = ticrate;
+            dt_update = dt_time = dt_sum = 0;
         }
 
         // determine whether the player is pressing forwards or backwards keys
@@ -368,7 +371,8 @@ void HUD_StrafeHUD()
                     // calculate the maximum air strafe speed and acceleration
                     float strafity = 1 - (90 - fabs(wishangle)) / 45;
 
-                    if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0){
+                    if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
+                    {
                         maxspeed = GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer));
                         maxspeed = min(maxspeed, PHYS_MAXAIRSPEED(strafeplayer) * maxspeed_mod);
                     }
@@ -376,7 +380,8 @@ void HUD_StrafeHUD()
                     if(turnspeed == 0) turnspeed = maxspeed;
                     else turnspeed = min(turnspeed, maxspeed);
 
-                    if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0) {
+                    if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0)
+                    {
                         maxaccel = GeomLerp(PHYS_AIRACCELERATE(strafeplayer), strafity, PHYS_AIRSTRAFEACCELERATE(strafeplayer));
                     }
                     turnaccel = maxaccel;
@@ -414,22 +419,26 @@ void HUD_StrafeHUD()
             }
         }
 
-        maxaccel *= strafe_dt_avg * movespeed;
-        bestspeed = max(movespeed - maxaccel, 0);
+        maxaccel *= dt * movespeed;
+        bestspeed = max(movespeed - maxaccel, 0); // target speed to gain maximum acceleration
 
-        float strafespeed = speed; // speed minus friction
+        float frictionspeed; // speed lost from friction
+        float strafespeed; // speed minus friction
 
-        if((strafespeed > 0) && onground){
+        if((speed > 0) && onground)
+        {
             float strafefriction = IS_ONSLICK(strafeplayer) ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
-            float f = 1 - strafe_dt_avg * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / strafespeed, 1);
 
-            if(f <= 0)
-                strafespeed = 0;
-            else
-                strafespeed *= f;
+            frictionspeed = speed * dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
+            strafespeed = max(speed - frictionspeed, 0);
+        }
+        else
+        {
+            frictionspeed = 0;
+            strafespeed = speed;
         }
 
-        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? bestspeed + (speed - strafespeed) : autocvar_hud_panel_strafehud_switch_minspeed;
+        minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? bestspeed + frictionspeed : autocvar_hud_panel_strafehud_switch_minspeed;
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -532,7 +541,7 @@ void HUD_StrafeHUD()
 
         // best angle to strafe at
         bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
-        prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0);
+        prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG * (direction < 0 ? -1 : 1) : 0); // in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
         odd_bestangle = -bestangle - wishangle;
         bestangle -= wishangle;
         prebestangle -= wishangle;
@@ -1052,7 +1061,8 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
             else if(mirror_offset == 0) gradient_start = 1;
             else gradient_start = 0;
 
-            switch(gradient_start){
+            switch(gradient_start)
+            {
                 default:
                 case 0: // no offset required
                     gradient_offset = gradient_mirror_offset = 0;
