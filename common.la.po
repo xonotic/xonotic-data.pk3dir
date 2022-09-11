@@ -544,83 +544,83 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Quotiens pilam portantem interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^bckills"
-msgstr ""
+msgstr "SCO^ppinterf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^bctime"
-msgstr ""
+msgstr "SCO^pptempus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Quid tempus totum pilam portabat Abhibitione"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr ""
+msgstr "Quotiens vexillum (VC) aut clavem (CV) cepit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^caps"
-msgstr ""
+msgstr "SCO^caps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^captime"
-msgstr ""
+msgstr "SCO^captempus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Captus celerrimi tempus (VC)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of deaths"
-msgstr ""
+msgstr "Quotiens mortuus est"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^deaths"
-msgstr ""
+msgstr "SCO^mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "Quot claves deletae demissae in vacuum"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^destroyed"
-msgstr ""
+msgstr "SCO^delet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^vulnus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage done"
-msgstr ""
+msgstr "Quantum vulnus fecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^dmgtaken"
-msgstr ""
+msgstr "SCO^vulninse"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "The total damage taken"
-msgstr ""
+msgstr "Quantum vulnus in se"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Quotiens vexillum demisit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^drops"
-msgstr ""
+msgstr "SCO^demiss"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Player ELO"
-msgstr ""
+msgstr "Ludentis ELO"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^elo"
-msgstr ""
+msgstr "SCO^elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^fastest"
@@ -632,27 +632,27 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Quotiens deliquit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^faults"
-msgstr ""
+msgstr "SCO^delict"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Quotiens vexillum portantem interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fckills"
-msgstr ""
+msgstr "SCO^vpinterf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "FPS"
-msgstr ""
+msgstr "QIS (quadra in secundum)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^qis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
@@ -664,19 +664,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Quotiens pilam in portam iecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^goals"
-msgstr ""
+msgstr "SCO^pilport"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Quotiens clavem portantem interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^kckills"
-msgstr ""
+msgstr "SCO^cpinterf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^k/d"
@@ -698,11 +698,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of kills"
-msgstr ""
+msgstr "Quotiens interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^kills"
-msgstr ""
+msgstr "SCO^interf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
@@ -714,32 +714,32 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Quot vitae (HSU)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
-msgstr ""
+msgstr "SCO^vitae"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Quotiens clavem amisit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^losses"
-msgstr ""
+msgstr "SCO^amiss"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Player name"
-msgstr ""
+msgstr "Ludenti nomen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^name"
-msgstr ""
+msgstr "SCO^nomen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^nick"
-msgstr ""
+msgstr "SCO^agnomen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
@@ -752,19 +752,19 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr ""
+msgstr "Quotiens vexillum (VC) aut clavem (CV) aut pilam (Abhibitione) ferebat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^pickups"
-msgstr ""
+msgstr "SCO^lationes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Ping time"
-msgstr ""
+msgstr "Ping tempus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^ping"
-msgstr ""
+msgstr "SCO^ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Packet loss"
@@ -776,11 +776,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Quotiens ludentem in vacuum pepulit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^pushes"
-msgstr ""
+msgstr "SCO^puls"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Player rank"
@@ -792,11 +792,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Quotiens vexillum rettulit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^returns"
-msgstr ""
+msgstr "SCO^relat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of revivals"
@@ -808,11 +808,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Quot temporibus vicit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^quot vicit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^score"
@@ -840,27 +840,27 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Quotiens dominationis locum tetigit (Dominatione)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^takes"
-msgstr ""
+msgstr "SCO^tact"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Quotiens manus collegam interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "SCO^colleginterf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Quot tic (Dominatione)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^ticks"
-msgstr ""
+msgstr "SCO^tic"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^time"
@@ -1364,7 +1364,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
-msgstr ""
+msgstr "Vexilli Captus"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid ""
@@ -1455,7 +1455,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
-msgstr ""
+msgstr "Clavium Venatio"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
@@ -2898,22 +2898,22 @@ msgstr "^BG%s^K1 a ^BG%s^K1 congelatus est"
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K3 a ^BG%s^K3 restitutus est"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr ""
+msgstr "^BG%s^K3 restitutus est quia cecidit"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr ""
+msgstr "^BG%s^K3 eruptione Granatae suae restitutus est"
 
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 restitutus est quia %s secunda expectavit"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
@@ -2923,28 +2923,28 @@ msgstr "^BG%s^K1 a se congelatus est"
 #: qcsrc/common/notifications/all.inc:357
 #: qcsrc/common/notifications/all.inc:672
 msgid "^TC^TT^BG team wins the round"
-msgstr ""
+msgstr "^BGManus ^TC^TT^BG tempore vicit"
 
 #: qcsrc/common/notifications/all.inc:358
 #: qcsrc/common/notifications/all.inc:673
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr ""
+msgstr "^BG%s^BG tempore vicit"
 
 #: qcsrc/common/notifications/all.inc:359
 #: qcsrc/common/notifications/all.inc:535
 msgid "^BGRound tied"
-msgstr ""
+msgstr "^BGTempore aequaverunt"
 
 #: qcsrc/common/notifications/all.inc:360
 #: qcsrc/common/notifications/all.inc:536
 msgid "^BGRound over, there's no winner"
-msgstr ""
+msgstr "^BGTempus finitum, nemo vicit"
 
 #: qcsrc/common/notifications/all.inc:362
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr ""
+msgstr "^BGDei Modo sanitas %snaria servata est, fraudator!"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
@@ -2972,19 +2972,19 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr ""
+msgstr "^BGNon habes: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr ""
+msgstr "^BGDemisisti: ^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr ""
+msgstr "^BGCepisti: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:687
@@ -3017,29 +3017,29 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:378
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "^BG%s^F3 iam ludit"
 
 #: qcsrc/common/notifications/all.inc:379
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 pro ^TCmanu ^TT^F3 ludit"
 
 #: qcsrc/common/notifications/all.inc:381
 #: qcsrc/common/notifications/all.inc:694
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr ""
+msgstr "^BG%s^BG pilam demisit!"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:695
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr ""
+msgstr "^BG%s^BG pilam cepit!"
 
 #: qcsrc/common/notifications/all.inc:384
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^BG pro ^TCmanu ^TT^BG claves cepit"
 
 #: qcsrc/common/notifications/all.inc:385
 #, c-format
