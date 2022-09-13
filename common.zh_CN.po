@@ -1442,7 +1442,7 @@ msgstr "此轮比赛结束所需要的分数"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr "淘汰赛"
+msgstr "决斗场"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -2121,7 +2121,7 @@ msgstr "护盾"
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:59
 msgid "Speed"
-msgstr "速度"
+msgstr "加速"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -2357,11 +2357,11 @@ msgstr "^BG旗帜被它的所有者带回"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr "^BG^TC^TT队^BG旗帜被摧毁并回到基地"
+msgstr "^BG^TC^TT队^BG旗帜被毁坏并回到基地"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr "^BG旗帜被摧毁并回到基地"
+msgstr "^BG旗帜被毁坏并回到基地"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
@@ -2463,17 +2463,17 @@ msgstr "^BG%s%s^K1 让 ^BG%s^K1 用^BG%s^K1增益得分 ^K1%s%s"
 #: qcsrc/common/notifications/all.inc:262
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 被^BG%s^K1不公正地消灭了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 不公正地消灭了%s%s"
 
 #: qcsrc/common/notifications/all.inc:263
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1淹在水下%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 淹在水下%s%s"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1从高处推下%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 从高处推下%s%s"
 
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
@@ -2574,7 +2574,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 压扁了%s%s"
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用猛枭集束炸弹爆破%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的猛枭集束炸弹爆破%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -2640,7 +2640,7 @@ msgstr "^BG%s^K1 觉得他找到了一个不错的扎营地点%s%s"
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s"
-msgstr "^BG%s^K1 不公平地消灭了他自己%s%s"
+msgstr "^BG%s^K1 不公平地消灭了自己%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
@@ -2690,7 +2690,7 @@ msgstr "^BG%s^K1 熔成了碎渣%s%s"
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr "^BG%s^K1 被一个魔法师引爆%s%s"
+msgstr "^BG%s^K1 被魔法师引爆了%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
@@ -2710,12 +2710,12 @@ msgstr "^BG%s^K1 被钢铁巨人电击而亡%s%s"
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr "^BG%s^K1 被一只蜘蛛咬了%s%s"
+msgstr "^BG%s^K1 被蜘蛛咬了%s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr "^BG%s^K1 被一条飞龙用火球攻击%s%s"
+msgstr "^BG%s^K1 被飞龙的火球攻击%s%s"
 
 #: qcsrc/common/notifications/all.inc:308
 #, c-format
@@ -2817,7 +2817,7 @@ msgstr "^BG%s^K1 被电轮炮塔炸飞了%s%s"
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr "^BG%s^K1 被笼罩在 FLAC 炮塔的炮弹中%s%s"
+msgstr "^BG%s^K1 被笼罩在重型镭射炮塔的炮弹中%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -2832,12 +2832,12 @@ msgstr "^BG%s^K1 藏不过猎手炮塔%s%s"
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 被机枪炮塔扫射到满身疮痍%s%s"
+msgstr "^BG%s^K1 被机枪炮塔扫射得满身疮痍%s%s"
 
 #: qcsrc/common/notifications/all.inc:329
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr "^BG%s^K1 被一个 MLRS 炮塔变成了烤焦的肢体%s%s"
+msgstr "^BG%s^K1 被一架多重火箭炮塔变成了烤焦的肢体%s%s"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
@@ -2862,7 +2862,7 @@ msgstr "^BG%s^K1 被行走者炮塔发出的浓缩重金属教会做人%s%s"
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr "^BG%s^K1 被行走者炮塔给予恐惧%s%s"
+msgstr "^BG%s^K1 被笼罩在行走者炮塔的恐惧中%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
@@ -2917,7 +2917,7 @@ msgstr "^BG%s^K1 被 ^BG%s^K1 背叛%s%s"
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr "^BG%s^BG%s^BG（%s %s每%s秒）"
+msgstr "^BG%s^BG%s^BG（可获得 %s %s，间隔 %s 秒）"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
@@ -2932,7 +2932,7 @@ msgstr "^BG%s^K3 被 ^BG%s^K3 复活"
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr "^BG%s^K3 通过跌落而复活"
+msgstr "^BG%s^K3 通过跌落复活"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
@@ -3210,7 +3210,7 @@ msgstr "^BG%s^BG 没有打破 %s%s^BG %s%s %s 的记录"
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr "^BG%s^BG 竞速结束"
+msgstr "^BG%s^BG 完成竞速"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
@@ -3314,7 +3314,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用弧光电击%s%s"
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用弧光电束爆破了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光电束爆破了%s%s"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
@@ -3324,7 +3324,7 @@ msgstr "^BG%s^K1 试图把玩弧光电束%s%s"
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1's 的镭射枪打死了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用镭射枪杀害%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3334,12 +3334,12 @@ msgstr "^BG%s^K1 被自己的镭射枪送进地狱%s%s"
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"
-msgstr "^BG%s%s^K1 感受到 ^BG%s^K1 手中紫电的强大吸力%s%s"
+msgstr "^BG%s%s^K1 感受到 ^BG%s^K1 手中紫电的强大引力%s%s"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr "^BG%s^K1 感受到自己手中紫电的强大吸力%s%s"
+msgstr "^BG%s^K1 感受到自己手中紫电的强大引力%s%s"
 
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
@@ -3359,7 +3359,7 @@ msgstr "^BG%s^K1 被自己的灭世炸上天%s%s"
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用电射枪光束爆破了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的电射枪光束爆破了%s%s"
 
 #: qcsrc/common/notifications/all.inc:455
 #, c-format
@@ -3394,7 +3394,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的火雷烧着了%s%s"
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr "^BG%s^K1 应该去用一把更小的枪%s%s"
+msgstr "^BG%s^K1 应该使用更小的枪%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
@@ -3419,7 +3419,7 @@ msgstr "^BG%s^K1 试图把玩小哈格火箭弹%s%s"
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用重型镭射突击大炮切成了两半%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用重型镭射突击大炮切开%s%s"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -3445,7 +3445,7 @@ msgstr "^BG%s^K1 用乱音克莱因瓶伤到了自己的耳朵%s%s"
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用机枪狙击了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用机枪狙击%s%s"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
@@ -3471,7 +3471,7 @@ msgstr "^BG%s^K1 忘记自己放置了地雷%s%s"
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr "^BG%s%s^K1 离 ^BG%s^K1 打出的榴弹太近了%s%s"
+msgstr "^BG%s%s^K1 离 ^BG%s^K1 打出的榴弹太近%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
@@ -3481,12 +3481,12 @@ msgstr "^BG%s%s^K1 吃了一记 ^BG%s^K1 的榴弹%s%s"
 #: qcsrc/common/notifications/all.inc:478
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr "^BG%s^K1 没躲过自己的榴弹%s%s"
+msgstr "^BG%s^K1 没能躲过自己的榴弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr "^BG%s^K1 被自己的榴弹枪炸成碎尸%s%s"
+msgstr "^BG%s^K1 被自己的榴弹炸成碎尸%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -3563,22 +3563,22 @@ msgstr "^BG%s%s^K1 没有逃过 ^BG%s^K1 的步枪攻击%s%s"
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用跟踪火箭无情追赶%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的跟踪火箭无情追赶%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用瞄准者盯住了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的瞄准者盯住了%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr "^BG%s^K1 试图把玩小跟踪火箭%s%s"
+msgstr "^BG%s^K1 试图把玩跟踪火箭%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的脉冲波击倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用脉冲枪击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
@@ -3598,7 +3598,7 @@ msgstr "^BG%s%s^K1 用大霰弹枪把 ^BG%s^K1 搧得再起不能%s%s"
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s"
-msgstr "^BG%s^K1 无法逃出传送门%s%s"
+msgstr "^BG%s^K1 与传送门同在%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
@@ -4437,11 +4437,11 @@ msgstr "^F2护盾已失效"
 
 #: qcsrc/common/notifications/all.inc:747
 msgid "^F2You are on speed"
-msgstr "^F2你获得了速度提升"
+msgstr "^F2你获得了加速"
 
 #: qcsrc/common/notifications/all.inc:748
 msgid "^F2Speed has worn off"
-msgstr "^F2速度已失效"
+msgstr "^F2加速已失效"
 
 #: qcsrc/common/notifications/all.inc:750
 msgid "^F2You are invisible"
@@ -4586,7 +4586,7 @@ msgstr "%s^K1 连续得了五分！%s^BG"
 #: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr "%s^K1 解锁了【狂怒】！%s^BG"
+msgstr "%s^K1 进入【狂怒】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 msgid "RAGE! "
@@ -4623,7 +4623,7 @@ msgstr "混乱！"
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr "%s^K1 成为【暴怒者】！%s^BG"
+msgstr "%s^K1 现在【无懈可击】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
@@ -4632,7 +4632,7 @@ msgstr "%s^K1 连续得了二十分！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:457
 msgid "BERSERKER! "
-msgstr "暴怒者！"
+msgstr "无懈可击！"
 
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
@@ -4749,12 +4749,12 @@ msgstr "，结束了他的 %d 次连续得分"
 #: qcsrc/common/notifications/all.qh:619
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr "，丢掉了其 %d 连杀"
+msgstr "，失去了其 %d 连杀"
 
 #: qcsrc/common/notifications/all.qh:620
 #, c-format
 msgid ", losing their %d score spree"
-msgstr "，丢掉了他的 %d 次连续得分"
+msgstr "，失去了他的 %d 次连续得分"
 
 #: qcsrc/common/notifications/all.qh:646
 #, c-format
@@ -4852,7 +4852,7 @@ msgstr "电轮"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
-msgstr "镭射炮塔"
+msgstr "重型镭射炮塔"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
@@ -5499,7 +5499,7 @@ msgstr "机枪"
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:20
 msgid "Mine Layer"
-msgstr "地雷放置者"
+msgstr "地雷放置器"
 
 #: qcsrc/common/weapons/weapon/mortar.qh:20
 msgid "Mortar"
@@ -5507,7 +5507,7 @@ msgstr "榴弹枪"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
-msgstr "传送门放置器"
+msgstr "传送枪"
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
@@ -7201,7 +7201,7 @@ msgid ""
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
 "一些武器在生成时会被随机替换为新武器：\n"
-"重型镭射突击大炮、地雷放置者、步枪、T.A.G. 瞄准者"
+"重型镭射突击大炮、地雷放置器、步枪、T.A.G. 瞄准者"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
 msgid ""
@@ -8812,7 +8812,7 @@ msgstr "除了团队游戏"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr "仅在淘汰赛"
+msgstr "仅在决斗场"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
@@ -8820,7 +8820,7 @@ msgstr "仅在团队游戏"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr "在团队游戏和淘汰赛"
+msgstr "在团队游戏和决斗场"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
