@@ -6,7 +6,7 @@
 
 .float race_started;
 
-float calculate_strafe_efficiency(entity strafeplayer, vector movement)
+float calculate_strafe_efficiency(entity strafeplayer, vector movement, float dt)
 {
     if(strafeplayer)
     {
@@ -15,15 +15,16 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
         bool   strafekeys;
         bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         float  speed                         = vlen(vec2(strafeplayer.velocity));
-        float  crouch_mod                    = IS_DUCKED(strafeplayer) ? .5 : 1;
+        float  maxspeed_mod                  = IS_DUCKED(strafeplayer) ? .5 : 1;
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
-        float  maxspeed                      = maxspeed_phys * crouch_mod;
+        float  maxspeed                      = maxspeed_phys * maxspeed_mod;
+        float  movespeed;
+        float  bestspeed;
         float  maxaccel_phys                 = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
-        float  maxaccel                      = maxaccel_phys * crouch_mod;
+        float  maxaccel                      = maxaccel_phys;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0); // change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
         float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
-        int    direction;
         int    keys_fwd;
         float  wishangle                     = 0;
         bool   fwd                           = true;
@@ -81,7 +82,27 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
 
         if(strafekeys && !onground && !swimming)
         {
-            maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no modifiers here because they don't affect air strafing
+            if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
+                maxspeed = min(PHYS_MAXAIRSTRAFESPEED(strafeplayer), PHYS_MAXAIRSPEED(strafeplayer) * maxspeed_mod);
+            if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0)
+                maxaccel = PHYS_AIRSTRAFEACCELERATE(strafeplayer);
+        }
+
+        movespeed = min(vlen(vec2(movement)), maxspeed);
+
+        maxaccel *= dt * movespeed;
+        bestspeed = max(movespeed - maxaccel, 0);
+
+        float strafespeed = speed; // speed minus friction
+
+        if((strafespeed > 0) && onground){
+            float strafefriction = IS_ONSLICK(strafeplayer) ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
+            float f = 1 - dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / strafespeed, 1);
+
+            if(f <= 0)
+                strafespeed = 0;
+            else
+                strafespeed *= f;
         }
 
         // get current strafing angle ranging from -180° to +180°
@@ -147,10 +168,10 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
         {
             float efficiency = 0;
             float moveangle = angle + wishangle;
-            float bestangle = (speed > (maxspeed - maxaccel) ? acos((maxspeed - maxaccel) / speed) : 0) * RAD2DEG; // best angle to strafe at
-            float prebestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG;
+            float bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) : 0) * RAD2DEG; // best angle to strafe at
+            float prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) : 0) * RAD2DEG;
 
-            ++strafeplayer.strafe_efficiency_tics;
+            strafeplayer.strafe_efficiency_time += dt;
             if(fabs(vlen(vec2(movement))) > 0)
             {
                 if(fabs(moveangle) > 90)
