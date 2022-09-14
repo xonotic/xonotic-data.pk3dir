@@ -7,14 +7,15 @@ const int FRAGS_PLAYER_OUT_OF_GAME = -616;
 ///////////////////////////
 // cvar constants
 
-const int CVAR_SAVE = 1;
-const int CVAR_NOTIFY = 2;
-const int CVAR_READONLY = 4;
+const int CVAR_SAVE = BIT(0);
+const int CVAR_NOTIFY = BIT(1);
+const int CVAR_READONLY = BIT(2);
 
 // server flags
-const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
-const int SERVERFLAG_TEAMPLAY = 2;
-const int SERVERFLAG_PLAYERSTATS = 4;
+const int SERVERFLAG_ALLOW_FULLBRIGHT = BIT(0);
+const int SERVERFLAG_TEAMPLAY = BIT(1);
+const int SERVERFLAG_PLAYERSTATS = BIT(2);
+const int SERVERFLAG_PLAYERSTATS_CUSTOM = BIT(3);
 
 const int SPECIES_HUMAN = 0;
 const int SPECIES_ROBOT_SOLID = 1;

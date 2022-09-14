@@ -243,9 +243,10 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 void W_SwitchWeapon_Force(Player this, Weapon wep, .entity weaponentity)
 {
 	TC(Weapon, wep);
-	this.(weaponentity).cnt = this.(weaponentity).m_switchweapon.m_id;
-	this.(weaponentity).m_switchweapon = wep;
-	this.(weaponentity).selectweapon = wep.m_id;
+	entity w_ent = this.(weaponentity);
+	w_ent.cnt = w_ent.m_switchweapon.m_id;
+	w_ent.m_switchweapon = wep;
+	w_ent.selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
@@ -283,7 +284,7 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 			return false;
 		}
 	}
-	else if(!weaponLocked(this) && CS(this).cvar_cl_weapon_switch_reload)
+	else if(!weaponLocked(this) && CS_CVAR(this).cvar_cl_weapon_switch_reload)
 	{
 		entity actor = this;
 		w.wr_reload(w, actor, weaponentity);
@@ -294,7 +295,7 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 
 void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
 {
-	if(!W_SwitchWeapon(this, w, weaponentity) && CS(this).cvar_cl_weapon_switch_fallback_to_impulse)
+	if(!W_SwitchWeapon(this, w, weaponentity) && CS_CVAR(this).cvar_cl_weapon_switch_fallback_to_impulse)
 		W_NextWeaponOnImpulse(this, w.impulse, weaponentity);
 }
 
@@ -309,7 +310,7 @@ void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponent
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, CS(this).cvar_cl_weaponpriority, +1, imp, 1, (CS(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
+	w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, 1, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
@@ -320,9 +321,9 @@ void W_NextWeapon(entity this, int list, .entity weaponentity)
 	if(list == 0)
 		W_CycleWeapon(this, weaponorder_byid, -1, weaponentity);
 	else if(list == 1)
-		W_CycleWeapon(this, CS(this).weaponorder_byimpulse, -1, weaponentity);
+		W_CycleWeapon(this, CS_CVAR(this).weaponorder_byimpulse, -1, weaponentity);
 	else if(list == 2)
-		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriority, -1, weaponentity);
+		W_CycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, -1, weaponentity);
 }
 
 // prev weapon
@@ -331,9 +332,9 @@ void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 	if(list == 0)
 		W_CycleWeapon(this, weaponorder_byid, +1, weaponentity);
 	else if(list == 1)
-		W_CycleWeapon(this, CS(this).weaponorder_byimpulse, +1, weaponentity);
+		W_CycleWeapon(this, CS_CVAR(this).weaponorder_byimpulse, +1, weaponentity);
 	else if(list == 2)
-		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriority, +1, weaponentity);
+		W_CycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, weaponentity);
 }
 
 // previously used if exists and has ammo, (second) best otherwise
@@ -345,3 +346,13 @@ void W_LastWeapon(entity this, .entity weaponentity)
 	else
 		W_SwitchToOtherWeapon(this, weaponentity);
 }
+
+// fix switchweapon (needed when spectating is disabled, as PutClientInServer comes too early)
+REPLICATE_APPLYCHANGE("cl_weaponpriority",
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))
+			this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+	}
+);

@@ -1,5 +1,3 @@
 #pragma once
 
 float g_weaponarena_random_with_blaster;
-
-entity GiveFrags_randomweapons;

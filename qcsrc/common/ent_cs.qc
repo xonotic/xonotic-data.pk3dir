@@ -2,12 +2,12 @@
 
 #if defined(CSQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
+	#include <common/resources/resources.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
-	#include <server/resources.qh>
+	#include <common/resources/resources.qh>
+	#include <common/resources/sv_resources.qh>
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
@@ -21,13 +21,13 @@ STATIC_INIT(EntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
 // these entcs_props ids need to be referenced directly
 int ENTCS_PROP_ENTNUM_id = 0;
 int ENTCS_PROP_ORIGIN_id = 0;
+int ENTCS_PROP_HEALTH_id = 0;
 STATIC_INIT(EntCSProps_setglobalids)
 {
 	FOREACH(EntCSProps, true, {
-		if (it.registered_id == "ENTCS_PROP_ENTNUM")
-			ENTCS_PROP_ENTNUM_id = it.m_id;
-		if (it.registered_id == "ENTCS_PROP_ORIGIN")
-			ENTCS_PROP_ORIGIN_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_ENTNUM") ENTCS_PROP_ENTNUM_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_ORIGIN") ENTCS_PROP_ORIGIN_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_HEALTH") ENTCS_PROP_HEALTH_id = it.m_id;
 	});
 }
 
@@ -159,12 +159,23 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 
 #ifdef SVQC
 
-	int ENTCS_PUBLICMASK = 0;
+	int ENTCS_PUBLICMASK = 0, ENTCS_PRIVATEMASK = 0;
 	STATIC_INIT(ENTCS_PUBLICMASK)
 	{
-		FOREACH(EntCSProps, it.m_public,
+		FOREACH(EntCSProps, true,
 		{
-			ENTCS_PUBLICMASK |= BIT(it.m_id);
+			if (it.m_public)
+				ENTCS_PUBLICMASK |= BIT(it.m_id);
+			else
+				ENTCS_PRIVATEMASK |= BIT(it.m_id);
+		});
+	}
+
+	void entcs_update_players(entity player)
+	{
+		FOREACH_CLIENT(it != player && IS_PLAYER(it),
+		{
+			CS(it).entcs.SendFlags |= ENTCS_PRIVATEMASK;
 		});
 	}
 
@@ -177,7 +188,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			{
 				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
-				if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
+				if (!(IS_PLAYER(to) || INGAME(to))) break;
 			}
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
@@ -211,21 +222,38 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			it.m_set(this, player);
 			this.SendFlags |= BIT(it.m_id);
 		});
-		setorigin(this, this.origin); // relink
+
+		if (intermission_running)
+		{
+			// health is set to special values after the game ends, ignore any change
+			this.SendFlags &= ~BIT(ENTCS_PROP_HEALTH_id);
+		}
+
+		// always send origin of players even if they stand still otherwise
+		// if a teammate isn't in my pvs and his health (or view angle or name
+		// etc...) changes then his tag disappears
+		if (IS_PLAYER(this.owner))
+			this.SendFlags |= BIT(ENTCS_PROP_ORIGIN_id);
+
+		// not needed, origin is just data to be sent
+		//setorigin(this, this.origin); // relink
 	}
 
 	void entcs_attach(entity player)
 	{
-		entity e = CS(player).entcs = new(entcs_sender);
+		entity e = CS(player).entcs = new_pure(entcs_sender);
 		e.owner = player;
 		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
+		// NOTE: the following code block has been disabled as a workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/1824
+#if 0
 		if (!IS_REAL_CLIENT(player)) return;
 		FOREACH_CLIENT(true, {
 			assert(CS(it).entcs);
 			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
 		});
+#endif
 	}
 
 	void entcs_detach(entity player)
@@ -254,11 +282,17 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		entity e = CSQCModel_server2csqc(this.sv_entnum);
 		if (e == NULL)
 		{
+			// player model is NOT in client's PVS
+			InterpolateOrigin_Do(this);
 			this.has_origin = this.has_sv_origin;
 			return;
 		}
 		this.has_origin = true;
+		// when a player model is in client's PVS we use its origin directly
+		// (entcs networked origin is overriden)
 		this.origin = e.origin;
+		InterpolateOrigin_Reset(this);
+		setorigin(this, this.origin);
 		// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
 		if (this.model != e.model)
 		{

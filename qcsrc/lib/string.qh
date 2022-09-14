@@ -60,13 +60,118 @@ MACRO_END
 	this = string_null; \
 MACRO_END
 
+// Returns the number of days since 0000-03-01 (March 1, year 0)
+// Starting counting from March, as the 1st month of the year, February becomes the 12th and last month,
+// so its variable duration does not affect, given that the 29th is the last day of the period
 ERASEABLE
-string seconds_tostring(float sec)
+int days_up_to_date(int Y, int M, int D)
 {
-	float minutes = floor(sec / 60);
-	sec -= minutes * 60;
-	return sprintf("%d:%02d", minutes, sec);
+	int years = (M <= 2) ? Y - 1 : Y;
+
+	int leap_days = floor(years / 4) - floor(years / 100) + floor(years / 400);
+
+	// using these 2 formulas to save 2 arrays or switches (performance isn't important here)
+	int months = (M <= 2) ? (M + 9) : (M - 3); // 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	int leftover_days = (M <= 2) ? (M + 5) : floor(0.58 * M - 1.1); // 6, 7, 0, 1, 1, 2, 2, 3, 4, 4, 5, 5
+
+	int month_days = 30 * months + leftover_days;
+
+	return 365 * years + month_days + D + leap_days;
 }
+
+#define DAYS_UP_TO_EPOCH 719469 // days_up_to_date(1970, 1, 1);
+
+// Returns the number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
+// This function exists only as a replacement for strftime(false, "%s") which doesn't work
+// on Windows (%s is not supported) and at least in some linux systems doesn't return the
+// correct result
+// NOTE: at the current date, the number (string) returned by both strftime(false, "%s") and
+// strftime_s() is so high that can't be converted to int (with ftos) without precision loss
+ERASEABLE
+string strftime_s()
+{
+	string date = strftime(false, "%Y-%m-%d %H:%M:%S");
+	int i, seconds = 0;
+	i =0; int Y = stof(substring(date, i, 4)); // years
+	i+=5; int M = stof(substring(date, i, 2)); // months
+	i+=3; int D = stof(substring(date, i, 2)); // days
+
+	i+=3; seconds += stof(substring(date, i, 2)) * 60 * 60; // hours
+	i+=3; seconds += stof(substring(date, i, 2)) * 60; // minutes
+	i+=3; seconds += stof(substring(date, i, 2)); // seconds
+
+	// doing so we loose precision
+	//seconds += (days_up_to_date(Y, M, D) - DAYS_UP_TO_EPOCH) * 24 * 60 * 60;
+	//return ftos(seconds);
+
+	int days_since_epoch = days_up_to_date(Y, M, D) - DAYS_UP_TO_EPOCH;
+	// use hundreds of seconds as unit to avoid precision loss
+	int hundreds_of_seconds = days_since_epoch * 24 * 6 * 6;
+	hundreds_of_seconds += floor(seconds / 100);
+
+	// tens of seconds and seconds
+	string seconds_str = ftos(seconds % 100);
+	if ((seconds % 100) < 10)
+		seconds_str = strcat("0", seconds_str);
+
+	return strcat(ftos(hundreds_of_seconds), seconds_str);
+}
+
+/// \param[in] seconds number of seconds, can be negative too
+/// \return time as "m:ss" string (floored)
+ERASEABLE
+string seconds_tostring(float seconds)
+{
+	bool negative = false;
+	if (seconds < 0)
+	{
+		negative = true;
+		seconds = -seconds;
+		if (floor(seconds) != seconds)
+			seconds += 1; // make floor work in the other direction
+	}
+	int minutes = floor(seconds / 60);
+	seconds -= minutes * 60;
+	if (negative)
+		return sprintf("-%d:%02d", minutes, seconds);
+	return sprintf("%d:%02d", minutes, seconds);
+}
+
+/// \param[in] tm integer clocked time in tenths or hundredths, CANNOT be negative
+/// \param[in] hundredths if true append hundredths too, otherwise only tenths
+/// \param[in] compact if true leading 0s are omitted (except the seconds unit digit)
+/// \return clocked time as "m:ss.t" or "m:ss.th" string (rounded)
+ERASEABLE
+string clockedtime_tostring(int tm, bool hundredths, bool compact)
+{
+	if (tm < 0)
+	{
+		if (compact)
+			return strcat("0.0", hundredths ? "0" : "");
+		else
+			return strcat("0:00.0", hundredths ? "0" : "");
+	}
+	int acc = hundredths ? 6000 : 600;
+	tm = floor(tm + 0.5);
+	int minutes = floor(tm / acc);
+	int tm_without_minutes = tm - minutes * acc;
+	// NOTE: the start digit of s is a placeholder and won't be displayed
+	string s = ftos(acc * 10 + tm_without_minutes);
+	if (!compact || minutes > 0)
+		return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, hundredths ? 2 : 1));
+
+	int ofs = 2, digits = 1;
+	if (tm_without_minutes >= 10 * (hundredths ? 100 : 10))
+	{
+		ofs = 1;
+		digits = 2;
+	}
+	return strcat(substring(s, ofs, digits), ".", substring(s, 3, hundredths ? 2 : 1));
+
+}
+
+#define mmsst(tm, compact) clockedtime_tostring(tm, false, compact)
+#define mmssth(tm, compact) clockedtime_tostring(tm, true, compact)
 
 ERASEABLE
 string format_time(float seconds)
@@ -80,26 +185,6 @@ string format_time(float seconds)
 	seconds -= minutes * 600;
 	if (days > 0) return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
 	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
-}
-
-ERASEABLE
-string mmsss(float tenths)
-{
-	tenths = floor(tenths + 0.5);
-	float minutes = floor(tenths / 600);
-	tenths -= minutes * 600;
-	string s = ftos(1000 + tenths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
-}
-
-ERASEABLE
-string mmssss(float hundredths)
-{
-	hundredths = floor(hundredths + 0.5);
-	float minutes = floor(hundredths / 6000);
-	hundredths -= minutes * 6000;
-	string s = ftos(10000 + hundredths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
 }
 
 int ColorTranslateMode;
@@ -312,7 +397,10 @@ bool isInvisibleString(string s)
 			case 192:          // charmap space
 				if (!utf8) break;
 				return false;
-			case 0xE000 + 192: // utf8 charmap space
+			case 0xE000: // invisible char of the utf8 quake charmap
+			case 0xE00A: // invisible char of the utf8 quake charmap
+			case 0xE0A0: // invisible char of the utf8 quake charmap
+			case 0xE020: // invisible char of the utf8 quake charmap
 			case 0x00A0: // NO-BREAK SPACE
 			//case 0x1680: // OGHAM SPACE MARK
 			case 0x180E: // MONGOLIAN VOWEL SEPARATOR
@@ -433,3 +521,67 @@ const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 
 const string DIGITS = "0123456789";
 #define IS_DIGIT(d) (strstrofs(DIGITS, (d), 0) >= 0)
+
+// returns true if the caret at position pos is escaped
+ERASEABLE
+bool isCaretEscaped(string theText, float pos)
+{
+	// count all the previous carets
+	int carets = 0;
+	while(pos - carets >= 1 && substring(theText, pos - carets - 1, 1) == "^")
+		++carets;
+	// if number of previous carets is odd then this carets is escaped
+	return (carets & 1);
+}
+
+ERASEABLE
+bool isValidColorCodeValue(string theText, int cc_len, int tag_start)
+{
+	if (cc_len == 2)
+		return IS_DIGIT(substring(theText, tag_start + 1, 1));
+	if (cc_len == 5)
+		return (IS_HEXDIGIT(substring(theText, tag_start + 2, 1))
+			&& IS_HEXDIGIT(substring(theText, tag_start + 3, 1))
+			&& IS_HEXDIGIT(substring(theText, tag_start + 4, 1)));
+	return false;
+}
+
+// it returns 0 if pos is NOT in the middle or at the end of a color code
+// otherwise it returns a vector with color code length as the first component
+// and the offset from '^' position to pos as the second component
+// e.g.:
+// "j^2kl" | returns 0 if pos == 0 or 1 or 4
+//    ^^   | returns '2 1' or '2 2' if pos == 2 or 3
+ERASEABLE
+vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_end)
+{
+	if (text_len == 0)
+		text_len = strlen(theText);
+	string tag_type = "^";
+	int cc_len = 2;
+	int tag_len = 1;
+
+	LABEL(check_color_tag)
+
+	int ofs = cc_len;
+	if (!check_at_the_end)
+		ofs--;
+	for (; ofs >= 1; ofs--)
+	{
+		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))
+			continue;
+		if(substring(theText, pos - ofs, tag_len) == tag_type)
+		{
+			if (!isCaretEscaped(theText, pos - ofs) && isValidColorCodeValue(theText, cc_len, pos - ofs))
+				return eX * cc_len + eY * ofs;
+		}
+	}
+	if (cc_len == 2)
+	{
+		tag_type = "^x";
+		cc_len = 5;
+		tag_len = 2;
+		goto check_color_tag;
+	}
+	return '0 0 0';
+}

@@ -339,7 +339,6 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
-vector prev_mousepos;
 // draws map vote or gametype vote
 void MapVote_Draw()
 {
@@ -356,15 +355,6 @@ void MapVote_Draw()
 		return;
 
 	HUD_Panel_LoadCvars();
-
-	if (!autocvar_hud_cursormode)
-	{
-		if (mousepos.x != prev_mousepos.x || mousepos.y != prev_mousepos.y)
-		{
-			mv_selection_keyboard = 0;
-			prev_mousepos = mousepos;
-		}
-	}
 
 	center = (vid_conwidth - 1)/2;
 	xmin = vid_conwidth * 0.08;
@@ -770,9 +760,11 @@ int MapVote_MoveUp(int pos)
 		imp = pos - mv_columns;
 		if ( imp < 0 )
 		{
-			imp = floor(mv_num_maps/mv_columns)*mv_columns + pos % mv_columns;
-			if ( imp >= mv_num_maps )
-				imp -= mv_columns;
+			int mv_rows = ceil(mv_num_maps / mv_columns);
+			if (imp == -mv_columns) // pos == 0
+				imp = mv_columns * mv_rows - 1;
+			else
+				imp = imp + mv_columns * mv_rows - 1;
 		}
 	}
 	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
@@ -789,7 +781,12 @@ int MapVote_MoveDown(int pos)
 	{
 		imp = pos + mv_columns;
 		if ( imp >= mv_num_maps )
-			imp = imp % mv_columns;
+		{
+			if ((imp % mv_columns) == mv_columns - 1)
+				imp = 0;
+			else
+				imp = imp % mv_columns + 1;
+		}
 	}
 	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
 		imp = MapVote_MoveDown(imp);
@@ -812,13 +809,22 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
-	if (bInputType == 0)
+	if (bInputType == 2)
+	{
+		mv_selection_keyboard = 0;
+		return false;
+	}
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if (key_pressed)
 	{
 		if (nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if (nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if (nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
 	}
-	else if (bInputType == 1)
+	else
 	{
 		if (nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if (nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
@@ -828,8 +834,11 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			first_digit = 0;
 	}
 
-	if (bInputType != 0)
-		return false;
+	// Key release events must be handled by the engine otherwise the on-press command such as +jump
+	// executed by pressing SPACE before entering the map voting screen won't be followed by the
+	// on-release command (-jump) on key release once entered the map voting screen, causing +jump
+	// to stay active even on the next map and automatically forcing the player to join
+	if (!key_pressed) return false;
 
 	int imp = 0;
 	switch(nPrimary)
@@ -886,6 +895,9 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if (mv_selection >= 0)
 			imp = min(mv_selection + 1, mv_num_maps);
 	}
+
+	if (nPrimary == K_MOUSE2)
+		return true; // do nothing
 
 	if (imp)
 	{

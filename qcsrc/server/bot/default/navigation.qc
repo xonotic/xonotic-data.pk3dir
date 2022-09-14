@@ -923,7 +923,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
+	if (waypointeditor_enabled && !IS_BOT_CLIENT(ent))
 	{
 		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
 		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
@@ -1372,7 +1372,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		if(autocvar_g_waypointeditor && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
+		if(waypointeditor_enabled && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 			e.nearestwaypoint = NULL;
 
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
@@ -1398,7 +1398,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
-			else if(autocvar_g_waypointeditor)
+			else if(waypointeditor_enabled)
 				e.nearestwaypointtimeout = time + 3 + random() * 2;
 		}
 		nwp = e.nearestwaypoint;
@@ -1487,7 +1487,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK))
 	{
 		// often path can be optimized by not adding the nearest waypoint
-		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
+		if (this.goalentity.navigation_dynamicgoal || waypointeditor_enabled)
 		{
 			if (nearest_wp.enemy.wpcost < autocvar_bot_ai_strategyinterval_movingtarget)
 			{

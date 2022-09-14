@@ -7,6 +7,12 @@
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
+	#ifdef GAMEQC
+		REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
+		REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
+		REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
+	#endif
+
 	#ifdef SVQC
 		/**
 		 * @param from the source entity, its position is sent
@@ -331,7 +337,7 @@
 						msg_entity = this.pusher;
 						if (IS_REAL_CLIENT(msg_entity))
 						{
-							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
+							float atten = (CS_CVAR(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten, thepitch);
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten, thepitch);
 							else soundto(MSG_ONE, this, chan, sample, vol, atten, thepitch);
@@ -351,7 +357,7 @@
 				{
 					#define X() \
 						MACRO_BEGIN \
-							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
+							float atten = (CS_CVAR(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten, thepitch); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten, thepitch); \
 							else soundto(MSG_ONE, this, chan, sample, vol, atten, thepitch); \
@@ -385,10 +391,10 @@
 
 					#define X() \
 						MACRO_BEGIN \
-							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) \
+							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS_CVAR(msg_entity).cvar_cl_autotaunt) \
 							{ \
-								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) \
-									? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
+								float atten = (CS_CVAR(msg_entity).cvar_cl_voice_directional >= 1) \
+									? bound(ATTEN_MIN, CS_CVAR(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
 								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten, thepitch); \

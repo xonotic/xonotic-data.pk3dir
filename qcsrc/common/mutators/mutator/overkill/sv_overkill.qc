@@ -10,17 +10,6 @@ bool autocvar_g_overkill_itemwaypoints = true;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
-IntrusiveList g_overkill_items;
-STATIC_INIT(overkill)
-{
-	g_overkill_items = IL_NEW();
-	IL_PUSH(g_overkill_items, ITEM_HealthMega);
-	IL_PUSH(g_overkill_items, ITEM_ArmorSmall);
-	IL_PUSH(g_overkill_items, ITEM_ArmorMedium);
-	IL_PUSH(g_overkill_items, ITEM_ArmorBig);
-	IL_PUSH(g_overkill_items, ITEM_ArmorMega);
-}
-
 /// \brief Returns a random classname of the overkill item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
 /// \return Random classname of the overkill item.
@@ -273,8 +262,6 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
-	// this gives unlimited ammo (the 4 types) but not fuel
-	// using `g_use_ammunition` instead gives also fuel which is unnecessary and distracting in the HUD
 	start_items |= IT_UNLIMITED_AMMO;
 
 	start_weapons = warmup_start_weapons = ok_start_items;

@@ -2,8 +2,6 @@
 
 bool autocvar_g_allow_checkpoints;
 
-.string stored_netname; // TODO: store this information independently of race-based gamemodes
-
 float race_teams;
 
 // scores
@@ -11,7 +9,7 @@ const float ST_RACE_LAPS = 1;
 
 int autocvar_g_cts_send_rankings_cnt = 15;
 
-bool g_race_qualifying;
+int g_race_qualifying;
 
 float speedaward_lastsent;
 float speedaward_lastupdate;
@@ -47,11 +45,13 @@ float race_GetFractionalLapCount(entity e);
 float race_readTime(string map, float pos);
 string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
+
+void race_checkAndWriteName(entity player);
 void race_ClearRecords();
 void race_SendNextCheckpoint(entity e, float spec);
 void race_PreparePlayer(entity this);
 void race_send_recordtime(float msg);
-void race_send_speedaward(float msg);
+
 void race_setTime(string map, float t, string myuid, string mynetname, entity e, bool showmessage);
 
 float speedaward_speed;
@@ -63,12 +63,12 @@ string speedaward_alltimebest_holder;
 string speedaward_alltimebest_uid;
 
 void race_send_speedaward(float msg);
-
 void race_send_speedaward_alltimebest(float msg);
+void race_SpeedAwardFrame(entity player);
 
 void race_send_rankings_cnt(float msg);
-
-void race_SendRankings(float pos, float prevpos, float del, float msg);
+void race_SendRanking(float pos, float prevpos, float del, float msg);
+void race_SendAll(entity player, bool only_rankings);
 
 void race_RetractPlayer(entity this);
 

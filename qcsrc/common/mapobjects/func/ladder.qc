@@ -121,9 +121,9 @@ void func_ladder_init(entity this)
 			}
 		}
 	}
+	delete(tracetest_ent);
 	if(trace_startsolid || trace_endpos.z < this.absmax.z)
 	{
-		delete(tracetest_ent);
 		return;
 	}
 

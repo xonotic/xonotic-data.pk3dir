@@ -6,9 +6,9 @@ bool autocvar_samelevel;
 bool autocvar_sv_autoscreenshot;
 string autocvar_sv_intermission_cdtrack;
 
-float intermission_running;
+bool intermission_running;
 float intermission_exittime;
-float alreadychangedlevel;
+bool alreadychangedlevel;
 
 string GetGametype();
 

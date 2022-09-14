@@ -10,7 +10,7 @@ void turret_remove(entity this)
 .vector glowmod;
 void turret_changeteam(entity this)
 {
-	this.glowmod = Team_ColorRGB(this.team - 1) * 2;
+	this.glowmod = Team_ColorRGB(this.team - 1);
 	this.teamradar_color = Team_ColorRGB(this.team - 1);
 
 	if(this.team)
@@ -88,9 +88,9 @@ void turret_draw2d(entity this)
 		if(hud != HUD_NORMAL)
 		{
 			if((get_turretinfo(this.m_id)).spawnflags & TUR_FLAG_MOVE)
-				txt = "gfx/vehicles/turret_moving.tga";
+				txt = "gfx/vehicles/turret_moving";
 			else
-				txt = "gfx/vehicles/turret_stationary.tga";
+				txt = "gfx/vehicles/turret_stationary";
 
 			vector pz = drawgetimagesize(txt) * autocvar_cl_vehicles_crosshair_size;
 			drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.7, DRAWFLAG_NORMAL);

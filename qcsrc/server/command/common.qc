@@ -168,17 +168,6 @@ entity GetFilteredEntity(string input)
 	return selection;
 }
 
-// same thing, but instead return their edict number
-float GetFilteredNumber(string input)
-{
-	entity selection = GetFilteredEntity(input);
-	float output;
-
-	output = etof(selection);
-
-	return output;
-}
-
 // switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input)
 {
@@ -358,7 +347,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					string mon_oldname = mon.monster_name;
 
 					mon.monster_name = argument;
-					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null);
+					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
 					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
 					return;
 				}
@@ -463,9 +452,9 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob command [arguments]"));
-			print_to(caller, "  Where 'command' can be butcher spawn skin movetarget kill name");
-			print_to(caller, "  spawn, skin, movetarget and name require 'arguments'");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob <command> [<arguments>]"));
+			print_to(caller, "  Where <command> can be butcher spawn skin movetarget kill name");
+			print_to(caller, "  spawn, skin, movetarget and name require <arguments>");
 			print_to(caller, "  spawn also takes arguments list and random");
 			print_to(caller, "  Monster will follow owner if third argument of spawn command is not defined");
 			return;
@@ -490,8 +479,8 @@ void CommonCommand_info(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info request"));
-			print_to(caller, "  Where 'request' is the suffixed string appended onto the request for cvar.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info <request>"));
+			print_to(caller, "  Where <request> is the suffixed string appended onto the request for cvar.");
 			return;
 		}
 	}
@@ -598,8 +587,9 @@ void CommonCommand_records(int request, entity caller)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records"));
-			print_to(caller, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records [<pagenum>]"));
+			print_to(caller, "  Without arguments it prints all records (all pages) for the current gametype,");
+			print_to(caller, "  otherwise if there are multiple pages it only prints page <pagenum> (1..10),");
 			return;
 		}
 	}
@@ -674,6 +664,7 @@ void CommonCommand_timein(int request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEOUT);
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}
@@ -831,8 +822,8 @@ void CommonCommand_who(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [separator]"));
-			print_to(caller, "  Where 'separator' is the optional string to separate the values with, default is a space.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [<separator>]"));
+			print_to(caller, "  Where <separator> is the optional string to separate the values with, default is a space.");
 			return;
 		}
 	}

@@ -1,5 +1,8 @@
 // generated file; do not modify
 #include <common/gamemodes/gamemode/invasion/invasion.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/invasion/cl_invasion.qh>
+#endif
 #ifdef SVQC
     #include <common/gamemodes/gamemode/invasion/sv_invasion.qh>
 #endif

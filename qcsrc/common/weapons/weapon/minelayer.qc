@@ -18,12 +18,12 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.owner = this.owner;
 	newmine.realowner = this.realowner;
-	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
+	setsize(newmine, '-4 -4 -4', '4 4 4');
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
-	newmine.mine_orientation = -trace_plane_normal;
+	newmine.movedir = -trace_plane_normal;
 
 	newmine.takedamage = this.takedamage;
 	newmine.damageforcescale = this.damageforcescale;
@@ -92,7 +92,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
-		this.velocity = this.mine_orientation; // particle fx and decals need .velocity
+		this.velocity = this.movedir; // particle fx and decals need .velocity
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius),
 						NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, this.weaponentity_fld, NULL);
@@ -192,7 +192,7 @@ void W_MineLayer_Think(entity this)
 	head = findradius(this.origin, WEP_CVAR(minelayer, proximityradius));
 	while(head)
 	{
-		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head))
+		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
 		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
 		if(!this.mine_time)
 		{
@@ -379,7 +379,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
 
         float desirabledamage;
         desirabledamage = enemydamage;
-        if(time > STAT(INVINCIBLE_FINISHED, actor) && time > actor.spawnshieldtime)
+        if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
             desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;

@@ -2,7 +2,7 @@
 
 #include <common/items/_mod.qh>
 #include <common/items/item/ammo.qh>
-#include <common/items/item/powerup.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 
 float instagib_respawntime_ammo = 45;
 float instagib_respawntimejitter_ammo = 0;
@@ -67,77 +67,3 @@ REGISTER_ITEM(ExtraLife, Powerup) {
 }
 
 SPAWNFUNC_ITEM(item_extralife, ITEM_ExtraLife)
-
-#ifdef GAMEQC
-MODEL(Invisibility_ITEM, Item_Model("g_strength.md3"));
-SOUND(Invisibility, Item_Sound("powerup"));
-#endif
-
-#ifdef SVQC
-/// \brief Initializes the invisibility powerup.
-/// \param[in,out] item Item to initialize.
-/// \return No return.
-void powerup_invisibility_init(Pickup this, entity item);
-#endif
-
-REGISTER_ITEM(Invisibility, Powerup) {
-    this.m_canonical_spawnfunc = "item_invisibility";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
-    this.m_model            =   MDL_Invisibility_ITEM;
-    this.m_sound            =   SND_Invisibility;
-    this.m_glow             =   true;
-    this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
-#endif
-    this.netname            =   "invisibility";
-    this.m_name             =   _("Invisibility");
-    this.m_icon             =   "strength";
-    this.m_color            =   '0 0 1';
-    this.m_waypoint         =   _("Invisibility");
-    this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_STRENGTH;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_invisibility_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)
-
-#ifdef GAMEQC
-MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
-SOUND(Speed, Item_Sound("powerup_shield"));
-#endif
-
-#ifdef SVQC
-/// \brief Initializes the speed powerup.
-/// \param[in,out] item Item to initialize.
-/// \return No return.
-void powerup_speed_init(Pickup this, entity item);
-#endif
-
-REGISTER_ITEM(Speed, Powerup) {
-    this.m_canonical_spawnfunc = "item_speed";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
-    this.m_model            =   MDL_Speed_ITEM;
-    this.m_sound            =   SND_Speed;
-    this.m_glow             =   true;
-    this.m_respawnsound     =   SND_SHIELD_RESPAWN;
-#endif
-    this.netname            =   "speed";
-    this.m_name             =   _("Speed");
-    this.m_icon             =   "shield";
-    this.m_color            =   '1 0 1';
-    this.m_waypoint         =   _("Speed");
-    this.m_waypointblink    =   2;
-#ifdef GAMEQC
-    this.m_itemid           =   IT_INVINCIBLE;
-#endif
-#ifdef SVQC
-    this.m_iteminit         =   powerup_speed_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_speed, ITEM_Speed)

@@ -32,7 +32,7 @@
 
 // See common.qc for their proper commands
 
-string getrecords(int page)  // 50 records per page
+string getrecords(int page)
 {
 	string s = "";
 
@@ -40,9 +40,6 @@ string getrecords(int page)  // 50 records per page
 	s = M_ARGV(1, string);
 
 	MapInfo_ClearTemps();
-
-	if (s == "" && page == 0)
-		return "No records are available on this server for the current game mode.\n";
 	return s;
 }
 
@@ -62,7 +59,7 @@ string getrankings()
 
 		n = race_readName(map, i);
 		p = count_ordinal(i);
-		s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
+		s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t, false)), " ", n, "\n");
 	}
 
 	MapInfo_ClearTemps();
@@ -307,6 +304,7 @@ string getmonsterlist()
 =============
 GetCvars
 =============
+Superseded by REPLICATE
 Called with:
   0:  sends the request
   >0: receives a cvar from name=argv(f) value=argv(f+1)
@@ -376,12 +374,6 @@ void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float 
 			stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
-{
-	string o = W_FixWeaponOrder_ForceComplete(wo);
-	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
-	return o;
-}
 
 /**
  * @param f -1: cleanup, 0: request, 1: receive
@@ -400,39 +392,9 @@ void GetCvars(entity this, entity store, int f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 
-	Notification_GetCvars(this);
+	Notification_GetCvars(this, store);
 
 	ReplicateVars(this, store, s, f);
-
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
-
-	GetCvars_handleFloat(this, store, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
-
-	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
-	{
-		if (s == "cl_weaponpriority")
-		{
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			{
-				.entity weaponentity = weaponentities[slot];
-				if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))
-					this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
-			}
-		}
-		if (s == "cl_allow_uidtracking")
-			PlayerStats_GameReport_AddPlayer(this);
-		//if (s == "cl_gunalign")
-			//W_ResetGunAlign(this, store.cvar_cl_gunalign);
-	}
+		ReplicateVars_ApplyChange(this, store, s, f);
 }

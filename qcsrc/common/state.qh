@@ -47,5 +47,8 @@ ENDCLASS(ClientState)
 	ClientState CS(Client this) { TC(Client, this); assert(this._cs); return this._cs; }
 #endif
 
+// NOTE: this exists to ease migration later on - ClientState does not exist early enough for replicated cvars!
+#define CS_CVAR(this) (this)
+
 void ClientState_attach(entity this);
 void ClientState_detach(entity this);

@@ -86,23 +86,23 @@ void W_Seeker_Missile_Think(entity this)
 	{
 		if(dist <= WEP_CVAR(seeker, missile_proxy_maxrange))
 		{
-			if(this.autoswitch == 0)
+			if(this.cvar_cl_autoswitch == 0)
 			{
-				this.autoswitch = time + WEP_CVAR(seeker, missile_proxy_delay);
+				this.cvar_cl_autoswitch = time + WEP_CVAR(seeker, missile_proxy_delay);
 			}
 			else
 			{
-				if(this.autoswitch <= time)
+				if(this.cvar_cl_autoswitch <= time)
 				{
 					W_Seeker_Missile_Explode(this, NULL);
-					this.autoswitch = 0;
+					this.cvar_cl_autoswitch = 0;
 				}
 			}
 		}
 		else
 		{
-			if(this.autoswitch != 0)
-				this.autoswitch = 0;
+			if(this.cvar_cl_autoswitch != 0)
+				this.cvar_cl_autoswitch = 0;
 		}
 	}
 	///////////////
@@ -169,7 +169,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, missile_ammo), weaponentity);
 
 	makevectors(actor.v_angle);
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
 	w_shotorg += f_diff;
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 

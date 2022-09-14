@@ -346,7 +346,7 @@ void bot_cmdhelp(string scmd)
 		switch(ntype)
 		{
 			case BOT_CMD_PARAMETER_FLOAT:
-				stype = "float number";
+				stype = "float";
 				break;
 			case BOT_CMD_PARAMETER_STRING:
 				stype = "string";
@@ -449,17 +449,14 @@ void bot_list_commands()
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
-	LOG_INFO(
-	    "List of all available commands:\n"
-	    "  Command - Parameter Type\n"
-    );
+	LOG_HELP("Bot commands:");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
 		switch(bot_cmd_parm_type[i])
 		{
 			case BOT_CMD_PARAMETER_FLOAT:
-				ptype = "float number";
+				ptype = "float";
 				break;
 			case BOT_CMD_PARAMETER_STRING:
 				ptype = "string";
@@ -471,8 +468,12 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		LOG_INFO("  ", bot_cmd_string[i]," - <", ptype, ">");
+		if (ptype != "none")
+			LOG_HELP("  ^2", bot_cmd_string[i]," ^7<", ptype, ">");
+		else
+			LOG_HELP("  ^2", bot_cmd_string[i]);
 	}
+	LOG_HELP("For help about a specific command, type bot_cmd help <command>");
 }
 
 // Commands code
@@ -492,8 +493,8 @@ float bot_cmd_impulse(entity this)
 
 float bot_cmd_continue(entity this)
 {
-	bot_relinkplayerlist();
 	this.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
+	bot_relinkplayerlist();
 	return CMD_STATUS_FINISHED;
 }
 
@@ -999,6 +1000,11 @@ float bot_cmd_releasekey(entity this)
 	return bot_cmd_keypress_handler(this, key,false);
 }
 
+bool bot_ispaused(entity this)
+{
+	return(this.bot_exec_status & BOT_EXEC_STATUS_PAUSED);
+}
+
 float bot_cmd_pause(entity this)
 {
 	PHYS_INPUT_BUTTON_DRAG(this) = false;
@@ -1013,8 +1019,8 @@ float bot_cmd_pause(entity this)
 	CS(this).movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
-	bot_clear(this);
 	this.bot_exec_status |= BOT_EXEC_STATUS_PAUSED;
+	bot_relinkplayerlist();
 	return CMD_STATUS_FINISHED;
 }
 

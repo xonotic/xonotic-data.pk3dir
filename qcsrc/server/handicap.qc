@@ -17,7 +17,7 @@ void Handicap_Initialize(entity player)
 
 float Handicap_GetVoluntaryHandicap(entity player)
 {
-	return bound(1.0, CS(player).cvar_cl_handicap, 10.0);
+	return bound(1.0, CS_CVAR(player).cvar_cl_handicap, 10.0);
 }
 
 float Handicap_GetForcedHandicap(entity player)

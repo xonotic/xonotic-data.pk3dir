@@ -43,13 +43,7 @@ float autocvar_g_buffs_disability_slowtime;
 float autocvar_g_buffs_disability_speed;
 float autocvar_g_buffs_disability_rate;
 float autocvar_g_buffs_disability_weaponspeed;
-float autocvar_g_buffs_speed_speed;
-float autocvar_g_buffs_speed_rate;
-float autocvar_g_buffs_speed_weaponspeed;
-float autocvar_g_buffs_speed_damage_take;
-float autocvar_g_buffs_speed_regen;
 float autocvar_g_buffs_vampire_damage_steal;
-float autocvar_g_buffs_invisible_alpha;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_buffs_inferno_burntime_factor;
 float autocvar_g_buffs_inferno_burntime_min_time;
@@ -65,29 +59,26 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 // ammo
 .float buff_ammo_prev_infitems;
 .int buff_ammo_prev_clipload;
-// invisible
-.float buff_invisible_prev_alpha;
-// disability
-.float buff_disability_time;
-.float buff_disability_effect_time;
 // flight
 .float buff_flight_oldgravity;
+.bool buff_flight_crouchheld;
 // common buff variables
 .float buff_effect_delay;
 
 // buff definitions
-.float buff_active;
+.bool buff_active;
 .float buff_activetime;
-.float buff_activetime_updated;
+.bool buff_activetime_updated;
 .entity buff_waypoint;
-.int oldbuffs; // for updating effects
+.entity oldbuffs; // for updating effects
 .float buff_shield; // delay for players to keep them from spamming buff pickups
 .entity buff_model; // controls effects (TODO: make csqc)
 
 const vector BUFF_MIN = ('-16 -16 0');
 const vector BUFF_MAX = ('16 16 60');
 
-// client side options
-.float cvar_cl_buffs_autoreplace;
-
 float buff_Available(entity buff);
+
+void buff_RemoveAll(entity actor, int removal_type);
+
+entity buff_FirstFromFlags(entity actor);

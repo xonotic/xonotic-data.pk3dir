@@ -1,48 +1,18 @@
 #pragma once
 
-#ifdef CSQC
-
+#ifdef GAMEQC
 entityclass(Rubble);
 classfield(Rubble).float creationtime;
 
-IntrusiveList g_rubble;
-STATIC_INIT(g_rubble) { g_rubble = IL_NEW(); }
+#ifdef CSQC
+IntrusiveList CasingsNGibs;
+STATIC_INIT(CasingsNGibs) { CasingsNGibs = IL_NEW(); }
+#endif
 
-void RubbleLimit(string cname, int limit, void(entity) deleteproc)
-{
-	// remove rubble of the same type if it's at the limit
-	// remove multiple rubble if the limit has been decreased
-	while (1)
-	{
-		// walk the list and count the entities, find the oldest
-		// initialize our search with the first entity
-		int c = 0;
-		entity oldest = NULL;
-		float oldesttime = 0;
-		// compare to all other matching entities
-		IL_EACH(g_rubble, it.classname == cname,
-		{
-			++c;
-			if(!oldest || oldesttime > it.creationtime)
-			{
-				oldest = it;
-				oldesttime = it.creationtime;
-			}
-		});
+void LimitedChildrenRubble(IntrusiveList list, string cname, int limit, void(entity) deleteproc, entity parent);
 
-		// stop if there are less than the limit already
-		if (c <= limit) break;
+entity ReplaceOldListedChildRubble(IntrusiveList list, entity child, entity oldChild);
 
-		// delete this oldest one and search again
-		deleteproc(oldest);
-	}
-}
-
-entity RubbleNew(entity e)
-{
-	e.creationtime = time;
-	IL_PUSH(g_rubble, e);
-	return e;
-}
+entity ListNewChildRubble(IntrusiveList list, entity child);
 
 #endif

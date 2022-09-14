@@ -14,7 +14,7 @@ CLASS(XonoticCheckBoxString, CheckBox)
 	ATTRIB(XonoticCheckBoxString, colorF, vector, SKINCOLOR_CHECKBOX_F);
 	ATTRIB(XonoticCheckBoxString, colorD, vector, SKINCOLOR_CHECKBOX_D);
 
-	ATTRIB(XonoticCheckBoxString, cvarName, string);
+	ATTRIB(XonoticCheckBoxString, controlledCvar, string);
 	METHOD(XonoticCheckBoxString, loadCvars, void(entity));
 	METHOD(XonoticCheckBoxString, saveCvars, void(entity));
 	ATTRIB(XonoticCheckBoxString, sendCvars, float, 0);

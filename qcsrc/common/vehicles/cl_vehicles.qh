@@ -10,13 +10,13 @@ bool autocvar__vehicles_shownchasemessage;
 vector autocvar_hud_progressbar_vehicles_ammo1_color;
 vector autocvar_hud_progressbar_vehicles_ammo2_color;
 
-const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
-const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
-const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
-const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal.tga";
-const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
-const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
-const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
+const string vCROSS_BURST = "gfx/vehicles/crosshair_burst";
+const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop";
+const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide";
+const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal";
+const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint";
+const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock";
+const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain";
 
 entity dropmark;
 
@@ -32,8 +32,5 @@ float alarm2time;
 
 vector vehicleHud_Size;
 vector vehicleHud_Pos;
-
-void RaptorCBShellfragDraw(entity this);
-void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 
 #define weapon2mode STAT(VEHICLESTAT_W2MODE)

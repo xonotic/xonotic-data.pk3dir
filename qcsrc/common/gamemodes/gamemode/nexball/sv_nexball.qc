@@ -94,10 +94,10 @@ void ball_restart(entity this)
 
 void nexball_setstatus(entity this)
 {
-	this.items &= ~IT_KEY1;
+	STAT(OBJECTIVE_STATUS, this) &= ~NB_CARRYING;
 	if(this.ballcarried)
 	{
-		if(this.ballcarried.teamtime && (this.ballcarried.teamtime < time))
+		if(this.ballcarried.lifetime && (this.ballcarried.lifetime < time))
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
 			entity e = this.ballcarried;
@@ -105,7 +105,7 @@ void nexball_setstatus(entity this)
 			ResetBall(e);
 		}
 		else
-			this.items |= IT_KEY1;
+			STAT(OBJECTIVE_STATUS, this) |= NB_CARRYING;
 	}
 }
 
@@ -163,7 +163,7 @@ void GiveBall(entity plyr, entity ball)
 	setorigin(ball, plyr.origin + plyr.view_ofs);
 
 	if(ball.team != plyr.team)
-		ball.teamtime = time + autocvar_g_nexball_basketball_delay_hold_forteam;
+		ball.lifetime = time + autocvar_g_nexball_basketball_delay_hold_forteam;
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
 	ball.weaponentity_fld = weaponentity;
@@ -214,7 +214,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.nb_droptime = time;
 	settouch(ball, basketball_touch);
 	setthink(ball, ResetBall);
-	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.teamtime);
+	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.lifetime);
 
 	if(STAT(NB_METERSTART, ball.owner))
 	{
@@ -244,7 +244,7 @@ void InitBall(entity this)
 	this.cnt = 0;
 	setthink(this, ResetBall);
 	this.nextthink = time + autocvar_g_nexball_delay_idle + 3;
-	this.teamtime = 0;
+	this.lifetime = 0;
 	this.pusher = NULL;
 	this.team = false;
 	_sound(this, CH_TRIGGER, this.noise1, VOL_BASE, ATTEN_NORM);
@@ -256,7 +256,7 @@ void ResetBall(entity this)
 {
 	if(this.cnt < 2)	// step 1
 	{
-		if(time == this.teamtime)
+		if(time == this.lifetime)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
 
 		settouch(this, func_null);
@@ -352,7 +352,7 @@ void basketball_touch(entity this, entity toucher)
 	{
 		_sound(this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 		if(this.velocity && !this.cnt)
-			this.nextthink = min(time + autocvar_g_nexball_delay_idle, this.teamtime);
+			this.nextthink = min(time + autocvar_g_nexball_delay_idle, this.lifetime);
 	}
 }
 
@@ -461,7 +461,7 @@ spawnfunc(nexball_team)
 void nb_spawnteam(string teamname, float teamcolor)
 {
 	LOG_TRACE("^2spawned team ", teamname);
-	entity e = new(nexball_team);
+	entity e = new_pure(nexball_team);
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;

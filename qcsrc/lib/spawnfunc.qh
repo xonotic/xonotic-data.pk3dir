@@ -7,7 +7,8 @@
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
 /** Not for production use, provides access to a dump of the entity's fields when it is parsed from map data */
-//noref string __fullspawndata;
+noref string __fullspawndata;
+.string fullspawndata;
 
 // Optional type checking; increases compile time too much to be enabled by default
 #if 0
@@ -149,6 +150,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, height) \
 		FIELD_SCALAR(fld, impulse) \
 		FIELD_SCALAR(fld, invincible_finished) \
+		FIELD_SCALAR(fld, invisibility_finished) \
 		FIELD_SCALAR(fld, item_pickupsound) \
 		FIELD_SCALAR(fld, killtarget) \
 		FIELD_SCALAR(fld, lerpfrac) \
@@ -178,9 +180,16 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, noise2) \
 		FIELD_SCALAR(fld, noise3) \
 		FIELD_SCALAR(fld, noise) \
+		FIELD_SCALAR(fld, notcpm) \
+		FIELD_SCALAR(fld, notfree) \
+		FIELD_SCALAR(fld, notsingle) \
+		FIELD_SCALAR(fld, notta) \
+		FIELD_SCALAR(fld, notteam) \
+		FIELD_SCALAR(fld, notvq3) \
 		FIELD_SCALAR(fld, phase) \
 		FIELD_SCALAR(fld, platmovetype) \
 		FIELD_SCALAR(fld, race_place) \
+		FIELD_SCALAR(fld, speed_finished) \
 		FIELD_SCALAR(fld, strength_finished) \
 		FIELD_SCALAR(fld, radius) \
 		FIELD_SCALAR(fld, respawntimestart) \
@@ -251,6 +260,10 @@ void _checkWhitelisted(entity this, string id)
 	}
 }
 
+// this function simply avoids expanding IL_NEW during compilation
+// for each spawning entity
+void g_spawn_queue_spawn() { g_spawn_queue = IL_NEW(); }
+
 noref bool __spawnfunc_first;
 
 #define spawnfunc(id) \
@@ -265,7 +278,7 @@ noref bool __spawnfunc_first;
 		if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = 0; } \
 		else if (__spawnfunc_expecting) { \
 			/* engine call */ \
-			if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
+			if (!g_spawn_queue) g_spawn_queue_spawn(); \
 			__spawnfunc_expecting = 0; \
 			this = __spawnfunc_expect; \
 			__spawnfunc_expect = NULL; \
@@ -280,9 +293,17 @@ noref bool __spawnfunc_first;
 		this.classname = #id; \
 		if (!this.spawnfunc_checked) { \
 			_checkWhitelisted(this, #id); \
+			if (__fullspawndata) { \
+				/* not supported in old DP */ \
+				/* must be read inside the real spawnfunc */ \
+				this.fullspawndata = __fullspawndata; \
+			} \
 			this.spawnfunc_checked = true; \
 			if (this) { \
 				/* not worldspawn, delay spawn */ \
+				/* clear some dangerous fields (TODO: properly support these in the map!) */ \
+				this.think = func_null; \
+				this.nextthink = 0; \
 				__spawnfunc_defer(this, __spawnfunc_##id); \
 			} else { \
 				/* world might not be "worldspawn" */ \

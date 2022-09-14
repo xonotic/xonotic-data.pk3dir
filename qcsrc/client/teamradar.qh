@@ -19,11 +19,11 @@ float v_flipped;
 
 float hud_panel_radar_scale; // window size = ...qu
 float hud_panel_radar_foreground_alpha;
-float hud_panel_radar_rotation;
+int hud_panel_radar_rotation;
 vector hud_panel_radar_size;
-float hud_panel_radar_zoommode;
-float hud_panel_radar_maximized_zoommode;
-float hud_panel_radar_maximized_rotation;
+int hud_panel_radar_zoommode;
+int hud_panel_radar_maximized_zoommode;
+int hud_panel_radar_maximized_rotation;
 
 
 vector teamradar_2dcoord_to_texcoord(vector in);

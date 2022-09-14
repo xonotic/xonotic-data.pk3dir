@@ -51,6 +51,4 @@ float nb_teams;
 .entity nb_dropper;
 .float nb_droptime;
 
-.float teamtime;
-
 float g_nexball_meter_period;

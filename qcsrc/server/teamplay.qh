@@ -12,7 +12,11 @@ string autocvar_g_forced_team_otherwise;
 
 bool lockteams;
 
+.int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
 // ========================== Global teams API ================================
+
+void Team_InitTeams();
 
 /// \brief Returns the global team entity at the given index.
 /// \param[in] index Index of the team.
@@ -47,23 +51,32 @@ int Team_GetNumberOfAlivePlayers(entity team_ent);
 /// \param[in] number Number of players to set.
 void Team_SetNumberOfAlivePlayers(entity team_ent, int number);
 
+/// \brief Returns the winner team.
+/// \return Winner team or 0 if 2 or more teams have alive players or -1 if no team has any alive players.
+int Team_GetWinnerAliveTeam();
+
 /// \brief Returns the number of alive teams.
 /// \return Number of alive teams.
 int Team_GetNumberOfAliveTeams();
 
-/// \brief Returns the number of control points owned by a team.
+/// \brief Returns the winner team.
+/// \param[in] min_owned_items Minimum number of items the winner team must have.
+/// \return Winner team or 0 if 2 or more teams own items or -1 if no team own any items.
+int Team_GetWinnerTeam_WithOwnedItems(int min_owned_items);
+
+/// \brief Returns the number of items owned by a team.
 /// \param[in] team_ent Team entity.
-/// \return Number of control points owned by a team.
-int Team_GetNumberOfControlPoints(entity team_ent);
+/// \return Number of items owned by a team.
+int Team_GetNumberOfOwnedItems(entity team_ent);
 
-/// \brief Sets the number of control points owned by a team.
+/// \brief Sets the number of items owned by a team.
 /// \param[in,out] team_ent Team entity.
-/// \param[in] number Number of control points to set.
-void Team_SetNumberOfControlPoints(entity team_ent, int number);
+/// \param[in] number Number of items to set.
+void Team_SetNumberOfOwnedItems(entity team_ent, int number);
 
-/// \brief Returns the number of teams that own control points.
-/// \return Number of teams that own control points.
-int Team_GetNumberOfTeamsWithControlPoints();
+/// \brief Returns the number of teams that own items.
+/// \return Number of teams that own items.
+int Team_GetNumberOfTeamsWithOwnedItems();
 
 // ======================= Entity specific API ================================
 
@@ -321,8 +334,8 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
 int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
 	entity player, bool use_score);
 
-/// \brief Called when the player connects or when they change their color with
-/// the "color" command.
+/// \brief Called when the player changes color with the "color" command.
+/// Note that the "color" command is always called early on player connection
 /// \param[in,out] player Player that requested a new color.
 /// \param[in] new_color Requested color.
 void SV_ChangeTeam(entity player, int new_color);

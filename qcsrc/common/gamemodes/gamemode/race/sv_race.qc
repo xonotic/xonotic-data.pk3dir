@@ -53,20 +53,18 @@ void havocbot_role_race(entity this)
 
 void race_ScoreRules()
 {
-    GameRules_score_enabled(false);
+	GameRules_score_enabled(false);
 	GameRules_scoring(race_teams, 0, 0, {
-        if (race_teams) {
-            field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else if (g_race_qualifying) {
-            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else {
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        }
+		if (race_teams)
+			field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+		else if (g_race_qualifying)
+			field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		if (race_teams || !g_race_qualifying)
+		{
+			field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+			field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+			field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+		}
 	});
 }
 
@@ -139,7 +137,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
 
-#ifdef SVQC
 	if(IS_PLAYER(player))
 	{
 		if (player.race_penalty)
@@ -152,7 +149,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 			player.disableclientprediction = 2;
 		}
 	}
-#endif
 
 	// force kbd movement for fairness
 	float wishspeed;
@@ -238,26 +234,7 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 
-	string rr = RACE_RECORD;
-
-	if(IS_REAL_CLIENT(player))
-	{
-		msg_entity = player;
-		race_send_recordtime(MSG_ONE);
-		race_send_speedaward(MSG_ONE);
-
-		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
-		race_send_speedaward_alltimebest(MSG_ONE);
-
-		float i;
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, false);
 }
 
 MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
@@ -308,6 +285,13 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(rc, PlayerDamaged)
+{
+	int frag_deathtype = M_ARGV(5, int);
+	if (frag_deathtype == DEATH_KILL.m_id)
+		return true; // forbid logging damage
+}
+
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
@@ -328,42 +312,8 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
-	{
-		if (!player.stored_netname)
-			player.stored_netname = strzone(uid2name(player.crypto_idfp));
-		if(player.stored_netname != player.netname)
-		{
-			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
-			strcpy(player.stored_netname, player.netname);
-		}
-	}
-
-	if (!IS_OBSERVER(player))
-	{
-		if(vdist(player.velocity - player.velocity_z * '0 0 1', >, speedaward_speed))
-		{
-			speedaward_speed = vlen(player.velocity - player.velocity_z * '0 0 1');
-			speedaward_holder = player.netname;
-			speedaward_uid = player.crypto_idfp;
-			speedaward_lastupdate = time;
-		}
-		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
-		{
-			string rr = RACE_RECORD;
-			race_send_speedaward(MSG_ALL);
-			speedaward_lastsent = speedaward_speed;
-			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
-			{
-				speedaward_alltimebest = speedaward_speed;
-				speedaward_alltimebest_holder = speedaward_holder;
-				speedaward_alltimebest_uid = speedaward_uid;
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
-				race_send_speedaward_alltimebest(MSG_ALL);
-			}
-		}
-	}
+	race_checkAndWriteName(player);
+	race_SpeedAwardFrame(player);
 }
 
 MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
@@ -400,7 +350,7 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 				continue;
 
 			string h = race_readName(MapInfo_Map_bspname, 1);
-			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
+			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r, false)), " ", h, "\n");
 		}
 	}
 
@@ -473,6 +423,8 @@ void rc_SetLimits()
 
 	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
 
+	record_type = RACE_RECORD;
+
 	if(autocvar_g_campaign)
 	{
 		g_race_qualifying = 1;
@@ -492,8 +444,8 @@ void rc_SetLimits()
 	}
 	else
 		g_race_qualifying = 0;
-    GameRules_limit_score(fraglimit_override);
-    GameRules_limit_lead(leadlimit_override);
-    GameRules_limit_time(timelimit_override);
-    GameRules_limit_time_qualifying(qualifying_override);
+	GameRules_limit_score(fraglimit_override);
+	GameRules_limit_lead(leadlimit_override);
+	GameRules_limit_time(timelimit_override);
+	GameRules_limit_time_qualifying(qualifying_override);
 }

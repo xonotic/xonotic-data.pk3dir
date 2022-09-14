@@ -4,13 +4,13 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/racetimer.qh>
-#include <client/resources.qh>
 #include <client/view.qh>
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
+#include <common/resources/cl_resources.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // StrafeHUD (#25)
@@ -37,12 +37,6 @@ bool state_fwd_prev = true;
 float state_fwd_time = 0;
 float starttime = 0;
 float startspeed = -1;
-float jumptime = 0;
-float jumpheight = -1;
-float jumpheight_persistent = -1;
-float jumpheight_prev = 0;
-float jumpspeed_prev = 0;
-bool  jumprestart = true;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -124,8 +118,6 @@ void HUD_StrafeHUD()
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
         float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_panel_strafehud_unit);
         float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_panel_strafehud_unit);
-        string speed_unit                    = GetSpeedUnit(autocvar_hud_panel_strafehud_unit);
-        string length_unit                   = GetLengthUnit(autocvar_hud_panel_strafehud_unit);
         int    length_decimals               = autocvar_hud_panel_strafehud_unit >= 3 && autocvar_hud_panel_strafehud_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
         float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
         float  antiflicker_speed             = max(0, autocvar_hud_panel_strafehud_antiflicker_speed);
@@ -647,6 +639,7 @@ void HUD_StrafeHUD()
             {
                 vector startspeed_size = panel_size;
                 startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 5);
+                string speed_unit = GetSpeedUnit(autocvar_hud_panel_strafehud_unit);
                 drawstring_aspect(panel_pos + eY * panel_size.y, strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
@@ -656,56 +649,34 @@ void HUD_StrafeHUD()
             startspeed = -1;
         }
 
-        // experimental: show height achieved by a single jump (doesn't work in low gravity and may not be 100% accurate)
-        if(autocvar_hud_panel_strafehud_jumpheight_fade > 0)
+        // show height achieved by a single jump
+        if(autocvar_hud_panel_strafehud_jumpheight_fade > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
         {
-            float text_alpha = 0;
-            float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min, 0);
-            float jumpheight_current = strafeplayer.origin.z;
-            float jumpspeed_current = strafeplayer.velocity.z;
-            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
+            static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
+            static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
+
+            // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
+            if((strafeplayer.velocity.z <= 0 && height_max >= strafeplayer.origin.z) || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
             {
-                // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
-                jumprestart = true;
+                height_min = height_max = strafeplayer.origin.z;
             }
-            else
+            else if(strafeplayer.origin.z > height_max)
             {
-                if(jumpheight < 0 || jumprestart)
-                {
-                    jumprestart = false;
-                    jumpheight = 0;
-                }
-                else
-                {
-                    jumpheight += jumpheight_current - jumpheight_prev;
-                }
-                if((jumpheight * length_conversion_factor) > jumpheight_min && jumpheight > jumpheight_persistent)
-                {
+                height_max = strafeplayer.origin.z;
+                jumpheight = (height_max - height_min) * length_conversion_factor;
+
+                if(jumpheight > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
                     jumptime = time;
-                    jumpheight_persistent = jumpheight;
-                }
             }
-            jumpheight_prev = jumpheight_current;
-            jumpspeed_prev = jumpspeed_current;
-            if(jumpheight_persistent > 0)
+
+            if((time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade)
             {
-                text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
-                if((time - jumptime) > autocvar_hud_panel_strafehud_jumpheight_fade)
-                {
-                    jumpheight_persistent = -1;
-                }
-            }
-            if(jumpheight_persistent > 0 && text_alpha > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
-            {
+                float text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
                 vector jumpheight_size = panel_size;
                 jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 5);
-                drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight_persistent * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                string length_unit = GetLengthUnit(autocvar_hud_panel_strafehud_unit);
+                drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
-        }
-        else
-        {
-            jumpheight_prev = jumpspeed_prev = 0;
-            jumpheight = jumpheight_persistent = -1;
         }
         draw_endBoldFont();
 

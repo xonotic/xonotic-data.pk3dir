@@ -31,6 +31,6 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 		backtrace("Can't spawn eliminatedPlayers again!");
 		return;
 	}
-	Net_LinkEntity(eliminatedPlayers = spawn(), false, 0, EliminatedPlayers_SendEntity);
+	Net_LinkEntity(eliminatedPlayers = new_pure(eliminatedPlayers), false, 0, EliminatedPlayers_SendEntity);
 	eliminatedPlayers.isEliminated = isEliminated_func;
 }

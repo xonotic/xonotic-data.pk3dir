@@ -142,5 +142,5 @@ void XonoticHUDExitDialog_fill(entity me)
 				setDependent(e, "hud_configure_grid", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Exit setup"), '0 0 0', "_hud_configure 0", 1));
+		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Exit setup"), '0 0 0', "_hud_configure 0", COMMANDBUTTON_CLOSE));
 }

@@ -179,26 +179,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 
-	if(IS_REAL_CLIENT(player))
-	{
-		string rr = CTS_RECORD;
-
-		msg_entity = player;
-		race_send_recordtime(MSG_ONE);
-		race_send_speedaward(MSG_ONE);
-
-		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
-		race_send_speedaward_alltimebest(MSG_ONE);
-
-		float i;
-		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
-		race_send_rankings_cnt(MSG_ONE);
-		for (i = 1; i <= m; ++i)
-		{
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
+	race_SendAll(player, false);
 }
 
 MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
@@ -254,6 +235,13 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(cts, PlayerDamaged)
+{
+	int frag_deathtype = M_ARGV(5, int);
+	if (frag_deathtype == DEATH_KILL.m_id)
+		return true; // forbid logging damage
+}
+
 MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
@@ -282,42 +270,8 @@ MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
-	{
-		if (!player.stored_netname)
-			player.stored_netname = strzone(uid2name(player.crypto_idfp));
-		if(player.stored_netname != player.netname)
-		{
-			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
-			strcpy(player.stored_netname, player.netname);
-		}
-	}
-
-	if (!IS_OBSERVER(player))
-	{
-		if(vdist(player.velocity - player.velocity_z * '0 0 1', >, speedaward_speed))
-		{
-			speedaward_speed = vlen(player.velocity - player.velocity_z * '0 0 1');
-			speedaward_holder = player.netname;
-			speedaward_uid = player.crypto_idfp;
-			speedaward_lastupdate = time;
-		}
-		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
-		{
-			string rr = CTS_RECORD;
-			race_send_speedaward(MSG_ALL);
-			speedaward_lastsent = speedaward_speed;
-			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
-			{
-				speedaward_alltimebest = speedaward_speed;
-				speedaward_alltimebest_holder = speedaward_holder;
-				speedaward_alltimebest_uid = speedaward_uid;
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
-				race_send_speedaward_alltimebest(MSG_ALL);
-			}
-		}
-	}
+	race_checkAndWriteName(player);
+	race_SpeedAwardFrame(player);
 }
 
 MUTATOR_HOOKFUNCTION(cts, ForbidThrowCurrentWeapon)
@@ -371,7 +325,7 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 				continue;
 
 			string h = race_readName(MapInfo_Map_bspname, 1);
-			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
+			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r, false)), " ", h, "\n");
 		}
 	}
 
@@ -418,5 +372,6 @@ MUTATOR_HOOKFUNCTION(cts, ForbidDropCurrentWeapon)
 
 void cts_Initialize()
 {
+	record_type = CTS_RECORD;
 	cts_ScoreRules();
 }

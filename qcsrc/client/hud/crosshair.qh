@@ -27,7 +27,6 @@ float autocvar_crosshair_hitindication_speed;
 bool autocvar_crosshair_hittest;
 bool autocvar_crosshair_hittest_blur_teammate = 0;
 bool autocvar_crosshair_hittest_blur_wall = 1;
-//float autocvar_crosshair_hittest_scale = 1.25;
 bool autocvar_crosshair_hittest_showimpact;
 bool autocvar_crosshair_per_weapon;
 float autocvar_crosshair_pickup;

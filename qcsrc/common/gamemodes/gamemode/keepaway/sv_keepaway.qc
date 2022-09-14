@@ -46,7 +46,6 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-void ka_TouchEvent(entity this, entity toucher);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
 	if(game_stopped) return;
@@ -78,16 +77,36 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
+.float timepoints_counter;
+MUTATOR_HOOKFUNCTION(ka, reset_map_global)
+{
+	FOREACH_CLIENT(true,
+	{
+		it.timepoints_counter = 0;
+	});
+	return true;
+}
+
 void ka_TimeScoring(entity this)
 {
 	if(this.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
+		float timescore = 0;
 		if(autocvar_g_keepaway_score_timepoints)
-			GameRules_scoring_add(this.owner, SCORE, autocvar_g_keepaway_score_timepoints);
+			timescore = autocvar_g_keepaway_score_timepoints / max(0.001, autocvar_g_keepaway_score_timeinterval);
 
-		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
-		this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+		if (timescore)
+			GameRules_scoring_add_float2int(this.owner, SCORE, timescore, timepoints_counter, 1);
+
+		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, 1);
+		this.nextthink = time + 1;
 	}
+}
+
+void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
+{
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+		ka_RespawnBall(this);
 }
 
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
@@ -124,8 +143,11 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	this.effects |= EF_NODRAW;
 	settouch(this, func_null);
 	setthink(this, ka_TimeScoring);
-	this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+	this.nextthink = time + 1;
 	this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.damagedbycontents = false;
+	IL_REMOVE(g_damagedbycontents, this);
 	navigation_dynamicgoal_unset(this);
 
 	// apply effects to player
@@ -176,6 +198,9 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
+	ball.event_damage = ka_DamageEvent;
+	ball.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, ball);
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, player.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
@@ -225,6 +250,9 @@ void ka_SpawnBall()
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
+	e.event_damage = ka_DamageEvent;
+	e.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, e);
 	e.solid = SOLID_TRIGGER;
 	set_movetype(e, MOVETYPE_BOUNCE);
 	e.glow_color = autocvar_g_keepawayball_trail_color;
@@ -267,7 +295,8 @@ void ka_Handler_CheckBall(entity this)
 
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	ka_Handler = new(ka_Handler);
+	g_kaballs = IL_NEW();
+	ka_Handler = new_pure(ka_Handler);
 	setthink(ka_Handler, ka_Handler_CheckBall);
 	ka_Handler.nextthink = time;
 }
@@ -386,12 +415,8 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	// clear the item used for the ball in keepaway
-	player.items &= ~IT_KEY1;
-
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
-	if(player.ballcarried)
-		player.items |= IT_KEY1;
+	STAT(OBJECTIVE_STATUS, player) = BITSET(STAT(OBJECTIVE_STATUS, player), KA_CARRYING, player.ballcarried != NULL);
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
@@ -410,38 +435,37 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_damage = M_ARGV(4, float);
-	vector frag_force = M_ARGV(6, vector);
+
+	// as a gamemode rule, only apply scaling to player versus player combat
+	if(!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+		return;
 
 	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
-			frag_damage *= autocvar_g_keepaway_ballcarrier_selfdamage;
-			frag_force *= autocvar_g_keepaway_ballcarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_selfdamage;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_selfforce;
 		}
 		else // damage done to noncarriers
 		{
-			frag_damage *= autocvar_g_keepaway_ballcarrier_damage;
-			frag_force *= autocvar_g_keepaway_ballcarrier_force;
+			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force;
 		}
 	}
-	else if (IS_PLAYER(frag_attacker) && !frag_target.ballcarried) // if the target is a noncarrier
+	else // if the target is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
-			frag_damage *= autocvar_g_keepaway_noncarrier_selfdamage;
-			frag_force *= autocvar_g_keepaway_noncarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_selfdamage;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_selfforce;
 		}
 		else // damage done to other noncarriers
 		{
-			frag_damage *= autocvar_g_keepaway_noncarrier_damage;
-			frag_force *= autocvar_g_keepaway_noncarrier_force;
+			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force;
 		}
 	}
-
-	M_ARGV(4, float) = frag_damage;
-	M_ARGV(6, vector) = frag_force;
 }
 
 MUTATOR_HOOKFUNCTION(ka, ClientDisconnect)

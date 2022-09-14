@@ -29,6 +29,19 @@ entity Item_FindDefinition(string class_name)
 	return NULL;
 }
 
+entity Item_DefinitionFromInternalName(string item_name)
+{
+	FOREACH(Items, it.netname == item_name,
+	{
+		return it;
+	});
+	FOREACH(Weapons, it.netname == item_name,
+	{
+		return it.m_pickup;
+	});
+	return NULL;
+}
+
 bool Item_IsAllowed(string class_name)
 {
 	entity definition = Item_FindDefinition(class_name);
@@ -132,8 +145,8 @@ void Item_SetExpiring(entity item, bool expiring)
 
 // Compatibility spawn functions
 
-// FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-SPAWNFUNC_ITEM(item_armor1, ITEM_ArmorSmall)
+// in Quake this is green armor, in Xonotic maps it is an armor shard
+SPAWNFUNC_ITEM_COND(item_armor1, cvar("sv_mapformat_is_quake3"), ITEM_ArmorSmall, ITEM_ArmorMedium)
 
 SPAWNFUNC_ITEM(item_armor25, ITEM_ArmorMega)
 
@@ -146,5 +159,3 @@ SPAWNFUNC_ITEM(item_health25, ITEM_HealthMedium)
 SPAWNFUNC_ITEM(item_health_large, ITEM_HealthBig)
 
 SPAWNFUNC_ITEM(item_health100, ITEM_HealthMega)
-
-SPAWNFUNC_ITEM(item_quad, ITEM_Strength)
