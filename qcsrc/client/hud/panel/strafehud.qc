@@ -181,8 +181,12 @@ void HUD_StrafeHUD()
         if(!onground && !onground_expired) // if ground timeout hasn't expired yet use ground physics
         {
             onground = true;
+
             if(!autocvar__hud_configure)
+            {
+                maxspeed = PHYS_MAXSPEED(strafeplayer) * maxspeed_mod;
                 maxaccel = PHYS_ACCELERATE(strafeplayer);
+            }
         }
 
         movespeed = vlen(vec2(movement));
