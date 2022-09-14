@@ -116,10 +116,8 @@ void HUD_StrafeHUD()
         static float demo_angle = -37;
         static float demo_direction = 1;
         static float demo_time = 0;
-        static bool state_onground = false;
-        static float state_onground_time = 0;
-        static bool state_strafekeys = false;
-        static float state_strafekeys_time = 0;
+        static float onground_lasttime = 0;
+        static float turn_lasttime = 0;
         static bool turn = false;
         static float turnangle;
         static float turnspeed;
@@ -131,7 +129,10 @@ void HUD_StrafeHUD()
         static float dt = 0;
 
         // physics
-        bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+        int    keys                          = STAT(PRESSED_KEYS);
+        bool   jumpheld                      = islocal ? (PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) : (keys & KEY_JUMP); // doesn't work in spectator mode if spectated player uses +jetpack
+        bool   onground                      = (islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR)) && !jumpheld; // if jump is held assume we are in air
+        bool   onground_expired;
         bool   strafekeys;
         bool   swimming                      = strafe_waterlevel >= WATERLEVEL_SWIMMING; // the hud will not work well while swimming
         bool   spectating                    = entcs_GetSpecState(strafeplayer.sv_entnum) == ENTCS_SPEC_PURE;
@@ -147,7 +148,6 @@ void HUD_StrafeHUD()
         float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
         float  angle;
         vector movement                      = PHYS_INPUT_MOVEVALUES(strafeplayer);
-        int    keys                          = STAT(PRESSED_KEYS);
         int    keys_fwd;
         float  wishangle                     = 0;
 
@@ -191,6 +191,25 @@ void HUD_StrafeHUD()
         float  range_minangle;
         float  arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0); // there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 
+        if(onground) onground_lasttime = time;
+        else if(jumpheld) onground_lasttime = 0;
+
+        if(onground_lasttime == 0)
+            onground_expired = true;
+        else
+            onground_expired = (time - onground_lasttime) >= autocvar_hud_panel_strafehud_timeout_ground;
+
+        if(!onground && !onground_expired) // if ground timeout hasn't expired yet use ground physics
+        {
+            onground = true;
+            if(!autocvar__hud_configure)
+                maxaccel = PHYS_ACCELERATE(strafeplayer);
+        }
+
+        movespeed = vlen(vec2(movement));
+        if(movespeed == 0) movespeed = maxspeed;
+        else movespeed = min(movespeed, maxspeed);
+
         if(!autocvar_hud_panel_strafehud_uncapped)
             arrow_size = max(arrow_size, 1);
 
@@ -213,7 +232,7 @@ void HUD_StrafeHUD()
                 dt_time = dt_sum = 0;
             }
         }
-        else
+        else // when spectating other players server ticrate will be used, this may not be accurate but there is no way to find other player's frametime
         {
             dt = ticrate;
             dt_update = dt_time = dt_sum = 0;
@@ -336,36 +355,20 @@ void HUD_StrafeHUD()
         }
 
         // detect air strafe turning
-        if(onground != state_onground)
-        {
-            state_onground_time = time;
-        }
-        state_onground = onground;
-
-        if(strafekeys != state_strafekeys)
-        {
-            state_strafekeys_time = time;
-        }
-        state_strafekeys = strafekeys;
-
-        if((!strafekeys && vlen(vec2(movement)) > 0) || autocvar__hud_configure)
+        if((!strafekeys && vlen(vec2(movement)) > 0) || onground || autocvar__hud_configure)
         {
             turn = false;
         }
-        else if(onground)
-        {
-            if((time - state_onground_time) >= autocvar_hud_panel_strafehud_timeout_ground) // timeout for strafe jumping in general
-            {
-                turn = false;
-            }
-        }
         else // air strafe only
         {
+            bool turn_expired = (time - turn_lasttime) >= autocvar_hud_panel_strafehud_timeout_turn;
+
             if(strafekeys)
             {
-                if(((time - state_onground_time) >= autocvar_hud_panel_strafehud_timeout_air) || (keys & KEY_JUMP)) // timeout for slick ramps
+                if(onground_expired) // timeout for slick ramps
                 {
                     turn = true; // CPMA turning
+                    turn_lasttime = time;
                     turnangle = wishangle;
 
                     // calculate the maximum air strafe speed and acceleration
@@ -373,12 +376,9 @@ void HUD_StrafeHUD()
 
                     if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
                     {
-                        maxspeed = GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer));
-                        maxspeed = min(maxspeed, PHYS_MAXAIRSPEED(strafeplayer) * maxspeed_mod);
+                        maxspeed = min(maxspeed, GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer)));
                     }
-                    turnspeed = vlen(vec2(movement));
-                    if(turnspeed == 0) turnspeed = maxspeed;
-                    else turnspeed = min(turnspeed, maxspeed);
+                    turnspeed = movespeed = min(movespeed, maxspeed);
 
                     if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0)
                     {
@@ -387,34 +387,17 @@ void HUD_StrafeHUD()
                     turnaccel = maxaccel;
                 }
             }
-            else if((time - state_strafekeys_time) >= autocvar_hud_panel_strafehud_timeout_turn) // timeout for jumping with strafe keys only
+            else if(turn)
             {
-                turn = false;
-            }
-        }
-        if(turn && (onground || !strafekeys)) // retain last state until strafe turning times out
-        {
-            wishangle = turnangle;
-            movespeed = turnspeed;
-            maxaccel = turnaccel;
-        }
-        else{
-            movespeed = vlen(vec2(movement));
-            if(movespeed == 0) movespeed = maxspeed;
-            else movespeed = min(movespeed, maxspeed);
-
-            if(onground)
-            {
-                if((keys & KEY_JUMP) && ((time - state_onground_time) < autocvar_hud_panel_strafehud_timeout_ground)) // if ground timeout hasn't expired yet use air accelerate
+                if(!turn_expired) // retain last state until strafe turning times out
                 {
-                    maxaccel = !autocvar__hud_configure ? PHYS_AIRACCELERATE(strafeplayer) : 1;
+                    wishangle = turnangle;
+                    movespeed = turnspeed;
+                    maxaccel = turnaccel;
                 }
-            }
-            else
-            {
-                if(!(keys & KEY_JUMP) && ((time - state_onground_time) < autocvar_hud_panel_strafehud_timeout_air)) // if air timeout hasn't expired yet use ground accelerate
+                else // timeout for jumping with strafe keys only
                 {
-                    maxaccel = !autocvar__hud_configure ? PHYS_ACCELERATE(strafeplayer) : 1;
+                    turn = false;
                 }
             }
         }
@@ -930,7 +913,7 @@ void HUD_StrafeHUD()
             static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
             // tries to catch kill and spectate but those are not reliable
-            if((strafeplayer.velocity.z <= 0) || onground || swimming || IS_DEAD(strafeplayer) || spectating)
+            if((strafeplayer.velocity.z <= 0) || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
             {
                 height_min = height_max = strafeplayer.origin.z;
             }
