@@ -11,7 +11,7 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement, float dt
     if(strafeplayer)
     {
         // physics
-        bool   onground                      = IS_ONGROUND(strafeplayer);
+        bool   onground                      = IS_ONGROUND(strafeplayer) && !(PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer));
         bool   strafekeys;
         bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         float  speed                         = vlen(vec2(strafeplayer.velocity));
