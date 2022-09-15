@@ -616,7 +616,7 @@ msgstr "SCO^demiss"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Player ELO"
-msgstr "Ludentis ELO"
+msgstr "Ludentis gradus Elonis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^elo"
@@ -784,11 +784,11 @@ msgstr "SCO^puls"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Player rank"
-msgstr ""
+msgstr "Ludentis gradus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^rank"
-msgstr ""
+msgstr "SCO^gradus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of flag returns"
@@ -873,7 +873,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:694
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
-msgstr ""
+msgstr "Si rationarium mutare vis, ^2scoreboard_columns_set iubeto."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:695
 msgid "Usage:"
@@ -985,17 +985,17 @@ msgstr "Manus Selectio"
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^3%s^7 preme ut in manum selectam conscribaris"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^3%s^7 preme ut in aliquam manum conscribaris"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2270
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^3%s^7 preme ut quamvis manum seligas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2281
 #, c-format
@@ -1319,13 +1319,15 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
-msgstr ""
+msgstr "Assultus"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Obstantia delete ut hostium energiae nucleus invenietur delebiturque ante "
+"temporis finem"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:22
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:28
@@ -1339,11 +1341,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
-msgstr ""
+msgstr "Generum Harena"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Omnes hostes interficite ut tempore vincetis"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
@@ -1371,6 +1373,8 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Hostium vexillum invenite et capiendum ad basem vestram qua hostes "
+"prohibeatis ferte"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
@@ -1395,19 +1399,19 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
-msgstr ""
+msgstr "Interfectio"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Quam plurimos interfice"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "Dominationis locos tangite defenditeque ut vincetis"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
-msgstr ""
+msgstr "Dominatio"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
@@ -1417,29 +1421,31 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr ""
+msgstr "Duellum"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Cum altero pugna unus ut utrum victor esse decernetis"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
-msgstr ""
+msgstr "Congelatio"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Hostes congelandos interficite, ad collegas congelatos restituendos state; "
+"omnes hostes congelate ut vincetis"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
-msgstr ""
+msgstr "Invasio"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Beluarum pecoribus superstes es"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
@@ -1447,11 +1453,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
-msgstr ""
+msgstr "Abhibitio"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "Omnes claves colligite ut tempore vincetis"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
@@ -1459,19 +1465,19 @@ msgstr "Clavium Venatio"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1Iam nullam vitam habes"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Homo Stans Ultimus"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
-msgstr ""
+msgstr "Superstes es et interfice ut inimici vitas non habebunt"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
-msgstr ""
+msgstr "Vitae:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1527,7 +1533,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "Manuum interfectio"
 
 #: qcsrc/common/items/item/ammo.qh:52
 msgid "bullets"
