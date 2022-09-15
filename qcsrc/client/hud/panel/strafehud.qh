@@ -40,7 +40,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud_direction_alpha, float, 0, "opacity of the dir
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_width, float, 0.25, "stroke width of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel height)");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_length, float, 0.02, "length of the horizontal component of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel width)");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_range, float, 200, "range of the slick detector in qu, \"0\" to disable");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_granularity, int, 4, "value from 0 to 4 which defines how exact the search for slick should be, higher values may yield better results but require more computation");
+AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_granularity, int, 1, "value from 0 to 4 which defines how exact the search for slick should be, higher values may yield better results but require more computation");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_color, vector, '0 1 1', "color of the slick detector indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_alpha, float, 0.5, "opacity of the slick detector indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_height, float, 0.125, "height of the slick detector indicator (relative to the panel height)");
