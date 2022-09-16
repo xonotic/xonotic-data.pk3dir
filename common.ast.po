@@ -16,7 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ximielga <dorian@openmailbox.org>, 2014\n"
+"Last-Translator: Tornes Ḷḷume <tornes.llume@openmailbox.org>, "
+"2015-2017,2020-2022\n"
 "Language-Team: Asturian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -983,7 +984,7 @@ msgstr "Espectadores"
 #: qcsrc/client/hud/panel/scoreboard.qc:2252
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr "Esbilla d'un equipu"
+msgstr "Seleición d'un equipu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2264
 #, c-format
@@ -7075,15 +7076,15 @@ msgstr "Amestar lo amosao"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Add the maps shown in the list to your selection"
-msgstr "Amiesta los mapes de la llista a la esbilla"
+msgstr "Amiesta los mapes de la llista a la seleición"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:194
 msgid "Remove shown"
-msgstr "Desaniciar lo amosao"
+msgstr "Quitar lo amosao"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:195
 msgid "Remove the maps shown in the list from your selection"
-msgstr "Desanicia de la esbilla los mapes amosaos de la llista"
+msgstr "Quita de la seleición los mapes qu'apaecen na llista"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Add all"
@@ -7091,15 +7092,15 @@ msgstr "Amestar too"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Add every available map to your selection"
-msgstr "Amiesta cada mapa disponible a la esbilla"
+msgstr "Amiesta cada mapa disponible a la seleición"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:204
 msgid "Remove all"
-msgstr "Desaniciar too"
+msgstr "Quitar too"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:205
 msgid "Remove all the maps from your selection"
-msgstr "Desanicia tolos mapes de la esbilla"
+msgstr "Quita tolos mapes de la seleición"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
@@ -7573,11 +7574,11 @@ msgstr "Siguiente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:76
 msgid "MUSICPL^Remove"
-msgstr "Desaniciar"
+msgstr "Quitar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:79
 msgid "MUSICPL^Remove all"
-msgstr "Desaniciar too"
+msgstr "Quitar too"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
 msgid "Auto screenshot scoreboard"
@@ -9691,7 +9692,7 @@ msgstr "Xunise al «meyor» equipu (seleición automática)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr "Esbilla automática (aconséyase)"
+msgstr "Seleición automática (aconséyase)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -9964,11 +9965,11 @@ msgstr "<nun s'atopó'l modelu>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid "SERVER^Remove favorite"
-msgstr "Desaniciar de Favoritos"
+msgstr "Quitar de Favoritos"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr "Desanicia'l sirvidor rescampláu de Favoritos"
+msgstr "Quita'l sirvidor rescampláu de Favoritos"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"
