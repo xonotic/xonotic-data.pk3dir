@@ -2,6 +2,7 @@
 
 float autocvar_g_ca_damage2score = 100;
 bool autocvar_g_ca_spectate_enemies;
+bool autocvar_g_ca_less_stalemates;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -44,10 +45,124 @@ void CA_count_alive_players()
 
 void nades_Clear(entity player);
 
-float CA_CheckWinner()
+float CA_LessStalemates()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+print("less CA stalemates is active\n");
+	int highestHealthTeam = 0;
+	int secondHighestHealthTeam = 0;
+	// REFACTORME: remove this array and use team.health instead
+	float teamAlivePlayers[NUM_TEAMS];
+	for(int i = 0; i < NUM_TEAMS; i++){
+		teamAlivePlayers[i] = 0;
+	}
+
+	// fetch the amount of alive players for each team
+	// and at the same time order them on the two index pointers based on which one of them has the most of them
+	for (int i = 0; i < NUM_TEAMS; i++){
+		if (ca_teams & Team_IndexToBit(i+1)){
+			if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i+1)) > 0 && highestHealthTeam == 0
+					|| Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i+1)) > teamAlivePlayers[highestHealthTeam-1])
+			{
+				teamAlivePlayers[i] = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i+1));
+				secondHighestHealthTeam = highestHealthTeam;
+				highestHealthTeam = i+1;
+			} else {
+				if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i+1)) > 0 && secondHighestHealthTeam == 0
+						|| Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i+1)) > teamAlivePlayers[secondHighestHealthTeam-1])
+				{
+					teamAlivePlayers[i] = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i+1));
+					secondHighestHealthTeam = i+1;
+				}
+			}
+		}
+	}
+
+print("amount of players alive in teams\n");
+	for (int i = 0; i < NUM_TEAMS; i++){
+		print(sprintf("%f", teamAlivePlayers[i]), "\n");
+	}
+
+	// check if we have a team with more alive players than others
+	if (teamAlivePlayers[highestHealthTeam-1] != teamAlivePlayers[secondHighestHealthTeam-1])
 	{
+print("different amount of players alive in teams\n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), INFO_ROUND_TEAM_WIN));
+		TeamScore_AddToTeam(Team_IndexToTeam(highestHealthTeam), ST_CA_ROUNDS, +1);
+
+		allowed_to_spawn = false;
+		game_stopped = true;
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+
+		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+
+		return 1;
+	}
+
+	// check which team has more health then
+print("checking health\n");
+	// REFACTORME: remove this array and use team.health instead
+	float teamHealth[NUM_TEAMS];
+	for (int i = 0; i < NUM_TEAMS; i++){
+		teamHealth[i] = 0;
+	}
+
+	// fetch health amount of each player for each team
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
+	{
+		if (IS_DEAD(it)){
+			continue;
+		}
+		float health = GetResource(it, RES_HEALTH);
+		float armor = GetResource(it, RES_ARMOR);
+
+		for (int i = 0; i < NUM_TEAMS; i++)
+			if(it.team == Team_IndexToTeam(i+1))
+				teamHealth[i] += health+armor;
+	});
+
+print("amount of health in teams\n");
+	for (int i = 0; i < NUM_TEAMS; i++){
+		print(sprintf("%f", teamHealth[i]), "\n");
+	}
+
+	highestHealthTeam = 0;
+	secondHighestHealthTeam = 0;
+
+	// compare which teams have the most health
+	for (int i = 0; i < NUM_TEAMS; i++){
+		if (teamHealth[i] > 0 && highestHealthTeam == 0
+				|| teamHealth[i] > teamHealth[highestHealthTeam-1])
+		{
+			secondHighestHealthTeam = highestHealthTeam;
+			highestHealthTeam = i+1;
+		} else {
+			if (teamHealth[i] > 0 && secondHighestHealthTeam == 0
+					|| teamHealth[i] > teamHealth[secondHighestHealthTeam-1])
+			{
+				secondHighestHealthTeam = i+1;
+			}
+		}
+	}
+
+	// award round win to the team with highest total health
+	if (teamHealth[highestHealthTeam-1] > teamHealth[secondHighestHealthTeam-1]){
+print("different amount of health in teams\n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), INFO_ROUND_TEAM_WIN));
+		TeamScore_AddToTeam(Team_IndexToTeam(highestHealthTeam), ST_CA_ROUNDS, +1);
+
+		allowed_to_spawn = false;
+		game_stopped = true;
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+
+		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+
+		return 1;
+	}
+	else // two top teams have identical survivor count and total health? fine, stalemate...
+	{
+print("same amount of health in teams, still a stalemate...\n");
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
@@ -56,6 +171,26 @@ float CA_CheckWinner()
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
+	}
+}
+
+float CA_CheckWinner()
+{
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	{
+		if(!autocvar_g_ca_less_stalemates){
+			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
+			FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+
+			allowed_to_spawn = false;
+			game_stopped = true;
+			round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+			return 1;
+		} else {
+			if (CA_LessStalemates())
+				return 1;
+		}
 	}
 
 	CA_count_alive_players();
