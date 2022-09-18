@@ -2193,6 +2193,7 @@ void InitializeEntitiesRun()
 }
 
 // deferred dropping
+// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
 void DropToFloor_Handler(entity this)
 {
 	if(!this || wasfreed(this))
@@ -2213,6 +2214,7 @@ void DropToFloor_Handler(entity this)
 	{
 		vector offset, org;
 		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
 		org = this.origin + offset;
 		traceline(org, end, MOVE_NORMAL, this);
 		trace_endpos = trace_endpos - offset;
@@ -2220,6 +2222,7 @@ void DropToFloor_Handler(entity this)
 		{
 			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
 			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
 			this.groundentity = NULL;
 		}
 		else if(trace_fraction < 1)
@@ -2228,6 +2231,7 @@ void DropToFloor_Handler(entity this)
 			//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 				//SV_NudgeOutOfSolid(this);
 			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
 			this.move_suspendedinair = true;
@@ -2238,12 +2242,12 @@ void DropToFloor_Handler(entity this)
 		if(!trace_allsolid && trace_fraction < 1)
 		{
 			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
 			this.move_suspendedinair = true;
 		}
 	}
-	SET_ONGROUND(this);
 	this.dropped_origin = this.origin;
 }
 
