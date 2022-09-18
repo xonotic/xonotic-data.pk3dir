@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-24 07:22+0200\n"
+"POT-Creation-Date: 2022-09-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Seokho Son, 2022\n"
 "Language-Team: Korean (http://www.transifex.com/team-xonotic/xonotic/"
@@ -148,8 +148,8 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1참가하려면 ^3%s^1를 누르세요"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
-#: qcsrc/client/hud/panel/scoreboard.qc:2264
-#: qcsrc/client/hud/panel/scoreboard.qc:2266 qcsrc/client/main.qc:1411
+#: qcsrc/client/hud/panel/scoreboard.qc:2266
+#: qcsrc/client/hud/panel/scoreboard.qc:2268 qcsrc/client/main.qc:1411
 #: qcsrc/common/notifications/all.qh:428
 msgid "jump"
 msgstr "뛰기"
@@ -501,6 +501,14 @@ msgid "QMCMD^Shuffle teams"
 msgstr "QMCMD^팀 섞기"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
+msgid "Server's custom quickmenu"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:875
+msgid "Waypoint editor quickmenu"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^플레이어를 관전"
 
@@ -876,20 +884,20 @@ msgstr "SCO^시간"
 msgid "Total time raced (Race/CTS)"
 msgstr "총 경주한 시간 (Race/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:694
+#: qcsrc/client/hud/panel/scoreboard.qc:696
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "^2scoreboard_columns_set 명령을 사용하여 스코어보드 수정이 가능합니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:695
+#: qcsrc/client/hud/panel/scoreboard.qc:697
 msgid "Usage:"
 msgstr "용법:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:697
+#: qcsrc/client/hud/panel/scoreboard.qc:699
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:698
+#: qcsrc/client/hud/panel/scoreboard.qc:700
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -897,7 +905,7 @@ msgstr ""
 "인수를 주지 않은 ^2scoreboard_columns_set ^7는 인수를 cvar "
 "scoreboard_columns 에서 읽어옵니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:699
+#: qcsrc/client/hud/panel/scoreboard.qc:701
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -905,7 +913,7 @@ msgstr ""
 "  ^5참고: ^7인수가 없는 scoreboard_columns_set는 맵이 시작 될 때마다 실행됩니"
 "다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:700
+#: qcsrc/client/hud/panel/scoreboard.qc:702
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -913,15 +921,15 @@ msgstr ""
 "^2scoreboard_columns_set 과 ^3expand_default ^7 는 기본 레이아웃을 불러오고 "
 "cvar scoreboard_columns 를 확장시켜 수정 할 수 있게 합니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:701
+#: qcsrc/client/hud/panel/scoreboard.qc:703
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "^3|^7 로 오른쪽 정렬된 필드를 시작할 수 있습니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:702
+#: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid "The following field names are recognized (case insensitive):"
 msgstr "다음의 필드 네임이 인식됨(대소문자 구분 안 함)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:710
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -934,7 +942,7 @@ msgstr ""
 "'all'을 필드로 지정하여 현재 게임 모드에서 사용 가능한 모든 필드를 표시할 수"
 "도 있습니다. "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:714
+#: qcsrc/client/hud/panel/scoreboard.qc:716
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -942,11 +950,11 @@ msgstr ""
 "'teams' 와 'noteams' 라고 하는 특수한 게임 타입은\n"
 "모든 teams/noteams 게임 모드를 포함/제외하는 데 사용할 수 있습니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:718
+#: qcsrc/client/hud/panel/scoreboard.qc:720
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "예시: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:719
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -954,7 +962,7 @@ msgstr ""
 "이는 이름과 왼쪽으로 정렬된 핑 및 pl과\n"
 "오른쪽 수직 바에 오른쪽으로 정렬 된 필드를 표시합니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:721
+#: qcsrc/client/hud/panel/scoreboard.qc:723
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -962,10 +970,10 @@ msgstr ""
 "'field3' 는 CTF 에서만 표시되고, 'field4' 는 DM을 제외한\n"
 "모든 다른 게임모드 들에서 표시 됩니다."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1000
-#: qcsrc/client/hud/panel/scoreboard.qc:1007
-#: qcsrc/client/hud/panel/scoreboard.qc:1062
-#: qcsrc/client/hud/panel/scoreboard.qc:1073 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1002
+#: qcsrc/client/hud/panel/scoreboard.qc:1009
+#: qcsrc/client/hud/panel/scoreboard.qc:1064
+#: qcsrc/client/hud/panel/scoreboard.qc:1075 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -974,102 +982,102 @@ msgstr ""
 msgid "N/A"
 msgstr "준비중"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1632
+#: qcsrc/client/hud/panel/scoreboard.qc:1634
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "정확도 통계(평균 %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1789
+#: qcsrc/client/hud/panel/scoreboard.qc:1791
 msgid "Item stats"
 msgstr "아이템 상태"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1900
+#: qcsrc/client/hud/panel/scoreboard.qc:1902
 msgid "Map stats:"
 msgstr "맵 스텟:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1930
+#: qcsrc/client/hud/panel/scoreboard.qc:1932
 msgid "Monsters killed:"
 msgstr "죽인 몬스터 수:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1937
+#: qcsrc/client/hud/panel/scoreboard.qc:1939
 msgid "Secrets found:"
 msgstr "비밀 발견:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2147
+#: qcsrc/client/hud/panel/scoreboard.qc:2149
 #, c-format
 msgid "Spectators"
 msgstr "관전자"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2252
+#: qcsrc/client/hud/panel/scoreboard.qc:2254
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2264
+#: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2266
+#: qcsrc/client/hud/panel/scoreboard.qc:2268
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2270
+#: qcsrc/client/hud/panel/scoreboard.qc:2272
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2281
+#: qcsrc/client/hud/panel/scoreboard.qc:2283
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f 분"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2290
-#: qcsrc/client/hud/panel/scoreboard.qc:2297
+#: qcsrc/client/hud/panel/scoreboard.qc:2292
+#: qcsrc/client/hud/panel/scoreboard.qc:2299
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s%s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2291
-#: qcsrc/client/hud/panel/scoreboard.qc:2298
-#: qcsrc/client/hud/panel/scoreboard.qc:2317
-#: qcsrc/client/hud/panel/scoreboard.qc:2324
+#: qcsrc/client/hud/panel/scoreboard.qc:2293
+#: qcsrc/client/hud/panel/scoreboard.qc:2300
+#: qcsrc/client/hud/panel/scoreboard.qc:2319
+#: qcsrc/client/hud/panel/scoreboard.qc:2326
 msgid "SCO^points"
 msgstr "SCO^점"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2316
-#: qcsrc/client/hud/panel/scoreboard.qc:2323
+#: qcsrc/client/hud/panel/scoreboard.qc:2318
+#: qcsrc/client/hud/panel/scoreboard.qc:2325
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s%s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2332
+#: qcsrc/client/hud/panel/scoreboard.qc:2334
 #, c-format
 msgid "^7Map: ^2%s"
 msgstr "^7맵: ^2%s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2494
+#: qcsrc/client/hud/panel/scoreboard.qc:2496
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "스피드 어워드: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2498
+#: qcsrc/client/hud/panel/scoreboard.qc:2500
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "역대 가장 빠름: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2532
+#: qcsrc/client/hud/panel/scoreboard.qc:2534
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1^3%s^1 동안 부활 중..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2542
+#: qcsrc/client/hud/panel/scoreboard.qc:2544
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "당신은 죽었어요, 부활까지 ^3%s^7 기다리세요"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2551
+#: qcsrc/client/hud/panel/scoreboard.qc:2553
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "당신은 죽었어요, ^2%s^7를 눌러 부활하세요"
@@ -2068,12 +2076,12 @@ msgstr ""
 msgid "Veil grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:125
+#: qcsrc/common/mutators/mutator/nades/nades.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:127
+#: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
@@ -7762,7 +7770,7 @@ msgstr "유저"
 msgid "Misc"
 msgstr "다른"
 
-#: qcsrc/menu/xonotic/dialog_settings.qh:7
+#: qcsrc/menu/xonotic/dialog_settings.qh:8
 msgid "Change the game settings"
 msgstr ""
 
