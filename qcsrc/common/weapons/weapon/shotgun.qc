@@ -203,14 +203,17 @@ METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 
 METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(shotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
+    // force reload weapon when clip is empty or insufficent
+    if(WEP_CVAR(shotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(shotgun, ammo))
     {
-        // don't force reload an empty shotgun if its melee attack is active
-        if(WEP_CVAR(shotgun, secondary) < 2) {
+        if(actor.(weaponentity).clip_load >= 0 && GetResource(actor, thiswep.ammo_type) > 0)
+        {
             thiswep.wr_reload(thiswep, actor, weaponentity);
+            return;
         }
     }
-    else
+
+    if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     {
         if(fire & 1)
         {
@@ -228,6 +231,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						EFFECT_BULLET_WEAK);
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
+                    return;
                 }
             }
         }
@@ -247,15 +251,18 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						EFFECT_BULLET_WEAK);
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
+                    return;
                 }
             }
         }
     }
+
     if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(WEP_CVAR(shotgun, secondary) == 1)
-    if(((fire & 1) && GetResource(actor, thiswep.ammo_type) <= 0 && !(actor.items & IT_UNLIMITED_AMMO)) || (fire & 2))
+    if(((fire & 1) && !IS_BOT_CLIENT(actor) && GetResource(actor, thiswep.ammo_type) <= 0 && actor.(weaponentity).clip_load == 0 && !(actor.items & IT_UNLIMITED_AMMO)) || (fire & 2))
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
     {
+        // melee attack
         // attempt forcing playback of the anim by switching to another anim (that we never play) here...
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
     }
@@ -268,9 +275,6 @@ METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapon
 }
 METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(IS_BOT_CLIENT(actor))
-    if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
-        return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
     switch(WEP_CVAR(shotgun, secondary))
     {
         case 1: return true; // melee does not use ammo
