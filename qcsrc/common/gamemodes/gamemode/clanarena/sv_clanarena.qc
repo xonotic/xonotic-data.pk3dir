@@ -112,19 +112,18 @@ print("checking health\n");
 		if (IS_DEAD(it)){
 			continue;
 		}
-		float health = GetResource(it, RES_HEALTH);
-		float armor = GetResource(it, RES_ARMOR);
+		float healthValue = GetResource(it, RES_HEALTH);
+		float armorValue = GetResource(it, RES_ARMOR);
 
 		for (int i = 1; i <= AvailableTeams(); i++)
 			if (it.team == Team_IndexToTeam(i))
-				(Team_GetTeamFromIndex(i)).health += health+armor;
+				(Team_GetTeamFromIndex(i)).health += healthValue+armorValue;
 	});
 
 print("amount of health in teams\n");
-	// this could be removed with the side-effect that teams will have initially 1 health per survivor
-	//for (int i = 1; i <= AvailableTeams(); i++){
-	//	print(sprintf("%f", Team_GetTeamFromIndex(i).health), "\n");
-	//}
+	for (int i = 1; i <= AvailableTeams(); i++){
+		print(sprintf("%f", Team_GetTeamFromIndex(i).health), "\n");
+	}
 
 	highestHealthTeam = 0;
 	secondHighestHealthTeam = 0;
