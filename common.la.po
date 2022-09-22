@@ -362,11 +362,11 @@ msgstr "impeto, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "vexillum portans occisus (l:%y^7)"
+msgstr "vexillifer occisus (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "vexillum portans occisus, imago"
+msgstr "vexillifer occisus, imago"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #, c-format
@@ -472,7 +472,7 @@ msgstr "Totum quadrum"
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 #: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "Suffragia diribere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Restart the map"
@@ -648,7 +648,7 @@ msgstr "SCO^delict"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
-msgstr "Quotiens vexillum portantem interfecit"
+msgstr "Quotiens vexilliferum interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fckills"
@@ -808,11 +808,11 @@ msgstr "SCO^relat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of revivals"
-msgstr ""
+msgstr "Quotiens ludentem restituit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^revivals"
-msgstr ""
+msgstr "restitut"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of rounds won"
@@ -957,7 +957,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:194
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:199
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1634
 #, c-format
@@ -1110,7 +1110,7 @@ msgstr "^2Nomen^7 non \"^1Ludens anonymus^7\" in statisticis"
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
-msgstr ""
+msgstr "Suffragiis disputent de:"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "Allow servers to store and display your name?"
@@ -1252,7 +1252,7 @@ msgstr "^F2%s^BG preme ut ludas"
 #: qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr ""
+msgstr "Ludi modus:"
 
 #: qcsrc/client/main.qc:1440
 msgid "Active modifications:"
@@ -1260,7 +1260,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1443
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Ludi insignis suasa:"
 
 #: qcsrc/client/main.qc:1450
 msgid "MOTD:"
@@ -1273,16 +1273,16 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:70
 msgid " (1 vote)"
-msgstr ""
+msgstr " (1 suffragium)"
 
 #: qcsrc/client/mapvoting.qc:72
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr " (%d suffragia)"
 
 #: qcsrc/client/mapvoting.qc:292
 msgid "Don't care"
-msgstr ""
+msgstr "Non curo"
 
 #: qcsrc/client/mapvoting.qc:383
 msgid "Decide the gametype"
@@ -1395,7 +1395,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
 msgid "Rankings"
-msgstr ""
+msgstr "Gradus"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
@@ -1505,7 +1505,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Pilae Fur"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -1565,35 +1565,35 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Armatura parva"
 
 #: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
-msgstr ""
+msgstr "Armatura media"
 
 #: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
 msgid "Big armor"
-msgstr ""
+msgstr "Armatura magna"
 
 #: qcsrc/common/items/item/armor.qh:170 qcsrc/common/items/item/armor.qh:177
 msgid "Mega armor"
-msgstr ""
+msgstr "Armatura maxima"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Sanitas parva"
 
 #: qcsrc/common/items/item/health.qh:84
 msgid "Medium health"
-msgstr ""
+msgstr "Sanitas media"
 
 #: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
 msgid "Big health"
-msgstr ""
+msgstr "Sanitas magna"
 
 #: qcsrc/common/items/item/health.qh:170 qcsrc/common/items/item/health.qh:177
 msgid "Mega health"
-msgstr ""
+msgstr "Sanitas maxima"
 
 #: qcsrc/common/items/item/jetpack.qh:38 qcsrc/common/items/item/jetpack.qh:41
 #: qcsrc/common/util.qc:263
@@ -1875,29 +1875,29 @@ msgstr ""
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr ""
+msgstr "Magus"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr ""
+msgstr "Magi spiculum"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr ""
+msgstr "Aranea"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr ""
+msgstr "Araneae impetus"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
-msgstr ""
+msgstr "Implicatus araneo"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -2021,15 +2021,15 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
 msgid "Extra life"
-msgstr ""
+msgstr "Vita addita"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr ""
+msgstr "Napalm granata"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:28
 msgid "Ice grenade"
-msgstr ""
+msgstr "Granata gelata"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:38
 msgid "Translocate grenade"
@@ -2058,7 +2058,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nades.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
-msgstr ""
+msgstr "arma demittere / granatam iacere"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
@@ -2067,7 +2067,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
-msgstr ""
+msgstr "Granata"
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -2098,7 +2098,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:58
 msgid "Invisibility"
-msgstr ""
+msgstr "Invisibilitas"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -2110,7 +2110,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:59
 msgid "Speed"
-msgstr ""
+msgstr "Celeritas"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -2120,7 +2120,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "Incensio"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
@@ -2128,7 +2128,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Perarma"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2136,23 +2136,23 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr ""
+msgstr "Me iuvate!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr ""
+msgstr "Hic"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "PERICULUM"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Frozen!"
-msgstr ""
+msgstr "Congelatus!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Restituitur"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -2187,7 +2187,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "Flag carrier"
-msgstr ""
+msgstr "Vexillifer"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Enemy carrier"
@@ -2195,31 +2195,31 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Dropped flag"
-msgstr ""
+msgstr "Vexillum demissum"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "White base"
-msgstr ""
+msgstr "Basis alba"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Red base"
-msgstr ""
+msgstr "Basis rubra"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Blue base"
-msgstr ""
+msgstr "Basis caerulea"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:30
 msgid "Yellow base"
-msgstr ""
+msgstr "Basis flava"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 msgid "Pink base"
-msgstr ""
+msgstr "Basis rosea"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
 msgid "Return flag here"
-msgstr ""
+msgstr "Vexillum huc referte"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:34
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:35
@@ -2234,7 +2234,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
 msgid "Dropped key"
-msgstr ""
+msgstr "Clavis demissa"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:41
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
@@ -2242,24 +2242,24 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Key carrier"
-msgstr ""
+msgstr "Clavem portans"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 msgid "Run here"
-msgstr ""
+msgstr "Huc currite"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Ball"
-msgstr ""
+msgstr "Pila"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Ball carrier"
-msgstr ""
+msgstr "Pilam portans"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Dux"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -2272,11 +2272,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Weapon"
-msgstr ""
+msgstr "Arma"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Monster"
-msgstr ""
+msgstr "Belua"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Vehicle"
@@ -2293,7 +2293,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "%s iuvandus est!"
 
 #: qcsrc/common/net_notice.qc:90
 msgid "^1Server notices:"
