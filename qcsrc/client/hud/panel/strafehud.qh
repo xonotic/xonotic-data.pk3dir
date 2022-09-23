@@ -56,9 +56,26 @@ float autocvar_hud_panel_strafehud_timeout_turn = 0.1;
 float autocvar_hud_panel_strafehud_antiflicker_angle = 0.01;
 float autocvar_hud_panel_strafehud_fps_update = 0.5;
 
-void HUD_Panel_DrawStrafeHUD(float, float, vector, float, int, int);
+void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
 vector StrafeHUD_mixColors(vector, vector, float);
 void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
+
+const int STRAFEHUD_DIRECTION_NONE = 0;
+const int STRAFEHUD_DIRECTION_LEFT = 1;
+const int STRAFEHUD_DIRECTION_RIGHT = 2;
+
+const int STRAFEHUD_KEYS_NONE = 0;
+const int STRAFEHUD_KEYS_FORWARD = 1;
+const int STRAFEHUD_KEYS_BACKWARD = 2;
+
+const int STRAFEHUD_STYLE_DRAWFILL = 0;
+const int STRAFEHUD_STYLE_PROGRESSBAR = 1;
+const int STRAFEHUD_STYLE_GRADIENT = 2;
+
+const int STRAFEHUD_GRADIENT_NONE = 0;
+const int STRAFEHUD_GRADIENT_LEFT = 1;
+const int STRAFEHUD_GRADIENT_RIGHT = 2;
+const int STRAFEHUD_GRADIENT_BOTH = 3;
