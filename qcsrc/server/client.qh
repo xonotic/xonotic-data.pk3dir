@@ -50,11 +50,12 @@ string autocvar_hostname;
 int autocvar_spawn_debug;
 string autocvar_sv_motd;
 int autocvar_sv_name_maxlength = 64;
+string autocvar_sv_quickmenu_file;
 bool autocvar_sv_servermodelsonly;
+bool autocvar_sv_showspectators;
 int autocvar_sv_spectate;
 bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
-bool autocvar_sv_showspectators;
 
 // WEAPONTODO
 .string weaponorder_byimpulse;

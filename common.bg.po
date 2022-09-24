@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-24 07:22+0200\n"
+"POT-Creation-Date: 2022-09-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: ubone <van_ds_ff@mail.bg>, 2016\n"
 "Language-Team: Bulgarian (http://www.transifex.com/team-xonotic/xonotic/"
@@ -148,8 +148,8 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Натиснете ^3%s^1 за да се включите"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
-#: qcsrc/client/hud/panel/scoreboard.qc:2264
-#: qcsrc/client/hud/panel/scoreboard.qc:2266 qcsrc/client/main.qc:1411
+#: qcsrc/client/hud/panel/scoreboard.qc:2266
+#: qcsrc/client/hud/panel/scoreboard.qc:2268 qcsrc/client/main.qc:1411
 #: qcsrc/common/notifications/all.qh:428
 msgid "jump"
 msgstr "скок"
@@ -501,6 +501,14 @@ msgid "QMCMD^Shuffle teams"
 msgstr "QMCMD^Разбъркай отборите"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
+msgid "Server's custom quickmenu"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:875
+msgid "Waypoint editor quickmenu"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^Наблюдавай играч"
 
@@ -877,49 +885,49 @@ msgstr "SCO^време"
 msgid "Total time raced (Race/CTS)"
 msgstr "Общо време на състезаване (Race/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:694
+#: qcsrc/client/hud/panel/scoreboard.qc:696
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 "Можете да променяте таблото като използвате командата "
 "^2scoreboard_columns_set."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:695
+#: qcsrc/client/hud/panel/scoreboard.qc:697
 msgid "Usage:"
 msgstr "Употреба:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:697
+#: qcsrc/client/hud/panel/scoreboard.qc:699
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3поле1 поле2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:698
+#: qcsrc/client/hud/panel/scoreboard.qc:700
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:699
+#: qcsrc/client/hud/panel/scoreboard.qc:701
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:700
+#: qcsrc/client/hud/panel/scoreboard.qc:702
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:701
+#: qcsrc/client/hud/panel/scoreboard.qc:703
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "Може да използвате ^3|^7 за да започнете дясно-подравнените полета."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:702
+#: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 "Следните имена на полета са разпознати (без значение от малки и големи букви)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:710
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -933,7 +941,7 @@ msgstr ""
 "или на всички с изключение на тези. Също може да укажете 'all' като\n"
 "поле, за да се виждат всички възможни полета за избрания тип на игра."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:714
+#: qcsrc/client/hud/panel/scoreboard.qc:716
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -942,11 +950,11 @@ msgstr ""
 "да\n"
 "включат/изключат ВСИЧКИ teams/noteams типове на игра"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:718
+#: qcsrc/client/hud/panel/scoreboard.qc:720
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "Пример: scoreboard_columns_set име ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:719
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -954,7 +962,7 @@ msgstr ""
 "ще покаже име, пинг и pl подредени в ляво и полетата\n"
 "дясно от вертикалния бар, подредени в дясно."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:721
+#: qcsrc/client/hud/panel/scoreboard.qc:723
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -962,10 +970,10 @@ msgstr ""
 "'field3' ще се показва само в CTF, а 'field4' ще се показва във всички\n"
 "типове на игра, без DM"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1000
-#: qcsrc/client/hud/panel/scoreboard.qc:1007
-#: qcsrc/client/hud/panel/scoreboard.qc:1062
-#: qcsrc/client/hud/panel/scoreboard.qc:1073 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1002
+#: qcsrc/client/hud/panel/scoreboard.qc:1009
+#: qcsrc/client/hud/panel/scoreboard.qc:1064
+#: qcsrc/client/hud/panel/scoreboard.qc:1075 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -974,102 +982,102 @@ msgstr ""
 msgid "N/A"
 msgstr "няма"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1632
+#: qcsrc/client/hud/panel/scoreboard.qc:1634
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Точност (средно %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1789
+#: qcsrc/client/hud/panel/scoreboard.qc:1791
 msgid "Item stats"
 msgstr "Статистики на предмета"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1900
+#: qcsrc/client/hud/panel/scoreboard.qc:1902
 msgid "Map stats:"
 msgstr "Статистика за картата:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1930
+#: qcsrc/client/hud/panel/scoreboard.qc:1932
 msgid "Monsters killed:"
 msgstr "Убити чудовища:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1937
+#: qcsrc/client/hud/panel/scoreboard.qc:1939
 msgid "Secrets found:"
 msgstr "Открити тайни(ци):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2147
+#: qcsrc/client/hud/panel/scoreboard.qc:2149
 #, c-format
 msgid "Spectators"
 msgstr "Зяпачи"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2252
+#: qcsrc/client/hud/panel/scoreboard.qc:2254
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Избор на отбор"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2264
+#: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2266
+#: qcsrc/client/hud/panel/scoreboard.qc:2268
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2270
+#: qcsrc/client/hud/panel/scoreboard.qc:2272
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2281
+#: qcsrc/client/hud/panel/scoreboard.qc:2283
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f минути"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2290
-#: qcsrc/client/hud/panel/scoreboard.qc:2297
+#: qcsrc/client/hud/panel/scoreboard.qc:2292
+#: qcsrc/client/hud/panel/scoreboard.qc:2299
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2291
-#: qcsrc/client/hud/panel/scoreboard.qc:2298
-#: qcsrc/client/hud/panel/scoreboard.qc:2317
-#: qcsrc/client/hud/panel/scoreboard.qc:2324
+#: qcsrc/client/hud/panel/scoreboard.qc:2293
+#: qcsrc/client/hud/panel/scoreboard.qc:2300
+#: qcsrc/client/hud/panel/scoreboard.qc:2319
+#: qcsrc/client/hud/panel/scoreboard.qc:2326
 msgid "SCO^points"
 msgstr "SCO^точки"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2316
-#: qcsrc/client/hud/panel/scoreboard.qc:2323
+#: qcsrc/client/hud/panel/scoreboard.qc:2318
+#: qcsrc/client/hud/panel/scoreboard.qc:2325
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2332
+#: qcsrc/client/hud/panel/scoreboard.qc:2334
 #, c-format
 msgid "^7Map: ^2%s"
 msgstr "^7Карта: ^2%s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2494
+#: qcsrc/client/hud/panel/scoreboard.qc:2496
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Награда за скорост: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2498
+#: qcsrc/client/hud/panel/scoreboard.qc:2500
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Най-добро време %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2532
+#: qcsrc/client/hud/panel/scoreboard.qc:2534
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Съживяване след ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2542
+#: qcsrc/client/hud/panel/scoreboard.qc:2544
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Мъртав сте, изчакайте ^3%s^7 преди съживяване"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2551
+#: qcsrc/client/hud/panel/scoreboard.qc:2553
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Мъртав сте, натиснете ^2%s^7 за съживяване"
@@ -2074,12 +2082,12 @@ msgstr ""
 msgid "Veil grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:125
+#: qcsrc/common/mutators/mutator/nades/nades.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:127
+#: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
@@ -7816,7 +7824,7 @@ msgstr "Потребител"
 msgid "Misc"
 msgstr "Разни"
 
-#: qcsrc/menu/xonotic/dialog_settings.qh:7
+#: qcsrc/menu/xonotic/dialog_settings.qh:8
 msgid "Change the game settings"
 msgstr "Промени настройките на играта"
 

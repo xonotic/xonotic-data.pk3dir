@@ -46,6 +46,7 @@
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
@@ -1138,6 +1139,12 @@ void ClientConnect(entity this)
 	{
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
+		// quickmenu file must be put in a subfolder with an unique name
+		// to reduce chances of overriding custom client quickmenus
+		if (waypointeditor_enabled)
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", "wpeditor.txt"));
+		else if (autocvar_sv_quickmenu_file != "" && strstrofs(autocvar_sv_quickmenu_file, "/", 0) && fexists(autocvar_sv_quickmenu_file))
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", autocvar_sv_quickmenu_file));
 	}
 
 	if (!autocvar_sv_foginterval && world.fog != "")
