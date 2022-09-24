@@ -513,11 +513,11 @@ msgstr "随机组队"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "服务器的自定义快捷菜单"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
-msgstr ""
+msgstr "路径点编辑菜单"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
@@ -1114,7 +1114,7 @@ msgstr "时限"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
-msgstr "瞬间死亡"
+msgstr "决胜时刻"
 
 #: qcsrc/client/hud/panel/timer.qc:138
 msgid "Overtime"
@@ -1131,7 +1131,7 @@ msgstr "^1你必须在进入 hud 配置模式之前回应"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr "在统计信息中以^2玩家名^7替代“^1匿名玩家^7”"
+msgstr "在统计信息中显示^2玩家名^7而非“^1匿名玩家^7”"
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
@@ -1139,7 +1139,7 @@ msgstr "一轮投票被发起："
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "Allow servers to store and display your name?"
-msgstr "允许服务器存储并显示你的名字？"
+msgstr "允许服务器存储并展示你的名字？"
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
@@ -4054,7 +4054,7 @@ msgstr "^K1你被电轮炮塔杀死了！"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr "^K1你不幸被行走者炮塔追逐！"
+msgstr "^K1你不幸被行走者炮塔追赶！"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You were fragged by a Walker turret!"
@@ -6704,7 +6704,7 @@ msgstr "滑动"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
 msgid "EF^Both"
-msgstr "都有"
+msgstr "全部"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Weapon icons:"
@@ -8024,7 +8024,7 @@ msgstr "5 分钟"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:173
 msgid "WRN^Both"
-msgstr "都有"
+msgstr "全部"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:176
 msgid "Automatic taunts:"
@@ -8626,7 +8626,7 @@ msgstr "HUD 跟随玩家视角而移动"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "Shake the HUD when hurt"
-msgstr "在受伤时震动 HUD"
+msgstr "在受伤时晃动 HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
@@ -8683,7 +8683,7 @@ msgstr "攻击者"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:49
 msgid "SPREES^Both"
-msgstr "都有"
+msgstr "全部"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
 msgid "Print on a seperate line"
@@ -9573,7 +9573,7 @@ msgstr "伽玛值："
 msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
-msgstr "逆向伽玛纠正值，即不影响白色或黑色的亮度效果"
+msgstr "逆向伽玛纠正值，不影响纯白或纯黑的亮度效果"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Contrast boost:"
