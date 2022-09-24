@@ -28,7 +28,7 @@ void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 	int detailreduction = ((isplayer) ? autocvar_cl_playerdetailreduction : autocvar_cl_modeldetailreduction);
 
 	// LOD model loading
-	if(this.lodmodelindex0 != this.modelindex)
+	if(this.lodmodelindex0 != this.modelindex && this.lodmodelindex1 != this.modelindex && this.lodmodelindex2 != this.modelindex)
 	{
 		string modelname = this.model;
 		string s;
