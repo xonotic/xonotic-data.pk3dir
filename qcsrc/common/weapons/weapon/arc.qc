@@ -711,6 +711,13 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     }
     #endif
 }
+METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_ARC_SUICIDE_BOLT;
+    else
+    	return WEAPON_THINKING_WITH_PORTALS;
+}
 METHOD(Arc, wr_init, void(entity thiswep))
 {
     if(!arc_shotorigin[0])

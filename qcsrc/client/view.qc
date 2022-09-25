@@ -359,11 +359,6 @@ STATIC_INIT(viewmodel) {
 vector project_3d_to_2d(vector vec)
 {
 	vec = cs_project(vec);
-	if(cs_project_is_b0rked > 0)
-	{
-		vec.x *= vid_conwidth / vid_width;
-		vec.y *= vid_conheight / vid_height;
-	}
 	return vec;
 }
 
@@ -1716,6 +1711,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Debug_Draw();
 #endif
 
+	if (autocvar__scoreboard_team_selection)
+	{
+		Scoreboard_UI_Enable(1);
+		cvar_set("_scoreboard_team_selection", "0");
+	}
 	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
@@ -1724,34 +1724,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	{
 		localcmd("\n", NextFrameCommand, "\n");
 		NextFrameCommand = string_null;
-	}
-
-	// we must do this check AFTER a frame was rendered, or it won't work
-	if(cs_project_is_b0rked == 0)
-	{
-		string w0, h0;
-		w0 = ftos(autocvar_vid_conwidth);
-		h0 = ftos(autocvar_vid_conheight);
-		//setproperty(VF_VIEWPORT, '0 0 0', '640 480 0');
-		//setproperty(VF_FOV, '90 90 0');
-		setproperty(VF_ORIGIN, '0 0 0');
-		setproperty(VF_ANGLES, '0 0 0');
-		setproperty(VF_PERSPECTIVE, 1);
-		vector forward, right, up;
-		MAKE_VECTORS('0 0 0', forward, right, up);
-		vector v1, v2;
-		cvar_set("vid_conwidth", "800");
-		cvar_set("vid_conheight", "600");
-		v1 = cs_project(forward);
-		cvar_set("vid_conwidth", "640");
-		cvar_set("vid_conheight", "480");
-		v2 = cs_project(forward);
-		if(v1 == v2)
-			cs_project_is_b0rked = 1;
-		else
-			cs_project_is_b0rked = -1;
-		cvar_set("vid_conwidth", w0);
-		cvar_set("vid_conheight", h0);
 	}
 
 	HUD_Mouse(local_player);
