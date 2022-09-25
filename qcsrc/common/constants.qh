@@ -49,6 +49,8 @@ const int HUD_BUMBLEBEE_GUN = 25;
 // # of maps, I'll use arrays for them :P
 const int MAPVOTE_COUNT = 30;
 
+const int MODVOTE_COUNT = 8;
+
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
 const vector PL_MIN_CONST = '-16 -16 -24';

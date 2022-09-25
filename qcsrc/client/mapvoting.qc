@@ -42,6 +42,14 @@ string mapvote_chosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
 
+int mv_gamemod_count;
+string mv_gamemod_names[MODVOTE_COUNT];
+string mv_gamemod_icons[MODVOTE_COUNT];
+string mv_gamemod_descriptions[MODVOTE_COUNT];
+int mv_gamemod_votes[MODVOTE_COUNT];
+int mv_gamemod_ownvotes[MODVOTE_COUNT];
+int mv_gamemod_selection;
+
 const int NUM_SSDIRS = 4;
 string ssdirs[NUM_SSDIRS];
 int n_ssdirs;
@@ -205,6 +213,128 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	delete(title);
 }
 
+void GameModVote_DrawItem(vector pos, vector bsize, vector tsize, int id)
+{
+	TC(int, id);
+
+	string modname = mv_gamemod_names[id];
+	string icon = mv_gamemod_icons[id];
+
+	vector img_size = '0 0 0';
+	string votes_text = sprintf(_("%.0f votes"), mv_gamemod_votes[id]);
+	string pic;
+	float modname_text_size;
+	float votes_text_size;
+
+	modname_text_size = stringwidth(modname, false, tsize);
+	votes_text_size = stringwidth(votes_text, false, tsize);
+
+	float rect_margin = tsize.y / 2;
+	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	bsize.y -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
+	bsize.x -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
+
+	vector rect_pos = pos + '0.5 0.5 0' * rect_margin;
+	vector rect_size = '1 1 0';
+	rect_size.x = min(bsize.x, 4/3*bsize.y) - rect_margin;
+	rect_size.y = bsize.y - rect_margin;
+
+	img_size.y = rect_size.y;
+	img_size.y -= tsize.y + 2*rect_margin;
+	img_size.x = img_size.y;
+
+	pos.x = rect_pos.x + (rect_size.x - img_size.x) / 2;
+	pos.y = rect_pos.y + (rect_size.y - img_size.y) / 2;
+
+	vector modname_pos = '0 0 0';
+	modname_pos.x = rect_pos.x + (rect_size.x - modname_text_size) / 2;
+	modname_pos.y = rect_pos.y + autocvar_hud_panel_mapvote_highlight_border;
+	//modname_pos.y = pos.y + img_size.y;
+	
+	vector votes_pos = '0 0 0';
+	//votes_pos.x = pos.x + img_size.x - 2 * tsize.x;
+	//votes_pos.y = pos.y + img_size.y - tsize.y;
+	votes_pos.x = rect_pos.x + (rect_size.x - votes_text_size) / 2;
+	votes_pos.y = pos.y + img_size.y;
+
+	vector rgb = '1 1 1';
+
+	if (mv_gamemod_selection == id) {
+		// Highlight selected item
+		rgb = '1 1 0';
+		drawfill(rect_pos, rect_size, rgb, 0.1, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, 1, DRAWFLAG_NORMAL);
+	} else {
+		
+		// 0 - no votes, 1 - plus vote, 2 - minus vote
+		if(mv_gamemod_ownvotes[id] == 1) {
+			rgb = '0 1 0';
+			drawfill(rect_pos, rect_size, rgb, 0.1, DRAWFLAG_NORMAL);
+			drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, 1, DRAWFLAG_NORMAL);
+		} 
+
+		if(mv_gamemod_ownvotes[id] == 2) {
+			rgb = '1 0 0';
+			drawfill(rect_pos, rect_size, rgb, 0.1, DRAWFLAG_NORMAL);
+			drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, 1, DRAWFLAG_NORMAL);
+		}
+
+		rgb = '1 1 1';
+
+	}
+
+	drawstring(modname_pos, modname, tsize, rgb, 1, DRAWFLAG_NORMAL);
+
+	pic = strcat("gfx/gamemod/", icon);
+	if(icon == "" || !fexists(pic))
+	{
+		drawfill(pos, img_size, '.5 .5 .5', .7, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		drawpic(pos, pic, img_size, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
+
+	drawstring(votes_pos, votes_text, tsize, rgb, 1, DRAWFLAG_NORMAL);
+
+}
+
+// Stole from menu/menu.qc, void m_tooltip(vector pos)
+void GameModVote_DrawDescription(vector pos, vector tsize, int id)
+{
+	
+	string desc = mv_gamemod_descriptions[id];
+
+	int text_size = stringwidth(desc, false, tsize);
+
+	pos.y -= 4 * tsize.y;
+
+	float rect_margin = tsize.y / 2;
+	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	
+	vector bsize = '0 0 0';
+	bsize.y = tsize.y * 3;
+	bsize.x = text_size + 2 * tsize.x;
+
+	vector rect_pos = pos + '0.5 0.5 0' * rect_margin;
+	vector rect_size = '1 1 0';
+	rect_size.x = bsize.x - rect_margin;
+	rect_size.y = bsize.y - rect_margin;
+
+	vector text_pos = '0 0 0';
+	text_pos.x = rect_pos.x + (rect_size.x - text_size) / 2;
+	text_pos.y = rect_pos.y + tsize.y;
+
+	vector rgb = '1 1 0';
+	drawfill(rect_pos, rect_size, '0 0 0', 0.75, DRAWFLAG_NORMAL);
+	drawfill(rect_pos, rect_size, rgb, 0.1, DRAWFLAG_NORMAL);
+	drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, 1, DRAWFLAG_NORMAL);
+	drawstring(text_pos, desc, tsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+
+}
+
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)
 {
 	TC(int, id);
@@ -305,6 +435,33 @@ vector MapVote_GridVec(vector gridspec, int i, int m)
 		'1 0 0' * (gridspec.x * r)
 		+
 		'0 1 0' * (gridspec.y * (i - r) / m);
+}
+
+float GameModVote_Selection(vector topleft, vector cellsize, float rows, float columns) {
+
+	float c, r;
+
+	mv_gamemod_selection = -1;
+
+
+	for (r = 0; r < rows; ++r)
+		for (c = 0; c < columns; ++c)
+		{
+			if (mousepos.x >= topleft.x + cellsize.x *  c &&
+				mousepos.x <= topleft.x + cellsize.x * (c + 1) &&
+				mousepos.y >= topleft.y + cellsize.y *  r &&
+				mousepos.y <= topleft.y + cellsize.y * (r + 1))
+			{
+				mv_gamemod_selection = r * columns + c;
+				break;
+			}
+		}
+
+	if (mv_gamemod_selection >= mv_gamemod_count)
+		mv_gamemod_selection = -1;
+
+	return mv_gamemod_selection;
+
 }
 
 float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns)
@@ -508,6 +665,45 @@ void MapVote_Draw()
 		pos.x = (xmax+xmin)*0.5;
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
+
+	if(gametypevote && mv_gamemod_count > 0){
+		
+		if(mv_columns < 3 && rows <= 2){
+			rows = 2;
+			mv_columns = ceil(mv_gamemod_count / 2);
+		} else {
+			rows = 1;
+			mv_columns = mv_gamemod_count;
+		}
+
+		pos.y += panel_size.y + hud_fontsize.y;
+
+		dist.x = panel_size.x / mv_columns;
+		dist.y = min(vid_conheight - pos.y, dist.x, vid_conheight / 6);
+		dist.x = min(dist.x, 4/3 * dist.y);
+
+		panel_size.x = dist.x * mv_columns;
+		panel_size.y = dist.y * rows;
+
+		//panel_pos.x = xmin + (xmax - xmin - panel_size.x) / 2;
+		panel_pos.y = pos.y;
+
+		HUD_Panel_DrawBg();
+
+		pos.x = panel_pos.x;
+
+		mv_gamemod_selection = GameModVote_Selection(pos, dist, rows, mv_columns);
+		if(mv_gamemod_selection >= 0){
+			GameModVote_DrawDescription(panel_pos, hud_fontsize, mv_gamemod_selection);
+		}
+
+		for(i = 0; i < mv_gamemod_count; i++)
+		{
+			GameModVote_DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist, hud_fontsize, i);
+		}
+
+	}
+
 }
 
 void Cmd_MapVote_MapDownload(int argc)
@@ -721,6 +917,16 @@ void MapVote_Init()
 			MapVote_ReadOption(i);
 	}
 
+	if(gametypevote) {
+		mv_gamemod_count = ReadByte();
+		for(i = 0; i < mv_gamemod_count; i++)
+		{
+			mv_gamemod_names[i] = strzone(ReadString());
+			mv_gamemod_icons[i] = strzone(ReadString());
+			mv_gamemod_descriptions[i] = strzone(ReadString());
+		}
+	}
+
 	for(i = 0; i < n_ssdirs; ++i)
 		ssdirs[n_ssdirs] = string_null;
 	n_ssdirs = 0;
@@ -895,25 +1101,44 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			imp = first_digit * 10 + (imp % 10);
 	}
 
+	int imp2 = 0;
 	if (nPrimary == K_MOUSE1)
 	{
 		mv_selection_keyboard = 0;
 		mv_selection = mv_mouse_selection;
-		if (mv_selection >= 0)
+		if (mv_selection >= 0) {
 			imp = min(mv_selection + 1, mv_num_maps);
+		} else {
+			if(mv_gamemod_selection >= 0) {
+				imp2 = MAPVOTE_COUNT + min(mv_gamemod_selection + 1, mv_gamemod_count);
+			}
+		}
+
 	}
 
-	if (nPrimary == K_MOUSE2)
-		return true; // do nothing
+	if (mv_selection < 0 && nPrimary == K_MOUSE2) {
+		if(mv_gamemod_selection >= 0) {
+			imp2 = MAPVOTE_COUNT + MODVOTE_COUNT + min(mv_gamemod_selection + 1, mv_gamemod_count);
+		}
+	}
 
+	bool status = false;
 	if (imp)
 	{
-		if (imp <= mv_num_maps)
+		if (imp <= mv_num_maps) {
 			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
-		return true;
+		}
+			
+		status = true;
+	} else {
+		if (imp2)
+		{
+			localcmd(strcat("\nimpulse ", ftos(imp2), "\n"));
+			status = true;
+		}
 	}
 
-	return false;
+	return status;
 }
 
 void MapVote_UpdateMask()
@@ -925,6 +1150,7 @@ void MapVote_UpdateMask()
 void MapVote_UpdateVotes()
 {
 	int i;
+	int tmp;
 	for(i = 0; i < mv_num_maps; ++i)
 	{
 		if(mv_flags[i] & GTV_AVAILABLE)
@@ -939,6 +1165,22 @@ void MapVote_UpdateVotes()
 	}
 
 	mv_ownvote = ReadByte()-1;
+
+	if(gametypevote && mv_gamemod_count) {
+		for(i = 0; i < mv_gamemod_count; i++)
+		{			
+			mv_gamemod_ownvotes[i] = ReadByte();
+			if(mv_detail) {
+				tmp = ReadByte();
+				if(tmp > 127)
+					mv_gamemod_votes[i] = tmp - 256; // Negative total votes
+				else
+					mv_gamemod_votes[i] = tmp;
+			} else {
+				mv_gamemod_votes[i] = 0;
+			}
+		}
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
