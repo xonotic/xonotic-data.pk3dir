@@ -2224,9 +2224,7 @@ void Scoreboard_Draw()
 	sbt_fg_alpha = autocvar_hud_panel_scoreboard_table_fg_alpha * panel_fg_alpha;
 	sbt_fg_alpha_self = autocvar_hud_panel_scoreboard_table_fg_alpha_self * panel_fg_alpha;
 
-	// don't overlap with con_notify
-	if(!autocvar__hud_configure)
-		panel_pos.y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos.y);
+	panel_pos.y = hud_fontsize.y * 1.5;
 
 	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
 	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.93);
@@ -2246,7 +2244,7 @@ void Scoreboard_Draw()
 	vector sb_gameinfo_type_fontsize, sb_gameinfo_detail_fontsize;
 
 	// Begin of Game Info Section
-	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
+	sb_gameinfo_type_fontsize = hud_fontsize * 1.7;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 
 	// Game Info: Game Type
