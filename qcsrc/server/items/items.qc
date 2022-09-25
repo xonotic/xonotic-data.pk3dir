@@ -635,7 +635,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			delete(this);
+			RemoveItem(this);
 			return;
 		}
 	}
