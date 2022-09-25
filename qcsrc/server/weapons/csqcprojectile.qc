@@ -98,13 +98,13 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 void UpdateCSQCProjectile(entity e)
 {
-	if(e.net_sendentity == CSQCProjectile_SendEntity)
+	if(getSendEntity(e) == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
 // FIXME HACK
-	else if(e.net_sendentity == ItemSend)
+	else if(getSendEntity(e) == ItemSend)
 	{
 		ItemUpdate(e);
 	}
@@ -113,7 +113,7 @@ void UpdateCSQCProjectile(entity e)
 
 void UpdateCSQCProjectileAfterTeleport(entity e)
 {
-	if(e.net_sendentity == CSQCProjectile_SendEntity)
+	if(getSendEntity(e) == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;

@@ -117,14 +117,6 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	IntrusiveList g_uncustomizables;
 	STATIC_INIT(g_uncustomizables) { g_uncustomizables = IL_NEW(); }
 
-	.bool(entity this, entity to, int sendflags) net_sendentity;
-
-	bool Net_SendEntity(entity to, int sendflags)
-	{
-		ENGINE_EVENT();
-		return (this.net_sendentity) ? this.net_sendentity(this, to, sendflags) : false;
-	}
-
 	void Net_LinkEntity(entity e, bool docull, bool checkmodel, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "")
@@ -141,8 +133,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			setsize(e, mi, ma);
 		}
 
-		e.net_sendentity = sendfunc;
-		e.SendEntity = Net_SendEntity;
+		setSendEntity(e, sendfunc);
 		e.SendFlags = 0xFFFFFF;
 
 		if (!docull) e.effects |= EF_NODEPTHTEST;
@@ -156,8 +147,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void Net_UnlinkEntity(entity e)
 	{
-		e.net_sendentity = func_null;
-		e.SendEntity = func_null;
+		setSendEntity(e, func_null);
 	}
 
 	.void(entity this) uncustomizeentityforclient;

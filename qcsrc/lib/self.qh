@@ -92,13 +92,10 @@ SELFWRAP(customizeentityforclient, bool, (), (entity this, entity client), (this
 SELFWRAP(camera_transform, vector, (vector org, vector ang), (entity this, vector org, vector ang), (this, org, ang))
 #define setcamera_transform(e, f) SELFWRAP_SET(camera_transform, e, f)
 
-// NOTE: still references self via ENGINE_EVENT 
-#if 0
 /** return false to remove from the client */
 SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, int sendflags), (this, to, sendflags))
 #define setSendEntity(e, f) SELFWRAP_SET(SendEntity, e, f)
 #define getSendEntity(e) SELFWRAP_GET(SendEntity, e)
-#endif
 
 #define ChangeYaw(e, ...) (__self = (e), builtin_ChangeYaw(__VA_ARGS__))
 #define checkclient(e, ...) (__self = (e), builtin_checkclient(__VA_ARGS__))
