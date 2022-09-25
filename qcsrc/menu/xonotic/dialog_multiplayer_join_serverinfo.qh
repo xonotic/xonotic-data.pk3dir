@@ -2,44 +2,33 @@
 
 #include "dialog.qh"
 CLASS(XonoticServerInfoDialog, XonoticDialog)
-	METHOD(XonoticServerInfoDialog, fill, void(entity));
 	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float));
-	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Information"));
-	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO);
-	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.8);
-	ATTRIB(XonoticServerInfoDialog, rows, float, 18);
-	ATTRIB(XonoticServerInfoDialog, columns, float, 6.2);
+	METHOD(XonoticServerInfoDialog, fill, void(entity));
+	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Info"));
+	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER);
+	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.96);
+	ATTRIB(XonoticServerInfoDialog, rows, float, 19);
+	ATTRIB(XonoticServerInfoDialog, columns, float, 2);
+	ATTRIB(XonoticServerInfoDialog, infoTab, entity);
+	ATTRIB(XonoticServerInfoDialog, ToSTab, entity);
 
-	ATTRIB(XonoticServerInfoDialog, currentServerName, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerCName, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerType, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerMap, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerPlayers, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerNumPlayers, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerNumBots, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerNumFreeSlots, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerMod, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerVersion, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerKey, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerID, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerEncrypt, string);
-	ATTRIB(XonoticServerInfoDialog, currentServerPure, string);
+	ATTRIB(XonoticServerInfoTab, currentServerName, string);
+	ATTRIB(XonoticServerInfoTab, currentServerCName, string);
+	ATTRIB(XonoticServerInfoTab, currentServerType, string);
+	ATTRIB(XonoticServerInfoTab, currentServerMap, string);
+	ATTRIB(XonoticServerInfoTab, currentServerPlayers, string);
+	ATTRIB(XonoticServerInfoTab, currentServerNumPlayers, string);
+	ATTRIB(XonoticServerInfoTab, currentServerNumBots, string);
+	ATTRIB(XonoticServerInfoTab, currentServerNumFreeSlots, string);
+	ATTRIB(XonoticServerInfoTab, currentServerMod, string);
+	ATTRIB(XonoticServerInfoTab, currentServerVersion, string);
+	ATTRIB(XonoticServerInfoTab, currentServerKey, string);
+	ATTRIB(XonoticServerInfoTab, currentServerID, string);
+	ATTRIB(XonoticServerInfoTab, currentServerEncrypt, string);
+	ATTRIB(XonoticServerInfoTab, currentServerPure, string);
+	ATTRIB(XonoticServerInfoTab, currentServerStatsStatus, string);
 
-	ATTRIB(XonoticServerInfoDialog, nameLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, cnameLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, typeLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, mapLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, rawPlayerList, entity);
-	ATTRIB(XonoticServerInfoDialog, numPlayersLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, numBotsLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, numFreeSlotsLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, modLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, versionLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, keyLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, idLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, encryptLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, canConnectLabel, entity);
-	ATTRIB(XonoticServerInfoDialog, pureLabel, entity);
 ENDCLASS(XonoticServerInfoDialog)
 
 void Join_Click(entity btn, entity me);
+

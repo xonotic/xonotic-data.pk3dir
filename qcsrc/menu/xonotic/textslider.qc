@@ -14,7 +14,7 @@ entity makeXonoticTextSlider(string theCvar)
 void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, string theTooltip)
 {
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
-	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.controlledCvar = (theCvar) ? theCvar : string_null;
 	// me.loadCvars(me); // don't load it yet
 	setZonedTooltip(me, theTooltip, theCvar);
 }
@@ -36,10 +36,10 @@ void XonoticTextSlider_setValue_noAnim(entity me, float val)
 }
 void XonoticTextSlider_loadCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
-	float n = tokenize_console(me.cvarName);
+	float n = tokenize_console(me.controlledCvar);
 	string s = cvar_string(argv(0));
 	float i;
 	for(i = 1; i < n; ++i)
@@ -58,12 +58,12 @@ void XonoticTextSlider_loadCvars(entity me)
 }
 void XonoticTextSlider_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.controlledCvar)
 		return;
 
 	if(me.value >= 0 && me.value < me.nValues)
 	{
-		float n = tokenize_console(me.cvarName);
+		float n = tokenize_console(me.controlledCvar);
 		if(n == 1)
 		{
 			// this is a special case to allow spaces in the identifiers
@@ -73,7 +73,7 @@ void XonoticTextSlider_saveCvars(entity me)
 		else
 		{
 			float i;
-			float m = tokenize_console(strcat(me.cvarName, " ", me.getIdentifier(me)));
+			float m = tokenize_console(strcat(me.controlledCvar, " ", me.getIdentifier(me)));
 			if(m == n + 1)
 			{
 				for(i = 0; i < n; ++i)
@@ -91,7 +91,7 @@ void XonoticTextSlider_saveCvars(entity me)
 				}
 			}
 			else
-				error("XonoticTextSlider: invalid identifier ", me.getIdentifier(me), " does not match cvar list ", me.cvarName);
+				error("XonoticTextSlider: invalid identifier ", me.getIdentifier(me), " does not match cvar list ", me.controlledCvar);
 		}
 	}
 }

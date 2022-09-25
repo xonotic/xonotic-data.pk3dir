@@ -1,0 +1,20 @@
+#pragma once
+
+#include <common/items/item/pickup.qh>
+CLASS(Powerup, Pickup)
+#ifdef SVQC
+    ATTRIB(Powerup, m_mins, vector, '-16 -16 0');
+    ATTRIB(Powerup, m_maxs, vector, '16 16 80');
+    ATTRIB(Powerup, m_botvalue, int, 11000);
+    ATTRIB(Powerup, m_itemflags, int, FL_POWERUP);
+    ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup));
+    ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup));
+#endif
+ENDCLASS(Powerup)
+
+#include <common/mutators/mutator/status_effects/all.qh>
+CLASS(Powerups, StatusEffects)
+#ifdef GAMEQC
+    ATTRIB(Powerups, m_sound_rm, Sound, SND_POWEROFF);
+#endif
+ENDCLASS(Powerups)

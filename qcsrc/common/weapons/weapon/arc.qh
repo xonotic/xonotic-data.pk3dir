@@ -2,7 +2,7 @@
 
 CLASS(Arc, Weapon)
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
-/* ammotype  */ ATTRIB(Arc, ammo_type, int, RES_CELLS);
+/* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
@@ -23,6 +23,10 @@ CLASS(Arc, Weapon)
 	BEGIN(class) \
 		P(class, prefix, bolt, float, NONE) \
 		P(class, prefix, bolt_ammo, float, NONE) \
+        P(class, prefix, bolt_bounce_count, float, NONE) \
+        P(class, prefix, bolt_bounce_explode, float, NONE) \
+        P(class, prefix, bolt_bounce_lifetime, float, NONE) \
+        P(class, prefix, bolt_count, float, NONE) \
         P(class, prefix, bolt_damageforcescale, float, NONE) \
         P(class, prefix, bolt_damage, float, NONE) \
         P(class, prefix, bolt_edgedamage, float, NONE) \
@@ -31,6 +35,7 @@ CLASS(Arc, Weapon)
         P(class, prefix, bolt_lifetime, float, NONE) \
         P(class, prefix, bolt_radius, float, NONE) \
         P(class, prefix, bolt_refire, float, NONE) \
+        P(class, prefix, bolt_refire2, float, NONE) \
         P(class, prefix, bolt_speed, float, NONE) \
         P(class, prefix, bolt_spread, float, NONE) \
 		P(class, prefix, beam_ammo, float, NONE) \

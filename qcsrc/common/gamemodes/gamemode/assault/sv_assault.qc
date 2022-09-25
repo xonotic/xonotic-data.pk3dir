@@ -11,16 +11,6 @@
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
-IntrusiveList g_assault_destructibles;
-IntrusiveList g_assault_objectivedecreasers;
-IntrusiveList g_assault_objectives;
-STATIC_INIT(g_assault)
-{
-	g_assault_destructibles = IL_NEW();
-	g_assault_objectivedecreasers = IL_NEW();
-	g_assault_objectives = IL_NEW();
-}
-
 // random functions
 void assault_objective_use(entity this, entity actor, entity trigger)
 {
@@ -129,7 +119,6 @@ void target_objective_decrease_activate(entity this)
 		spr = WaypointSprite_SpawnFixed(WP_AssaultDefend, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
-		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(it.classname == "func_assault_destructible")
 		{
@@ -202,8 +191,6 @@ void assault_wall_think(entity this)
 // reset objectives, toggle spawnpoints, reset triggers, ...
 void assault_new_round(entity this)
 {
-	//bprint("ASSAULT: new round\n");
-
 	// up round counter
 	this.winning = this.winning + 1;
 
@@ -223,7 +210,8 @@ void assault_new_round(entity this)
 
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - AS_ROUND_DELAY - game_starttime) / 60));
-	ReadyRestart_force(); // sets game_starttime
+	bprint("Starting second round...\n");
+	ReadyRestart_force(true); // sets game_starttime
 }
 
 entity as_round;
@@ -262,12 +250,12 @@ int WinningCondition_Assault()
 	{
 		if(ent.winning)	// round end has been triggered by attacking team
 		{
-			bprint("Assault: round completed.\n");
+			bprint(Team_ColoredFullName(assault_attacker_team), " destroyed the objective in ", process_time(2, ceil(time - game_starttime)), "\n");
 			SetWinners(team, assault_attacker_team);
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
+			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round or the only round in campaign
 			{
 				status = WINNING_YES;
 			}
@@ -366,7 +354,7 @@ spawnfunc(func_assault_destructible)
 	else
 		this.team = NUM_TEAM_1;
 
-	spawnfunc_func_breakable(this);
+	func_breakable_setup(this);
 }
 
 spawnfunc(func_assault_wall)
@@ -642,5 +630,8 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 {
 	// readyrestart not supported (yet)
+	// it's supported only in campaign mode (single round mode), since campaign requires it
+	if (autocvar_g_campaign)
+		return false;
 	return true;
 }

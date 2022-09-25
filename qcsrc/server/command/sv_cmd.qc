@@ -23,6 +23,7 @@
 #include <server/ipban.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
@@ -144,9 +145,9 @@ void GameCommand_adminmsg(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd adminmsg clients \"message\" [infobartime]");
-			LOG_HELP("  'clients' is a list (separated by commas) of player entity ID's or nicknames");
-			LOG_HELP("  If infobartime is provided, the message will be sent to infobar.");
+			LOG_HELP("Usage:^3 sv_cmd adminmsg <clients> \"<message>\" [<infobartime>]");
+			LOG_HELP("  <clients> is a list (separated by commas) of player entity ID's or nicknames");
+			LOG_HELP("  If <infobartime> is provided, the message will be sent to infobar.");
 			LOG_HELP("  Otherwise, it will just be sent as a centerprint message.");
 			LOG_HELP("Examples: adminmsg 2,4 \"this infomessage will last for ten seconds\" 10");
 			LOG_HELP("          adminmsg 2,5 \"this message will be a centerprint\"");
@@ -161,7 +162,13 @@ void GameCommand_allready(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			ReadyRestart();
+			if(warmup_stage)
+			{
+				ReadyRestart(true);
+			}
+			else
+				LOG_INFO("Not in warmup.");
+
 			return;
 		}
 
@@ -184,8 +191,7 @@ void GameCommand_allspec(int request, int argc)
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				if (it.caplayer) it.caplayer = 0;
-				PutObserverInServer(it);
+				PutObserverInServer(it, true, true);
 				++n;
 			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -196,8 +202,8 @@ void GameCommand_allspec(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd allspec [reason]");
-			LOG_HELP("  Where 'reason' is an optional argument for explanation of allspec command.");
+			LOG_HELP("Usage:^3 sv_cmd allspec [<reason>]");
+			LOG_HELP("  Where <reason> is an optional argument for explanation of allspec command.");
 			LOG_HELP("See also: ^2moveplayer, shuffleteams^7");
 			return;
 		}
@@ -228,8 +234,8 @@ void GameCommand_anticheat(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd anticheat client");
-			LOG_HELP("  'client' is the entity number or name of the player.");
+			LOG_HELP("Usage:^3 sv_cmd anticheat <client>");
+			LOG_HELP("  <client> is the entity number or name of the player.");
 			return;
 		}
 	}
@@ -327,9 +333,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", "0");
-				bot_fixcount();
+				bot_fixcount(false);  // Kill all bots.
 				cvar_settemp("bot_number", argv(2));
-				if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+				if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 				return;
 			}
 			else if (argv(1) == "load" && argc == 3)
@@ -360,9 +366,9 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 							cvar_settemp("minplayers", "0");
 							cvar_settemp("minplayers_per_team", "0");
 							cvar_settemp("bot_number", "0");
-							bot_fixcount();
+							bot_fixcount(false);  // Kill all bots.
 							cvar_settemp("bot_number", argv(3));
-							if (!bot_fixcount()) LOG_INFO("Sorry, could not set requested bot count");
+							if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
 						}
 						else
 						{
@@ -430,10 +436,10 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd bot_cmd client command [argument]");
-			LOG_HELP("  'client' can be either the name of the bot or a progressive number (not the entity number!)");
+			LOG_HELP("Usage:^3 sv_cmd bot_cmd <client> <command> [<arguments>]");
+			LOG_HELP("  <client> can be either the name of the bot or a progressive number (not the entity number!)");
 			LOG_HELP("           can also be '*' or 'all' to allow sending the command to all the bots");
-			LOG_HELP("  For full list of commands, see bot_cmd help [command].");
+			LOG_HELP("  For full list of commands, see bot_cmd help [<command>].");
 			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc \"say something\"");
 			LOG_HELP("          sv_cmd bot_cmd 1 presskey jump");
 			LOG_HELP("          sv_cmd bot_cmd * pause");
@@ -459,8 +465,8 @@ void GameCommand_cointoss(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd cointoss [result1 result2]");
-			LOG_HELP("  Where 'result1' and 'result2' are user created options.");
+			LOG_HELP("Usage:^3 sv_cmd cointoss [<result1> <result2>]");
+			LOG_HELP("  Where <result1> and <result2> are user created options.");
 			return;
 		}
 	}
@@ -500,10 +506,10 @@ void GameCommand_database(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd database action filename");
-			LOG_HELP("  Where 'action' is the command to complete,");
-			LOG_HELP("  and 'filename' is what it acts upon.");
-			LOG_HELP("  Full list of commands here: \"save, dump, load.\"");
+			LOG_HELP("Usage:^3 sv_cmd database <action> <filename>");
+			LOG_HELP("  Where <action> is the command to complete,");
+			LOG_HELP("  and <filename> is what it acts upon.");
+			LOG_HELP("  Full list of commands here: save, dump, load.");
 			return;
 		}
 	}
@@ -538,8 +544,8 @@ void GameCommand_defer_clear(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd defer_clear client");
-			LOG_HELP("  'client' is the entity number or name of the player.");
+			LOG_HELP("Usage:^3 sv_cmd defer_clear <client>");
+			LOG_HELP("  <client> is the entity number or name of the player.");
 			LOG_HELP("See also: ^2defer_clear_all^7");
 			return;
 		}
@@ -593,10 +599,10 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd delrec ranking [map]");
-			LOG_HELP("  'ranking' is which ranking level to clear up to, ");
+			LOG_HELP("Usage:^3 sv_cmd delrec <ranking> [<map>]");
+			LOG_HELP("  <ranking> is which ranking level to clear up to, ");
 			LOG_HELP("  it will clear all records up to nth place.");
-			LOG_HELP("  if 'map' is not provided it will use current map.");
+			LOG_HELP("  if <map> is not provided it will use current map.");
 			return;
 		}
 	}
@@ -715,6 +721,11 @@ void GameCommand_gametype(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_INFOF("This command works only when the server is running.");
+				return;
+			}
 			if (argv(1) != "")
 			{
 				string s = argv(1);
@@ -740,7 +751,7 @@ void GameCommand_gametype(int request, int argc)
 				}
 				else
 				{
-					bprint("Game type switch to ", s, " failed: this type does not exist!\n");
+					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
 				}
 
 				return;
@@ -751,8 +762,8 @@ void GameCommand_gametype(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gametype mode");
-			LOG_HELP("  Where 'mode' is the gametype mode to switch to.");
+			LOG_HELP("Usage:^3 sv_cmd gametype <mode>");
+			LOG_HELP("  Where <mode> is the gametype mode to switch to.");
 			LOG_HELP("See also: ^2gotomap^7");
 			return;
 		}
@@ -788,15 +799,14 @@ void GameCommand_gettaginfo(int request, int argc)
 				if (i)
 				{
 					v = gettaginfo(tmp_entity, i);
-					LOG_INFOF(
-						"model %s frame %s tag %s index %s parent %s",
+					LOG_HELPF("model %s frame %s tag %s index %s parent %s",
 						tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
 					);
-					LOG_INFOF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
-					LOG_INFOF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
-					LOG_INFOF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
-					LOG_INFOF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
-					LOG_INFOF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
+					LOG_HELPF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
+					LOG_HELPF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
+					LOG_HELPF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
+					LOG_HELPF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
+					LOG_HELPF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
 					if (argc >= 6)
 					{
 						v.y = -v.y;
@@ -817,7 +827,7 @@ void GameCommand_gettaginfo(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]");
+			LOG_HELP("Usage:^3 sv_cmd gettaginfo <model> <frame> <index> [<command1>] [<command2>]");
 			LOG_HELP("See also: ^2bbox, trace^7");
 			return;
 		}
@@ -876,7 +886,7 @@ void GameCommand_animbench(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]");
+			LOG_HELP("Usage:^3 sv_cmd animbench <model> <frame1> <frame2>");
 			LOG_HELP("See also: ^2bbox, trace^7");
 			return;
 		}
@@ -889,6 +899,11 @@ void GameCommand_gotomap(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_INFOF("This command works only when the server is running.");
+				return;
+			}
 			if (argv(1))
 			{
 				LOG_INFO(GotoMap(argv(1)));
@@ -900,8 +915,8 @@ void GameCommand_gotomap(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd gotomap map");
-			LOG_HELP("  Where 'map' is the *.bsp file to change to.");
+			LOG_HELP("Usage:^3 sv_cmd gotomap <map>");
+			LOG_HELP("  Where <map> is the *.bsp file to change to.");
 			LOG_HELP("See also: ^2gametype^7");
 			return;
 		}
@@ -975,13 +990,13 @@ void GameCommand_moveplayer(int request, int argc)
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
+			if (destination == "spec")
+				destination = "spectator";
 
-			string successful, t;
-			successful = string_null;
-
-			// lets see if the target(s) even actually exist.
 			if ((targets) && (destination))
 			{
+				string successful = string_null;
+				string t;
 				for ( ; targets; )
 				{
 					t = car(targets);
@@ -990,101 +1005,101 @@ void GameCommand_moveplayer(int request, int argc)
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, false, false);
+					string client_num_str = ftos(etof(client));
 
 					if (accepted <= 0)
 					{
-						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : "."));
-						continue;
+						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), ".");
 					}
-
-					// Where are we putting this player?
-					if (destination == "spec" || destination == "spectator")
+					else if (destination == "spectator")
 					{
+						string pl_name = playername(client.netname, client.team, false);
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							if (client.caplayer) client.caplayer = 0;
-							PutObserverInServer(client);
+							PutObserverInServer(client, true, true);
 
-							successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
+							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already spectating.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already spectating.");
 						}
-						continue;
 					}
 					else
 					{
-						if (!IS_SPEC(client) && !IS_OBSERVER(client))
+						if (!teamplay)
 						{
-							if (teamplay)
-							{
-								// set up
-								int save = Player_GetForcedTeamIndex(client);
-								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
+							LOG_INFO("Can't change teams when currently not playing a team game.");
+							return;
+						}
 
-								// find the team to move the player to
-								int team_num = Team_ColorToTeam(destination);
-								entity balance;
-								if (team_num == client.team)  // already on the destination team
-								{
-									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
-									continue;
-								}
-								else if (team_num == 0)  // auto team
-								{
-									balance = TeamBalance_CheckAllowedTeams(client);
-									team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
-								}
-								else
-								{
-									balance = TeamBalance_CheckAllowedTeams(client);
-								}
-								Player_SetForcedTeamIndex(client, save);
+						string pl_name = playername(client.netname, client.team, false);
+						if (IS_SPEC(client) || IS_OBSERVER(client))
+						{
+							// well technically we could, but should we allow that? :P
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not in the game.");
+							continue;
+						}
 
-								// Check to see if the destination team is even available
-								int team_id = Team_TeamToIndex(team_num);
-								if (team_id == -1)
-								{
-									LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
-									TeamBalance_Destroy(balance);
-									return;
-								}
-								if (!TeamBalance_IsTeamAllowed(balance, team_id))
-								{
-									LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
-									TeamBalance_Destroy(balance);
-									return;
-								}
-								TeamBalance_Destroy(balance);
+						// set up
+						int save = Player_GetForcedTeamIndex(client);
+						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
-								// If so, lets continue and finally move the player
-								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
-								if (MoveToTeam(client, team_id, 6))
-								{
-									successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
-								}
-								else
-								{
-									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ")");
-								}
-								continue;
-							}
-							else
-							{
-								LOG_INFO("Can't change teams when currently not playing a team game.");
-								return;
-							}
+						// find the team to move the player to
+						int team_num = Team_ColorToTeam(destination);
+						entity balance;
+						if (team_num == client.team)  // already on the destination team
+						{
+							// keep the forcing undone
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							continue;
+						}
+						else if (team_num == 0)  // auto team
+						{
+							balance = TeamBalance_CheckAllowedTeams(client);
+							team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 						}
 						else
 						{
-							LOG_INFO("Can't change teams if the player isn't in the game.");  // well technically we could, but should we allow that? :P
+							balance = TeamBalance_CheckAllowedTeams(client);
+						}
+						Player_SetForcedTeamIndex(client, save);
+
+						// Check to see if the destination team is even available
+						int team_id = Team_TeamToIndex(team_num);
+						if (team_id == -1)
+						{
+							LOG_INFO("Can't move player to ", destination, " team because it doesn't exist.");
+							TeamBalance_Destroy(balance);
 							return;
 						}
+						if (!IsTeamAvailable(team_num))
+						{
+							LOG_INFO("Can't move player to ", destination, " team because it isn't available.");
+							TeamBalance_Destroy(balance);
+							return;
+						}
+						if (!TeamBalance_IsTeamAllowed(balance, team_id))
+						{
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							TeamBalance_Destroy(balance);
+							continue;
+						}
+						TeamBalance_Destroy(balance);
+
+						// If so, lets continue and finally move the player
+						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
+						if (MoveToTeam(client, team_id, 6))
+						{
+							successful = strcat(successful, (successful ? ", " : ""), pl_name);
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+						}
+						else
+						{
+							LOG_INFO("Unable to move player #", client_num_str, " (", pl_name, ")");
+						}
 					}
-				}
+				} // loop end
 
 				if (successful) bprint("Successfully moved players ", successful, " to destination ", destination, ".\n");
 				else LOG_INFO("No players given (", original_targets, ") are able to move.");
@@ -1097,10 +1112,10 @@ void GameCommand_moveplayer(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd moveplayer clients destination");
-			LOG_HELP("  'clients' is a list (separated by commas) of player entity ID's or nicknames");
-			LOG_HELP("  'destination' is what to send the player to, be it team or spectating");
-			LOG_HELP("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"");
+			LOG_HELP("Usage:^3 sv_cmd moveplayer <clients> <destination>");
+			LOG_HELP("  <clients> is a list (separated by commas) of player entity ID's or nicknames");
+			LOG_HELP("  <destination> is what to send the player to, be it team or spectating");
+			LOG_HELP("  Full list of destinations here: spec, spectator, red, blue, yellow, pink, auto.");
 			LOG_HELP("Examples: sv_cmd moveplayer 1,3,5 red");
 			LOG_HELP("          sv_cmd moveplayer 2 spec");
 			LOG_HELP("See also: ^2allspec, shuffleteams^7");
@@ -1117,12 +1132,9 @@ void GameCommand_nospectators(int request)
 		{
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, {
-				if(!it.caplayer)
-				{
-					CS(it).spectatortime = time;
-					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-				}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
+				CS(it).spectatortime = time;
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 			});
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
@@ -1213,7 +1225,7 @@ void GameCommand_setbots(int request, int argc)
 				cvar_settemp("minplayers", "0");
 				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", argv(1));
-				bot_fixcount();
+				bot_fixcount(true);
 				return;
 			}
 		}
@@ -1222,8 +1234,8 @@ void GameCommand_setbots(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd setbots botnumber");
-			LOG_HELP("  Where 'botnumber' is the amount of bots to set bot_number cvar to.");
+			LOG_HELP("Usage:^3 sv_cmd setbots <botnumber>");
+			LOG_HELP("  Where <botnumber> is the amount of bots to set bot_number cvar to.");
 			LOG_HELP("See also: ^2bot_cmd^7");
 			return;
 		}
@@ -1238,7 +1250,7 @@ void shuffleteams()
 		return;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if (Player_HasRealForcedTeam(it)) {
 			// we could theoretically assign forced players to their teams
 			// and shuffle the rest to fill the empty spots but in practise
@@ -1260,7 +1272,7 @@ void shuffleteams()
 	TeamBalance_Destroy(balance);
 
 	int team_index = 0;
-	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
+	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || INGAME(it), {
 		int target_team_index = team_index + 1;
 		if (Entity_GetTeamIndex(it) != target_team_index)
 		{
@@ -1294,6 +1306,26 @@ void GameCommand_shuffleteams(int request)
 			LOG_HELP("Usage:^3 sv_cmd shuffleteams");
 			LOG_HELP("  No arguments required.");
 			LOG_HELP("See also: ^2moveplayer, allspec^7");
+			return;
+		}
+	}
+}
+
+void GameCommand_resetmatch(int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			ReadyRestart(false);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd resetmatch");
+			LOG_HELP("  No arguments required.");
 			return;
 		}
 	}
@@ -1333,9 +1365,9 @@ void GameCommand_stuffto(int request, int argc)
 				LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_HELP("Usage:^3 sv_cmd stuffto client \"command\"");
-				LOG_HELP("  'client' is the entity number or name of the player,");
-				LOG_HELP("  and 'command' is the command to be sent to that player.");
+				LOG_HELP("Usage:^3 sv_cmd stuffto <client> \"<command>\"");
+				LOG_HELP("  <client> is the entity number or name of the player,");
+				LOG_HELP("  and <command> is the command to be sent to that player.");
 				return;
 			}
 		}
@@ -1506,7 +1538,7 @@ void GameCommand_trace(int request, int argc)
 					}
 				}
 
-					// no default case, just go straight to invalid
+				// no default case, just go straight to invalid
 			}
 		}
 
@@ -1514,10 +1546,10 @@ void GameCommand_trace(int request, int argc)
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd trace command [startpos endpos] [endpos_height]");
-			LOG_HELP("  Where startpos and endpos are parameters for 'walk' and 'showline' commands,");
-			LOG_HELP("  'endpos_height' is an optional parameter for 'walk' command,");
-			LOG_HELP("  Full list of commands here: \"debug, debug2, walk, showline.\"");
+			LOG_HELP("Usage:^3 sv_cmd trace <command> [<startpos> <endpos>] [<endpos_height>]");
+			LOG_HELP("  Where <startpos> and <endpos> are parameters for the 'walk' and 'showline' commands,");
+			LOG_HELP("  <endpos_height> is an optional parameter for the 'walk' command,");
+			LOG_HELP("  Full list of commands here: debug, debug2, walk, showline.");
 			LOG_HELP("See also: ^2bbox, gettaginfo^7");
 			return;
 		}
@@ -1582,9 +1614,9 @@ void GameCommand_warp(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd warp [level]");
-			LOG_HELP("  'level' is the level to change campaign mode to.");
-			LOG_HELP("  if 'level' is not provided it will change to the next level.");
+			LOG_HELP("Usage:^3 sv_cmd warp [<level>]");
+			LOG_HELP("  <level> is the level to change campaign mode to.");
+			LOG_HELP("  if <level> is not provided it will change to the next level.");
 			return;
 		}
 	}
@@ -1620,7 +1652,7 @@ void GameCommand_(int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
-SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
+SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
 SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
@@ -1643,6 +1675,7 @@ SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { G
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
+SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
@@ -1711,8 +1744,8 @@ void GameCommand(string command)
 			LOG_HELP("\nGeneric commands shared by all programs:");
 			GenericCommand_macro_help();
 
-			LOG_HELP("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are listed above.\n"
-				"For help about a specific command, type sv_cmd help COMMAND");
+			LOG_HELP("\nUsage:^3 sv_cmd <command>^7, where possible commands are listed above.\n"
+				"For help about a specific command, type sv_cmd help <command>");
 
 			return;
 		}

@@ -274,8 +274,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 //
 	if (this.delay)
 	{
-	// create a temp object to fire at a later time
-		entity t = new(DelayedUse);
+		// create a temp object to fire at a later time
+		entity t = new_pure(DelayedUse);
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
 		t.enemy = actor;

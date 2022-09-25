@@ -2,7 +2,6 @@
 
 #include <common/anim.qh>
 #include <common/animdecide.qh>
-#include <common/animdecide.qh>
 #include <common/csqcmodel_settings.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
@@ -13,6 +12,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/minigames/sv_minigames.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
@@ -229,8 +229,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	vector v;
-	float dh = max(GetResource(this, RES_HEALTH), 0);
-	float da = max(GetResource(this, RES_ARMOR), 0);
+	float initial_health = max(GetResource(this, RES_HEALTH), 0);
+	float initial_armor = max(GetResource(this, RES_ARMOR), 0);
 	float take = 0, save = 0;
 
 	if (damage)
@@ -244,8 +244,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 		}
 
-		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+		if (STAT(FROZEN, this))
+		{
+			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
+				damage = 0;
+		}
+		else if (StatusEffects_active(STATUSEFFECT_SpawnShield, this) && autocvar_g_spawnshield_blockdamage < 1)
+			damage *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
 		{
@@ -316,7 +321,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
-		if (save > 10 && (dh - take) > 0) // don't play armor sound if the attack is fatal
+		if (save > 10 && (initial_health - take) > 0) // don't play armor sound if the attack is fatal
 			sound (this, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
 			sound (this, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
@@ -329,7 +334,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	if (time >= this.spawnshieldtime || autocvar_g_spawnshield_blockdamage < 1)
+	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, this) || autocvar_g_spawnshield_blockdamage < 1)
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
@@ -339,7 +344,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > this.pain_finished)		//Don't switch pain sequences like crazy
+			if (time > this.pain_finished && !STAT(FROZEN, this)) // Don't switch pain sequences like crazy
 			{
 				this.pain_finished = time + 0.5;	//Supajoe
 
@@ -383,18 +388,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
-
-			float realdmg = damage - excess;
-			if (this != attacker && realdmg)
-			if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
-			{
-				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
-					GameRules_scoring_add(attacker, DMG, realdmg);
-				}
-				if (IS_PLAYER(this)) {
-					GameRules_scoring_add(this, DMGTAKEN, realdmg);
-				}
-			}
 		}
 		else
 			this.max_armorvalue += (save + take);
@@ -413,7 +406,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && this != attacker)
-	if(DIFF_TEAM(this, attacker))
+	if (DIFF_TEAM(this, attacker) && (!STAT(FROZEN, this) || this.freeze_time > time))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.(weaponentity).m_weapon;
@@ -422,19 +415,31 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResource(this, RES_HEALTH), 0);
-	da = da - max(GetResource(this, RES_ARMOR), 0);
+	float dh = initial_health - max(GetResource(this, RES_HEALTH), 0); // health difference
+	float da = initial_armor - max(GetResource(this, RES_ARMOR), 0); // armor difference
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
 
-	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
+	bool forbid_logging_damage = MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
+
+	if ((dh || da) && !forbid_logging_damage)
+	{
+		float realdmg = damage - excess;
+		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
+			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
+		{
+			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
+				GameRules_scoring_add(attacker, DMG, realdmg);
+			if (IS_PLAYER(this))
+				GameRules_scoring_add(this, DMGTAKEN, realdmg);
+		}
+	}
 
 	if (GetResource(this, RES_HEALTH) < 1)
 	{
-		float defer_ClientKill_Now_TeamChange;
-		defer_ClientKill_Now_TeamChange = false;
+		bool defer_ClientKill_Now_TeamChange = false;
 
 		if(this.alivetime)
 		{
@@ -554,7 +559,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// don't play teleportation sounds
 		this.teleportable = TELEPORT_SIMPLE;
 
-		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
+		STAT(AIR_FINISHED, this) = 0;
 
 		this.death_time = time;
 		if (random() < 0.5)

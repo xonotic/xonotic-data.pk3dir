@@ -24,11 +24,15 @@ const int IT_RESOURCE       			=  BIT(5); // bitflag to mark this item as a reso
 const int IT_KEY1						= BIT(6);
 const int IT_KEY2						= BIT(7);
 
+const int IT_BUFF						= BIT(8); // unused bit for buff items
+
 // special colorblend meaning in engine
-const int IT_INVISIBILITY 				= BIT(9);
-const int IT_INVINCIBLE 				= BIT(10);
+// legacy bitflags for powerups
+const int IT_INVISIBILITY				= BIT(9);
+const int IT_INVINCIBLE					= BIT(10);
 const int IT_SUPERWEAPON				= BIT(11); // suit
-const int IT_STRENGTH   				= BIT(12);
+const int IT_STRENGTH					= BIT(12);
+const int IT_SPEED						= BIT(13);
 
 // item masks
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
@@ -63,28 +67,25 @@ const int ITS_GLOW              = BIT(6);
 #ifdef SVQC
 .float strength_finished; // NOTE: this field is used only by map entities, it does not directly apply the strength stat
 .float invincible_finished; // ditto
+.float buffs_finished; // ditts
 
-#define spawnfunc_body(item) \
-	if (!Item_IsDefinitionAllowed(item)) \
+#define SPAWNFUNC_BODY(item) \
+	if (item && Item_IsDefinitionAllowed(item)) \
+		StartItem(this, item); \
+	else \
 	{ \
 		startitem_failed = true; \
 		delete(this); \
-		return; \
-	} \
-	StartItem(this, item)
+	}
 
 #define SPAWNFUNC_ITEM(name, item) \
 	spawnfunc(name) \
 	{ \
-		spawnfunc_body(item); \
+		SPAWNFUNC_BODY(item) \
 	}
 
 #define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
-	spawnfunc(name) \
-	{ \
-		entity item = (cond) ? item1 : item2; \
-		spawnfunc_body(item); \
-	}
+	SPAWNFUNC_ITEM(name, (cond ? item1 : item2))
 
 #else
 

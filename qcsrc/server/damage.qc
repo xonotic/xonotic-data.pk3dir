@@ -9,12 +9,15 @@
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <common/playerstats.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -29,7 +32,6 @@
 #include <server/items/items.qh>
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/scores.qh>
 #include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
@@ -93,10 +95,6 @@ string AppendItemcodes(string s, entity player)
 		if(w != 0 || slot == 0)
 			s = strcat(s, ftos(w));
 	}
-	if(time < STAT(STRENGTH_FINISHED, player))
-		s = strcat(s, "S");
-	if(time < STAT(INVINCIBLE_FINISHED, player))
-		s = strcat(s, "I");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
 	// TODO: include these codes as a flag on the item itself
@@ -283,7 +281,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					}
-
+					case DEATH_HURTTRIGGER:
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message, deathlocation, CS(targ).killcount, 0, 0);
+						break;
 					default:
 					{
 						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
@@ -413,7 +413,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			int f3 = 0;
 			if(deathtype == DEATH_BUFF.m_id)
-				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
+				f3 = buff_FirstFromFlags(attacker).m_id;
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
@@ -609,9 +609,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		SetResourceExplicit(targ, RES_ARMOR, 0);
-		targ.spawnshieldtime = 0;
-		SetResourceExplicit(targ, RES_HEALTH, 0.9); // this is < 1
+		if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
+		{
+			SetResourceExplicit(targ, RES_ARMOR, 0);
+			SetResourceExplicit(targ, RES_HEALTH, 0.9); // this is < 1
+		}
+		StatusEffects_remove(STATUSEFFECT_SpawnShield, targ, STATUSEFFECT_REMOVE_CLEAR);
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -625,12 +628,15 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(deathtype != DEATH_TELEFRAG.m_id)
 		if(IS_PLAYER(attacker))
 		{
-			if(IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			// avoid dealing damage or force to other independent players
+			// and avoid dealing damage or force to things owned by other independent players
+			if((IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ))) ||
+				(targ.realowner && IS_INDEPENDENT_PLAYER(targ.realowner) && attacker != targ.realowner))
 			{
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(SAME_TEAM(attacker, targ))
+			else if(!STAT(FROZEN, targ) && SAME_TEAM(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -760,34 +766,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			}
 		}
 
-		if(!MUTATOR_IS_ENABLED(mutator_instagib))
-		{
-			// apply strength multiplier
-			if (attacker.items & ITEM_Strength.m_itemid)
-			{
-				if(targ == attacker)
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-					force = force * autocvar_g_balance_powerup_strength_selfforce;
-				}
-				else
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_damage;
-					force = force * autocvar_g_balance_powerup_strength_force;
-				}
-			}
-
-			// apply invincibility multiplier
-			if (targ.items & ITEM_Shield.m_itemid)
-			{
-				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
-				if (targ != attacker)
-				{
-					force = force * autocvar_g_balance_powerup_invincible_takeforce;
-				}
-			}
-		}
-
 		if (targ == attacker)
 			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
@@ -806,7 +784,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim, attacker))
 			{
-				if(DIFF_TEAM(victim, attacker) && !STAT(FROZEN, victim))
+				if (DIFF_TEAM(victim, attacker))
 				{
 					if(damage > 0)
 					{
@@ -815,11 +793,10 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 							if(PHYS_INPUT_BUTTON_CHAT(victim))
 								attacker.typehitsound += 1;
 							else
-								attacker.damage_dealt += damage;
+								attacker.hitsound_damage_dealt += damage;
 						}
 
-						damage_goodhits += 1;
-						damage_gooddamage += damage;
+						impressive_hits += 1;
 
 						if (!DEATH_ISSPECIAL(deathtype))
 						{
@@ -829,11 +806,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if(IS_PLAYER(attacker))
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
 				{
-					// if enemy gets frozen in this frame and receives other damage don't
-					// play the typehitsound e.g. when hit by multiple bullets of the shotgun
-					if (deathtype != DEATH_FIRE.m_id && (!STAT(FROZEN, victim) || time > victim.freeze_time))
+					if (deathtype != DEATH_FIRE.m_id)
 					{
 						attacker.typehitsound += 1;
 					}
@@ -852,7 +827,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	// apply push
 	if (targ.damageforcescale)
 	if (force)
-	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
+	if (!IS_PLAYER(targ) || !StatusEffects_active(STATUSEFFECT_SpawnShield, targ) || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(targ.move_movetype == MOVETYPE_PHYSICS)
@@ -890,9 +865,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	}
 }
 
+// Returns total damage applies to creatures
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
-	// Returns total damage applies to creatures
 {
 	entity	targ;
 	vector	force;
@@ -908,6 +883,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		backtrace("RadiusDamage called recursively! Expect stuff to go HORRIBLY wrong.");
 		return 0;
 	}
+
+	if (rad < 0) rad = 0;
 
 	RadiusDamage_running = 1;
 
@@ -940,27 +917,25 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if (((cantbe != targ) && !mustbe) || (mustbe == targ))
 		if (targ.takedamage)
 		{
-			vector nearest;
-			vector diff;
-			float power;
+			// measure distance from nearest point on target (not origin)
+			// to nearest point on inflictor (not origin)
+			vector nearest = targ.WarpZone_findradius_nearest;
+			vector inflictornearest = NearestPointOnBoundingBox(
+				inflictororigin - (inflictor.maxs - inflictor.mins) * 0.5,
+				inflictororigin + (inflictor.maxs - inflictor.mins) * 0.5,
+				nearest);
+			vector diff = inflictornearest - nearest;
 
-			// LordHavoc: measure distance to nearest point on target (not origin)
-			// (this guarentees 100% damage on a touch impact)
-			nearest = targ.WarpZone_findradius_nearest;
-			diff = targ.WarpZone_findradius_dist;
 			// round up a little on the damage to ensure full damage on impacts
 			// and turn the distance into a fraction of the radius
-			power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
-			//bprint(" ");
-			//bprint(ftos(power));
-			//if (targ == attacker)
-			//	print(ftos(power), "\n");
-			if (power > 0)
+			float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
+			if (dist <= rad)
 			{
-				float finaldmg;
-				if (power > 1)
-					power = 1;
-				finaldmg = coredamage * power + edgedamage * (1 - power);
+				float power = 1;
+				if (rad > 0)
+					power -= (dist / rad);
+				// at this point power can't be < 0 or > 1
+				float finaldmg = coredamage * power + edgedamage * (1 - power);
 				if (finaldmg > 0)
 				{
 					float a;
@@ -1102,11 +1077,6 @@ bool Heal(entity targ, entity inflictor, float amount, float limit)
 	return healed;
 }
 
-float Fire_IsBurning(entity e)
-{
-	return (time < e.fire_endtime);
-}
-
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 {
 	float dps;
@@ -1117,23 +1087,14 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(IS_DEAD(e))
 			return -1;
 	}
-	else
-	{
-		if(!e.fire_burner)
-		{
-			// print("adding a fire burner to ", e.classname, "\n");
-			e.fire_burner = new(fireburner);
-			setthink(e.fire_burner, fireburner_think);
-			e.fire_burner.nextthink = time;
-			e.fire_burner.owner = e;
-		}
-	}
 
 	t = max(t, 0.1);
 	dps = d / t;
-	if(Fire_IsBurning(e))
+	if(StatusEffects_active(STATUSEFFECT_Burning, e))
 	{
-		mintime = e.fire_endtime - time;
+		float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
+
+		mintime = fireendtime - time;
 		maxtime = max(mintime, t);
 
 		mindps = e.fire_damagepersec;
@@ -1196,7 +1157,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
 
 			e.fire_damagepersec = totaldamage / totaltime;
-			e.fire_endtime = time + totaltime;
+			StatusEffects_apply(STATUSEFFECT_Burning, e, time + totaltime, 0);
 			if(totaldamage > 1.2 * mindamage)
 			{
 				e.fire_deathtype = dt;
@@ -1216,7 +1177,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	else
 	{
 		e.fire_damagepersec = dps;
-		e.fire_endtime = time + t;
+		StatusEffects_apply(STATUSEFFECT_Burning, e, time + t, 0);
 		e.fire_deathtype = dt;
 		e.fire_owner = o;
 		e.fire_hitsound = false;
@@ -1231,31 +1192,20 @@ void Fire_ApplyDamage(entity e)
 	float t, d, hi, ty;
 	entity o;
 
-	if (!Fire_IsBurning(e))
-		return;
-
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
 	if(IS_NOT_A_CLIENT(o))
 		o = e.fire_owner;
 
-	// water and slime stop fire
-	if(e.waterlevel)
-	if(e.watertype != CONTENT_LAVA)
-		e.fire_endtime = 0;
-
-	// ice stops fire
-	if(STAT(FROZEN, e))
-		e.fire_endtime = 0;
-
-	t = min(frametime, e.fire_endtime - time);
+	float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
+	t = min(frametime, fireendtime - time);
 	d = e.fire_damagepersec * t;
 
-	hi = e.fire_owner.damage_dealt;
+	hi = e.fire_owner.hitsound_damage_dealt;
 	ty = e.fire_owner.typehitsound;
 	Damage(e, e, e.fire_owner, d, e.fire_deathtype, DMG_NOWEP, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
-		e.fire_owner.damage_dealt = hi;
+		e.fire_owner.hitsound_damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = true;
@@ -1267,37 +1217,10 @@ void Fire_ApplyDamage(entity e)
 			if(!IS_DEAD(it) && it.takedamage && !IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
 			{
-				t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
+				t = autocvar_g_balance_firetransfer_time * (fireendtime - time);
 				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
 				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
 			}
 		});
 	}
-}
-
-void Fire_ApplyEffect(entity e)
-{
-	if(Fire_IsBurning(e))
-		e.effects |= EF_FLAME;
-	else
-		e.effects &= ~EF_FLAME;
-}
-
-void fireburner_think(entity this)
-{
-	// for players, this is done in the regular loop
-	if(wasfreed(this.owner))
-	{
-		delete(this);
-		return;
-	}
-	Fire_ApplyEffect(this.owner);
-	if(!Fire_IsBurning(this.owner))
-	{
-		this.owner.fire_burner = NULL;
-		delete(this);
-		return;
-	}
-	Fire_ApplyDamage(this.owner);
-	this.nextthink = time;
 }

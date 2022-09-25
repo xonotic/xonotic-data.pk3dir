@@ -15,7 +15,20 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 
 	// 1. dist damage
 	d = (GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR));
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+
+	RadiusDamage(
+		this,
+		this.realowner,
+		WEP_CVAR_PRI(fireball, damage),
+		WEP_CVAR_PRI(fireball, edgedamage),
+		WEP_CVAR_PRI(fireball, radius),
+		NULL,
+		NULL,
+		WEP_CVAR_PRI(fireball, force),
+		this.projectiledeathtype,
+		this.weaponentity_fld, directhitentity
+	);
+
 	if(GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR) >= d)
 	if(!this.cnt)
 	{
@@ -24,28 +37,42 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 		// 2. bfg effect
 		// NOTE: this cannot be made warpzone aware by design. So, better intentionally ignore warpzones here.
 		for(e = findradius(this.origin, WEP_CVAR_PRI(fireball, bfgradius)); e; e = e.chain)
-		if(e != this.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
 		{
-			// can we see fireball?
-			traceline(e.origin + e.view_ofs, this.origin, MOVE_NORMAL, e);
-			if(/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
-				continue;
-			// can we see player who shot fireball?
-			traceline(e.origin + e.view_ofs, this.realowner.origin + this.realowner.view_ofs, MOVE_NORMAL, e);
-			if(trace_ent != this.realowner)
-			if(/* trace_startsolid || */ trace_fraction != 1)
-				continue;
-			dist = vlen(this.origin - e.origin - e.view_ofs);
-			points = (1 - sqrt(dist / WEP_CVAR_PRI(fireball, bfgradius)));
-			if(points <= 0)
-				continue;
-			dir = normalize(e.origin + e.view_ofs - this.origin);
+			if(e != this.realowner && e.takedamage == DAMAGE_AIM && !IS_INDEPENDENT_PLAYER(e))
+			if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
+			{
 
-			if(accuracy_isgooddamage(this.realowner, e))
-				accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+				// can we see fireball?
+				traceline(e.origin + e.view_ofs, this.origin, MOVE_NORMAL, e);
+				if(/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
+					continue;
+				// can we see player who shot fireball?
+				traceline(e.origin + e.view_ofs, this.realowner.origin + this.realowner.view_ofs, MOVE_NORMAL, e);
+				if(trace_ent != this.realowner)
+				if(/* trace_startsolid || */ trace_fraction != 1)
+					continue;
+				dist = vlen(this.origin - e.origin - e.view_ofs);
+				points = (1 - sqrt(dist / WEP_CVAR_PRI(fireball, bfgradius)));
+				if(points <= 0)
+					continue;
+				dir = normalize(e.origin + e.view_ofs - this.origin);
 
-			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
-			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
+				if(accuracy_isgooddamage(this.realowner, e))
+					accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+
+				Damage(
+					e,
+					this,
+					this.realowner,
+					WEP_CVAR_PRI(fireball, bfgdamage) * points,
+					this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH,
+					this.weaponentity_fld,
+					e.origin + e.view_ofs,
+					WEP_CVAR_PRI(fireball, bfgforce) * dir
+				);
+
+				Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
+			}
 		}
 	}
 
@@ -79,8 +106,13 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
-	if(e != this.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
 	{
+		if(STAT(FROZEN, e)) continue;
+		if(e == this.realowner) continue;
+		if(IS_INDEPENDENT_PLAYER(e)) continue;
+		if(e.takedamage != DAMAGE_AIM) continue;
+		if(IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)) continue;
+
 		p = e.origin;
 		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
 		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
@@ -89,7 +121,7 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 		if(d < dist)
 		{
 			e.fireball_impactvec = p;
-			RandomSelection_AddEnt(e, 1 / (1 + d), !Fire_IsBurning(e));
+			RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
 		}
 	}
 	if(RandomSelection_chosen_ent)

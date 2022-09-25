@@ -26,6 +26,7 @@
 #include <common/mutators/mutator/overkill/_mod.qh>
 #include <common/mutators/mutator/physical_items/_mod.qh>
 #include <common/mutators/mutator/pinata/_mod.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/random_gravity/_mod.qh>
 #include <common/mutators/mutator/random_items/_mod.qh>
 #include <common/mutators/mutator/rocketflying/_mod.qh>
@@ -34,6 +35,7 @@
 #include <common/mutators/mutator/sandbox/_mod.qh>
 #include <common/mutators/mutator/spawn_near_teammate/_mod.qh>
 #include <common/mutators/mutator/stale_move_negation/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/superspec/_mod.qh>
 #include <common/mutators/mutator/touchexplode/_mod.qh>
 #include <common/mutators/mutator/vampire/_mod.qh>

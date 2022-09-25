@@ -2,9 +2,9 @@
 
 #include "commandbutton.qh"
 CLASS(XonoticBigCommandButton, XonoticCommandButton)
-	METHOD(XonoticBigCommandButton, configureXonoticBigCommandButton, void(entity, string, vector, string, float, string));
+	METHOD(XonoticBigCommandButton, configureXonoticBigCommandButton, void(entity, string, vector, string, int, string));
 	ATTRIB(XonoticBigCommandButton, image, string, SKINGFX_BUTTON_BIG);
 	ATTRIB(XonoticBigCommandButton, grayImage, string, SKINGFX_BUTTON_BIG_GRAY);
 ENDCLASS(XonoticBigCommandButton)
-entity makeXonoticBigCommandButton_T(string theText, vector theColor, string theCommand, float closesMenu, string theTooltip);
-entity makeXonoticBigCommandButton(string theText, vector theColor, string theCommand, float closesMenu);
+entity makeXonoticBigCommandButton_T(string theText, vector theColor, string theCommand, int theFlags, string theTooltip);
+entity makeXonoticBigCommandButton(string theText, vector theColor, string theCommand, int theFlags);

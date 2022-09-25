@@ -6,30 +6,24 @@
 // Nexball HUD mod icon
 void HUD_Mod_NexBall(vector pos, vector mySize)
 {
-	float nb_pb_starttime, dt, p;
-	int stat_items;
+	int stat_items = STAT(OBJECTIVE_STATUS);
+	float nb_pb_starttime = STAT(NB_METERSTART);
 
-	stat_items = STAT(ITEMS);
-	nb_pb_starttime = STAT(NB_METERSTART);
-
-	if (stat_items & IT_KEY1)
-		mod_active = 1;
-	else
-		mod_active = 0;
+	mod_active = (stat_items & NB_CARRYING);
 
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
 	{
-		dt = (time - nb_pb_starttime) % nb_pb_period;
+		float dt = (time - nb_pb_starttime) % nb_pb_period;
 		// one period of positive triangle
-		p = 2 * dt / nb_pb_period;
+		float p = 2 * dt / nb_pb_period;
 		if (p > 1)
 			p = 2 - p;
 
 		HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", p, (mySize.x <= mySize.y), 0, autocvar_hud_progressbar_nexball_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	if (stat_items & IT_KEY1)
+	if (stat_items & NB_CARRYING)
 		drawpic_aspect_skin(pos, "nexball_carrying", eX * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
@@ -47,4 +41,9 @@ MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardAccuracy)
 {
 	return ISGAMETYPE(NEXBALL); // accuracy is not a factor in this gamemode
+}
+
+MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardItemStats)
+{
+	return ISGAMETYPE(NEXBALL); // hide the item stats panel
 }

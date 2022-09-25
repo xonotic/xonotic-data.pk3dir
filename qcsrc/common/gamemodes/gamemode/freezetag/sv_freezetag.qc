@@ -1,7 +1,7 @@
 #include "sv_freezetag.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <server/elimination.qh>
-#include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
@@ -9,6 +9,15 @@ float autocvar_g_freezetag_round_timelimit;
 //int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
+
+float autocvar_g_ft_start_health = 100;
+float autocvar_g_ft_start_armor = 100;
+float autocvar_g_ft_start_ammo_shells = 60;
+float autocvar_g_ft_start_ammo_nails = 320;
+float autocvar_g_ft_start_ammo_rockets = 160;
+float autocvar_g_ft_start_ammo_cells = 180;
+float autocvar_g_ft_start_ammo_plasma = 180;
+float autocvar_g_ft_start_ammo_fuel = 0;
 
 void freezetag_count_alive_players()
 {
@@ -31,14 +40,10 @@ void freezetag_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
-			1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 
 	eliminatedPlayers.SendFlags |= 1;
@@ -78,31 +83,6 @@ bool freezetag_CheckTeams()
 	return false;
 }
 
-int freezetag_getWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no player left
-}
-
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
@@ -114,6 +94,7 @@ bool freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
+			it.freezetag_revive_time = 0;
 			nades_Clear(it);
 		});
 		game_stopped = true;
@@ -121,12 +102,10 @@ bool freezetag_CheckWinner()
 		return true;
 	}
 
-	if (Team_GetNumberOfAliveTeams() > 1)
-	{
+	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
 		return false;
-	}
 
-	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
@@ -141,6 +120,7 @@ bool freezetag_CheckWinner()
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.freezetag_frozen_timeout = 0;
+		it.freezetag_revive_time = 0;
 		nades_Clear(it);
 	});
 
@@ -179,7 +159,7 @@ void freezetag_Add_Score(entity targ, entity attacker)
 {
 	if(attacker == targ)
 	{
-		// you froze your own dumb targ
+		// you froze your own dumb self
 		// counted as "suicide" already
 		GameRules_scoring_add(targ, SCORE, -1);
 	}
@@ -199,7 +179,8 @@ void freezetag_Freeze(entity targ, entity attacker)
 	if(STAT(FROZEN, targ))
 		return;
 
-	if(autocvar_g_freezetag_frozen_maxtime > 0)
+	targ.freezetag_frozen_time = time;
+	if (autocvar_g_freezetag_revive_auto && autocvar_g_freezetag_frozen_maxtime > 0)
 		targ.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
 	Freeze(targ, 0, FROZEN_NORMAL, true);
@@ -381,10 +362,18 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_Add_Score(frag_target, frag_attacker);
 			freezetag_count_alive_players();
 			freezetag_LastPlayerForTeam_Notify(frag_target);
+			frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		}
 		else
+		{
+			float t = frag_target.freezetag_frozen_timeout;
+			float t2 = frag_target.freezetag_frozen_time;
 			Unfreeze(frag_target, false); // remove ice
-		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
+			// keep timeout value so it can be restored when player will be refrozen on respawn
+			// NOTE this can't be exactly -2 since game starts from time 2
+			frag_target.freezetag_frozen_timeout = -t;
+			frag_target.freezetag_frozen_time = t2;
+		}
 		return true;
 	}
 
@@ -415,9 +404,16 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return true; // do nothing, round is starting right now
 
-	if(player.freezetag_frozen_timeout == -2) // player was dead
+	if(player.freezetag_frozen_timeout <= -2) // player was dead
 	{
+		float t = player.freezetag_frozen_timeout;
+		float t2 = player.freezetag_frozen_time;
 		freezetag_Freeze(player, NULL);
+		if (t < -2)
+		{
+			player.freezetag_frozen_timeout = -t;
+			player.freezetag_frozen_time = t2;
+		}
 		return true;
 	}
 
@@ -437,6 +433,7 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		CS(it).killcount = 0;
+		it.freezetag_revive_time = 0;
 		it.freezetag_frozen_timeout = -1;
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
@@ -458,13 +455,49 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 	targ.freezetag_frozen_timeout = 0;
 }
 
-#ifdef IS_REVIVING
-	#undef IS_REVIVING
+MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	//float frag_deathtype = M_ARGV(3, float);
+	//float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
+	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto_reducible
+		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto)
+	{
+		float t = 0;
+		if ((autocvar_g_freezetag_revive_auto_reducible < 0 || DIFF_TEAM(frag_attacker, frag_target))
+			&& frag_target.freezetag_frozen_timeout > time)
+		{
+			if (fabs(autocvar_g_freezetag_revive_auto_reducible) == 1)
+			{
+				float maxforce = autocvar_g_freezetag_revive_auto_reducible_maxforce;
+				t = vlen(frag_force);
+				// limit hit force considered at once, e.g when you have the Strength
+				// powerup but also with weapons that fire multiple projectiles at once (crylink)
+				if (frag_target.freezetag_frozen_force + t > maxforce)
+				{
+					t = max(0, maxforce - frag_target.freezetag_frozen_force);
+					frag_target.freezetag_frozen_force = maxforce;
+				}
+				else
+					frag_target.freezetag_frozen_force += t;
+				t *= autocvar_g_freezetag_revive_auto_reducible_forcefactor;
+			}
+			frag_target.freezetag_frozen_timeout -= t;
+			if (frag_target.freezetag_frozen_timeout < time)
+				frag_target.freezetag_frozen_timeout = time;
+		}
+	}
+}
+
+#ifdef IN_REVIVING_RANGE
+	#undef IN_REVIVING_RANGE
 #endif
 
-// returns true if player is reviving it
-#define IS_REVIVING(player, it, revive_extra_size) \
-	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+#define IN_REVIVING_RANGE(player, it, revive_extra_size) \
+	(it != player && !IS_DEAD(it) && SAME_TEAM(it, player) \
 	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
@@ -481,73 +514,157 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
+	player.freezetag_frozen_force = 0;
+
 	if (!(frametime && IS_PLAYER(player)))
 		return true;
 
-	entity reviving_players_last = NULL;
-	entity reviving_players_first = NULL;
+	entity revivers_last = NULL;
+	entity revivers_first = NULL;
 
+	bool player_is_reviving = false;
 	int n = 0;
 	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-		if (reviving_players_last)
-			reviving_players_last.chain = it;
-		reviving_players_last = it;
-		if (!reviving_players_first)
-			reviving_players_first = it;
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		// check if player is reviving anyone
+		if (STAT(FROZEN, it) == FROZEN_NORMAL)
+		{
+			if ((STAT(FROZEN, player) == FROZEN_NORMAL))
+				continue;
+			if (!IN_REVIVING_RANGE(player, it, revive_extra_size))
+				continue;
+			player_is_reviving = true;
+			break;
+		}
+
+		if (!(STAT(FROZEN, player) == FROZEN_NORMAL))
+			continue; // both player and it are NOT frozen
+		if (!IN_REVIVING_RANGE(player, it, revive_extra_size))
+			continue;
+
+		// found a teammate that is reviving player
+		if (autocvar_g_freezetag_revive_time_to_score > 0 && STAT(FROZEN, player) == FROZEN_NORMAL)
+		{
+			it.freezetag_revive_time += frametime / autocvar_g_freezetag_revive_time_to_score;
+			while (it.freezetag_revive_time > 1)
+			{
+				GameRules_scoring_add(it, SCORE, +1);
+				it.freezetag_revive_time -= 1;
+			}
+		}
+		if (revivers_last)
+			revivers_last.chain = it;
+		revivers_last = it;
+		if (!revivers_first)
+			revivers_first = it;
 		++n;
 	});
-	if (reviving_players_last)
-		reviving_players_last.chain = NULL;
+	if (revivers_last)
+		revivers_last.chain = NULL;
 
 	// allow normal revival during automatic revival
-	// (not allowing it IS_REVIVING should check freezetag_frozen_timeout too)
+	// (if we wouldn't allow it then freezetag_frozen_timeout should be checked too in the previous loop)
+	//if (STAT(FROZEN, player) == FROZEN_NORMAL) // redundant check
 	if (!n && player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 
+	float base_progress = 0;
+	if  (STAT(FROZEN, player) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto
+		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto_progress)
+	{
+		// NOTE if auto-revival is in progress, manual revive speed is reduced so that it always takes the same amount of time
+		base_progress = bound(0, (1 - (player.freezetag_frozen_timeout - time) / autocvar_g_freezetag_frozen_maxtime), 1);
+	}
+
 	if (!n) // no teammate nearby
 	{
+		float clearspeed = autocvar_g_freezetag_revive_clearspeed;
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
-			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+			if (autocvar_g_freezetag_revive_time_to_score > 0)
+			{
+				if (STAT(REVIVE_PROGRESS, player) > base_progress)
+				{
+					// reduce auto-revival time based on manual revival progress
+					base_progress = STAT(REVIVE_PROGRESS, player);
+					player.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime * (1 - STAT(REVIVE_PROGRESS, player));
+				}
+				// don't clear revive progress, it would allow stacking points
+				// by entering and exiting the revival zone many times
+				STAT(REVIVE_PROGRESS, player) = base_progress;
+			}
+			else
+				STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * clearspeed * (1 - base_progress), 1);
 		}
-		else if (!STAT(FROZEN, player))
-			STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
+		else if (!STAT(FROZEN, player) && !player_is_reviving)
+			STAT(REVIVE_PROGRESS, player) = base_progress; // thawing nobody
 	}
 	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
-		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+		float spd = autocvar_g_freezetag_revive_speed_t2s;
+		if (autocvar_g_freezetag_revive_time_to_score <= 0)
+			spd = autocvar_g_freezetag_revive_speed * (1 - base_progress);
+		STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, spd), 1);
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
+			float frozen_time = time - player.freezetag_frozen_time;
 			Unfreeze(player, false);
+			SetResourceExplicit(player, RES_HEALTH, ((warmup_stage) ? warmup_start_health : start_health));
+			player.spawnshieldtime = time + autocvar_g_freezetag_revive_spawnshield;
 			freezetag_count_alive_players();
 
 			if(n == -1)
 			{
-				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freezetag_frozen_maxtime);
+				if(autocvar_sv_eventlog)
+					GameLogEcho(strcat(":ft:autorevival:", ftos(player.playerid)));
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, frozen_time);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, frozen_time);
 				return true;
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			for(entity it = reviving_players_first; it; it = it.chain)
+			for(entity it = revivers_first; it; it = it.chain)
 			{
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
-				GameRules_scoring_add(it, SCORE, +1);
+				if (autocvar_g_freezetag_revive_time_to_score <= 0)
+					GameRules_scoring_add(it, SCORE, +1);
 				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
 			}
 
-			entity first = reviving_players_first;
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
-			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, revivers_first.netname);
+			Send_Notification(NOTIF_ONE, revivers_first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, revivers_first.netname);
+			if(autocvar_sv_eventlog)
+			{
+				string revivers = "";
+				for(entity it = revivers_first; it; it = it.chain)
+					revivers = strcat(revivers, ftos(it.playerid), ",");
+				revivers = substring(revivers, 0, strlen(revivers) - 1);
+				GameLogEcho(strcat(":ft:revival:", ftos(player.playerid), ":", revivers));
+			}
 		}
 
-		for(entity it = reviving_players_first; it; it = it.chain)
+		for(entity it = revivers_first; it; it = it.chain)
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
+	}
+
+	if (STAT(FROZEN, player) == FROZEN_NORMAL)
+	{
+		entity player_wp = player.waypointsprite_attached;
+		if (n > 0 || (n == 0 && STAT(REVIVE_PROGRESS, player) > 0.95))
+		{
+			WaypointSprite_UpdateSprites(player_wp, WP_Reviving, WP_Null, WP_Null);
+			WaypointSprite_UpdateTeamRadar(player_wp, RADARICON_WAYPOINT, WP_REVIVING_COLOR);
+		}
+		else
+		{
+			WaypointSprite_UpdateSprites(player_wp, WP_Frozen, WP_Null, WP_Null);
+			WaypointSprite_UpdateTeamRadar(player_wp, RADARICON_WAYPOINT, WP_FROZEN_COLOR);
+		}
+
+		WaypointSprite_UpdateMaxHealth(player_wp, 1);
+		WaypointSprite_UpdateHealth(player_wp, STAT(REVIVE_PROGRESS, player));
 	}
 
 	return true;
@@ -556,14 +673,17 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
 	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
-	//start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
+	start_health       = warmup_start_health       = autocvar_g_ft_start_health;
+	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_ft_start_armor;
+	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_ft_start_ammo_shells;
+	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ft_start_ammo_nails;
+	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
+	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ft_start_ammo_plasma;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
@@ -636,7 +756,7 @@ void freezetag_Initialize()
 		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
 
 	freezetag_teams = BITS(bound(2, freezetag_teams, 4));
-	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, 0, {
 		field_team(ST_FT_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 		field(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	});

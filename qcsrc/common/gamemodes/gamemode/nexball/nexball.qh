@@ -31,3 +31,7 @@ CLASS(NexBall, Gametype)
 ENDCLASS(NexBall)
 REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
 #define g_nexball IS_GAMETYPE(NEXBALL)
+
+#ifdef GAMEQC
+const int NB_CARRYING = BIT(0);
+#endif

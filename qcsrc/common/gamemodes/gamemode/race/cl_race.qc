@@ -31,10 +31,10 @@ int race_CheckName(string net_name)
 void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, vector textSize, float f)
 {
 	drawstring_aspect(pos, text, textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring_aspect(pos + timeText_ofs, TIME_ENCODED_TOSTRING(theTime), textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + timeText_ofs, TIME_ENCODED_TOSTRING(theTime, false), textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	if (f < 1) {
 		drawstring_aspect_expanding(pos, text, textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(pos + timeText_ofs, TIME_ENCODED_TOSTRING(theTime), textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + timeText_ofs, TIME_ENCODED_TOSTRING(theTime, false), textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 }
 
@@ -164,6 +164,11 @@ MUTATOR_HOOKFUNCTION(cl_race, HUD_StrafeHUD_showoptional)
 MUTATOR_HOOKFUNCTION(cl_race, HUD_Score_show)
 {
 	return spectatee_status == -1 && ISGAMETYPE(RACE); // hide the score panel while observing
+}
+
+MUTATOR_HOOKFUNCTION(cl_race, DrawScoreboardItemStats)
+{
+	return ISGAMETYPE(RACE); // hide the item stats panel
 }
 
 MUTATOR_HOOKFUNCTION(cl_race, ShowRankings)

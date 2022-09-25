@@ -512,9 +512,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
-	if(bInputType == 2)
-		return false;
-
 	if(!autocvar__hud_configure)
 		return false;
 
@@ -525,6 +522,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
 	// block any input while a menu dialog is fading
 	// don't block mousepos read as it leads to cursor jumps in the interaction with the menu
 	if(autocvar__menu_alpha)
@@ -534,32 +537,26 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
-	if(bInputType == 0) {
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
+	if(key_pressed) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
-	else if(bInputType == 1) {
+	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 
 	if(nPrimary == K_CTRL)
 	{
-		if (bInputType == 1) //ctrl has been released
+		if (!key_pressed) //ctrl has been released
 		{
 			if (tab_panel)
 			{
@@ -573,37 +570,23 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 	}
 
-	if(nPrimary == K_MOUSE1)
+	if(nPrimary == K_ESCAPE)
 	{
-		if(bInputType == 0) // key pressed
-			mouseClicked |= S_MOUSE1;
-		else if(bInputType == 1) // key released
-			mouseClicked -= (mouseClicked & S_MOUSE1);
-	}
-	else if(nPrimary == K_MOUSE2)
-	{
-		if(bInputType == 0) // key pressed
-			mouseClicked |= S_MOUSE2;
-		else if(bInputType == 1) // key released
-			mouseClicked -= (mouseClicked & S_MOUSE2);
-	}
-	else if(nPrimary == K_ESCAPE)
-	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		hud_configure_menu_open = 1;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 			return true;
 		if (!hud_configure_menu_open)
 			HUD_Configure_Exit_Force();
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		// FIXME minor bug: if a panel is highlighted, has the same pos_x and
@@ -636,7 +619,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		vector candidate_pos = '0 0 0';
 		const float LEVELS_NUM = 4;
 		float level_height = vid_conheight / LEVELS_NUM;
-LABEL(find_tab_panel)
+		LABEL(find_tab_panel)
 		level = floor(tab_panel_pos.y / level_height) * level_height; //starting level
 		candidate_pos.x = (!tab_backward) ? vid_conwidth : 0;
 		start_posX = tab_panel_pos.x;
@@ -644,7 +627,7 @@ LABEL(find_tab_panel)
 		k=0;
 		while(++k)
 		{
-			for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
+			for(int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			{
 				panel = REGISTRY_GET(hud_panels, i);
 				if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
@@ -692,7 +675,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == K_SPACE && hudShiftState & S_CTRL) // enable/disable highlighted panel or dock
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (highlightedPanel)
@@ -705,7 +688,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'c' && hudShiftState & S_CTRL) // copy highlighted panel size
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (highlightedPanel)
@@ -717,7 +700,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'v' && hudShiftState & S_CTRL) // past copied size on the highlighted panel
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 
 		if (panel_size_copied == '0 0 0' || !highlightedPanel)
@@ -746,7 +729,7 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 		//restore previous values
 		if (highlightedPanel_backup)
@@ -760,13 +743,13 @@ LABEL(find_tab_panel)
 	}
 	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
 	{
-		if (bInputType == 1 || mouseClicked)
+		if (!key_pressed || mouseClicked)
 			return true;
 		localcmd("hud save myconfig\n");
 	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
-		if (bInputType == 1)
+		if (!key_pressed)
 		{
 			pressed_key_time = 0;
 			return true;
@@ -784,8 +767,19 @@ LABEL(find_tab_panel)
 		if (highlightedPanel)
 			HUD_Panel_EnableMenu();
 	}
-	else if(hit_con_bind || nPrimary == K_PAUSE)
+	else if(nPrimary == K_PAUSE)
 		return false;
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
+	{
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+	}
 
 	return true;
 }

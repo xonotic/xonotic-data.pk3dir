@@ -2,7 +2,7 @@
 
 CLASS(MachineGun, Weapon)
 /* spawnfunc */ ATTRIB(MachineGun, m_canonical_spawnfunc, string, "weapon_machinegun");
-/* ammotype  */ ATTRIB(MachineGun, ammo_type, int, RES_BULLETS);
+/* ammotype  */ ATTRIB(MachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);

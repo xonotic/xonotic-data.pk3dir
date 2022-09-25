@@ -117,6 +117,10 @@ void UpdateCSQCProjectileAfterTeleport(entity e)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
+		// send full data as the projectile may need resetting
+		// this is a workaround for client-side projectiles erroneously calling their SUB_Stop touch function occasionally
+		// when passing through a warpzone
+		e.SendFlags |= 2;
 		// mark as teleported
 		e.SendFlags |= 0x08;
 	}

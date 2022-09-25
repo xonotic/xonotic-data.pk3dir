@@ -27,13 +27,23 @@ REGISTER_MUTATOR(ft, false)
 	return 0;
 }
 
+.float freezetag_revive_time;
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
+.float freezetag_frozen_force;
 const float ICE_MAX_ALPHA = 1;
 const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;
 
+bool autocvar_g_freezetag_revive_auto = 1;
+int autocvar_g_freezetag_revive_auto_progress = 1;
+int autocvar_g_freezetag_revive_auto_reducible;
+float autocvar_g_freezetag_revive_auto_reducible_forcefactor = 0.01;
+float autocvar_g_freezetag_revive_auto_reducible_maxforce;
 float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
+float autocvar_g_freezetag_revive_speed_t2s = 0.25;
+float autocvar_g_freezetag_revive_time_to_score = 1.5;
 bool autocvar_g_freezetag_revive_nade;
 float autocvar_g_freezetag_revive_nade_health;
+float autocvar_g_freezetag_revive_spawnshield = 1;

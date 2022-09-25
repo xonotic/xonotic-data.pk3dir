@@ -22,6 +22,8 @@ PROPERTY(float, g_pickup_respawntimejitter_powerup)
 CLASS(Pickup, GameItem)
 #ifdef GAMEQC
     ATTRIB(Pickup, m_model, Model);
+    ATTRIB(Pickup, m_skin, int);
+    ATTRIB(Pickup, m_color, vector);
     ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP);
 #endif
     ATTRIB(Pickup, netname, string);

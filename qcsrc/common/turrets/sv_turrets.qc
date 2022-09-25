@@ -1245,9 +1245,9 @@ void turret_initparams(entity tur)
 	#undef TRY
 }
 
-bool turret_closetotarget(entity this, vector targ)
+bool turret_closetotarget(entity this, vector targ, float range)
 {
-	vector path_extra_size = '64 64 64';
+	vector path_extra_size = '1 1 1' * range;
 	return boxesoverlap(targ - path_extra_size, targ + path_extra_size, this.absmin - path_extra_size, this.absmax + path_extra_size);
 }
 
@@ -1256,7 +1256,7 @@ void turret_findtarget(entity this)
 	entity e = find(NULL, classname, "turret_manager");
 	if(!e)
 	{
-		e = new(turret_manager);
+		e = new_pure(turret_manager);
 		setthink(e, turrets_manager_think);
 		e.nextthink = time + 2;
 	}

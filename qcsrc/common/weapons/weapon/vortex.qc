@@ -63,7 +63,7 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 
 	if(!MUTATOR_CALLHOOK(Particles_VortexBeam, shotorg, endpos))
 	{
-		if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
+		if(autocvar_cl_particles_oldvortexbeam)
 			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 		else
 			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
@@ -138,18 +138,18 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	}
 
 	yoda = 0;
-	damage_goodhits = 0;
+	impressive_hits = 0;
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, false, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(damage_goodhits && actor.vortex_lasthit)
+	if(impressive_hits && actor.vortex_lasthit)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
-		damage_goodhits = 0; // only every second time
+		impressive_hits = 0; // only every second time
 	}
 
-	actor.vortex_lasthit = damage_goodhits;
+	actor.vortex_lasthit = impressive_hits;
 
 	//beam done on client
 	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -164,7 +164,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
 {
     if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
-        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt / W_TICSPERFRAME);
+        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt);
 }
 
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
@@ -180,7 +180,7 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(!WEP_CVAR(vortex, charge_always))
-        W_Vortex_Charge(actor, weaponentity, frametime);
+        W_Vortex_Charge(actor, weaponentity, frametime / W_TICSPERFRAME);
 
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)

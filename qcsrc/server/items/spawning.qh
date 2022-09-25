@@ -12,6 +12,12 @@ bool startitem_failed;
 /// found.
 entity Item_FindDefinition(string class_name);
 
+/// \brief Returns the item definition corresponding to the given internal name.
+/// \param[in] item_name Internal netname to search for.
+/// \return Item definition corresponding to the given internal name or NULL is not
+/// found.
+entity Item_DefinitionFromInternalName(string item_name);
+
 /// \brief Checks whether the items with the specified class name are allowed to
 /// spawn.
 /// \param[in] class_name Item class name to check.

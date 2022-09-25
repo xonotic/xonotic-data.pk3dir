@@ -8,6 +8,7 @@ CLASS(Bumblebee, Vehicle)
 /* maxs       */ ATTRIB(Bumblebee, m_maxs, vector, '230 130 130');
 /* view offset*/ ATTRIB(Bumblebee, view_ofs, vector, '0 0 300');
 /* view dist  */ ATTRIB(Bumblebee, height, float, 450);
+#ifdef GAMEQC
 /* model	  */ ATTRIB(Bumblebee, mdl, string, "models/vehicles/bumblebee_body.dpm");
 /* model	  */ ATTRIB(Bumblebee, model, string, "models/vehicles/bumblebee_body.dpm");
 /* head_model */ ATTRIB(Bumblebee, head_model, string, "");
@@ -15,6 +16,7 @@ CLASS(Bumblebee, Vehicle)
 /* tags       */ ATTRIB(Bumblebee, tag_head, string, "");
 /* tags       */ ATTRIB(Bumblebee, tag_hud, string, "");
 /* tags       */ ATTRIB(Bumblebee, tag_view, string, "tag_viewport");
+#endif
 /* netname    */ ATTRIB(Bumblebee, netname, string, "bumblebee");
 /* fullname   */ ATTRIB(Bumblebee, vehicle_name, string, _("Bumblebee"));
 /* icon       */ ATTRIB(Bumblebee, m_icon, string, "vehicle_bumble");

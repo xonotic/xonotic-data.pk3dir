@@ -127,7 +127,7 @@ void HUD_Weapons()
 	int weapon_count, weapon_id;
 	int row, column, rows = 0, columns = 0;
 	bool vertical_order = true;
-	float aspect = autocvar_hud_panel_weapons_aspect;
+	float aspect = max(0.001, autocvar_hud_panel_weapons_aspect);
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
@@ -581,6 +581,7 @@ void HUD_Weapons()
 
 				if(a > 0)
 				{
+					// TODO: registry handles
 					switch (it.ammo_type)
 					{
 						case RES_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;

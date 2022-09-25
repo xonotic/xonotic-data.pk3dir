@@ -1,7 +1,18 @@
 #include "sv_clanarena.qh"
 
-float autocvar_g_ca_damage2score_multiplier;
+float autocvar_g_ca_damage2score = 100;
 bool autocvar_g_ca_spectate_enemies;
+
+float autocvar_g_ca_start_health = 200;
+float autocvar_g_ca_start_armor = 200;
+float autocvar_g_ca_start_ammo_shells = 60;
+float autocvar_g_ca_start_ammo_nails = 320;
+float autocvar_g_ca_start_ammo_rockets = 160;
+float autocvar_g_ca_start_ammo_cells = 180;
+float autocvar_g_ca_start_ammo_plasma = 180;
+float autocvar_g_ca_start_ammo_fuel = 0;
+
+.float ca_damage_counter;
 
 void CA_count_alive_players()
 {
@@ -24,40 +35,11 @@ void CA_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
-			1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
-}
-
-int CA_GetWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no player left
 }
 
 void nades_Clear(entity player);
@@ -77,12 +59,10 @@ float CA_CheckWinner()
 	}
 
 	CA_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() > 1)
-	{
+	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
 		return 0;
-	}
 
-	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
@@ -147,9 +127,9 @@ bool CA_CheckTeams()
 
 bool ca_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
+	if(INGAME_JOINED(e) && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
-	if(e.caplayer == 0.5)
+	if(INGAME_JOINING(e))
 		return true;
 	return false;
 }
@@ -176,7 +156,9 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.caplayer = 1;
+	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
+	if (time <= game_starttime) // reset on game restart, not on round start
+		player.ca_damage_counter = 0;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -188,7 +170,7 @@ MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
 	// spectators / observers that weren't playing can join; they are
 	// immediately forced to observe in the PutClientInServer hook
 	// this way they are put in a team and can play in the next round
-	if (!allowed_to_spawn && player.caplayer)
+	if (!allowed_to_spawn && INGAME(player))
 		return true;
 	return false;
 }
@@ -200,9 +182,9 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (CS(player).jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !INGAME(player)) // not when connecting
 		{
-			player.caplayer = 0.5;
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING);
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
@@ -212,27 +194,13 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
-		if (!it.caplayer && IS_BOT_CLIENT(it))
-		{
-			it.team = -1;
-			it.caplayer = 1;
-		}
-		if (it.caplayer)
+		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
-			it.caplayer = 1;
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
 	});
-	bot_relinkplayerlist();
-	return true;
-}
-
-MUTATOR_HOOKFUNCTION(ca, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-
-	TRANSMUTE(Observer, player);
 	return true;
 }
 
@@ -286,13 +254,10 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
-	{
 		eliminatedPlayers.SendFlags |= 1;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
-	}
 	return true;
 }
+
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
@@ -307,15 +272,22 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
+	bool is_forced = M_ARGV(1, bool);
+	if (is_forced && INGAME(player))
+		INGAME_STATUS_CLEAR(player);
+
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
-		player.caplayer = 0;
-	if (player.caplayer)
+	{
+		entcs_update_players(player);
+		INGAME_STATUS_CLEAR(player);
+	}
+	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	if (!player.caplayer)
+	if (!INGAME(player))
 		return false;  // allow team reset
 	return true;  // prevent team reset
 }
@@ -334,14 +306,17 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_lms_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
+	start_health       = warmup_start_health       = autocvar_g_ca_start_health;
+	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_ca_start_armor;
+	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_ca_start_ammo_shells;
+	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ca_start_ammo_nails;
+	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ca_start_ammo_rockets;
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ca_start_ammo_cells;
+	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ca_start_ammo_plasma;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ca_start_ammo_fuel;
 }
 
 MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
@@ -368,7 +343,7 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if (autocvar_g_powerups <= 0)
-	if (item.flags & FL_POWERUP)
+	if (item.itemdef.instanceOfPowerup)
 		return true;
 
 	if (autocvar_g_pickup_items <= 0)
@@ -382,14 +357,49 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(6, float);
 	float frag_damage = M_ARGV(7, float);
 	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
 	float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
-	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
-		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+	if (autocvar_g_ca_damage2score <= 0 || frag_damage - excess == 0) return;
+
+	entity scorer = NULL;
+	float scorer_damage = 0;
+
+	if (IS_PLAYER(frag_attacker))
+	{
+		if (DIFF_TEAM(frag_target, frag_attacker))
+			scorer_damage = frag_damage - excess;
+		else // friendly fire
+			scorer_damage = -(frag_damage - excess);
+
+		scorer = frag_attacker;
+	}
+	else
+	{
+		//handle (environmental hazard) suiciding, check first if player has a registered attacker who most likely pushed them there to avoid punishing pushed players as pushers are already rewarded
+		//deathtypes:
+		//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
+		//camp = campcheck, lava = lava, slime = slime
+		//team change / rebalance suicides are currently not included
+		if (frag_deathtype == DEATH_KILL.m_id ||
+			frag_deathtype == DEATH_DROWN.m_id ||
+			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
+			frag_deathtype == DEATH_CAMP.m_id ||
+			frag_deathtype == DEATH_LAVA.m_id ||
+			frag_deathtype == DEATH_SLIME.m_id ||
+			frag_deathtype == DEATH_SWAMP.m_id)
+		{
+			scorer_damage = -(frag_damage - excess);
+			scorer = frag_target;
+		}
+	}
+
+	if (scorer)
+		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, ca_damage_counter, autocvar_g_ca_damage2score);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
@@ -415,7 +425,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (!autocvar_g_ca_spectate_enemies && INGAME(client))
 	if (DIFF_TEAM(targ, client))
 		return true;
 }
@@ -424,7 +434,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
@@ -439,7 +449,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }
@@ -464,7 +474,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		if (IS_PLAYER(it) || it.caplayer == 1)
+		if (IS_PLAYER(it) || INGAME_JOINED(it))
 			++M_ARGV(0, int);
 		++M_ARGV(1, int);
 	});
@@ -475,7 +485,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.caplayer)
+	if (INGAME(player))
 	{
 		// they're going to spec, we can do other checks
 		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
@@ -489,13 +499,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
 {
 	return true; // doesn't work well with the whole spectator as player thing
-}
-
-MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
-{
-	entity player = M_ARGV(0, entity);
-
-	return player.caplayer == 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)

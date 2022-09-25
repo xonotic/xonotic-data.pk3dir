@@ -591,11 +591,18 @@ void MapVote_Tick()
 		return;
 
 	int totalvotes = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+	FOREACH_CLIENT(true, {
+		if(!IS_REAL_CLIENT(it))
+		{
+			// apply the same special health value to bots too for consistency's sake
+			if(GetResource(it, RES_HEALTH) != 2342)
+				SetResourceExplicit(it, RES_HEALTH, 2342);
+			continue;
+		}
 		// hide scoreboard again
 		if(GetResource(it, RES_HEALTH) != 2342)
 		{
-			SetResourceExplicit(it, RES_HEALTH, 2342);
+			SetResourceExplicit(it, RES_HEALTH, 2342); // health in the voting phase
 			CS(it).impulse = 0;
 
 			msg_entity = it;

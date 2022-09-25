@@ -26,6 +26,40 @@
 #include <server/weapons/csqcprojectile.qh>
 #include <server/world.qh>
 
+void dropclient_do(entity this)
+{
+	if (this.owner)
+		dropclient(this.owner);
+	delete(this);
+}
+/**
+ * Schedules dropclient for a player and returns true;
+ * if dropclient is already scheduled (for that player) it does nothing and returns false.
+ *
+ * NOTE: this function exists only to allow sending a message to the kicked player with
+ * Send_Notification, which doesn't work if called together with dropclient
+ */
+bool dropclient_schedule(entity this)
+{
+	bool scheduled = false;
+	FOREACH_ENTITY_CLASS("dropclient_handler", true,
+	{
+		if(it.owner == this)
+		{
+			scheduled = true;
+			break; // can't use return here, compiler shows a warning
+		}
+	});
+	if (scheduled)
+		return false;
+
+	entity e = new_pure(dropclient_handler);
+	setthink(e, dropclient_do);
+	e.owner = this;
+	e.nextthink = time + 0.1;
+	return true;
+}
+
 void CreatureFrame_hotliquids(entity this)
 {
 	if (this.contents_damagetime >= time)
@@ -297,8 +331,8 @@ void StartFrame()
 	CreatureFrame_All();
 	CheckRules_World();
 
-	if (warmup_stage && !game_stopped && warmup_limit > 0 && time >= warmup_limit) {
-		ReadyRestart();
+	if (warmup_stage && !game_stopped && warmup_limit > 0 && time - game_starttime >= warmup_limit) {
+		ReadyRestart(true);
 		return;
 	}
 
@@ -331,7 +365,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 		return;
 	}
 
-	if (DoesQ3ARemoveThisEntity(this)) {
+	if (q3compat && DoesQ3ARemoveThisEntity(this)) {
 		delete(this);
 		return;
 	}
@@ -361,6 +395,62 @@ void SV_OnEntityPreSpawnFunction(entity this)
 		delete(this);
 		return;
 	}
+}
+
+string GetField_fullspawndata(entity e, string f, ...)
+/* Retrieves the value of a map entity field from fullspawndata
+ * This bypasses field value changes made by the engine,
+ * eg string-to-float and escape sequence substitution.
+ *
+ * Avoids the need to declare fields just to read them once :)
+ *
+ * Returns the last instance of the field to match DarkPlaces behaviour.
+ * Path support: converts \ to / and tests the file if a third (bool, true) arg is passed.
+ * Returns string_null if the entity does not have the field, or the file is not in the VFS.
+ *
+ * FIXME: entities with //comments are not supported.
+ */
+{
+	string v = string_null;
+
+	if (!e.fullspawndata)
+	{
+		//LOG_WARNF("^1EDICT %s (classname %s) has no fullspawndata, engine lacks support?", ftos(num_for_edict(e)), e.classname);
+		return v;
+	}
+
+	if (strstrofs(e.fullspawndata, "//", 0) >= 0)
+	{
+		// tokenize and tokenize_console return early if "//" is reached,
+		// which can leave an odd number of tokens and break key:value pairing.
+		LOG_WARNF("^1EDICT %s fullspawndata contains unsupported //comment^7%s", ftos(num_for_edict(e)), e.fullspawndata);
+		return v;
+	}
+
+	//print(sprintf("%s(EDICT %s, FIELD %s)\n", __FUNC__, ftos(num_for_edict(e)), f));
+	//print(strcat("FULLSPAWNDATA:", e.fullspawndata, "\n"));
+
+	// tokenize treats \ as an escape, but tokenize_console returns the required literal
+	for (int t = tokenize_console(e.fullspawndata) - 3; t > 0; t -= 2)
+	{
+		//print(sprintf("\tTOKEN %s:%s\t%s:%s\n", ftos(t), ftos(t + 1), argv(t), argv(t + 1)));
+		if (argv(t) == f)
+		{
+			v = argv(t + 1);
+			break;
+		}
+	}
+
+	//print(strcat("RESULT: ", v, "\n\n"));
+
+	if (v && ...(0, bool) == true)
+	{
+		v = strreplace("\\", "/", v);
+		if (whichpack(v) == "")
+			return string_null;
+	}
+
+	return v;
 }
 
 void WarpZone_PostInitialize_Callback()
