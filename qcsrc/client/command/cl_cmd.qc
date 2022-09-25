@@ -447,6 +447,24 @@ void LocalCommand_(int request)
 }
 */
 
+void LocalCommand_cl_particles_pro(int request)
+{
+    switch(request)
+    {
+        case 1:
+        {
+			localcmd("\ncl_particles_reloadeffects proeffects.txt\n");
+            return;
+        }
+
+        default:
+		{
+			localcmd("\ncl_particles_reloadeffects effectinfo.txt\n");
+			return;
+		}
+
+    }
+}
 
 // ==================================
 //  Macro system for client commands
@@ -462,6 +480,7 @@ CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalComm
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
 CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like cl_weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
+CLIENT_COMMAND(cl_particles_pro, "PRO Particles") { LocalCommand_cl_particles_pro(request); }
 
 void LocalCommand_macro_help()
 {
