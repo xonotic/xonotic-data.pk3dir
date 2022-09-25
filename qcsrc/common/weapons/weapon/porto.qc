@@ -338,7 +338,7 @@ METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor, .entity weaponent
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(!WEP_CVAR(porto, secondary))
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false, true))
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
 }
 METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
