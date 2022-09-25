@@ -635,7 +635,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			delete(this);
+			RemoveItem(this);
 			return;
 		}
 	}
@@ -787,6 +787,8 @@ void Item_FindTeam(entity this)
 void RemoveItem(entity this)
 {
 	if(wasfreed(this) || !this) { return; }
+	if(this.waypointsprite_attached)
+		WaypointSprite_Kill(this.waypointsprite_attached);
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	delete(this);
 }
@@ -977,7 +979,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if (Item_IsLoot(this))
 	{
-		this.reset = SUB_Remove;
+		this.reset = RemoveItem;
 		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
