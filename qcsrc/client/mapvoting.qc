@@ -355,11 +355,12 @@ void MapVote_Draw()
 		return;
 
 	HUD_Panel_LoadCvars();
+	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
 	center = (vid_conwidth - 1)/2;
-	xmin = vid_conwidth * 0.08;
+	xmin = hud_fontsize.y * 1.5;
 	xmax = vid_conwidth - xmin;
-	ymin = 20;
+	ymin = hud_fontsize.y * 1.5;
 	ymax = vid_conheight - ymin;
 
 	if(chat_posy + chat_sizey / 2 < vid_conheight / 2)
@@ -367,11 +368,10 @@ void MapVote_Draw()
 	else
 		ymax -= chat_sizey;
 
-	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	if (gametypevote)
 	{
-		gtv_text_size = hud_fontsize * 1.4;
-		gtv_text_size_small = hud_fontsize * 1.1;
+		gtv_text_size = hud_fontsize * 1.3;
+		gtv_text_size_small = hud_fontsize * 1;
 	}
 
 	pos.y = ymin;
@@ -381,27 +381,26 @@ void MapVote_Draw()
 	draw_beginBoldFont();
 
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
-	pos.x = center - stringwidth(map, false, hud_fontsize * 2) * 0.5;
-	drawstring(pos, map, hud_fontsize * 2, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	pos.y += hud_fontsize.y * 2;
+	pos.x = center - stringwidth(map, false, hud_fontsize * 1.7) * 0.5;
+	drawstring(pos, map, hud_fontsize * 1.7, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	pos.y += hud_fontsize.y * 1.8;
 
 	if( mapvote_chosenmap != "" )
 	{
-		pos.y += hud_fontsize.y * 0.25;
-		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
-		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos.y += hud_fontsize.y * 1.5;
+		pos.y += hud_fontsize.y * 0.2;
+		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.3) * 0.5;
+		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.3, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos.y += hud_fontsize.y * 1.3;
 	}
-	pos.y += hud_fontsize.y * 0.5;
+	pos.y += hud_fontsize.y * 0.4;
 
 	draw_endBoldFont();
 
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
-	pos.x = center - stringwidth(map, false, hud_fontsize * 1.5) * 0.5;
-	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+	pos.x = center - stringwidth(map, false, hud_fontsize * 1.3) * 0.5;
+	drawstring(pos, map, hud_fontsize * 1.3, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += hud_fontsize.y * 1.5;
-	pos.y += hud_fontsize.y * 0.5;
 
 	// base for multi-column stuff...
 	pos.y += hud_fontsize.y;
@@ -415,7 +414,15 @@ void MapVote_Draw()
 	}
 
 	// higher than the image itself ratio for mapvote items to reserve space for long map names
-	int item_aspect = (gametypevote) ? 3/1 : 5/3;
+	float item_aspect;
+	if(gametypevote) {
+		item_aspect = 3.5/1.0;
+	} else {
+		if(mv_num_maps > 8)
+			item_aspect = 6.1/3.0;
+		else
+			item_aspect = 5.0/3.0;
+	}
 	vector table_size = HUD_GetTableSize_BestItemAR(mv_num_maps, vec2(xmax - xmin, ymax - ymin), item_aspect);
 	mv_columns = table_size.x;
 	rows = table_size.y;
