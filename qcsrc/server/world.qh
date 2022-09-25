@@ -27,6 +27,7 @@ float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
