@@ -130,7 +130,7 @@ void Announcer_Gamestart()
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
-	if(intermission)
+	if(intermission || warmup_stage)
 	{
 		Announcer_ClearTitle();
 		if(announcer_countdown)
