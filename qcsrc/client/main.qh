@@ -105,6 +105,8 @@ bool warmup_stage;
 
 string hostname;
 string welcome_msg;
+int srv_minplayers;
+int srv_maxplayers;
 float welcome_msg_menu_check_maxtime;
 void Welcome_Message_Show_Try();
 
