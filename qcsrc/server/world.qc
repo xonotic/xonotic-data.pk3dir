@@ -624,8 +624,42 @@ STATIC_INIT_EARLY(maxclients)
 
 void GameplayMode_DelayedInit(entity this)
 {
+	// at this stage team entities are spawned, teamplay contains the number of them
+
 	if(!scores_initialized)
 		ScoreRules_generic();
+
+	if (warmup_stage >= 0 && autocvar_g_maxplayers >= 0)
+		return;
+	if (!g_duel)
+		MapReadSizes(mapname);
+
+	if (autocvar_g_maxplayers < 0 && teamplay)
+	{
+		// automatic maxplayers should be a multiple of team count
+		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+			map_maxplayers = maxclients; // unlimited, but may need rounding
+		int d = map_maxplayers % AVAILABLE_TEAMS;
+		int u = AVAILABLE_TEAMS - d;
+		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+	}
+
+	if (warmup_stage < 0)
+	{
+		int m = GetPlayerLimit();
+		if (m <= 0) m = maxclients;
+		map_minplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_minplayers, m);
+		if (teamplay)
+		{
+			// automatic minplayers should be a multiple of team count
+			int d = map_minplayers % AVAILABLE_TEAMS;
+			int u = AVAILABLE_TEAMS - d;
+			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+		}
+		warmup_limit = -1;
+	}
+	else
+		map_minplayers = 0; // don't display a minimum if it's not used
 }
 
 void InitGameplayMode()

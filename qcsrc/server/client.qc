@@ -809,6 +809,9 @@ void PutPlayerInServer(entity this)
 		this.alivetime = time;
 
 	antilag_clear(this, CS(this));
+
+	if (warmup_stage == -1)
+		ReadyCount();
 }
 
 /** Called when a client spawns in the server */
@@ -1980,10 +1983,11 @@ int GetPlayerLimit()
 {
 	if(g_duel)
 		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
-	int player_limit = autocvar_g_maxplayers;
+	// don't return map_maxplayers during intermission as it would interfere with MapHasRightSize()
+	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
 	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
 	player_limit = M_ARGV(0, int);
-	return player_limit;
+	return player_limit < maxclients ? player_limit : 0;
 }
 
 /**

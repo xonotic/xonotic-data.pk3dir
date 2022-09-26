@@ -503,7 +503,11 @@ void ReadyRestart(bool forceWarmupEnd)
 	ReadyRestart_force(false);
 }
 
-// Count the players who are ready and determine whether or not to restart the match
+/* Count the players who are ready and determine whether or not to restart the match when:
+ * a player presses F4                      server/command/cmd.qc  ClientCommand_ready()
+ * a player switches from players to specs  server/client.qc       PutObserverInServer()
+ * a player joins (from specs or directly)  server/client.qc       PutPlayerInServer()
+ * a player disconnects                     server/client.qc       ClientDisconnect()	*/
 void ReadyCount()
 {
 	// cannot reset the game while a timeout is active or pending
@@ -519,6 +523,25 @@ void ReadyCount()
 	});
 
 	Nagger_ReadyCounted();
+
+	if (t_players < map_minplayers) // map_minplayers will only be set if g_warmup -1 at worldspawn
+	{
+		// TODO: handle player spectating/disconnecting during countdown
+		if (warmup_limit > 0)
+			warmup_limit = -1;
+		return; // don't ReadyRestart if players are ready but too few
+	}
+	else if (map_minplayers && warmup_limit <= 0)
+	{
+		// there's enough players now but we're still in infinite warmup
+		warmup_limit = cvar("g_warmup_limit");
+		if (warmup_limit == 0)
+			warmup_limit = autocvar_timelimit * 60;
+		if (warmup_limit > 0)
+			game_starttime = time;
+		// implicit else: g_warmup -1 && g_warmup_limit -1 means
+		// warmup continues until enough players AND enough RUPs (no time limit)
+	}
 
 	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
 	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
