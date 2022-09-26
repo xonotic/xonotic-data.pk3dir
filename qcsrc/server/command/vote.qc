@@ -543,8 +543,8 @@ void ReadyCount()
 		// warmup continues until enough players AND enough RUPs (no time limit)
 	}
 
-	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
-	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
+	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 1);
+	ready_needed_count = ceil(t_players * ready_needed_factor);
 
 	if (readycount >= ready_needed_count) ReadyRestart(true);
 }
