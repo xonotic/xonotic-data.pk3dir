@@ -78,7 +78,7 @@ void Announcer_Countdown(entity this)
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
-		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
+		Local_Notification(MSG_MULTI, COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
 		Announcer_ClearTitle();

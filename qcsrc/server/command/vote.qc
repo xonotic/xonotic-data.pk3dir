@@ -526,7 +526,12 @@ void ReadyCount()
 
 	if (t_players < map_minplayers) // map_minplayers will only be set if g_warmup -1 at worldspawn
 	{
-		// TODO: handle player spectating/disconnecting during countdown
+		if (game_starttime > time) // someone bailed during countdown, back to warmup
+		{
+			warmup_stage = -1; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
+			game_starttime = time;
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, map_minplayers);
+		}
 		if (warmup_limit > 0)
 			warmup_limit = -1;
 		return; // don't ReadyRestart if players are ready but too few
