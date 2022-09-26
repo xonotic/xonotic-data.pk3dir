@@ -506,6 +506,9 @@ void ReadyRestart(bool forceWarmupEnd)
 // Count the players who are ready and determine whether or not to restart the match
 void ReadyCount()
 {
+	// cannot reset the game while a timeout is active or pending
+	if (timeout_status) return;
+
 	float ready_needed_factor, ready_needed_count;
 	float t_players = 0;
 	readycount = 0;

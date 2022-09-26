@@ -256,7 +256,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		{
 			if (vote_called) { VoteCount(false); }
 			this.ready = false;
-			recount_ready = true;
+			if (warmup_stage) recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -307,7 +307,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	TRANSMUTE(Observer, this);
 
-	if(recount_ready) ReadyCount();
+	if(recount_ready) ReadyCount(); // FIXME: please add comment about why this is delayed
 
 	WaypointSprite_PlayerDead(this);
 	accuracy_resend(this);
@@ -1236,7 +1236,7 @@ void ClientDisconnect(entity this)
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
-	ReadyCount();
+	if (warmup_stage) ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
 	player_powerups_remove_all(this); // stop powerup sound
