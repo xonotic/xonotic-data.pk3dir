@@ -258,6 +258,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(CA_JOIN_LATE,                            N_CONSOLE,  0, 0, "", "",       "",     _("^F1Round already started, you will join the game in the next round"), "")
     MSG_INFO_NOTIF(CA_LEAVE,                                N_CONSOLE,  0, 0, "", "",       "",     _("^F2You will spectate in the next round"), "")
 
+    MSG_INFO_NOTIF(COUNTDOWN_RESTART,                       N_CHATCON,  0, 0, "", "",       "",     _("^F2Match is restarting..."), "")
     MSG_INFO_NOTIF(COUNTDOWN_STOP,                          N_CHATCON,  0, 0, "", "",       "",     _("^F4Countdown stopped!"), "")
 
     MSG_INFO_NOTIF(DEATH_MURDER_BUFF,                       N_CONSOLE,  3, 3, "spree_inf s1 s2 f3buffname s3loc spree_end", "s2 s1",    "notify_death",         _("^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"), _("^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"))
