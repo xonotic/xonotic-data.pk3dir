@@ -507,14 +507,13 @@ void ReadyRestart(bool forceWarmupEnd)
 void ReadyCount()
 {
 	float ready_needed_factor, ready_needed_count;
-	float t_ready = 0, t_players = 0;
+	float t_players = 0;
+	readycount = 0;
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
 		++t_players;
-		if (it.ready) ++t_ready;
+		if (it.ready) ++readycount;
 	});
-
-	readycount = t_ready;
 
 	Nagger_ReadyCounted();
 
