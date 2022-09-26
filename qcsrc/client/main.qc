@@ -1434,6 +1434,16 @@ bool net_handle_ServerWelcome()
 
 	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
 
+	msg = strcat(msg, "^8\n", _("Map:"), " ^2");
+	if (world.message == "")
+		msg = strcat(msg, mi_shortname, "^8\n");
+	else
+	{
+		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
+		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
+		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "^8\n");
+	}
+
 	if (srv_minplayers || srv_maxplayers)
 	{
 		msg = strcat(msg, "^8\n", _("This match supports"), " ^5");
