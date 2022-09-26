@@ -54,7 +54,7 @@ bool MapHasRightSize(string map)
 {
 	int minplayers = max(0, floor(autocvar_minplayers));
 	if (teamplay)
-		minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+		minplayers = max(0, floor(autocvar_minplayers_per_team) * AVAILABLE_TEAMS);
 	if (autocvar_g_maplist_check_waypoints
 		&& (currentbots || autocvar_bot_number || player_count < minplayers))
 	{

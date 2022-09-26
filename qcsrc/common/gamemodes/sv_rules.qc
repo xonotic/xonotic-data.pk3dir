@@ -7,7 +7,7 @@ void GameRules_teams(bool value)
 {
     if (value) {
         serverflags |= SERVERFLAG_TEAMPLAY;
-        teamplay = 1;
+        teamplay = 1;  // aka AVAILABLE_TEAMS, updated by ScoreRules_basics() after team ents spawn
         cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
         Team_InitTeams();
         GameRules_spawning_teams(true);
