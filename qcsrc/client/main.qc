@@ -1420,19 +1420,16 @@ bool net_handle_ServerWelcome()
 	}
 
 	strcpy(hostname, ReadString());
-
 	string hostversion = ReadString();
 	bool version_mismatch = ReadByte();
 	bool version_check = ReadByte();
-	string ver = GetVersionMessage(hostversion, version_mismatch, version_check);
-
 	string modifications = translate_modifications(ReadString());
 	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 
-	string msg = "";
-	msg = strcat(msg, ver);
+	string msg = GetVersionMessage(hostversion, version_mismatch, version_check);
+
 	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
