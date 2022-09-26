@@ -1040,6 +1040,8 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
+	WriteByte(msg_type, map_minplayers);
+	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);

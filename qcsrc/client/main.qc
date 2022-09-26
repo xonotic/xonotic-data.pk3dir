@@ -1423,6 +1423,8 @@ bool net_handle_ServerWelcome()
 	string hostversion = ReadString();
 	bool version_mismatch = ReadByte();
 	bool version_check = ReadByte();
+	srv_minplayers = ReadByte();
+	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
 	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
@@ -1431,6 +1433,19 @@ bool net_handle_ServerWelcome()
 	string msg = GetVersionMessage(hostversion, version_mismatch, version_check);
 
 	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+
+	if (srv_minplayers || srv_maxplayers)
+	{
+		msg = strcat(msg, "^8\n", _("This match supports"), " ^5");
+		if (srv_minplayers == srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d players"), srv_maxplayers), "^8\n");
+		else if (srv_minplayers && srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d to %d players"), srv_minplayers, srv_maxplayers), "^8\n");
+		else if (srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d players maximum"), srv_maxplayers), "^8\n");
+		else
+			msg = strcat(msg, sprintf(_("%d players minimum"), srv_minplayers), "^8\n");
+	}
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
