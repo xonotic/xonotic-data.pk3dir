@@ -1468,7 +1468,7 @@ bool net_handle_ServerWelcome()
 	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
 
 	if (motd != "")
-		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+		msg = strcat(msg, "^8\n^9↓ ", _("Server's message"), " ↓^8\n", motd);
 
 	strcpy(welcome_msg, msg);
 	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
