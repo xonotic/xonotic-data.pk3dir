@@ -2333,7 +2333,7 @@ void Scoreboard_Draw()
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 		// map name
-		str = sprintf(_("^7Map: ^2%s"), shortmapname);
+		str = sprintf(_("^7Map: ^2%s"), mi_shortname);
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section

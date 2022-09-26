@@ -177,9 +177,6 @@ float spectatee_status_changed_time;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
 
-// short mapname
-string shortmapname;
-
 // database for misc stuff
 int tempdb;
 int ClientProgsDB;
