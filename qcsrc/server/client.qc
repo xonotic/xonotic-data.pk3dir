@@ -2034,7 +2034,7 @@ int nJoinAllowed(entity this, entity ignore)
 	static float msg_time = 0;
 	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
 		msg_time = time + 0.5;
 	}
 
