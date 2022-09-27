@@ -513,11 +513,11 @@ msgstr "Mélanger les équipes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "Menu rapide personnalisé du serveur"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
-msgstr ""
+msgstr "Menu rapide de l'éditeur de waypoints"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
@@ -8730,11 +8730,11 @@ msgstr "Afficher des marqueurs pour les objectifs sur la carte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
-msgstr "Afficher les waypoints (flèches 3D)"
+msgstr "Afficher divers repères spécifiques au type de jeu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
-msgstr "Ajuster l'opacité des waypoints"
+msgstr "Ajuster l'opacité des repères"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
