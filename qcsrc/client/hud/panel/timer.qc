@@ -1,4 +1,5 @@
 #include "timer.qh"
+#include "scoreboard.qh"
 
 #include <client/draw.qh>
 #include <client/view.qh>
@@ -123,7 +124,12 @@ void HUD_Timer()
 	int overtimes = STAT(OVERTIMES);
 
 	if(warmup_stage || autocvar__hud_configure)
-		subtext = _("Warmup");
+	{
+		if (STAT(WARMUP_TIMELIMIT) > 0)
+			subtext = _("Warmup");
+		else
+			subtext = srv_minplayers ? _("Warmup: too few players") : _("Warmup: no time limit");
+	}
 	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");
 	else if (overtimes == -1)

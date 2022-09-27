@@ -547,9 +547,11 @@ void Scoreboard_UpdatePlayerTeams()
 	update_time = time;
 
 	entity pl, tmp;
+	numplayers = 0;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
+		numplayers += pl.team != NUM_SPECTATOR;
 		//num += 1;
 		int Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
