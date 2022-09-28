@@ -34,7 +34,7 @@ msgstr "^1Kunde inte skriva till %s"
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Titel vid %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -47,6 +47,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Flerradsmeddelande vid tiden %s som\n"
+"^BOLDvarar längre an vanligtvis"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
@@ -60,7 +62,7 @@ msgstr "Generellt meddelande"
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "mot"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -198,7 +200,7 @@ msgstr " Tryck på ^3%s%s för att justera"
 #: qcsrc/client/hud/panel/infomessages.qc:197
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "lagurval"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 msgid "^1Spectating this player:"
@@ -408,7 +410,7 @@ msgstr "Visa vy/HUD-inställningar"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
-msgstr "3dje personsläge"
+msgstr "Tredjepersonsvy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Player models like mine"
@@ -495,11 +497,11 @@ msgstr "Slumpa lagen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "Serverns egna snabbmeny"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
-msgstr ""
+msgstr "Vägpunktsredigerarens snabbmeny"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
@@ -1015,17 +1017,17 @@ msgstr "Lagval"
 #: qcsrc/client/hud/panel/scoreboard.qc:2266
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Tryck ^3%s^7 för att gå med det valda laget"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2268
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7Tryck ^3%s^7 för att auto-välja ett lag och gå med"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2272
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Tryck ^3%s ^7för att välja ett specifikt lag"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2283
 #, c-format
@@ -1203,27 +1205,27 @@ msgstr "knop"
 #: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
-msgstr "Alla Vapen Arena"
+msgstr "Alla Vapen-Arena"
 
 #: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Alla Tillgängliga Vapen-Arena"
 
 #: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
-msgstr "Flesta Vapen Arena"
+msgstr "Flesta Vapen-Arena"
 
 #: qcsrc/client/main.qc:1363
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Flesta Tillgängliga Vapen-Arena"
 
 #: qcsrc/client/main.qc:1366 qcsrc/client/main.qc:1380
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Inga Vapen-Arena"
 
 #: qcsrc/client/main.qc:1378
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1234,37 +1236,37 @@ msgstr "%s Arena"
 #: qcsrc/client/main.qc:1389 qcsrc/client/main.qc:1394
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Detta är %s"
 
 #: qcsrc/client/main.qc:1390
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Din klientversion är utdaterad."
 
 #: qcsrc/client/main.qc:1391
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### DU KOMMER INTE ATT KUNNA SPELA PÅ DENNA SERVERN ###"
 
 #: qcsrc/client/main.qc:1392
 msgid "Please update!"
-msgstr ""
+msgstr "Vänligen uppdatera!"
 
 #: qcsrc/client/main.qc:1395
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Denna server använder en utdaterad Xonotic-version."
 
 #: qcsrc/client/main.qc:1396
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### DENNA SERVER ÄN INKOMPATIBEL OCH DU KAN DÄRFÖR INTE GÅ MED ###"
 
 #: qcsrc/client/main.qc:1398
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Välkommen till %s"
 
 #: qcsrc/client/main.qc:1413 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Nivå %d:"
 
 #: qcsrc/client/main.qc:1415
 #, c-format
@@ -1278,15 +1280,15 @@ msgstr "Speltyp:"
 
 #: qcsrc/client/main.qc:1440
 msgid "Active modifications:"
-msgstr ""
+msgstr "Aktiva modifikationer:"
 
 #: qcsrc/client/main.qc:1443
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Speciella speltypstips:"
 
 #: qcsrc/client/main.qc:1450
 msgid "MOTD:"
-msgstr ""
+msgstr "MOTD:"
 
 #: qcsrc/client/main.qc:1528
 #, c-format
@@ -1671,7 +1673,7 @@ msgstr "Skapa"
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
 #: qcsrc/menu/xonotic/dialog_welcome.qc:113
 msgid "Join"
-msgstr "Anslut"
+msgstr "Gå med"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:521
 msgid "Minigames"
@@ -1901,7 +1903,7 @@ msgstr "En Spelare"
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2010,11 +2012,11 @@ msgstr "Rita skadenummer"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr "Minimal typsnittsstorlek:"
+msgstr "Minimal storlek på typsnitt:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr "Maximal typsnittsstorlek:"
+msgstr "Maximal storlek på typsnitt:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
@@ -2038,7 +2040,7 @@ msgstr "av-handskrok"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3änterhake^8 är påslagen, tryck ^3%s^8 för att använda den"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2089,7 +2091,7 @@ msgstr "släpp vapen / kasta granat"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3granater^8 är påslagna, tryck ^3%s^8 för att använda dem"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2098,7 +2100,7 @@ msgstr "Granat"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3av-handsblaster^8 är påslagen, tryck ^3%s^8 för att använda den"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -2285,7 +2287,7 @@ msgstr "Bollbärare"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr ""
+msgstr "Ledare"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -2727,17 +2729,17 @@ msgstr "^BG%s^K1 exploderades av en Mage%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1s inälvor blev utåt av en Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 blev krossad av en Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 blev zappad till döds av en Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
@@ -3366,7 +3368,7 @@ msgstr "^BG%s%s^K1 var sprängd av ^BG%s^K1's Arc-bultar%s%s"
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 lekte med Arc-boltar"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -3695,16 +3697,16 @@ msgstr "^BGMålet förstört på ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGBörja!"
 
 #: qcsrc/common/notifications/all.inc:531
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGSpelet startar om"
 
 #: qcsrc/common/notifications/all.inc:532
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGOmgång %s startar om"
 
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Round cannot start"
@@ -4321,7 +4323,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGLedare kan nu ses av fiender på radar!"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
@@ -5038,7 +5040,7 @@ msgstr "I luften"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Bara närstrid-Arena"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5088,11 +5090,11 @@ msgstr "Inga startvapen"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Granater"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Av-handsblaster"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -5855,7 +5857,7 @@ msgstr "Animation"
 
 #: qcsrc/menu/xonotic/credits.qc:54
 msgid "Campaign"
-msgstr ""
+msgstr "Kampanj"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Level Design"
@@ -5983,7 +5985,7 @@ msgstr "Portugisiska"
 
 #: qcsrc/menu/xonotic/credits.qc:314
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Portugisiska (Brazilien)"
 
 #: qcsrc/menu/xonotic/credits.qc:320
 msgid "Romanian"
@@ -6011,7 +6013,7 @@ msgstr "Svenska"
 
 #: qcsrc/menu/xonotic/credits.qc:376
 msgid "Turkish"
-msgstr ""
+msgstr "Turkiska"
 
 #: qcsrc/menu/xonotic/credits.qc:385
 msgid "Ukrainian"
@@ -6118,16 +6120,16 @@ msgstr "Välkommen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
-msgstr "Anslut!"
+msgstr "Gå med!"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Börja om nivå"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
-msgstr ""
+msgstr "Huvudmeny"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -6151,16 +6153,16 @@ msgstr "Inmatning"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr ""
+msgstr "Snabbmeny"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:115
 msgid "Spectate"
-msgstr ""
+msgstr "Åskåda"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
-msgstr ""
+msgstr "Spelmeny"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -7168,7 +7170,7 @@ msgstr "Ta bort alla kartor från dina val"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Start flerspelarläge!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -8414,12 +8416,12 @@ msgstr "Allt"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "Dynamiska ljus i realtid"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
-msgstr ""
+msgstr "Temporära ljuskällor i realtid som explosioner, raketer och powerups"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
@@ -8428,21 +8430,23 @@ msgstr "Skuggor"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "Skuggor kastas av dynamiska ljus i realtid"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Realtime world lights"
-msgstr ""
+msgstr "Världsljus i realtid"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"Realtidsljuskällor inkluderade i vissa kartor. Kan ha en stor påverkan på "
+"prestanda."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "Skuggor kastade av världsljus i realtid"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Use normal maps"
@@ -8453,6 +8457,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"Riktad skuggning av vissa texturer för att simulera interaktion av "
+"realtidsljus med en ojämn yta"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
@@ -8460,11 +8466,11 @@ msgstr "Mjuka skuggor"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Corona brightness:"
-msgstr ""
+msgstr "Ljusstyrka av korona:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Blosseffekt runt vissa ljus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
@@ -8472,7 +8478,7 @@ msgstr "Tona ut koronor baserat på synlighet"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
-msgstr ""
+msgstr "Koronauttoning genom ocklutionsförfrågningar"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
@@ -8652,7 +8658,7 @@ msgstr "Kontrollera genomskinnlighet av vägpunkterna"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Font size:"
-msgstr ""
+msgstr "Storlek på typsnitt:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
@@ -8738,7 +8744,7 @@ msgstr "HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr "För att HUD redigeraren ska visas, måste du vara inne i ett spel."
+msgstr "För att HUD-redigeraren ska visas, måste du vara inne i ett spel."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
@@ -9268,12 +9274,12 @@ msgstr "%d fps"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d KiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d MiB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Network"
@@ -9289,15 +9295,15 @@ msgstr "Visa en graf av paketstorlekar och annan information"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "Kompensation av paketförlust"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "Varje paket innehåller en kopia av det föregåenge meddelandet"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "Felkompensering av rörelseprediktion"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
@@ -9306,7 +9312,7 @@ msgstr "Använd kryptering (AES) när tillgängligt"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Bandwidth limit:"
-msgstr ""
+msgstr "Gräns på bandbredd:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
@@ -9330,15 +9336,15 @@ msgstr "Lokal latenstid:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr ""
+msgstr "HTTP-nedladdningar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
-msgstr ""
+msgstr "Samtidiga:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "Maximal mängd samtidiga HTTP-nedladdningar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -9576,6 +9582,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"Vsync förhindrar bildbläddring, men ökar latenstid och låser din fps till "
+"skärmens uppdateringsfrekvens"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
@@ -9590,8 +9598,8 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
-"Slå på anti-aliasing, vilket mjukar ut kanterna på 3D-geometri. Notera att "
-"det kan minska prestanda ganska mycket"
+"Slå på anti-aliasing, vilket mjukar ut kanterna på 3D-geometri. Tänk på att "
+"det kan reducera prestandan ganska mycket"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:76
 msgid "AA^Disabled"
@@ -9609,13 +9617,15 @@ msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Resolution scaling:"
-msgstr ""
+msgstr "Upplösningsskala:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"Multiplikator på Skärm- eller fönsterstorlek, över 1x gör antialias, under "
+"1x kan hjälpa långsamma GPUer"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
@@ -9783,7 +9793,7 @@ msgstr "Svårt"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "Spela kampanj!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9867,11 +9877,11 @@ msgstr "Rörelse"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "move forwards"
-msgstr ""
+msgstr "gå framåt"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "move backwards"
-msgstr ""
+msgstr "gå bakåt"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
@@ -10019,35 +10029,35 @@ msgstr "redigeringsmeny för vägpunkter"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Lämna nuvarande match"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Stoppå demo"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Lämna kampanj"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Lämna enspelarläge"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Lämna flerspelarläge"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Lämna nuvarande kampanjnivå"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Lämna nuvarande enspelarmatch"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Lämna nuvanande flerspelarmatch / Koppla bort från server"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"
