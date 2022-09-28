@@ -2,7 +2,7 @@
 
 float autocvar_g_ca_damage2score = 100;
 bool autocvar_g_ca_spectate_enemies;
-bool autocvar_g_ca_less_stalemates;
+bool autocvar_g_ca_prevent_stalemate;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -45,163 +45,93 @@ void CA_count_alive_players()
 
 void nades_Clear(entity player);
 
-float CA_LessStalemates()
+int CA_PreventStalemate()
 {
-print("less CA stalemates is active\n");
-	int highestHealthTeam = 0;
-	int secondHighestHealthTeam = 0;
+	int winnerTeam = 0;
+	int secondTeam = 0;
 
 	// change AvailableTeams() to AVAILABLE_TEAMS when this is merged to this branch
 	//  https://gitlab.com/xonotic/xonotic-data.pk3dir/-/merge_requests/1022/
-	for(int i = 1; i <= AvailableTeams(); i++){
-		Team_GetTeamFromIndex(i).health = 0;
-	}
-
-	// fetch the amount of alive players for each team
-	// and at the same time order them on the two index pointers based on which one of them has the most of them
-	for (int i = 1; i <= AvailableTeams(); i++){
-		if (ca_teams & Team_IndexToBit(i)){
-			if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > 0 && highestHealthTeam == 0
-					|| Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetTeamFromIndex(highestHealthTeam).health)
-			{
-				Team_GetTeamFromIndex(i).health = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i));
-				secondHighestHealthTeam = highestHealthTeam;
-				highestHealthTeam = i;
-			} else {
-				if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > 0 && secondHighestHealthTeam == 0
-						|| Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetTeamFromIndex(secondHighestHealthTeam).health)
-				{
-					Team_GetTeamFromIndex(i).health = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i));
-					secondHighestHealthTeam = i;
-				}
-			}
-		}
-	}
-
-print("amount of players alive in teams\n");
-	for (int i = 1; i <= AvailableTeams(); i++){
-		print(sprintf("%f", Team_GetTeamFromIndex(i).health), "\n");
-	}
-
-	// check if we have a team with more alive players than others
-	if (Team_GetTeamFromIndex(highestHealthTeam).health != Team_GetTeamFromIndex(secondHighestHealthTeam).health)
+	for(int i = 1; i <= AvailableTeams(); i++)
 	{
-print("different amount of players alive in teams\n");
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(Team_IndexToTeam(highestHealthTeam), ST_CA_ROUNDS, +1);
-
-		allowed_to_spawn = false;
-		game_stopped = true;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-
-		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
-
-		return 1;
-	}
-
-	// check which team has more health then
-print("checking health\n");
-	for (int i = 1; i <= AvailableTeams(); i++){
-		Team_GetTeamFromIndex(i).health = 0;
-	}
-
-	// fetch health amount of each player for each team
-	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
-	{
-		if (IS_DEAD(it)){
-			continue;
-		}
-		float healthValue = GetResource(it, RES_HEALTH);
-		float armorValue = GetResource(it, RES_ARMOR);
-
-		for (int i = 1; i <= AvailableTeams(); i++)
-			if (it.team == Team_IndexToTeam(i))
-				(Team_GetTeamFromIndex(i)).health += healthValue+armorValue;
-	});
-
-print("amount of health in teams\n");
-	for (int i = 1; i <= AvailableTeams(); i++){
-		print(sprintf("%f", Team_GetTeamFromIndex(i).health), "\n");
-	}
-
-	highestHealthTeam = 0;
-	secondHighestHealthTeam = 0;
-
-	// compare which teams have the most health
-	for (int i = 1; i <= AvailableTeams(); i++){
-		if (Team_GetTeamFromIndex(i).health > 0 && highestHealthTeam == 0
-				|| Team_GetTeamFromIndex(i).health > Team_GetTeamFromIndex(highestHealthTeam).health)
+		if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(winnerTeam)))
 		{
-			secondHighestHealthTeam = highestHealthTeam;
-			highestHealthTeam = i;
-		} else {
-			if (Team_GetTeamFromIndex(i).health > 0 && secondHighestHealthTeam == 0
-					|| Team_GetTeamFromIndex(i).health > Team_GetTeamFromIndex(secondHighestHealthTeam).health)
+			secondTeam = winnerTeam;
+			winnerTeam = i;
+		}
+		else
+		{
+			if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(secondTeam)))
 			{
-				secondHighestHealthTeam = i;
+				secondTeam = i;
 			}
 		}
 	}
 
-	// award round win to the team with highest total health
-	if (Team_GetTeamFromIndex(highestHealthTeam).health > Team_GetTeamFromIndex(secondHighestHealthTeam).health){
-print("different amount of health in teams\n");
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(Team_IndexToTeam(highestHealthTeam), INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(Team_IndexToTeam(highestHealthTeam), ST_CA_ROUNDS, +1);
+	if(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(secondTeam)))
+		return Team_IndexToTeam(winnerTeam);
 
-		allowed_to_spawn = false;
-		game_stopped = true;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+	// Equality. Let's check which team has more health now
+	winnerTeam = 0;
+	secondTeam = 0;
+	int winnerTeamHealth = 0;
+	int secondTeamHealth = 0;
+	int teamIndex, teamHealth;
 
-		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
-
-		for (int i = 1; i <= AvailableTeams(); i++){
-			Team_GetTeamFromIndex(i).health = 0;
-		}
-
-		return 1;
-	}
-	else // two top teams have identical survivor count and total health? fine, stalemate...
+	for(int i = 1; i <= AvailableTeams(); i++)
 	{
-print("same amount of health in teams, still a stalemate...\n");
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+		teamIndex = i;
+		teamHealth = 0;
 
-		allowed_to_spawn = false;
-		game_stopped = true;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+		// Add up health for the players in this team
+		FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
+		{
+			if (it.team != Team_IndexToTeam(teamIndex))
+				continue;
+			if (IS_DEAD(it))
+				continue;
+			teamHealth += GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR);
+		});
 
-		for (int i = 1; i <= AvailableTeams(); i++){
-			Team_GetTeamFromIndex(i).health = 0;
+		// Set the winner teams
+		if(!winnerTeam || teamHealth > winnerTeamHealth)
+		{
+			secondTeam = winnerTeam;
+			secondTeamHealth = winnerTeamHealth;
+			winnerTeam = i;
+			winnerTeamHealth = teamHealth;
 		}
-
-		return 1;
+		else
+		{
+			if(!secondTeam || teamHealth > secondTeamHealth)
+			{
+				secondTeam = i;
+				secondTeamHealth = teamHealth;
+			}
+		}
 	}
+
+	if(winnerTeamHealth != secondTeamHealth)
+		return Team_IndexToTeam(winnerTeam);
+	else
+		return -2; // Equality. Can't avoid the stalemate.
 }
 
 float CA_CheckWinner()
 {
+	int winner_team = 0;
+
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		if(!autocvar_g_ca_less_stalemates){
-			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-			FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
-
-			allowed_to_spawn = false;
-			game_stopped = true;
-			round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-		} else {
-			CA_LessStalemates();
-		}
-		return 1;
+		if(autocvar_g_ca_prevent_stalemate)
+			winner_team = CA_PreventStalemate();
+		else
+			winner_team = -2;
 	}
 
 	CA_count_alive_players();
-	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
+		winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
 		return 0;
 
@@ -215,6 +145,11 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
+	}
+	else if(winner_team == -2)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 	}
 
 	allowed_to_spawn = false;

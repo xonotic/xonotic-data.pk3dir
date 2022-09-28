@@ -14,8 +14,6 @@ int autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
 string autocvar_g_ca_weaponarena = "most";
 
-.float health;
-
 int ca_teams;
 bool allowed_to_spawn;
 
