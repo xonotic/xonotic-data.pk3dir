@@ -1,4 +1,5 @@
 #include "halflife.qh"
+
 .float  roomtype;
 .float  radius;
 .float  pitch;

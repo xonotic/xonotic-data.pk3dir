@@ -8,7 +8,7 @@
 //======================= Global variables ====================================
 
 int autocvar_g_dynamic_handicap; ///< Whether to enable dynamic handicap.
-/// \brief The scale of the handicap. Larget values mean more penalties for
+/// \brief The scale of the handicap. Larger values mean more penalties for
 /// strong players and more buffs for weak players.
 float autocvar_g_dynamic_handicap_scale;
 /// \brief The exponent used to calculate handicap. 1 means linear scale. Values
@@ -32,13 +32,13 @@ float DynamicHandicap_ClampHandicap(float handicap);
 void DynamicHandicap_UpdateHandicap()
 {
 	float total_score = 0;
-	float total_players = 0;
+	float totalplayers = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		total_score += PlayerScore_Get(it, SP_SCORE);
-		++total_players;
+		++totalplayers;
 	});
-	float mean_score = total_score / total_players;
+	float mean_score = total_score / totalplayers;
 	FOREACH_CLIENT(true,
 	{
 		float score = PlayerScore_Get(it, SP_SCORE);

@@ -4,7 +4,7 @@
 
 void XonoticHUDRaceTimerDialog_fill(entity me)
 {
-	entity e;
+	//entity e;
 	string panelname = "racetimer";
 
 	dialog_hudpanel_main_checkbox(me, panelname);

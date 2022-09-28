@@ -1,15 +1,19 @@
 #include "mapinfo.qh"
 #if defined(CSQC)
-    #include "../client/defs.qh"
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include <common/monsters/_mod.qh>
+	#include <common/util.qh>
+	#include <common/monsters/_mod.qh>
 #endif
 
+#ifdef MENUQC
+#define WARN_COND false
+#else
 bool autocvar_g_mapinfo_ignore_warnings;
+#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
+#endif
 
 // generic string stuff
 
@@ -249,11 +253,9 @@ string unquote(string s)
 	return "";
 }
 
-float MapInfo_Get_ByID(float i)
+bool MapInfo_Get_ByID(int i)
 {
-	if(MapInfo_Get_ByName(MapInfo_BSPName_ByID(i), 0, NULL))
-		return 1;
-	return 0;
+	return MapInfo_Get_ByName(MapInfo_BSPName_ByID(i), 0, NULL) ? true : false;
 }
 
 string _MapInfo_Map_worldspawn_music;
@@ -424,27 +426,7 @@ void _MapInfo_Map_Reset()
 
 string _MapInfo_GetDefault(Gametype t)
 {
-	switch(t)
-	{
-		case MAPINFO_TYPE_DEATHMATCH:      return "30 20 0";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
-		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
-		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_LMS:             return "9 20 0";
-		case MAPINFO_TYPE_CA:              return "10 20 0";
-		case MAPINFO_TYPE_KEYHUNT:         return "1000 20 3 0";
-		case MAPINFO_TYPE_ASSAULT:         return "20 0";
-		case MAPINFO_TYPE_RACE:            return "20 5 7 15 0";
-		case MAPINFO_TYPE_ONSLAUGHT:       return "20 0";
-		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
-		case MAPINFO_TYPE_CTS:             return "20 0 0";
-		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
-		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
-		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
-		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
-		// THIS FUNCTION WILL EVENTUALLY BE REMOVED
-		default:                           return "";
-	}
+	return t.m_legacydefaults;
 }
 
 void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisType, int load_default)
@@ -457,7 +439,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
 	}
@@ -485,6 +467,8 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
+		cvar_set("fraglimit", "0"); // special case!
+
 		sa = car(s); if(sa == "") sa = cvar_string("timelimit");
 		cvar_set("g_race_qualifying_timelimit", sa);
 		s = cdr(s);
@@ -502,7 +486,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		s = cdr(s);
 	}
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("leadlimit", "0");
 	}
@@ -546,7 +530,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 		if (sa == "") continue;
 		int p = strstrofs(sa, "=", 0);
 		if (p < 0) {
-			if(!autocvar_g_mapinfo_ignore_warnings)
+			if(WARN_COND)
 				LOG_WARNF("Invalid gametype setting in mapinfo for gametype %s: %s", MapInfo_Type_ToString(pWantedType), sa);
 			continue;
 		}
@@ -586,7 +570,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 			}
 		}
 		FOREACH(Gametypes, true, handled |= it.m_parse_mapinfo(k, v));
-		if (!handled && !autocvar_g_mapinfo_ignore_warnings)
+		if (!handled && WARN_COND)
             LOG_WARNF("Invalid gametype setting in mapinfo for gametype %s: %s", MapInfo_Type_ToString(pWantedType), sa);
 	}
 
@@ -602,25 +586,26 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string t)
+Gametype MapInfo_Type_FromString(string gtype, bool dowarn)
 {
-#define deprecate(from, to) MACRO_BEGIN { \
-	if (t == #from) { \
-		string replacement = #to; \
-		if(!autocvar_g_mapinfo_ignore_warnings) \
-			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, t, replacement); \
-		t = replacement; \
-	} \
-} MACRO_END
-	deprecate(nexball, nb);
-	deprecate(freezetag, ft);
-	deprecate(keepaway, ka);
-	deprecate(invasion, inv);
-	deprecate(assault, as);
-	deprecate(race, rc);
-	FOREACH(Gametypes, it.mdl == t, return it);
+	string replacement = "";
+	switch (gtype)
+	{
+		case "nexball":   replacement = "nb"; break;
+		case "freezetag": replacement = "ft"; break;
+		case "keepaway":  replacement = "ka"; break;
+		case "invasion":  replacement = "inv"; break;
+		case "assault":   replacement = "as"; break;
+		case "race":      replacement = "rc"; break;
+	}
+	if (replacement != "")
+	{
+		if (dowarn && WARN_COND)
+			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
+		gtype = replacement;
+	}
+	FOREACH(Gametypes, it.mdl == gtype, return it);
 	return NULL;
-#undef deprecate
 }
 
 string MapInfo_Type_Description(Gametype t)
@@ -642,7 +627,10 @@ string MapInfo_Type_ToText(Gametype t)
 void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse)
 {
 	string t;
-	float fh, o;
+	float o;
+	// tabs are invalid, treat them as "empty"
+	s = strreplace("\t", "", s);
+
 	t = car(s); s = cdr(s);
 
 	// limited support of "" and comments
@@ -676,16 +664,17 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	{
 		if(recurse > 0)
 		{
-			fh = fopen(s, FILE_READ);
+			float fh = fopen(s, FILE_READ);
 			if(fh < 0)
-				LOG_WARN("Map ", pFilename, " references not existing config file ", s);
+			{
+				if(WARN_COND)
+					LOG_WARN("Map ", pFilename, " references not existing config file ", s);
+			}
 			else
 			{
-				for (;;)
+				while((s = fgets(fh)))
 				{
-					if (!((s = fgets(fh))))
-						break;
-
+					s = strreplace("\t", "", s); // treat tabs as "empty", perform here first to ensure coments are detected
 					// catch different sorts of comments
 					if(s == "")                    // empty lines
 						continue;
@@ -706,27 +695,32 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 				fclose(fh);
 			}
 		}
-		else
+		else if(WARN_COND)
 			LOG_WARN("Map ", pFilename, " uses too many levels of inclusion");
 	}
-	else if(t == "")
-		LOG_WARN("Map ", pFilename, " contains a potentially harmful setting, ignored");
-	else if (!cvar_value_issafe(t))
-		LOG_WARN("Map ", pFilename, " contains a potentially harmful setting, ignored");
-	else if (!cvar_value_issafe(s))
-		LOG_WARN("Map ", pFilename, " contains a potentially harmful setting, ignored");
-	else if(matchacl(MAPINFO_SETTEMP_ACL_SYSTEM, t) <= 0)
-		LOG_WARN("Map ", pFilename, " contains a potentially harmful setting, ignored");
+	else if(t == ""
+		|| !cvar_value_issafe(t)
+		|| !cvar_value_issafe(s)
+		|| matchacl(MAPINFO_SETTEMP_ACL_SYSTEM, t) <= 0)
+	{
+		if (WARN_COND)
+			LOG_WARN("Map ", pFilename, " contains a potentially harmful setting, ignored");
+	}
 	else if(matchacl(acl, t) <= 0)
-		LOG_WARN("Map ", pFilename, " contains a denied setting, ignored");
+	{
+		if (WARN_COND)
+			LOG_WARN("Map ", pFilename, " contains a denied setting, ignored");
+	}
 	else
 	{
 		if(type == 0) // server set
 		{
 			LOG_TRACE("Applying temporary setting ", t, " := ", s);
+		#if 0
 			if(cvar("g_campaign"))
 				cvar_set(t, s); // this is a wrapper and is always temporary anyway; no need to backup old values then
 			else
+		#endif
 				cvar_settemp(t, s);
 		}
 		else
@@ -742,22 +736,19 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 float MapInfo_isRedundant(string fn, string t)
 {
 	// normalize file name
-	fn = strreplace("_", "-", fn);
+	fn = strreplace("_", "", fn);
+	fn = strreplace("-", "", fn);
 
 	// normalize visible title
-	t = strreplace(": ", "-", t);
-	t = strreplace(":", "-", t);
-	t = strreplace(" ", "-", t);
-	t = strreplace("_", "-", t);
-	t = strreplace("'", "-", t);
-
-	if(!strcasecmp(fn, t))
-		return true;
+	t = strreplace(":", "", t);
+	t = strreplace(" ", "", t);
+	t = strreplace("_", "", t);
+	t = strreplace("-", "", t);
+	t = strreplace("'", "", t);
+	t = strdecolorize(t);
 
 	// we allow the visible title to have punctuation the file name does
 	// not, but not vice versa
-	t = strreplace("-", "", t);
-
 	if(!strcasecmp(fn, t))
 		return true;
 
@@ -851,9 +842,6 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 				fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(it), _MapInfo_GetDefaultEx(it)));
 			});
 
-			if(fexists(strcat("scripts/", pFilename, ".arena")))
-				fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
-
 			fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 			fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");
 			fputs(fh, "// optional: clientsettemp_for_type (all|gametypename) cvarname value\n");
@@ -868,7 +856,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 				error("... but I just wrote it!");
 		}
 
-		if(!autocvar_g_mapinfo_ignore_warnings)
+		if(WARN_COND)
 			LOG_WARN("autogenerated mapinfo file ", fn, " has been loaded; please edit that file and move it to maps/", pFilename, ".mapinfo");
 	}
 
@@ -907,7 +895,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			else if(t == "vehicles") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
 			else if(t == "monsters") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_MONSTERS;
 			else if(t == "new_toys") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
-			else
+			else if(WARN_COND)
 				LOG_WARN("Map ", pFilename, " supports unknown feature ", t, ", ignored");
 		}
 		else if(t == "hidden")
@@ -934,21 +922,21 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t);
-			//if(!autocvar_g_mapinfo_ignore_warnings)
+			Gametype f = MapInfo_Type_FromString(t, true);
+			//if(WARN_COND)
 				//LOG_WARN("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.");
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
-			else if(!autocvar_g_mapinfo_ignore_warnings)
+			else if(WARN_COND)
 				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "gametype")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t);
+			Gametype f = MapInfo_Type_FromString(t, true);
 			if(f)
 				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
-			else if(!autocvar_g_mapinfo_ignore_warnings)
+			else if(WARN_COND)
 				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "size")
@@ -960,16 +948,25 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s); d = stof(t);
 			t = car(s); s = cdr(s); e = stof(t);
 			if(s == "")
-				LOG_WARN("Map ", pFilename, " contains an incorrect size line (not enough params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z");
+			{
+				if(WARN_COND)
+					LOG_WARN("Map ", pFilename, " contains an incorrect size line (not enough params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z");
+			}
 			else
 			{
 				t = car(s); s = cdr(s); f = stof(t);
 				if(s != "")
-					LOG_WARN("Map ", pFilename, " contains an incorrect size line (too many params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z");
+				{
+					if(WARN_COND)
+						LOG_WARN("Map ", pFilename, " contains an incorrect size line (too many params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z");
+				}
 				else
 				{
 					if(a >= d || b >= e || c >= f)
-						LOG_WARN("Map ", pFilename, " contains an incorrect size line, mins have to be < maxs");
+					{
+						if(WARN_COND)
+							LOG_WARN("Map ", pFilename, " contains an incorrect size line, mins have to be < maxs");
+					}
 					else
 					{
 						MapInfo_Map_mins.x = a;
@@ -987,7 +984,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
 			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t)))
+			if(all || (f = MapInfo_Type_FromString(t, true)))
 			{
 				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
 				{
@@ -1004,7 +1001,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
 			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t)))
+			if(all || (f = MapInfo_Type_FromString(t, true)))
 			{
 				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
 				{
@@ -1019,7 +1016,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "fog")
 		{
 			if (!cvar_value_issafe(s))
-				LOG_WARN("Map ", pFilename, " contains a potentially harmful fog setting, ignored");
+			{
+				if(WARN_COND)
+					LOG_WARN("Map ", pFilename, " contains a potentially harmful fog setting, ignored");
+			}
 			else
 				MapInfo_Map_fog = s;
 		}
@@ -1035,14 +1035,17 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(pGametypeToSet)
 			{
 				if (!cvar_value_issafe(t))
-					LOG_WARN("Map ", pFilename, " contains a potentially harmful cdtrack, ignored");
+				{
+					if(WARN_COND)
+						LOG_WARN("Map ", pFilename, " contains a potentially harmful cdtrack, ignored");
+				}
 				else
 					MapInfo_Map_clientstuff = strcat(
 						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
 					);
 			}
 		}
-		else if(!autocvar_g_mapinfo_ignore_warnings)
+		else if(WARN_COND)
 			LOG_WARN("Map ", pFilename, " provides unknown info item ", t, ", ignored");
 	}
 	fclose(fh);
@@ -1057,20 +1060,15 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
 		return r;
-	LOG_WARN("Map ", pFilename, " supports no game types, ignored");
+	if (WARN_COND)
+		LOG_WARN("Map ", pFilename, " supports no game types, ignored");
 	return 0;
 }
 int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametypeToSet)
 {
 	int r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
-	if(cvar("g_tdm_on_dm_maps"))
-	{
-		// if this is set, all DM maps support TDM too
-		if (!(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags))
-			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)
-				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
-	}
+	FOREACH(Gametypes, it.m_isForcedSupported(it), _MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, it));
 
 	if(pGametypeToSet)
 	{
@@ -1142,14 +1140,16 @@ string MapInfo_FixName(string s)
 int MapInfo_CurrentFeatures()
 {
 	int req = 0;
-	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
+    // TODO: find a better way to check if weapons are required on the map
+	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || !cvar("g_melee_only") 
+		|| cvar("g_race") || cvar("g_cts") || cvar("g_nexball") || cvar("g_ca") || cvar("g_freezetag") || cvar("g_lms")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
 }
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = Gametypes_from(cvar("gamecfg"));
+	Gametype prev = MapInfo_Type_FromString(cvar_string("gamecfg"), false);
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1233,7 +1233,7 @@ string MapInfo_ListAllAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 void MapInfo_LoadMapSettings_SaveGameType(Gametype t)
 {
 	MapInfo_SwitchGameType(t);
-	cvar_set("gamecfg", ftos(t.m_id));
+	cvar_set("gamecfg", t.mdl);
 	MapInfo_LoadedGametype = t;
 }
 
@@ -1253,21 +1253,38 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 
 		if(MapInfo_Map_supportedGametypes == 0)
 		{
-			LOG_SEVERE("Mapinfo system is not functional at all. Assuming deathmatch.");
-			MapInfo_Map_supportedGametypes = MAPINFO_TYPE_DEATHMATCH.m_flags;
-			MapInfo_LoadMapSettings_SaveGameType(MAPINFO_TYPE_DEATHMATCH);
-			_MapInfo_Map_ApplyGametypeEx("", MAPINFO_TYPE_DEATHMATCH, MAPINFO_TYPE_DEATHMATCH);
+			RandomSelection_Init();
+			FOREACH(Gametypes, it.m_priority == 2, 
+			{
+				MapInfo_Map_supportedGametypes |= it.m_flags;
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+			if(RandomSelection_chosen_ent)
+				t = RandomSelection_chosen_ent;
+			LOG_SEVEREF("Mapinfo system is not functional at all. Falling back to a preferred mode (%s).", t.mdl);
+			MapInfo_LoadMapSettings_SaveGameType(t);
+			_MapInfo_Map_ApplyGametypeEx("", t, t);
 			return; // do not call Get_ByName!
 		}
 
+#if 0
+		// find the lowest bit in the supported gametypes
+		// unnecessary now that we select one at random
 		int _t = 1;
 		while(!(MapInfo_Map_supportedGametypes & 1))
 		{
 			_t <<= 1;
 			MapInfo_Map_supportedGametypes = floor(MapInfo_Map_supportedGametypes >> 1);
 		}
+#endif
+		RandomSelection_Init();
 		Gametype t_prev = t;
-		FOREACH(Gametypes, it.m_flags == _t, { t = it; break; });
+		FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.m_flags,
+		{
+			RandomSelection_AddEnt(it, 1, it.m_priority);
+		});
+		if(RandomSelection_chosen_ent)
+			t = RandomSelection_chosen_ent;
 
 		// t is now a supported mode!
 		LOG_WARNF("can't play the selected map in the given game mode (%s). Falling back to a supported mode (%s).", t_prev.mdl, t.mdl);

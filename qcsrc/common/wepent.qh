@@ -5,6 +5,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 
 .float vortex_charge;
 .float vortex_chargepool_ammo;
+.float oknex_charge;
+.float oknex_chargepool_ammo;
 .int tuba_instrument;
 .int minelayer_mines;
 .float arc_heat_percent;
@@ -32,6 +34,10 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 	.Weapon activeweapon;
 	.Weapon switchingweapon;
 	.Weapon switchweapon;
+
+	.float m_alpha;
+
+	.int m_skin;
 
 	// only for Porto
 	.bool angles_held_status;

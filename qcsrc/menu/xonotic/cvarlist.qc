@@ -23,7 +23,7 @@ void CvarList_Load(entity me, string filter)
 	if(me.handle < 0)
 		return;
 
-	buf_cvarlist(me.handle, filter, "_");
+	buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
 	me.nItems = buf_getsize(me.handle);
 	if(autocvar_menu_cvarlist_onlymodified)
 	{
@@ -107,17 +107,10 @@ void XonoticCvarList_setSelected(entity me, float i)
 	if(me.nItems == 0)
 		return;
 
-	if(me.cvarName)
-		strunzone(me.cvarName);
-	if(me.cvarDescription)
-		strunzone(me.cvarDescription);
-	if(me.cvarType)
-		strunzone(me.cvarType);
-	if(me.cvarDefault)
-		strunzone(me.cvarDefault);
-	me.cvarName = strzone(bufstr_get(me.handle, me.selectedItem));
-	me.cvarDescription = strzone(cvar_description(me.cvarName));
-	me.cvarDefault = strzone(cvar_defstring(me.cvarName));
+	strfree(me.cvarType);
+	strcpy(me.cvarName, bufstr_get(me.handle, me.selectedItem));
+	strcpy(me.cvarDescription, cvar_description(me.cvarName));
+	strcpy(me.cvarDefault, cvar_defstring(me.cvarName));
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
 	me.cvarDescriptionBox.setText(me.cvarDescriptionBox, me.cvarDescription);
 	float needsForcing = me.updateCvarType(me);

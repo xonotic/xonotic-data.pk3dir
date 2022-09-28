@@ -1,7 +1,7 @@
 #include "common.qh"
 
 #if defined(CSQC)
-    #include <common/t_items.qh>
+    #include <client/items/items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/weapons/_all.qh>
@@ -71,8 +71,11 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 	e.warpzone_targetorigin = other_org;
 	e.warpzone_angles = my_ang;
 	e.warpzone_targetangles = other_ang;
-	fixedmakevectors(my_ang); e.warpzone_forward = v_forward;
-	fixedmakevectors(other_ang); e.warpzone_targetforward = v_forward;
+	vector forward, right, up;
+	FIXED_MAKE_VECTORS(my_ang, forward, right, up);
+	e.warpzone_forward = forward;
+	FIXED_MAKE_VECTORS(other_ang, forward, right, up);
+	e.warpzone_targetforward = forward;
 	setcamera_transform(e, WarpZone_camera_transform);
 }
 
@@ -201,7 +204,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	float nomonsters_adjusted;
 	float frac, sol, i;
 	float contentshack;
-	vector o0, e0;
 	entity wz;
 	vector vf, vr, vu;
 
@@ -231,8 +233,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	o0 = org;
-	e0 = end;
 
 	switch(nomonsters)
 	{
@@ -571,13 +571,25 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 	return nearest;
 }
 
+// blacklist of entities that WarpZone_FindRadius doesn't care about
 bool WarpZoneLib_BadEntity(entity e)
 {
 	if (is_pure(e)) return true;
 	string s = e.classname;
 
-	//if (s == "net_linked") return true; // actually some real entities are linked without classname, fail
-	if (s == "") return true;
+	switch(s)
+	{
+		case "weaponentity":
+		case "exteriorweaponentity":
+		case "sprite_waypoint":
+		case "spawnfunc":
+		case "weaponchild":
+		case "chatbubbleentity":
+		case "buff_model":
+		//case "net_linked": // actually some real entities are linked without classname, fail
+		case "":
+			return true;
+	}
 
 	if (startsWith(s, "target_")) return true;
 
@@ -778,21 +790,28 @@ void WarpZone_RefSys_Copy(entity me, entity from)
 }
 entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 {
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	WarpZone_RefSys_Copy(e, me);
 	return e;
 }
 
 bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 {
-	return !WarpZoneLib_BoxTouchesBrush(toucher.absmin, toucher.absmax, this, toucher);
+	vector emin = toucher.absmin, emax = toucher.absmax;
+	if(STAT(Q3COMPAT))
+	{
+		// DP's tracebox enlarges absolute bounding boxes by a single quake unit
+		// we must undo that here to allow accurate touching
+		emin += '1 1 1';
+		emax -= '1 1 1';
+	}
+	return !WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
 }
 
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {
-	float eps = 0.0625;
+	const float eps = 0.0625;
 	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return;

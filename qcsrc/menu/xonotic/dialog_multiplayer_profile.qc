@@ -27,17 +27,19 @@ void XonoticProfileTab_draw(entity me)
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 	SUPER(XonoticProfileTab).draw(me);
 }
+void language_selector_click(entity me, entity btn)
+{
+	localcmd("\nmenu_cmd languageselect\n");
+}
 void XonoticProfileTab_fill(entity me)
 {
 	entity e, pms, label, box;
 	float i;
 	entity profileApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"color -1 -1;"
+		"color -1 -1;" // apply colors contained in _cl_color
 		"name \"$_cl_name\";"
 		"playermodel $_cl_playermodel;"
 		"playerskin $_cl_playerskin;"
-		"sendcvar cl_allow_uidtracking;"
-		"sendcvar cl_allow_uid2name;"
 		, COMMANDBUTTON_APPLY);
 	profileApplyButton.disableOnClick = true;
 
@@ -123,13 +125,18 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
-			e.applyButton = profileApplyButton;
+			e.sendCvars = true;
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
-			e.applyButton = profileApplyButton;
+			e.sendCvars = true;
 			setDependent(e, "cl_allow_uidtracking", 1, 1);
-	me.gotoRC(me, 4, 3.1); // TOP RIGHT
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidranking", _("Allow player statistics to rank you in leaderboards")));
+			e.sendCvars = true;
+			setDependent(e, "cl_allow_uidtracking", 1, 1);
+	me.gotoRC(me, 4.5, 3.1); // TOP RIGHT
 	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT
 	//me.gotoRC(me, 12.5, 0); // BOTTOM LEFT
 		me.TDempty(me, 0.25);
@@ -142,37 +149,17 @@ void XonoticProfileTab_fill(entity me)
 	me.gotoRC(me, 16, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
 	//me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
 	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, TOP POS
-		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
+		//me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
 
 	me.TR(me);
+		me.TDempty(me, 0.75);
+		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Select language..."), '0 0 0'));
+			e.onClick = language_selector_click;
+			e.onClickEntity = me;
+		/*
 		me.TDempty(me, 0.5);
 		me.TD(me, 4.5, 2, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
-
-
-	// ================
-	//  GENDER SECTION
-	// ================
-	me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
-	//me.gotoRC(me, 19.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, BOTTOM POS
-	//me.gotoRC(me, 6.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, BOTTOM POS
-	#if 0
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_gender"));
-			e.addValue(e, _("Undisclosed"), "0");
-			e.addValue(e, _("Female"), "1");
-			e.addValue(e, _("Male"), "2");
-			e.configureXonoticTextSliderValues(e);
-	#else
-			me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gender")));
-		me.TR(me);
-			#define GENDERWIDTH_OFFSET 0.25
-			#define GENDERWIDTH_LENGTH 2.5
-			#define GENDERWIDTH_ITEM (GENDERWIDTH_LENGTH / 3)
-			me.TDempty(me, GENDERWIDTH_OFFSET);
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "2", _("Female")));
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "1", _("Male")));
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "0", _("Undisclosed")));
-	#endif
+		*/
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, profileApplyButton);

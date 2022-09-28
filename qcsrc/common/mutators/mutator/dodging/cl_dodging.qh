@@ -1,0 +1,4 @@
+#pragma once
+
+REPLICATE_INIT(float, cvar_cl_dodging_timeout);
+REPLICATE_INIT(bool, cvar_cl_dodging);

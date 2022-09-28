@@ -3,29 +3,55 @@
 #include <common/weapons/_all.qh>
 #include <common/scores.qh>
 
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
+
+void HUD_Scale_Disable();
+void HUD_Scale_Enable();
+
+#define HUD_ScaleX(f) (f * hud_scale.x)
+#define HUD_ScaleY(f) (f * hud_scale.y)
+#define HUD_ShiftX(f) (f + hud_shift.x + hud_shift.z * (f - hud_scale_center.x))
+#define HUD_ShiftY(f) (f + hud_shift.y + hud_shift.z * (f - hud_scale_center.y))
+vector HUD_Scale(vector v);
+vector HUD_Shift(vector v);
+
+vector HUD_GetFontsize(string cvarname);
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();
 void HUD_Radar_Mouse();
+bool HUD_WouldShowCursor();
+bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
-#define hud_panels_from(i) _hud_panels_from(i, NULL)
 REGISTER_REGISTRY(hud_panels)
 
-#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
+REGISTRY_DEFINE_GET(hud_panels, NULL)
+
+#define _REGISTER_HUD_PANEL(id, draw_func, export_func, configflags, showflags) \
 	void draw_func(); \
+	void export_func(int fh); \
 	REGISTER(hud_panels, HUD_PANEL, id, m_id, new_pure(hud_panel)) { \
 		this.panel_id = this.m_id; \
 		this.panel_draw = draw_func; \
+		this.panel_export = export_func; \
 		this.panel_name = strzone(strtolower(#id)); \
 		this.panel_configflags = configflags; \
 		this.panel_showflags = showflags; \
 	}
 
+#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
+	_REGISTER_HUD_PANEL(id, draw_func, draw_func##_Export, configflags, showflags)
+
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
 // draw the background/borders
-#define HUD_Panel_DrawBg() MACRO_BEGIN { \
+#define HUD_Panel_DrawBg() MACRO_BEGIN \
 	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "") \
 		draw_BorderPicture( \
 			HUD_Shift(panel_pos - '1 1 0' * panel_bg_border), \
@@ -34,9 +60,9 @@ REGISTER_REGISTRY(hud_panels)
 			panel_bg_color, panel_bg_alpha, \
 			HUD_Scale('1 1 0' * BORDER_MULTIPLIER * panel_bg_border) \
 		); \
-} MACRO_END
+MACRO_END
 
-int panel_order[hud_panels_MAX];
+int panel_order[REGISTRY_MAX(hud_panels)];
 string hud_panelorder_prev;
 
 bool hud_draw_maximized;
@@ -51,9 +77,9 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect);
-vector HUD_Get_Num_Color (float hp, float maxvalue);
-void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha);
-void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp);
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink);
+void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, bool icon_right_align, vector color, float theAlpha);
+void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, int icon_right_align, vector color, float theAlpha, float fadelerp);
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag);
 vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect);
 
@@ -73,8 +99,6 @@ int vote_prev; // previous state of vote_active to check for a change
 float vote_alpha;
 float vote_change; // "time" when vote_active changed
 
-float hud_panel_quickmenu;
-
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
 vector panel_click_resizeorigin; // coordinates for opposite point when resizing
@@ -83,11 +107,10 @@ entity highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
-float scoreboard_bottom;
-int weapon_accuracy[Weapons_MAX];
+int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
-int complain_weapon;
-float complain_weapon_type;
+entity complain_weapon;
+int complain_weapon_type;
 float complain_weapon_time;
 
 PlayerScoreField ps_primary, ps_secondary;
@@ -104,6 +127,7 @@ int hudShiftState;
 const int S_SHIFT = 1;
 const int S_CTRL = 2;
 const int S_ALT = 4;
+const int S_TAB = 8;
 
 float hud_fade_alpha;
 
@@ -120,18 +144,18 @@ vector panel_size_copied;
 
 entity panel;
 entityclass(HUDPanel);
-class(HUDPanel) .string panel_name;
-class(HUDPanel) .int panel_id;
-class(HUDPanel) .vector current_panel_pos;
-class(HUDPanel) .vector current_panel_size;
-class(HUDPanel) .string current_panel_bg;
-class(HUDPanel) .float current_panel_bg_alpha;
-class(HUDPanel) .float current_panel_bg_border;
-class(HUDPanel) .vector current_panel_bg_color;
-class(HUDPanel) .float current_panel_bg_color_team;
-class(HUDPanel) .float current_panel_bg_padding;
-class(HUDPanel) .float current_panel_fg_alpha;
-class(HUDPanel) .float update_time;
+classfield(HUDPanel) .string panel_name;
+classfield(HUDPanel) .int panel_id;
+classfield(HUDPanel) .vector current_panel_pos;
+classfield(HUDPanel) .vector current_panel_size;
+classfield(HUDPanel) .string current_panel_bg;
+classfield(HUDPanel) .float current_panel_bg_alpha;
+classfield(HUDPanel) .float current_panel_bg_border;
+classfield(HUDPanel) .vector current_panel_bg_color;
+classfield(HUDPanel) .float current_panel_bg_color_team;
+classfield(HUDPanel) .float current_panel_bg_padding;
+classfield(HUDPanel) .float current_panel_fg_alpha;
+classfield(HUDPanel) .float update_time;
 float panel_enabled;
 vector panel_pos;
 vector panel_size;
@@ -148,7 +172,8 @@ string panel_bg_border_str;
 float panel_bg_padding;
 string panel_bg_padding_str;
 
-class(HUDPanel) .void() panel_draw;
+classfield(HUDPanel) .void() panel_draw;
+classfield(HUDPanel) .void(int fh) panel_export;
 
 // chat panel can be reduced / moved while the mapvote is active
 // let know the mapvote panel about chat pos and size
@@ -156,6 +181,26 @@ float chat_posy;
 float chat_sizey;
 
 float current_player;
+
+float autocvar__menu_alpha; // updated by the menu VM, useful to tell when the menu is being drawn
+
+string autocvar__hud_panelorder;
+
+bool autocvar_hud_cursormode = true;
+string autocvar_hud_dock;
+float autocvar_hud_dock_alpha;
+string autocvar_hud_dock_color;
+bool autocvar_hud_dock_color_team;
+string autocvar_hud_panel_bg;
+float autocvar_hud_panel_bg_alpha;
+float autocvar_hud_panel_bg_border;
+vector autocvar_hud_panel_bg_color;
+float autocvar_hud_panel_bg_color_team;
+float autocvar_hud_panel_bg_padding;
+float autocvar_hud_panel_fg_alpha;
+string autocvar_hud_skin;
+float autocvar_hud_progressbar_alpha;
+float autocvar_hud_panel_update_interval;
 
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
@@ -175,17 +220,13 @@ vector hud_shift;
 vector hud_shift_current = '0 0 0';
 vector hud_scale_center;
 
-float stringwidth_colors(string s, vector theSize);
-float stringwidth_nocolors(string s, vector theSize);
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
 
 .int panel_showflags;
-const int PANEL_SHOW_NEVER    = 0x00;
-const int PANEL_SHOW_MAINGAME = 0x01;
-const int PANEL_SHOW_MINIGAME = 0x02;
-const int PANEL_SHOW_MAPVOTE  = 0x04;
-const int PANEL_SHOW_WITH_SB  = 0x08;
-const int PANEL_SHOW_ALWAYS   = 0xff;
+const int PANEL_SHOW_MAINGAME = BIT(0); // show in the main HUD
+const int PANEL_SHOW_MINIGAME = BIT(1); // show when minigames panels are shown
+const int PANEL_SHOW_MAPVOTE  = BIT(2); // show during map vote
+const int PANEL_SHOW_WITH_SB  = BIT(3); // show when scoreboard is on
 
 .int panel_configflags;
 const int PANEL_CONFIG_NO        = 0x00;
@@ -211,7 +252,7 @@ REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // AMMO
 REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // POWERUPS
 REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // HEALTHARMOR
-REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // NOTIFY
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // NOTIFY
 REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // TIMER
 REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RADAR
 REGISTER_HUD_PANEL(SCORE,           HUD_Score,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // SCORE
@@ -227,11 +268,12 @@ REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(MINIGAMEBOARD,   HUD_MinigameBoard,  PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEBOARD
 REGISTER_HUD_PANEL(MINIGAMESTATUS,  HUD_MinigameStatus, PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMESTATUS
 REGISTER_HUD_PANEL(MINIGAMEHELP,    HUD_MinigameHelp,   PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEHELP
-REGISTER_HUD_PANEL(MINIGAMEMENU,    HUD_MinigameMenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // MINIGAMEMENU
+REGISTER_HUD_PANEL(MINIGAMEMENU,    HUD_MinigameMenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEMENU
 REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       PANEL_CONFIG_NO                          ,                                             PANEL_SHOW_MAPVOTE                     ) // MAPVOTE
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
-REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME                                                                ) // QUICKMENU
+REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // QUICKMENU
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
+REGISTER_HUD_PANEL(STRAFEHUD,       HUD_StrafeHUD,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // STRAFEHUD
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
@@ -242,114 +284,112 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO         
 
 // Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
-#define HUD_Panel_GetBg() MACRO_BEGIN {                                                                             \
-	string panel_bg;                                                                                                \
-	if (!autocvar__hud_configure && panel_bg_str == "0") {                                                          \
-		panel_bg = "0";                                                                                             \
-	} else {                                                                                                        \
-		if (panel_bg_str == "") {                                                                                   \
-			panel_bg_str = autocvar_hud_panel_bg;                                                                   \
-		}                                                                                                           \
-		if (panel_bg_str == "0" && !autocvar__hud_configure) {                                                      \
-			panel_bg = "0";                                                                                         \
-		} else {                                                                                                    \
-			if (panel_bg_str == "0" && autocvar__hud_configure)                                                     \
-				panel_bg_alpha_str = "0";                                                                           \
-			panel_bg = strcat(hud_skin_path, "/", panel_bg_str);                                                    \
-			if (precache_pic(panel_bg) == "") {                                                                     \
-				panel_bg = strcat(hud_skin_path, "/", "border_default");                                            \
-				if (precache_pic(panel_bg) == "") {                                                                 \
-					panel_bg = strcat("gfx/hud/default/", "border_default");                                        \
-				}                                                                                                   \
-			}                                                                                                       \
-		}                                                                                                           \
-	}                                                                                                               \
-	if (panel.current_panel_bg)                                                                                     \
-		strunzone(panel.current_panel_bg);                                                                          \
-	panel.current_panel_bg = strzone(panel_bg);                                                                     \
-} MACRO_END
+#define HUD_Panel_GetBg() MACRO_BEGIN \
+	string panel_bg; \
+	if (!autocvar__hud_configure && panel_bg_str == "0") { \
+		panel_bg = "0"; \
+	} else { \
+		if (panel_bg_str == "") { \
+			panel_bg_str = autocvar_hud_panel_bg; \
+		} \
+		if (panel_bg_str == "0" && !autocvar__hud_configure) { \
+			panel_bg = "0"; \
+		} else { \
+			if (panel_bg_str == "0" && autocvar__hud_configure) \
+				panel_bg_alpha_str = "0"; \
+			panel_bg = strcat(hud_skin_path, "/", panel_bg_str); \
+			if (precache_pic(panel_bg) == "") { \
+				panel_bg = strcat(hud_skin_path, "/", "border_default"); \
+				if (precache_pic(panel_bg) == "") { \
+					panel_bg = strcat("gfx/hud/default/", "border_default"); \
+				} \
+			} \
+		} \
+	} \
+	strcpy(panel.current_panel_bg, panel_bg); \
+MACRO_END
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
-#define HUD_Panel_GetColor() MACRO_BEGIN {                                                                          \
-	if ((teamplay) && panel_bg_color_team > 0) {                                                                        \
-		if (autocvar__hud_configure && myteam == NUM_SPECTATOR)                                                     \
-			panel_bg_color = '1 0 0' * panel_bg_color_team;                                                         \
-		else                                                                                                        \
-			panel_bg_color = myteamcolors * panel_bg_color_team;                                                    \
-	} else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team > 0) {          \
-		panel_bg_color = '1 0 0' * panel_bg_color_team;                                                             \
-	} else {                                                                                                        \
-		if (panel_bg_color_str == "") {                                                                             \
-			panel_bg_color = autocvar_hud_panel_bg_color;                                                           \
-		} else {                                                                                                    \
-			if (panel_bg_color_str == "shirt") {                                                                    \
+#define HUD_Panel_GetColor() MACRO_BEGIN \
+	if ((teamplay) && panel_bg_color_team > 0) { \
+		if (autocvar__hud_configure && myteam == NUM_SPECTATOR) \
+			panel_bg_color = '1 0 0' * panel_bg_color_team; \
+		else \
+			panel_bg_color = myteamcolors * panel_bg_color_team; \
+	} else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team > 0) { \
+		panel_bg_color = '1 0 0' * panel_bg_color_team; \
+	} else { \
+		if (panel_bg_color_str == "") { \
+			panel_bg_color = autocvar_hud_panel_bg_color; \
+		} else { \
+			if (panel_bg_color_str == "shirt") { \
 				panel_bg_color = colormapPaletteColor(floor(entcs_GetClientColors(current_player) / 16), 0); \
-			} else if (panel_bg_color_str == "pants") {                                                             \
+			} else if (panel_bg_color_str == "pants") { \
 				panel_bg_color = colormapPaletteColor(entcs_GetClientColors(current_player) % 16, 1); \
-			} else {                                                                                                \
-				panel_bg_color = stov(panel_bg_color_str);                                                          \
-			}                                                                                                       \
-		}                                                                                                           \
-	}                                                                                                               \
-} MACRO_END
+			} else { \
+				panel_bg_color = stov(panel_bg_color_str); \
+			} \
+		} \
+	} \
+MACRO_END
 
 // Get value for panel_bg_color_team: if "" fetch default, else use panel_bg_color_team_str
-#define HUD_Panel_GetColorTeam() MACRO_BEGIN {                                                                      \
-	if (panel_bg_color_team_str == "") {                                                                            \
-		panel_bg_color_team = autocvar_hud_panel_bg_color_team;                                                     \
-	} else {                                                                                                        \
-		panel_bg_color_team = stof(panel_bg_color_team_str);                                                        \
-	}                                                                                                               \
-} MACRO_END
+#define HUD_Panel_GetColorTeam() MACRO_BEGIN \
+	if (panel_bg_color_team_str == "") { \
+		panel_bg_color_team = autocvar_hud_panel_bg_color_team; \
+	} else { \
+		panel_bg_color_team = stof(panel_bg_color_team_str); \
+	} \
+MACRO_END
 
 // Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
 // comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
-#define HUD_Panel_GetBgAlpha() MACRO_BEGIN {                                                                        \
-	if (panel_bg_alpha_str == "") {                                                                                 \
-		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);                                                     \
-	}                                                                                                               \
-	panel_bg_alpha = stof(panel_bg_alpha_str);                                                                      \
-	if (autocvar__hud_configure) {                                                                                  \
-		if (!panel_enabled)                                                                                         \
-			panel_bg_alpha = 0.25;                                                                                  \
-		else if (hud_configure_menu_open == 2 && panel == highlightedPanel)                                                    \
+#define HUD_Panel_GetBgAlpha() MACRO_BEGIN \
+	if (panel_bg_alpha_str == "") { \
+		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha); \
+	} \
+	panel_bg_alpha = stof(panel_bg_alpha_str); \
+	if (autocvar__hud_configure) { \
+		if (!panel_enabled) \
+			panel_bg_alpha = 0.25; \
+		else if (hud_configure_menu_open == 2 && panel == highlightedPanel) \
 			panel_bg_alpha = (1 - autocvar__menu_alpha) * max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
-		else                                                                                                        \
-			panel_bg_alpha = max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha);                                \
-	}                                                                                                               \
-} MACRO_END
+		else \
+			panel_bg_alpha = max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha); \
+	} \
+MACRO_END
 
 // Get value for panel_fg_alpha. Also do various minalpha checks
 // comment on line 2 of macro: // ALWAYS show disabled panels at 0.25 alpha when in config mode
-#define HUD_Panel_GetFgAlpha() MACRO_BEGIN {                                                                        \
-	panel_fg_alpha = autocvar_hud_panel_fg_alpha;                                                                   \
-	if (autocvar__hud_configure && !panel_enabled)                                                                  \
-		panel_fg_alpha = 0.25;                                                                                      \
-} MACRO_END
+#define HUD_Panel_GetFgAlpha() MACRO_BEGIN \
+	panel_fg_alpha = autocvar_hud_panel_fg_alpha; \
+	if (autocvar__hud_configure && !panel_enabled) \
+		panel_fg_alpha = 0.25; \
+MACRO_END
 
 // Get border. See comments above, it's similar.
-#define HUD_Panel_GetBorder() MACRO_BEGIN {                                                                         \
-	if (panel_bg_border_str == "") {                                                                                \
-		panel_bg_border = autocvar_hud_panel_bg_border;                                                             \
-	} else {                                                                                                        \
-		panel_bg_border = stof(panel_bg_border_str);                                                                \
-	}                                                                                                               \
-} MACRO_END
+#define HUD_Panel_GetBorder() MACRO_BEGIN \
+	if (panel_bg_border_str == "") { \
+		panel_bg_border = autocvar_hud_panel_bg_border; \
+	} else { \
+		panel_bg_border = stof(panel_bg_border_str); \
+	} \
+MACRO_END
 
 // Get padding. See comments above, it's similar.
 // last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
-#define HUD_Panel_GetPadding() MACRO_BEGIN {                                                                        \
-	if (panel_bg_padding_str == "") {                                                                               \
-		panel_bg_padding = autocvar_hud_panel_bg_padding;                                                           \
-	} else {                                                                                                        \
-		panel_bg_padding = stof(panel_bg_padding_str);                                                              \
-	}                                                                                                               \
-	panel_bg_padding = min(min(panel_size.x, panel_size.y)/2 - 5, panel_bg_padding);                                \
-} MACRO_END
+#define HUD_Panel_GetPadding() MACRO_BEGIN \
+	if (panel_bg_padding_str == "") { \
+		panel_bg_padding = autocvar_hud_panel_bg_padding; \
+	} else { \
+		panel_bg_padding = stof(panel_bg_padding_str); \
+	} \
+	panel_bg_padding = min(min(panel_size.x, panel_size.y)/2 - 5, panel_bg_padding); \
+MACRO_END
 
 // return smoothly faded pos and size of given panel when a dialog is active
 // don't center too wide panels, it doesn't work with different resolutions
-#define HUD_Panel_UpdatePosSize_ForMenu() MACRO_BEGIN { \
+#define HUD_Panel_UpdatePosSize_ForMenu() MACRO_BEGIN \
 	vector new_size = panel_size; \
 	float max_panel_width = 0.52 * vid_conwidth; \
 	if(panel_size.x > max_panel_width) \
@@ -360,13 +400,13 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO         
 	vector new_pos = vec2(panel_bg_border + 0.5 * max_panel_width, 0.5 * vid_conheight) - 0.5 * new_size; \
 	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * new_pos; \
 	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * new_size; \
-} MACRO_END
+MACRO_END
 
 // Scale the pos and size vectors to absolute coordinates
-#define HUD_Panel_ScalePosSize() MACRO_BEGIN {                                                                      \
-	panel_pos.x *= vid_conwidth;  panel_pos.y *= vid_conheight;                                                     \
-	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight;                                                    \
-} MACRO_END
+#define HUD_Panel_ScalePosSize() MACRO_BEGIN \
+	panel_pos.x *= vid_conwidth; panel_pos.y *= vid_conheight; \
+	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight; \
+MACRO_END
 
 float panel_fade_alpha;
 void HUD_Panel_LoadCvars();
@@ -375,17 +415,17 @@ void HUD_Panel_LoadCvars();
 	panel_enabled = ((panel.panel_configflags & PANEL_CONFIG_CANBEOFF) \
 					? cvar(strcat("hud_panel_", panel.panel_name)) : true)
 
-#define HUD_Panel_UpdatePosSize() MACRO_BEGIN {                                                                     \
+#define HUD_Panel_UpdatePosSize() MACRO_BEGIN \
 	Hud_Panel_GetPanelEnabled(); \
-	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));                                  \
-	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size")));                                \
-	HUD_Panel_ScalePosSize();                                                                                       \
-	if (hud_configure_menu_open == 2 && panel == highlightedPanel) {                                                           \
-		HUD_Panel_UpdatePosSize_ForMenu();                                                                          \
-	}                                                                                                               \
-	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border"));                        \
-	HUD_Panel_GetBorder();                                                                                          \
-} MACRO_END
+	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
+	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
+	HUD_Panel_ScalePosSize(); \
+	if (hud_configure_menu_open == 2 && panel == highlightedPanel) { \
+		HUD_Panel_UpdatePosSize_ForMenu(); \
+	} \
+	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border")); \
+	HUD_Panel_GetBorder(); \
+MACRO_END
 
 const int NOTIFY_MAX_ENTRIES = 10;
 const float NOTIFY_ICON_MARGIN = 0.02;

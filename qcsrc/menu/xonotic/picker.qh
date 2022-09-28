@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../item.qh"
-CLASS(XonoticPicker, Item)
+CLASS(XonoticPicker, MenuItem)
 	METHOD(XonoticPicker, configureXonoticPicker, void(entity));
 	METHOD(XonoticPicker, mousePress, bool(XonoticPicker this, vector pos));
 	METHOD(XonoticPicker, mouseRelease, float(entity, vector));

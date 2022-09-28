@@ -6,7 +6,7 @@ void bot_clientconnect(entity this) { }
 void bot_clientdisconnect(entity this) { }
 void bot_cmdhelp(string scmd) { }
 void bot_endgame() { }
-bool bot_fixcount() { return true; }
+bool bot_fixcount(bool multiple_per_frame) { return true; }
 void bot_list_commands() { }
 void bot_queuecommand(entity bot, string cmdstring) { }
 void bot_relinkplayerlist() { }
@@ -38,7 +38,7 @@ void waypoint_schedulerelink(entity wp) { }
 void waypoint_spawnforitem(entity e) { }
 void waypoint_spawnforitem_force(entity e, vector org) { }
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent) { }
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent) { }
-void waypoint_spawn_fromeditor(entity pl) { }
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent) { }
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp) { }
 entity waypoint_spawn(vector m1, vector m2, float f) { return NULL; }
 #endif

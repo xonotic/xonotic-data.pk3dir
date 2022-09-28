@@ -1,4 +1,5 @@
 #include "all.qh"
+
 #if defined(CSQC)
 	#include <client/announcer.qh>
 #elif defined(MENUQC)
@@ -6,10 +7,9 @@
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
 	#include <common/teams.qh>
-	#include <server/autocvars.qh>
-	#include <server/constants.qh>
-	#include <server/defs.qh>
+	#include <server/command/getreplies.qh>
 	#include <server/mutators/_mod.qh>
+	#include <server/world.qh>
 #endif
 
 // ================================================
@@ -79,6 +79,9 @@ string Notification_CheckArgs(
 
 bool Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_client)
 {
+	if(!IS_REAL_CLIENT(to_client))
+		return false;
+
 	switch (broadcast)
 	{
 		case NOTIF_ONE:
@@ -159,7 +162,7 @@ void Destroy_All_Notifications()
 	#ifdef SVQC
 	Kill_Notification(NOTIF_ALL, NULL, MSG_Null, CPID_Null);
 	#else
-	reset_centerprint_messages();
+	centerprint_KillAll();
 	#endif
 
 	// kill all real notification entities
@@ -247,11 +250,11 @@ string Process_Notif_Args(
 
 				switch(strtolower(selected))
 				{
-					#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { ++sel_num; break; }
-					#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { ++sel_num; break; }
-					#define ARG_CASE_ARG_CS_SV(selected,result)    case selected: { ++sel_num; break; }
-					#define ARG_CASE_ARG_CS(selected,result)       case selected: { ++sel_num; break; }
-					#define ARG_CASE_ARG_SV(selected,result)       case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: ++sel_num; break;
+					#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: ++sel_num; break;
+					#define ARG_CASE_ARG_CS_SV(selected,result)    case selected: ++sel_num; break;
+					#define ARG_CASE_ARG_CS(selected,result)       case selected: ++sel_num; break;
+					#define ARG_CASE_ARG_SV(selected,result)       case selected: ++sel_num; break;
 					#define ARG_CASE_ARG_DC(selected,result)
 					#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 					NOTIF_ARGUMENT_LIST
@@ -298,7 +301,7 @@ string Process_Notif_Args(
 
 				switch(strtolower(selected))
 				{
-					#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: ++sel_num; break;
 					#define ARG_CASE_ARG_CS_SV_DC(selected,result)
 					#define ARG_CASE_ARG_CS_SV(selected,result)
 					#define ARG_CASE_ARG_CS(selected,result)
@@ -350,11 +353,11 @@ string Process_Notif_Args(
 				switch(strtolower(selected))
 				{
 					#define ARG_CASE_ARG_CS_SV_HA(selected,result)
-					#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: ++sel_num; break;
 					#define ARG_CASE_ARG_CS_SV(selected,result)
 					#define ARG_CASE_ARG_CS(selected,result)
 					#define ARG_CASE_ARG_SV(selected,result)
-					#define ARG_CASE_ARG_DC(selected,result)       case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_DC(selected,result)       case selected: ++sel_num; break;
 					#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 					NOTIF_ARGUMENT_LIST
 					#undef ARG_CASE
@@ -608,7 +611,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				// ======================
 				//  Process Notif String
 				// ======================
-				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN { \
+				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN \
 					notif.nent_string = strzone(CCR( \
 						Process_Notif_Line( \
 							typeId, \
@@ -619,7 +622,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 							stringname \
 						)) \
 					); \
-				} MACRO_END
+				MACRO_END
 
 				if(GENTLE)
 				{
@@ -759,12 +762,12 @@ void Create_Notification_Entity_Choice(entity notif,
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars(entity this)
+void Notification_GetCvars(entity this, entity store)
 {
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		GetCvars_handleFloat(
 			this,
-			CS(this),
+			store,
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],
@@ -777,60 +780,64 @@ void Notification_GetCvars(entity this)
 /** used to output notifications.cfg file */
 void Dump_Notifications(int fh, bool alsoprint)
 {
-	#define NOTIF_WRITE(a) MACRO_BEGIN { \
-		fputs(fh, a); \
-		if (alsoprint) LOG_INFO(a); \
-	} MACRO_END
+	#define NOTIF_WRITE(str) write_String_To_File(fh, str, alsoprint)
 
-	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN { \
-		string notif_msg = sprintf( \
+	#define NOTIF_WRITE_ENTITY(e, description) \
+		NOTIF_WRITE(sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n", \
 			Get_Notif_CvarName(e), e.nent_default, description \
-		); \
-		NOTIF_WRITE(notif_msg); \
-	} MACRO_END
+		))
 
-	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) MACRO_BEGIN { \
-		string notif_msg = sprintf( \
+	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) \
+		NOTIF_WRITE(sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n" \
 			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
 			Get_Notif_CvarName(e), e.nent_default, descriptiona, \
 			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb \
-		); \
-		NOTIF_WRITE(notif_msg); \
-	} MACRO_END
+		))
 
-	#define NOTIF_WRITE_HARDCODED(cvar, default, description) MACRO_BEGIN { \
-		string notif_msg = sprintf( \
-			"seta notification_%s \"%s\" \"%s\"\n", \
-			cvar, default, description \
-		); \
-		NOTIF_WRITE(notif_msg); \
-	} MACRO_END
+	#define NOTIF_WRITE_HARDCODED(cvar, default, description) \
+		NOTIF_WRITE("seta notification_" cvar " \"" default "\" \"" description "\"\n")
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
 	// You ARE supposed to manually edit this function to add i.e. hard coded
 	// notification variables for mutators or game modes or such and then
 	// regenerate the notifications.cfg file from the new code.
 
-	NOTIF_WRITE("// ********************************************** //\n");
-	NOTIF_WRITE("// ** WARNING - DO NOT MANUALLY EDIT THIS FILE ** //\n");
-	NOTIF_WRITE("// **                                          ** //\n");
-	NOTIF_WRITE("// **  This file is automatically generated    ** //\n");
-	NOTIF_WRITE("// **  by code with the command 'dumpnotifs'.  ** //\n");
-	NOTIF_WRITE("// **                                          ** //\n");
-	NOTIF_WRITE("// **  If you add a new notification, please   ** //\n");
-	NOTIF_WRITE("// **  regenerate this file with that command  ** //\n");
-	NOTIF_WRITE("// **  making sure that the output matches     ** //\n");
-	NOTIF_WRITE("// **  with the lists and defaults in code.    ** //\n");
-	NOTIF_WRITE("// **                                          ** //\n");
-	NOTIF_WRITE("// ********************************************** //\n");
+	NOTIF_WRITE(
+		"// ********************************************** //\n"
+		"// ** WARNING - DO NOT MANUALLY EDIT THIS FILE ** //\n"
+		"// **                                          ** //\n"
+		"// **  This file is automatically generated    ** //\n"
+		"// **  by code with the command 'dumpnotifs'.  ** //\n"
+		"// **                                          ** //\n"
+		"// **  If you add a new notification, please   ** //\n"
+		"// **  regenerate this file with that command  ** //\n"
+		"// **  making sure that the output matches     ** //\n"
+		"// **  with the lists and defaults in code.    ** //\n"
+		"// **                                          ** //\n"
+		"// ********************************************** //\n");
 
 	// These notifications will also append their string as a comment...
 	// This is not necessary, and does not matter if they vary between config versions,
 	// it is just a semi-helpful tool for those who want to manually change their user settings.
 
-	int NOTIF_ANNCE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE, { ++NOTIF_ANNCE_COUNT; });
+	int NOTIF_ANNCE_COUNT = 0;
+	int NOTIF_INFO_COUNT = 0;
+	int NOTIF_CENTER_COUNT = 0;
+	int NOTIF_MULTI_COUNT = 0;
+	int NOTIF_CHOICE_COUNT = 0;
+	FOREACH(Notifications, true, {
+		switch (it.nent_type)
+		{
+			case MSG_ANNCE: ++NOTIF_ANNCE_COUNT; break;
+			case MSG_INFO: ++NOTIF_INFO_COUNT; break;
+			case MSG_CENTER: ++NOTIF_CENTER_COUNT; break;
+			case MSG_MULTI: ++NOTIF_MULTI_COUNT; break;
+			case MSG_CHOICE: ++NOTIF_CHOICE_COUNT; break;
+		}
+	});
+
 	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -838,7 +845,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_INFO_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_INFO, { ++NOTIF_INFO_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -847,7 +853,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_CENTER_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER, { ++NOTIF_CENTER_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -855,7 +860,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_MULTI_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI, { ++NOTIF_MULTI_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -863,7 +867,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_CHOICE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE, { ++NOTIF_CHOICE_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
@@ -1011,15 +1014,15 @@ string Local_Notification_sprintf(
 		string tmp_s; // used by NOTIF_ARGUMENT_LIST
 		switch (strtolower(selected))
 		{
-			#define ARG_CASE_ARG_CS_SV_HA(selected, result) case selected: { arg_slot[sel_num++] = result; break; }
-			#define ARG_CASE_ARG_CS_SV_DC(selected, result) case selected: { arg_slot[sel_num++] = result; break; }
-			#define ARG_CASE_ARG_CS_SV(selected, result)    case selected: { arg_slot[sel_num++] = result; break; }
+			#define ARG_CASE_ARG_CS_SV_HA(selected, result) case selected: arg_slot[sel_num++] = result; break;
+			#define ARG_CASE_ARG_CS_SV_DC(selected, result) case selected: arg_slot[sel_num++] = result; break;
+			#define ARG_CASE_ARG_CS_SV(selected, result)    case selected: arg_slot[sel_num++] = result; break;
 #ifdef CSQC
-			#define ARG_CASE_ARG_CS(selected, result)       case selected: { arg_slot[sel_num++] = result; break; }
+			#define ARG_CASE_ARG_CS(selected, result)       case selected: arg_slot[sel_num++] = result; break;
 			#define ARG_CASE_ARG_SV(selected, result)
 #else
 			#define ARG_CASE_ARG_CS(selected, result)
-			#define ARG_CASE_ARG_SV(selected, result)       case selected: { arg_slot[sel_num++] = result; break; }
+			#define ARG_CASE_ARG_SV(selected, result)       case selected: arg_slot[sel_num++] = result; break;
 #endif
 			#define ARG_CASE_ARG_DC(selected, result)
 			#define ARG_CASE(prog, selected, result)        ARG_CASE_##prog(selected, result)
@@ -1063,8 +1066,7 @@ void Local_Notification_sound(int soundchannel, string soundfile, float soundvol
 
 		_sound(NULL, soundchannel, AnnouncerFilename(soundfile), soundvolume, soundposition);
 
-		if (prev_soundfile) strunzone(prev_soundfile);
-		prev_soundfile = strzone(soundfile);
+		strcpy(prev_soundfile, soundfile);
 		prev_soundtime = time;
 	}
 	else
@@ -1100,7 +1102,7 @@ void Local_Notification_HUD_Notify_Push(
 		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push");
 		switch (strtolower(selected))
 		{
-			#define ARG_CASE_ARG_CS_SV_HA(selected, result) case selected: { arg_slot[sel_num++] = result; break; }
+			#define ARG_CASE_ARG_CS_SV_HA(selected, result) case selected: arg_slot[sel_num++] = result; break;
 			#define ARG_CASE_ARG_CS_SV_DC(selected, result)
 			#define ARG_CASE_ARG_CS_SV(selected, result)
 			#define ARG_CASE_ARG_CS(selected, result)
@@ -1131,7 +1133,7 @@ void Local_Notification_HUD_Notify_Push(
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 
-void Local_Notification_centerprint_generic(
+void Local_Notification_centerprint_Add(
 	string input, string durcnt,
 	CPID cpid, float f1, float f2)
 {
@@ -1140,15 +1142,15 @@ void Local_Notification_centerprint_generic(
 	for (int sel_num = 0; (durcnt != ""); )
 	{
 		string selected = car(durcnt); durcnt = cdr(durcnt);
-		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic");
+		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_Add");
 		switch (strtolower(selected))
 		{
 			#define ARG_CASE_ARG_CS_SV_HA(selected, result)
-			#define ARG_CASE_ARG_CS_SV_DC(selected, result) case selected: { arg_slot[sel_num++] = result; break; }
+			#define ARG_CASE_ARG_CS_SV_DC(selected, result) case selected: arg_slot[sel_num++] = result; break;
 			#define ARG_CASE_ARG_CS_SV(selected, result)
 			#define ARG_CASE_ARG_CS(selected, result)
 			#define ARG_CASE_ARG_SV(selected, result)
-			#define ARG_CASE_ARG_DC(selected, result)       case selected: { arg_slot[sel_num++] = result; break; }
+			#define ARG_CASE_ARG_DC(selected, result)       case selected: arg_slot[sel_num++] = result; break;
 			#define ARG_CASE(prog, selected, result)        ARG_CASE_##prog(selected,result)
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
@@ -1161,14 +1163,14 @@ void Local_Notification_centerprint_generic(
 			default:
 			{
 				if (/* wtf */ ftos(stof(selected)) != "") { arg_slot[sel_num++] = selected; }
-				else { NOTIF_HIT_UNKNOWN(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic") }
+				else { NOTIF_HIT_UNKNOWN(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_Add") }
 				break;
 			}
 		}
 	}
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
+		"Local_Notification_centerprint_Add('%s^7', '%s', %d, %d, %d, %d);\n",
 		MakeConsoleSafe(input),
 		durcnt,
 		f1, f2,
@@ -1176,7 +1178,7 @@ void Local_Notification_centerprint_generic(
 		stof(arg_slot[1])
 	));
 	#endif
-	centerprint_generic(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
+	centerprint_Add(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 #endif
 
@@ -1295,7 +1297,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		#ifdef CSQC
 		case MSG_CENTER:
 		{
-			Local_Notification_centerprint_generic(
+			Local_Notification_centerprint_Add(
 				Local_Notification_sprintf(
 					notif.nent_string,
 					notif.nent_args,
@@ -1414,11 +1416,9 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
         int _net_name = net_name;
         CPID net_name = ENUMCAST(CPID, _net_name);
         if (net_name == CPID_Null) {
-            // kill all
-            reset_centerprint_messages();
+            centerprint_KillAll();
         } else {
-            // kill group
-            centerprint_generic(ORDINAL(net_name), "", 0, 0);
+            centerprint_Kill(ORDINAL(net_name));// kill group
         }
         return;
     }
@@ -1472,7 +1472,7 @@ void Net_Notification_Remove(entity this)
 		this.owner.nent_name
 	));
 	#endif
-	for (int i = 0; i < this.nent_stringcount; ++i) { if (this.nent_strings[i]) strunzone(this.nent_strings[i]); }
+	for (int i = 0; i < this.nent_stringcount; ++i) { strfree(this.nent_strings[i]); }
 	delete(this);
 }
 
@@ -1528,7 +1528,7 @@ void Send_Notification(
 	MSG net_type, Notification net_name,
 	...count)
 {
-    if (broadcast != NOTIF_ALL && broadcast != NOTIF_ALL_EXCEPT && !IS_REAL_CLIENT(client)) return;
+    if (broadcast == NOTIF_ONE_ONLY && !IS_REAL_CLIENT(client)) return;
 	entity notif = net_name;
 	string parms = sprintf("%s, '%s', %s, %s",
 		Get_Notif_BroadcastName(broadcast),
@@ -1609,9 +1609,9 @@ void Send_Notification(
 		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice;
 
-		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN { \
+		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN \
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
-				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
+				switch (CS_CVAR(ent).msg_choice_choices[net_name.nent_choice_idx]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \
@@ -1629,7 +1629,7 @@ void Send_Notification(
 				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
 				f1, f2, f3, f4); \
-		} MACRO_END
+		MACRO_END
 
 		switch (broadcast)
 		{
@@ -1642,7 +1642,7 @@ void Send_Notification(
 			}
 			default:
 			{
-				FOREACH_CLIENT(IS_REAL_CLIENT(it) && Notification_ShouldSend(broadcast, it, client), {
+				FOREACH_CLIENT(Notification_ShouldSend(broadcast, it, client), {
 					RECURSE_FROM_CHOICE(it, continue);
 				});
 				break;

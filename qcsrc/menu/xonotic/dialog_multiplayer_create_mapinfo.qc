@@ -12,19 +12,11 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	me.startButton.onClickEntity = mlb;
 	MapInfo_Get_ByID(i);
 
-	if(me.currentMapBSPName)
-	{
-		strunzone(me.currentMapBSPName);
-		strunzone(me.currentMapTitle);
-		strunzone(me.currentMapAuthor);
-		strunzone(me.currentMapDescription);
-		strunzone(me.currentMapPreviewImage);
-	}
-	me.currentMapBSPName = strzone(MapInfo_Map_bspname);
-	me.currentMapTitle = strzone(strdecolorize(MapInfo_Map_title));
-	me.currentMapAuthor = strzone(strdecolorize(MapInfo_Map_author));
-	me.currentMapDescription = strzone(MapInfo_Map_description);
-	me.currentMapPreviewImage = strzone(strcat("/maps/", MapInfo_Map_bspname));
+	strcpy(me.currentMapBSPName, MapInfo_Map_bspname);
+	strcpy(me.currentMapTitle, strdecolorize(MapInfo_Map_title));
+	strcpy(me.currentMapAuthor, strdecolorize(MapInfo_Map_author));
+	strcpy(me.currentMapDescription, MapInfo_Map_description);
+	strcpy(me.currentMapPreviewImage, strcat("/maps/", MapInfo_Map_bspname));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
@@ -96,4 +88,5 @@ void XonoticMapInfoDialog_fill(entity me)
 		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton(ZCTX(_("MAP^Play")), '0 0 0'));
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
+			setDependent(e, "g_campaign", 0, 0);
 }

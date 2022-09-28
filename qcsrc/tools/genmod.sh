@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -eu
+
+# This script creates / updates the _mod.qc / _mod.qh / _mod.inc files based on
+# the qc / qh files present in the qcsrc folder.
+
 cd ${0%/*}
 cd ..
 ROOT=$PWD/

@@ -1,11 +1,9 @@
 #include "teamradar.qh"
 
-#include "autocvars.qh"
-#include "hud/_mod.qh"
-
+#include <client/hud/_mod.qh>
+#include <client/view.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
-
-#include "../lib/csqcmodel/interpolate.qh"
+#include <lib/csqcmodel/interpolate.qh>
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
@@ -68,7 +66,7 @@ void draw_teamradar_background(float fg)
 	{
 		fga = 1;
 		fgc = '1 1 1' * fg;
-		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
+		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
 		if(v_flipped)
 		{
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord3), yinvert(mi_pictexcoord3), fgc, fga);
@@ -93,36 +91,37 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
-	makevectors(pangles - '0 1 0' * teamradar_angle);
+	vector forward, right, up;
+	MAKE_VECTORS(pangles - '0 1 0' * teamradar_angle, forward, right, up);
 	if(v_flipped)
 	{
-		v_forward.x = -v_forward.x;
-		v_right.x = -v_right.x;
-		v_up.x = -v_up.x;
+		forward.x = -forward.x;
+		right.x = -right.x;
+		up.x = -up.x; // TODO: unused!
 	}
-	v_forward.z = 0;
-	v_forward = normalize(v_forward);
-	v_forward.y *= -1.0;
-	v_right.x = -v_forward.y;
-	v_right.y = v_forward.x;
+	forward.z = 0;
+	forward = normalize(forward);
+	forward.y *= -1.0;
+	right.x = -forward.y;
+	right.y = forward.x;
 
 	if(rgb == '1 1 1')
 		rgb2 = '0 0 0';
 	else
 		rgb2 = '1 1 1';
 
-	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*3, '0 0 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord+v_right*4-v_forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord-v_forward*2, '1 0 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord-v_right*4-v_forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
+	R_BeginPolygon("", 0, true);
+	R_PolygonVertex(coord+forward*3, '0 0 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord+right*4-forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord-forward*2, '1 0 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord-right*4-forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
 	R_EndPolygon();
 
-	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*2, '0 0 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord+v_right*3-v_forward*2, '0 1 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, panel_fg_alpha);
+	R_BeginPolygon("", 0, true);
+	R_PolygonVertex(coord+forward*2, '0 0 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord+right*3-forward*2, '0 1 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord-forward, '1 0 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord-right*3-forward*2, '1 1 0', rgb, panel_fg_alpha);
 	R_EndPolygon();
 }
 
@@ -149,7 +148,7 @@ void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb,
 
 void draw_teamradar_link(vector start, vector end, int colors)
 {
-    TC(int, colors);
+	TC(int, colors);
 	vector c0, c1, norm;
 
 	start = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(start));
@@ -163,7 +162,7 @@ void draw_teamradar_link(vector start, vector end, int colors)
 	c0 = colormapPaletteColor(colors & 0x0F, false);
 	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);
 	R_PolygonVertex(start + norm, '0 1 0', c0, panel_fg_alpha);
 	R_PolygonVertex(end + norm, '1 1 0', c1, panel_fg_alpha);
@@ -203,7 +202,6 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 	InterpolateOrigin_Undo(this);
 
 	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
-	this.classname = "radarlink";
 	if (isnew) IL_PUSH(g_radarlinks, this);
 
 	if(sendflags & 1)

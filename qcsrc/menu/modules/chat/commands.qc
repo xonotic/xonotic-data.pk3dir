@@ -6,7 +6,7 @@
 
 noref string autocvar__cl_hook_print = "menu_cmd notice";
 
-GENERIC_COMMAND(notice, "Append a notice to chat")
+GENERIC_COMMAND(notice, "Append a notice to chat", true)
 {
     switch(request)
     {
@@ -37,7 +37,7 @@ GENERIC_COMMAND(notice, "Append a notice to chat")
 
 void m_goto(string name);
 
-GENERIC_COMMAND(commandmode, "input a console command")
+GENERIC_COMMAND(commandmode, "input a console command", true)
 {
     switch(request)
     {
@@ -64,7 +64,7 @@ GENERIC_COMMAND(commandmode, "input a console command")
     }
 }
 
-GENERIC_COMMAND(messagemode, "input a chat message to say to everyone")
+GENERIC_COMMAND(messagemode, "input a chat message to say to everyone", true)
 {
     switch(request)
     {
@@ -91,7 +91,7 @@ GENERIC_COMMAND(messagemode, "input a chat message to say to everyone")
     }
 }
 
-GENERIC_COMMAND(messagemode2, "input a chat message to say to only your team")
+GENERIC_COMMAND(messagemode2, "input a chat message to say to only your team", true)
 {
     switch(request)
     {

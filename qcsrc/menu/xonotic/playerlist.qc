@@ -2,11 +2,11 @@
 
 .float realUpperMargin2;
 
-const float PLAYERPARM_SCORE = 0;
-const float PLAYERPARM_PING = 1;
-const float PLAYERPARM_TEAM = 2;
-const float PLAYERPARM_NAME = 3;
-const float PLAYERPARM_COUNT = 4;
+const int PLAYERPARM_SCORE = 0;
+const int PLAYERPARM_PING = 1;
+const int PLAYERPARM_TEAM = 2;
+const int PLAYERPARM_NAME = 3;
+const int PLAYERPARM_COUNT = 4;
 
 entity makeXonoticPlayerList()
 {
@@ -33,7 +33,7 @@ void XonoticPlayerList_setPlayerList(entity me, string plist)
 		s = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
 		n = tokenize_console(s);
 
-		if(n == 4)
+		if(n == PLAYERPARM_COUNT)
 		{
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
@@ -61,8 +61,10 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticPlayerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	// this list does 1 char left and right margin

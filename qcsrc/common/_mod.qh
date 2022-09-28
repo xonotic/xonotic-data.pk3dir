@@ -7,8 +7,8 @@
 #include <common/mapinfo.qh>
 #include <common/net_notice.qh>
 #include <common/playerstats.qh>
+#include <common/replicate.qh>
 #include <common/state.qh>
-#include <common/t_items.qh>
 #include <common/util.qh>
 #include <common/viewloc.qh>
 #include <common/wepent.qh>

@@ -2,4 +2,4 @@
 
 #include "hud.qh"
 #include "hud_config.qh"
-#include <client/mutators/events.qh>
+#include <client/mutators/_mod.qh>

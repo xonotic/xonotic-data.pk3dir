@@ -4,5 +4,5 @@ sight sound/monsters/zombie/sight 0
 //ranged sound/monsters/zombie/ranged 0
 //melee sound/monsters/zombie/melee 0
 //pain sound/monsters/zombie/pain 0
-spawn sound/monsters/zombie/spawn 0
+//spawn sound/monsters/zombie/spawn 0
 idle sound/monsters/zombie/idle 0

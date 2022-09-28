@@ -1,7 +1,87 @@
 #include "porto.qh"
 
+#ifdef CSQC
+STATIC_INIT(Porto)
+{
+	entity e = new_pure(porto);
+	e.draw = Porto_Draw;
+	IL_PUSH(g_drawables, e);
+	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+}
+
+const int polyline_length = 16;
+.vector polyline[polyline_length];
+void Porto_Draw(entity this)
+{
+	if (spectatee_status || intermission == 1 || intermission == 2 || STAT(HEALTH) <= 0 || WEP_CVAR(porto, secondary)) return;
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wepent = viewmodels[slot];
+
+		if (wepent.activeweapon != WEP_PORTO) continue;
+
+		vector pos = view_origin;
+		vector dir = view_forward;
+		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
+		pos += v_right * -wepent.movedir.y
+			+  v_up * wepent.movedir.z;
+
+		if (wepent.angles_held_status)
+		{
+			makevectors(wepent.angles_held);
+			dir = v_forward;
+		}
+
+		wepent.polyline[0] = pos;
+
+		int portal_number = 0, portal1_idx = 1, portal_max = 2;
+		int n = 1 + 2;  // 2 lines == 3 points
+		for (int idx = 0; idx < n && idx < polyline_length - 1; )
+		{
+			traceline(pos, pos + 65536 * dir, true, this);
+			dir = reflect(dir, trace_plane_normal);
+			pos = trace_endpos;
+			wepent.polyline[++idx] = pos;
+			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
+			{
+				n += 1;
+				continue;
+			}
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+			{
+				n = max(2, idx);
+				break;
+			}
+			// check size
+			{
+				vector ang = vectoangles2(trace_plane_normal, dir);
+				ang.x = -ang.x;
+				makevectors(ang);
+				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+				{
+					n = max(2, idx);
+					break;
+				}
+			}
+			portal_number += 1;
+			if (portal_number >= portal_max) break;
+			if (portal_number == 1) portal1_idx = idx;
+		}
+		for (int idx = 0; idx < n - 1; ++idx)
+		{
+			vector p = wepent.polyline[idx], q = wepent.polyline[idx + 1];
+			if (idx == 0) p -= view_up * 16;  // line from player
+			vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
+			Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
+		}
+	}
+}
+#endif
+
 #ifdef SVQC
-#include <common/triggers/trigger/jumppads.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
+#include <server/weapons/throwing.qh>
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
@@ -20,7 +100,6 @@ void W_Porto_Success(entity this)
 	delete(this);
 }
 
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity);
 void W_Porto_Fail(entity this, float failhard)
 {
 	if(this.realowner == NULL)
@@ -37,9 +116,9 @@ void W_Porto_Fail(entity this, float failhard)
 
 	this.realowner.porto_current = NULL;
 
-	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(this.realowner.weapons & WEPSET(PORTO)))
+	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
-		setsize(this, '-16 -16 0', '16 16 32');
+		setsize(this, '-16 -16 0', '16 16 48');
 		setorigin(this, this.origin + trace_plane_normal);
 		if(move_out_of_solid(this))
 		{
@@ -198,11 +277,11 @@ void W_Porto_Touch(entity this, entity toucher)
 	}
 }
 
-void W_Porto_Attack(entity actor, .entity weaponentity, float type)
+void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float type)
 {
 	entity gren;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: does the deathtype even need to be set here? porto can't hurt people
+	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0, thiswep.m_id); // TODO: does the deathtype even need to be set here? porto can't hurt people
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
@@ -227,7 +306,8 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	setthink(gren, W_Porto_Think);
 	settouch(gren, W_Porto_Touch);
 
-	if(actor.items & ITEM_Strength.m_itemid)
+	// TODO: handle as mutator effect
+	if(StatusEffects_active(STATUSEFFECT_Strength, actor))
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
@@ -270,7 +350,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, weaponentity, 0);
+            W_Porto_Attack(thiswep, actor, weaponentity, 0);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
 
@@ -279,7 +359,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
         {
-            W_Porto_Attack(actor, weaponentity, 1);
+            W_Porto_Attack(thiswep, actor, weaponentity, 1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
         }
     }
@@ -306,7 +386,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, weaponentity, -1);
+            W_Porto_Attack(thiswep, actor, weaponentity, -1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
     }

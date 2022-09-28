@@ -1,0 +1,15 @@
+#pragma once
+
+float autocvar_g_balance_kill_delay;
+float autocvar_g_balance_kill_antispam;
+
+// set when showing a kill countdown
+.entity killindicator;
+.int killindicator_teamchange;
+
+void ClientKill_Now_TeamChange(entity this);
+void ClientKill_Now(entity this);
+void KillIndicator_Think(entity this);
+void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
+void ClientKill_Silent(entity this, float _delay);
+void ClientKill(entity this);

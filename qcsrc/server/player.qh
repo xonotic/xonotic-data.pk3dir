@@ -1,52 +1,33 @@
 #pragma once
 
+float autocvar_g_spawnshieldtime;
+float autocvar_g_spawnshield_blockdamage;
+bool autocvar_sv_precacheplayermodels;
+bool autocvar_sv_defaultcharacter;
+bool autocvar_sv_defaultcharacterskin;
+int autocvar_sv_defaultplayerskin_blue;
+int autocvar_sv_defaultplayerskin_pink;
+int autocvar_sv_defaultplayerskin_red;
+int autocvar_sv_defaultplayerskin_yellow;
+string autocvar_sv_defaultplayercolors;
+string autocvar_sv_defaultplayermodel;
+string autocvar_sv_defaultplayermodel_blue;
+string autocvar_sv_defaultplayermodel_pink;
+string autocvar_sv_defaultplayermodel_red;
+string autocvar_sv_defaultplayermodel_yellow;
+int autocvar_sv_defaultplayerskin;
+float autocvar_sv_gibhealth;
+
 .entity pusher;
 .float pushltime;
-.float istypefrag;
+.bool istypefrag;
+
+.float death_time;
 
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
 void CopyBody_Think(entity this);
 void CopyBody(entity this, float keepvelocity);
-
-void dedicated_print(string input);
-
-/// \brief Print the string to player's chat.
-/// \param[in] player Player to print to.
-/// \param[in] text Text to print.
-/// \return No return.
-void PrintToChat(entity player, string text);
-
-/// \brief Print the string to player's chat if the server cvar "developer" is
-/// not 0.
-/// \param[in] player Player to print to.
-/// \param[in] text Text to print.
-/// \return No return.
-void DebugPrintToChat(entity player, string text);
-
-/// \brief Prints the string to all players' chat.
-/// \param[in] text Text to print.
-/// \return No return.
-void PrintToChatAll(string text);
-
-/// \brief Prints the string to all players' chat if the server cvar "developer"
-/// is not 0.
-/// \param[in] text Text to print.
-/// \return No return.
-void DebugPrintToChatAll(string text);
-
-/// \brief Print the string to chat of all players of the specified team.
-/// \param[in] teamnum Team to print to. See NUM_TEAM constants.
-/// \param[in] text Text to print.
-/// \return No return.
-void PrintToChatTeam(int teamnum, string text);
-
-/// \brief Print the string to chat of all players of the specified team if the
-/// server cvar "developer" is not 0.
-/// \param[in] teamnum Team to print to. See NUM_TEAM constants.
-/// \param[in] text Text to print.
-/// \return No return.
-void DebugPrintToChatTeam(int teamnum, string text);
 
 void player_setupanimsformodel(entity this);
 
@@ -54,28 +35,11 @@ void player_anim(entity this);
 
 void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
-// g_<gametype>_str:
-// If 0, default is used.
-// If <0, 0 is used.
-// Otherwise, g_str (default value) is used.
-// For consistency, negative values there are mapped to zero too.
-#define GAMETYPE_DEFAULTED_SETTING(str) \
-	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
-	(gametype_setting_tmp < 0) ? 0 \
-	: (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
-	: gametype_setting_tmp)
-
-void calculate_player_respawn_time(entity this);
-
-void ClientKill_Now_TeamChange(entity this);
-
-/// \brief Moves player to the specified team.
-/// \param[in,out] client Client to move.
-/// \param[in] team_colour Color of the team.
-/// \param[in] type ???
-/// \return True on success, false otherwise.
-bool MoveToTeam(entity client, float team_colour, float type);
-
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
-int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
+bool PlayerHeal(entity targ, entity inflictor, float amount, float limit);
+
+void precache_all_playermodels(string pattern);
+
+IntrusiveList g_clones;
+STATIC_INIT(g_clones) { g_clones = IL_NEW(); }

@@ -1,5 +1,0 @@
-#pragma once
-
-#ifdef SVQC
-spawnfunc(func_breakable);
-#endif

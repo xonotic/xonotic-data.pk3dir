@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef CSQC
+#include <client/draw.qh>
+#include <client/view.qh>
+#include <common/resources/cl_resources.qh>
+#endif
+
 
 // This includes some functions useful for debugging.
 // Some more bot-specific ones are in server/pathlib/debug.qc.
@@ -65,7 +71,7 @@ REGISTER_NET_TEMP(net_debug)
  * 6: on (.solid != 0)
  */
 bool autocvar_debugdraw;
-#endif
+#endif // GAMEQC
 
 #ifdef CSQC
 	string autocvar_debugdraw_filter, autocvar_debugdraw_filterout;
@@ -157,8 +163,7 @@ bool autocvar_debugdraw;
             });
 		});
 	}
-#endif
-
+#endif // CSQC
 
 #ifdef SVQC
 	COMMON_COMMAND(debugdraw_sv, "Dump all server entities")
@@ -184,16 +189,16 @@ bool autocvar_debugdraw;
 			default:
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
+				LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
 				return;
 			}
 		}
 	}
-#endif
-#endif
+#endif // SVQC
+#endif // ENABLE_DEBUGDRAW
 
 
-GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
+GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
 {
 	switch (request)
 	{
@@ -201,34 +206,33 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 		{
 			int bufhandle = stof(argv(1));
 			int string_index = stof(argv(2));
-			string s = bufstr_get(bufhandle, string_index);
-			LOG_INFOF("%s", s);
+			LOG_INFO(bufstr_get(bufhandle, string_index));
 			return;
 		}
 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get <bufhandle> <string_index>");
 			return;
 		}
 	}
 }
 
 
-GENERIC_COMMAND(version, "Print the current version")
+GENERIC_COMMAND(version, "Print the current version", false)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO(WATERMARK);
+			LOG_INFO(PROGNAME, " version: ", WATERMARK);
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " version");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " version");
 			return;
 		}
 	}
@@ -238,7 +242,8 @@ GENERIC_COMMAND(version, "Print the current version")
 #ifdef CSQC
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 #endif
-GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
+
+GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 {
 	switch (request)
 	{
@@ -263,7 +268,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
 			return;
 		}
 	}
@@ -272,6 +277,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 
 #if ENABLE_DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
+
 #ifdef SVQC
 bool autocvar_debugtrace;
 
@@ -288,16 +294,16 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		it.debug_trace_button = btn;
 		if (!btn || skip) continue;
 		FOREACH_ENTITY(true, {
-		    it.solid_prev = it.solid;
+			it.solid_prev = it.solid;
 			it.solid = SOLID_BBOX;
 		});
 		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
-		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
+		MAKE_VECTORS(it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
 		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
-		    it.solid = it.solid_prev;
-            it.solid_prev = 0;
+			it.solid = it.solid_prev;
+			it.solid_prev = 0;
 		});
 		entity e = trace_ent;
 		int i = etof(e);
@@ -307,7 +313,8 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		stuffcmd(it, sprintf("prvm_edict server %d\n", i));
 	});
 }
-#endif
+#endif // SVQC
+
 #ifdef CSQC
 entity TRACE_ENT;
 void Trace_draw2d(entity this)
@@ -325,11 +332,12 @@ STATIC_INIT(TRACE_ENT)
 	e.draw2d = Trace_draw2d;
 	IL_PUSH(g_drawables_2d, e);
 }
-#endif
+#endif // CSQC
+
 #endif
 
 
-GENERIC_COMMAND(find, "Search through entities for matching classname")
+GENERIC_COMMAND(findent, "Search through entities for matching classname", false)
 {
 	switch (request)
 	{
@@ -338,44 +346,58 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 			int entcnt = 0;
 			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
 			{
-				LOG_INFOF("%i (%s)", it, it.classname);
+				LOG_HELPF("%i (%s)", it, it.classname);
 				++entcnt;
 			});
 			if(entcnt)
-				LOG_INFOF("Found %d entities", entcnt);
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2find^7");
-        }
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname");
-			LOG_INFO("  Where 'classname' is the classname to search for.");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find <classname>");
+			LOG_HELP("  Where <classname> is the classname to search for.");
 			return;
 		}
 	}
 }
 
 
-GENERIC_COMMAND(findat, "Search through entities for matching origin")
+GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
+			vector org = stov(argv(1));
+			float dist = stof(argv(2));
+			int entcnt = 0;
+			FOREACH_ENTITY_ORDERED(true,
+			{
+				if (dist > 0)
+				{
+					if (!vdist(it.origin - org, <, dist))
+						continue;
+				}
+				else if (it.origin != org)
+					continue;
+				LOG_HELPF("%i (%s)", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_HELPF("Found %d entities", entcnt);
 			return;
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2findat^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat <position> [<dist>]");
+			LOG_HELP("  Where <position> is a vector \"x y z\"");
 			return;
 		}
 	}
@@ -396,14 +418,14 @@ CLASS(DebugText3d, Object)
 	ATTRIB(DebugText3d, message, string); // the text (i wanted to use the .text field but then this whole macro-based-inheritance thing shat itself)
 	ATTRIB(DebugText3d, health, float); // text alignment (recycled field)
 	ATTRIB(DebugText3d, hit_time, float); // when it was created
-	ATTRIB(DebugText3d, fade_rate, float); // how fast is should disappear
+	ATTRIB(DebugText3d, fade_rate, float); // how fast it should disappear
 	ATTRIB(DebugText3d, velocity, vector);
 
 	CONSTRUCTOR(DebugText3d, vector pos, string msg, float align, float fade_rate_, vector vel) {
 		CONSTRUCT(DebugText3d);
 		this.origin = pos;
 		this.message = strzone(msg);
-		this.health = align;
+		SetResource(this, RES_HEALTH, align);
 		this.hit_time = time;
 		this.fade_rate = fade_rate_;
 		this.velocity = vel;
@@ -411,7 +433,7 @@ CLASS(DebugText3d, Object)
 	}
 
 	DESTRUCTOR(DebugText3d) {
-		strunzone(this.message);
+		strfree(this.message);
 	}
 
 	void DebugText3d_draw2d(DebugText3d this) {
@@ -423,16 +445,25 @@ CLASS(DebugText3d, Object)
 			return;
 		}
 
-		int size = 8;
+		int size = 11;
 		vector screen_pos = project_3d_to_2d(this.origin) + since_created * this.velocity;
-		float align = this.health;
-		if (align > 0)
-			screen_pos.x -= stringwidth(this.message, true, size * '1 1 0') * min(1, align);
 		if (screen_pos.z < 0) return; // behind camera
-		screen_pos.z = 0;
 
-		vector rgb = '1 1 0';
-		drawcolorcodedstring2_builtin(screen_pos, this.message, size * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
+		screen_pos.z = 0;
+		float align = GetResource(this, RES_HEALTH);
+		string msg;
+		vector msg_pos;
+
+		int n = tokenizebyseparator(this.message, "\n");
+		for(int k = 0; k < n; ++k)
+		{
+			msg = argv(k);
+			msg_pos = screen_pos + k * 1.25 * size * eY;
+			if (align > 0)
+				msg_pos.x -= stringwidth(msg, true, size * '1 1 0') * min(1, align);
+
+			drawcolorcodedstring_builtin(msg_pos, msg, size * '1 1 0', alpha_, DRAWFLAG_NORMAL);
+		}
 	}
 	ATTRIB(DebugText3d, draw2d, void(DebugText3d), DebugText3d_draw2d);
 ENDCLASS(DebugText3d)

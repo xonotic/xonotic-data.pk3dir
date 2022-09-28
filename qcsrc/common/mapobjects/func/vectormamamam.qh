@@ -1,0 +1,8 @@
+#pragma once
+
+const int PROJECT_ON_TARGETNORMAL = BIT(0);
+const int PROJECT_ON_TARGET2NORMAL = BIT(1);
+const int PROJECT_ON_TARGET3NORMAL = BIT(2);
+const int PROJECT_ON_TARGET4NORMAL = BIT(3);
+
+const float VECTORMAMAMAM_TIMESTEP = 0.1;

@@ -1,18 +1,56 @@
 #pragma once
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/all.qh>
+
+float autocvar_g_weaponspreadfactor;
+float autocvar_g_weaponforcefactor;
+float autocvar_g_weapondamagefactor;
+float autocvar_g_weaponratefactor;
+float autocvar_g_weaponspeedfactor;
+
+#define INDEPENDENT_ATTACK_FINISHED 1
+
+// there is 2 weapon tics that can run in one server frame
+const int W_TICSPERFRAME = 2;
+
+// VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
+.float weapon_nextthink;
+.void(Weapon thiswep, entity actor, .entity weaponentity, int fire) weapon_think;
 
 float internalteam;
 entity weapon_dropevent_item;
 
+// reset to 0 on weapon switch
+// may be useful to all weapons
+.float bulletcounter;
+
 ..entity weaponentity_fld;
+
+.float weapon_load[REGISTRY_MAX(Weapons)];
+.int ammo_none; // used by the reloading system, must always be 0
+.int clip_load;
+.int old_clip_load;
+.int clip_size;
+
+.float attack_finished_for[REGISTRY_MAX(Weapons) * MAX_WEAPONSLOTS];
+.float attack_finished_single[MAX_WEAPONSLOTS];
+#if INDEPENDENT_ATTACK_FINISHED
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * MAX_WEAPONSLOTS + (slot)]))
+#else
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
+#endif
+#define ATTACK_FINISHED(ent, w) ATTACK_FINISHED_FOR(ent, ent.(w).m_weapon.m_id, weaponslot(w))
 
 void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
+void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
+
+void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
+
 vector CL_Weapon_GetShotOrg(float wpn);
 
-bool forbidWeaponUse(entity player);
+bool weaponUseForbidden(entity player);
+bool weaponLocked(entity player);
 
 void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset);
 
@@ -21,6 +59,8 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity);
 
 void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound);
+
+void W_ResetGunAlign(entity player, int preferred_alignment);
 
 void W_WeaponFrame(Player actor, .entity weaponentity);
 
@@ -35,3 +75,5 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 void weapon_prepareattack_do(entity actor, .entity weaponentity, float secondary, float attacktime);
 
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);
+
+//REPLICATE_APPLYCHANGE("cl_gunalign", { W_ResetGunAlign(this, store.cvar_cl_gunalign); });

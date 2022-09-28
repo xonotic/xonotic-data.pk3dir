@@ -1,0 +1,12 @@
+// generated file; do not modify
+#include <common/mapobjects/bgmscript.qh>
+#include <common/mapobjects/models.qh>
+#include <common/mapobjects/platforms.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+
+#include <common/mapobjects/func/_mod.qh>
+#include <common/mapobjects/misc/_mod.qh>
+#include <common/mapobjects/target/_mod.qh>
+#include <common/mapobjects/trigger/_mod.qh>

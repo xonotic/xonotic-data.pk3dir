@@ -48,15 +48,15 @@ void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH));
 
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
@@ -88,7 +88,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Hook_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = WEP_CVAR_SEC(hook, health);
+	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_SEC(hook, health));
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
@@ -145,7 +145,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
 
         // hook also inhibits health regeneration, but only for 1 second
-        if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+        if(!(actor.items & IT_UNLIMITED_AMMO))
             actor.pauseregen_finished = max(actor.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
     }
 
@@ -163,9 +163,9 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         {
             if( time > actor.(weaponentity).hook_time_fueldecrease )
             {
-                if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+                if(!(actor.items & IT_UNLIMITED_AMMO))
                 {
-                    if( actor.ammo_fuel >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
+                    if( GetResource(actor, RES_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
                     {
                         W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
                         actor.(weaponentity).hook_time_fueldecrease = time;
@@ -173,7 +173,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     }
                     else
                     {
-                        actor.ammo_fuel = 0;
+                        SetResource(actor, RES_FUEL, 0);
                         actor.(weaponentity).hook_state |= HOOK_REMOVING;
                         if(actor.(weaponentity).m_weapon != WEP_Null) // offhand
                         	W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
@@ -214,9 +214,9 @@ METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentit
     if (!thiswep.ammo_factor) return true;
 
     if(actor.(weaponentity).hook)
-    	return actor.ammo_fuel > 0;
+    	return GetResource(actor, RES_FUEL) > 0;
 
-    return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
+    return GetResource(actor, RES_FUEL) >= WEP_CVAR_PRI(hook, ammo);
 }
 METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
@@ -261,11 +261,11 @@ float autocvar_cl_grapplehook_alpha = 1;
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 
 entityclass(Hook);
-class(Hook) .entity HookType; // ENT_CLIENT_*
-class(Hook) .vector origin;
-class(Hook) .vector velocity;
-class(Hook) .float HookSilent;
-class(Hook) .float HookRange;
+classfield(Hook) .entity HookType; // ENT_CLIENT_*
+classfield(Hook) .vector origin;
+classfield(Hook) .vector velocity;
+classfield(Hook) .float HookSilent;
+classfield(Hook) .float HookRange;
 
 string Draw_GrapplingHook_trace_callback_tex;
 float Draw_GrapplingHook_trace_callback_rnd;
@@ -281,7 +281,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
-class(Hook) .float teleport_time;
+classfield(Hook) .float teleport_time;
 void Draw_GrapplingHook(entity this)
 {
 	vector a, b, atrans;

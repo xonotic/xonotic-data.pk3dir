@@ -1,5 +1,5 @@
 #include "bd.qh"
-REGISTER_MINIGAME(bd, "Bulldozer");
+REGISTER_MINIGAME(bd, _("Bulldozer"));
 
 REGISTER_NET_LINKED(ENT_CLIENT_BD_CONTROLLER)
 
@@ -21,6 +21,7 @@ const int BD_NUM_CNT = 20;
 const int BD_TILE_SIZE = 20;
 
 const int BD_TEAMS = 1;
+const int BD_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 .int bd_dir;
 
@@ -309,8 +310,7 @@ bool bd_move_dozer(entity minigame, entity dozer)
 				case BD_TILE_BRICK1: return false;
 			}
 
-			if(hit.netname) { strunzone(hit.netname); }
-			hit.netname = strzone(testpos);
+			strcpy(hit.netname, testpos);
 			minigame_server_sendflags(hit,MINIG_SF_UPDATE);
 			break;
 		}
@@ -330,8 +330,7 @@ bool bd_move_dozer(entity minigame, entity dozer)
 		case BD_TILE_BRICK1: return false;
 	}
 
-	if(dozer.netname) { strunzone(dozer.netname); }
-	dozer.netname = strzone(newpos);
+	strcpy(dozer.netname, newpos);
 
 	return true;
 }
@@ -422,7 +421,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 				if(!piece)
 					return; // how?!
 
-				if(piece.netname) { strunzone(piece.netname); }
+				strfree(piece.netname);
 				delete(piece);
 				minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 				return;
@@ -439,7 +438,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 			}
 			else
 			{
-				entity piece = msle_spawn(minigame,"minigame_board_piece");
+				entity piece = msle_spawn(minigame,new(minigame_board_piece));
 				piece.team = 1;
 				piece.netname = strzone(pos);
 				piece.bd_tiletype = thetile;
@@ -488,12 +487,12 @@ void bd_unfill_recurse(entity minigame, entity player, int thetype, int letter, 
 
 	if(targ && thetype == targ.bd_tiletype)
 	{
-		if(targ.netname) { strunzone(targ.netname); }
+		strfree(targ.netname);
 		delete(targ);
 	}
 	else if(piece && thetype == piece.bd_tiletype)
 	{
-		if(piece.netname) { strunzone(piece.netname); }
+		strfree(piece.netname);
 		delete(piece);
 	}
 	else return;
@@ -568,7 +567,7 @@ void bd_setup_pieces(entity minigame)
 	while( (e = findentity(e, owner, minigame)) )
 		if(e.classname == "minigame_board_piece")
 		{
-			if(e.netname) { strunzone(e.netname); }
+			strfree(e.netname);
 			delete(e);
 		}
 	e = NULL;
@@ -598,8 +597,7 @@ void bd_do_next_match(entity minigame, entity player)
 
 	if(minigame.bd_nextlevel && minigame.bd_nextlevel != "")
 	{
-		if(minigame.bd_levelname) { strunzone(minigame.bd_levelname); }
-		minigame.bd_levelname = strzone(minigame.bd_nextlevel);
+		strcpy(minigame.bd_levelname, minigame.bd_nextlevel);
 	}
 
 	bd_setup_pieces(minigame);
@@ -609,8 +607,7 @@ void bd_do_next_match(entity minigame, entity player)
 
 void bd_set_next_match(entity minigame, string next)
 {
-	if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-	minigame.bd_nextlevel = strzone(next);
+	strcpy(minigame.bd_nextlevel, next);
 }
 
 void bd_next_match(entity minigame, entity player, string next)
@@ -678,8 +675,7 @@ void bd_set_nextlevel(entity minigame, string s)
 {
 	tokenize_console(s);
 
-	if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-	minigame.bd_nextlevel = strzone(argv(2));
+	strcpy(minigame.bd_nextlevel, argv(2));
 }
 
 int bd_fix_dir(vector dir)
@@ -716,7 +712,7 @@ void bd_load_piece(entity minigame, string s)
 	}
 	else
 	{
-		entity e = msle_spawn(minigame,"minigame_board_piece");
+		entity e = msle_spawn(minigame,new(minigame_board_piece));
 		e.netname = tilename;
 		e.team = 1;
 		e.bd_dir = dir;
@@ -732,11 +728,13 @@ bool bd_save_level(entity minigame)
 		int target_count = 0, boulder_count = 0;
 		entity piece = NULL;
 		while((piece = findentity(piece,owner,minigame)))
-		if(piece.classname == "minigame_board_piece")
-			if(piece.bd_tiletype == BD_TILE_BOULDER)
-				++boulder_count;
-			else if(piece.bd_tiletype == BD_TILE_TARGET)
-				++target_count;
+			if(piece.classname == "minigame_board_piece")
+			{
+				if(piece.bd_tiletype == BD_TILE_BOULDER)
+					++boulder_count;
+				else if(piece.bd_tiletype == BD_TILE_TARGET)
+					++target_count;
+			}
 
 		if(boulder_count != target_count)
 		{
@@ -854,8 +852,7 @@ int bd_server_event(entity minigame, string event, ...)
 	{
 		case "start":
 		{
-			if(minigame.bd_levelname) { strunzone(minigame.bd_levelname); }
-			minigame.bd_levelname = strzone(autocvar_sv_minigames_bulldozer_startlevel);
+			strcpy(minigame.bd_levelname, autocvar_sv_minigames_bulldozer_startlevel);
 			bd_setup_pieces(minigame);
 			minigame.minigame_flags = BD_TURN_MOVE;
 
@@ -867,7 +864,7 @@ int bd_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			e = NULL;
@@ -877,38 +874,52 @@ int bd_server_event(entity minigame, string event, ...)
 				delete(e);
 			}
 
-			if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-			if(minigame.bd_levelname) { strunzone(minigame.bd_levelname); }
+			strfree(minigame.bd_nextlevel);
+			strfree(minigame.bd_levelname);
 			return false;
 		}
 		case "join":
 		{
 			int pl_num = minigame_count_players(minigame);
 
-			if(pl_num >= BD_TEAMS) { return false; }
+			if(pl_num >= BD_TEAMS) { return BD_SPECTATOR_TEAM; }
 
 			return 1;
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == BD_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					bd_do_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null), ((...(1,int)) >= 4 ? argv(3) : string_null));
 					return true;
 				case "next":
+					if(event_blocked)
+						return true;
 					bd_next_match(minigame,...(0,entity), ((...(1,int) >= 2 ? argv(1) : string_null)));
 					return true;
 				case "restart":
+					if(event_blocked)
+						return true;
 					bd_restart_match(minigame,...(0,entity));
 					return true;
 				case "edit":
+					if(event_blocked)
+						return true;
 					bd_activate_editor(minigame,...(0,entity));
 					return true;
 				case "save":
+					if(event_blocked)
+						return true;
 					bd_close_editor(minigame,...(0,entity));
 					return true;
 				case "fill":
+					if(event_blocked)
+						return true;
 					bd_do_fill(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null));
 					return true;
 			}
@@ -1093,22 +1104,20 @@ void bd_hud_board(vector pos, vector mySize)
 	if ( (active_minigame.minigame_flags & BD_TURN_LOSS) || (active_minigame.minigame_flags & BD_TURN_WIN) )
 	{
 		vector winfs = hud_fontsize*2;
-		string victory_text = "Game over!";
+		string victory_text = _("Game over!");
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
-			victory_text = "Well done! Click 'Next Level' to continue";
+			victory_text = _("Well done! Click 'Next Level' to continue");
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s", victory_text),
-			winfs, 0, DRAWFLAG_NORMAL, 0.5);
+			victory_text, winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s", victory_text),
-			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
+			victory_text, winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
 
@@ -1130,15 +1139,18 @@ void bd_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != BD_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != BD_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
@@ -1149,9 +1161,10 @@ void bd_hud_status(vector pos, vector mySize)
 			string thepiece = "bd/dozer";
 			if(active_minigame.minigame_flags & BD_TURN_EDIT)
 				thepiece = bd_get_tile_pic(bd_curr_tile);
-			drawpic( mypos,
+			const float tile_scale = 0.7;
+			drawpic( mypos + tile_size * 0.5 * (1 - tile_scale),
 					minigame_texture(thepiece),
-					tile_size * 0.7, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+					tile_size * tile_scale, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			mypos_x += tile_size_x;
 
@@ -1164,14 +1177,19 @@ void bd_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string bd_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == BD_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & BD_TURN_LOSS )
 		return _("Better luck next time!");
 
 	if ( turnflags & BD_TURN_WIN )
+	{
 		if(random() > 0.5)
 			return _("Tubular! Press \"Next Level\" to continue!");
 		else
 			return _("Wicked! Press \"Next Level\" to continue!");
+	}
 
 	if( turnflags & BD_TURN_EDIT )
 		return _("Press the space bar to change your currently selected tile");
@@ -1209,36 +1227,10 @@ void bd_editor_fill(entity minigame)
 
 void bd_set_curr_pos(string s)
 {
-	if ( bd_curr_pos )
-		strunzone(bd_curr_pos);
+	strfree(bd_curr_pos);
 	if ( s )
 		s = strzone(s);
 	bd_curr_pos = s;
-}
-
-bool bd_normal_move(entity minigame, int themove)
-{
-	switch ( themove )
-	{
-		case K_RIGHTARROW:
-		case K_KP_RIGHTARROW:
-			bd_make_move(minigame, "r");
-			return true;
-		case K_LEFTARROW:
-		case K_KP_LEFTARROW:
-			bd_make_move(minigame, "l");
-			return true;
-		case K_UPARROW:
-		case K_KP_UPARROW:
-			bd_make_move(minigame, "u");
-			return true;
-		case K_DOWNARROW:
-		case K_KP_DOWNARROW:
-			bd_make_move(minigame, "d");
-			return true;
-	}
-
-	return false;
 }
 
 bool bd_change_dozer_angle(entity minigame)
@@ -1261,54 +1253,6 @@ bool bd_change_dozer_angle(entity minigame)
 	return true;
 }
 
-bool bd_editor_move(entity minigame, int themove)
-{
-	switch ( themove )
-	{
-		case K_RIGHTARROW:
-		case K_KP_RIGHTARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("a3");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,1,0,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_LEFTARROW:
-		case K_KP_LEFTARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("c3");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,-1,0,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_UPARROW:
-		case K_KP_UPARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("a1");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,1,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_DOWNARROW:
-		case K_KP_DOWNARROW:
-			if ( ! bd_curr_pos )
-				bd_set_curr_pos("a3");
-			else
-				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,-1,BD_NUM_CNT,BD_LET_CNT));
-			return true;
-		case K_ENTER:
-		case K_KP_ENTER:
-			bd_editor_make_move(minigame, "");
-			return true;
-		case K_SPACE:
-			if(bd_change_dozer_angle(minigame))
-				return true;
-			bd_curr_tile += 1;
-			if(bd_curr_tile > BD_TILE_LAST)
-				bd_curr_tile = 1;
-			return true;
-	}
-
-	return false;
-}
-
 // Required function, handle client events
 int bd_client_event(entity minigame, string event, ...)
 {
@@ -1316,39 +1260,126 @@ int bd_client_event(entity minigame, string event, ...)
 	{
 		case "activate":
 		{
-			minigame.message = bd_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, bd_turn_to_string(minigame.minigame_flags));
 			bd_set_curr_pos("");
 			bd_curr_tile = BD_TILE_BRICK1;
 			return false;
 		}
-		case "key_pressed":
+		case "deactivate":
 		{
-			if(minigame.minigame_flags & BD_TURN_MOVE)
+			strfree(minigame.message);
+			return false;
+		}
+		case "key_pressed":
+		case "key_released":
+		{
+			bool event_blocked = ((event == "key_released")
+				|| !(minigame.minigame_flags & BD_TURN_MOVE) || (minigame_self.team == BD_SPECTATOR_TEAM));
+			if (!(minigame.minigame_flags & BD_TURN_WIN) && !(minigame.minigame_flags & BD_TURN_LOSS))
 			{
-				if(bd_normal_move(minigame, ...(0,int)))
-					return true;
+				switch ( ...(0,int) )
+				{
+					case K_RIGHTARROW:
+					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
+						bd_make_move(minigame, "r");
+						return true;
+					case K_LEFTARROW:
+					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
+						bd_make_move(minigame, "l");
+						return true;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
+						bd_make_move(minigame, "u");
+						return true;
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
+						bd_make_move(minigame, "d");
+						return true;
+				}
 			}
 
 			if(minigame.minigame_flags & BD_TURN_EDIT)
 			{
-				if(bd_editor_move(minigame, ...(0,int)))
-					return true;
+				switch ( ...(0,int) )
+				{
+					case K_RIGHTARROW:
+					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("a3");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,1,0,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_LEFTARROW:
+					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("c3");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,-1,0,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("a1");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,1,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
+						if ( ! bd_curr_pos )
+							bd_set_curr_pos("a3");
+						else
+							bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,-1,BD_NUM_CNT,BD_LET_CNT));
+						return true;
+					case K_ENTER:
+					case K_KP_ENTER:
+						if (event_blocked)
+							return true;
+						bd_editor_make_move(minigame, "");
+						return true;
+					case K_SPACE:
+						if (event_blocked)
+							return true;
+						if(bd_change_dozer_angle(minigame))
+							return true;
+						bd_curr_tile += 1;
+						if(bd_curr_tile > BD_TILE_LAST)
+							bd_curr_tile = 1;
+						return true;
+				}
 			}
 
 			return false;
 		}
 		case "mouse_pressed":
 		{
-			if(minigame.minigame_flags & BD_TURN_EDIT)
+			if((minigame.minigame_flags & BD_TURN_EDIT) && minigame_self.team != BD_SPECTATOR_TEAM)
 			{
 				if(...(0,int) == K_MOUSE1)
 				{
+					bd_client_event(minigame, "mouse_moved");
 					bd_editor_make_move(minigame, "");
 					return true;
 				}
 
 				if(...(0,int) == K_MOUSE2)
 				{
+					bd_client_event(minigame, "mouse_moved");
 					bd_editor_fill(minigame);
 					return true;
 				}
@@ -1358,7 +1389,7 @@ int bd_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_moved":
 		{
-			if(minigame.minigame_flags & BD_TURN_EDIT)
+			if((minigame.minigame_flags & BD_TURN_EDIT) && minigame_self.team != BD_SPECTATOR_TEAM)
 			{
 				vector mouse_pos = minigame_hud_normalize(mousepos,bd_boardpos,bd_boardsize);
 				bd_set_curr_pos(minigame_tile_name(mouse_pos,BD_LET_CNT,BD_NUM_CNT));
@@ -1375,9 +1406,9 @@ int bd_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = bd_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, bd_turn_to_string(sent.minigame_flags));
 					//if ( sent.minigame_flags & minigame_self.team )
-						minigame_prompt();
+						//minigame_prompt();
 				}
 			}
 			else if(sent.classname == "minigame_board_piece")
@@ -1386,8 +1417,7 @@ int bd_client_event(entity minigame, string event, ...)
 				{
 					int letter = ReadByte();
 					int number = ReadByte();
-					if(sent.netname) { strunzone(sent.netname); }
-					sent.netname = strzone(minigame_tile_buildname(letter, number));
+					strcpy(sent.netname, minigame_tile_buildname(letter, number));
 
 					sent.bd_tiletype = ReadByte();
 

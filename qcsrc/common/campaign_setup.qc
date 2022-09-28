@@ -1,9 +1,10 @@
 #include "campaign_setup.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "campaign_common.qh"
-    #include "mapinfo.qh"
+	#include <common/campaign_common.qh>
+	#include <common/mapinfo.qh>
 #endif
 
 void CampaignSetup(int n)
@@ -17,4 +18,7 @@ void CampaignSetup(int n)
 		localcmd("\n");
 	localcmd("disconnect\nmaxplayers 16\n");
 	MapInfo_LoadMap(campaign_mapname[n], 1);
+	#ifdef MENUQC
+	makeServerSingleplayer();
+	#endif
 }

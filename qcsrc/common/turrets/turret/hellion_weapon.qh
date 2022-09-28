@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(HellionAttack, PortoLaunch)
-/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
 /* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
 /* wepname   */ ATTRIB(HellionAttack, m_name, string, _("Hellion"));

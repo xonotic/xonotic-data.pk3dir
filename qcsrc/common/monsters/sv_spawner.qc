@@ -1,5 +1,7 @@
 #include "sv_spawner.qh"
-#include "sv_spawn.qh"
+
+#include <common/monsters/sv_monsters.qh>
+#include <common/monsters/sv_spawn.qh>
 
 void spawner_use(entity this, entity actor, entity trigger)
 {
@@ -16,7 +18,8 @@ void spawner_use(entity this, entity actor, entity trigger)
 	e.noalign = this.noalign;
 	e.angles = this.angles;
 	e.monster_skill = this.monster_skill;
-	e = spawnmonster(e, this.spawnmob, 0, this, this, this.origin, false, true, this.monster_moveflags);
+	e.skin = this.skin;
+	e = spawnmonster(e, this.spawnmob, MON_Null, this, this, this.origin, false, true, this.monster_moveflags);
 }
 
 spawnfunc(monster_spawner)

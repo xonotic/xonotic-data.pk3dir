@@ -2,6 +2,11 @@
 
 #include <common/mutators/base.qh>
 
+// register all possible hooks here
+
+// to use a hook, first register your mutator using REGISTER_MUTATOR
+// then create your function using MUTATOR_HOOKFUNCTION
+
 // globals
 
 string cmd_name;

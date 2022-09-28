@@ -57,7 +57,7 @@ if [ x"$mode" = x"pot" ]; then
 			echo "$name"
 		done | sort -u
 	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new >&2
-	if msgcmp -N --use-untranslated common.pot common.pot.new; then
+	if msgcmp -N --use-untranslated common.pot common.pot.new && msgcmp -N --use-untranslated common.pot.new common.pot; then
 		echo "No contentful changes to common.pot - OK."
 		rm -f common.pot.new
 	else
@@ -101,11 +101,11 @@ if [ x"$mode" = x"txt" ]; then
 				if [ "$p" -lt 50 ]; then
 					continue
 				fi
-				item="$l $l \"$l\" 0%"
+				item="$l \"$l\" \"$l\" 0%"
 			fi
 			printf "%s\n" "$item" | sed -e "s/[0-9][0-9]*%/$p%/"
 		done
-	} | tr '"' '\t' | sort -k3 | tr '\t' '"'
+	} | LC_ALL=C sort -t '"' -k4,4
 fi
 
 if [ x"$mode" = x"po" ]; then

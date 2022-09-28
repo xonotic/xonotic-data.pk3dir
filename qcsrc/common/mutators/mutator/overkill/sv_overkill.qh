@@ -1,8 +1,50 @@
 #pragma once
 
+string autocvar_g_overkill;
 bool autocvar_g_overkill_filter_healthmega;
-bool autocvar_g_overkill_filter_armormedium;
-bool autocvar_g_overkill_filter_armorbig;
+bool autocvar_g_overkill_filter_armormedium = true;
+bool autocvar_g_overkill_filter_armorbig = true;
 bool autocvar_g_overkill_filter_armormega;
 
 .float ok_item;
+IntrusiveList g_overkill_items;
+
+REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MapInfo_LoadedGametype.m_weaponarena && cvar_string("g_mod_balance") == "Overkill")
+{
+	MUTATOR_ONADD
+	{
+		precache_all_playermodels("models/ok_player/*.dpm");
+
+		if (autocvar_g_overkill_filter_healthmega)
+		{
+			ITEM_HealthMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armormedium)
+		{
+			ITEM_ArmorMedium.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armorbig)
+		{
+			ITEM_ArmorBig.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armormega)
+		{
+			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		g_overkill_items = IL_NEW();
+		IL_PUSH(g_overkill_items, ITEM_HealthMega);
+		IL_PUSH(g_overkill_items, ITEM_ArmorSmall);
+		IL_PUSH(g_overkill_items, ITEM_ArmorMedium);
+		IL_PUSH(g_overkill_items, ITEM_ArmorBig);
+		IL_PUSH(g_overkill_items, ITEM_ArmorMega);
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		ITEM_HealthMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		IL_DELETE(g_overkill_items);
+	}
+}

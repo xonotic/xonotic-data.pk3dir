@@ -1,13 +1,26 @@
 #include "ammo.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/items/items.qh>
 #include <client/view.qh>
-#include <common/t_items.qh>
+#include <common/mutators/mutator/nades/nades.qh>
+#include <common/resources/resources.qh>
 #include <common/wepent.qh>
 
 // Ammo (#1)
+
+void HUD_Ammo_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_ammo_onlycurrent");
+	HUD_Write_Cvar("hud_panel_ammo_noncurrent_alpha");
+	HUD_Write_Cvar("hud_panel_ammo_noncurrent_scale");
+	HUD_Write_Cvar("hud_panel_ammo_iconalign");
+	HUD_Write_Cvar("hud_panel_ammo_progressbar");
+	HUD_Write_Cvar("hud_panel_ammo_progressbar_name");
+	HUD_Write_Cvar("hud_panel_ammo_progressbar_xoffset");
+	HUD_Write_Cvar("hud_panel_ammo_text");
+}
 
 void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color)
 {
@@ -19,12 +32,10 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
-
-void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
+void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent, bool isInfinite)
 {
-    TC(bool, isCurrent); TC(bool, isInfinite);
-	if(ammoType == RESOURCE_NONE)
+	TC(bool, isCurrent); TC(bool, isInfinite);
+	if(ammoType == RES_NONE)
 		return;
 
 	// Initialize variables
@@ -32,7 +43,7 @@ void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, boo
 	int ammo;
 	if(autocvar__hud_configure)
 	{
-		isCurrent = (ammoType == RESOURCE_ROCKETS); // Rockets always current
+		isCurrent = (ammoType == RES_ROCKETS); // Rockets always current
 		ammo = 60;
 	}
 	else
@@ -105,7 +116,7 @@ void HUD_Ammo()
 	{
 		if((!autocvar_hud_panel_ammo) || (spectatee_status == -1))
 			return;
-		if(STAT(HEALTH) < 1 && autocvar_hud_panel_ammo_hide_ondeath)
+		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_ammo_hide_ondeath)
 			return;
 	}
 
@@ -178,13 +189,13 @@ void HUD_Ammo()
 
 	Weapon wep = wepent.switchweapon;
 	int i;
-	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 	row = column = 0;
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, RESOURCE_ROCKETS, true, false);
+			DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
 		}
 		else
 		{
@@ -206,11 +217,12 @@ void HUD_Ammo()
 	}
 	else
 	{
-		int ammotype;
 		row = column = 0;
-		for(i = 0; i < AMMO_COUNT; ++i)
+		// disabling new-style loop for now to restore original order of ammo types
+		//FOREACH(Resources, it.instanceOfAmmoResource && !it.m_hidden,
+		for(int j = 0; j < AMMO_COUNT; ++j)
 		{
-			ammotype = GetAmmoTypeFromNum(i);
+			Resource ammotype = GetAmmoTypeFromNum(j);
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
 				ammo_size,

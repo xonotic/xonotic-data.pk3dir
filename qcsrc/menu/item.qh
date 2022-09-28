@@ -5,28 +5,28 @@
 #include "draw.qh"
 #include "menu.qh"
 
-CLASS(Item, Object)
-	METHOD(Item, draw, void(Item));
-	METHOD(Item, keyDown, float(Item, float, float, float));
-	METHOD(Item, keyUp, float(Item, float, float, float));
-	METHOD(Item, mouseMove, float(Item, vector));
-	METHOD(Item, mousePress, bool(Item this, vector pos));
-	METHOD(Item, mouseDrag, float(Item, vector));
-	METHOD(Item, mouseRelease, float(Item, vector));
-	METHOD(Item, focusEnter, void(Item));
-	METHOD(Item, focusLeave, void(Item));
-	METHOD(Item, resizeNotify, void(Item, vector, vector, vector, vector));
-	METHOD(Item, relinquishFocus, void(Item));
-	METHOD(Item, showNotify, void(Item));
-	METHOD(Item, hideNotify, void(Item));
-	METHOD(Item, toString, string(Item));
-	METHOD(Item, destroy, void(Item));
-	ATTRIB(Item, focused, float, 0);
-	ATTRIB(Item, focusable, float, 0);
-	ATTRIB(Item, allowFocusSound, float, 0);
-	ATTRIB(Item, parent, entity);
-	ATTRIB(Item, preferredFocusPriority, float, 0);
-	ATTRIB(Item, origin, vector, '0 0 0');
-	ATTRIB(Item, size, vector, '0 0 0');
-	ATTRIB(Item, tooltip, string);
-ENDCLASS(Item)
+CLASS(MenuItem, Object)
+	METHOD(MenuItem, draw, void(MenuItem));
+	METHOD(MenuItem, keyDown, float(MenuItem, float, float, float));
+	METHOD(MenuItem, keyUp, float(MenuItem, float, float, float));
+	METHOD(MenuItem, mouseMove, float(MenuItem, vector));
+	METHOD(MenuItem, mousePress, bool(MenuItem this, vector pos));
+	METHOD(MenuItem, mouseDrag, float(MenuItem, vector));
+	METHOD(MenuItem, mouseRelease, float(MenuItem, vector));
+	METHOD(MenuItem, focusEnter, void(MenuItem));
+	METHOD(MenuItem, focusLeave, void(MenuItem));
+	METHOD(MenuItem, resizeNotify, void(MenuItem, vector, vector, vector, vector));
+	METHOD(MenuItem, relinquishFocus, void(MenuItem));
+	METHOD(MenuItem, showNotify, void(MenuItem));
+	METHOD(MenuItem, hideNotify, void(MenuItem));
+	METHOD(MenuItem, toString, string(MenuItem));
+	METHOD(MenuItem, destroy, void(MenuItem));
+	ATTRIB(MenuItem, focused, float, 0);
+	ATTRIB(MenuItem, focusable, float, 0);
+	ATTRIB(MenuItem, allowFocusSound, float, 0);
+	ATTRIB(MenuItem, parent, entity);
+	ATTRIB(MenuItem, preferredFocusPriority, float, 0);
+	ATTRIB(MenuItem, origin, vector, '0 0 0');
+	ATTRIB(MenuItem, size, vector, '0 0 0');
+	ATTRIB(MenuItem, tooltip, string);
+ENDCLASS(MenuItem)

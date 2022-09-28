@@ -4,9 +4,8 @@ noref vector _vlen2;
 #define vlen2(v) (_vlen2 = (v), dotproduct(_vlen2, _vlen2))
 
 #if 1
-noref float _vdist_f;
 /** Vector distance comparison, avoids sqrt() */
-#define vdist(v, cmp, f) (vlen2(v) cmp (_vdist_f = (f), _vdist_f * _vdist_f))
+#define vdist(v, cmp, f) (vlen2(v) cmp ((f) ** 2))
 #else
 #define vdist(v, cmp, f) (vlen(v) cmp (f))
 #endif
@@ -69,18 +68,6 @@ float vlen_minnorm2d(vector v)
 	return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
-ERASEABLE
-float dist_point_line(vector p, vector l0, vector ldir)
-{
-	ldir = normalize(ldir);
-
-	// remove the component in line direction
-	p = p - (p * ldir) * ldir;
-
-	// vlen of the remaining vector
-	return vlen(p);
-}
-
 /** requires that m2>m1 in all coordinates, and that m4>m3 */
 ERASEABLE
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z; }
@@ -89,16 +76,11 @@ float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= 
 ERASEABLE
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
 
+#define pointinsidebox(point, bmins, bmaxs) boxinsidebox(point, point, bmins, bmaxs)
+
 #define PITCH(v) ((v).x)
 #define YAW(v) ((v).y)
 #define ROLL(v) ((v).z)
-
-#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN { \
-	f(angles); \
-	forward = v_forward; \
-	right = v_right; \
-	up = v_up; \
-} MACRO_END
 
 //pseudo prototypes:
 // vector vec2(vector v); // returns a vector with just the x and y components of the given vector
@@ -113,6 +95,13 @@ noref vector _vec3_tmp;
 #define vec2_2(_x, _y) (_vec2_tmp.x = (_x), _vec2_tmp.y = (_y), _vec2_tmp + _vec_zero)
 #define vec3(_x, _y, _z) (_vec3_tmp.x = (_x), _vec3_tmp.y = (_y), _vec3_tmp.z = (_z), _vec3_tmp + _vec_zero)
 
+#define VEC_NAN vec3(FLOAT_NAN, FLOAT_NAN, FLOAT_NAN);
+
+ERASEABLE
+bool is_all_nans(vector v) {
+	return isnan(v.x) && isnan(v.y) && isnan(v.z);
+}
+
 ERASEABLE
 vector Rotate(vector v, float a)
 {
@@ -122,6 +111,19 @@ vector Rotate(vector v, float a)
 
 noref vector _yinvert;
 #define yinvert(v) (_yinvert = (v), _yinvert.y = 1 - _yinvert.y, _yinvert)
+
+/// \param[in] p point
+/// \param[in] l0 starting point of ldir
+/// \param[in] ldir line
+/// \return Vector starting from p perpendicular to ldir
+ERASEABLE
+vector point_line_vec(vector p, vector l0, vector ldir)
+{
+	ldir = normalize(ldir);
+	p = l0 - p;
+	// remove the component in line direction from p
+	return p - ((p * ldir) * ldir);
+}
 
 /**
  * @param dir the directional vector
@@ -176,13 +178,23 @@ vector vec_epsilon(vector this, float eps)
 	ERASEABLE
 	vector NearestPointOnBox(entity box, vector org)
 	{
-		vector m1 = box.mins + box.origin;
-		vector m2 = box.maxs + box.origin;
+		vector mi = box.mins + box.origin;
+		vector ma = box.maxs + box.origin;
 
 		return vec3(
-			bound(m1.x, org.x, m2.x),
-			bound(m1.y, org.y, m2.y),
-			bound(m1.z, org.z, m2.z)
+			bound(mi.x, org.x, ma.x),
+			bound(mi.y, org.y, ma.y),
+			bound(mi.z, org.z, ma.z)
 		);
 	}
+
+ERASEABLE
+vector NearestPointOnBoundingBox(vector mi, vector ma, vector org)
+{
+	return vec3(
+		bound(mi.x, org.x, ma.x),
+		bound(mi.y, org.y, ma.y),
+		bound(mi.z, org.z, ma.z)
+	);
+}
 #endif

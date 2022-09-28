@@ -2,6 +2,9 @@
 
 #include "log.qh"
 
+/// Only ever assign into the first 24 bits in QC (so max is BIT(23)).
+/// QC converts the float to int, performs the bit operation, then converts it back.
+/// Assigning to the highest bits means some of the low ones might get lost due to float precision.
 #define BIT(n) (1 << (n))
 #define BITS(n) (BIT(n) - 1)
 #ifndef BRANCHLESS_BITSET

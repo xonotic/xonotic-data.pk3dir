@@ -14,5 +14,18 @@ CLASS(EWheel, Turret)
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
     ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+		P(class, prefix, speed_fast, float) \
+		P(class, prefix, speed_slow, float) \
+		P(class, prefix, speed_slower, float) \
+		P(class, prefix, speed_stop, float) \
+		P(class, prefix, turnrate, float) \
+	END()
+	TR_PROPS(X, EWheel, ewheel)
+#undef X
+
 ENDCLASS(EWheel)
 REGISTER_TURRET(EWHEEL, NEW(EWheel));

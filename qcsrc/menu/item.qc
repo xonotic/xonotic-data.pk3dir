@@ -3,26 +3,26 @@
 #include "item/container.qh"
 #include "item/borderimage.qh"
 
-	METHOD(Item, destroy, void(Item this))
+	METHOD(MenuItem, destroy, void(MenuItem this))
 	{
 		// free memory associated with this
 	}
 
-	METHOD(Item, relinquishFocus, void(Item this))
+	METHOD(MenuItem, relinquishFocus, void(MenuItem this))
 	{
 		entity par = this.parent;
 		if (!par) return;
 		if (par.instanceOfContainer) par.setFocus(par, NULL);
 	}
 
-	METHOD(Item, resizeNotify, void(Item this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
+	METHOD(MenuItem, resizeNotify, void(MenuItem this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
 	{
 		this.origin = absOrigin;
 		this.size = absSize;
 	}
 
 	int autocvar_menu_showboxes;
-	METHOD(Item, draw, void(Item this))
+	METHOD(MenuItem, draw, void(MenuItem this))
 	{
 		if (!autocvar_menu_showboxes) return;
 		vector rgb = '1 0 1';
@@ -53,53 +53,53 @@
 		}
 	}
 
-	METHOD(Item, showNotify, void(Item this))
+	METHOD(MenuItem, showNotify, void(MenuItem this))
 	{}
 
-	METHOD(Item, hideNotify, void(Item this))
+	METHOD(MenuItem, hideNotify, void(MenuItem this))
 	{}
 
-	METHOD(Item, keyDown, float(Item this, float scan, float ascii, float shift))
+	METHOD(MenuItem, keyDown, float(MenuItem this, float scan, float ascii, float shift))
 	{
 		return 0;  // unhandled
 	}
 
-	METHOD(Item, keyUp, float(Item this, float scan, float ascii, float shift))
+	METHOD(MenuItem, keyUp, float(MenuItem this, float scan, float ascii, float shift))
 	{
 		return 0;  // unhandled
 	}
 
-	METHOD(Item, mouseMove, float(Item this, vector pos))
+	METHOD(MenuItem, mouseMove, float(MenuItem this, vector pos))
 	{
 		return 0;  // unhandled
 	}
 
-	METHOD(Item, mousePress, bool(Item this, vector pos))
+	METHOD(MenuItem, mousePress, bool(MenuItem this, vector pos))
 	{
 		return false;  // unhandled
 	}
 
-	METHOD(Item, mouseDrag, float(Item this, vector pos))
+	METHOD(MenuItem, mouseDrag, float(MenuItem this, vector pos))
 	{
 		return 0;  // unhandled
 	}
 
-	METHOD(Item, mouseRelease, float(Item this, vector pos))
+	METHOD(MenuItem, mouseRelease, float(MenuItem this, vector pos))
 	{
 		return 0;  // unhandled
 	}
 
     void m_play_focus_sound();
 
-	METHOD(Item, focusEnter, void(Item this))
+	METHOD(MenuItem, focusEnter, void(MenuItem this))
 	{
 		if (this.allowFocusSound) m_play_focus_sound();
 	}
 
-	METHOD(Item, focusLeave, void(Item this))
+	METHOD(MenuItem, focusLeave, void(MenuItem this))
 	{}
 
-	METHOD(Item, toString, string(Item this))
+	METHOD(MenuItem, toString, string(MenuItem this))
 	{
 		return string_null;
 	}

@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(PhaserTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(PhaserTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(PhaserTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(PhaserTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(PhaserTurretAttack, netname, string, "turret_phaser");
 /* wepname   */ ATTRIB(PhaserTurretAttack, m_name, string, _("Phaser"));

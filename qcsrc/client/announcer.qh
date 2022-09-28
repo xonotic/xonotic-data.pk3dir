@@ -1,5 +1,9 @@
 #pragma once
 
+string autocvar_cl_announcer;
+float autocvar_cl_announcer_antispam = 2;
+float autocvar_cl_announcer_maptime = 3;
+
 void Announcer();
 
 string AnnouncerOption();

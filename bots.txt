@@ -1,8 +1,11 @@
 //bot configuration:
 // default team values (team-override): 1 = red, 2 = blue, 3 = yellow, 4 = pink
 // use -1 for shirt-color or pants-color to get random colors
-// note: only one tab is allowed as separator
-//       enable indentation with elastic tab stops if you want to make sense of it all
+//
+//   WARNING: Only ONE tab is allowed as separator.
+//
+//   TIP: Enable indentation with elastic tab stops if you want to make sense of it all.
+//
 //name	model	skin	shirt	pants	team	keyboard use	moving	dodging	ping	weapon use	aggressivity	range	aiming	calmhand	mouse	fightthink	aithink
 Hellfire	ignis	0	4	0	0	0	0	-0.5	-1	1	1	-0.5	-1	-1	2	0.5	-1
 Toxic	gakmasked	0	14	7	0	-1	-1.5	-0.5	0	1	0	0	0	2	-0.5	-0.5	1

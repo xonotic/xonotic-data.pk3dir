@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/clanarena/clanarena.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/clanarena/cl_clanarena.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/clanarena/sv_clanarena.qh>
+#endif

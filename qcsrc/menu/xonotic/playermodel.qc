@@ -27,7 +27,7 @@ void XonoticPlayerModelSelector_loadModels(entity me)
 	int i;
 	string fn;
 
-	float glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
+	float glob = search_begin(get_model_datafilename(string_null, -1, "txt"), true, true);
 	if (glob < 0)
 		return;
 
@@ -113,21 +113,12 @@ void XonoticPlayerModelSelector_go(entity me, float d)
 {
 	me.idxModels = mod(me.idxModels + d + me.numModels, me.numModels);
 
-	if(me.currentModel)
-		strunzone(me.currentModel);
-	if(me.currentModelTitle)
-		strunzone(me.currentModelTitle);
-	if(me.currentModelImage)
-		strunzone(me.currentModelImage);
-	if(me.currentModelDescription)
-		strunzone(me.currentModelDescription);
-
 	// select model #i!
-	me.currentModelTitle = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_TITLE));
-	me.currentModelImage = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_IMAGE));
+	strcpy(me.currentModelTitle, bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_TITLE));
+	strcpy(me.currentModelImage, bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_IMAGE));
 	me.currentSkin = stof(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_SKIN));
-	me.currentModel = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_MODEL));
-	me.currentModelDescription = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_DESC));
+	strcpy(me.currentModel, bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_MODEL));
+	strcpy(me.currentModelDescription, bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_DESC));
 
 	// fix the image
 	if(draw_PictureSize(me.currentModelImage) == '0 0 0')

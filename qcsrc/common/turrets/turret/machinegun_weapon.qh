@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(MachineGunTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(MachineGunTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(MachineGunTurretAttack, netname, string, "turret_machinegun");
 /* wepname   */ ATTRIB(MachineGunTurretAttack, m_name, string, _("Machinegun"));

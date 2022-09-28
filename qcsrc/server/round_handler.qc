@@ -1,10 +1,10 @@
 #include "round_handler.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "campaign.qh"
-#include "command/vote.qh"
-#include "../common/util.qh"
+#include <common/mapobjects/triggers.qh>
+#include <common/util.qh>
+#include <server/campaign.qh>
+#include <server/command/vote.qh>
+#include <server/world.qh>
 
 void round_handler_Think(entity this)
 {
@@ -28,7 +28,7 @@ void round_handler_Think(entity this)
 		this.wait = false;
 		this.cnt = this.count + 1;  // init countdown
 		round_starttime = time + this.count;
-		reset_map(true);
+		reset_map(true, false);
 	}
 
 	if (this.cnt > 0)  // countdown running
@@ -42,6 +42,7 @@ void round_handler_Think(entity this)
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;
+				rounds_played++;
 				if (this.roundStart) this.roundStart();
 				return;
 			}
@@ -50,6 +51,7 @@ void round_handler_Think(entity this)
 		else
 		{
 			round_handler_Reset(0);
+			round_starttime = -1; // can't start
 		}
 		this.nextthink = time + 1;  // canRoundStart every second
 	}
@@ -75,6 +77,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	this.count = fabs(floor(the_count));
 	this.cnt = this.count + 1;
 	this.round_timelimit = (the_round_timelimit > 0) ? the_round_timelimit : 0;
+	round_limit = the_round_timelimit;
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1
@@ -86,14 +89,14 @@ void round_handler_FirstThink(entity this)
 	this.nextthink = max(time, game_starttime);
 }
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func)
+void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, void() roundStart_func)
 {
 	if (round_handler)
 	{
 		backtrace("Can't spawn round_handler again!");
 		return;
 	}
-	entity this = round_handler = new(round_handler);
+	entity this = round_handler = new_pure(round_handler);
 
 	setthink(this, round_handler_FirstThink);
 	this.canRoundStart = canRoundStart_func;
@@ -111,7 +114,11 @@ void round_handler_Reset(float next_think)
 	if (this.count)
 		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
 	this.nextthink = next_think;
-	round_starttime = (next_think) ? (next_think + this.count) : -1;
+	if (next_think)
+	{
+		if (next_think <= game_starttime) rounds_played = 0;
+		round_starttime = next_think + this.count;
+	}
 }
 
 void round_handler_Remove()

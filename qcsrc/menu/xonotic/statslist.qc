@@ -41,12 +41,13 @@ string XonoticStatsList_convertDate(string input)
 		default: return input; // failed, why?
 	}
 
-	return sprintf(
-		"%s %s, %d",
-		monthname,
-		count_ordinal(stof(substring(input, 8, 2))),
-		stof(substring(input, 0, 4))
-	);
+	// without no-c-format this string looks messed up in Transifex since only %d is a valid c placeholder
+	/* xgettext:no-c-format */
+	string date = ZCTX(_("DATE^%m %d, %Y"));
+	date = strreplace("%Y", substring(input, 0, 4), date);
+	date = strreplace("%d", ftos(stof(substring(input, 8, 2))), date); // ftos-stof removes leading 0
+	date = strreplace("%m", monthname, date);
+	return date;
 }
 
 void XonoticStatsList_getStats(entity me)
@@ -270,8 +271,10 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticStatsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 #if 0

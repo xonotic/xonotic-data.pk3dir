@@ -1,5 +1,11 @@
 #include "spiderbot.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
+#ifdef GAMEQC
+
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;
 const int SBRM_GUIDE = 2;
@@ -246,7 +252,7 @@ bool spiderbot_frame(entity this, float dt)
 	vehic.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, vehic.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
 	vehic.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, vehic.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
-	if(!forbidWeaponUse(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 	{
 		vehic.cnt = time;
@@ -264,7 +270,7 @@ bool spiderbot_frame(entity this, float dt)
 
 			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
-				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
+				autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(this, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -294,7 +300,7 @@ bool spiderbot_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, dt, false);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, dt, false, RES_HEALTH);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	//this.vehicle_ammo2 = vehic.tur_head.frame;
@@ -309,7 +315,7 @@ bool spiderbot_frame(entity this, float dt)
 	this.oldorigin = this.origin; // negate fall damage
 	this.velocity = vehic.velocity;
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, spiderbot);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, spiderbot, RES_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, spiderbot);
@@ -400,7 +406,7 @@ void spiderbot_blowup(entity this)
 		return;
 	}
 
-	entity h = spawn(), g1 = spawn(), g2 = spawn(), b = spawn();
+	entity h = new(spiderbot_top), g1 = new(spiderbot_gun), g2 = new(spiderbot_gun), b = new(spiderbot_body);
 
 	setmodel(b, MDL_VEH_SPIDERBOT_BODY);
 	setmodel(h, MDL_VEH_SPIDERBOT_TOP);
@@ -524,7 +530,7 @@ METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
     STAT(VEHICLESTAT_W2MODE, instance) = SBRM_GUIDE;
     set_movetype(instance, MOVETYPE_WALK);
     CSQCVehicleSetup(instance.owner, 0);
-    instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
+    instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_spiderbot_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
 
     if(instance.owner.flagcarried)
@@ -540,7 +546,7 @@ METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 {
-    instance.health				= 0;
+	SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.takedamage			= DAMAGE_NO;
     settouch(instance, func_null);
@@ -561,8 +567,8 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
     if(!instance.gun1)
     {
         instance.vehicles_impulse = spiderbot_impulse;
-        instance.gun1 = spawn();
-        instance.gun2 = spawn();
+        instance.gun1 = new(spiderbot_gun);
+        instance.gun2 = new(spiderbot_gun);
         setmodel(instance.gun1, MDL_VEH_SPIDERBOT_GUN);
         setmodel(instance.gun2, MDL_VEH_SPIDERBOT_GUN);
         setattachment(instance.gun1, instance.tur_head, "tag_hardpoint01");
@@ -582,7 +588,7 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
     setorigin(instance, instance.pos1 + '0 0 128');
     instance.angles = instance.pos2;
     instance.damageforcescale = 0.03;
-    instance.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_spiderbot_health);
     instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 
     instance.PlayerPhysplug = spiderbot_frame;
@@ -599,9 +605,9 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
         instance.vehicle_flags |= VHF_HEALTHREGEN;
 
     instance.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
-    instance.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_spiderbot_health);
     instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
-    instance.max_health = instance.vehicle_health;
+    instance.max_health = GetResource(instance, RES_HEALTH);
     instance.pushable = true; // spiderbot can use jumppads
 }
 
@@ -635,5 +641,7 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
     AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
     AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 }
+
+#endif
 
 #endif

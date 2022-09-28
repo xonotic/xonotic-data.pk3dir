@@ -8,6 +8,7 @@ CLASS(Raptor, Vehicle)
 /* maxs       */ ATTRIB(Raptor, m_maxs, vector, '80 80 70');
 /* view offset*/ ATTRIB(Raptor, view_ofs, vector, '0 0 160');
 /* view dist  */ ATTRIB(Raptor, height, float, 200);
+#ifdef GAMEQC
 /* model	  */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
 /* model	  */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
 /* head_model */ ATTRIB(Raptor, head_model, string, "");
@@ -15,6 +16,7 @@ CLASS(Raptor, Vehicle)
 /* tags       */ ATTRIB(Raptor, tag_head, string, "");
 /* tags       */ ATTRIB(Raptor, tag_hud, string, "tag_hud");
 /* tags       */ ATTRIB(Raptor, tag_view, string, "tag_camera");
+#endif
 /* netname    */ ATTRIB(Raptor, netname, string, "raptor");
 /* fullname   */ ATTRIB(Raptor, vehicle_name, string, _("Raptor"));
 /* icon       */ ATTRIB(Raptor, m_icon, string, "vehicle_raptor");

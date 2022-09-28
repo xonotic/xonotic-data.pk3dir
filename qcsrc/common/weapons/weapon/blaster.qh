@@ -2,7 +2,7 @@
 
 CLASS(Blaster, Weapon)
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
-/* ammotype  */ //ATTRIB(Blaster, ammo_type, int, RESOURCE_NONE);
+/* ammotype  */ //ATTRIB(Blaster, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
@@ -10,6 +10,8 @@ CLASS(Blaster, Weapon)
 /* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
+/* flash mdl */ ATTRIB(Blaster, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Blaster, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
@@ -50,13 +52,15 @@ SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
 
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
-OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+OffhandBlaster OFFHAND_BLASTER;
+STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
 
 #ifdef SVQC
 .float blaster_damage;
 .float blaster_edgedamage;
 .float blaster_radius;
 .float blaster_force;
+.float blaster_force_zscale;
 .float blaster_lifetime;
 
 // Will be demacroed after WEP_CVAR macros are also demacroed.
@@ -71,6 +75,7 @@ OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER =
 		WEP_CVAR_SEC(weapon_name, edgedamage), \
 		WEP_CVAR_SEC(weapon_name, radius), \
 		WEP_CVAR_SEC(weapon_name, force), \
+		WEP_CVAR_SEC(weapon_name, force_zscale), \
 		WEP_CVAR_SEC(weapon_name, speed), \
 		WEP_CVAR_SEC(weapon_name, spread), \
 		WEP_CVAR_SEC(weapon_name, delay), \

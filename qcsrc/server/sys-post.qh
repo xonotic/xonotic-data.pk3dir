@@ -2,13 +2,7 @@
 
 #undef droptofloor
 #undef sound
-#undef cvar_set
-#undef cvar_string
-#undef cvar
 
-var float(string name) cvar;
-var string(string name) cvar_string;
-var void(string name, string value) cvar_set;
 var void delete_fn(entity e);
 
 #undef IT_SHOTGUN
@@ -34,5 +28,10 @@ var void delete_fn(entity e);
 #undef IT_INVULNERABILITY
 #undef IT_SUIT
 #undef IT_QUAD
+
+#undef STATE_TOP
+#undef STATE_BOTTOM
+#undef STATE_UP
+#undef STATE_DOWN
 
 #pragma noref 0

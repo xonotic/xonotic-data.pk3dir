@@ -39,8 +39,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	float n;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Quality preset:")));
-		n = 5 + 2 * boolean(cvar("developer"));
-		if(cvar("developer"))
+		n = 5 + 2 * boolean(cvar("developer") > 0);
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
 				e.applyButton = effectsApplyButton;
@@ -55,7 +55,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultra")), '0 0 0', "exec effects-ultra.cfg", 0));
 			e.applyButton = effectsApplyButton;
-		if(cvar("developer"))
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultimate")), '0.5 0 0', "exec effects-ultimate.cfg", 0));
 				e.applyButton = effectsApplyButton;
@@ -87,7 +87,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 			setDependent(e, "r_showsurfaces", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
-			if(cvar("developer"))
+			if(cvar("developer") > 0)
 				e.addValue(e, ZCTX(_("RES^Leet")), "1337");
 			e.addValue(e, ZCTX(_("RES^Lowest")), "3");
 			e.addValue(e, ZCTX(_("RES^Very low")), "2");
@@ -125,10 +125,11 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			}
 		}
 	me.TR(me);
-		if(cvar("developer"))
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
+		if(cvar("developer") > 0)
 		{
-			me.TDempty(me, 0.2);
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
+			me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
 				_("Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly.")));
 		}
 	me.TR(me);
@@ -188,37 +189,34 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 
 	me.gotoRC(me, 1.25, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton_T(1, "r_coronas", "0", _("No dynamic lighting"),
-			_("Enable corona flares around certain lights")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton_T(1, "gl_flashblend", string_null, _("Fake corona lighting"),
-			_("Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights")));
-		makeMulti(e, "r_coronas");
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "r_shadow_realtime_dlight", string_null, _("Realtime dynamic lighting"),
-			_("Enable rendering of dynamic lights such as explosions and rocket lights")));
-		makeMulti(e, "r_coronas");
+		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_dlight", _("Realtime dynamic lights"),
+			_("Temporary realtime light sources such as explosions, rockets and powerups")));
+				makeMulti(e, "!gl_flashblend");
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_dlight_shadows", _("Shadows"),
-			_("Enable rendering of shadows from dynamic lights")));
+			_("Shadows cast by realtime dynamic lights")));
 			setDependent(e, "r_shadow_realtime_dlight", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_world", _("Realtime world lighting"),
-			_("Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance.")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_world", _("Realtime world lights"),
+			_("Realtime light sources included in certain maps. May have a big impact on performance.")));
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_world_shadows", _("Shadows"),
-			_("Enable rendering of shadows from realtime world lights")));
+			_("Shadows cast by realtime world lights")));
 			setDependent(e, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "r_shadow_usenormalmap", _("Use normal maps"),
-			_("Enable use of directional shading on textures")));
+			_("Directional shading of certain textures to simulate interaction of realtime light with a bumpy surface")));
 			setDependentOR(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_shadowmapping", _("Soft shadows")));
 			setDependentWeird(e, someShadowCvarIsEnabled);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Corona brightness:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1.5, 0.1, "r_coronas",
+			_("Flare effects around certain lights")));
+	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "r_coronas_occlusionquery", _("Fade corona according to visibility"),
-			_("Fade coronas according to visibility")));
-			setDependent(e, "r_coronas", 1, 1);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "r_coronas_occlusionquery", _("Fade coronas according to visibility"),
+			_("Corona fading using occlusion queries")));
+			setDependent(e, "r_coronas", 0.1, 2);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_bloom", _("Bloom"),

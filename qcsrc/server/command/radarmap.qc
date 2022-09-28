@@ -2,13 +2,11 @@
 #ifdef RADARMAP
 
 #include <common/command/_mod.qh>
-
-#include "../g_world.qh"
-#include "../g_subs.qh"
-
+#include <common/mapobjects/triggers.qh>
 #include <common/util.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
+#include <server/intermission.qh>
+#include <server/world.qh>
 
 // ===============================================
 //	Generates radar map images for use in the HUD
@@ -367,7 +365,7 @@ void RadarMap_Think(entity this)
 	}
 }
 
-bool RadarMap_Make(float argc)
+bool RadarMap_Make(int argc)
 {
 	float i;
 

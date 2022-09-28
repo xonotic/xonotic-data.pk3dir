@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../item.qh"
-CLASS(XonoticCrosshairPreview, Item)
+CLASS(XonoticCrosshairPreview, MenuItem)
 	METHOD(XonoticCrosshairPreview, configureXonoticCrosshairPreview, void(entity));
 	METHOD(XonoticCrosshairPreview, draw, void(entity));
 	ATTRIB(XonoticCrosshairPreview, src, string);

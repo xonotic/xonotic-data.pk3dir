@@ -1,20 +1,20 @@
 #include "player_skeleton.qh"
 
+#include <client/mutators/_mod.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
-#include "mutators/events.qh"
-#include "../lib/csqcmodel/cl_player.qh"
-#include "../lib/warpzone/anglestransform.qh"
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/warpzone/anglestransform.qh>
 
 .float v_angle_save_x;
 
-class(Skeleton) .float skeleton_info_modelindex;
-class(Skeleton) .float skeleton_info_skin;
+classfield(Skeleton) .float skeleton_info_modelindex;
+classfield(Skeleton) .float skeleton_info_skin;
 const int BONETYPE_LOWER = 0;
 const int BONETYPE_UPPER = 1;
 const int MAX_BONES = 128;
-class(Skeleton) .float skeleton_bonetype[MAX_BONES];
-class(Skeleton) .float skeleton_numbones;
+classfield(Skeleton) .float skeleton_bonetype[MAX_BONES];
+classfield(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {
@@ -83,7 +83,7 @@ void skeleton_markbones(entity e)
 
 void skel_set_boneabs(float s, int bone, vector absorg)
 {
-    TC(int, bone);
+	TC(int, bone);
 	vector absang = fixedvectoangles2(v_forward, v_up);
 
 	vector parentorg = skel_get_boneabs(s, skel_get_boneparent(s, bone));
@@ -113,7 +113,7 @@ void free_skeleton_from_frames(entity e)
 
 void skeleton_from_frames(entity e, bool is_dead)
 {
-    TC(bool, is_dead);
+	TC(bool, is_dead);
 	float m = e.modelindex;
 	if(!e.skeletonindex)
 	{

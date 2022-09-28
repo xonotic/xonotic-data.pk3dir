@@ -23,6 +23,9 @@ const string STR_OBSERVER = "observer";
 #define IS_TURRET(v) (v.turret_flags & TUR_FLAG_ISTURRET)
 
 #define IS_MOVABLE(v) ((IS_PLAYER(v) || IS_MONSTER(v)) && !STAT(FROZEN, v))
+#define IS_DEAD(s) ((s).deadflag != DEAD_NO)
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // NOTE: FOR_EACH_CLIENTSLOT deprecated! Use the following instead: FOREACH_CLIENTSLOT(true, { code; });
 // NOTE: FOR_EACH_CLIENT deprecated! Use the following instead: FOREACH_CLIENT(true, { code; });
@@ -34,14 +37,14 @@ const string STR_OBSERVER = "observer";
 // NOTE: FOR_EACH_REALPLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { code; });
 
 #define FOREACH_CLIENTSLOT(cond, body) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		for(int _i = 1; _i <= maxclients; ++_i) \
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = ftoe(i); \
 			if(cond) { LAMBDA(body) } \
 		} \
-	} MACRO_END
+	MACRO_END
 
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), LAMBDA(body))
 
@@ -50,23 +53,17 @@ const string STR_OBSERVER = "observer";
 entity _FCR_clients[255];
 bool _FCR_entered = false;
 #define FOREACH_CLIENT_RANDOM(cond, body) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		if (_FCR_entered) LOG_FATAL("FOREACH_CLIENT_RANDOM must not be nested"); \
 		_FCR_entered = true; \
 		int _cnt = 0; \
 		FOREACH_CLIENT(cond, { \
-            int _j = floor(random() * (_cnt + 1)); \
-            if (_j == _cnt) \
-            { \
-                _FCR_clients[_cnt] = it; \
-            } \
-            else \
-            { \
-                _FCR_clients[_cnt] = _FCR_clients[_j]; \
-                _FCR_clients[_j] = it; \
-            } \
-            _cnt++; \
-        }); \
+			int _j = floor(random() * (_cnt + 1)); \
+			if (_j != _cnt) \
+				_FCR_clients[_cnt] = _FCR_clients[_j]; \
+			_FCR_clients[_j] = it; \
+			++_cnt; \
+		}); \
 		for (int _i = 0; _i < _cnt; ++_i) \
 		{ \
 			const noref int i = _i; \
@@ -74,6 +71,6 @@ bool _FCR_entered = false;
 			if (cond) { LAMBDA(body) } \
 		} \
 		_FCR_entered = false; \
-	} MACRO_END
+	MACRO_END
 
 // NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: IL_EACH(g_monsters, true, { code; });

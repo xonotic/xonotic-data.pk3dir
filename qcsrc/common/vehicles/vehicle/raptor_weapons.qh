@@ -3,7 +3,7 @@
 #include <common/weapons/_all.qh>
 
 CLASS(RaptorCannon, PortoLaunch)
-/* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(RaptorCannon, impulse, int, 3);
 /* refname   */ ATTRIB(RaptorCannon, netname, string, "raptorcannon");
 /* wepname   */ ATTRIB(RaptorCannon, m_name, string, _("Raptor cannon"));
@@ -11,7 +11,7 @@ ENDCLASS(RaptorCannon)
 REGISTER_WEAPON(RAPTOR, NEW(RaptorCannon));
 
 CLASS(RaptorBomb, PortoLaunch)
-/* flags     */ ATTRIB(RaptorBomb, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(RaptorBomb, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(RaptorBomb, impulse, int, 3);
 /* refname   */ ATTRIB(RaptorBomb, netname, string, "raptorbomb");
 /* wepname   */ ATTRIB(RaptorBomb, m_name, string, _("Raptor bomb"));
@@ -19,7 +19,7 @@ ENDCLASS(RaptorBomb)
 REGISTER_WEAPON(RAPTOR_BOMB, NEW(RaptorBomb));
 
 CLASS(RaptorFlare, PortoLaunch)
-/* flags     */ ATTRIB(RaptorFlare, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(RaptorFlare, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(RaptorFlare, impulse, int, 3);
 /* refname   */ ATTRIB(RaptorFlare, netname, string, "raptorflare");
 /* wepname   */ ATTRIB(RaptorFlare, m_name, string, _("Raptor flare"));
@@ -30,7 +30,7 @@ REGISTER_WEAPON(RAPTOR_FLARE, NEW(RaptorFlare));
 float autocvar_g_vehicle_raptor_cannon_cost = 1;
 float autocvar_g_vehicle_raptor_cannon_damage = 10;
 float autocvar_g_vehicle_raptor_cannon_radius = 60;
-float autocvar_g_vehicle_raptor_cannon_refire = 0.03;
+float autocvar_g_vehicle_raptor_cannon_refire = 0.033333;
 float autocvar_g_vehicle_raptor_cannon_speed = 24000;
 float autocvar_g_vehicle_raptor_cannon_spread = 0.01;
 float autocvar_g_vehicle_raptor_cannon_force = 25;
@@ -51,4 +51,9 @@ float autocvar_g_vehicle_raptor_flare_refire = 5;
 float autocvar_g_vehicle_raptor_flare_lifetime = 10;
 float autocvar_g_vehicle_raptor_flare_chase = 0.9;
 float autocvar_g_vehicle_raptor_flare_range = 2000;
+#endif
+
+#ifdef CSQC
+void RaptorCBShellfragDraw(entity this);
+void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 #endif

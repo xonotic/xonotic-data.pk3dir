@@ -1,24 +1,29 @@
 #pragma once
 
+IntrusiveList g_events;
+IntrusiveList g_components;
+STATIC_INIT(components) { g_events = IL_NEW(); g_components = IL_NEW(); }
+
 /** Components always interpolate from the previous state */
 #define COMPONENT(com) \
 	void com_##com##_interpolate(entity it, float a); \
 	.bool com_##com
 
-#define FOREACH_COMPONENT(com, body) FOREACH_ENTITY_FLOAT(com_##com, true, body)
+#define FOREACH_COMPONENT(com, body) IL_EACH(g_components, it.com_##com, body)
 
 
 #define EVENT(T, args) .bool evt_##T##_listener; .void args evt_##T
 
 #define emit(T, ...) \
 	MACRO_BEGIN \
-	FOREACH_ENTITY_FLOAT_ORDERED(evt_##T##_listener, true, it.evt_##T(__VA_ARGS__)); \
+	IL_EACH(g_events, it.evt_##T##_listener, it.evt_##T(__VA_ARGS__)); \
 	MACRO_END
 
 #define subscribe(listener, T, fn) \
 	MACRO_BEGIN \
 	listener.evt_##T = (fn); \
 	listener.evt_##T##_listener = true; \
+	IL_PUSH(g_events, listener); \
 	MACRO_END
 
 

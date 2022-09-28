@@ -1,3 +1,0 @@
-#pragma once
-
-bool expr_evaluate(string s);

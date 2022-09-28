@@ -22,7 +22,7 @@ noref float autocvar_net_connecttimeout = 30;
 
 #ifdef GAMEQC
 #include "physics/all.inc"
-#include "triggers/include.qc"
+#include "mapobjects/_mod.inc"
 #include "viewloc.qc"
 #endif
 
@@ -39,7 +39,6 @@ noref float autocvar_net_connecttimeout = 30;
 #include "effects/all.qc"
 #include "impulses/all.qc"
 #include "notifications/all.qc"
-#include "t_items.qc"
 #endif
 
 #include "items/_mod.inc"
@@ -50,3 +49,5 @@ noref float autocvar_net_connecttimeout = 30;
 
 #include "mutators/_mod.inc"
     #include "gamemodes/_mod.inc"
+
+#include "resources/_mod.inc"

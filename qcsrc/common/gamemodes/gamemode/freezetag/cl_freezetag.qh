@@ -1,0 +1,5 @@
+#pragma once
+
+int autocvar_hud_panel_modicons_freezetag_layout;
+
+void HUD_Mod_FreezeTag_Export(int fh);

@@ -13,45 +13,11 @@ float autocvar_g_monster_zombie_speed_stop;
 float autocvar_g_monster_zombie_speed_run;
 float autocvar_g_monster_zombie_speed_walk;
 
-/*
-const float zombie_anim_attackleap			= 0;
-const float zombie_anim_attackrun1			= 1;
-const float zombie_anim_attackrun2			= 2;
-const float zombie_anim_attackrun3			= 3;
-const float zombie_anim_attackstanding1		= 4;
-const float zombie_anim_attackstanding2		= 5;
-const float zombie_anim_attackstanding3		= 6;
-const float zombie_anim_blockend			= 7;
-const float zombie_anim_blockstart			= 8;
-const float zombie_anim_deathback1			= 9;
-const float zombie_anim_deathback2			= 10;
-const float zombie_anim_deathback3			= 11;
-const float zombie_anim_deathfront1			= 12;
-const float zombie_anim_deathfront2			= 13;
-const float zombie_anim_deathfront3			= 14;
-const float zombie_anim_deathleft1			= 15;
-const float zombie_anim_deathleft2			= 16;
-const float zombie_anim_deathright1			= 17;
-const float zombie_anim_deathright2			= 18;
-const float zombie_anim_idle				= 19;
-const float zombie_anim_painback1			= 20;
-const float zombie_anim_painback2			= 21;
-const float zombie_anim_painfront1			= 22;
-const float zombie_anim_painfront2			= 23;
-const float zombie_anim_runbackwards		= 24;
-const float zombie_anim_runbackwardsleft	= 25;
-const float zombie_anim_runbackwardsright	= 26;
-const float zombie_anim_runforward			= 27;
-const float zombie_anim_runforwardleft		= 28;
-const float zombie_anim_runforwardright		= 29;
-const float zombie_anim_spawn				= 30;
-*/
-
 .vector moveto;
 
 void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
 {
-	if (this.health <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	vector angles_face;
@@ -74,16 +40,16 @@ void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
 
 void M_Zombie_Defend_Block_End(entity this)
 {
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	setanim(this, this.anim_blockend, false, true, true);
-	this.armorvalue = autocvar_g_monsters_armor_blockpercent;
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
 }
 
 bool M_Zombie_Defend_Block(entity this)
 {
-	this.armorvalue = 0.9;
+	SetResourceExplicit(this, RES_ARMOR, 0.9);
 	this.state = MONSTER_ATTACK_MELEE; // freeze monster
 	this.attack_finished_single[0] = time + 2.1;
 	this.anim_finished = this.attack_finished_single[0];
@@ -100,7 +66,7 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			if(random() < 0.3 && actor.health < 75 && actor.enemy.health > 10)
+			if(random() < 0.3 && GetResource(actor, RES_HEALTH) < 75 && GetResource(actor.enemy, RES_HEALTH) > 10)
 				return M_Zombie_Defend_Block(actor);
 
 			float anim_chance = random();
@@ -125,7 +91,7 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	return false;
 }
 
-spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -141,14 +107,15 @@ METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, enti
 {
     TC(Zombie, this);
     actor.pain_finished = time + 0.34;
-    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
+    if(time >= actor.spawn_time)
+    	setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
     return damage_take;
 }
 
 METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);
-    actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
+    SetResourceExplicit(actor, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
 
     setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
     return true;
@@ -180,7 +147,7 @@ METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);
-    if(!actor.health) actor.health = (autocvar_g_monster_zombie_health);
+    if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_zombie_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
@@ -194,7 +161,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Zombie_Attack;
-    actor.spawnshieldtime = actor.spawn_time;
+    StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.respawntime = 0.2;
     actor.damageforcescale = 0.0001; // no push while spawning
 

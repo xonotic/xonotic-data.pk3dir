@@ -189,7 +189,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	float sigma;
 	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
-	spread *= spreadfactor; //g_weaponspreadfactor;
+	spread *= spreadfactor; //autocvar_g_weaponspreadfactor;
 	if(spread <= 0)
 		return forward;
 

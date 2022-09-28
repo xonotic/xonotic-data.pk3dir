@@ -14,5 +14,35 @@ CLASS(WalkerTurret, Turret)
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
 /* fullname   */ ATTRIB(WalkerTurret, turret_name, string, _("Walker Turret"));
     ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+		P(class, prefix, melee_damage, float) \
+		P(class, prefix, melee_force, float) \
+		P(class, prefix, melee_range, float) \
+		P(class, prefix, rocket_damage, float) \
+		P(class, prefix, rocket_force, float) \
+		P(class, prefix, rocket_radius, float) \
+		P(class, prefix, rocket_range, float) \
+		P(class, prefix, rocket_range_min, float) \
+		P(class, prefix, rocket_refire, float) \
+		P(class, prefix, rocket_speed, float) \
+		P(class, prefix, rocket_turnrate, float) \
+		P(class, prefix, speed_jump, float) \
+		P(class, prefix, speed_roam, float) \
+		P(class, prefix, speed_run, float) \
+		P(class, prefix, speed_stop, float) \
+		P(class, prefix, speed_swim, float) \
+		P(class, prefix, speed_walk, float) \
+		P(class, prefix, turn, float) \
+		P(class, prefix, turn_run, float) \
+		P(class, prefix, turn_strafe, float) \
+		P(class, prefix, turn_swim, float) \
+		P(class, prefix, turn_walk, float) \
+	END()
+	TR_PROPS(X, WalkerTurret, walker)
+#undef X
+
 ENDCLASS(WalkerTurret)
 REGISTER_TURRET(WALKER, NEW(WalkerTurret));

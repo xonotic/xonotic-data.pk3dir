@@ -1,14 +1,17 @@
 #include "score.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include "scoreboard.qh"
+#include <client/draw.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
 #include <common/scores.qh>
 
 // Score (#7)
+
+void HUD_Score_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_score_rankings");
+}
 
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
@@ -74,8 +77,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		return;
 	}
 
-	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
-		Scoreboard_UpdatePlayerTeams();
+	Scoreboard_UpdatePlayerTeams();
 	if (team_count)
 	{
 		// show team scores in the first line
@@ -140,7 +142,7 @@ void HUD_Score()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(MUTATOR_CALLHOOK(HUD_Score_show)) return;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -177,7 +179,7 @@ void HUD_Score()
 				pl = NULL;
 
 		score = me.(scores(ps_primary));
-		timer = TIME_ENCODED_TOSTRING(score);
+		timer = TIME_ENCODED_TOSTRING(score, false);
 
 		draw_beginBoldFont();
 		if (pl && ((!(scores_flags(ps_primary) & SFL_ZERO_IS_WORST)) || score)) {

@@ -5,8 +5,9 @@
 #include "xonotic/tab.qh"
 
 REGISTRY(Settings, BITS(3))
-#define Settings_from(i) _Settings_from(i, NULL)
 REGISTER_REGISTRY(Settings)
+
+REGISTRY_DEFINE_GET(Settings, NULL)
 #define REGISTER_SETTINGS(id, impl) \
     LAZY_NEW(id, impl) \
     REGISTER(Settings, MENU, id, m_id, NEW(Lazy, LAZY(id)))

@@ -10,7 +10,7 @@
 .vector cp_origin, cp_bob_origin;
 .float cp_bob_spd;
 
-.vector cp_bob_dmg;
+.float cp_bob_dmg_z;
 
 .vector punchangle;
 
@@ -30,7 +30,7 @@ void cpicon_draw(entity this)
 	this.cp_bob_spd = this.cp_bob_spd + 1.875 * frametime;
 	this.colormod = '1 1 1' * (2 - bound(0, (this.pain_finished - time) / 10, 1));
 
-	if(!this.iscaptured) this.alpha = this.health / this.max_health;
+	if(!this.iscaptured) this.alpha = GetResource(this, RES_HEALTH) / this.max_health;
 
 	if(this.iscaptured)
 	{
@@ -79,7 +79,7 @@ void cpicon_draw(entity this)
 		this.angles_y = this.angles_y + 45 * frametime;
 	}
 
-	setorigin(this, this.cp_origin + this.cp_bob_origin + this.cp_bob_dmg);
+	setorigin(this, this.cp_origin + this.cp_bob_origin + eZ * this.cp_bob_dmg_z);
 }
 
 void cpicon_damage(entity this, float hp)
@@ -113,7 +113,7 @@ void cpicon_construct(entity this, bool isnew)
 
 	if(this.icon_realmodel == NULL)
 	{
-		this.icon_realmodel = spawn();
+		this.icon_realmodel = new(cpicon_model);
 		setmodel(this.icon_realmodel, MDL_Null);
 		setorigin(this.icon_realmodel, this.origin);
 		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);
@@ -165,14 +165,14 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.health = ReadByte();
+		SetResourceExplicit(this, RES_HEALTH, ReadByte());
 		this.max_health = ReadByte();
 		this.count = ReadByte();
 		this.team = ReadByte();
 		this.iscaptured = ReadByte();
 
 		if(!this.count)
-			this.count = (this.health - this.max_health) * frametime;
+			this.count = (GetResource(this, RES_HEALTH) - this.max_health) * frametime;
 
 		cpicon_changeteam(this);
 		cpicon_construct(this, isnew);
@@ -189,9 +189,9 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 
 		_tmp = ReadByte();
 
-		if(_tmp != this.health)
+		if(_tmp != GetResource(this, RES_HEALTH))
 			cpicon_damage(this, _tmp);
 
-		this.health = _tmp;
+		SetResourceExplicit(this, RES_HEALTH, _tmp);
 	}
 }

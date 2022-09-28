@@ -53,6 +53,11 @@ IN THE SOFTWARE.\
 .float frame2time;
 .float lerpfrac;
 
+const int ISPLAYER_MODEL = BIT(0); // using a player model
+const int ISPLAYER_CLIENT = BIT(1); // is a client
+const int ISPLAYER_LOCAL = BIT(2); // is the local player
+const int ISPLAYER_PLAYER = BIT(3); // is a player in the match
+
 const int CSQCMODEL_PROPERTY_FRAME = BIT(23);
 const int CSQCMODEL_PROPERTY_TELEPORTED = BIT(22); // the "teleport bit" cancelling interpolation
 const int CSQCMODEL_PROPERTY_MODELINDEX = BIT(21);

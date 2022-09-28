@@ -1,14 +1,13 @@
 #include "walk.qh"
+
 void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 {
-	vector stepnormal = '0 0 0';
-
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
-		_Movetype_UnstickEntity(this);
+	if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 1)
+		_Movetype_CheckStuck(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));
 
@@ -20,7 +19,15 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
 
-	int clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
+	if(PHYS_WALLCLIP(this) && this.pm_time)
+	{
+		if(dt >= this.pm_time || (this.flags & FL_WATERJUMP))
+			this.pm_time = 0;
+		else
+			this.pm_time -= dt;
+	}
+
+	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
 	if (GAMEPLAYFIX_DOWNTRACEONGROUND(this) && !(clip & 1))
 	{
@@ -39,12 +46,18 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		else type = MOVE_NORMAL;
 		tracebox(upmove, this.mins, this.maxs, downmove, type, this);
 		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
+		{
 			clip |= 1;  // but we HAVE found a floor
+			// set groundentity so we get carried when walking onto a mover
+			this.groundentity = trace_ent;
+		}
 	}
 
 	// if the move did not hit the ground at any point, we're not on ground
 	if (!(clip & 1))
 		UNSET_ONGROUND(this);
+	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
+		this.pm_time = 0.25;
 
 	_Movetype_CheckVelocity(this);
 	_Movetype_LinkEdict(this, true);
@@ -90,10 +103,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// move up
 		vector upmove = '0 0 1' * PHYS_STEPHEIGHT(this);
-		_Movetype_PushEntity(this, upmove, true);
-		if(wasfreed(this))
-			return;
-		if(trace_startsolid)
+		if(!_Movetype_PushEntity(this, upmove, true, true))
 		{
 			// we got teleported when upstepping... must abort the move
 			return;
@@ -101,7 +111,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// move forward
 		this.velocity_z = 0;
-		clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, 0);
+		clip = _Movetype_FlyMove(this, dt, applygravity, true, 0);
 		this.velocity_z += start_velocity.z;
 		if (clip & 8)
 		{
@@ -135,21 +145,19 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// extra friction based on view angle
 		if ((clip & 2) && PHYS_WALLFRICTION(this))
-			_Movetype_WallFriction(this, stepnormal);
+			_Movetype_WallFriction(this, move_stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || IS_ONGROUND(this))
+	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) 
+				|| !oldonground || IS_ONGROUND(this) || (GAMEPLAYFIX_STEPDOWN_MAXSPEED(this) && vdist(start_velocity, >=, GAMEPLAYFIX_STEPDOWN_MAXSPEED(this)) && !IS_ONSLICK(this)))
 	{
 		return;
 	}
 
 	// move down
-	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT(this) + start_velocity.z * dt);
-	_Movetype_PushEntity(this, downmove, true);
-	if(wasfreed(this))
-		return;
-
-	if(trace_startsolid)
+	vector downmove = '0 0 0';
+	downmove.z = -PHYS_STEPHEIGHT(this) + start_velocity.z * dt;
+	if(!_Movetype_PushEntity(this, downmove, true, true))
 	{
 		// we got teleported when downstepping... must abort the move
 		return;
@@ -159,6 +167,13 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	{
 		// this has been disabled so that you can't jump when you are stepping
 		// up while already jumping (also known as the Quake2 double jump bug)
+		// LordHavoc: disabled this check so you can walk on monsters/players
+		//if (PRVM_serveredictfloat(ent, solid) == SOLID_BSP)
+		if(GAMEPLAYFIX_STEPDOWN(this) == 2)
+		{
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+		}
 	}
 	else
 	{

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+[ -z "$QCCFLAGS_WATERMARK" ] && export QCCFLAGS_WATERMARK=$(git describe --tags --dirty='~')
 set -eu
 cd ${0%/*}
 
@@ -29,7 +30,7 @@ CPP="cc -xc -E"
 declare -a QCCDEFS=(
     -DNDEBUG=1
     -DXONOTIC=1
-    -DWATERMARK="\"$(git describe --tags --dirty='~')\""
+    -DWATERMARK="\"$QCCFLAGS_WATERMARK\""
     -DENABLE_EFFECTINFO=0
     -DENABLE_DEBUGDRAW=0
     -DENABLE_DEBUGTRACE=0
@@ -38,6 +39,11 @@ QCCDEFS="${QCCDEFS[@]}"
 
 declare -a QCCFLAGS=(
     -std=gmqcc
+    # Without -O3, GMQCC thinks some variables are used uninitialized if the initialization is done inside an `if (1)` block
+    # (which is created by e.g. BEGIN_MACRO) which would cause the compilation units test to fail.
+    # There doesn't appear to be any measurable increase in compile time
+    # and it allows us to get rid of some explicit initializations which are just useless noise.
+    -O3
     -Wall -Werror
     -futf8
     -freturn-assignments
@@ -61,10 +67,10 @@ function check1() {
     MODE=${prog}
     includes="-include lib/_all.inc"
     [ -f ${prog}/_all.qh ] && includes="${includes} -include ${prog}/_all.qh"
-    qpp ${file} test.dat \
+    qpp ${file} test-${prog}.dat \
             ${includes} \
             -I. ${QCCIDENT} ${QCCDEFS} > ${WORKDIR}/${prog}.qc
-    qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${prog}.qc >/dev/null
+    qcc ${QCCFLAGS} -o ../${WORKDIR}/test-${prog}.dat ../${WORKDIR}/${prog}.qc >/dev/null
 }
 
 function check() {
@@ -80,6 +86,7 @@ if [ ${#@} -eq 0 ]; then
     check menu
 else
     for var in ${@}; do
+        var=${var#test-}
         check ${var}
     done
 fi

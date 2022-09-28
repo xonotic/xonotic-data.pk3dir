@@ -16,7 +16,7 @@ const int AI_STATUS_JETPACK_FLYING             = BIT(9);
 const int AI_STATUS_JETPACK_LANDING            = BIT(10);
 const int AI_STATUS_STUCK                      = BIT(11); // Cannot reach any goal
 
-.float isbot; // true if this client is actually a bot
+.bool isbot; // true if this client is actually a bot
 .int aistatus;
 
 // Skill system
@@ -48,6 +48,8 @@ float bot_distance_close;
 entity bot_list;
 .entity nextbot;
 .string cleanname;
+// the *_freeme fields exist only to avoid an engine crash
+// when trying to strunzone the original fields
 .string netname_freeme;
 .string playermodel_freeme;
 .string playerskin_freeme;
@@ -65,6 +67,7 @@ entity bot_list;
 .bool bot_pickup_respawning;
 .float bot_canfire;
 .float bot_strategytime;
+.float bot_jump_time;
 
 .float bot_forced_team;
 .float bot_config_loaded;
@@ -75,7 +78,6 @@ entity bot_strategytoken;
 float botframe_spawnedwaypoints;
 float botframe_nextthink;
 float botframe_nextdangertime;
-float bot_cvar_nextthink;
 
 int _content_type;
 #define IN_LAVA(pos) (_content_type = pointcontents(pos), (_content_type == CONTENT_LAVA || _content_type == CONTENT_SLIME))
@@ -88,14 +90,13 @@ int _content_type;
  */
 
 entity bot_spawn();
-float bot_fixcount();
+bool bot_fixcount(bool multiple_per_frame);
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);
 void bot_custom_weapon_priority_setup();
 void bot_endgame();
 void bot_relinkplayerlist();
-void bot_clear(entity this);
 void bot_clientdisconnect(entity this);
 void bot_clientconnect(entity this);
 void bot_removefromlargestteam();

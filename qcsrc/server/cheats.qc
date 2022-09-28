@@ -1,37 +1,33 @@
 #include "cheats.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/effects/all.qh>
-
-#include "g_damage.qh"
-#include "race.qh"
-#include "../common/triggers/teleporters.qh"
-
-#include "mutators/_mod.qh"
-
 #include "weapons/tracing.qh"
-
-#include "../common/constants.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/util.qh"
-
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/func/breakable.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/player.qh>
-
-#include "../common/monsters/_mod.qh"
-
+#include <common/resources/sv_resources.qh>
+#include <common/stats.qh>
+#include <common/util.qh>
 #include <common/weapons/_all.qh>
-
-#include "../common/triggers/subs.qh"
-
-#include "../common/triggers/func/breakable.qh"
-
-#include "../lib/csqcmodel/sv_model.qh"
-
-#include "../lib/warpzone/anglestransform.qh"
-#include "../lib/warpzone/util_server.qh"
-
-void CopyBody(entity this, float keepvelocity);
+#include <common/weapons/_all.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/anglestransform.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
+#include <server/clientkill.qh>
+#include <server/damage.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/race.qh>
+#include <server/world.qh>
 
 #ifdef NOCHEATS
 
@@ -44,7 +40,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 #else
 
-.float maycheat;
+.bool maycheat;
 float gamestart_sv_cheats;
 
 
@@ -58,43 +54,39 @@ void CheatShutdown()
 {
 }
 
-float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {
-	// dead people cannot cheat
 	if(IS_DEAD(this))
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(this))
 		return 0;
 
-	// sv_clones
 	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
-		if(this.lip < sv_clones)
+		if(this.lip < autocvar_sv_clones)
 			return 1;
 
 	// haha
 	if(this.maycheat)
 		return 1;
 
-	// sv_cheats
 	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
 
 	return 0;
 }
 
 #define BEGIN_CHEAT_FUNCTION() \
-	float cheating, attempting; \
-	cheating = 0; attempting = 0
+	float cheating = 0, attempting = 0
 #define DID_CHEAT() \
 	++cheating
 #define ADD_CHEATS(e,n) \
@@ -125,6 +117,7 @@ void info_autoscreenshot_findtarget(entity this)
 }
 spawnfunc(info_autoscreenshot)
 {
+	// this one just has to exist
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
 		objerror(this, "Too many info_autoscreenshot entitites. FAIL!");
@@ -132,7 +125,6 @@ spawnfunc(info_autoscreenshot)
 	}
 	if(this.target != "")
 		InitializeEntity(this, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
-	// this one just has to exist
 }
 
 float CheatImpulse(entity this, int imp)
@@ -151,22 +143,21 @@ float CheatImpulse(entity this, int imp)
 			this.personal.origin = this.origin;
 			this.personal.v_angle = this.v_angle;
 			this.personal.velocity = this.velocity;
-			this.personal.ammo_rockets = this.ammo_rockets;
-			this.personal.ammo_nails = this.ammo_nails;
-			this.personal.ammo_cells = this.ammo_cells;
-			this.personal.ammo_plasma = this.ammo_plasma;
-			this.personal.ammo_shells = this.ammo_shells;
-			this.personal.ammo_fuel = this.ammo_fuel;
-			this.personal.health = max(1, this.health);
-			this.personal.armorvalue = this.armorvalue;
-			this.personal.weapons = this.weapons;
+			SetResource(this.personal, RES_ROCKETS, GetResource(this, RES_ROCKETS));
+			SetResource(this.personal, RES_BULLETS, GetResource(this, RES_BULLETS));
+			SetResource(this.personal, RES_CELLS, GetResource(this, RES_CELLS));
+			SetResource(this.personal, RES_PLASMA, GetResource(this, RES_PLASMA));
+			SetResource(this.personal, RES_SHELLS, GetResource(this, RES_SHELLS));
+			SetResource(this.personal, RES_FUEL, GetResource(this, RES_FUEL));
+			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
+			SetResource(this.personal, RES_ARMOR, GetResource(this, RES_ARMOR));
+			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
+			StatusEffects_copy(this.statuseffects, this.personal, 0);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
 			this.personal.pauserotfuel_finished = this.pauserotfuel_finished;
 			this.personal.pauseregen_finished = this.pauseregen_finished;
-			this.personal.strength_finished = this.strength_finished;
-			this.personal.invincible_finished = this.invincible_finished;
 			this.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
@@ -210,22 +201,22 @@ float CheatImpulse(entity this, int imp)
 					MUTATOR_CALLHOOK(AbortSpeedrun, this);
 				}
 
-				this.ammo_rockets = this.personal.ammo_rockets;
-				this.ammo_nails = this.personal.ammo_nails;
-				this.ammo_cells = this.personal.ammo_cells;
-				this.ammo_plasma = this.personal.ammo_plasma;
-				this.ammo_shells = this.personal.ammo_shells;
-				this.ammo_fuel = this.personal.ammo_fuel;
-				this.health = this.personal.health;
-				this.armorvalue = this.personal.armorvalue;
-				this.weapons = this.personal.weapons;
+				SetResource(this, RES_ROCKETS, GetResource(this.personal, RES_ROCKETS));
+				SetResource(this, RES_BULLETS, GetResource(this.personal, RES_BULLETS));
+				SetResource(this, RES_CELLS, GetResource(this.personal, RES_CELLS));
+				SetResource(this, RES_PLASMA, GetResource(this.personal, RES_PLASMA));
+				SetResource(this, RES_SHELLS, GetResource(this.personal, RES_SHELLS));
+				SetResource(this, RES_FUEL, GetResource(this.personal, RES_FUEL));
+				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
+				SetResource(this, RES_ARMOR, GetResource(this.personal, RES_ARMOR));
+				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;
 				this.pauserotfuel_finished = time + this.personal.pauserotfuel_finished - this.personal.teleport_time;
 				this.pauseregen_finished = time + this.personal.pauseregen_finished - this.personal.teleport_time;
-				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
-				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
+				StatusEffects_copy(this.personal, this.statuseffects, this.personal.teleport_time);
+				StatusEffects_update(this);
 
 				if(!autocvar_g_allow_checkpoints)
 					DID_CHEAT();
@@ -290,7 +281,6 @@ float CheatImpulse(entity this, int imp)
 	END_CHEAT_FUNCTION();
 }
 
-void DragBox_Think(entity this);
 float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
@@ -306,11 +296,6 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 5)
 			{
-				// arguments:
-				//   effectname
-				//   origin (0..1, on crosshair line)
-				//   velocity
-				//   howmany
 				f = stof(argv(2));
 				crosshair_trace(this);
 				start = (1-f) * this.origin + f * trace_endpos;
@@ -320,7 +305,9 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd pointparticles effectname position(0..1) velocityvector multiplier\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd pointparticles <effectname> <position> <velocity> <countmultiplier>\n");
+			sprint(this, "  Where <position> is a number from 0 to 1 representing distance on the crosshair line,\n");
+			sprint(this, "  and <velocity> is a vector \"x y z\"\n");
 			break;
 		case "trailparticles":
 			IS_CHEAT(this, 0, argc, 0);
@@ -335,14 +322,12 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles effectname\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles <effectname>\n");
 			break;
 		case "make":
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 3)
 			{
-				// arguments:
-				//   modelname mode
 				f = stof(argv(2));
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
@@ -352,10 +337,10 @@ float CheatCommand(entity this, int argc)
 				}
 				else
 				{
-					entity e = spawn();
+					entity e = new(func_breakable);
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
-					e.health = 1000;
+					SetResourceExplicit(e, RES_HEALTH, 1000);
 					setorigin(e, trace_endpos);
 					e.effects = EF_NOMODELFLAGS;
 					if(f == 1)
@@ -363,7 +348,7 @@ float CheatCommand(entity this, int argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					spawnfunc_func_breakable(e);
+					func_breakable_setup(e);
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -381,7 +366,10 @@ float CheatCommand(entity this, int argc)
 				}
 			}
 			else
-				sprint(this, "Usage: sv_cheats 1; restart; cmd make models/... 0/1/2\n");
+			{
+				sprint(this, "Usage:^3 sv_cheats 1; restart; cmd make <modelname> <mode>\n");
+				sprint(this, "  where <mode> can be 0, 1 or 2\n");
+			}
 			break;
 		case "penalty":
 			IS_CHEAT(this, 0, argc, 0);
@@ -391,7 +379,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd penalty <duration> <reason>))\n");
 			break;
 		case "dragbox_spawn": {
 			IS_CHEAT(this, 0, argc, 0);
@@ -516,7 +504,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_setcnt cnt\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_setcnt <cnt>\n");
 			break;
 		case "drag_save":
 			IS_CHEAT(this, 0, argc, 0);
@@ -536,7 +524,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
 			break;
 		case "drag_saveraceent":
 			IS_CHEAT(this, 0, argc, 0);
@@ -559,7 +547,7 @@ float CheatCommand(entity this, int argc)
 					effectnum = 0;
 					for(entity ent = NULL; (ent = find(ent, classname, "dragbox_box")); )
 					{
-						if(e.cnt <= 0 && ent.cnt == 0 || e.cnt == ent.cnt)
+						if((e.cnt <= 0 && ent.cnt == 0) || e.cnt == ent.cnt)
 						{
 							start = start + ent.origin;
 							++effectnum;
@@ -605,7 +593,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
 			break;
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);
@@ -710,18 +698,6 @@ float CheatCommand(entity this, int argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity this, float force_allow_pick, float ischeat);
-void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
-void Drag_Finish(entity dragger);
-float Drag_IsDraggable(entity draggee);
-float Drag_MayChangeAngles(entity draggee);
-void Drag_MoveForward(entity dragger);
-void Drag_SetSpeed(entity dragger, float s);
-void Drag_MoveBackward(entity dragger);
-void Drag_Update(entity dragger);
-float Drag_CanDrag(entity dragger);
-float Drag_IsDragging(entity dragger);
-void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
 float CheatFrame(entity this)
@@ -811,59 +787,51 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 					Drag_Finish(this);
 				}
 			}
-			else
+			else if(Drag_CanDrag(this) && PHYS_INPUT_BUTTON_DRAG(this))
 			{
-				if(Drag_CanDrag(this))
-					if(PHYS_INPUT_BUTTON_DRAG(this))
-					{
-						crosshair_trace_plusvisibletriggers(this);
-						entity e = trace_ent;
-						float pick = force_allow_pick;
-						if (e && !pick)
-						{
-							// pick is true if the object can be picked up. While an object is being carried, the Drag() function
-							// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
-							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
-							// it goes out of range while slinging it around.
+				crosshair_trace_plusvisibletriggers(this);
+				entity e = trace_ent;
+				float pick = force_allow_pick;
+				if (e && !pick && vdist(this.origin - e.origin, <=, autocvar_g_grab_range))
+				{
+					// pick is true if the object can be picked up. While an object is being carried, the Drag() function
+					// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+					// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+					// it goes out of range while slinging it around.
 
-							if(vdist(this.origin - e.origin, <=, autocvar_g_grab_range))
-							{
-								switch(e.grab)
-								{
-									case 0: // can't grab
-										break;
-									case 1: // owner can grab
-										if(e.owner == this || e.realowner == this)
-											pick = true;
-										break;
-									case 2: // owner and team mates can grab
-										if(SAME_TEAM(e.owner, this) || SAME_TEAM(e.realowner, this) || e.team == this.team)
-											pick = true;
-										break;
-									case 3: // anyone can grab
-										pick = true;
-										break;
-									default:
-										break;
-								}
-							}
-						}
-						// Find e and pick
-						if(e && pick)
-							if(Drag_IsDraggable(e))
-							{
-								if(ischeat)
-									IS_CHEAT(this, 0, 0, CHRAME_DRAG);
-								if(e.draggedby)
-									Drag_Finish(e.draggedby);
-								if(e.tag_entity)
-									detach_sameorigin(e);
-								Drag_Begin(this, e, trace_endpos);
-								if(ischeat)
-									DID_CHEAT();
-								return true;
-							}
+					switch(e.grab)
+					{
+						case 0: // can't grab
+							break;
+						case 1: // owner can grab
+							if(e.owner == this || e.realowner == this)
+								pick = true;
+							break;
+						case 2: // owner and team mates can grab
+							if(SAME_TEAM(e.owner, this) || SAME_TEAM(e.realowner, this) || e.team == this.team)
+								pick = true;
+							break;
+						case 3: // anyone can grab
+							pick = true;
+							break;
+						default:
+							break;
 					}
+				}
+				// Find e and pick
+				if(e && pick && Drag_IsDraggable(e, this))
+				{
+					if(ischeat)
+						IS_CHEAT(this, 0, 0, CHRAME_DRAG);
+					if(e.draggedby)
+						Drag_Finish(e.draggedby);
+					if(e.tag_entity)
+						detach_sameorigin(e);
+					Drag_Begin(this, e, trace_endpos);
+					if(ischeat)
+						DID_CHEAT();
+					return true;
+				}
 			}
 			break;
 	}
@@ -926,31 +894,24 @@ void Drag_Finish(entity dragger)
 	}
 }
 
-float Drag_IsDraggable(entity draggee)
+bool drag_undraggable(entity draggee, entity dragger)
+{
+	// stuff probably shouldn't need this, we should figure out why they do!
+	// exceptions of course are observers and weapon entities, where things mess up
+	return false;
+}
+
+float Drag_IsDraggable(entity draggee, entity dragger)
 {
 	// TODO add more checks for bad stuff here
 	if(draggee == NULL)
 		return false;
-	if(draggee.classname == "func_bobbing")
-		return false;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
-		return false;
-	if(draggee.classname == "plat")
-		return false;
-	if(draggee.classname == "func_button")
-		return false;
-//	if(draggee.model == "")
-//		return false;
-	if(IS_SPEC(draggee))
-		return false;
-	if(IS_OBSERVER(draggee))
-		return false;
-	if(draggee.classname == "exteriorweaponentity")
-		return false;
-	if(draggee.classname == "weaponentity")
-		return false;
+		return false; // probably due to BSP collision
+	//if(draggee.model == "")
+	//	return false;
 
-	return true;
+	return ((draggee.draggable) ? draggee.draggable(draggee, dragger) : true);
 }
 
 float Drag_MayChangeAngles(entity draggee)
@@ -1028,7 +989,7 @@ float Drag_IsDragging(entity dragger)
 		dragger.dragentity = NULL;
 		return false;
 	}
-	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
+	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity, dragger))
 	{
 		Drag_Finish(dragger);
 		return false;

@@ -2,7 +2,7 @@
 
 CLASS(Crylink, Weapon)
 /* spawnfunc */ ATTRIB(Crylink, m_canonical_spawnfunc, string, "weapon_crylink");
-/* ammotype  */ ATTRIB(Crylink, ammo_type, int, RESOURCE_CELLS);
+/* ammotype  */ ATTRIB(Crylink, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Crylink, impulse, int, 6);
 /* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB);
 /* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);
@@ -10,6 +10,8 @@ CLASS(Crylink, Weapon)
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Crylink, m_model, Model, MDL_CRYLINK_ITEM);
+/* flash mdl */ ATTRIB(Crylink, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Crylink, m_muzzleeffect, entity, EFFECT_CRYLINK_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Crylink, w_crosshair, string, "gfx/crosshaircrylink");
 /* crosshair */ ATTRIB(Crylink, w_crosshair_size, float, 0.5);
@@ -71,4 +73,6 @@ SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
 
 .entity queuenext;
 .entity queueprev;
+
+void W_Crylink_Dequeue(entity e);
 #endif

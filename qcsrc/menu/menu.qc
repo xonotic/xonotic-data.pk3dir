@@ -13,14 +13,14 @@
 #include "xonotic/serverlist.qh"
 #include "xonotic/slider_resolution.qh"
 
-.string cvarName;
+.string controlledCvar;
 
 #include "xonotic/util.qh"
 
-#include "../common/items/_mod.qh"
+#include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
-#include "../common/mapinfo.qh"
-#include "../common/mutators/base.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 
 int mouseButtonsPressed;
 vector menuMousePos;
@@ -50,7 +50,7 @@ void m_gamestatus()
 	gamestatus = 0;
 	if (isserver()) gamestatus |= GAME_ISSERVER;
 	if (clientstate() == CS_CONNECTED || isdemo()) gamestatus |= GAME_CONNECTED;
-	if (cvar("developer")) gamestatus |= GAME_DEVELOPER;
+	if (cvar("developer") > 0) gamestatus |= GAME_DEVELOPER;
 }
 
 void m_init()
@@ -69,11 +69,11 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-		LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
+		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
-	if (cvar("developer"))
+	if (cvar("developer") > 0)
 	{
 		for (int i = 0; ; ++i)
 		{
@@ -218,11 +218,12 @@ void m_init_delayed()
 	if (m_goto_buffer)
 	{
 		m_goto(m_goto_buffer);
-		strunzone(m_goto_buffer);
-		m_goto_buffer = string_null;
+		strfree(m_goto_buffer);
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
+
+	cvar_set("_menu_initialized", "2");
 }
 
 void m_keyup(float key, float ascii)
@@ -337,7 +338,8 @@ void drawBackground(string img, float a, string algn, float force1)
 	if (main.mainNexposee.ModalController_state == 0) return;
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
-	for (int i = 0, l = 0; i < strlen(algn); ++i)
+	int len = strlen(algn);
+	for (int i = 0, l = 0; i < len; ++i)
 	{
 		string c = substring(algn, i, 1);
 		switch (c)
@@ -482,7 +484,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		{
 			it = it.itemFromPoint(it, pos);
 			if (it.tooltip) best = it;
-			else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+			else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 			it = NULL;
 		}
 		else if (it.instanceOfModalController)
@@ -495,7 +497,7 @@ entity m_findtooltipitem(entity root, vector pos)
 		}
 		if (!it) break;
 		if (it.tooltip) best = it;
-		else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+		else if (menu_tooltips == 2 && (it.controlledCvar || it.onClickCommand)) best = it;
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
@@ -506,11 +508,14 @@ string gettooltip()
 	if (menu_tooltips == 2)
 	{
 		string s;
-		if (menuTooltipItem.cvarName)
+		if (menuTooltipItem.controlledCvar)
 		{
-			if (getCvarsMulti(menuTooltipItem)) s =
-				    strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
-			else s = strcat("[", menuTooltipItem.cvarName, "]");
+			string cvar_list = getCvarsMulti(menuTooltipItem);
+			if (cvar_list)
+				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
+			else
+				cvar_list = menuTooltipItem.controlledCvar;
+			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{
@@ -551,8 +556,7 @@ void m_tooltip(vector pos)
 			{
 				// fade out if tooltip of a certain item has changed
 				menuTooltipState = 3;
-				if (prev_tooltip) strunzone(prev_tooltip);
-				prev_tooltip = strzone(it.tooltip);
+				strcpy(prev_tooltip, it.tooltip);
 			}
 			else if (menuTooltipItem && !m_testmousetooltipbox(pos))
 			{
@@ -585,8 +589,7 @@ void m_tooltip(vector pos)
 
 					menuTooltipOrigin.x = -1;  // unallocated
 
-					if (menuTooltipText) strunzone(menuTooltipText);
-					menuTooltipText = strzone(gettooltip());
+					strcpy(menuTooltipText, gettooltip());
 
 					int i = 0;
 					float w = 0;
@@ -636,11 +639,7 @@ void m_tooltip(vector pos)
 
 	if (menuTooltipItem == NULL)
 	{
-		if (menuTooltipText)
-		{
-			strunzone(menuTooltipText);
-			menuTooltipText = string_null;
-		}
+		strfree(menuTooltipText);
 		return;
 	}
 	else
@@ -676,23 +675,32 @@ void m_tooltip(vector pos)
 	}
 }
 
+const int MIN_DISCONNECTION_TIME = 1;
 float autocvar_menu_force_on_disconnection;
+bool autocvar_g_campaign;
 void m_draw(float width, float height)
 {
-	if (autocvar_menu_force_on_disconnection > 0)
+	static float connected_time;
+	if (clientstate() == CS_DISCONNECTED)
 	{
-		static float connected_time;
-		if (clientstate() == CS_DISCONNECTED)
+		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 		{
-			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
+			if (autocvar_g_campaign)
 			{
-				m_toggle(true);
-				connected_time = 0;
+				// in the case player uses the disconnect command (in the console or with a key)
+				// reset g_campaign and update menu items to reflect cvar values that may have been restored after quiting the campaign
+				// see also LEAVEMATCH_CMD
+				cvar_set("g_campaign", "0");
+				m_sync();
 			}
+			if (autocvar_menu_force_on_disconnection > 0)
+				m_toggle(true);
+			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
+			connected_time = 0;
 		}
-		else
-			connected_time = time;
 	}
+	else
+		connected_time = time;
 
 	m_gamestatus();
 
@@ -715,7 +723,9 @@ void m_draw(float width, float height)
 		menuNotTheFirstFrame = true;
 		if (Menu_Active && !cvar("menu_video_played"))
         {
-            localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
+            localcmd("cd loop $menu_cdtrack\n");
+            // TODO: use this when we have a welcome sound
+            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
             menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
         }
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
@@ -954,8 +964,7 @@ void m_goto(string itemname)
 {
 	if (!menuInitialized)
 	{
-		if (m_goto_buffer) strunzone(m_goto_buffer);
-		m_goto_buffer = strzone(itemname);
+		strcpy(m_goto_buffer, itemname);
 		return;
 	}
 	if (itemname == "")  // this can be called by GameCommand
@@ -963,12 +972,16 @@ void m_goto(string itemname)
 		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
 		{
 			m_hide();
+			return;
 		}
-		else
-		{
-			m_activate_window(main.mainNexposee);
-			m_display();
-		}
+		itemname = "nexposee";
+	}
+
+	if (itemname == "nexposee")
+	{
+		// unlike 'togglemenu 1', this closes modal and root dialogs if opened
+		m_activate_window(main.mainNexposee);
+		m_display();
 	}
 	else
 	{

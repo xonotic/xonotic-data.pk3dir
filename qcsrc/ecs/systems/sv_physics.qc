@@ -1,9 +1,14 @@
 #include "physics.qh"
 
+float autocvar_sv_spectator_speed_multiplier;
+float autocvar_sv_spectator_speed_multiplier_min = 1;
+float autocvar_sv_spectator_speed_multiplier_max = 5;
+
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
 	Physics_UpdateStats(this);
+	PM_ClientMovement_UpdateStatus(this);
 }
 
 bool sys_phys_override(entity this, float dt)
@@ -21,7 +26,7 @@ void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
-	if (sv_maxidle > 0) {
+	if (autocvar_sv_maxidle > 0 || autocvar_sv_maxidle_playertospectator > 0) {
 		if (buttons != CS(this).buttons_old
 		    || CS(this).movement != CS(this).movement_old
 		    || this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }
@@ -33,7 +38,6 @@ void sys_phys_monitor(entity this, float dt)
 void sys_phys_ai(entity this)
 {
 	if (!IS_BOT_CLIENT(this)) { return; }
-	if (playerdemo_read(this)) { return; }
 	bot_think(this);
 }
 

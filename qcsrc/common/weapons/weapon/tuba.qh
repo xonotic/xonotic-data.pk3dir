@@ -3,7 +3,7 @@
 CLASS(Tuba, Weapon)
 /* spawnfunc */ ATTRIB(Tuba, m_canonical_spawnfunc, string, "weapon_tuba");
 /* impulse   */ ATTRIB(Tuba, impulse, int, 1);
-/* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
+/* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, 2000);
 /* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
@@ -45,9 +45,15 @@ SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)
 
 #ifdef CSQC
 entityclass(Tuba);
-class(Tuba) .int note;
-class(Tuba) .bool tuba_attenuate;
-class(Tuba) .float tuba_volume;
-class(Tuba) .float tuba_volume_initial;
-class(Tuba) .int tuba_instrument;
+classfield(Tuba) .int note;
+classfield(Tuba) .bool tuba_attenuate;
+classfield(Tuba) .float tuba_volume;
+classfield(Tuba) .float tuba_volume_initial;
+classfield(Tuba) .int tuba_instrument;
+#endif
+
+#ifdef SVQC
+float autocvar_snd_soundradius;
+
+bool W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo);
 #endif

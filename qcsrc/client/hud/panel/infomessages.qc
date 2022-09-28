@@ -1,12 +1,15 @@
 #include "infomessages.qh"
 
-#include <client/autocvars.qh>
-#include <client/miscfunctions.qh>
-
+#include <client/draw.qh>
 #include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
 
 // Info messages (#14)
+
+void HUD_InfoMessages_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_infomessages_flip");
+}
 
 float autocvar_hud_panel_infomessages_group0 = 1;
 float autocvar_hud_panel_infomessages_group_fadetime = 0.4;
@@ -33,7 +36,6 @@ int img_select(int group_id)
 	return img_cur_msg[group_id];
 }
 
-float stringwidth_colors(string s, vector theSize);
 vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
 {
 	getWrappedLine_remaining = s;
@@ -51,10 +53,10 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 	return pos;
 }
 
-#define InfoMessage(s) MACRO_BEGIN { \
+#define InfoMessage(s) MACRO_BEGIN \
 	pos = InfoMessages_drawstring(s, pos, mySize, ((img_curr_group >= 0) ? panel_fg_alpha * img_fade[img_curr_group] : panel_fg_alpha), fontsize); \
 	img_curr_group = -1; \
-} MACRO_END
+MACRO_END
 
 void HUD_InfoMessages()
 {
@@ -117,22 +119,15 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 
-			MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize);
+			bool mutator_returnvalue = MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
+			pos = M_ARGV(0, vector);
+			img_curr_group = M_ARGV(2, int);
 
-			if(!warmup_stage && gametype == MAPINFO_TYPE_LMS)
+			if(!mutator_returnvalue)
 			{
-				entity sk;
-				sk = playerslots[player_localnum];
-				if(sk.(scores(ps_primary)) >= 666)
-					s = _("^1Match has already begun");
-				else if(sk.(scores(ps_primary)) > 0)
-					s = _("^1You have no more lives left");
-				else
-					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-			}
-			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-			InfoMessage(s);
+				InfoMessage(s);
+			}
 		}
 
 		if (time < STAT(GAMESTARTTIME))
@@ -199,7 +194,7 @@ void HUD_InfoMessages()
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team menu"), "menu_showteamselect"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "scoreboard_team_selection"), blinkcolor));
 					InfoMessage(s);
 				}
 			}

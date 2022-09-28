@@ -1,6 +1,40 @@
 #include "mage.qh"
 
 #ifdef SVQC
+float autocvar_g_monster_mage_health;
+float autocvar_g_monster_mage_damageforcescale = 0.5;
+float autocvar_g_monster_mage_attack_spike_damage;
+float autocvar_g_monster_mage_attack_spike_radius;
+float autocvar_g_monster_mage_attack_spike_delay;
+float autocvar_g_monster_mage_attack_spike_accel;
+float autocvar_g_monster_mage_attack_spike_decel;
+float autocvar_g_monster_mage_attack_spike_chance = 0.45;
+float autocvar_g_monster_mage_attack_spike_turnrate;
+float autocvar_g_monster_mage_attack_spike_speed_max;
+float autocvar_g_monster_mage_attack_spike_smart;
+float autocvar_g_monster_mage_attack_spike_smart_trace_min;
+float autocvar_g_monster_mage_attack_spike_smart_trace_max;
+float autocvar_g_monster_mage_attack_spike_smart_mindist;
+float autocvar_g_monster_mage_attack_push_chance = 0.7;
+float autocvar_g_monster_mage_attack_push_damage;
+float autocvar_g_monster_mage_attack_push_radius;
+float autocvar_g_monster_mage_attack_push_delay;
+float autocvar_g_monster_mage_attack_push_force;
+float autocvar_g_monster_mage_attack_teleport_chance = 0.2;
+float autocvar_g_monster_mage_attack_teleport_delay = 2;
+float autocvar_g_monster_mage_attack_teleport_random = 0.4;
+float autocvar_g_monster_mage_attack_teleport_random_range = 1200;
+float autocvar_g_monster_mage_heal_self;
+float autocvar_g_monster_mage_heal_allies;
+float autocvar_g_monster_mage_heal_minhealth;
+float autocvar_g_monster_mage_heal_range;
+float autocvar_g_monster_mage_heal_delay;
+float autocvar_g_monster_mage_shield_time;
+float autocvar_g_monster_mage_shield_delay;
+float autocvar_g_monster_mage_shield_blockpercent;
+float autocvar_g_monster_mage_speed_stop;
+float autocvar_g_monster_mage_speed_run;
+float autocvar_g_monster_mage_speed_walk;
 
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
 void M_Mage_Attack_Spike(entity this, vector dir);
@@ -12,6 +46,7 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weapon
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
+        monster_makevectors(actor, actor.enemy);
         W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(actor, w_shotdir);
@@ -36,74 +71,44 @@ CLASS(OffhandMageTeleport, OffhandWeapon)
         player.OffhandMageTeleport_key_pressed = key_pressed;
     }
 ENDCLASS(OffhandMageTeleport)
-OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
-
-float autocvar_g_monster_mage_health;
-float autocvar_g_monster_mage_damageforcescale = 0.5;
-float autocvar_g_monster_mage_attack_spike_damage;
-float autocvar_g_monster_mage_attack_spike_radius;
-float autocvar_g_monster_mage_attack_spike_delay;
-float autocvar_g_monster_mage_attack_spike_accel;
-float autocvar_g_monster_mage_attack_spike_decel;
-float autocvar_g_monster_mage_attack_spike_turnrate;
-float autocvar_g_monster_mage_attack_spike_speed_max;
-float autocvar_g_monster_mage_attack_spike_smart;
-float autocvar_g_monster_mage_attack_spike_smart_trace_min;
-float autocvar_g_monster_mage_attack_spike_smart_trace_max;
-float autocvar_g_monster_mage_attack_spike_smart_mindist;
-float autocvar_g_monster_mage_attack_push_damage;
-float autocvar_g_monster_mage_attack_push_radius;
-float autocvar_g_monster_mage_attack_push_delay;
-float autocvar_g_monster_mage_attack_push_force;
-float autocvar_g_monster_mage_heal_self;
-float autocvar_g_monster_mage_heal_allies;
-float autocvar_g_monster_mage_heal_minhealth;
-float autocvar_g_monster_mage_heal_range;
-float autocvar_g_monster_mage_heal_delay;
-float autocvar_g_monster_mage_shield_time;
-float autocvar_g_monster_mage_shield_delay;
-float autocvar_g_monster_mage_shield_blockpercent;
-float autocvar_g_monster_mage_speed_stop;
-float autocvar_g_monster_mage_speed_run;
-float autocvar_g_monster_mage_speed_walk;
-
-/*
-const float mage_anim_idle		= 0;
-const float mage_anim_walk		= 1;
-const float mage_anim_attack	= 2;
-const float mage_anim_pain		= 3;
-const float mage_anim_death		= 4;
-const float mage_anim_run		= 5;
-*/
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
+STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
 
 void M_Mage_Defend_Heal(entity this);
 void M_Mage_Defend_Shield(entity this);
 
 .entity mage_spike;
 .float mage_shield_delay;
-.float mage_shield_time;
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
 	if(targ == NULL)
 		return false;
-	if(targ.health <= 0)
+	if(GetResource(targ, RES_HEALTH) <= 0)
 		return false;
 	if(DIFF_TEAM(targ, this) && targ != this.monster_follow)
 		return false;
 	if(STAT(FROZEN, targ))
 		return false;
 	if(!IS_PLAYER(targ))
-		return (IS_MONSTER(targ) && targ.health < targ.max_health);
-	if(targ.items & ITEM_Shield.m_itemid)
+		return (IS_MONSTER(targ) && GetResource(targ, RES_HEALTH) < targ.max_health);
+	if(StatusEffects_active(STATUSEFFECT_Shield, targ))
 		return false;
 
 	switch(this.skin)
 	{
-		case 0: return (targ.health < autocvar_g_balance_health_regenstable);
-		case 1: return ((targ.ammo_cells && targ.ammo_cells < g_pickup_cells_max) || (targ.ammo_plasma && targ.ammo_plasma < g_pickup_plasma_max) || (targ.ammo_rockets && targ.ammo_rockets < g_pickup_rockets_max) || (targ.ammo_nails && targ.ammo_nails < g_pickup_nails_max) || (targ.ammo_shells && targ.ammo_shells < g_pickup_shells_max));
-		case 2: return (targ.armorvalue < autocvar_g_balance_armor_regenstable);
-		case 3: return (targ.health > 0);
+		case 0: return (GetResource(targ, RES_HEALTH) < autocvar_g_balance_health_regenstable);
+		case 1:
+		{
+			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < g_pickup_cells_max)
+				||  (GetResource(targ, RES_PLASMA) && GetResource(targ, RES_PLASMA) < g_pickup_plasma_max)
+				||  (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < g_pickup_rockets_max)
+				||  (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < g_pickup_nails_max)
+				||  (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < g_pickup_shells_max)
+					);
+		}
+		case 2: return (GetResource(targ, RES_ARMOR) < autocvar_g_balance_armor_regenstable);
+		case 3: return (GetResource(targ, RES_HEALTH) > 0);
 	}
 
 	return false;
@@ -136,7 +141,7 @@ void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think(entity this)
 {
-	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
+	if (time > this.ltime || (this.enemy && GetResource(this.enemy, RES_HEALTH) <= 0) || !this.owner || GetResource(this.owner, RES_HEALTH) <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode(this, NULL);
 	}
@@ -191,7 +196,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 {
 	makevectors(this.angles);
 
-	entity missile = spawn();
+	entity missile = new(M_Mage_Attack_Spike);
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
@@ -215,7 +220,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 
 void M_Mage_Defend_Heal(entity this)
 {
-	float washealed = false;
+	bool washealed = false;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_mage_heal_range, M_Mage_Defend_Heal_Check(this, it),
 	{
@@ -226,26 +231,32 @@ void M_Mage_Defend_Heal(entity this)
 			switch(this.skin)
 			{
 				case 0:
-					if(it.health < autocvar_g_balance_health_regenstable) it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
+				{
+					Heal(it, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
 					fx = EFFECT_HEALING;
 					break;
+				}
 				case 1:
-					if(it.ammo_cells) it.ammo_cells = bound(it.ammo_cells, it.ammo_cells + 1, g_pickup_cells_max);
-					if(it.ammo_plasma) it.ammo_plasma = bound(it.ammo_plasma, it.ammo_plasma + 1, g_pickup_plasma_max);
-					if(it.ammo_rockets) it.ammo_rockets = bound(it.ammo_rockets, it.ammo_rockets + 1, g_pickup_rockets_max);
-					if(it.ammo_shells) it.ammo_shells = bound(it.ammo_shells, it.ammo_shells + 2, g_pickup_shells_max);
-					if(it.ammo_nails) it.ammo_nails = bound(it.ammo_nails, it.ammo_nails + 5, g_pickup_nails_max);
+				{
+					if(GetResource(it, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, g_pickup_cells_max);
+					if(GetResource(it, RES_PLASMA)) GiveResourceWithLimit(it, RES_PLASMA, 1, g_pickup_plasma_max);
+					if(GetResource(it, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, g_pickup_rockets_max);
+					if(GetResource(it, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, g_pickup_shells_max);
+					if(GetResource(it, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, g_pickup_nails_max);
+					// TODO: fuel?
 					fx = EFFECT_AMMO_REGEN;
 					break;
+				}
 				case 2:
-					if(it.armorvalue < autocvar_g_balance_armor_regenstable)
+					if(GetResource(it, RES_ARMOR) < autocvar_g_balance_armor_regenstable)
 					{
-						it.armorvalue = bound(0, it.armorvalue + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_armor_regenstable);
+						GiveResourceWithLimit(it, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
 						fx = EFFECT_ARMOR_REPAIR;
 					}
 					break;
 				case 3:
-					it.health = bound(0, it.health - ((it == this)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
+					float hp = ((it == this) ? autocvar_g_monster_mage_heal_self : autocvar_g_monster_mage_heal_allies);
+					TakeResource(it, RES_HEALTH, hp); // TODO: use regular damage functions? needs a way to bypass friendly fire checks
 					fx = EFFECT_RAGE;
 					break;
 			}
@@ -255,16 +266,17 @@ void M_Mage_Defend_Heal(entity this)
 		else
 		{
 			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-			it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), it.max_health);
+			Heal(it, this, autocvar_g_monster_mage_heal_allies, RES_LIMIT_NONE);
 			if(!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
-				WaypointSprite_UpdateHealth(it.sprite, it.health);
+				WaypointSprite_UpdateHealth(it.sprite, GetResource(it, RES_HEALTH));
 		}
 	});
 
 	if(washealed)
 	{
-		setanim(this, this.anim_shoot, true, true, true);
+		setanim(this, this.anim_melee, true, true, true);
 		this.attack_finished_single[0] = time + (autocvar_g_monster_mage_heal_delay);
+		this.state = MONSTER_ATTACK_MELEE;
 		this.anim_finished = time + 1.5;
 	}
 }
@@ -276,22 +288,44 @@ void M_Mage_Attack_Push(entity this)
 						NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, this.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
 
-	setanim(this, this.anim_shoot, true, true, true);
+	setanim(this, this.anim_duckjump, true, true, true);
 	this.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_push_delay);
+	this.anim_finished = time + 1;
+	this.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
 }
 
 void M_Mage_Attack_Teleport(entity this, entity targ)
 {
 	if(!targ) return;
-	if(vdist(targ.origin - this.origin, >, 1500)) return;
+	if(vdist(targ.origin - this.origin, >, autocvar_g_monster_mage_attack_teleport_random_range)) return;
+
+	if(autocvar_g_monster_mage_attack_teleport_random && random() <= autocvar_g_monster_mage_attack_teleport_random)
+	{
+		vector oldpos = this.origin;
+		vector extrasize = '1 1 1' * autocvar_g_monster_mage_attack_teleport_random_range;
+		if(MoveToRandomLocationWithinBounds(this, this.absmin - extrasize, this.absmax + extrasize,
+											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
+											Q3SURFACEFLAG_SKY, 10, 64, 256, true))
+		{
+			vector a = vectoangles(targ.origin - this.origin);
+			this.angles = '0 1 0' * a.y;
+			this.fixangle = true;
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, oldpos, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+			this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
+			return;
+		}
+	}
+
+	if(!IS_ONGROUND(targ)) return;
 
 	makevectors(targ.angles);
-	tracebox(targ.origin + ((v_forward * -1) * 200), this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
+	tracebox(CENTER_OR_VIEWOFS(targ), this.mins, this.maxs, CENTER_OR_VIEWOFS(targ) + ((v_forward * -1) * 200), MOVE_NOMONSTERS, this);
 
 	if(trace_fraction < 1)
 		return;
 
-	vector newpos = targ.origin + ((v_forward * -1) * 200);
+	vector newpos = trace_endpos;
 
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
@@ -305,23 +339,16 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 	this.fixangle = true;
 	this.velocity *= 0.5;
 
-	this.attack_finished_single[0] = time + 0.2;
-}
-
-void M_Mage_Defend_Shield_Remove(entity this)
-{
-	this.effects &= ~(EF_ADDITIVE | EF_BLUE);
-	this.armorvalue = autocvar_g_monsters_armor_blockpercent;
+	this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
 }
 
 void M_Mage_Defend_Shield(entity this)
 {
-	this.effects |= (EF_ADDITIVE | EF_BLUE);
+	StatusEffects_apply(STATUSEFFECT_Shield, this, time + autocvar_g_monster_mage_shield_time, 0);
 	this.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
-	this.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
-	this.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
 	setanim(this, this.anim_shoot, true, true, true);
-	this.attack_finished_single[0] = time + 1;
+	this.attack_finished_single[0] = time + 1; // give just a short cooldown on attacking
 	this.anim_finished = time + 1;
 }
 
@@ -331,7 +358,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			if(random() <= 0.7)
+			if(random() <= autocvar_g_monster_mage_attack_push_chance)
 			{
 				Weapon wep = WEP_MAGE_SPIKE;
 
@@ -343,36 +370,32 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(!actor.mage_spike)
+			if(random() <= autocvar_g_monster_mage_attack_teleport_chance)
 			{
-				if(random() <= 0.4)
-				{
-					OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
-					off.offhand_think(off, actor, true);
-					return true;
-				}
-				else
-				{
-					setanim(actor, actor.anim_shoot, true, true, true);
-					actor.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
-					actor.anim_finished = time + 1;
-					Weapon wep = WEP_MAGE_SPIKE;
-					wep.wr_think(wep, actor, weaponentity, 1);
-					return true;
-				}
+				OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
+				actor.OffhandMageTeleport_key_pressed = 0;
+				off.offhand_think(off, actor, 1);
+				return true;
+			}
+			else if(!actor.mage_spike && random() <= autocvar_g_monster_mage_attack_spike_chance)
+			{
+				setanim(actor, actor.anim_shoot, true, true, true);
+				actor.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
+				actor.anim_finished = time + 1;
+				actor.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
+				Weapon wep = WEP_MAGE_SPIKE;
+				wep.wr_think(wep, actor, weaponentity, 1);
+				return true;
 			}
 
-			if(actor.mage_spike)
-				return true;
-			else
-				return false;
+			return false;
 		}
 	}
 
 	return false;
 }
 
-spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE.monsterid); }
+spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE); }
 
 #endif // SVQC
 
@@ -405,18 +428,13 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     	});
     }
 
-    if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
+    if(GetResource(actor, RES_HEALTH) < (autocvar_g_monster_mage_heal_minhealth) || need_help)
     if(time >= actor.attack_finished_single[0])
     if(random() < 0.5)
         M_Mage_Defend_Heal(actor);
 
-    if(time >= actor.mage_shield_time && actor.armorvalue)
-        M_Mage_Defend_Shield_Remove(actor);
-
-    if(actor.enemy)
-    if(actor.health < actor.max_health)
-    if(time >= actor.mage_shield_delay)
-    if(random() < 0.5)
+    if(actor.enemy && time >= actor.mage_shield_delay && random() < 0.5)
+    if(GetResource(actor, RES_HEALTH) < actor.max_health && !StatusEffects_active(STATUSEFFECT_Shield, actor))
         M_Mage_Defend_Shield(actor);
 
     return true;
@@ -431,7 +449,7 @@ METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity a
 METHOD(Mage, mr_death, bool(Mage this, entity actor))
 {
     TC(Mage, this);
-    setanim(actor, actor.anim_die1, false, true, true);
+    setanim(actor, ((random() > 0.5) ? actor.anim_die2 : actor.anim_die1), false, true, true);
     return true;
 }
 
@@ -441,12 +459,22 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 {
     TC(Mage, this);
     vector none = '0 0 0';
-    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_run = animfixfps(actor, '1 1 1', none);
     actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '5 1 1', none);
+    actor.anim_duckjump = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+    //actor.anim_fire1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    //actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    //actor.anim_fire3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+    actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
+    actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+    //actor.anim_pain3 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
+    actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '10 1 0.5', none); // 2 seconds
+    //actor.anim_dead1 = animfixfps(actor, '11 1 0.5', none); // 2 seconds
+    //actor.anim_dead2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
     return true;
 }
 #endif
@@ -455,7 +483,7 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
     TC(Mage, this);
-    if(!actor.health) actor.health = (autocvar_g_monster_mage_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_mage_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }

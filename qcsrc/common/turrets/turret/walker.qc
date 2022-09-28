@@ -86,10 +86,10 @@ void walker_rocket_touch(entity this, entity toucher)
 
 void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
-    this.health = this.health - damage;
+    TakeResource(this, RES_HEALTH, damage);
     this.velocity = this.velocity + vforce;
 
-    if (this.health <= 0)
+    if (GetResource(this, RES_HEALTH) <= 0)
         W_PrepareExplosionByDamage(this, this.owner, walker_rocket_explode);
 }
 
@@ -218,7 +218,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.bot_dodgerating	= 50;
     rocket.takedamage		 = DAMAGE_YES;
     rocket.damageforcescale   = 2;
-    rocket.health			 = 25;
+    SetResourceExplicit(rocket, RES_HEALTH, 25);
     rocket.tur_shotorg		= randomvec() * 512;
     rocket.cnt				= time + 1;
     rocket.enemy			  = this.enemy;
@@ -281,7 +281,8 @@ void walker_move_path(entity this)
 {
 #ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
-    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+    if(turret_closetotarget(this, this.pathcurrent.origin, 64))
+    {
         if (this.pathcurrent.path_next == NULL)
         {
             // Path endpoint reached
@@ -304,13 +305,14 @@ void walker_move_path(entity this)
         }
         else
             this.pathcurrent = this.pathcurrent.path_next;
+    }
 
     this.moveto = this.pathcurrent.origin;
     this.steerto = steerlib_attract2(this, this.moveto,0.5,500,0.95);
     walker_move_to(this, this.moveto, 0);
 
 #else
-    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+    if(turret_closetotarget(this, this.pathcurrent.origin, 64))
         this.pathcurrent = this.pathcurrent.enemy;
 
     if(!this.pathcurrent)
@@ -352,7 +354,7 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
     fixedmakevectors(it.angles);
 
-    if (it.spawnflags & TSF_NO_PATHBREAK && it.pathcurrent)
+    if ((it.spawnflags & TSF_NO_PATHBREAK) && it.pathcurrent)
         walker_move_path(it);
     else if (it.enemy == NULL)
     {
@@ -627,17 +629,17 @@ void walker_draw(entity this)
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.avelocity;
 
-    if (this.health < 127)
+    if(GetResource(this, RES_HEALTH) < 127)
     if(random() < 0.15)
         te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-        METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
-        {
-            it.gravity		= 1;
-            set_movetype(it, MOVETYPE_BOUNCE);
-            it.move_time		= time;
-            it.draw			= walker_draw;
-        }
+METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
+{
+    it.gravity		= 1;
+    set_movetype(it, MOVETYPE_BOUNCE);
+    it.move_time		= time;
+    it.draw			= walker_draw;
+}
 
 #endif // CSQC

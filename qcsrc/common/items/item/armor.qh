@@ -11,7 +11,7 @@ CLASS(Armor, Pickup)
 ENDCLASS(Armor)
 
 #ifdef SVQC
-    #include <common/t_items.qh>
+    #include <server/items/items.qh>
 #endif
 
 #ifdef GAMEQC
@@ -22,27 +22,31 @@ SOUND(ArmorSmall, Item_Sound("armor1"));
 PROPERTY(float, g_pickup_armorsmall_anyway);
 PROPERTY(int, g_pickup_armorsmall);
 PROPERTY(int, g_pickup_armorsmall_max);
-void item_armorsmall_init(entity item)
+void item_armorsmall_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorsmall_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armorsmall;
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armorsmall);
 }
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
 #endif
     this.netname                =   "armor_small";
-    this.m_name                 =   "5 Armor";
-    this.m_icon                 =   "armor";
+    this.m_name                 =   _("Small armor");
+    this.m_icon                 =   "armor_small";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
+#endif
 #ifdef SVQC
-    this.m_itemid               =   IT_ARMOR_SHARD;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
     this.m_pickupanyway         =   GET(g_pickup_armorsmall_anyway);
@@ -60,27 +64,31 @@ SOUND(ArmorMedium, Item_Sound("armor10"));
 PROPERTY(float, g_pickup_armormedium_anyway);
 PROPERTY(int, g_pickup_armormedium);
 PROPERTY(int, g_pickup_armormedium_max);
-void item_armormedium_init(entity item)
+void item_armormedium_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormedium_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armormedium;
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armormedium);
 }
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
 #endif
     this.netname                =   "armor_medium";
-    this.m_name                 =   "25 Armor";
-    this.m_icon                 =   "armor";
+    this.m_name                 =   _("Medium armor");
+    this.m_icon                 =   "armor_medium";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
+#endif
 #ifdef SVQC
-    this.m_itemid               =   IT_ARMOR;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
     this.m_pickupanyway         =   GET(g_pickup_armormedium_anyway);
@@ -98,29 +106,33 @@ SOUND(ArmorBig, Item_Sound("armor17_5"));
 PROPERTY(float, g_pickup_armorbig_anyway);
 PROPERTY(int, g_pickup_armorbig);
 PROPERTY(int, g_pickup_armorbig_max);
-void item_armorbig_init(entity item)
+void item_armorbig_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorbig_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armorbig;
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armorbig);
 }
 #endif
 
 REGISTER_ITEM(ArmorBig, Armor) {
     this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
 #endif
     this.netname                =   "armor_big";
-    this.m_name                 =   "50 Armor";
-    this.m_icon                 =   "armor";
+    this.m_name                 =   _("Big armor");
+    this.m_icon                 =   "armor_big";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
+#endif
     this.m_color                =   '0 1 0';
     this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
-    this.m_itemid               =   IT_ARMOR;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_armorbig_anyway);
@@ -138,31 +150,35 @@ SOUND(ArmorMega, Item_Sound("armor25"));
 PROPERTY(float, g_pickup_armormega_anyway);
 PROPERTY(int, g_pickup_armormega);
 PROPERTY(int, g_pickup_armormega_max);
-void item_armormega_init(entity item)
+void item_armormega_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormega_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armormega;
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armormega);
 }
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
     this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
 #endif
     this.netname                =   "armor_mega";
-    this.m_name                 =   "100 Armor";
-    this.m_icon                 =   "item_large_armor";
+    this.m_name                 =   _("Mega armor");
+    this.m_icon                 =   "armor_mega";
+#ifdef CSQC
+    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
+    	this.m_icon             =   "item_large_armor"; // compatible with Xonotic v0.8.2 or lower
+#endif
     this.m_color                =   '0 1 0';
     this.m_waypoint             =   _("Mega armor");
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';
-    this.m_itemid               =   IT_ARMOR;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_armormega_anyway);

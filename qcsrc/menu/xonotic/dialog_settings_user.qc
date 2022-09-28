@@ -17,8 +17,6 @@ entity makeXonoticUserSettingsTab()
 void XonoticUserSettingsTab_fill(entity me)
 {
 	entity e, sk;
-	entity userApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_gentle;", COMMANDBUTTON_APPLY);
-	userApplyButton.disableOnClick = true;
 
 	me.TR(me);
 		me.TDempty(me, 0.25);
@@ -73,9 +71,5 @@ void XonoticUserSettingsTab_fill(entity me)
 	me.gotoRC(me, 11.5, 3.25); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox_T(0, "cl_gentle", _("Disable gore effects and harsh language"),
 			_("Replace blood and gibs with content that does not have any gore effects")));
-			e.applyButton = userApplyButton;
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, 6, userApplyButton);
-
+			e.sendCvars = true;
 }

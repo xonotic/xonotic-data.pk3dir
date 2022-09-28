@@ -1,0 +1,7 @@
+#pragma once
+
+vector autocvar_hud_progressbar_nexball_color;
+
+void HUD_Mod_NexBall(vector pos, vector mySize);
+
+float nb_pb_period;

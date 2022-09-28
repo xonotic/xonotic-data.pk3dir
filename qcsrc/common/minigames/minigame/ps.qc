@@ -1,10 +1,12 @@
 #include "ps.qh"
-REGISTER_MINIGAME(ps, "Peg Solitaire");
+REGISTER_MINIGAME(ps, _("Peg Solitaire"));
 
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
 const float PS_TURN_WIN   = 0x0200; // player has won
 const float PS_TURN_DRAW  = 0x0400; // player can make no more moves
 const float PS_TURN_TYPE  = 0x0f00; // turn type mask
+
+const int PS_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 const int PS_LET_CNT = 7;
 const int PS_NUM_CNT = 7;
@@ -23,15 +25,14 @@ entity ps_find_piece(entity minig, string tile)
 
 bool ps_draw(entity minigame)
 {
-	int valid = 0;
 	entity e = NULL;
 	while( ( e = findentity(e,owner,minigame) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
-			++valid;
+			return true;
 		}
 
-	return ((valid > 0) ? true : false);
+	return false;
 }
 
 bool ps_tile_blacklisted(string tile)
@@ -39,15 +40,19 @@ bool ps_tile_blacklisted(string tile)
 	int number = minigame_tile_number(tile);
 	int letter = minigame_tile_letter(tile);
 	if(letter < 2)
+	{
 		if(number < 2)
 			return true;
 		else if(number > PS_NUM_CNT - 3)
 			return true;
+	}
 	if(letter > PS_LET_CNT - 3)
+	{
 		if(number < 2)
 			return true;
 		else if(number > PS_NUM_CNT - 3)
 			return true;
+	}
 
 	return false;
 }
@@ -120,7 +125,7 @@ void ps_setup_pieces(entity minigame)
 			continue;
 		if(i == floor(PS_NUM_CNT * 0.5) && t == floor(PS_LET_CNT * 0.5))
 			continue; // middle piece is empty
-		entity piece = msle_spawn(minigame,"minigame_board_piece");
+		entity piece = msle_spawn(minigame,new(minigame_board_piece));
 		piece.team = 1; // init default team?
 		piece.netname = strzone(minigame_tile_buildname(t,i));
 		minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -139,11 +144,10 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 	if(!middle)
 		return false;
 
-	if(middle.netname) { strunzone(middle.netname); }
+	strfree(middle.netname);
 	delete(middle);
 
-	if(piece.netname) { strunzone(piece.netname); }
-	piece.netname = strzone(pos);
+	strcpy(piece.netname, pos);
 
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
 
@@ -153,7 +157,7 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 // make a move
 void ps_move(entity minigame, entity player, string thepiece, string pos )
 {
-	if ( minigame.minigame_flags & PS_TURN_MOVE )
+	if ( (minigame.minigame_flags & PS_TURN_MOVE) )
 	if ( pos )
 	{
 		if ( ps_valid_tile(pos) )
@@ -232,7 +236,7 @@ int ps_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -242,17 +246,20 @@ int ps_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 1 player
-			if(pl_num >= 1) { return false; }
+			if(pl_num >= 1) { return PS_SPECTATOR_TEAM; }
 
 			// Team 1 by default
 			return 1;
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == PS_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
-
+					if(event_blocked)
+						return true;
 					ps_move(minigame, ...(0,entity), (...(1,int) == 3 ? argv(1) : string_null), (...(1,int) == 3 ? argv(2) : string_null));
 					return true;
 			}
@@ -408,20 +415,20 @@ void ps_hud_board(vector pos, vector mySize)
 		vector winfs = hud_fontsize*2;
 		string remaining_text;
 		if(active_minigame.minigame_flags & PS_TURN_WIN)
-			remaining_text = "All pieces cleared!";
+			remaining_text = _("All pieces cleared!");
 		else
-			remaining_text = strcat("Remaining pieces: ", ftos(remaining));
+			remaining_text = strcat(_("Remaining pieces:"), " ", ftos(remaining));
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text),
+			strcat(_("Game over!"), " ", remaining_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text),
+			strcat(_("Game over!"), " ", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -444,10 +451,13 @@ void ps_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != PS_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	int remaining = 0;
 	entity e;
@@ -461,7 +471,7 @@ void ps_hud_status(vector pos, vector mySize)
 
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != PS_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
@@ -484,6 +494,9 @@ void ps_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string ps_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == PS_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if (turnflags & PS_TURN_DRAW )
 		return _("No more valid moves");
 
@@ -514,8 +527,7 @@ void ps_make_move(entity minigame)
 
 void ps_set_curr_pos(string s)
 {
-	if ( ps_curr_pos )
-		strunzone(ps_curr_pos);
+	strfree(ps_curr_pos);
 	if ( s )
 		s = strzone(s);
 	ps_curr_pos = s;
@@ -530,17 +542,26 @@ int ps_client_event(entity minigame, string event, ...)
 		{
 			ps_set_curr_pos("");
 			ps_curr_piece = NULL;
-			minigame.message = ps_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, ps_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			//if((minigame.minigame_flags & PS_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = (event == "key_released" || minigame_self.team == PS_SPECTATOR_TEAM);
+			if (!(minigame.minigame_flags & PS_TURN_WIN) && !(minigame.minigame_flags & PS_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("a3");
 						else
@@ -548,6 +569,8 @@ int ps_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("c3");
 						else
@@ -555,6 +578,8 @@ int ps_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("a1");
 						else
@@ -562,6 +587,8 @@ int ps_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! ps_curr_pos )
 							ps_set_curr_pos("a3");
 						else
@@ -570,6 +597,8 @@ int ps_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						ps_make_move(minigame);
 						return true;
 				}
@@ -581,6 +610,7 @@ int ps_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				ps_client_event(minigame, "mouse_moved");
 				ps_make_move(minigame);
 				return true;
 			}
@@ -590,7 +620,7 @@ int ps_client_event(entity minigame, string event, ...)
 		case "mouse_moved":
 		{
 			vector mouse_pos = minigame_hud_normalize(mousepos,ps_boardpos,ps_boardsize);
-			if ( minigame.minigame_flags == PS_TURN_MOVE )
+			if ( minigame.minigame_flags == PS_TURN_MOVE && minigame_self.team != PS_SPECTATOR_TEAM )
 			{
 				ps_set_curr_pos(minigame_tile_name(mouse_pos,PS_NUM_CNT,PS_LET_CNT));
 			}
@@ -607,9 +637,9 @@ int ps_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = ps_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
-						minigame_prompt();
+					strcpy(sent.message, ps_turn_to_string(sent.minigame_flags));
+					//if ( sent.minigame_flags & minigame_self.team )
+						//minigame_prompt();
 				}
 			}
 

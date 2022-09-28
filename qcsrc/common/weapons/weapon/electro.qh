@@ -2,7 +2,7 @@
 
 CLASS(Electro, Weapon)
 /* spawnfunc */ ATTRIB(Electro, m_canonical_spawnfunc, string, "weapon_electro");
-/* ammotype  */ ATTRIB(Electro, ammo_type, int, RESOURCE_CELLS);
+/* ammotype  */ ATTRIB(Electro, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
 /* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
@@ -10,6 +10,8 @@ CLASS(Electro, Weapon)
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);
+/* flash mdl */ ATTRIB(Electro, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Electro, m_muzzleeffect, entity, EFFECT_ELECTRO_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");
 /* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);
@@ -40,9 +42,14 @@ CLASS(Electro, Weapon)
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, health, float, SEC) \
 		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, limit, float, SEC) \
+		P(class, prefix, midaircombo_enemy, bool, PRI) \
 		P(class, prefix, midaircombo_explode, float, PRI) \
 		P(class, prefix, midaircombo_interval, float, PRI) \
+		P(class, prefix, midaircombo_own, bool, PRI) \
 		P(class, prefix, midaircombo_radius, float, PRI) \
+		P(class, prefix, midaircombo_speed, float, PRI) \
+		P(class, prefix, midaircombo_teammate, float, PRI) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire2, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
@@ -53,6 +60,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, speed_z, float, SEC) \
 		P(class, prefix, spread, float, BOTH) \
 		P(class, prefix, stick, float, SEC) \
+		P(class, prefix, stick_lifetime, float, SEC) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, touchexplode, float, SEC) \
@@ -70,6 +78,7 @@ REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
 SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
 #ifdef SVQC
+IntrusiveList LimitedElectroBallRubbleList;
 .float electro_count;
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo(entity this);

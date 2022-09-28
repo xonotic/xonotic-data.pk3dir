@@ -1,9 +1,0 @@
-#pragma once
-
-#include "multi.qh"
-#include "jumppads.qh"
-#include "secret.qh"
-#include "swamp.qh"
-#include "keylock.qh"
-#include "impulse.qh"
-#include "viewloc.qh"

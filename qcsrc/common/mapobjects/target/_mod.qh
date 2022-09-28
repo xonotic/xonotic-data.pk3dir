@@ -1,0 +1,10 @@
+// generated file; do not modify
+#include <common/mapobjects/target/changelevel.qh>
+#include <common/mapobjects/target/kill.qh>
+#include <common/mapobjects/target/levelwarp.qh>
+#include <common/mapobjects/target/location.qh>
+#include <common/mapobjects/target/music.qh>
+#include <common/mapobjects/target/spawn.qh>
+#include <common/mapobjects/target/spawnpoint.qh>
+#include <common/mapobjects/target/speaker.qh>
+#include <common/mapobjects/target/voicescript.qh>

@@ -13,7 +13,7 @@ void extensions_set(string s)
     }
 }
 
-GENERIC_COMMAND(_cl_hook_gamestart, "_cl_hook_gamestart")
+GENERIC_COMMAND(_cl_hook_gamestart, "_cl_hook_gamestart", true)
 {
     switch(request)
     {
@@ -34,7 +34,7 @@ GENERIC_COMMAND(_cl_hook_gamestart, "_cl_hook_gamestart")
     }
 }
 
-GENERIC_COMMAND(_cl_extensions, "_cl_extensions")
+GENERIC_COMMAND(_cl_extensions, "_cl_extensions", true)
 {
     switch(request)
     {

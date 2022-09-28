@@ -79,7 +79,8 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
-		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems));
+		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems)
+			|| (gamestatus & (GAME_ISSERVER | GAME_CONNECTED) && cvar("g_campaign")));
 	SUPER(XonoticMapList).draw(me);
 }
 
@@ -88,8 +89,10 @@ void XonoticMapList_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticMapList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);
 	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize.y;
 
@@ -181,8 +184,6 @@ void XonoticMapList_refilter(entity me)
 
 	for(i = 0; i < MapInfo_count; ++i)
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
-	if(me.g_maplistCache)
-		strunzone(me.g_maplistCache);
 	s = "0";
 	for(i = 1; i < MapInfo_count; i *= 2)
 		s = strcat(s, s);
@@ -201,7 +202,7 @@ void XonoticMapList_refilter(entity me)
 				);
 		}
 	}
-	me.g_maplistCache = strzone(s);
+	strcpy(me.g_maplistCache, s);
 	if(gt != me.lastGametype || f != me.lastFeatures)
 	{
 		me.lastGametype = gt;
@@ -217,12 +218,9 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 
 void MapList_StringFilterBox_Change(entity box, entity me)
 {
-	if(me.stringFilter)
-		strunzone(me.stringFilter);
+	strfree(me.stringFilter);
 	if(box.text != "")
 		me.stringFilter = strzone(box.text);
-	else
-		me.stringFilter = string_null;
 
 	me.refilter(me);
 }
@@ -345,9 +343,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		if(time < me.typeToSearchTime)
 		{
 			save = substring(me.typeToSearchString, 0, strlen(me.typeToSearchString) - 1);
-			if(me.typeToSearchString)
-				strunzone(me.typeToSearchString);
-			me.typeToSearchString = strzone(save);
+			strcpy(me.typeToSearchString, save);
 			me.typeToSearchTime = time + 0.5;
 			if(strlen(me.typeToSearchString))
 			{
@@ -364,19 +360,17 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 			save = ch;
 		else
 			save = strcat(me.typeToSearchString, ch);
-		if(me.typeToSearchString)
-			strunzone(me.typeToSearchString);
-		me.typeToSearchString = strzone(save);
+		strcpy(me.typeToSearchString, save);
 		me.typeToSearchTime = time + 0.5;
 		MapInfo_FindName(me.typeToSearchString);
 		if(MapInfo_FindName_firstResult >= 0)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
-	else if(shift & S_CTRL && scan == 'f') // ctrl-f (as in "F"ind)
+	else if((shift & S_CTRL) && scan == 'f') // ctrl-f (as in "F"ind)
 	{
 		me.parent.setFocus(me.parent, me.stringFilterBox);
 	}
-	else if(shift & S_CTRL && scan == 'u') // ctrl-u (remove stringFilter line
+	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line
 	{
 		me.stringFilterBox.setText(me.stringFilterBox, "");
 		MapList_StringFilterBox_Change(me.stringFilterBox, me);

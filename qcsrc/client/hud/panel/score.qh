@@ -1,2 +1,6 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_score;
+bool autocvar_hud_panel_score_dynamichud        = true;
+bool autocvar_hud_panel_score_rankings;

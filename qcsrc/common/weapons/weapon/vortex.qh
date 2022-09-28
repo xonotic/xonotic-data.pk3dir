@@ -2,14 +2,16 @@
 
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
-/* ammotype  */ ATTRIB(Vortex, ammo_type, int, RESOURCE_CELLS);
+/* ammotype  */ ATTRIB(Vortex, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
-/* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
+/* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
+/* flash mdl */ ATTRIB(Vortex, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Vortex, m_muzzleeffect, entity, EFFECT_VORTEX_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
@@ -22,10 +24,12 @@ CLASS(Vortex, Weapon)
 	BEGIN(class) \
 		P(class, prefix, ammo, float, BOTH) \
 		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, armorpierce, float, BOTH) \
 		P(class, prefix, chargepool, float, SEC) \
 		P(class, prefix, chargepool_pause_regen, float, SEC) \
 		P(class, prefix, chargepool_regen, float, SEC) \
 		P(class, prefix, charge, float, NONE) \
+		P(class, prefix, charge_always, float, NONE) \
 		P(class, prefix, charge_animlimit, float, NONE) \
 		P(class, prefix, charge_limit, float, NONE) \
 		P(class, prefix, charge_maxspeed, float, NONE) \
@@ -63,6 +67,14 @@ REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
 SPAWNFUNC_WEAPON(weapon_vortex, WEP_VORTEX)
 SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
 
+#ifdef CSQC
+bool autocvar_cl_particles_oldvortexbeam;
+#endif
+
 #ifdef SVQC
+.float vortex_charge_rottime;
+
 .float vortex_lasthit;
+
+void W_Vortex_Charge(entity actor, .entity weaponentity, float dt);
 #endif

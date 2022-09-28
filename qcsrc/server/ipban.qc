@@ -1,12 +1,11 @@
 #include "ipban.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "autocvars.qh"
-#include "command/banning.qh"
-#include "defs.qh"
-#include "../common/constants.qh"
-#include "../common/util.qh"
+#include <common/constants.qh>
+#include <common/stats.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/banning.qh>
+#include <server/main.qh>
 
 /*
  * Protocol of online ban list:
@@ -30,8 +29,6 @@
  */
 
 #define MAX_IPBAN_URIS (URI_GET_IPBAN_END - URI_GET_IPBAN + 1)
-
-float Ban_Insert(string ip, float bantime, string reason, float dosync);
 
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
 {
@@ -199,24 +196,29 @@ LABEL(skip)
 
 void OnlineBanList_Think(entity this)
 {
-	float argc;
+	int argc;
 	string uri;
 	float i, n;
 
 	if(autocvar_g_ban_sync_uri == "")
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 	if(autocvar_g_ban_sync_interval == 0) // < 0 is okay, it means "sync on level start only"
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 	argc = tokenize_console(autocvar_g_ban_sync_trusted_servers);
 	if(argc == 0)
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 
-	if(OnlineBanList_Servers)
-		strunzone(OnlineBanList_Servers);
-	OnlineBanList_Servers = argv(0);
-	for(i = 1; i < argc; ++i)
-		OnlineBanList_Servers = strcat(OnlineBanList_Servers, ";", argv(i));
-	OnlineBanList_Servers = strzone(OnlineBanList_Servers);
+	string s = argv(0); for(i = 1; i < argc; ++i) s = strcat(s, ";", argv(i));
+	strcpy(OnlineBanList_Servers, s);
 
 	uri = strcat(     "action=list&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&servers=", uri_escape(OnlineBanList_Servers));
@@ -237,14 +239,13 @@ void OnlineBanList_Think(entity this)
 			uri_get(strcat(argv(i), "?", uri), URI_GET_IPBAN + i); // 1000 = "banlist" callback target
 	}
 
-	if(autocvar_g_ban_sync_interval > 0)
-		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
-	else
-		goto killme;
-	return;
+	if(autocvar_g_ban_sync_interval <= 0)
+	{
+		delete(this);
+		return;
+	}
 
-LABEL(killme)
-	delete(this);
+	this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 }
 
 const float BAN_MAX = 256;
@@ -451,9 +452,16 @@ bool Ban_MaybeEnforceBan(entity client)
 {
 	if (Ban_IsClientBanned(client, -1))
 	{
-		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
+		if (!client.crypto_idfp)
+			LOG_INFOF("^1NOTE:^7 banned client %s just tried to enter\n",
+				client.netaddress);
+		else
+			LOG_INFOF("^1NOTE:^7 banned client %s (%s) just tried to enter\n",
+				client.netaddress, client.crypto_idfp);
+
+		if(autocvar_g_ban_telluser)
+			sprint(client, "You are banned from this server.\n");
 		dropclient(client);
-		bprint(s);
 		return true;
 	}
 	return false;
@@ -485,7 +493,7 @@ string Ban_Enforce(float j, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netname, "^7 has to go\n");
 			dropclient(it);
 		}
 	});

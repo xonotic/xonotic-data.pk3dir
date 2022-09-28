@@ -14,5 +14,18 @@ CLASS(HunterKiller, Turret)
 /* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
 /* fullname   */ ATTRIB(HunterKiller, turret_name, string, _("Hunter-Killer Turret"));
     ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+		P(class, prefix, shot_speed_accel, float) \
+		P(class, prefix, shot_speed_accel2, float) \
+		P(class, prefix, shot_speed_decel, float) \
+		P(class, prefix, shot_speed_max, float) \
+		P(class, prefix, shot_speed_turnrate, float) \
+	END()
+	TR_PROPS(X, HunterKiller, hk)
+#undef X
+
 ENDCLASS(HunterKiller)
 REGISTER_TURRET(HK, NEW(HunterKiller));

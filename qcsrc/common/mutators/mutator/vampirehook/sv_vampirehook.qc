@@ -21,18 +21,18 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 	if(!STAT(FROZEN, thehook.aiment))
 	if(time >= game_starttime)
 	if(DIFF_TEAM(thehook.owner, thehook.aiment) || autocvar_g_vampirehook_teamheal)
-	if(thehook.aiment.health > 0)
+	if(GetResource(thehook.aiment, RES_HEALTH) > 0)
 	if(autocvar_g_vampirehook_damage)
 	{
 		thehook.last_dmg = time + autocvar_g_vampirehook_damagerate;
-		thehook.owner.damage_dealt += autocvar_g_vampirehook_damage;
+		thehook.owner.hitsound_damage_dealt += autocvar_g_vampirehook_damage;
 		Damage(dmgent, thehook, thehook.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, DMG_NOWEP, thehook.origin, '0 0 0');
-		if(SAME_TEAM(thehook.owner, thehook.aiment))
-			thehook.aiment.health = min(thehook.aiment.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
-		else
-			thehook.owner.health = min(thehook.owner.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
+		entity targ = ((SAME_TEAM(thehook.owner, thehook.aiment)) ? thehook.aiment : thehook.owner);
+		// TODO: we can't do this due to an issue with globals and the mutator arguments
+		//Heal(targ, thehook.owner, autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
+		SetResourceExplicit(targ, RES_HEALTH, min(GetResource(targ, RES_HEALTH) + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max));
 
 		if(dmgent == thehook.owner)
-			dmgent.health -= autocvar_g_vampirehook_damage; // FIXME: friendly fire?!
+			TakeResource(dmgent, RES_HEALTH, autocvar_g_vampirehook_damage); // FIXME: friendly fire?!
 	}
 }

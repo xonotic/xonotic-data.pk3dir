@@ -1,0 +1,7 @@
+// generated file; do not modify
+#include <common/mapobjects/misc/corner.qh>
+#include <common/mapobjects/misc/dynlight.qh>
+#include <common/mapobjects/misc/follow.qh>
+#include <common/mapobjects/misc/keys.qh>
+#include <common/mapobjects/misc/laser.qh>
+#include <common/mapobjects/misc/teleport_dest.qh>

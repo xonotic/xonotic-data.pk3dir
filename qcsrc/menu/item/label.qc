@@ -9,8 +9,7 @@
 		me.text = txt;
 		if (txt != me.currentText)
 		{
-			if (me.currentText) strunzone(me.currentText);
-			me.currentText = strzone(txt);
+			strcpy(me.currentText, txt);
 			me.recalcPos = 1;
 		}
 	}
@@ -112,8 +111,7 @@
 			t = me.textEntity.toString(me.textEntity);
 			if (t != me.currentText)
 			{
-				if (me.currentText) strunzone(me.currentText);
-				me.currentText = strzone(t);
+				strcpy(me.currentText, t);
 				me.recalcPos = 1;
 			}
 		}

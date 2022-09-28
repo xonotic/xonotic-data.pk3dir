@@ -2,14 +2,16 @@
 
 CLASS(Mortar, Weapon)
 /* spawnfunc */ ATTRIB(Mortar, m_canonical_spawnfunc, string, "weapon_mortar");
-/* ammotype  */ ATTRIB(Mortar, ammo_type, int, RESOURCE_ROCKETS);
+/* ammotype  */ ATTRIB(Mortar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Mortar, impulse, int, 4);
-/* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
+/* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
 /* modelname */ ATTRIB(Mortar, mdl, string, "gl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);
+/* flash mdl */ ATTRIB(Mortar, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Mortar, m_muzzleeffect, entity, EFFECT_GRENADE_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");
 /* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);

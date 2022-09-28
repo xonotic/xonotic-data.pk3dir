@@ -1,7 +1,0 @@
-#pragma once
-
-// tZorks trigger impulse / gravity
-.float radius;
-.float falloff;
-.float strength;
-.float lastpushtime;

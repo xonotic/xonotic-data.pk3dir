@@ -1,2 +1,53 @@
 #pragma once
 #include "../panel.qh"
+
+bool autocvar_hud_panel_weapons;
+bool autocvar_hud_panel_weapons_accuracy;
+bool autocvar_hud_panel_weapons_ammo;
+float autocvar_hud_panel_weapons_ammo_alpha;
+string autocvar_hud_panel_weapons_ammo_color;
+int autocvar_hud_panel_weapons_ammo_full_cells;
+int autocvar_hud_panel_weapons_ammo_full_plasma;
+int autocvar_hud_panel_weapons_ammo_full_fuel;
+int autocvar_hud_panel_weapons_ammo_full_nails;
+int autocvar_hud_panel_weapons_ammo_full_rockets;
+int autocvar_hud_panel_weapons_ammo_full_shells;
+float autocvar_hud_panel_weapons_aspect;
+bool autocvar_hud_panel_weapons_complainbubble;
+string autocvar_hud_panel_weapons_complainbubble_color_donthave;
+string autocvar_hud_panel_weapons_complainbubble_color_outofammo;
+string autocvar_hud_panel_weapons_complainbubble_color_unavailable;
+float autocvar_hud_panel_weapons_complainbubble_fadetime;
+float autocvar_hud_panel_weapons_complainbubble_padding;
+float autocvar_hud_panel_weapons_complainbubble_time;
+bool autocvar_hud_panel_weapons_dynamichud      = true;
+bool autocvar_hud_panel_weapons_hide_ondeath      = false;
+int autocvar_hud_panel_weapons_label;
+float autocvar_hud_panel_weapons_label_scale = 0.5;
+int autocvar_hud_panel_weapons_onlyowned;
+float autocvar_hud_panel_weapons_noncurrent_alpha = 1;
+float autocvar_hud_panel_weapons_noncurrent_scale = 1;
+float autocvar_hud_panel_weapons_selection_radius = 0;
+float autocvar_hud_panel_weapons_selection_speed = 10;
+float autocvar_hud_panel_weapons_timeout;
+int autocvar_hud_panel_weapons_timeout_effect;
+bool autocvar_hud_panel_weapons_orderbyimpulse = true;
+float autocvar_hud_panel_weapons_timeout_fadebgmin;
+float autocvar_hud_panel_weapons_timeout_fadefgmin;
+float autocvar_hud_panel_weapons_timeout_speed_in = 0.25;
+float autocvar_hud_panel_weapons_timeout_speed_out = 0.75;
+
+string autocvar_accuracy_color_levels;
+string autocvar_cl_weaponpriority;
+
+const int MAX_ACCURACY_LEVELS = 10;
+float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
+float acc_col_loadtime;
+int acc_levels;
+string acc_color_levels;
+void Accuracy_LoadLevels();
+
+void Accuracy_LoadColors();
+
+vector Accuracy_GetColor(float accuracy);

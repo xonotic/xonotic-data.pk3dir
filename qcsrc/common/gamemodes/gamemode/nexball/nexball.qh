@@ -1,36 +1,37 @@
 #pragma once
 
-#ifdef SVQC
-//EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
-const float BALL_EFFECTMASK = 1229;
-const vector BALL_MINS = '-16 -16 -16'; // The model is 24*24*24
-const vector BALL_MAXS = '16 16 16';
-const vector BALL_ATTACHORG = '3 0 16';
-const float BALL_FOOT = 1;
-const float BALL_BASKET = 2;
-//spawnflags
-const float GOAL_TOUCHPLAYER = 1;
-//goal types
-const float GOAL_FAULT = -1;
-const float GOAL_OUT = -2;
+#include <common/mapinfo.qh>
 
-void DropBall(entity ball, vector org, vector vel);
-float autocvar_g_nexball_football_boost_forward;
-float autocvar_g_nexball_football_boost_up;
-float autocvar_g_nexball_football_physics;
-float autocvar_g_nexball_delay_idle;
-float autocvar_g_nexball_basketball_delay_hold;
-float autocvar_g_nexball_basketball_delay_hold_forteam;
-float autocvar_g_nexball_basketball_effects_default;
-float autocvar_g_nexball_basketball_teamsteal;
-float autocvar_g_nexball_meter_period;
+#ifdef CSQC
+void HUD_Mod_NexBall(vector pos, vector mySize);
+#endif
+CLASS(NexBall, Gametype)
+    INIT(NexBall)
+    {
+        this.gametype_init(this, _("Nexball"),"nb","g_nexball",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_WEAPONARENA,"","timelimit=20 pointlimit=5 leadlimit=0",_("Shoot and kick the ball into the enemies goal, keep your goal clean"));
+    }
+    METHOD(NexBall, m_generate_mapinfo, void(Gametype this, string v))
+    {
+        if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
+            MapInfo_Map_supportedGametypes |= this.m_flags;
+    }
+    METHOD(NexBall, m_isTwoBaseMode, bool())
+    {
+        return true;
+    }
+    METHOD(NexBall, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Goals:"),           1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end"));
+    }
+#ifdef CSQC
+    ATTRIB(NexBall, m_modicons, void(vector pos, vector mySize), HUD_Mod_NexBall);
+#endif
+    ATTRIB(NexBall, m_legacydefaults, string, "5 20 0");
+ENDCLASS(NexBall)
+REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
+#define g_nexball IS_GAMETYPE(NEXBALL)
 
-float balls;
-float ball_scale;
-float nb_teams;
-
-.entity nb_dropper;
-.float nb_droptime;
-
-.float teamtime;
+#ifdef GAMEQC
+const int NB_CARRYING = BIT(0);
 #endif

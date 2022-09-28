@@ -24,10 +24,24 @@
 	#define bool float
 #endif
 
+#ifndef QCC_SUPPORT_ACCUMULATE
+	#warning "QCC does not support accumulate, may not compile correctly"
+	#define ACCUMULATE
+#else
+	#define ACCUMULATE [[accumulate]]
+#endif
+
 #ifndef QCC_SUPPORT_ERASEABLE
 	#define ERASEABLE
 #else
 	#define ERASEABLE [[eraseable]]
+#endif
+
+#ifndef QCC_SUPPORT_ALIAS
+    #warning "QCC does not support alias, may not compile correctly"
+    #define ALIAS(var)
+#else
+    #define ALIAS(var) [[alias(var)]]
 #endif
 
 #include <dpdefs/pre.qh>
@@ -46,6 +60,12 @@
 #endif
 
 #include <dpdefs/post.qh>
+
+#ifndef QCC_SUPPORT_POW
+    #define pow(a, b) pow(a, b)
+#else
+    #define pow(a, b) ((a) ** (b))
+#endif
 
 #include "self.qh"
 
@@ -84,6 +104,9 @@
 
 #include "warpzone/mathlib.qc"
 
+// needs to be included before any of the functions which use globals are called
+#include "deglobalization.qh"
+
 #include "accumulate.qh"
 #include "angle.qc"
 #include "arraylist.qh"
@@ -95,6 +118,7 @@
 #include "draw.qh"
 #include "enumclass.qh"
 #include "file.qh"
+#include "float.qh"
 #include "functional.qh"
 #include "i18n.qh"
 #include "intrusivelist.qh"
@@ -113,6 +137,7 @@
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "progname.qh"
+#include "promise.qc"
 #include "random.qc"
 #include "registry.qh"
 #include "registry_net.qh"
@@ -141,14 +166,14 @@ void make_safe_for_remove(entity this);
     #define objerror_safe(e) make_safe_for_remove(e)
 #endif
 
-#define objerror(this, msg) MACRO_BEGIN { \
+#define objerror(this, msg) MACRO_BEGIN \
 	LOG_WARN("======OBJECT ERROR======"); \
 	entity _e = (this); \
 	eprint(_e); \
 	objerror_safe(_e); \
 	delete(_e); \
 	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
-} MACRO_END
+MACRO_END
 
 #ifdef MENUQC
 	void _m_init();

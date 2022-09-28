@@ -3,51 +3,97 @@
 #include <common/constants.qh>
 #include <common/weapons/_all.qh>
 
+bool autocvar_cl_db_saveasdump;
+bool autocvar_cl_spawn_event_particles;
+bool autocvar_cl_spawn_event_sound = 1;
+// float autocvar_cl_spawn_point_model;
+bool autocvar_cl_spawn_point_particles;
+float autocvar_cl_spawn_point_dist_max = 1200;
+bool autocvar_cl_unpress_zoom_on_spawn = true;
+bool autocvar_cl_unpress_zoom_on_death = true;
+bool autocvar_cl_unpress_zoom_on_weapon_switch = true;
+bool autocvar_cl_unpress_attack_on_weapon_switch = false;
+bool autocvar_hud_showbinds;
+bool autocvar_hud_showbinds_limit;
+bool autocvar__hud_showbinds_reload;
+bool autocvar_developer_csqcentities;
+bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
+bool autocvar_cl_race_cptimes_showself = false;
+bool autocvar_cl_welcome = true;
+
 // Map coordinate base calculations need these
 vector mi_center;
 vector mi_scale;
 // Minimap
 string minimapname;
 
-float postinit;
+bool postinit;
 entity gametype;
+// temporary hack
+#define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 
 float FONT_USER = 8;
 
 
-vector OFFSET_CURSOR = '0 0 0';
-vector SIZE_CURSOR = '32 32 0';
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
-void draw_cursor_normal(vector pos, vector col, float a);
-void LoadMenuSkinValues();
+void PostInit();
+
+void Ent_Remove(entity this);
+
+void Gamemode_Init();
+
+entity players;
+entity teams;
+float team_count; // real teams
+
+void AuditLists();
+
+float RegisterPlayer(entity player);
+
+void RemovePlayer(entity player);
+
+void MoveToLast(entity e);
+
+float RegisterTeam(entity Team);
+
+void RemoveTeam(entity Team);
+
+entity GetTeam(int Team, bool add);
+
+bool SetTeam(entity pl, int Team);
 
 vector hud_fontsize;
 
 float RANKINGS_RECEIVED_CNT;
+float RANKINGS_DISPLAY_CNT;
 string grecordholder[RANKINGS_CNT];
 float grecordtime[RANKINGS_CNT];
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 entity teamslots[17];    // 17 teams (including "spectator team")
-.float gotscores;
+.bool gotscores;
 .entity owner;
-.float ready;
-.float eliminated;
+.bool ready;
+.bool eliminated;
+
+IntrusiveList g_drawables;
+IntrusiveList g_drawables_2d;
+IntrusiveList g_radarlinks;
+IntrusiveList g_radaricons;
+STATIC_INIT(main)
+{
+	g_drawables = IL_NEW();
+	g_drawables_2d = IL_NEW();
+	g_radarlinks = IL_NEW();
+	g_radaricons = IL_NEW();
+}
 
 .void(entity) draw;
-IntrusiveList g_drawables;
-STATIC_INIT(g_drawables) { g_drawables = IL_NEW(); }
 .void(entity) draw2d;
-IntrusiveList g_drawables_2d;
-STATIC_INIT(g_drawables_2d) { g_drawables_2d = IL_NEW(); }
 .void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-IntrusiveList g_radarlinks;
-STATIC_INIT(g_radarlinks) { g_radarlinks = IL_NEW(); }
-IntrusiveList g_radaricons;
-STATIC_INIT(g_radaricons) { g_radaricons = IL_NEW(); }
+.float renderflags; // engine field
 
 bool button_zoom;
 bool spectatorbutton_zoom;
@@ -55,7 +101,12 @@ bool button_attack2;
 
 float current_viewzoom;
 float zoomin_effect;
-float warmup_stage;
+bool warmup_stage;
+
+string hostname;
+string welcome_msg;
+float welcome_msg_menu_check_maxtime;
+void Welcome_Message_Show_Try();
 
 void Fog_Force();
 
@@ -63,25 +114,23 @@ string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
 
+void Release_Common_Keys();
+
 string vote_called_vote;
-float ready_waiting;
-float ready_waiting_for_me;
-float vote_waiting;
-float vote_waiting_for_me;
+bool ready_waiting;
+bool ready_waiting_for_me;
+bool vote_waiting;
+bool vote_waiting_for_me;
 
 float current_zoomfraction;
 
-float cs_project_is_b0rked;
-float vid_width, vid_height, vid_pixelheight;
+int vid_width, vid_height;
+float vid_pixelheight;
 
 float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;
 float camera_roll;
 vector camera_direction;
-
-void centerprint_hud(string strMessage);
-void centerprint_kill(float id);
-void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 const float ALPHA_MIN_VISIBLE = 0.003;
 
@@ -105,7 +154,38 @@ const int MAX_SPECTATORS = 7;
 int spectatorlist[MAX_SPECTATORS];
 
 int framecount;
-.float health;
 
 float GetSpeedUnitFactor(int speed_unit);
 string GetSpeedUnit(int speed_unit);
+
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
+
+.int team;
+.int team_size;
+
+int binddb;
+
+// Spectating
+// -1 - observing
+// 0 - playing
+// >0 - id of spectated player
+float spectatee_status;
+float spectatee_status_changed_time;
+
+#define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
+
+// short mapname
+string shortmapname;
+
+// database for misc stuff
+int tempdb;
+int ClientProgsDB;
+vector hook_shotorigin[4]; // WEAPONTODO
+vector lightning_shotorigin[4]; // TODO: unused
+
+float serverprevtime, serverdeltatime;
+
+float ticrate;
+
+int serverflags;

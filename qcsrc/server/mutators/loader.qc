@@ -1,7 +1,9 @@
 #include "loader.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
 
 STATIC_INIT_LATE(Gametype) {
     Gametype g = MapInfo_CurrentGametype();

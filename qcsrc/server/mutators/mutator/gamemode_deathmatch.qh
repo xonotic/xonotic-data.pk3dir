@@ -1,9 +1,0 @@
-#pragma once
-
-#include "../gamemode.qh"
-
-REGISTER_MUTATOR(dm, false)
-{
-    MUTATOR_STATIC();
-	return 0;
-}

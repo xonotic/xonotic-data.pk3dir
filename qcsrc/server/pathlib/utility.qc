@@ -1,8 +1,8 @@
 #include "utility.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "pathlib.qh"
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/pathlib/pathlib.qh>
 
 bool location_isok(vector point, bool waterok, bool air_isok)
 {

@@ -1,5 +1,7 @@
 #include "sv_minigames.qh"
-#include "minigames.qh"
+
+#include <common/minigames/minigames.qh>
+#include <server/gamelog.qh>
 
 void player_clear_minigame(entity player)
 {
@@ -9,7 +11,7 @@ void player_clear_minigame(entity player)
 		set_movetype(player, MOVETYPE_WALK);
 	else
 		set_movetype(player, MOVETYPE_FLY_WORLDONLY);
-	player.team_forced = 0;
+	Player_SetForcedTeamIndex(player, TEAM_FORCE_DEFAULT);
 }
 
 void minigame_rmplayer(entity minigame_session, entity player)
@@ -146,11 +148,9 @@ int minigame_addplayer(entity minigame_session, entity player)
 		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
 
 		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )
-		{
-			PutObserverInServer(player);
-		}
+			PutObserverInServer(player, true, true);
 		if ( autocvar_sv_minigames_observer == 2 )
-			player.team_forced = -1;
+			Player_SetForcedTeamIndex(player, TEAM_FORCE_SPECTATOR);
 
 		minigame_resend(minigame_session);
 	}
@@ -248,7 +248,7 @@ void end_minigame(entity minigame_session)
 		delete(e);
 	}
 
-	strunzone(minigame_session.netname);
+	strfree(minigame_session.netname);
 	delete(minigame_session);
 }
 

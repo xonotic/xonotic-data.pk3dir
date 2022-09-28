@@ -1,5 +1,8 @@
 #pragma once
 
+bool autocvar_g_hitplots;
+string autocvar_g_hitplots_individuals;
+
 .float hitplotfh;
 
 void W_HitPlotAnalysis(entity player, entity wep, vector screenforward, vector screenright, vector screenup);

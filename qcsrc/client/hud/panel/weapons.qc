@@ -1,17 +1,92 @@
 #include "weapons.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>
 
 // Weapons (#0)
 
-entity weaponorder[Weapons_MAX];
+void HUD_Weapons_Export(int fh)
+{
+	HUD_Write_Cvar("hud_panel_weapons_accuracy");
+	HUD_Write_Cvar("hud_panel_weapons_label");
+	HUD_Write_Cvar("hud_panel_weapons_label_scale");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_padding");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_time");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_fadetime");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_outofammo");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_donthave");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_unavailable");
+	HUD_Write_Cvar("hud_panel_weapons_ammo");
+	HUD_Write_Cvar("hud_panel_weapons_ammo_color");
+	HUD_Write_Cvar("hud_panel_weapons_ammo_alpha");
+	HUD_Write_Cvar("hud_panel_weapons_aspect");
+	HUD_Write_Cvar("hud_panel_weapons_timeout");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_effect");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_fadebgmin");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_fadefgmin");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_speed_in");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_speed_out");
+	HUD_Write_Cvar("hud_panel_weapons_onlyowned");
+	HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
+	HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
+	HUD_Write_Cvar("hud_panel_weapons_selection_radius");
+	HUD_Write_Cvar("hud_panel_weapons_selection_speed");
+}
+
+void Accuracy_LoadLevels()
+{
+	if(autocvar_accuracy_color_levels != acc_color_levels)
+	{
+		strcpy(acc_color_levels, autocvar_accuracy_color_levels);
+		acc_levels = tokenize_console(acc_color_levels);
+		if(acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+		if(acc_levels < 2)
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values");
+
+		int i;
+		for(i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i)) / 100.0;
+	}
+}
+
+void Accuracy_LoadColors()
+{
+	if(time > acc_col_loadtime)
+	if(acc_levels >= 2)
+	{
+		int i;
+		for(i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+		acc_col_loadtime = time + 2;
+	}
+}
+
+vector Accuracy_GetColor(float accuracy)
+{
+	float factor;
+	vector color;
+	if(acc_levels < 2)
+		return '0 0 0'; // return black, can't determine the right color
+
+	// find the max level lower than acc
+	int j = acc_levels-1;
+	while(j && accuracy < acc_lev[j])
+		--j;
+
+	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
+	factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+	color = acc_col[j];
+	color = color + factor * (acc_col[j+1] - color);
+	return color;
+}
+
+entity weaponorder[REGISTRY_MAX(Weapons)];
 void weaponorder_swap(int i, int j, entity pass)
 {
-    TC(int, i); TC(int, j);
+	TC(int, i); TC(int, j);
 	entity h = weaponorder[i];
 	weaponorder[i] = weaponorder[j];
 	weaponorder[j] = h;
@@ -20,25 +95,27 @@ void weaponorder_swap(int i, int j, entity pass)
 string weaponorder_cmp_str;
 int weaponorder_cmp(int i, int j, entity pass)
 {
-    TC(int, i); TC(int, j);
+	TC(int, i); TC(int, j);
 	int ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].m_id), 0);
 	int aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].m_id), 0);
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN { \
+#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN \
 	int nHidden = 0; \
 	FOREACH(Weapons, it != WEP_Null, { \
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if ((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) nHidden += 1; \
+		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) nHidden += 1; \
 	}); \
-	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
+	vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
 	rows = table_size.y; \
 	weapon_size.x = panel_size.x / columns; \
 	weapon_size.y = panel_size.y / rows; \
-} MACRO_END
+MACRO_END
 
+string cl_weaponpriority_old;
+bool weapons_orderbyimpulse_old;
 void HUD_Weapons()
 {
 	// declarations
@@ -50,7 +127,7 @@ void HUD_Weapons()
 	int weapon_count, weapon_id;
 	int row, column, rows = 0, columns = 0;
 	bool vertical_order = true;
-	float aspect = autocvar_hud_panel_weapons_aspect;
+	float aspect = max(0.001, autocvar_hud_panel_weapons_aspect);
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
@@ -63,7 +140,7 @@ void HUD_Weapons()
 	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
-	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 
 	vector weapon_pos, weapon_size = '0 0 0';
 	vector color;
@@ -90,22 +167,21 @@ void HUD_Weapons()
 	// update generic hud functions
 	HUD_Panel_LoadCvars();
 
-	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
+	if(cl_weaponpriority_old != autocvar_cl_weaponpriority || weapons_orderbyimpulse_old != autocvar_hud_panel_weapons_orderbyimpulse || weaponorder[0] == NULL)
 	{
-		int weapon_cnt;
-		if(weaponorder_bypriority)
-			strunzone(weaponorder_bypriority);
-		if(weaponorder_byimpulse)
-			strunzone(weaponorder_byimpulse);
+		weapons_orderbyimpulse_old = autocvar_hud_panel_weapons_orderbyimpulse;
+		strcpy(cl_weaponpriority_old, autocvar_cl_weaponpriority);
+		string weporder = W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(cl_weaponpriority_old));
+		if(autocvar_hud_panel_weapons_orderbyimpulse)
+		{
+			weporder = W_FixWeaponOrder_BuildImpulseList(weporder);
+		}
 
-		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
-		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
-		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+		weaponorder_cmp_str = strcat(" ", weporder, " ");
 
-		weapon_cnt = 0;
+		int weapon_cnt = 0;
 		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, weaponorder[weapon_cnt++] = it);
-		for(i = weapon_cnt; i < Weapons_MAX; ++i)
+		for(i = weapon_cnt; i < REGISTRY_MAX(Weapons); ++i)
 			weaponorder[i] = NULL;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, NULL);
 
@@ -113,7 +189,14 @@ void HUD_Weapons()
 	}
 
 	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
-		complain_weapon = 0;
+		complain_weapon = NULL;
+
+	entity wepent = viewmodels[0]; // TODO: unhardcode
+
+	if (wepent.switchweapon == WEP_Null)
+		panel_switchweapon = NULL;
+	else if (!panel_switchweapon)
+		panel_switchweapon = wepent.switchweapon;
 
 	if(autocvar__hud_configure)
 	{
@@ -121,7 +204,7 @@ void HUD_Weapons()
 		{
 			int j = 0;
 			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
-				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_SPECIALATTACK))
 				{
 					if(!panel_switchweapon || j < 4)
 						panel_switchweapon = it;
@@ -141,8 +224,8 @@ void HUD_Weapons()
 				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
 			});
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((Weapons_COUNT - 1) - nHidden));
-			for(i = 0, j = 0; i <= (Weapons_COUNT - 1) && j < countw; ++i)
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((REGISTRY_COUNT(Weapons) - 1) - nHidden));
+			for(i = 0, j = 0; i <= (REGISTRY_COUNT(Weapons) - 1) && j < countw; ++i)
 			{
 				if(weaponorder[i].spawnflags & WEP_FLAG_MUTATORBLOCKED)
 					continue;
@@ -164,10 +247,18 @@ void HUD_Weapons()
 
 		// do we own this weapon?
 		weapon_count = 0;
-		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || (weaponorder[i].m_id == complain_weapon))
-				++weapon_count;
-
+		if (autocvar_hud_panel_weapons_onlyowned >= 2) // only current
+		{
+			for (i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+				if (weaponorder[i] == panel_switchweapon || weaponorder[i] == complain_weapon)
+					++weapon_count;
+		}
+		else
+		{
+			for (i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+				if ((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || weaponorder[i] == complain_weapon)
+					++weapon_count;
+		}
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
@@ -227,7 +318,7 @@ void HUD_Weapons()
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = (Weapons_COUNT - 1);
+		weapon_count = (REGISTRY_COUNT(Weapons) - 1);
 
 	// animation for fading in/out the panel respectively when not in use
 	if(!autocvar__hud_configure)
@@ -378,13 +469,6 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
-	entity wepent = viewmodels[0]; // TODO: unhardcode
-
-	if(wepent.switchweapon == WEP_Null)
-		panel_switchweapon = NULL;
-	else if(!panel_switchweapon)
-		panel_switchweapon = wepent.switchweapon;
-
 	// draw background behind currently selected weapon
 	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving
 	if(panel_switchweapon)
@@ -400,15 +484,26 @@ void HUD_Weapons()
 		if(!it || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
-		if(autocvar_hud_panel_weapons_onlyowned)
+		if (autocvar_hud_panel_weapons_onlyowned)
 		{
-			if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
-				continue;
+			if (autocvar_hud_panel_weapons_onlyowned >= 2) // only current
+			{
+				if (!(it == panel_switchweapon || it == complain_weapon))
+					continue;
+			}
+			else
+			{
+				if (!((weapons_stat & WepSet_FromWeapon(it)) || (it == complain_weapon)))
+					continue;
+			}
 		}
 		else
 		{
-			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) && !(weapons_stat & WepSet_FromWeapon(it)))
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)
+				&& !(weapons_stat & WepSet_FromWeapon(it)))
+			{
 				continue;
+			}
 		}
 
 		// figure out the drawing position of weapon
@@ -479,21 +574,22 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RESOURCE_NONE))
+			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
 			{
 				float ammo_full;
 				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
 
 				if(a > 0)
 				{
+					// TODO: registry handles
 					switch (it.ammo_type)
 					{
-						case RESOURCE_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
-						case RESOURCE_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
-						case RESOURCE_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case RESOURCE_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
-						case RESOURCE_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
-						case RESOURCE_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
+						case RES_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case RES_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case RES_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case RES_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case RES_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
+						case RES_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 
@@ -523,7 +619,7 @@ void HUD_Weapons()
 		}
 
 		// draw the complain message
-		if(it.m_id == complain_weapon)
+		if(it == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));

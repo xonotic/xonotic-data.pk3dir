@@ -1,0 +1,57 @@
+#pragma once
+#include "../panel.qh"
+
+int autocvar_hud_panel_strafehud = 3;
+bool autocvar__hud_panel_strafehud_demo = false;
+bool autocvar_hud_panel_strafehud_dynamichud    = true;
+int autocvar_hud_panel_strafehud_mode = 0;
+float autocvar_hud_panel_strafehud_range = 0;
+int autocvar_hud_panel_strafehud_style = 1;
+int autocvar_hud_panel_strafehud_unit = 1;
+bool autocvar_hud_panel_strafehud_unit_show = true;
+vector autocvar_hud_panel_strafehud_bar_neutral_color = '1 1 1';
+float autocvar_hud_panel_strafehud_bar_neutral_alpha = 0.3;
+vector autocvar_hud_panel_strafehud_bar_accel_color = '0 1 0';
+float autocvar_hud_panel_strafehud_bar_accel_alpha = 0.3;
+vector autocvar_hud_panel_strafehud_bar_overturn_color = '1 0 1';
+float autocvar_hud_panel_strafehud_bar_overturn_alpha = 0.3;
+float autocvar_hud_panel_strafehud_angle_alpha = 0.8;
+float autocvar_hud_panel_strafehud_angle_height = 1.5;
+float autocvar_hud_panel_strafehud_angle_width = 0.005;
+vector autocvar_hud_panel_strafehud_angle_neutral_color = '1 1 0';
+vector autocvar_hud_panel_strafehud_angle_accel_color = '0 1 1';
+vector autocvar_hud_panel_strafehud_angle_overturn_color = '1 0 1';
+float autocvar_hud_panel_strafehud_switch_minspeed = -1;
+vector autocvar_hud_panel_strafehud_switch_active_color = '0 1 0';
+float autocvar_hud_panel_strafehud_switch_active_alpha = 1;
+vector autocvar_hud_panel_strafehud_switch_inactive_color = '1 1 0';
+float autocvar_hud_panel_strafehud_switch_inactive_alpha = 1;
+float autocvar_hud_panel_strafehud_switch_width = 0.0075;
+vector autocvar_hud_panel_strafehud_direction_color = '0 0.5 1';
+float autocvar_hud_panel_strafehud_direction_alpha = 1;
+float autocvar_hud_panel_strafehud_direction_width = 0.25;
+float autocvar_hud_panel_strafehud_direction_length = 0.02;
+float autocvar_hud_panel_strafehud_slickdetector_range = 0;
+int autocvar_hud_panel_strafehud_slickdetector_granularity = 2;
+vector autocvar_hud_panel_strafehud_slickdetector_color = '0 1 1';
+float autocvar_hud_panel_strafehud_slickdetector_alpha = 0.5;
+float autocvar_hud_panel_strafehud_slickdetector_height = 0.125;
+float autocvar_hud_panel_strafehud_startspeed_fade = 0;
+vector autocvar_hud_panel_strafehud_startspeed_color = '1 0.75 0';
+float autocvar_hud_panel_strafehud_startspeed_size = 1.5;
+float autocvar_hud_panel_strafehud_jumpheight_fade = 0;
+float autocvar_hud_panel_strafehud_jumpheight_min = 50;
+vector autocvar_hud_panel_strafehud_jumpheight_color = '0 1 0.75';
+float autocvar_hud_panel_strafehud_jumpheight_size = 1.5;
+float autocvar_hud_panel_strafehud_timeout_air = 0.1;
+float autocvar_hud_panel_strafehud_timeout_ground = 0.03333333;
+float autocvar_hud_panel_strafehud_timeout_turn = 0.1;
+float autocvar_hud_panel_strafehud_timeout_direction = 0.5;
+float autocvar_hud_panel_strafehud_antiflicker_angle = 0.01;
+float autocvar_hud_panel_strafehud_antiflicker_speed = 0.0001;
+
+void HUD_Panel_DrawStrafeHUD(float, float, vector, float, int, int);
+vector StrafeHUD_mixColors(vector, vector, float);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
+float GetLengthUnitFactor(int);
+string GetLengthUnit(int);

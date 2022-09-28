@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(WalkerTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(WalkerTurretAttack, impulse, int, 5);
 /* refname   */ ATTRIB(WalkerTurretAttack, netname, string, "turret_walker");
 /* wepname   */ ATTRIB(WalkerTurretAttack, m_name, string, _("Walker"));

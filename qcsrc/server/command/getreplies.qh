@@ -13,10 +13,16 @@ const int LADDER_SIZE = 30; // ladder shows the top X players
 string top_uids[LADDER_SIZE];
 float top_scores[LADDER_SIZE];
 
-// allow functions to be used in other code like g_world.qc and race.qc
+// allow functions to be used in other code like world.qc and race.qc
 string getrecords(float page);
 string getrankings();
 string getladder();
 string getmaplist();
 string getlsmaps();
 string getmonsterlist();
+
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name);
+
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name);
+
+void GetCvars(entity this, entity store, int f);

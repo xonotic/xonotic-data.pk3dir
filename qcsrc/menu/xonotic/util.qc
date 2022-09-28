@@ -6,7 +6,7 @@
 #include "../menu.qh"
 #include <common/campaign_common.qh>
 #include <common/constants.qh>
-#include <common/mapinfo.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/util.qh>
 #include <common/command/_mod.qh>
 
@@ -17,7 +17,7 @@ float GL_CheckExtension(string ext)
 
 float GL_Have_TextureCompression()
 {
-	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
+	return GL_CheckExtension("GL_EXT_texture_compression_s3tc");
 }
 
 .entity parent, firstChild, nextSibling;
@@ -26,7 +26,7 @@ void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, e
 	depthfirst(root, parent, firstChild, nextSibling, funcPre, funcPost, pass);
 }
 
-.string cvarName;
+.string controlledCvar;
 void SUB_Null_ee(entity e1, entity e2)
 {
 }
@@ -53,12 +53,12 @@ void loadAllCvars(entity root)
 	forAllDescendants(root, loadCvarsOf, SUB_Null_ee, NULL);
 }
 
-.string cvarNames_Multi;
+.string controlledCvars_Multi;
 .void(entity me) saveCvars_Multi;
 string getCvarsMulti(entity me)
 {
-	if (me.cvarNames_Multi)
-		return me.cvarNames_Multi;
+	if (me.controlledCvars_Multi)
+		return me.controlledCvars_Multi;
 	return string_null;
 }
 void saveCvarsMulti(entity me)
@@ -67,9 +67,9 @@ void saveCvarsMulti(entity me)
 	string s, cvarname;
 
 	me.saveCvars_Multi(me);
-	s = cvar_string(me.cvarName);
+	s = cvar_string(me.controlledCvar);
 
-	n = tokenize_console(me.cvarNames_Multi);
+	n = tokenize_console(me.controlledCvars_Multi);
 	for(i = 0; i < n; ++i)
 	{
 		// cvars prefixed with ! get saved with the inverted value
@@ -89,7 +89,7 @@ void saveCvarsMulti(entity me)
 }
 void makeMulti(entity e, string otherCvars)
 {
-	e.cvarNames_Multi = otherCvars;
+	e.controlledCvars_Multi = otherCvars;
 	e.saveCvars_Multi = e.saveCvars;
 	e.saveCvars = saveCvarsMulti;
 }
@@ -127,6 +127,7 @@ void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
 .bool disabled;
 void setDependent_Check(entity e)
 {
+	bool disabled_prev = e.disabled;
 	float f;
 	string s;
 	if(e.func_setDependent)
@@ -165,6 +166,8 @@ void setDependent_Check(entity e)
 				e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > e.op_setDependent);
 		}
 	}
+	if (disabled_prev != e.disabled && e.loadCvars)
+		e.loadCvars(e);
 }
 void setDependent_Draw(entity e)
 {
@@ -267,8 +270,7 @@ void setZonedTooltip(entity e, string theTooltip, string theCvar)
 		theTooltip = string_null;
 	}
 
-	if(e.tooltip)
-		strunzone(e.tooltip);
+	strfree(e.tooltip);
 	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
 }
 
@@ -311,11 +313,6 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-void DisableServerBackwardsCompatibility()
-{
-	cvar_set("gameversion_min", ftos(100 * floor(cvar("gameversion") / 100)));
-}
-
 void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 {
 	float n;
@@ -350,6 +347,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string s;
 
 	string un_version = "";
+	string un_tosversion = "";
 	string un_download = "";
 	string un_url = "";
 	string un_bannedservers = "";
@@ -368,6 +366,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			case "V":
 			{
 				un_version = s;
+				break;
+			}
+			case "T":
+			{
+				un_tosversion = s;
 				break;
 			}
 			case "C":
@@ -409,25 +412,17 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		}
 	}
 
-	if(un_version != "")
+	if(un_version != "" && vercmp(cvar_string("g_xonoticversion"), un_version) < 0)
 	{
-		if(vercmp(cvar_string("g_xonoticversion"), un_version) < 0)
-		{
-			// update needed
-			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { LOG_INFOF(_("Update can be downloaded at:\n%s"), un_download); }
-			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
-			DisableServerBackwardsCompatibility();
-		}
-		else if(cvar_string("g_xonoticversion") == un_version)
-		{
-			if(un_compatexpire != "")
-			{
-				string curdate = strftime(false, "%Y%m%d%H%M%S");
-				if (strcmp(curdate, un_compatexpire) >= 0)
-					DisableServerBackwardsCompatibility();
-			}
-		}
+		// update needed
+		_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
+		if(un_download) { LOG_INFO(_("Update can be downloaded at:"), "\n", un_download); }
+		if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
+	}
+
+	if(un_tosversion != "")
+	{
+		_Nex_ExtResponseSystem_NewToS = stof(un_tosversion);
 	}
 
 	if(un_bannedservers != "")
@@ -459,21 +454,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 void updateCheck()
 {
-	if(cvar("menu_updatecheck"))
+	if(!_Nex_ExtResponseSystem_Queried)
 	{
-		if(!_Nex_ExtResponseSystem_Queried)
-		{
-			_Nex_ExtResponseSystem_Queried = 1;
-			float startcnt;
-			string uri;
-
-			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
-
-			// for privacy, munge the start count a little
-			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-			uri_get(uri, URI_GET_UPDATENOTIFICATION);
-		}
+		_Nex_ExtResponseSystem_Queried = 1;
+		cvar_set("cl_startcount", ftos(cvar("cl_startcount") + 1));
+		uri_get("https://update.xonotic.org/checkupdate.txt", URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
@@ -507,15 +492,10 @@ void updateCheck()
 
 }
 
-bool show_propermenu = false;
-
 float preMenuInit()
 {
 	vector sz;
 	vector boxA, boxB;
-
-	if(random() < 0.1)
-		show_propermenu = true;
 
 	updateCheck();
 
@@ -546,18 +526,7 @@ float preMenuInit()
 
 string campaign_name_previous;
 float campaign_won_previous;
-#ifdef WATERMARK
-string autocvar_menu_watermark = WATERMARK;
-#else
-string autocvar_menu_watermark = "";
-#endif
-void postMenuDraw()
-{
-	if(autocvar_menu_watermark != "")
-	{
-		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
-	}
-}
+void postMenuDraw() {}
 void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize);
 .entity winnerDialog;
 void preMenuDraw()
@@ -566,16 +535,13 @@ void preMenuDraw()
 
 	updateCheck();
 
-	if(_Nex_ExtResponseSystem_UpdateTo != "")
+	if(_Nex_ExtResponseSystem_UpdateTo != "" && !(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
 		line = eY * fs.y;
 		string l1, l2;
-		if(show_propermenu)
-			l1 = sprintf("Jeff pay 4 new weapons for %s", _Nex_ExtResponseSystem_UpdateTo);
-		else
-			l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
+		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
 		l2 = "http://www.xonotic.org/";
 		if(_Nex_ExtResponseSystem_UpdateToURL)
 			l2 = _Nex_ExtResponseSystem_UpdateToURL;
@@ -594,6 +560,7 @@ void preMenuDraw()
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
+
 	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)
@@ -612,8 +579,7 @@ void preMenuDraw()
 	}
 	else
 	{
-		strunzone(campaign_name_previous);
-		campaign_name_previous = strzone(campaign_name);
+		strcpy(campaign_name_previous, campaign_name);
 		campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
 	}
 }
@@ -694,13 +660,14 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
-	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/**/
 
 // hidden gametypes come last so indexing always works correctly
 #define HIDDEN_GAMETYPES \
 	GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/**/
 
 Gametype GameType_GetID(int cnt)
@@ -716,10 +683,11 @@ Gametype GameType_GetID(int cnt)
 int GameType_GetCount()
 {
 	int i = 0;
+	int dev = cvar("developer");
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	#define GAMETYPE(it) if (cvar("developer")) ++i;
+	#define GAMETYPE(it) { if (dev > 0) ++i; }
 	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return i;
@@ -828,6 +796,18 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 }
 
+bool isServerSingleplayer()
+{
+	return (cvar_string("net_address") == "127.0.0.1" && cvar_string("net_address_ipv6") == "::1");
+}
+
+void makeServerSingleplayer()
+{
+	// it doesn't allow clients to connect from different machines
+	localcmd("defer 0.1 \"sv_cmd settemp net_address 127.0.0.1\"\n");
+	localcmd("defer 0.1 \"sv_cmd settemp net_address_ipv6 ::1\"\n");
+}
+
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
 {
 	if(startAlpha < targetAlpha)
@@ -841,9 +821,9 @@ void CheckSendCvars(entity me, string cvarnamestring)
 {
 	if(me.sendCvars)
 	{
-		LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
+			LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
 			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
 		}
 	}

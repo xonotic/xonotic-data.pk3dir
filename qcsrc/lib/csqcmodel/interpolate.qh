@@ -21,6 +21,8 @@
  */
 #pragma once
 
+float autocvar_cl_lerpexcess; // TODO: int?
+
 .int iflags;
 const int IFLAG_VELOCITY = BIT(0);
 const int IFLAG_ANGLES = BIT(1);
@@ -33,6 +35,10 @@ const int IFLAG_V_ANGLE = BIT(7);
 const int IFLAG_V_ANGLE_X = BIT(8);
 const int IFLAG_ORIGIN = BIT(9);
 const int IFLAG_INTERNALMASK = IFLAG_VALID | IFLAG_PREVALID;
+
+// InterpolateOrigin can interpolate many things, not just origin;
+// set the appropriate flag(s) to this.iflags before
+// InterpolateOrigin_Note(this) and after InterpolateOrigin_Undo(this)
 
 // call this BEFORE reading an entity update
 void InterpolateOrigin_Undo(entity this);

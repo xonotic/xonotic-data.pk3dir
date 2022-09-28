@@ -2,7 +2,7 @@
 
 CLASS(Vaporizer, Weapon)
 /* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");
-/* ammotype  */ ATTRIB(Vaporizer, ammo_type, int, RESOURCE_CELLS);
+/* ammotype  */ ATTRIB(Vaporizer, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
@@ -10,6 +10,8 @@ CLASS(Vaporizer, Weapon)
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
+/* flash mdl */ ATTRIB(Vaporizer, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Vaporizer, m_muzzleeffect, entity, EFFECT_VORTEX_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
@@ -22,7 +24,8 @@ CLASS(Vaporizer, Weapon)
 	BEGIN(class) \
 		P(class, prefix, ammo, float, PRI) \
     	P(class, prefix, animtime, float, PRI) \
-    	P(class, prefix, damage, float, PRI) \
+        P(class, prefix, damage, float, PRI) \
+    	P(class, prefix, force, float, PRI) \
     	P(class, prefix, refire, float, PRI) \
     	P(class, prefix, ammo, float, SEC) \
     	P(class, prefix, animtime, float, SEC) \
@@ -30,6 +33,7 @@ CLASS(Vaporizer, Weapon)
     	P(class, prefix, delay, float, SEC) \
     	P(class, prefix, edgedamage, float, SEC) \
     	P(class, prefix, force, float, SEC) \
+        P(class, prefix, force_zscale, float, SEC) \
     	P(class, prefix, lifetime, float, SEC) \
     	P(class, prefix, radius, float, SEC) \
     	P(class, prefix, refire, float, SEC) \
@@ -59,7 +63,5 @@ SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)
 .float jump_interval;
 .float jump_interval2;
 .bool held_down;
-.float rm_force;
-.float rm_damage;
-.float rm_edmg;
+.int rm_laser_count;
 #endif

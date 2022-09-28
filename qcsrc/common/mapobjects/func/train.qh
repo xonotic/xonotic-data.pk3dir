@@ -1,0 +1,6 @@
+#pragma once
+
+
+const int TRAIN_CURVE = BIT(0);
+const int TRAIN_TURN = BIT(1);
+const int TRAIN_NEEDACTIVATION = BIT(2);

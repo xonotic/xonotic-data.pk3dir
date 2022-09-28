@@ -1,0 +1,11 @@
+#pragma once
+
+#ifdef SVQC
+IntrusiveList g_swamped;
+STATIC_INIT(g_swamped) { g_swamped = IL_NEW(); }
+
+.entity swampslug;            // Uses this to release from swamp ("untouch" fix)
+
+.float swamp_interval;	//Hurt players in swamp with this interval
+.float swamp_slowdown;	//Players in swamp get slowed down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
+#endif

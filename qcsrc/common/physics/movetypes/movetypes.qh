@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef SVQC
+// undefined on client, engine cvar
+bool autocvar_physics_ode;
+
+int autocvar_sv_qcphysics = 1; // TODO this is for testing - remove when qcphysics work
+#endif
+
 // water levels
 const int WATERLEVEL_NONE = 0;
 const int WATERLEVEL_WETFEET = 1;
@@ -16,15 +23,24 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND)
 #define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP)
 #define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN)
+#define GAMEPLAYFIX_STEPDOWN_MAXSPEED(s)    STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED)
 #define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES)
 #define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS)
 #define GAMEPLAYFIX_WATERTRANSITION(s) 		STAT(GAMEPLAYFIX_WATERTRANSITION)
+#define GAMEPLAYFIX_SLIDEMOVEPROJECTILES(s) STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES)
+#define GAMEPLAYFIX_GRENADEBOUNCESLOPES(s) 	STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES)
+#define GAMEPLAYFIX_NOAIRBORNCORPSE(s) 		STAT(GAMEPLAYFIX_NOAIRBORNCORPSE)
+#define NOAIRBORNCORPSE_ALLOWSUSPENDED(s) 	STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED)
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
+#define GAMEPLAYFIX_DELAYPROJECTILES(s) 	STAT(GAMEPLAYFIX_DELAYPROJECTILES)
+
 
 #define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT)
 #define PHYS_NOSTEP(s)                      STAT(NOSTEP)
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
 #define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
+
+#define PHYS_WALLCLIP(s)					STAT(MOVEVARS_WALLCLIP)
 
 #ifdef CSQC
 .float bouncestop;
@@ -55,6 +71,8 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 void set_movetype(entity this, int mt);
 
+.float pm_time;
+
 .float move_movetype;
 .float move_time;
 //.vector move_origin;
@@ -76,16 +94,26 @@ void set_movetype(entity this, int mt);
 .float move_suspendedinair;
 .float move_didgravity;
 
+// unsticking
+const int UNSTICK_FINE = 0;
+const int UNSTICK_FIXED = 1;
+const int UNSTICK_STUCK = 2;
+
+// set by _Movetype_FlyMove
+vector move_stepnormal;
+
+bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
 void _Movetype_WallFriction(entity this, vector stepnormal);
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
 void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
+void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
 void _Movetype_PushEntityTrace(entity this, vector push);
-float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
+bool _Movetype_PushEntity(entity this, vector push, float failonstartsolid, bool dolink);
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);
@@ -94,7 +122,7 @@ void Movetype_Physics_NoMatchServer(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 
-float _Movetype_UnstickEntity(entity this);
+int _Movetype_UnstickEntity(entity this);
 
 const int MAX_CLIP_PLANES = 5;
 
@@ -115,14 +143,13 @@ const int MOVETYPE_FOLLOW           = 12;
 const int MOVETYPE_PHYSICS          = 32;
 const int MOVETYPE_FLY_WORLDONLY    = 33;
 
-const int FL_ITEM                   = 256;
-const int FL_ONGROUND				= 512;
 #elif defined(SVQC)
 const int MOVETYPE_ANGLENOCLIP      = 1;
 const int MOVETYPE_ANGLECLIP        = 2;
 #endif
 
-const int FL_ONSLICK = BIT(20);
+const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
+const int MOVETYPE_QCENTITY = 151; // QC-driven entity physics, some think functions!
 
 const int MOVETYPE_FAKEPUSH         = 13;
 

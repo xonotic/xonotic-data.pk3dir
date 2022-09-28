@@ -1,11 +1,13 @@
 #include "racetimer.qh"
 
-#include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include <common/mapinfo.qh>
+#include <client/draw.qh>
 
-// Race timer (#6)
+// Race timer (#8)
+
+void HUD_RaceTimer_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)
@@ -65,12 +67,12 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		if(mytime >= theirtime)
 			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
 		else
-			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime));
+			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime), false);
 		col = "^3";
 		if(mytime >= othertime)
 			othertimestr = strcat("+", ftos_decimals(mytime - othertime, TIME_DECIMALS));
 		else
-			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime));
+			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime), false);
 		othercol = "^7";
 	}
 
@@ -98,7 +100,7 @@ void HUD_RaceTimer ()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(!MUTATOR_CALLHOOK(ShowRaceTimer)) return;
 		if(spectatee_status == -1) return;
 	}
 
@@ -148,10 +150,11 @@ void HUD_RaceTimer ()
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
 		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
-		s = _("^1Intermediate 1 (+15.42)");
+		s = strcat("^1", sprintf(_("Intermediate %d"), 1), " (+15.42)");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
+		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
+		s = strcat("^1", s);
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -169,7 +172,7 @@ void HUD_RaceTimer ()
 				else
 					s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
 				if(race_time)
-					forcetime = TIME_ENCODED_TOSTRING(race_time);
+					forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 			}
 		}
 		else
@@ -197,7 +200,8 @@ void HUD_RaceTimer ()
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if(a > 0)
 			{
-				s = sprintf(_("^1PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
+				s = sprintf(_("PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
+				s = strcat("^1", s);
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -216,7 +220,7 @@ void HUD_RaceTimer ()
 
 		if(race_laptime && race_checkpoint != 255)
 		{
-			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
+			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime), false);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '0.6 0.6 0' * mySize.y));
 			drawstring(str_pos, s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
@@ -246,10 +250,19 @@ void HUD_RaceTimer ()
 			a = bound(0, (1 + t - time), 1);
 			if(a > 0)
 			{
+				string col;
 				if(time < t)
-					s = sprintf(_("^1PENALTY: %.1f (%s)"), (t - time) * 0.1, race_penaltyreason);
+				{
+					t = (t - time) * 0.1;
+					col = "^1";
+				}
 				else
-					s = sprintf(_("^2PENALTY: %.1f (%s)"), 0, race_penaltyreason);
+				{
+					t = 0;
+					col = "^2";
+				}
+				s = sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason);
+				s = strcat(col, s);
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}

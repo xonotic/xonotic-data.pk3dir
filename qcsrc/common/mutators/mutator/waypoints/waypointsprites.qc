@@ -5,7 +5,6 @@ REGISTER_MUTATOR(waypointsprites, true);
 REGISTER_NET_LINKED(waypointsprites)
 
 #ifdef SVQC
-/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 {
     WriteHeader(MSG_ENTITY, waypointsprites);
@@ -15,17 +14,14 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     if (this.max_health || (this.pain_finished && (time < this.pain_finished + 0.25)))
         sendflags |= 0x80;
 
-    int f = 0;
-    if(this.currentammo == 1)
-        f |= 1; // hideable
-    if(this.exteriormodeltoclient == to)
-        f |= 2; // my own
-    if(this.currentammo == 2)
-        f |= 2; // radar only
+    int hide_flags = 0;
+    if(this.currentammo == 1) hide_flags |= 1; // hideable
+    else if(this.currentammo == 2) hide_flags |= 2; // radar only
+    if(this.exteriormodeltoclient == to) hide_flags |= 2; // my own
 
-    MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
+    MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, hide_flags);
     sendflags = M_ARGV(2, int);
-    f = M_ARGV(3, int);
+    hide_flags = M_ARGV(3, int);
 
     WriteByte(MSG_ENTITY, sendflags);
     WriteByte(MSG_ENTITY, this.wp_extra);
@@ -34,7 +30,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     {
         if (this.max_health)
         {
-            WriteByte(MSG_ENTITY, (this.health / this.max_health) * 191.0);
+            WriteByte(MSG_ENTITY, (GetResource(this, RES_HEALTH) / this.max_health) * 191.0);
         }
         else
         {
@@ -69,8 +65,8 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     {
         WriteCoord(MSG_ENTITY, this.fade_time);
         WriteCoord(MSG_ENTITY, this.teleport_time);
-        WriteShort(MSG_ENTITY, this.fade_rate); // maxdist
-        WriteByte(MSG_ENTITY, f);
+        WriteShort(MSG_ENTITY, bound(0, this.fade_rate, 32767)); // maxdist
+        WriteByte(MSG_ENTITY, hide_flags);
     }
 
     if (sendflags & 32)
@@ -82,11 +78,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
         if (WaypointSprite_isteammate(this.owner, WaypointSprite_getviewentity(to)))
         {
-            float dt = (this.waypointsprite_helpmetime - time) / 0.1;
-            if (dt < 0)
-                dt = 0;
-            if (dt > 255)
-                dt = 255;
+            float dt = bound(0, (this.waypointsprite_helpmetime - time) / 0.1, 255);
             WriteByte(MSG_ENTITY, dt);
         }
         else
@@ -106,12 +98,11 @@ NET_HANDLE(waypointsprites, bool isnew) {
 
 void Ent_RemoveWaypointSprite(entity this)
 {
-    if (this.netname) strunzone(this.netname);
-    if (this.netname2) strunzone(this.netname2);
-    if (this.netname3) strunzone(this.netname3);
+    strfree(this.netname);
+    strfree(this.netname2);
+    strfree(this.netname3);
 }
 
-/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
@@ -134,7 +125,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
         int t = ReadByte();
         if (t < 192)
         {
-            this.health = t / 191.0;
+            SetResourceExplicit(this, RES_HEALTH, t / 191.0);
             this.build_finished = 0;
         }
         else
@@ -142,7 +133,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
             t = (t - 192) * 256 + ReadByte();
             this.build_started = servertime;
             if (this.build_finished)
-                this.build_starthealth = bound(0, this.health, 1);
+                this.build_starthealth = bound(0, GetResource(this, RES_HEALTH), 1);
             else
                 this.build_starthealth = 0;
             this.build_finished = servertime + t / 32;
@@ -150,7 +141,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     }
     else
     {
-        this.health = -1;
+        SetResourceExplicit(this, RES_HEALTH, -1);
         this.build_finished = 0;
     }
 
@@ -169,23 +160,17 @@ void Ent_WaypointSprite(entity this, bool isnew)
 
     if (sendflags & 2)
     {
-        if (this.netname)
-            strunzone(this.netname);
-        this.netname = strzone(ReadString());
+        strcpy(this.netname, ReadString());
     }
 
     if (sendflags & 4)
     {
-        if (this.netname2)
-            strunzone(this.netname2);
-        this.netname2 = strzone(ReadString());
+        strcpy(this.netname2, ReadString());
     }
 
     if (sendflags & 8)
     {
-        if (this.netname3)
-            strunzone(this.netname3);
-        this.netname3 = strzone(ReadString());
+        strcpy(this.netname3, ReadString());
     }
 
     if (sendflags & 16)
@@ -223,10 +208,10 @@ void Ent_WaypointSprite(entity this, bool isnew)
 float spritelookupblinkvalue(entity this, string s)
 {
     if (s == WP_Weapon.netname) {
-        if (Weapons_from(this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
+        if (REGISTRY_GET(Weapons, this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypointblink;
     if(s == WP_FlagReturn.netname) return 2;
 
     return 1;
@@ -234,8 +219,8 @@ float spritelookupblinkvalue(entity this, string s)
 
 vector spritelookupcolor(entity this, string s, vector def)
 {
-    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return Weapons_from(this.wp_extra).wpcolor;
-    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items_from(this.wp_extra).m_color;
+    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).wpcolor;
+    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
         return M_ARGV(2, vector);
@@ -248,8 +233,8 @@ string spritelookuptext(entity this, string s)
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
+    if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_name;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypoint;
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -267,9 +252,9 @@ string spritelookuptext(entity this, string s)
 string spritelookupicon(entity this, string s)
 {
     // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
-    if (s == WP_Vehicle.netname) return Vehicles_from(this.wp_extra).m_icon;
+    if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).model2;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_icon;
+    if (s == WP_Vehicle.netname) return REGISTRY_GET(Vehicles, this.wp_extra).m_icon;
     //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -306,7 +291,7 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
     v4 = Rotate(v4, rot) + org;
 
     // draw them
-    R_BeginPolygon(pic, f);
+    R_BeginPolygon(pic, f, true);
     R_PolygonVertex(v1, '0 0 0', rgb, a);
     R_PolygonVertex(v2, '1 0 0', rgb, a);
     R_PolygonVertex(v3, '1 1 0', rgb, a);
@@ -316,7 +301,7 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
 void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, float f)
 {
-    R_BeginPolygon(pic, f);
+    R_BeginPolygon(pic, f, true);
     R_PolygonVertex(o, '0 0 0', rgb, a);
     R_PolygonVertex(o + ri, '1 0 0', rgb, a);
     R_PolygonVertex(o + up + ri, '1 1 0', rgb, a);
@@ -358,13 +343,13 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
     float border = 1.5 * t;
     float margin = 4.0 * t;
 
-    float borderDiag = border * 1.414;
+    float borderDiag = border * M_SQRT2;
     vector arrowX  = eX * size;
     vector arrowY  = eY * (size+borderDiag);
     vector borderX = eX * (size+borderDiag);
     vector borderY = eY * (size+borderDiag+border);
 
-    R_BeginPolygon("", DRAWFLAG_NORMAL);
+    R_BeginPolygon("", DRAWFLAG_NORMAL, true);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
     R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
     R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
@@ -372,7 +357,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
     R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
-    R_BeginPolygon("", DRAWFLAG_ADDITIVE);
+    R_BeginPolygon("", DRAWFLAG_ADDITIVE, true);
     R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
@@ -495,7 +480,7 @@ void Draw_WaypointSprite(entity this)
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (this.hideflags & 1 && autocvar_cl_hidewaypoints)
+    if ((this.hideflags & 1) && autocvar_cl_hidewaypoints)
         return; // fixed waypoint
 
     InterpolateOrigin_Do(this);
@@ -546,10 +531,12 @@ void Draw_WaypointSprite(entity this)
     float dist = vlen(this.origin - view_origin);
     float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
-    if (this.maxdistance > waypointsprite_normdistance)
-        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
-    else if (this.maxdistance > 0)
-        a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+    if(this.maxdistance > 0)
+    {
+        // restrict maximum normal distance to the waypoint's maximum distance to prevent exploiting cvars
+        float maxnormdistance = bound(0, waypointsprite_normdistance, this.maxdistance - 1);
+        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1) ** waypointsprite_distancealphaexponent);
+    }
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
@@ -558,11 +545,13 @@ void Draw_WaypointSprite(entity this)
         LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
     }
 
-    if (time - floor(time) > 0.5)
+    float health_val = GetResource(this, RES_HEALTH);
+    float blink_time = (health_val >= 0) ? (health_val * 10) : time;
+    if (blink_time - floor(blink_time) > 0.5)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (this.lifetime > 0) // fading out waypoints don't blink
+        else if (!this.lifetime) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(this, spriteimage);
     }
 
@@ -589,15 +578,16 @@ void Draw_WaypointSprite(entity this)
     {
         // scale it to be just in view
         vector d;
-        float f1, f2;
 
         d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
         ang = atan2(-d.x, -d.y);
         if (o.z < 0)
             ang += M_PI;
 
-        f1 = d.x / vid_conwidth;
-        f2 = d.y / vid_conheight;
+		float f1 = d.x / vid_conwidth;
+		float f2 = d.y / vid_conheight;
+		if (f1 == 0) { f1 = 0.000001; }
+		if (f2 == 0) { f2 = 0.000001; }
 
         if (max(f1, -f1) > max(f2, -f2)) {
             if (d.z * f1 > 0) {
@@ -659,14 +649,14 @@ void Draw_WaypointSprite(entity this)
         if (time < this.build_finished + 0.25)
         {
             if (time < this.build_started)
-                this.health = this.build_starthealth;
+                SetResourceExplicit(this, RES_HEALTH, this.build_starthealth);
             else if (time < this.build_finished)
-                this.health = (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth;
+                SetResourceExplicit(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
             else
-                this.health = 1;
+                SetResourceExplicit(this, RES_HEALTH, 1);
         }
         else
-            this.health = -1;
+            SetResourceExplicit(this, RES_HEALTH, -1);
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -714,7 +704,7 @@ void Draw_WaypointSprite(entity this)
     }
 
     draw_beginBoldFont();
-    if (this.health >= 0)
+    if (GetResource(this, RES_HEALTH) >= 0)
     {
         float align = 0, marg;
         if (this.build_finished)
@@ -731,7 +721,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                this.health,
+                GetResource(this, RES_HEALTH),
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,
@@ -836,9 +826,10 @@ void WaypointSprite_UpdateSprites(entity e, entity _m1, entity _m2, entity _m3)
 void WaypointSprite_UpdateHealth(entity e, float f)
 {
     f = bound(0, f, e.max_health);
-    if (f != e.health || e.pain_finished)
+    float step = e.max_health / 40;
+    if ((floor(f / step) != floor(GetResource(e, RES_HEALTH) / step)) || e.pain_finished)
     {
-        e.health = f;
+        SetResourceExplicit(e, RES_HEALTH, f);
         e.pain_finished = 0;
         e.SendFlags |= 0x80;
     }
@@ -885,9 +876,13 @@ void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col)
 {
     // no check, as this is never called without doing an actual change (usually only once)
     int i = icon.m_id;
-    e.cnt = (e.cnt & BIT(7)) | (i & BITS(7));
-    e.colormod = col;
-    e.SendFlags |= 32;
+    int new_cnt = (e.cnt & BIT(7)) | (i & BITS(7));
+    if (new_cnt != e.cnt || col != e.colormod)
+    {
+    	e.cnt = new_cnt;
+    	e.colormod = col;
+    	e.SendFlags |= 32;
+    }
 }
 
 void WaypointSprite_Ping(entity e)
@@ -1106,7 +1101,7 @@ entity WaypointSprite_SpawnFixed(
 
 entity WaypointSprite_DeployFixed(
     entity spr,
-    float limited_range,
+    bool limited_range,
     entity player,
     vector ofs,
     entity icon // initial icon
@@ -1138,7 +1133,7 @@ entity WaypointSprite_DeployPersonal(
 entity WaypointSprite_Attach(
     entity spr,
     entity player,
-    float limited_range,
+    bool limited_range,
     entity icon // initial icon
 )
 {
@@ -1165,10 +1160,10 @@ entity WaypointSprite_AttachCarrier(
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', NULL, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
-    if (carrier.health)
+    if (GetResource(carrier, RES_HEALTH))
     {
-        WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
-        WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+        WaypointSprite_UpdateMaxHealth(e, 2 * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
+        WaypointSprite_UpdateHealth(e, healtharmor_maxdamage(GetResource(carrier, RES_HEALTH), GetResource(carrier, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
     }
     return e;
 }

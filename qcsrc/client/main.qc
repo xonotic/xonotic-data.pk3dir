@@ -1,30 +1,33 @@
 #include "main.qh"
 
-#include "defs.qh"
-#include <common/ent_cs.qh>
-#include "miscfunctions.qh"
+#include <client/command/cl_cmd.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/chat.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/items/items.qh>
+#include <client/mapvoting.qh>
+#include <client/mutators/_mod.qh>
+#include <client/shownames.qh>
+#include <client/view.qh>
+#include <client/weapons/projectile.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.inc>
+#include <common/effects/all.qh>
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
-#include <common/effects/all.qh>
-#include <common/effects/all.inc>
-#include "hud/_mod.qh"
-#include "mapvoting.qh"
-#include "mutators/events.qh"
-#include "hud/panel/scoreboard.qh"
-#include "hud/panel/quickmenu.qh"
-#include "shownames.qh"
-#include <common/t_items.qh>
-#include "wall.qh"
-#include "weapons/projectile.qh"
-#include <common/deathtypes/all.qh>
+#include <common/ent_cs.qh>
+#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
-#include <common/triggers/include.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -37,68 +40,15 @@
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
-{
-	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
-	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
-}
-
-void draw_cursor_normal(vector pos, vector col, float a)
-{
-	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
-}
-
-void LoadMenuSkinValues()
-{
-	int fh = -1;
-	if(cvar_string("menu_skin") != "")
-	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0 && cvar_defstring("menu_skin") != "")
-	{
-		cvar_set("menu_skin", cvar_defstring("menu_skin"));
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0)
-	{
-		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-
-	draw_currentSkin = strzone(draw_currentSkin);
-
-	if(fh >= 0)
-	{
-		string s;
-		while((s = fgets(fh)))
-		{
-			int n = tokenize_console(s);
-			if (n < 2)
-				continue;
-			if(substring(argv(0), 0, 2) == "//")
-				continue;
-			if(argv(0) == "SIZE_CURSOR")
-				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-			else if(argv(0) == "OFFSET_CURSOR")
-				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-		}
-		fclose(fh);
-	}
-}
-
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void ConsoleCommand_macro_init();
 void CSQC_Init()
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_INFOF("^4CSQC Build information: ^1%s", WATERMARK);
+	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
 
 	{
@@ -137,12 +87,23 @@ void CSQC_Init()
 
 	registercvar("cl_shootfromfixedorigin", "");
 
-	registercvar("cl_multijump", "1");
+	registercvar("cl_multijump", "-1");
+
+	registercvar("cl_dodging", "0");
 
 	registercvar("cl_spawn_near_teammate", "1");
 
+	registercvar("cl_weapon_switch_reload", "1");
+	registercvar("cl_weapon_switch_fallback_to_impulse", "1");
+
+	registercvar("cl_allow_uidranking", "1");
+
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
+
+	if (cvar_type("_scoreboard_team_selection_available") & CVAR_TYPEFLAG_EXISTS)
+		cvar_settemp("_scoreboard_team_selection_available", "1");
+	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
 
 	gametype = NULL;
 
@@ -168,13 +129,13 @@ void CSQC_Init()
 
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
-		minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
+		minimapname = strcat("gfx/", mi_shortname, "_radar");
 		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
 			// but maybe we have a non-clever minimap
-			minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+			minimapname = strcat("gfx/", mi_shortname, "_mini");
 			if (precache_pic(minimapname) == "")
 				minimapname = ""; // FAIL
 			else
@@ -212,6 +173,9 @@ void Shutdown()
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
 
+	if (autocvar_r_drawviewmodel < 0)
+		cvar_set("r_drawviewmodel", "0");
+
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
 	if (!isdemo())
@@ -219,20 +183,153 @@ void Shutdown()
 		if (!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart nop\n");
 		if (!(calledhooks & HOOK_END))
+		{
+			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
+		}
 	}
 
 	localcmd("\ncl_hook_shutdown\n");
 
+	localcmd("\n-button12\n");
+
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
+
+	ReplicateVars(REPLICATEVARS_DESTROY);
+}
+
+void AuditLists()
+{
+	entity e;
+	entity prev;
+
+	prev = players;
+	for(e = prev.sort_next; e; prev = e, e = e.sort_next)
+	{
+		if(prev != e.sort_prev)
+			error(strcat("sort list chain error\nplease submit the output of 'prvm_edicts client' to the developers"));
+	}
+
+	prev = teams;
+	for(e = prev.sort_next; e; prev = e, e = e.sort_next)
+	{
+		if(prev != e.sort_prev)
+			error(strcat("sort list chain error\nplease submit the output of 'prvm_edicts client' to the developers"));
+	}
+}
+
+float RegisterPlayer(entity player)
+{
+	entity pl;
+	AuditLists();
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+		if(pl == player)
+			error("Player already registered!");
+	player.sort_next = players.sort_next;
+	player.sort_prev = players;
+	if(players.sort_next)
+		players.sort_next.sort_prev = player;
+	players.sort_next = player;
+	AuditLists();
+	return true;
+}
+
+void RemovePlayer(entity player)
+{
+	entity pl, parent;
+	AuditLists();
+	parent = players;
+	for(pl = players.sort_next; pl && pl != player; pl = pl.sort_next)
+		parent = pl;
+
+	if(!pl)
+	{
+		error("Trying to remove a player which is not in the playerlist!");
+		return;
+	}
+	parent.sort_next = player.sort_next;
+	if(player.sort_next)
+		player.sort_next.sort_prev = parent;
+	AuditLists();
+}
+
+void MoveToLast(entity e)
+{
+	AuditLists();
+	entity ent = e.sort_next;
+	while(ent)
+	{
+		SORT_SWAP(ent, e);
+		ent = e.sort_next;
+	}
+	AuditLists();
+}
+
+float RegisterTeam(entity Team)
+{
+	assert_once(Team.team, eprint(Team));
+	entity tm;
+	AuditLists();
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm == Team)
+			error("Team already registered!");
+	Team.sort_next = teams.sort_next;
+	Team.sort_prev = teams;
+	if(teams.sort_next)
+		teams.sort_next.sort_prev = Team;
+	teams.sort_next = Team;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		++team_count;
+	AuditLists();
+	return true;
+}
+
+void RemoveTeam(entity Team)
+{
+	entity tm, parent;
+	AuditLists();
+	parent = teams;
+	for(tm = teams.sort_next; tm && tm != Team; tm = tm.sort_next)
+		parent = tm;
+
+	if(!tm)
+	{
+		LOG_INFO(_("Trying to remove a team which is not in the teamlist!"));
+		return;
+	}
+	parent.sort_next = Team.sort_next;
+	if(Team.sort_next)
+		Team.sort_next.sort_prev = parent;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		--team_count;
+	AuditLists();
+}
+
+entity GetTeam(int Team, bool add)
+{
+	TC(int, Team); TC(bool, add);
+	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
+	if(teamslots[num])
+		return teamslots[num];
+	if (!add)
+		return NULL;
+	entity tm = new_pure(team);
+	tm.team = Team;
+	teamslots[num] = tm;
+	RegisterTeam(tm);
+	return tm;
 }
 
 .float has_team;
-float SetTeam(entity o, int Team)
+bool SetTeam(entity o, int Team)
 {
-    TC(int, Team);
-	devassert_once(Team);
+	TC(int, Team);
+	//devassert_once(Team);
 	entity tm;
 	if(teamplay)
 	{
@@ -304,7 +401,7 @@ float SetTeam(entity o, int Team)
 
 void Playerchecker_Think(entity this)
 {
-    int i;
+	int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
 	{
@@ -344,7 +441,6 @@ void Playerchecker_Think(entity this)
 	this.nextthink = time + 0.2;
 }
 
-void TrueAim_Init();
 void PostInit()
 {
 	entity playerchecker = new_pure(playerchecker);
@@ -353,7 +449,19 @@ void PostInit()
 
 	TrueAim_Init();
 
+	// this can't be called in CSQC_Init as it'd send cvars too early
+	ReplicateVars_Start();
+
 	postinit = true;
+}
+
+void Release_Common_Keys()
+{
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
 }
 
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
@@ -365,21 +473,63 @@ void PostInit()
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
-	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+	TC(int, bInputType);
+	bool override = false;
+
+	override |= HUD_Scoreboard_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
 		return true;
 
-	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
+	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
 		return true;
 
-	if (HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary))
+	override |= HUD_Panel_Chat_InputEvent(bInputType, nPrimary, nSecondary);
+
+	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
+
+	override |= HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary);
+
+	override |= MapVote_InputEvent(bInputType, nPrimary, nSecondary);
+
+	override |= HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary);
+
+	if(override)
 		return true;
 
-	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	if(bInputType == 3 || bInputType == 2)
+		return false;
 
-	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+	}
+
+	// NOTE: Shift-Escape must be filtered out because it's the hardcoded console shortcut
+	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
+	{
+		if (hudShiftState & S_TAB)
+		{
+			Scoreboard_UI_Enable(0);
+			return true;
+		}
+		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		{
+			localcmd("\nmenu_showgamemenudialog\n");
+			return true;
+		}
+	}
 
 	return false;
 }
@@ -389,8 +539,6 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
-void Ent_Remove(entity this);
 
 void Ent_RemovePlayerScore(entity this)
 {
@@ -517,11 +665,18 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		for(i = 0; i < MAX_SPECTATORS; ++i)
 			spectatorlist[i] = 0; // reset list first
 
-		for(i = 0; i < num_spectators; ++i)
+		int limit = min(num_spectators, MAX_SPECTATORS);
+		for(i = 0; i < limit; ++i)
 		{
 			slot = ReadByte();
 			spectatorlist[i] = slot - 1;
 		}
+	}
+	else
+	{
+		for(int j = 0; j < MAX_SPECTATORS; ++j)
+			spectatorlist[j] = 0; // reset list if showspectators has been turned off
+		num_spectators = 0;
 	}
 
 	return = true;
@@ -532,6 +687,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		race_laptime = 0;
 		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
+		spectatee_status_changed_time = time;
 	}
 	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 	{
@@ -556,9 +712,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 
 	if(!(nags & BIT(2)))
 	{
-		if(vote_called_vote)
-			strunzone(vote_called_vote);
-		vote_called_vote = string_null;
+		strfree(vote_called_vote);
 		vote_active = 0;
 	}
 	else
@@ -576,23 +730,21 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 
 	if(nags & BIT(7))
 	{
-		if(vote_called_vote)
-			strunzone(vote_called_vote);
-		vote_called_vote = strzone(ReadString());
+		strcpy(vote_called_vote, ReadString());
 	}
 
 	if(nags & 1)
 	{
 		for(j = 0; j < maxclients; ++j)
 			if(playerslots[j])
-				playerslots[j].ready = 1;
+				playerslots[j].ready = true;
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
 			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
-						playerslots[j].ready = 0;
+						playerslots[j].ready = false;
 		}
 	}
 
@@ -613,7 +765,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 	if (sf & 1) {
 		for (int j = 0; j < maxclients; ++j) {
 			if (playerslots[j]) {
-				playerslots[j].eliminated = 1;
+				playerslots[j].eliminated = true;
 			}
 		}
 		for (int i = 1; i <= maxclients; i += 8) {
@@ -623,7 +775,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 				if (f & BIT(b)) continue;
 				int j = i - 1 + b;
 				if (playerslots[j]) {
-					playerslots[j].eliminated = 0;
+					playerslots[j].eliminated = false;
 				}
 			}
 		}
@@ -668,33 +820,15 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
-	if(this.alpha <= 0)
-		return;
-
-	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
-}
-
-void Spawn_PreDraw(entity this)
-{
-	float alph;
-	vector org = getpropertyvec(VF_ORIGIN);
-	if(this.fade_start)
+	bool dodraw = autocvar_cl_spawn_point_particles;
+	if(dodraw && autocvar_cl_spawn_point_dist_max)
 	{
-		if(vdist(org - this.origin, >, this.fade_end))
-			alph = 0; // save on some processing
-		else if(vdist(org - this.origin, <, this.fade_start))
-			alph = 1; // more processing saved
-		else
-			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+		vector org = getpropertyvec(VF_ORIGIN);
+		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
 	}
-	else
-		alph = 1;
-	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
-	this.alpha = alph;
-	if(alph <= 0)
-		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+
+	if(dodraw)
+		pointparticles(((!teamplay) ? EFFECT_SPAWNPOINT_NEUTRAL : EFFECT_SPAWNPOINT(this.team - 1)), this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
@@ -721,27 +855,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			//this.draw = Spawn_Draw;
 			IL_PUSH(g_drawables, this);
 		}*/
-		if(autocvar_cl_spawn_point_particles)
-		{
-			if(teamplay)
-			{
-				switch(teamnum)
-				{
-					case NUM_TEAM_1: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_RED); break;
-					case NUM_TEAM_2: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_BLUE); break;
-					case NUM_TEAM_3: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_YELLOW); break;
-					case NUM_TEAM_4: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_PINK); break;
-					default: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); break;
-				}
-			}
-			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
-
-			this.draw = Spawn_Draw;
-			if (is_new) IL_PUSH(g_drawables, this);
-			setpredraw(this, Spawn_PreDraw);
-			this.fade_start = autocvar_cl_spawn_point_dist_min;
-			this.fade_end = autocvar_cl_spawn_point_dist_max;
-		}
+		this.draw = Spawn_Draw;
+		if (is_new) IL_PUSH(g_drawables, this);
 	//}
 
 	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(this.origin), teamnum, this.cnt);
@@ -785,8 +900,11 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
-		zoomin_effect = 1;
-		current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
+		{
+			zoomin_effect = 1;
+			current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+		}
 
 		if(autocvar_cl_unpress_zoom_on_spawn)
 		{
@@ -799,10 +917,10 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
-// The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
+// The parameter isnew reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
-	this.sourceLoc = __FILE__ ":" STR(__LINE__);
+	this.sourceLoc = __FILE__":"STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
@@ -825,6 +943,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
+			ONREMOVE(this);
 			clearentity(this);
 			isnew = true;
 		}
@@ -843,7 +962,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+			LOG_INFOF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
@@ -851,7 +970,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	time = savetime;
 	if (!done)
 	{
-		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		LOG_FATALF("CSQC_Ent_Update(%i, %d) at %f {.entnum=%d, .enttype=%d} t=%s (%d)", this, isnew, savetime, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
@@ -939,11 +1058,11 @@ void CSQC_Parse_Print(string strMessage)
 	}
 }
 
-// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
+// CSQC_Parse_CenterPrint : Provides the centerprint_AddStandard string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
-	centerprint_hud(strMessage);
+	centerprint_AddStandard(strMessage);
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -976,7 +1095,7 @@ void Fog_Force()
 		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
-void Gamemode_Init();
+bool net_handle_ServerWelcome();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
@@ -984,16 +1103,17 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
-		if (scores_label(it)) strunzone(scores_label(it));
-		scores_label(it) = strzone(ReadString());
+		strcpy(scores_label(it), ReadString());
 		scores_flags(it) = ReadByte();
 	});
 	for (int i = 0; i < MAX_TEAMSCORE; ++i)
 	{
-		if (teamscores_label(i)) strunzone(teamscores_label(i));
-		teamscores_label(i) = strzone(ReadString());
+		strcpy(teamscores_label(i), ReadString());
 		teamscores_flags(i) = ReadByte();
 	}
+	bool welcome_msg_too = ReadByte();
+	if (welcome_msg_too)
+		net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
 	Gamemode_Init();
@@ -1012,8 +1132,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
-	if (forcefog) strunzone(forcefog);
-	forcefog = strzone(ReadString());
+	strcpy(forcefog, ReadString());
 
 	armorblockpercent = ReadByte() / 255.0;
 	damagepush_speedfactor = ReadByte() / 255.0;
@@ -1034,16 +1153,11 @@ float GetSpeedUnitFactor(int speed_unit)
 	switch(speed_unit)
 	{
 		default:
-		case 1:
-			return 1.0;
-		case 2:
-			return 0.0254;
-		case 3:
-			return 0.0254 * 3.6;
-		case 4:
-			return 0.0254 * 3.6 * 0.6213711922;
-		case 5:
-			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+		case 1: return 1.0;
+		case 2: return 0.0254;
+		case 3: return 0.0254 * 3.6;
+		case 4: return 0.0254 * 3.6 * 0.6213711922;
+		case 5: return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 	}
 }
 
@@ -1051,17 +1165,13 @@ string GetSpeedUnit(int speed_unit)
 {
 	switch(speed_unit)
 	{
+		// translator-friendly strings without the initial space
 		default:
-		case 1:
-			return _(" qu/s");
-		case 2:
-			return _(" m/s");
-		case 3:
-			return _(" km/h");
-		case 4:
-			return _(" mph");
-		case 5:
-			return _(" knots");
+		case 1: return strcat(" ", _("qu/s"));
+		case 2: return strcat(" ", _("m/s"));
+		case 3: return strcat(" ", _("km/h"));
+		case 4: return strcat(" ", _("mph"));
+		case 5: return strcat(" ", _("knots"));
 	}
 }
 
@@ -1076,17 +1186,15 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_time = ReadInt24_t();
 			race_previousbesttime = ReadInt24_t();
 			race_mypreviousbesttime = ReadInt24_t();
-			if(race_previousbestname)
-				strunzone(race_previousbestname);
 			string pbestname = ReadString();
 			if(autocvar_cl_race_cptimes_onlyself)
 			{
 				race_previousbesttime = race_mypreviousbesttime;
 				race_mypreviousbesttime = 0;
-				race_previousbestname = strzone("");
+				strcpy(race_previousbestname, "");
 			}
 			else
-				race_previousbestname = strzone(pbestname);
+				strcpy(race_previousbestname, pbestname);
 
 			race_checkpointtime = time;
 
@@ -1112,17 +1220,15 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextbesttime = ReadInt24_t();
 			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
 				race_mybesttime = ReadInt24_t();
-			if(race_nextbestname)
-				strunzone(race_nextbestname);
 			string newname = ReadString();
 			if(autocvar_cl_race_cptimes_onlyself && b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING)
 			{
 				race_nextbesttime = race_mybesttime;
 				race_mybesttime = 0;
-				race_nextbestname = strzone("");
+				strcpy(race_nextbestname, "");
 			}
 			else
-				race_nextbestname = strzone(newname);
+				strcpy(race_nextbestname, newname);
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE:
@@ -1132,13 +1238,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_mycheckpointlapsdelta = ReadByte();
 			if(race_mycheckpointlapsdelta >= 128)
 				race_mycheckpointlapsdelta -= 256;
-			if(race_mycheckpointenemy)
-				strunzone(race_mycheckpointenemy);
 			int who = ReadByte();
 			if(who)
-				race_mycheckpointenemy = strzone(entcs_GetName(who - 1));
+				strcpy(race_mycheckpointenemy, entcs_GetName(who - 1));
 			else
-				race_mycheckpointenemy = strzone(""); // TODO: maybe string_null works fine here?
+				strcpy(race_mycheckpointenemy, ""); // TODO: maybe string_null works fine here?
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
@@ -1148,31 +1252,23 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_othercheckpointlapsdelta = ReadByte();
 			if(race_othercheckpointlapsdelta >= 128)
 				race_othercheckpointlapsdelta -= 256;
-			if(race_othercheckpointenemy)
-				strunzone(race_othercheckpointenemy);
 			int what = ReadByte();
 			if(what)
-				race_othercheckpointenemy = strzone(entcs_GetName(what - 1));
+				strcpy(race_othercheckpointenemy, entcs_GetName(what - 1));
 			else
-				race_othercheckpointenemy = strzone(""); // TODO: maybe string_null works fine here?
+				strcpy(race_othercheckpointenemy, ""); // TODO: maybe string_null works fine here?
 			break;
 
 		case RACE_NET_PENALTY_RACE:
-			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
-			//race_penaltyaccumulator += race_penaltytime;
-			if(race_penaltyreason)
-				strunzone(race_penaltyreason);
-			race_penaltyreason = strzone(ReadString());
-			break;
-
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
 			race_penaltytime = ReadShort();
-			race_penaltyaccumulator += race_penaltytime;
-			if(race_penaltyreason)
-				strunzone(race_penaltyreason);
-			race_penaltyreason = strzone(ReadString());
+			string reason = ReadString();
+			if (reason == "missing a checkpoint")
+				reason = _("missing a checkpoint");
+			strcpy(race_penaltyreason, reason);
+			if (b == RACE_NET_PENALTY_QUALIFYING)
+				race_penaltyaccumulator += race_penaltytime;
 			break;
 
 		case RACE_NET_SERVER_RECORD:
@@ -1180,74 +1276,62 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			break;
 		case RACE_NET_SPEED_AWARD:
 			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
-			if(race_speedaward_holder)
-				strunzone(race_speedaward_holder);
-			race_speedaward_holder = strzone(ReadString());
-			if(race_speedaward_unit)
-				strunzone(race_speedaward_unit);
-			race_speedaward_unit = strzone(GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
+			strcpy(race_speedaward_holder, ReadString());
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
 			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
-			if(race_speedaward_alltimebest_holder)
-				strunzone(race_speedaward_alltimebest_holder);
-			race_speedaward_alltimebest_holder = strzone(ReadString());
-			if(race_speedaward_alltimebest_unit)
-				strunzone(race_speedaward_alltimebest_unit);
-			race_speedaward_alltimebest_unit = strzone(GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
+			strcpy(race_speedaward_alltimebest_holder, ReadString());
+			break;
+		case RACE_NET_RANKINGS_CNT:
+			RANKINGS_DISPLAY_CNT = ReadByte();
 			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
-            int pos = ReadShort();
+			int pos = ReadShort();
 			prevpos = ReadShort();
 			del = ReadShort();
 
 			// move other rankings out of the way
-            int i;
+			int i;
 			if (prevpos) {
-				for (i=prevpos-1;i>pos-1;--i) {
+				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
+				for (i=m-1; i>pos-1; --i) {
 					grecordtime[i] = grecordtime[i-1];
-					if(grecordholder[i])
-						strunzone(grecordholder[i]);
-					grecordholder[i] = strzone(grecordholder[i-1]);
+					strcpy(grecordholder[i], grecordholder[i-1]);
 				}
 			} else if (del) { // a record has been deleted by the admin
-				for (i=pos-1; i<= RANKINGS_CNT-1; ++i) {
-					if (i == RANKINGS_CNT-1) { // clear out last record
+				for (i=pos-1; i<= RANKINGS_DISPLAY_CNT-1; ++i) {
+					if (i == RANKINGS_DISPLAY_CNT-1) { // clear out last record
 						grecordtime[i] = 0;
-						if (grecordholder[i])
-							strunzone(grecordholder[i]);
-						grecordholder[i] = string_null;
+						strfree(grecordholder[i]);
 					}
 					else {
 						grecordtime[i] = grecordtime[i+1];
-						if (grecordholder[i])
-							strunzone(grecordholder[i]);
-						grecordholder[i] = strzone(grecordholder[i+1]);
+						strcpy(grecordholder[i], grecordholder[i+1]);
 					}
 				}
 			} else { // player has no ranked record yet
-				for (i=RANKINGS_CNT-1;i>pos-1;--i) {
+				for (i=RANKINGS_DISPLAY_CNT-1;i>pos-1;--i) {
 					grecordtime[i] = grecordtime[i-1];
-					if(grecordholder[i])
-						strunzone(grecordholder[i]);
-					grecordholder[i] = strzone(grecordholder[i-1]);
+					strcpy(grecordholder[i], grecordholder[i-1]);
 				}
 			}
 
+			if (grecordtime[RANKINGS_DISPLAY_CNT]) {
+				// kick off the player who fell from the last displayed position
+				grecordtime[RANKINGS_DISPLAY_CNT] = 0;
+				strfree(grecordholder[RANKINGS_DISPLAY_CNT]);
+			}
+
 			// store new ranking
-			if(grecordholder[pos-1] != "")
-				strunzone(grecordholder[pos-1]);
-			grecordholder[pos-1] = strzone(ReadString());
+			strcpy(grecordholder[pos-1], ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
 			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:
 			race_status = ReadShort();
-			if(race_status_name)
-				strunzone(race_status_name);
-			race_status_name = strzone(ReadString());
+			strcpy(race_status_name, ReadString());
 	}
 	return true;
 }
@@ -1274,7 +1358,8 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
-	complain_weapon = ReadByte();
+	int weapon_id = ReadByte();
+	complain_weapon = REGISTRY_GET(Weapons, weapon_id);
 	complain_weapon_type = ReadByte();
 	return = true;
 
@@ -1283,10 +1368,144 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 
 	switch(complain_weapon_type)
 	{
-		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, complain_weapon); break;
-		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
-		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
+		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, weapon_id); break;
+		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, weapon_id); break;
+		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, weapon_id); break;
 	}
+}
+
+string translate_modifications(string s)
+{
+	return build_mutator_list(s);
+}
+
+string translate_weaponarena(string s)
+{
+	if (s == "") return s;
+	if (s == "All Weapons Arena") return _("All Weapons Arena");
+	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
+	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
+	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
+	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
+	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
+	if (s == "No Weapons Arena") return _("No Weapons Arena");
+
+	int n = tokenizebyseparator(s, " & ");
+	string wpn_list = "";
+	for (int i = 0; i < n; i++)
+	{
+		Weapon wep = Weapon_from_name(argv(i));
+		if (wep == WEP_Null)
+			LOG_INFO("^3Warning: ^7server sent an invalid weapon name\n");
+		wpn_list = cons_mid(wpn_list, " & ", wep.m_name);
+	}
+	if (wpn_list != "")
+		return sprintf(_("%s Arena"), wpn_list);
+	else
+		return _("No Weapons Arena");
+}
+
+string GetVersionMessage(string hostversion, bool version_mismatch, bool version_check)
+{
+	string xonotic_hostversion = strcat("Xonotic ", hostversion);
+	if (version_mismatch)
+	{
+		if(!version_check)
+			return strcat(sprintf(_("This is %s"), xonotic_hostversion), "\n^3",
+				_("Your client version is outdated."), "\n\n\n",
+				_("### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"), "\n\n\n",
+				_("Please update!"));
+		else
+			return strcat(sprintf(_("This is %s"), xonotic_hostversion), "\n^3",
+				_("This server is using an outdated Xonotic version."), "\n\n\n",
+				_("### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"));
+	}
+	return sprintf(_("Welcome to %s"), xonotic_hostversion);
+}
+
+bool net_handle_ServerWelcome()
+{
+	bool campaign = ReadByte();
+	if (campaign)
+	{
+		string campaign_title = ReadString();
+		int campaign_level = ReadByte();
+		string campaign_msg = ReadString();
+		string welcomedialog_args;
+		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		string key = getcommandkey(_("jump"), "+jump");
+		string msg = strcat(
+			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
+			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
+		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
+		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		return true;
+	}
+
+	strcpy(hostname, ReadString());
+
+	string hostversion = ReadString();
+	bool version_mismatch = ReadByte();
+	bool version_check = ReadByte();
+	string ver = GetVersionMessage(hostversion, version_mismatch, version_check);
+
+	string modifications = translate_modifications(ReadString());
+	string weaponarena_list = translate_weaponarena(ReadString());
+	string cache_mutatormsg = ReadString();
+	string motd = ReadString();
+
+	string msg = "";
+	msg = strcat(msg, ver);
+	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+
+	modifications = cons_mid(modifications, ", ", weaponarena_list);
+	if(modifications != "")
+		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
+
+	if (cache_mutatormsg != "")
+		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = M_ARGV(0, string);
+	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
+
+	if (motd != "")
+		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+
+	strcpy(welcome_msg, msg);
+	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
+	return true;
+}
+
+void Welcome_Message_Show_Try()
+{
+	if (!welcome_msg_menu_check_maxtime)
+		return;
+
+	// if want dialog check if menu is initialized but for a short time
+	if (cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	{
+		if (cvar("_menu_welcome_dialog_available"))
+		{
+			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
+			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
+			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+			if (intermission || isdemo() || !autocvar_cl_welcome)
+				// close it after it's been initialized so it can still be opened manually
+				localcmd("\ntogglemenu 0\n");
+		}
+
+		strfree(welcome_msg);
+		welcome_msg_menu_check_maxtime = 0;
+	}
+}
+
+NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
+{
+	return net_handle_ServerWelcome();
 }
 
 string _getcommandkey(string cmd_name, string command, bool forcename)
@@ -1310,6 +1529,8 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 				string key = keynumtostring(k);
 				if(!joy_active && substring(key, 0, 3) == "JOY")
 					continue;
+
+				key = translate_key(key);
 
 				if (keys == "")
 					keys = key;
@@ -1337,4 +1558,27 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 		return sprintf("%s (%s)", cmd_name, keys);
 	else
 		return keys;
+}
+
+/** engine callback */
+void URI_Get_Callback(int id, int status, string data)
+{
+	TC(int, id); TC(int, status);
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
+	}
 }

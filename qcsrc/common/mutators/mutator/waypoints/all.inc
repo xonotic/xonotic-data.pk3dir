@@ -5,7 +5,10 @@ REGISTER_WAYPOINT(Helpme, _("Help me!"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(Here, _("Here"), "", '0 1 0', 1);
 REGISTER_WAYPOINT(Danger, _("DANGER"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(Frozen, _("Frozen!"), "", '0.25 0.90 1', 1);
+const vector WP_FROZEN_COLOR = '0.25 0.9 1';
+const vector WP_REVIVING_COLOR = '1 0.5 0';
+REGISTER_WAYPOINT(Frozen, _("Frozen!"), "", WP_FROZEN_COLOR, 1);
+REGISTER_WAYPOINT(Reviving, _("Reviving"), "", WP_REVIVING_COLOR, 1);
 
 REGISTER_WAYPOINT(Item, _("Item"), "", '1 0 1', 1);
 
@@ -14,8 +17,8 @@ REGISTER_WAYPOINT(RaceFinish, _("Finish"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(RaceStart, _("Start"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(RaceStartFinish, _("Start"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(AssaultDefend, _("Defend"), "", '1 0.5 0', 1);
-REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(AssaultDefend, _("Defend"), "as_defend", '1 0.5 0', 1);
+REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), "as_destroy", '1 0.5 0', 1);
 REGISTER_WAYPOINT(AssaultPush, _("Push"), "", '1 0.5 0', 1);
 
 REGISTER_WAYPOINT(FlagCarrier, _("Flag carrier"), "", '0.8 0.8 0', 1);
@@ -44,6 +47,8 @@ REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "kh_pink_carrying", '0 1 1',
 
 REGISTER_WAYPOINT(KaBall, _("Ball"), "notify_ballpickedup", '0 1 1', 1);
 REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), "keepawayball_carrying", '1 0 0', 1);
+
+REGISTER_WAYPOINT(LmsLeader, _("Leader"), "", '0 1 1', 1);
 
 REGISTER_WAYPOINT(NbBall, _("Ball"), "", '0.91 0.85 0.62', 1);
 REGISTER_WAYPOINT(NbGoal, _("Goal"), "", '1 0.5 0', 1);

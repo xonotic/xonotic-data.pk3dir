@@ -20,7 +20,7 @@ function qpp() {
         server) DEFS="-DGAMEQC -DSVQC"
         ;;
     esac
-    >&2 echo + ${CPP} "${@:3}" ${DEFS} "${IN}"
+    #>&2 echo + ${CPP} "${@:3}" ${DEFS} "${IN}"
     set +e
     # additional information
     ${CPP} "${@:3}" ${DEFS} \
@@ -36,7 +36,7 @@ function qpp() {
 }
 
 function qcc() {
-    >&2 echo + $(basename ${QCC}) $@
+    #>&2 echo + $(basename ${QCC}) $@
     # FIXME: relative compiler path is too deep
     (cd tools && ${QCC} "$@")
 }

@@ -1,14 +1,12 @@
 #include "csqcprojectile.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/t_items.qh>
-
-#include "../command/common.qh"
-
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/stats.qh>
 #include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/common.qh>
+#include <server/items/items.qh>
 
 .float csqcprojectile_type;
 
@@ -119,6 +117,10 @@ void UpdateCSQCProjectileAfterTeleport(entity e)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
+		// send full data as the projectile may need resetting
+		// this is a workaround for client-side projectiles erroneously calling their SUB_Stop touch function occasionally
+		// when passing through a warpzone
+		e.SendFlags |= 2;
 		// mark as teleported
 		e.SendFlags |= 0x08;
 	}

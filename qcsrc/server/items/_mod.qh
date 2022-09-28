@@ -1,0 +1,3 @@
+// generated file; do not modify
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>

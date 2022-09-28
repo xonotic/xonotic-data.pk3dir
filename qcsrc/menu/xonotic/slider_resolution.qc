@@ -1,6 +1,8 @@
 #include "slider_resolution.qh"
 
 /* private static */ float XonoticResolutionSlider_DataHasChanged;
+/* attrib */ float vid_conwidth;
+/* attrib */ float vid_conheight;
 
 // Updates cvars (to be called by menu.qc at startup or on detected res change)
 float updateConwidths(float width, float height, float pixelheight)
@@ -18,6 +20,20 @@ float updateConwidths(float width, float height, float pixelheight)
 	cvar_set("_menu_vid_height", ftos(height));
 	cvar_set("_menu_vid_pixelheight", ftos(pixelheight));
 	cvar_set("_menu_vid_desktopfullscreen", cvar_string("vid_desktopfullscreen"));
+
+	// engine is handling conwidth calculations!
+	if((cvar_type("vid_conwidthauto") & CVAR_TYPEFLAG_ENGINE) && cvar("vid_conwidthauto"))
+	{
+		if(vid_conwidth != cvar("vid_conwidth") || vid_conheight != cvar("vid_conheight"))
+		{
+			// Please reload resolutions list and such stuff.
+			XonoticResolutionSlider_DataHasChanged = true;
+			vid_conwidth = cvar("vid_conwidth");
+			vid_conheight = cvar("vid_conheight");
+			return 1;
+		}
+		return 0; // No recalculation
+	}
 
 	r_x = width;
 	r_y = height;

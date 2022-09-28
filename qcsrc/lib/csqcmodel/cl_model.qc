@@ -179,7 +179,7 @@ void CSQCModel_InterpolateAnimation_Do(entity this)
 void CSQCModel_Draw(entity this)
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (this.entnum >= 1 && this.entnum <= maxclients);
+	bool isplayer = (this.isplayermodel & ISPLAYER_CLIENT);
 	noref bool islocalplayer = (this.entnum == player_localnum + 1);
 	noref bool isnolocalplayer = (isplayer && (this.entnum != player_localnum + 1));
 
@@ -223,9 +223,10 @@ void CSQCModel_remove(entity this)
 NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 {
 	int sf = ReadInt24_t();
+	int psf = ReadByte();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = ReadByte() || (this.entnum >= 1 && this.entnum <= maxclients);
+	bool isplayer = (psf & ISPLAYER_CLIENT) || (this.entnum >= 1 && this.entnum <= maxclients);
 	if (isnew && isplayer)
 	{
 		CSQCModel_players[this.entnum - 1] = this;
@@ -234,7 +235,10 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	bool islocalplayer = (this.entnum == player_localnum + 1);
 	noref bool isnolocalplayer = (isplayer && !islocalplayer);
 
-	this.classname = "csqcmodel";
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_CLIENT, isplayer);
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_LOCAL, islocalplayer);
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_PLAYER, (psf & ISPLAYER_PLAYER));
+
 	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
 	this.iflags |= IFLAG_ANGLES; // interpolate angles too
 	this.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
@@ -272,7 +276,10 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 		this.csqcmodel_teleported = 1;
 	}
 
-	if(sf & BIT(14))
+	if(sf & BIT(3))
+		this.alpha = this.m_alpha;
+
+	if(sf & BIT(11))
 		viewloc_SetTags(this);
 
 	CSQCModel_InterpolateAnimation_Note(this, sf);

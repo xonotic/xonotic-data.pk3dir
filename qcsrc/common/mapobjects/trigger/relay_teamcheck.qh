@@ -1,0 +1,5 @@
+#pragma once
+
+
+const int RELAYTEAMCHECK_NOTEAM = BIT(0);
+const int RELAYTEAMCHECK_INVERT = BIT(1);

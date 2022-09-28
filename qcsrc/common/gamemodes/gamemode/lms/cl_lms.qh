@@ -1,0 +1,4 @@
+#pragma once
+
+void HUD_Mod_LMS(vector myPos, vector mySize);
+void HUD_Mod_LMS_Draw(vector myPos, vector mySize);

@@ -12,5 +12,13 @@ CLASS(TeslaCoil, Turret)
 /* netname    */ ATTRIB(TeslaCoil, netname, string, "tesla");
 /* fullname   */ ATTRIB(TeslaCoil, turret_name, string, _("Tesla Coil"));
     ATTRIB(TeslaCoil, m_weapon, Weapon, WEP_TESLA);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+	END()
+	TR_PROPS(X, TeslaCoil, tesla)
+#undef X
+
 ENDCLASS(TeslaCoil)
 REGISTER_TURRET(TESLA, NEW(TeslaCoil));

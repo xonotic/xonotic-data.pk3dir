@@ -1,120 +1,341 @@
 #pragma once
 
-string cache_mutatormsg;
-string cache_lastmutatormsg;
+int autocvar_teamplay_mode;
 
-// The following variables are used for balancing. They are not updated
-// automatically. You need to call CheckAllowedTeams and GetTeamCounts to get
-// proper values.
+bool autocvar_g_changeteam_banned;
+bool autocvar_teamplay_lockonrestart;
 
-// These four have 2 different states. If they are equal to -1, it means that
-// the player can't join the team. Zero or positive value means that player can
-// join the team and means the number of players on that team.
-float c1;
-float c2;
-float c3;
-float c4;
-float num_bots_team1; ///< Number of bots in the first team.
-float num_bots_team2; ///< Number of bots in the second team.
-float num_bots_team3; ///< Number of bots in the third team.
-float num_bots_team4; ///< Number of bots in the fourth team.
-entity lowest_human_team1; ///< Human with the lowest score in the first team.
-entity lowest_human_team2; ///< Human with the lowest score in the second team.
-entity lowest_human_team3; ///< Human with the lowest score in the third team.
-entity lowest_human_team4; ///< Human with the lowest score in the fourth team.
-entity lowest_bot_team1; ///< Bot with the lowest score in the first team.
-entity lowest_bot_team2; ///< Bot with the lowest score in the second team.
-entity lowest_bot_team3; ///< Bot with the lowest score in the third team.
-entity lowest_bot_team4; ///< Bot with the lowest score in the fourth team.
+bool autocvar_g_balance_teams;
+bool autocvar_g_balance_teams_prevent_imbalance;
 
-int redowned, blueowned, yellowowned, pinkowned;
+string autocvar_g_forced_team_otherwise;
 
-//float audit_teams_time;
+bool lockteams;
 
-void TeamchangeFrags(entity e);
+.int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
-void LogTeamchange(float player_id, float team_number, float type);
+// ========================== Global teams API ================================
 
-void default_delayedinit(entity this);
+void Team_InitTeams();
 
-void InitGameplayMode();
+/// \brief Returns the global team entity at the given index.
+/// \param[in] index Index of the team.
+/// \return Global team entity at the given index.
+entity Team_GetTeamFromIndex(int index);
 
-string GetClientVersionMessage(entity this);
+/// \brief Returns the global team entity that corresponds to the given TEAM_NUM
+/// value.
+/// \param[in] team_num Team value. See TEAM_NUM constants.
+/// \return Global team entity that corresponds to the given TEAM_NUM value.
+entity Team_GetTeam(int team_num);
 
-string getwelcomemessage(entity this);
+// ========================= Team specific API ================================
+
+/// \brief Returns the score of the team.
+/// \param[in] team_ent Team entity.
+/// \return Score of the team.
+float Team_GetTeamScore(entity team_ent);
+
+/// \brief Sets the score of the team.
+/// \param[in,out] team_ent Team entity.
+/// \param[in] score Score to set.
+void Team_SetTeamScore(entity team_ent, float score);
+
+/// \brief Returns the number of alive players in a team.
+/// \param[in] team_ent Team entity.
+/// \return Number of alive players in a team.
+int Team_GetNumberOfAlivePlayers(entity team_ent);
+
+/// \brief Sets the number of alive players in a team.
+/// \param[in,out] team_ent Team entity.
+/// \param[in] number Number of players to set.
+void Team_SetNumberOfAlivePlayers(entity team_ent, int number);
+
+/// \brief Returns the winner team.
+/// \return Winner team or 0 if 2 or more teams have alive players or -1 if no team has any alive players.
+int Team_GetWinnerAliveTeam();
+
+/// \brief Returns the number of alive teams.
+/// \return Number of alive teams.
+int Team_GetNumberOfAliveTeams();
+
+/// \brief Returns the winner team.
+/// \param[in] min_owned_items Minimum number of items the winner team must have.
+/// \return Winner team or 0 if 2 or more teams own items or -1 if no team own any items.
+int Team_GetWinnerTeam_WithOwnedItems(int min_owned_items);
+
+/// \brief Returns the number of items owned by a team.
+/// \param[in] team_ent Team entity.
+/// \return Number of items owned by a team.
+int Team_GetNumberOfOwnedItems(entity team_ent);
+
+/// \brief Sets the number of items owned by a team.
+/// \param[in,out] team_ent Team entity.
+/// \param[in] number Number of items to set.
+void Team_SetNumberOfOwnedItems(entity team_ent, int number);
+
+/// \brief Returns the number of teams that own items.
+/// \return Number of teams that own items.
+int Team_GetNumberOfTeamsWithOwnedItems();
+
+// ======================= Entity specific API ================================
+
+void setcolor(entity this, int clr);
+
+/// \brief Returns whether the given entity belongs to a valid team.
+/// \param[in] this Entity to check.
+/// \return True if entity belongs to a valid team, false otherwise.
+bool Entity_HasValidTeam(entity this);
+
+/// \brief Returns the team index of the given entity.
+/// \param[in] this Entity to check.
+/// \return Team index of the entity.
+int Entity_GetTeamIndex(entity this);
+
+/// \brief Returns the team entity of the given entity.
+/// \param[in] this Entity to check.
+/// \return Team entity of the given entity or NULL if the entity doesn't belong
+/// to any team.
+entity Entity_GetTeam(entity this);
 
 void SetPlayerColors(entity player, float _color);
 
+/// \brief Sets the team of the player using its index.
+/// \param[in,out] player Player to adjust.
+/// \param[in] index Index of the team to set.
+/// \return True if team switch was successful, false otherwise.
+bool Player_SetTeamIndex(entity player, int index);
+
+enum
+{
+	TEAM_CHANGE_AUTO = 2, ///< The team was selected by autobalance.
+	TEAM_CHANGE_MANUAL = 3, ///< Player has manually selected their team.
+	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
+};
+
+/// \brief Sets the team of the player.
+/// \param[in,out] player Player to adjust.
+/// \param[in] team_index Index of the team to set.
+/// \param[in] type Type of the team change. See TEAM_CHANGE constants.
+/// \return True if team switch was successful, false otherwise.
+bool SetPlayerTeam(entity player, int team_index, int type);
+
+/// \brief Sets the team of the player with all sanity checks.
+/// \param[in,out] player Player to adjust.
+/// \param[in] team_index Index of the team to set.
+void Player_SetTeamIndexChecked(entity player, int team_index);
+
+/// \brief Moves player to the specified team.
+/// \param[in,out] client Client to move.
+/// \param[in] team_index Index of the team.
+/// \param[in] type ???
+/// \return True on success, false otherwise.
+bool MoveToTeam(entity client, int team_index, int type);
+
+enum
+{
+	TEAM_FORCE_SPECTATOR = -1, ///< Force the player to spectator team.
+	TEAM_FORCE_DEFAULT = 0 ///< Don't force any team.
+};
+
+/// \brief Returns whether player has real forced team. Spectator team is
+/// ignored.
+/// \param[in] player Player to check.
+/// \return True if player has real forced team, false otherwise.
+bool Player_HasRealForcedTeam(entity player);
+
+/// \brief Returns the index of the forced team of the given player.
+/// \param[in] player Player to check.
+/// \return Index of the forced team.
+int Player_GetForcedTeamIndex(entity player);
+
+/// \brief Sets the index of the forced team of the given player.
+/// \param[in,out] player Player to adjust.
+/// \param[in] team_index Index of the team to set.
+void Player_SetForcedTeamIndex(entity player, int team_index);
+
+/// \brief Determines the forced team of the player using current global config.
+/// \param[in,out] player Player to adjust.
+void Player_DetermineForcedTeam(entity player);
+
+// ========================= Team balance API =================================
+
+/// \brief Assigns the given player to a team that will make the game most
+/// balanced.
+/// \param[in,out] player Player to assign.
+void TeamBalance_JoinBestTeam(entity player);
+
+/// \brief Checks whether the player can join teams according to global
+/// configuration and mutator settings.
+/// \param[in] for_whom Player to check for. Pass NULL for global rules.
+/// \return Team balance entity that holds information about teams. This entity
+/// will be automatically destroyed on the next frame but you are encouraged to
+/// manually destroy it by calling TeamBalance_Destroy for performance reasons.
+entity TeamBalance_CheckAllowedTeams(entity for_whom);
+
+/// \brief Destroy the team balance entity.
+/// \param[in,out] balance Team balance entity to destroy.
+/// \note Team balance entity is allowed to be NULL.
+void TeamBalance_Destroy(entity balance);
+
+/// \brief Returns the bitmask of allowed teams.
+/// \param[in] balance Team balance entity.
+/// \return Bitmask of allowed teams.
+int TeamBalance_GetAllowedTeams(entity balance);
+
+/// \brief Returns whether the team change to the specified team is allowed.
+/// \param[in] balance Team balance entity.
+/// \param[in] index Index of the team.
+/// \return True if team change to the specified team is allowed, false
+/// otherwise.
+bool TeamBalance_IsTeamAllowed(entity balance, int index);
+
+/// \brief Counts the number of players and various other information about
+/// each team.
+/// \param[in,out] balance Team balance entity.
+/// \param[in] ignore Player to ignore. This is useful if you plan to switch the
+/// player's team. Pass NULL for global information.
+/// \note This function updates the internal state of the team balance entity.
+void TeamBalance_GetTeamCounts(entity balance, entity ignore);
+
+/// \brief Returns the number of players (both humans and bots) in a team.
+/// \param[in] balance Team balance entity.
+/// \param[in] index Index of the team.
+/// \return Number of player (both humans and bots) in a team.
+/// \note You need to call TeamBalance_GetTeamCounts before calling this
+/// function.
+int TeamBalance_GetNumberOfPlayers(entity balance, int index);
+
+/// \brief Finds the team that will make the game most balanced if the player
+/// joins it.
+/// \param[in] balance Team balance entity.
+/// \param[in] player Player to check.
+/// \param[in] ignore_player ???
+/// \return Index of the team that will make the game most balanced if the
+/// player joins it. If there are several equally good teams available, the
+/// function will pick a random one.
+int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
+
+/// \brief Returns the bitmask of the teams that will make the game most
+/// balanced if the player joins any of them.
+/// \param[in] balance Team balance entity.
+/// \param[in] player Player to check.
+/// \param[in] use_score Whether to take into account team scores.
+/// \return Bitmask of the teams that will make the game most balanced if the
+/// player joins any of them.
+/// \note You need to call TeamBalance_GetTeamCounts before calling this
+/// function.
+int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score);
+
+/// \brief Describes the result of comparing teams.
+enum
+{
+	TEAMS_COMPARE_INVALID, ///< One or both teams are invalid.
+	TEAMS_COMPARE_LESS, ///< First team is less than the second one.
+	TEAMS_COMPARE_EQUAL, ///< Both teams are equal.
+	TEAMS_COMPARE_GREATER ///< First team the greater than the second one.
+};
+
+/// \brief Compares two teams for the purposes of game balance.
+/// \param[in] balance Team balance entity.
+/// \param[in] team_index_a Index of the first team.
+/// \param[in] team_index_b Index of the second team.
+/// \param[in] player Player to check.
+/// \param[in] use_score Whether to take into account team scores.
+/// \return TEAMS_COMPARE value. See above.
+/// \note You need to call TeamBalance_GetTeamCounts before calling this
+/// function.
+int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
+	entity player, bool use_score);
+
+/// \brief Switches a bot from one team to another if teams are not balanced.
+void TeamBalance_AutoBalanceBots();
+
+/// \brief Returns the index of the team with most players that is contained in
+/// the given bitmask of teams.
+/// \param[in] balance Team balance entity.
+/// \param[in] teams Bitmask of teams to search in.
+/// \return Index of the team with most players.
+int TeamBalance_GetLargestTeamIndex(entity balance, int teams);
+
+/// \brief Returns the player who is the most suitable for switching between
+/// the given teams.
+/// \param[in] source_team_index Index of the team to search in.
+/// \param[in] destination_team_index Index of the team to switch to.
+/// \param[in] is_bot True to search for bot, false for human.
+/// \return Player who is the most suitable for switching between the given
+/// teams or NULL if not found.
+entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
+	int destination_team_index, bool is_bot);
+
+// ============================ Internal API ==================================
+
+void LogTeamChange(float player_id, float team_number, int type);
+
 /// \brief Kills player as a result of team change.
 /// \param[in,out] player Player to kill.
-/// \return No return.
 void KillPlayerForTeamChange(entity player);
 
-/// \brief Sets the team of the player.
-/// \param[in,out] player Player to adjust.
-/// \param[in] team_num Team number to set. See TEAM_NUM constants.
-/// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeamSimple(entity player, int team_num);
+/// \brief Returns whether the team change to the specified team is allowed.
+/// \param[in] balance Team balance entity.
+/// \param[in] index Index of the team.
+/// \return True if team change to the specified team is allowed, false
+/// otherwise.
+/// \note This function bypasses all the sanity checks.
+bool TeamBalance_IsTeamAllowedInternal(entity balance, int index);
 
-/// \brief Sets the team of the player.
-/// \param[in,out] player Player to adjust.
-/// \param[in] destination_team Team to set.
-/// \param[in] source_team Previous team of the player.
-/// \param[in] no_print Whether to print this event to players' console.
-/// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeam(entity player, int destination_team, int source_team,
-	bool no_print);
+/// \brief Bans team change to all teams except the given one.
+/// \param[in,out] balance Team balance entity.
+/// \param[in] index Index of the team.
+void TeamBalance_BanTeamsExcept(entity balance, int index);
 
-// set c1...c4 to show what teams are allowed
-void CheckAllowedTeams(entity for_whom);
+/// \brief Returns the team entity of the team balance entity at the given
+/// index.
+/// \param[in] balance Team balance entity.
+/// \param[in] index Index of the team.
+/// \return Team entity of the team balance entity at the given index.
+entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 
-float PlayerValue(entity p);
+/// \brief Returns the team entity of the team balance entity that corresponds
+/// to the given TEAM_NUM value.
+/// \param[in] balance Team balance entity.
+/// \param[in] team_num Team value. See TEAM_NUM constants.
+/// \return Team entity of the team balance entity that corresponds to the given
+/// TEAM_NUM value.
+entity TeamBalance_GetTeam(entity balance, int team_num);
 
-// c1...c4 should be set to -1 (not allowed) or 0 (allowed).
-// teams that are allowed will now have their player counts stored in c1...c4
-void GetTeamCounts(entity ignore);
+/// \brief Returns whether the team is allowed.
+/// \param[in] team_ent Team entity.
+/// \return True if team is allowed, false otherwise.
+bool TeamBalanceTeam_IsAllowed(entity team_ent);
 
-/// \brief Returns whether one team is smaller than the other.
+/// \brief Returns the number of players (both humans and bots) in a team.
+/// \param[in] team_ent Team entity.
+/// \return Number of player (both humans and bots) in a team.
+/// \note You need to call TeamBalance_GetTeamCounts before calling this
+/// function.
+int TeamBalanceTeam_GetNumberOfPlayers(entity team_ent);
+
+/// \brief Returns the number of bots in a team.
+/// \param[in] team_ent Team entity.
+/// \return Number of bots in a team.
+/// \note You need to call TeamBalance_GetTeamCounts before calling this
+/// function.
+int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
+
+/// \brief Compares two teams for the purposes of game balance.
 /// \param[in] team_a First team.
 /// \param[in] team_b Second team.
 /// \param[in] player Player to check.
 /// \param[in] use_score Whether to take into account team scores.
-/// \return True if first team is smaller than the second one, false otherwise.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player,
-	bool use_score);
+/// \return TEAMS_COMPARE value. See above.
+/// \note You need to call TeamBalance_GetTeamCounts before calling this
+/// function.
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
+	entity player, bool use_score);
 
-/// \brief Returns whether one team is equal to the other.
-/// \param[in] team_a First team.
-/// \param[in] team_b Second team.
-/// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
-/// \return True if first team is equal to the second one, false otherwise.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-bool IsTeamEqualToTeam(int team_a, int team_b, entity player, bool use_score);
-
-/// \brief Returns the bitmask of the best teams for the player to join.
-/// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
-/// \return Bitmask of the best teams for the player to join.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-int FindBestTeams(entity player, bool use_score);
-
-// returns # of smallest team (1, 2, 3, 4)
-// NOTE: Assumes CheckAllowedTeams has already been called!
-int FindSmallestTeam(entity player, float ignore_player);
-
-void JoinBestTeam(entity this, bool force_best_team);
-
-/// \brief Auto balances bots in teams after the player has changed team.
-/// \param[in] source_team Previous team of the player (1, 2, 3, 4).
-/// \param[in] destination_team Current team of the player (1, 2, 3, 4).
-/// \return No return.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-void AutoBalanceBots(int source_team, int destination_team);
-
-void setcolor(entity this, int clr);
+/// \brief Called when the player changes color with the "color" command.
+/// Note that the "color" command is always called early on player connection
+/// \param[in,out] player Player that requested a new color.
+/// \param[in] new_color Requested color.
+void SV_ChangeTeam(entity player, int new_color);

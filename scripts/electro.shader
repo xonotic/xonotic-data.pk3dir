@@ -8,9 +8,18 @@ electro_plasma
 
 electro_plasma_hull
 {
-        {
+	{
 	map textures/electro_plasma_hull.tga
-	alphaFunc GT0
+	alphaFunc GE128
 	rgbGen Vertex
-        }
+	}
+}
+
+electro
+{
+	dpreflectcube cubemaps/default/sky
+	{
+		map textures/electronew.tga
+		rgbgen lightingDiffuse
+	}
 }

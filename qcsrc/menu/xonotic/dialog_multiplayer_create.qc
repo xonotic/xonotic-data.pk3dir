@@ -13,6 +13,8 @@
 #include "slider.qh"
 #include "mainwindow.qh"
 #include "button.qh"
+#include "commandbutton.qh"
+#include "leavematchbutton.qh"
 #include "inputbox.qh"
 
 void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip)
@@ -27,16 +29,8 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 	// clear old values
 	for(i = 0; i < e.nValues; ++i);
 	{
-		if(e.(valueStrings[i]))
-		{
-			strunzone(e.(valueStrings[i]));
-			e.(valueStrings[i]) = string_null;
-		}
-		if(e.(valueIdentifiers[i]))
-		{
-			strunzone(e.(valueIdentifiers[i]));
-			e.(valueIdentifiers[i]) = string_null;
-		}
+		strfree(e.(valueStrings[i]));
+		strfree(e.(valueIdentifiers[i]));
 	}
 	e.clearValues(e);
 
@@ -60,23 +54,8 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 
 void GameType_ConfigureSliders_for_CurrentGametype(entity me)
 {
-	switch(MapInfo_CurrentGametype())
-	{
-		case MAPINFO_TYPE_CA:              GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of frags needed before the match will end")); break;
-		case MAPINFO_TYPE_FREEZETAG:       GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of frags needed before the match will end")); break;
-		case MAPINFO_TYPE_CTF:             GameType_ConfigureSliders(me, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end")); break;
-		case MAPINFO_TYPE_DOMINATION:      GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end")); break;
-		case MAPINFO_TYPE_KEYHUNT:         GameType_ConfigureSliders(me, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end")); break;
-		case MAPINFO_TYPE_LMS:             GameType_ConfigureSliders(me, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null); break;
-		case MAPINFO_TYPE_RACE:            GameType_ConfigureSliders(me, _("Laps:"),            1,   25,  1, "g_race_laps_limit",         string_null,                    string_null); break;
-		case MAPINFO_TYPE_NEXBALL:         GameType_ConfigureSliders(me, _("Goals:"),           1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end")); break;
-		case MAPINFO_TYPE_ASSAULT:         GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_ONSLAUGHT:       GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_CTS:             GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_INVASION:        GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(me, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end")); break;
-		default:                           GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end")); break;
-	}
+	Gametype gt = MapInfo_CurrentGametype();
+	gt.m_configuremenu(gt, me, GameType_ConfigureSliders);
 }
 
 entity makeXonoticServerCreateTab()
@@ -142,11 +121,13 @@ void XonoticServerCreateTab_fill(entity me)
 			_("The maximum amount of players or bots that can be connected to your server at once")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
+			setDependent(e, "g_campaign", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 9, 1, "bot_number",
 			_("Amount of bots on your server")));
+			setDependent(e, "g_campaign", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
-			setDependent(e, "bot_number", 0, -1);
+			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("skill",
 			_("Specify how experienced the bots will be")));
 			e.addValue(e, _("Botlike"), "0");
@@ -161,13 +142,14 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addValue(e, _("Unhuman"), "9");
 			e.addValue(e, _("Godlike"), "10");
 			e.configureXonoticTextSliderValues(e);
-			setDependent(e, "bot_number", 0, -1);
+			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
 
 	me.gotoRC(me, me.rows - 3.8, 0);
 		me.TD(me, 1, 3, e0 = makeXonoticTextLabel(0.5, string_null));
 			e0.textEntity = main.mutatorsDialog;
 			e0.allowCut = 1;
 			//e0.allowWrap = 1;
+			setDependent(e0, "g_campaign", 0, 0);
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
@@ -180,6 +162,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
+			setDependent(e, "g_campaign", 0, 0);
 
 	// The right half begins here
 
@@ -223,10 +206,11 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClick = MapList_Remove_All;
 			e.onClickEntity = me.mapListBox;
 
-	// The big button at the bottom
-
+	// bottom row
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Multiplayer!"), '0 0 0'));
+		me.TDempty(me, me.columns * 1/12);
+		me.TD(me, 1, me.columns * 5/12, e = makeXonoticLeaveMatchButton('0 0 0', 0));
+		me.TD(me, 1, me.columns * 5/12, e = makeXonoticButton(_("Start multiplayer!"), '0 0 0'));
 			e.onClick = MapList_LoadMap;
 			e.onClickEntity = me.mapListBox;
 			me.mapListBox.startButton = e;

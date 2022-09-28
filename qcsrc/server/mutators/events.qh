@@ -4,9 +4,13 @@
 
 // register all possible hooks here
 
+// to use a hook, first register your mutator using REGISTER_MUTATOR
+// then create your function using MUTATOR_HOOKFUNCTION
+
 /** called when a player becomes observer, after shared setup */
 #define EV_MakePlayerObserver(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** is_forced */ i(bool, MUTATOR_ARGV_1_bool) \
     /**/
 MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
 
@@ -23,6 +27,12 @@ MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
+
+/** returns true if client should be put as player on connection */
+#define EV_AutoJoinOnConnection(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(AutoJoinOnConnection, EV_AutoJoinOnConnection);
 
 /** called when player spawns to determine whether to give them random start weapons. Return true to forbid giving them. */
 #define EV_ForbidRandomStartWeapons(i, o) \
@@ -81,6 +91,17 @@ MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
     /**/
 MUTATOR_HOOKABLE(PlayerDied, EV_PlayerDied);
 
+/** called when showing an obituary for the player. return true to show nothing (workarounds may be needed) */
+#define EV_ClientObituary(i, o) \
+    /** inflictor       */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker        */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** target          */ i(entity, MUTATOR_ARGV_2_entity) \
+    /** deathtype       */ i(float,  MUTATOR_ARGV_3_float) \
+    /** wep entity      */ i(entity, MUTATOR_ARGV_4_entity) \
+    /** anonymous killer*/ o(bool,   MUTATOR_ARGV_5_bool) \
+    /**/
+MUTATOR_HOOKABLE(ClientObituary, EV_ClientObituary);
+
 /** allows overriding the frag centerprint messages */
 #define EV_FragCenterMessage(i, o) \
     /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -120,46 +141,59 @@ MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
     /** target     */ i(entity, MUTATOR_ARGV_1_entity) \
     /** frag score */ i(float, MUTATOR_ARGV_2_float) \
     /**            */ o(float, MUTATOR_ARGV_2_float) \
+    /** deathtype  */ i(float, MUTATOR_ARGV_3_float) \
+    /** wep entity */ i(entity, MUTATOR_ARGV_4_entity) \
     /**/
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
-/** allows adjusting allowed teams */
-#define EV_CheckAllowedTeams(i, o) \
+/** Allows adjusting allowed teams. Return true to use the bitmask value and set
+ * non-empty string to use team entity name. Both behaviors can be active at the
+ * same time and will stack allowed teams.
+ */
+#define EV_TeamBalance_CheckAllowedTeams(i, o) \
     /** mask of teams      */ i(float, MUTATOR_ARGV_0_float) \
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
     /** player checked     */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
+MUTATOR_HOOKABLE(TeamBalance_CheckAllowedTeams,
+	EV_TeamBalance_CheckAllowedTeams);
 
 /** return true to manually override team counts */
-MUTATOR_HOOKABLE(GetTeamCounts, EV_NO_ARGS);
+MUTATOR_HOOKABLE(TeamBalance_GetTeamCounts, EV_NO_ARGS);
 
-/** allow overriding of team counts */
-#define EV_GetTeamCount(i, o) \
-    /** team to count                   */ i(float, MUTATOR_ARGV_0_float) \
+/** allows overriding of team counts */
+#define EV_TeamBalance_GetTeamCount(i, o) \
+    /** team index to count             */ i(float, MUTATOR_ARGV_0_float) \
     /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
-    /**/                                   o(float, MUTATOR_ARGV_2_float) \
-    /** number of bots in a team        */ i(float, MUTATOR_ARGV_3_float) \
-    /**/                                   o(float, MUTATOR_ARGV_3_float) \
-    /** lowest scoring human in a team  */ i(entity, MUTATOR_ARGV_4_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_4_entity) \
-    /** lowest scoring bot in a team    */ i(entity, MUTATOR_ARGV_5_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_5_entity) \
+    /** number of players in a team     */ o(float, MUTATOR_ARGV_2_float) \
+    /** number of bots in a team        */ o(float, MUTATOR_ARGV_3_float) \
     /**/
-MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
+MUTATOR_HOOKABLE(TeamBalance_GetTeamCount, EV_TeamBalance_GetTeamCount);
 
-/** allows overriding best teams */
-#define EV_FindBestTeams(i, o) \
+/** allows overriding the teams that will make the game most balanced if the
+ *  player joins any of them.
+ */
+#define EV_TeamBalance_FindBestTeams(i, o) \
     /** player checked   */ i(entity, MUTATOR_ARGV_0_entity) \
     /** bitmask of teams */ o(float, MUTATOR_ARGV_1_float) \
     /**/
-MUTATOR_HOOKABLE(FindBestTeams, EV_FindBestTeams);
+MUTATOR_HOOKABLE(TeamBalance_FindBestTeams, EV_TeamBalance_FindBestTeams);
+
+/** Called during autobalance. Return true to override the player that will be
+switched. */
+#define EV_TeamBalance_GetPlayerForTeamSwitch(i, o) \
+    /** source team index      */ i(int, MUTATOR_ARGV_0_int) \
+    /** destination team index */ i(int, MUTATOR_ARGV_1_int) \
+    /** is looking for bot     */ i(bool, MUTATOR_ARGV_2_bool) \
+    /** player to switch       */ o(entity, MUTATOR_ARGV_3_entity) \
+    /**/
+MUTATOR_HOOKABLE(TeamBalance_GetPlayerForTeamSwitch,
+	EV_TeamBalance_GetPlayerForTeamSwitch);
 
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \
@@ -229,8 +263,16 @@ MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 
+/** Check if items having the given definition are allowed to spawn.
+ *  Return true to disallow spawning.
+ */
+#define EV_FilterItemDefinition(i, o) \
+    /** item        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(FilterItemDefinition, EV_FilterItemDefinition);
+
 /**
- * checks if the current item may be spawned (.items and .weapons may be read and written to, as well as the ammo_ fields)
+ * checks if the current item may be spawned (.items may be read and written to, as well as the ammo_ fields)
  * return error to request removal
  */
 #define EV_FilterItem(i, o) \
@@ -275,7 +317,17 @@ MUTATOR_HOOKABLE(PlayerPreThink, EV_PlayerPreThink);
     /**/
 MUTATOR_HOOKABLE(GetPressedKeys, EV_GetPressedKeys);
 
-/** is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client */
+/**
+ * is meant to call GetCvars_handle* for cvars this mutator needs from the client, e.g.:
+	MUTATOR_HOOKFUNCTION(mymutator, GetCvars)
+	{
+		GetCvars_handleFloat(this, store, s, f, cvar_mycvar, "mycvar");
+		return false;
+	}
+ * Usually you can just use REPLICATE instead of this hook, e.g.:
+	REPLICATE(cvar_mycvar, int, "mycvar");
+ * NOTE: requesting cvar values (get_cvars_f 0) is deprecated
+ */
 #define EV_GetCvars(i, o) \
     /**/ i(float, get_cvars_f) \
     /**/ i(string, get_cvars_s) \
@@ -400,12 +452,14 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
     /** mirrordamage    */ i(float,  MUTATOR_ARGV_5_float) \
     /** mirrordamage 	*/ o(float,  MUTATOR_ARGV_5_float) \
     /** force           */ i(vector, MUTATOR_ARGV_6_vector) \
-    /** force 			*/ o(vector, MUTATOR_ARGV_6_vector) \
+    /** force           */ o(vector, MUTATOR_ARGV_6_vector) \
+    /** weapon entity 	*/ i(entity, MUTATOR_ARGV_7_entity) \
     /**/
 MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 
 /**
  * Called when a player is damaged
+ * Returns true if damage shouldn't be logged
  */
 #define EV_PlayerDamaged(i, o) \
     /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -424,6 +478,8 @@ MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 #define EV_W_DecreaseAmmo(i, o) \
     /** actor */            i(entity, MUTATOR_ARGV_0_entity) \
     /** weapon entity */    i(entity, MUTATOR_ARGV_1_entity) \
+    /** ammo to take */     i(float, MUTATOR_ARGV_2_float) \
+    /**/                    o(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
 
@@ -658,37 +714,101 @@ enum {
     /**/
 MUTATOR_HOOKABLE(ItemTouched, EV_ItemTouched);
 
+// The Resource hooks are often called by other hooks and to avoid conflicts
+// as much as possible their args start from ARGV_7
+
 /** Called when the amount of entity resources changes. Can be used to override
 resource limit. */
 #define EV_GetResourceLimit(i, o) \
-	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
-	/** limit */          i(float, MUTATOR_ARGV_2_float) \
-	/**/                  o(float, MUTATOR_ARGV_2_float) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/** limit */          i(float, MUTATOR_ARGV_9_float) \
+	/**/                  o(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(GetResourceLimit, EV_GetResourceLimit);
 
-/** Called when the amount of resource of an entity changes. See RESOURCE_*
+/** Called when the amount of resource of an entity changes. See RES_*
 constants for resource types. Return true to forbid the change. */
-#define EV_SetResourceAmount(i, o) \
-	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
-	/**/                  o(int, MUTATOR_ARGV_1_int) \
-	/** amount */         i(float, MUTATOR_ARGV_2_float) \
-	/**/                  o(float, MUTATOR_ARGV_2_float) \
+#define EV_SetResource(i, o) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/**/                  o(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */         i(float, MUTATOR_ARGV_9_float) \
+	/**/                  o(float, MUTATOR_ARGV_9_float) \
 	/**/
-MUTATOR_HOOKABLE(SetResourceAmount, EV_SetResourceAmount);
+MUTATOR_HOOKABLE(SetResource, EV_SetResource);
 
-/** Called when entity is being given some resource. See RESOURCE_* constants
-for resource types. Return true to forbid giving. */
+/** Called after the amount of resource of an entity has changed. See RES_*
+constants for resource types. Amount wasted is the amount of resource that is
+above resource limit so it was not given. */
+#define EV_ResourceAmountChanged(i, o) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */         i(float, MUTATOR_ARGV_9_float) \
+	/**/
+MUTATOR_HOOKABLE(ResourceAmountChanged, EV_ResourceAmountChanged);
+
+/** Called when there was an attempt to set entity resources higher than their
+limit. See RES_* constants for resource types. Amount wasted is the amount
+of resource that is above resource limit so it was not given. */
+#define EV_ResourceWasted(i, o) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */  i(entity, MUTATOR_ARGV_8_entity) \
+	/** amount wasted */  i(float, MUTATOR_ARGV_9_float) \
+	/**/
+MUTATOR_HOOKABLE(ResourceWasted, EV_ResourceWasted);
+
+/** Called when entity is being given some resource. See RES_* constants
+for resource types. Return true to forbid giving.
+NOTE: This hook is also called by GiveResourceWithLimit */
 #define EV_GiveResource(i, o) \
-	/** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
-	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
-	/**/                 o(int, MUTATOR_ARGV_1_int) \
-	/** amount */        i(float, MUTATOR_ARGV_2_float) \
-	/**/                 o(float, MUTATOR_ARGV_2_float) \
+	/** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+	/**/                 o(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */        i(float, MUTATOR_ARGV_9_float) \
+	/**/                 o(float, MUTATOR_ARGV_9_float) \
 	/**/
 MUTATOR_HOOKABLE(GiveResource, EV_GiveResource);
+
+/** Called when entity is being given some resource with specified limit. See
+RES_* constants for resource types. Return true to forbid giving. */
+#define EV_GiveResourceWithLimit(i, o) \
+	/** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+	/** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+	/**/                 o(entity, MUTATOR_ARGV_8_entity) \
+	/** amount */        i(float, MUTATOR_ARGV_9_float) \
+	/**/                 o(float, MUTATOR_ARGV_9_float) \
+	/** limit */         i(float, MUTATOR_ARGV_10_float) \
+	/**/                 o(float, MUTATOR_ARGV_10_float) \
+	/**/
+MUTATOR_HOOKABLE(GiveResourceWithLimit, EV_GiveResourceWithLimit);
+
+/** Called when some resource is being taken from an entity. See RES_* constants
+for resource types. Return true to forbid giving.
+NOTE: This hook is also called by TakeResourceWithLimit */
+#define EV_TakeResource(i, o) \
+    /** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+    /** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_8_entity) \
+    /** amount */        i(float, MUTATOR_ARGV_9_float) \
+    /**/                 o(float, MUTATOR_ARGV_9_float) \
+    /**/
+MUTATOR_HOOKABLE(TakeResource, EV_TakeResource);
+
+/** Called when some resource is being taken from an entity, with a limit. See
+RES_* constants for resource types. Return true to forbid giving. */
+#define EV_TakeResourceWithLimit(i, o) \
+    /** receiver */      i(entity, MUTATOR_ARGV_7_entity) \
+    /** resource type */ i(entity, MUTATOR_ARGV_8_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_8_entity) \
+    /** amount */        i(float, MUTATOR_ARGV_9_float) \
+    /**/                 o(float, MUTATOR_ARGV_9_float) \
+    /** limit */         i(float, MUTATOR_ARGV_10_float) \
+    /**/                 o(float, MUTATOR_ARGV_10_float) \
+    /**/
+MUTATOR_HOOKABLE(TakeResourceWithLimit, EV_TakeResourceWithLimit);
+
+// END Resource hooks
 
 /** called at when a player connect */
 #define EV_ClientConnect(i, o) \
@@ -962,9 +1082,9 @@ MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
  * Called before player changes their team. Return true to block team change.
  */
 #define EV_Player_ChangeTeam(i, o) \
-    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
-	/** current team */   i(float, MUTATOR_ARGV_1_float) \
-	/** new team */       i(float, MUTATOR_ARGV_2_float) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** current team index */ i(float, MUTATOR_ARGV_1_float) \
+    /** new team index */     i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 
@@ -972,9 +1092,9 @@ MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
  * Called after player has changed their team.
  */
 #define EV_Player_ChangedTeam(i, o) \
-    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
-	/** old team */       i(float, MUTATOR_ARGV_1_float) \
-	/** current team */   i(float, MUTATOR_ARGV_2_float) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** old team index */     i(float, MUTATOR_ARGV_1_float) \
+    /** current team index */ i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangedTeam, EV_Player_ChangedTeam);
 
@@ -991,15 +1111,23 @@ MUTATOR_HOOKABLE(Player_ChangeTeamKill, EV_Player_ChangeTeamKill);
 	/** id */       i(float, MUTATOR_ARGV_0_float) \
 	/** status */   i(float, MUTATOR_ARGV_1_float) \
 	/** data */     i(string, MUTATOR_ARGV_2_string) \
-    /**/
+	/**/
 MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
+
+/**
+ * return true to lock weapon (can't be used nor changed) for a player
+ */
+#define EV_LockWeapon(i, o) \
+	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(LockWeapon, EV_LockWeapon);
 
 /**
  * return true to prevent weapon use for a player
  */
- #define EV_ForbidWeaponUse(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
-    /**/
+#define EV_ForbidWeaponUse(i, o) \
+	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
 MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
 
 /** called when creating a clone of the player (usually for corpses that stay after the player has re-spawned) */
@@ -1025,7 +1153,10 @@ MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
     /**/
 MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
 
-/** return true to just restart the match, for modes that don't support readyrestart */
+/**
+ * return true to restart the server instead of restarting the match, for modes that don't support readyrestart.
+ * NOTE: ReadyRestart support is mandatory in campaign
+ */
 MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
 
 /** called when a fusion reactor is validating its target */
@@ -1060,6 +1191,13 @@ MUTATOR_HOOKABLE(Item_ScheduleRespawn, EV_Item_ScheduleRespawn);
     /**/
 MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
 
+/** called after physics stats are set on a player, allows post-initialization modifications */
+#define EV_PlayerPhysics_PostUpdateStats(i, o) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** maxspeed_mod */       i(float, MUTATOR_ARGV_1_float) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics_PostUpdateStats, EV_PlayerPhysics_PostUpdateStats);
+
 /** return true to use your own aim target (or none at all) */
 #define EV_HavocBot_Aim(i, o) \
     /** bot */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -1071,3 +1209,68 @@ MUTATOR_HOOKABLE(HavocBot_Aim, EV_HavocBot_Aim);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(CalculateRespawnTime, EV_CalculateRespawnTime);
+
+/** called when parsing a vote command. */
+#define EV_VoteCommand_Parse(i, o) \
+    /** caller */                           i(entity, MUTATOR_ARGV_0_entity) \
+    /** first command */                    i(string, MUTATOR_ARGV_1_string) \
+    /** vote command */                     i(string, MUTATOR_ARGV_2_string) \
+    /** start position of vote command */   i(float, MUTATOR_ARGV_3_float) \
+    /** argument count */                   i(float, MUTATOR_ARGV_4_float) \
+    /**/
+MUTATOR_HOOKABLE(VoteCommand_Parse, EV_VoteCommand_Parse);
+
+enum {
+    MUT_VOTEPARSE_CONTINUE, // return this flag to make the function continue as normal
+    MUT_VOTEPARSE_SUCCESS, // return 1 (vote parsed)
+    MUT_VOTEPARSE_INVALID, // return -1 (vote parsed but counted as invalid, no action or vote)
+    MUT_VOTEPARSE_UNACCEPTABLE // return 0 (vote parameter counted as unacceptable, warns caller)
+};
+
+/**
+ * Called when freezing an entity (monster or player), return true to force showing a waypoint
+ */
+#define EV_Freeze(i, o) \
+    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** revive speed */     i(float, MUTATOR_ARGV_1_float) \
+    /** frozen type */      i(int, MUTATOR_ARGV_2_int) \
+    /**/
+MUTATOR_HOOKABLE(Freeze, EV_Freeze);
+
+/**
+ * Called when an entity (monster or player) is defrosted
+ */
+#define EV_Unfreeze(i, o) \
+    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
+
+/**
+ * Called when a player is trying to join, argument is the number of players allowed to join the match
+ */
+#define EV_GetPlayerLimit(i, o) \
+    /** g_maxplayers */             i(int, MUTATOR_ARGV_0_int) \
+    /**/                            o(int, MUTATOR_ARGV_0_int) \
+    /**/
+MUTATOR_HOOKABLE(GetPlayerLimit, EV_GetPlayerLimit);
+
+/** include special item codes for a death to the game log */
+#define EV_LogDeath_AppendItemCodes(i, o) \
+    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
+    /** item codes */     i(string, MUTATOR_ARGV_1_string) \
+    /**/                  o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(LogDeath_AppendItemCodes, EV_LogDeath_AppendItemCodes);
+
+/** Allows disabling or enabling rocket jumping independently of balance, use the parameter to force a preferred setting */
+#define EV_AllowRocketJumping(i, o) \
+    /** allow_rocketjump */         i(bool, MUTATOR_ARGV_0_bool) \
+    /**/                            o(bool, MUTATOR_ARGV_0_bool) \
+    /**/
+MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);
+
+/** Called when weapons are performing their attack, useful for applying bonus attack sounds */
+#define EV_W_PlayStrengthSound(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(W_PlayStrengthSound, EV_W_PlayStrengthSound);

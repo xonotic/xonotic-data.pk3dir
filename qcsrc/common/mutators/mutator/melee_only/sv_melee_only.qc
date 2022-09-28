@@ -1,7 +1,9 @@
 #include "sv_melee_only.qh"
 
+#include "../overkill/sv_overkill.qh"
+
 string autocvar_g_melee_only;
-REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !cvar("g_instagib") && !cvar("g_overkill") && !g_nexball);
+REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MapInfo_LoadedGametype.m_weaponarena);
 
 MUTATOR_HOOKFUNCTION(melee_only, SetStartItems, CBC_ORDER_LAST)
 {
@@ -25,11 +27,11 @@ MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
+MUTATOR_HOOKFUNCTION(melee_only, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	switch (item.itemdef)
+	switch (definition)
 	{
 		case ITEM_HealthSmall:
 		case ITEM_ArmorSmall:
@@ -46,5 +48,5 @@ MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Melee Only Arena");
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Melee only Arena");
 }

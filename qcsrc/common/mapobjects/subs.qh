@@ -1,0 +1,169 @@
+#pragma once
+#include "defs.qh"
+
+.float friction;
+void SUB_Friction(entity this);
+
+void SUB_NullThink(entity this);
+
+/*
+==================
+SUB_VanishOrRemove
+
+Makes client invisible or removes non-client
+==================
+*/
+void SUB_VanishOrRemove(entity ent);
+
+void SUB_SetFade_Think(entity this);
+
+/*
+==================
+SUB_SetFade
+
+Fade 'ent' out when time >= 'when'
+==================
+*/
+.float fade_rate;
+void SUB_SetFade(entity ent, float when, float fading_time);
+
+.vector		finaldest, finalangle; 		//plat.qc stuff
+.void(entity this) think1;
+.float state;
+.float		t_length, t_width;
+
+.vector destvec;
+.vector destvec2;
+
+.float	delay;
+.float	wait;
+.float	lip;
+.float	speed;
+.float	sounds;
+.string  platmovetype;
+.float platmovetype_start, platmovetype_end;
+
+//entity activator;
+
+.string killtarget;
+
+.vector	pos1, pos2;
+.vector	mangle;
+
+.string target2;
+.string target3;
+.string target4;
+.string curvetarget;
+.float target_random;
+.float trigger_reverse;
+
+// Keys player is holding
+.float itemkeys;
+// message delay for func_door locked by keys and key locks
+// this field is used on player entities
+.float key_door_messagetime;
+
+.vector dest1, dest2;
+
+.entity move_controller;
+
+const int TSPEED_TIME = -1;
+const int TSPEED_LINEAR = 0;
+const int TSPEED_START = 1;
+const int TSPEED_END = 2;
+// TODO average too?
+
+#ifdef CSQC
+// this stuff is defined in the server side engine VM, so we must define it separately here
+.float takedamage;
+const int DAMAGE_NO = 0;
+const int DAMAGE_YES = 1;
+const int DAMAGE_AIM = 2;
+
+.string		noise, noise1, noise2, noise3;	// contains names of wavs to play
+
+.float		max_health;		// players maximum health is stored here
+#endif
+
+#ifdef SVQC
+spawnfunc(info_null);
+#endif
+
+/*
+=============
+SUB_CalcMove
+
+calculate this.velocity and this.nextthink to reach dest from
+this.origin traveling at speed
+===============
+*/
+void SUB_CalcMoveDone(entity this);
+
+.float platmovetype_turn;
+void SUB_CalcMove_controller_think (entity this);
+
+void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest);
+
+void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest);
+
+void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+
+void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+
+#ifdef SVQC
+void ApplyMinMaxScaleAngles(entity e);
+
+void SetBrushEntityModel(entity this, bool with_lod);
+
+int autocvar_loddebug;
+.string lodtarget1;
+.string lodtarget2;
+.string lodmodel1;
+.string lodmodel2;
+.float lodmodelindex0;
+.float lodmodelindex1;
+.float lodmodelindex2;
+.float loddistance1;
+.float loddistance2;
+
+bool LOD_customize(entity this, entity client);
+
+void LOD_uncustomize(entity this);
+
+void LODmodel_attach(entity this);
+#endif
+
+/*
+=============
+SUB_CalcAngleMove
+
+calculate this.avelocity and this.nextthink to reach destangle from
+this.angles rotating
+
+The calling function should make sure this.think is valid
+===============
+*/
+void SUB_CalcAngleMoveDone (entity this);
+
+// FIXME: I fixed this function only for rotation around the main axes
+void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
+
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
+
+/*
+================
+InitTrigger
+================
+*/
+
+#ifdef SVQC
+void SetMovedir(entity this);
+
+void InitTrigger(entity this);
+
+void InitSolidBSPTrigger(entity this);
+
+bool InitMovingBrushTrigger(entity this);
+#endif

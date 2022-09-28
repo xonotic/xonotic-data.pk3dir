@@ -14,8 +14,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 	for(i = 0; i < campaign_entries; ++i)
 	{
 		l = l0;
-		if(campaign_longdesc_wrapped[i])
-			strunzone(campaign_longdesc_wrapped[i]);
+		strfree(campaign_longdesc_wrapped[i]);
 		n = tokenizebyseparator(campaign_longdesc[i], "\n");
 		r = "";
 		for(j = 0; j < n; ++j)
@@ -58,7 +57,7 @@ void XonoticCampaignList_configureXonoticCampaignList(entity me)
 	me.configureXonoticListBox(me);
 	me.campaignGlob = search_begin("maps/campaign*.txt", true, true);
 	me.loadCvars(me);
-	me.campaignGo(me, 0); // takes care of enabling/disabling buttons too
+	me.campaignGo(me, 0); // it makes work buttons too
 }
 
 void XonoticCampaignList_destroy(entity me)
@@ -70,17 +69,13 @@ void XonoticCampaignList_destroy(entity me)
 void XonoticCampaignList_loadCvars(entity me)
 {
 	// read campaign cvars
-	if(campaign_name)
-		strunzone(campaign_name);
-	if(me.cvarName)
-		strunzone(me.cvarName);
-	campaign_name = strzone(cvar_string("g_campaign_name"));
-	me.cvarName = strzone(strcat("g_campaign", campaign_name, "_index"));
-	registercvar(me.cvarName, "", 0); // saved by server QC anyway
+	strcpy(campaign_name, cvar_string("g_campaign_name"));
+	strcpy(me.controlledCvar, strcat("g_campaign", campaign_name, "_index"));
+	registercvar(me.controlledCvar, "", 0); // saved by server QC anyway
 	CampaignFile_Unload();
 	CampaignFile_Load(0, CAMPAIGN_MAX_ENTRIES);
-	me.campaignIndex = bound(0, cvar(me.cvarName), campaign_entries);
-	cvar_set(me.cvarName, ftos(me.campaignIndex));
+	me.campaignIndex = bound(0, cvar(me.controlledCvar), campaign_entries);
+	cvar_set(me.controlledCvar, ftos(me.campaignIndex));
 	if(me.columnNameSize)
 		rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 	me.nItems = min(me.campaignIndex + 2, campaign_entries);
@@ -96,16 +91,13 @@ void XonoticCampaignList_saveCvars(entity me)
 	// write campaign cvars
 	// no reason to do this!
 	// cvar_set("g_campaign_name", campaign_name);
-	// cvar_set(me.cvarName, ftos(me.campaignIndex)); // NOTE: only server QC does that!
+	// cvar_set(me.controlledCvar, ftos(me.campaignIndex)); // NOTE: only server QC does that!
 }
 
 void XonoticCampaignList_campaignGo(entity me, float step)
 {
-	float canNext, canPrev;
 	string s;
 	float i, j, n;
-
-	canNext = canPrev = 0;
 
 	if(me.campaignGlob >= 0)
 	{
@@ -141,15 +133,10 @@ void XonoticCampaignList_campaignGo(entity me, float step)
 			s = substring(s, 13, strlen(s) - 17);
 			cvar_set("g_campaign_name", s);
 			me.loadCvars(me);
-			canNext = (j != n - 1);
-			canPrev = (j != 0);
+			me.hasNextCampaign = (j != n - 1);
+			me.hasPrevCampaign = (j != 0);
 		}
 	}
-
-	if(me.buttonNext)
-		me.buttonNext.disabled = !canNext;
-	if(me.buttonPrev)
-		me.buttonPrev.disabled = !canPrev;
 }
 
 void MultiCampaign_Next(entity btn, entity me)
@@ -163,7 +150,12 @@ void MultiCampaign_Prev(entity btn, entity me)
 
 void XonoticCampaignList_draw(entity me)
 {
-	if(cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
+	if(me.buttonNext)
+		me.buttonNext.disabled = !me.hasNextCampaign;
+	if(me.buttonPrev)
+		me.buttonPrev.disabled = !me.hasPrevCampaign;
+
+	if(cvar(me.controlledCvar) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
 	SUPER(XonoticCampaignList).draw(me);
 }
@@ -173,8 +165,10 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticCampaignList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * me.realFontSize.y;
 	me.realUpperMargin2 = me.realUpperMargin1 + 2 * me.realFontSize.y;
 
@@ -188,6 +182,9 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.columnCheckMarkOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x * 2;
 
 	me.checkMarkOrigin = eY + eX * (me.columnCheckMarkOrigin + me.columnCheckMarkSize) - me.checkMarkSize;
+
+	me.typeIconOrigin = vec3(me.columnPreviewSize - me.checkMarkSize.x, me.checkMarkOrigin.y, 0);
+	me.typeIconSize = me.checkMarkSize;
 
 	rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 }
@@ -232,13 +229,19 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 
+	s = strcat("/gfx/menu/", cvar_string("menu_skin"), "/gametype_", campaign_gametype[i]);
+	if(i <= me.campaignIndex && draw_PictureSize(s) != '0 0 0')
+		draw_Picture(me.typeIconOrigin, s, me.typeIconSize, '1 1 1', 1);
+
 	if(i < me.campaignIndex)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	if(i <= me.campaignIndex)
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
 		s = "???";
-	s = draw_TextShortenToWidth(sprintf(_("Level %d: %s"), i+1, s), me.columnNameSize, 0, me.realFontSize);
+	// NOTE the following string should be equal to the one used in the Welcome dialog
+	// to avoid adding a slightly different string to translate
+	s = draw_TextShortenToWidth(strcat(sprintf(_("Level %d:"), i+1), " ", s), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
 	if(i <= me.campaignIndex)

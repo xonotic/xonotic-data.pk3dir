@@ -1,10 +1,11 @@
 #include "mainwindow.qh"
 
-#include "../mutators/events.qh"
 #include <menu/modules/chat/dialog.qh>
+#include <menu/mutators/_mod.qh>
 
 #include "nexposee.qh"
 #include "inputbox.qh"
+#include "dialog_termsofservice.qh"
 #include "dialog_firstrun.qh"
 #include "dialog_hudsetup_exit.qh"
 #include "dialog_hudpanel_notification.qh"
@@ -26,8 +27,10 @@
 #include "dialog_hudpanel_centerprint.qh"
 #include "dialog_hudpanel_itemstime.qh"
 #include "dialog_hudpanel_quickmenu.qh"
+#include "dialog_hudpanel_strafehud.qh"
 
 #include "dialog_settings_input_userbind.qh"
+#include "dialog_settings_bindings_reset.qh"
 #include "dialog_settings_misc_cvars.qh"
 #include "dialog_settings_misc_reset.qh"
 #include "dialog_settings_user_languagewarning.qh"
@@ -41,6 +44,8 @@
 #include "dialog_multiplayer_create_mutators.qh"
 #include "dialog_sandboxtools.qh"
 #include "dialog_monstertools.qh"
+#include "dialog_gamemenu.qh"
+#include "dialog_welcome.qh"
 #include "dialog_teamselect.qh"
 #include "dialog_uid2name.qh"
 #include "dialog_singleplayer.qh"
@@ -53,10 +58,16 @@ void MainWindow_draw(entity me)
 {
 	SUPER(MainWindow).draw(me);
 
-	if(me.dialogToShow)
-	{
-		DialogOpenButton_Click_withCoords(NULL, me.dialogToShow, '0 0 0', eX * conwidth + eY * conheight);
-		me.dialogToShow = NULL;
+	if (me.firstDraw) {
+		if (me.ToSDialog.shouldShow())
+		{
+			me.ToSDialog.loadXonoticToS(me.ToSDialog);
+			DialogOpenButton_Click_withCoords(NULL, me.ToSDialog, '0 0 0', eX * conwidth + eY * conheight);
+		}
+		else if(me.firstRunDialog.shouldShow())
+			DialogOpenButton_Click_withCoords(NULL, me.firstRunDialog, '0 0 0', eX * conwidth + eY * conheight);
+		
+		me.firstDraw = false;
 	}
 }
 
@@ -72,8 +83,17 @@ void MainWindow_configureMainWindow(entity me)
 {
 	entity n, i;
 
+	// terms of service dialog
+	me.ToSDialog = i = NEW(XonoticToSDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	// dialog run upon startup
 	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticWelcomeDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
@@ -159,8 +179,16 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
+	i = NEW(XonoticHUDStrafeHUDDialog);
+	i.configureDialog(i);
+	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	// dialogs used by settings
 	me.userbindEditDialog = i = NEW(XonoticUserbindEditDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.bindingsResetDialog = i = NEW(XonoticBindingsResetDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
@@ -224,6 +252,10 @@ void MainWindow_configureMainWindow(entity me)
 
 
 	// miscellaneous dialogs
+	i = NEW(XonoticGameMenuDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	i = NEW(XonoticTeamSelectDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -245,6 +277,7 @@ void MainWindow_configureMainWindow(entity me)
 
 	// main dialogs/windows
 	me.mainNexposee = n = NEW(XonoticNexposee);
+
 	/*
 		if(checkextension("DP_GECKO_SUPPORT"))
 		{
@@ -254,6 +287,7 @@ void MainWindow_configureMainWindow(entity me)
 			n.setNexposee(n, i, '0.1 0.1 0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		}
 	*/
+
 		i = NEW(XonoticSingleplayerDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -285,7 +319,4 @@ void MainWindow_configureMainWindow(entity me)
 	me.moveItemAfter(me, n, NULL);
 
 	me.initializeDialog(me, n);
-
-	if(cvar_string("_cl_name") == cvar_defstring("_cl_name"))
-		me.dialogToShow = me.firstRunDialog;
 }

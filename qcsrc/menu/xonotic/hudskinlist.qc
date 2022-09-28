@@ -146,8 +146,10 @@ void XonoticHUDSkinList_resizeNotify(entity me, vector relOrigin, vector relSize
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticHUDSkinList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnNameOrigin = me.realFontSize.x;
@@ -188,19 +190,15 @@ void HUDSkinList_Refresh_Click(entity btn, entity me)
 
 void HUDSkinList_SavedName_Change(entity box, entity me)
 {
-	if(me.savedName)
-		strunzone(me.savedName);
+	strfree(me.savedName);
 
 	if(box.text != "")
 		me.savedName = strzone(box.text);
-	else
-		me.savedName = string_null;
 }
 
 void HUDSkinList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	strfree(me.filterString);
 
 	if(box.text != "")
 	{
@@ -209,8 +207,6 @@ void HUDSkinList_Filter_Change(entity box, entity me)
 		else
 			me.filterString = strzone(strcat("*", box.text, "*"));
 	}
-	else
-		me.filterString = string_null;
 
 	me.getHUDSkins(me);
 }

@@ -1,4 +1,17 @@
 #pragma once
 #include "../panel.qh"
 
+bool autocvar_hud_panel_ammo;
+bool autocvar_hud_panel_ammo_dynamichud         = true;
+bool autocvar_hud_panel_ammo_hide_ondeath         = false;
+bool autocvar_hud_panel_ammo_iconalign;
+int autocvar_hud_panel_ammo_maxammo;
+bool autocvar_hud_panel_ammo_onlycurrent;
+float autocvar_hud_panel_ammo_noncurrent_alpha = 0.7;
+float autocvar_hud_panel_ammo_noncurrent_scale = 1;
+bool autocvar_hud_panel_ammo_progressbar;
+string autocvar_hud_panel_ammo_progressbar_name;
+float autocvar_hud_panel_ammo_progressbar_xoffset;
+bool autocvar_hud_panel_ammo_text;
+
 void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color);

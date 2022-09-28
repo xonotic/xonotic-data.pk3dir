@@ -1,0 +1,7 @@
+#pragma once
+
+int autocvar_hud_panel_modicons_ca_layout;
+
+void HUD_Mod_CA(vector myPos, vector mySize);
+void HUD_Mod_CA_Draw(vector myPos, vector mySize, int layout);
+void HUD_Mod_CA_Export(int fh);

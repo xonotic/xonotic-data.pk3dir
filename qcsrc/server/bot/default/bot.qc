@@ -1,51 +1,43 @@
 #include "bot.qh"
 
-#include "cvars.qh"
-
-#include "aim.qh"
-#include "navigation.qh"
-#include "scripting.qh"
-#include "waypoints.qh"
-
-#include "havocbot/havocbot.qh"
-#include "havocbot/scripting.qh"
-
-#include "../../teamplay.qh"
-
-#include "../../antilag.qh"
-#include "../../autocvars.qh"
-#include "../../campaign.qh"
-#include "../../client.qh"
-#include "../../constants.qh"
-#include "../../defs.qh"
-#include "../../race.qh"
-#include <common/t_items.qh>
-
-#include "../../mutators/_mod.qh"
-
-#include "../../weapons/accuracy.qh"
-
-#include <common/physics/player.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-
-#include <server/scores_rules.qh>
-
 #include <common/weapons/_all.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
-
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/antilag.qh>
+#include <server/bot/default/aim.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/havocbot.qh>
+#include <server/bot/default/havocbot/scripting.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/bot/default/scripting.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
+#include <server/world.qh>
+
+STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
-	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
-	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+	CS_CVAR(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS_CVAR(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 entity bot_spawn()
@@ -74,14 +66,14 @@ void bot_think(entity this)
 
 	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
 
-	//if (this.bot_painintensity > 0)
-	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
-
-	//this.bot_painintensity = this.bot_painintensity + this.bot_oldhealth - this.health;
-	//this.bot_painintensity = bound(0, this.bot_painintensity, 100);
-
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
+		if (IS_PLAYER(this))
+		{
+			.entity weaponentity = weaponentities[0];
+			if(this.(weaponentity).m_weapon == WEP_Null)
+				W_NextWeapon(this, 0, weaponentity);
+		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
@@ -108,7 +100,8 @@ void bot_think(entity this)
 
 	// clear buttons
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
-	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	// keep jump button pressed for a short while, useful with ramp jumps
+	PHYS_INPUT_BUTTON_JUMP(this) = (!IS_DEAD(this) && time < this.bot_jump_time + 0.2);
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
@@ -120,6 +113,9 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
+		.entity weaponentity = weaponentities[0];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;
@@ -127,13 +123,24 @@ void bot_think(entity this)
 	}
 
 	// if dead, just wait until we can respawn
-	if (IS_DEAD(this))
+	if (IS_DEAD(this) || IS_OBSERVER(this))
 	{
+		if (bot_waypoint_queue_owner == this)
+			bot_waypoint_queue_owner = NULL;
+		this.aistatus = 0;
 		CS(this).movement = '0 0 0';
-		if (this.deadflag == DEAD_DEAD)
+		if (IS_OBSERVER(this))
+			return;
+		if (IS_DEAD(this))
 		{
-			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
-			navigation_goalrating_timeout_force(this);
+			if (!navigation_goalrating_timeout(this))
+				navigation_goalrating_timeout_force(this);
+			// jump must not be pressed for at least one frame in order for
+			// PlayerThink to detect the key down event
+			if (this.deadflag == DEAD_DYING)
+				PHYS_INPUT_BUTTON_JUMP(this) = false;
+			else if (this.deadflag == DEAD_DEAD)
+				PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
@@ -146,21 +153,7 @@ void bot_think(entity this)
 void bot_setnameandstuff(entity this)
 {
 	string readfile, s;
-	float file, tokens, prio;
-
-	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
-	string name, prefix, suffix;
-
- 	if(autocvar_g_campaign)
-	{
-		prefix = "";
-		suffix = "";
-	}
-	else
-	{
-		prefix = autocvar_bot_prefix;
-		suffix = autocvar_bot_suffix;
-	}
+	int file, tokens, prio;
 
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
@@ -171,6 +164,26 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
+		entity balance = TeamBalance_CheckAllowedTeams(NULL);
+		TeamBalance_GetTeamCounts(balance, NULL);
+		int smallest_team = -1;
+		int smallest_count = -1;
+		if (teamplay)
+		{
+			for (int i = 1; i <= AvailableTeams(); ++i)
+			{
+				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
+				// TeamBalance_GetNumberOfPlayers(balance, i); returns the number of players + 1
+				// since it keeps a spot for the real player in the desired team
+				int count = TeamBalance_GetNumberOfPlayers(balance, i);
+				if (smallest_count < 0 || count < smallest_count)
+				{
+					smallest_team = i;
+					smallest_count = count;
+				}
+			}
+		}
+		TeamBalance_Destroy(balance);
 		RandomSelection_Init();
 		while((readfile = fgets(file)))
 		{
@@ -178,23 +191,40 @@ void bot_setnameandstuff(entity this)
 				continue;
 			if(substring(readfile, 0, 1) == "#")
 				continue;
+			// NOTE if the line is empty tokenizebyseparator(readfile, "\t")
+			// will create 1 empty token because there's no separator (bug?)
+			if (readfile == "")
+				continue;
 			tokens = tokenizebyseparator(readfile, "\t");
 			if(tokens == 0)
 				continue;
 			s = argv(0);
-			prio = 1;
+			prio = 0;
+			bool conflict = false;
 			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-				if(s == it.cleanname)
+				if (s == it.cleanname)
 				{
-					prio = 0;
+					conflict = true;
 					break;
 				}
 			});
+			if (!conflict)
+				prio += 1;
+			if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+			{
+				int forced_team = stof(argv(5));
+				if (!Team_IsValidIndex(forced_team))
+					forced_team = 0;
+				if (!forced_team || forced_team == smallest_team)
+					prio += 2;
+			}
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
 		fclose(file);
 	}
+
+	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
 
 	tokens = tokenizebyseparator(readfile, "\t");
 	if(argv(0) != "") bot_name = argv(0);
@@ -212,17 +242,24 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	this.bot_forced_team = stof(argv(5));
+	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	{
+		this.bot_forced_team = stof(argv(5));
+		if (!Team_IsValidIndex(this.bot_forced_team))
+			this.bot_forced_team = 0;
+	}
+	else
+		this.bot_forced_team = 0;
 
 	prio = 6;
 
-	#define READSKILL(f, w, r) MACRO_BEGIN { \
+	#define READSKILL(f, w, r) MACRO_BEGIN \
 		if(argv(prio) != "") \
 			this.f = stof(argv(prio)) * w; \
 		else \
 			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
 		prio++; \
-	} MACRO_END
+	MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -242,29 +279,37 @@ void bot_setnameandstuff(entity this)
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
+	if (file >= 0 && argv(prio) != "")
+		LOG_INFOF("^1Warning^7: too many parameters for bot %s, please check format of %s", bot_name, autocvar_bot_config_file);
+
 	this.bot_config_loaded = true;
 
-	// this is really only a default, JoinBestTeam is called later
+	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
-	// pick the name
-	if (autocvar_bot_usemodelnames)
-		name = bot_model;
-	else
-		name = bot_name;
+	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);
+	string suffix = (autocvar_g_campaign ? "" : autocvar_bot_suffix);
+	string name = (autocvar_bot_usemodelnames ? bot_model : bot_name);
 
-	// number bots with identical names
-	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-		if(it.cleanname == name)
-			++j;
-	});
-	if (j)
-		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
-	else
+	if (name == "")
+	{
+		name = ftos(etof(this));
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
-
+	}
+	else
+	{
+		// number bots with identical names
+		int j = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+			if(it.cleanname == name)
+				++j;
+		});
+		if (j)
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
+		else
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
+	}
 	this.cleanname = strzone(name);
 
 	// pick the model and skin
@@ -276,6 +321,10 @@ void bot_setnameandstuff(entity this)
 
 void bot_custom_weapon_priority_setup()
 {
+	static string bot_priority_far_prev;
+	static string bot_priority_mid_prev;
+	static string bot_priority_close_prev;
+	static string bot_priority_distances_prev;
 	float tokens, i, w;
 
 	bot_custom_weapon = false;
@@ -283,70 +332,50 @@ void bot_custom_weapon_priority_setup()
 	if(	autocvar_bot_ai_custom_weapon_priority_far == "" ||
 		autocvar_bot_ai_custom_weapon_priority_mid == "" ||
 		autocvar_bot_ai_custom_weapon_priority_close == "" ||
- 		autocvar_bot_ai_custom_weapon_priority_distances == ""
+		autocvar_bot_ai_custom_weapon_priority_distances == ""
 	)
 		return;
 
-	// Parse distances
-	tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
+	if (bot_priority_distances_prev != autocvar_bot_ai_custom_weapon_priority_distances)
+	{
+		strcpy(bot_priority_distances_prev, autocvar_bot_ai_custom_weapon_priority_distances);
+		tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
 
-	if (tokens!=2)
-		return;
+		if (tokens!=2)
+			return;
 
-	bot_distance_far = stof(argv(0));
-	bot_distance_close = stof(argv(1));
+		bot_distance_far = stof(argv(0));
+		bot_distance_close = stof(argv(1));
 
-	if(bot_distance_far < bot_distance_close){
-		bot_distance_far = stof(argv(1));
-		bot_distance_close = stof(argv(0));
-	}
-
-	// Initialize list of weapons
-	bot_weapons_far[0] = -1;
-	bot_weapons_mid[0] = -1;
-	bot_weapons_close[0] = -1;
-
-	// Parse far distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
-
-	int c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_far[c] = w;
-			++c;
+		if(bot_distance_far < bot_distance_close){
+			bot_distance_far = stof(argv(1));
+			bot_distance_close = stof(argv(0));
 		}
 	}
-	if(c < Weapons_COUNT)
-		bot_weapons_far[c] = -1;
 
-	// Parse mid distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_mid)," ");
+	int c;
 
-	c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_mid[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_mid[c] = -1;
+	#define PARSE_WEAPON_PRIORITIES(dist) MACRO_BEGIN \
+		if (bot_priority_##dist##_prev != autocvar_bot_ai_custom_weapon_priority_##dist) { \
+			strcpy(bot_priority_##dist##_prev, autocvar_bot_ai_custom_weapon_priority_##dist); \
+			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
+			bot_weapons_##dist[0] = -1; \
+			c = 0; \
+			for(i = 0; i < tokens && c < REGISTRY_COUNT(Weapons); ++i) { \
+				w = stof(argv(i)); \
+				if (w >= WEP_FIRST && w <= WEP_LAST) { \
+					bot_weapons_##dist[c] = w; \
+					++c; \
+				} \
+			} \
+			if (c < REGISTRY_COUNT(Weapons)) \
+				bot_weapons_##dist[c] = -1; \
+		} \
+	MACRO_END
 
-	// Parse close distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
-
-	c = 0;
-	for(i=0; i < tokens && i < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_close[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_close[c] = -1;
+	PARSE_WEAPON_PRIORITIES(far);
+	PARSE_WEAPON_PRIORITIES(mid);
+	PARSE_WEAPON_PRIORITIES(close);
 
 	bot_custom_weapon = true;
 }
@@ -376,17 +405,19 @@ void bot_relinkplayerlist()
 
 		if(IS_BOT_CLIENT(it))
 		{
-			if(prevbot)
-				prevbot.nextbot = it;
-			else
-				bot_list = it;
-			prevbot = it;
+			if (!IS_OBSERVER(it) && !bot_ispaused(it))
+			{
+				if(prevbot)
+					prevbot.nextbot = it;
+				else
+					bot_list = it;
+				prevbot = it;
+			}
 			++currentbots;
 		}
 	});
 	if(prevbot)
 		prevbot.nextbot = NULL;
-	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -396,18 +427,10 @@ void bot_clientdisconnect(entity this)
 	if (!IS_BOT_CLIENT(this))
 		return;
 	bot_clearqueue(this);
-	if(this.cleanname)
-		strunzone(this.cleanname);
-	if(this.netname_freeme)
-		strunzone(this.netname_freeme);
-	if(this.playermodel_freeme)
-		strunzone(this.playermodel_freeme);
-	if(this.playerskin_freeme)
-		strunzone(this.playerskin_freeme);
-	this.cleanname = string_null;
-	this.netname_freeme = string_null;
-	this.playermodel_freeme = string_null;
-	this.playerskin_freeme = string_null;
+	strfree(this.cleanname);
+	strfree(this.netname_freeme);
+	strfree(this.playermodel_freeme);
+	strfree(this.playerskin_freeme);
 	if(this.bot_cmd_current)
 		delete(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner == this)
@@ -429,24 +452,13 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if(this.bot_forced_team==1)
-		this.team = NUM_TEAM_1;
-	else if(this.bot_forced_team==2)
-		this.team = NUM_TEAM_2;
-	else if(this.bot_forced_team==3)
-		this.team = NUM_TEAM_3;
-	else if(this.bot_forced_team==4)
-		this.team = NUM_TEAM_4;
-	else
-		JoinBestTeam(this, true);
-
 	havocbot_setupbot(this);
 }
 
 void bot_removefromlargestteam()
 {
-	CheckAllowedTeams(NULL);
-	GetTeamCounts(NULL);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	TeamBalance_GetTeamCounts(balance, NULL);
 
 	entity best = NULL;
 	float besttime = 0;
@@ -465,12 +477,10 @@ void bot_removefromlargestteam()
 
 		int thiscount = 0;
 
-		switch(it.team)
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: thiscount = c1; break;
-			case NUM_TEAM_2: thiscount = c2; break;
-			case NUM_TEAM_3: thiscount = c3; break;
-			case NUM_TEAM_4: thiscount = c4; break;
+			thiscount = TeamBalance_GetNumberOfPlayers(balance,
+				Team_TeamToIndex(it.team));
 		}
 
 		if(thiscount > bestcount)
@@ -485,6 +495,7 @@ void bot_removefromlargestteam()
 			best = it;
 		}
 	});
+	TeamBalance_Destroy(balance);
 	if(!bcount)
 		return; // no bots to remove
 	currentbots = currentbots - 1;
@@ -529,11 +540,8 @@ void bot_removenewest()
 
 void autoskill(float factor)
 {
-	float bestbot;
-	float bestplayer;
-
-	bestbot = -1;
-	bestplayer = -1;
+	int bestbot = -1;
+	int bestplayer = -1;
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
@@ -541,37 +549,37 @@ void autoskill(float factor)
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
 	});
 
-	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
-	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
+	string msg = strcat("autoskill: best player got ", ftos(bestplayer), ", ""best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		LOG_DEBUG("not doing anything");
+		msg = strcat(msg, "not doing anything");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			LOG_DEBUG("2 frags difference, increasing skill");
+			msg = strcat(msg, "2 frags difference, increasing skill");
 			cvar_set("skill", ftos(autocvar_skill + 1));
-			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
+			bprint("^2BOT SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else if(bestbot >= bestplayer * factor + 2)
 	{
 		if(autocvar_skill > 0)
 		{
-			LOG_DEBUG("2 frags difference, decreasing skill");
+			msg = strcat(msg, "2 frags difference, decreasing skill");
 			cvar_set("skill", ftos(autocvar_skill - 1));
-			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
+			bprint("^1BOT SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		LOG_DEBUG("not doing anything");
+		msg = strcat(msg, "not doing anything");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}
+	LOG_DEBUG(msg);
 
 	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
@@ -581,9 +589,10 @@ void bot_calculate_stepheightvec()
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
 	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
+	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }
 
-float bot_fixcount()
+bool bot_fixcount(bool multiple_per_frame)
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
@@ -599,8 +608,6 @@ float bot_fixcount()
 	}
 
 	int bots;
-	// add/remove bots if needed to make sure there are at least
-	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
@@ -608,15 +615,19 @@ float bot_fixcount()
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
-		float realminplayers, minplayers;
-		realminplayers = autocvar_minplayers;
-		minplayers = max(0, floor(realminplayers));
+		int minplayers = max(0, floor(autocvar_minplayers));
+		if (teamplay)
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+		int minbots = max(0, floor(autocvar_bot_number));
 
-		float realminbots, minbots;
-		realminbots = autocvar_bot_number;
-		minbots = max(0, floor(realminbots));
+		// add bots to reach minplayers if needed
+		bots = max(minbots, minplayers - activerealplayers);
+		// cap bots to the max players allowed by the server
+		int player_limit = GetPlayerLimit();
+		if(player_limit)
+			bots = min(bots, max(player_limit - activerealplayers, 0));
+		bots = min(bots, maxclients - realplayers);
 
-		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
 		if(bots > minbots)
 			bots_would_leave = true;
 	}
@@ -629,52 +640,23 @@ float bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		if (currentbots < bots)
+		while (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
 				bprint("Can not add bot, server full.\n");
 				return false;
 			}
+			if (!multiple_per_frame)
+			{
+				break;
+			}
 		}
-		while (currentbots > bots)
+		while (currentbots > bots && bots >= 0)
 			bot_removenewest();
 	}
 
 	return true;
-}
-
-void bot_remove_from_bot_list(entity this)
-{
-	entity e = bot_list;
-	entity prev_bot = NULL;
-	while (e)
-	{
-		if(e == this)
-		{
-			if(!prev_bot)
-				bot_list = this.nextbot;
-			else
-				prev_bot.nextbot = this.nextbot;
-			if(bot_strategytoken == this)
-			{
-				bot_strategytoken = this.nextbot;
-				bot_strategytoken_taken = true;
-			}
-			this.nextbot = NULL;
-			break;
-		}
-		prev_bot = e;
-		e = e.nextbot;
-	}
-}
-
-void bot_clear(entity this)
-{
-	bot_remove_from_bot_list(this);
-	if(bot_waypoint_queue_owner == this)
-		bot_waypoint_queue_owner = NULL;
-	this.aistatus &= ~AI_STATUS_STUCK; // otherwise bot_waypoint_queue_owner will be set again to this by navigation_unstuck
 }
 
 void bot_serverframe()
@@ -699,6 +681,7 @@ void bot_serverframe()
 	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
 	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
 	// either intentionally or automatically (sv_spectate 0)
+	// A working workaround for this bug was implemented in commit fbd145044, see entcs_attach
 	if (time < 2.5)
 	{
 		currentbots = -1;
@@ -739,7 +722,7 @@ void bot_serverframe()
 
 	if(time > botframe_nextthink)
 	{
-		if(!bot_fixcount())
+		if(!bot_fixcount(false))
 			botframe_nextthink = time + 10;
 	}
 
@@ -749,13 +732,13 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || autocvar_g_waypointeditor || autocvar_g_waypointeditor_auto)
+	if (currentbots > 0 || waypointeditor_enabled || autocvar_g_waypointeditor_auto)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
 		{
 			if(!botframe_loadedforcedlinks)
-				waypoint_load_links_hardwired();
+				waypoint_load_hardwiredlinks();
 		}
 		else
 		{
@@ -814,16 +797,12 @@ void bot_serverframe()
 		}
 	}
 
-	if (autocvar_g_waypointeditor)
+	if (waypointeditor_enabled)
 		botframe_showwaypointlinks();
 
 	if (autocvar_g_waypointeditor_auto)
 		botframe_autowaypoints();
 
-	if(time > bot_cvar_nextthink)
-	{
-		if(currentbots>0)
-			bot_custom_weapon_priority_setup();
-		bot_cvar_nextthink = time + 5;
-	}
+	if (currentbots > 0)
+		bot_custom_weapon_priority_setup();
 }

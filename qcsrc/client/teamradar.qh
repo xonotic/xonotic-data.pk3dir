@@ -4,10 +4,10 @@ const int MAX_TEAMRADAR_TIMES = 32;
 
 entityclass(TeamRadar);
 // to make entities have dots on the team radar
-class(TeamRadar) .float teamradar_icon;
-class(TeamRadar) .float teamradar_times[MAX_TEAMRADAR_TIMES];
-class(TeamRadar) .int teamradar_time_index;
-class(TeamRadar) .vector teamradar_color;
+classfield(TeamRadar) .float teamradar_icon;
+classfield(TeamRadar) .float teamradar_times[MAX_TEAMRADAR_TIMES];
+classfield(TeamRadar) .int teamradar_time_index;
+classfield(TeamRadar) .vector teamradar_color;
 
 float teamradar_angle; // player yaw angle
 vector teamradar_origin3d_in_texcoord; // player origin
@@ -19,11 +19,11 @@ float v_flipped;
 
 float hud_panel_radar_scale; // window size = ...qu
 float hud_panel_radar_foreground_alpha;
-float hud_panel_radar_rotation;
+int hud_panel_radar_rotation;
 vector hud_panel_radar_size;
-float hud_panel_radar_zoommode;
-float hud_panel_radar_maximized_zoommode;
-float hud_panel_radar_maximized_rotation;
+int hud_panel_radar_zoommode;
+int hud_panel_radar_maximized_zoommode;
+int hud_panel_radar_maximized_rotation;
 
 
 vector teamradar_2dcoord_to_texcoord(vector in);

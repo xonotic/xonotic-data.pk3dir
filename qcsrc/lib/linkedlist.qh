@@ -49,7 +49,6 @@ entity LL_POP(LinkedList this)
 #define LL_CLEAR_1(this) LL_CLEAR_2(this, LAMBDA())
 #define LL_CLEAR_2(this, dtor) \
 	MACRO_BEGIN \
-	{ \
 		LinkedList _ll = this; \
 		assert(_ll); \
 		while (_ll.ll_tail) \
@@ -59,26 +58,24 @@ entity LL_POP(LinkedList this)
 			dtor \
 			delete(it); \
 		} \
-	} MACRO_END
+	MACRO_END
 
 #define LL_DELETE(...) EVAL_LL_DELETE(OVERLOAD(LL_DELETE, __VA_ARGS__))
 #define EVAL_LL_DELETE(...) __VA_ARGS__
 #define LL_DELETE_1(this) LL_DELETE_2(this, LAMBDA())
 #define LL_DELETE_2(this, dtor) \
 	MACRO_BEGIN \
-	{ \
 		LL_CLEAR_2(this, dtor); \
 		delete(this); \
 		this = NULL; \
-	} MACRO_END
+	MACRO_END
 
 #define LL_EACH(list, cond, body) \
 	MACRO_BEGIN                                                         \
-	{                                                                   \
 		noref int i = 0;                                                \
 		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i))  \
 		{                                                               \
 			ITER_CONST noref entity it = _it.ll_data;                   \
 			if (cond) { body }                                          \
 		}                                                               \
-	} MACRO_END
+	MACRO_END

@@ -9,7 +9,7 @@ CLASS(XonoticColorpickerString, Image)
 	METHOD(XonoticColorpickerString, mouseRelease, float(entity, vector));
 	METHOD(XonoticColorpickerString, mouseDrag, float(entity, vector));
 
-	ATTRIB(XonoticColorpickerString, cvarName, string);
+	ATTRIB(XonoticColorpickerString, controlledCvar, string);
 	METHOD(XonoticColorpickerString, loadCvars, void(entity));
 	METHOD(XonoticColorpickerString, saveCvars, void(entity));
 

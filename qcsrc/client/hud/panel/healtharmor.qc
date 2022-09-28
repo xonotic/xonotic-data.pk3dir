@@ -1,15 +1,28 @@
 #include "healtharmor.qh"
 
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-
+#include <client/draw.qh>
 #include <common/deathtypes/all.qh>
 
 // Health/armor (#3)
 
+void HUD_HealthArmor_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_healtharmor_combined");
+	HUD_Write_Cvar("hud_panel_healtharmor_flip");
+	HUD_Write_Cvar("hud_panel_healtharmor_iconalign");
+	HUD_Write_Cvar("hud_panel_healtharmor_baralign");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_health");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_armor");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx_smooth");
+	HUD_Write_Cvar("hud_panel_healtharmor_text");
+}
+
 void HUD_HealthArmor()
 {
-	int armor, health, fuel;
+	int armor, health, fuel, air_time;
 	if(!autocvar__hud_configure)
 	{
 		if((!autocvar_hud_panel_healtharmor) || (spectatee_status == -1))
@@ -52,12 +65,14 @@ void HUD_HealthArmor()
 			prev_armor = 0;
 		}
 		fuel = STAT(FUEL);
+		air_time = bound(0, STAT(AIR_FINISHED) - time, 10);
 	}
 	else
 	{
 		health = 150;
 		armor = 75;
 		fuel = 20;
+		air_time = 6;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -79,6 +94,32 @@ void HUD_HealthArmor()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	float air_alpha;
+	if (!STAT(AIR_FINISHED))
+		air_alpha = 0;
+	else if (time > STAT(AIR_FINISHED))
+	{
+		air_alpha = blink_synced(0.5, 0.5, 7, STAT(AIR_FINISHED), -1);
+		air_time = 10;
+	}
+	else
+	{
+		float fade_time = 10 / 2;
+		float start_alpha = autocvar_hud_panel_healtharmor_oxygenbar_startalpha;
+		float f = (STAT(AIR_FINISHED) - time - fade_time) / fade_time;
+		air_alpha = bound(0, start_alpha + (1 - start_alpha) * (1 - f), 1);
+	}
+
+	float fuel_alpha;
+	if (!fuel)
+		fuel_alpha = 0;
+	else
+	{
+		float start_alpha = autocvar_hud_panel_healtharmor_fuelbar_startalpha;
+		float f = (100 - fuel) / 50;
+		fuel_alpha = bound(0, start_alpha + (1 - start_alpha) * f, 1);
+	}
+
 	int baralign = autocvar_hud_panel_healtharmor_baralign;
 	int iconalign = autocvar_hud_panel_healtharmor_iconalign;
 
@@ -86,9 +127,7 @@ void HUD_HealthArmor()
 	int maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
 	if(autocvar_hud_panel_healtharmor_combined) // combined health and armor display
 	{
-		vector v;
-		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);
-
+		vector v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);
 		float hp = floor(v.x + 1);
 
 		float maxtotal = maxhealth + maxarmor;
@@ -110,10 +149,12 @@ void HUD_HealthArmor()
 				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "health", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if(autocvar_hud_panel_healtharmor_text)
-			DrawNumIcon(pos, mySize, hp, biggercount, 0, iconalign, HUD_Get_Num_Color(hp, maxtotal), 1);
+			DrawNumIcon(pos, mySize, hp, biggercount, false, false, iconalign, HUD_Get_Num_Color(hp, maxtotal, true), 1);
 
 		if(fuel)
-			HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, 0.2 * mySize.y), "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, 0.2 * mySize.y), "progressbar", fuel / 100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, fuel_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+		if(air_time)
+			HUD_Panel_DrawProgressBar(pos + eY * 0.8 * mySize.y, vec2(mySize.x, 0.2 * mySize.y), "progressbar", air_time / 10, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_oxygen_color, air_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 	}
 	else
 	{
@@ -137,13 +178,13 @@ void HUD_HealthArmor()
 				armor_offset.y = mySize.y;
 		}
 
-		bool health_baralign, armor_baralign, fuel_baralign;
+		bool health_baralign, armor_baralign, fuel_baralign, air_align;
 		bool health_iconalign, armor_iconalign;
 		if (autocvar_hud_panel_healtharmor_flip)
 		{
 			armor_baralign = (autocvar_hud_panel_healtharmor_baralign == 2 || autocvar_hud_panel_healtharmor_baralign == 1);
 			health_baralign = (autocvar_hud_panel_healtharmor_baralign == 3 || autocvar_hud_panel_healtharmor_baralign == 1);
-			fuel_baralign = health_baralign;
+			air_align = fuel_baralign = health_baralign;
 			armor_iconalign = (autocvar_hud_panel_healtharmor_iconalign == 2 || autocvar_hud_panel_healtharmor_iconalign == 1);
 			health_iconalign = (autocvar_hud_panel_healtharmor_iconalign == 3 || autocvar_hud_panel_healtharmor_iconalign == 1);
 		}
@@ -151,7 +192,7 @@ void HUD_HealthArmor()
 		{
 			health_baralign = (autocvar_hud_panel_healtharmor_baralign == 2 || autocvar_hud_panel_healtharmor_baralign == 1);
 			armor_baralign = (autocvar_hud_panel_healtharmor_baralign == 3 || autocvar_hud_panel_healtharmor_baralign == 1);
-			fuel_baralign = armor_baralign;
+			air_align = fuel_baralign = armor_baralign;
 			health_iconalign = (autocvar_hud_panel_healtharmor_iconalign == 2 || autocvar_hud_panel_healtharmor_iconalign == 1);
 			armor_iconalign = (autocvar_hud_panel_healtharmor_iconalign == 3 || autocvar_hud_panel_healtharmor_iconalign == 1);
 		}
@@ -199,16 +240,13 @@ void HUD_HealthArmor()
 
 					if (health <= autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth)
 					{
-						float BLINK_FACTOR = 0.15;
-						float BLINK_BASE = 0.85;
-						float BLINK_FREQ = 9;
-						pain_health_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+						pain_health_alpha = blink(0.85, 0.15, 9);
 					}
 				}
 				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
-				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, health_iconalign, HUD_Get_Num_Color(health, maxhealth), 1);
+				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, false, health_iconalign, HUD_Get_Num_Color(health, maxhealth, true), 1);
 		}
 
 		//if(armor)
@@ -255,10 +293,11 @@ void HUD_HealthArmor()
 			}
 			if(!autocvar_hud_panel_healtharmor_progressbar || p_armor)
 			if(autocvar_hud_panel_healtharmor_text)
-				DrawNumIcon(pos + armor_offset, mySize, armor, "armor", is_vertical, armor_iconalign, HUD_Get_Num_Color(armor, maxarmor), 1);
+				DrawNumIcon(pos + armor_offset, mySize, armor, "armor", is_vertical, false, armor_iconalign, HUD_Get_Num_Color(armor, maxarmor, true), 1);
 		}
 
-		if(fuel)
+		vector cell_size = mySize;
+		if (fuel || air_time)
 		{
 			if (is_vertical)
 				mySize.x *= 0.2 / 2; //if vertical always halve x to not cover too much numbers with 3 digits
@@ -268,7 +307,20 @@ void HUD_HealthArmor()
 				mySize.x *= 2; //restore full panel size
 			else if (panel_ar < 1/4)
 				mySize.y *= 2; //restore full panel size
-			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel/100, is_vertical, fuel_baralign, autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			if (fuel)
+				HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel / 100, is_vertical, fuel_baralign, autocvar_hud_progressbar_fuel_color, fuel_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			if (air_time)
+			{
+				if (panel_ar > 1 && panel_ar < 4)
+					pos.y += cell_size.y;
+				else if (panel_ar > 1/4 && panel_ar <= 1)
+					pos.x += cell_size.x;
+				if (is_vertical)
+					pos.x += cell_size.x - mySize.x;
+				else
+					pos.y += cell_size.y - mySize.y;
+				HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", air_time / 10, is_vertical, air_align, autocvar_hud_progressbar_oxygen_color, air_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 

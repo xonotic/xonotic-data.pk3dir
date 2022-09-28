@@ -1,16 +1,20 @@
 #include "common.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-#include "common.qh"
-
-#include "../scores.qh"
-
+#include <common/deathtypes/all.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/mutators/_mod.qh>
+#include <server/scores.qh>
+#include <server/world.qh>
 
 
 // ====================================================
@@ -28,7 +32,7 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return playername(caller, false);
+	if (caller) return playername(caller.netname, caller.team, false);
 	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
@@ -76,7 +80,7 @@ float VerifyClientNumber(float tmp_number)
 	else return true;
 }
 
-entity GetIndexedEntity(float argc, float start_index)
+entity GetIndexedEntity(int argc, float start_index)
 {
 	entity selection;
 	float tmp_number, index;
@@ -162,17 +166,6 @@ entity GetFilteredEntity(string input)
 	}
 
 	return selection;
-}
-
-// same thing, but instead return their edict number
-float GetFilteredNumber(string input)
-{
-	entity selection = GetFilteredEntity(input);
-	float output;
-
-	output = etof(selection);
-
-	return output;
 }
 
 // switch between sprint and print depending on whether the receiver is the server or a player
@@ -280,7 +273,7 @@ void timeout_handler_think(entity this)
 //  Common commands used in both sv_cmd.qc and cmd.qc
 // ===================================================
 
-void CommonCommand_cvar_changes(float request, entity caller)
+void CommonCommand_cvar_changes(int request, entity caller)
 {
 	switch (request)
 	{
@@ -301,7 +294,7 @@ void CommonCommand_cvar_changes(float request, entity caller)
 	}
 }
 
-void CommonCommand_cvar_purechanges(float request, entity caller)
+void CommonCommand_cvar_purechanges(int request, entity caller)
 {
 	switch (request)
 	{
@@ -354,7 +347,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					string mon_oldname = mon.monster_name;
 
 					mon.monster_name = argument;
-					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null);
+					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
 					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
 					return;
 				}
@@ -391,11 +384,11 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 						break;
 					});
 
-					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
+					if (!found && arg_lower != "random" && arg_lower != "anyrandom") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}
@@ -405,7 +398,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					Damage(mon, NULL, NULL, mon.health + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
+					Damage(mon, NULL, NULL, GetResource(mon, RES_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
 					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
 					return;
 				}
@@ -416,7 +409,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
-					if (mon.monsterid == MON_MAGE.monsterid) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
+					if (mon.monsterdef == MON_MAGE) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
 
 					mon.skin = stof(argument);
 					print_to(caller, strcat("Monster skin successfully changed to ", ftos(mon.skin)));
@@ -437,7 +430,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "butcher":
 				{
 					if (caller) { print_to(caller, "This command is not available to players"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFOF("%s", M_ARGV(0, string)); return; }
+					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(M_ARGV(0, string)); return; }
 
 					int tmp_remcount = 0;
 
@@ -459,9 +452,9 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob command [arguments]"));
-			print_to(caller, "  Where 'command' can be butcher spawn skin movetarget kill name");
-			print_to(caller, "  spawn, skin, movetarget and name require 'arguments'");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob <command> [<arguments>]"));
+			print_to(caller, "  Where <command> can be butcher spawn skin movetarget kill name");
+			print_to(caller, "  spawn, skin, movetarget and name require <arguments>");
 			print_to(caller, "  spawn also takes arguments list and random");
 			print_to(caller, "  Monster will follow owner if third argument of spawn command is not defined");
 			return;
@@ -469,13 +462,13 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 	}
 }
 
-void CommonCommand_info(float request, entity caller, float argc)
+void CommonCommand_info(int request, entity caller, int argc)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
+			string command = cvar_string(strcat("sv_info_", argv(1)));
 
 			if (command) wordwrap_sprint(caller, command, 1000);
 			else print_to(caller, "ERROR: unsupported info command");
@@ -486,14 +479,14 @@ void CommonCommand_info(float request, entity caller, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info request"));
-			print_to(caller, "  Where 'request' is the suffixed string appended onto the request for cvar.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info <request>"));
+			print_to(caller, "  Where <request> is the suffixed string appended onto the request for cvar.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_ladder(float request, entity caller)
+void CommonCommand_ladder(int request, entity caller)
 {
 	switch (request)
 	{
@@ -513,7 +506,7 @@ void CommonCommand_ladder(float request, entity caller)
 	}
 }
 
-void CommonCommand_lsmaps(float request, entity caller)
+void CommonCommand_lsmaps(int request, entity caller)
 {
 	switch (request)
 	{
@@ -533,7 +526,7 @@ void CommonCommand_lsmaps(float request, entity caller)
 	}
 }
 
-void CommonCommand_printmaplist(float request, entity caller)
+void CommonCommand_printmaplist(int request, entity caller)
 {
 	switch (request)
 	{
@@ -553,7 +546,7 @@ void CommonCommand_printmaplist(float request, entity caller)
 	}
 }
 
-void CommonCommand_rankings(float request, entity caller)
+void CommonCommand_rankings(int request, entity caller)
 {
 	switch (request)
 	{
@@ -573,7 +566,7 @@ void CommonCommand_rankings(float request, entity caller)
 	}
 }
 
-void CommonCommand_records(float request, entity caller)
+void CommonCommand_records(int request, entity caller)
 {
 	switch (request)
 	{
@@ -594,14 +587,15 @@ void CommonCommand_records(float request, entity caller)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records"));
-			print_to(caller, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records [<pagenum>]"));
+			print_to(caller, "  Without arguments it prints all records (all pages) for the current gametype,");
+			print_to(caller, "  otherwise if there are multiple pages it only prints page <pagenum> (1..10),");
 			return;
 		}
 	}
 }
 
-void CommonCommand_teamstatus(float request, entity caller)
+void CommonCommand_teamstatus(int request, entity caller)
 {
 	switch (request)
 	{
@@ -621,7 +615,7 @@ void CommonCommand_teamstatus(float request, entity caller)
 	}
 }
 
-void CommonCommand_time(float request, entity caller)
+void CommonCommand_time(int request, entity caller)
 {
 	switch (request)
 	{
@@ -632,8 +626,8 @@ void CommonCommand_time(float request, entity caller)
 			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
 			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
 			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
-			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %e %H:%M:%S %Z %Y")));
-			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %d %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %d %H:%M:%S %Z %Y")));
 			return;
 		}
 
@@ -647,7 +641,7 @@ void CommonCommand_time(float request, entity caller)
 	}
 }
 
-void CommonCommand_timein(float request, entity caller)
+void CommonCommand_timein(int request, entity caller)
 {
 	switch (request)
 	{
@@ -670,6 +664,7 @@ void CommonCommand_timein(float request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEOUT);
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}
@@ -702,7 +697,7 @@ void CommonCommand_timein(float request, entity caller)
 	}
 }
 
-void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMAND IS TERRIBLE.
+void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND IS TERRIBLE.
 {
 	switch (request)
 	{
@@ -717,7 +712,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 				{
 					print_to(caller, "^7Error: You can not call a timeout while a vote is active.");
 				}
-				else if (warmup_stage && !g_warmup_allow_timeout)
+				else if (warmup_stage && !autocvar_g_warmup_allow_timeout)
 				{
 					print_to(caller, "^7Error: You can not call a timeout in warmup-stage.");
 				}
@@ -749,7 +744,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 					timeout_time = autocvar_sv_timeout_length;
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
-					timeout_handler = spawn();
+					timeout_handler = new(timeout_handler);
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
@@ -771,7 +766,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 	}
 }
 
-void CommonCommand_who(float request, entity caller, float argc)
+void CommonCommand_who(int request, entity caller, int argc)
 {
 	switch (request)
 	{
@@ -827,8 +822,8 @@ void CommonCommand_who(float request, entity caller, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [separator]"));
-			print_to(caller, "  Where 'separator' is the optional string to separate the values with, default is a space.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [<separator>]"));
+			print_to(caller, "  Where <separator> is the optional string to separate the values with, default is a space.");
 			return;
 		}
 	}
@@ -836,7 +831,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void CommonCommand_(float request, entity caller)
+void CommonCommand_(int request, entity caller)
 {
     switch(request)
     {

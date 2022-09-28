@@ -1,0 +1,11 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticBindingsResetDialog, XonoticDialog)
+	METHOD(XonoticBindingsResetDialog, fill, void(entity));
+	ATTRIB(XonoticBindingsResetDialog, title, string, _("Reset key bindings"));
+	ATTRIB(XonoticBindingsResetDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
+	ATTRIB(XonoticBindingsResetDialog, intendedWidth, float, 0.5);
+	ATTRIB(XonoticBindingsResetDialog, rows, float, 3);
+	ATTRIB(XonoticBindingsResetDialog, columns, float, 2);
+ENDCLASS(XonoticBindingsResetDialog)

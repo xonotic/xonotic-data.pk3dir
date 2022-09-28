@@ -4,7 +4,8 @@
 //  Declarations for server side game commands
 // =================================================
 
-string GotoMap(string m);
+bool shuffleteams_on_reset_map;
+void shuffleteams();
 
 void race_deleteTime(string map, float pos);
 

@@ -2,7 +2,6 @@
 #include "common.qh"
 
 #if defined(CSQC)
-	#include <client/autocvars.qh>
 	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -28,6 +27,11 @@ void WarpZone_Fade_PreDraw(entity this)
 void WarpZone_Touch(entity this, entity toucher);
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
+	if(!warpzone_warpzones_exist)
+	{
+		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has warpzones
+		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+	}
 	warpzone_warpzones_exist = 1;
 	if (!this.enemy)
 	{
@@ -84,6 +88,11 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 
 NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
 {
+	if(!warpzone_cameras_exist)
+	{
+		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has cameras
+		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+	}
 	warpzone_cameras_exist = 1;
 	this.classname = "func_warpzone_camera";
 
@@ -266,11 +275,13 @@ void WarpZone_FixView()
 	setproperty(VF_ORIGIN, org);
 	setproperty(VF_ANGLES, ang);
 
+	vector width = '1 0 0' * cvar("vid_conwidth");
+	vector height = '0 1 0' * cvar("vid_conheight");
 	nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);
-	corner1 = cs_unproject('1 0 0' * cvar("vid_conwidth") + nearclip);
-	corner2 = cs_unproject('0 1 0' * cvar("vid_conheight") + nearclip);
-	corner3 = cs_unproject('1 0 0' * cvar("vid_conwidth") + '0 1 0' * cvar("vid_conheight") + nearclip);
+	corner1 = cs_unproject(width + nearclip);
+	corner2 = cs_unproject(height + nearclip);
+	corner3 = cs_unproject(width + height + nearclip);
 	o = WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
 	if(o != '0 0 0')
 		setproperty(VF_ORIGIN, org + o);

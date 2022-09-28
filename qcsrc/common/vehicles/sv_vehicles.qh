@@ -12,6 +12,7 @@ AUTOCVAR(g_vehicles_steal, bool, true, "allow stealing enemy vehicles in teampla
 AUTOCVAR(g_vehicles_steal_show_waypoint, bool, true, "show a waypoint above the thief");
 float autocvar_g_vehicles_crush_dmg = 70;
 float autocvar_g_vehicles_crush_force = 50;
+float autocvar_g_vehicles_crush_minspeed = 100;
 bool autocvar_g_vehicles_delayspawn = true;
 float autocvar_g_vehicles_delayspawn_jitter = 10;
 float autocvar_g_vehicles_allow_bots;
@@ -45,14 +46,14 @@ float autocvar_g_vehicles_weapon_damagerate = 2;
 .entity gunner1;
 .entity gunner2;
 
-.float vehicle_health = _STAT(VEHICLESTAT_HEALTH);  /// If ent is player this is 0..100 indicating precentage of health left on vehicle. If ent is vehile, this is the real health value.
-.float vehicle_energy = _STAT(VEHICLESTAT_ENERGY);  /// If ent is player this is 0..100 indicating precentage of energy left on vehicle. If ent is vehile, this is the real energy value.
-.float vehicle_shield = _STAT(VEHICLESTAT_SHIELD);  /// If ent is player this is 0..100 indicating precentage of shield left on vehicle. If ent is vehile, this is the real shield value.
+const .float vehicle_health = _STAT(VEHICLESTAT_HEALTH);  /// If ent is player this is 0..100 indicating precentage of health left on vehicle. Vehicle's value is the health resource
+const .float vehicle_energy = _STAT(VEHICLESTAT_ENERGY);  /// If ent is player this is 0..100 indicating precentage of energy left on vehicle. If ent is vehicle, this is the real energy value.
+const .float vehicle_shield = _STAT(VEHICLESTAT_SHIELD);  /// If ent is player this is 0..100 indicating precentage of shield left on vehicle. If ent is vehicle, this is the real shield value.
 
-.float vehicle_ammo1 = _STAT(VEHICLESTAT_AMMO1);   /// If ent is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If ent is vehile, this is the real ammo1 value.
-.float vehicle_reload1 = _STAT(VEHICLESTAT_RELOAD1); /// If ent is player this is 0..100 indicating percentage of primary reload status. If ent is vehile, this is the real reload1 value.
-.float vehicle_ammo2 = _STAT(VEHICLESTAT_AMMO2);   /// If ent is player this is 0..100 indicating percentage of secondary ammo left. If ent is vehile, this is the real ammo2 value.
-.float vehicle_reload2 = _STAT(VEHICLESTAT_RELOAD2); /// If ent is player this is 0..100 indicating percentage of secondary reload status. If ent is vehile, this is the real reload2 value.
+const .float vehicle_ammo1 = _STAT(VEHICLESTAT_AMMO1);   /// If ent is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If ent is vehicle, this is the real ammo1 value.
+const .float vehicle_reload1 = _STAT(VEHICLESTAT_RELOAD1); /// If ent is player this is 0..100 indicating percentage of primary reload status. If ent is vehicle, this is the real reload1 value.
+const .float vehicle_ammo2 = _STAT(VEHICLESTAT_AMMO2);   /// If ent is player this is 0..100 indicating percentage of secondary ammo left. If ent is vehicle, this is the real ammo2 value.
+const .float vehicle_reload2 = _STAT(VEHICLESTAT_RELOAD2); /// If ent is player this is 0..100 indicating percentage of secondary reload status. If ent is vehicle, this is the real reload2 value.
 
 .float sound_nexttime;
 const float VOL_VEHICLEENGINE = 1;
@@ -65,6 +66,8 @@ const float VHSF_NORMAL = 0;
 const float VHSF_FACTORY = 2;
 
 .float dmg_time;
+
+.float pain_frame;
 
 .float play_time;
 
@@ -79,7 +82,6 @@ const int MAX_AXH = 4;
 .float  lock_strength;
 .float  lock_time;
 .float  lock_soundtime;
-const float	DAMAGE_TARGETDRONE = 10;
 
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
@@ -87,12 +89,8 @@ const float	DAMAGE_TARGETDRONE = 10;
 .void(entity this, int exit_flags) vehicle_exit;
 .bool(entity this, entity player) vehicle_enter;
 const int VHEF_NORMAL = 0;  /// User pressed exit key
-const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehicle is dying
 const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
-
-float  force_fromtag_power;
-float  force_fromtag_normpower;
-vector force_fromtag_origin;
 
 float vehicles_exit_running;
 
@@ -100,13 +98,16 @@ float vehicles_exit_running;
 #define VEHICLE_UPDATE_PLAYER(ply,vehi,fld,vhname) \
 	ply.vehicle_##fld = (vehi.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
+#define VEHICLE_UPDATE_PLAYER_RESOURCE(ply,vehi,fld,vhname,res) \
+	ply.vehicle_##fld = (GetResource(vehi, res) / autocvar_g_vehicle_##vhname##_##fld) * 100
+
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
 void vehicles_exit(entity vehic, int eject);
 bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
-float vehicle_altitude(entity this, float amax);
+void vehicles_enter(entity pl, entity veh);
 
 IntrusiveList g_vehicle_returners;
 STATIC_INIT(g_vehicle_returners) { g_vehicle_returners = IL_NEW(); }

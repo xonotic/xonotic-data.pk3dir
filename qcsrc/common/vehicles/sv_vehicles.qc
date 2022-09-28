@@ -1,5 +1,17 @@
 #include "sv_vehicles.qh"
 
+#include <common/items/_mod.qh>
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/vehicles/vehicles.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/weapons/common.qh>
+#include <server/world.qh>
+
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -161,43 +173,6 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 	}
 }
 
-float vehicle_altitude(entity this, float amax)
-{
-	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * amax), MOVE_WORLDONLY, this);
-	return vlen(this.origin - trace_endpos);
-}
-
-vector vehicles_force_fromtag_hover(entity this, string tag_name, float spring_length, float max_power)
-{
-	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
-	v_forward  = normalize(v_forward) * -1;
-	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, this);
-
-	force_fromtag_power = (1 - trace_fraction) * max_power;
-	force_fromtag_normpower = force_fromtag_power / max_power;
-
-	return v_forward  * force_fromtag_power;
-}
-
-vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_length, float max_power)
-{
-	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
-	v_forward  = normalize(v_forward) * -1;
-	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, this);
-
-	// TODO - this may NOT be compatible with wall/celing movement, unhardcode 0.25 (engine count multiplier)
-	if(trace_fraction == 1.0)
-	{
-		force_fromtag_normpower = -0.25;
-		return '0 0 -200';
-	}
-
-	force_fromtag_power = ((1 - trace_fraction) - trace_fraction) * max_power;
-	force_fromtag_normpower = force_fromtag_power / max_power;
-
-	return v_forward  * force_fromtag_power;
-}
-
 // projectile handling
 void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
@@ -205,9 +180,9 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	if(inflictor.owner == this.owner)
 		return;
 
-	this.health -= damage;
+	TakeResource(this, RES_HEALTH, damage);
 	this.velocity += force;
-	if(this.health < 1)
+	if(GetResource(this, RES_HEALTH) < 1)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
@@ -230,7 +205,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, DMG_NOWEP, toucher);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.projectiledeathtype, DMG_NOWEP, toucher);
 
 	delete(this);
 }
@@ -245,16 +220,14 @@ void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 	vehicles_projectile_explode(this, trigger);
 }
 
-entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
+entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {
     TC(Sound, _mzlsound);
-	entity proj;
-
-	proj = spawn();
+	entity proj = new(vehicles_projectile);
 
 	PROJECTILE_MAKETRIGGER(proj);
 	setorigin(proj, _org);
@@ -262,7 +235,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.shot_dmg		 = _dmg;
 	proj.shot_radius	  = _radi;
 	proj.shot_force	   = _force;
-	proj.totalfrags	   = _deahtype;
+	proj.projectiledeathtype	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags = FL_PROJECTILE;
@@ -282,7 +255,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	{
 		proj.takedamage	   = DAMAGE_AIM;
 		proj.event_damage	 = vehicles_projectile_damage;
-		proj.health		   = _health;
+		SetResourceExplicit(proj, RES_HEALTH, _health);
 	}
 	else
 		proj.flags |= FL_NOTARGET;
@@ -290,8 +263,8 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
-	if(_mzlfx)
-		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
+	if(_mzlfx != EFFECT_Null)
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
@@ -324,7 +297,7 @@ void vehicles_gib_think(entity this)
 
 entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
 {
-	entity _gib = spawn();
+	entity _gib = new(vehicle_gib);
 	_setmodel(_gib, _template.model);
 	vector org = gettaginfo(this, gettagindex(this, _tag));
 	setorigin(_gib, org);
@@ -369,8 +342,8 @@ bool vehicle_addplayerslot(	entity _owner,
 	_slot.vehicle_enter = _enterfunc;
 	STAT(HUD, _slot) = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
-	_slot.vehicle_viewport = spawn();
-	_slot.vehicle_hudmodel = spawn();
+	_slot.vehicle_viewport = new(vehicle_viewport);
+	_slot.vehicle_hudmodel = new(vehicle_hudmodel);
 	_slot.vehicle_hudmodel.viewmodelforclient = _slot;
 	_slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
@@ -385,7 +358,7 @@ bool vehicle_addplayerslot(	entity _owner,
 
 vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname,
 						 float _pichlimit_min, float _pichlimit_max,
-						 float _rotlimit_min, float _rotlimit_max, float _aimspeed)
+						 float _rotlimit_min, float _rotlimit_max, float _aimspeed, float dt)
 {
 	vector vtmp, vtag;
 	float ftmp;
@@ -393,7 +366,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
 	vtmp = AnglesTransform_Normalize(vtmp, true);
-	ftmp = _aimspeed * frametime;
+	ftmp = _aimspeed * dt;
 	vtmp_y = bound(-ftmp, vtmp_y, ftmp);
 	vtmp_x = bound(-ftmp, vtmp_x, ftmp);
 	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);
@@ -450,7 +423,7 @@ void vehicles_reset_colors(entity this, entity player)
 	this.velocity  = '0 0 0';
 	this.effects   = eff;
 
-	Vehicle info = Vehicles_from(this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_setcolors(info, this);
 }
 
@@ -587,12 +560,29 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (this.vehicle_health / this.max_health);
+			regen = regen * (GetResource(this, RES_HEALTH) / this.max_health);
 
 		this.(regen_field) = min(this.(regen_field) + regen * delta_time, field_max);
 
 		if(this.owner)
 			this.owner.(regen_field) = (this.(regen_field) / field_max) * 100;
+	}
+}
+
+void vehicles_regen_resource(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale, Resource resource)
+{
+	float resource_amount = GetResource(this, resource);
+
+	if(resource_amount < field_max)
+	if(timer + rpause < time)
+	{
+		if(_healthscale)
+			regen = regen * (resource_amount / this.max_health);
+
+		SetResource(this, resource, min(resource_amount + regen * delta_time, field_max));
+
+		if(this.owner)
+			this.owner.(regen_field) = (GetResource(this, resource) / field_max) * 100;
 	}
 }
 
@@ -613,7 +603,7 @@ void shieldhit_think(entity this)
 
 void vehicles_painframe(entity this)
 {
-	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((this.vehicle_health / this.max_health) * 100));
+	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((GetResource(this, RES_HEALTH) / this.max_health) * 100));
 
 	if(myhealth <= 50)
 	if(this.pain_frame < time)
@@ -626,10 +616,12 @@ void vehicles_painframe(entity this)
 			this.velocity += randomvec() * 30;
 
 		if(this.vehicle_flags & VHF_DMGROLL)
+		{
 			if(this.vehicle_flags & VHF_DMGHEADROLL)
 				this.tur_head.angles += randomvec();
 			else
 				this.angles += randomvec();
+		}
 	}
 }
 
@@ -664,7 +656,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	{
 		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == NULL)
 		{
-			this.vehicle_shieldent = spawn();
+			this.vehicle_shieldent = new(vehicle_shieldent);
 			this.vehicle_shieldent.effects = EF_LOWPRECISION;
 
 			setmodel(this.vehicle_shieldent, MDL_VEH_SHIELD);
@@ -684,7 +676,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 		if(this.vehicle_shield < 0)
 		{
-			this.vehicle_health -= fabs(this.vehicle_shield);
+			TakeResource(this, RES_HEALTH, fabs(this.vehicle_shield));
 			this.vehicle_shieldent.colormod = '2 0 0';
 			this.vehicle_shield = 0;
 			this.vehicle_shieldent.alpha = 0.75;
@@ -699,7 +691,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	}
 	else
 	{
-		this.vehicle_health -= damage;
+		TakeResource(this, RES_HEALTH, damage);
 
 		if(sound_allowed(MSG_BROADCAST, attacker))
 			spamsound (this, CH_PAIN, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
@@ -710,21 +702,34 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	else
 		this.velocity += force;
 
-	if(this.vehicle_health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(this.owner)
+		{
 			if(this.vehicle_flags & VHF_DEATHEJECT)
 				vehicles_exit(this, VHEF_EJECT);
 			else
 				vehicles_exit(this, VHEF_RELEASE);
-
+		}
 
 		antilag_clear(this, this);
 
-		Vehicle info = Vehicles_from(this.vehicleid);
+		Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 		info.vr_death(info, this);
 		vehicles_setreturn(this);
 	}
+}
+
+bool vehicles_heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
+	if(targ.owner)
+		targ.owner.vehicle_health = (GetResource(targ, RES_HEALTH) / targ.max_health) * 100;
+	return true;
 }
 
 bool vehicles_crushable(entity e)
@@ -745,17 +750,12 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 
 	if(this.play_time < time)
 	{
-		float wc = vlen(this.velocity - this.oldvelocity);
-		//dprint("oldvel: ", vtos(this.oldvelocity), "\n");
-		//dprint("vel: ", vtos(this.velocity), "\n");
-		if(_minspeed < wc)
+		if(vdist(this.velocity - this.oldvelocity, >, _minspeed))
 		{
+			float wc = vlen(this.velocity - this.oldvelocity);
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			Damage(this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
-
-			//dprint("wc: ", ftos(wc), "\n");
-			//dprint("take: ", ftos(take), "\n");
 		}
 	}
 }
@@ -797,7 +797,6 @@ void vehicles_exit(entity vehic, bool eject)
 
 	vehicles_exit_running = true;
 
-	// TODO: this was in an IS_CLIENT check, make sure it isn't actually needed!
 	if(vehic.vehicle_flags & VHF_PLAYERSLOT)
 	{
 		vehic.vehicle_exit(vehic, eject);
@@ -813,6 +812,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 			WriteEntity( MSG_ONE, player);
 
+			// NOTE: engine networked
 			WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 			WriteAngle(MSG_ONE, 0);
 			WriteAngle(MSG_ONE, vehic.angles_y);
@@ -826,7 +826,7 @@ void vehicles_exit(entity vehic, bool eject)
 		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable		= TELEPORT_NORMAL;
-		player.alpha			= 1;
+		player.alpha			= default_player_alpha;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
 		player.view_ofs			= STAT(PL_VIEW_OFS, player);
@@ -893,19 +893,19 @@ void vehicles_touch(entity this, entity toucher)
 	// Vehicle currently in use
 	if(this.owner)
 	{
-		if(!forbidWeaponUse(this.owner))
 		if(toucher != NULL)
 		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
 		if(vehicles_crushable(toucher))
+		if(!weaponLocked(this.owner))
 		{
-			if(vdist(this.velocity, >=, 30))
+			if(vdist(this.velocity, >=, autocvar_g_vehicles_crush_minspeed))
 				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, DMG_NOWEP, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
 
 		if(this.play_time < time) {
-			Vehicle info = Vehicles_from(this.vehicleid);
+			Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 			info.vr_impact(info, this);
 		}
 
@@ -938,7 +938,7 @@ bool vehicle_impulse(entity this, int imp)
 
 void vehicles_enter(entity pl, entity veh)
 {
-   // Remove this when bots know how to use vehicles
+	// Remove this when bots know how to use vehicles
 	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
@@ -950,7 +950,7 @@ void vehicles_enter(entity pl, entity veh)
 	|| (pl.vehicle)
 	) { return; }
 
-	Vehicle info = Vehicles_from(veh.vehicleid);
+	Vehicle info = veh.vehicledef; //REGISTRY_GET(Vehicles, veh.vehicleid);
 
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
@@ -1000,11 +1000,12 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	pl.crouch = false;
+	UNSET_DUCKED(pl);
 	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
 	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
+	veh.event_heal 		= vehicles_heal;
 	veh.nextthink		= 0;
 	pl.items &= ~IT_USING_JETPACK;
 	pl.angles			= veh.angles;
@@ -1054,6 +1055,7 @@ void vehicles_enter(entity pl, entity veh)
 		WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, veh.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 		if(veh.tur_head)
 		{
@@ -1088,7 +1090,7 @@ void vehicles_think(entity this)
 	if(this.owner)
 		STAT(VEHICLESTAT_W2MODE, this.owner) = STAT(VEHICLESTAT_W2MODE, this);
 
-	Vehicle info = Vehicles_from(this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_think(info, this);
 
 	vehicles_painframe(this);
@@ -1118,6 +1120,7 @@ void vehicles_spawn(entity this)
 	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
+	this.event_heal 		= vehicles_heal;
 	this.reset 				= vehicles_reset;
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
@@ -1160,7 +1163,7 @@ void vehicles_spawn(entity this)
 	});
 
 
-	Vehicle info = Vehicles_from(this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_spawn(info, this);
 
 	vehicles_reset_colors(this, NULL);
@@ -1177,10 +1180,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
-	{
 		info.vr_precache(info);
-		IL_PUSH(g_vehicles, this);
-	}
 
 	if(this.targetname && this.targetname != "")
 	{
@@ -1228,8 +1228,10 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.damagedbycontents		= true;
 	IL_PUSH(g_damagedbycontents, this);
 	this.vehicleid				= info.vehicleid;
+	this.vehicledef 			= info;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
+	this.event_heal 			= func_null;
 	settouch(this, vehicles_touch);
 	setthink(this, vehicles_spawn);
 	this.nextthink				= time;

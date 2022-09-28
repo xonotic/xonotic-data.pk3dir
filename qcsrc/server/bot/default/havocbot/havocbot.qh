@@ -12,17 +12,16 @@
 
 .float havocbot_keyboardtime;
 .float havocbot_ducktime;
-.float bot_timelastseengoal;
-.float bot_canruntogoal;
 .float bot_chooseweapontime;
 .float rocketjumptime;
 .float nextaim;
 .float havocbot_personal_waypoint_searchtime;
 .float havocbot_personal_waypoint_failcounter;
 .float havocbot_chooseenemy_finished;
-.float havocbot_stickenemy;
+.float havocbot_stickenemy_time;
 .float havocbot_role_timeout;
 
+.float bot_stop_moving_timeout;
 .float bot_tracewalk_time;
 .entity ignoregoal;
 .entity bot_lastseengoal;
@@ -50,9 +49,6 @@ float havocbot_moveto_refresh_route(entity this);
 
 vector havocbot_dodge(entity this);
 
-.void(entity this) havocbot_role;
-.void(entity this) havocbot_previous_role;
-
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
@@ -61,5 +57,3 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
  */
 
 .entity draggedby;
-.float ladder_time;
-.entity ladder_entity;

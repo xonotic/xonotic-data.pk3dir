@@ -1,7 +1,84 @@
 #pragma once
 
 #include "utils.qh"
+#include <server/intermission.qh>
+//#include <common/resources/resources.qh>
+#include <common/replicate.qh>
 #include <common/sounds/all.qh>
+
+bool autocvar__notarget;
+int autocvar_g_balance_armor_start;
+float autocvar_g_balance_pause_armor_rot_spawn;
+float autocvar_g_balance_pause_fuel_rot_spawn;
+float autocvar_g_balance_pause_health_regen_spawn;
+float autocvar_g_balance_pause_health_rot_spawn;
+bool autocvar_g_botclip_collisions;
+bool autocvar_g_fullbrightplayers;
+bool autocvar_g_playerclip_collisions;
+float autocvar_g_player_alpha;
+float autocvar_g_player_brightness;
+float autocvar_g_player_damageforcescale = 2;
+float autocvar_g_respawn_delay_small;
+int autocvar_g_respawn_delay_small_count;
+float autocvar_g_respawn_delay_large;
+int autocvar_g_respawn_delay_large_count;
+float autocvar_g_respawn_delay_max;
+bool autocvar_g_respawn_delay_forced;
+bool autocvar_g_respawn_ghosts;
+float autocvar_g_respawn_ghosts_alpha = 1;
+float autocvar_g_respawn_ghosts_fadetime = 1.5;
+float autocvar_g_respawn_ghosts_time = 4.5;
+float autocvar_g_respawn_ghosts_speed;
+int autocvar_g_respawn_waves;
+bool autocvar_g_nodepthtestplayers;
+string autocvar_g_mutatormsg;
+float autocvar_sv_foginterval;
+float autocvar_sv_maxidle;
+int autocvar_sv_maxidle_minplayers = 2;
+float autocvar_sv_maxidle_playertospectator = 60;
+bool autocvar_sv_maxidle_alsokickspectators;
+int autocvar_sv_maxidle_slots;
+bool autocvar_sv_maxidle_slots_countbots;
+bool autocvar_g_forced_respawn;
+int autocvar_g_maxplayers;
+float autocvar_g_maxplayers_spectator_blocktime;
+string autocvar_g_xonoticversion;
+float autocvar_gameversion;
+float autocvar_gameversion_min;
+float autocvar_gameversion_max;
+string autocvar_hostname;
+int autocvar_spawn_debug;
+string autocvar_sv_motd;
+int autocvar_sv_name_maxlength = 64;
+string autocvar_sv_quickmenu_file;
+bool autocvar_sv_servermodelsonly;
+bool autocvar_sv_showspectators;
+int autocvar_sv_spectate;
+bool autocvar_sv_teamnagger;
+float autocvar_sv_player_scale;
+
+// WEAPONTODO
+.string weaponorder_byimpulse;
+
+.entity clientdata;
+
+.float jointime; // time of connecting
+.float startplaytime; // time of switching from spectator to player
+.float alivetime; // time of being alive
+
+.bool wasplayer;
+
+.int spectatee_status;
+.bool zoomstate;
+
+.bool just_joined;
+
+.int pressedkeys;
+
+.int playerid;
+
+.string playermodel;
+.string playerskin;
 
 void ClientState_attach(entity this);
 
@@ -17,7 +94,7 @@ CLASS(Client, Object)
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
-    ATTRIB(Client, playerskin, int, this.playerskin);
+    ATTRIB(Client, playerskin, string, this.playerskin);
 
     /** fingerprint of CA key the player used to authenticate */
     ATTRIB(Client, crypto_keyfp, string, this.crypto_keyfp);
@@ -82,7 +159,6 @@ CLASS(Client, Object)
     ATTRIB(Client, teamkill_soundtime, float, this.teamkill_soundtime);
     ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
     ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
-    ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
     ATTRIB(Client, jointime, float, this.jointime);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
     ATTRIB(Client, startplaytime, float, this.startplaytime);
@@ -98,7 +174,6 @@ CLASS(Client, Object)
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
     ATTRIB(Client, just_joined, bool, this.just_joined);
     ATTRIB(Client, race_completed, bool, this.race_completed);
-    ATTRIBARRAY(Client, msg_choice_choices, int, 50); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, latency_sum, float, this.latency_sum);
     ATTRIB(Client, latency_cnt, int, this.latency_cnt);
     ATTRIB(Client, latency_time, float, this.latency_time);
@@ -114,9 +189,13 @@ CLASS(Client, Object)
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
+    ATTRIB(Client, autojoin_checked, int, this.wasplayer);
 
     // networked cvars
 
+// not currently handled by ClientState
+#if 0
+    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, cvar_cl_allow_uid2name, int, this.cvar_cl_allow_uid2name);
     ATTRIB(Client, cvar_cl_allow_uidtracking, int, this.cvar_cl_allow_uidtracking);
     ATTRIB(Client, cvar_cl_autotaunt, float, this.cvar_cl_autotaunt);
@@ -132,18 +211,24 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_clippedspectating, bool, this.cvar_cl_clippedspectating);
     ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
     ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);
-    ATTRIB(Client, cvar_cl_newusekeysupported, bool, this.cvar_cl_newusekeysupported);
     ATTRIB(Client, cvar_cl_noantilag, bool, this.cvar_cl_noantilag);
     ATTRIB(Client, cvar_cl_movement_track_canjump, bool, this.cvar_cl_movement_track_canjump);
     ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
-    ATTRIB(Client, autoswitch, bool, this.autoswitch);
+    ATTRIB(Client, cvar_cl_autoswitch, bool, this.cvar_cl_autoswitch);
+    ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
+    ATTRIB(Client, cvar_r_drawviewmodel, bool, this.cvar_r_drawviewmodel);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
+    ATTRIB(Client, cvar_cl_dodging, float, this.cvar_cl_dodging);
     ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
     ATTRIB(Client, cvar_cl_accuracy_data_share, bool, this.cvar_cl_accuracy_data_share);
     ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
     ATTRIBARRAY(Client, cvar_cl_weaponpriorities, string, 10);
     ATTRIB(Client, cvar_cl_weaponpriority, string, this.cvar_cl_weaponpriority);
+    ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
+    ATTRIB(Client, cvar_cl_weapon_switch_reload, bool, this.cvar_cl_weapon_switch_reload);
+    ATTRIB(Client, cvar_cl_weapon_switch_fallback_to_impulse, bool, this.cvar_cl_weapon_switch_fallback_to_impulse);
+#endif
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -190,9 +275,6 @@ CLASS(Player, Client)
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
     ATTRIB(Player, ballistics_density, float, this.ballistics_density);
-    ATTRIB(Player, prevstrengthsound, float, this.prevstrengthsound);
-    ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
-    ATTRIB(Player, buff_shield, float, this.buff_shield);
 
     INIT(Player) {
         this.classname = STR_PLAYER;
@@ -225,11 +307,101 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
-void play_countdown(entity this, float finished, Sound samp);
+int autocvar__independent_players;
+bool independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
+#define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
 
-float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
+.int killcount;
+
+//flood fields
+.float nickspamtime; // time of last nick change
+.float nickspamcount;
+
+void SendWelcomeMessage(entity this, int msg_type);
+
+// respawning
+.int respawn_flags;
+.float respawn_time;
+.float respawn_time_max;
+
+.float respawn_countdown; // next number to count
+
+const int RESPAWN_FORCE = BIT(0);
+const int RESPAWN_SILENT = BIT(1);
+const int RESPAWN_DENY = BIT(2);
+
+float blockSpectators; // if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
+.float spectatortime; // point in time since the client is spectating or observing
+
+.bool player_blocked;
+
+const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
+
+// TODO: standardise resource regeneration
+.float pauseregen_finished;
+.float pauserothealth_finished;
+.float pauserotarmor_finished;
+.float pauserotfuel_finished;
+
+// g_<gametype>_str:
+// If 0, default is used.
+// If <0, 0 is used.
+// Otherwise, g_str (default value) is used.
+// For consistency, negative values there are mapped to zero too.
+#define GAMETYPE_DEFAULTED_SETTING(str) \
+    ((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
+    (gametype_setting_tmp < 0) ? 0 \
+    : (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
+    : gametype_setting_tmp)
+
+void calculate_player_respawn_time(entity this);
+
+bool PlayerInList(entity player, string list);
+
+void ClientData_Touch(entity e);
+
+int nJoinAllowed(entity this, entity ignore);
+
+void PlayerUseKey(entity this);
+
+void FixClientCvars(entity e);
+
+// called when a client connects, useful for updating sounds and such of static objects
+.void(entity this, entity player) init_for_player;
+
+IntrusiveList g_initforplayer;
+STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+
+void play_countdown(entity this, float finished, Sound samp);
+void player_powerups_remove_all(entity this);
+
+// NOTE: current type is Resource (avoiding circular includes!)
+void RotRegen(entity this, entity current, float limit_mod,
+	float regenstable, float regenfactor, float regenlinear, float regenframetime,
+	float rotstable, float rotfactor, float rotlinear, float rotframetime);
 
 bool Spectate(entity this, entity pl);
 
-#define SPECTATE_COPY() [[accumulate]] void SpectateCopy(entity this, entity spectatee)
+void ClientInit_Spawn();
+
+void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint);
+
+void SetSpectatee(entity this, entity spectatee);
+void SetSpectatee_status(entity this, int spectatee_num);
+
+void FixPlayermodel(entity player);
+
+void ClientInit_misc(entity this);
+
+int GetPlayerLimit();
+
+const int MIN_SPEC_TIME = 1;
+bool joinAllowed(entity this);
+void Join(entity this);
+
+#define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
+
+const int MAX_SPECTATORS = 7;

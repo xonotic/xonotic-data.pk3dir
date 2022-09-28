@@ -1,6 +1,7 @@
 #include "gametypelist.qh"
 
 #include "dialog_multiplayer_create.qh"
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 
 entity makeXonoticGametypeList()
@@ -31,16 +32,17 @@ void XonoticGametypeList_setSelected(entity me, float i)
 void XonoticGametypeList_loadCvars(entity me)
 {
 	Gametype t = MapInfo_CurrentGametype();
+	int cnt = GameType_GetCount();
 	float i;
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(i = 0; i < cnt; ++i)
 		if(t == GameType_GetID(i))
 			break;
-	if(i >= GameType_GetCount())
+	if(i >= cnt)
 	{
-		for(i = 0; i < GameType_GetCount(); ++i)
+		for(i = 0; i < cnt; ++i)
 			if(t == MAPINFO_TYPE_DEATHMATCH)
 				break;
-		if(i >= GameType_GetCount())
+		if(i >= cnt)
 			i = 0;
 	}
 	me.setSelected(me, i);
@@ -101,8 +103,10 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticGametypeList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 	me.columnIconOrigin = 0;
 	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;

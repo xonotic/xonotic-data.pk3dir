@@ -125,12 +125,12 @@ copy(progs)
 copy(menu)
 
 function(pack prog)
-    add_custom_target(${prog}.pk3
+    add_custom_target(${prog}.pk3 ALL
             DEPENDS ${prog}-${GIT_DESC}.pk3
             )
     add_custom_command(OUTPUT ${prog}-${GIT_DESC}.pk3
             DEPENDS ${prog}
-            COMMAND ${CMAKE_COMMAND} -E echo "http://xonotic.org" > "${prog}-${GIT_DESC}.txt"
+            COMMAND ${CMAKE_COMMAND} -E echo "https://xonotic.org" > "${prog}-${GIT_DESC}.txt"
             COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:${prog}>/${prog}.dat" "${prog}-${GIT_DESC}.dat"
             COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:${prog}>/${prog}.lno" "${prog}-${GIT_DESC}.lno"
             COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${prog}-${GIT_DESC}.pk3" --format=zip

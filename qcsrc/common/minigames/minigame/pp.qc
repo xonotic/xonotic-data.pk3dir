@@ -1,5 +1,5 @@
 #include "pp.qh"
-REGISTER_MINIGAME(pp, "Push-Pull");
+REGISTER_MINIGAME(pp, _("Push-Pull"));
 
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int PP_TURN_WIN   = 0x0200; // player has won
@@ -11,7 +11,7 @@ const int PP_TURN_TEAM1 = 0x0001;
 const int PP_TURN_TEAM2 = 0x0002;
 const int PP_TURN_TEAM  = 0x000f; // turn team mask
 
-const int PP_BLOCKED_TEAM = 5; // there won't ever be a 5th team, so we can abuse this
+const int PP_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 const int PP_LET_CNT = 7;
 const int PP_NUM_CNT = 7;
@@ -121,11 +121,11 @@ void pp_move(entity minigame, entity player, string pos )
 
 			if(existing)
 			{
-				if(existing.netname) { strunzone(existing.netname); }
+				strfree(existing.netname);
 				delete(existing);
 			}
 
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.cnt = 1;
 			piece.team = player.team; // temporary
 			piece.netname = strzone(pos);
@@ -157,7 +157,7 @@ void pp_setup_pieces(entity minigame)
 
 		if(t1_true || t2_true)
 		{
-			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.team = ((t1_true) ? 1 : 2);
 			piece.netname = strzone(minigame_tile_buildname(i,t));
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -215,7 +215,7 @@ int pp_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -225,7 +225,7 @@ int pp_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 2 players
-			if(pl_num >= 2) { return false; }
+			if(pl_num >= 2) { return PP_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -236,12 +236,18 @@ int pp_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == PP_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					pp_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 				case "next":
+					if(event_blocked)
+						return true;
 					pp_next_match(minigame,...(0,entity));
 					return true;
 			}
@@ -359,13 +365,13 @@ void pp_hud_board(vector pos, vector mySize)
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",pname),
+			sprintf(_("%s^7 won the game!"), pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",pname),
+			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -388,17 +394,20 @@ void pp_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	if ( (active_minigame.minigame_flags&PP_TURN_TEAM) == 2 )
-		mypos_y  += player_fontsize_y + ts_y;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != PP_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		if ( (active_minigame.minigame_flags&PP_TURN_TEAM) == 2 )
+			mypos_y  += player_fontsize_y + ts_y;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != PP_SPECTATOR_TEAM )
 		{
 			vector tile_color = '1 1 1';
 			switch(e.team)
@@ -434,14 +443,18 @@ void pp_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string pp_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == PP_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & PP_TURN_DRAW )
 		return _("Draw");
 
 	if ( turnflags & PP_TURN_WIN )
 	{
+		// translator-friendly messages composed of 2 existing messages
 		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
-			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
-		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
+			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
+		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
 	}
 
 	if ( turnflags & PP_TURN_NEXT )
@@ -471,8 +484,7 @@ void pp_make_move(entity minigame)
 
 void pp_set_curr_pos(string s)
 {
-	if ( pp_curr_pos )
-		strunzone(pp_curr_pos);
+	strfree(pp_curr_pos);
 	if ( s )
 		s = strzone(s);
 	pp_curr_pos = s;
@@ -486,17 +498,27 @@ int pp_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			pp_set_curr_pos("");
-			minigame.message = pp_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, pp_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if((minigame.minigame_flags & PP_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & PP_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & PP_TURN_WIN) && !(minigame.minigame_flags & PP_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a3");
 						else
@@ -504,6 +526,8 @@ int pp_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("c3");
 						else
@@ -511,6 +535,8 @@ int pp_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a1");
 						else
@@ -518,6 +544,8 @@ int pp_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a3");
 						else
@@ -526,6 +554,8 @@ int pp_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						pp_make_move(minigame);
 						return true;
 				}
@@ -537,6 +567,7 @@ int pp_client_event(entity minigame, string event, ...)
 		{
 			if(...(0,int) == K_MOUSE1)
 			{
+				pp_client_event(minigame, "mouse_moved");
 				pp_make_move(minigame);
 				return true;
 			}
@@ -561,7 +592,7 @@ int pp_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = pp_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, pp_turn_to_string(sent.minigame_flags));
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 					sent.pp_team1_score = ReadByte();

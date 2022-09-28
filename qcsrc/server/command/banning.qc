@@ -1,24 +1,21 @@
 #include "banning.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/state.qh>
 #include <common/command/_mod.qh>
-#include "banning.qh"
-
-#include "common.qh"
-
-#include "../player.qh"
-#include "../ipban.qh"
-
+#include <common/state.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/banning.qh>
+#include <server/command/common.qh>
+#include <server/ipban.qh>
+#include <server/player.qh>
 
 // =====================================================
 //  Banning and kicking command code, written by Samual
 //  Last updated: December 29th, 2011
 // =====================================================
 
-void BanCommand_ban(float request, float argc, string command)
+void BanCommand_ban(int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -41,20 +38,20 @@ void BanCommand_ban(float request, float argc, string command)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2ban^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd ban address [bantime] [reason]");
-			LOG_INFO("  'address' is the IP address or range of the player to ban,");
-			LOG_INFO("  'bantime' is the amount of time that the ban is active (default if not provided),");
-			LOG_INFO("  and 'reason' is the string to label the ban with as reason for banning.");
-			LOG_INFO("See also: ^2banlist, kickban, unban^7");
+			LOG_HELP("Usage:^3 sv_cmd ban <address> [<bantime>] [<reason>]");
+			LOG_HELP("  <address> is the IP address or range of the player to ban,");
+			LOG_HELP("  <bantime> is the amount of time that the ban is active (default if not provided),");
+			LOG_HELP("  and <reason> is the string to label the ban with as reason for banning.");
+			LOG_HELP("See also: ^2banlist, kickban, unban^7");
 			return;
 		}
 	}
 }
 
-void BanCommand_banlist(float request)
+void BanCommand_banlist(int request)
 {
 	switch (request)
 	{
@@ -67,15 +64,15 @@ void BanCommand_banlist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd banlist");
-			LOG_INFO("  No arguments required.");
-			LOG_INFO("See also: ^2ban, kickban, unban^7");
+			LOG_HELP("Usage:^3 sv_cmd banlist");
+			LOG_HELP("  No arguments required.");
+			LOG_HELP("See also: ^2ban, kickban, unban^7");
 			return;
 		}
 	}
 }
 
-void BanCommand_kickban(float request, float argc, string command)
+void BanCommand_kickban(int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -108,21 +105,21 @@ void BanCommand_kickban(float request, float argc, string command)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2kickban^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd kickban client [bantime] [masksize] [reason]");
-			LOG_INFO("  'client' is the entity number or name of the player to ban,");
-			LOG_INFO("  'bantime' is the amount of time that the ban is active (default if not provided),");
-			LOG_INFO("  'masksize' is the range of the IP address (1-thru-4, default if not provided),");
-			LOG_INFO("  and 'reason' is the string to label the ban with as reason for banning.");
-			LOG_INFO("See also: ^2ban, banlist, unban^7");
+			LOG_HELP("Usage:^3 sv_cmd kickban <client> [<bantime>] [<masksize>] [<reason>]");
+			LOG_HELP("  <client> is the entity number or name of the player to ban,");
+			LOG_HELP("  <bantime> is the amount of time that the ban is active (default if not provided),");
+			LOG_HELP("  <masksize> is the range of the IP address (1-thru-4, default if not provided),");
+			LOG_HELP("  and <reason> is the string to label the ban with as reason for banning.");
+			LOG_HELP("See also: ^2ban, banlist, unban^7");
 			return;
 		}
 	}
 }
 
-void BanCommand_mute(float request, float argc, string command)  // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
+void BanCommand_mute(int request, int argc, string command)  // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
 {
 	switch (request)
 	{
@@ -146,18 +143,18 @@ void BanCommand_mute(float request, float argc, string command)  // TODO: Add a 
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2mute^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd mute client");
-			LOG_INFO("  'client' is the entity number or name of the player to mute.");
-			LOG_INFO("See also: ^2unmute^7");
+			LOG_HELP("Usage:^3 sv_cmd mute <client>");
+			LOG_HELP("  <client> is the entity number or name of the player to mute.");
+			LOG_HELP("See also: ^2unmute^7");
 			return;
 		}
 	}
 }
 
-void BanCommand_unban(float request, float argc)
+void BanCommand_unban(int request, int argc)
 {
 	switch (request)
 	{
@@ -195,15 +192,15 @@ void BanCommand_unban(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd unban banid");
-			LOG_INFO("  Where 'banid' is the ID of the ban of which to remove.");
-			LOG_INFO("See also: ^2ban, banlist, kickban^7");
+			LOG_HELP("Usage:^3 sv_cmd unban <banid>");
+			LOG_HELP("  Where <banid> is the ID of the ban of which to remove.");
+			LOG_HELP("See also: ^2ban, banlist, kickban^7");
 			return;
 		}
 	}
 }
 
-void BanCommand_unmute(float request, float argc)
+void BanCommand_unmute(int request, int argc)
 {
 	switch (request)
 	{
@@ -227,12 +224,12 @@ void BanCommand_unmute(float request, float argc)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2mute^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd unmute client");
-			LOG_INFO("  'client' is the entity number or name of the player to unmute.");
-			LOG_INFO("See also: ^2mute^7");
+			LOG_HELP("Usage:^3 sv_cmd unmute <client>");
+			LOG_HELP("  <client> is the entity number or name of the player to unmute.");
+			LOG_HELP("See also: ^2mute^7");
 			return;
 		}
 	}
@@ -240,7 +237,7 @@ void BanCommand_unmute(float request, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void BanCommand_(float request)
+void BanCommand_(int request)
 {
     switch(request)
     {
@@ -253,8 +250,8 @@ void BanCommand_(float request)
         default:
         case CMD_REQUEST_USAGE:
         {
-            print("\nUsage:^3 sv_cmd \n");
-            print("  No arguments required.\n");
+            LOG_HELP("Usage:^3 sv_cmd ");
+            LOG_HELP("  No arguments required.");
             return;
         }
     }
@@ -285,7 +282,7 @@ void BanCommand_macro_help()
 #undef BAN_COMMAND
 }
 
-float BanCommand_macro_command(float argc, string command)
+float BanCommand_macro_command(int argc, string command)
 {
 	#define BAN_COMMAND(name, function, description) \
 		{ if (name == strtolower(argv(0))) { function; return true; } }
@@ -296,7 +293,7 @@ float BanCommand_macro_command(float argc, string command)
 	return false;
 }
 
-float BanCommand_macro_usage(float argc)
+float BanCommand_macro_usage(int argc)
 {
 	#define BAN_COMMAND(name, function, description) \
 		{ if (name == strtolower(argv(1))) { function; return true; } }
@@ -318,7 +315,7 @@ void BanCommand_macro_write_aliases(float fh)
 
 float BanCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

@@ -1,5 +1,8 @@
 #pragma once
 
+float autocvar_g_balance_portal_health;
+float autocvar_g_balance_portal_lifetime;
+
 .float portal_id;
 .entity portal_in, portal_out;
 
@@ -11,3 +14,5 @@ void Portal_ClearWithID(entity own, float id);
 
 vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle);
 void Portal_ClearAll_PortalsOnly(entity own);
+
+void Portal_Think(entity this);

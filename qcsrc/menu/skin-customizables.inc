@@ -1,4 +1,4 @@
-#if 0
+/*
 "Perl code to convert this to a skinvalues.txt file.";
 print "title Generic\n";
 print "author Morphed\n";
@@ -32,7 +32,7 @@ while(<DATA>)
 	}
 }
 __DATA__
-#endif
+*/
 SKINBEGIN
 	// font sizes (used for everything)
 	SKINFLOAT(FONTSIZE_NORMAL, 12);
@@ -70,6 +70,7 @@ SKINBEGIN
 	SKINVECTOR(COLOR_DIALOG_CROSSHAIR, '1 0.7 0.7');
 	SKINVECTOR(COLOR_DIALOG_HUD, '1 0.7 0.7');
 	SKINVECTOR(COLOR_DIALOG_SERVERINFO, '0.7 0.7 1');
+	SKINVECTOR(COLOR_DIALOG_WELCOME, '1 0.7 0.7');
 	SKINVECTOR(COLOR_DIALOG_CVARS, '1 0 0');
 	SKINVECTOR(COLOR_DIALOG_SCREENSHOTVIEWER, '0.7 0.7 1');
 	SKINVECTOR(COLOR_DIALOG_HUDCONFIRM, '1 0 0');

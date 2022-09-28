@@ -1,3 +1,5 @@
+#include <common/effects/all.qh>
+
 EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
 EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
 EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")
