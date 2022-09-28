@@ -895,21 +895,13 @@ spawnfunc(worldspawn)
 	{
 		// prefer .music over .noise
 		string chosen_music;
-		string oldstuff;
 		if(world.music)
 			chosen_music = world.music;
 		else
 			chosen_music = world.noise;
-		if(
-			substring(chosen_music, strlen(chosen_music) - 4, 4) == ".wav"
-			||
-			substring(chosen_music, strlen(chosen_music) - 4, 4) == ".ogg"
-		)
-			oldstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
-		else
-			oldstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
 
-		strcpy(clientstuff, oldstuff);
+		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+		strcpy(clientstuff, newstuff);
 	}
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")

@@ -1038,12 +1038,8 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			fputs(fh, strcat("author ", MapInfo_Map_author, "\n"));
 			if(_MapInfo_Map_worldspawn_music != "")
 			{
-				if(
-					substring(_MapInfo_Map_worldspawn_music, strlen(_MapInfo_Map_worldspawn_music) - 4, 4) == ".wav"
-					||
-					substring(_MapInfo_Map_worldspawn_music, strlen(_MapInfo_Map_worldspawn_music) - 4, 4) == ".ogg"
-				)
-					fputs(fh, strcat("cdtrack ", substring(_MapInfo_Map_worldspawn_music, 0, strlen(_MapInfo_Map_worldspawn_music) - 4), "\n"));
+				if(strcasecmp(substring(_MapInfo_Map_worldspawn_music, -4, 4), ".wav") == 0 || strcasecmp(substring(_MapInfo_Map_worldspawn_music, -4, 4), ".ogg") == 0)
+					fputs(fh, strcat("cdtrack ", substring(_MapInfo_Map_worldspawn_music, 0, -4), "\n"));
 				else
 					fputs(fh, strcat("cdtrack ", _MapInfo_Map_worldspawn_music, "\n"));
 			}
