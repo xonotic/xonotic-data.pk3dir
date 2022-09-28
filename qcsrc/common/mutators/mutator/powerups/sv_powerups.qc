@@ -122,7 +122,8 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 		case ITEM_Invisibility: e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
 		case ITEM_Speed: e.speed_finished = finished; maxtime = autocvar_g_balance_powerup_speed_time; break;
 	}
-	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 100 132', randomvec() * 175 + '0 0 175', time_to_live);
+	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), time_to_live);
+	e.item_spawnshieldtime = time + 0.5;
 
 	if(!freezeTimer)
 		Item_SetExpiring(e, true);
@@ -162,11 +163,11 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 	FOREACH(StatusEffect, it.instanceOfPowerups,
 	{
 		if(StatusEffects_active(it, frag_target))
-			powerups_DropItem(frag_target, it, autocvar_g_powerups_dropondeath == 2);
+			powerups_DropItem(frag_target, it, autocvar_g_powerups_drop_ondeath == 2);
 	});
 }
 
-MUTATOR_HOOKFUNCTION(powerups, PlayerUseKey, CBC_ORDER_FIRST)
+MUTATOR_HOOKFUNCTION(powerups, PlayerUseKey)
 {
 	if(!autocvar_g_powerups_drop)
 		return;
