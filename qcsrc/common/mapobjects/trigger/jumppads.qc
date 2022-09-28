@@ -134,11 +134,8 @@ bool jumppad_push(entity this, entity targ)
 		return false;
 
 	vector org = targ.origin;
-#ifdef SVQC
-	if(autocvar_sv_q3defragcompat)
-#elif defined(CSQC)
-	if(STAT(Q3DEFRAGCOMPAT))
-#endif
+
+	if(STAT(Q3COMPAT))
 	{
 		org.z += targ.mins_z;
 		org.z += 1; // off by 1!

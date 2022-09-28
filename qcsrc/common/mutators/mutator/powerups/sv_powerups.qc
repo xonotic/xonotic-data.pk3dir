@@ -112,7 +112,7 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 
 	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
 	// otherwise it'll disappear after the timer runs out.
-	float time_to_live = (freezeTimer ? autocvar_g_powerups_dropondeath_ttl : timeleft);
+	float time_to_live = (freezeTimer ? autocvar_g_items_dropped_lifetime : timeleft);
 
 	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
 	switch(item)
@@ -154,7 +154,7 @@ MUTATOR_HOOKFUNCTION(powerups, ItemTouched)
 
 MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 {
-	if(!autocvar_g_powerups_dropondeath)
+	if(!autocvar_g_powerups_drop_ondeath)
 		return;
 
 	entity frag_target = M_ARGV(2, entity);

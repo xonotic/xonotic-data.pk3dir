@@ -798,10 +798,13 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 {
 	vector emin = toucher.absmin, emax = toucher.absmax;
-	// the engine offsets absolute bounding boxes by a single quake unit
-	// we must undo that here to allow accurate touching
-	emin += '1 1 1';
-	emax -= '1 1 1';
+	if(STAT(Q3COMPAT))
+	{
+		// DP's tracebox enlarges absolute bounding boxes by a single quake unit
+		// we must undo that here to allow accurate touching
+		emin += '1 1 1';
+		emax -= '1 1 1';
+	}
 	return !WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
 }
 

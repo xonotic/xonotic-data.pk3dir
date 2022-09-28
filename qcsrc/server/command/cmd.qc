@@ -73,8 +73,8 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		{
 			if (argv(1) != "")
 			{
-				CS_CVAR(caller).autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).autoswitch ? "on" : "off"), ".\n"));
+				CS_CVAR(caller).cvar_cl_autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS_CVAR(caller).cvar_cl_autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -114,7 +114,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 					else if (teamplay && !autocvar_sv_spectate && !(Player_GetForcedTeamIndex(caller) > 0))
 					{
 						TRANSMUTE(Observer, caller);  // really?
-						stuffcmd(caller, "menu_showteamselect\n");
+						stuffcmd(caller, "scoreboard_team_selection\n");
 					}
 				}
 
@@ -282,6 +282,7 @@ void ClientCommand_join(entity caller, int request)
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
 			}
+			CS(caller).parm_idlesince = time;
 
 			return;  // never fall through to usage
 		}
@@ -366,40 +367,35 @@ void ClientCommand_physics(entity caller, int request, int argc)
 	}
 }
 
-void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for toggling readyness
+void ClientCommand_ready(entity caller, int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
+			if (IS_CLIENT(caller) && caller.last_ready < time - 3)
 			{
-				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
+					if (time < game_starttime) // game is already restarting
+						return;
+					if (caller.ready)            // toggle
 					{
-						if (time < game_starttime) // game is already restarting
-							return;
-						if (caller.ready)            // toggle
-						{
-							caller.ready = false;
-							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
-						}
-						else
-						{
-							caller.ready = true;
-							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
-						}
-
-						// cannot reset the game while a timeout is active!
-						if (!timeout_status) ReadyCount();
+						caller.ready = false;
+						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
+							bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 					}
 					else
 					{
-						sprint(caller, "^1Game has already been restarted\n");
+						caller.ready = true;
+						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
+							bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 					}
+
+					caller.last_ready = time;
+
+					// cannot reset the game while a timeout is active!
+					if (!timeout_status) ReadyCount();
 				}
 			}
 			return;  // never fall through to usage

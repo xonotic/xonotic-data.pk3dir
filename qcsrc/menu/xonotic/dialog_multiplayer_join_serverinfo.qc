@@ -1,11 +1,15 @@
 #include "dialog_multiplayer_join_serverinfo.qh"
 #include <common/mapinfo.qh>
 
+#include "tabcontroller.qh"
 #include "serverlist.qh"
 #include "playerlist.qh"
 #include "inputbox.qh"
 #include "textlabel.qh"
 #include "button.qh"
+#include "dialog_multiplayer_join_serverinfotab.qh"
+#include "dialog_multiplayer_join_termsofservice.qh"
+
 
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
@@ -36,10 +40,10 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	//  Now, fill in the strings
 	// ==========================
 	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
-	me.nameLabel.setText(me.nameLabel, me.currentServerName);
+	me.infoTab.nameLabel.setText(me.infoTab.nameLabel, me.currentServerName);
 
 	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
-	me.cnameLabel.setText(me.cnameLabel, me.currentServerCName);
+	me.infoTab.cnameLabel.setText(me.infoTab.cnameLabel, me.currentServerCName);
 
 	pure_available = false;
 	pure_violations = -1;
@@ -56,6 +60,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	freeslots = -1;
 	sflags = -1;
 	modname = "";
+	bool ToSSpecified = false;
 	for(int j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -68,11 +73,36 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			pure_violations = stof(v);
 		}
 		else if(k == "S")
+		{
 			freeslots = stof(v);
+		}
 		else if(k == "F")
+		{
 			sflags = stof(v);
+		}
 		else if(k == "M")
+		{
 			modname = v;
+		}
+		else if(k == "T")
+		{
+			ToSSpecified = true;
+			string downloadurl = v;
+			if (downloadurl == "INVALID")
+			{
+				me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
+			}
+			else
+			{
+				downloadurl = strreplace("|", ":", downloadurl);
+				me.ToSTab.loadToS(me.ToSTab, downloadurl);
+			}
+		}
+	}
+
+	if (!ToSSpecified)
+	{
+		me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
 	}
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
@@ -88,39 +118,39 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
 
 	me.currentServerType = strzone(typestr);
-	me.typeLabel.setText(me.typeLabel, me.currentServerType);
+	me.infoTab.typeLabel.setText(me.infoTab.typeLabel, me.currentServerType);
 
 	me.currentServerMap = strzone(gethostcachestring(SLIST_FIELD_MAP, i));
-	me.mapLabel.setText(me.mapLabel, me.currentServerMap);
+	me.infoTab.mapLabel.setText(me.infoTab.mapLabel, me.currentServerMap);
 
 	me.currentServerPlayers = strzone(gethostcachestring(SLIST_FIELD_PLAYERS, i));
-	me.rawPlayerList.setPlayerList(me.rawPlayerList, me.currentServerPlayers);
+	me.infoTab.rawPlayerList.setPlayerList(me.infoTab.rawPlayerList, me.currentServerPlayers);
 
 	numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
 	maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
 	numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
 	me.currentServerNumPlayers = strzone(sprintf("%d/%d", numh, maxp));
-	me.numPlayersLabel.setText(me.numPlayersLabel, me.currentServerNumPlayers);
+	me.infoTab.numPlayersLabel.setText(me.infoTab.numPlayersLabel, me.currentServerNumPlayers);
 
 	s = ftos(numb);
 	me.currentServerNumBots = strzone(s);
-	me.numBotsLabel.setText(me.numBotsLabel, me.currentServerNumBots);
+	me.infoTab.numBotsLabel.setText(me.infoTab.numBotsLabel, me.currentServerNumBots);
 
 	if(freeslots < 0) { freeslots = maxp - numh - numb; }
 	s = ftos(freeslots);
 	me.currentServerNumFreeSlots = strzone(s);
-	me.numFreeSlotsLabel.setText(me.numFreeSlotsLabel, me.currentServerNumFreeSlots);
+	me.infoTab.numFreeSlotsLabel.setText(me.infoTab.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
 	me.currentServerMod = ((modname == "Xonotic") ? ZCTX(_("MOD^Default")) : modname);
 	me.currentServerMod = strzone(me.currentServerMod);
-	me.modLabel.setText(me.modLabel, me.currentServerMod);
+	me.infoTab.modLabel.setText(me.infoTab.modLabel, me.currentServerMod);
 
 	me.currentServerVersion = strzone(versionstr);
-	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
+	me.infoTab.versionLabel.setText(me.infoTab.versionLabel, me.currentServerVersion);
 
 	me.currentServerPure = ((!pure_available) ? _("N/A") : (pure_violations == 0) ? _("Official") : sprintf(_("%d modified"), pure_violations));
 	me.currentServerPure = strzone(me.currentServerPure);
-	me.pureLabel.setText(me.pureLabel, me.currentServerPure);
+	me.infoTab.pureLabel.setText(me.infoTab.pureLabel, me.currentServerPure);
 
 	s = crypto_getencryptlevel(me.currentServerCName);
 	if(s == "")
@@ -157,101 +187,34 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 				me.currentServerEncrypt = _("Required (will encrypt)");
 			break;
 	}
-	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
-	setZonedTooltip(me.encryptLabel, _("Use the `crypto_aeslevel` cvar to change your preferences"), string_null);
+	me.infoTab.encryptLabel.setText(me.infoTab.encryptLabel, me.currentServerEncrypt);
+	setZonedTooltip(me.infoTab.encryptLabel, _("Use the `crypto_aeslevel` cvar to change your preferences"), string_null);
 
 	s = crypto_getidfp(me.currentServerCName);
 	if (!s) { s = _("N/A"); }
 	me.currentServerID = strzone(s);
-	me.idLabel.setText(me.idLabel, me.currentServerID);
+	me.infoTab.idLabel.setText(me.infoTab.idLabel, me.currentServerID);
 
 	s = crypto_getkeyfp(me.currentServerCName);
 	if (!s) { s = _("N/A"); }
 	me.currentServerKey = strzone(s);
-	me.keyLabel.setText(me.keyLabel, me.currentServerKey);
+	me.infoTab.keyLabel.setText(me.infoTab.keyLabel, me.currentServerKey);
+
+	me.currentServerStatsStatus = ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? ((sflags & SERVERFLAG_PLAYERSTATS_CUSTOM) ? _("custom stats server") : _("stats enabled")) : _("stats disabled"));
+	me.currentServerStatsStatus = strzone(me.currentServerStatsStatus);
+	me.infoTab.statsLabel.setText(me.infoTab.statsLabel, me.currentServerStatsStatus);
 }
 
 void XonoticServerInfoDialog_fill(entity me)
 {
-	entity e;
+	entity mc, e;
+	mc = makeXonoticTabController(me.rows - 2);
 	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Hostname:")));
-		me.TD(me, 1, 4.6, e = makeXonoticTextLabel(0.5, ""));
-		e.colorL = SKINCOLOR_SERVERINFO_NAME;
-		e.allowCut = 1;
-		me.nameLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Address:")));
-		me.TD(me, 1, 4.6, e = makeXonoticTextLabel(0.5, ""));
-		e.colorL = SKINCOLOR_SERVERINFO_IP;
-		e.allowCut = 1;
-		me.cnameLabel = e;
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Status"), me.infoTab = makeXonoticServerInfoTab()));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Terms of Service"), me.ToSTab = makeXonoticServerToSTab()));
 
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Gametype:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.typeLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Map:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.mapLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Mod:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.modLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Version:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.versionLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Settings:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.pureLabel = e;
-
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Players:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.numPlayersLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Bots:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.numBotsLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Free slots:")));
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
-		e.allowCut = 1;
-		me.numFreeSlotsLabel = e;
-
-	me.gotoRC(me, me.rows - 5, 0);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Encryption:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
-			e.allowCut = 1;
-			me.encryptLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("ID:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
-			e.allowCut = 1;
-			me.keyLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Key:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
-			e.allowCut = 1;
-			me.idLabel = e;
-
-	me.gotoRC(me, 2, 2.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Players:")));
-	me.TR(me);
-		me.TD(me, me.rows - 8, 4, e = makeXonoticPlayerList());
-			me.rawPlayerList = e;
+		me.TD(me, me.rows - 2, me.columns, mc);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Close"), '0 0 0'));
@@ -270,3 +233,4 @@ void Join_Click(entity btn, entity me)
 {
 	localcmd("connect ", me.currentServerCName, "\n");
 }
+

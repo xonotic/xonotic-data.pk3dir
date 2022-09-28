@@ -63,9 +63,8 @@ float EnemyHitCheck()
 	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
 	t = entcs_GetTeam(n - 1);
-	if(teamplay)
-		if(t == myteam)
-			return SHOTTYPE_HITTEAM;
+	if(teamplay && t == myteam)
+		return SHOTTYPE_HITTEAM;
 	if(t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;
@@ -229,7 +228,7 @@ void HUD_Crosshair(entity this)
 	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
 		csqcplayer.alpha = csqcplayer.m_alpha;
 
-	if (autocvar_chase_active > 0 && autocvar_chase_front)
+	if (autocvar_chase_active > 0 && (autocvar_chase_front || autocvar_cl_lockview))
 	{
 		if (csqcplayer.alpha != csqcplayer.m_alpha)
 			HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);

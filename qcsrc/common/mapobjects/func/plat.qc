@@ -76,8 +76,9 @@ spawnfunc(func_plat)
 		this.noise1 = "plats/plat2.wav";
 	}
 
-	if (this.sounds == 2)
+	if (this.sounds == 2 || q3compat)
 	{
+		// Plats in Q3 always have sounds (they're hard coded in Q3 engine)
 		this.noise = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
@@ -87,6 +88,18 @@ spawnfunc(func_plat)
 		this.noise = this.sound1;
 	if (this.sound2)
 		this.noise1 = this.sound2;
+
+	if (q3compat)
+	{
+		// CPMA adds these fields for overriding the engine sounds
+		string s = GetField_fullspawndata(this, "sound_start", true);
+		string e = GetField_fullspawndata(this, "sound_end", true);
+
+		if (s)
+			this.noise = strzone(s);
+		if (e)
+			this.noise1 = strzone(e);
+	}
 
 	if(this.noise && this.noise != "")
 	{
