@@ -953,6 +953,8 @@ string _MapInfo_FindArenaFile(string pFilename, string extension)
 			continue; // how?
 		for(string s; (s = fgets(fh)); )
 		{
+			if(substring(s, 0, 2) == "//")
+				continue;
 			int offset = strstrofs(s, "map", 0);
 			if(offset >= 0)
 			{
