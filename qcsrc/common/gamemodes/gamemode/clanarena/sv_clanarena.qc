@@ -54,22 +54,20 @@ int CA_PreventStalemate()
 	//  https://gitlab.com/xonotic/xonotic-data.pk3dir/-/merge_requests/1022/
 	for(int i = 1; i <= AvailableTeams(); i++)
 	{
-		if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(winnerTeam)))
+		if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)))
 		{
 			secondTeam = winnerTeam;
-			winnerTeam = i;
+			winnerTeam = Team_IndexToTeam(i);
 		}
 		else
 		{
-			if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(secondTeam)))
-			{
-				secondTeam = i;
-			}
+			if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+				secondTeam = Team_IndexToTeam(i);
 		}
 	}
 
-	if(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(secondTeam)))
-		return Team_IndexToTeam(winnerTeam);
+	if(Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+		return winnerTeam;
 
 	// Equality. Let's check which team has more health now
 	winnerTeam = 0;
@@ -84,10 +82,8 @@ int CA_PreventStalemate()
 		teamHealth = 0;
 
 		// Add up health for the players in this team
-		FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
+		FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it) && it.team == Team_IndexToTeam(teamIndex),
 		{
-			if (it.team != Team_IndexToTeam(teamIndex))
-				continue;
 			if (IS_DEAD(it))
 				continue;
 			teamHealth += GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR);
@@ -98,21 +94,21 @@ int CA_PreventStalemate()
 		{
 			secondTeam = winnerTeam;
 			secondTeamHealth = winnerTeamHealth;
-			winnerTeam = i;
+			winnerTeam = Team_IndexToTeam(i);
 			winnerTeamHealth = teamHealth;
 		}
 		else
 		{
 			if(!secondTeam || teamHealth > secondTeamHealth)
 			{
-				secondTeam = i;
+				secondTeam = Team_IndexToTeam(i);
 				secondTeamHealth = teamHealth;
 			}
 		}
 	}
 
 	if(winnerTeamHealth != secondTeamHealth)
-		return Team_IndexToTeam(winnerTeam);
+		return winnerTeam;
 	else
 		return -2; // Equality. Can't avoid the stalemate.
 }
