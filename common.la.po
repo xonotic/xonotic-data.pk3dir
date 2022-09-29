@@ -1919,11 +1919,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:30
 msgid "Resistance"
-msgstr ""
+msgstr "Resistentia"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:41
 msgid "Medic"
-msgstr ""
+msgstr "Medicus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:53
 msgid "Bash"
@@ -1936,23 +1936,23 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:75
 msgid "Disability"
-msgstr ""
+msgstr "Debilitas"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:89
 msgid "Disabled"
-msgstr ""
+msgstr "Debilis"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:100
 msgid "Vengeance"
-msgstr ""
+msgstr "Ultio"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:111
 msgid "Jump"
-msgstr ""
+msgstr "Saltus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:122
 msgid "Inferno"
-msgstr ""
+msgstr "Infernus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:133
 msgid "Swapper"
@@ -1960,15 +1960,15 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:144
 msgid "Magnet"
-msgstr ""
+msgstr "Magnes"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:154
 msgid "Luck"
-msgstr ""
+msgstr "Fors"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:164
 msgid "Flight"
-msgstr ""
+msgstr "Volatus"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
 msgid "Buff"
@@ -2041,7 +2041,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Heal grenade"
-msgstr ""
+msgstr "Granata sanatrix"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:68
 msgid "Monster grenade"
@@ -2116,7 +2116,7 @@ msgstr "Celeritas"
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:58
 msgid "Strength"
-msgstr ""
+msgstr "Vis"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -2191,7 +2191,7 @@ msgstr "Vexillifer"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Hostis portans"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Dropped flag"
@@ -2306,7 +2306,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG vexillum ^TC^TT^BG cepit"
 
 #: qcsrc/common/notifications/all.inc:229
 #, c-format
@@ -2318,12 +2318,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:230
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG vexillum cepit"
 
 #: qcsrc/common/notifications/all.inc:231
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr ""
+msgstr "^BG%s^BG vexillum ^TC^TT^BG ^F1%s^BG secundis cepit"
 
 #: qcsrc/common/notifications/all.inc:232
 #, c-format
@@ -2334,37 +2334,37 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:233
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG a suo possessore ad basem relatum est"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BGVexillum a suo possessore relatum est"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG deletum relatumque ad basem est"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGVexillum deletum relatumque ad basem est"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG ad basem demissum et se relatum est"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGVexillum ad basem demissum et se relatum est"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG in inaccessibilia cecidit et ad basem redit"
 
 #: qcsrc/common/notifications/all.inc:240
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
-msgstr ""
+msgstr "^BGVexillum in inaccessibilia cecidit et ad basem redit"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
