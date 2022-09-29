@@ -47,6 +47,7 @@ void nades_Clear(entity player);
 
 int CA_PreventStalemate()
 {
+	//LOG_INFO("PreventStalemate running");
 	int winnerTeam = 0;
 	int secondTeam = 0;
 
@@ -67,9 +68,15 @@ int CA_PreventStalemate()
 	}
 
 	if(Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+	{
+		LOG_INFOF("Stalemate broken by alive players. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)",
+			Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)),
+			Team_ColorCode(secondTeam), Team_ColorName(secondTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)));
 		return winnerTeam;
+	}
 
 	// Equality. Let's check which team has more health now
+	//LOG_INFO("Equality. Checking health now.");
 	winnerTeam = 0;
 	secondTeam = 0;
 	int winnerTeamHealth = 0;
@@ -108,7 +115,12 @@ int CA_PreventStalemate()
 	}
 
 	if(winnerTeamHealth != secondTeamHealth)
+	{
+		LOG_INFOF("Stalemate broken by team health. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)",
+			Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), winnerTeamHealth,
+			Team_ColorCode(secondTeam), Team_ColorName(secondTeam), secondTeamHealth);
 		return winnerTeam;
+	}
 	else
 		return -2; // Equality. Can't avoid the stalemate.
 }
