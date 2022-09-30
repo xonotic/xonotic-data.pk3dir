@@ -8,8 +8,7 @@
 	#include <common/monsters/_mod.qh>
 #endif
 
-bool autocvar_g_mapinfo_arena_compat = true;
-bool autocvar_g_mapinfo_arena_generate = false;
+int autocvar_g_mapinfo_q3compat = 1;
 
 #ifdef MENUQC
 #define WARN_COND false
@@ -299,17 +298,20 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	mapMins = '0 0 0';
 	mapMaxs = '0 0 0';
 
-	if(autocvar_g_mapinfo_arena_generate)
+	if(autocvar_g_mapinfo_q3compat == 2) // generate mapinfo using arena data
 	{
 		// try for .arena or .defi files, as they may have more accurate information
 		bool isdefi = false;
+		float arena_fh = -1;
 		string arena_fn = _MapInfo_FindArenaFile(pFilename, ".arena");
-		int arena_fh = fopen(arena_fn, FILE_READ);
+		if(arena_fn != "")
+			arena_fh = fopen(arena_fn, FILE_READ);
 		if(arena_fh < 0)
 		{
 			isdefi = true;
 			arena_fn = _MapInfo_FindArenaFile(pFilename, ".defi");
-			arena_fh = fopen(arena_fn, FILE_READ);
+			if(arena_fn != "")
+				arena_fh = fopen(arena_fn, FILE_READ);
 		}
 		if(arena_fh >= 0)
 		{
@@ -624,6 +626,7 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 		case "ffa": 	  replacement = "dm"; do_warn = false; break;
 		case "cctf":
 		case "oneflag":   replacement = "ctf"; do_warn = false; break;
+		case "tournament":
 		case "tourney":   replacement = "duel"; do_warn = false; break;
 		case "arena":     if(is_q3compat) { replacement = "ca"; do_warn = false; } break;
 	}
@@ -789,7 +792,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 	// NOTE: .arena files can hold more than 1 map's information!
 	// to handle this, we're going to store gathered information in local variables and save it if we encounter the correct map name
 	bool in_brackets = false; // testing a potential mapinfo section (within brackets)
-	bool dosave = (arena_filename == strcat("scripts/", pFilename, ((isdefi) ? ".defi" : ".arena"))); // if the map is using the fallback, just accept the first found mapinfo (it's probably correct!)
+	bool dosave = false;
 	string stored_Map_description = "";
 	string stored_Map_title = "";
 	string stored_Map_author = "";
@@ -805,11 +808,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 		// catch different sorts of comments
 		if(s == "")                    // empty lines
 			continue;
-		if(substring(s, 0, 1) == "#")  // UNIX style
-			continue;
 		if(substring(s, 0, 2) == "//") // C++ style
-			continue;
-		if(substring(s, 0, 1) == "_")  // q3map style
 			continue;
 		if(strstrofs(s, "{", 0) >= 0)
 		{
@@ -900,7 +899,10 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			// if there is a valid gametype in this .arena file, include it in the menu
 			stored_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			// type in quake 3 holds all the supported gametypes, so we must loop through all of them
-			string types = strreplace("team", "tdm ft", s); // TODO: handle support here better to include more Xonotic teamplay modes
+			// TODO: handle support here better to include more Xonotic teamplay modes
+			string types = strreplace("team", "tdm ft", s);
+			if(strstrofs(s, "tournament", 0) < 0 && strstrofs(s, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
+				types = cons(types, "ca kh");
 			FOREACH_WORD(types, true,
 			{
 				Gametype f = MapInfo_Type_FromString(it, false, true);
@@ -931,46 +933,61 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 #if defined(CSQC) || defined(MENUQC)
 string(string filename) whichpack = #503;
 #endif
+string _MapInfo_CheckArenaFile(string pFilename, string pMapname)
+{
+	// returns the file name if valid, otherwise returns ""
+	// a string is returned to optimise the use cases where a filename is also returned
+	int fh = fopen(pFilename, FILE_READ);
+	if(fh < 0)
+		return "";
+	for(string s; (s = fgets(fh)); )
+	{
+		s = strreplace("\t", "", s);
+		if(s == "")
+			continue;
+		while(substring(s, 0, 1) == " ")
+			s = substring(s, 1, -1);
+		if(substring(s, 0, 2) == "//")
+			continue;
+		int offset = strstrofs(s, "map", 0);
+		if(offset >= 0)
+		{
+			if(strstrofs(strtolower(s), strcat("\"", strtolower(pMapname), "\""), offset) >= 0) // quake 3 is case insensitive
+			{
+				fclose(fh);
+				return pFilename; // FOUND IT!
+			}
+		}
+	}
+	fclose(fh);
+	return ""; // file did not contain a "map" field matching our map name
+}
+
 string _MapInfo_FindArenaFile(string pFilename, string extension)
 {
 	string fallback = strcat("scripts/", pFilename, extension);
 	if(!checkextension("DP_QC_FS_SEARCH_PACKFILE"))
-		return fallback;
+		return _MapInfo_CheckArenaFile(fallback, pFilename);
 	string base_pack = whichpack(strcat("maps/", pFilename, ".bsp"));
 	if(base_pack == "") // this map isn't packaged!
-		return fallback;
+		return _MapInfo_CheckArenaFile(fallback, pFilename);
 
 	int glob = search_packfile_begin(strcat("scripts/*", extension), true, true, base_pack);
 	if(glob < 0)
-		return fallback;
+		return _MapInfo_CheckArenaFile(fallback, pFilename);
 	int n = search_getsize(glob);
 	for(int j = 0; j < n; ++j)
 	{
 		string file = search_getfilename(glob, j);
-
-		int fh = fopen(file, FILE_READ);
-		if(fh < 0)
-			continue; // how?
-		for(string s; (s = fgets(fh)); )
+		if(_MapInfo_CheckArenaFile(file, pFilename) != "")
 		{
-			if(substring(s, 0, 2) == "//")
-				continue;
-			int offset = strstrofs(s, "map", 0);
-			if(offset >= 0)
-			{
-				if(strstrofs(strtolower(s), strcat("\"", strtolower(pFilename), "\""), offset) >= 0) // quake 3 is case insensitive
-				{
-					fclose(fh);
-					search_end(glob);
-					return file; // FOUND IT!
-				}
-			}
+			search_end(glob);
+			return file;
 		}
-		fclose(fh);
 	}
 
 	search_end(glob);
-	return fallback; // if we get here, a valid .arena file could not be found
+	return ""; // if we get here, a valid .arena file could not be found
 }
 
 // load info about a map by name into the MapInfo_Map_* globals
@@ -1004,17 +1021,18 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
-		if(autocvar_g_mapinfo_arena_compat)
+		if(autocvar_g_mapinfo_q3compat == 1) // use arena data instead of generating a mapinfo file
 		{
-			// try for .arena or .defi files if no .mapinfo exists
 			bool isdefi = false;
 			fn = _MapInfo_FindArenaFile(pFilename, ".arena");
-			fh = fopen(fn, FILE_READ);
+			if(fn != "")
+				fh = fopen(fn, FILE_READ);
 			if(fh < 0)
 			{
 				isdefi = true;
 				fn = _MapInfo_FindArenaFile(pFilename, ".defi");
-				fh = fopen(fn, FILE_READ);
+				if(fn != "")
+					fh = fopen(fn, FILE_READ);
 			}
 			if(fh >= 0)
 			{

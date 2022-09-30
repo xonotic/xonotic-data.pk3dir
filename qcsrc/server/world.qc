@@ -887,8 +887,8 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(_MapInfo_FindArenaFile(mapname, ".arena")));
-	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(_MapInfo_FindArenaFile(mapname, ".defi")));
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, _MapInfo_FindArenaFile(mapname, ".arena") != "");
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
 
 	// quake 3 music support
 	if(world.music || world.noise)
