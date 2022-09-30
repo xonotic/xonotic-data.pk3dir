@@ -170,7 +170,7 @@ void bot_setnameandstuff(entity this)
 		int smallest_count = -1;
 		if (teamplay)
 		{
-			for (int i = 1; i <= AvailableTeams(); ++i)
+			for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 			{
 				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
 				// TeamBalance_GetNumberOfPlayers(balance, i); returns the number of players + 1
@@ -210,7 +210,7 @@ void bot_setnameandstuff(entity this)
 			});
 			if (!conflict)
 				prio += 1;
-			if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+			if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 			{
 				int forced_team = stof(argv(5));
 				if (!Team_IsValidIndex(forced_team))
@@ -242,7 +242,7 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 	{
 		this.bot_forced_team = stof(argv(5));
 		if (!Team_IsValidIndex(this.bot_forced_team))
@@ -611,13 +611,13 @@ bool bot_fixcount(bool multiple_per_frame)
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
+	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		int minplayers = max(0, floor(autocvar_minplayers));
 		if (teamplay)
-			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AVAILABLE_TEAMS);
 		int minbots = max(0, floor(autocvar_bot_number));
 
 		// add bots to reach minplayers if needed

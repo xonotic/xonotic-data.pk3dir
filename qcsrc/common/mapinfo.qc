@@ -1083,6 +1083,23 @@ int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametyp
 	return r;
 }
 
+bool MapReadSizes(string map)
+{
+	// TODO: implement xonotic#28 / xonvote 172 (sizes in mapinfo)
+	string readsize_msg = strcat("MapReadSizes ", map);
+	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	if(fh >= 0)
+	{
+		map_minplayers = stoi(fgets(fh));
+		map_maxplayers = stoi(fgets(fh));
+		fclose(fh);
+		LOG_TRACEF(readsize_msg, ": ok, min %d max %d", map_minplayers, map_maxplayers);
+		return true;
+	}
+	LOG_TRACE(readsize_msg, ": not found");
+	return false;
+}
+
 float MapInfo_FindName(string s)
 {
 	// if there is exactly one map of prefix s, return it
