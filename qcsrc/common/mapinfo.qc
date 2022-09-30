@@ -906,7 +906,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			string types = s;
 			types = strreplace("team", "tdm ft", types);
 			types = strreplace("ffa", "dm lms ka", types);
-			if(strstrofs(s, "tournament", 0) < 0 && strstrofs(s, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
+			if(strstrofs(types, "tournament", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
 				types = cons(types, "ca kh");
 			FOREACH_WORD(types, true,
 			{
