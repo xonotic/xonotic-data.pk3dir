@@ -903,7 +903,9 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			stored_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			// type in quake 3 holds all the supported gametypes, so we must loop through all of them
 			// TODO: handle support here better to include more Xonotic teamplay modes
-			string types = strreplace("team", "tdm ft", s);
+			string types = s;
+			types = strreplace("team", "tdm ft", types);
+			types = strreplace("ffa", "dm lms ka", types);
 			if(strstrofs(s, "tournament", 0) < 0 && strstrofs(s, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
 				types = cons(types, "ca kh");
 			FOREACH_WORD(types, true,
