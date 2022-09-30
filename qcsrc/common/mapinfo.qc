@@ -943,11 +943,11 @@ string _MapInfo_CheckArenaFile(string pFilename, string pMapname)
 	for(string s; (s = fgets(fh)); )
 	{
 		s = strreplace("\t", "", s);
-		if(s == "")
-			continue;
 		while(substring(s, 0, 1) == " ")
 			s = substring(s, 1, -1);
 		if(substring(s, 0, 2) == "//")
+			continue;
+		if(s == "")
 			continue;
 		int offset = strstrofs(s, "map", 0);
 		if(offset >= 0)
