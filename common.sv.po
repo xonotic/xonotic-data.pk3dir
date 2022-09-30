@@ -1695,7 +1695,7 @@ msgstr "Spelet är slut!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "Bra gjort! Klicka på 'Nästa Nivå' för att fortsätta"
+msgstr "Bra jobbat! Klicka på 'Nästa Nivå' för att fortsätta"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -7386,7 +7386,7 @@ msgstr "Fulla"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
 msgid "Show full servers that have no slots available"
-msgstr "Visa fulla servrar som inte här några platser tillgängliga"
+msgstr "Visa fulla servrar som inte har några platser tillgängliga"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
