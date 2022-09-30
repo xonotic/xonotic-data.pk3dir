@@ -273,6 +273,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	float r;
 	float diameter, spawnpoints;
 	float spawnplaces;
+	bool is_q3df_map = false;
 
 	vector mapMins, mapMaxs;
 
@@ -341,7 +342,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 				_MapInfo_Map_worldspawn_music = v;
 			else if(k == "noise")
 				_MapInfo_Map_worldspawn_music = v;
-			else if(k == "message")
+			else if(k == "message" && (!MapInfo_Map_title || MapInfo_Map_title == "<TITLE>"))
 			{
 				i = strstrofs(v, " by ", 0);
 				if(MapInfo_Map_author == "<AUTHOR>" && i >= 0)
@@ -394,6 +395,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_MONSTERS;
 				else if(v == "target_music" || v == "trigger_music")
 					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
+				else if(v == "target_stopTimer")
+					is_q3df_map = true; // don't support standard gamemodes
 				else
 					FOREACH(Gametypes, true, it.m_generate_mapinfo(it, v));
 			}
@@ -412,7 +415,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	{
 		// we have a symmetrical map, don't add the modes without bases
 	}
-	else
+	else if(!is_q3df_map)
 	{
 		FOREACH(Gametypes, it.m_isAlwaysSupported(it, spawnpoints, diameter), MapInfo_Map_supportedGametypes |= it.m_flags);
 	}
@@ -1021,13 +1024,16 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
-		if(autocvar_g_mapinfo_q3compat == 1) // use arena data instead of generating a mapinfo file
+		if(autocvar_g_mapinfo_q3compat) // use arena data instead of generating a mapinfo file
 		{
 			bool isdefi = false;
-			fn = _MapInfo_FindArenaFile(pFilename, ".arena");
-			if(fn != "")
-				fh = fopen(fn, FILE_READ);
-			if(fh < 0)
+			if(autocvar_g_mapinfo_q3compat == 1) // only parse .arena files in mode 1
+			{
+				fn = _MapInfo_FindArenaFile(pFilename, ".arena");
+				if(fn != "")
+					fh = fopen(fn, FILE_READ);
+			}
+			if(fh < 0 || autocvar_g_mapinfo_q3compat == 2)
 			{
 				isdefi = true;
 				fn = _MapInfo_FindArenaFile(pFilename, ".defi");
