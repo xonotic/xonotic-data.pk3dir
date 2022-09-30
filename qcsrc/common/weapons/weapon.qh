@@ -1,7 +1,7 @@
 #pragma once
 
-#include <common/resources.qh>
 #include <common/items/item/pickup.qh>
+#include <common/resources/resources.qh>
 #include <common/stats.qh>
 
 #ifdef SVQC
@@ -45,7 +45,7 @@ CLASS(Weapon, Object)
     /** control what happens when this weapon is spawned */
     METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
     /** M: ammotype  : main ammo type */
-    ATTRIB(Weapon, ammo_type, int, RES_NONE);
+    ATTRIB(Weapon, ammo_type, Resource, RES_NONE);
     /** M: impulse   : weapon impulse */
     ATTRIB(Weapon, impulse, int, -1);
     /** M: flags     : WEPSPAWNFLAG_... combined */
@@ -223,15 +223,16 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
 
-string GetAmmoPicture(int ammotype);
+string GetAmmoPicture(Resource ammotype);
 
-string GetAmmoName(int ammotype);
+string GetAmmoName(Resource ammotype);
 
-entity GetAmmoItem(int ammotype);
+entity GetAmmoItem(Resource ammotype);
 
 #ifdef CSQC
-int GetAmmoTypeFromNum(int i);
-int GetAmmoStat(int ammotype);
+Resource GetAmmoTypeFromNum(int i);
+
+int GetAmmoStat(Resource ammotype);
 #endif
 
 string W_Sound(string w_snd);

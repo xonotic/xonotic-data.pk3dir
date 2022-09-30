@@ -2,7 +2,7 @@
 
 CLASS(Rifle, Weapon)
 /* spawnfunc */ ATTRIB(Rifle, m_canonical_spawnfunc, string, "weapon_rifle");
-/* ammotype  */ ATTRIB(Rifle, ammo_type, int, RES_BULLETS);
+/* ammotype  */ ATTRIB(Rifle, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(Rifle, impulse, int, 7);
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);

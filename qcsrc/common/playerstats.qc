@@ -15,6 +15,17 @@
 	#include <server/world.qh>
 #endif
 
+
+#ifdef GAMEQC
+REPLICATE(cvar_cl_allow_uid2name, int, "cl_allow_uid2name");
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
+REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
+#endif
+
+#ifdef SVQC
+REPLICATE_APPLYCHANGE("cl_allow_uidtracking", { PlayerStats_GameReport_AddPlayer(this); });
+#endif
+
 #ifdef SVQC
 void PlayerStats_Prematch()
 {
@@ -29,8 +40,10 @@ void PlayerStats_GameReport_Reset_All()
 	strfree(PS_GR_OUT_EVL);
 
 	if (PS_GR_OUT_DB >= 0)
+	{
 		db_close(PS_GR_OUT_DB);
-	PlayerStats_GameReport_Init();
+		PlayerStats_GameReport_Init();
+	}
 	if(PS_GR_OUT_DB < 0)
 		return;
 
@@ -192,9 +205,15 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	{
 		if(CS(p).latency_cnt)
 		{
-			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
+			float latency = max(0, CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency)
-				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
+			{
+				// if previous average latency exists (player disconnected and reconnected)
+				// make the average of previous and current average latency
+				float prev_latency = PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, 0);
+				float new_latency = !prev_latency ? latency : (prev_latency + latency) / 2;
+				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, -prev_latency + new_latency);
+			}
 		}
 
 		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));
@@ -268,6 +287,10 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_DelayMapVote = true;
 
 		serverflags |= SERVERFLAG_PLAYERSTATS;
+		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
+		{
+			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
+		}
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -349,6 +372,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * i: player index
 		 * n: nickname of the player (optional)
 		 * t: team ID
+		 * r: player ranking enabled / disabled
 		 * e: followed by an event name, a space, and the event count/score
 		 *  event names can be:
 		 *   alivetime: total playing time of the player

@@ -6,7 +6,7 @@
 CLASS(Duel, Gametype)
     INIT(Duel)
     {
-        this.gametype_init(this, _("Duel"),"duel","g_duel",GAMETYPE_FLAG_USEPOINTS,"","timelimit=10 pointlimit=0 leadlimit=0",_("Fight in a one versus one arena battle to decide the winner"));
+        this.gametype_init(this, _("Duel"),"duel","g_duel",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_1V1,"","timelimit=10 pointlimit=0 leadlimit=0",_("Fight in a one versus one arena battle to decide the winner"));
     }
     METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {

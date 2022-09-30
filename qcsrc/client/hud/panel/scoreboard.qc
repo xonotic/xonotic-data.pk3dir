@@ -80,7 +80,6 @@ float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_eliminated = 0.6;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
-float autocvar_hud_panel_scoreboard_namesize = 15;
 float autocvar_hud_panel_scoreboard_team_size_position = 0;
 float autocvar_hud_panel_scoreboard_spectators_position = 1;
 
@@ -107,6 +106,8 @@ float autocvar_hud_panel_scoreboard_minwidth = 0.4;
 bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
+
+float scoreboard_time;
 
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
@@ -164,6 +165,337 @@ string Label_getInfo(string label, int mode)
 	return label;
 }
 
+bool scoreboard_ui_disabling;
+void HUD_Scoreboard_UI_Disable()
+{
+	scoreboard_ui_disabling = true;
+	scoreboard_showscores = false;
+}
+
+void HUD_Scoreboard_UI_Disable_Instantly()
+{
+	scoreboard_ui_disabling = false;
+	scoreboard_ui_enabled = 0;
+	scoreboard_selected_panel = 0;
+	scoreboard_selected_player = NULL;
+	scoreboard_selected_team = NULL;
+}
+
+// mode: 0 normal, 1 team selection
+void Scoreboard_UI_Enable(int mode)
+{
+	if(isdemo()) return;
+
+	if (mode == 1)
+	{
+		if (scoreboard_ui_enabled == 2 || !teamplay || intermission)
+			return;
+
+		// release player's pressed keys as they aren't released elsewhere
+		// in particular jump needs to be released as it may open the team selection
+		// (when server detects jump has been pressed it sends the command to open the team selection)
+		Release_Common_Keys();
+		scoreboard_ui_enabled = 2;
+		scoreboard_selected_panel = SB_PANEL_SCOREBOARD;
+	}
+	else
+	{
+		if (scoreboard_ui_enabled == 1)
+			return;
+		scoreboard_ui_enabled = 1;
+		scoreboard_selected_panel = SB_PANEL_FIRST;
+	}
+	scoreboard_selected_player = NULL;
+	scoreboard_selected_team = NULL;
+	scoreboard_selected_panel_time = time;
+}
+
+int rankings_start_column;
+int rankings_rows = 0;
+int rankings_columns = 0;
+int rankings_cnt = 0;
+float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	string s;
+
+	if(!scoreboard_ui_enabled || scoreboard_ui_disabling)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
+		return true;
+	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	// ESC to exit (TAB-ESC works too)
+	if(nPrimary == K_ESCAPE)
+	{
+		if (!key_pressed)
+			return true;
+		HUD_Scoreboard_UI_Disable();
+		return true;
+	}
+
+	// block any input while a menu dialog is fading
+	if(autocvar__menu_alpha)
+	{
+		hudShiftState = 0;
+		return true;
+	}
+
+	// allow console bind to work
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+
+	bool hit_con_bind = false;
+	int i;
+	for (i = 0; i < keys; ++i)
+	{
+		if(nPrimary == stof(argv(i)))
+			hit_con_bind = true;
+	}
+
+	if(key_pressed) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
+	}
+	else {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+	}
+
+	if(nPrimary == K_TAB)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_ui_enabled == 2)
+		{
+			if (hudShiftState & S_SHIFT)
+				goto uparrow_action;
+			else
+				goto downarrow_action;
+		}
+
+		if (hudShiftState & S_SHIFT)
+		{
+			--scoreboard_selected_panel;
+			if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
+				--scoreboard_selected_panel;
+			if (scoreboard_selected_panel < SB_PANEL_FIRST)
+				scoreboard_selected_panel = SB_PANEL_MAX;
+		}
+		else
+		{
+			++scoreboard_selected_panel;
+			if (scoreboard_selected_panel == SB_PANEL_RANKINGS && !rankings_cnt)
+				++scoreboard_selected_panel;
+			if (scoreboard_selected_panel > SB_PANEL_MAX)
+				scoreboard_selected_panel = SB_PANEL_FIRST;
+		}
+
+		scoreboard_selected_panel_time = time;
+	}
+	else if(nPrimary == K_DOWNARROW)
+	{
+		if (!key_pressed)
+			return true;
+		LABEL(downarrow_action);
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_ui_enabled == 2)
+			{
+				entity curr_team = NULL;
+				bool scoreboard_selected_team_found = false;
+				if (!scoreboard_selected_team)
+					scoreboard_selected_team_found = true;
+
+				for(entity tm = teams.sort_next; tm; tm = tm.sort_next)
+				{
+					if(tm.team == NUM_SPECTATOR)
+						continue;
+					curr_team = tm;
+					if (scoreboard_selected_team_found)
+						goto ok_team;
+					if (scoreboard_selected_team == tm)
+						scoreboard_selected_team_found = true;
+				}
+				LABEL(ok_team);
+				if (curr_team == scoreboard_selected_team) // loop reached the last team
+					curr_team = NULL;
+				scoreboard_selected_team = curr_team;
+			}
+			else
+			{
+				entity pl, tm;
+				entity curr_pl = NULL;
+				bool scoreboard_selected_player_found = false;
+				if (!scoreboard_selected_player)
+					scoreboard_selected_player_found = true;
+
+				for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				{
+					if(tm.team != NUM_SPECTATOR)
+					for(pl = players.sort_next; pl; pl = pl.sort_next)
+					{
+						if(pl.team != tm.team)
+							continue;
+						curr_pl = pl;
+						if (scoreboard_selected_player_found)
+							goto ok_done;
+						if (scoreboard_selected_player == pl)
+							scoreboard_selected_player_found = true;
+					}
+				}
+				LABEL(ok_done);
+				if (curr_pl == scoreboard_selected_player) // loop reached the last player
+					curr_pl = NULL;
+				scoreboard_selected_player = curr_pl;
+			}
+		}
+	}
+	else if(nPrimary == K_UPARROW)
+	{
+		if (!key_pressed)
+			return true;
+		LABEL(uparrow_action);
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_ui_enabled == 2)
+			{
+				entity prev_team = NULL;
+				for(entity tm = teams.sort_next; tm; tm = tm.sort_next)
+				{
+					if(tm.team == NUM_SPECTATOR)
+						continue;
+					if (tm == scoreboard_selected_team)
+						goto ok_team2;
+					prev_team = tm;
+				}
+				LABEL(ok_team2);
+				scoreboard_selected_team = prev_team;
+			}
+			else
+			{
+				entity prev_pl = NULL;
+				entity pl, tm;
+				for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				{
+					if(tm.team != NUM_SPECTATOR)
+					for(pl = players.sort_next; pl; pl = pl.sort_next)
+					{
+						if(pl.team != tm.team)
+							continue;
+						if (pl == scoreboard_selected_player)
+							goto ok_done2;
+						prev_pl = pl;
+					}
+				}
+				LABEL(ok_done2);
+				scoreboard_selected_player = prev_pl;
+			}
+		}
+	}
+	else if(nPrimary == K_RIGHTARROW)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
+			rankings_start_column = min(rankings_start_column + 1, (ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns));
+	}
+	else if(nPrimary == K_LEFTARROW)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
+			rankings_start_column = max(rankings_start_column - 1, 0);
+	}
+	else if(nPrimary == K_ENTER || nPrimary == K_SPACE || nPrimary == K_KP_ENTER)
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_ui_enabled == 2)
+			{
+				string team_name;
+				if (!scoreboard_selected_team || (hudShiftState & S_SHIFT))
+					team_name = "auto";
+				else
+					team_name = Static_Team_ColorName(scoreboard_selected_team.team);
+				localcmd(sprintf("cmd selectteam %s; cmd join\n", team_name));
+				HUD_Scoreboard_UI_Disable();
+			}
+			else if (scoreboard_selected_player)
+				localcmd(sprintf("spectate %d\n", scoreboard_selected_player.sv_entnum + 1));
+		}
+	}
+	else if(nPrimary == 'c' && (hudShiftState & S_CTRL))
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_ui_enabled == 1 && scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			switch (scoreboard_selected_columns_layout)
+			{
+				case 0:
+					if (autocvar_scoreboard_columns != "" && autocvar_scoreboard_columns != "all" && autocvar_scoreboard_columns != "default")
+					{
+						localcmd(sprintf("scoreboard_columns_set\n")); // sets the layout saved in scoreboard_columns
+						scoreboard_selected_columns_layout = 1;
+						break;
+					}
+					// fallthrough
+				case 1:
+					localcmd(sprintf("scoreboard_columns_set default\n"));
+					scoreboard_selected_columns_layout = 2;
+					break;
+				case 2:
+					localcmd(sprintf("scoreboard_columns_set all\n"));
+					scoreboard_selected_columns_layout = 0;
+					break;
+			}
+		}
+	}
+	else if(nPrimary == 't' && (hudShiftState & S_CTRL))
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_selected_player)
+			{
+				localcmd(sprintf("commandmode tell \"%s^7\"\n", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+				HUD_Scoreboard_UI_Disable();
+			}
+		}
+	}
+	else if(nPrimary == 'k' && (hudShiftState & S_CTRL))
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+		{
+			if (scoreboard_selected_player)
+				localcmd(sprintf("vcall kick \"%s^7\"\n", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+		}
+	}
+	else if(hit_con_bind || nPrimary == K_PAUSE)
+		return false;
+
+	return true;
+}
+
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
 
@@ -209,6 +541,11 @@ void Scoreboard_InitScores()
 //float lastpnum;
 void Scoreboard_UpdatePlayerTeams()
 {
+	static float update_time;
+	if (time <= update_time)
+		return;
+	update_time = time;
+
 	entity pl, tmp;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
@@ -896,7 +1233,12 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	vector h_pos = item_pos;
 	vector h_size = vec2(panel_size.x, hud_fontsize.y * 1.25);
 	// alternated rows highlighting
-	if(is_self)
+	if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD && scoreboard_ui_enabled == 1)
+	{
+		if (pl == scoreboard_selected_player)
+			drawfill(h_pos, h_size, rgb, 0.44 * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	else if(is_self)
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
 	else if((sbt_highlight) && (!(pl_number % 2)))
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
@@ -1065,6 +1407,16 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			}
 		}
 
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD && scoreboard_ui_enabled == 1)
+		{
+			if (pl == scoreboard_selected_player)
+			{
+				h_size.x = column_width + hud_fontsize.x * 0.25;
+				h_size.y = hud_fontsize.y;
+				drawfill(pos - hud_fontsize.x * 0.25 * eX, h_size, rgb, 0.44 * panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+		}
+
 		vector name_pos = pos;
 		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 			name_pos.x += max(fieldsize, min_fieldsize) + 2 * fieldpadding + hud_fontsize.x * 0.25;
@@ -1119,6 +1471,12 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_pos = pos;
 	panel_size.y = 1.25 * hud_fontsize.y * (1 + bound(1, tm.team_size, max_players));
 	panel_size.y += panel_bg_padding * 2;
+
+	vector scoreboard_selected_hl_pos = pos;
+	vector scoreboard_selected_hl_size = '0 0 0';
+	scoreboard_selected_hl_size.x = scoreboard_right - scoreboard_left;
+	scoreboard_selected_hl_size.y = panel_size.y;
+
 	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
@@ -1180,13 +1538,39 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 		++i;
 	}
 
+	if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+	{
+		if (scoreboard_ui_enabled == 1 || (tm && scoreboard_selected_team == tm))
+		{
+			float _alpha = (scoreboard_ui_enabled == 2) ? 0.2 : 0.3 * max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
+			_alpha *= panel_fg_alpha;
+			if (_alpha)
+				drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '1 1 1', _alpha, DRAWFLAG_NORMAL);
+		}
+	}
+
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
 }
 
 bool Scoreboard_WouldDraw()
 {
-	if (MUTATOR_CALLHOOK(DrawScoreboard))
+	if (scoreboard_ui_enabled)
+	{
+		if (scoreboard_ui_disabling)
+		{
+			if (scoreboard_fade_alpha == 0)
+				HUD_Scoreboard_UI_Disable_Instantly();
+			return false;
+		}
+		if (intermission && scoreboard_ui_enabled == 2)
+		{
+			HUD_Scoreboard_UI_Disable_Instantly();
+			return false;
+		}
+		return true;
+	}
+	else if (MUTATOR_CALLHOOK(DrawScoreboard))
 		return false;
 	else if (QuickMenu_IsOpened())
 		return false;
@@ -1559,9 +1943,6 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	return end_pos;
 }
 
-int rankings_rows = 0;
-int rankings_columns = 0;
-int rankings_cnt = 0;
 vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector rgb, vector bg_size)
 {
 	int i;
@@ -1575,10 +1956,16 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	vector hl_rgb = rgb + '0.5 0.5 0.5';
 
+	vector scoreboard_selected_hl_pos = pos;
+
 	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
+
+	vector scoreboard_selected_hl_size = '0 0 0';
+	scoreboard_selected_hl_size.x = scoreboard_right - scoreboard_left;
+	scoreboard_selected_hl_size.y = pos.y - scoreboard_selected_hl_pos.y;
 
 	panel_pos = pos;
 
@@ -1614,6 +2001,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	panel_size.y = rankings_rows * 1.25 * hud_fontsize.y;
 	panel_size.y += panel_bg_padding * 2;
+	scoreboard_selected_hl_size.y += panel_size.y;
 
 	HUD_Panel_DrawBg();
 
@@ -1636,21 +2024,21 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	string str = "";
 	int column = 0, j = 0;
 	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
-	for(i = 0; i < rankings_cnt; ++i)
+	int start_item = rankings_start_column * rankings_rows;
+	for(i = start_item; i < start_item + rankings_cnt; ++i)
 	{
-		float t;
-		t = grecordtime[i];
+		int t = grecordtime[i];
 		if (t == 0)
 			continue;
 
 		if(strdecolorize(grecordholder[i]) == zoned_name_self)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
-		else if(!((j + column) & 1) && sbt_highlight)
+		else if(!((j + rankings_start_column + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
 		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t, true), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
 			str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
@@ -1668,11 +2056,16 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	}
 	strfree(zoned_name_self);
 
+	if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
+	{
+		float fade = max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
+		drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '1 1 1', fade * 0.44, DRAWFLAG_NORMAL);
+	}
+
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
 }
 
-float scoreboard_time;
 bool have_weapon_stats;
 bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
@@ -1857,73 +2250,90 @@ void Scoreboard_Draw()
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 
 	// Game Info: Game Type
-	str = MapInfo_Type_ToText(gametype);
+	if (scoreboard_ui_enabled == 2)
+		str = _("Team Selection");
+	else
+		str = MapInfo_Type_ToText(gametype);
 	draw_beginBoldFont();
 	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 
-	// Game Info: Game Detail
-	float tl = STAT(TIMELIMIT);
-	float fl = STAT(FRAGLIMIT);
-	float ll = STAT(LEADLIMIT);
-	float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
-	str = "";
-	if(tl > 0)
-		str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
-	if(!gametype.m_hidelimits)
-	{
-		if(fl > 0)
-		{
-			if(tl > 0)
-				str = strcat(str, "^7 / "); // delimiter
-			if(teamplay)
-			{
-				str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
-					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-					(teamscores_label(ts_primary) == "fastest") ? "" :
-					TranslateScoresLabel(teamscores_label(ts_primary))));
-			}
-			else
-			{
-				str = strcat(str, sprintf(_("^5%s %s"), ScoreString(scores_flags(ps_primary), fl),
-					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-					(scores_label(ps_primary) == "fastest") ? "" :
-					TranslateScoresLabel(scores_label(ps_primary))));
-			}
-		}
-		if(ll > 0)
-		{
-			if(tl > 0 || fl > 0)
-			{
-				// delimiter
-				if (ll_and_fl && fl > 0)
-					str = strcat(str, "^7 & ");
-				else
-					str = strcat(str, "^7 / ");
-			}
-
-			if(teamplay)
-			{
-				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
-					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-					(teamscores_label(ts_primary) == "fastest") ? "" :
-					TranslateScoresLabel(teamscores_label(ts_primary))));
-			}
-			else
-			{
-				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
-					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-					(scores_label(ps_primary) == "fastest") ? "" :
-					TranslateScoresLabel(scores_label(ps_primary))));
-			}
-		}
-	}
-
 	pos.y += sb_gameinfo_type_fontsize.y;
-	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
-	// map name
-	str = sprintf(_("^7Map: ^2%s"), shortmapname);
-	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
+	// Game Info: Game Detail
+	if (scoreboard_ui_enabled == 2)
+	{
+		if (scoreboard_selected_team)
+			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), getcommandkey(_("jump"), "+jump"));
+		else
+			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
+		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
+		str = sprintf(_("^7Press ^3%s ^7to select a specific team"), translate_key("TAB"));
+		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		float tl = STAT(TIMELIMIT);
+		float fl = STAT(FRAGLIMIT);
+		float ll = STAT(LEADLIMIT);
+		float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
+		str = "";
+		if(tl > 0)
+			str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
+		if(!gametype.m_hidelimits)
+		{
+			if(fl > 0)
+			{
+				if(tl > 0)
+					str = strcat(str, "^7 / "); // delimiter
+				if(teamplay)
+				{
+					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
+						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
+						(teamscores_label(ts_primary) == "fastest") ? "" :
+						TranslateScoresLabel(teamscores_label(ts_primary))));
+				}
+				else
+				{
+					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(scores_flags(ps_primary), fl),
+						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
+						(scores_label(ps_primary) == "fastest") ? "" :
+						TranslateScoresLabel(scores_label(ps_primary))));
+				}
+			}
+			if(ll > 0)
+			{
+				if(tl > 0 || fl > 0)
+				{
+					// delimiter
+					if (ll_and_fl && fl > 0)
+						str = strcat(str, "^7 & ");
+					else
+						str = strcat(str, "^7 / ");
+				}
+
+				if(teamplay)
+				{
+					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
+						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
+						(teamscores_label(ts_primary) == "fastest") ? "" :
+						TranslateScoresLabel(teamscores_label(ts_primary))));
+				}
+				else
+				{
+					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
+						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
+						(scores_label(ps_primary) == "fastest") ? "" :
+						TranslateScoresLabel(scores_label(ps_primary))));
+				}
+			}
+		}
+		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
+		// map name
+		str = sprintf(_("^7Map: ^2%s"), shortmapname);
+		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
+	}
 	// End of Game Info Section
 
 	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3; // space between Game Info Section and score table
@@ -2075,16 +2485,22 @@ void Scoreboard_Draw()
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
 		string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
-		if(race_speedaward) {
-			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, ColorTranslateRGB(race_speedaward_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos.y += 1.25 * hud_fontsize.y;
+		if(race_speedaward_alltimebest)
+		{
+			string name;
+			float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+			str = "";
+			if(race_speedaward)
+			{
+				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
+				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, name);
+				str = strcat(str, " / ");
+			}
+			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
+			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, name));
+			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}
-		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, ColorTranslateRGB(race_speedaward_alltimebest_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos.y += 1.25 * hud_fontsize.y;
-		}
-		if (race_speedaward || race_speedaward_alltimebest)
-			pos.y += 0.25 * hud_fontsize.y;
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
 	else
@@ -2105,8 +2521,7 @@ void Scoreboard_Draw()
 
 	// print information about respawn status
 	float respawn_time = STAT(RESPAWN_TIME);
-	if(!intermission)
-	if(respawn_time)
+	if(!intermission && respawn_time)
 	{
 		if(respawn_time < 0)
 		{
