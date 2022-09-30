@@ -547,9 +547,11 @@ void Scoreboard_UpdatePlayerTeams()
 	update_time = time;
 
 	entity pl, tmp;
+	numplayers = 0;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
+		numplayers += pl.team != NUM_SPECTATOR;
 		//num += 1;
 		int Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
@@ -2330,8 +2332,9 @@ void Scoreboard_Draw()
 			}
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
-		// map name
-		str = sprintf(_("^7Map: ^2%s"), shortmapname);
+		// map name and player count
+		str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section
