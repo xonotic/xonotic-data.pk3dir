@@ -1197,13 +1197,12 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif)
 
 void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
 {	
-	//LOG_INFOF("Comparison %d > %d", time, notif_queue_next_time);
 	if(queue_time == -1 || time > notif_queue_next_time) {
-		//LOG_INFOF("Running NOW!");
+		// Run immediately
 		Local_Notification_Queue_Run(net_type, notif);
 		notif_queue_next_time = time + queue_time;
 	} else {
-		//LOG_INFOF("Queueing: %d %d", notif_queue_length, notif_queue_next_time);
+		// Put in queue
 		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
 	
 		notif_queue_type[notif_queue_length] = net_type;
@@ -1221,9 +1220,7 @@ void Local_Notification_Queue_Process()
 		return;
 
 	int j;
-	
 	if(notif_queue_time[0] <= time) {
-		//LOG_INFOF("Process running: %d <= %d", notif_queue_time[0], time);
 		Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0]);
 		
 		// Shift queue to the left
