@@ -1427,6 +1427,25 @@ void ClearWinners()
 	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = 0; });
 }
 
+void AnnounceNewLeader()
+{
+	LOG_INFO("Announce new leader");
+	// Don't announce if in warmup or just started
+	if(warmup_stage || time - game_starttime < 1) return;
+	if(teamplay) return; // Not implemented in teamplay yet. We need an announcer for that.
+
+	if (WinningConditionHelper_equality)
+	{
+		Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
+		Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
+	}
+	else
+	{
+		Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
+		Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
+	}
+}
+
 int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
@@ -1490,6 +1509,14 @@ float WinningCondition_Scores(float limit, float leadlimit)
 				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
 			fragsleft_last = fragsleft;
+		}
+	}
+
+	// Announce new leader if any
+	if(MUTATOR_CALLHOOK(Scores_AnnounceLeads)) {
+		if (Score_NewLeader()) {
+			LOG_INFO("Pass 2");
+			AnnounceNewLeader();
 		}
 	}
 

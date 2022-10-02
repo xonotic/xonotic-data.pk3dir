@@ -111,6 +111,9 @@ float WinningConditionHelper_secondteam;    ///< the color of the second team, o
 float WinningConditionHelper_equality;      ///< we have no winner
 entity WinningConditionHelper_winner;       ///< the winning player, or NULL if none
 entity WinningConditionHelper_second;       ///< the second player, or NULL if none
+entity WinningConditionHelper_winner_last;
+entity WinningConditionHelper_equality_one;
+entity WinningConditionHelper_equality_two;
 float WinningConditionHelper_lowerisbetter; ///< lower is better, duh
 float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
 #define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999

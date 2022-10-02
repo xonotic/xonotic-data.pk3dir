@@ -202,6 +202,10 @@
     MSG_ANNCE_NOTIF(VOTE_CALL,                  N__ALWAYS, "votecall",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
     MSG_ANNCE_NOTIF(VOTE_FAIL,                  N__ALWAYS, "votefail",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
+    MSG_ANNCE_NOTIF(LEAD_GAINED,                N__ALWAYS, "leadgained",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(LEAD_LOST,                  N__ALWAYS, "leadlost",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(LEAD_TIED,                  N__ALWAYS, "leadtied",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+
 #undef N___NEVER
 #undef N_GNTLOFF
 #undef N__ALWAYS
