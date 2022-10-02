@@ -396,7 +396,7 @@ void ApplyMinMaxScaleAngles(entity e)
 		e.mins_y = -e.maxs.x;
 	}
 	if(e.scale)
-		setsize(e, e.mins * e.scale, e.maxs * e.scale);
+		setsize(e, RoundPerfectVector(e.mins * e.scale), RoundPerfectVector(e.maxs * e.scale));
 	else
 		setsize(e, e.mins, e.maxs);
 }
