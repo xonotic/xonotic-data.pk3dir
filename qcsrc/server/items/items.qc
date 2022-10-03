@@ -976,6 +976,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	precache_model(this.model);
 	precache_sound(this.item_pickupsound);
 
+	if(q3compat && !this.team)
+	{
+		string t = GetField_fullspawndata(this, "team", false);
+		// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+		if(t) this.team = crc16(false, t);
+	}
+
 	if (Item_IsLoot(this))
 	{
 		this.reset = SUB_Remove;
