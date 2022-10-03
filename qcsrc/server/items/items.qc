@@ -199,7 +199,6 @@ void Item_Respawn(entity this)
 {
 	Item_Show(this, 1);
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin(this, this.origin);
 
 	if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 	{
@@ -728,7 +727,6 @@ LABEL(pickup)
 void Item_Reset(entity this)
 {
 	Item_Show(this, !this.state);
-	setorigin(this, this.origin);
 
 	if (Item_IsLoot(this))
 	{
