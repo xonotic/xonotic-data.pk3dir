@@ -748,12 +748,9 @@ void Item_Reset(entity this)
 
 void Item_FindTeam(entity this)
 {
-	entity e;
-
-	if(!(this.effects & EF_NODRAW))
+	if(!(this.effects & EF_NOGUNBOB)) // marker for item team search
 		return;
 
-	// marker for item team search
 	LOG_TRACE("Initializing item team ", ftos(this.team));
 	RandomSelection_Init();
 	IL_EACH(g_items, it.team == this.team,
@@ -762,7 +759,7 @@ void Item_FindTeam(entity this)
 			RandomSelection_AddEnt(it, it.cnt, 0);
 	});
 
-	e = RandomSelection_chosen_ent;
+	entity e = RandomSelection_chosen_ent;
 	if (!e)
 		return;
 
@@ -772,13 +769,17 @@ void Item_FindTeam(entity this)
 		{
 			if(it != e)
 			{
-				// make it non-spawned
-				Item_Show(it, -1);
-				it.state = 1; // state 1 = initially hidden item, apparently
+				Item_Show(it, -1); // make it non-spawned
+				if (it.waypointsprite_attached)
+					WaypointSprite_Kill(it.waypointsprite_attached);
+				it.nextthink = 0; // disable any scheduled powerup spawn
 			}
 			else
 				Item_Reset(it);
-			it.effects &= ~EF_NODRAW;
+
+			// leave 'this' marked so Item_FindTeam() works when called again via this.reset
+			if(it != this)
+				it.effects &= ~EF_NOGUNBOB;
 		}
 	});
 }
@@ -1017,7 +1018,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		this.reset = Item_Reset;
+		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
@@ -1127,7 +1128,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!this.cnt)
 			this.cnt = 1; // item probability weight
 
-		this.effects |= EF_NODRAW; // marker for item team search
+		this.effects |= EF_NOGUNBOB; // marker for item team search
 		InitializeEntity(this, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
 	else
