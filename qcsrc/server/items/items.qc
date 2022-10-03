@@ -248,13 +248,13 @@ void Item_RespawnCountdown(entity this)
 				}
 			} while (0);
 			bool mutator_returnvalue = MUTATOR_CALLHOOK(Item_RespawnCountdown, this);
-            if(this.waypointsprite_attached)
-            {
-                GameItem def = this.itemdef;
-                if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
-                    WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-                WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-            }
+			if(this.waypointsprite_attached)
+			{
+				GameItem def = this.itemdef;
+				if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
+					WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+				WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+			}
 		}
 
 		if(this.waypointsprite_attached)
