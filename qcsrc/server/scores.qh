@@ -101,6 +101,11 @@ void Score_ClearAll();
 void Score_NicePrint(entity to);
 
 /**
+ * Returns if there's a new leader since the last time the function was called.
+ */
+bool Score_NewLeader();
+
+/**
  * Sets the following results for the current scores entities.
  */
 void WinningConditionHelper(entity this);
