@@ -750,37 +750,37 @@ void Item_FindTeam(entity this)
 {
 	entity e;
 
-	if(this.effects & EF_NODRAW)
+	if(!(this.effects & EF_NODRAW))
+		return;
+
+	// marker for item team search
+	LOG_TRACE("Initializing item team ", ftos(this.team));
+	RandomSelection_Init();
+	IL_EACH(g_items, it.team == this.team,
 	{
-		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(this.team));
-		RandomSelection_Init();
-		IL_EACH(g_items, it.team == this.team,
-		{
-			if(it.itemdef) // is a registered item
-				RandomSelection_AddEnt(it, it.cnt, 0);
-		});
+		if(it.itemdef) // is a registered item
+			RandomSelection_AddEnt(it, it.cnt, 0);
+	});
 
-		e = RandomSelection_chosen_ent;
-		if (!e)
-			return;
+	e = RandomSelection_chosen_ent;
+	if (!e)
+		return;
 
-		IL_EACH(g_items, it.team == this.team,
+	IL_EACH(g_items, it.team == this.team,
+	{
+		if(it.itemdef) // is a registered item
 		{
-			if(it.itemdef) // is a registered item
+			if(it != e)
 			{
-				if(it != e)
-				{
-					// make it non-spawned
-					Item_Show(it, -1);
-					it.state = 1; // state 1 = initially hidden item, apparently
-				}
-				else
-					Item_Reset(it);
-				it.effects &= ~EF_NODRAW;
+				// make it non-spawned
+				Item_Show(it, -1);
+				it.state = 1; // state 1 = initially hidden item, apparently
 			}
-		});
-	}
+			else
+				Item_Reset(it);
+			it.effects &= ~EF_NODRAW;
+		}
+	});
 }
 
 // Savage: used for item garbage-collection
