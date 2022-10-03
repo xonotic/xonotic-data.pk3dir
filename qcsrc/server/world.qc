@@ -1515,7 +1515,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	// Announce new leader if any
 	if(MUTATOR_CALLHOOK(Scores_AnnounceLeads)) {
 		if (Score_NewLeader()) {
-			LOG_INFO("Pass 2");
 			AnnounceNewLeader();
 		}
 	}
