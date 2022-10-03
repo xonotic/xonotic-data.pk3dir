@@ -23,7 +23,9 @@
 .int lodmodelindex0;
 .int lodmodelindex1;
 .int lodmodelindex2;
-void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
+.float loddistance1;
+.float loddistance2;
+void CSQCModel_LOD_Apply(entity this, bool isplayer)
 {
 	int detailreduction = ((isplayer) ? autocvar_cl_playerdetailreduction : autocvar_cl_modeldetailreduction);
 
@@ -48,7 +50,7 @@ void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 			precache_model(s);
 			_setmodel(this, s);
 			if(this.modelindex)
-				this.lodmodelindex1 = this.modelindex;
+				this.lodmodelindex2 = this.lodmodelindex1 = this.modelindex;
 		}
 
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
@@ -77,11 +79,13 @@ void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 	else
 	{
 		float distance = vlen(((isplayer) ? this.origin : NearestPointOnBox(this, view_origin)) - view_origin); // TODO: perhaps it should just use NearestPointOnBox all the time, player hitbox can potentially be huge
+		float dist1 = (this.loddistance1 > 0) ? this.loddistance1 : autocvar_cl_loddistance1;
+		float dist2 = (this.loddistance2 > 0) ? this.loddistance2 : autocvar_cl_loddistance2;
 		float f = (distance * current_viewzoom + 100.0) * detailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
-		if(f > autocvar_cl_loddistance2)
+		if(f > dist2)
 			this.modelindex = this.lodmodelindex2;
-		else if(f > autocvar_cl_loddistance1)
+		else if(f > dist1)
 			this.modelindex = this.lodmodelindex1;
 		else
 			this.modelindex = this.lodmodelindex0;
@@ -669,7 +673,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	if((this.isplayermodel & ISPLAYER_MODEL) && this.drawmask) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_ModelAppearance_Apply(this, (this.isplayermodel & ISPLAYER_LOCAL));
-		CSQCPlayer_LOD_Apply(this, true);
+		CSQCModel_LOD_Apply(this, true);
 
 		if(!isplayer)
 		{
@@ -748,7 +752,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		}
 	}
 	else
-		CSQCPlayer_LOD_Apply(this, false);
+		CSQCModel_LOD_Apply(this, false);
 
 	CSQCModel_AutoTagIndex_Apply(this);
 
