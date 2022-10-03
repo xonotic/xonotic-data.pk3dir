@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2022\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -175,12 +175,12 @@ msgstr "^2Идёт ^1разминка^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:157
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^3Требуется ещё 1^2 игрок для старта матча."
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^3Требуется ещё %d^2 игрока для старта матча."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -1080,7 +1080,7 @@ msgstr "^2+%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2336
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7игроков"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1138,11 +1138,11 @@ msgstr "Разминка"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Разминка: без ограничения по времени"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Разминка: слишком мало игроков"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1317,27 +1317,27 @@ msgstr "Режим игры:"
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
-msgstr ""
+msgstr "Этот матч поддерживает"
 
 #: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d игроков"
 
 #: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d-%d игроков"
 
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d игроков максимально"
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d игроков минимально"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
@@ -1349,7 +1349,7 @@ msgstr "Особые игровые советы:"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Сообщение сервера"
 
 #: qcsrc/client/main.qc:1549
 #, c-format
@@ -2535,12 +2535,12 @@ msgstr "^F2Вы станете зрителем со следующего рау
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Матч перезапускается…"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Отсчёт остановлен!"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
@@ -3763,7 +3763,7 @@ msgstr "^BGЦель разрушена в ^F4%s^BG!"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "Требуется %s игроков для этого матча."
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -4335,6 +4335,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Вы не можете присоединиться к игре в данный момент.\n"
+"Этот матч ограничен для ^F2%s^BG игроков."
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"

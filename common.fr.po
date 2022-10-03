@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2022\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -175,12 +175,13 @@ msgstr "^2Actuellement en mode ^1échauffement^2 !"
 
 #: qcsrc/client/hud/panel/infomessages.qc:157
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 joueur supplémentaire est nécessaire pour commencer la partie."
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr ""
+"^3%d^2 joueurs supplémentaires sont nécessaires pour commencer la partie."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -1084,7 +1085,7 @@ msgstr "^2+%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2336
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7joueurs"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1142,11 +1143,11 @@ msgstr "Échauffement"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Échauffement : pas de limite de temps"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Échauffement : trop peu de joueurs"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1322,27 +1323,27 @@ msgstr "Type de jeu :"
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
-msgstr ""
+msgstr "Cette partie prend en charge"
 
 #: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d joueurs"
 
 #: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d à %d joueurs"
 
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d joueurs maximum"
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d joueurs minimum"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
@@ -1354,7 +1355,7 @@ msgstr "Astuces de jeu spéciales :"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Message du serveur"
 
 #: qcsrc/client/main.qc:1549
 #, c-format
@@ -1457,7 +1458,7 @@ msgstr "Limite de frags :"
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "Nombre de frags nécessaire pour terminer le match"
+msgstr "Nombre de frags nécessaires pour terminer la partie"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1481,7 +1482,7 @@ msgstr "Limite de captures :"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "Nombre de captures nécessaire pour terminer le match"
+msgstr "Nombre de captures nécessaires pour terminer la partie"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1516,7 +1517,7 @@ msgstr "Domination"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "Nombre de points nécessaire pour terminer le match"
+msgstr "Nombre de points nécessaires pour terminer la partie"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1592,7 +1593,7 @@ msgstr "Nombre de buts :"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "Nombre de buts nécessaire pour terminer le match"
+msgstr "Nombre de buts nécessaires pour terminer la partie"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2404,7 +2405,7 @@ msgstr "^1Notifications du serveur :"
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
-"^F4NOTE : ^BGles joueurs ne voient pas le tchat spectateur pendant le match"
+"^F4NOTE : ^BGles joueurs ne voient pas le tchat spectateur pendant la partie"
 
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
@@ -2557,12 +2558,12 @@ msgstr "^F2Vous serez spectateur lors de la prochaine manche"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2La partie recommence…"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Compte à rebours arrêté !"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
@@ -3811,7 +3812,7 @@ msgstr "^BGObjectif détruit en ^F4%s^BG !"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "%s joueurs sont nécessaires pour cette partie."
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -4387,6 +4388,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Vous ne pouvez actuellement pas rejoindre la partie.\n"
+"Cette partie est limitée à ^F2%s^BG joueurs."
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"
@@ -10480,7 +10483,7 @@ msgstr "A rejoint le :"
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr "Dernier match :"
+msgstr "Dernière partie :"
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
@@ -10494,7 +10497,7 @@ msgstr "Carte favorite :"
 #: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
-msgstr "Matchs :"
+msgstr "Parties :"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
