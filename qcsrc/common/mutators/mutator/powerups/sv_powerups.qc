@@ -169,8 +169,7 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(powerups, PlayerUseKey)
 {
-	if(!autocvar_g_powerups_drop)
-		return;
+	if(MUTATOR_RETURNVALUE || game_stopped || !autocvar_g_powerups_drop) return;
 	
 	entity player = M_ARGV(0, entity);
 	
