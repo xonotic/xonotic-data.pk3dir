@@ -22,7 +22,7 @@ bool teleport_dest_send(entity this, entity to, int sendflags)
 
 void teleport_dest_link(entity this)
 {
-	Net_LinkEntity(this, false, 0, teleport_dest_send);
+	Net_LinkEntity(this, false, true, 0, teleport_dest_send);
 	this.SendFlags |= SF_TRIGGER_INIT;
 }
 

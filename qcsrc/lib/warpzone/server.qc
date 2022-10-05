@@ -161,14 +161,10 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 		entity ts = new(warpzone_teleported);
 		setmodel(ts, MDL_Null);
-		setSendEntity(ts, WarpZone_Teleported_Send);
-		ts.SendFlags = 0xFFFFFF;
+		Net_LinkEntity(ts, false, false, 1, WarpZone_Teleported_Send);
 		ts.drawonlytoclient = player;
-		setthink(ts, SUB_Remove);
-		ts.nextthink = time + 1;
 		ts.owner = player;
 		ts.enemy = wz;
-		ts.effects = EF_NODEPTHTEST;
 		ts.angles = wz.warpzone_transform;
 	}
 	#elif defined(CSQC)
@@ -716,9 +712,7 @@ spawnfunc(trigger_warpzone)
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else
 		setsize(this, this.mins, this.maxs);
-	setSendEntity(this, WarpZone_Send);
-	this.SendFlags = 0xFFFFFF;
-	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+	Net_LinkEntity(this, false, false, 0, WarpZone_Send);
 	this.warpzone_next = warpzone_first;
 	warpzone_first = this;
 
@@ -744,8 +738,7 @@ spawnfunc(func_camera)
 		this.solid = SOLID_BSP;
 	else if(this.solid < 0)
 		this.solid = SOLID_NOT;
-	setSendEntity(this, WarpZone_Camera_Send);
-	this.SendFlags = 0xFFFFFF;
+	Net_LinkEntity(this, true, false, 0, WarpZone_Camera_Send);
 	this.warpzone_next = warpzone_camera_first;
 	warpzone_camera_first = this;
 }

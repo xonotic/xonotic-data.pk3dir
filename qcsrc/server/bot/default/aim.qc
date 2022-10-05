@@ -254,7 +254,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	this.bot_5th_order_aimfilter= this.bot_5th_order_aimfilter
 		+ (this.bot_4th_order_aimfilter - this.bot_5th_order_aimfilter) * bound(0, autocvar_bot_ai_aimskill_order_filter_5th,1);
 
-	//blend = (bound(0,skill,10)*0.1)*((1-bound(0,skill,10)*0.05) ** 2.5)*5.656854249; //Plot formule before changing !
+	//blend = (bound(0,skill,10)*0.1)*pow((1-bound(0,skill,10)*0.05), 2.5)*5.656854249; //Plot formule before changing !
 	blend = bound(0,skill+this.bot_aimskill,10)*0.1;
 	desiredang = desiredang + blend *
 	(
@@ -307,7 +307,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	blendrate = autocvar_bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
 	//this.v_angle = this.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
-	r = bound(delta_t, r * delta_t * (2 + ((skill + this.bot_mouseskill) ** 3) * 0.005 - random()), 1);
+	r = bound(delta_t, r * delta_t * (2 + pow((skill + this.bot_mouseskill), 3) * 0.005 - random()), 1);
 	this.v_angle += diffang * (r + (1 - r) * bound(0, 1 - autocvar_bot_ai_aimskill_mouse, 1));
 
 	this.v_angle_z = 0;

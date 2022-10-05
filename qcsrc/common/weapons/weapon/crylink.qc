@@ -115,9 +115,9 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 		return avg_origin; // nothing to do
 
 	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
-	avg_dist = (vlen(e.origin - avg_origin) ** 2);
+	avg_dist = pow(vlen(e.origin - avg_origin), 2);
 	for(p = e; (p = p.queuenext) != e; )
-		avg_dist += (vlen(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_origin) ** 2);
+		avg_dist += pow(vlen(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_origin), 2);
 	avg_dist *= (1.0 / n);
 	avg_dist = sqrt(avg_dist);
 

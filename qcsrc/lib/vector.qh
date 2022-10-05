@@ -5,7 +5,7 @@ noref vector _vlen2;
 
 #if 1
 /** Vector distance comparison, avoids sqrt() */
-#define vdist(v, cmp, f) (vlen2(v) cmp ((f) ** 2))
+#define vdist(v, cmp, f) (vlen2(v) cmp pow((f), 2))
 #else
 #define vdist(v, cmp, f) (vlen(v) cmp (f))
 #endif

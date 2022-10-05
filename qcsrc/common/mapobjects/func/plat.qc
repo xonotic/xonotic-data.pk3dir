@@ -51,7 +51,7 @@ float plat_send(entity this, entity to, float sf)
 
 void plat_link(entity this)
 {
-	//Net_LinkEntity(this, 0, false, plat_send);
+	//Net_LinkEntity(this, false, true, 0, plat_send);
 }
 
 spawnfunc(func_plat)

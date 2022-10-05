@@ -6,8 +6,8 @@ ERASEABLE
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
 	if (weight == 0) return;
-	if (mean == 0) e.(a) *= (value ** weight);
-	else e.(a) += (value ** mean) * weight;
+	if (mean == 0) e.(a) *= pow(value, weight);
+	else e.(a) += pow(value, mean) * weight;
 	e.(c) += weight;
 }
 
@@ -15,8 +15,8 @@ ERASEABLE
 float mean_evaluate(entity e, .float a, .float c, float mean)
 {
 	if (e.(c) == 0) return 0;
-	if (mean == 0) return (e.(a) ** (1.0 / e.(c)));
-	else return ((e.(a) / e.(c)) ** (1.0 / mean));
+	if (mean == 0) return pow(e.(a), (1.0 / e.(c)));
+	else return pow((e.(a) / e.(c)), (1.0 / mean));
 }
 
 #define MEAN_ACCUMULATE(s, prefix, v, w) mean_accumulate(s, prefix##_accumulator, prefix##_count, prefix##_mean, v, w)
@@ -243,12 +243,12 @@ float almost_in_bounds(float a, float b, float c)
 ERASEABLE
 float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
 {
-	if (halflifedist > 0) return (0.5 ** ((bound(mindist, d, maxdist) - mindist) / halflifedist));
-	else if (halflifedist < 0) return (0.5 ** ((bound(mindist, d, maxdist) - maxdist) / halflifedist));
+	if (halflifedist > 0) return pow(0.5, ((bound(mindist, d, maxdist) - mindist) / halflifedist));
+	else if (halflifedist < 0) return pow(0.5, ((bound(mindist, d, maxdist) - maxdist) / halflifedist));
 	else return 1;
 }
 
-#define power2of(e) (2 ** e)
+#define power2of(e) pow(2, e)
 
 ERASEABLE
 float log2of(float e)

@@ -128,7 +128,7 @@ void kh_update_state()
 			f = key.team;
 		else
 			f = 30;
-		s |= (32 ** key.count) * f;
+		s |= pow(32, key.count) * f;
 	}
 
 	FOREACH_CLIENT(true, { STAT(OBJECTIVE_STATUS, it) = s; });
@@ -136,7 +136,7 @@ void kh_update_state()
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			STAT(OBJECTIVE_STATUS, key.owner) |= (32 ** key.count) * 31;
+			STAT(OBJECTIVE_STATUS, key.owner) |= pow(32, key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }

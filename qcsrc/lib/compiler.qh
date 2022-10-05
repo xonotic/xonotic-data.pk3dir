@@ -1,37 +1,45 @@
 #pragma once
 
 #ifndef QCC_SUPPORT_ACCUMULATE
-	#ifdef GMQCC
+	#if defined(GMQCC) || defined(FTEQCC)
 		#define QCC_SUPPORT_ACCUMULATE
 	#endif
 #endif
 
 #ifndef QCC_SUPPORT_NIL
-	#ifdef GMQCC
+	#if defined(GMQCC) || defined(FTEQCC)
 		#define QCC_SUPPORT_NIL
 	#endif
 #endif
 
 #ifndef QCC_SUPPORT_ERASEABLE
-	#ifdef GMQCC
+	#if defined(GMQCC) || defined(FTEQCC)
 		#define QCC_SUPPORT_ERASEABLE
 	#endif
 #endif
 
 #ifndef QCC_SUPPORT_ALIAS
-	#ifdef GMQCC
+	#if defined(GMQCC) || defined(FTEQCC)
 		#define QCC_SUPPORT_ALIAS
 	#endif
 #endif
 
 #ifndef QCC_SUPPORT_POW
-    #ifdef GMQCC
+    #if defined(GMQCC) || defined(FTEQCC)
         #define QCC_SUPPORT_POW
     #endif
 #endif
 
-#ifdef GMQCC
+#if defined(GMQCC) || defined(FTEQCC)
     #define LABEL(id) :id
 #else
     #define LABEL(id) id:
+#endif
+
+#ifdef QCC_SUPPORT_POW
+    #ifdef FTEQCC
+        #define POW(a, b) ((a) *^ (b))
+    #else
+        #define POW(a, b) ((a) ** (b))
+    #endif
 #endif

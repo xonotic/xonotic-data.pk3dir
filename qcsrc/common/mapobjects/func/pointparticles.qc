@@ -113,7 +113,7 @@ spawnfunc(func_pointparticles)
 	//if(!this.cnt) this.cnt = _particleeffectnum(this.mdl);
 	this.setactive = generic_netlinked_setactive;
 
-	Net_LinkEntity(this, (this.spawnflags & PARTICLES_VISCULLING), 0, pointparticles_SendEntity);
+	Net_LinkEntity(this, (this.spawnflags & PARTICLES_VISCULLING), true, 0, pointparticles_SendEntity);
 
 	if(this.targetname && this.targetname != "")
 	{
@@ -324,7 +324,7 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 		if(!this.absolute)
 		{
 			v = this.maxs - this.mins;
-			this.impulse *= -v.x * v.y * v.z / (64**3); // relative: particles per 64^3 cube
+			this.impulse *= -v.x * v.y * v.z / pow(64, 3); // relative: particles per 64^3 cube
 		}
 	}
 

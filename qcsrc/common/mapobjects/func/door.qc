@@ -595,7 +595,7 @@ float door_send(entity this, entity to, float sf)
 
 void door_link()
 {
-	//Net_LinkEntity(this, false, 0, door_send);
+	//Net_LinkEntity(this, false, true, 0, door_send);
 }
 #endif
 

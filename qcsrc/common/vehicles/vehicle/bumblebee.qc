@@ -886,7 +886,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         if(instance.gun3.enemy == NULL)
         {
             instance.gun3.enemy = new(bumble_raygun);
-            Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);
+            Net_LinkEntity(instance.gun3.enemy, true, true, 0, bumble_raygun_send);
             instance.gun3.enemy.SendFlags = BRG_SETUP;
             instance.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
             instance.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;

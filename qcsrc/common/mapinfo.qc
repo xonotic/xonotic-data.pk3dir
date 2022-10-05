@@ -761,7 +761,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	string fn;
 	string s, t;
 	float fh;
-	int f, i;
+	int i;
 	float r, n, p;
 	string acl;
 
@@ -922,20 +922,20 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t, true);
+			Gametype gt = MapInfo_Type_FromString(t, true);
 			//if(WARN_COND)
 				//LOG_WARN("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.");
-			if(f)
-				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
+			if(gt)
+				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, gt, true);
 			else if(WARN_COND)
 				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "gametype")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t, true);
-			if(f)
-				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
+			Gametype gt = MapInfo_Type_FromString(t, true);
+			if(gt)
+				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, gt);
 			else if(WARN_COND)
 				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
@@ -954,7 +954,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 			else
 			{
-				t = car(s); s = cdr(s); f = stof(t);
+				t = car(s); s = cdr(s); float f = stof(t);
 				if(s != "")
 				{
 					if(WARN_COND)
@@ -983,10 +983,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		{
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
-			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t, true)))
+			Gametype gt = NULL;
+			if(all || (gt = MapInfo_Type_FromString(t, true)))
 			{
-				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
+				if((all ? MAPINFO_TYPE_ALL : gt.m_flags) & pGametypeToSet.m_flags)
 				{
 					_MapInfo_Parse_Settemp(pFilename, acl, 0, s, 1);
 				}
@@ -1000,10 +1000,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		{
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
-			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t, true)))
+			Gametype gt = NULL;
+			if(all || (gt = MapInfo_Type_FromString(t, true)))
 			{
-				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
+				if((all ? MAPINFO_TYPE_ALL : gt.m_flags) & pGametypeToSet.m_flags)
 				{
 					_MapInfo_Parse_Settemp(pFilename, acl, 1, s, 1);
 				}

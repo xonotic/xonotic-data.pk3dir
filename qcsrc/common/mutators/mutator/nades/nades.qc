@@ -549,7 +549,7 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	vector size = '1 1 1' * orb.orb_radius / 2;
 	setsize(orb, -size, size);
 
-	Net_LinkEntity(orb, true, 0, orb_send);
+	Net_LinkEntity(orb, true, true, 0, orb_send);
 	orb.SendFlags |= 1;
 
 	setthink(orb, nades_orb_think);
@@ -571,7 +571,7 @@ void nade_entrap_touch(entity this, entity toucher)
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-		toucher.velocity = toucher.velocity * (autocvar_g_nades_entrap_strength ** pushdeltatime);
+		toucher.velocity = toucher.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
 
 	#ifdef SVQC
 		UpdateCSQCProjectile(toucher);

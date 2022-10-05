@@ -41,7 +41,7 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.oldorigin_x = compressShortVector(e.velocity);
 	e.species = bloodtype;
 
-	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
+	Net_LinkEntity(e, false, true, 0.2, Damage_DamageInfo_SendEntity);
 }
 
 #endif

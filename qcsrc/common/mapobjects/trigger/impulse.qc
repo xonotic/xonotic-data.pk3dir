@@ -80,7 +80,7 @@ void trigger_impulse_touch_accel(entity this, entity toucher)
 	}
 
 	// div0: ticrate independent, 1 = identity (not 20)
-	toucher.velocity = toucher.velocity * (this.strength ** pushdeltatime);
+	toucher.velocity = toucher.velocity * pow(this.strength, pushdeltatime);
 
 #ifdef SVQC
 	UpdateCSQCProjectile(toucher);
@@ -203,7 +203,7 @@ spawnfunc(trigger_impulse)
 			{
 				this.strength = IMPULSE_DEFAULT_ACCEL_STRENGTH;
 			}
-			this.strength = (this.strength ** autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
+			this.strength = pow(this.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
 			settouch(this, trigger_impulse_touch_accel);
 		}
 	}

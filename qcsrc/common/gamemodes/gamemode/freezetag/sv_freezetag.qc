@@ -223,7 +223,7 @@ void havocbot_goalrating_ft_freeplayers(entity this, float ratingscale, vector o
 			// If teamate is not frozen still seek them out as fight better
 			// in a group.
 			best_dist2 = vlen2(it.origin - org);
-			if (best_dist2 < 700 ** 2)
+			if (best_dist2 < pow(700, 2))
 			{
 				best_pl = NULL;
 				best_dist2 = 0; // already close to a teammate

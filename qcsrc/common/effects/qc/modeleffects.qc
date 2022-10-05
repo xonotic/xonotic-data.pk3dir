@@ -68,7 +68,7 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 		e.scale2 = -s2;
 	float sz = max(e.scale, e.scale2);
 	setsize(e, e.mins * sz, e.maxs * sz);
-	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
+	Net_LinkEntity(e, false, true, 0.1, modeleffect_SendEntity);
 }
 
 #endif

@@ -1,5 +1,6 @@
 CPP := cc -xc -E
 QCC ?= ../../../../gmqcc/gmqcc
+QCCIDENT ?= -DGMQCC
 
 PROGS_OUT ?= ..
 WORKDIR ?= ../.tmp
@@ -37,6 +38,10 @@ QCCFLAGS_WERROR ?= \
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
+# By default Xonotic targets GMQCC, set to empty string for FTEQCC debugging
+QCCFLAGS_TARGET ?= \
+	-std=gmqcc
+
 QCCDEFS ?= \
 	-DXONOTIC=$(XONOTIC) \
 	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
@@ -49,7 +54,7 @@ QCCDEFS ?= \
 
 # -Ooverlap-locals is required
 QCCFLAGS ?= \
-	-std=gmqcc \
+	$(QCCFLAGS_TARGET) \
 	-Ooverlap-locals \
 	-O3 \
 	$(QCCFLAGS_WERROR) \
@@ -128,6 +133,7 @@ export CPP
 export QCC
 export QCCDEFS
 export QCCFLAGS
+export QCCIDENT
 
 $(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
 	@ echo make[1]: Entering directory \`$(CURDIR)/client\'

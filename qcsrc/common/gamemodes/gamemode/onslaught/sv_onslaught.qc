@@ -878,7 +878,7 @@ void ons_camSetup(entity this)
 	cam.origin = this.origin;
 	setorigin(cam, cam.origin);
 	cam.angles = best_ang;
-	Net_LinkEntity(cam, false, 0, clientcamera_send);
+	Net_LinkEntity(cam, false, true, 0, clientcamera_send);
 
 	FOREACH_CLIENT(true, it.clientcamera = cam;);
 
@@ -1029,7 +1029,7 @@ void ons_GeneratorReset(entity this)
 	setthink(this, ons_GeneratorThink);
 	this.nextthink = time + GEN_THINKRATE;
 
-	Net_LinkEntity(this, false, 0, generator_send);
+	Net_LinkEntity(this, false, true, 0, generator_send);
 
 	this.SendFlags = GSF_SETUP; // just incase
 	this.SendFlags |= GSF_STATUS;
@@ -1053,7 +1053,7 @@ void ons_DelayedGeneratorSetup(entity this)
 
 	onslaught_updatelinks();
 
-	Net_LinkEntity(this, false, 0, generator_send);
+	Net_LinkEntity(this, false, true, 0, generator_send);
 }
 
 
@@ -2089,7 +2089,7 @@ spawnfunc(onslaught_link)
 	ons_worldlinklist = this;
 
 	InitializeEntity(this, ons_DelayedLinkSetup, INITPRIO_FINDTARGET);
-	Net_LinkEntity(this, false, 0, ons_Link_Send);
+	Net_LinkEntity(this, false, true, 0, ons_Link_Send);
 }
 
 /*QUAKED spawnfunc_onslaught_controlpoint (0 .5 .8) (-32 -32 0) (32 32 128)

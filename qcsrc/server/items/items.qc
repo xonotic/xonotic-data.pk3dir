@@ -1133,7 +1133,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	else
 		Item_Reset(this);
 
-	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
+	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), true, 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
@@ -1348,7 +1348,7 @@ spawnfunc(target_items)
 		res = GetResource(this, RES_HEALTH);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "health");
 		res = GetResource(this, RES_ARMOR);   if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "armor");
 		FOREACH(StatusEffect, it.instanceOfBuff, str = sprintf("%s %s%d %s", str, valueprefix, this.buffs_finished * boolean(this.buffdef == it), it.netname));
-		FOREACH(Weapons, it != WEP_Null, str = sprintf("%s %s%d %s", str, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
+		FOREACH(Weapons, it != WEP_Null, str = sprintf("%s %s%d %s", str, itemprefix, boolean(!!(STAT(WEAPONS, this) & (it.m_wepset))), it.netname));
 	}
 	this.netname = strzone(str);
 

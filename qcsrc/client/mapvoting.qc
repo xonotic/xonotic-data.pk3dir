@@ -473,7 +473,7 @@ void MapVote_Draw()
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
 	if (mv_top2_time)
-		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time) ** 2);
+		mv_top2_alpha = max(0.2, pow(1 - (time - mv_top2_time), 2));
 
 	void (vector, float, float, string, string, float, float) DrawItem;
 

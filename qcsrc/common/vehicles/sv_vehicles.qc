@@ -59,7 +59,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 		//axh.drawonlytoclient = own; // not spectatable
 		setcefc(axh, AuxiliaryXhair_customize);
 		axh.owner = own;
-		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
+		Net_LinkEntity(axh, false, true, 0, SendAuxiliaryXhair);
 	}
 
 	if(loc != axh.axh_prevorigin)

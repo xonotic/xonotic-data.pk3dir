@@ -79,7 +79,7 @@ void CSQCProjectile_Check(entity e)
 
 void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 {
-	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
+	Net_LinkEntity(e, docull, true, 0, CSQCProjectile_SendEntity);
 
 	e.csqcprojectile_clientanimate = clientanimate;
 

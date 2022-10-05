@@ -64,7 +64,7 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill) * min(14 / (skill + 14), 1));
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
@@ -587,7 +587,7 @@ void autoskill(float factor)
 void bot_calculate_stepheightvec()
 {
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
-	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
+	jumpheight_vec = pow(autocvar_sv_jumpvelocity, 2) / (2 * autocvar_sv_gravity) * '0 0 1';
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
 	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }

@@ -199,7 +199,7 @@ void clearentity(entity e)
 	ACCUMULATE cname spawn##cname##_1(cname this)
 
 #define CONSTRUCTOR(cname, ...)                                                                    \
-	cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__)                                          \
+	ACCUMULATE cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__)                                          \
 	{                                                                                              \
 		return = this;                                                                             \
 	}                                                                                              \
@@ -277,7 +277,7 @@ void clearentity(entity e)
 .string vtblname;
 .entity vtblbase;
 
-void RegisterClasses() {}
+ACCUMULATE void RegisterClasses() {}
 STATIC_INIT(RegisterClasses)
 {
 	RegisterClasses();

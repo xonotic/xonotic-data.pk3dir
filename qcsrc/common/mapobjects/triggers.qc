@@ -127,8 +127,7 @@ void trigger_init(entity this)
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
 {
-	setSendEntity(this, sendfunc);
-	this.SendFlags = 0xFFFFFF;
+	Net_LinkEntity(this, true, false, 0, sendfunc);
 }
 
 void trigger_common_write(entity this, bool withtarget)

@@ -4,7 +4,7 @@
 #include "textlabel.qh"
 #include "button.qh"
 
-void Handle_TimeDemo_Click(entity unused, entity unused) { demolist.timeDemo(demolist); }
+void Handle_TimeDemo_Click(entity unused, entity me) { demolist.timeDemo(demolist); }
 void XonoticDemoTimeConfirmDialog_fill(entity me)
 {
 	entity e;

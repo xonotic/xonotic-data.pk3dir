@@ -186,7 +186,7 @@ float train_send(entity this, entity to, float sf)
 
 void train_link(entity this)
 {
-	//Net_LinkEntity(this, 0, false, train_send);
+	//Net_LinkEntity(this, false, true, 0, train_send);
 }
 
 void train_use(entity this, entity actor, entity trigger)

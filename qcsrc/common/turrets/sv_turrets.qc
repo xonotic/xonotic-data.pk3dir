@@ -1194,7 +1194,7 @@ void turret_use(entity this, entity actor, entity trigger)
 
 void turret_link(entity this)
 {
-	Net_LinkEntity(this, true, 0, turret_send);
+	Net_LinkEntity(this, true, true, 0, turret_send);
 	setthink(this, turret_think);
 	this.nextthink = time;
 	this.tur_head.effects = EF_NODRAW;

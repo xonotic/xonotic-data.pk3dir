@@ -539,7 +539,7 @@ void HUD_StrafeHUD()
                 bool indicator_direction = direction < 0;
                 // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
                 // if both conditions are true then it's inverted twice hence not inverted at all
-                if(!fwd != odd_angles)
+                if((!fwd) != odd_angles)
                 {
                     indicator_direction = !indicator_direction;
                 }

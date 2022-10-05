@@ -105,7 +105,7 @@ bool trigger_keylock_send(entity this, entity to, int sf)
 void trigger_keylock_link(entity this)
 {
 	// uncomment to network keylocks
-	//Net_LinkEntity(this, false, 0, trigger_keylock_send);
+	//Net_LinkEntity(this, false, true, 0, trigger_keylock_send);
 }
 
 /*QUAKED trigger_keylock (.0 .5 .8) ?

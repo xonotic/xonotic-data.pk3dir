@@ -273,7 +273,7 @@ spawnfunc(misc_laser)
 
 	this.mangle = this.angles;
 
-	Net_LinkEntity(this, false, 0, laser_SendEntity);
+	Net_LinkEntity(this, false, true, 0, laser_SendEntity);
 
 	this.setactive = laser_setactive;
 

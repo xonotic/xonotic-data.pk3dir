@@ -99,7 +99,7 @@ void TeamScore_Spawn(float t, string name)
 	entity ts = new_pure(csqc_score_team);
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
-	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
+	Net_LinkEntity(ts, false, true, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
 	PlayerStats_GameReport_AddTeam(t);
@@ -227,7 +227,7 @@ void ScoreInfo_Init(int teams)
 	else
 	{
 		scores_initialized = new_pure(ent_client_scoreinfo);
-		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
+		Net_LinkEntity(scores_initialized, false, true, 0, ScoreInfo_SendEntity);
 	}
 	if(teams & BIT(0))
 		TeamScore_Spawn(NUM_TEAM_1, "Red");
@@ -328,7 +328,7 @@ void PlayerScore_Attach(entity player)
 		error("player already has a scorekeeper");
 	entity sk = new_pure(scorekeeper);
 	sk.owner = player;
-	Net_LinkEntity(sk, false, 0, PlayerScore_SendEntity);
+	Net_LinkEntity(sk, false, true, 0, PlayerScore_SendEntity);
 	CS(player).scorekeeper = sk;
 }
 

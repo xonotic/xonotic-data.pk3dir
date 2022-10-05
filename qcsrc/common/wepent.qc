@@ -164,7 +164,7 @@ MACRO_END
 		e.nextthink = time;
 		//e.drawonlytoclient = wep.owner;
 		setcefc(e, wepent_customize);
-		Net_LinkEntity(e, false, 0, wepent_send);
+		Net_LinkEntity(e, false, true, 0, wepent_send);
 	}
 
 #endif

@@ -171,7 +171,7 @@ void GenericCommand_rpn(int request, int argc, string command)
 						rpn_setf(f2 - f * floor(f2 / f));
 					} else if(rpncmd == "pow" || rpncmd == "**") {
 						f = rpn_popf();
-						rpn_setf(rpn_getf() ** f);
+						rpn_setf(pow(rpn_getf(), f));
 					} else if(rpncmd == "bitand" || rpncmd == "&") {
 						f = rpn_popf();
 						rpn_setf(rpn_getf() & f);
@@ -189,7 +189,7 @@ void GenericCommand_rpn(int request, int argc, string command)
 						rpn_setf(rpn_getf() || f);
 					} else if(rpncmd == "xor" || rpncmd == "^^") {
 						f = rpn_popf();
-						rpn_setf(!rpn_getf() != !f);
+						rpn_setf((!rpn_getf()) != !f);
 					} else if(rpncmd == "bitnot") {
 						rpn_setf(~rpn_popf());
 					} else if(rpncmd == "not") {

@@ -65,7 +65,7 @@ int g_magic_stats_hole = 0;
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
 #if defined(CSQC)
 	/** Get all stats and store them as globals, access with `STAT(ID)` */
-	void stats_get() {}
+	ACCUMULATE void stats_get() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD(STAT, __VA_ARGS__))
 	#define EVAL_STAT(...) __VA_ARGS__
     #define STAT_1(id) (RVALUE, _STAT(id))
@@ -99,7 +99,7 @@ int g_magic_stats_hole = 0;
     /** Internal use only */
     entity STATS;
 	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
-	void stats_add() {}
+	ACCUMULATE void stats_add() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD_(STAT, __VA_ARGS__))
     #define EVAL_STAT(...) __VA_ARGS__
     #define STAT_1(id) (RVALUE, STAT_2(id, STATS))
@@ -151,8 +151,8 @@ int g_magic_stats_hole = 0;
 			.T fld = _STAT(id); \
 			addstat_##T(STAT_##id.m_id, fld); \
 		}
-	void GlobalStats_update(entity this) {}
-	void GlobalStats_updateglobal() {}
+	ACCUMULATE void GlobalStats_update(entity this) {}
+	ACCUMULATE void GlobalStats_updateglobal() {}
     /** TODO: do we want the global copy to update? */
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \

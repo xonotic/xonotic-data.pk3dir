@@ -167,7 +167,7 @@ void Vehicles_drawHUD(
 		float tmpblinkValue = 0.55 + sin(time * 3) * 0.45;
 		tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (96/256) - tmpSize.x;
 		tmpPos.y = vehicleHud_Pos.y;
-		tmpSize = '1 1 1' * hud_fontsize;
+		tmpSize = hud_fontsize;
 		drawstring(tmpPos, sprintf(_("Press %s"), getcommandkey(_("drop weapon"), "dropweapon")), tmpSize, '1 0 0' + '0 1 1' * tmpblinkValue, hudAlpha, DRAWFLAG_NORMAL);
 	}
 

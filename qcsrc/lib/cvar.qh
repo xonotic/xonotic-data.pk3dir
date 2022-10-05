@@ -5,6 +5,7 @@
 #include "static.qh"
 
 ERASEABLE
+ACCUMULATE
 void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) {}
 
 ERASEABLE

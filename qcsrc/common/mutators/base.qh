@@ -120,8 +120,8 @@ ENDCLASS(CallbackChain)
 #define _MUTATOR_HANDLE_POPTMP(type, id) id = tmp_##id;
 #define _MUTATOR_HANDLE_POPOUT(type, id) id = out_##id;
 
-void RegisterHooks() {};
-void RegisterCallbacks() {};
+ACCUMULATE void RegisterHooks() {};
+ACCUMULATE void RegisterCallbacks() {};
 
 #define MUTATOR_HOOKABLE(id, params) _MUTATOR_HOOKABLE(id, params)
 #define _MUTATOR_HOOKABLE(id, params) \
@@ -228,7 +228,7 @@ bool Mutator_Add(Mutator mut)
         // good
         if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.m_name);
 #ifdef SVQC
-        Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
+        Net_LinkEntity(mut, false, true, 0, Mutator_SendEntity);
 #endif
         return true;
     }
@@ -261,8 +261,8 @@ void Mutator_Remove(Mutator mut)
 }
 
 #define REGISTER_MUTATOR(id, dependence) \
-    bool MUTATORFUNC_##id##_hooks(int mode) { return = false; } \
-    bool MUTATORFUNC_##id(int mode) { \
+    ACCUMULATE bool MUTATORFUNC_##id##_hooks(int mode) { return = false; } \
+    ACCUMULATE bool MUTATORFUNC_##id(int mode) { \
         return = false; \
         bool ret = MUTATORFUNC_##id##_hooks(mode); if (ret) return ret; \
     } \
@@ -304,7 +304,7 @@ MACRO_END
 
 #define _MUTATOR_CALLBACK(name, func) \
     Callback CB_##name; \
-    bool func(); \
+    ACCUMULATE bool func(); \
     ACCUMULATE void RegisterCallbacks() { CB_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \

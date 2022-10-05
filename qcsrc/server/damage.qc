@@ -980,7 +980,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 							LOG_INFOF("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
 
 
-						total = 0.25 * (max(mininv_f, mininv_d) ** 2);
+						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
 
 						if(autocvar_g_throughfloor_debug)
 							LOG_INFOF(" steps=%f", total);

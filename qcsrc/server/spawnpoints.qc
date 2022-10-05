@@ -87,7 +87,7 @@ void link_spawnpoint(entity this)
 	// and don't show non-team spawns in team matches.
 	// (Unless useallspawns is activated)
 	if(anypoint || !((teamplay && !Team_IsValidTeam(this.team)) || (!teamplay && Team_IsValidTeam(this.team))))
-		Net_LinkEntity(this, false, 0, SpawnPoint_Send);
+		Net_LinkEntity(this, false, true, 0, SpawnPoint_Send);
 }
 
 void relocate_spawnpoint(entity this)
@@ -312,7 +312,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_AddEnt(spot, (bound(lower, spot.spawnpoint_score.y, upper) ** exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
+		RandomSelection_AddEnt(spot, pow(bound(lower, spot.spawnpoint_score.y, upper), exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
 
 	return RandomSelection_chosen_ent;
 }

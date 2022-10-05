@@ -106,7 +106,7 @@ void conveyor_init(entity this)
 	this.reset = generic_netlinked_reset;
 	this.reset(this);
 
-	Net_LinkEntity(this, 0, false, conveyor_send);
+	Net_LinkEntity(this, false, true, 0, conveyor_send);
 
 	this.SendFlags |= SF_TRIGGER_INIT;
 }

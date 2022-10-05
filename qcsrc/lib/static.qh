@@ -26,26 +26,26 @@ void profile(string s)
 /** before worldspawn */
 #define STATIC_INIT_EARLY(func) _STATIC_INIT(func##_0,    __static_init_0)
 #define static_init_early()     CALL_ACCUMULATED_FUNCTION(__static_init_0)
-void __static_init_0() {}
+ACCUMULATE void __static_init_0() {}
 
 /** during worldspawn */
 #define STATIC_INIT(func)       _STATIC_INIT(func##_1,    __static_init_1)
 #define static_init()           CALL_ACCUMULATED_FUNCTION(__static_init_1)
-void __static_init_1() {}
+ACCUMULATE void __static_init_1() {}
 
 /** directly after STATIC_INIT */
 #define STATIC_INIT_LATE(func)  _STATIC_INIT(func##_2,    __static_init_2)
 #define static_init_late()      CALL_ACCUMULATED_FUNCTION(__static_init_2)
-void __static_init_2() {}
+ACCUMULATE void __static_init_2() {}
 
 /** directly after STATIC_INIT_LATE */
 #define PRECACHE(func)          _STATIC_INIT(func##_3,    __static_init_3)
 #define static_init_precache()  CALL_ACCUMULATED_FUNCTION(__static_init_3)
-void __static_init_3() {}
+ACCUMULATE void __static_init_3() {}
 
 /* other map entities spawn now */
 
 /** before shutdown */
 #define SHUTDOWN(func)          _STATIC_INIT(func##_shutdown, __shutdown)
 #define shutdownhooks()         CALL_ACCUMULATED_FUNCTION(    __shutdown)
-void __shutdown() {}
+ACCUMULATE void __shutdown() {}

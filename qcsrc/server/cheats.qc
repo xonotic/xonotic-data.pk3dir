@@ -854,7 +854,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
 	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
 	touchpoint = touchpoint - gettaginfo(draggee, 0);
-	tagscale = (vlen(v_forward) ** -2);
+	tagscale = pow(vlen(v_forward), -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
 	dragger.draglocalvector_y = touchpoint * v_right * tagscale;
 	dragger.draglocalvector_z = touchpoint * v_up * tagscale;
@@ -929,7 +929,7 @@ void Drag_MoveForward(entity dragger)
 
 void Drag_SetSpeed(entity dragger, float s)
 {
-	dragger.dragspeed = (2 ** s);
+	dragger.dragspeed = pow(2, s);
 }
 
 void Drag_MoveBackward(entity dragger)

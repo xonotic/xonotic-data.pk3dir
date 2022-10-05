@@ -121,12 +121,11 @@ void CSQCModel_CheckUpdate(entity e)
 
 void CSQCModel_LinkEntity(entity e)
 {
-	setSendEntity(e, CSQCModel_Send);
-	e.SendFlags = 0xFFFFFF;
+	Net_LinkEntity(e, true, false, 0, CSQCModel_Send);
 	CSQCModel_CheckUpdate(e);
 }
 
 void CSQCModel_UnlinkEntity(entity e)
 {
-	setSendEntity(e, func_null);
+	Net_UnlinkEntity(e);
 }

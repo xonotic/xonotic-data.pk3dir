@@ -570,7 +570,7 @@ void RandomSeed_Spawn()
 {
 	randomseed = new_pure(randomseed);
 	setthink(randomseed, RandomSeed_Think);
-	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
+	Net_LinkEntity(randomseed, false, true, 0, RandomSeed_Send);
 
 	getthink(randomseed)(randomseed); // sets random seed and nextthink
 }

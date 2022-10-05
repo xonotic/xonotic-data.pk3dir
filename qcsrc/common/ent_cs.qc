@@ -245,7 +245,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		e.owner = player;
 		setthink(e, entcs_think);
 		e.nextthink = time;
-		Net_LinkEntity(e, false, 0, entcs_send);
+		Net_LinkEntity(e, false, true, 0, entcs_send);
 		// NOTE: the following code block has been disabled as a workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/1824
 #if 0
 		if (!IS_REAL_CLIENT(player)) return;

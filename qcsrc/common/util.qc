@@ -502,7 +502,7 @@ float compressShortVector(vector vec)
 STATIC_INIT(compressShortVector)
 {
 	float l = 1;
-	float f = (2 ** (1/8));
+	float f = pow(2, (1/8));
 	int i;
 	for(i = 0; i < 128; ++i)
 	{
@@ -1891,7 +1891,7 @@ void attach_sameorigin(entity e, entity to, string tag)
     float tagscale;
 
     org = e.origin - gettaginfo(to, gettagindex(to, tag));
-    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
+    tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag
     t_forward = v_forward * tagscale;
     t_left = v_right * -tagscale;
     t_up = v_up * tagscale;
