@@ -117,8 +117,6 @@ void HUD_StrafeHUD()
         static float turn_lasttime           = 0;
         static bool  turn                    = false;
         static float turnangle;
-        static float turnspeed;
-        static float turnaccel;
         static float dt_update               = 0;
         static int   dt_time                 = 0;
         static float dt_sum                  = 0;
@@ -196,7 +194,7 @@ void HUD_StrafeHUD()
         if(onground_lasttime == 0)
             onground_expired = true;
         else
-            onground_expired = (time - onground_lasttime) >= autocvar_hud_panel_strafehud_timeout_ground;
+            onground_expired = (time - onground_lasttime) >= autocvar_hud_panel_strafehud_timeout_ground; // timeout for slick ramps
 
         if(!onground && !onground_expired) // if ground timeout hasn't expired yet use ground physics
         {
@@ -364,43 +362,37 @@ void HUD_StrafeHUD()
         }
         else // air strafe only
         {
-            bool turn_expired = (time - turn_lasttime) >= autocvar_hud_panel_strafehud_timeout_turn;
+            bool turn_expired = (time - turn_lasttime) >= autocvar_hud_panel_strafehud_timeout_turn; // timeout for jumping with strafe keys only
 
             if(strafekeys)
+                turn = true;
+            else if(turn_expired)
+                turn = false;
+
+            if(turn) // CPMA turning
             {
-                if(onground_expired) // timeout for slick ramps
+                if(strafekeys)
                 {
-                    turn = true; // CPMA turning
                     turn_lasttime = time;
                     turnangle = wishangle;
-
-                    // calculate the maximum air strafe speed and acceleration
-                    float strafity = 1 - (90 - fabs(wishangle)) / 45;
-
-                    if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
-                    {
-                        maxspeed = min(maxspeed, GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer)));
-                    }
-                    turnspeed = movespeed = min(movespeed, maxspeed);
-
-                    if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0)
-                    {
-                        maxaccel = GeomLerp(PHYS_AIRACCELERATE(strafeplayer), strafity, PHYS_AIRSTRAFEACCELERATE(strafeplayer));
-                    }
-                    turnaccel = maxaccel;
                 }
-            }
-            else if(turn)
-            {
-                if(!turn_expired) // retain last state until strafe turning times out
+                else // retain last state until strafe turning times out
                 {
                     wishangle = turnangle;
-                    movespeed = turnspeed;
-                    maxaccel = turnaccel;
                 }
-                else // timeout for jumping with strafe keys only
+
+                // calculate the maximum air strafe speed and acceleration
+                float strafity = 1 - (90 - fabs(wishangle)) / 45;
+
+                if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
                 {
-                    turn = false;
+                    maxspeed = min(maxspeed, GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer)));
+                }
+                movespeed = min(movespeed, maxspeed);
+
+                if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0)
+                {
+                    maxaccel = GeomLerp(PHYS_AIRACCELERATE(strafeplayer), strafity, PHYS_AIRSTRAFEACCELERATE(strafeplayer));
                 }
             }
         }
