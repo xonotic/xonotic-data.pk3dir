@@ -33,6 +33,7 @@ float GeomLerp(float a, float _lerp, float b); // declare GeomLerp here since th
 
 void HUD_StrafeHUD()
 {
+    static float hud_lasttime = 0;
     entity strafeplayer;
     bool islocal;
 
@@ -110,9 +111,6 @@ void HUD_StrafeHUD()
         }
 
         // presistent
-        static float demo_angle              = -37;
-        static float demo_direction          = 1;
-        static float demo_time               = 0;
         static float onground_lasttime       = 0;
         static float turn_lasttime           = 0;
         static bool  turn                    = false;
@@ -482,19 +480,31 @@ void HUD_StrafeHUD()
         }
         else // simulate turning for HUD setup
         {
-            fwd = true;
-            if(autocvar__hud_panel_strafehud_demo && ((time - demo_time) >= .025))
+            const float demo_maxangle = 55; // maximum angle before changing direction
+            const float demo_turnspeed = 40; // turning speed in degrees per second
+
+            static float demo_position = -37 / demo_maxangle; // current positioning value between -1 and +1
+
+            if(autocvar__hud_panel_strafehud_demo)
             {
-                demo_time = time;
-                demo_angle += demo_direction;
-                if(fabs(demo_angle) >= 55)
-                {
-                    demo_direction = -demo_direction;
-                }
+                float demo_dt = time - hud_lasttime;
+                float demo_step = (demo_turnspeed / demo_maxangle) * demo_dt;
+                demo_position = ((demo_position + demo_step) % 4 + 4) % 4;
             }
-            angle = demo_angle;
+
+            // triangle wave function
+            if(demo_position > 3)
+                angle = -1 + (demo_position - 3);
+            else if(demo_position > 1)
+                angle = +1 - (demo_position - 1);
+            else
+                angle = demo_position;
+            angle *= demo_maxangle;
+
+            fwd = true;
+            hud_lasttime = time;
             wishangle = 45;
-            if(demo_angle < 0) wishangle *= -1;
+            if(angle < 0) wishangle *= -1;
         }
 
         // invert the wish angle when strafing backwards
@@ -973,6 +983,7 @@ void HUD_StrafeHUD()
         }
         draw_endBoldFont();
     }
+    hud_lasttime = time;
 }
 
 // functions to make hud elements align perfectly in the hud area
