@@ -146,7 +146,7 @@ void HUD_StrafeHUD()
         int    direction;
 
         // HUD
-        int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
+        int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : STRAFEHUD_MODE_VIEW_CENTERED;
         float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_panel_strafehud_unit);
         float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_panel_strafehud_unit);
         int    length_decimals               = autocvar_hud_panel_strafehud_unit >= 3 && autocvar_hud_panel_strafehud_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
@@ -502,7 +502,6 @@ void HUD_StrafeHUD()
             angle *= demo_maxangle;
 
             fwd = true;
-            hud_lasttime = time;
             wishangle = 45;
             if(angle < 0) wishangle *= -1;
         }
@@ -574,7 +573,7 @@ void HUD_StrafeHUD()
         {
             currentangle_size.y = max(currentangle_size.y, 0);
         }
-        if(mode == 0)
+        if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
         {
             currentangle_offset = angle/hudangle * panel_size.x;
         }
@@ -642,7 +641,7 @@ void HUD_StrafeHUD()
             neutral_offset = direction == STRAFEHUD_DIRECTION_LEFT ? preaccelzone_left_offset + preaccelzone_width : -neutral_width;
 
             // shift hud if operating in view angle centered mode
-            if(mode == 0)
+            if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
             {
                 shift_offset = -currentangle_offset;
                 bestangle_offset += shift_offset;
@@ -675,7 +674,7 @@ void HUD_StrafeHUD()
             // draw neutral zone
             HUD_Panel_DrawStrafeHUD(neutral_offset, neutral_width, hidden_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE);
 
-            if(speed >= minspeed && bestangle_width > 0) // only draw indicators if minspeed is reached
+            if(speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0) // only draw indicators if minspeed is reached
             {
                 // draw the switch indicator(s)
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
@@ -798,7 +797,7 @@ void HUD_StrafeHUD()
             currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
         }
 
-        if(mode == 0 || straight_overturn)
+        if(mode == STRAFEHUD_MODE_VIEW_CENTERED || straight_overturn)
         {
             currentangle_offset = panel_size.x/2;
         }
