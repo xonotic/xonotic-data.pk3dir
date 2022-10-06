@@ -63,6 +63,9 @@ float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
 
+const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
+const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
+
 const int STRAFEHUD_DIRECTION_NONE = 0;
 const int STRAFEHUD_DIRECTION_LEFT = 1;
 const int STRAFEHUD_DIRECTION_RIGHT = 2;
