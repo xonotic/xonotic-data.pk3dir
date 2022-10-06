@@ -82,8 +82,7 @@ void powerups_DropItem_Think(entity this)
 	TakeResource(this, RES_HEALTH, 1);
 	
 	if(GetResource(this, RES_HEALTH) < 1) {
-		WaypointSprite_Kill(this.waypointsprite_attached);
-		delete(this);
+		RemoveItem(this);
 		return;
 	}
 	
