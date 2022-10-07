@@ -19,11 +19,6 @@ int NumTeams(int teams)
 	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
 }
 
-int AvailableTeams()
-{
-	return NumTeams(ScoreRules_teams);
-}
-
 // NOTE: ST_constants may not be >= MAX_TEAMSCORE
 // scores that should be in all modes:
 void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled)
@@ -35,6 +30,7 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 		ScoreInfo_SetLabel_TeamScore(i, "", 0);
 
 	ScoreRules_teams = teams;
+	AVAILABLE_TEAMS = NumTeams(teams);
 
 	if(score_enabled)
 		ScoreInfo_SetLabel_TeamScore(ST_SCORE, "score", stprio);

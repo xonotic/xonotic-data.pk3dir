@@ -269,7 +269,11 @@ void CSQCPlayer_ApplyDeathTilt(entity this)
 {
 	if(!this.csqcmodel_isdead || !autocvar_v_deathtilt)
 		return;
-	view_angles.z = autocvar_v_deathtiltangle;
+	// incompatible with cl_eventchase_death 2 because tilting is applied while the corpse is
+	// in the air and immediately turned off when it touches the ground
+	if (autocvar_cl_eventchase_death == 2 && this.csqcmodel_isdead)
+		return;
+	view_angles.z += min((time - this.death_time) * 8, 1) * autocvar_v_deathtiltangle;
 }
 
 float autocvar_v_idlescale;
@@ -417,6 +421,8 @@ float autocvar_cl_rollangle;
 float autocvar_cl_rollspeed;
 float CSQCPlayer_CalcRoll(entity this)
 {
+	if (!autocvar_cl_rollangle) return 0;
+
 	makevectors(view_angles);
 	float side = (this.velocity * v_right);
 	float sign = (side < 0) ? -1 : 1;

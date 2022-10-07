@@ -549,9 +549,11 @@ void Scoreboard_UpdatePlayerTeams()
 	update_time = time;
 
 	entity pl, tmp;
+	numplayers = 0;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
+		numplayers += pl.team != NUM_SPECTATOR;
 		//num += 1;
 		int Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
@@ -2181,6 +2183,15 @@ vector Scoreboard_Spectators_Draw(vector pos) {
 	return pos;
 }
 
+string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
+{
+	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
+	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
+	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit),
+		(s_label == "score") ? CTX(_("SCO^points")) :
+		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
+}
+
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -2304,20 +2315,7 @@ void Scoreboard_Draw()
 			{
 				if(tl > 0)
 					str = strcat(str, "^7 / "); // delimiter
-				if(teamplay)
-				{
-					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
-						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-						(teamscores_label(ts_primary) == "fastest") ? "" :
-						TranslateScoresLabel(teamscores_label(ts_primary))));
-				}
-				else
-				{
-					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(scores_flags(ps_primary), fl),
-						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-						(scores_label(ps_primary) == "fastest") ? "" :
-						TranslateScoresLabel(scores_label(ps_primary))));
-				}
+				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
 			if(ll > 0)
 			{
@@ -2329,26 +2327,13 @@ void Scoreboard_Draw()
 					else
 						str = strcat(str, "^7 / ");
 				}
-
-				if(teamplay)
-				{
-					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
-						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-						(teamscores_label(ts_primary) == "fastest") ? "" :
-						TranslateScoresLabel(teamscores_label(ts_primary))));
-				}
-				else
-				{
-					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
-						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-						(scores_label(ps_primary) == "fastest") ? "" :
-						TranslateScoresLabel(scores_label(ps_primary))));
-				}
+				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true));
 			}
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
-		// map name
-		str = sprintf(_("^7Map: ^2%s"), shortmapname);
+		// map name and player count
+		str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section
