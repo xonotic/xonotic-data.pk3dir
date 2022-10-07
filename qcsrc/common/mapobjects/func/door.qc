@@ -369,14 +369,25 @@ void door_trigger_touch(entity this, entity toucher)
 #endif
 			return;
 
-	if (time < this.door_finished)
+	if (this.owner.state == STATE_UP)
 		return;
 
 	// check if door is locked
 	if (!door_check_keys(this, toucher))
 		return;
 
-	this.door_finished = time + 1;
+	if (this.owner.state == STATE_TOP)
+	{
+		if (this.owner.nextthink < this.owner.ltime + this.owner.wait)
+		{
+			entity e = this.owner;
+			do {
+				e.nextthink = e.ltime + e.wait;
+				e = e.enemy;
+			} while (e != this.owner);
+		}
+		return;
+	}
 
 	door_use(this.owner, toucher, NULL);
 }
