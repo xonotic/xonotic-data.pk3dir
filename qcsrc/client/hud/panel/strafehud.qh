@@ -40,7 +40,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud_direction_alpha, float, 0, "opacity of the dir
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_width, float, 0.25, "stroke width of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel height)");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_length, float, 0.02, "length of the horizontal component of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel width)");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_range, float, 200, "range of the slick detector in qu, \"0\" to disable");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_granularity, int, 4, "value from 0 to 4 which defines how exact the search for slick should be, higher values may yield better results but require more computation");
+AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_granularity, int, 1, "value from 0 to 4 which defines how exact the search for slick should be, higher values may yield better results but require more computation");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_color, vector, '0 1 1', "color of the slick detector indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_alpha, float, 0.5, "opacity of the slick detector indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_height, float, 0.125, "height of the slick detector indicator (relative to the panel height)");
@@ -56,9 +56,29 @@ AUTOCVAR_SAVE(hud_panel_strafehud_timeout_turn, float, 0.1, "time (in seconds) a
 AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_angle, float, 0.01, "how many degrees from 0° to 180° the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 AUTOCVAR_SAVE(hud_panel_strafehud_fps_update, float, 0.5, "update interval (in seconds) of the frametime to calculate the optimal angle, smaller values may cause flickering");
 
-void HUD_Panel_DrawStrafeHUD(float, float, vector, float, int, int);
+void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
 vector StrafeHUD_mixColors(vector, vector, float);
 void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
+
+const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
+const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
+
+const int STRAFEHUD_DIRECTION_NONE = 0;
+const int STRAFEHUD_DIRECTION_LEFT = 1;
+const int STRAFEHUD_DIRECTION_RIGHT = 2;
+
+const int STRAFEHUD_KEYS_NONE = 0;
+const int STRAFEHUD_KEYS_FORWARD = 1;
+const int STRAFEHUD_KEYS_BACKWARD = 2;
+
+const int STRAFEHUD_STYLE_DRAWFILL = 0;
+const int STRAFEHUD_STYLE_PROGRESSBAR = 1;
+const int STRAFEHUD_STYLE_GRADIENT = 2;
+
+const int STRAFEHUD_GRADIENT_NONE = 0;
+const int STRAFEHUD_GRADIENT_LEFT = 1;
+const int STRAFEHUD_GRADIENT_RIGHT = 2;
+const int STRAFEHUD_GRADIENT_BOTH = 3;
