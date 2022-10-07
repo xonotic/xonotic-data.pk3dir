@@ -3,15 +3,22 @@
 #include "strafehud.qh"
 
 #include <client/draw.qh>
-#include <client/hud/panel/racetimer.qh>
-#include <client/view.qh>
-#include <common/animdecide.qh>
-#include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
-#include <common/physics/movetypes/movetypes.qh>
-#include <common/physics/player.qh>
-#include <common/resources/cl_resources.qh>
 #include <lib/csqcmodel/cl_player.qh>
+#include <common/physics/player.qh>
+#include <common/physics/movetypes/movetypes.qh>
+
+// non-essential
+#include <client/view.qh> // for v_flipped state
+
+// non-local players
+#include <common/animdecide.qh> // anim_implicit_state
+#include <common/ent_cs.qh> // CSQCModel_server2csqc()
+
+// start speed
+#include <client/hud/panel/racetimer.qh> // checkpoint information (race_*)
+
+// jump height
+#include <common/resources/cl_resources.qh> // IS_DEAD() macro
 
 AUTOCVAR_SAVE(hud_panel_strafehud_pos, string, "0.320000 0.570000", "position of this base of the panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_size, string, "0.360000 0.020000", "size of this panel");
@@ -93,7 +100,7 @@ void HUD_StrafeHUD()
     {
         float strafe_waterlevel;
 
-        // get the player waterlevel without affecting the player entity, this way we can fetch waterlevel even if client prediction is disabled
+        // check the player waterlevel without affecting the player entity, this way we can fetch waterlevel even if client prediction is disabled
         {
             // store old values
             void old_contentstransition(int, int) = strafeplayer.contentstransition;
@@ -110,7 +117,7 @@ void HUD_StrafeHUD()
             strafeplayer.waterlevel = old_waterlevel;
         }
 
-        // presistent
+        // persistent
         static float onground_lasttime       = 0;
         static float turn_lasttime           = 0;
         static bool  turn                    = false;
@@ -124,12 +131,12 @@ void HUD_StrafeHUD()
         int    keys                          = STAT(PRESSED_KEYS);
         bool   jumpheld                      = islocal ? (PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) : (keys & KEY_JUMP); // doesn't work in spectator mode if spectated player uses +jetpack
         bool   onground                      = (islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR)) && !jumpheld; // if jump is held assume we are in air
+        bool   real_onground                 = onground; // doesn't get changed by ground timeout
         bool   onground_expired;
         bool   strafekeys;
         bool   swimming                      = strafe_waterlevel >= WATERLEVEL_SWIMMING; // the hud will not work well while swimming
-        bool   spectating                    = entcs_GetSpecState(strafeplayer.sv_entnum) == ENTCS_SPEC_PURE;
         float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
-        float  maxspeed_mod                  = IS_DUCKED(csqcplayer) ? .5 : 1;
+        float  maxspeed_mod                  = IS_DUCKED(csqcplayer) ? .5 : 1; // only the local csqcplayer entity contains this information even when spectating
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_mod : 320;
         float  movespeed;
@@ -618,11 +625,11 @@ void HUD_StrafeHUD()
                 switch(autocvar_hud_panel_strafehud_style)
                 {
                     default:
-                    case 0:
+                    case STRAFEHUD_STYLE_DRAWFILL:
                         drawfill(panel_pos, panel_size, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                         break;
 
-                    case 1:
+                    case STRAFEHUD_STYLE_PROGRESSBAR:
                         HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 }
             }
@@ -802,7 +809,7 @@ void HUD_StrafeHUD()
             currentangle_offset = panel_size.x/2;
         }
 
-        if(autocvar_hud_panel_strafehud_style == 2 && !immobile)
+        if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT && !immobile)
         {
             float moveangle = angle + wishangle;
             float strafeangle = bestangle + wishangle;
@@ -846,14 +853,14 @@ void HUD_StrafeHUD()
 
         switch(autocvar_hud_panel_strafehud_angle_style)
         {
-            case 1:
+            case STRAFEHUD_INDICATOR_SOLID:
                 if(currentangle_size.x > 0 && currentangle_size.y > 0)
                 {
                     if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (ghost_offset - currentangle_size.x/2), currentangle_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 }
                 break;
-            case 2:
+            case STRAFEHUD_INDICATOR_DASHED:
                 if(currentangle_size.x > 0 && currentangle_size.y > 0)
                 {
                     vector line_size = currentangle_size;
@@ -866,7 +873,7 @@ void HUD_StrafeHUD()
                     }
                 }
                 break;
-            case 0:
+            case STRAFEHUD_INDICATOR_NONE:
             default:
                 // don't offset text and arrows if the angle indicator line isn't drawn
                 angleheight_offset = panel_size.y;
@@ -939,7 +946,7 @@ void HUD_StrafeHUD()
             static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
             // tries to catch kill and spectate but those are not reliable
-            if((strafeplayer.velocity.z <= 0) || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
+            if((strafeplayer.velocity.z <= 0) || real_onground || swimming || IS_DEAD(strafeplayer) || !IS_PLAYER(strafeplayer))
             {
                 height_min = height_max = strafeplayer.origin.z;
             }
