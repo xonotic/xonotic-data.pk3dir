@@ -704,7 +704,7 @@ void door_init_shared(entity this)
 	}
 	else if (!this.wait)
 	{
-		this.wait = 3;
+		this.wait = q3compat ? 2 : 3;
 	}
 
 	if (!this.lip)
