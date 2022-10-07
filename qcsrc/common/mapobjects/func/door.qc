@@ -757,7 +757,11 @@ spawnfunc(func_door)
 	door_init_shared(this);
 
 	this.pos1 = this.origin;
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+	vector absmovedir;
+	absmovedir.x = fabs(this.movedir.x);
+	absmovedir.y = fabs(this.movedir.y);
+	absmovedir.z = fabs(this.movedir.z);
+	this.pos2 = this.pos1 + this.movedir * (absmovedir * this.size - this.lip);
 
 	if(autocvar_sv_doors_always_open)
 	{
