@@ -54,7 +54,7 @@ void HUD_StrafeHUD()
     {
         if(!autocvar_hud_panel_strafehud ||
            (spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3)) ||
-           (autocvar_hud_panel_strafehud == 3 && !MUTATOR_CALLHOOK(HUD_StrafeHUD_showoptional))) return;
+           (autocvar_hud_panel_strafehud == 3 && !MUTATOR_CALLHOOK(HUD_StrafeHUD_showoptional))) { hud_lasttime = time; return; }
     }
 
     HUD_Panel_LoadCvars();
