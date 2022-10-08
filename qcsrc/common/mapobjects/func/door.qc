@@ -620,9 +620,10 @@ void door_init_startopen(entity this)
 	this.pos2 = this.pos1;
 	this.pos1 = this.origin;
 
-#ifdef SVQC
-	this.SendFlags |= SF_TRIGGER_UPDATE;
-#endif
+// no longer needed: not using delayed initialisation for door_init_startopen()
+//#ifdef SVQC
+//	this.SendFlags |= SF_TRIGGER_UPDATE;
+//#endif
 }
 
 void door_reset(entity this)
@@ -749,11 +750,6 @@ spawnfunc(func_door)
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
 
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
-	if (this.spawnflags & DOOR_START_OPEN)
-		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
-
 	door_init_shared(this);
 
 	this.pos1 = this.origin;
@@ -762,6 +758,11 @@ spawnfunc(func_door)
 	absmovedir.y = fabs(this.movedir.y);
 	absmovedir.z = fabs(this.movedir.z);
 	this.pos2 = this.pos1 + this.movedir * (absmovedir * this.size - this.lip);
+
+// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+// but spawn in the open position
+	if (this.spawnflags & DOOR_START_OPEN)
+		door_init_startopen(this);
 
 	if(autocvar_sv_doors_always_open)
 	{
