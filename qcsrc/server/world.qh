@@ -122,7 +122,7 @@ float g_weapon_stay;
 float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
 
 float g_grappling_hook;
-float warmup_stage;
+int warmup_stage;
 
 bool sv_ready_restart_after_countdown;
 

@@ -439,7 +439,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	if (time <= game_starttime && game_stopped)
 		return;
 	if (!is_fake_round_start)
-		bprint("^1Match is restarting...\n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_COUNTDOWN_RESTART);
 
 	VoteReset();
 
@@ -517,23 +517,53 @@ void ReadyRestart(bool forceWarmupEnd)
 	ReadyRestart_force(false);
 }
 
-// Count the players who are ready and determine whether or not to restart the match
+/* Count the players who are ready and determine whether or not to restart the match when:
+ * a player presses F4                      server/command/cmd.qc  ClientCommand_ready()
+ * a player switches from players to specs  server/client.qc       PutObserverInServer()
+ * a player joins (from specs or directly)  server/client.qc       PutPlayerInServer()
+ * a player disconnects                     server/client.qc       ClientDisconnect()	*/
 void ReadyCount()
 {
+	// cannot reset the game while a timeout is active or pending
+	if (timeout_status) return;
+
 	float ready_needed_factor, ready_needed_count;
-	float t_ready = 0, t_players = 0;
+	float t_players = 0;
+	readycount = 0;
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
 		++t_players;
-		if (it.ready) ++t_ready;
+		if (it.ready) ++readycount;
 	});
-
-	readycount = t_ready;
 
 	Nagger_ReadyCounted();
 
-	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
-	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
+	if (t_players < map_minplayers) // map_minplayers will only be set if g_warmup -1 at worldspawn
+	{
+		if (game_starttime > time) // someone bailed during countdown, back to warmup
+		{
+			warmup_stage = -1; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
+			game_starttime = time;
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, map_minplayers);
+		}
+		if (warmup_limit > 0)
+			warmup_limit = -1;
+		return; // don't ReadyRestart if players are ready but too few
+	}
+	else if (map_minplayers && warmup_limit <= 0)
+	{
+		// there's enough players now but we're still in infinite warmup
+		warmup_limit = cvar("g_warmup_limit");
+		if (warmup_limit == 0)
+			warmup_limit = autocvar_timelimit * 60;
+		if (warmup_limit > 0)
+			game_starttime = time;
+		// implicit else: g_warmup -1 && g_warmup_limit -1 means
+		// warmup continues until enough players AND enough RUPs (no time limit)
+	}
+
+	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 1);
+	ready_needed_count = ceil(t_players * ready_needed_factor);
 
 	if (readycount >= ready_needed_count) ReadyRestart(true);
 }

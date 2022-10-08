@@ -1,4 +1,5 @@
 #include "timer.qh"
+#include "scoreboard.qh"
 
 #include <client/draw.qh>
 #include <client/view.qh>
@@ -82,15 +83,9 @@ void HUD_Timer()
 		curtime = time;
 
 	if(warmup_stage)
-	{
 		timelimit = STAT(WARMUP_TIMELIMIT);
-		if(timelimit == 0)
-			timelimit = STAT(TIMELIMIT) * 60;
-	}
 	else
-	{
 		timelimit = STAT(TIMELIMIT) * 60;
-	}
 
 	// Calculate time left
 	timeleft = HUD_Timer_TimeLeft(curtime, STAT(GAMESTARTTIME), timelimit);
@@ -172,7 +167,12 @@ void HUD_Timer()
 	int overtimes = STAT(OVERTIMES);
 
 	if(warmup_stage || autocvar__hud_configure)
-		subtext = _("Warmup");
+	{
+		if (STAT(WARMUP_TIMELIMIT) > 0)
+			subtext = _("Warmup");
+		else
+			subtext = srv_minplayers ? _("Warmup: too few players") : _("Warmup: no time limit");
+	}
 	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");
 	else if(overtimes >= 2)

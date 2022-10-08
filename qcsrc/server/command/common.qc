@@ -188,6 +188,10 @@ void timeout_handler_reset(entity this)
 	timeout_leadtime = 0;
 
 	delete(this);
+
+	// ReadyCount() does nothing when a timeout is active or pending
+	// so check readiness now to support g_warmup_allow_timeout
+	if (warmup_stage) ReadyCount();
 }
 
 void timeout_handler_think(entity this)

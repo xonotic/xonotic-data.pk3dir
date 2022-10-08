@@ -51,11 +51,12 @@ int autocvar_spawn_debug;
 string autocvar_sv_motd;
 string autocvar_sv_motd_permanent;
 int autocvar_sv_name_maxlength = 64;
+string autocvar_sv_quickmenu_file;
 bool autocvar_sv_servermodelsonly;
+bool autocvar_sv_showspectators;
 int autocvar_sv_spectate;
 bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
-bool autocvar_sv_showspectators;
 
 // z411
 string autocvar_hostname_full;

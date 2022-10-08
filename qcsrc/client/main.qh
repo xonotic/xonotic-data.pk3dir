@@ -111,6 +111,8 @@ bool warmup_stage;
 
 string hostname;
 string welcome_msg;
+int srv_minplayers;
+int srv_maxplayers;
 float welcome_msg_menu_check_maxtime;
 void Welcome_Message_Show_Try();
 
@@ -188,9 +190,6 @@ float spectatee_status;
 float spectatee_status_changed_time;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
-
-// short mapname
-string shortmapname;
 
 // database for misc stuff
 int tempdb;

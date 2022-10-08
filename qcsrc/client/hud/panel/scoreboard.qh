@@ -17,6 +17,8 @@ float scoreboard_bottom;
 float scoreboard_left;
 float scoreboard_right;
 
+int numplayers;
+
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();
 void Scoreboard_InitScores();

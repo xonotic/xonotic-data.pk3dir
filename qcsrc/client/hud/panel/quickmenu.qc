@@ -867,6 +867,14 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
+	if (autocvar__hud_panel_quickmenu_file_from_server != "")
+	{
+	string entry_name = _("Server's custom quickmenu");
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = _("Waypoint editor quickmenu");
+	QUICKMENU_ENTRY(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	}
+
 	if(spectatee_status != 0)
 	{
 	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Spectate a player")), "Spectate a player", "spectate \"%s^7\"", 0, 1)

@@ -200,7 +200,6 @@ void Item_Respawn(entity this)
 {
 	Item_Show(this, 1);
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin(this, this.origin);
 
 	if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 	{
@@ -255,13 +254,13 @@ void Item_RespawnCountdown(entity this)
 				}
 			} while (0);
 			bool mutator_returnvalue = MUTATOR_CALLHOOK(Item_RespawnCountdown, this);
-            if(this.waypointsprite_attached)
-            {
-                GameItem def = this.itemdef;
-                if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
-                    WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-                WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-            }
+			if(this.waypointsprite_attached)
+			{
+				GameItem def = this.itemdef;
+				if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
+					WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+				WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+			}
 		}
 
 		if(this.waypointsprite_attached)
@@ -671,7 +670,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			delete(this);
+			RemoveItem(this);
 			return;
 		}
 	}
@@ -764,7 +763,6 @@ LABEL(pickup)
 void Item_Reset(entity this)
 {
 	Item_Show(this, !this.state);
-	setorigin(this, this.origin);
 
 	if (Item_IsLoot(this))
 	{
@@ -784,45 +782,48 @@ void Item_Reset(entity this)
 
 void Item_FindTeam(entity this)
 {
-	entity e;
+	if(!(this.effects & EF_NOGUNBOB)) // marker for item team search
+		return;
 
-	if(this.effects & EF_NODRAW)
+	LOG_TRACE("Initializing item team ", ftos(this.team));
+	RandomSelection_Init();
+	IL_EACH(g_items, it.team == this.team,
 	{
-		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(this.team));
-		RandomSelection_Init();
-		IL_EACH(g_items, it.team == this.team,
-		{
-			if(it.itemdef) // is a registered item
-				RandomSelection_AddEnt(it, it.cnt, 0);
-		});
+		if(it.itemdef) // is a registered item
+			RandomSelection_AddEnt(it, it.cnt, 0);
+	});
 
-		e = RandomSelection_chosen_ent;
-		if (!e)
-			return;
+	entity e = RandomSelection_chosen_ent;
+	if (!e)
+		return;
 
-		IL_EACH(g_items, it.team == this.team,
+	IL_EACH(g_items, it.team == this.team,
+	{
+		if(it.itemdef) // is a registered item
 		{
-			if(it.itemdef) // is a registered item
+			if(it != e)
 			{
-				if(it != e)
-				{
-					// make it non-spawned
-					Item_Show(it, -1);
-					it.state = 1; // state 1 = initially hidden item, apparently
-				}
-				else
-					Item_Reset(it);
-				it.effects &= ~EF_NODRAW;
+				Item_Show(it, -1); // make it non-spawned
+				if (it.waypointsprite_attached)
+					WaypointSprite_Kill(it.waypointsprite_attached);
+				it.nextthink = 0; // disable any scheduled powerup spawn
 			}
-		});
-	}
+			else
+				Item_Reset(it);
+
+			// leave 'this' marked so Item_FindTeam() works when called again via this.reset
+			if(it != this)
+				it.effects &= ~EF_NOGUNBOB;
+		}
+	});
 }
 
 // Savage: used for item garbage-collection
 void RemoveItem(entity this)
 {
 	if(wasfreed(this) || !this) { return; }
+	if(this.waypointsprite_attached)
+		WaypointSprite_Kill(this.waypointsprite_attached);
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	delete(this);
 }
@@ -1011,9 +1012,16 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	precache_model(this.model);
 	precache_sound(this.item_pickupsound);
 
+	if(q3compat && !this.team)
+	{
+		string t = GetField_fullspawndata(this, "team", false);
+		// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+		if(t) this.team = crc16(false, t);
+	}
+
 	if (Item_IsLoot(this))
 	{
-		this.reset = SUB_Remove;
+		this.reset = RemoveItem;
 		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
@@ -1053,7 +1061,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		this.reset = Item_Reset;
+		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
@@ -1163,7 +1171,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!this.cnt)
 			this.cnt = 1; // item probability weight
 
-		this.effects |= EF_NODRAW; // marker for item team search
+		this.effects |= EF_NOGUNBOB; // marker for item team search
 		InitializeEntity(this, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
 	else
