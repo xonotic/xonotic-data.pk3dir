@@ -18,6 +18,7 @@
 #include <client/hud/panel/racetimer.qh> // checkpoint information (race_*)
 
 // jump height
+#include <lib/csqcmodel/common.qh> // for IS_PLAYER() macro
 #include <common/resources/cl_resources.qh> // IS_DEAD() macro
 
 // StrafeHUD (#25)
