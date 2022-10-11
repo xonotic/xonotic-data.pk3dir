@@ -706,6 +706,9 @@ void InitGameplayMode()
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
 
+	if (g_ca && autocvar_g_ca_spectate_enemies == -1)
+		observe_blocked = true;
+
 	InitializeEntity(NULL, GameplayMode_DelayedInit, INITPRIO_GAMETYPE_FALLBACK);
 }
 

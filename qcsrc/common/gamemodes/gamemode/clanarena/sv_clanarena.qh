@@ -5,6 +5,7 @@
 #include <server/round_handler.qh>
 #include <server/command/sv_cmd.qh>
 
+int autocvar_g_ca_spectate_enemies;
 int autocvar_g_ca_point_limit;
 int autocvar_g_ca_point_leadlimit;
 float autocvar_g_ca_round_timelimit;

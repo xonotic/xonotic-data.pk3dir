@@ -7,6 +7,7 @@
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
+#include <common/gamemodes/gamemode/clanarena/sv_clanarena.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
 #include <common/mapobjects/func/conveyor.qh>
@@ -138,6 +139,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (observe_blocked)            sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -2253,10 +2255,12 @@ void ObserverOrSpectatorThink(entity this)
 				}
 				CS(this).impulse = 0;
 			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				this.would_spectate = false;
-				this.flags &= ~FL_JUMPRELEASED;
-				TRANSMUTE(Observer, this);
-				PutClientInServer(this);
+				if(!observe_blocked) {
+					this.would_spectate = false;
+					this.flags &= ~FL_JUMPRELEASED;
+					TRANSMUTE(Observer, this);
+					PutClientInServer(this);
+				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;

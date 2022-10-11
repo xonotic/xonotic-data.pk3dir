@@ -1,7 +1,6 @@
 #include "sv_clanarena.qh"
 
 float autocvar_g_ca_damage2score = 100;
-bool autocvar_g_ca_spectate_enemies;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -287,6 +286,8 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+	if (autocvar_g_ca_spectate_enemies == -1)
+		player.would_spectate = true; // force to spectate only
 	if (!INGAME(player))
 		return false;  // allow team reset
 	return true;  // prevent team reset
@@ -425,7 +426,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && INGAME(client))
+	if (autocvar_g_ca_spectate_enemies != 0 && INGAME(client))
 	if (DIFF_TEAM(targ, client))
 		return true;
 }
@@ -434,7 +435,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
+	if (autocvar_g_ca_spectate_enemies != 0 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
@@ -449,7 +450,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
+	if (autocvar_g_ca_spectate_enemies != 0 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }
