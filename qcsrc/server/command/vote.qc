@@ -498,7 +498,7 @@ void ReadyRestart(bool forceWarmupEnd)
 	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
 	else
-		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage
+		warmup_stage = autocvar_g_warmup; // go into warmup if it's enabled, otherwise restart into match stage
 
 	ReadyRestart_force(false);
 }
