@@ -303,6 +303,7 @@ void cvar_changes_init()
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_q3compat");
 		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
@@ -891,8 +892,22 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
-	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, _MapInfo_FindArenaFile(mapname, ".arena") != "");
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
+
+	// quake 3 music support
+	if(world.music || world.noise)
+	{
+		// prefer .music over .noise
+		string chosen_music;
+		if(world.music)
+			chosen_music = world.music;
+		else
+			chosen_music = world.noise;
+
+		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+		strcpy(clientstuff, newstuff);
+	}
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
