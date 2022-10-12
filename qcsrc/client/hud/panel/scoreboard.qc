@@ -127,7 +127,7 @@ string Label_getInfo(string label, int mode)
 		case "dmg":          if (!mode) return CTX(_("SCO^damage"));       else LOG_HELP(strcat("^3", "dmg", "                ^7", _("The total damage done")));
 		case "dmgtaken":     if (!mode) return CTX(_("SCO^dmgtaken"));     else LOG_HELP(strcat("^3", "dmgtaken", "           ^7", _("The total damage taken")));
 		case "drops":        if (!mode) return CTX(_("SCO^drops"));        else LOG_HELP(strcat("^3", "drops", "              ^7", _("Number of flag drops")));
-		case "elo":          if (!mode) return CTX(_("SCO^elo"));          else LOG_HELP(strcat("^3", "elo", "                ^7", _("Player ELO")));
+		case "skill":        if (!mode) return CTX(_("SCO^skill"));        else LOG_HELP(strcat("^3", "skill", "              ^7", _("Player SKILL")));
 		case "fastest":      if (!mode) return CTX(_("SCO^fastest"));      else LOG_HELP(strcat("^3", "fastest", "            ^7", _("Time of fastest lap (Race/CTS)")));
 		case "faults":       if (!mode) return CTX(_("SCO^faults"));       else LOG_HELP(strcat("^3", "faults", "             ^7", _("Number of faults committed")));
 		case "fckills":      if (!mode) return CTX(_("SCO^fckills"));      else LOG_HELP(strcat("^3", "fckills", "            ^7", _("Number of flag carrier kills")));
@@ -1044,13 +1044,13 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			}
 			return ftos(f);
 
-		case SP_ELO:
+		case SP_SKILL:
 		{
-			float elo = pl.(scores(SP_ELO));
-			switch (elo) {
+			float skill = pl.(scores(SP_SKILL));
+			switch (skill) {
 				case -1: return "...";
 				case -2: return _("N/A");
-				default: return ftos(elo);
+				default: return ftos(skill);
 			}
 		}
 

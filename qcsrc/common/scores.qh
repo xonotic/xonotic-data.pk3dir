@@ -68,7 +68,7 @@ REGISTER_SP(SUICIDES);
 REGISTER_SP(DMG);
 REGISTER_SP(DMGTAKEN);
 
-REGISTER_SP(ELO); // not sortable
+REGISTER_SP(SKILL); // not sortable
 REGISTER_SP(FPS); // not sortable
 
 // fields not networked via the score system
