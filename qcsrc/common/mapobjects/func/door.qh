@@ -13,6 +13,7 @@ const int DOOR_TOGGLE = BIT(5);
 const int DOOR_NONSOLID = BIT(10);
 const int DOOR_CRUSH = BIT(11); // can't use CRUSH cause that is the same as DOOR_DONT_LINK
 
+#define Q3_DOOR_CRUSHER BIT(2) // in Q3 this disables the auto reverse so the blocking player takes damage every frame
 
 #ifdef CSQC
 // stuff for preload
