@@ -555,7 +555,7 @@ SILVER_KEY causes the door to open only if the activator holds a silver key.
 "speed"		movement speed (100 default)
 "wait"		wait before returning (3 default, -1 = never return)
 "lip"		lip remaining at end of move (8 default)
-"dmg"		damage to inflict when blocked (2 default)
+"dmg"		damage to inflict when blocked (0 default)
 "sounds"
 0)	no sound
 1)	stone
