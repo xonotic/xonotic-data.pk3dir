@@ -26,7 +26,7 @@ CLASS(ClanArena, Gametype)
     }
     METHOD(ClanArena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
-        if(spawnpoints >= 8 && diameter > 4096)
+        if(spawnpoints >= 8 && diameter > 3250)
             return true;
         return false;
     }
