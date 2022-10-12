@@ -776,6 +776,9 @@ spawnfunc(func_door)
 			this.speed = 100;
 	}
 
+	if (q3compat && !this.dmg)
+		this.dmg = 2;
+
 	settouch(this, door_touch);
 
 // LinkDoors can't be done until all of the doors have been spawned, so
