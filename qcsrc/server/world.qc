@@ -2254,9 +2254,9 @@ void DropToFloor_Handler(entity this)
 
 	vector end = this.origin - '0 0 256';
 
-	// NOTE: NudgeOutOfSolid support is not added as Xonotic's physics do not use it!
-	//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
-		//SV_NudgeOutOfSolid(this);
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+		move_out_of_solid(this);
 
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
 
@@ -2278,8 +2278,8 @@ void DropToFloor_Handler(entity this)
 		else if(trace_fraction < 1)
 		{
 			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
-			//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
-				//SV_NudgeOutOfSolid(this);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+				move_out_of_solid(this);
 			setorigin(this, trace_endpos);
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
