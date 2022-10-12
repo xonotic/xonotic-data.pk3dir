@@ -202,10 +202,10 @@ void XonoticStatsList_getStats(entity me)
 						outstr = _("Matches:");
 						break;
 					}
-					case "elo":
+					case "skill":
 					{
 						order = 2;
-						outstr = _("ELO:");
+						outstr = _("SKILL:");
 						data = sprintf("%d", stof(data));
 						break;
 					}

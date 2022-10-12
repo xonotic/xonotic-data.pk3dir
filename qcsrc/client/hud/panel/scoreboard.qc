@@ -136,7 +136,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^damage dealt"),  "dmg", "                ", _("The total damage dealt"));
 		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
-		SCO_LABEL(_("SCO^elo"),           "elo", "                ", _("Player ELO"));
+		SCO_LABEL(_("SCO^skill"),         "skill", "              ", _("Player skill"));
 		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
 		SCO_LABEL(_("SCO^faults"),        "faults", "             ", _("Number of faults committed"));
 		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
@@ -1141,14 +1141,14 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 				return sprintf("%.1f", f / rounds_played);
 			return ftos(f);
 
-		case SP_ELO:
+		case SP_SKILL:
 		{
-			float elo = pl.(scores(SP_ELO));
-			switch (elo)
+			float skill = pl.(scores(SP_SKILL));
+			switch (skill)
 			{
 				case -1: return "...";
 				case -2: return _("N/A");
-				default: return ftos(elo);
+				default: return ftos(skill);
 			}
 		}
 

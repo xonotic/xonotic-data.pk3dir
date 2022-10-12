@@ -465,7 +465,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 					url_fputs(fh, sprintf("t %s\n", tt));
 				}
 
-				// elo ranking enabled
+				// skill ranking enabled
 				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_ranked", p));
 				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
 
@@ -528,13 +528,13 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
-	GameRules_scoring_add(joiningplayer, ELO, -1);
+	GameRules_scoring_add(joiningplayer, SKILL, -1);
 	// http://stats.xonotic.org/skill?hashkey=Cm5mzXa1Vn9VX0%2FySV4Pp8ca9CTZvklERDqrrNOUFZU%3D
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
 		if (joiningplayer.crypto_idfp == "") {
-			GameRules_scoring_add(joiningplayer, ELO, -1);
+			GameRules_scoring_add(joiningplayer, SKILL, -1);
 		} else {
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
@@ -567,7 +567,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	else
 	{
 		// server has this disabled, kill the DB and set status to idle
-		GameRules_scoring_add(joiningplayer, ELO, -1);
+		GameRules_scoring_add(joiningplayer, SKILL, -1);
 		if(PS_B_IN_DB >= 0)
 		{
 			db_close(PS_B_IN_DB);
@@ -644,8 +644,8 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			if (json_get(buf, "0.game_type_cd") == gametype && gametype != "") {
 				float mu = stof(json_get(buf, "0.mu"));
 				float sigma = stof(json_get(buf, "0.sigma"));
-				float elo = mu - 3 * sigma;
-				GameRules_scoring_add(p, ELO, ((elo < 0) ? 0 : elo) + 1);
+				float skill = mu - 3 * sigma;
+				GameRules_scoring_add(p, SKILL, ((skill < 0) ? 0 : skill) + 1);
 				return;
 			}
 			break;
@@ -664,7 +664,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			break;
 		}
 	}
-	GameRules_scoring_add(p, ELO, -1);
+	GameRules_scoring_add(p, SKILL, -1);
 }
 #endif // SVQC
 
