@@ -22,6 +22,7 @@
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
