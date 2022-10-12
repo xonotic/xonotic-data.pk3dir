@@ -43,7 +43,7 @@ void door_blocked(entity this, entity blocker)
 	else
 	{
 #ifdef SVQC
-		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
+		if(this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
