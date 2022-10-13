@@ -7,7 +7,9 @@ void plat_link(entity this);
 void plat_delayedinit(entity this)
 {
 	plat_link(this);
-	plat_spawn_inside_trigger(this); // the "start moving" trigger
+	// Q3 uses only a truth check of .targetname to decide whether to spawn a trigger
+	if(!Q3COMPAT_COMMON || this.targetname == "")
+		plat_spawn_inside_trigger(this); // the "start moving" trigger
 }
 
 float plat_send(entity this, entity to, float sf)
@@ -186,7 +188,8 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 
-		plat_spawn_inside_trigger(this);
+		if(!Q3COMPAT_COMMON || this.targetname == "")
+			plat_spawn_inside_trigger(this);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
