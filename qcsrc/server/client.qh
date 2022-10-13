@@ -72,6 +72,7 @@ float autocvar_sv_player_scale;
 .bool zoomstate;
 
 .bool just_joined;
+.bool wants_join;
 
 .int pressedkeys;
 
@@ -160,6 +161,7 @@ CLASS(Client, Object)
     ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
     ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
     ATTRIB(Client, jointime, float, this.jointime);
+    ATTRIB(Client, wants_join, bool, this.wants_join);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
     ATTRIB(Client, startplaytime, float, this.startplaytime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);

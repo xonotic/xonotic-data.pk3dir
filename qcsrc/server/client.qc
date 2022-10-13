@@ -410,6 +410,8 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
+	if (CS(this).wants_join)
+		CS(this).wants_join = false;
 }
 
 int player_getspecies(entity this)
@@ -1108,6 +1110,8 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+
+	CS(this).wants_join = false;
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1945,10 +1949,28 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
+entity SpectatorWantsJoin(entity this)
+{
+	if(!teamplay) return NULL;
+
+	FOREACH_CLIENT(IS_SPEC(it) || IS_OBSERVER(it), {
+		if(it == this) continue;
+		if(CS(it).wants_join) {
+			LOG_INFO("Returning entity");
+			return it;
+		}
+	});
+
+	LOG_INFO("Returning NULL");
+	return NULL;
+}
+
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
+		return false;
+	if (SpectatorWantsJoin(this))
 		return false;
 	if (frametime) // once per frame is more than enough
 		stuffcmd(this, "_scoreboard_team_selection 1\n");
@@ -1961,8 +1983,15 @@ void Join(entity this)
 
 	TRANSMUTE(Player, this);
 
+	entity to_join = SpectatorWantsJoin(this);
+	if(to_join)
+	{
+		Join(to_join);
+		this.team_selected = false; // Don't let this player select team
+	}
+
 	if(!this.team_selected)
-	if(autocvar_g_campaign || autocvar_g_balance_teams)
+	if(autocvar_g_campaign || autocvar_g_balance_teams || to_join)
 		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
@@ -1979,6 +2008,8 @@ void Join(entity this)
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
+
+	CS(this).wants_join = false;
 }
 
 int GetPlayerLimit()
@@ -2049,6 +2080,11 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
+	if (teamplay && !SpectatorWantsJoin(this))
+	{
+		CS(this).wants_join = true;
+		return false;
+	}
 	return true;
 }
 
