@@ -213,10 +213,13 @@ bool door_check_keys(entity door, entity player)
 	return false;
 }
 
-void door_fire(entity this, entity actor, entity trigger)
+void door_use(entity this, entity actor, entity trigger)
 {
-	if (this.owner != this)
-		objerror (this, "door_fire: this.owner != this");
+	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
+
+	if (!this.owner)
+		return;
+	this = this.owner;
 
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
@@ -255,14 +258,6 @@ void door_fire(entity this, entity actor, entity trigger)
 		}
 		e = e.enemy;
 	} while ((e != this) && (e != NULL));
-}
-
-void door_use(entity this, entity actor, entity trigger)
-{
-	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
-
-	if (this.owner)
-		door_fire(this.owner, actor, trigger);
 }
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
