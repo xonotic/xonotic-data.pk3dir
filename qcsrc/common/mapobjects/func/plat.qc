@@ -58,7 +58,12 @@ void plat_link(entity this)
 
 spawnfunc(func_plat)
 {
-	if (this.spawnflags & CRUSH)
+	if (q3compat)
+	{
+		this.spawnflags = 0; // Q3 plats have no spawnflags
+		if (!this.dmg) this.dmg = 2;
+	}
+	else if (this.spawnflags & CRUSH)
 	{
 		this.dmg = 10000;
 	}
@@ -124,8 +129,8 @@ spawnfunc(func_plat)
 
 	setblocked(this, plat_crush);
 
-	if (!this.speed) this.speed = 150;
-	if (!this.lip) this.lip = 16;
+	if (!this.speed) this.speed = q3compat ? 200 : 150;
+	if (!this.lip) this.lip = q3compat ? 8 : 16;
 	if (!this.height) this.height = this.size.z - this.lip;
 
 	this.pos1 = this.origin;
