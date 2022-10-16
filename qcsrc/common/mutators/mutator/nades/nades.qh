@@ -65,6 +65,7 @@ float autocvar_g_nades_entrap_time = 10;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
 float autocvar_g_nades_tandem_item_lifetime;
+bool autocvar_g_nades_tandem_includespecial;
 bool autocvar_g_nades_tandem_randomweapon_includespecial = false;
 bool autocvar_g_nades_tandem_item_includespecial;
 float autocvar_g_nades_tandem_ball_item_spawncount = 1;

@@ -711,16 +711,16 @@ void nade_tandem_spawnitem(entity e, vector org)
 		case "ammo"	 : 
 		{
 			itm = (random() > 0.5) ? 
-			ITEM_Shells  : (random() > 0.5) ? 
-			ITEM_Bullets : (random() > 0.5) ?
-			ITEM_Rockets : ITEM_Plasma;
+				ITEM_Shells  : (random() > 0.5) ? 
+				ITEM_Bullets : (random() > 0.5) ?
+				ITEM_Rockets : ITEM_Plasma;
 			break;
 		}
-		case "jetpack" : 
+		case "jetpack": 
 		{ 
 			itm = (!autocvar_g_nades_tandem_item_includespecial) ? 
-			ITEM_JetpackFuel : (random() < 0.5) ? 
-			ITEM_JetpackFuel : ITEM_Jetpack; 
+				ITEM_JetpackFuel : (random() < 0.5) ? 
+				ITEM_JetpackFuel : ITEM_Jetpack; 
 			break; 
 		}
 		default: { itm = nade_tandem_randomitem(); break; }
@@ -755,7 +755,14 @@ void nade_tandem_dropping(entity this, vector org)
 	{
 		switch (this.pokenade_type)
 		{
-			case "weapon" 	: { nade_tandem_randomweapon(e, org); return; }
+			case "weapon" 	: 
+			{
+				if (autocvar_g_nades_tandem_includespecial)
+				{
+					nade_tandem_randomweapon(e, org);
+					return;
+				}
+			}
 			case "health"	: 
 			case "armor"	: 
 			case "ammo"		: 
@@ -917,7 +924,10 @@ void nade_tandem_boom(entity this)
 
 	this.nade_item_spawncount = 0;
 
-	switch (this.tandemnade_type)
+	int tandemnade_type_select = (autocvar_g_nades_tandem_includespecial) ? 
+		this.tandemnade_type : 1;
+
+	switch (tandemnade_type_select)
 	{
 		case 1:
 		{
