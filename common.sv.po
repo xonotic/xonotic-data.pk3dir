@@ -160,12 +160,12 @@ msgstr "^2Just nu i ^1uppvärmningsläge^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:157
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 spelare till behövs för att matchen ska börja."
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^3%d^2 spelare till behövs för att matchen ska börja."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -1065,7 +1065,7 @@ msgstr "^2+%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2336
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7spelare"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1123,11 +1123,11 @@ msgstr "Uppvärmning"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Uppvärmning: ingen tidsgräns"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Uppvärmning: för få spelare"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1302,27 +1302,27 @@ msgstr "Speltyp:"
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
-msgstr ""
+msgstr "Denna match stödjer"
 
 #: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d spelare"
 
 #: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d till %d spelare"
 
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d spelare maximum"
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d spelare minimum"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
@@ -1334,7 +1334,7 @@ msgstr "Speciella speltypstips:"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Serverns meddelande"
 
 #: qcsrc/client/main.qc:1549
 #, c-format
@@ -1596,7 +1596,7 @@ msgstr "Serverns bästa"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
-msgstr "Lopp"
+msgstr "Race"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race against other players to the finish line"
@@ -2526,12 +2526,12 @@ msgstr "^F2Du kommer att åskåda nästa omgång"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Matchen startar om..."
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Nedräkning stoppad!"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
@@ -3753,7 +3753,7 @@ msgstr "^BGMålet förstört på ^F4%s^BG!"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "%s spelare behövs för denna matchen."
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -4323,6 +4323,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Du kan inte gå med spelet just nu.\n"
+"Matchen är begränsad till ^F2%s^BG spelare."
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"

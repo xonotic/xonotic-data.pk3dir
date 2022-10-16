@@ -43,7 +43,7 @@
 #endif
 
 // Step 7: remove WITHSELF, no replacement
-#if 0
+#if 1
     #undef WITHSELF
     #define WITHSELF(value, block) block
 #endif
