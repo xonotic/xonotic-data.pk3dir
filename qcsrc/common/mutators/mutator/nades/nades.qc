@@ -1335,56 +1335,16 @@ void nade_boom(entity this)
 	if(this.takedamage)
 	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
 	{
-		case NADE_TYPE_NAPALM: 
-		{
-			nade_napalm_boom(this);
-			break;
-		}
-		case NADE_TYPE_ICE: 
-		{
-			nade_ice_boom(this);
-			break;
-		}
-		case NADE_TYPE_TRANSLOCATE: 
-		{
-			nade_translocate_boom(this);
-			break;
-		}
-		case NADE_TYPE_SPAWN: 
-		{
-			nade_spawn_boom(this);
-			break;
-		}
-		case NADE_TYPE_HEAL: 
-		{
-			nade_heal_boom(this);
-			break;
-		}
-		case NADE_TYPE_TANDEM: 
-		{
-			nade_tandem_boom(this);
-			break;
-		}
-		case NADE_TYPE_ENTRAP: 
-		{
-			nade_entrap_boom(this);
-			break;
-		}
-		case NADE_TYPE_VEIL: 
-		{
-			nade_veil_boom(this);
-			break;
-		}
-		case NADE_TYPE_AMMO: 
-		{
-			nade_ammo_boom(this);
-			break;
-		}
-		case NADE_TYPE_DARK: 
-		{
-			nade_dark_boom(this);
-			break;
-		}
+		case NADE_TYPE_NAPALM: nade_napalm_boom(this); break;
+		case NADE_TYPE_ICE: nade_ice_boom(this); break;
+		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(this); break;
+		case NADE_TYPE_SPAWN: nade_spawn_boom(this); break;
+		case NADE_TYPE_HEAL: nade_heal_boom(this); break;
+		case NADE_TYPE_TANDEM: nade_tandem_boom(this); break;
+		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
+		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
+		case NADE_TYPE_AMMO: nade_ammo_boom(this); break;
+		case NADE_TYPE_DARK: nade_dark_boom(this); break;
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
