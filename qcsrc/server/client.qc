@@ -46,6 +46,7 @@
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
@@ -255,7 +256,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		{
 			if (vote_called) { VoteCount(false); }
 			this.ready = false;
-			recount_ready = true;
+			if (warmup_stage || game_starttime > time) recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -306,7 +307,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	TRANSMUTE(Observer, this);
 
-	if(recount_ready) ReadyCount();
+	if(recount_ready) ReadyCount(); // FIXME: please add comment about why this is delayed
 
 	WaypointSprite_PlayerDead(this);
 	accuracy_resend(this);
@@ -808,6 +809,9 @@ void PutPlayerInServer(entity this)
 		this.alivetime = time;
 
 	antilag_clear(this, CS(this));
+
+	if (warmup_stage == -1)
+		ReadyCount();
 }
 
 /** Called when a client spawns in the server */
@@ -1019,17 +1023,10 @@ void ClientPreConnect(entity this)
 }
 #endif
 
-void SendWelcomemessage(entity this, bool force_centerprint)
-{
-	msg_entity = this;
-	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
-	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
-}
-
 // NOTE csqc uses the active mutators list sent by this function
 // to understand which mutators are enabled
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
-void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
+void SendWelcomeMessage(entity this, int msg_type)
 {
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
@@ -1039,11 +1036,12 @@ void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_ty
 		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
-	WriteByte(msg_type, force_centerprint);
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
+	WriteByte(msg_type, map_minplayers);
+	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
@@ -1146,12 +1144,18 @@ void ClientConnect(entity this)
 	{
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
+		// quickmenu file must be put in a subfolder with an unique name
+		// to reduce chances of overriding custom client quickmenus
+		if (waypointeditor_enabled)
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", "wpeditor.txt"));
+		else if (autocvar_sv_quickmenu_file != "" && strstrofs(autocvar_sv_quickmenu_file, "/", 0) && fexists(autocvar_sv_quickmenu_file))
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", autocvar_sv_quickmenu_file));
 	}
 
 	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
 			send_CSQC_teamnagger();
 
@@ -1177,9 +1181,6 @@ void ClientConnect(entity this)
 
 	if (player_count == 1)
 		localcmd("\nsv_hook_firstjoin\n");
-
-	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
-		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
 }
 /*
 =============
@@ -1240,7 +1241,7 @@ void ClientDisconnect(entity this)
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
-	ReadyCount();
+	if (warmup_stage || game_starttime > time) ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
 	player_powerups_remove_all(this); // stop powerup sound
@@ -1949,7 +1950,8 @@ bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
-	stuffcmd(this, "menu_showteamselect\n");
+	if (frametime) // once per frame is more than enough
+		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
 void Join(entity this)
@@ -1983,10 +1985,11 @@ int GetPlayerLimit()
 {
 	if(g_duel)
 		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
-	int player_limit = autocvar_g_maxplayers;
+	// don't return map_maxplayers during intermission as it would interfere with MapHasRightSize()
+	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
 	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
 	player_limit = M_ARGV(0, int);
-	return player_limit;
+	return player_limit < maxclients ? player_limit : 0;
 }
 
 /**
@@ -2031,67 +2034,11 @@ int nJoinAllowed(entity this, entity ignore)
 	static float msg_time = 0;
 	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
 		msg_time = time + 0.5;
 	}
 
 	return free_slots;
-}
-
-void PrintWelcomeMessage(entity this)
-{
-	if(CS(this).motd_actived_time == 0)
-	{
-		if (autocvar_g_campaign) {
-			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, false);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this)) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, true);
-			}
-		}
-	}
-	else if(CS(this).motd_actived_time > 0) // showing MOTD or campaign message
-	{
-		if (autocvar_g_campaign) {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if (time - CS(this).motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		}
-	}
-	else //if(CS(this).motd_actived_time < 0) // just connected, motd is active
-	{
-		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
-			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if (CS(this).motd_actived_time == -2)
-		{
-			// instantly hide MOTD
-			CS(this).motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-		}
-		else if (IS_PLAYER(this) || IS_SPEC(this))
-		{
-			// FIXME occasionally for some reason MOTD never goes away
-			// delay MOTD removal a little bit in the hope it fixes this bug
-			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
-				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
-			else //if (CS(this).motd_actived_time < -2)
-				CS(this).motd_actived_time++;
-		}
-	}
 }
 
 bool joinAllowed(entity this)
@@ -2524,9 +2471,6 @@ void PlayerPreThink (entity this)
 	if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 		PlayerUseKey(this);
 	CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
-
-	if (IS_REAL_CLIENT(this))
-		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)

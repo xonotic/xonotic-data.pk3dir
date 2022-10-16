@@ -74,7 +74,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Fontsize:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Font size:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider(5, 16, 1, "g_waypointsprite_fontsize"));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
@@ -127,7 +127,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Fontsize:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Font size:")));
 			setDependent(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(5, 16, 1, "hud_shownames_fontsize"));
 			setDependent(e, "hud_shownames", 1, 1);

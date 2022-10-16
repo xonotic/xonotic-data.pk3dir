@@ -384,7 +384,7 @@ string ScoreString(int pFlags, float pValue)
 	else if(pFlags & SFL_RANK)
 		valstr = (pValue < 256 ? count_ordinal(pValue) : _("N/A"));
 	else if(pFlags & SFL_TIME)
-		valstr = TIME_ENCODED_TOSTRING(pValue);
+		valstr = TIME_ENCODED_TOSTRING(pValue, true);
 	else
 		valstr = ftos(pValue);
 
@@ -870,14 +870,14 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	return left;
 }
 
-float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t w)
+float textLengthUpToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t w)
 {
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
 	// DO NOT CALL THIS AT HOME.
 	// No really, don't.
-	if(w(theText) <= maxWidth)
+	if(w(theText) <= maxLength)
 		return strlen(theText); // yeah!
 
 	bool colors = (w("^7") == 0);
@@ -896,7 +896,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 			ofs = (!res.x) ? 0 : res.x - res.y;
 		}
 
-		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
+		if(w(substring(theText, 0, middle + ofs)) <= maxLength)
 			left = middle + ofs;
 		else
 			right = middle;
@@ -941,17 +941,17 @@ string find_last_color_code(string s)
 	return "";
 }
 
-string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
+string getWrappedLine(float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
 
-	if(w <= 0)
+	if(maxWidth <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	int take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	int take_until = textLengthUpToWidth(s, maxWidth, theFontSize, tw);
 	if(take_until > 0 && take_until < strlen(s))
 	{
 		int last_word = take_until - 1;
@@ -979,17 +979,17 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	}
 }
 
-string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
+string getWrappedLineLen(int maxLength, textLengthUpToLength_lenFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
 
-	if(w <= 0)
+	if(maxLength <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	int take_until = textLengthUpToLength(s, w, tw);
+	int take_until = textLengthUpToLength(s, maxLength, tw);
 	if(take_until > 0 && take_until < strlen(s))
 	{
 		int last_word = take_until - 1;

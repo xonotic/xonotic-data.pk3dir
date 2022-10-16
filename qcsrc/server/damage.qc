@@ -628,7 +628,10 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(deathtype != DEATH_TELEFRAG.m_id)
 		if(IS_PLAYER(attacker))
 		{
-			if(IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			// avoid dealing damage or force to other independent players
+			// and avoid dealing damage or force to things owned by other independent players
+			if((IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ))) ||
+				(targ.realowner && IS_INDEPENDENT_PLAYER(targ.realowner) && attacker != targ.realowner))
 			{
 				damage = 0;
 				force = '0 0 0';
@@ -928,11 +931,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
 			if (dist <= rad)
 			{
-				float power = 1;
-				if (rad > 0)
-					power -= (dist / rad);
-				// at this point power can't be < 0 or > 1
-				float finaldmg = coredamage * power + edgedamage * (1 - power);
+				float f = (rad > 0) ? 1 - (dist / rad) : 1;
+				// at this point f can't be < 0 or > 1
+				float finaldmg = coredamage * f + edgedamage * (1 - f);
 				if (finaldmg > 0)
 				{
 					float a;

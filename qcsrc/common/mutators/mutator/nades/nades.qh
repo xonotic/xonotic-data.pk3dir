@@ -144,7 +144,9 @@ REPLICATE_INIT(string, cvar_cl_pokenade_type);
 .entity nade_damage_target;
 .float toss_time;
 .float nade_show_particles;
+.float nade_veil_time;
 .float nade_veil_prevalpha;
+.float nade_entrap_time;
 
 bool orb_send(entity this, entity to, int sf);
 

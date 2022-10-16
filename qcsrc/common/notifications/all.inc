@@ -258,6 +258,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(CA_JOIN_LATE,                            N_CONSOLE,  0, 0, "", "",       "",     _("^F1Round already started, you will join the game in the next round"), "")
     MSG_INFO_NOTIF(CA_LEAVE,                                N_CONSOLE,  0, 0, "", "",       "",     _("^F2You will spectate in the next round"), "")
 
+    MSG_INFO_NOTIF(COUNTDOWN_RESTART,                       N_CHATCON,  0, 0, "", "",       "",     _("^F2Match is restarting..."), "")
+    MSG_INFO_NOTIF(COUNTDOWN_STOP,                          N_CHATCON,  0, 0, "", "",       "",     _("^F4Countdown stopped!"), "")
+
     MSG_INFO_NOTIF(DEATH_MURDER_BUFF,                       N_CONSOLE,  3, 3, "spree_inf s1 s2 f3buffname s3loc spree_end", "s2 s1",    "notify_death",         _("^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"), _("^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"))
     MSG_INFO_NOTIF(DEATH_MURDER_CHEAT,                      N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_DROWN,                      N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_water",         _("^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"), "")
@@ -300,9 +303,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_GENERIC,                      N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_selfkill",      _("^BG%s^K1 died%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_LAVA,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s"), _("^BG%s^K1 found a hot place%s%s"))
     MSG_INFO_NOTIF(DEATH_SELF_MON_MAGE,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was exploded by a Mage%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_MON_SHAMBLER_CLAW,            N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1's innards became outwards by a Shambler%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_MON_SHAMBLER_SMASH,           N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was smashed by a Shambler%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_MON_SHAMBLER_ZAP,             N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was zapped to death by a Shambler%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_MON_GOLEM_CLAW,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1's innards became outwards by a Golem%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_MON_GOLEM_SMASH,              N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was smashed by a Golem%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_MON_GOLEM_ZAP,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was zapped to death by a Golem%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_SPIDER,                   N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was bitten by a Spider%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_WYVERN,                   N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was fireballed by a Wyvern%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_ZOMBIE_JUMP,              N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 joins the Zombies%s%s"), "")
@@ -443,6 +446,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(WEAPON_ACCORDEON_SUICIDE,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapontuba",               _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ARC_MURDER,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponarc",                _("^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ARC_MURDER_SPRAY,                 N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponarc",                _("^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_ARC_SUICIDE_BOLT,                 N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponarc",                _("^BG%s^K1 played with Arc bolts%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_BLASTER_MURDER,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponlaser",              _("^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_BLASTER_SUICIDE,                  N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponlaser",              _("^BG%s^K1 shot themself to hell with their Blaster%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_CRYLINK_MURDER,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponcrylink",            _("^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"), "")
@@ -526,6 +530,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ASSAULT_DEFENDING,                 N_ENABLE,    0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are defending!"), "")
     MSG_CENTER_NOTIF(ASSAULT_OBJ_DESTROYED,             N_ENABLE,    0, 1, "f1time",         CPID_ASSAULT_ROLE,      "0 0",  _("^BGObjective destroyed in ^F4%s^BG!"), "")
 
+    MSG_CENTER_NOTIF(COUNTDOWN_STOP,                    N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "4 0",  strcat(BOLD(_("^F4Countdown stopped!")), "\n^BG", _("%s players are needed for this match.")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  BOLD(_("^BGBegin!")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_GAMESTART,               N_ENABLE,    0, 1, "",               CPID_ROUND,             "1 f1", strcat(_("^BGGame starts in"), "\n", BOLD("^COUNT")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 2, "f1",             CPID_ROUND,             "1 f2", strcat(_("^BGRound %s starts in"), "\n", BOLD("^COUNT")), "")
@@ -688,7 +693,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ITEM_WEAPON_UNAVAILABLE,           N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
     MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
-    MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "")
+    MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
@@ -704,6 +709,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(LMS_NOLIVES,                       N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGYou have no lives left, you must wait until the next match"), "")
     MSG_CENTER_NOTIF(LMS_SPECWARN,                      N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^F4WARNING:^BG you can't rejoin this match after spectating.\nUse the same command again to spectate anyway."), "")
+    MSG_CENTER_NOTIF(LMS_VISIBLE_LEADER,                N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGEnemies can now see you on radar!"), "")
+    MSG_CENTER_NOTIF(LMS_VISIBLE_OTHER,                 N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGLeaders can now be seen by enemies on radar!"), "")
 
     MSG_CENTER_NOTIF(MISSING_TEAMS,                     N_ENABLE,    0, 1, "missing_teams",  CPID_MISSING_TEAMS,     "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "")
     MSG_CENTER_NOTIF(MISSING_PLAYERS,                   N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "-1 0", _("^BGWaiting for %s player(s) to join..."), "")
@@ -712,8 +719,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(INSTAGIB_FINDAMMO,                 N_ENABLE,    0, 0, "",               CPID_INSTAGIB_FINDAMMO, "1 9",  _("^F4^COUNT^BG left to find some ammo!"), "")
     MSG_CENTER_NOTIF(INSTAGIB_FINDAMMO_FIRST,           N_ENABLE,    0, 0, "",               CPID_INSTAGIB_FINDAMMO, "1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!"))
     MSG_CENTER_NOTIF(INSTAGIB_LIVES_REMAINING,          N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Extra lives remaining: ^K1%s"), "")
-
-    MSG_CENTER_NOTIF(MOTD,                              N_ENABLE,    1, 0, "s1",             CPID_MOTD,              "-1 0", "^BG%s", "")
 
     MSG_CENTER_NOTIF(NIX_COUNTDOWN,                     N_ENABLE,    0, 2, "item_wepname",   CPID_NIX,               "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "")
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     N_ENABLE,    0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
@@ -792,6 +797,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(prefix##_PINK, defaultvalue, anncepre##PINK, infopre##PINK, centerpre##PINK)
 
 // MSG_MULTI_NOTIFICATIONS
+    MSG_MULTI_NOTIF(COUNTDOWN_BEGIN,                    N_ENABLE,  ANNCE_BEGIN,    NULL,                                   CENTER_COUNTDOWN_BEGIN)
+    MSG_MULTI_NOTIF(COUNTDOWN_STOP,                     N_ENABLE,  NULL,           INFO_COUNTDOWN_STOP,                    CENTER_COUNTDOWN_STOP)
+
     MSG_MULTI_NOTIF(DEATH_MURDER_BUFF,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_BUFF,                 NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_CHEAT,                 N_ENABLE,  NULL,           INFO_DEATH_MURDER_CHEAT,                NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_DROWN,                 N_ENABLE,  NULL,           INFO_DEATH_MURDER_DROWN,                NULL)
@@ -834,9 +842,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_SELF_GENERIC,                 N_ENABLE,  NULL,           INFO_DEATH_SELF_GENERIC,                CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(DEATH_SELF_LAVA,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_LAVA,                   CENTER_DEATH_SELF_LAVA)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_MAGE,                N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_MAGE,               CENTER_DEATH_SELF_MONSTER)
-    MSG_MULTI_NOTIF(DEATH_SELF_MON_SHAMBLER_CLAW,       N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_SHAMBLER_CLAW,      CENTER_DEATH_SELF_MONSTER)
-    MSG_MULTI_NOTIF(DEATH_SELF_MON_SHAMBLER_SMASH,      N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_SHAMBLER_SMASH,     CENTER_DEATH_SELF_MONSTER)
-    MSG_MULTI_NOTIF(DEATH_SELF_MON_SHAMBLER_ZAP,        N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_SHAMBLER_ZAP,       CENTER_DEATH_SELF_MONSTER)
+    MSG_MULTI_NOTIF(DEATH_SELF_MON_GOLEM_CLAW,          N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_GOLEM_CLAW,         CENTER_DEATH_SELF_MONSTER)
+    MSG_MULTI_NOTIF(DEATH_SELF_MON_GOLEM_SMASH,         N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_GOLEM_SMASH,        CENTER_DEATH_SELF_MONSTER)
+    MSG_MULTI_NOTIF(DEATH_SELF_MON_GOLEM_ZAP,           N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_GOLEM_ZAP,          CENTER_DEATH_SELF_MONSTER)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_SPIDER,              N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_SPIDER,             CENTER_DEATH_SELF_MONSTER)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_WYVERN,              N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_WYVERN,             CENTER_DEATH_SELF_MONSTER)
     MSG_MULTI_NOTIF(DEATH_SELF_MON_ZOMBIE_JUMP,         N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_ZOMBIE_JUMP,        CENTER_DEATH_SELF_MONSTER)
@@ -887,13 +895,13 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(ITEM_WEAPON_UNAVAILABLE,            N_ENABLE,  NULL,           INFO_ITEM_WEAPON_UNAVAILABLE,           CENTER_ITEM_WEAPON_UNAVAILABLE)
 
     MSG_MULTI_NOTIF(MULTI_COINTOSS,                     N_ENABLE,  NULL,           INFO_COINTOSS,                          CENTER_COINTOSS)
-    MSG_MULTI_NOTIF(MULTI_COUNTDOWN_BEGIN,              N_ENABLE,  ANNCE_BEGIN,    NULL,                                   CENTER_COUNTDOWN_BEGIN)
     MSG_MULTI_NOTIF(MULTI_INSTAGIB_FINDAMMO,            N_ENABLE,  ANNCE_NUM_10,   NULL,                                   CENTER_INSTAGIB_FINDAMMO_FIRST)
 
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_MURDER,            N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_MURDER,           NULL)
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_SUICIDE,           N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_SUICIDE,          CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_ARC_MURDER,                  N_ENABLE,  NULL,           INFO_WEAPON_ARC_MURDER,                 NULL)
     MSG_MULTI_NOTIF(WEAPON_ARC_MURDER_SPRAY,            N_ENABLE,  NULL,           INFO_WEAPON_ARC_MURDER_SPRAY,           NULL)
+    MSG_MULTI_NOTIF(WEAPON_ARC_SUICIDE_BOLT,            N_ENABLE,  NULL,           INFO_WEAPON_ARC_SUICIDE_BOLT,           CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_BLASTER_MURDER,              N_ENABLE,  NULL,           INFO_WEAPON_BLASTER_MURDER,             NULL)
     MSG_MULTI_NOTIF(WEAPON_BLASTER_SUICIDE,             N_ENABLE,  NULL,           INFO_WEAPON_BLASTER_SUICIDE,            CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_CRYLINK_MURDER,              N_ENABLE,  NULL,           INFO_WEAPON_CRYLINK_MURDER,             NULL)

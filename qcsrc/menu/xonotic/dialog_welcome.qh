@@ -19,5 +19,7 @@ CLASS(XonoticWelcomeDialog, XonoticRootDialog)
 	//ATTRIB(XonoticWelcomeDialog, serverinfo_name_ent, entity, world);
 	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD, string, string_null);
 	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD_ent, entity, world);
+	ATTRIB(XonoticWelcomeDialog, joinButton_ent, entity, world);
+	ATTRIB(XonoticWelcomeDialog, spectateButton_ent, entity, world);
 	ATTRIB(XonoticWelcomeDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticWelcomeDialog)
