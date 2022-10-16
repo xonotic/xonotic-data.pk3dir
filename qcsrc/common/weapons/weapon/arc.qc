@@ -611,7 +611,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
             WEP_CVAR(arc, beam_botaimspeed),
             0,
             WEP_CVAR(arc, beam_botaimlifetime),
-            false
+            false, true
         );
     }
     else
@@ -622,7 +622,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
             1000000,
             0,
             0.001,
-            false
+            false, true
         );
     }
 }

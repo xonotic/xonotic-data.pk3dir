@@ -65,7 +65,6 @@ entity bot_list;
 .float bot_pickup;
 .float bot_pickupbasevalue;
 .bool bot_pickup_respawning;
-.float bot_canfire;
 .float bot_strategytime;
 .float bot_jump_time;
 
