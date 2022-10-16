@@ -1781,16 +1781,16 @@ void nades_CheckTypes(entity player)
 	int cl_ntype = CS_CVAR(player).cvar_cl_nade_type;
 	switch (cl_ntype)
 	{
-		case 2: if (!autocvar_g_nades_napalm) cl_ntype = 1; break;
-		case 3: if (!autocvar_g_nades_ice) cl_ntype = 1; break;
-		case 4: if (!autocvar_g_nades_translocate) cl_ntype = 1; break;
-		case 5: if (!autocvar_g_nades_spawntype) cl_ntype = 1; break;
-		case 6: if (!autocvar_g_nades_heal) cl_ntype = 1; break;
-		case 7: if (!autocvar_g_nades_tandem) cl_ntype = 1; break;
-		case 8: if (!autocvar_g_nades_entrap) cl_ntype = 1; break;
-		case 9: if (!autocvar_g_nades_veil) cl_ntype = 1; break;
-		case 10: if (!autocvar_g_nades_ammo) cl_ntype = 1; break;
-		case 11: if (!autocvar_g_nades_dark) cl_ntype = 1; break;
+		case NADE_TYPE_NAPALM.m_id: if (!autocvar_g_nades_napalm) cl_ntype = 1; break;
+		case NADE_TYPE_ICE.m_id: if (!autocvar_g_nades_ice) cl_ntype = 1; break;
+		case NADE_TYPE_TRANSLOCATE.m_id: if (!autocvar_g_nades_translocate) cl_ntype = 1; break;
+		case NADE_TYPE_SPAWN.m_id: if (!autocvar_g_nades_spawntype) cl_ntype = 1; break;
+		case NADE_TYPE_HEAL.m_id: if (!autocvar_g_nades_heal) cl_ntype = 1; break;
+		case NADE_TYPE_TANDEM.m_id: if (!autocvar_g_nades_tandem) cl_ntype = 1; break;
+		case NADE_TYPE_ENTRAP.m_id: if (!autocvar_g_nades_entrap) cl_ntype = 1; break;
+		case NADE_TYPE_VEIL.m_id: if (!autocvar_g_nades_veil) cl_ntype = 1; break;
+		case NADE_TYPE_AMMO.m_id: if (!autocvar_g_nades_ammo) cl_ntype = 1; break;
+		case NADE_TYPE_DARK.m_id: if (!autocvar_g_nades_dark) cl_ntype = 1; break;
 	}
 	STAT(NADE_BONUS_TYPE, player) = cl_ntype;
 }
