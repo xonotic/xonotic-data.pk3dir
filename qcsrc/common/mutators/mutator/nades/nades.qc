@@ -1233,6 +1233,13 @@ void nade_dark_boom(entity this)
 	//CSQCProjectile(fountain, true, PROJECTILE_NADE_DARK_BURN, true);
 }
 
+void normal_nade_boom(entity this)
+{
+	RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+				 autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
+	Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
+}
+
 void nade_boom(entity this)
 {
 	entity expef = NULL;
@@ -1244,13 +1251,16 @@ void nade_boom(entity this)
 			nade_blast = autocvar_g_nades_napalm_blast;
 			expef = EFFECT_EXPLOSION_MEDIUM;
 			break;
+		
 		case NADE_TYPE_ICE:
 			nade_blast = false;
 			expef = EFFECT_ELECTRO_COMBO; // hookbomb_explode electro_combo bigplasma_impact
 			break;
+		
 		case NADE_TYPE_TRANSLOCATE:
 			nade_blast = false;
 			break;
+		
 		case NADE_TYPE_TANDEM:
 			if(!autocvar_g_monsters)
 			{
@@ -1267,6 +1277,7 @@ void nade_boom(entity this)
 				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
 				break; // fall back to a standard nade explosion
 			}
+		
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
 			switch(this.realowner.team)
@@ -1278,6 +1289,7 @@ void nade_boom(entity this)
 				default: expef = EFFECT_SPAWN_NEUTRAL; break;
 			}
 			break;
+		
 		case NADE_TYPE_HEAL:
 			nade_blast = false;
 			expef = EFFECT_SPAWN_RED;
@@ -1318,25 +1330,61 @@ void nade_boom(entity this)
 	this.event_damage = func_null; // prevent somehow calling damage in the next call
 
 	if(nade_blast)
-	{
-		RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				 autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
-		Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
-	}
+		normal_nade_boom(this);
 
 	if(this.takedamage)
 	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
 	{
-		case NADE_TYPE_NAPALM: nade_napalm_boom(this); break;
-		case NADE_TYPE_ICE: nade_ice_boom(this); break;
-		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(this); break;
-		case NADE_TYPE_SPAWN: nade_spawn_boom(this); break;
-		case NADE_TYPE_HEAL: nade_heal_boom(this); break;
-		case NADE_TYPE_TANDEM: nade_tandem_boom(this); break;
-		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
-		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
-		case NADE_TYPE_AMMO: nade_ammo_boom(this); break;
-		case NADE_TYPE_DARK: nade_dark_boom(this); break;
+		case NADE_TYPE_NAPALM: 
+		{
+			nade_napalm_boom(this);
+			break;
+		}
+		case NADE_TYPE_ICE: 
+		{
+			nade_ice_boom(this);
+			break;
+		}
+		case NADE_TYPE_TRANSLOCATE: 
+		{
+			nade_translocate_boom(this);
+			break;
+		}
+		case NADE_TYPE_SPAWN: 
+		{
+			nade_spawn_boom(this);
+			break;
+		}
+		case NADE_TYPE_HEAL: 
+		{
+			nade_heal_boom(this);
+			break;
+		}
+		case NADE_TYPE_TANDEM: 
+		{
+			nade_tandem_boom(this);
+			break;
+		}
+		case NADE_TYPE_ENTRAP: 
+		{
+			nade_entrap_boom(this);
+			break;
+		}
+		case NADE_TYPE_VEIL: 
+		{
+			nade_veil_boom(this);
+			break;
+		}
+		case NADE_TYPE_AMMO: 
+		{
+			nade_ammo_boom(this);
+			break;
+		}
+		case NADE_TYPE_DARK: 
+		{
+			nade_dark_boom(this);
+			break;
+		}
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -1768,6 +1816,25 @@ void nades_Clear(entity player)
 	STAT(NADE_TIMER, player) = 0;
 }
 
+void nades_CheckTypes(entity player)
+{
+	int cl_ntype = CS_CVAR(player).cvar_cl_nade_type;
+	switch (cl_ntype)
+	{
+		case 2: if (!autocvar_g_nades_napalm) cl_ntype = 1; break;
+		case 3: if (!autocvar_g_nades_ice) cl_ntype = 1; break;
+		case 4: if (!autocvar_g_nades_translocate) cl_ntype = 1; break;
+		case 5: if (!autocvar_g_nades_spawntype) cl_ntype = 1; break;
+		case 6: if (!autocvar_g_nades_heal) cl_ntype = 1; break;
+		case 7: if (!autocvar_g_nades_tandem) cl_ntype = 1; break;
+		case 8: if (!autocvar_g_nades_entrap) cl_ntype = 1; break;
+		case 9: if (!autocvar_g_nades_veil) cl_ntype = 1; break;
+		case 10: if (!autocvar_g_nades_ammo) cl_ntype = 1; break;
+		case 11: if (!autocvar_g_nades_dark) cl_ntype = 1; break;
+	}
+	STAT(NADE_BONUS_TYPE, player) = cl_ntype;
+}
+
 MUTATOR_HOOKFUNCTION(nades, VehicleEnter)
 {
 	entity player = M_ARGV(0, entity);
@@ -1875,7 +1942,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				STAT(NADE_BONUS_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
+				nades_CheckTypes(player);
 				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
 				player.tandemnade_type = CS_CVAR(player).cvar_cl_tandemnade_type;
 			}
