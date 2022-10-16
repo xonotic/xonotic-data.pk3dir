@@ -6,6 +6,7 @@
 # Ellis Walsh, 2022
 # Ellis Walsh, 2022
 # Hampus Kreitz, 2022
+# Hampus Kreitz, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
