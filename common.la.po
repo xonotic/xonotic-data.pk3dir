@@ -527,29 +527,29 @@ msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:80
 msgid "Start line"
-msgstr ""
+msgstr "Carceres"
 
 #: qcsrc/client/hud/panel/racetimer.qc:82
 #: qcsrc/client/hud/panel/racetimer.qc:86
 msgid "Finish line"
-msgstr ""
+msgstr "Calx"
 
 #: qcsrc/client/hud/panel/racetimer.qc:84
 #: qcsrc/client/hud/panel/racetimer.qc:153
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Meta %da"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156
 #: qcsrc/client/hud/panel/racetimer.qc:203
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "MULTA: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "meta ambita"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
@@ -2150,7 +2150,7 @@ msgstr "Invisibilitas"
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:57
 msgid "Shield"
-msgstr ""
+msgstr "Scutum"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -2170,7 +2170,7 @@ msgstr "Incensio"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Nascentis Scutum"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"

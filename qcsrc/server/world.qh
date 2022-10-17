@@ -27,6 +27,7 @@ float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -149,6 +150,10 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
 void CheckRules_World();
 float RedirectionThink();
+
+// quake 3 music compatibility
+.string music;
+.string noise;
 
 void readplayerstartcvars();
 
