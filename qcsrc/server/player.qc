@@ -39,6 +39,8 @@
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
+AUTOCVAR(sv_spawnkill_time, float, 1.6, _("time after spawn which consideres to be spawnkill"));
+
 void Drop_Special_Items(entity player)
 {
 	// called when the player has become stuck or frozen
@@ -225,6 +227,29 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 		this.damagedbycontents = false;
 	}
 }
+
+void CheckSpawnkill(entity this, entity attacker) {
+    if (autocvar_sv_spawnkill_time <= 0) {
+        return;
+    }
+
+    if (this == attacker) {
+        this.spawnkilled_series = 0;
+        this.spawnkill_series = 0;
+        return;
+    }
+
+    if ((time - this.alivetime) < autocvar_sv_spawnkill_time) {
+        PlayerScore_Add(this, SP_SPWN_KILLED, 1);
+        PlayerScore_Add(attacker, SP_SPWN_KILLS, 1);
+        this.spawnkilled_series++;
+        attacker.spawnkill_series++;
+    } else {
+        this.spawnkilled_series = 0;
+    }
+    this.spawnkill_series = 0;
+}
+
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
@@ -444,6 +469,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(this.alivetime)
 		{
 			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+      CheckSpawnkill(this, attacker);
 			this.alivetime = 0;
 		}
 

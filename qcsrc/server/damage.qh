@@ -63,6 +63,12 @@ int impressive_hits;
 
 .float spawnshieldtime;
 
+// spawnkill
+.int spawnkilled_series;
+.int spawnkill_series;
+
+
+
 .int totalfrags;
 
 .bool canteamdamage;
