@@ -107,6 +107,8 @@ bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
 
+AUTOCVAR(_scoreboard_instagib, bool, false, "");
+
 float scoreboard_time;
 
 // mode 0: returns translated label
@@ -748,16 +750,44 @@ void Cmd_Scoreboard_Help()
 " +dom/ticks +dom/takes" \
 " -lms,rc,cts,inv,nb/score"
 
+
+#define SCOREBOARD_DEFAULT_COLUMNS_INSTAGIB \
+"ping pl fps name |" \
+" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
+" -teams,lms/deaths +ft,tdm/deaths" \
+" +tdm/sum" \
+" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" -cts,nb,rc/accuracy" \
+" +tdm,ft,dom,ons,as/teamkills"\
+" -rc,cts,nb/deaths" \
+" +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
+" +lms/lives +lms/rank" \
+" +kh/kckills +kh/losses +kh/caps" \
+" ?+rc/laps ?+rc/time +rc,cts/fastest" \
+" +as/objectives +nb/faults +nb/goals" \
+" +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
+" +dom/ticks +dom/takes" \
+" -lms,rc,cts,inv,nb/score"
+
+
+
 void Cmd_Scoreboard_SetFields(int argc)
 {
 	TC(int, argc);
 	int i, slash;
-	string str, pattern;
+	string str, pattern, default_scoreboard;
 	bool have_name = false, have_primary = false, have_secondary = false, have_separator = false;
 	int missing;
 
 	if(!gametype)
 		return; // do nothing, we don't know gametype and scores yet
+
+   if (autocvar__scoreboard_instagib) {
+        default_scoreboard = SCOREBOARD_DEFAULT_COLUMNS_INSTAGIB;
+    } else {
+        default_scoreboard = SCOREBOARD_DEFAULT_COLUMNS;
+    }
 
 	// sbt_fields uses strunzone on the titles!
 	if(!sbt_field_title[0])
@@ -769,15 +799,15 @@ void Cmd_Scoreboard_SetFields(int argc)
 		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
 
 	if(argc < 3)
-		argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", default_scoreboard), " ");
 
 	if(argc == 3)
 	{
 		if(argv(2) == "default" || argv(2) == "expand_default")
 		{
 			if(argv(2) == "expand_default")
-				cvar_set("scoreboard_columns", SCOREBOARD_DEFAULT_COLUMNS);
-			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
+				cvar_set("scoreboard_columns", default_scoreboard);
+			argc = tokenizebyseparator(strcat("0 1 ", default_scoreboard), " ");
 		}
 		else if(argv(2) == "all" || argv(2) == "ALL")
 		{

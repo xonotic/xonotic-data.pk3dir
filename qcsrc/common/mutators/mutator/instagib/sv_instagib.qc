@@ -446,6 +446,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(mutator_instagib, FixClientCvars)
+{
+	entity player = M_ARGV(0, entity);
+	stuffcmd(player, "cl_cmd settemp _scoreboard_instagib 1\n");
+}
+
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":instagib");

@@ -103,7 +103,22 @@ void accuracy_add(entity this, Weapon w, float fired, float hit)
         a.fired_time = time;
     }
 
-	if (b == accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid])) return; // no change
+    int new_b = accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid]);
+
+  	if (b == new_b) return; // no change
+    if (w.m_id == WEP_VAPORIZER.m_id) {
+      int acc;
+      if (new_b == 0) {
+          acc = 0;
+      } else if (new_b == 255) {
+          acc = 1.0;
+      } else {
+          acc = (new_b - 1) / 100;
+      }
+
+      // hack to make acc look same
+      PlayerScore_Set(this, SP_ACC_VAPORIZER, acc * 100);
+    }
 	int sf = 1 << (wepid % 24);
 	a.SendFlags |= sf;
 	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
