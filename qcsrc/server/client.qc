@@ -138,7 +138,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
-	if (observe_blocked)            sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -879,6 +878,7 @@ void ClientInit_misc(entity this)
 	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
+	WriteByte(channel, observe_blocked);
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 }
 
