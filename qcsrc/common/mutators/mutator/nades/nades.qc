@@ -1720,9 +1720,9 @@ void nade_prime(entity this)
 	}
 	else
 	{
-		ntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_type);
-		tntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_tandemnade_type : autocvar_g_nades_tandemnade_type);
+		ntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_type);
+		tntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_tandemnade_type : autocvar_g_nades_tandemnade_type);
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype, tntype);
@@ -1781,16 +1781,16 @@ void nades_CheckTypes(entity player)
 	int cl_ntype = CS_CVAR(player).cvar_cl_nade_type;
 	switch (cl_ntype)
 	{
-		case NADE_TYPE_NAPALM.m_id: if (!autocvar_g_nades_napalm) cl_ntype = 1; break;
-		case NADE_TYPE_ICE.m_id: if (!autocvar_g_nades_ice) cl_ntype = 1; break;
-		case NADE_TYPE_TRANSLOCATE.m_id: if (!autocvar_g_nades_translocate) cl_ntype = 1; break;
-		case NADE_TYPE_SPAWN.m_id: if (!autocvar_g_nades_spawntype) cl_ntype = 1; break;
-		case NADE_TYPE_HEAL.m_id: if (!autocvar_g_nades_heal) cl_ntype = 1; break;
-		case NADE_TYPE_TANDEM.m_id: if (!autocvar_g_nades_tandem) cl_ntype = 1; break;
-		case NADE_TYPE_ENTRAP.m_id: if (!autocvar_g_nades_entrap) cl_ntype = 1; break;
-		case NADE_TYPE_VEIL.m_id: if (!autocvar_g_nades_veil) cl_ntype = 1; break;
-		case NADE_TYPE_AMMO.m_id: if (!autocvar_g_nades_ammo) cl_ntype = 1; break;
-		case NADE_TYPE_DARK.m_id: if (!autocvar_g_nades_dark) cl_ntype = 1; break;
+		case NADE_TYPE_NAPALM.m_id: if (!autocvar_g_nades_napalm) 			cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_ICE.m_id: if (!autocvar_g_nades_ice) 				cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_TRANSLOCATE.m_id: if (!autocvar_g_nades_translocate) cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_SPAWN.m_id: if (!autocvar_g_nades_spawntype) 		cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_HEAL.m_id: if (!autocvar_g_nades_heal) 				cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_TANDEM.m_id: if (!autocvar_g_nades_tandem) 			cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_ENTRAP.m_id: if (!autocvar_g_nades_entrap) 			cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_VEIL.m_id: if (!autocvar_g_nades_veil) 				cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_AMMO.m_id: if (!autocvar_g_nades_ammo) 				cl_ntype = NADE_TYPE_NORMAL.m_id; break;
+		case NADE_TYPE_DARK.m_id: if (!autocvar_g_nades_dark) 				cl_ntype = NADE_TYPE_NORMAL.m_id; break;
 	}
 	STAT(NADE_BONUS_TYPE, player) = cl_ntype;
 }
