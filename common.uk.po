@@ -10,6 +10,7 @@
 # Ігор Андреєв <ihor@noleron.com>, 2021
 # Ігор Андреєв <ihor@noleron.com>, 2021
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
+# Ігор Андреєв <ihor@noleron.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
