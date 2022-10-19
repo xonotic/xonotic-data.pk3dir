@@ -653,6 +653,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{
@@ -1112,7 +1113,6 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	damagepush_speedfactor = ReadByte() / 255.0;
 
 	serverflags = ReadByte();
-	observe_blocked = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 
