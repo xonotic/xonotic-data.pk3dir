@@ -3,6 +3,7 @@
 #include <common/mutators/base.qh>
 #include <server/elimination.qh>
 #include <server/round_handler.qh>
+#include <server/world.qh>
 #include <server/command/sv_cmd.qh>
 
 int autocvar_g_ca_spectate_enemies;
@@ -38,6 +39,8 @@ REGISTER_MUTATOR(ca, false)
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2)
 			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
+		if (autocvar_g_ca_spectate_enemies == -1)
+			observe_blocked = true;
 
 		ca_teams = BITS(bound(2, ca_teams, 4));
         GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, {

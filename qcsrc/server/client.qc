@@ -7,7 +7,6 @@
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
-#include <common/gamemodes/gamemode/clanarena/sv_clanarena.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
 #include <common/mapobjects/func/conveyor.qh>
