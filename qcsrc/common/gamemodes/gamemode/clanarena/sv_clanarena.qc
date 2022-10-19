@@ -366,11 +366,13 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		INGAME_STATUS_CLEAR(player);
 	}
 	if (INGAME(player))
+	{
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+		if (autocvar_g_ca_spectate_enemies == -1)
+			player.would_spectate = true; // force to spectate only
+	}
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	if (autocvar_g_ca_spectate_enemies == -1)
-		player.would_spectate = true; // force to spectate only
 	if (!INGAME(player))
 		return false;  // allow team reset
 	return true;  // prevent team reset

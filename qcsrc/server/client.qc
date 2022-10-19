@@ -138,7 +138,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
-	if (observe_blocked)            sf |= BIT(3); // observing blocked
+	if (observe_blocked && INGAME(to))
+	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -2254,7 +2255,7 @@ void ObserverOrSpectatorThink(entity this)
 				}
 				CS(this).impulse = 0;
 			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				if(!observe_blocked) {
+				if(!observe_blocked || !INGAME(this)) {
 					this.would_spectate = false;
 					this.flags &= ~FL_JUMPRELEASED;
 					TRANSMUTE(Observer, this);
