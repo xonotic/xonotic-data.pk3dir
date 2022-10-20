@@ -514,13 +514,17 @@ void ReadyCount()
 	// cannot reset the game while a timeout is active or pending
 	if (timeout_status) return;
 
-	float ready_needed_factor, ready_needed_count;
-	float t_players = 0;
+	int total_players = 0, human_players = 0, humans_ready = 0;
 	readycount = 0;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
-		++t_players;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME_JOINED(it), {
+		++total_players;
 		if (it.ready) ++readycount;
+		if (IS_REAL_CLIENT(it))
+		{
+			++human_players;
+			if (it.ready) ++humans_ready;
+		}
 	});
 
 	Nagger_ReadyCounted();
@@ -530,7 +534,7 @@ void ReadyCount()
 	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
 	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
 
-	if (t_players < minplayers)
+	if (total_players < minplayers)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
 		{
@@ -556,10 +560,8 @@ void ReadyCount()
 		// warmup continues until enough players AND enough RUPs (no time limit)
 	}
 
-	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 1);
-	ready_needed_count = ceil(t_players * ready_needed_factor);
-
-	if (readycount >= ready_needed_count) ReadyRestart(true);
+	if (humans_ready && humans_ready >= rint(human_players * bound(0.5, cvar("g_warmup_majority_factor"), 1)))
+		ReadyRestart(true);
 }
 
 
