@@ -118,7 +118,6 @@ void bot_think(entity this)
 			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
-		this.bot_nextthink = game_starttime;
 		return;
 	}
 

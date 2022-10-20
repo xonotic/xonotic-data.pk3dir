@@ -419,7 +419,8 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think(entity this)
 {
-	reset_map(true, false);
+	if (!warmup_stage) // if the countdown was not aborted
+		reset_map(true, false);
 	delete(this);
 }
 
@@ -536,6 +537,8 @@ void ReadyCount()
 			warmup_stage = autocvar_g_warmup; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
 			game_starttime = time;
 			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
+			if (!sv_ready_restart_after_countdown) // if we ran reset_map() at start of countdown
+				FOREACH_CLIENT(IS_PLAYER(it), { GiveWarmupResources(it); });
 		}
 		if (warmup_limit > 0)
 			warmup_limit = -1;
