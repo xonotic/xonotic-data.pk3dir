@@ -812,7 +812,7 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 
-	if (warmup_stage == -1)
+	if (warmup_stage < 0 || warmup_stage > 1)
 		ReadyCount();
 }
 
@@ -1042,7 +1042,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
-	WriteByte(msg_type, map_minplayers);
+	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);
 	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");

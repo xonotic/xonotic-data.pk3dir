@@ -524,19 +524,24 @@ void ReadyCount()
 
 	Nagger_ReadyCounted();
 
-	if (t_players < map_minplayers) // map_minplayers will only be set if g_warmup -1 at worldspawn
+	// can't read warmup_stage here as it could have been set to 0 by ReadyRestart()
+	// and we need to use this when checking if we should abort the countdown
+	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
+	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
+
+	if (t_players < minplayers)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
 		{
-			warmup_stage = -1; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
+			warmup_stage = autocvar_g_warmup; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
 			game_starttime = time;
-			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, map_minplayers);
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
 		}
 		if (warmup_limit > 0)
 			warmup_limit = -1;
 		return; // don't ReadyRestart if players are ready but too few
 	}
-	else if (map_minplayers && warmup_limit <= 0)
+	else if (minplayers && warmup_limit <= 0)
 	{
 		// there's enough players now but we're still in infinite warmup
 		warmup_limit = cvar("g_warmup_limit");
