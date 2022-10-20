@@ -86,7 +86,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 		for (i = 1; i <= maxclients; i += 8)
 		{
 			for (f = 0, e = edict_num(i), b = BIT(0); b < BIT(8); b <<= 1, e = nextent(e))
-				if (!IS_REAL_CLIENT(e) || e.ready)
+				if (e.ready)
 					f |= b;
 			WriteByte(MSG_ENTITY, f);
 		}
@@ -456,8 +456,8 @@ void ReadyRestart_force(bool is_fake_round_start)
 	if(!is_fake_round_start && !warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
 
-	// reset the .ready status of all players (also spectators)
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { it.ready = false; });
+	// reset the .ready status of all clients (including spectators and bots)
+	FOREACH_CLIENT(true, { it.ready = false; });
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 

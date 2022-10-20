@@ -63,7 +63,7 @@ void VoteCommand(int request, entity caller, int argc, string vote_command);
 const float RESTART_COUNTDOWN = 10;
 entity nagger;
 int readycount;                    // amount of players who are ready
-.float ready;                      // flag for if a player is ready
+.bool ready;                       // flag for if a player is ready
 .float last_ready;                 // last ready time for anti-spam
 .int team_saved;                   // team number to restore upon map reset
 .void(entity this) reset;          // if set, an entity is reset using this
