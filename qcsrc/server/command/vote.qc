@@ -429,7 +429,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 {
 	if (time <= game_starttime && game_stopped)
 		return;
-	if (!is_fake_round_start)
+	if (!is_fake_round_start && !autocvar_g_campaign)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_COUNTDOWN_RESTART);
 
 	VoteReset();

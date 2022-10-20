@@ -1404,7 +1404,7 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	bool campaign = ReadByte();
+	campaign = ReadByte();
 	if (campaign)
 	{
 		string campaign_title = ReadString();
