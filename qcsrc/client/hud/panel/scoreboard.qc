@@ -513,8 +513,6 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
 
-#define SB_EXTRA_SORTING_FIELDS 5
-PlayerScoreField sb_extra_sorting_field[SB_EXTRA_SORTING_FIELDS];
 void Scoreboard_InitScores()
 {
 	int i, f;
@@ -522,18 +520,13 @@ void Scoreboard_InitScores()
 	ps_primary = ps_secondary = NULL;
 	ts_primary = ts_secondary = -1;
 	FOREACH(Scores, true, {
+		if(scores_flags(it) & SFL_NOT_SORTABLE)
+			continue;
 		f = (scores_flags(it) & SFL_SORT_PRIO_MASK);
 		if(f == SFL_SORT_PRIO_PRIMARY)
 			ps_primary = it;
 		if(f == SFL_SORT_PRIO_SECONDARY)
 			ps_secondary = it;
-		if(ps_primary == it || ps_secondary == it)
-			continue;
-		if (scores_label(it) == "kills")      sb_extra_sorting_field[0] = it;
-		if (scores_label(it) == "deaths")     sb_extra_sorting_field[1] = it;
-		if (scores_label(it) == "suicides")   sb_extra_sorting_field[2] = it;
-		if (scores_label(it) == "dmg")        sb_extra_sorting_field[3] = it;
-		if (scores_label(it) == "dmgtaken")   sb_extra_sorting_field[4] = it;
 	});
 	if(ps_secondary == NULL)
 		ps_secondary = ps_primary;
@@ -621,26 +614,19 @@ float Scoreboard_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	entity fld = NULL;
-	int r;
-	for (int i = -2; i < SB_EXTRA_SORTING_FIELDS; ++i)
-	{
-		if (i < 0)
-		{
-			if (!fld) fld = ps_primary;
-			else if (ps_secondary == ps_primary) continue;
-			else fld = ps_secondary;
-		}
-		else
-		{
-			fld = sb_extra_sorting_field[i];
-			if (fld == ps_primary || fld == ps_secondary) continue;
-		}
-		if (!fld) continue;
+	int res = Scoreboard_CompareScore(left.scores(ps_primary), right.scores(ps_primary), scores_flags(ps_primary));
+	if (res >= 0) return res;
 
-		r = Scoreboard_CompareScore(left.scores(fld), right.scores(fld), scores_flags(fld));
-		if (r >= 0) return r;
+	if (ps_secondary && ps_secondary != ps_primary)
+	{
+		res = Scoreboard_CompareScore(left.scores(ps_secondary), right.scores(ps_secondary), scores_flags(ps_secondary));
+		if (res >= 0) return res;
 	}
+
+	FOREACH(Scores, (it != ps_primary && it != ps_secondary), {
+		res = Scoreboard_CompareScore(left.scores(it), right.scores(it), scores_flags(it));
+		if (res >= 0) return res;
+	});
 
 	if (left.sv_entnum < right.sv_entnum)
 		return true;

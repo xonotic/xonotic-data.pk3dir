@@ -1329,11 +1329,6 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
 
-	// set correct team colors
-	flag.glowmod = Team_ColorRGB(teamnum);
-	flag.colormap = (teamnum) ? (teamnum - 1) * 0x11 : 0x00;
-	flag.colormap |= BIT(10); // RENDER_COLORMAPPED
-
 	// crudely force them all to 0
 	if(autocvar_g_ctf_score_ignore_fields)
 		flag.cnt = flag.score_assist = flag.score_team_capture = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
@@ -1783,7 +1778,7 @@ void havocbot_role_ctf_carrier(entity this)
 
 		entity goal = this.goalentity;
 		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
-			this.goalentity_lock_timeout = time + ((this.bot_aimtarg) ? 2 : 3);
+			this.goalentity_lock_timeout = time + ((this.enemy) ? 2 : 3);
 
 		if (goal)
 			this.havocbot_cantfindflag = time + 10;

@@ -192,7 +192,7 @@ string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 // gets a gametype from a string
 string _MapInfo_GetDefaultEx(Gametype t);
 float _MapInfo_GetTeamPlayBool(Gametype t);
-Gametype MapInfo_Type_FromString(string t, bool dowarn);
+Gametype MapInfo_Type_FromString(string t, bool dowarn, bool is_q3compat);
 string MapInfo_Type_Description(Gametype t);
 string MapInfo_Type_ToString(Gametype t);
 string MapInfo_Type_ToText(Gametype t);
@@ -205,6 +205,10 @@ Gametype MapInfo_LoadedGametype; // game type that was active during map load
 void MapInfo_Cache_Destroy(); // disable caching
 void MapInfo_Cache_Create(); // enable caching
 void MapInfo_Cache_Invalidate(); // delete cache if any, but keep enabled
+
+bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gametype pGametypeToSet, bool isdefi, bool isgenerator);
+
+string _MapInfo_FindArenaFile(string pFilename, string extension);
 
 void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse);
 

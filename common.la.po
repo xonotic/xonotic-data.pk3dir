@@ -527,29 +527,29 @@ msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:80
 msgid "Start line"
-msgstr ""
+msgstr "Carceres"
 
 #: qcsrc/client/hud/panel/racetimer.qc:82
 #: qcsrc/client/hud/panel/racetimer.qc:86
 msgid "Finish line"
-msgstr ""
+msgstr "Calx"
 
 #: qcsrc/client/hud/panel/racetimer.qc:84
 #: qcsrc/client/hud/panel/racetimer.qc:153
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Meta %da"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156
 #: qcsrc/client/hud/panel/racetimer.qc:203
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "MULTA: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "meta ambita"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
@@ -2150,7 +2150,7 @@ msgstr "Invisibilitas"
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:57
 msgid "Shield"
-msgstr ""
+msgstr "Scutum"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -2170,7 +2170,7 @@ msgstr "Incensio"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Nascentis Scutum"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -2480,11 +2480,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr ""
+msgstr "^F1Tempus iam inceptum est, tempore proximo ludes"
 
 #: qcsrc/common/notifications/all.inc:259
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Tempore proximo spectabis"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
@@ -2568,7 +2568,7 @@ msgstr "^BG%s%s^K1 congelatus, Granata Gelata ^BG%s^K1, occisus est%s%s"
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr "^BG%s%s^K1, Granata Sanante ^BG%s^K1, sanatus non est%s%s"
+msgstr "^BG%s%s^K1, Granata Sanatrice ^BG%s^K1, sanatus non est%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
@@ -2802,7 +2802,7 @@ msgstr "^BG%s^K1 congelatus, Granata Gelata sua, mortuus est%s%s"
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr "^BG%s^K1 Granata Sanante se non sanavit%s%s"
+msgstr "^BG%s^K1 Granata Sanatrice se non sanavit%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
@@ -3070,7 +3070,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr ""
+msgstr "^F1%s %s^BG emittere non potest, sed sua ^F1%s^BG potest"
 
 #: qcsrc/common/notifications/all.inc:377
 #: qcsrc/common/notifications/all.inc:693
@@ -3081,12 +3081,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:379
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG se conectat..."
 
 #: qcsrc/common/notifications/all.inc:380
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 se conexuit"
 
 #: qcsrc/common/notifications/all.inc:381
 #, c-format
@@ -3118,37 +3118,37 @@ msgstr "^BG%s^BG pro ^TCmanu ^TT^BG claves cepit"
 #: qcsrc/common/notifications/all.inc:388
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TCClavem ^TTm^BG demisit"
 
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TCClavem ^TTm^BG amisit"
 
 #: qcsrc/common/notifications/all.inc:390
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr ""
+msgstr "^BGA %s^BG %s^BG pulsus est, propterea ^TCClavis ^TT^BG deleta est"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TCClavem ^TTm^BG delevit"
 
 #: qcsrc/common/notifications/all.inc:392
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TCClavem ^TTm^BG tenet"
 
 #: qcsrc/common/notifications/all.inc:394
 #, c-format
 msgid "^BG%s^F3 forfeited"
-msgstr ""
+msgstr "^BG%s^F3 reliquit"
 
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 has no more lives left"
-msgstr ""
+msgstr "^BG%s^F3 iam nullam vitam habet"
 
 #: qcsrc/common/notifications/all.inc:397
 msgid "^BGMonsters are currently disabled"
@@ -3156,7 +3156,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:399
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr ""
+msgstr "^TCManus ^TT^BG nimis diu pilam tenebat"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
@@ -3189,7 +3189,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:408
 #, c-format
 msgid "^BG%s^K1 picked up Invisibility"
-msgstr ""
+msgstr "^BG%s^K1 Invisibilitatem tenet"
 
 #: qcsrc/common/notifications/all.inc:409
 #, c-format
@@ -3199,48 +3199,50 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^K1 picked up Speed"
-msgstr ""
+msgstr "^BG%s^K1 Celeritatem tenet"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr ""
+msgstr "^BG%s^K1 Vim tenet"
 
 #: qcsrc/common/notifications/all.inc:413
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 se dinexuit"
 
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
 msgid "^BG%s^F3 was kicked after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 expulsus est quia otiosus %s secunda fuit"
 
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 in^BG spectatores^F3 motus est quia otiosus %s secunda fuit"
 
 #: qcsrc/common/notifications/all.inc:416
 msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
+"^F2Tu e moderatro expulsus est quia spectator fuisti et spectare iam vetitum "
+"est."
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 expulsus est quia manus collegas nimis interficiebat"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr ""
+msgstr "^BG%s^F3 iam^BG spectat"
 
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG cursum reliquit"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
@@ -3255,7 +3257,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG cursum finivit"
 
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
@@ -3303,19 +3305,20 @@ msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
+"^F2Ludere incipere %s debes, ne expelleris quia spectare iam vetitum est!"
 
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon"
-msgstr ""
+msgstr "^BG%s^K1 Perarma tenet"
 
 #: qcsrc/common/notifications/all.inc:438
 msgid "^BGYou cannot change to a larger team"
-msgstr ""
+msgstr "^BGIre in manum maiorem non potes"
 
 #: qcsrc/common/notifications/all.inc:439
 msgid "^BGYou are not allowed to change teams"
-msgstr ""
+msgstr "^BGIre in aliam manum non potes"
 
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
