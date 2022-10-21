@@ -485,19 +485,19 @@ msgstr "Suffragia diribere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "Harenam integrare"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "Ludum finire"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "Ludi tempus minuere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "Ludi tempus addere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Shuffle teams"
@@ -553,11 +553,11 @@ msgstr "meta ambita"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Clica ut locum in quem teleporteris seligas"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Clica ut locum in quo nascaris seligas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of ball carrier kills"
@@ -641,11 +641,11 @@ msgstr "SCO^elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^fastest"
-msgstr ""
+msgstr "celerrim"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Circumitus celerrimi tempus (Cursu)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of faults committed"
@@ -673,7 +673,7 @@ msgstr "SCO^qis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Quotiens interfecit, suicidiis subtractis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^frags"
@@ -703,7 +703,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Quotiens interfecit, mortibus divisis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^kdr"
@@ -723,11 +723,11 @@ msgstr "SCO^interf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Quotiens circumivit (Cursu)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
-msgstr ""
+msgstr "circumit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
@@ -760,11 +760,11 @@ msgstr "SCO^agnomen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Quot metae deletae sunt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^objectives"
-msgstr ""
+msgstr "metae"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid ""
@@ -785,11 +785,11 @@ msgstr "SCO^ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Packet loss"
-msgstr ""
+msgstr "Perditae litterae (interretiales)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^pl"
-msgstr ""
+msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
@@ -833,27 +833,27 @@ msgstr "SCO^quot vicit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^score"
-msgstr ""
+msgstr "ratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Total score"
-msgstr ""
+msgstr "Tota ratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of suicides"
-msgstr ""
+msgstr "Quot suicidia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^suicides"
-msgstr ""
+msgstr "suicidia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Quotiens interfecit, mortibus subtractiis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^sum"
-msgstr ""
+msgstr "summa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
@@ -881,11 +881,11 @@ msgstr "SCO^tic"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^time"
-msgstr ""
+msgstr "tempus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Quousque cucurrit (Cursu)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:698
 msgid ""
@@ -1030,7 +1030,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2321
 #: qcsrc/client/hud/panel/scoreboard.qc:2328
 msgid "SCO^points"
-msgstr ""
+msgstr "ratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2320
 #: qcsrc/client/hud/panel/scoreboard.qc:2327
@@ -1391,7 +1391,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "Point limit:"
-msgstr ""
+msgstr "Ratio terminalis:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1471,7 +1471,7 @@ msgstr "Dominatio"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "Quem numerum, cum alicuius ratio attinget, ludus finietur"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1503,7 +1503,7 @@ msgstr "Beluarum pecoribus superstes es"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "Pilam tene ut tuae rationi addetur cum interficies"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
