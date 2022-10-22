@@ -1,3 +1,3 @@
-mesh,models/ctf/flag.tga
-mesh2,models/ctf/banner.tga
-mesh3,models/ctf/glow.tga
+mesh,models/ctf/flag_red.tga
+mesh2,models/ctf/banner_red.tga
+mesh3,models/ctf/glow_red.tga

@@ -115,7 +115,6 @@ void havocbot_ai(entity this)
 		if (this.goalcurrent)
 			navigation_clearroute(this);
 		this.enemy = NULL;
-		this.bot_aimtarg = NULL;
 		return;
 	}
 
@@ -132,9 +131,8 @@ void havocbot_ai(entity this)
 		}
 	}
 	havocbot_aim(this);
-	lag_update(this);
 
-	if (this.bot_aimtarg)
+	if (this.enemy)
 	{
 		this.aistatus |= AI_STATUS_ATTACKING;
 		this.aistatus &= ~AI_STATUS_ROAMING;
@@ -162,8 +160,8 @@ void havocbot_ai(entity this)
 		}
 		else
 		{
-			if(IS_PLAYER(this.bot_aimtarg))
-				bot_aimdir(this, this.bot_aimtarg.origin + this.bot_aimtarg.view_ofs - this.origin - this.view_ofs, 0);
+			if(IS_PLAYER(this.enemy))
+				bot_aimdir(this, this.enemy.origin + this.enemy.view_ofs - this.origin - this.view_ofs, 0);
 		}
 	}
 	else if (this.goalcurrent)
@@ -1275,26 +1273,6 @@ void havocbot_movetogoal(entity this)
 	}
 }
 
-entity havocbot_gettarget(entity this, bool secondary)
-{
-	entity best = NULL;
-	vector eye = CENTER_OR_VIEWOFS(this);
-	IL_EACH(g_bot_targets, boolean((secondary) ? it.classname == "misc_breakablemodel" : it.classname != "misc_breakablemodel"),
-	{
-		vector v = CENTER_OR_VIEWOFS(it);
-		if(vdist(v - eye, <, autocvar_bot_ai_enemydetectionradius))
-		if(!best || vlen2(CENTER_OR_VIEWOFS(best) - eye) > vlen2(v - eye))
-		if(bot_shouldattack(this, it))
-		{
-			traceline(eye, v, true, this);
-			if (trace_ent == it || trace_fraction >= 1)
-				best = it;
-		}
-	});
-
-	return best;
-}
-
 void havocbot_chooseenemy(entity this)
 {
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
@@ -1348,7 +1326,7 @@ void havocbot_chooseenemy(entity this)
 	while(true)
 	{
 		scan_secondary_targets = false;
-LABEL(scan_targets)
+		LABEL(scan_targets)
 		IL_EACH(g_bot_targets, it.bot_attack,
 		{
 			if(!scan_secondary_targets)
@@ -1528,9 +1506,13 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 
 void havocbot_aim(entity this)
 {
-	if (time < this.nextaim)
+	// if aim rate is a multiple of think rate due to precision errors the sum of multiple think times
+	// can be slightly greater than aim time and cause a jump of a whole think time (bot_netxtthink)
+	// in that case this small tolerance time makes so that aim time snaps to think time
+	if (time < this.nextaim - 0.01)
 		return;
 	this.nextaim = time + 0.1;
+
 	vector myvel = this.velocity;
 	if (!this.waterlevel)
 		myvel.z = 0;
@@ -1540,10 +1522,7 @@ void havocbot_aim(entity this)
 		vector enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
-		lag_additem(this, time + CS(this).ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
 	}
-	else
-		lag_additem(this, time + CS(this).ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
 bool havocbot_moveto_refresh_route(entity this)

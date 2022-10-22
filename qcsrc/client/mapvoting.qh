@@ -17,4 +17,5 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void Net_MapVote_Picture();
 
 float mv_active;
+int mv_winner;
 float xmin, xmax, ymin, ymax;

@@ -83,6 +83,9 @@ void m_init()
 		}
 	}
 
+	registercvar("_menu_cmd_closemenu_available", "0", 0);
+	cvar_set("_menu_cmd_closemenu_available", "1");
+
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
@@ -910,6 +913,7 @@ void Shutdown()
 		if (it.classname == "vtbl") continue;
 		it.destroy(it);
 	});
+	cvar_set("_menu_cmd_closemenu_available", "0");
 }
 
 void m_focus_item_chain(entity outermost, entity innermost)
