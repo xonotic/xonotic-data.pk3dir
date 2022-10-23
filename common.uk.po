@@ -7,16 +7,17 @@
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 # Basil <cigariscigar@gmail.com>, 2011,2013
 # Ihor Andreev, 2021
-# Ihor Andreev <ihor@noleron.com>, 2021
-# Ihor Andreev <ihor@noleron.com>, 2021
+# Ігор Андреєв <ihor@noleron.com>, 2021
+# Ігор Андреєв <ihor@noleron.com>, 2021
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
+# Ігор Андреєв <ihor@noleron.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Dmitro Sokhin <gamebot@ex.ua>, 2015\n"
+"Last-Translator: Ігор Андреєв <ihor@noleron.com>, 2021\n"
 "Language-Team: Ukrainian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"

@@ -5,7 +5,8 @@
 #define REGISTER_SP(id) REGISTER(Scores, SP, id, m_id, new_pure(PlayerScoreField))
 REGISTRY(Scores, MAX_SCORE);
 REGISTER_REGISTRY(Scores)
-REGISTRY_SORT(Scores);
+// do not sort alphabetically, player sort priority is based on score registration order
+//REGISTRY_SORT(Scores);
 REGISTRY_CHECK(Scores);
 
 REGISTRY_DEFINE_GET(Scores, NULL)
@@ -14,8 +15,62 @@ STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
 /*
  * Score indices
  */
-
 #ifdef GAMEQC
+// networked fields
+// NOTE: score registration order is used as player sort priority (after primary and secondary)
+
+// TODO: move gamemode scores to gamemode files
+// TODO: allow gamemodes to fully customize player sorting priority, even the common ones
+
+REGISTER_SP(RACE_LAPS);
+REGISTER_SP(RACE_TIME);
+REGISTER_SP(RACE_FASTEST);
+
+REGISTER_SP(ASSAULT_OBJECTIVES);
+
+REGISTER_SP(CTF_CAPS);
+REGISTER_SP(CTF_FCKILLS);
+REGISTER_SP(CTF_RETURNS);
+REGISTER_SP(CTF_DROPS);
+REGISTER_SP(CTF_PICKUPS);
+REGISTER_SP(CTF_CAPTIME);
+
+REGISTER_SP(DOM_TAKES);
+REGISTER_SP(DOM_TICKS);
+
+REGISTER_SP(FREEZETAG_REVIVALS);
+
+REGISTER_SP(KEEPAWAY_BCTIME);
+REGISTER_SP(KEEPAWAY_CARRIERKILLS);
+REGISTER_SP(KEEPAWAY_PICKUPS);
+
+REGISTER_SP(KH_CAPS);
+REGISTER_SP(KH_KCKILLS);
+REGISTER_SP(KH_LOSSES);
+REGISTER_SP(KH_DESTROYS);
+REGISTER_SP(KH_PUSHES);
+REGISTER_SP(KH_PICKUPS);
+
+REGISTER_SP(LMS_RANK);
+REGISTER_SP(LMS_LIVES);
+
+REGISTER_SP(NEXBALL_GOALS);
+REGISTER_SP(NEXBALL_FAULTS);
+
+REGISTER_SP(ONS_CAPS);
+REGISTER_SP(ONS_TAKES);
+
+REGISTER_SP(SCORE);
+REGISTER_SP(KILLS);
+REGISTER_SP(DEATHS);
+REGISTER_SP(TEAMKILLS);
+REGISTER_SP(SUICIDES);
+REGISTER_SP(DMG);
+REGISTER_SP(DMGTAKEN);
+
+REGISTER_SP(ELO); // not sortable
+REGISTER_SP(FPS); // not sortable
+
 // fields not networked via the score system
 REGISTER_SP(END);
 
@@ -124,15 +179,18 @@ const int SFL_RANK = BIT(5);
  */
 const int SFL_TIME = BIT(6);
 
+const int SFL_NOT_SORTABLE = BIT(7); // don't sort by this field
+
 // not an extra constant yet
 #define SFL_ZERO_IS_WORST SFL_TIME
 
 /**
  * Scoring priority (NOTE: PRIMARY is used for fraglimit)
+ * NOTE: SFL_SORT_PRIO_SECONDARY value must be lower than SFL_SORT_PRIO_PRIMARY's
  */
-const int SFL_SORT_PRIO_SECONDARY = 4;
-const int SFL_SORT_PRIO_PRIMARY = 8;
-const int SFL_SORT_PRIO_MASK = 12;
+const int SFL_SORT_PRIO_SECONDARY = BIT(2);
+const int SFL_SORT_PRIO_PRIMARY = BIT(3);
+const int SFL_SORT_PRIO_MASK = SFL_SORT_PRIO_PRIMARY | SFL_SORT_PRIO_SECONDARY;
 
 #define IS_INCREASING(x) ( (x) & SFL_LOWER_IS_BETTER )
 #define IS_DECREASING(x) ( !((x) & SFL_LOWER_IS_BETTER) )

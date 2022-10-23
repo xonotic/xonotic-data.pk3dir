@@ -43,7 +43,8 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	if (!INDEPENDENT_PLAYERS)
 	{
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES, "suicides", SFL_LOWER_IS_BETTER);
-		ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS, "teamkills", SFL_LOWER_IS_BETTER);
+		if (teamplay)
+			ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS, "teamkills", SFL_LOWER_IS_BETTER);
 	}
 
 	if(score_enabled)
@@ -56,8 +57,9 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	ScoreInfo_SetLabel_PlayerScore(SP_SPWN_KILLS, "spawnkills", 0);
 	ScoreInfo_SetLabel_PlayerScore(SP_SPWN_KILLED, "spawnkilled", 0);
 
+	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", SFL_NOT_SORTABLE);
 	if(STAT(SHOWFPS))
-		ScoreInfo_SetLabel_PlayerScore(SP_FPS, "fps", 0);
+		ScoreInfo_SetLabel_PlayerScore(SP_FPS, "fps", SFL_NOT_SORTABLE);
 }
 
 void ScoreRules_basics_end()
