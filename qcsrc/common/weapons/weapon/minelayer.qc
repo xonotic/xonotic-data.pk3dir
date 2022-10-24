@@ -346,7 +346,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
     if(minecount >= WEP_CVAR(minelayer, limit))
         PHYS_INPUT_BUTTON_ATCK(actor) = false;
     else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), false, false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
     {
         // decide whether to detonate mines

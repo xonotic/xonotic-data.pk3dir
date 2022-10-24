@@ -2090,6 +2090,7 @@ void readplayerstartcvars()
 
 void readlevelcvars()
 {
+	serverflags &= ~SERVERFLAG_ALLOW_FULLBRIGHT;
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
