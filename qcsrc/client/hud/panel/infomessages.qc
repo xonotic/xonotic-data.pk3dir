@@ -152,13 +152,19 @@ void HUD_InfoMessages()
 		else
 			blinkcolor = "^3";
 
+		int players_needed = 0;
 		if(warmup_stage && STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
 		{
 			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
-			if(srv_minplayers - numplayers == 1)
+			players_needed = srv_minplayers - numplayers;
+		}
+
+		if(players_needed > 0)
+		{
+			if(players_needed == 1)
 				s = _("^31^2 more player is needed for the match to start.");
 			else
-				s = sprintf(_("^3%d^2 more players are needed for the match to start."), srv_minplayers - numplayers);
+				s = sprintf(_("^3%d^2 more players are needed for the match to start."), players_needed);
 			InfoMessage(s);
 		}
 		else if(ready_waiting && !spectatee_status)
