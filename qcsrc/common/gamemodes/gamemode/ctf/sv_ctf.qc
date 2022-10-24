@@ -730,14 +730,11 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player && DIFF_TEAM(it, player), { Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL, Team_ColorCode(player.team), player.netname); });
 
 	if(flag.team)
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
+		FOREACH_CLIENT(IS_PLAYER(it) && CTF_DIFFTEAM(player, it), {
 			if(CTF_SAMETEAM(flag, it))
-			{
-				if(SAME_TEAM(player, it))
-					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
-				else
-					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
-			}
+				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
+			else
+				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_TEAM, Team_ColorCode(player.team), player.netname);
 		});
 
 	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
