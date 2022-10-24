@@ -567,12 +567,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_NEUTRAL_VERBOSE,  N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_TEAM,             N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got their flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_TEAM_VERBOSE,     N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"), "")
-
 	MULTITEAM_CENTER(CTF_PICKUP_ENEMY_OTHER,            N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"), "", FLAG)
     MULTITEAM_CENTER(CTF_PICKUP_ENEMY_OTHER_VERBOSE,    N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"), "", FLAG)
 	MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_OTHER_NEUTRAL,    N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got the flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_OTHER_VERBOSE_NEUTRAL, N_ENABLE,    2, 0, "s1 s2 s1",  CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"), "")
-
     MULTITEAM_CENTER(CTF_PICKUP_TEAM,                   N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MULTITEAM_CENTER(CTF_PICKUP_TEAM_VERBOSE,           N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,           N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the flag! Protect them!"), "")
