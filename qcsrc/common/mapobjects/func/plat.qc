@@ -98,14 +98,28 @@ spawnfunc(func_plat)
 
 	if (q3compat)
 	{
-		// CPMA adds these fields for overriding the engine sounds
+		// CPMA adds these fields for overriding the Q3 default sounds
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
 
 		if (s)
 			this.noise = strzone(s);
+		else
+		{
+			// PK3s supporting Q3A sometimes include custom sounds at Q3 default paths
+			s = "sound/movers/plats/pt1_strt.wav";
+			if (FindFileInMapPack(s))
+				this.noise = s;
+		}
+
 		if (e)
 			this.noise1 = strzone(e);
+		else
+		{
+			e = "sound/movers/plats/pt1_end.wav";
+			if (FindFileInMapPack(e))
+				this.noise1 = e;
+		}
 	}
 
 	if(this.noise && this.noise != "")
