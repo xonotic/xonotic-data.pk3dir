@@ -88,9 +88,13 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 	if(mode == "")
 	{
-		// z411 Load quickmenu.txt by default
-		mode = "file";
-		file = "quickmenu.txt";
+		if(autocvar__hud_panel_quickmenu_file_from_server)
+		{
+			mode = "file";
+			file = autocvar__hud_panel_quickmenu_file_from_server;
+		}
+		else
+			mode = "default";
 	}
 
 	if(mode == "file")
