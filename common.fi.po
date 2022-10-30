@@ -173,12 +173,12 @@ msgstr "^2Tällä hetkellä ^1lämmittelyssä^2 !"
 
 #: qcsrc/client/hud/panel/infomessages.qc:157
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 pelaajaa tarvitaan lisää jotta ottelu voidaan aloittaa."
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^3%d^2 pelaajaa tarvitaan lisää jotta ottelu voidaan aloittaa."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -1076,7 +1076,7 @@ msgstr "^2+%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2336
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7pelaajaa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1134,11 +1134,11 @@ msgstr "Lämmittely"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Lämmittely: ei aikarajaa"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Lämmittely: liian vähän pelaajia"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1313,27 +1313,27 @@ msgstr "Pelityyppi"
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
-msgstr ""
+msgstr "Tämä ottelu tukee"
 
 #: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d pelaajaa"
 
 #: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d :stä %d pelaajaa"
 
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d pelaajaa on erimmäismäärä"
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d pelaajaa on vähimmäismäärä"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
@@ -1345,7 +1345,7 @@ msgstr "Erityisvinkit pelaamiseen:"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Palvelimen viesti"
 
 #: qcsrc/client/main.qc:1549
 #, c-format
@@ -2540,12 +2540,12 @@ msgstr "^F2Seuraava kierros menee sinun osaltasi katsellessa"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Ottelu alkaa uudelleen..."
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Laskenta pysäytetty!"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
@@ -3789,7 +3789,7 @@ msgstr "^BGKohde tuhottu ^F4%s^BG!"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "%s pelaajaa tarvitaan tähän otteluun."
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -4361,6 +4361,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Et voi liittyä peliin tällä hetkellä.\n"
+"Tämä ottelu on rajoitettu ^F2%s^BG pelaajaan."
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"

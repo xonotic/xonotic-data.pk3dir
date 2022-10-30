@@ -6,13 +6,14 @@
 # LegendGuard, 2020
 # LegendGuard, 2020-2021
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017
+# Yotta Mxt, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017\n"
+"Last-Translator: Yotta Mxt, 2022\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
 "Language: ca\n"
@@ -208,7 +209,7 @@ msgstr " Prem ^3%s%s per ajustar"
 #: qcsrc/client/hud/panel/infomessages.qc:206
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "selecció d'equip"
 
 #: qcsrc/client/hud/panel/infomessages.qc:216
 msgid "^1Spectating this player:"
@@ -505,7 +506,7 @@ msgstr "QMCMD^Barrejar equips"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "Menu ràpid personalitzat del servidor"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
@@ -1019,7 +1020,7 @@ msgstr "Espectadors"
 #: qcsrc/client/hud/panel/scoreboard.qc:2256
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr ""
+msgstr "Selecció d'Equip"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2268
 #, c-format
@@ -1068,7 +1069,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
-msgstr ""
+msgstr "Mapa:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2499
 #, c-format
@@ -1088,12 +1089,12 @@ msgstr "^1Reapareixent en ^3%s^1..."
 #: qcsrc/client/hud/panel/scoreboard.qc:2547
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Ets mort, espera ^3 1 %s ^7 abans de resucitar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2556
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Ets mort, pressiona ^2 1%s ^7 per a resucitar"
 
 #: qcsrc/client/hud/panel/strafehud.qc:879
 msgid "qu"
