@@ -45,6 +45,17 @@ float QuickMenu_TimeOut;
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
+#define QUICKMENU_ENTRY(title,command) { \
+	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
+	{ \
+		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
+		++QuickMenu_Buffer_Size; \
+		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
+	} \
+	++QuickMenu_Buffer_Size; \
+}
+
+
 void QuickMenu_TimeOut_Set()
 {
 	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
@@ -92,6 +103,15 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 			mode = "default";
 		else
 			mode = "file";
+	}
+
+	if(mode == "default")
+	{
+		if (autocvar_hud_panel_quickmenu_server_is_default && autocvar__hud_panel_quickmenu_file_from_server != "")
+		{
+			mode = "file";
+			file = autocvar__hud_panel_quickmenu_file_from_server;
+		}
 	}
 
 	if(mode == "file")
@@ -171,6 +191,10 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 			++QuickMenu_Buffer_Size;
 		}
 		fclose(fh);
+
+		// forcedly add this entry
+		if (autocvar_hud_panel_quickmenu_server_is_default && autocvar__hud_panel_quickmenu_file_from_server != "")
+			QUICKMENU_ENTRY(_("Standard quick menu"), "quickmenu; wait; quickmenu")
 	}
 	else
 	{
@@ -715,16 +739,6 @@ void HUD_QuickMenu()
 	} \
 }
 
-#define QUICKMENU_ENTRY(title,command) { \
-	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
-	{ \
-		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
-		++QuickMenu_Buffer_Size; \
-		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
-	} \
-	++QuickMenu_Buffer_Size; \
-}
-
 #define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
 	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {\
 		QUICKMENU_SMENU(submenu,eng_submenu) \
@@ -870,10 +884,15 @@ void QuickMenu_Default(string target_submenu)
 
 	if (autocvar__hud_panel_quickmenu_file_from_server != "")
 	{
-	string entry_name = _("Server's custom quickmenu");
+	string entry_name = _("Server quick menu");
 	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
-		entry_name = _("Waypoint editor quickmenu");
+		entry_name = _("Waypoint editor menu");
 	QUICKMENU_ENTRY(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = _("Waypoint editor menu as default");
+	else
+		entry_name = _("Server quick menu as default");
+	QUICKMENU_ENTRY(entry_name, "toggle hud_panel_quickmenu_server_is_default")
 	}
 
 	if(spectatee_status != 0)
