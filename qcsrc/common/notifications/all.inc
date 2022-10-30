@@ -98,7 +98,11 @@
 #define N_GNTLOFF 1
 #define N__ALWAYS 2
 
-#define ANNCE_DEFTIME 2
+// defaault time for announcer queue (time to wait before the next announcer is played)
+// -1 = bypass queue and play the announcer immediately
+// 0 = use the announcer sound length
+// >0 = use the specified time to wait
+#define ANNCE_DEFTIME 0
 
 #define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position) \
     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, defaultvalue) \
