@@ -656,6 +656,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{

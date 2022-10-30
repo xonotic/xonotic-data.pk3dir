@@ -103,6 +103,7 @@ vector view_origin, view_forward, view_right, view_up;
 
 bool button_zoom;
 bool spectatorbutton_zoom;
+bool observe_blocked;
 bool button_attack2;
 
 float current_viewzoom;
