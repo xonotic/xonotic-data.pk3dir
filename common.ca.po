@@ -7,6 +7,7 @@
 # LegendGuard, 2020-2021
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017
 # Yotta Mxt, 2022
+# Yotta Mxt, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"

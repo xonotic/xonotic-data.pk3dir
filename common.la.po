@@ -65,7 +65,7 @@ msgstr "vs"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Ludens^7: Hic fabulae locus est."
+msgstr "^3Ludens^7: Hoc locutorium est."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
@@ -151,7 +151,7 @@ msgstr "salire"
 #: qcsrc/client/hud/panel/infomessages.qc:137
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1Ludus incipiet post secunda ^3%d^1"
+msgstr "^1Ludus incipietur post ^3%d^1 secunda"
 
 #: qcsrc/client/hud/panel/infomessages.qc:143
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -159,12 +159,12 @@ msgstr "^2Nunc ^1exercitium^2 est!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:157
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 plures ludentes requiruntur ut ludus incipiatur."
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^3%d^2 plures ludentes requiruntur ut ludus incipiatur."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -258,7 +258,7 @@ msgstr "Plura..."
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "Chat"
-msgstr "Fabula"
+msgstr "Locutorium"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^Send public message to"
@@ -291,7 +291,7 @@ msgstr "Anglice nuntiare"
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^Team chat"
-msgstr "Manus fabula"
+msgstr "Manus locutorium"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^strength soon"
@@ -451,7 +451,7 @@ msgstr "Vulnerum soni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^Chat sound"
-msgstr "Fabulae soni"
+msgstr "Locutorii soni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Change spectator camera"
@@ -971,15 +971,15 @@ msgstr "N/A"
 #: qcsrc/client/hud/panel/scoreboard.qc:1636
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Accuratiae statistica (media %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1793
 msgid "Item stats"
-msgstr ""
+msgstr "Utilium statistica"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1904
 msgid "Map stats:"
-msgstr ""
+msgstr "Harenae statistica:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1934
 msgid "Monsters killed:"
@@ -1041,22 +1041,22 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2336
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7ludentes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
-msgstr ""
+msgstr "Harena:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2499
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Celeritate donum: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2503
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Omnium celerrimus: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2537
 #, c-format
@@ -1099,15 +1099,15 @@ msgstr "Exercitium"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Exercitium: tempus infinitum"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Exercitium: ludentes desunt"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
-msgstr ""
+msgstr "Tempus Terminale"
 
 #: qcsrc/client/hud/panel/timer.qc:136
 msgid "Sudden Death"
@@ -1174,7 +1174,7 @@ msgstr "Non habes"
 
 #: qcsrc/client/hud/panel/weapons.qc:639
 msgid "Unavailable"
-msgstr ""
+msgstr "Deest"
 
 #: qcsrc/client/main.qc:300
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1264,7 +1264,7 @@ msgstr "Salve, es in %s"
 #: qcsrc/client/main.qc:1412 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Actus %dus:"
 
 #: qcsrc/client/main.qc:1414
 #, c-format
@@ -1310,7 +1310,7 @@ msgstr "Ludi insignis suasa:"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Moderatri nuntium"
 
 #: qcsrc/client/main.qc:1549
 #, c-format
@@ -1332,11 +1332,11 @@ msgstr "Non curo"
 
 #: qcsrc/client/mapvoting.qc:383
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Ludi modum decernite"
 
 #: qcsrc/client/mapvoting.qc:383
 msgid "Vote for a map"
-msgstr ""
+msgstr "Harenam decernite"
 
 #: qcsrc/client/mapvoting.qc:400
 #, c-format
@@ -1416,7 +1416,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Captuum temporum gradus"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
