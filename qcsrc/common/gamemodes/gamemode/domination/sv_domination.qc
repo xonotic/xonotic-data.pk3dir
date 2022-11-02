@@ -32,9 +32,9 @@ void set_dom_state(entity e)
 	STAT(DOM_TOTAL_PPS, e) = total_pps;
 	STAT(DOM_PPS_RED, e) = pps_red;
 	STAT(DOM_PPS_BLUE, e) = pps_blue;
-	if(domination_teams >= 3)
+	if(domination_teams & BIT(2))
 		STAT(DOM_PPS_YELLOW, e) = pps_yellow;
-	if(domination_teams >= 4)
+	if(domination_teams & BIT(3))
 		STAT(DOM_PPS_PINK, e) = pps_pink;
 }
 
@@ -601,9 +601,9 @@ void dom_spawnteams(int teams)
 	TC(int, teams);
 	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND_DOM_CLAIM, "", "Red team has captured a control point");
 	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND_DOM_CLAIM, "", "Blue team has captured a control point");
-	if(teams >= 3)
+	if(teams & BIT(2))
 		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_3), NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND_DOM_CLAIM, "", "Yellow team has captured a control point");
-	if(teams >= 4)
+	if(teams & BIT(3))
 		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_4), NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND_DOM_CLAIM, "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, SND_Null, "", "");
 }
@@ -617,14 +617,15 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 		domination_teams = autocvar_g_domination_teams_override;
 		if (domination_teams < 2)
 			domination_teams = autocvar_g_domination_default_teams;
-		domination_teams = bound(2, domination_teams, 4);
+		domination_teams = BITS(bound(2, domination_teams, 4));
 		dom_spawnteams(domination_teams);
 	}
-
-	entity balance = TeamBalance_CheckAllowedTeams(NULL);
-	int teams = TeamBalance_GetAllowedTeams(balance);
-	TeamBalance_Destroy(balance);
-	domination_teams = teams;
+	else
+	{
+		entity balance = TeamBalance_CheckAllowedTeams(NULL);
+		domination_teams = TeamBalance_GetAllowedTeams(balance);
+		TeamBalance_Destroy(balance);
+	}
 
 	domination_roundbased = autocvar_g_domination_roundbased;
 
