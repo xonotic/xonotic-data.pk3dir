@@ -14,10 +14,10 @@
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
 # Karol Kosek, 2020
-# Karol Kosek, 2020
-# Karol Kosek, 2020
-# Karol Kosek, 2020
-# Karol Kosek, 2020
+# cbbd2834e4f65fe29be8a0db728247c5_37a907e, 2020
+# cbbd2834e4f65fe29be8a0db728247c5_37a907e, 2020
+# cbbd2834e4f65fe29be8a0db728247c5_37a907e, 2020
+# cbbd2834e4f65fe29be8a0db728247c5_37a907e, 2020
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Marcin Nogaj, 2022
 # Marcin Nogaj, 2022
