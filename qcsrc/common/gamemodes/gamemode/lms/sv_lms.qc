@@ -453,14 +453,22 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 {
+	if (intermission_running)
+		return;
+
+	lms_leaders = 0;
+	FOREACH_CLIENT(true, {
+		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME && it.lms_leader)
+			lms_leaders++;
+	});
+
 	float leader_time = autocvar_g_lms_leader_wp_time;
 	float leader_interval = leader_time + autocvar_g_lms_leader_wp_interval;
 	lms_visible_leaders_prev = lms_visible_leaders;
-	lms_visible_leaders = (time > lms_visible_leaders_time && time < lms_visible_leaders_time + leader_time);
-	if (lms_visible_leaders_prev && !lms_visible_leaders)
+	lms_visible_leaders = (lms_leaders && time > lms_visible_leaders_time && time < lms_visible_leaders_time + leader_time);
+	if (!lms_leaders || (lms_visible_leaders_prev && !lms_visible_leaders))
 		lms_visible_leaders_time = time + leader_interval + random() * autocvar_g_lms_leader_wp_interval_jitter;
 
-	lms_leaders = 0;
 	FOREACH_CLIENT(true, {
 		STAT(OBJECTIVE_STATUS, it) = lms_visible_leaders;
 		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
@@ -478,7 +486,6 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 				}
 				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
-				lms_leaders++;
 			}
 			else // if (!it.lms_leader)
 			{
