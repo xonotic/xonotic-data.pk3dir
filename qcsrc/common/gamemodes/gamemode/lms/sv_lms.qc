@@ -367,17 +367,19 @@ void lms_RemovePlayer(entity player)
 			if(!warmup_stage)
 			{
 				int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+				float pl_health = IS_DEAD(player) ? start_health : GetResource(player, RES_HEALTH);
+				float pl_armor = IS_DEAD(player) ? start_armorvalue : GetResource(player, RES_ARMOR);
 				if (!last_forfeiter_lives || pl_lives < last_forfeiter_lives)
 				{
 					last_forfeiter_lives = pl_lives;
-					last_forfeiter_health = GetResource(player, RES_HEALTH);
-					last_forfeiter_armorvalue = GetResource(player, RES_ARMOR);
+					last_forfeiter_health = pl_health;
+					last_forfeiter_armorvalue = pl_armor;
 				}
 				else if (pl_lives == last_forfeiter_lives)
 				{
 					// these values actually can belong to a different forfeiter
-					last_forfeiter_health = min(last_forfeiter_health, GetResource(player, RES_HEALTH));
-					last_forfeiter_armorvalue = min(last_forfeiter_armorvalue, GetResource(player, RES_ARMOR));
+					last_forfeiter_health = min(last_forfeiter_health, pl_health);
+					last_forfeiter_armorvalue = min(last_forfeiter_armorvalue, pl_armor);
 				}
 				GameRules_scoring_add(player, LMS_LIVES, -pl_lives);
 			}

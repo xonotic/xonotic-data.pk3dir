@@ -707,7 +707,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_CENTER(KEYHUNT_START,                     N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGYou are starting with the ^TC^TT Key"), "", KEY)
 
     MSG_CENTER_NOTIF(LMS_NOLIVES,                       N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGYou have no lives left, you must wait until the next match"), "")
-    // TODO update notifications.cfg
     MSG_CENTER_NOTIF(LMS_VISIBLE_LEADER,                N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGEnemies can now see you on radar!"), "")
     MSG_CENTER_NOTIF(LMS_VISIBLE_OTHER,                 N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGLeaders can now be seen by enemies on radar!"), "")
 
