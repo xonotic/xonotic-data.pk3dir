@@ -303,6 +303,7 @@ void cvar_changes_init()
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_q3compat");
 		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
@@ -467,7 +468,6 @@ void cvar_changes_init()
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
-		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
@@ -507,7 +507,7 @@ void cvar_changes_init()
 		BADVALUE("sys_ticrate", "0.0333333");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
-		BADPREFIX("g_warmup_");
+		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
@@ -625,8 +625,42 @@ STATIC_INIT_EARLY(maxclients)
 
 void GameplayMode_DelayedInit(entity this)
 {
+	// at this stage team entities are spawned, teamplay contains the number of them
+
 	if(!scores_initialized)
 		ScoreRules_generic();
+
+	if (warmup_stage >= 0 && autocvar_g_maxplayers >= 0)
+		return;
+	if (!g_duel)
+		MapReadSizes(mapname);
+
+	if (autocvar_g_maxplayers < 0 && teamplay)
+	{
+		// automatic maxplayers should be a multiple of team count
+		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+			map_maxplayers = maxclients; // unlimited, but may need rounding
+		int d = map_maxplayers % AVAILABLE_TEAMS;
+		int u = AVAILABLE_TEAMS - d;
+		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+	}
+
+	if (warmup_stage < 0)
+	{
+		int m = GetPlayerLimit();
+		if (m <= 0) m = maxclients;
+		map_minplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_minplayers, m);
+		if (teamplay)
+		{
+			// automatic minplayers should be a multiple of team count
+			int d = map_minplayers % AVAILABLE_TEAMS;
+			int u = AVAILABLE_TEAMS - d;
+			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+		}
+		warmup_limit = -1;
+	}
+	else
+		map_minplayers = 0; // don't display a minimum if it's not used
 }
 
 void InitGameplayMode()
@@ -826,7 +860,7 @@ spawnfunc(worldspawn)
 	GameRules_limit_fallbacks();
 
 	if(warmup_limit == 0)
-		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
+		warmup_limit = autocvar_timelimit * 60;
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -858,8 +892,22 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
-	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, _MapInfo_FindArenaFile(mapname, ".arena") != "");
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
+
+	// quake 3 music support
+	if(world.music || world.noise)
+	{
+		// prefer .music over .noise
+		string chosen_music;
+		if(world.music)
+			chosen_music = world.music;
+		else
+			chosen_music = world.noise;
+
+		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+		strcpy(clientstuff, newstuff);
+	}
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -2042,6 +2090,7 @@ void readplayerstartcvars()
 
 void readlevelcvars()
 {
+	serverflags &= ~SERVERFLAG_ALLOW_FULLBRIGHT;
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
@@ -2195,9 +2244,61 @@ void InitializeEntitiesRun()
 }
 
 // deferred dropping
+// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
 void DropToFloor_Handler(entity this)
 {
-	WITHSELF(this, builtin_droptofloor());
+	if(!this || wasfreed(this))
+	{
+		// no modifying free entities
+		return;
+	}
+
+	vector end = this.origin - '0 0 256';
+
+	// NOTE: NudgeOutOfSolid support is not added as Xonotic's physics do not use it!
+	//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+		//SV_NudgeOutOfSolid(this);
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
+			this.groundentity = NULL;
+		}
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+				//SV_NudgeOutOfSolid(this);
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	else
+	{
+		if(!trace_allsolid && trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
 	this.dropped_origin = this.origin;
 }
 

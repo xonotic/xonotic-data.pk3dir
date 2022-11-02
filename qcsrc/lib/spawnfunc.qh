@@ -173,6 +173,7 @@ noref string __fullspawndata;
 		FIELD_SCALAR(fld, monster_name) \
 		FIELD_SCALAR(fld, movetype) \
 		FIELD_SCALAR(fld, move_movetype) \
+		FIELD_SCALAR(fld, music) \
 		FIELD_SCALAR(fld, netname) \
 		FIELD_SCALAR(fld, nextthink) \
 		FIELD_SCALAR(fld, noalign) \
