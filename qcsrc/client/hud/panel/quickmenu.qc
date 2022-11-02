@@ -55,6 +55,9 @@ float QuickMenu_TimeOut;
 	++QuickMenu_Buffer_Size; \
 }
 
+// special entries are shown with a different color
+#define QUICKMENU_ENTRY_SPECIAL(title, command) QUICKMENU_ENTRY(title, strcat("\n", command))
+
 
 void QuickMenu_TimeOut_Set()
 {
@@ -194,7 +197,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 		// forcedly add this entry
 		if (autocvar_hud_panel_quickmenu_server_is_default && autocvar__hud_panel_quickmenu_file_from_server != "")
-			QUICKMENU_ENTRY(_("Standard quick menu"), "quickmenu; wait; quickmenu")
+			QUICKMENU_ENTRY_SPECIAL(_("Standard quick menu"), "quickmenu; wait; quickmenu")
 	}
 	else
 	{
@@ -671,7 +674,10 @@ void HUD_QuickMenu()
 			color = "^4";
 		else
 		{
-			color = "^3";
+			if (substring(QuickMenu_Page_Command[i], 0, 1) == "\n")
+				color = "^6"; // special command
+			else
+				color = "^3";
 			if(QuickMenu_Page_Command_Type[i] == 1) // toggle command
 			{
 				int end = strstrofs(QuickMenu_Page_Command[i], ";", 0);
@@ -887,7 +893,7 @@ void QuickMenu_Default(string target_submenu)
 	string entry_name = _("Server quick menu");
 	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
 		entry_name = _("Waypoint editor menu");
-	QUICKMENU_ENTRY(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	QUICKMENU_ENTRY_SPECIAL(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
 	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
 		entry_name = _("Waypoint editor menu as default");
 	else
