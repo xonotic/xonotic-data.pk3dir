@@ -7,6 +7,7 @@
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
+# cbbd2834e4f65fe29be8a0db728247c5_37a907e, 2020
 # Cris Sus, 2021
 # Cris Sus, 2021
 # Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
