@@ -102,6 +102,12 @@ void SUB_CalcMoveDone(entity this)
 		this.think1 (this);
 }
 
+void SUB_CalcMovePause(entity this)
+{
+	this.move_controller.animstate_starttime += frametime;
+	this.move_controller.animstate_endtime += frametime;
+}
+
 .float platmovetype_turn;
 void SUB_CalcMove_controller_think (entity this)
 {
