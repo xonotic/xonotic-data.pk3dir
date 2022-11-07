@@ -1110,8 +1110,6 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-
-	LOG_INFO("Wants join set to false");
 	CS(this).wants_join = false;
 
 	stuffcmd(this, clientstuff, "\n");

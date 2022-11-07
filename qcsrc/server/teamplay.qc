@@ -244,13 +244,13 @@ entity SpectatorWantsJoin(entity this)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if(it == this) continue;
 		if(CS(it).wants_join) {
-			LOG_INFOF("Player is waiting to join: %s", it.netname);
+			LOG_DEBUGF("Player is waiting to join: %s", it.netname);
 			return it;
 		}
 	});
 
 	// No players waiting to join
-	LOG_INFO("No players waiting to join.");
+	LOG_DEBUG("No players waiting to join.");
 	return NULL;
 }
 
