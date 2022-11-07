@@ -113,6 +113,7 @@ enum
 	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
 };
 
+bool IsQueueNeeded(entity ignore);
 entity SpectatorWantsJoin(entity this);
 
 /// \brief Sets the team of the player.
@@ -184,6 +185,8 @@ void TeamBalance_Destroy(entity balance);
 /// \param[in] balance Team balance entity.
 /// \return Bitmask of allowed teams.
 int TeamBalance_GetAllowedTeams(entity balance);
+
+bool TeamBalance_AreEqual(entity ignore);
 
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.
