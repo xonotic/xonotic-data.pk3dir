@@ -1666,57 +1666,57 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
-msgstr ""
+msgstr "Hac vice lude"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
-msgstr ""
+msgstr "Linquere"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:368
 msgid "Invite"
-msgstr ""
+msgstr "Invitare"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:407
 msgid "Current Game"
-msgstr ""
+msgstr "Ludus praesens"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr ""
+msgstr "Indicem linquere"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr ""
+msgstr "Creare"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
 #: qcsrc/menu/xonotic/dialog_welcome.qc:113
 msgid "Join"
-msgstr ""
+msgstr "Incipere"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:521
 msgid "Minigames"
-msgstr ""
+msgstr "Parvi ludi"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:582
 msgid "Minigame message"
-msgstr ""
+msgstr "Parvi ludi nota"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Excavatrum"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
 #: qcsrc/common/minigames/minigame/ps.qc:431
 msgid "Game over!"
-msgstr ""
+msgstr "Ludus finitus!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Macte virtute! 'Posteriorem' clicca ut persequaris"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -1726,48 +1726,48 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Spectas"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Meliorem fortunam habebis!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1189
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Bonum! 'Posteriorem' preme ut persequaris!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Bonum! 'Posteriorem' preme ut persequaris!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1195
 msgid "Press the space bar to change your currently selected tile"
-msgstr ""
+msgstr "Spatii clavem preme ut laterem seligas"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1198
 msgid "Push the boulders onto the targets"
-msgstr ""
+msgstr "Moles pelle in metas"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1434
 msgid "Next Level"
-msgstr ""
+msgstr "Actus Posterior"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1435
 msgid "Restart"
-msgstr ""
+msgstr "Integrare"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Editor"
-msgstr ""
+msgstr "Scribere"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1437
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
-msgstr ""
+msgstr "Servare"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Conecte Quattuor"
 
 #: qcsrc/common/minigames/minigame/c4.qc:316
 #: qcsrc/common/minigames/minigame/c4.qc:322
@@ -1777,7 +1777,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 ludo vicit!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:384
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1790,28 +1790,28 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "You lost the game!"
-msgstr ""
+msgstr "Te vicit!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:390
 #: qcsrc/common/minigames/minigame/nmm.qc:611
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 msgid "You win!"
-msgstr ""
+msgstr "Vicisti!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:394
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 #: qcsrc/common/minigames/minigame/pp.qc:468
 #: qcsrc/common/minigames/minigame/ttt.qc:351
 msgid "Wait for your opponent to make their move"
-msgstr ""
+msgstr "Adversum qui motum statuit exspecta"
 
 #: qcsrc/common/minigames/minigame/c4.qc:397
 #: qcsrc/common/minigames/minigame/nmm.qc:617
 #: qcsrc/common/minigames/minigame/pp.qc:471
 #: qcsrc/common/minigames/minigame/ttt.qc:354
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "Tabulae locum in quo calculus ponatur clicca"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
@@ -1820,15 +1820,15 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
-msgstr ""
+msgstr "Unum tuum calculum seligere potes ut in finitimum moveas"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid "You can select one of your pieces to move it anywhere on the board"
-msgstr ""
+msgstr "Unum tuum calculum seligere potes ut in quemvis locum moveas"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can take one of the opponent's pieces"
-msgstr ""
+msgstr "Unum adversi calculum capere potes"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
