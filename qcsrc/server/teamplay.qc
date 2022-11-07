@@ -256,7 +256,6 @@ entity SpectatorWantsJoin(entity this)
 
 bool SetPlayerTeam(entity player, int team_index, int type)
 {
-	LOG_INFO("SetPlayerTeam");
 	int old_team_index = Entity_GetTeamIndex(player);
 
 	if (!Player_SetTeamIndex(player, team_index))
@@ -274,13 +273,10 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			LOG_INFOF("Is queue needed %d", IsQueueNeeded(player));
 			if (IsQueueNeeded(player) && !SpectatorWantsJoin(player))
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
 				CS(player).wants_join = true; // TODO : Refactor
-				bool res = TeamBalance_AreEqual(player);
-				LOG_INFOF("result %d", res);
 			}
 			else
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);

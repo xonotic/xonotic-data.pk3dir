@@ -2070,6 +2070,11 @@ bool joinAllowed(entity this)
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
 	if (CS(this).wants_join) return false;
+	if (IsQueueNeeded(this) && autocvar_g_balance_teams)
+	{
+		TeamBalance_JoinBestTeam(this);
+		return false;
+	}
 	return true;
 }
 
