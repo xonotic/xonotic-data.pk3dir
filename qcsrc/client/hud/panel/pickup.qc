@@ -1,0 +1,72 @@
+#include "pickup.qh"
+
+#include <client/hud/hud.qh>
+#include <common/items/inventory.qh>
+
+// Pickup
+
+void HUD_Pickup_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_Pickup()
+{
+	if(!autocvar_hud_panel_pickup) return;
+
+	HUD_Panel_LoadCvars();
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	if (autocvar_hud_panel_score_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
+	HUD_Panel_DrawBg();
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	float last_pickup_time = STAT(LAST_PICKUP);
+	entity it = last_pickup_item;
+
+	if(last_pickup_time && last_pickup_time > time - 3 && it) {
+		float a;
+		string str1, str2, icon;
+		vector sz, sz2;
+		vector fontsize = '1 1 0' * mySize.y;
+		vector iconsize = hud_fontsize * 2;
+
+		icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
+		sz = draw_getimagesize(icon);
+		sz2 = vec2(iconsize.y*(sz.x/sz.y), iconsize.y);
+		if(autocvar__hud_configure)
+			str2 = "Medium Health";
+		else
+			str2 = ((last_pickup_times > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_times) : it.m_name);
+
+		if(autocvar__hud_configure)
+			a = 1;
+		else if(time < last_pickup_time + 3 - 0.5)
+			a = 1;
+		else
+			a = (last_pickup_time + 3 - time) / 0.5;
+
+		if(autocvar_hud_panel_pickup_timer) {
+			//if(spectatee_status || !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) {
+			//if(spectatee_status) {
+			if(1) {
+				str1 = seconds_tostring(last_pickup_timer);
+				drawstring(pos, str1, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+				pos.x += stringwidth(str1, false, fontsize) + fontsize.x * 0.25;
+			}
+		}
+
+		drawpic_aspect_skin(pos - eY * (fontsize.y / 4), it.m_icon, fontsize * 1.5, '1 1 1', a, DRAWFLAG_NORMAL);
+		pos.x += fontsize.x * 1.6;
+		drawstring(pos, str2, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+	}
+}

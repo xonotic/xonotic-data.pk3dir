@@ -1,0 +1,6 @@
+#pragma once
+#include "../panel.qh"
+
+bool autocvar_hud_panel_pickup;
+bool autocvar_hud_panel_pickup_timer = true;
+

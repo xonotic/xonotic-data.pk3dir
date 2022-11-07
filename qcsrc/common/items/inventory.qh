@@ -37,7 +37,13 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
+#include <client/hud/hud.qh>
+
 Inventory g_inventory;
+float last_pickup_timer;
+entity last_pickup_item;
+int last_pickup_times;
+
 void Inventory_remove(entity this)
 {
     if(g_inventory == this)
@@ -63,6 +69,13 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             .int fld = inv_items[it.m_id];
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
+
+            if(last_pickup_item != it) last_pickup_times = 0;
+			//last_pickup_timer = timer;
+			last_pickup_timer = 0;
+			last_pickup_item = it;
+			last_pickup_times++;
+
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }

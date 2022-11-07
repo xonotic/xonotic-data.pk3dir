@@ -9,6 +9,7 @@
 #include <client/hud/panel/modicons.qh>
 #include <client/hud/panel/notify.qh>
 #include <client/hud/panel/physics.qh>
+#include <client/hud/panel/pickup.qh>
 #include <client/hud/panel/powerups.qh>
 #include <client/hud/panel/pressedkeys.qh>
 #include <client/hud/panel/quickmenu.qh>
