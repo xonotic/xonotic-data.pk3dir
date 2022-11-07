@@ -1961,6 +1961,7 @@ bool ShowTeamSelection(entity this)
 		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
+
 void Join(entity this)
 {
 	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
@@ -1972,9 +1973,7 @@ void Join(entity this)
 	if(to_join)
 	{
 		Join(to_join);
-		CS(this).wants_join = false;
 		this.team_selected = false; // Don't let this player select team
-		LOG_INFOF("Forcing joining of queued player %s!", to_join.netname);
 	}
 
 	if(!this.team_selected)
@@ -1989,12 +1988,17 @@ void Join(entity this)
 	PutClientInServer(this);
 
 	if(IS_PLAYER(this))
-	if(teamplay && this.team != -1 && CS(this).wants_join)
-		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
-	{}
+	if(teamplay && this.team != -1)
+	{
+		if(CS(this).wants_join)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
+
+	if(to_join)
+		CS(to_join).wants_join = false;
 }
 
 int GetPlayerLimit()
@@ -2065,14 +2069,7 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
-	//if (CS(this).wants_join) return false;
-	if (teamplay && !SpectatorWantsJoin(this))
-	{
-		// TODO : Refactor
-		LOG_INFOF("Spec %s wants to join. Queueing.", this.netname);
-		CS(this).wants_join = true;
-		return false;
-	}
+	if (CS(this).wants_join) return false;
 	return true;
 }
 

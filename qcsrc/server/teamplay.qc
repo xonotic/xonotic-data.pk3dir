@@ -239,7 +239,8 @@ entity SpectatorWantsJoin(entity this)
 	// Check if there are spectators waiting to join
 	if(!teamplay) return NULL;
 
-	FOREACH_CLIENT(IS_SPEC(it) || IS_OBSERVER(it), {
+	//FOREACH_CLIENT(IS_SPEC(it) || IS_OBSERVER(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if(it == this) continue;
 		if(CS(it).wants_join) {
 			LOG_INFOF("Player is waiting to join: %s", it.netname);
@@ -248,6 +249,7 @@ entity SpectatorWantsJoin(entity this)
 	});
 
 	// No players waiting to join
+	LOG_INFO("No players waiting to join.");
 	return NULL;
 }
 
@@ -269,8 +271,16 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		if (!IS_BOT_CLIENT(player))
 			TeamBalance_AutoBalanceBots();
 
-		if (team_index != -1 && IS_PLAYER(player))
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+		if (team_index != -1)
+		{
+			if (!SpectatorWantsJoin(player))
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
+				CS(player).wants_join = true; // TODO : Refactor
+			}
+			else
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+		}
 	}
 
 	if (team_index == -1)
