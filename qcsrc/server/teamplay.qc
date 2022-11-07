@@ -234,8 +234,26 @@ bool Player_SetTeamIndex(entity player, int index)
 	return true;
 }
 
+entity SpectatorWantsJoin(entity this)
+{
+	// Check if there are spectators waiting to join
+	if(!teamplay) return NULL;
+
+	FOREACH_CLIENT(IS_SPEC(it) || IS_OBSERVER(it), {
+		if(it == this) continue;
+		if(CS(it).wants_join) {
+			LOG_INFOF("Player is waiting to join: %s", it.netname);
+			return it;
+		}
+	});
+
+	// No players waiting to join
+	return NULL;
+}
+
 bool SetPlayerTeam(entity player, int team_index, int type)
 {
+	LOG_INFO("SetPlayerTeam");
 	int old_team_index = Entity_GetTeamIndex(player);
 
 	if (!Player_SetTeamIndex(player, team_index))
@@ -251,7 +269,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		if (!IS_BOT_CLIENT(player))
 			TeamBalance_AutoBalanceBots();
 
-		if (team_index != -1)
+		if (team_index != -1 && IS_PLAYER(player))
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
 	}
 

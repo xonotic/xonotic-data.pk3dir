@@ -113,6 +113,8 @@ enum
 	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
 };
 
+entity SpectatorWantsJoin(entity this);
+
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_index Index of the team to set.

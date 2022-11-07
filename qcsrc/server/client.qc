@@ -1111,6 +1111,7 @@ void ClientConnect(entity this)
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
+	LOG_INFO("Wants join set to false");
 	CS(this).wants_join = false;
 
 	stuffcmd(this, clientstuff, "\n");
@@ -1949,22 +1950,6 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-entity SpectatorWantsJoin(entity this)
-{
-	if(!teamplay) return NULL;
-
-	FOREACH_CLIENT(IS_SPEC(it) || IS_OBSERVER(it), {
-		if(it == this) continue;
-		if(CS(it).wants_join) {
-			LOG_INFO("Returning entity");
-			return it;
-		}
-	});
-
-	LOG_INFO("Returning NULL");
-	return NULL;
-}
-
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
@@ -1987,6 +1972,7 @@ void Join(entity this)
 	if(to_join)
 	{
 		Join(to_join);
+		CS(this).wants_join = false;
 		this.team_selected = false; // Don't let this player select team
 		LOG_INFOF("Forcing joining of queued player %s!", to_join.netname);
 	}
@@ -2003,14 +1989,12 @@ void Join(entity this)
 	PutClientInServer(this);
 
 	if(IS_PLAYER(this))
-	if(teamplay && this.team != -1)
-	{
-	}
+	if(teamplay && this.team != -1 && CS(this).wants_join)
+		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	{}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
-
-	CS(this).wants_join = false;
 }
 
 int GetPlayerLimit()
@@ -2081,6 +2065,7 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
+	//if (CS(this).wants_join) return false;
 	if (teamplay && !SpectatorWantsJoin(this))
 	{
 		// TODO : Refactor

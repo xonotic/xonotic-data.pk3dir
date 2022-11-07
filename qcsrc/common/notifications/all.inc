@@ -380,6 +380,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(JOIN_CONNECT,                            N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected"), "")
     MSG_INFO_NOTIF(JOIN_PLAY,                               N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")
     MULTITEAM_INFO(JOIN_PLAY_TEAM,                          N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing on the ^TC^TT team"), "", NAME)
+	MULTITEAM_INFO(JOIN_WANTS_TEAM,                         N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 wants to play on the ^TC^TT team"), "", NAME)
 
     MSG_INFO_NOTIF(KEEPAWAY_DROPPED,                        N_CONSOLE,  1, 0, "s1", "s1",       "notify_balldropped",       _("^BG%s^BG has dropped the ball!"), "")
     MSG_INFO_NOTIF(KEEPAWAY_PICKUP,                         N_CONSOLE,  1, 0, "s1", "s1",       "notify_ballpickedup",      _("^BG%s^BG has picked up the ball!"), "")
