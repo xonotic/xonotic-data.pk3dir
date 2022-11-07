@@ -1988,6 +1988,7 @@ void Join(entity this)
 	{
 		Join(to_join);
 		this.team_selected = false; // Don't let this player select team
+		LOG_INFOF("Forcing joining of queued player %s!", to_join.netname);
 	}
 
 	if(!this.team_selected)
@@ -2082,6 +2083,8 @@ bool joinAllowed(entity this)
 	if (ShowTeamSelection(this)) return false;
 	if (teamplay && !SpectatorWantsJoin(this))
 	{
+		// TODO : Refactor
+		LOG_INFOF("Spec %s wants to join. Queueing.", this.netname);
 		CS(this).wants_join = true;
 		return false;
 	}
