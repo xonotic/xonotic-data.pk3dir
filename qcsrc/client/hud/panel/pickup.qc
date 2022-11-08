@@ -60,9 +60,11 @@ void HUD_Pickup()
 			a = (last_pickup_time + 3 - time) / 0.5;
 
 		if(autocvar_hud_panel_pickup_timer) {
-			//if(spectatee_status || !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) {
-			//if(spectatee_status) {
-			if(1) {
+			// 1 will show the timer always
+			// 2 will show the timer only if spectating
+			// forbid serverflag will force the 2nd behavior
+			if((autocvar_hud_panel_pickup_timer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
+			{
 				str1 = seconds_tostring(last_pickup_timer);
 				drawstring(pos, str1, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
 				pos.x += stringwidth(str1, false, fontsize) + fontsize.x * 0.25;

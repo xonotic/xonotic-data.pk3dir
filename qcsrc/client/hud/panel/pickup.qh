@@ -2,6 +2,6 @@
 #include "../panel.qh"
 
 bool autocvar_hud_panel_pickup;
-bool autocvar_hud_panel_pickup_timer = true;
+int autocvar_hud_panel_pickup_timer = 1;
 float autocvar_hud_panel_pickup_iconsize = 1.5;
 
