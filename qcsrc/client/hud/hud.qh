@@ -121,6 +121,7 @@ int ts_primary, ts_secondary;
 float weapontime;
 float weaponprevtime;
 
+float timer;
 float teamnagger;
 
 int hudShiftState;

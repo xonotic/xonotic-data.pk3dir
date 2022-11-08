@@ -33,7 +33,7 @@ void HUD_Pickup()
 	float last_pickup_time = STAT(LAST_PICKUP);
 	entity it = last_pickup_item;
 
-	if(last_pickup_time && last_pickup_time > time - 3 && it) {
+	if((last_pickup_time && last_pickup_time > time - 3 && it) || autocvar__hud_configure) {
 		float a;
 		string str1, str2, icon;
 		vector sz, sz2;
