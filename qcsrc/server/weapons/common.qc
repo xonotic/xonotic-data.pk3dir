@@ -35,10 +35,6 @@ void W_GiveWeapon(entity e, int wep)
 	if (!wep) return;
 
 	STAT(WEAPONS, e) |= WepSet_FromWeapon(REGISTRY_GET(Weapons, wep));
-
-	if (IS_PLAYER(e)) {
-	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);
-    }
 }
 
 void W_PlayStrengthSound(entity player)

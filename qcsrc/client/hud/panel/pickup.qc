@@ -38,7 +38,7 @@ void HUD_Pickup()
 		string str1, str2, icon;
 		vector sz, sz2;
 		vector fontsize = '1 1 0' * mySize.y;
-		vector iconsize = hud_fontsize * 2;
+		vector iconsize = fontsize * 1.5;
 
 		icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
 		sz = draw_getimagesize(icon);
@@ -65,8 +65,8 @@ void HUD_Pickup()
 			}
 		}
 
-		drawpic_aspect_skin(pos - eY * (fontsize.y / 4), it.m_icon, fontsize * 1.5, '1 1 1', a, DRAWFLAG_NORMAL);
-		pos.x += fontsize.x * 1.6;
+		drawpic(pos - eY * (fontsize.y / 4), icon, sz2, '1 1 1', a, DRAWFLAG_NORMAL);
+		pos.x += sz2.x + fontsize.x * 0.25;
 		drawstring(pos, str2, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
 }

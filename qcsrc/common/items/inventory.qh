@@ -80,6 +80,18 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
     }
     return true;
 }
+
+NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
+{
+	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
+
+	if(last_pickup_item != it) last_pickup_times = 0;
+	last_pickup_timer = timer;
+	last_pickup_item = it;
+	last_pickup_times++;
+
+	return true;
+}
 #endif
 
 #ifdef SVQC

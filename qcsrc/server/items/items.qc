@@ -475,6 +475,15 @@ bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammoma
 	return true;
 }
 
+void Item_NotifyWeapon(entity player, int wep)
+{
+	if(IS_REAL_CLIENT(player)) {
+		msg_entity = player;
+		WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
+		WriteByte(MSG_ONE, wep);
+	}
+}
+
 bool Item_GiveTo(entity item, entity player)
 {
 	// if nothing happens to player, just return without taking the item
@@ -526,6 +535,7 @@ bool Item_GiveTo(entity item, entity player)
 							W_DropEvent(wr_pickup, player, it.m_id, item, weaponentity);
 					}
 					W_GiveWeapon(player, it.m_id);
+					Item_NotifyWeapon(player, it.m_id);
 				}
 			});
 		}
