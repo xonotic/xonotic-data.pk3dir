@@ -11,6 +11,7 @@
 #include <common/mutators/mutator/buffs/sv_buffs.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/resources/resources.qh>
 #include <common/util.qh>
@@ -477,11 +478,11 @@ bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammoma
 
 void Item_NotifyWeapon(entity player, int wep)
 {
-	if(IS_REAL_CLIENT(player)) {
-		msg_entity = player;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (it == player || (IS_SPEC(it) && it.enemy == player)), {
+		msg_entity = it;
 		WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
 		WriteByte(MSG_ONE, wep);
-	}
+	});
 }
 
 bool Item_GiveTo(entity item, entity player)
@@ -518,15 +519,18 @@ bool Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
-		WepSet w;
+		WepSet w, wp;
 		w = STAT(WEAPONS, item);
-		w &= ~STAT(WEAPONS, player);
+		wp = w & ~STAT(WEAPONS, player);
 
 		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
 			FOREACH(Weapons, it != WEP_Null, {
 				if(w & (it.m_wepset))
+					Item_NotifyWeapon(player, it.m_id);
+
+				if(wp & (it.m_wepset))
 				{
 					for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 					{
@@ -535,7 +539,6 @@ bool Item_GiveTo(entity item, entity player)
 							W_DropEvent(wr_pickup, player, it.m_id, item, weaponentity);
 					}
 					W_GiveWeapon(player, it.m_id);
-					Item_NotifyWeapon(player, it.m_id);
 				}
 			});
 		}
