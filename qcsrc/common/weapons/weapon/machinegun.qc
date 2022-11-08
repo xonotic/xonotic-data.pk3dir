@@ -3,10 +3,12 @@
 #ifdef SVQC
 
 .float machinegun_spread_accumulation;
+.float lastShotTime;
 
-.float oldTime;
-
-float lowerEndOfSpreadSpectrum; float higherEndOfSpreadSpectrum; float spreadSpectrumDistance; bool inversedSpread;
+float lowerEndOfSpreadSpectrum;
+float higherEndOfSpreadSpectrum;
+float spreadSpectrumDistance;
+bool inversedSpread;
 
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
@@ -69,14 +71,20 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 {
 	float machinegun_spread;
 
-	//initiate spread like this so it can be used invertedly, accurate with more firing, like Hyperion weapons from Borderlands
-	if(WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min)){
-		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min); higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max); inversedSpread = false;
-	} else {
-		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max); higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min); inversedSpread = true;
+	//check if max is lower or higher than min so it can be used invertedly, accurate with more firing, like Hyperion weapons from Borderlands
+	if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
+	{
+		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
+		higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
+		inversedSpread = false;
+	}
+	else
+	{
+		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
+		higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
+		inversedSpread = true;
 	}
 	spreadSpectrumDistance = higherEndOfSpreadSpectrum - lowerEndOfSpreadSpectrum;
-
 
 	if(!(fire & 1) || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1))
 	{
@@ -101,66 +109,89 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	// Step by step calculations for machinegun_spread_accumulation with optional debug printing
-	// done before inversed spread support was added but still should give a fairly good idea
+	// debug print opt-in
+	#if 0
+		// Step by step calculations for machinegun_spread_accumulation with optional debug printing
+		// done before inversed spread support was added but still should give a fairly good idea
 
-	// check current time
-	//print("\n Current time: ");
-	//print(sprintf("%f ", time));
+		// the time of the last shot
+		print(sprintf("old     time: %f \n", actor.(weaponentity).lastShotTime));
 
-	// seconds passed since the last shot
-	// oldTime is given value at the end of the calculations
-	//float seconds = (time - actor.(weaponentity).oldTime);
-	//print("\n seconds between last time and this time: ");
-	//print(sprintf("%f ", seconds));
+		// check current time
+		print(sprintf("current time: %f \n", time));
 
-	// use seconds passed since last shot to calculate how much spread should have decayed since then
-	//float spreadReduction = seconds * WEP_CVAR(machinegun, spread_decay);
-	//print("\n reduced spread: ");
-	//print(sprintf("%f ", spreadReduction));
+		// seconds passed since the last shot
+		// lastShotTime is given value at the end of the calculations
+		float secondsSinceLastShot = (time - actor.(weaponentity).lastShotTime);
+		print(sprintf("seconds between last time and this time: %f \n", secondsSinceLastShot));
 
-	// reduce spread by the calculated amount
-	//actor.(weaponentity).machinegun_spread_accumulation = actor.(weaponentity).machinegun_spread_accumulation - spreadReduction;
-	//print("\n current spread: ");
-	//print(sprintf("%f ", actor.(weaponentity).machinegun_spread_accumulation));
+		// use seconds passed since last shot to calculate how much spread should have decayed since then
+		float spreadReduction = secondsSinceLastShot * WEP_CVAR(machinegun, spread_decay);
+		print(sprintf("spread accumulation reduction: %f \n", spreadReduction));
 
-	// if spread is reduced to the negatives make it 0 instead
-	// the following if block is replaced by max(accumulation, 0);
-	//if(actor.(weaponentity).machinegun_spread_accumulation < 0){
-	//	print("\n spread was <0, was reset to 0 before firing");
-	//	actor.(weaponentity).machinegun_spread_accumulation = 0;
-	//}
+		// reduce spread by the calculated amount
+		float stepByStep = actor.(weaponentity).machinegun_spread_accumulation - spreadReduction;
 
-	// store the time of the last shot
-	//actor.(weaponentity).oldTime = time;
-	//print("\n Old time: ");
-	//print(sprintf("%f ", actor.(weaponentity).oldTime));
+		// if spread is reduced to the negatives make it 0 instead
+		// the following if block is replaced by max(accumulation, 0);
+		if (stepByStep < 0) {
+			print("step by step spread was less than 0, it was reset to 0 before firing \n");
+			stepByStep = 0;
+		}
 
-	actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).oldTime) * WEP_CVAR(machinegun, spread_decay)), 0);
-	actor.(weaponentity).oldTime = time;
+		print(sprintf("current spread accumulation: %f \n", stepByStep));
 
-	if(WEP_CVAR(machinegun, spread_decay) == 0){
+		// calculate spread on one line
+		float oneliner = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
+		print(sprintf("oneline spread accumulation: %f \n", oneliner));
+
+		// check that the step by step and oneliner match
+		if (stepByStep != oneliner)
+			print("MISMATCH BETWEEN STEP BY STEP AND ONELINER!\n");
+
+		actor.(weaponentity).machinegun_spread_accumulation = oneliner;
+
+		if (inversedSpread) {
+			machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
+			print(sprintf("final inversed machinegun_spread: %f \n\n", machinegun_spread));
+		} else {
+			machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
+			print(sprintf("final non-inverse machinegun_spread: %f \n\n", machinegun_spread));
+		}
+	#else
+		actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
+
+		if (inversedSpread) {
+			machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
+		} else {
+			machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
+		}
+	#endif
+	actor.(weaponentity).lastShotTime = time;
+
+	if (WEP_CVAR(machinegun, spread_decay) == 0) {
 		actor.(weaponentity).machinegun_spread_accumulation = bound(0, (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), spreadSpectrumDistance);
 	}
 
 	// function for reducing mg's damage with no spread and adding damage with heated up barrel or vice versa depending on the values of exposed cvars
-	float coldDamageMultiplierApplicationPercent = 1; float heatDamageMultiplierApplicationPercent = 1;
+	float coldMultiplierApplicationPercent = 1;
+	float heatMultiplierApplicationPercent = 1;
 
-	if(spreadSpectrumDistance > 0){ //avoid division by 0, can never be <0 either how it is set when defined
-		coldDamageMultiplierApplicationPercent = (spreadSpectrumDistance - actor.(weaponentity).machinegun_spread_accumulation)/spreadSpectrumDistance;
-		heatDamageMultiplierApplicationPercent = 						   actor.(weaponentity).machinegun_spread_accumulation /spreadSpectrumDistance;
+	if (spreadSpectrumDistance > 0) { //avoid division by 0, can never be < 0 either due to how it is set when defined
+		coldMultiplierApplicationPercent = (spreadSpectrumDistance - actor.(weaponentity).machinegun_spread_accumulation) / spreadSpectrumDistance;
+		heatMultiplierApplicationPercent =                           actor.(weaponentity).machinegun_spread_accumulation  / spreadSpectrumDistance;
 		// these formulas seem to give numbers which are used as the distance from one end to the other
 		// cold = lower end, heat = higher end, spreadSpectrumDistance = higherEndOfSpreadSpectrum - lowerEndOfSpreadSpectrum = 30 for these examples
 		//
-		// examples for cold barrel / coldDamageMultiplierApplicationPercent:
+		// examples for cold barrel / coldMultiplierApplicationPercent:
 		// min 5 , spread buildup 100% , max 35
 		// (30 - 30) / 30 = 0   apply none of the multiplier
 		// min 5 , spread buildup  50% , max 35
 		// (30 - 15) / 30 = 0.5 apply half of the multiplier
 		// min 5 , spread buildup   0% , max 35
-		// (30 -  0) / 30 = 1   apply all of the multiplier
+		// (30 -  0) / 30 = 1   apply all  of the multiplier
 		//
-		// examples for warm barrel / heatDamageMultiplierApplicationPercent:
+		// examples for warm barrel / heatMultiplierApplicationPercent:
 		// min 5 , spread buildup   0% , max 35
 		// 30 / 30 = 1   apply all  of the multiplier
 		// min 5 , spread buildup  50% , max 35
@@ -168,19 +199,20 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		// min 5 , spread buildup 100% , max 35
 		//  0 / 30 = 0   apply none of the multiplier
 	}
-	// example where low end has halved damage and high end has tripled damage with 50% spread accumulation: heat = (0.5 * 0.5) + (0.5 * 3) = 0.25 + 1.5 = 1.75 damage multiplier
-	// example where low end has halved damage and high end has tripled damage with 90% spread accumulation: heat = (0.1 * 0.5) + (0.9 * 3) = 0.05 + 2.7 = 2.75 damage multiplier
-	float heat = (coldDamageMultiplierApplicationPercent*WEP_CVAR(machinegun, spread_cold_damagemultiplier)) + (heatDamageMultiplierApplicationPercent*WEP_CVAR(machinegun, spread_heat_damagemultiplier));
-	if(spreadSpectrumDistance == 0) heat = heat/2; // avoid damage doubling from ((1*1)+(1*1)) = 2 , also averages the 2 multipliers when spreadSpectrumDistance == 0
 
-	if(inversedSpread){
-		machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
-	} else {
-		machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
-	}
+	// example where low end has halved damage and high end has tripled damage:
+	// with 50% spread accumulation: heat = (0.5 * 0.5) + (0.5 * 3) = 0.25 + 1.5 = 1.75 damage multiplier
+	// with 90% spread accumulation: heat = (0.1 * 0.5) + (0.9 * 3) = 0.05 + 2.7 = 2.75 damage multiplier
+	float heat = (coldMultiplierApplicationPercent * WEP_CVAR(machinegun, spread_cold_damagemultiplier))
+	           + (heatMultiplierApplicationPercent * WEP_CVAR(machinegun, spread_heat_damagemultiplier));
+
+	// avoid damage doubling from (1 * 1) + (1 * 1) = 2
+	// this also averages the 2 multipliers when spreadSpectrumDistance == 0
+	// so 0.5 cold to 4 heat would average out to 2.25 with no spectrum distance for spread
+	if (spreadSpectrumDistance == 0) heat = heat / 2;
 
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage) * heat, 
-			   0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
+	           0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 	actor.(weaponentity).machinegun_spread_accumulation = actor.(weaponentity).machinegun_spread_accumulation + WEP_CVAR(machinegun, spread_add);
@@ -221,10 +253,12 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 	actor.(weaponentity).machinegun_spread_accumulation = actor.(weaponentity).machinegun_spread_accumulation + (WEP_CVAR(machinegun, spread_add) * 0.5);
-	if(actor.(weaponentity).machinegun_spread_accumulation > spreadSpectrumDistance){
+
+	if (actor.(weaponentity).machinegun_spread_accumulation > spreadSpectrumDistance) {
 		actor.(weaponentity).machinegun_spread_accumulation = spreadSpectrumDistance;
 	}
-	if(actor.(weaponentity).misc_bulletcounter == 0)
+
+	if (actor.(weaponentity).misc_bulletcounter == 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(machinegun, burst_refire2) * W_WeaponRateFactor(actor);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(machinegun, burst_animtime), w_ready);
@@ -266,8 +300,8 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
             if(WEP_CVAR(machinegun, spread_decay) != 0){
-                actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).oldTime) * WEP_CVAR(machinegun, spread_decay)), 0);
-                actor.(weaponentity).oldTime = time;
+                actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
+                actor.(weaponentity).lastShotTime = time;
                 if(actor.(weaponentity).machinegun_spread_accumulation > 0){
                     w_ready(thiswep, actor, weaponentity, fire);
                     return;
