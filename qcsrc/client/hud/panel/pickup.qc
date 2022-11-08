@@ -38,9 +38,13 @@ void HUD_Pickup()
 		string str1, str2, icon;
 		vector sz, sz2;
 		vector fontsize = '1 1 0' * mySize.y;
-		vector iconsize = fontsize * 1.5;
+		vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
 
-		icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
+		if(autocvar__hud_configure)
+			icon = strcat(hud_skin_path, "/weaponnex");
+		else
+			icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
+
 		sz = draw_getimagesize(icon);
 		sz2 = vec2(iconsize.y*(sz.x/sz.y), iconsize.y);
 		if(autocvar__hud_configure)
@@ -65,7 +69,7 @@ void HUD_Pickup()
 			}
 		}
 
-		drawpic(pos - eY * (fontsize.y / 4), icon, sz2, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', a, DRAWFLAG_NORMAL);
 		pos.x += sz2.x + fontsize.x * 0.25;
 		drawstring(pos, str2, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
