@@ -17,12 +17,14 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	strcpy(me.currentMapAuthor, strdecolorize(MapInfo_Map_author));
 	strcpy(me.currentMapDescription, MapInfo_Map_description);
 	strcpy(me.currentMapPreviewImage, strcat("/maps/", MapInfo_Map_bspname));
+	if(!draw_PictureExists(me.currentMapPreviewImage)) // Quake 3 compatibility
+		strcpy(me.currentMapPreviewImage, strcat("/levelshots/", MapInfo_Map_bspname));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
-	if(draw_PictureSize(me.currentMapPreviewImage) == '0 0 0')
+	if(!draw_PictureExists(me.currentMapPreviewImage))
 		me.previewImage.src = "nopreview_map";
 	else
 		me.previewImage.src = me.currentMapPreviewImage;
@@ -88,4 +90,5 @@ void XonoticMapInfoDialog_fill(entity me)
 		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton(ZCTX(_("MAP^Play")), '0 0 0'));
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
+			setDependent(e, "g_campaign", 0, 0);
 }

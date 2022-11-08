@@ -53,7 +53,7 @@ SPAWNFUNC_ITEM(item_shield, ITEM_Shield)
 SPAWNFUNC_ITEM(item_invincible, ITEM_Shield)
 
 CLASS(Shield, Powerups)
-    ATTRIB(Shield, netname, string, "shield");
+    ATTRIB(Shield, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
     ATTRIB(Shield, m_name, string, _("Shield"));
     ATTRIB(Shield, m_icon, string, "shield");
 ENDCLASS(Shield)

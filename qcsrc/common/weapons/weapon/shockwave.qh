@@ -2,7 +2,7 @@
 
 CLASS(Shockwave, Weapon)
 /* spawnfunc */ ATTRIB(Shockwave, m_canonical_spawnfunc, string, "weapon_shockwave");
-/* ammotype  */ //ATTRIB(Shockwave, ammo_type, int, RES_NONE);
+/* ammotype  */ //ATTRIB(Shockwave, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
 /* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, 3000);

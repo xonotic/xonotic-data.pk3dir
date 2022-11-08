@@ -1,0 +1,9 @@
+#pragma once
+
+#include "commandbutton.qh"
+CLASS(XonoticLeaveMatchButton, XonoticCommandButton)
+	METHOD(XonoticLeaveMatchButton, draw, void(entity));
+	METHOD(XonoticLeaveMatchButton, configureXonoticLeaveMatchButton, void(entity, vector, int));
+ENDCLASS(XonoticLeaveMatchButton)
+
+entity makeXonoticLeaveMatchButton(vector theColor, int theFlags);

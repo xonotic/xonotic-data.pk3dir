@@ -1,4 +1,7 @@
 // generated file; do not modify
+#ifdef CSQC
+    #include <common/mutators/mutator/hook/cl_hook.qh>
+#endif
 #ifdef SVQC
     #include <common/mutators/mutator/hook/sv_hook.qh>
 #endif

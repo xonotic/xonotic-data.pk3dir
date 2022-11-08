@@ -387,9 +387,9 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 METHOD(Hagar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(random()>0.15)
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false, true);
     else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false, true);
 }
 METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {

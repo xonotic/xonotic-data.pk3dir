@@ -537,27 +537,21 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
 	if(key_pressed) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
 	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 
 	if(nPrimary == K_CTRL)
@@ -576,21 +570,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 	}
 
-	if(nPrimary == K_MOUSE1)
-	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE1;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE1);
-	}
-	else if(nPrimary == K_MOUSE2)
-	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE2;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE2);
-	}
-	else if(nPrimary == K_ESCAPE)
+	if(nPrimary == K_ESCAPE)
 	{
 		if (!key_pressed)
 			return true;
@@ -639,7 +619,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		vector candidate_pos = '0 0 0';
 		const float LEVELS_NUM = 4;
 		float level_height = vid_conheight / LEVELS_NUM;
-LABEL(find_tab_panel)
+		LABEL(find_tab_panel)
 		level = floor(tab_panel_pos.y / level_height) * level_height; //starting level
 		candidate_pos.x = (!tab_backward) ? vid_conwidth : 0;
 		start_posX = tab_panel_pos.x;
@@ -647,7 +627,7 @@ LABEL(find_tab_panel)
 		k=0;
 		while(++k)
 		{
-			for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
+			for(int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			{
 				panel = REGISTRY_GET(hud_panels, i);
 				if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
@@ -787,8 +767,19 @@ LABEL(find_tab_panel)
 		if (highlightedPanel)
 			HUD_Panel_EnableMenu();
 	}
-	else if(hit_con_bind || nPrimary == K_PAUSE)
+	else if(nPrimary == K_PAUSE)
 		return false;
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
+	{
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+	}
 
 	return true;
 }

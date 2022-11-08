@@ -12,6 +12,7 @@
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/resources.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
@@ -198,7 +199,6 @@ void Item_Respawn(entity this)
 {
 	Item_Show(this, 1);
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin(this, this.origin);
 
 	if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 	{
@@ -247,13 +247,13 @@ void Item_RespawnCountdown(entity this)
 				}
 			} while (0);
 			bool mutator_returnvalue = MUTATOR_CALLHOOK(Item_RespawnCountdown, this);
-            if(this.waypointsprite_attached)
-            {
-                GameItem def = this.itemdef;
-                if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
-                    WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-                WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-            }
+			if(this.waypointsprite_attached)
+			{
+				GameItem def = this.itemdef;
+				if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
+					WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+				WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+			}
 		}
 
 		if(this.waypointsprite_attached)
@@ -447,7 +447,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	}
 }
 
-bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
+bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammomax)
 {
 	float amount = GetResource(item, res_type);
 	if (amount == 0)
@@ -483,7 +483,7 @@ bool Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS_CVAR(player).autoswitch)
+	if(CS_CVAR(player).cvar_cl_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -634,7 +634,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			delete(this);
+			RemoveItem(this);
 			return;
 		}
 	}
@@ -727,7 +727,6 @@ LABEL(pickup)
 void Item_Reset(entity this)
 {
 	Item_Show(this, !this.state);
-	setorigin(this, this.origin);
 
 	if (Item_IsLoot(this))
 	{
@@ -747,45 +746,48 @@ void Item_Reset(entity this)
 
 void Item_FindTeam(entity this)
 {
-	entity e;
+	if(!(this.effects & EF_NOGUNBOB)) // marker for item team search
+		return;
 
-	if(this.effects & EF_NODRAW)
+	LOG_TRACE("Initializing item team ", ftos(this.team));
+	RandomSelection_Init();
+	IL_EACH(g_items, it.team == this.team,
 	{
-		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(this.team));
-		RandomSelection_Init();
-		IL_EACH(g_items, it.team == this.team,
-		{
-			if(it.itemdef) // is a registered item
-				RandomSelection_AddEnt(it, it.cnt, 0);
-		});
+		if(it.itemdef) // is a registered item
+			RandomSelection_AddEnt(it, it.cnt, 0);
+	});
 
-		e = RandomSelection_chosen_ent;
-		if (!e)
-			return;
+	entity e = RandomSelection_chosen_ent;
+	if (!e)
+		return;
 
-		IL_EACH(g_items, it.team == this.team,
+	IL_EACH(g_items, it.team == this.team,
+	{
+		if(it.itemdef) // is a registered item
 		{
-			if(it.itemdef) // is a registered item
+			if(it != e)
 			{
-				if(it != e)
-				{
-					// make it non-spawned
-					Item_Show(it, -1);
-					it.state = 1; // state 1 = initially hidden item, apparently
-				}
-				else
-					Item_Reset(it);
-				it.effects &= ~EF_NODRAW;
+				Item_Show(it, -1); // make it non-spawned
+				if (it.waypointsprite_attached)
+					WaypointSprite_Kill(it.waypointsprite_attached);
+				it.nextthink = 0; // disable any scheduled powerup spawn
 			}
-		});
-	}
+			else
+				Item_Reset(it);
+
+			// leave 'this' marked so Item_FindTeam() works when called again via this.reset
+			if(it != this)
+				it.effects &= ~EF_NOGUNBOB;
+		}
+	});
 }
 
 // Savage: used for item garbage-collection
 void RemoveItem(entity this)
 {
 	if(wasfreed(this) || !this) { return; }
+	if(this.waypointsprite_attached)
+		WaypointSprite_Kill(this.waypointsprite_attached);
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	delete(this);
 }
@@ -974,14 +976,21 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	precache_model(this.model);
 	precache_sound(this.item_pickupsound);
 
+	if(q3compat && !this.team)
+	{
+		string t = GetField_fullspawndata(this, "team", false);
+		// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+		if(t) this.team = crc16(false, t);
+	}
+
 	if (Item_IsLoot(this))
 	{
-		this.reset = SUB_Remove;
+		this.reset = RemoveItem;
 		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
-		this.nextthink = time + 20;
+		this.nextthink = time + autocvar_g_items_dropped_lifetime;
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
@@ -1016,7 +1025,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		this.reset = Item_Reset;
+		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
@@ -1093,7 +1102,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	// support skinned models for powerups
 	this.skin = def.m_skin;
-	this.glowmod = def.m_color;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
@@ -1109,6 +1117,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(Item_IsLoot(this))
 		this.gravity = 1;
+	else
+		this.glowmod = def.m_color;
 
 	if(def.instanceOfWeaponPickup)
 	{
@@ -1125,7 +1135,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!this.cnt)
 			this.cnt = 1; // item probability weight
 
-		this.effects |= EF_NODRAW; // marker for item team search
+		this.effects |= EF_NOGUNBOB; // marker for item team search
 		InitializeEntity(this, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
 	else
@@ -1434,12 +1444,12 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != NULL)
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+			sound(e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != NULL)
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+			sound(e, ((snd_incr == SND_POWERUP) ? CH_TRIGGER_SINGLE : CH_TRIGGER), snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1450,7 +1460,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
-bool GiveResourceValue(entity e, int res_type, int op, int val)
+bool GiveResourceValue(entity e, Resource res_type, int op, int val)
 {
 	int v0 = GetResource(e, res_type);
 	float new_val = 0;
@@ -1512,7 +1522,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS_CVAR(e).autoswitch)
+	if(CS_CVAR(e).cvar_cl_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

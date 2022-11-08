@@ -179,6 +179,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		if(trace_fraction == 1)
 			break;
 
+		time_left *= 1 - trace_fraction;
+
 		float my_trace_fraction = trace_fraction;
 		vector my_trace_plane_normal = trace_plane_normal;
 
@@ -204,6 +206,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			// step - handle it immediately
 			vector org = this.origin;
 			vector steppush = '0 0 1' * stepheight;
+			push = this.velocity * time_left;
 
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
@@ -224,7 +227,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			}
 
 			// accept the new position if it made some progress...
-			if(fabs(this.origin_x - org.x) >= 0.03125 || fabs(this.origin_y - org.y) >= 0.03125)
+			// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
+			if(this.origin_x - org.x || this.origin_y - org.y)
 			{
 				trace_endpos = this.origin;
 				time_left *= 1 - trace2_fraction;
@@ -249,8 +253,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			original_velocity = this.velocity;
 			numplanes = 0;
 		}
-
-		time_left *= 1 - my_trace_fraction;
 
 		// clipped to another plane
 		if(numplanes >= MAX_CLIP_PLANES)
@@ -780,15 +782,11 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			this.angles = this.angles + movedt * this.avelocity;
 			break;
 		case MOVETYPE_STEP:
-			if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
-				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Step(this, movedt);
 			break;
 		case MOVETYPE_WALK:
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
-			if (movedt > 0 && GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
-				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Walk(this, movedt);
 			break;
 		case MOVETYPE_TOSS:

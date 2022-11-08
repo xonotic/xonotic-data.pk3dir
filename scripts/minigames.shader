@@ -4,8 +4,8 @@ minigame_busy
 	cull none
 	nopicmip
 
- 	{
+	{
 		map models/sprites/minigame_busy
 		blendfunc blend
 	}
-} 
+}

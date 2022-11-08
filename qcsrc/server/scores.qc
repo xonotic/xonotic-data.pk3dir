@@ -23,36 +23,35 @@ var .float scores_primary;
 var .float teamscores_primary;
 float scores_flags_primary;
 float teamscores_flags_primary;
+var .float scores_secondary;
+float scores_flags_secondary;
 
-vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, vector previous, bool strict) // returns: cmp value, best prio
+// returns cmp value
+int ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, int previous)
 {
-	if(!strict && !(fieldflags & SFL_SORT_PRIO_MASK)) // column does not sort
-		return previous;
-	if((fieldflags & SFL_SORT_PRIO_MASK) < previous.y)
+	if(fieldflags & SFL_NOT_SORTABLE) // column does not sort
 		return previous;
 	if (t1.(field) == t2.(field))
 		return previous;
-
-	previous.y = fieldflags & SFL_SORT_PRIO_MASK;
 
 	if(fieldflags & SFL_ZERO_IS_WORST)
 	{
 		if (t1.(field) == 0)
 		{
-			previous.x = -1;
+			previous = -1;
 			return previous;
 		}
 		else if (t2.(field) == 0)
 		{
-			previous.x = +1;
+			previous = +1;
 			return previous;
 		}
 	}
 
 	if (fieldflags & SFL_LOWER_IS_BETTER)
-		previous.x = (t2.(field) - t1.(field));
+		previous = (t2.(field) - t1.(field));
 	else
-		previous.x = (t1.(field) - t2.(field));
+		previous = (t1.(field) - t2.(field));
 
 	return previous;
 }
@@ -139,23 +138,28 @@ float TeamScore_Add(entity player, float scorefield, float score)
 	return TeamScore_AddToTeam(player.team, scorefield, score);
 }
 
-float TeamScore_Compare(entity t1, entity t2, bool strict)
+// strict: compare others fields too besides primary and secondary
+int TeamScore_Compare(entity t1, entity t2, bool strict)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
-	vector result = '0 0 0';
-	float i;
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	// supporting MAX_TEAMSCORE > 2 requires keeping track of primary and secondary teamscore
+	if (MAX_TEAMSCORE > 2)
+		error("MAX_TEAMSCORE > 2 not supported");
+
+	// first compare primary, then others (don't check secondary flag since there are only 2 teamscores)
+	int result = 0;
+	int i = boolean(teamscores_primary && teamscores_primary == teamscores(1));
+	result = ScoreField_Compare(t1, t2, teamscores(i), teamscores_flags(i), result);
+	if (result == 0 && strict)
 	{
-		var .float f;
-		f = teamscores(i);
-		result = ScoreField_Compare(t1, t2, f, teamscores_flags(i), result, strict);
+		i = (i + 1) % MAX_TEAMSCORE;
+		result = ScoreField_Compare(t1, t2, teamscores(i), teamscores_flags(i), result);
+		if (result == 0)
+			result = t1.team - t2.team;
 	}
 
-	if (result.x == 0 && strict)
-		result.x = t1.team - t2.team;
-
-	return result.x;
+	return result;
 }
 
 /*
@@ -170,6 +174,11 @@ void ScoreInfo_SetLabel_PlayerScore(PlayerScoreField i, string label, float scor
 	{
 		scores_primary = scores(i);
 		scores_flags_primary = scoreflags;
+	}
+	else if((scoreflags & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
+	{
+		scores_secondary = scores(i);
+		scores_flags_secondary = scoreflags;
 	}
 	if(label != "")
 	{
@@ -208,6 +217,13 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
 	}
+	// prevent sending the welcome message again when score types are sent again because the scoring system has changed
+	// it can happen in some game modes like Race when the qualyfing session ends and the race starts
+	bool welcome_msg_too = (!CS(to) || time < CS(to).jointime + 5);
+	WriteByte(MSG_ENTITY, welcome_msg_too);
+	// welcome message is sent here because it needs to know the gametype
+	if (welcome_msg_too)
+		SendWelcomeMessage(to, MSG_ENTITY);
 	return true;
 }
 
@@ -396,20 +412,33 @@ float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tsc
 	return r;
 }
 
+// strict: compare others fields too besides primary and secondary
 float PlayerScore_Compare(entity t1, entity t2, bool strict)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
-	vector result = '0 0 0';
-	FOREACH(Scores, true, {
-		var .float f = scores(it);
-		result = ScoreField_Compare(t1, t2, f, scores_flags(it), result, strict);
-	});
+	int result = 0;
+	result = ScoreField_Compare(t1, t2, scores_primary, scores_flags_primary, result);
+	// NOTE: if (scores_secondary) doesn't work because it's a field pointer
+	if (result == 0 && scores_flags_secondary)
+		result = ScoreField_Compare(t1, t2, scores_secondary, scores_flags_secondary, result);
 
-	if (result.x == 0 && strict)
-		result.x = t1.owner.playerid - t2.owner.playerid;
+	if (result == 0 && strict)
+	{
+		FOREACH(Scores, true, {
+			if (scores_flags(it) & SFL_SORT_PRIO_MASK)
+				continue;
+			if (scores_label(it) == "")
+				continue;
+			var .float f = scores(it);
+			result = ScoreField_Compare(t1, t2, f, scores_flags(it), result);
+			if (result) break;
+		});
+		if (result == 0)
+			result = t1.owner.playerid - t2.owner.playerid;
+	}
 
-	return result.x;
+	return result;
 }
 
 void WinningConditionHelper(entity this)
@@ -434,6 +463,7 @@ void WinningConditionHelper(entity this)
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
 	s = strcat(s, ":F", ftos(serverflags));
+	s = strcat(s, ":T", sv_termsofservice_url_escaped);
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(NULL, (fullstatus ? 1 : 2)));
 
@@ -453,7 +483,7 @@ void WinningConditionHelper(entity this)
 		for(t = 0; t < 16; ++t)
 		{
 			sk = teamscorekeepers[t];
-			c = TeamScore_Compare(winnerscorekeeper, sk, 1);
+			c = TeamScore_Compare(winnerscorekeeper, sk, true);
 			if(c < 0)
 			{
 				WinningConditionHelper_secondteam = WinningConditionHelper_winnerteam;
@@ -463,7 +493,7 @@ void WinningConditionHelper(entity this)
 			}
 			else
 			{
-				c = TeamScore_Compare(secondscorekeeper, sk, 1);
+				c = TeamScore_Compare(secondscorekeeper, sk, true);
 				if(c < 0)
 				{
 					WinningConditionHelper_secondteam = t + 1;
@@ -472,7 +502,7 @@ void WinningConditionHelper(entity this)
 			}
 		}
 
-		WinningConditionHelper_equality = (TeamScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
+		WinningConditionHelper_equality = (TeamScore_Compare(winnerscorekeeper, secondscorekeeper, false) == 0);
 		if(WinningConditionHelper_equality)
 			WinningConditionHelper_winnerteam = WinningConditionHelper_secondteam = -1;
 
@@ -556,12 +586,12 @@ void WinningConditionHelper(entity this)
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
-			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if(!(IS_PLAYER(it) || INGAME_JOINED(it)))
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+			if (IS_PLAYER(it) || INGAME_JOINED(it))
 				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";
@@ -700,7 +730,8 @@ string GetTeamScoreString(float tm, float shortString)
 	return out;
 }
 
-float PlayerTeamScore_Compare(entity p1, entity p2, float teams, bool strict)
+// strict: compare others fields too besides primary and secondary
+int PlayerTeamScore_Compare(entity p1, entity p2, float teams, bool strict)
 {
 	if(teams && teamscores_entities_count)
 	{

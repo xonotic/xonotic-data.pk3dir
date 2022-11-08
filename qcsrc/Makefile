@@ -81,6 +81,7 @@ clean: | $(WORKDIR)
 	$(RM) $(WORKDIR)/qccversion.*
 	$(RM) $(WORKDIR)/csprogs-*
 	$(RM) $(WORKDIR)/autoexec/csprogs-*.cfg
+	$(RM) $(WORKDIR)/*.dat
 	$(RM) csprogs-*.pk3
 
 .PHONY: qc
@@ -93,6 +94,12 @@ sv: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/progs.dat
 pk3: csprogs-$(VER).pk3
 
 
+
+COMPTESTS = test-server test-client test-menu
+.PHONY: test $(COMPTESTS)
+test: $(COMPTESTS)
+$(COMPTESTS):
+	tools/compilationunits.sh $@
 
 
 

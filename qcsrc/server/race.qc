@@ -8,6 +8,7 @@
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/playerstats.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/vehicles/sv_vehicles.qh>
@@ -60,7 +61,7 @@ void write_recordmarker(entity pl, float tstart, float dt)
     // also write a marker into demo files for demotc-race-record-extractor to find
     stuffcmd(pl,
              strcat(
-                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false)),
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
 
@@ -474,8 +475,6 @@ void race_deleteTime(string map, float pos)
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
-	float snew, l;
-
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
 
@@ -485,23 +484,15 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 	if(cp == race_timed_checkpoint) // finish line
 	if (!CS(e).race_completed)
 	{
-		float s;
-		if(g_race_qualifying)
+		int s = GameRules_scoring_add(e, RACE_FASTEST, 0);
+		if(!s || t < s)
+			GameRules_scoring_add(e, RACE_FASTEST, t - s);
+		if(!g_race_qualifying)
 		{
-			s = GameRules_scoring_add(e, RACE_FASTEST, 0);
-			if(!s || t < s)
-				GameRules_scoring_add(e, RACE_FASTEST, t - s);
-		}
-		else
-		{
-			s = GameRules_scoring_add(e, RACE_FASTEST, 0);
-			if(!s || t < s)
-				GameRules_scoring_add(e, RACE_FASTEST, t - s);
-
 			s = GameRules_scoring_add(e, RACE_TIME, 0);
-			snew = TIME_ENCODE(time - game_starttime);
+			int snew = TIME_ENCODE(time - game_starttime);
 			GameRules_scoring_add(e, RACE_TIME, snew - s);
-			l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
+			int l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
 
 			if(autocvar_fraglimit)
 				if(l >= autocvar_fraglimit)
@@ -511,6 +502,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				CS(e).race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
+				if(e.bot_attack)
+					IL_REMOVE(g_bot_targets, e);
+				e.bot_attack = false;
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
 			}
@@ -871,7 +865,7 @@ void trigger_race_checkpoint_verify(entity this)
 	if (have_verified) return;
 	have_verified = true;
 
-	bool qual = g_race_qualifying;
+	int qual = g_race_qualifying;
 
 	int pl_race_checkpoint = 0;
 	int pl_race_place = 0;
@@ -881,7 +875,7 @@ void trigger_race_checkpoint_verify(entity this)
 			pl_race_checkpoint = race_NextCheckpoint(i);
 
 			// race only (middle of the race)
-			g_race_qualifying = false;
+			g_race_qualifying = 0;
 			pl_race_place = 0;
 			if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for respawning in race) - bailing out"));

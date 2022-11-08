@@ -14,7 +14,6 @@ int autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
 string autocvar_g_ca_weaponarena = "most";
 
-
 int ca_teams;
 bool allowed_to_spawn;
 
@@ -51,6 +50,3 @@ REGISTER_MUTATOR(ca, false)
 	}
 	return 0;
 }
-
-// should be removed in the future, as other code should not have to care
-.float caplayer; // 0.5 if scheduled to join the next round

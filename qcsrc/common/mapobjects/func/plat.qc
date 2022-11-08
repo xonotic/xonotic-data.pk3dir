@@ -61,11 +61,11 @@ spawnfunc(func_plat)
 		this.dmg = 10000;
 	}
 
-    if (this.dmg && (this.message == ""))
+	if (this.dmg && (this.message == ""))
 	{
 		this.message = "was squished";
 	}
-    if (this.dmg && (this.message2 == ""))
+	if (this.dmg && (this.message2 == ""))
 	{
 		this.message2 = "was squished by";
 	}

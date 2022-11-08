@@ -117,13 +117,61 @@ string strftime_s()
 	return strcat(ftos(hundreds_of_seconds), seconds_str);
 }
 
+/// \param[in] seconds number of seconds, can be negative too
+/// \return time as "m:ss" string (floored)
 ERASEABLE
-string seconds_tostring(float sec)
+string seconds_tostring(float seconds)
 {
-	float minutes = floor(sec / 60);
-	sec -= minutes * 60;
-	return sprintf("%d:%02d", minutes, sec);
+	bool negative = false;
+	if (seconds < 0)
+	{
+		negative = true;
+		seconds = -seconds;
+		if (floor(seconds) != seconds)
+			seconds += 1; // make floor work in the other direction
+	}
+	int minutes = floor(seconds / 60);
+	seconds -= minutes * 60;
+	if (negative)
+		return sprintf("-%d:%02d", minutes, seconds);
+	return sprintf("%d:%02d", minutes, seconds);
 }
+
+/// \param[in] tm integer clocked time in tenths or hundredths, CANNOT be negative
+/// \param[in] hundredths if true append hundredths too, otherwise only tenths
+/// \param[in] compact if true leading 0s are omitted (except the seconds unit digit)
+/// \return clocked time as "m:ss.t" or "m:ss.th" string (rounded)
+ERASEABLE
+string clockedtime_tostring(int tm, bool hundredths, bool compact)
+{
+	if (tm < 0)
+	{
+		if (compact)
+			return strcat("0.0", hundredths ? "0" : "");
+		else
+			return strcat("0:00.0", hundredths ? "0" : "");
+	}
+	int acc = hundredths ? 6000 : 600;
+	tm = floor(tm + 0.5);
+	int minutes = floor(tm / acc);
+	int tm_without_minutes = tm - minutes * acc;
+	// NOTE: the start digit of s is a placeholder and won't be displayed
+	string s = ftos(acc * 10 + tm_without_minutes);
+	if (!compact || minutes > 0)
+		return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, hundredths ? 2 : 1));
+
+	int ofs = 2, digits = 1;
+	if (tm_without_minutes >= 10 * (hundredths ? 100 : 10))
+	{
+		ofs = 1;
+		digits = 2;
+	}
+	return strcat(substring(s, ofs, digits), ".", substring(s, 3, hundredths ? 2 : 1));
+
+}
+
+#define mmsst(tm, compact) clockedtime_tostring(tm, false, compact)
+#define mmssth(tm, compact) clockedtime_tostring(tm, true, compact)
 
 ERASEABLE
 string format_time(float seconds)
@@ -137,26 +185,6 @@ string format_time(float seconds)
 	seconds -= minutes * 600;
 	if (days > 0) return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
 	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
-}
-
-ERASEABLE
-string mmsss(float tenths)
-{
-	tenths = floor(tenths + 0.5);
-	float minutes = floor(tenths / 600);
-	tenths -= minutes * 600;
-	string s = ftos(1000 + tenths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
-}
-
-ERASEABLE
-string mmssss(float hundredths)
-{
-	hundredths = floor(hundredths + 0.5);
-	float minutes = floor(hundredths / 6000);
-	hundredths -= minutes * 6000;
-	string s = ftos(10000 + hundredths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
 }
 
 int ColorTranslateMode;

@@ -1,0 +1,30 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticServerInfoTab, XonoticTab)
+	METHOD(XonoticServerInfoTab, fill, void(entity));
+	ATTRIB(XonoticServerInfoTab, title, string, _("Server Information"));
+	ATTRIB(XonoticServerInfoTab, color, vector, SKINCOLOR_DIALOG_SERVERINFO);
+	ATTRIB(XonoticServerInfoTab, intendedWidth, float, 0.8);
+	ATTRIB(XonoticServerInfoTab, rows, float, 17);
+	ATTRIB(XonoticServerInfoTab, columns, float, 6.2);
+
+	ATTRIB(XonoticServerInfoTab, nameLabel, entity);
+	ATTRIB(XonoticServerInfoTab, cnameLabel, entity);
+	ATTRIB(XonoticServerInfoTab, typeLabel, entity);
+	ATTRIB(XonoticServerInfoTab, mapLabel, entity);
+	ATTRIB(XonoticServerInfoTab, rawPlayerList, entity);
+	ATTRIB(XonoticServerInfoTab, numPlayersLabel, entity);
+	ATTRIB(XonoticServerInfoTab, numBotsLabel, entity);
+	ATTRIB(XonoticServerInfoTab, numFreeSlotsLabel, entity);
+	ATTRIB(XonoticServerInfoTab, modLabel, entity);
+	ATTRIB(XonoticServerInfoTab, versionLabel, entity);
+	ATTRIB(XonoticServerInfoTab, keyLabel, entity);
+	ATTRIB(XonoticServerInfoTab, idLabel, entity);
+	ATTRIB(XonoticServerInfoTab, encryptLabel, entity);
+	ATTRIB(XonoticServerInfoTab, canConnectLabel, entity);
+	ATTRIB(XonoticServerInfoTab, pureLabel, entity);
+	ATTRIB(XonoticServerInfoTab, statsLabel, entity);
+ENDCLASS(XonoticServerInfoTab)
+entity makeXonoticServerInfoTab();
+

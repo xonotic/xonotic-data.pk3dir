@@ -2,7 +2,7 @@
 
 CLASS(OverkillShotgun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillShotgun, m_canonical_spawnfunc, string, "weapon_okshotgun");
-/* ammotype  */ ATTRIB(OverkillShotgun, ammo_type, int, RES_SHELLS);
+/* ammotype  */ ATTRIB(OverkillShotgun, ammo_type, Resource, RES_SHELLS);
 /* impulse   */ ATTRIB(OverkillShotgun, impulse, int, 2);
 /* flags     */ ATTRIB(OverkillShotgun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillShotgun, bot_pickupbasevalue, float, 6000);

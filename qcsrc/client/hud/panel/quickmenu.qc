@@ -70,6 +70,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()
 		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));
@@ -189,7 +190,10 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
+	mouseClicked = 0;
 	hudShiftState = 0;
+
+	Release_Common_Keys();
 
 	QuickMenu_TimeOut_Set();
 	return true;
@@ -441,58 +445,47 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
 	if(key_pressed)
 	{
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
 	else
 	{
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 
-	if(nPrimary == K_ESCAPE)
+	if(nPrimary == K_ESCAPE && key_pressed)
 	{
-		if (!key_pressed)
-			return true;
 		QuickMenu_Close();
 	}
-	else if(nPrimary >= '0' && nPrimary <= '9')
+	else if(nPrimary >= '0' && nPrimary <= '9' && key_pressed)
 	{
-		if (!key_pressed)
-			return true;
 		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
-	if(nPrimary == K_MOUSE1)
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
 	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE1;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE1);
-	}
-	else if(nPrimary == K_MOUSE2)
-	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE2;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE2);
-	}
-	else if(hit_con_bind)
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+		if (key_pressed)
+			QuickMenu_Close();
 		return false;
+	}
 
 	return true;
 }
@@ -769,6 +762,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_m
 	if(teamplayers && !team_count)
 		return;
 
+	Scoreboard_UpdatePlayerTeams();
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players
@@ -873,6 +867,14 @@ void QuickMenu_Default(string target_submenu)
 		if(teamplay)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
+
+	if (autocvar__hud_panel_quickmenu_file_from_server != "")
+	{
+	string entry_name = _("Server's custom quickmenu");
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = _("Waypoint editor quickmenu");
+	QUICKMENU_ENTRY(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	}
 
 	if(spectatee_status != 0)
 	{

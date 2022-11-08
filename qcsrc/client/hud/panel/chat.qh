@@ -13,3 +13,5 @@ bool autocvar_con_chatrect;
 //float autocvar_con_chatrect_x;
 //float autocvar_con_chatrect_y;
 float autocvar_con_chatwidth;
+
+float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSecondary);

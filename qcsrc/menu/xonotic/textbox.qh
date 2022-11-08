@@ -1,0 +1,26 @@
+#pragma once
+
+#include "listbox.qh"
+
+// slightly hacky multiline textbox with scrollbar
+CLASS(XonoticTextBox, XonoticListBox)
+	METHOD(XonoticTextBox, destroy, void(entity));
+	ATTRIB(XonoticTextBox, rowsPerItem, float, 1);
+	METHOD(XonoticTextBox, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticTextBox, drawListBoxItem, void(entity, int, vector, bool, bool));
+	ATTRIB(XonoticTextBox, allowFocusSound, float, 0);
+	ATTRIB(XonoticTextBox, align, float, 0);
+	ATTRIB(XonoticTextBox, allowColors, bool, false);
+	ATTRIB(XonoticTextBox, escapedNewLines, bool, false);
+	ATTRIB(XonoticTextBox, alpha, float, SKINALPHA_TEXT);
+	ATTRIB(XonoticTextBox, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticTextBox, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticTextBox, itemAbsSize, vector, '0 0 0');
+	METHOD(XonoticTextBox, setText, void(entity, string));
+	METHOD(XonoticTextBox, getTextBoxLine, string(entity, int));
+	ATTRIB(XonoticTextBox, nItems, int, 0);
+	ATTRIB(XonoticTextBox, stringList, int, -1);
+	ATTRIB(XonoticTextBox, selectionDoesntMatter, bool, true);
+ENDCLASS(XonoticTextBox)
+entity makeXonoticTextBox();
+

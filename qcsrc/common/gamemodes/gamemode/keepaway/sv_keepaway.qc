@@ -77,15 +77,29 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
+.float timepoints_counter;
+MUTATOR_HOOKFUNCTION(ka, reset_map_global)
+{
+	FOREACH_CLIENT(true,
+	{
+		it.timepoints_counter = 0;
+	});
+	return true;
+}
+
 void ka_TimeScoring(entity this)
 {
 	if(this.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
+		float timescore = 0;
 		if(autocvar_g_keepaway_score_timepoints)
-			GameRules_scoring_add(this.owner, SCORE, autocvar_g_keepaway_score_timepoints);
+			timescore = autocvar_g_keepaway_score_timepoints / max(0.001, autocvar_g_keepaway_score_timeinterval);
 
-		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
-		this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+		if (timescore)
+			GameRules_scoring_add_float2int(this.owner, SCORE, timescore, timepoints_counter, 1);
+
+		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, 1);
+		this.nextthink = time + 1;
 	}
 }
 
@@ -129,7 +143,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	this.effects |= EF_NODRAW;
 	settouch(this, func_null);
 	setthink(this, ka_TimeScoring);
-	this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+	this.nextthink = time + 1;
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 	this.damagedbycontents = false;

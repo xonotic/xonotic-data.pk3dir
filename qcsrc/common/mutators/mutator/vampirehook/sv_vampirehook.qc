@@ -25,7 +25,7 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 	if(autocvar_g_vampirehook_damage)
 	{
 		thehook.last_dmg = time + autocvar_g_vampirehook_damagerate;
-		thehook.owner.damage_dealt += autocvar_g_vampirehook_damage;
+		thehook.owner.hitsound_damage_dealt += autocvar_g_vampirehook_damage;
 		Damage(dmgent, thehook, thehook.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, DMG_NOWEP, thehook.origin, '0 0 0');
 		entity targ = ((SAME_TEAM(thehook.owner, thehook.aiment)) ? thehook.aiment : thehook.owner);
 		// TODO: we can't do this due to an issue with globals and the mutator arguments

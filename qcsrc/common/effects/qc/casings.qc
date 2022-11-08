@@ -10,13 +10,6 @@
 
 REGISTER_NET_TEMP(casings)
 
-#if defined(SVQC)
-.bool cvar_cl_casings;
-.int cvar_r_drawviewmodel;
-#elif defined(CSQC)
-bool cvar_cl_casings;
-int cvar_r_drawviewmodel;
-#endif
 REPLICATE(cvar_cl_casings, bool, "cl_casings");
 REPLICATE(cvar_r_drawviewmodel, int, "r_drawviewmodel");
 

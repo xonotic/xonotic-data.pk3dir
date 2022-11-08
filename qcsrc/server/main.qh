@@ -28,9 +28,6 @@ void remove_safely(entity e);
 
 void remove_unsafely(entity e);
 
-// copies a string to a tempstring (so one can strunzone it)
-string strcat1(string s) = #115; // FRIK_FILE
-
 #ifdef PROFILING
 float client_cefc_accumulator;
 float client_cefc_accumulatortime;
@@ -46,6 +43,8 @@ float servertime, serverprevtime, serverframetime;
 .float species;
 
 .float contents_damagetime;
+
+string GetField_fullspawndata(entity e, string f, ...);
 
 /*
 ==================

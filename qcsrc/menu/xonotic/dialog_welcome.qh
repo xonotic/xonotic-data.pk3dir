@@ -1,0 +1,25 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticWelcomeDialog, XonoticRootDialog)
+	METHOD(XonoticWelcomeDialog, fill, void(entity));
+	ATTRIB(XonoticWelcomeDialog, title, string, _("Welcome"));
+	ATTRIB(XonoticWelcomeDialog, color, vector, SKINCOLOR_DIALOG_WELCOME);
+	ATTRIB(XonoticWelcomeDialog, intendedWidth, float, 0.8);
+	ATTRIB(XonoticWelcomeDialog, rows, float, 12);
+	ATTRIB(XonoticWelcomeDialog, columns, float, 4);
+	ATTRIB(XonoticWelcomeDialog, name, string, "Welcome");
+
+	METHOD(XonoticWelcomeDialog, draw, void(entity));
+	METHOD(XonoticWelcomeDialog, mouseRelease, bool(entity, vector));
+	METHOD(XonoticWelcomeDialog, keyDown, float(entity, float, float, float));
+	METHOD(XonoticWelcomeDialog, destroy, void(entity));
+	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, int));
+	ATTRIB(XonoticWelcomeDialog, serverinfo_name, string, string_null);
+	//ATTRIB(XonoticWelcomeDialog, serverinfo_name_ent, entity, world);
+	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD, string, string_null);
+	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD_ent, entity, world);
+	ATTRIB(XonoticWelcomeDialog, joinButton_ent, entity, world);
+	ATTRIB(XonoticWelcomeDialog, spectateButton_ent, entity, world);
+	ATTRIB(XonoticWelcomeDialog, requiresConnection, bool, true);
+ENDCLASS(XonoticWelcomeDialog)
