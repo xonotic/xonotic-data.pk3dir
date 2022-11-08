@@ -66,13 +66,13 @@ void HUD_Pickup()
 			if((autocvar_hud_panel_pickup_timer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
 			{
 				str1 = seconds_tostring(last_pickup_timer);
-				drawstring(pos, str1, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+				drawstring(pos, str1, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				pos.x += stringwidth(str1, false, fontsize) + fontsize.x * 0.25;
 			}
 		}
 
-		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		pos.x += sz2.x + fontsize.x * 0.25;
-		drawstring(pos, str2, fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawstring(pos, str2, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 }
