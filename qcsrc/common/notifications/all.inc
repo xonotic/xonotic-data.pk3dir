@@ -98,10 +98,10 @@
 #define N_GNTLOFF 1
 #define N__ALWAYS 2
 
-// defaault time for announcer queue (time to wait before the next announcer is played)
+// default time for announcer queue (time to wait before the next announcer is played)
 // -1 = bypass queue and play the announcer immediately
 // 0 = use the announcer sound length
-// >0 = use the specified time to wait
+// >0 = use the specified time in seconds
 #define ANNCE_INSTANT -1
 #define ANNCE_DEFTIME 0
 
