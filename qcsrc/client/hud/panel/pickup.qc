@@ -1,5 +1,6 @@
 #include "pickup.qh"
 
+#include <client/draw.qh>
 #include <client/hud/hud.qh>
 #include <common/items/inventory.qh>
 
@@ -19,7 +20,7 @@ void HUD_Pickup()
 	pos = panel_pos;
 	mySize = panel_size;
 
-	if (autocvar_hud_panel_score_dynamichud)
+	if (autocvar_hud_panel_pickup_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();

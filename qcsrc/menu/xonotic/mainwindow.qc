@@ -20,6 +20,7 @@
 #include "dialog_hudpanel_timer.qh"
 #include "dialog_hudpanel_vote.qh"
 #include "dialog_hudpanel_weapons.qh"
+#include "dialog_hudpanel_pickup.qh"
 #include "dialog_hudpanel_engineinfo.qh"
 #include "dialog_hudpanel_infomessages.qh"
 #include "dialog_hudpanel_physics.qh"

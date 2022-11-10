@@ -1,7 +1,9 @@
 #include "dialog_hudpanel_pickup.qh"
 
 #include "checkbox.qh"
+#include "textlabel.qh"
 #include "slider.qh"
+#include "textslider.qh"
 
 void XonoticHUDPickupDialog_fill(entity me)
 {
