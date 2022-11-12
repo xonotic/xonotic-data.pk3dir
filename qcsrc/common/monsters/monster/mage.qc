@@ -108,7 +108,6 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 					);
 		}
 		case 2: return (GetResource(targ, RES_ARMOR) < autocvar_g_balance_armor_regenstable);
-		case 3: return (GetResource(targ, RES_HEALTH) > 0);
 	}
 
 	return false;
@@ -253,11 +252,6 @@ void M_Mage_Defend_Heal(entity this)
 						GiveResourceWithLimit(it, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
 						fx = EFFECT_ARMOR_REPAIR;
 					}
-					break;
-				case 3:
-					float hp = ((it == this) ? autocvar_g_monster_mage_heal_self : autocvar_g_monster_mage_heal_allies);
-					TakeResource(it, RES_HEALTH, hp); // TODO: use regular damage functions? needs a way to bypass friendly fire checks
-					fx = EFFECT_RAGE;
 					break;
 			}
 
