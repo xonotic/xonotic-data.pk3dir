@@ -55,6 +55,8 @@ void monster_dropitem(entity this, entity attacker)
 	{
 		e.noalign = true;
 		StartItem(e, e.monster_loot);
+		if(startitem_failed || wasfreed(e))
+			return;
 		e.gravity = 1;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
