@@ -1194,11 +1194,14 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif)
 
 void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
 {	
+	// Guess length if required
+	if(queue_time == 0)
+		queue_time = soundlength(AnnouncerFilename(notif.nent_snd));
+
 	if(queue_time == -1 || time > notif_queue_next_time) {
 		// Run immediately
 		Local_Notification_Queue_Run(net_type, notif);
-		if(queue_time >= 0)
-			notif_queue_next_time = time + (queue_time == 0 ? soundlength(AnnouncerFilename(notif.nent_snd)) : queue_time);
+		notif_queue_next_time = time + queue_time;
 	} else {
 		// Put in queue
 		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
