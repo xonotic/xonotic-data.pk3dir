@@ -103,7 +103,8 @@
 // 0 = use the announcer sound length
 // >0 = use the specified time in seconds
 #define ANNCE_INSTANT -1
-#define ANNCE_DEFTIME 0
+#define ANNCE_LENGTH 0
+#define ANNCE_DEFTIME 2
 
 #define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position) \
     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, defaultvalue) \
