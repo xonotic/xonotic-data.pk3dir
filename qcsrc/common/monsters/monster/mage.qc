@@ -24,7 +24,6 @@ float autocvar_g_monster_mage_attack_teleport_chance = 0.2;
 float autocvar_g_monster_mage_attack_teleport_delay = 2;
 float autocvar_g_monster_mage_attack_teleport_random = 0.4;
 float autocvar_g_monster_mage_attack_teleport_random_range = 1200;
-float autocvar_g_monster_mage_heal_self;
 float autocvar_g_monster_mage_heal_allies;
 float autocvar_g_monster_mage_heal_minhealth;
 float autocvar_g_monster_mage_heal_range;
