@@ -99,6 +99,8 @@ this.origin traveling at speed
 */
 void SUB_CalcMoveDone(entity this);
 
+void SUB_CalcMovePause(entity this);
+
 .float platmovetype_turn;
 void SUB_CalcMove_controller_think (entity this);
 
