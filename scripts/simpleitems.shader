@@ -407,6 +407,28 @@ g_h100_simple // 100hp
 
 ////////// POWERUPS //////////
 
+models/items/g_strength_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_strength_luma
+		blendfunc add
+	}
+}
+
+models/items/g_invincible_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invincible_luma
+		blendfunc add
+	}
+}
+
 g_strength_simple // strength
 {
 	deformVertexes autosprite
