@@ -203,7 +203,8 @@ MUTATOR_HOOKFUNCTION(sv, ClientObituary)
 			GiveFrags(frag_attacker, frag_target, ((autocvar_g_survival_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	}
 
-	M_ARGV(5, bool) = true; // anonymous attacker
+	if(frag_attacker.survival_status == SV_STATUS_HUNTER)
+		M_ARGV(5, bool) = true; // anonymous attacker
 }
 
 MUTATOR_HOOKFUNCTION(sv, PlayerPreThink)
