@@ -6,23 +6,6 @@ float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
 
-void surv_FakeTimeLimit(entity e, float t)
-{
-	if(!IS_REAL_CLIENT(e))
-		return;
-#if 0
-	msg_entity = e;
-	WriteByte(MSG_ONE, 3); // svc_updatestat
-	WriteByte(MSG_ONE, 236); // STAT_TIMELIMIT
-	if(t < 0)
-		WriteCoord(MSG_ONE, autocvar_timelimit);
-	else
-		WriteCoord(MSG_ONE, (t + 1) / 60);
-#else
-	STAT(SURVIVAL_ROUNDTIMER, e) = t;
-#endif
-}
-
 void nades_Clear(entity player);
 
 void Surv_UpdateScores(bool timed_out)
@@ -58,7 +41,6 @@ float Surv_CheckWinner()
 		{
 			if(IS_PLAYER(it))
 				nades_Clear(it);
-			surv_FakeTimeLimit(it, -1);
 		});
 
 		Surv_UpdateScores(true);
@@ -108,7 +90,6 @@ float Surv_CheckWinner()
 	{
 		if(IS_PLAYER(it))
 			nades_Clear(it);
-		surv_FakeTimeLimit(it, -1);
 	});
 
 	return 1;
@@ -145,8 +126,6 @@ void Surv_RoundStart()
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR);
 		else if(it.survival_status == SV_STATUS_HUNTER)
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_HUNTER);
-
-		surv_FakeTimeLimit(it, round_handler_GetEndTime());
 	});
 }
 
@@ -285,7 +264,6 @@ MUTATOR_HOOKFUNCTION(sv, reset_map_players)
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		it.survival_status = 0;
-		surv_FakeTimeLimit(it, -1); // restore original timelimit
 		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
@@ -384,7 +362,6 @@ MUTATOR_HOOKFUNCTION(sv, MakePlayerObserver)
 	{
 		player.survival_validkills = 0;
 		player.survival_status = 0;
-		surv_FakeTimeLimit(player, -1); // restore original timelimit
 		return false;  // allow team reset
 	}
 	return true;  // prevent team reset
