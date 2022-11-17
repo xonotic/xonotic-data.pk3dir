@@ -24,10 +24,10 @@ METHOD(Vortex, wr_glow, vector(Vortex this, entity actor, entity wepent))
 	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
 	if (charge < animlimit)
 	{
-		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
-		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
-		g.y += fabs(f * autocvar_g_weapon_charge_colormod_green_full);
-		g.z += fabs(f * autocvar_g_weapon_charge_colormod_blue_full);
+        f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit) * charge / (1 - animlimit);
+        g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+        g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+        g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
 	// transition color can't be '0 0 0' as it defaults to player model glow color
 	if (g == '0 0 0')
