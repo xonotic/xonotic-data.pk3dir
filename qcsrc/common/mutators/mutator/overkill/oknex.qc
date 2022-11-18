@@ -17,7 +17,7 @@ METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepen
 	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
 	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
 	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
-	if (charge > animlimit)
+	if (charge < animlimit)
 	{
 		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
 		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
