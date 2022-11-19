@@ -28,7 +28,7 @@ msgstr "^2Certe exportatum est ad %s! (Nota: in data/data/ servatum est)"
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr "^1Scriptionem in %s defuit"
+msgstr "^1Scriptioni in %s defuit"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
@@ -1833,83 +1833,83 @@ msgstr "Unum adversi calculum capere potes"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Pong"
 
 #: qcsrc/common/minigames/minigame/pong.qc:607
 #: qcsrc/common/minigames/minigame/ttt.qc:309
 msgid "AI"
-msgstr ""
+msgstr "IA"
 
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
-msgstr ""
+msgstr "^1Ludum incipere^7 preme ut hi ludentes ludum incipiant"
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
-msgstr ""
+msgstr "Ludum incipere"
 
 #: qcsrc/common/minigames/minigame/pong.qc:699
 msgid "Add AI player"
-msgstr ""
+msgstr "Ludentem IA addere"
 
 #: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Remove AI player"
-msgstr ""
+msgstr "Ludentem IA extrahere"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Affer-Aufer"
 
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "\"^1Ludum posteriorem^7\" selige ut reludas!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/pp.qc:463
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 #: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr ""
+msgstr "\"^1Ludum posteriorem^7\" selige ut ludum integres!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:464
 #: qcsrc/common/minigames/minigame/ttt.qc:347
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Adversum qui de ludo novo statuit exspecta"
 
 #: qcsrc/common/minigames/minigame/pp.qc:613
 #: qcsrc/common/minigames/minigame/ttt.qc:698
 msgid "Next Match"
-msgstr ""
+msgstr "Ludus posterior"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Paxillorum Solitarius"
 
 #: qcsrc/common/minigames/minigame/ps.qc:418
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Omnes paxilli excepti!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:420
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Paxilli manentes:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "Paxilli manentes: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:501
 msgid "No more valid moves"
-msgstr ""
+msgstr "Iam movere non potes"
 
 #: qcsrc/common/minigames/minigame/ps.qc:504
 msgid "Well done, you win!"
-msgstr ""
+msgstr "Macte virtute, vicisti!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:507
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "Paxillum super paxillum fer ut is excipiatur"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
@@ -1958,7 +1958,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr ""
+msgstr "Zombium"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:19
 msgid "Ammo"
@@ -1974,12 +1974,12 @@ msgstr "Medicus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:53
 msgid "Bash"
-msgstr ""
+msgstr "Impactus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:64 qcsrc/common/util.qc:259
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:142
 msgid "Vampire"
-msgstr ""
+msgstr "Striga"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:75
 msgid "Disability"
@@ -2003,7 +2003,7 @@ msgstr "Infernus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:133
 msgid "Swapper"
-msgstr ""
+msgstr "Mutuatio"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:144
 msgid "Magnet"
@@ -2048,18 +2048,18 @@ msgstr "Color:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "Collegae vulneris numerum scribere"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:10
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "off-hand hook"
-msgstr ""
+msgstr "uncus obvius"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^8est ^3uncus scandendo^8, ^3%s^8 preme ut eo utaris"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2110,7 +2110,7 @@ msgstr "arma demittere / granatam iacere"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^8sunt ^3granatae^8, ^3%s^8 preme ut eis utaris"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2203,7 +2203,7 @@ msgstr "Restituitur"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
-msgstr ""
+msgstr "Utile"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
@@ -2349,6 +2349,7 @@ msgstr "^1Moderatri notae:"
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
+"^F4NOTA: ^BGQuidque spectatores scripserint, tempore ludentes non legent"
 
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
