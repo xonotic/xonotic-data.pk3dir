@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-//MODEL(Speed_ITEM, Item_Model("g_invincible.md3")); // TODO: new model required
 SOUND(Speed, Item_Sound("powerup_shield"));
 #endif
 
@@ -38,10 +37,9 @@ REGISTER_ITEM(Speed, Powerup) {
 #endif
 #ifdef GAMEQC
     this.m_itemid           =   IT_SPEED;
-    this.m_model            =   MDL_BUFF; // TODO: MDL_Speed_ITEM when new model available
-    this.m_skin             =   9;
+    this.m_skin             =   2;
     this.m_sound            =   SND_Speed;
-    this.m_glow             =   true;
+    // this.m_glow             =   true;
     this.m_respawnsound     =   SND_SHIELD_RESPAWN;
 #endif
     this.netname            =   "speed";

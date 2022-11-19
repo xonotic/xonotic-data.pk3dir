@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-MODEL(Shield_ITEM, "models/relics/relic_powerup.md3");
 SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
@@ -36,7 +35,6 @@ REGISTER_ITEM(Shield, Powerup) {
 #endif
 #ifdef GAMEQC
     this.m_itemid           =   IT_INVINCIBLE;
-    this.m_model            =   MDL_Shield_ITEM;
     this.m_skin             =   1;
     this.m_sound            =   SND_Shield;
     // this.m_glow             =   true;

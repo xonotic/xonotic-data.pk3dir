@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-MODEL(Strength_ITEM, "models/relics/relic_powerup.md3");
 SOUND(Strength, Item_Sound("powerup"));
 #endif
 
@@ -38,7 +37,6 @@ REGISTER_ITEM(Strength, Powerup) {
 #endif
 #ifdef GAMEQC
     this.m_itemid           =   IT_STRENGTH;
-    this.m_model            =   MDL_Strength_ITEM;
     this.m_skin             =   0;
     this.m_sound            =   SND_Strength;
     // this.m_glow             =   true;
