@@ -7,7 +7,7 @@
 
 #if defined(GAMEQC)
 
-METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepent))
+METHOD(OverkillNex, wr_glow, vector(OverkillNex this, int actor_colors, entity wepent))
 {
 	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
 	float charge = wepent.oknex_charge;
