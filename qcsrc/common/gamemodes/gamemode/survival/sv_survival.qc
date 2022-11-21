@@ -1,7 +1,7 @@
 #include "sv_survival.qh"
 
 float autocvar_g_survival_hunter_count = 0.25;
-float autocvar_g_survival_round_timelimit = 180;
+float autocvar_g_survival_round_timelimit = 120;
 float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
