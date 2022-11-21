@@ -102,6 +102,12 @@ void SUB_CalcMoveDone(entity this)
 		this.think1 (this);
 }
 
+void SUB_CalcMovePause(entity this)
+{
+	this.move_controller.animstate_starttime += frametime;
+	this.move_controller.animstate_endtime += frametime;
+}
+
 .float platmovetype_turn;
 void SUB_CalcMove_controller_think (entity this)
 {
@@ -169,7 +175,8 @@ void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector co
 	// 2 * control * t - 2 * control * t * t + destin * t * t
 	// 2 * control * t + (destin - 2 * control) * t * t
 
-	setorigin(controller, org);
+	//setorigin(controller, org); // don't link to the world
+	controller.origin = org;
 	control -= org;
 	destin -= org;
 
@@ -184,7 +191,8 @@ void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector de
 	// 2 * control * t - 2 * control * t * t + destin * t * t
 	// 2 * control * t + (destin - 2 * control) * t * t
 
-	setorigin(controller, org);
+	//setorigin(controller, org); // don't link to the world
+	controller.origin = org;
 	destin -= org;
 
 	controller.destvec = destin; // end point
