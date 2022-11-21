@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-13 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2022\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -3702,12 +3702,12 @@ msgstr "^BG%s^K1 доигрался с ракетками из Самонаво�
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr "^BG%s%s^K1 был застрелен из Шоковой Волны ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был застрелен из Ударной Волны ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr "^BG%s%s^K1 отшлёпан ^BG%s^K1 огромной Шоковой Волной%s%s"
+msgstr "^BG%s%s^K1 отшлёпан ^BG%s^K1 огромной Ударной Волной%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
@@ -5652,7 +5652,7 @@ msgstr "Самонаводчик"
 
 #: qcsrc/common/weapons/weapon/shockwave.qh:18
 msgid "Shockwave"
-msgstr "Шоковая Волна"
+msgstr "Ударная Волна"
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:20
 msgid "Shotgun"
