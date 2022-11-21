@@ -671,7 +671,7 @@ bool HUD_WouldShowCursor()
 {
 	if(autocvar__hud_configure)
 		return true;
-	if(mv_active)
+	if(mv_active && !isdemo())
 		return true;
 	//entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1)); // TODO: doesn't use regular cursor handling
 	//if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))

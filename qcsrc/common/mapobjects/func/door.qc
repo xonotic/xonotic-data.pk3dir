@@ -27,6 +27,7 @@ void door_go_up(entity this, entity actor, entity trigger);
 
 void door_blocked(entity this, entity blocker)
 {
+	bool reverse = false;
 	if((this.spawnflags & DOOR_CRUSH)
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
@@ -69,6 +70,7 @@ void door_blocked(entity this, entity blocker)
 					else
 						door_rotating_go_down(this);
 				}
+				reverse = true;
 			}
 		}
 #ifdef SVQC
@@ -80,6 +82,8 @@ void door_blocked(entity this, entity blocker)
 		}
 #endif
 	}
+	if (!reverse)
+		SUB_CalcMovePause(this);
 }
 
 void door_hit_top(entity this)
