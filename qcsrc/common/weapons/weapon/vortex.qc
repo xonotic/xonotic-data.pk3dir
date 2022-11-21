@@ -4,44 +4,19 @@
 //REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
 
 #if defined(GAMEQC)
-float autocvar_g_weapon_charge_colormod_red_full;
-float autocvar_g_weapon_charge_colormod_red_half;
-float autocvar_g_weapon_charge_colormod_green_full;
-float autocvar_g_weapon_charge_colormod_blue_full;
-float autocvar_g_weapon_charge_colormod_blue_half;
-float autocvar_g_weapon_charge_colormod_green_half;
-float autocvar_g_weapon_charge_colormod_hdrmultiplier;
-bool autocvar_g_weapon_charge_colormod_useplayercolor = true;
-
 METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 {
 	if (!WEP_CVAR(vortex, charge)) return '0 0 0';
 	float charge = wepent.vortex_charge;
 	float animlimit = WEP_CVAR(vortex, charge_animlimit);
-	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
-	vector g;
-	if (autocvar_g_weapon_charge_colormod_useplayercolor)
+	float hdrmultiplier = 4; // old cvar default
+	float f = hdrmultiplier * min(1, charge / animlimit);
+	vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
+	vector g = f * (mycolors * 0.01);
+	if (charge > animlimit)
 	{
-		vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
-		g = f * (mycolors * 0.01);
-		if (charge > animlimit)
-		{
-			f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
-			g += f * (mycolors * 0.4);
-		}
-	}
-	else
-	{
-		g.x = f * autocvar_g_weapon_charge_colormod_red_half;
-		g.y = f * autocvar_g_weapon_charge_colormod_green_half;
-		g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
-		if (charge > animlimit)
-		{
-			f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
-			g.x += f * autocvar_g_weapon_charge_colormod_red_full;
-			g.y += f * autocvar_g_weapon_charge_colormod_green_full;
-			g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
-		}
+		f = hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g += f * (mycolors * 0.4);
 	}
 	// transition color can't be '0 0 0' as it defaults to player model glow color
 	if (g == '0 0 0')
