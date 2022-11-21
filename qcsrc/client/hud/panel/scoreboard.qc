@@ -499,8 +499,6 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
 
-#define SB_EXTRA_SORTING_FIELDS 5
-PlayerScoreField sb_extra_sorting_field[SB_EXTRA_SORTING_FIELDS];
 void Scoreboard_InitScores()
 {
 	int i, f;
@@ -508,18 +506,13 @@ void Scoreboard_InitScores()
 	ps_primary = ps_secondary = NULL;
 	ts_primary = ts_secondary = -1;
 	FOREACH(Scores, true, {
+		if(scores_flags(it) & SFL_NOT_SORTABLE)
+			continue;
 		f = (scores_flags(it) & SFL_SORT_PRIO_MASK);
 		if(f == SFL_SORT_PRIO_PRIMARY)
 			ps_primary = it;
 		if(f == SFL_SORT_PRIO_SECONDARY)
 			ps_secondary = it;
-		if(ps_primary == it || ps_secondary == it)
-			continue;
-		if (scores_label(it) == "kills")      sb_extra_sorting_field[0] = it;
-		if (scores_label(it) == "deaths")     sb_extra_sorting_field[1] = it;
-		if (scores_label(it) == "suicides")   sb_extra_sorting_field[2] = it;
-		if (scores_label(it) == "dmg")        sb_extra_sorting_field[3] = it;
-		if (scores_label(it) == "dmgtaken")   sb_extra_sorting_field[4] = it;
 	});
 	if(ps_secondary == NULL)
 		ps_secondary = ps_primary;
@@ -547,9 +540,11 @@ void Scoreboard_UpdatePlayerTeams()
 	update_time = time;
 
 	entity pl, tmp;
+	numplayers = 0;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
+		numplayers += pl.team != NUM_SPECTATOR;
 		//num += 1;
 		int Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
@@ -605,26 +600,19 @@ float Scoreboard_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	entity fld = NULL;
-	int r;
-	for (int i = -2; i < SB_EXTRA_SORTING_FIELDS; ++i)
-	{
-		if (i < 0)
-		{
-			if (!fld) fld = ps_primary;
-			else if (ps_secondary == ps_primary) continue;
-			else fld = ps_secondary;
-		}
-		else
-		{
-			fld = sb_extra_sorting_field[i];
-			if (fld == ps_primary || fld == ps_secondary) continue;
-		}
-		if (!fld) continue;
+	int res = Scoreboard_CompareScore(left.scores(ps_primary), right.scores(ps_primary), scores_flags(ps_primary));
+	if (res >= 0) return res;
 
-		r = Scoreboard_CompareScore(left.scores(fld), right.scores(fld), scores_flags(fld));
-		if (r >= 0) return r;
+	if (ps_secondary && ps_secondary != ps_primary)
+	{
+		res = Scoreboard_CompareScore(left.scores(ps_secondary), right.scores(ps_secondary), scores_flags(ps_secondary));
+		if (res >= 0) return res;
 	}
+
+	FOREACH(Scores, (it != ps_primary && it != ps_secondary), {
+		res = Scoreboard_CompareScore(left.scores(it), right.scores(it), scores_flags(it));
+		if (res >= 0) return res;
+	});
 
 	if (left.sv_entnum < right.sv_entnum)
 		return true;
@@ -2164,6 +2152,15 @@ vector Scoreboard_Spectators_Draw(vector pos) {
 	return pos;
 }
 
+string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
+{
+	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
+	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
+	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit),
+		(s_label == "score") ? CTX(_("SCO^points")) :
+		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
+}
+
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -2287,20 +2284,7 @@ void Scoreboard_Draw()
 			{
 				if(tl > 0)
 					str = strcat(str, "^7 / "); // delimiter
-				if(teamplay)
-				{
-					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
-						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-						(teamscores_label(ts_primary) == "fastest") ? "" :
-						TranslateScoresLabel(teamscores_label(ts_primary))));
-				}
-				else
-				{
-					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(scores_flags(ps_primary), fl),
-						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-						(scores_label(ps_primary) == "fastest") ? "" :
-						TranslateScoresLabel(scores_label(ps_primary))));
-				}
+				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
 			if(ll > 0)
 			{
@@ -2312,26 +2296,13 @@ void Scoreboard_Draw()
 					else
 						str = strcat(str, "^7 / ");
 				}
-
-				if(teamplay)
-				{
-					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
-						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-						(teamscores_label(ts_primary) == "fastest") ? "" :
-						TranslateScoresLabel(teamscores_label(ts_primary))));
-				}
-				else
-				{
-					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
-						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-						(scores_label(ps_primary) == "fastest") ? "" :
-						TranslateScoresLabel(scores_label(ps_primary))));
-				}
+				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true));
 			}
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
-		// map name
-		str = sprintf(_("^7Map: ^2%s"), shortmapname);
+		// map name and player count
+		str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section

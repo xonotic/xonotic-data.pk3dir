@@ -19,11 +19,6 @@ int NumTeams(int teams)
 	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
 }
 
-int AvailableTeams()
-{
-	return NumTeams(ScoreRules_teams);
-}
-
 // NOTE: ST_constants may not be >= MAX_TEAMSCORE
 // scores that should be in all modes:
 void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled)
@@ -35,6 +30,7 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 		ScoreInfo_SetLabel_TeamScore(i, "", 0);
 
 	ScoreRules_teams = teams;
+	AVAILABLE_TEAMS = NumTeams(teams);
 
 	if(score_enabled)
 		ScoreInfo_SetLabel_TeamScore(ST_SCORE, "score", stprio);
@@ -47,7 +43,8 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	if (!INDEPENDENT_PLAYERS)
 	{
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES, "suicides", SFL_LOWER_IS_BETTER);
-		ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS, "teamkills", SFL_LOWER_IS_BETTER);
+		if (teamplay)
+			ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS, "teamkills", SFL_LOWER_IS_BETTER);
 	}
 
 	if(score_enabled)
@@ -55,10 +52,10 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 
 	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
 	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", 0);
 
+	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", SFL_NOT_SORTABLE);
 	if(STAT(SHOWFPS))
-		ScoreInfo_SetLabel_PlayerScore(SP_FPS, "fps", 0);
+		ScoreInfo_SetLabel_PlayerScore(SP_FPS, "fps", SFL_NOT_SORTABLE);
 }
 
 void ScoreRules_basics_end()
