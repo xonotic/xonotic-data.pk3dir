@@ -11,7 +11,7 @@ float autocvar_g_weapon_charge_colormod_blue_full;
 float autocvar_g_weapon_charge_colormod_blue_half;
 float autocvar_g_weapon_charge_colormod_green_half;
 float autocvar_g_weapon_charge_colormod_hdrmultiplier;
-bool autocvar_g_weapon_charge_colormod_useplayercolor;
+bool autocvar_g_weapon_charge_colormod_useplayercolor = true;
 
 METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 {
