@@ -37,10 +37,7 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
-#include <client/hud/hud.qh>
-
 Inventory g_inventory;
-float last_pickup_timer;
 entity last_pickup_item;
 int last_pickup_times;
 
@@ -48,6 +45,13 @@ void Inventory_remove(entity this)
 {
     if(g_inventory == this)
         g_inventory = NULL;
+}
+
+void Inventory_pickup(entity it)
+{
+	if(last_pickup_item != it) last_pickup_times = 0;
+	last_pickup_item = it;
+	last_pickup_times++;
 }
 
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
@@ -70,11 +74,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
 
-            if(last_pickup_item != it) last_pickup_times = 0;
-			last_pickup_timer = timer;
-			last_pickup_item = it;
-			last_pickup_times++;
-
+            Inventory_pickup(it);
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
@@ -84,12 +84,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
 {
 	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
-
-	if(last_pickup_item != it) last_pickup_times = 0;
-	last_pickup_timer = timer;
-	last_pickup_item = it;
-	last_pickup_times++;
-
+	Inventory_pickup(it);
 	return true;
 }
 #endif

@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
+#include <client/hud/panel/timer.qh>
 #include <common/items/inventory.qh>
 
 // Pickup
@@ -9,6 +10,17 @@
 void HUD_Pickup_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+float HUD_Pickup_Time(float t)
+{
+	if(autocvar_hud_panel_timer_increment)
+		return floor(t - STAT(GAMESTARTTIME));
+	else
+	{
+		float timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
+		return ceil(timelimit + STAT(GAMESTARTTIME) - t);
+	}
 }
 
 void HUD_Pickup()
@@ -66,7 +78,7 @@ void HUD_Pickup()
 			// forbid serverflag will force the 2nd behavior
 			if((autocvar_hud_panel_pickup_timer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
 			{
-				str1 = seconds_tostring(last_pickup_timer);
+				str1 = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
 				drawstring(pos, str1, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				pos.x += stringwidth(str1, false, fontsize) + fontsize.x * 0.25;
 			}

@@ -73,10 +73,7 @@ void HUD_Timer()
 
 	// Use real or frozen time and get the time limit
 	curtime = (intermission_time ? intermission_time : time);
-	if(warmup_stage)
-		timelimit = STAT(WARMUP_TIMELIMIT);
-	else
-		timelimit = STAT(TIMELIMIT) * 60;
+	timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
 
 	// Calculate time left
 	timeleft = HUD_Timer_TimeLeft(curtime, STAT(GAMESTARTTIME), timelimit);
