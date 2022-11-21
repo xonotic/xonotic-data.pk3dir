@@ -49,7 +49,7 @@ void Inventory_remove(entity this)
 
 void Inventory_pickup(entity it)
 {
-	if(last_pickup_item != it) last_pickup_times = 0;
+	if(last_pickup_item != it || time - STAT(LAST_PICKUP) > 5) last_pickup_times = 0;
 	last_pickup_item = it;
 	last_pickup_times++;
 }
