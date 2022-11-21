@@ -23,11 +23,11 @@ METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 	if (autocvar_g_weapon_charge_colormod_useplayercolor)
 	{
 		vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
-		g = f * (mycolors * 0.2);
+		g = f * (mycolors * 0.01);
 		if (charge > animlimit)
 		{
 			f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
-			g += f * (mycolors * 0.3);
+			g += f * (mycolors * 0.4);
 		}
 	}
 	else
