@@ -523,7 +523,7 @@ bool Item_GiveTo(entity item, entity player)
 		w = STAT(WEAPONS, item);
 		wp = w & ~STAT(WEAPONS, player);
 
-		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
+		if (wp || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
 			FOREACH(Weapons, it != WEP_Null, {
