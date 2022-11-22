@@ -320,6 +320,55 @@ void ttt_hud_status(vector pos, vector mySize)
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
+
+	int specs = 0;
+	FOREACH_MINIGAME_ENTITY(e)
+	{
+		if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
+		{
+			specs++;
+		}
+	}
+
+	if (specs > 0)
+	{
+		pos_y = pos_y * 0.3;
+		pos_x = pos_x * 0.41;
+
+		int i = 0;
+
+		string allspecs = "";
+		ts = minigame_drawstring_wrapped(mySize_x * 1.7, pos, "Spectators: ", '14 14 0', '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+		pos_y += 14;
+		FOREACH_MINIGAME_ENTITY(e)
+		{
+			if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
+			{
+				i++;
+				string current_spec = "";
+
+				string cmpctString = entcs_GetName(e.minigame_playerslot - 1);
+				if (strlennocol(cmpctString) > 8)
+				{
+					int new_length = textLengthUpToLength(cmpctString, 8, strlennocol);
+					cmpctString = strcat(substring(cmpctString, 0, new_length), "..");
+				}
+				//last
+				if (i != specs)
+				{
+					current_spec = strcat(cmpctString, ",");
+				}
+				else
+				{
+					current_spec = cmpctString;
+				}
+				if (strlen(allspecs) + strlen(current_spec) > 100)
+					break;
+				allspecs = strcat(allspecs, current_spec);
+			}
+		}
+		ts = minigame_drawcolorcodedstring_wrapped(mySize_x * 1.7, pos, allspecs, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+	}
 }
 
 // Turn a set of flags into a help message
