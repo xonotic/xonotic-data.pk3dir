@@ -32,6 +32,8 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 
 			casingtype |= 0x40; // client will apply autocvar_cl_gunoffset in first person
 		}
+		else if (1 & ~checkpvs(it.origin + it.view_ofs, casingowner)) // 1 or 3 means visible
+			continue;
 
 		msg_entity = it; // sound_allowed checks this
 		if (!sound_allowed(MSG_ONE, it))
