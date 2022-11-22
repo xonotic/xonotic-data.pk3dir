@@ -9,14 +9,13 @@ METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 	if (!WEP_CVAR(vortex, charge)) return '0 0 0';
 	float charge = wepent.vortex_charge;
 	float animlimit = WEP_CVAR(vortex, charge_animlimit);
-	float hdrmultiplier = 4; // old cvar default
-	float f = hdrmultiplier * min(1, charge / animlimit);
+	float f = min(1, charge / animlimit);
 	vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
-	vector g = f * (mycolors * 0.01);
+	vector g = f * (mycolors * 0.3);
 	if (charge > animlimit)
 	{
-		f = hdrmultiplier * (charge - animlimit) / (1 - animlimit);
-		g += f * (mycolors * 0.4);
+		f = (charge - animlimit) / (1 - animlimit);
+		g += f * (mycolors * 0.7);
 	}
 	// transition color can't be '0 0 0' as it defaults to player model glow color
 	if (g == '0 0 0')
