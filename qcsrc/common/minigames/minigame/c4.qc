@@ -389,8 +389,7 @@ void c4_hud_status(vector pos, vector mySize)
 		int i = 0;
 
 		string allspecs = "";
-		ts = minigame_drawstring_wrapped(mySize_x * 1.7, pos, "Spectators: ",
-										 '14 14 0', '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+		ts = minigame_drawstring_wrapped(mySize_x * 1.7, pos, "Spectators: ", '14 14 0', '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
 		pos_y += 14;
 		FOREACH_MINIGAME_ENTITY(e)
 		{
