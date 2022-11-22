@@ -7,7 +7,7 @@
 METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 {
 	if (!WEP_CVAR(vortex, charge)) return '0 0 0';
-	float charge = wepent.vortex_charge;
+	float charge = max(0.25, wepent.vortex_charge);
 	float animlimit = WEP_CVAR(vortex, charge_animlimit);
 	float f = min(1, charge / animlimit);
 	vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);

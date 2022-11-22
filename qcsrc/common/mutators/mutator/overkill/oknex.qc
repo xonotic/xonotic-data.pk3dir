@@ -10,7 +10,7 @@
 METHOD(OverkillNex, wr_glow, vector(OverkillNex this, int actor_colors, entity wepent))
 {
 	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
-	float charge = wepent.oknex_charge;
+	float charge = max(0.25, wepent.oknex_charge);
 	float animlimit = WEP_CVAR(oknex, charge_animlimit);
 	float f = min(1, charge / animlimit);
 	vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
