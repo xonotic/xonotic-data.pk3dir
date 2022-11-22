@@ -313,6 +313,7 @@ void viewmodel_draw(entity this)
 		{
 			this.name_last = name;
 			CL_WeaponEntity_SetModel(this, name, swap);
+			this.origin += autocvar_cl_gunoffset;
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;
 		}

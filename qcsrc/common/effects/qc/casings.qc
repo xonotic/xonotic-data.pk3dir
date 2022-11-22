@@ -22,10 +22,18 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	FOREACH_CLIENT(true, {
 		if (!(CS_CVAR(it).cvar_cl_casings))
 			continue;
-		if (it == casingowner && !(CS_CVAR(it).cvar_r_drawviewmodel))
-			continue;
 
-		msg_entity = it;
+		casingtype &= 0x3F; // reset any bitflags that were set for the previous client
+
+		if (it == casingowner || (IS_SPEC(it) && it.enemy == casingowner))
+		{
+			if (!(CS_CVAR(it).cvar_r_drawviewmodel))
+				continue;
+
+			casingtype |= 0x40; // client will apply autocvar_cl_gunoffset in first person
+		}
+
+		msg_entity = it; // sound_allowed checks this
 		if (!sound_allowed(MSG_ONE, it))
 			casingtype |= 0x80; // silent
 
@@ -133,27 +141,29 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 
 NET_HANDLE(casings, bool isNew)
 {
-    int _state = ReadByte();
-    vector org = ReadVector();
-    vector vel = decompressShortVector(ReadShort());
-    vector ang;
-    ang_x = ReadByte() * 360 / 256;
-    ang_y = ReadByte() * 360 / 256;
-    ang_z = ReadByte() * 360 / 256;
+    Casing casing = ListNewChildRubble(CasingsNGibs, new(casing));
+
+    casing.state = ReadByte();
+    casing.origin = ReadVector();
+    casing.velocity = decompressShortVector(ReadShort());
+    casing.angles_x = ReadByte() * 360 / 256;
+    casing.angles_y = ReadByte() * 360 / 256;
+    casing.angles_z = ReadByte() * 360 / 256;
+
     return = true;
 
-    Casing casing = ListNewChildRubble(CasingsNGibs, new(casing));
-    casing.silent = (_state & 0x80);
-    casing.state = (_state & 0x7F);
-    casing.origin = org;
-    setorigin(casing, casing.origin);
-    casing.velocity = vel;
-    casing.angles = ang;
-    casing.drawmask = MASK_NORMAL;
+    casing.silent = casing.state & 0x80;
+    if (casing.state & 0x40 && !autocvar_chase_active)
+        casing.origin += autocvar_cl_gunoffset.x * v_forward
+                       - autocvar_cl_gunoffset.y * v_right
+                       + autocvar_cl_gunoffset.z * v_up;
+    casing.state &= 0x3F; // the 2 most significant bits are reserved for the silent and casingowner bitflags
 
+    setorigin(casing, casing.origin);
+    casing.drawmask = MASK_NORMAL;
     casing.draw = Casing_Draw;
     if (isNew) IL_PUSH(g_drawables, casing);
-    casing.velocity = casing.velocity + 2 * prandomvec();
+    casing.velocity += 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
     set_movetype(casing, MOVETYPE_BOUNCE);
     casing.bouncefactor = 0.25;
