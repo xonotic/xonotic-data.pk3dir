@@ -4,13 +4,14 @@
 #
 # Translators:
 # Kamparano <kamparano.viro@gmail.com>, 2017
+# Voltinus <voltinusmail@gmail.com>, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-13 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Kamparano <kamparano.viro@gmail.com>, 2017\n"
+"Last-Translator: Voltinus <voltinusmail@gmail.com>, 2022\n"
 "Language-Team: Esperanto (http://www.transifex.com/team-xonotic/xonotic/"
 "language/eo/)\n"
 "Language: eo\n"
@@ -76,7 +77,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Spektas: ^7%s"
+msgstr "^1Spektante: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
@@ -209,11 +210,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:216
 msgid "^1Spectating this player:"
-msgstr "^1Spektas tiu ludanto:"
+msgstr "^1Spektante tiun ludanton:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:216
 msgid "^1Spectating you:"
-msgstr "^1Spektas vin:"
+msgstr "^1Spektante vin:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:232
 msgid "^7Press ^3ESC ^7to show HUD options."
