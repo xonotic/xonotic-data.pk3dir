@@ -47,11 +47,11 @@ void Inventory_remove(entity this)
         g_inventory = NULL;
 }
 
-void Inventory_pickup(entity it)
+void Inventory_pickup(entity it, int times)
 {
 	if(last_pickup_item != it || time - STAT(LAST_PICKUP) > 5) last_pickup_times = 0;
 	last_pickup_item = it;
-	last_pickup_times++;
+	last_pickup_times += times;
 }
 
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
@@ -74,7 +74,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
 
-            Inventory_pickup(it);
+            Inventory_pickup(it, next - prev);
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
@@ -84,7 +84,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
 {
 	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
-	Inventory_pickup(it);
+	Inventory_pickup(it, 1);
 	return true;
 }
 #endif
