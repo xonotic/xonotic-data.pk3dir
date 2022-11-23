@@ -374,27 +374,22 @@ void ClientCommand_ready(entity caller, int request)
 		case CMD_REQUEST_COMMAND:
 		{
 			if (IS_CLIENT(caller) && caller.last_ready < time - 3)
+			if (warmup_stage || g_race_qualifying == 2)
+			if (IS_PLAYER(caller) || INGAME_JOINED(caller))
 			{
-				if (warmup_stage || g_race_qualifying == 2)
+				if (caller.ready) // toggle
 				{
-					if (time < game_starttime) // game is already restarting
-						return;
-					if (caller.ready)            // toggle
-					{
-						caller.ready = false;
-						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
-							bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
-					}
-					else
-					{
-						caller.ready = true;
-						if (IS_PLAYER(caller) || INGAME_JOINED(caller))
-							bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
-					}
-
-					caller.last_ready = time;
-					ReadyCount();
+					caller.ready = false;
+					bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 				}
+				else
+				{
+					caller.ready = true;
+					bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
+				}
+
+				caller.last_ready = time;
+				ReadyCount();
 			}
 			return;  // never fall through to usage
 		}
