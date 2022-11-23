@@ -35,8 +35,7 @@
 //  Nagger for players to know status of voting
 bool Nagger_SendEntity(entity this, entity to, float sendflags)
 {
-	int nags, i, f, b;
-	entity e;
+	int nags = 0;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_NAGGER);
 
 	// bits:
@@ -49,25 +48,23 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 	//  64 = vote counts
 	// 128 = vote string
 
-	nags = 0;
-	if (readycount)
+	if (warmup_stage)
 	{
-		nags |= BIT(0);
-		if (to.ready == 0) nags |= BIT(1);
+		if (readycount)
+		{
+			nags |= BIT(0);
+			if (!to.ready) nags |= BIT(1);
+		}
+		nags |= BIT(4);
 	}
+
 	if (vote_called)
 	{
 		nags |= BIT(2);
 		if (to.vote_selection == 0) nags |= BIT(3);
+		nags |= sendflags & BIT(6);
+		nags |= sendflags & BIT(7);
 	}
-	if (warmup_stage) nags |= BIT(4);
-
-	if (sendflags & BIT(6)) nags |= BIT(6);
-
-	if (sendflags & BIT(7)) nags |= BIT(7);
-
-	if (!(nags & 4))  // no vote called? send no string
-		nags &= ~(BIT(6) | BIT(7));
 
 	WriteByte(MSG_ENTITY, nags);
 
@@ -81,13 +78,14 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 	if (nags & BIT(7)) WriteString(MSG_ENTITY, vote_called_display);
 
-	if (nags & 1)
+	if (nags & BIT(0))
 	{
-		for (i = 1; i <= maxclients; i += 8)
+		for (int i = 1; i <= maxclients;)
 		{
-			for (f = 0, e = edict_num(i), b = BIT(0); b < BIT(8); b <<= 1, e = nextent(e))
-				if (e.ready)
-					f |= b;
+			int f = 0;
+			for (int b = 0; b < 8 && i <= maxclients; ++b, ++i)
+				if (edict_num(i).ready)
+					f |= BIT(b);
 			WriteByte(MSG_ENTITY, f);
 		}
 	}
