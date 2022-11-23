@@ -2279,9 +2279,9 @@ void DropToFloor_Handler(entity this)
 		else if(trace_fraction < 1)
 		{
 			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			setorigin(this, trace_endpos);
 			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 				move_out_of_solid(this);
-			setorigin(this, trace_endpos);
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
