@@ -86,6 +86,7 @@ void HUD_Pickup()
 
 		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		pos.x += sz2.x + fontsize.x * 0.25;
+		str2 = textShortenToWidth(str2, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
 		drawstring(pos, str2, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 }
