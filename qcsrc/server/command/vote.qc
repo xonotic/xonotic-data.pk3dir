@@ -158,7 +158,7 @@ void VoteAccept()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ^1", vote_called_display, "^2 was accepted\n");
 
-	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = 1;
+	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = true;
 	else localcmd(strcat(vote_called_command, "\n"));
 
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
