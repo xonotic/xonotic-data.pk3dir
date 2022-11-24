@@ -65,18 +65,21 @@ void HUD_Pickup()
 		else
 			str2 = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
 
+		float fade_out_time = min(5, autocvar_hud_panel_pickup_fade_out);
+		float display_time = max(fade_out_time, autocvar_hud_panel_pickup_time);
+
 		if(autocvar__hud_configure)
 			a = 1;
-		else if(time < last_pickup_time + 3 - 0.5)
+		else if(time < last_pickup_time + display_time - fade_out_time)
 			a = 1;
 		else
-			a = (last_pickup_time + 3 - time) / 0.5;
+			a = (last_pickup_time + display_time - time) / fade_out_time;
 
-		if(autocvar_hud_panel_pickup_timer) {
+		if(autocvar_hud_panel_pickup_showtimer) {
 			// 1 will show the timer always
 			// 2 will show the timer only if spectating
 			// forbid serverflag will force the 2nd behavior
-			if((autocvar_hud_panel_pickup_timer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
+			if((autocvar_hud_panel_pickup_showtimer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
 			{
 				str1 = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
 				drawstring(pos, str1, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
