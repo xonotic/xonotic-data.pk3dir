@@ -407,28 +407,6 @@ g_h100_simple // 100hp
 
 ////////// POWERUPS //////////
 
-models/items/g_strength_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/items/g_strength_luma
-		blendfunc add
-	}
-}
-
-models/items/g_invincible_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/items/g_invincible_luma
-		blendfunc add
-	}
-}
-
 g_strength_simple // strength
 {
 	deformVertexes autosprite
@@ -486,5 +464,51 @@ g_fuelregen_simple // fuel regen powerup
 	{
 		map models/items/g_fuelregen_simple
 		blendfunc blend
+	}
+}
+
+// relic powerups
+
+models/items/g_strength_luma // strength
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_strength_luma
+		blendfunc add
+	}
+}
+
+models/items/g_invincible_luma // invincible
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invincible_luma
+		blendfunc add
+	}
+}
+
+models/items/g_invisibility_luma // invisibility
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invisibility_luma
+		blendfunc add
+	}
+}
+
+models/items/g_speed_luma // speed
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_speed_luma
+		blendfunc add
 	}
 }
