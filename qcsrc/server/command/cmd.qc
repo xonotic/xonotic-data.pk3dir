@@ -353,7 +353,6 @@ void ClientCommand_ready(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller) && caller.last_ready < time - 3)
 			if (warmup_stage || g_race_qualifying == 2)
 			if (IS_PLAYER(caller) || INGAME_JOINED(caller))
 			{
@@ -367,8 +366,6 @@ void ClientCommand_ready(entity caller, int request)
 					caller.ready = true;
 					bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 				}
-
-				caller.last_ready = time;
 				ReadyCount();
 			}
 			return;  // never fall through to usage
