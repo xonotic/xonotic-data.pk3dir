@@ -40,26 +40,6 @@
 //  Last updated: December 28th, 2011
 // =========================================================
 
-bool SV_ParseClientCommand_floodcheck(entity this)
-{
-	entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
-
-	if (!timeout_status)  // not while paused
-	{
-		if (time <= (store.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
-		{
-			store.cmd_floodcount += 1;
-			if (store.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
-		}
-		else
-		{
-			store.cmd_floodtime = time;
-			store.cmd_floodcount = 1;
-		}
-	}
-	return true;  // continue, as we're not flooding yet
-}
-
 
 // =======================
 //  Command Sub-Functions
@@ -889,6 +869,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "say": case "say_team": case "tell": break;   // chat has its own flood control in chat.qc
 		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
 			if(!IS_CLIENT(this)) // on connection
 			{
@@ -900,9 +881,24 @@ void SV_ParseClientCommand(entity this, string command)
 			break;
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
+		// on connection, client sends all of these
+		case "name": case "rate": case "rate_burstsize": case "playermodel": case "playerskin": case "clientversion":
+			if(!IS_CLIENT(this)) break;
+			// else fall through to default: flood control
 		default:
-			if (SV_ParseClientCommand_floodcheck(this)) break; // "true": continue, as we're not flooding yet
-			else return;                                   // "false": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
+			if (!timeout_status)  // not while paused
+			{
+				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+				// this is basically the same as the chat flood control
+				if (time < store.cmd_floodtime)
+				{
+					sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - time), "^3 seconds, command was: ", command, "\n"));
+					return;  // too much spam, halt
+				}
+				else
+					store.cmd_floodtime = max(time - autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time, store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+			}
+			break;  // continue, as we're not flooding yet
 	}
 
 	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */

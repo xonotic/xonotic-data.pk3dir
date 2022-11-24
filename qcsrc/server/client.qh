@@ -185,7 +185,6 @@ CLASS(Client, Object)
     ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
     ATTRIB(Client, hitplotfh, int, this.hitplotfh);
     ATTRIB(Client, clientdata, entity, this.clientdata);
-    ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);

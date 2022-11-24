@@ -4,7 +4,6 @@ float autocvar_sv_clientcommand_antispam_time;
 int autocvar_sv_clientcommand_antispam_count;
 
 .float cmd_floodtime;
-.float cmd_floodcount;
 
 string MapVote_Suggest(entity this, string m);
 
