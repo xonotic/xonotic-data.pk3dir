@@ -39,7 +39,7 @@ STATIC_INIT(Inventory)
 #ifdef CSQC
 Inventory g_inventory;
 entity last_pickup_item;
-int last_pickup_times;
+int last_pickup_count;
 
 void Inventory_remove(entity this)
 {
@@ -47,11 +47,11 @@ void Inventory_remove(entity this)
         g_inventory = NULL;
 }
 
-void Inventory_pickup(entity it, int times)
+void Inventory_pickup(entity it, int count)
 {
-	if(last_pickup_item != it || time - STAT(LAST_PICKUP) > 5) last_pickup_times = 0;
+	if(last_pickup_item != it || time - STAT(LAST_PICKUP) > 5) last_pickup_count = 0;
 	last_pickup_item = it;
-	last_pickup_times += times;
+	last_pickup_count += count;
 }
 
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)

@@ -63,7 +63,7 @@ void HUD_Pickup()
 		if(autocvar__hud_configure)
 			str2 = "Medium Health";
 		else
-			str2 = ((last_pickup_times > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_times) : it.m_name);
+			str2 = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
 
 		if(autocvar__hud_configure)
 			a = 1;
