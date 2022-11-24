@@ -5,7 +5,7 @@
 #include <client/hud/panel/timer.qh>
 #include <common/items/inventory.qh>
 
-// Pickup
+// Pickup (#26)
 
 void HUD_Pickup_Export(int fh)
 {
