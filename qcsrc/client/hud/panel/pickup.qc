@@ -48,7 +48,7 @@ void HUD_Pickup()
 
 	if((last_pickup_time && last_pickup_time > time - 3 && it) || autocvar__hud_configure) {
 		float a;
-		string str1, str2, icon;
+		string str_timer, str_name, icon;
 		vector sz, sz2;
 		vector fontsize = '1 1 0' * mySize.y;
 		vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
@@ -61,9 +61,9 @@ void HUD_Pickup()
 		sz = draw_getimagesize(icon);
 		sz2 = vec2(iconsize.y*(sz.x/sz.y), iconsize.y);
 		if(autocvar__hud_configure)
-			str2 = "Medium Health";
+			str_name = "Mega armor";
 		else
-			str2 = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
+			str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
 
 		float fade_out_time = min(5, autocvar_hud_panel_pickup_fade_out);
 		float display_time = max(fade_out_time, autocvar_hud_panel_pickup_time);
@@ -81,15 +81,15 @@ void HUD_Pickup()
 			// forbid serverflag will force the 2nd behavior
 			if((autocvar_hud_panel_pickup_showtimer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
 			{
-				str1 = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
-				drawstring(pos, str1, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				pos.x += stringwidth(str1, false, fontsize) + fontsize.x * 0.25;
+				str_timer = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
+				drawstring(pos, str_timer, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
 			}
 		}
 
 		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		pos.x += sz2.x + fontsize.x * 0.25;
-		str2 = textShortenToWidth(str2, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
-		drawstring(pos, str2, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
+		drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 }
