@@ -54,7 +54,7 @@ void HUD_Pickup()
 		vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
 
 		if(autocvar__hud_configure)
-			icon = strcat(hud_skin_path, "/weaponnex");
+			icon = strcat(hud_skin_path, "/armor_mega");
 		else
 			icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
 
@@ -81,7 +81,10 @@ void HUD_Pickup()
 			// forbid serverflag will force the 2nd behavior
 			if((autocvar_hud_panel_pickup_showtimer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER)) || spectatee_status)
 			{
-				str_timer = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
+				if(autocvar__hud_configure)
+					str_timer = "13:02";
+				else
+					str_timer = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
 				drawstring(pos, str_timer, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
 			}
