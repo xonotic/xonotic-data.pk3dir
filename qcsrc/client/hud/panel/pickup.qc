@@ -12,6 +12,14 @@ void HUD_Pickup_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
+void Pickup_Update(entity it, int count)
+{
+	if(last_pickup_item != it || time - STAT(LAST_PICKUP) > autocvar_hud_panel_pickup_time)
+		last_pickup_count = 0;
+	last_pickup_item = it;
+	last_pickup_count += count;
+}
+
 float HUD_Pickup_Time(float t)
 {
 	if(autocvar_hud_panel_timer_increment)
