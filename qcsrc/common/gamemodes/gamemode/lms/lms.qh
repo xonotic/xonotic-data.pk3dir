@@ -2,6 +2,9 @@
 
 #include <common/mapinfo.qh>
 
+#ifdef CSQC
+void HUD_Mod_LMS(vector myPos, vector mySize);
+#endif
 CLASS(LastManStanding, Gametype)
     INIT(LastManStanding)
     {
@@ -17,5 +20,8 @@ CLASS(LastManStanding, Gametype)
         returns(menu, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null);
     }
     ATTRIB(LastManStanding, m_legacydefaults, string, "9 20 0");
+#ifdef CSQC
+    ATTRIB(LastManStanding, m_modicons, void(vector myPos, vector mySize), HUD_Mod_LMS);
+#endif
 ENDCLASS(LastManStanding)
 REGISTER_GAMETYPE(LMS, NEW(LastManStanding));

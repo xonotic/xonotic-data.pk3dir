@@ -42,7 +42,7 @@ void Announcer_Duel()
 	strcpy(prev_pl2_name, pl2_name);
 
 	// There are new duelers, update title
-	centerprint_SetDuelTitle(pl1_name, pl2_name, _("vs"));
+	centerprint_SetDuelTitle(pl1_name, pl2_name);
 }
 
 void Announcer_ClearTitle()
@@ -78,7 +78,7 @@ void Announcer_Countdown(entity this)
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
-		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
+		Local_Notification(MSG_MULTI, COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
 		Announcer_ClearTitle();
@@ -130,7 +130,7 @@ void Announcer_Gamestart()
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
-	if(intermission)
+	if(intermission || warmup_stage)
 	{
 		Announcer_ClearTitle();
 		if(announcer_countdown)

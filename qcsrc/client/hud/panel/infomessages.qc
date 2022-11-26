@@ -150,7 +150,16 @@ void HUD_InfoMessages()
 		else
 			blinkcolor = "^3";
 
-		if(ready_waiting && !spectatee_status)
+		if(warmup_stage && STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
+		{
+			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
+			if(srv_minplayers - numplayers == 1)
+				s = _("^31^2 more player is needed for the match to start.");
+			else
+				s = sprintf(_("^3%d^2 more players are needed for the match to start."), srv_minplayers - numplayers);
+			InfoMessage(s);
+		}
+		else if(ready_waiting && !spectatee_status)
 		{
 			if(ready_waiting_for_me)
 			{
@@ -194,7 +203,7 @@ void HUD_InfoMessages()
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team menu"), "menu_showteamselect"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "scoreboard_team_selection"), blinkcolor));
 					InfoMessage(s);
 				}
 			}

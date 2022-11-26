@@ -611,7 +611,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
             WEP_CVAR(arc, beam_botaimspeed),
             0,
             WEP_CVAR(arc, beam_botaimlifetime),
-            false
+            false, true
         );
     }
     else
@@ -622,7 +622,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
             1000000,
             0,
             0.001,
-            false
+            false, true
         );
     }
 }
@@ -710,6 +710,13 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
         actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
     }
     #endif
+}
+METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_ARC_SUICIDE_BOLT;
+    else
+    	return WEAPON_THINKING_WITH_PORTALS;
 }
 METHOD(Arc, wr_init, void(entity thiswep))
 {
