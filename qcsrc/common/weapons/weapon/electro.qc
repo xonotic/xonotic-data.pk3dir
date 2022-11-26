@@ -676,7 +676,7 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
             if(particleeffectnum(EFFECT_ELECTRO_COMBO_LONG) >= 0)
                 pointparticles(EFFECT_ELECTRO_COMBO_LONG, org2, '0 0 0', 1);
             else
-                pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);
+                pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
             if(!w_issilent)
                 sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
         }
