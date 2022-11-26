@@ -22,13 +22,12 @@ void Pickup_Update(entity it, int count)
 
 float HUD_Pickup_Time(float t)
 {
-	if(autocvar_hud_panel_timer_increment)
+	float timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
+
+	if(autocvar_hud_panel_timer_increment || timelimit <= 0)
 		return floor(t - STAT(GAMESTARTTIME));
 	else
-	{
-		float timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
 		return ceil(timelimit + STAT(GAMESTARTTIME) - t);
-	}
 }
 
 void HUD_Pickup()
