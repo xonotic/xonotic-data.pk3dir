@@ -196,4 +196,17 @@ vector NearestPointOnBoundingBox(vector mi, vector ma, vector org)
 		bound(mi.z, org.z, ma.z)
 	);
 }
+
+// bones_was_here: rounding bbox to nearest perfect floats prevents obscure collision bugs like #2742
+// FIXME: QC shouldn't need to work around tracebox potentially returning a tiny trace_fraction when the move should have been blocked.
+// Tiny values are valid in some situations and can't simply be ignored.
+#define PFLOAT (1/1024) // 1/32 1/64 etc also work
+#define RPFLOAT(a) (a=rint(a/PFLOAT)*PFLOAT)
+ERASEABLE
+vector RoundPerfectVector(vector v)
+{
+	RPFLOAT(v.x); RPFLOAT(v.y); RPFLOAT(v.z);
+	return v;
+}
+
 #endif

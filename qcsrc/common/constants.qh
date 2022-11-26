@@ -12,6 +12,7 @@ const int CVAR_NOTIFY = BIT(1);
 const int CVAR_READONLY = BIT(2);
 
 // server flags
+// NOTE: the engine doesn't clear serverflags on map change (gotomap)
 const int SERVERFLAG_ALLOW_FULLBRIGHT = BIT(0);
 const int SERVERFLAG_TEAMPLAY = BIT(1);
 const int SERVERFLAG_PLAYERSTATS = BIT(2);

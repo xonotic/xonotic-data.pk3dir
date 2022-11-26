@@ -83,6 +83,17 @@ vector draw_PictureSize(string pic)
 	return drawgetimagesize(pic);
 }
 
+bool draw_PictureExists(string pic)
+{
+	pic = draw_UseSkinFor(pic);
+	if (fexists(strcat(pic, ".tga"))) return true;
+	if (fexists(strcat(pic, ".png"))) return true;
+	if (fexists(strcat(pic, ".jpg"))) return true;
+	if (fexists(strcat(pic, ".pcx"))) return true;
+
+	return false;
+}
+
 void draw_Fill(vector theOrigin, vector theSize, vector theColor, float theAlpha)
 {
 	drawfill(boxToGlobal(theOrigin, draw_shift, draw_scale), boxToGlobalSize(theSize, draw_scale), theColor, theAlpha * draw_alpha, 0);

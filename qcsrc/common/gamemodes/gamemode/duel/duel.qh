@@ -10,7 +10,7 @@ CLASS(Duel, Gametype)
     }
     METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
-        return (diameter < 16384);
+        return (diameter < 3250);
     }
     METHOD(Duel, m_isForcedSupported, bool(Gametype this))
     {

@@ -157,7 +157,12 @@ void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 	}
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
-		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	{
+		if(!draw_PictureExists(strcat("/levelshots/", MapInfo_Map_bspname)))
+			draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+		else
+			draw_Picture(me.columnPreviewOrigin * eX, strcat("/levelshots/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	}
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 
