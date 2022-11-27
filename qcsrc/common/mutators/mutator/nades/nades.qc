@@ -667,7 +667,7 @@ void nade_tandem_randomweapon(entity e, vector org)
 	setorigin(e, org);
 	e.velocity = randomvec() * 150 + '0 0 325';
 	e.spawnfunc_checked = true;
-	e.glowmod = weaponentity_glowmod(RandomSelection_chosen_ent, e, 0, NULL);
+	e.glowmod = weaponentity_glowmod(RandomSelection_chosen_ent, 0, e);
 	weapon_defaultspawnfunc(e, RandomSelection_chosen_ent);
 }
 
