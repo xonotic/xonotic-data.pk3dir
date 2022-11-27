@@ -729,7 +729,7 @@ void nade_tandem_spawnitem(entity e, vector org)
 	if((IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS)) 
 		&& (itm != ITEM_ArmorSmall || itm != ITEM_HealthSmall))
 	{
-		print_to(e, "Non-regular items can't be spawned on survival-type gamemodes");
+		// Non-regular items can't be spawned on survival-type gamemodes
 		itm = (random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall;
 	}
 
@@ -751,6 +751,7 @@ void nade_tandem_dropping(entity this, vector org)
 	e.spawnfunc_checked = true;
 	e.pokenade_type = this.pokenade_type;
 
+	// Items can't be spawned on CA and Instagib
 	if(!IS_GAMETYPE(CA) && !autocvar_g_instagib)
 	{
 		switch (this.pokenade_type)
@@ -770,7 +771,6 @@ void nade_tandem_dropping(entity this, vector org)
 			default			: { nade_tandem_spawnitem(e, org); return; }
 		}
 	}
-	else print_to(this, "Items can't be spawned on CA and Instagib");
 }
 
 void tandem_ball_think(entity this)

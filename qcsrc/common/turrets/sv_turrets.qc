@@ -704,7 +704,8 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(!e_target)
 		return -2;
 
-	if(e_target.owner == e_turret)
+	// Don't attack against owner
+	if(e_target.owner == e_turret || e_target == e_turret.realowner)
 		return -0.5;
 
 	if(!checkpvs(e_target.origin, e_turret))
@@ -1033,7 +1034,7 @@ void turret_think(entity this)
 	if(this.tur_spawned && this.turret_lifetime != 0)
 	if(time >= this.turret_lifetime)
 	{
-		tmp_vehcount--;
+		tmp_turcount--;
 
 		turret_die(this);
 		return;
@@ -1135,9 +1136,6 @@ void turret_think(entity this)
 			}
 
 		// Check if we have a vailid enemy, and try to find one if we dont.
-
-		// Don't attack against owner
-		if(turret_select_target(this) == this.realowner) return;
 
 		// g_turrets_targetscan_maxdelay forces a target re-scan at least this often
 		float do_target_scan = 0;
