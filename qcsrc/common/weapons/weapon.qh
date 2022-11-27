@@ -117,7 +117,7 @@ CLASS(Weapon, Object)
     /** (CLIENT) weapon specific view model */
     METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
     /** (BOTH) weapon specific glow */
-    METHOD(Weapon, wr_glow, vector(Weapon this, entity actor, entity wepent)) { return '0 0 0'; }
+    METHOD(Weapon, wr_glow, vector(Weapon this, int actor_colors, entity wepent)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
     METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) a weapon is picked up */
