@@ -18,6 +18,7 @@ string autocvar_g_ca_weaponarena = "most";
 
 int ca_teams;
 bool allowed_to_spawn;
+bool g_ca_spectate_enemies; // updated on map reset
 
 const int ST_CA_ROUNDS = 1;
 
@@ -39,8 +40,6 @@ REGISTER_MUTATOR(ca, false)
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2)
 			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
-		if (autocvar_g_ca_spectate_enemies == -1)
-			observe_blocked_if_eliminated = true;
 
 		ca_teams = BITS(bound(2, ca_teams, 4));
         GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, {
@@ -48,6 +47,8 @@ REGISTER_MUTATOR(ca, false)
         });
 
 		allowed_to_spawn = true;
+		g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;
+		observe_blocked_if_eliminated = (g_ca_spectate_enemies == -1);
 		round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		EliminatedPlayers_Init(ca_isEliminated);

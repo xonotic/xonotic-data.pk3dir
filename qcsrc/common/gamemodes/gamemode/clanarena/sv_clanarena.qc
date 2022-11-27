@@ -274,6 +274,9 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
+	g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;
+	bool observe_blocked_if_eliminated_prev = observe_blocked_if_eliminated;
+	observe_blocked_if_eliminated = (g_ca_spectate_enemies == -1);
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		if (INGAME(it) || IS_BOT_CLIENT(it))
@@ -282,6 +285,8 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
+		if (observe_blocked_if_eliminated_prev != observe_blocked_if_eliminated)
+			ClientData_Touch(it); // send observe_blocked_if_eliminated
 	});
 	return true;
 }
@@ -511,7 +516,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (autocvar_g_ca_spectate_enemies != 1 && INGAME(client))
+	if (g_ca_spectate_enemies != 1 && INGAME(client))
 	if (DIFF_TEAM(targ, client))
 		return true;
 }
@@ -520,7 +525,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (autocvar_g_ca_spectate_enemies != 1 && INGAME(client)
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
@@ -535,7 +540,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (autocvar_g_ca_spectate_enemies != 1 && INGAME(client)
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }
