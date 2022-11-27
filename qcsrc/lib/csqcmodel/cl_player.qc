@@ -526,6 +526,18 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 
 void CSQCPlayer_CalcRefdef(entity this)
 {
+	if(use_engine_refdef)
+	{
+		int refdefflags = 0;
+		if (this.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
+		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
+		// note: these two only work in WIP2, but are harmless in WIP1
+		if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
+		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
+		V_CalcRefdef(this, refdefflags); // TODO? uses .health stat in the engine when this isn't called here, may be broken!
+		return;
+	}
+
 	vector vieworg = this.origin;
 	if(intermission)
 	{
