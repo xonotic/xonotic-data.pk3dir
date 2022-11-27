@@ -4,7 +4,7 @@
 #
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
-# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015,2018-2021
+# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015,2018-2022
 # Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-02 07:22+0200\n"
+"POT-Creation-Date: 2022-11-27 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
@@ -150,8 +150,8 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Aperte ^3%s^1 para entrar no jogo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
-#: qcsrc/client/hud/panel/scoreboard.qc:2268
-#: qcsrc/client/hud/panel/scoreboard.qc:2270 qcsrc/client/main.qc:1410
+#: qcsrc/client/hud/panel/scoreboard.qc:2263
+#: qcsrc/client/hud/panel/scoreboard.qc:2265 qcsrc/client/main.qc:1414
 #: qcsrc/common/notifications/all.qh:428
 msgid "jump"
 msgstr "saltar"
@@ -174,74 +174,64 @@ msgstr "^2Precisa-se de mais ^31^2 jogador para iniciar a partida."
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^2Precisa-se de mais ^3%d^2 jogadores para iniciar a partida."
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
+#: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%sAperte ^3%s%s para terminar o aquecimento"
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
-#: qcsrc/client/hud/panel/infomessages.qc:169
-#: qcsrc/client/hud/panel/infomessages.qc:182
+#: qcsrc/client/hud/panel/infomessages.qc:165
+#: qcsrc/client/hud/panel/infomessages.qc:172
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "ready"
 msgstr "pronto"
 
-#: qcsrc/client/hud/panel/infomessages.qc:169
-#, c-format
-msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sAperte ^3%s%s assim que estiver pronto"
-
-#: qcsrc/client/hud/panel/infomessages.qc:174
+#: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 "^2Aguardando outros jogadores ficarem prontos para terminar o aquecimento..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:176
-msgid "^2Waiting for others to ready up..."
-msgstr "^2Aguardando outros jogadores ficarem prontos..."
-
-#: qcsrc/client/hud/panel/infomessages.qc:182
+#: qcsrc/client/hud/panel/infomessages.qc:172
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Aperte ^3%s^2 para terminar o aquecimento"
 
-#: qcsrc/client/hud/panel/infomessages.qc:203
+#: qcsrc/client/hud/panel/infomessages.qc:193
 msgid "Teamnumbers are unbalanced!"
 msgstr "As equipes estão desequilibradas!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:206
+#: qcsrc/client/hud/panel/infomessages.qc:196
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " Aperte ^3%s%s para ajustar"
 
-#: qcsrc/client/hud/panel/infomessages.qc:206
+#: qcsrc/client/hud/panel/infomessages.qc:196
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
 msgstr "seleção de equipe"
 
-#: qcsrc/client/hud/panel/infomessages.qc:216
+#: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "^1Spectating this player:"
 msgstr "^1Assistindo a este jogador:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:216
+#: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "^1Spectating you:"
 msgstr "^1Assistindo você:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:232
+#: qcsrc/client/hud/panel/infomessages.qc:222
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Aperte ^3ESC ^7para exibir as opções de interface."
 
-#: qcsrc/client/hud/panel/infomessages.qc:233
+#: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 "^3Clique duas vezes ^7em um painel para abrir sua janela de opções "
 "específicas."
 
-#: qcsrc/client/hud/panel/infomessages.qc:234
+#: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "Use ^3CTRL ^7para desligar o teste de colisão, e ^3SHIFT ^7e"
 
-#: qcsrc/client/hud/panel/infomessages.qc:235
+#: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3TECLAS DIRECIONAIS ^7para pequenos ajustes."
 
@@ -558,7 +548,7 @@ msgstr "Intermediário %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "PENALIDADE: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1246
 msgid "missing a checkpoint"
 msgstr "falta um ponto de checagem"
 
@@ -901,21 +891,21 @@ msgstr "tempo"
 msgid "Total time raced (Race/CTS)"
 msgstr "Tempo total em corridas (Corrida/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:698
+#: qcsrc/client/hud/panel/scoreboard.qc:684
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 "É possível modificar o placar usando o comando ^2scoreboard_columns_set."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:699
+#: qcsrc/client/hud/panel/scoreboard.qc:685
 msgid "Usage:"
 msgstr "Uso:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:701
+#: qcsrc/client/hud/panel/scoreboard.qc:687
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3field1 field2..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:702
+#: qcsrc/client/hud/panel/scoreboard.qc:688
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -923,7 +913,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7sem argumentos lê os argumentos do cvar "
 "scoreboard_columns"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:703
+#: qcsrc/client/hud/panel/scoreboard.qc:689
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -931,7 +921,7 @@ msgstr ""
 "  ^5Observação: ^7scoreboard_columns_set sem argumentos é executado sempre "
 "que um mapa é iniciado"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:704
+#: qcsrc/client/hud/panel/scoreboard.qc:690
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -939,17 +929,17 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7carrega o layout padrão e o "
 "expande no cvar scoreboard_columns para ficar editável"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:705
+#: qcsrc/client/hud/panel/scoreboard.qc:691
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "É possível usar um ^3|^7 para iniciar os campos alinhados à direita."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:706
+#: qcsrc/client/hud/panel/scoreboard.qc:692
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 "Os seguintes nomes de campo são reconhecidos (maiúsculas e minúsculas não "
 "diferem):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:712
+#: qcsrc/client/hud/panel/scoreboard.qc:698
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -963,7 +953,7 @@ msgstr ""
 "Também é possível especificar a palavra \"all\" como um\n"
 "campo para exibir todos os campos disponíveis para o modo de jogo atual."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:718
+#: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -971,11 +961,11 @@ msgstr ""
 "É possível usar os nomes especiais de modos de jogo \"teams\" e \"noteams\"\n"
 "para incluir/excluir TODOS os modos de jogo de equipe/sem equipe."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:722
+#: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "Exemplo: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:723
+#: qcsrc/client/hud/panel/scoreboard.qc:709
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -983,7 +973,7 @@ msgstr ""
 "exibirá o nome, ping e pp alinhados à esquerda e os campos\n"
 "à direita da barra vertical alinhada à direita."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:711
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -991,10 +981,10 @@ msgstr ""
 "\"field3\" só aparecerá em CTF e 'field4' aparecerá em todos\n"
 "os outros modos de jogo, exceto MM."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1004
-#: qcsrc/client/hud/panel/scoreboard.qc:1011
-#: qcsrc/client/hud/panel/scoreboard.qc:1066
-#: qcsrc/client/hud/panel/scoreboard.qc:1077 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:990
+#: qcsrc/client/hud/panel/scoreboard.qc:997
+#: qcsrc/client/hud/panel/scoreboard.qc:1052
+#: qcsrc/client/hud/panel/scoreboard.qc:1063 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1003,107 +993,102 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1636
+#: qcsrc/client/hud/panel/scoreboard.qc:1622
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Estatísticas de precisão (média %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1793
+#: qcsrc/client/hud/panel/scoreboard.qc:1779
 msgid "Item stats"
 msgstr "Estatísticas de item"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1904
+#: qcsrc/client/hud/panel/scoreboard.qc:1890
 msgid "Map stats:"
 msgstr "Estatísticas do mapa:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1934
+#: qcsrc/client/hud/panel/scoreboard.qc:1920
 msgid "Monsters killed:"
 msgstr "Monstros mortos:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1941
+#: qcsrc/client/hud/panel/scoreboard.qc:1927
 msgid "Secrets found:"
 msgstr "Segredos encontrados:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2151
+#: qcsrc/client/hud/panel/scoreboard.qc:2137
 #, c-format
 msgid "Spectators"
 msgstr "Espectadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2256
-#: qcsrc/menu/xonotic/dialog_teamselect.qh:7
-msgid "Team Selection"
-msgstr "Seleção de Equipe"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2268
-#, c-format
-msgid "^7Press ^3%s^7 to join the selected team"
-msgstr "^7Aperte ^3%s^7 para entrar na equipe selecionada"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2270
-#, c-format
-msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr "^7Aperte ^3%s^7 para autosselecionar uma equipe e entrar"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2274
-#, c-format
-msgid "^7Press ^3%s ^7to select a specific team"
-msgstr "^7Aperte ^3%s^7 para especificar uma equipe"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2285
-#, c-format
-msgid "^3%1.0f minutes"
-msgstr "^3%1.0f minutos"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2294
-#: qcsrc/client/hud/panel/scoreboard.qc:2301
-#, c-format
-msgid "^5%s %s"
-msgstr "^5%s %s"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2295
-#: qcsrc/client/hud/panel/scoreboard.qc:2302
-#: qcsrc/client/hud/panel/scoreboard.qc:2321
-#: qcsrc/client/hud/panel/scoreboard.qc:2328
-msgid "SCO^points"
-msgstr "pontos"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2320
-#: qcsrc/client/hud/panel/scoreboard.qc:2327
+#: qcsrc/client/hud/panel/scoreboard.qc:2159
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2336
+#: qcsrc/client/hud/panel/scoreboard.qc:2159
+#, c-format
+msgid "^5%s %s"
+msgstr "^5%s %s"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2160
+msgid "SCO^points"
+msgstr "pontos"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2251
+#: qcsrc/menu/xonotic/dialog_teamselect.qh:7
+msgid "Team Selection"
+msgstr "Seleção de Equipe"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2263
+#, c-format
+msgid "^7Press ^3%s^7 to join the selected team"
+msgstr "^7Aperte ^3%s^7 para entrar na equipe selecionada"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2265
+#, c-format
+msgid "^7Press ^3%s^7 to auto-select a team and join"
+msgstr "^7Aperte ^3%s^7 para autosselecionar uma equipe e entrar"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2269
+#, c-format
+msgid "^7Press ^3%s ^7to select a specific team"
+msgstr "^7Aperte ^3%s^7 para especificar uma equipe"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2280
+#, c-format
+msgid "^3%1.0f minutes"
+msgstr "^3%1.0f minutos"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7jogadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2337 qcsrc/client/main.qc:1436
+#: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1440
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Mapa:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2499
+#: qcsrc/client/hud/panel/scoreboard.qc:2467
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Prêmio de velocidade: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2503
+#: qcsrc/client/hud/panel/scoreboard.qc:2471
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "O mais rápido de todos: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2537
+#: qcsrc/client/hud/panel/scoreboard.qc:2505
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Ressurgindo em ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2547
+#: qcsrc/client/hud/panel/scoreboard.qc:2515
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Você morreu. Espere ^3%s^7 antes de ressurgir"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2556
+#: qcsrc/client/hud/panel/scoreboard.qc:2524
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
@@ -1217,178 +1202,178 @@ msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 "Você está tentando remover uma equipe que não está na lista de equipes!"
 
-#: qcsrc/client/main.qc:1144 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1149 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1150 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1151 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1152 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr "nós"
 
-#: qcsrc/client/main.qc:1359
+#: qcsrc/client/main.qc:1363
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Arena com Todas as Armas"
 
-#: qcsrc/client/main.qc:1360
+#: qcsrc/client/main.qc:1364
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "Arena com Todas as Armas Disponíveis"
 
-#: qcsrc/client/main.qc:1361
+#: qcsrc/client/main.qc:1365
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "Arena com Maioria das Armas"
 
-#: qcsrc/client/main.qc:1362
+#: qcsrc/client/main.qc:1366
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "Arena com Maioria das Armas Disponíveis"
 
-#: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
+#: qcsrc/client/main.qc:1369 qcsrc/client/main.qc:1383
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "Arena sem Armas"
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1381
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "Arena de %s"
 
-#: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
+#: qcsrc/client/main.qc:1392 qcsrc/client/main.qc:1397
 #, c-format
 msgid "This is %s"
 msgstr "Isto é %s"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1393
 msgid "Your client version is outdated."
 msgstr "A versão de seu cliente está desatualizada."
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1394
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### NÃO PODERÁ JOGAR NESTE SERVIDOR ###"
 
-#: qcsrc/client/main.qc:1391
+#: qcsrc/client/main.qc:1395
 msgid "Please update!"
 msgstr "Por favor atualizar!"
 
-#: qcsrc/client/main.qc:1394
+#: qcsrc/client/main.qc:1398
 msgid "This server is using an outdated Xonotic version."
 msgstr "Este servidor usa uma versão desatualizada de Xonotic."
 
-#: qcsrc/client/main.qc:1395
+#: qcsrc/client/main.qc:1399
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ESTE SERVIDOR É INCOMPATÍVEL, LOGO NÃO PODE ENTRAR ###"
 
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1401
 #, c-format
 msgid "Welcome to %s"
 msgstr "Boas-vindas a %s"
 
-#: qcsrc/client/main.qc:1412 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1416 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Nível %d:"
 
-#: qcsrc/client/main.qc:1414
+#: qcsrc/client/main.qc:1418
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGAperte ^F2%s^BG para entrar no jogo"
 
-#: qcsrc/client/main.qc:1434
+#: qcsrc/client/main.qc:1438
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Modo de jogo:"
 
-#: qcsrc/client/main.qc:1448
+#: qcsrc/client/main.qc:1452
 msgid "This match supports"
 msgstr "Esta partida suporta"
 
-#: qcsrc/client/main.qc:1450
+#: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players"
 msgstr "%d jogadores"
 
-#: qcsrc/client/main.qc:1452
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d to %d players"
 msgstr "de %d a %d jogadores"
 
-#: qcsrc/client/main.qc:1454
+#: qcsrc/client/main.qc:1458
 #, c-format
 msgid "%d players maximum"
 msgstr "%d jogadores no máximo"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1460
 #, c-format
 msgid "%d players minimum"
 msgstr "%d jogadores no mínimo"
 
-#: qcsrc/client/main.qc:1461
+#: qcsrc/client/main.qc:1465
 msgid "Active modifications:"
 msgstr "Modificações ativas:"
 
-#: qcsrc/client/main.qc:1464
+#: qcsrc/client/main.qc:1468
 msgid "Special gameplay tips:"
 msgstr "Dicas de jogo especial:"
 
-#: qcsrc/client/main.qc:1471
+#: qcsrc/client/main.qc:1475
 msgid "Server's message"
 msgstr "Mensagem do servidor"
 
-#: qcsrc/client/main.qc:1549
+#: qcsrc/client/main.qc:1569
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (não tem atalho definido)"
 
-#: qcsrc/client/mapvoting.qc:70
+#: qcsrc/client/mapvoting.qc:72
 msgid " (1 vote)"
 msgstr "(1 voto)"
 
-#: qcsrc/client/mapvoting.qc:72
+#: qcsrc/client/mapvoting.qc:74
 #, c-format
 msgid " (%d votes)"
 msgstr "(%d votos)"
 
-#: qcsrc/client/mapvoting.qc:292
+#: qcsrc/client/mapvoting.qc:303
 msgid "Don't care"
 msgstr "Não importa"
 
-#: qcsrc/client/mapvoting.qc:383
+#: qcsrc/client/mapvoting.qc:395
 msgid "Decide the gametype"
 msgstr "Decidir o modo de jogo"
 
-#: qcsrc/client/mapvoting.qc:383
+#: qcsrc/client/mapvoting.qc:395
 msgid "Vote for a map"
 msgstr "Vote em um mapa"
 
-#: qcsrc/client/mapvoting.qc:400
+#: qcsrc/client/mapvoting.qc:418
 #, c-format
 msgid "%d seconds left"
 msgstr "Faltam %d segundos"
 
-#: qcsrc/client/mapvoting.qc:513
+#: qcsrc/client/mapvoting.qc:558
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3Você não pode usar esse comando sozinho!"
 
-#: qcsrc/client/mapvoting.qc:523
+#: qcsrc/client/mapvoting.qc:568
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1Erro:^7 Não foi possível encontrar o índice do pak."
 
-#: qcsrc/client/mapvoting.qc:532
+#: qcsrc/client/mapvoting.qc:577
 msgid "Requesting preview..."
 msgstr "Solicitando prévia..."
 
@@ -1440,16 +1425,13 @@ msgstr "Mate todos os inimigos para vencer a rodada"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
-#: qcsrc/common/mapinfo.qh:89
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
-msgid "Frag limit:"
-msgstr "Limite de execuções:"
+msgid "Round limit:"
+msgstr "Limite de rodadas:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
-#: qcsrc/common/mapinfo.qh:89
-msgid "The amount of frags needed before the match will end"
-msgstr "A quantidade de execuções necessária para acabar a partida"
+msgid "The amount of rounds won needed before the match will end"
+msgstr "A quantidade de rodadas vencidas necessária para acabar a partida"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1579,8 +1561,8 @@ msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
 msgstr "Atire e chute a bola no gol inimigo e mantenha seu gol limpo"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
-msgid "Goals:"
-msgstr "Gols:"
+msgid "Goal limit:"
+msgstr "Limite de gols:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1696,10 +1678,19 @@ msgstr "Regenerador de combustível"
 msgid "Fuel regen"
 msgstr "Regeneração de combustível"
 
-#: qcsrc/common/mapinfo.qc:624
+#: qcsrc/common/mapinfo.qc:659
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba Throwing"
+
+#: qcsrc/common/mapinfo.qh:89
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+msgid "Frag limit:"
+msgstr "Limite de execuções:"
+
+#: qcsrc/common/mapinfo.qh:89
+msgid "The amount of frags needed before the match will end"
+msgstr "A quantidade de execuções necessária para acabar a partida"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -5896,7 +5887,7 @@ msgstr "%dº"
 msgid "No description"
 msgstr "Sem descrição"
 
-#: qcsrc/lib/spawnfunc.qh:259
+#: qcsrc/lib/spawnfunc.qh:260
 #, c-format
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
@@ -6073,7 +6064,7 @@ msgstr "Coreano"
 
 #: qcsrc/menu/xonotic/credits.qc:287
 msgid "Polish"
-msgstr "Polônes"
+msgstr "Polonês"
 
 #: qcsrc/menu/xonotic/credits.qc:305
 msgid "Portuguese"
@@ -7271,24 +7262,24 @@ msgstr "Remove todos os mapas da sua seleção"
 msgid "Start multiplayer!"
 msgstr "Iniciar multijogador!"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:52
 msgid "Title:"
 msgstr "Título:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:56
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:58
 msgid "Author:"
 msgstr "Autor:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:62
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Game types:"
 msgstr "Modos de jogo:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:85
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
 msgstr "Fechar"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:90
 msgid "MAP^Play"
 msgstr "Jogar"
 
@@ -9452,7 +9443,7 @@ msgstr "Latência local:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr "Recebidos com HTTP"
+msgstr "Downloads HTTP"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
@@ -9460,7 +9451,7 @@ msgstr "Simultâneos:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr "Número máximo de recepções HTTP simultâneas"
+msgstr "Número máximo de downloads simultâneos via HTTP"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -10187,19 +10178,19 @@ msgstr "Sair desta partida de multijogador, ou desconectar do servidor"
 msgid "Do not press this button again!"
 msgstr "Não aperte este botão novamente!"
 
-#: qcsrc/menu/xonotic/maplist.qc:289
+#: qcsrc/menu/xonotic/maplist.qc:294
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
 "Hã? Impossível jogar isto (m é NULO). Refiltrando para que isso não ocorra "
 "novamente."
 
-#: qcsrc/menu/xonotic/maplist.qc:297
+#: qcsrc/menu/xonotic/maplist.qc:302
 #, c-format
 msgid "%s's Xonotic Server"
 msgstr "Servidor de Xonotic de %s"
 
-#: qcsrc/menu/xonotic/maplist.qc:302
+#: qcsrc/menu/xonotic/maplist.qc:307
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
