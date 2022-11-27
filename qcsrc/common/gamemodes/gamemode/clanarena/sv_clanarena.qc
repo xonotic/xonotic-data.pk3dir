@@ -373,8 +373,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (INGAME(player))
 	{
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
-		if (observe_blocked_if_eliminated)
-			player.would_spectate = true; // force to spectate only
+		player.would_spectate = observe_blocked_if_eliminated; // if blocked from observing force to spectate now
 	}
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
