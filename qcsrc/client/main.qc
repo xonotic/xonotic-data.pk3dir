@@ -460,6 +460,10 @@ void Release_Common_Keys()
 	localcmd("-use\n");
 	localcmd("-hook\n");
 	localcmd("-jump\n");
+	localcmd("-forward\n");
+	localcmd("-back\n");
+	localcmd("-moveleft\n");
+	localcmd("-moveright\n");
 }
 
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.

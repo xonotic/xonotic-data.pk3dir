@@ -843,7 +843,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	TC(int, bInputType);
 
 	static int first_digit = 0;
-	if (!mv_active)
+	if (!mv_active || isdemo())
 		return false;
 
 	if(bInputType == 3)
