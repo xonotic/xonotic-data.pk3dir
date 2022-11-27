@@ -13,6 +13,9 @@ float chat_maximized_scroll_ofs;
 float chat_maximized_reset_scroll_time;
 float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
+	if(!autocvar__con_chat_maximized)
+		return false;
+
 	if(bInputType == 3)
 	{
 		mousepos.x = nPrimary;
@@ -25,9 +28,6 @@ float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSeconda
 
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
-
-	if(!autocvar__con_chat_maximized)
-		return false;
 
 	if(nPrimary == K_MWHEELUP)
 	{
