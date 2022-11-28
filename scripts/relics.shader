@@ -104,6 +104,17 @@ models/relics/sign_medic
 	}
 }
 
+models/relics/sign_resistance
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_resistance
+		blendfunc add
+	}
+}
+
 models/relics/sign_swapper
 {
 	deformVertexes autosprite

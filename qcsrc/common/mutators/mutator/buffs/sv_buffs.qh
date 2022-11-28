@@ -30,6 +30,7 @@ bool autocvar_g_buffs_replace_powerups;
 bool autocvar_g_buffs_drop = false;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
+float autocvar_g_buffs_resistance_blockpercent;
 float autocvar_g_buffs_medic_survive_chance;
 float autocvar_g_buffs_medic_survive_health;
 float autocvar_g_buffs_medic_rot;

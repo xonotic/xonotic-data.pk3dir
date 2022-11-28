@@ -4,6 +4,7 @@ string Buff_UndeprecateName(string buffname)
     {
         case "ammoregen": return "ammo";               // Q3TA ammoregen
         case "doubler": return "inferno";              // Q3TA doubler
+        case "guard": return "resistance";             // Q3TA guard
         case "revival": case "regen": return "medic";  // WOP revival, Q3A regen
         case "jumper": return "jump";                  // WOP jumper
         case "invulnerability": return "vampire";      // Q3TA invulnerability
@@ -146,3 +147,14 @@ ENDCLASS(FlightBuff)
 REGISTER_BUFF(FLIGHT, NEW(FlightBuff));
 BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
 BUFF_SPAWNFUNC_Q3COMPAT(item_flight, BUFF_FLIGHT)
+
+CLASS(ResistanceBuff, Buff)
+    ATTRIB(ResistanceBuff, m_name, string, _("Resistance"));
+    ATTRIB(ResistanceBuff, netname, string, "resistance");
+    ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
+    ATTRIB(ResistanceBuff, m_skin, int, 11);
+    ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
+ENDCLASS(ResistanceBuff)
+REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));
+BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)

@@ -663,6 +663,12 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
+	if(StatusEffects_active(BUFF_RESISTANCE, frag_target))
+	{
+		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
+		frag_damage = bound(0, frag_damage - reduced, frag_damage);
+	}
+
 	if(StatusEffects_active(BUFF_MEDIC, frag_target))
 	if((GetResource(frag_target, RES_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
