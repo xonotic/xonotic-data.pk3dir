@@ -17,7 +17,7 @@ CLASS(AmmoBuff, Buff)
     ATTRIB(AmmoBuff, m_name, string, _("Ammo"));
     ATTRIB(AmmoBuff, netname, string, "ammo");
     ATTRIB(AmmoBuff, m_icon, string, "buff_ammo");
-    ATTRIB(AmmoBuff, m_skin, int, 3);
+    ATTRIB(AmmoBuff, m_skin, int, 0);
     ATTRIB(AmmoBuff, m_color, vector, '0.76 1 0.1');
 ENDCLASS(AmmoBuff)
 REGISTER_BUFF(AMMO, NEW(AmmoBuff));
@@ -51,7 +51,7 @@ CLASS(DisabilityBuff, Buff)
     ATTRIB(DisabilityBuff, m_name, string, _("Disability"));
     ATTRIB(DisabilityBuff, netname, string, "disability");
     ATTRIB(DisabilityBuff, m_icon, string, "buff_disability");
-    ATTRIB(DisabilityBuff, m_skin, int, 7);
+    ATTRIB(DisabilityBuff, m_skin, int, 3);
     ATTRIB(DisabilityBuff, m_color, vector, '0.94 0.3 1');
 ENDCLASS(DisabilityBuff)
 REGISTER_BUFF(DISABILITY, NEW(DisabilityBuff));
@@ -76,7 +76,7 @@ CLASS(VengeanceBuff, Buff)
     ATTRIB(VengeanceBuff, m_name, string, _("Vengeance"));
     ATTRIB(VengeanceBuff, netname, string, "vengeance");
     ATTRIB(VengeanceBuff, m_icon, string, "buff_vengeance");
-    ATTRIB(VengeanceBuff, m_skin, int, 15);
+    ATTRIB(VengeanceBuff, m_skin, int, 4);
     ATTRIB(VengeanceBuff, m_color, vector, '1 0.23 0.61');
 ENDCLASS(VengeanceBuff)
 REGISTER_BUFF(VENGEANCE, NEW(VengeanceBuff));
@@ -87,7 +87,7 @@ CLASS(JumpBuff, Buff)
     ATTRIB(JumpBuff, m_name, string, _("Jump"));
     ATTRIB(JumpBuff, netname, string, "jump");
     ATTRIB(JumpBuff, m_icon, string, "buff_jump");
-    ATTRIB(JumpBuff, m_skin, int, 10);
+    ATTRIB(JumpBuff, m_skin, int, 5);
     ATTRIB(JumpBuff, m_color, vector, '0.24 0.78 1');
 ENDCLASS(JumpBuff)
 REGISTER_BUFF(JUMP, NEW(JumpBuff));
@@ -98,7 +98,7 @@ CLASS(InfernoBuff, Buff)
     ATTRIB(InfernoBuff, m_name, string, _("Inferno"));
     ATTRIB(InfernoBuff, netname, string, "inferno");
     ATTRIB(InfernoBuff, m_icon, string, "buff_inferno");
-    ATTRIB(InfernoBuff, m_skin, int, 16);
+    ATTRIB(InfernoBuff, m_skin, int, 6);
     ATTRIB(InfernoBuff, m_color, vector, '1 0.62 0');
 ENDCLASS(InfernoBuff)
 REGISTER_BUFF(INFERNO, NEW(InfernoBuff));
@@ -109,7 +109,7 @@ CLASS(SwapperBuff, Buff)
     ATTRIB(SwapperBuff, m_name, string, _("Swapper"));
     ATTRIB(SwapperBuff, netname, string, "swapper");
     ATTRIB(SwapperBuff, m_icon, string, "buff_swapper");
-    ATTRIB(SwapperBuff, m_skin, int, 17);
+    ATTRIB(SwapperBuff, m_skin, int, 7);
     ATTRIB(SwapperBuff, m_color, vector, '0.63 0.36 1');
 ENDCLASS(SwapperBuff)
 REGISTER_BUFF(SWAPPER, NEW(SwapperBuff));
@@ -120,7 +120,7 @@ CLASS(MagnetBuff, Buff)
     ATTRIB(MagnetBuff, m_name, string, _("Magnet"));
     ATTRIB(MagnetBuff, netname, string, "magnet");
     ATTRIB(MagnetBuff, m_icon, string, "buff_magnet");
-    ATTRIB(MagnetBuff, m_skin, int, 18);
+    ATTRIB(MagnetBuff, m_skin, int, 8);
     ATTRIB(MagnetBuff, m_color, vector, '1 0.95 0.18');
 ENDCLASS(MagnetBuff)
 REGISTER_BUFF(MAGNET, NEW(MagnetBuff));
@@ -130,7 +130,7 @@ CLASS(LuckBuff, Buff)
     ATTRIB(LuckBuff, m_name, string, _("Luck"));
     ATTRIB(LuckBuff, netname, string, "luck");
     ATTRIB(LuckBuff, m_icon, string, "buff_luck");
-    ATTRIB(LuckBuff, m_skin, int, 19);
+    ATTRIB(LuckBuff, m_skin, int, 9);
     ATTRIB(LuckBuff, m_color, vector, '1 0.23 0.44');
 ENDCLASS(LuckBuff)
 REGISTER_BUFF(LUCK, NEW(LuckBuff));
@@ -140,7 +140,7 @@ CLASS(FlightBuff, Buff)
     ATTRIB(FlightBuff, m_name, string, _("Flight"));
     ATTRIB(FlightBuff, netname, string, "flight");
     ATTRIB(FlightBuff, m_icon, string, "buff_flight");
-    ATTRIB(FlightBuff, m_skin, int, 11);
+    ATTRIB(FlightBuff, m_skin, int, 10);
     ATTRIB(FlightBuff, m_color, vector, '0.23 0.44 1');
 ENDCLASS(FlightBuff)
 REGISTER_BUFF(FLIGHT, NEW(FlightBuff));
