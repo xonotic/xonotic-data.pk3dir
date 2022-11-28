@@ -71,17 +71,6 @@ models/relics/sign_inferno
 	}
 }
 
-models/relics/sign_invisible
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/relics/sign_invisible
-		blendfunc add
-	}
-}
-
 models/relics/sign_jump
 {
 	deformVertexes autosprite
@@ -111,17 +100,6 @@ models/relics/sign_medic
 	nopicmip
 	{
 		map models/relics/sign_medic
-		blendfunc add
-	}
-}
-
-models/relics/sign_speed
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/relics/sign_speed
 		blendfunc add
 	}
 }
