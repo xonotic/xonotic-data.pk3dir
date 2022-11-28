@@ -27,17 +27,6 @@ models/relics/sign_ammo
 	}
 }
 
-models/relics/sign_bash
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/relics/sign_bash
-		blendfunc add
-	}
-}
-
 models/relics/sign_blessed
 {
 	deformVertexes autosprite
@@ -122,17 +111,6 @@ models/relics/sign_medic
 	nopicmip
 	{
 		map models/relics/sign_medic
-		blendfunc add
-	}
-}
-
-models/relics/sign_resistance
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/relics/sign_resistance
 		blendfunc add
 	}
 }

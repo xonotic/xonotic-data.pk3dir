@@ -4,8 +4,6 @@ string Buff_UndeprecateName(string buffname)
     {
         case "ammoregen": return "ammo";               // Q3TA ammoregen
         case "doubler": return "inferno";              // Q3TA doubler
-        case "scout": return "bash";                   // Q3TA scout
-        case "guard": return "resistance";             // Q3TA guard
         case "revival": case "regen": return "medic";  // WOP revival, Q3A regen
         case "jumper": return "jump";                  // WOP jumper
         case "invulnerability": return "vampire";      // Q3TA invulnerability
@@ -26,17 +24,6 @@ REGISTER_BUFF(AMMO, NEW(AmmoBuff));
 BUFF_SPAWNFUNCS(ammo, BUFF_AMMO)
 BUFF_SPAWNFUNC_Q3COMPAT(item_ammoregen, BUFF_AMMO)
 
-CLASS(ResistanceBuff, Buff)
-    ATTRIB(ResistanceBuff, m_name, string, _("Resistance"));
-    ATTRIB(ResistanceBuff, netname, string, "resistance");
-    ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
-    ATTRIB(ResistanceBuff, m_skin, int, 0);
-    ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
-ENDCLASS(ResistanceBuff)
-REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));
-BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
-BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)
-
 CLASS(MedicBuff, Buff)
     ATTRIB(MedicBuff, m_name, string, _("Medic"));
     ATTRIB(MedicBuff, netname, string, "medic");
@@ -48,17 +35,6 @@ REGISTER_BUFF(MEDIC, NEW(MedicBuff));
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3COMPAT(item_regen, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3COMPAT(item_revival, BUFF_MEDIC)
-
-CLASS(BashBuff, Buff)
-    ATTRIB(BashBuff, m_name, string, _("Bash"));
-    ATTRIB(BashBuff, netname, string, "bash");
-    ATTRIB(BashBuff, m_icon, string, "buff_bash");
-    ATTRIB(BashBuff, m_skin, int, 5);
-    ATTRIB(BashBuff, m_color, vector, '1 0.39 0');
-ENDCLASS(BashBuff)
-REGISTER_BUFF(BASH, NEW(BashBuff));
-BUFF_SPAWNFUNCS(bash, BUFF_BASH)
-BUFF_SPAWNFUNC_Q3COMPAT(item_scout, BUFF_BASH)
 
 CLASS(VampireBuff, Buff)
     ATTRIB(VampireBuff, m_name, string, _("Vampire"));

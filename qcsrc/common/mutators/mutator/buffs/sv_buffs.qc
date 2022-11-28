@@ -663,12 +663,6 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
-	if(StatusEffects_active(BUFF_RESISTANCE, frag_target))
-	{
-		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
-		frag_damage = bound(0, frag_damage - reduced, frag_damage);
-	}
-
 	if(StatusEffects_active(BUFF_MEDIC, frag_target))
 	if((GetResource(frag_target, RES_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
@@ -692,19 +686,6 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		dmgent.owner = frag_target;
 		setthink(dmgent, buff_Vengeance_DelayedDamage);
 		dmgent.nextthink = time + 0.1;
-	}
-
-	if(StatusEffects_active(BUFF_BASH, frag_target))
-	if(frag_attacker != frag_target)
-		frag_force = '0 0 0';
-
-	if(StatusEffects_active(BUFF_BASH, frag_attacker))
-	if(frag_force)
-	{
-		if(frag_attacker == frag_target)
-			frag_force *= autocvar_g_buffs_bash_force_self;
-		else
-			frag_force *= autocvar_g_buffs_bash_force;
 	}
 
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
