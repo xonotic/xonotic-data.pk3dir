@@ -32,13 +32,21 @@ test_compilation_units:
 test_sv_game:
   stage: test
   script:
-    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - make -C darkplaces sv-release || exit 1
-    - export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic -noconfig -nohome"
+    - >
+      if wget -nv https://beta.xonotic.org/autobuild-rsync/Xonotic/xonotic-linux64-dedicated ; then
+        export ENGINE="$PWD/xonotic-linux64-dedicated"
+        chmod +x "$ENGINE"
+      else
+        git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
+        make -C darkplaces sv-release || exit 1
+        export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic"
+      fi
+    - export ENGINE="$ENGINE -noconfig -nohome"
+
     - make qc || exit 1
 
     - mkdir -p data/maps
-    - wget -O data/maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - wget -nv -O data/maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
     - while read LINE; do
         echo $LINE;
@@ -50,10 +58,10 @@ test_sv_game:
     - diff notifications.cfg data/data/notifications_dump.cfg ||
         { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
-    - wget -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
-    - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
-    - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
-    - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
+    - wget -nv -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
+    - wget -nv -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
+    - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
+    - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
     - EXPECT=4c834aa9b5950ffe25deec1880f21641
     - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
