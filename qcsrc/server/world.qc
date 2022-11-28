@@ -2298,6 +2298,12 @@ void DropToFloor_Handler(entity this)
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
 			this.move_suspendedinair = true;
 		}
+		else
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
 	}
 	this.dropped_origin = this.origin;
 }
