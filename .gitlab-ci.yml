@@ -12,9 +12,15 @@ before_script:
 # - export CC="gcc -pipe -march=native -mtune=native"
   - export CC="gcc -pipe"
 
-  - git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - make -C gmqcc || exit 1
-  - export QCC="$PWD/gmqcc/gmqcc"
+  - >
+    if wget -nv https://beta.xonotic.org/pipeline-bin/gmqcc ; then
+      export QCC="$PWD/gmqcc"
+      chmod +x "$QCC"
+    else
+      git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
+      make -C gmqcc || exit 1
+      export QCC="$PWD/gmqcc/gmqcc"
+    fi
 
   # Makefile: don't complain about lack of tags (fetching them is slow)
   - export QCCFLAGS_WATERMARK=gitlab_pipeline
@@ -33,7 +39,7 @@ test_sv_game:
   stage: test
   script:
     - >
-      if wget -nv https://beta.xonotic.org/autobuild-rsync/Xonotic/xonotic-linux64-dedicated ; then
+      if wget -nv https://beta.xonotic.org/pipeline-bin/xonotic-linux64-dedicated ; then
         export ENGINE="$PWD/xonotic-linux64-dedicated"
         chmod +x "$ENGINE"
       else
