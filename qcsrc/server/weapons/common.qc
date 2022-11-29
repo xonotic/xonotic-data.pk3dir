@@ -138,7 +138,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
         traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
         if (trace_fraction >= 1)
         {
-        	// NOTE: this notice can occur when projectiles hit non-world objects, better to not spam the console!
+            // NOTE: this notice can occur when projectiles hit non-world objects, better to not spam the console!
             //LOG_TRACE("Odd... did not hit...?");
         }
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
