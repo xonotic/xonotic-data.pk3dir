@@ -97,6 +97,7 @@ void Projectile_Draw(entity this)
 		else switch (this.cnt)
 		{
 			case PROJECTILE_GRENADE_BOUNCING:
+			case PROJECTILE_CLASSIC_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -139,6 +140,7 @@ void Projectile_Draw(entity this)
 	{
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
+		case PROJECTILE_CLASSIC_GRENADE_BOUNCING:
 			makevectors(ang);
 			trailorigin += v_right * 1 + v_forward * -10;
 			break;
@@ -294,45 +296,46 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		switch (this.cnt)
 		{
 #define HANDLE(id) case PROJECTILE_##id: setmodel(this, MDL_PROJECTILE_##id);
-			HANDLE(ELECTRO)            this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
-			HANDLE(ROCKET)             this.traileffect = EFFECT_TR_ROCKET.m_id; this.scale = 2; break;
-			HANDLE(CRYLINK)            this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
-			HANDLE(CRYLINK_BOUNCING)   this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
-			HANDLE(ELECTRO_BEAM)       this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
-			HANDLE(GRENADE)            this.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			HANDLE(GRENADE_BOUNCING)   this.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			HANDLE(MINE)               this.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			HANDLE(BLASTER)            this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
-			HANDLE(HLAC)               this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(PORTO_RED)          this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
-			HANDLE(PORTO_BLUE)         this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
-			HANDLE(HOOKBOMB)           this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
-			HANDLE(HAGAR)              this.traileffect = EFFECT_HAGAR_ROCKET.m_id; this.scale = 0.75; break;
-			HANDLE(HAGAR_BOUNCING)     this.traileffect = EFFECT_HAGAR_ROCKET.m_id; this.scale = 0.75; break;
-			HANDLE(FIREBALL)           this.modelindex = 0; this.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
-			HANDLE(FIREMINE)           this.modelindex = 0; this.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
-			HANDLE(TAG)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
-			HANDLE(FLAC)               this.scale = 0.4; this.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
-			HANDLE(SEEKER)             this.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
+			HANDLE(ELECTRO)                  this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(ROCKET)                   this.traileffect = EFFECT_TR_ROCKET.m_id; this.scale = 2; break;
+			HANDLE(CRYLINK)                  this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			HANDLE(CRYLINK_BOUNCING)         this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			HANDLE(ELECTRO_BEAM)             this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(GRENADE)                  this.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(GRENADE_BOUNCING)         this.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(CLASSIC_GRENADE_BOUNCING) this.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(MINE)                     this.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(BLASTER)                  this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(ARC_BOLT)                 this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
+			HANDLE(HLAC)                     this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(PORTO_RED)                this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
+			HANDLE(PORTO_BLUE)               this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
+			HANDLE(HOOKBOMB)                 this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
+			HANDLE(HAGAR)                    this.traileffect = EFFECT_HAGAR_ROCKET.m_id; this.scale = 0.75; break;
+			HANDLE(HAGAR_BOUNCING)           this.traileffect = EFFECT_HAGAR_ROCKET.m_id; this.scale = 0.75; break;
+			HANDLE(FIREBALL)                 this.modelindex = 0; this.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
+			HANDLE(FIREMINE)                 this.modelindex = 0; this.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
+			HANDLE(TAG)                      this.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			HANDLE(FLAC)                     this.scale = 0.4; this.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
+			HANDLE(SEEKER)                   this.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
 
-			HANDLE(MAGE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
-			HANDLE(GOLEM_LIGHTNING)    this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(MAGE_SPIKE)               this.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
+			HANDLE(GOLEM_LIGHTNING)          this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
-			HANDLE(RAPTORBOMB)         this.gravity = 1; this.avelocity = '0 0 180'; this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(RAPTORBOMBLET)      this.gravity = 1; this.avelocity = '0 0 180'; this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(RAPTORCANNON)       this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			HANDLE(RAPTORBOMB)               this.gravity = 1; this.avelocity = '0 0 180'; this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(RAPTORBOMBLET)            this.gravity = 1; this.avelocity = '0 0 180'; this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(RAPTORCANNON)             this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
 
-			HANDLE(SPIDERROCKET)       this.traileffect = EFFECT_SPIDERBOT_ROCKET_TRAIL.m_id; break;
-			HANDLE(WAKIROCKET)         this.traileffect = EFFECT_RACER_ROCKET_TRAIL.m_id; break;
-			HANDLE(WAKICANNON)         this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(SPIDERROCKET)             this.traileffect = EFFECT_SPIDERBOT_ROCKET_TRAIL.m_id; break;
+			HANDLE(WAKIROCKET)               this.traileffect = EFFECT_RACER_ROCKET_TRAIL.m_id; break;
+			HANDLE(WAKICANNON)               this.traileffect = EFFECT_Null.m_id; break;
 
-			HANDLE(BUMBLE_GUN)         this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
-			HANDLE(BUMBLE_BEAM)        this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(BUMBLE_GUN)               this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(BUMBLE_BEAM)              this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
-			HANDLE(RPC)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			HANDLE(RPC)                      this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
-			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER(this.team).m_id; break;
+			HANDLE(ROCKETMINSTA_LASER)       this.traileffect = EFFECT_ROCKETMINSTA_LASER(this.team).m_id; break;
 #undef HANDLE
 			default:
 				if (MUTATOR_CALLHOOK(Ent_Projectile, this))
@@ -378,6 +381,14 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				settouch(this, func_null);
 				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 				this.bouncestop = WEP_CVAR(mortar, bouncestop);
+				break;
+			case PROJECTILE_CLASSIC_GRENADE_BOUNCING:
+				this.mins = '-3 -3 -3';
+				this.maxs = '3 3 3';
+				set_movetype(this, MOVETYPE_BOUNCE);
+				settouch(this, func_null);
+				this.bouncefactor = WEP_CVAR_SEC(classic, bouncefactor);
+				this.bouncestop = WEP_CVAR_SEC(classic, bouncestop);
 				break;
 			case PROJECTILE_GOLEM_LIGHTNING:
 				this.mins = '-8 -8 -8';

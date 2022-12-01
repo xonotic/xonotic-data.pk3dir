@@ -1,6 +1,7 @@
 // generated file; do not modify
 #include <common/weapons/weapon/arc.qc>
 #include <common/weapons/weapon/blaster.qc>
+#include <common/weapons/weapon/classic.qc>
 #include <common/weapons/weapon/crylink.qc>
 #include <common/weapons/weapon/devastator.qc>
 #include <common/weapons/weapon/electro.qc>

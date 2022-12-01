@@ -32,7 +32,7 @@ void W_Classic_Rocket_Explode(entity this, entity directhitentity)
 }
 
 
-void W_Classic_Rocket_Explode_use(entity this, entity toucher)
+void W_Classic_Rocket_Explode_use(entity this, entity actor, entity trigger)
 {
 	W_Classic_Rocket_Explode(this, NULL);
 }
@@ -55,7 +55,8 @@ void W_Classic_Rocket_Damage(entity this, entity inflictor, entity attacker, flo
         this.angles = vectoangles(this.velocity);
 
         if(GetResource(this, RES_HEALTH) <= 0)
-                W_PrepareExplosionByDamage(this, attacker, W_Classic_Explode_use);
+                W_PrepareExplosionByDamage(this, attacker, adaptor_think2use_hittype_splash);
+                //W_PrepareExplosionByDamage(this, attacker, W_Classic_Rocket_Explode_use);
 }
 
 void W_Classic_Rocket_Attack(Weapon thiswep, entity actor, .entity weaponentity)
@@ -88,9 +89,10 @@ void W_Classic_Rocket_Attack(Weapon thiswep, entity actor, .entity weaponentity)
         missile.angles = vectoangles(missile.velocity);
 
         settouch(missile, W_Classic_Rocket_Touch);
-        setthink(missile, W_Classic_Rocket_use);
-	//setthink(missile, adaptor_think2use_hittype_splash);
-        missile.nextthink = time;
+        //setthink(missile, W_Classic_Rocket_Explode_use);
+	setthink(missile, adaptor_think2use_hittype_splash);
+	missile.use = W_Classic_Rocket_Explode_use;
+        missile.nextthink = time + WEP_CVAR_PRI(classic, lifetime);
         missile.cnt = time + WEP_CVAR_PRI(classic, lifetime);
         missile.flags = FL_PROJECTILE;
         IL_PUSH(g_projectiles, missile);
@@ -219,7 +221,7 @@ void W_Classic_Grenade_Attack(Weapon thiswep, entity actor, .entity weaponentity
 	IL_PUSH(g_projectiles, gren);
 	IL_PUSH(g_bot_dodge, gren);
 
-	CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
+	CSQCProjectile(gren, true, PROJECTILE_CLASSIC_GRENADE_BOUNCING, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
@@ -258,7 +260,6 @@ METHOD(Classic, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 
 METHOD(Classic, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	print("free\n");
 	if(autocvar_g_balance_classic_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(classic, ammo), WEP_CVAR_SEC(classic, ammo)))
 	{
 		// forced reload
@@ -266,20 +267,16 @@ METHOD(Classic, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	}
 	else if(fire & 1)
 	{
-		print("fire 1\n");
 		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(classic, refire)))
 		{
-			print("attack 1\n");
 			W_Classic_Rocket_Attack(thiswep, actor, weaponentity);
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(classic, animtime), w_ready);
 		}
 	}
 	else if(fire & 2)
 	{
-		print("fire 1\n");
 		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(classic, refire)))
 		{
-			print("attack 1\n");
 			W_Classic_Grenade_Attack(thiswep, actor, weaponentity);
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(classic, animtime), w_ready);
 		}
@@ -304,7 +301,7 @@ METHOD(Classic, wr_reload, void(entity thiswep, entity actor, .entity weaponenti
 {
 	W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(classic, ammo), WEP_CVAR_SEC(classic, ammo)), SND_RELOAD); // WEAPONTODO? imported from mortar.qc which had "WEAPONTODO"
 }
-
+/*
 METHOD(Classic, wr_suicidemessage, Notification(entity thiswep))
 {
 	if(w_deathtype & HITTYPE_SECONDARY)
@@ -331,7 +328,7 @@ METHOD(Classic, wr_killmessage, Notification(entity thiswep))
 	}
 
 }
-
+*/
 #endif
 #ifdef CSQC
 

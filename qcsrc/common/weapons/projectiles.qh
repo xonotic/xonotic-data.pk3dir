@@ -38,6 +38,8 @@ const int PROJECTILE_ROCKETMINSTA_LASER = 34;
 
 const int PROJECTILE_ARC_BOLT = 35;
 
+const int PROJECTILE_CLASSIC_GRENADE_BOUNCING = 36;
+
 // projectile IDs 40-50 reserved
 
 const int PROJECTILE_RPC = 60;
