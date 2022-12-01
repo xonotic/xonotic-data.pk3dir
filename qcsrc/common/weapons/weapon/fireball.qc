@@ -342,7 +342,7 @@ METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(actor.bot_primary_fireballmooth == 0)
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false, false))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
             if(random() < 0.02) actor.bot_primary_fireballmooth = 0;
@@ -350,7 +350,7 @@ METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity
     }
     else
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true, false))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.01) actor.bot_primary_fireballmooth = 1;
