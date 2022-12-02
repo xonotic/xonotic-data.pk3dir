@@ -4,31 +4,31 @@
 
 void W_Classic_Rocket_Explode(entity this, entity directhitentity)
 {
-        if(directhitentity.takedamage == DAMAGE_AIM)
-                if(IS_PLAYER(directhitentity))
-                        if(DIFF_TEAM(this.realowner, directhitentity))
-                                if(!IS_DEAD(directhitentity))
-                                        if(IsFlying(directhitentity))
-                                                Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-        this.event_damage = func_null;
-        this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-        RadiusDamage(
-                this,
-                this.realowner,
-                WEP_CVAR_PRI(classic, damage),
-                WEP_CVAR_PRI(classic, edgedamage),
-                WEP_CVAR_PRI(classic, radius),
-                NULL,
-                NULL,
-                WEP_CVAR_PRI(classic, force),
-                this.projectiledeathtype,
-                this.weaponentity_fld,
-                directhitentity
-        );
+	RadiusDamage(
+		this,
+		this.realowner,
+		WEP_CVAR_PRI(classic, damage),
+		WEP_CVAR_PRI(classic, edgedamage),
+		WEP_CVAR_PRI(classic, radius),
+		NULL,
+		NULL,
+		WEP_CVAR_PRI(classic, force),
+		this.projectiledeathtype,
+		this.weaponentity_fld,
+		directhitentity
+	);
 
-        delete(this);
+	delete(this);
 }
 
 
@@ -45,68 +45,67 @@ void W_Classic_Rocket_Touch(entity this, entity toucher)
 
 void W_Classic_Rocket_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-        if(GetResource(this, RES_HEALTH) <= 0)
-                return;
+	if(GetResource(this, RES_HEALTH) <= 0)
+		return;
 
-        if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
-                return; // g_projectiles_damage says to halt
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
 
-        TakeResource(this, RES_HEALTH, damage);
-        this.angles = vectoangles(this.velocity);
+	TakeResource(this, RES_HEALTH, damage);
+	this.angles = vectoangles(this.velocity);
 
-        if(GetResource(this, RES_HEALTH) <= 0)
-                W_PrepareExplosionByDamage(this, attacker, adaptor_think2use_hittype_splash);
+	if(GetResource(this, RES_HEALTH) <= 0)
+		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use_hittype_splash);
 }
 
 void W_Classic_Rocket_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-        W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(classic, ammo), weaponentity);
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(classic, ammo), weaponentity);
 
-        W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(classic, damage), thiswep.m_id);
-        W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(classic, damage), thiswep.m_id);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-        entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
-        missile.weaponentity_fld = weaponentity;
-        missile.owner = missile.realowner = actor;
-        missile.bot_dodge = true;
-        missile.bot_dodgerating = WEP_CVAR_PRI(classic, damage);
+	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	missile.weaponentity_fld = weaponentity;
+	missile.owner = missile.realowner = actor;
+	missile.bot_dodge = true;
+	missile.bot_dodgerating = WEP_CVAR_PRI(classic, damage);
 
-        missile.takedamage = DAMAGE_YES;
-        missile.damageforcescale = WEP_CVAR_PRI(classic, damageforcescale);
-        SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(classic, health));
-        missile.event_damage = W_Classic_Rocket_Damage;
-        missile.damagedbycontents = true;
-        IL_PUSH(g_damagedbycontents, missile);
-	
-        set_movetype(missile, MOVETYPE_FLY);
-        PROJECTILE_MAKETRIGGER(missile);
-        missile.projectiledeathtype = thiswep.m_id;
-        setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+	missile.takedamage = DAMAGE_YES;
+	missile.damageforcescale = WEP_CVAR_PRI(classic, damageforcescale);
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(classic, health));
+	missile.event_damage = W_Classic_Rocket_Damage;
+	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
-        setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-        W_SetupProjVelocity_Basic(missile, WEP_CVAR_PRI(classic, speed), 0);
-        missile.angles = vectoangles(missile.velocity);
+	set_movetype(missile, MOVETYPE_FLY);
+	PROJECTILE_MAKETRIGGER(missile);
+	missile.projectiledeathtype = thiswep.m_id;
+	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-        settouch(missile, W_Classic_Rocket_Touch);
-        //setthink(missile, W_Classic_Rocket_Explode_use);
+	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	W_SetupProjVelocity_Basic(missile, WEP_CVAR_PRI(classic, speed), 0);
+	missile.angles = vectoangles(missile.velocity);
+
+	settouch(missile, W_Classic_Rocket_Touch);
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.use = W_Classic_Rocket_Explode_use;
-        missile.nextthink = time + WEP_CVAR_PRI(classic, lifetime);
-        missile.cnt = time + WEP_CVAR_PRI(classic, lifetime);
-        missile.flags = FL_PROJECTILE;
-        IL_PUSH(g_projectiles, missile);
-        IL_PUSH(g_bot_dodge, missile);
-        missile.missile_flags = MIF_SPLASH;
+	missile.nextthink = time + WEP_CVAR_PRI(classic, lifetime);
+	missile.cnt = time + WEP_CVAR_PRI(classic, lifetime);
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
+	missile.missile_flags = MIF_SPLASH;
 
-        CSQCProjectile(missile, true, PROJECTILE_ROCKET, false); // because of fly sound
+	CSQCProjectile(missile, true, PROJECTILE_ROCKET, false); // because of fly sound
 
-        // common properties
-        MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+	// common properties
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
-        if (time >= missile.nextthink)
-        {
-                getthink(missile)(missile);
-        }
+	if (time >= missile.nextthink)
+	{
+		getthink(missile)(missile);
+	}
 }
 
 void W_Classic_Grenade_Explode(entity this, entity directhitentity)
