@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-27 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2022\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -131,7 +131,7 @@ msgstr "^1Для смены скорости нажмите ^3%s^1 или ^3%s"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Для свободного обзора нажмите ^3%s^1, для смены вида — ^3%s^1"
+msgstr "^1Для свободного обзора — ^3%s^1, для смены вида — ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
@@ -677,7 +677,7 @@ msgstr "Счётчик кадров"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^fps"
-msgstr "к/с"
+msgstr "кадр/с"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
@@ -855,7 +855,7 @@ msgstr "Число самоубийств"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^suicides"
-msgstr "самоубийства"
+msgstr "суициды"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of kills minus deaths"
@@ -863,7 +863,7 @@ msgstr "Количество убийств за вычетом смертей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^sum"
-msgstr "сумма"
+msgstr "итог"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
@@ -879,7 +879,7 @@ msgstr "Число убийств союзников"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^teamkills"
-msgstr "убсоюзника"
+msgstr "убсоюзн"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of ticks (Domination)"
@@ -2824,7 +2824,7 @@ msgstr "^BG%s^K1 был получил урок кунг-фу от Зомби%s%
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr "^BG%s^K1 освоил мастерство камикадзе%s%s"
+msgstr "^BG%s^K1 освоил искусство камикадзе%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
@@ -3071,7 +3071,7 @@ msgstr "^BGРежим Бога спас вас от %s единиц урона, 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr "^BG%s^BG забрал бонус %s^BG!"
+msgstr "^BG%s^BG взял бонус %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -3118,7 +3118,7 @@ msgstr "^BGНе хватает патронов, чтобы использова
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG режим огня невозможен, но вы можете использовать ^F1%s^BG"
+msgstr "Режим огня ^F1%s %s^BG невозможен, но можно использовать ^F1%s^BG"
 
 #: qcsrc/common/notifications/all.inc:377
 #: qcsrc/common/notifications/all.inc:693
@@ -3139,12 +3139,12 @@ msgstr "^BG%s^F3 подключился"
 #: qcsrc/common/notifications/all.inc:381
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr "^BG%s^F3 сейчас играет"
+msgstr "^BG%s^F3 теперь играет"
 
 #: qcsrc/common/notifications/all.inc:382
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr "^BG%s^F3 сейчас играет в команде ^TC^TT"
+msgstr "^BG%s^F3 теперь играет в команде ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:384
 #: qcsrc/common/notifications/all.inc:698
@@ -3232,7 +3232,7 @@ msgstr "^TC^TT^BG генератор уничтожен"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr "^TC^TT^BG генератор воспламенился из-за овертайма!"
+msgstr "^TC^TT^BG генератор воспламенился из-за дополнительного времени!"
 
 #: qcsrc/common/notifications/all.inc:408
 #, c-format
@@ -3414,7 +3414,7 @@ msgstr "^BGУ %s^K1 завяли уши от игры на @!#%%м Баяне%s%
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 убило током из Дугомёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был поражён током из Дугомёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3939,8 +3939,8 @@ msgstr "^BGПат! Теперь противники могут видеть в�
 #: qcsrc/common/notifications/all.inc:577
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
-"^BGПатовая ситуация! Теперь противники могут видеть тех, кто забрал их флаг, "
-"на радаре!"
+"^BGПатовая ситуация! Теперь противники могут видеть на радаре тех, кто "
+"забрал их флаг!"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
@@ -4067,7 +4067,7 @@ msgstr "^K1Вы фрагнули самого себя!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You need to be more careful!"
-msgstr "^K1Вам нужно быть поосторожнее!"
+msgstr "^K1Будьте внимательнее!"
 
 #: qcsrc/common/notifications/all.inc:629
 msgid "^K1You couldn't stand the heat!"
@@ -4497,7 +4497,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
-"^F2Продолжаем играть в ^F4ОВЕРТАЙМЕ^F2!\n"
+"^F2Теперь идёт ^F4ДОПОЛНИТЕЛЬНОЕ ВРЕМЯ^F2!\n"
 "Убивайте противников, пока не определится победитель!"
 
 #: qcsrc/common/notifications/all.inc:737
@@ -4505,7 +4505,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
-"^F2Продолжаем играть в ^F4ОВЕРТАЙМЕ^F2!\n"
+"^F2Теперь идёт ^F4ДОПОЛНИТЕЛЬНОЕ ВРЕМЯ^F2!\n"
 "Зарабатывайте очки, пока не определится победитель!"
 
 #: qcsrc/common/notifications/all.inc:738
@@ -4516,7 +4516,7 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
-"^F2Сейчас играется ^F4ОВЕРТАЙМ^F2!\n"
+"^F2Теперь идёт ^F4ДОПОЛНИТЕЛЬНОЕ ВРЕМЯ^F2!\n"
 "\n"
 "Генерторы постепенно распадаются.\n"
 "Чем больше контрольных точек держит ваша команда,\n"
@@ -4528,7 +4528,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
-"^F2Продолжаем играть в ^F4ОВЕРТАЙМЕ^F2!\n"
+"^F2Теперь идёт ^F4ДОПОЛНИТЕЛЬНОЕ ВРЕМЯ^F2!\n"
 "^BGК игровому времени добавлено ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:741
@@ -4817,7 +4817,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:498 qcsrc/common/notifications/all.qh:511
 #, c-format
 msgid "%d score spree! "
-msgstr "Серия очков: %d! "
+msgstr "Серия очков — %d! "
 
 #: qcsrc/common/notifications/all.qh:510
 #, c-format
@@ -9397,7 +9397,7 @@ msgstr "Загрузки по HTTP"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
-msgstr "Одновременно:"
+msgstr "Одновременные:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
@@ -10101,7 +10101,7 @@ msgstr "Покинуть одиночную игру"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr "Покинуть игру по сети"
+msgstr "Покинуть сетевую игру"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
