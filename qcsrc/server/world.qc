@@ -22,6 +22,7 @@
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
@@ -2260,9 +2261,9 @@ void DropToFloor_Handler(entity this)
 
 	vector end = this.origin - '0 0 256';
 
-	// NOTE: NudgeOutOfSolid support is not added as Xonotic's physics do not use it!
-	//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
-		//SV_NudgeOutOfSolid(this);
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+		move_out_of_solid(this);
 
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
 
@@ -2284,9 +2285,9 @@ void DropToFloor_Handler(entity this)
 		else if(trace_fraction < 1)
 		{
 			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
-			//if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
-				//SV_NudgeOutOfSolid(this);
 			setorigin(this, trace_endpos);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+				move_out_of_solid(this);
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
@@ -2302,6 +2303,12 @@ void DropToFloor_Handler(entity this)
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
 			this.move_suspendedinair = true;
+		}
+		else
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
 		}
 	}
 	this.dropped_origin = this.origin;
