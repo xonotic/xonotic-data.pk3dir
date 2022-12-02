@@ -2824,7 +2824,7 @@ msgstr "^BG%s^K1 был получил урок кунг-фу от Зомби%s%
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr "^BG%s^K1 освоил мастерство камикадзе%s%s"
+msgstr "^BG%s^K1 освоил искусство камикадзе%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
@@ -3071,7 +3071,7 @@ msgstr "^BGРежим Бога спас вас от %s единиц урона, 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr "^BG%s^BG забрал бонус %s^BG!"
+msgstr "^BG%s^BG взял бонус %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -3414,7 +3414,7 @@ msgstr "^BGУ %s^K1 завяли уши от игры на @!#%%м Баяне%s%
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 убило током из Дугомёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был поражён током из Дугомёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3939,8 +3939,8 @@ msgstr "^BGПат! Теперь противники могут видеть в�
 #: qcsrc/common/notifications/all.inc:577
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
-"^BGПатовая ситуация! Теперь противники могут видеть тех, кто забрал их флаг, "
-"на радаре!"
+"^BGПатовая ситуация! Теперь противники могут видеть на радаре тех, кто "
+"забрал их флаг!"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
@@ -4817,7 +4817,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:498 qcsrc/common/notifications/all.qh:511
 #, c-format
 msgid "%d score spree! "
-msgstr "Серия очков: %d! "
+msgstr "Серия очков — %d! "
 
 #: qcsrc/common/notifications/all.qh:510
 #, c-format
@@ -10101,7 +10101,7 @@ msgstr "Покинуть одиночную игру"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr "Покинуть игру по сети"
+msgstr "Покинуть сетевую игру"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
