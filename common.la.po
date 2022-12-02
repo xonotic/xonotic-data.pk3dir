@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-13 07:22+0100\n"
+"POT-Creation-Date: 2022-11-27 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: oblector o, 2022\n"
 "Language-Team: Latin (http://www.transifex.com/team-xonotic/xonotic/language/"
@@ -166,71 +166,61 @@ msgstr "^31^2 plures ludentes requiruntur ut ludus incipiatur."
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^3%d^2 plures ludentes requiruntur ut ludus incipiatur."
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
+#: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%s^3%s%s preme ut exercitium finias"
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
-#: qcsrc/client/hud/panel/infomessages.qc:169
-#: qcsrc/client/hud/panel/infomessages.qc:182
+#: qcsrc/client/hud/panel/infomessages.qc:165
+#: qcsrc/client/hud/panel/infomessages.qc:172
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "ready"
 msgstr "paratus"
 
-#: qcsrc/client/hud/panel/infomessages.qc:169
-#, c-format
-msgid "%sPress ^3%s%s once you are ready"
-msgstr "%s^3%s%s preme cum te paraveris"
-
-#: qcsrc/client/hud/panel/infomessages.qc:174
+#: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2Alios parantes qui exercitia finient exspecta..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:176
-msgid "^2Waiting for others to ready up..."
-msgstr "^2Alios parantes exspecta..."
-
-#: qcsrc/client/hud/panel/infomessages.qc:182
+#: qcsrc/client/hud/panel/infomessages.qc:172
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^3%s^2 preme ut exercitium finias"
 
-#: qcsrc/client/hud/panel/infomessages.qc:203
+#: qcsrc/client/hud/panel/infomessages.qc:193
 msgid "Teamnumbers are unbalanced!"
 msgstr "Manus aequatae non sunt numeris!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:206
+#: qcsrc/client/hud/panel/infomessages.qc:196
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr "^3%s%s preme ut mutes"
 
-#: qcsrc/client/hud/panel/infomessages.qc:206
+#: qcsrc/client/hud/panel/infomessages.qc:196
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
 msgstr "manus selectio"
 
-#: qcsrc/client/hud/panel/infomessages.qc:216
+#: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "^1Spectating this player:"
 msgstr "^1Hic ludens spectatur a:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:216
+#: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "^1Spectating you:"
 msgstr "^1Spectaris a:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:232
+#: qcsrc/client/hud/panel/infomessages.qc:222
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:233
+#: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:234
+#: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:235
+#: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr ""
 
@@ -1161,7 +1151,7 @@ msgstr "Non sino"
 
 #: qcsrc/client/hud/panel/weapons.qc:631
 msgid "Out of ammo"
-msgstr ""
+msgstr "Missili deest"
 
 #: qcsrc/client/hud/panel/weapons.qc:635
 msgid "Don't have"
@@ -1583,19 +1573,19 @@ msgstr "Manuum interfectio"
 
 #: qcsrc/common/items/item/ammo.qh:52
 msgid "bullets"
-msgstr ""
+msgstr "glandes"
 
 #: qcsrc/common/items/item/ammo.qh:82
 msgid "cells"
-msgstr ""
+msgstr "cellulae"
 
 #: qcsrc/common/items/item/ammo.qh:112
 msgid "plasma"
-msgstr ""
+msgstr "plasma"
 
 #: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
-msgstr ""
+msgstr "missilia ignea"
 
 #: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
@@ -1641,7 +1631,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "combustibile"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1962,7 +1952,7 @@ msgstr "Zombium"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:19
 msgid "Ammo"
-msgstr ""
+msgstr "Missilia"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:30
 msgid "Resistance"
@@ -2019,7 +2009,7 @@ msgstr "Volatus"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
 msgid "Buff"
-msgstr ""
+msgstr "Firmamen"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
@@ -2063,7 +2053,7 @@ msgstr "^8est ^3uncus scandendo^8, ^3%s^8 preme ut eo utaris"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Vaporatri missilia"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
@@ -2207,30 +2197,30 @@ msgstr "Utile"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
-msgstr ""
+msgstr "Meta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
 msgid "Finish"
-msgstr ""
+msgstr "Calx"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
 msgid "Start"
-msgstr ""
+msgstr "Carceres"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:20
 msgid "Defend"
-msgstr ""
+msgstr "Defendite"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Destroy"
-msgstr ""
+msgstr "Delete"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Push"
-msgstr ""
+msgstr "Pellite"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "Flag carrier"
@@ -2277,7 +2267,7 @@ msgstr "Vexillum huc referte"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Control point"
-msgstr ""
+msgstr "Dominationis locus"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
 msgid "Dropped key"
@@ -2327,11 +2317,11 @@ msgstr "Belua"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Vehicle"
-msgstr ""
+msgstr "Currus"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:67
 msgid "Intruder!"
-msgstr ""
+msgstr "Irrumpens!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:69
 msgid "Tagged"
@@ -2478,7 +2468,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
-msgstr ""
+msgstr "^F2UID non habes, perspectationis optiones non servabuntur"
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^F1Round already started, you will join the game in the next round"
@@ -2490,7 +2480,7 @@ msgstr "^F2Tempore proximo spectabis"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Ludus integratur..."
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
@@ -2500,12 +2490,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ^BG%s^K1 firmamine ^BG%s^K1, occisus est ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ^BG%s^K1 firmamine ^BG%s^K1, occisus est ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
@@ -2767,12 +2757,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 joins the Zombies%s%s"
-msgstr ""
+msgstr "^BG%s^K1 iam zombium est%s%s"
 
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Cungfu zombio doctus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #: qcsrc/common/notifications/all.inc:315
@@ -2809,12 +2799,12 @@ msgstr "^BG%s^K1 Granata Sanatrice se non sanavit%s%s"
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr ""
+msgstr "^BG%s^K1 mortuus est%s%s. Nonne ingratum est sine missile vivere?"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s"
-msgstr ""
+msgstr "^BG%s^K1 missilia exhausit%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
@@ -3025,24 +3015,24 @@ msgstr "^BGDei Modo sanitas %snaria servata est, fraudator!"
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG firmamen %s^BG tenet!"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG firmamen %s^BG amisit!"
 
 #: qcsrc/common/notifications/all.inc:369
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr ""
+msgstr "^BGFirmamen %s^BG demisisti!"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr ""
+msgstr "^BGFirmamen %s^BG tenes!"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:688
@@ -3066,7 +3056,7 @@ msgstr "^BGCepisti: ^F1%s"
 #: qcsrc/common/notifications/all.inc:691
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr ""
+msgstr "^BGTua missilia non satis sunt: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:376
 #: qcsrc/common/notifications/all.inc:692
@@ -3078,7 +3068,7 @@ msgstr "^F1%s %s^BG emittere non potest, sed sua ^F1%s^BG potest"
 #: qcsrc/common/notifications/all.inc:693
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr ""
+msgstr "^F4Non est^BG ^F1%s^BG in hac harena"
 
 #: qcsrc/common/notifications/all.inc:379
 #, c-format

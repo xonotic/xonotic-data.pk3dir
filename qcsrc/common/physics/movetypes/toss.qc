@@ -51,7 +51,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; bump++)
 	{
 		vector move = this.velocity * movetime;
-		if(!_Movetype_PushEntity(this, move, true, true))
+		if(!_Movetype_PushEntity(this, move, true))
 			return;
 		if (wasfreed(this))
 			return;
@@ -67,7 +67,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			trace_fraction = oldtrace_fraction;
 			trace_plane_normal = oldtrace_plane_normal;
 			trace_ent = oldtrace_ent;
-			if(!_Movetype_PushEntity(this, move, true, true))
+			if(!_Movetype_PushEntity(this, move, true))
 				return;
 			if (wasfreed(this))
 				return;

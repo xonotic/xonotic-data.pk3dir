@@ -166,7 +166,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
 	} else if (IS_DUCKED(this)) {
-		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
+		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
 		if (!trace_startsolid) {
 			UNSET_DUCKED(this);
 			this.view_ofs = STAT(PL_VIEW_OFS, this);
