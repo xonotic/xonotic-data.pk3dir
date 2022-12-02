@@ -56,7 +56,6 @@ void W_Classic_Rocket_Damage(entity this, entity inflictor, entity attacker, flo
 
         if(GetResource(this, RES_HEALTH) <= 0)
                 W_PrepareExplosionByDamage(this, attacker, adaptor_think2use_hittype_splash);
-                //W_PrepareExplosionByDamage(this, attacker, W_Classic_Rocket_Explode_use);
 }
 
 void W_Classic_Rocket_Attack(Weapon thiswep, entity actor, .entity weaponentity)
@@ -165,14 +164,14 @@ void W_Classic_Grenade_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 
-	// always explode when hitting a player, or if normal classic projectile
+	// always explode when hitting a player
 	if(toucher.takedamage == DAMAGE_AIM)
 	{
 		this.use(this, NULL, toucher);
 	}
 	else // bounce
 	{
-		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE+0.3, ATTN_NORM);
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
@@ -247,7 +246,7 @@ METHOD(Classic, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 			if(random() < 0.5) actor.bot_secondary_grenademooth = 0;
 		}
-		else
+		else // bots have a really hard time aiming for direct hits with a 700 ups arcing projectile, fallback to rockets
 		{
 			if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(classic, speed), 0, WEP_CVAR_PRI(classic, lifetime), false, true))
 			{
@@ -301,7 +300,7 @@ METHOD(Classic, wr_reload, void(entity thiswep, entity actor, .entity weaponenti
 {
 	W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(classic, ammo), WEP_CVAR_SEC(classic, ammo)), SND_RELOAD); // WEAPONTODO? imported from mortar.qc which had "WEAPONTODO"
 }
-/*
+
 METHOD(Classic, wr_suicidemessage, Notification(entity thiswep))
 {
 	if(w_deathtype & HITTYPE_SECONDARY)
@@ -328,7 +327,7 @@ METHOD(Classic, wr_killmessage, Notification(entity thiswep))
 	}
 
 }
-*/
+
 #endif
 #ifdef CSQC
 
@@ -336,7 +335,7 @@ METHOD(Classic, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	vector org2;
 	org2 = w_org + w_backoff * 12;
-	pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
+	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
 }
