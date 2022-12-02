@@ -64,7 +64,6 @@ void HUD_Timer()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	string timer;
 	string subtimer = string_null;
 	string subtext = string_null;
 	float curtime, timelimit, timeleft;
@@ -115,16 +114,16 @@ void HUD_Timer()
 	{
 		// Lock timer in infinite warmup
 		if (autocvar_hud_panel_timer_increment)
-			timer = seconds_tostring(0);
+			timer = 0;
 		else
-			timer = seconds_tostring(STAT(TIMELIMIT) * 60);
+			timer = STAT(TIMELIMIT) * 60;
 	}
 	else
 	{
 		if (autocvar_hud_panel_timer_increment || timelimit <= 0)
-			timer = seconds_tostring(HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME)));
+			timer = HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME));
 		else
-			timer = seconds_tostring(timeleft);
+			timer = timeleft;
 	}
 
 	// Secondary timer for round-based game modes
@@ -190,10 +189,10 @@ void HUD_Timer()
 	if(subtimer) {
 		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? timer : subtimer), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? seconds_tostring(timer) : subtimer), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	drawstring_aspect(pos, (swap ? subtimer : timer), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, (swap ? subtimer : seconds_tostring(timer)), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if(subtext)
 		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
