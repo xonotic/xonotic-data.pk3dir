@@ -80,13 +80,23 @@ CLASS(DebugSource, DataSource)
 ENDCLASS(DebugSource)
 
 #define REGISTRY_SOURCE(id, arr) \
+ArrayList arr##_MENU; \
+int arr##_MENU_COUNT; \
+STATIC_INIT_LATE(arr##_MENU) \
+{ \
+    AL_NEW(arr##_MENU, arr##_MAX, NULL, e); \
+    FOREACH(arr, !it.m_hidden, { \
+        AL_sete(arr##_MENU, arr##_MENU_COUNT, it); \
+        arr##_MENU_COUNT++; \
+    }); \
+} \
 CLASS(id, DataSource) \
     METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) { \
-        entity e = _R_GET(_##arr, i); \
+        entity e = AL_gete(arr##_MENU, i); \
         if (returns) e.display(e, returns); \
         return e; \
     } \
-    METHOD(id, reload, int(id this, string filter)) { return arr##_COUNT; } \
+    METHOD(id, reload, int(id this, string filter)) { return arr##_MENU_COUNT; } \
 ENDCLASS(id)
 
 #include "pages.qh"

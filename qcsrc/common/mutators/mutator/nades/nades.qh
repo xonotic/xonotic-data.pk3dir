@@ -106,7 +106,10 @@ CLASS(Nade, Object)
     }
 ENDCLASS(Nade)
 
-REGISTER_NADE(Null);
+CLASS(NullNade, Nade)
+    ATTRIB(NullNade, m_hidden, bool, true);
+ENDCLASS(NullNade)
+REGISTER(Nades, NADE_TYPE, Null, m_id, NEW(NullNade));
 REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 
 Nade Nade_FromProjectile(int proj)
