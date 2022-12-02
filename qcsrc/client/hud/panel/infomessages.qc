@@ -164,19 +164,9 @@ void HUD_InfoMessages()
 		else if(ready_waiting && !spectatee_status)
 		{
 			if(ready_waiting_for_me)
-			{
-				if(warmup_stage)
-					s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
-				else
-					s = sprintf(_("%sPress ^3%s%s once you are ready"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
-			}
+				s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
 			else
-			{
-				if(warmup_stage)
-					s = _("^2Waiting for others to ready up to end warmup...");
-				else
-					s = _("^2Waiting for others to ready up...");
-			}
+				s = _("^2Waiting for others to ready up to end warmup...");
 			InfoMessage(s);
 		}
 		else if(warmup_stage && !spectatee_status)

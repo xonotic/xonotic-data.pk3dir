@@ -131,7 +131,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		// try moving the contacted entity
 		int savesolid = this.solid;
 		this.solid = SOLID_NOT;
-		if(!_Movetype_PushEntity(check, move, true, true))
+		if(!_Movetype_PushEntity(check, move, true))
 		{
 			// entity "check" got teleported
 			check.angles_y += trace_fraction * moveangle.y;
@@ -155,7 +155,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			if(_Movetype_NudgeOutOfSolid_PivotIsKnownGood(check, pivot))
 			{
 				// hack to invoke all necessary movement triggers
-				_Movetype_PushEntity(check, '0 0 0', true, true);
+				_Movetype_PushEntity(check, '0 0 0', true);
 				// we could fix it or entity "check" was telported
 				continue;
 			}

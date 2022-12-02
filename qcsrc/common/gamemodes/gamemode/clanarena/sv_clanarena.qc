@@ -328,6 +328,11 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
+	g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;
+	observe_blocked_if_eliminated = (g_ca_spectate_enemies == -1);
+	// we can avoid sending observe_blocked_if_eliminated to all clients here (with ClientData_Touch)
+	// since it will get sent whenever the client spectates someone anyway
+
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		if (INGAME(it) || IS_BOT_CLIENT(it))
@@ -430,8 +435,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (INGAME(player))
 	{
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
-		if (autocvar_g_ca_spectate_enemies == -1)
-			player.would_spectate = true; // force to spectate only
+		player.would_spectate = observe_blocked_if_eliminated; // if blocked from observing force to spectate now
 	}
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
@@ -567,7 +571,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (autocvar_g_ca_spectate_enemies != 1 && INGAME(client))
+	if (g_ca_spectate_enemies != 1 && INGAME(client))
 	if (DIFF_TEAM(targ, client))
 		return true;
 }
@@ -576,7 +580,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (autocvar_g_ca_spectate_enemies != 1 && INGAME(client)
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
@@ -591,7 +595,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (autocvar_g_ca_spectate_enemies != 1 && INGAME(client)
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }

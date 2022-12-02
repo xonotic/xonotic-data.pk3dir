@@ -122,7 +122,8 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
 		_setmodel(e, e.model); // reset mins and maxs based on mesh
-		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+		// apply object scaling and prevent any float precision issues like #2742
+		setsize(e, RoundPerfectVector(e.mins * e.scale), RoundPerfectVector(e.maxs * e.scale));
 	}
 }
 
