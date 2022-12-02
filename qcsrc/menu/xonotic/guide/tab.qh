@@ -79,6 +79,8 @@ CLASS(DebugSource, DataSource)
     }
 ENDCLASS(DebugSource)
 
+.bool m_hidden;
+
 #define REGISTRY_SOURCE(id, arr) \
 ArrayList arr##_MENU; \
 int arr##_MENU_COUNT; \
