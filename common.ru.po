@@ -731,7 +731,7 @@ msgstr "убийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
-msgstr "Количество завершённых кругов (Гонка/CTS)"
+msgstr "Число завершённых кругов (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
@@ -952,9 +952,9 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
-"Вы можете написать '+' или '-' перед полем, а затем список режимов игры\n"
-"через запятую, затем слешку '/' для показа только этих или не этих\n"
-"режимов. Вы так же можете указать 'all' как поле для показа всех\n"
+"Вы можете написать «+» или «-» перед полем, а затем список режимов игры\n"
+"через запятую, затем косую черту «/» для показа только этих или не этих\n"
+"режимов. Вы так же можете указать «all» как поле для показа всех\n"
 "полей текущего игрового режима."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:704
@@ -1747,7 +1747,7 @@ msgstr "Игра окончена!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "Отличная работа! Щёлкните по «Следующий уровень» для продолжения"
+msgstr "Прекрасно! Щёлкните по «Следующий уровень» для продолжения"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -2019,7 +2019,7 @@ msgstr "Бессилие"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:89
 msgid "Disabled"
-msgstr "Выключено"
+msgstr "Отключено"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:100
 msgid "Vengeance"
@@ -2091,7 +2091,7 @@ msgstr "ручной крюк"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr "^3захватный крюк^8 включён, нажмите ^3%s^8, чтобы воспользоваться им"
+msgstr "^3захватный крюк^8 включён, нажмите ^3%s^8 для его использования"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
@@ -2818,7 +2818,7 @@ msgstr "^BG%s^K1 присоединился к Зомби%s%s"
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr "^BG%s^K1 был получил урок кунг-фу от Зомби%s%s"
+msgstr "^BG%s^K1 получил урок кунфу от Зомби%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #: qcsrc/common/notifications/all.inc:315
@@ -3118,7 +3118,7 @@ msgstr "^BGНе хватает патронов, чтобы использова
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "Режим огня ^F1%s %s^BG невозможен, но можно использовать ^F1%s^BG"
+msgstr "^BGРежим огня ^F1%s %s^BG невозможен, но можно использовать ^F1%s^BG"
 
 #: qcsrc/common/notifications/all.inc:377
 #: qcsrc/common/notifications/all.inc:693
@@ -3414,17 +3414,17 @@ msgstr "^BGУ %s^K1 завяли уши от игры на @!#%%м Баяне%s%
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 был поражён током из Дугомёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был поражён током из Дуги ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 был взорван болтами из Дугомёта %s%s ^BG%s^K1"
+msgstr "^BG%s%s^K1 был разорван зарядами из Дуги %s%s ^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr "^BG%s^K1 доигрался с зарядами Дугомёта%s%s"
+msgstr "^BG%s^K1 доигрался с зарядами Дуги%s%s"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
@@ -4038,7 +4038,7 @@ msgstr "^K1Смени свою тактику, кемпер!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You unfairly eliminated yourself!"
-msgstr "^K1Вы коварно самоликвидировались !"
+msgstr "^K1Вы коварно самоликвидировались!"
 
 #: qcsrc/common/notifications/all.inc:624
 #, c-format
@@ -4055,11 +4055,11 @@ msgstr "^K1Вас с хрустом расплющило по земле!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You felt a little too hot!"
-msgstr "^K1Вам немного жарковато!"
+msgstr "^K1Кажется, вам слишком жарко!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You got a little bit too crispy!"
-msgstr "^K1Кажется, вы немного хрустите!"
+msgstr "^K1Кажется, вы слишком хрустите!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You fragged yourself!"
@@ -4332,7 +4332,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"
-msgstr "^BGВы завладели мячом!"
+msgstr "^BGВы завладели мячом"
 
 #: qcsrc/common/notifications/all.inc:701
 msgid "^BGKilling people while you don't have the ball gives no points!"
@@ -4498,7 +4498,7 @@ msgid ""
 "Keep fragging until we have a winner!"
 msgstr ""
 "^F2Теперь идёт ^F4ДОПОЛНИТЕЛЬНОЕ ВРЕМЯ^F2!\n"
-"Убивайте противников, пока не определится победитель!"
+"Продолжайте набор фрагов, пока не определится победитель!"
 
 #: qcsrc/common/notifications/all.inc:737
 msgid ""
@@ -4843,7 +4843,7 @@ msgstr "Первая жертва! "
 #: qcsrc/common/notifications/all.qh:568
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr "%s^K1 совершил %d убийств подряд! %s^BG"
+msgstr "%s^K1 совершил %d фрагов подряд! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:569
 #, c-format
@@ -5582,7 +5582,7 @@ msgstr "Паук-бот"
 
 #: qcsrc/common/weapons/weapon/arc.qh:20
 msgid "Arc"
-msgstr "Дугомёт"
+msgstr "Дуга"
 
 #: qcsrc/common/weapons/weapon/blaster.qh:20
 msgid "Blaster"
@@ -6240,12 +6240,12 @@ msgstr "Показывать только текущий вид патронов
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:46
 msgid "Noncurrent alpha:"
-msgstr "Прозрачность неактивного:"
+msgstr "Прозрачность нетекущего:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
-msgstr "Размер неактивного:"
+msgstr "Размер нетекущего:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
@@ -6689,7 +6689,7 @@ msgstr "Угол скорости по центру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
 msgid "StrafeHUD style:"
-msgstr "Стиль интерфейсa:"
+msgstr "Стиль интерфейса:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "no styling"
@@ -6958,7 +6958,7 @@ msgstr "Настройки сетки:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 msgid "Snap panels to grid"
-msgstr "Привязка панелей к сетке"
+msgstr "Привязывать панели к сетке"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "Grid size:"
@@ -7487,7 +7487,7 @@ msgstr "Показать больше сведений о выбранном с�
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr "Условия обслуживания не указаны"
+msgstr "Условия использования не указаны"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1051
@@ -7570,7 +7570,7 @@ msgstr "Состояние"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr "Условия обслуживания"
+msgstr "Условия использования"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
@@ -8496,8 +8496,8 @@ msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
-"Источники света в реальном времени, задействованные на определенных картах. "
-"Может заметно сказаться на быстродействии."
+"Источники света в реальном времени, имеющиеся на определённых картах. Может "
+"заметно сказаться на быстродействии."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
@@ -8671,7 +8671,7 @@ msgstr "Таблица результатов"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:48
 msgid "Fading speed:"
-msgstr "Скорость затухания"
+msgstr "Скорость затухания:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
@@ -9082,7 +9082,7 @@ msgstr "Множитель приближения при нажатии кноп
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "ZOOM^Zoom speed:"
-msgstr "Скорость увеличителя:"
+msgstr "Скорость увеличения:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "How fast the view will be zoomed, disable to zoom instantly"
@@ -9096,7 +9096,7 @@ msgstr "Мгновенная"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:95
 msgid "ZOOM^Zoom sensitivity:"
-msgstr "Чувств-ть при увеличении:"
+msgstr "Чувств-ть увеличителя:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:97
 msgid ""
@@ -9344,7 +9344,7 @@ msgstr "Сеть"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:33
 msgid "Show netgraph"
-msgstr "Показывать сетевой монитор"
+msgstr "Показывать сетевой график"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Show a graph of packet sizes and other information"
@@ -9752,8 +9752,8 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
-"Обратное значение гамма-коррекции, эффект яркости, который не влияет на "
-"белый или черный"
+"Обратное значение гамма-коррекции, эффект яркости, не влияющий на белый или "
+"чёрный"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Contrast boost:"
@@ -9895,13 +9895,14 @@ msgstr "наблюдать"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
-"Условия обслуживания обновлены. Пожалуйста, прочтите их перед продолжением:"
+"Условия использования были обновлены. Пожалуйста, прочтите их перед "
+"продолжением:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
 msgstr ""
 "Добро пожаловать в Xonotic! Пожалуйста, прочтите следующие условия "
-"обслуживания:"
+"использования:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
