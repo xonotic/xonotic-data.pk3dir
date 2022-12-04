@@ -58,9 +58,9 @@ spawnfunc(func_fourier)
 
 	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
-		this.message = _(" was squished");
+		this.message = " was squished";
 	if(this.dmg && (this.message2 == ""))
-		this.message2 = _("was squished by");
+		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
 	this.dmgtime2 = time;

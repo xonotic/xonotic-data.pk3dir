@@ -23,10 +23,10 @@ void target_kill_reset(entity this)
 spawnfunc(target_kill)
 {
     if (this.message == "")
-		this.message = _("was in the wrong place");
+		this.message = "was in the wrong place";
 
 	if (this.message2 == "")
-		this.message2 = _("was thrown into a world of hurt by");
+		this.message2 = "was thrown into a world of hurt by";
 
     this.use = target_kill_use;
     this.reset = target_kill_reset;

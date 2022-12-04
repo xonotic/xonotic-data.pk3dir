@@ -40,9 +40,9 @@ spawnfunc(func_pendulum)
 	// not initializing this.dmg to 2, to allow damageless pendulum
 
 	if(this.dmg && (this.message == ""))
-		this.message = _(" was squished");
+		this.message = " was squished";
 	if(this.dmg && (this.message2 == ""))
-		this.message2 = _("was squished by");
+		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
 	this.dmgtime2 = time;

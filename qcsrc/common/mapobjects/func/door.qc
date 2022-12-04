@@ -649,11 +649,11 @@ void door_init_shared(entity this)
 
 	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message == ""))
 	{
-		this.message = _("was squished");
+		this.message = "was squished";
 	}
 	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message2 == ""))
 	{
-		this.message2 = _("was squished by");
+		this.message2 = "was squished by";
 	}
 
 	// TODO: other soundpacks
