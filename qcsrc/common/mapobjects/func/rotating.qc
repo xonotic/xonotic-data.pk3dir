@@ -80,9 +80,9 @@ spawnfunc(func_rotating)
 	this.pos1 = this.avelocity;
 
     if(this.dmg && (this.message == ""))
-        this.message = " was squished";
+        this.message = _(" was squished");
     if(this.dmg && (this.message2 == ""))
-		this.message2 = "was squished by";
+		this.message2 = _("was squished by");
 
 
     if(this.dmg && (!this.dmgtime))

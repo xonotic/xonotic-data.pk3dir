@@ -64,9 +64,9 @@ spawnfunc(trigger_hurt)
 	if (!this.dmg)
 		this.dmg = ((q3compat) ? 5 : 10000);
 	if (this.message == "")
-		this.message = "was in the wrong place";
+		this.message = _("was in the wrong place");
 	if (this.message2 == "")
-		this.message2 = "was thrown into a world of hurt by";
+		this.message2 = _("was thrown into a world of hurt by");
 	// this.message = "someone like %s always gets wrongplaced";
 
 	if(!trigger_hurt_first)
