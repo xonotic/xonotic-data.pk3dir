@@ -145,6 +145,8 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	SendCSQCVortexBeamParticle(charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
+
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_BOTH(vortex, !issecondary, animtime), w_ready);
 }
 
 .float vortex_chargepool_pauseregen_finished;
@@ -155,6 +157,101 @@ void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
 		actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt);
 }
 
+.float hagar_loadstep, hagar_loadbeep, hagar_warning;
+.float hagar_loadblock; // fire press checker, not original use
+void W_Vortex_Charge_Bow(Weapon thiswep, entity actor, .entity weaponentity)
+{
+	// loadable vortex attack, must always run each frame
+	if(time < game_starttime || time < actor.race_penalty || timeout_status == TIMEOUT_ACTIVE)
+		return;
+	if (weaponUseForbidden(actor))
+		return;
+
+	bool loaded = actor.(weaponentity).vortex_charge == WEP_CVAR(vortex, charge_limit);
+
+	if(PHYS_INPUT_BUTTON_ATCK(actor) && (actor.(weaponentity).state == WS_READY || actor.(weaponentity).state == WS_INUSE)) 
+	{
+		actor.(weaponentity).hagar_loadblock = true;
+
+		// check if we can attempt to charge more
+		if(!loaded)
+		{
+			W_Vortex_Charge(actor, weaponentity, frametime / W_TICSPERFRAME);
+			actor.(weaponentity).state = WS_INUSE;
+			sound(actor, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
+
+			if(actor.(weaponentity).vortex_charge >= WEP_CVAR(vortex, charge_limit)){
+				loaded = true;
+				actor.(weaponentity).vortex_charge = WEP_CVAR(vortex, charge_limit); //no overcharge
+			}
+		}
+		if(loaded && !actor.(weaponentity).hagar_loadbeep) // prevents the beep from playing each frame
+		{
+			// if this is the last rocket we can load, play a beep sound to notify the player
+			sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+			actor.(weaponentity).hagar_loadbeep = true;
+			actor.(weaponentity).hagar_loadstep = time + WEP_CVAR(vortex, charge_bow_hold) * W_WeaponRateFactor(actor);
+		}
+	}
+
+	if(actor.(weaponentity).vortex_charge && actor.(weaponentity).hagar_loadblock == true)
+	{
+		// play warning sound if we're about to release
+		if(!actor.(weaponentity).hagar_warning) // prevents the beep from playing each frame
+		{
+			if(loaded && actor.(weaponentity).hagar_loadstep - 0.5 < time && WEP_CVAR(vortex, charge_bow_hold) >= 0)
+			{
+				// we're about to automatically release after holding time, play a beep sound to notify the player
+				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+				actor.(weaponentity).hagar_warning = true;
+			}
+		}
+
+		// release if player let go of button or if they've held it in too long
+		if(!PHYS_INPUT_BUTTON_ATCK(actor) || (loaded && actor.(weaponentity).hagar_loadstep < time && WEP_CVAR(vortex, charge_bow_hold) >= 0))
+		{
+			actor.(weaponentity).state = WS_READY;
+			if(thiswep.wr_checkammo1(thiswep, actor, weaponentity)){
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire))){
+					W_Vortex_Attack(thiswep, actor, weaponentity, 0);
+				}
+			}
+		}
+	}
+	else
+	{
+		actor.(weaponentity).hagar_loadbeep = false;
+		actor.(weaponentity).hagar_warning = false;
+		actor.(weaponentity).hagar_loadblock = false;
+
+		// we aren't checking ammo during an attack, so we must do it here
+		if(!(thiswep.wr_checkammo1(thiswep, actor, weaponentity) + thiswep.wr_checkammo2(thiswep, actor, weaponentity)))
+		if(!(actor.items & IT_UNLIMITED_AMMO))
+		{
+			// note: this doesn't force the switch
+			W_SwitchToOtherWeapon(actor, weaponentity);
+			return;
+		}
+	}
+}
+
+METHOD(Vortex, wr_gonethink, void(entity thiswep, entity actor, .entity weaponentity))
+{
+	// we lost the weapon and want to prepare switching away
+	if(actor.(weaponentity).hagar_load)
+	{
+		actor.(weaponentity).state = WS_READY;
+		W_Vortex_Attack(thiswep, actor, weaponentity, 0);
+	}
+}
+METHOD(Vortex, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
+{
+	// if we have charge loaded when we die, release it
+	if(actor.(weaponentity).hagar_load && WEP_CVAR(vortex, charge_bow_hold_releasedeath))
+		if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+			W_Vortex_Attack(thiswep, actor, weaponentity, 0);
+}
+
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	if(bot_aim(actor, weaponentity, 1000000, 0, 1, false, true))
@@ -162,100 +259,111 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
+	if(autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)))
+	{ // forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+
+		if(WEP_CVAR(vortex, charge_bow))
+			actor.(weaponentity).vortex_charge = 0;
+
+		return; // if we need to reload cancel all charging and firing
+	}
+
+	if(WEP_CVAR(vortex, charge_bow))
+	{
+		W_Vortex_Charge_Bow(thiswep, actor, weaponentity);
+		return; // this charging mode overrides normal charging and firing
+	}
+
 	if(!WEP_CVAR(vortex, charge_always))
 		W_Vortex_Charge(actor, weaponentity, frametime / W_TICSPERFRAME);
 
 	if(WEP_CVAR_SEC(vortex, chargepool))
+	{
 		if(actor.(weaponentity).vortex_chargepool_ammo < 1)
 		{
 			if(actor.vortex_chargepool_pauseregen_finished < time)
 				actor.(weaponentity).vortex_chargepool_ammo = min(1, actor.(weaponentity).vortex_chargepool_ammo + WEP_CVAR_SEC(vortex, chargepool_regen) * frametime / W_TICSPERFRAME);
 			actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(vortex, chargepool_pause_regen));
 		}
+	}
 
-	if(autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
-		thiswep.wr_reload(thiswep, actor, weaponentity);
-	} else
+	if(fire & 1)
 	{
-		if(fire & 1)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
 		{
-			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
-			{
-				W_Vortex_Attack(thiswep, actor, weaponentity, 0);
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
-			}
+			W_Vortex_Attack(thiswep, actor, weaponentity, 0);
 		}
-		if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+	}
+	if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+	{
+		if(WEP_CVAR(vortex, charge))
 		{
-			if(WEP_CVAR(vortex, charge))
+			actor.(weaponentity).vortex_charge_rottime = time + WEP_CVAR(vortex, charge_rot_pause);
+			float dt = frametime / W_TICSPERFRAME;
+
+			if(actor.(weaponentity).vortex_charge < 1)
 			{
-				actor.(weaponentity).vortex_charge_rottime = time + WEP_CVAR(vortex, charge_rot_pause);
-				float dt = frametime / W_TICSPERFRAME;
-
-				if(actor.(weaponentity).vortex_charge < 1)
+				if(WEP_CVAR_SEC(vortex, chargepool))
 				{
-					if(WEP_CVAR_SEC(vortex, chargepool))
+					if(WEP_CVAR_SEC(vortex, ammo))
 					{
-						if(WEP_CVAR_SEC(vortex, ammo))
-						{
-							// always deplete if secondary is held
-							actor.(weaponentity).vortex_chargepool_ammo = max(0, actor.(weaponentity).vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
+						// always deplete if secondary is held
+						actor.(weaponentity).vortex_chargepool_ammo = max(0, actor.(weaponentity).vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
 
-							dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
-							actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
-							dt = min(dt, actor.(weaponentity).vortex_chargepool_ammo);
-							dt = max(0, dt);
-
-							actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
-						}
-					}
-
-					else if(WEP_CVAR_SEC(vortex, ammo))
-					{
-						if(fire & 2) // only eat ammo when the button is pressed
-						{
-							dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
-							if(!(actor.items & IT_UNLIMITED_AMMO))
-							{
-								// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-								if(autocvar_g_balance_vortex_reload_ammo)
-								{
-									dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
-									dt = max(0, dt);
-									if(dt > 0)
-									{
-										actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
-									}
-									actor.(weaponentity).(weapon_load[thiswep.m_id]) = actor.(weaponentity).clip_load;
-								}
-								else
-								{
-									dt = min(dt, (GetResource(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
-									dt = max(0, dt);
-									if(dt > 0)
-									{
-										SetResource(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResource(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
-									}
-								}
-							}
-							actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
-						}
-					}
-
-					else
-					{
 						dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
+						actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
+						dt = min(dt, actor.(weaponentity).vortex_chargepool_ammo);
+						dt = max(0, dt);
+
 						actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
 					}
 				}
-			}
-			else if(WEP_CVAR(vortex, secondary))
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
+
+				else if(WEP_CVAR_SEC(vortex, ammo))
 				{
-					W_Vortex_Attack(thiswep, actor, weaponentity, 1);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
+					if(fire & 2) // only eat ammo when the button is pressed
+					{
+						dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
+						if(!(actor.items & IT_UNLIMITED_AMMO))
+						{
+							// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+							if(autocvar_g_balance_vortex_reload_ammo)
+							{
+								dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+								dt = max(0, dt);
+								if(dt > 0)
+								{
+									actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
+								}
+								actor.(weaponentity).(weapon_load[thiswep.m_id]) = actor.(weaponentity).clip_load;
+							}
+							else
+							{
+								dt = min(dt, (GetResource(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+								dt = max(0, dt);
+								if(dt > 0)
+								{
+									SetResource(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResource(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
+								}
+							}
+						}
+						actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
+					}
 				}
+
+				else
+				{
+					dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
+					actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
+				}
+			}
+		}
+		else if(WEP_CVAR(vortex, secondary))
+		{
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
+			{
+				W_Vortex_Attack(thiswep, actor, weaponentity, 1);
 			}
 		}
 	}

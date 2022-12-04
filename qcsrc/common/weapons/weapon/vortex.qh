@@ -31,6 +31,9 @@ CLASS(Vortex, Weapon)
 		P(class, prefix, charge, float, NONE) \
 		P(class, prefix, charge_always, float, NONE) \
 		P(class, prefix, charge_animlimit, float, NONE) \
+		P(class, prefix, charge_bow, float, NONE) \
+		P(class, prefix, charge_bow_hold, float, NONE) \
+		P(class, prefix, charge_bow_hold_releasedeath, float, NONE) \
 		P(class, prefix, charge_limit, float, NONE) \
 		P(class, prefix, charge_maxspeed, float, NONE) \
 		P(class, prefix, charge_mindmg, float, NONE) \

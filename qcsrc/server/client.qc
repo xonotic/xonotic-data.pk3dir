@@ -2173,7 +2173,7 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(WEP_CVAR(vortex, charge_always))
+			if(WEP_CVAR(vortex, charge_always) && !WEP_CVAR(vortex, charge_bow))
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
