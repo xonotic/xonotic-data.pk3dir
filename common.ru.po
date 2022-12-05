@@ -87,7 +87,7 @@ msgstr "^3Игрок^7: Это область чата."
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
 msgid "FPS: %.*f"
-msgstr "FPS: %.*f"
+msgstr "Кадр/с: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:92
 msgid "^1Observing"
@@ -147,7 +147,7 @@ msgstr "вторичный огонь"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Нажчите ^3%s^1 для смены вида"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -566,11 +566,11 @@ msgstr "пропущена контрольная точка"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr "Кликните для выбора точки назначения телепорта"
+msgstr "Щёлкните для выбора точки назначения телепорта"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr "Кликните для выбора точки возрождения"
+msgstr "Щёлкните для выбора точки возрождения"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of ball carrier kills"
@@ -1849,7 +1849,7 @@ msgstr "Дождитесь хода противника"
 #: qcsrc/common/minigames/minigame/pp.qc:471
 #: qcsrc/common/minigames/minigame/ttt.qc:354
 msgid "Click on the game board to place your piece"
-msgstr "Кликнете по игровой доске для размещения вашей части"
+msgstr "Щёлкните по игровой доске для размещения вашей части"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
@@ -2149,7 +2149,7 @@ msgstr "бросить оружие / гранату"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr "^3гранаты^8 включены, нажмите ^3%s^8, чтобы использовать их"
+msgstr "^3гранаты^8 включены, нажмите ^3%s^8 для их использования"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:99
 msgid "Grenade"
@@ -2634,8 +2634,7 @@ msgstr "^BG%s%s^K1 был мумифицирован ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
-msgstr ""
-"^BG%s%s^K1 попытался занять место телепорта, принадлежащее ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 оказался в точке выхода из телепорта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
@@ -6466,7 +6465,7 @@ msgstr "Уведомления:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
 msgid "Also print notifications to the console"
-msgstr "Также показывать уведомления в консоли"
+msgstr "Также выводить уведомления в консоль"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:23
 msgid "Flip notify order"
@@ -7053,7 +7052,7 @@ msgstr "Игра по сети"
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
-msgstr "Играть по сети, смотреть демки или изменить настройки игрока"
+msgstr "Играть по сети, смотреть демки или сменить настройки игрока"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
@@ -7203,7 +7202,7 @@ msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
-"Нажмите здесь или Ctrl+F, чтобы задать ключевое слово для сужения списка "
+"Щёлкните здесь или Ctrl+F, чтобы задать ключевое слово для сужения списка "
 "арен. Ctrl+Delete, чтобы очистить; Enter, когда закончите."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
@@ -7458,7 +7457,7 @@ msgstr "Показывать полные серверы, не имеющие с
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr "Лагающие"
+msgstr "Далёкие"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
@@ -8822,7 +8821,7 @@ msgstr "Показывать информацию о сериях убийств
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
 msgid "Only display sprees if they are achievements"
-msgstr "Отображать серии убийств, только являющиеся достижениями"
+msgstr "Отображать серии убийств, если только это достижения"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
@@ -8884,11 +8883,11 @@ msgstr "Прочее"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
-msgstr "Отображать сообщения консоли в верхнем левом углу"
+msgstr "Выводить сообщения консоли в верхнем левом углу"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 msgid "Display all info messages in the chatbox"
-msgstr "Отображать все информационные сообщения в окне чата"
+msgstr "Выводить все информационные сообщения в окне чата"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display player statuses in the chatbox"
@@ -9333,7 +9332,7 @@ msgstr "Определённая пользователем привязка к�
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d fps"
-msgstr "%d к/c"
+msgstr "%d кадр/c"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
@@ -9351,7 +9350,7 @@ msgstr "Сеть"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:33
 msgid "Show netgraph"
-msgstr "Показывать сетевой график"
+msgstr "Показывать график сетевой активности"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Show a graph of packet sizes and other information"
@@ -9380,7 +9379,7 @@ msgstr "Ограничение канала:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Укажите скорость вашей сети"
+msgstr "Выберите скорость вашей сети"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
@@ -9416,7 +9415,7 @@ msgstr "Частота кадров"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:84
 msgid "Show frames per second"
-msgstr "Показывать счётчик кадров (FPS)"
+msgstr "Показывать счётчик кадров (кадр/c)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
 msgid "Show your rendered frames per second"
@@ -9804,7 +9803,7 @@ msgstr "Общая яркость отрисовки"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
 msgid "Wait for GPU to finish each frame"
-msgstr "Ждать завершения каждого кадра видеокартой"
+msgstr "Ждать завершения видеокартой каждого кадра"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:154
 msgid ""
