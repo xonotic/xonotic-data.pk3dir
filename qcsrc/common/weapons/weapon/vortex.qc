@@ -157,9 +157,9 @@ void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
 		actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt);
 }
 
-.float hagar_loadstep, hagar_loadbeep, hagar_warning;
-.float hagar_loadblock; // fire press checker, not original use
-//.float vortex_bow_in_charging;
+.float hagar_loadblock; // are we loading or not
+.float hagar_loadstep; // time when to force release
+.float hagar_loadbeep, hagar_warning; // prevent sounds from playing on multiple frames
 void W_Vortex_Charge_Bow(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// loadable vortex attack, must always run each frame
@@ -170,57 +170,58 @@ void W_Vortex_Charge_Bow(Weapon thiswep, entity actor, .entity weaponentity)
 
 	bool loaded = actor.(weaponentity).vortex_charge == WEP_CVAR(vortex, charge_limit);
 
+	// check if we can attempt to charge more
 	if(PHYS_INPUT_BUTTON_ATCK(actor) && (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)) || actor.(weaponentity).hagar_loadblock == true))
 	{
-		actor.(weaponentity).hagar_loadblock = true;
+		actor.(weaponentity).hagar_loadblock = true; // we are charging
 
-		// check if we can attempt to charge more
-		if(!loaded)
+		if(!loaded) // not fully loaded
 		{
 			W_Vortex_Charge(actor, weaponentity, frametime / W_TICSPERFRAME);
 			actor.(weaponentity).state = WS_INUSE;
 			if(!actor.(weaponentity).hagar_loadbeep){
-				//sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * 0.8, ATTN_NORM);
-				actor.(weaponentity).hagar_loadbeep = true; // set to true so that charging sound isn't replayed each charging frame
+				// set to true so that charging sound isn't replayed each charging frame
+				actor.(weaponentity).hagar_loadbeep = true;
+				// TODO find a better charging sound?
+				sound(actor, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, 1, ATTEN_NORM);
 			}
 
 			if(actor.(weaponentity).vortex_charge >= WEP_CVAR(vortex, charge_limit)){
 				loaded = true;
-				actor.(weaponentity).hagar_loadbeep = false; // set to false so we can play full charge beep
+				actor.(weaponentity).hagar_loadstep = time + WEP_CVAR(vortex, charge_bow_hold) * W_WeaponRateFactor(actor);
 				actor.(weaponentity).vortex_charge = WEP_CVAR(vortex, charge_limit); //no overcharge
+
+				// we are now fully loaded, play a beep sound to notify the player
+				sound(actor, CH_WEAPON_B, SND_ONS_SPARK1, 1, ATTEN_NORM);
+
+				sound(actor, CH_SHOTS_SINGLE, SND_ARC_LOOP_OVERHEAT, 1, ATTEN_NORM);
 			}
 		}
-		if(loaded && !actor.(weaponentity).hagar_loadbeep) // prevents the beep from playing each frame
+		else if(!actor.(weaponentity).hagar_warning) // prevents the beep from playing each frame
 		{
-			// if this is the last rocket we can load, play a beep sound to notify the player
-			sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
-			actor.(weaponentity).hagar_loadbeep = true;
-			actor.(weaponentity).hagar_loadstep = time + WEP_CVAR(vortex, charge_bow_hold) * W_WeaponRateFactor(actor);
-		}
-
-		// play warning sound if we're about to release
-		if(!actor.(weaponentity).hagar_warning) // prevents the beep from playing each frame
-		{
-			if(loaded && actor.(weaponentity).hagar_loadstep - 0.5 < time && WEP_CVAR(vortex, charge_bow_hold) >= 0)
+			if(actor.(weaponentity).hagar_loadstep - 0.5 < time && WEP_CVAR(vortex, charge_bow_hold) >= 0)
 			{
-				// we're about to automatically release after holding time, play a beep sound to notify the player
-				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+				// we're soon about to automatically have a forced release
+				// play a sound to notify the player
+				sound(actor, CH_WEAPON_B, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 				actor.(weaponentity).hagar_warning = true;
 			}
 		}
 	}
 
-	if(actor.(weaponentity).vortex_charge && actor.(weaponentity).hagar_loadblock == true)
+	// have we charged?
+	if(actor.(weaponentity).vortex_charge && actor.(weaponentity).hagar_loadblock)
 	{
-		// release if player let go of button or if they've held it in too long
+		// release if player let go of firing button or if they've held it in too long
 		if(!PHYS_INPUT_BUTTON_ATCK(actor) || (loaded && actor.(weaponentity).hagar_loadstep < time && WEP_CVAR(vortex, charge_bow_hold) >= 0))
 		{
+			stopsound(actor, CH_SHOTS_SINGLE);
 			actor.(weaponentity).state = WS_READY;
 			if(thiswep.wr_checkammo1(thiswep, actor, weaponentity)){
 				weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire));
 				W_Vortex_Attack(thiswep, actor, weaponentity, 0);
-				actor.(weaponentity).hagar_loadblock = false;
 			}
+			actor.(weaponentity).hagar_loadblock = false;
 		}
 	}
 	else
@@ -242,25 +243,37 @@ void W_Vortex_Charge_Bow(Weapon thiswep, entity actor, .entity weaponentity)
 METHOD(Vortex, wr_gonethink, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	// we lost the weapon and want to prepare switching away
-	if(actor.(weaponentity).vortex_charge)
+	if(actor.(weaponentity).vortex_charge && actor.(weaponentity).hagar_loadblock)
 	{
+		actor.(weaponentity).vortex_charge = 0;
+		actor.(weaponentity).hagar_loadbeep = false;
+		actor.(weaponentity).hagar_warning = false;
+		actor.(weaponentity).hagar_loadblock = false;
 		actor.(weaponentity).state = WS_READY;
-		if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-			W_Vortex_Attack(thiswep, actor, weaponentity, 0);
+		stopsound(actor, CH_SHOTS_SINGLE);
 	}
 }
 METHOD(Vortex, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	// if we have charge loaded when we die, release it
-	if(actor.(weaponentity).vortex_charge && WEP_CVAR(vortex, charge_bow_hold_releasedeath))
-		if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+	if(actor.(weaponentity).vortex_charge && WEP_CVAR(vortex, charge_bow_hold_releasedeath)){
+		actor.(weaponentity).state = WS_READY;
+		if(thiswep.wr_checkammo1(thiswep, actor, weaponentity)){
+			weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire));
 			W_Vortex_Attack(thiswep, actor, weaponentity, 0);
+		}
+		actor.(weaponentity).hagar_loadblock = false;
+	}
 }
 
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	if(bot_aim(actor, weaponentity, 1000000, 0, 1, false, true))
 		PHYS_INPUT_BUTTON_ATCK(actor) = true;
+
+	// check if we have a bow charging vortex and it's fully loaded
+	if(WEP_CVAR(vortex, charge_bow) && actor.(weaponentity).vortex_charge >= WEP_CVAR(vortex, charge_limit))
+		PHYS_INPUT_BUTTON_ATCK(actor) = false;
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
