@@ -1,36 +1,43 @@
 /*
-Generated framegroups file for gak
+Generated framegroups file for player_model
 Used by DarkPlaces to simulate frame groups in DPM models.
+
+Thanks to dpmodel tool, using .smd mesh and animations 
+we can know where's correct or not.
+That's a logical way to know how to do export correctly.
+
+Note: every frame is reduced (-1), e.g. 
+1 37 30 0 => 0 36 30 0
 */
 
-0 36 30 0 // gak dieone
-36 20 30 0 // gak dietwo
-58 15 15 1 // gak draw
-74 20 10 1 // gak duck
-95 21 32 1 // gak duckwalk
-117 16 15 0 // gak duckjump
-134 15 10 1 // gak duckidle
-150 41 5 1 // gak idle
-192 139 25 0 // gak jump // (140: 22) // 215 140 25 0 // gak fly
-354 15 24 0 // gak painone
-370 17 34 0 // gak paintwo
-389 3 3 0 // gak shoot
-392 21 15 1 // gak taunt
-414 21 29 1 // gak run
-436 21 29 1 // gak runbackwards
-458 21 29 1 // gak strafeleft
-480 21 29 1 // gak straferight
-502 2 15 0 // gak deadone
-505 2 15 0 // gak deadtwo
-508 21 29 1 // gak forwardright
-530 21 29 1 // gak forwardleft
-552 21 29 1 // gak backright
-574 21 29 1 // gak backleft
-596 21 20 0 // gak melee
-618 21 32 1 // gak duckwalkbackwards
-640 21 32 1 // gak duckstrafeleft
-662 21 32 1 // gak duckstraferight
-684 21 32 1 // gak duckforwardright
-706 21 32 1 // gak duckforwardleft
-728 21 32 1 // gak duckbackwardright
-750 21 32 1 // gak duckbackwardleft
+0 36 30 0 // player_model dieone
+36 20 30 0 // player_model dietwo
+58 15 15 1 // player_model draw
+74 20 10 1 // player_model duck
+95 21 32 1 // player_model duckwalk
+117 16 15 0 // player_model duckjump
+134 15 10 1 // player_model duckidle
+150 41 5 1 // player_model idle
+192 139 25 0 // player_model jump // (139: 21) // 214 139 25 0 // player_model fly
+354 15 24 0 // player_model painone
+370 17 34 0 // player_model paintwo
+389 3 3 0 // player_model shoot
+392 21 15 1 // player_model taunt
+414 21 29 1 // player_model run
+436 21 29 1 // player_model runbackwards
+458 21 29 1 // player_model strafeleft
+480 21 29 1 // player_model straferight
+502 2 15 0 // player_model deadone
+505 2 15 0 // player_model deadtwo
+508 21 29 1 // player_model forwardright
+530 21 29 1 // player_model forwardleft
+552 21 29 1 // player_model backright
+574 21 29 1 // player_model backleft
+596 21 20 0 // player_model melee
+618 21 32 1 // player_model duckwalkbackwards
+640 21 32 1 // player_model duckstrafeleft
+662 21 32 1 // player_model duckstraferight
+684 21 32 1 // player_model duckforwardright
+706 21 32 1 // player_model duckforwardleft
+728 21 32 1 // player_model duckbackwardright
+750 21 32 1 // player_model duckbackwardleft
