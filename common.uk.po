@@ -9,6 +9,7 @@
 # Ihor Andreev, 2021
 # Ігор Андреєв <ihor@noleron.com>, 2021
 # Ігор Андреєв <ihor@noleron.com>, 2021
+# Illia Serediuk, 2022
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 # Ігор Андреєв <ihor@noleron.com>, 2021
 msgid ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ігор Андреєв <ihor@noleron.com>, 2021\n"
+"Last-Translator: Illia Serediuk, 2022\n"
 "Language-Team: Ukrainian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -560,11 +561,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Натисніть що б вибрати пункт призначення телепорту"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Натисніть що б вибрати точку спавна"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of ball carrier kills"
@@ -600,7 +601,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of deaths"
-msgstr ""
+msgstr "Кількість смертей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^deaths"
@@ -620,7 +621,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "The total damage done"
-msgstr ""
+msgstr "Загальна кількість урону"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^dmgtaken"
@@ -722,7 +723,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of kills"
-msgstr ""
+msgstr "Кількість фрагів"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^kills"
@@ -755,7 +756,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Player name"
-msgstr ""
+msgstr "Ім'я гравця"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^name"
@@ -982,7 +983,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1779
 msgid "Item stats"
-msgstr ""
+msgstr "Характеристики предмета"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1890
 msgid "Map stats:"
@@ -990,7 +991,7 @@ msgstr "Статистика мапи:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1920
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Вбито монстрів:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1927
 msgid "Secrets found:"
@@ -1240,7 +1241,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1394
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Твоя версія клієнта не актуальна."
 
 #: qcsrc/client/main.qc:1395
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
@@ -1248,7 +1249,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1396
 msgid "Please update!"
-msgstr ""
+msgstr "Будь-ласка оновіться!"
 
 #: qcsrc/client/main.qc:1399
 msgid "This server is using an outdated Xonotic version."
@@ -1280,7 +1281,7 @@ msgstr "Тип гри:"
 
 #: qcsrc/client/main.qc:1453
 msgid "This match supports"
-msgstr ""
+msgstr "Цей матч підтримує"
 
 #: qcsrc/client/main.qc:1455
 #, c-format
@@ -1363,11 +1364,11 @@ msgstr ""
 
 #: qcsrc/client/view.qc:894
 msgid "Capture progress"
-msgstr ""
+msgstr "Процесс захоплення"
 
 #: qcsrc/client/view.qc:899
 msgid "Revival progress"
-msgstr ""
+msgstr "Процесс відодження"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
@@ -1404,7 +1405,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Ліміт раунда:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
@@ -1470,7 +1471,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr ""
+msgstr "Дуель"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -1536,7 +1537,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Ліміт очок:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1544,7 +1545,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Викрадач м'ячів"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -1576,7 +1577,7 @@ msgstr "Кругів:"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
-msgstr ""
+msgstr "Допоможи своїй команді набрати фрагів проти ворожої команди"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
@@ -1584,69 +1585,69 @@ msgstr "Team Deathmatch"
 
 #: qcsrc/common/items/item/ammo.qh:52
 msgid "bullets"
-msgstr ""
+msgstr "кулі"
 
 #: qcsrc/common/items/item/ammo.qh:82
 msgid "cells"
-msgstr ""
+msgstr "клітини"
 
 #: qcsrc/common/items/item/ammo.qh:112
 msgid "plasma"
-msgstr ""
+msgstr "плазма"
 
 #: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
-msgstr ""
+msgstr "ракети"
 
 #: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
-msgstr ""
+msgstr "оболонки"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Маленька броня"
 
 #: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
-msgstr ""
+msgstr "Невелика броня"
 
 #: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
 msgid "Big armor"
-msgstr ""
+msgstr "Велика броня"
 
 #: qcsrc/common/items/item/armor.qh:170 qcsrc/common/items/item/armor.qh:177
 msgid "Mega armor"
-msgstr ""
+msgstr "Мега броня"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Маленька аптечка"
 
 #: qcsrc/common/items/item/health.qh:84
 msgid "Medium health"
-msgstr ""
+msgstr "Невелика аптечка"
 
 #: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
 msgid "Big health"
-msgstr ""
+msgstr "Велика аптечка"
 
 #: qcsrc/common/items/item/health.qh:170 qcsrc/common/items/item/health.qh:177
 msgid "Mega health"
-msgstr ""
+msgstr "Мега аптечка"
 
 #: qcsrc/common/items/item/jetpack.qh:38 qcsrc/common/items/item/jetpack.qh:41
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Jetpack"
-msgstr ""
+msgstr "Ракетний ранець"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "пальне"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Паливний генератор"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -1668,7 +1669,7 @@ msgstr "Кількість фрагів, яка потрібна для закі
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
-msgstr ""
+msgstr "Твоя черга"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
@@ -1678,15 +1679,15 @@ msgstr "Вийти"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:368
 msgid "Invite"
-msgstr ""
+msgstr "Запрошення"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:407
 msgid "Current Game"
-msgstr ""
+msgstr "Поточна гра"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr ""
+msgstr "Вийти в меню"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1700,25 +1701,25 @@ msgstr "Приєднатися"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:521
 msgid "Minigames"
-msgstr ""
+msgstr "Міні-ігри"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:582
 msgid "Minigame message"
-msgstr ""
+msgstr "Повідомлення міні-гри"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Бульдозер"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
 #: qcsrc/common/minigames/minigame/ps.qc:431
 msgid "Game over!"
-msgstr ""
+msgstr "Кінець гри!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Так тримати! Натисни 'Наступний Рівень' що б продовжити"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -1728,11 +1729,11 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:498
 #: qcsrc/common/minigames/minigame/ttt.qc:329
 msgid "You are spectating"
-msgstr ""
+msgstr "Ти глядач"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1184
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Удачі в наступний раз!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1189
 msgid "Tubular! Press \"Next Level\" to continue!"
@@ -1752,15 +1753,15 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1434
 msgid "Next Level"
-msgstr ""
+msgstr "Наступний Рівень"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1435
 msgid "Restart"
-msgstr ""
+msgstr "Заново"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Editor"
-msgstr ""
+msgstr "Редактор"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1437
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
@@ -1785,21 +1786,21 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Draw"
-msgstr ""
+msgstr "Малювати"
 
 #: qcsrc/common/minigames/minigame/c4.qc:389
 #: qcsrc/common/minigames/minigame/nmm.qc:610
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "You lost the game!"
-msgstr ""
+msgstr "Ти програв гру"
 
 #: qcsrc/common/minigames/minigame/c4.qc:390
 #: qcsrc/common/minigames/minigame/nmm.qc:611
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 msgid "You win!"
-msgstr ""
+msgstr "Ти переміг"
 
 #: qcsrc/common/minigames/minigame/c4.qc:394
 #: qcsrc/common/minigames/minigame/nmm.qc:615
@@ -1834,12 +1835,12 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Понг"
 
 #: qcsrc/common/minigames/minigame/pong.qc:607
 #: qcsrc/common/minigames/minigame/ttt.qc:309
 msgid "AI"
-msgstr ""
+msgstr "ШІ"
 
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
@@ -1847,15 +1848,15 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
-msgstr ""
+msgstr "Почати матч"
 
 #: qcsrc/common/minigames/minigame/pong.qc:699
 msgid "Add AI player"
-msgstr ""
+msgstr "Додати бота"
 
 #: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Remove AI player"
-msgstr ""
+msgstr "Видалити бота"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
@@ -1881,7 +1882,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:613
 #: qcsrc/common/minigames/minigame/ttt.qc:698
 msgid "Next Match"
-msgstr ""
+msgstr "Настпуний матч"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"

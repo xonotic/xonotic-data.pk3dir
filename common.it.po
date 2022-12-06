@@ -136,7 +136,7 @@ msgstr "fuoco secondario"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Premi ^3%s^1 per cambiare il modo di vedere"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -171,12 +171,12 @@ msgstr "^2Attualmente in ^1warmup^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^2Manca ^31^2 giocatore per avviare la partita"
 
 #: qcsrc/client/hud/panel/infomessages.qc:161
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^2Mancano ^3%d^2 giocatori per avviare la partita"
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -210,7 +210,7 @@ msgstr " Premi ^3%s%s per aggiustare"
 #: qcsrc/client/hud/panel/infomessages.qc:198
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
-msgstr ""
+msgstr "selezione squadra"
 
 #: qcsrc/client/hud/panel/infomessages.qc:208
 msgid "^1Spectating this player:"
@@ -507,11 +507,11 @@ msgstr "Mischia le squadre"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "Server quickmenu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
-msgstr ""
+msgstr "Waypoint editor quickmenu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
@@ -1045,17 +1045,17 @@ msgstr "Selezione squadra"
 #: qcsrc/client/hud/panel/scoreboard.qc:2263
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Premi ^3%s^7 per unirti alla squadra selezionata"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2265
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7Premi ^3%s^7 per auto-scegliere e unirti a una squadra"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2269
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Premi ^3%s^7 per selezionare una squadra specifica"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2280
 #, c-format
@@ -1065,7 +1065,7 @@ msgstr "^3%1.0f minuti"
 #: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7giocatori"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1441
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1123,11 +1123,11 @@ msgstr "Warmup"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Warmup: nessun tempo limite"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Warmup: troppi pochi giocatori"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1302,27 +1302,27 @@ msgstr "Tipo di gioco:"
 
 #: qcsrc/client/main.qc:1453
 msgid "This match supports"
-msgstr ""
+msgstr "Questa partita supporta"
 
 #: qcsrc/client/main.qc:1455
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d giocatori"
 
 #: qcsrc/client/main.qc:1457
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "da %d a %d giocatori"
 
 #: qcsrc/client/main.qc:1459
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d giocatori al massimo"
 
 #: qcsrc/client/main.qc:1461
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d giocatori minimo"
 
 #: qcsrc/client/main.qc:1466
 msgid "Active modifications:"
@@ -1334,7 +1334,7 @@ msgstr "Speciali consigli di gioco:"
 
 #: qcsrc/client/main.qc:1476
 msgid "Server's message"
-msgstr ""
+msgstr "Messaggio del server"
 
 #: qcsrc/client/main.qc:1570
 #, c-format
@@ -1428,12 +1428,12 @@ msgstr "Uccidi tutti i nemici della tua squadra per vincere il round"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Limite round:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Il numero di round vinti necessario prima che la partita finisca"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1565,7 +1565,7 @@ msgstr "Spara e calcia la palla nella porta nemica, difendi la tua porta"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Limite goal:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -2537,12 +2537,12 @@ msgstr "^F2Sarai spettatore il prossimo round"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2La partita sta ricominciando..."
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Conto alla rovescia fermato!"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
@@ -3816,7 +3816,7 @@ msgstr "^BGObiettivo distrutto in ^F4%s^BG!"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "%s giocatori sono necessari per questa partita."
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -4393,6 +4393,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Non puoi entrare nel gioco in questo momento\n"
+"Questa partita è limitata a ^F2%s^BG giocatori."
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"

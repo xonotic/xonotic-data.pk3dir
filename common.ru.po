@@ -147,7 +147,7 @@ msgstr "вторичный огонь"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr "^1Нажчите ^3%s^1 для смены вида"
+msgstr "^1Нажмите ^3%s^1 для смены вида"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -427,7 +427,7 @@ msgstr "Настройки"
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^View/HUD settings"
-msgstr "Настройки вида / интерфейса"
+msgstr "Настройки вида/интерфейса"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
@@ -663,7 +663,7 @@ msgstr "Время лучшего круга (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of faults committed"
-msgstr "Количество совершённых ошибок"
+msgstr "Число совершённых ошибок"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^faults"
@@ -687,7 +687,7 @@ msgstr "кадр/с"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of kills minus suicides"
-msgstr "Количество убийств за вычетом самоубийств"
+msgstr "Число убийств за вычетом самоубийств"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^frags"
@@ -695,7 +695,7 @@ msgstr "фраги"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of goals scored"
-msgstr "Количество забитых голов"
+msgstr "Число забитых голов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^goals"
@@ -745,7 +745,7 @@ msgstr "круги"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
-msgstr "Количество жизней (LMS)"
+msgstr "Число жизней (Остаться в живых)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
@@ -770,11 +770,11 @@ msgstr "имя"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^nick"
-msgstr "ник"
+msgstr "позывной"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
-msgstr "Количество уничтоженных целей"
+msgstr "Число уничтоженных целей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^objectives"
@@ -841,7 +841,7 @@ msgstr "оживления"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of rounds won"
-msgstr "Количество выигранных раундов"
+msgstr "Число выигранных раундов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^rounds won"
@@ -865,7 +865,7 @@ msgstr "суициды"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of kills minus deaths"
-msgstr "Количество убийств за вычетом смертей"
+msgstr "Число убийств за вычетом смертей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^sum"
@@ -873,7 +873,7 @@ msgstr "итог"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
-msgstr "Количество захваченных точек доминации (Доминация)"
+msgstr "Число захваченных точек доминации (Доминация)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^takes"
@@ -889,7 +889,7 @@ msgstr "убсоюзн"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of ticks (Domination)"
-msgstr "Количество тиков (Доминация)"
+msgstr "Число тиков (Доминация)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^ticks"
@@ -1463,7 +1463,7 @@ msgstr "Предел захватов:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "Количество захватов, необходимых для завершения матча"
+msgstr "Число захватов, необходимых для завершения матча"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1498,7 +1498,7 @@ msgstr "Доминация"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "Количество очков, необходимых для завершения матча"
+msgstr "Число очков, необходимых для завершения матча"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1576,7 +1576,7 @@ msgstr "Предел голов:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "Количество голов, необходимых для завершения матча"
+msgstr "Число голов, необходимых для завершения матча"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1700,7 +1700,7 @@ msgstr "Предел фрагов:"
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "Количество фрагов, необходимых для завершения матча"
+msgstr "Число фрагов, необходимых для завершения матча"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -2144,7 +2144,7 @@ msgstr "Маскировочная граната"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
-msgstr "бросить оружие / гранату"
+msgstr "бросить оружие/гранату"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:104
 #, c-format
@@ -2215,7 +2215,7 @@ msgstr "Защита при возрождении"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr "Супероружия"
+msgstr "Суперпушки"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3370,7 +3370,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon"
-msgstr "^BG%s^K1 подобрал Супероружие"
+msgstr "^BG%s^K1 подобрал Суперпушку"
 
 #: qcsrc/common/notifications/all.inc:438
 msgid "^BGYou cannot change to a larger team"
@@ -4170,7 +4170,7 @@ msgstr "^K1Ваша встреча с турелью еМобиля законч
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr "^K1Вас фрагнула турелью еМобиля!"
+msgstr "^K1Вас фрагнула турель еМобиля!"
 
 #: qcsrc/common/notifications/all.inc:645
 msgid "^K1You had an unfortunate run in with a Walker turret!"
@@ -4600,15 +4600,15 @@ msgstr "^BGОсталось всего лишь %s^BG…"
 
 #: qcsrc/common/notifications/all.inc:763
 msgid "^F2Superweapons have broken down"
-msgstr "^F2Супероружие разрушилось"
+msgstr "^F2Суперпушки разрушились"
 
 #: qcsrc/common/notifications/all.inc:764
 msgid "^F2Superweapons have been lost"
-msgstr "^F2Супероружие было потеряно"
+msgstr "^F2Суперпушки были утеряны"
 
 #: qcsrc/common/notifications/all.inc:765
 msgid "^F2You now have a superweapon"
-msgstr "^F2Вы получили супероружие"
+msgstr "^F2Теперь у вас есть суперпушка"
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -5637,7 +5637,7 @@ msgstr "Мортира"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
-msgstr "Порт-О-Ланч"
+msgstr "Портал-О-Мёт"
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
@@ -7131,7 +7131,7 @@ msgstr "Число ботов:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Amount of bots on your server"
-msgstr "Количество ботов на вашем сервере"
+msgstr "Число ботов на вашем сервере"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Bot skill:"
@@ -8821,15 +8821,15 @@ msgstr "Показывать информацию о сериях убийств
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
 msgid "Only display sprees if they are achievements"
-msgstr "Отображать серии убийств, если только это достижения"
+msgstr "Выводить серии убийств, если только это достижения"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
-msgstr "Показывать сведения о серии убийств в центральной панели"
+msgstr "Выводить сведения о серии убийств в центральной панели"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
 msgid "Show spree information in death messages"
-msgstr "Показывать сведения о серии убийств в сообщениях о смерти"
+msgstr "Выводить сведения о серии убийств в сообщениях о смерти"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:43
 msgid "Sprees in info messages:"
@@ -10052,7 +10052,7 @@ msgstr "открыть консоль"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "quit"
-msgstr "выйти"
+msgstr "выход"
 
 #: qcsrc/menu/xonotic/keybinder.qc:113
 msgid "auto-join team"
@@ -10156,11 +10156,11 @@ msgstr "<модель игрока не найдена>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid "SERVER^Remove favorite"
-msgstr "SERVER^Удалить из избранного"
+msgstr "SERVER^Убрать из избранного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr "Удалить выбранный сервер из избранного"
+msgstr "Убрать выбранный сервер из избранного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"

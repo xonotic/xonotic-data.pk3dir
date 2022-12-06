@@ -6,7 +6,7 @@ en_AU "English (Australia)" "English (Australia)" 70%
 es    "Spanish" "Español" 99%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 30%
-it    "Italian" "Italiano" 98%
+it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 44%
 nl    "Dutch" "Nederlands" 63%
 pl    "Polish" "Polski" 72%
@@ -22,7 +22,7 @@ be    "Belarusian" "Беларуская" 50%
 bg    "Bulgarian" "Български" 66%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 59%
-uk    "Ukrainian" "Українська" 47%
+uk    "Ukrainian" "Українська" 50%
 zh_CN "Chinese (China)" "中文" 98%
 zh_TW "Chinese (Taiwan)" "國語" 58%
 ja_JP "Japanese" "日本語" 99%
