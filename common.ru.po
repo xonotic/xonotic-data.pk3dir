@@ -801,11 +801,11 @@ msgstr "отклик"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Packet loss"
-msgstr "Потери пакетов"
+msgstr "Потери пакетов (п/п)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^pl"
-msgstr "потери"
+msgstr "п/п"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
@@ -5195,7 +5195,7 @@ msgstr "TAB"
 #: qcsrc/common/util.qc:1453 qcsrc/common/util.qc:1524
 #, c-format
 msgid "ENTER"
-msgstr "ENTER"
+msgstr "ВВОД"
 
 #: qcsrc/common/util.qc:1454
 msgid "ESCAPE"
@@ -5608,7 +5608,7 @@ msgstr "Электро"
 
 #: qcsrc/common/weapons/weapon/fireball.qh:20
 msgid "Fireball"
-msgstr "Файербол"
+msgstr "Огнешар"
 
 #: qcsrc/common/weapons/weapon/hagar.qh:20
 msgid "Hagar"
@@ -5637,7 +5637,7 @@ msgstr "Мортира"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
-msgstr "Портал-О-Мёт"
+msgstr "Вратомёт"
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
@@ -7317,7 +7317,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:157
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
-"Падение на землю происходит медленнее (процент от нормальной гравитации)"
+"Падение на землю происходит медленнее (процент от естественного притяжения)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:166
 msgid "Weapon & item mutators:"
@@ -7378,8 +7378,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
-"Игроки при возрождении получат указанный набор оружия с бесконечным "
-"боеприпасом, иное оружие будет недоступно"
+"Игроки при возрождении получат выбранное оружие с бесконечным боеприпасом, "
+"иные пушки будут недоступны"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:206
 msgid "Weapon arenas:"
@@ -7387,7 +7387,7 @@ msgstr "Арены с оружием:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
 msgid "Custom weapons"
-msgstr "Набор оружия"
+msgstr "Выбранные оружия"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:231
 msgid "Most weapons"
@@ -8387,7 +8387,8 @@ msgstr "Параллакс-маппинг"
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
-msgstr "Эффект рельефного текстурирования, делает 2D-текстуры трёхмерными"
+msgstr ""
+"Эффект рельефного текстурирования, делает двухмерные текстуры трёхмерными"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
 msgid "Relief mapping"
@@ -8567,7 +8568,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "Сила размытия при движении — рекомендуется 0.4"
+msgstr "Сила размытия при движении — желательно 0.4"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Motion blur:"
@@ -8594,8 +8595,7 @@ msgstr "Качество:"
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
-msgstr ""
-"Множитель количества частиц. Чем он меньше, тем выше производительность"
+msgstr "Множитель числа частиц. Чем он меньше, тем выше производительность"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
 msgid "Particles further away than this will not be drawn"
@@ -9126,7 +9126,7 @@ msgstr "Кратность"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
 msgid "Display reticle 2D overlay while zooming"
-msgstr "Показывать 2D-эффект увеличительного прицела"
+msgstr "Показывать двухмерный эффект увеличительного прицела"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
 msgid "Release zoom when you die or respawn"
@@ -9164,7 +9164,7 @@ msgstr "Использовать список выше при выборе ор�
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
 msgid "Cycle through only usable weapon selections"
-msgstr "Переключать только готовые к использованию оружия"
+msgstr "Переключаться только между применимыми пушками"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
 msgid "Auto switch weapons on pickup"
@@ -9358,7 +9358,7 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr "Компенсация потери пакетов"
+msgstr "Компенсация потери пакетов (п/п)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
@@ -9660,7 +9660,7 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
-"Включить сглаживание краёв 3D-геометрии. Может заметно снизить "
+"Включить сглаживание краёв трёхмерной геометрии. Может заметно снизить "
 "производительность"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:76
@@ -9686,8 +9686,8 @@ msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
-"Множитель размера экрана или окна, свыше 1x выполняет сглаживание, ниже 1x "
-"может улучшить быстродействие на слабых ГП"
+"Множитель размера экрана или окна, выше 1x выполняет сглаживание, ниже 1x "
+"может улучшить быстродействие на слабых видеокартах"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
@@ -9811,7 +9811,7 @@ msgid ""
 "strange input or video lag on some machines"
 msgstr ""
 "Заставляет процессор ждать, пока видеокарта закончит отрисовку каждого "
-"кадра, может помочь в случае задержек и лагов на некоторых компьютерах"
+"кадра, может помочь в случае задержек и подвисаний на некоторых компьютерах"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
