@@ -1515,7 +1515,7 @@ msgstr "Homo Stans Ultimus"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
-msgstr "Superstes es et interfice ut inimici vitas non habebunt"
+msgstr "Superstes es et interfice ut inimici nullas vitas habebunt"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
@@ -3192,7 +3192,7 @@ msgstr "^BG%s^K1 Invisibilitatem tenet"
 #: qcsrc/common/notifications/all.inc:409
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr ""
+msgstr "^BG%s^K1 Scutum tenet"
 
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
@@ -3291,7 +3291,7 @@ msgstr ""
 msgid ""
 "^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 "
 "(^F1%s^F4)"
-msgstr ""
+msgstr "^F4A ^BG%s^F4 invitaris ut ^F2%s^F4 (^F1%s^F4) ludatur"
 
 #: qcsrc/common/notifications/all.inc:432
 msgid "^TC^TT ^BGteam scores!"
@@ -3324,12 +3324,15 @@ msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
 "^F2Xonotic %s"
 msgstr ""
+"^F4NOTA: ^BGHoc moderatrum ^F1Xonoticum %s (beta)^BG habet, ^F2Xonoticum "
+"%s^BG habes"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
 msgstr ""
+"^F4NOTA: ^BGHoc moderatrum ^F1Xonoticum %s^BG habet, ^F2Xonoticum %s^BG habes"
 
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
@@ -3337,32 +3340,34 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3http://www.xonotic.org/^BG!"
 msgstr ""
+"^F4NOTA: ^F1Xonoticus %s^BG editus est, at ^F2Xonoticum %s^BG habes, eum "
+"novum in ^F3http://www.xonotic.org/^BG inveni!"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, magno cantu ^BG%s^K1 M@!#%% Harmonicae, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suis auribus M@!%% Harmonica nocuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ^BG%s^K1 Arco, electrice occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ^BG%s^K1 Arci scintillis, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Arci scintillas lusit%s%s"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
