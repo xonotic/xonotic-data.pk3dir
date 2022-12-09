@@ -1,31 +1,47 @@
-0 36 15.000000 0 // dieone
-36 20 15.000000 0 // dietwo
-56 15 15.000000 1 // draw
-71 20 15.000000 1 // duck
-91 20 32.000000 1 // duckwalk
-112 16 15.000000 0 // duckjump
-128 15 8.000000 1 // duckidle
-143 41 5.000000 1 // idle
-184 160 25.000000 0 // jump
-344 15 15.000000 0 // painone
-359 17 15.000000 0 // paintwo
-376 3 15.000000 0 // shoot
-379 21 15.000000 1 // taunt
-400 21 35.000000 1 // run
-421 21 35.000000 1 // runbackwards
-442 21 35.000000 1 // strafeleft
-463 21 35.000000 1 // straferight
-484 2 15.000000 0 // deadone
-486 2 15.000000 0 // deadtwo
-488 21 35.000000 1 // forwardright
-509 21 35.000000 1 // forwardleft
-530 21 35.000000 1 // backright
-551 21 30.000000 1 // backleft
-572 21 20.000000 0 // melee
-593 20 32.000000 1 // duckwalkbackwards
-614 20 32.000000 1 // duckwalkstrafeleft
-635 20 32.000000 1 // duckwalkstraferight
-91 20 32.000000 1 // duckwalkforwardright
-91 20 32.000000 1 // duckwalkforwardleft
-593 20 32.000000 1 // duckwalkbackright
-593 20 32.000000 1 // duckwalkbackleft
+/*
+*****************************************
+*************  ! WARNING !  *************
+============= DO NOT MODIFY =============
+*****************************************
+Generated framegroups file for player_model
+Used by DarkPlaces to simulate frame groups in DPM models.
+
+Thanks to dpmodel tool, using .smd mesh and animations 
+we can know where's correct or not.
+That's a logical way to know how to do export correctly.
+
+Note: every frame is reduced (-1), e.g. 
+1 37 30 0 => 0 36 30 0
+*/
+
+0 36 30 0 // player_model dieone
+36 20 30 0 // player_model dietwo
+58 15 15 1 // player_model draw
+74 20 10 1 // player_model duck
+95 21 32 1 // player_model duckwalk
+117 16 15 0 // player_model duckjump
+134 15 10 1 // player_model duckidle
+150 41 5 1 // player_model idle
+192 139 25 0 // player_model jump // (139: 21) // 214 139 25 0 // player_model fly
+354 15 24 0 // player_model painone
+370 17 34 0 // player_model paintwo
+389 3 3 0 // player_model shoot
+392 21 15 1 // player_model taunt
+414 21 29 1 // player_model run
+436 21 29 1 // player_model runbackwards
+458 21 29 1 // player_model strafeleft
+480 21 29 1 // player_model straferight
+502 2 15 0 // player_model deadone
+505 2 15 0 // player_model deadtwo
+508 21 29 1 // player_model forwardright
+530 21 29 1 // player_model forwardleft
+552 21 29 1 // player_model backright
+574 21 29 1 // player_model backleft
+596 21 20 0 // player_model melee
+618 21 32 1 // player_model duckwalkbackwards
+640 21 32 1 // player_model duckstrafeleft
+662 21 32 1 // player_model duckstraferight
+684 21 32 1 // player_model duckforwardright
+706 21 32 1 // player_model duckforwardleft
+728 21 32 1 // player_model duckbackwardright
+750 21 32 1 // player_model duckbackwardleft
