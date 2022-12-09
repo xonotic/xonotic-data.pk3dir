@@ -3,13 +3,13 @@
 #include "../all.qh"
 
 #ifdef GAMEQC
-MODEL(MON_WYVERN, M_Model("wizard.mdl"));
+MODEL(MON_WYVERN, M_Model("wyvern.dpm"));
 #endif
 
 CLASS(Wyvern, Monster)
-    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Wyvern, m_mins, vector, '-20 -20 -58');
-    ATTRIB(Wyvern, m_maxs, vector, '20 20 20');
+    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Wyvern, m_mins, vector, '-30 -30 -48');
+    ATTRIB(Wyvern, m_maxs, vector, '30 30 30');
 #ifdef GAMEQC
     ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
 #endif

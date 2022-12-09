@@ -26,7 +26,7 @@ CLASS(ClanArena, Gametype)
     }
     METHOD(ClanArena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
-        if(spawnpoints >= 8 && diameter > 4096)
+        if(spawnpoints >= 8 && diameter > 3250)
             return true;
         return false;
     }
@@ -37,7 +37,7 @@ CLASS(ClanArena, Gametype)
     METHOD(ClanArena, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
     {
         TC(Gametype, this);
-        returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of frags needed before the match will end"));
+        returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of rounds won needed before the match will end"));
     }
 #ifdef CSQC
     ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);

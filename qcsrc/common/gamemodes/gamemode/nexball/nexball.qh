@@ -22,7 +22,7 @@ CLASS(NexBall, Gametype)
     METHOD(NexBall, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
     {
         TC(Gametype, this);
-        returns(menu, _("Goals:"),           1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end"));
+        returns(menu, _("Goal limit:"),      1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end"));
     }
 #ifdef CSQC
     ATTRIB(NexBall, m_modicons, void(vector pos, vector mySize), HUD_Mod_NexBall);

@@ -77,7 +77,7 @@ void turrets_setframe(entity this, float _frame, float client_only);
 bool turret_initialize(entity this, Turret tur);
 
 // returns true when box overlaps with a given location
-bool turret_closetotarget(entity this, vector targ);
+bool turret_closetotarget(entity this, vector targ, float range);
 
 /// Function to use for target evaluation. usualy turret_targetscore_generic
 .float(entity _turret, entity _target) turret_score_target;

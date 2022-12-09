@@ -48,7 +48,7 @@ void XonoticGameMenuDialog_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Profile"), '0 0 0', "menu_cmd profile", 0));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Settings"), '0 0 0', "menu_cmd videosettings", 0));
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Settings"), '0 0 0', "menu_cmd settings", 0));
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Input"), '0 0 0', "menu_cmd inputsettings", 0));

@@ -88,7 +88,7 @@ MODEL(PROJECTILE_HOOKBOMB,              "models/grenademodel.md3");
 MODEL(PROJECTILE_HAGAR,                 "models/hagarmissile.mdl");
 MODEL(PROJECTILE_HAGAR_BOUNCING,        "models/hagarmissile.mdl");
 
-MODEL(PROJECTILE_ARC_BOLT,              "models/ebomb.mdl"); // TODO: remove models/arctrail.mdl right before 0.8.3 release!
+MODEL(PROJECTILE_ARC_BOLT,              "models/ebomb.mdl");
 
 // napalm grenade
 MODEL(PROJECTILE_NAPALM_FOUNTAIN,       "null");
@@ -104,7 +104,7 @@ MODEL(PROJECTILE_FLAC,                  "models/hagarmissile.mdl");
 MODEL(PROJECTILE_SEEKER,                "models/tagrocket.md3");
 
 MODEL(PROJECTILE_MAGE_SPIKE,            "models/ebomb.mdl");
-MODEL(PROJECTILE_SHAMBLER_LIGHTNING,    "models/ebomb.mdl");
+MODEL(PROJECTILE_GOLEM_LIGHTNING,       "models/ebomb.mdl");
 
 MODEL(PROJECTILE_RAPTORBOMB,            "models/vehicles/clusterbomb.md3");
 MODEL(PROJECTILE_RAPTORBOMBLET,         "models/vehicles/bomblet.md3");

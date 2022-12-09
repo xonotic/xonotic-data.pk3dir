@@ -48,10 +48,10 @@ entity mapvote_ent;
  */
 Gametype GameTypeVote_Type_FromString(string type_name)
 {
-	Gametype type = MapInfo_Type_FromString(type_name, false);
+	Gametype type = MapInfo_Type_FromString(type_name, false, false);
 	if (type == NULL)
 		type = MapInfo_Type_FromString(cvar_string(
-			strcat("sv_vote_gametype_",type_name,"_type")), false);
+			strcat("sv_vote_gametype_",type_name,"_type")), false, false);
 	return type;
 }
 
@@ -59,11 +59,11 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 {
 	int flag = GTV_FORBIDDEN;
 
-	Gametype type = MapInfo_Type_FromString(type_name, false);
+	Gametype type = MapInfo_Type_FromString(type_name, false, false);
 	if ( type == NULL )
 	{
 		type = MapInfo_Type_FromString(cvar_string(
-			strcat("sv_vote_gametype_",type_name,"_type")), false);
+			strcat("sv_vote_gametype_",type_name,"_type")), false, false);
 		flag |= GTV_CUSTOM;
 	}
 
@@ -337,12 +337,17 @@ void GameTypeVote_SendOption(int i)
 	}
 }
 
+int mapvote_winner;
+float mapvote_winner_time;
 bool MapVote_SendEntity(entity this, entity to, int sf)
 {
 	int i;
 
 	if(sf & 1)
 		sf &= ~2; // if we send 1, we don't need to also send 2
+
+	if (!mapvote_winner_time)
+		sf &= ~8; // no winner yet
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);
@@ -401,6 +406,11 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, to.mapvote);
 	}
 
+	if(sf & 8)
+	{
+		WriteByte(MSG_ENTITY, mapvote_winner + 1);
+	}
+
 	return true;
 }
 
@@ -417,6 +427,13 @@ void MapVote_TouchMask()
 void MapVote_TouchVotes(entity voter)
 {
 	mapvote_ent.SendFlags |= 4;
+}
+
+void MapVote_Winner(int mappos)
+{
+	mapvote_ent.SendFlags |= 8;
+	mapvote_winner_time = time;
+	mapvote_winner = mappos;
 }
 
 bool MapVote_Finished(int mappos)
@@ -470,8 +487,7 @@ bool MapVote_Finished(int mappos)
 		return false;
 	}
 
-	Map_Goto_SetStr(mapvote_maps[mappos]);
-	Map_Goto(0);
+	MapVote_Winner(mappos);
 	alreadychangedlevel = true;
 
 	return true;
@@ -585,7 +601,6 @@ bool MapVote_CheckRules_2()
 
 void MapVote_Tick()
 {
-
 	MapVote_CheckRules_1(); // count
 	if(MapVote_CheckRules_2()) // decide
 		return;
@@ -647,6 +662,16 @@ void MapVote_Think()
 	if(!mapvote_run)
 		return;
 
+	if (mapvote_winner_time)
+	{
+		if (time > mapvote_winner_time + 1)
+		{
+			Map_Goto_SetStr(mapvote_maps[mapvote_winner]);
+			Map_Goto(0);
+		}
+		return;
+	}
+
 	if(alreadychangedlevel)
 		return;
 
@@ -655,6 +680,8 @@ void MapVote_Think()
 	//dprint("tick\n");
 
 	mapvote_nextthink = time + 0.5;
+	if (mapvote_nextthink > mapvote_timeout - 0.1) // make sure there's no delay when map vote times out
+		mapvote_nextthink = mapvote_timeout + 0.001;
 
 	if(!mapvote_initialized)
 	{

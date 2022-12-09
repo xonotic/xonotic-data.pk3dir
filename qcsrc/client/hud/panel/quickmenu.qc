@@ -70,6 +70,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()
 		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));
@@ -192,12 +193,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	mouseClicked = 0;
 	hudShiftState = 0;
 
-	// we must unset the player's buttons, as they aren't released elsewhere
-	localcmd("-fire\n");
-	localcmd("-fire2\n");
-	localcmd("-use\n");
-	localcmd("-hook\n");
-	localcmd("-jump\n");
+	Release_Common_Keys();
 
 	QuickMenu_TimeOut_Set();
 	return true;
@@ -871,6 +867,14 @@ void QuickMenu_Default(string target_submenu)
 		if(teamplay)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
+
+	if (autocvar__hud_panel_quickmenu_file_from_server != "")
+	{
+	string entry_name = _("Server's custom quickmenu");
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = _("Waypoint editor quickmenu");
+	QUICKMENU_ENTRY(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	}
 
 	if(spectatee_status != 0)
 	{

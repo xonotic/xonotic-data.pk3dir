@@ -7,22 +7,18 @@
 
 #if defined(GAMEQC)
 
-METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepent))
+METHOD(OverkillNex, wr_glow, vector(OverkillNex this, int actor_colors, entity wepent))
 {
 	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
-	float charge = wepent.oknex_charge;
+	float charge = max(0.25, wepent.oknex_charge);
 	float animlimit = WEP_CVAR(oknex, charge_animlimit);
-	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
-	vector g;
-	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
-	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
-	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
+	float f = min(1, charge / animlimit);
+	vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
+	vector g = f * (mycolors * 0.3);
 	if (charge > animlimit)
 	{
-		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
-		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
-		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
-		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
+		f = (charge - animlimit) / (1 - animlimit);
+		g += f * (mycolors * 0.7);
 	}
 	// transition color can't be '0 0 0' as it defaults to player model glow color
 	if (g == '0 0 0')
@@ -117,7 +113,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 
 METHOD(OverkillNex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	if(bot_aim(actor, weaponentity, 1000000, 0, 1, false))
+	if(bot_aim(actor, weaponentity, 1000000, 0, 1, false, true))
 		PHYS_INPUT_BUTTON_ATCK(actor) = true;
 	else
 	{

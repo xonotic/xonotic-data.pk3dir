@@ -109,8 +109,10 @@ void HUD_InfoMessages()
 					case 1:
 						if(spectatee_status == -1)
 							s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
-						else
+						else if(!observe_blocked)
 							s = sprintf(_("^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
+						else
+							s = sprintf(_("^1Press ^3%s^1 to change camera mode"), getcommandkey(_("drop weapon"), "dropweapon"));
 						break;
 					case 2:
 						s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));
@@ -150,22 +152,21 @@ void HUD_InfoMessages()
 		else
 			blinkcolor = "^3";
 
-		if(ready_waiting && !spectatee_status)
+		if(warmup_stage && STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
+		{
+			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
+			if(srv_minplayers - numplayers == 1)
+				s = _("^31^2 more player is needed for the match to start.");
+			else
+				s = sprintf(_("^3%d^2 more players are needed for the match to start."), srv_minplayers - numplayers);
+			InfoMessage(s);
+		}
+		else if(ready_waiting && !spectatee_status)
 		{
 			if(ready_waiting_for_me)
-			{
-				if(warmup_stage)
-					s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
-				else
-					s = sprintf(_("%sPress ^3%s%s once you are ready"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
-			}
+				s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
 			else
-			{
-				if(warmup_stage)
-					s = _("^2Waiting for others to ready up to end warmup...");
-				else
-					s = _("^2Waiting for others to ready up...");
-			}
+				s = _("^2Waiting for others to ready up to end warmup...");
 			InfoMessage(s);
 		}
 		else if(warmup_stage && !spectatee_status)
@@ -194,7 +195,7 @@ void HUD_InfoMessages()
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team menu"), "menu_showteamselect"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "scoreboard_team_selection"), blinkcolor));
 					InfoMessage(s);
 				}
 			}

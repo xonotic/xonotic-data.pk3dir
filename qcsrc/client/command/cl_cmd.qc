@@ -267,7 +267,7 @@ void LocalCommand_hud(int request, int argc)
 				{
 					if (argv(2) == "help")
 					{
-						LOG_HELP(" quickmenu [[default | file | \"\"] submenu file]");
+						LOG_HELP(" quickmenu [[default | file | \"\"] <submenu> <filename>]");
 						LOG_HELP("Called without options (or with \"\") loads either the default quickmenu or a quickmenu file if hud_panel_quickmenu_file is set to a valid filename.");
 						LOG_HELP("A submenu name can be given to open the quickmenu directly in a submenu; it requires to specify 'default', 'file' or '\"\"' option.");
 						LOG_HELP("A file name can also be given to open a different quickmenu");
