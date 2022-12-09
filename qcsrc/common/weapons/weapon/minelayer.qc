@@ -92,7 +92,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
-		this.velocity = this.movedir; // particle fx and decals need .velocity
+		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius),
 						NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, this.weaponentity_fld, NULL);

@@ -52,15 +52,15 @@ test_sv_game:
     - make qc || exit 1
 
     - mkdir -p data/maps
-    - wget -nv -O data/maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - wget -nv -O data/maps/_init.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
     - while read LINE; do
         echo $LINE;
         [ "$LINE" = "All tests OK" ] && PASS=1;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +wait +quit)
+      done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
     - test "$PASS" = "1" || { echo 'sv_cmd runtest failed!'; exit 1; }
 
-    - ${ENGINE} +map gitlab-ci +sv_cmd dumpnotifs +wait +quit
+    - ${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
     - diff notifications.cfg data/data/notifications_dump.cfg ||
         { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
