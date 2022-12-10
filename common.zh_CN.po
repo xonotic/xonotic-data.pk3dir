@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-27 07:22+0100\n"
+"POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
@@ -134,6 +134,7 @@ msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr "^1按 ^3%s^1 以观察, 按 ^3%s^1 以改变观察模式"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
 msgstr "丢出武器"
@@ -143,101 +144,106 @@ msgstr "丢出武器"
 msgid "secondary fire"
 msgstr "副火力"
 
-#: qcsrc/client/hud/panel/infomessages.qc:116
+#: qcsrc/client/hud/panel/infomessages.qc:115
+#, c-format
+msgid "^1Press ^3%s^1 to change camera mode"
+msgstr "^1按 ^3%s^1 切换镜头模式"
+
+#: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1按 ^3%s^1 获取游戏模式信息"
 
-#: qcsrc/client/hud/panel/infomessages.qc:116
+#: qcsrc/client/hud/panel/infomessages.qc:118
 #: qcsrc/menu/xonotic/keybinder.qc:103
 msgid "server info"
 msgstr "服务器信息"
 
-#: qcsrc/client/hud/panel/infomessages.qc:128
+#: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1按 ^3%s^1 以加入"
 
-#: qcsrc/client/hud/panel/infomessages.qc:128
+#: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/client/hud/panel/scoreboard.qc:2263
-#: qcsrc/client/hud/panel/scoreboard.qc:2265 qcsrc/client/main.qc:1414
+#: qcsrc/client/hud/panel/scoreboard.qc:2265 qcsrc/client/main.qc:1415
 #: qcsrc/common/notifications/all.qh:428
 msgid "jump"
 msgstr "跳跃"
 
-#: qcsrc/client/hud/panel/infomessages.qc:137
+#: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1游戏将在 ^3%d^1 秒后开始"
 
-#: qcsrc/client/hud/panel/infomessages.qc:143
+#: qcsrc/client/hud/panel/infomessages.qc:145
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2现在是^1热身^2阶段!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:157
-msgid "^31^2 more player is needed for the match to start."
-msgstr ""
-
 #: qcsrc/client/hud/panel/infomessages.qc:159
+msgid "^31^2 more player is needed for the match to start."
+msgstr "还需要 ^31^2 位玩家以开始竞赛。"
+
+#: qcsrc/client/hud/panel/infomessages.qc:161
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "还需要 ^3%d^2 位玩家以开始竞赛。"
 
-#: qcsrc/client/hud/panel/infomessages.qc:165
+#: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%s按 ^3%s%s 以结束热身"
 
-#: qcsrc/client/hud/panel/infomessages.qc:165
-#: qcsrc/client/hud/panel/infomessages.qc:172
+#: qcsrc/client/hud/panel/infomessages.qc:167
+#: qcsrc/client/hud/panel/infomessages.qc:174
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "ready"
 msgstr "准备"
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
+#: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2等待其他人完成热身……"
 
-#: qcsrc/client/hud/panel/infomessages.qc:172
+#: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2按下 ^3%s^2 来结束热身"
 
-#: qcsrc/client/hud/panel/infomessages.qc:193
+#: qcsrc/client/hud/panel/infomessages.qc:195
 msgid "Teamnumbers are unbalanced!"
 msgstr "队伍不平衡！"
 
-#: qcsrc/client/hud/panel/infomessages.qc:196
+#: qcsrc/client/hud/panel/infomessages.qc:198
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " 按下 ^3%s%s 来调整"
 
-#: qcsrc/client/hud/panel/infomessages.qc:196
+#: qcsrc/client/hud/panel/infomessages.qc:198
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "team selection"
 msgstr "选择团队"
 
-#: qcsrc/client/hud/panel/infomessages.qc:206
+#: qcsrc/client/hud/panel/infomessages.qc:208
 msgid "^1Spectating this player:"
 msgstr "^1正在观察此玩家："
 
-#: qcsrc/client/hud/panel/infomessages.qc:206
+#: qcsrc/client/hud/panel/infomessages.qc:208
 msgid "^1Spectating you:"
 msgstr "^1正在观察你："
 
-#: qcsrc/client/hud/panel/infomessages.qc:222
+#: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7按 ^3ESC ^7显示 HUD 设置。"
 
-#: qcsrc/client/hud/panel/infomessages.qc:223
+#: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr "^3双击^7一个面板以获取面板特定选项。"
 
-#: qcsrc/client/hud/panel/infomessages.qc:224
+#: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "^3CTRL ^7以禁用碰撞检测， ^3SHIFT ^7以及"
 
-#: qcsrc/client/hud/panel/infomessages.qc:225
+#: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3箭头键 ^7以微调。"
 
@@ -496,15 +502,15 @@ msgstr "重启地图"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^End match"
-msgstr "结束比赛"
+msgstr "结束竞赛"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^Reduce match time"
-msgstr "减少比赛时间"
+msgstr "减少竞赛时间"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Extend match time"
-msgstr "延长比赛时间"
+msgstr "延长竞赛时间"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Shuffle teams"
@@ -554,7 +560,7 @@ msgstr "第 %d 中间点"
 msgid "PENALTY: %.1f (%s)"
 msgstr "惩罚：%.1f（%s）"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1246
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1247
 msgid "missing a checkpoint"
 msgstr "缺失一个检查点"
 
@@ -1051,9 +1057,9 @@ msgstr "^3%1.0f 分钟"
 #: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7 / ^5%d^7 位玩家"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1440
+#: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1441
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "地图："
@@ -1109,11 +1115,11 @@ msgstr "热身"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "热身：无时间限制"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "热身：等待更多玩家"
 
 #: qcsrc/client/hud/panel/timer.qc:134
 msgid "Timeout"
@@ -1142,7 +1148,7 @@ msgstr "在统计信息中显示^2玩家名^7而非“^1匿名玩家^7”"
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
-msgstr "一轮投票被发起："
+msgstr "发起了一轮投票："
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "Allow servers to store and display your name?"
@@ -1180,7 +1186,7 @@ msgstr "弹药耗尽"
 
 #: qcsrc/client/hud/panel/weapons.qc:635
 msgid "Don't have"
-msgstr "没有"
+msgstr "未持有"
 
 #: qcsrc/client/hud/panel/weapons.qc:639
 msgid "Unavailable"
@@ -1188,141 +1194,141 @@ msgstr "不可用"
 
 #: qcsrc/client/main.qc:300
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "正在移除不在队伍表的队伍！"
+msgstr "正在移除不在队伍列表中的队伍！"
 
-#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1149 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
 msgstr "单位每秒"
 
-#: qcsrc/client/main.qc:1149 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1150 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
 msgstr "米每秒"
 
-#: qcsrc/client/main.qc:1150 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1151 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
 msgstr "千米每时"
 
-#: qcsrc/client/main.qc:1151 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1152 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
 msgstr "英里每时"
 
-#: qcsrc/client/main.qc:1152 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1153 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
 msgstr "海里每时"
 
-#: qcsrc/client/main.qc:1363
+#: qcsrc/client/main.qc:1364
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
-msgstr "所有武器竞技"
+msgstr "全武器竞技"
 
-#: qcsrc/client/main.qc:1364
+#: qcsrc/client/main.qc:1365
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "所有可用武器的竞技"
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1366
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "多数武器竞技"
 
-#: qcsrc/client/main.qc:1366
+#: qcsrc/client/main.qc:1367
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "多数可用武器的竞技"
 
-#: qcsrc/client/main.qc:1369 qcsrc/client/main.qc:1383
+#: qcsrc/client/main.qc:1370 qcsrc/client/main.qc:1384
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "无武器竞技"
 
-#: qcsrc/client/main.qc:1381
+#: qcsrc/client/main.qc:1382
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s 竞技"
 
-#: qcsrc/client/main.qc:1392 qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1393 qcsrc/client/main.qc:1398
 #, c-format
 msgid "This is %s"
 msgstr "这里是 %s"
 
-#: qcsrc/client/main.qc:1393
+#: qcsrc/client/main.qc:1394
 msgid "Your client version is outdated."
 msgstr "你的客户端版本过旧。"
 
-#: qcsrc/client/main.qc:1394
+#: qcsrc/client/main.qc:1395
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### 你不能在此服务器游玩 ###"
 
-#: qcsrc/client/main.qc:1395
+#: qcsrc/client/main.qc:1396
 msgid "Please update!"
 msgstr "请更新！"
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1399
 msgid "This server is using an outdated Xonotic version."
 msgstr "此服务器在使用过旧的 Xonotic 版本。"
 
-#: qcsrc/client/main.qc:1399
+#: qcsrc/client/main.qc:1400
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### 不兼容此服务器，因此你不能加入 ###"
 
-#: qcsrc/client/main.qc:1401
+#: qcsrc/client/main.qc:1402
 #, c-format
 msgid "Welcome to %s"
 msgstr "欢迎来到 %s"
 
-#: qcsrc/client/main.qc:1416 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1417 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "关卡 %d："
 
-#: qcsrc/client/main.qc:1418
+#: qcsrc/client/main.qc:1419
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BG按 ^F2%s^BG 以进入游戏"
 
-#: qcsrc/client/main.qc:1438
+#: qcsrc/client/main.qc:1439
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "游戏类型："
 
-#: qcsrc/client/main.qc:1452
+#: qcsrc/client/main.qc:1453
 msgid "This match supports"
-msgstr ""
+msgstr "此竞赛支持"
 
-#: qcsrc/client/main.qc:1454
+#: qcsrc/client/main.qc:1455
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d 位玩家"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1457
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d 到 %d 位玩家"
 
-#: qcsrc/client/main.qc:1458
+#: qcsrc/client/main.qc:1459
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "至多 %d 位玩家"
 
-#: qcsrc/client/main.qc:1460
+#: qcsrc/client/main.qc:1461
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "至少 %d 位玩家"
 
-#: qcsrc/client/main.qc:1465
+#: qcsrc/client/main.qc:1466
 msgid "Active modifications:"
 msgstr "起效的修改："
 
-#: qcsrc/client/main.qc:1468
+#: qcsrc/client/main.qc:1469
 msgid "Special gameplay tips:"
 msgstr "特殊游戏提示："
 
-#: qcsrc/client/main.qc:1475
+#: qcsrc/client/main.qc:1476
 msgid "Server's message"
-msgstr ""
+msgstr "服务器消息"
 
-#: qcsrc/client/main.qc:1569
+#: qcsrc/client/main.qc:1570
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (未绑定)"
@@ -1412,12 +1418,12 @@ msgstr "歼灭所有敌方团队玩家来取得胜利"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "此轮限制："
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "在竞赛结束前需要取胜的轮数"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1439,7 +1445,7 @@ msgstr "夺取限制："
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "此轮比赛结束所需要的夺旗数"
+msgstr "此轮竞赛结束所需要的夺旗数"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1474,7 +1480,7 @@ msgstr "统治"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "此轮比赛结束所需要的分数"
+msgstr "此轮竞赛结束所需要的分数"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1544,11 +1550,11 @@ msgstr "把球踢进对方球门，保护自己的球门"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "进球限制"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "此轮比赛结束所需要的进球数"
+msgstr "此轮竞赛结束所需要的进球数"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1672,11 +1678,11 @@ msgstr "击杀限制："
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "此轮比赛结束所需要的杀敌数"
+msgstr "此轮竞赛结束所需要的杀敌数"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
-msgstr "该轮到你了"
+msgstr "轮到你了"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
@@ -1851,11 +1857,11 @@ msgstr "电脑"
 
 #: qcsrc/common/minigames/minigame/pong.qc:626
 msgid "Press ^1Start Match^7 to start the match with the current players"
-msgstr "按^1开始比赛^7来与当前玩家开始比赛"
+msgstr "点击^1开始^7来与当前玩家进行游戏"
 
 #: qcsrc/common/minigames/minigame/pong.qc:698
 msgid "Start Match"
-msgstr "开始比赛"
+msgstr "开始"
 
 #: qcsrc/common/minigames/minigame/pong.qc:699
 msgid "Add AI player"
@@ -1872,19 +1878,19 @@ msgstr "推拉"
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "选择菜单上的“^1下一轮^7”以再次比赛！"
+msgstr "选择菜单上的“^1下一轮^7”再进行一轮游戏！"
 
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/pp.qc:463
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 #: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr "选择菜单上的“^1下一轮^7”开始新的比赛！"
+msgstr "选择菜单上的“^1下一轮^7”开始新游戏！"
 
 #: qcsrc/common/minigames/minigame/pp.qc:464
 #: qcsrc/common/minigames/minigame/ttt.qc:347
 msgid "Wait for your opponent to confirm the rematch"
-msgstr "等待对方玩家确认再次比赛"
+msgstr "等待对方玩家确认下一轮游戏"
 
 #: qcsrc/common/minigames/minigame/pp.qc:613
 #: qcsrc/common/minigames/minigame/ttt.qc:698
@@ -1910,7 +1916,7 @@ msgstr "剩余棋子：%s 颗"
 
 #: qcsrc/common/minigames/minigame/ps.qc:501
 msgid "No more valid moves"
-msgstr "没有有效的移动了"
+msgstr "没有可行的移动了"
 
 #: qcsrc/common/minigames/minigame/ps.qc:504
 msgid "Well done, you win!"
@@ -2357,7 +2363,7 @@ msgstr "^1服务器提示："
 
 #: qcsrc/common/notifications/all.inc:226
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
-msgstr "^F4注意：^BG比赛过程中旁观者的聊天不会被发送给玩家"
+msgstr "^F4注意：^BG竞赛过程中旁观者的聊天不会发送给玩家"
 
 #: qcsrc/common/notifications/all.inc:228
 #, c-format
@@ -2394,11 +2400,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:233
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BG^TC^TT队^BG旗帜被它的所有者带回基地"
+msgstr "^BG^TC^TT队^BG旗帜被所有者返还基地"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^BGThe flag was returned by its owner"
-msgstr "^BG旗帜被它的所有者带回"
+msgstr "^BG旗帜被所有者返还"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
@@ -2420,24 +2426,24 @@ msgstr "^BG旗帜掉落在基地并自己返回"
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
-msgstr "^BG^TC^TT队^BG旗帜掉落在无法到达的地方而自动回到基地"
+msgstr "^BG^TC^TT队^BG旗帜掉落在无法触及的地方而回到基地"
 
 #: qcsrc/common/notifications/all.inc:240
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
-msgstr "^BG旗帜掉落在无法到达的地方而自动回到基地"
+msgstr "^BG旗帜掉落在无法触及的地方而回到基地"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
-msgstr "^BG^TC^TT队^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
+msgstr "^BG^TC^TT队^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而回到基地"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
-msgstr "^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而自动返回基地"
+msgstr "^BG旗帜在 ^F1%.2f^BG 秒后失去耐心而回到基地"
 
 #: qcsrc/common/notifications/all.inc:243
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
@@ -2489,7 +2495,7 @@ msgstr "^F2你缺少一个 UID，超标准选项将不被保存或恢复"
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr "^F1这轮比赛已经开始，你将在下一轮加入游戏"
+msgstr "^F1这轮竞赛已经开始，你将在下一轮加入游戏"
 
 #: qcsrc/common/notifications/all.inc:259
 msgid "^F2You will spectate in the next round"
@@ -2497,12 +2503,12 @@ msgstr "^F2你将在下一轮旁观"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2竞赛正在重新开始……"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4倒计时已停止！"
 
 #: qcsrc/common/notifications/all.inc:264
 #, c-format
@@ -3311,7 +3317,7 @@ msgstr "^TC^TT队^BG得分！"
 msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
 "kicked, because spectating isn't allowed at this time!"
-msgstr "^F2你必须在下 %s内成为玩家，否则将被踢出，这次不允许旁观！"
+msgstr "^F2你必须在 %s内参与游戏，否则将被踢出。现在不允许旁观！"
 
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
@@ -3320,7 +3326,7 @@ msgstr "^BG%s^K1 拾起了超级武器"
 
 #: qcsrc/common/notifications/all.inc:438
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BG你不可以切换至更大的队伍"
+msgstr "^BG你不可以换到更大的队伍"
 
 #: qcsrc/common/notifications/all.inc:439
 msgid "^BGYou are not allowed to change teams"
@@ -3338,7 +3344,8 @@ msgstr ""
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
-msgstr "^F4注意：^BG此服务器在运行 ^F1Xonotic %s^BG，此客户端为 ^F2Xonotic %s"
+msgstr ""
+"^F4注意：^BG此服务器在运行 ^F1Xonotic %s^BG，你的客户端为 ^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
@@ -3694,7 +3701,7 @@ msgstr "^BG在 ^F4%s^BG内摧毁了目标！"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "此轮竞赛需要 %s 位玩家。"
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -3711,7 +3718,7 @@ msgstr "^BG第 %s 轮即将开始"
 
 #: qcsrc/common/notifications/all.inc:537
 msgid "^F4Round cannot start"
-msgstr "^F4此轮无法开始"
+msgstr "^F4这一轮无法开始"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F2Don't camp!"
@@ -4264,6 +4271,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1你现在不可以参加这轮游戏。\n"
+"这轮竞赛限制为 ^F2%s^BG 位玩家。"
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGYou picked up the ball"
@@ -4311,14 +4320,14 @@ msgstr "^BG你带着^TC^TT队^BG钥匙开局"
 
 #: qcsrc/common/notifications/all.inc:710
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr "^BG你已耗尽生命，你必须等待至下一轮比赛"
+msgstr "^BG你已耗尽生命，你必须等待至下一轮竞赛"
 
 #: qcsrc/common/notifications/all.inc:711
 msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
-"^F4警告：^BG在进入旁观模式后，不能重新加入此局比赛。\n"
+"^F4警告：^BG在进入旁观模式后，不能重新加入此局竞赛。\n"
 "再次运行此指令以旁观。"
 
 #: qcsrc/common/notifications/all.inc:713
@@ -4431,7 +4440,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
-"^F2现在是^F4超时模式^F2！\n"
+"^F2现在是^F4超时阶段^F2！\n"
 "继续杀敌、直到决胜！"
 
 #: qcsrc/common/notifications/all.inc:737
@@ -4439,7 +4448,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
-"^F2现在是^F4超时模式^F2！\n"
+"^F2现在是^F4超时阶段^F2！\n"
 "尽全力进球、直到决胜！"
 
 #: qcsrc/common/notifications/all.inc:738
@@ -4450,7 +4459,7 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
-"^F2现在是^F4超时模式^F2！\n"
+"^F2现在是^F4超时阶段^F2！\n"
 "\n"
 "发电机开始衰减。\n"
 "团队占领的控制点越多，\n"
@@ -4462,8 +4471,8 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
-"^F2现在是^F4超时模式^F2！\n"
-"^BG将 ^F4%s^BG 加入了游戏！"
+"^F2现在是^F4超时阶段^F2！\n"
+"^BG为游戏添加了 ^F4%s^BG！"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^K1In^BG-portal created"
@@ -4483,7 +4492,7 @@ msgstr "^F2神力给你的武器融入毁灭性的力量"
 
 #: qcsrc/common/notifications/all.inc:746
 msgid "^F2Strength has worn off"
-msgstr "^F2神力已失效"
+msgstr "^F2神力已解除"
 
 #: qcsrc/common/notifications/all.inc:748
 msgid "^F2Shield surrounds you"
@@ -4491,7 +4500,7 @@ msgstr "^F2护盾环绕着你"
 
 #: qcsrc/common/notifications/all.inc:749
 msgid "^F2Shield has worn off"
-msgstr "^F2护盾已失效"
+msgstr "^F2护盾已解除"
 
 #: qcsrc/common/notifications/all.inc:751
 msgid "^F2You are on speed"
@@ -4499,7 +4508,7 @@ msgstr "^F2你获得了加速"
 
 #: qcsrc/common/notifications/all.inc:752
 msgid "^F2Speed has worn off"
-msgstr "^F2加速已失效"
+msgstr "^F2加速已解除"
 
 #: qcsrc/common/notifications/all.inc:754
 msgid "^F2You are invisible"
@@ -4507,7 +4516,7 @@ msgstr "^F2你现在隐身"
 
 #: qcsrc/common/notifications/all.inc:755
 msgid "^F2Invisibility has worn off"
-msgstr "^F2隐身已失效"
+msgstr "^F2隐身已解除"
 
 #: qcsrc/common/notifications/all.inc:757
 msgid "^F2The race is over, finish your lap!"
@@ -4524,7 +4533,7 @@ msgstr "^BG还有更多……"
 #: qcsrc/common/notifications/all.inc:761
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
-msgstr "^BG仅还剩 %s^BG 个……"
+msgstr "^BG还剩 %s^BG 个……"
 
 #: qcsrc/common/notifications/all.inc:763
 msgid "^F2Superweapons have broken down"
@@ -4667,7 +4676,7 @@ msgstr "杀戮！"
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr "%s^K1 取得了【混乱】！%s^BG"
+msgstr "%s^K1 释发【混乱】！%s^BG"
 
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
@@ -5805,7 +5814,7 @@ msgstr "无说明"
 msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
 "please file an issue."
-msgstr "实体域 %s.%s (%s) 未列入白名单。如果你确认这是一个错误，请报告问题"
+msgstr "实体域 %s.%s (%s) 未列入白名单。如果你确认这是一个错误，请报告问题。"
 
 #: qcsrc/lib/string.qh:186
 #, c-format
@@ -6023,7 +6032,7 @@ msgstr "过去的贡献者"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr "强制保存到 config.cfg"
+msgstr "强制保存到了 config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
@@ -6068,8 +6077,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"欢迎来到 Xonotic，请选择你的语言、输入玩家名称以开始。之后也可以在主菜单更"
-"改。"
+"欢迎来到 Xonotic，请选择你的语言、输入玩家名称以开始。这些选项随后可以在有关"
+"选项修改。"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -6083,11 +6092,11 @@ msgstr "你在游戏里的名字"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:74
 msgid "Text language:"
-msgstr "文本语言："
+msgstr "文字语言："
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr "允许 stats.xonotic.org 使用你的昵称做玩家统计？"
+msgstr "允许 stats.xonotic.org 在玩家统计中使用你的昵称吗？"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:89
 msgid "Undecided"
@@ -7001,7 +7010,7 @@ msgstr "时间限制："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Timelimit in minutes that when hit, will end the match"
-msgstr "以分钟计的时间限制，当超过时会结束比赛"
+msgstr "以分钟计的时间限制，当超过时会结束竞赛"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 #, c-format
@@ -7564,12 +7573,12 @@ msgstr "播放"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
-msgstr "播放演示将断开你当前的比赛"
+msgstr "播放演示将使你离开当前的竞赛"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr "你真的希望现在断开连接吗？"
+msgstr "你真的想要离开吗？"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
@@ -7578,7 +7587,7 @@ msgstr "断开"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
-msgstr "定时演示将断开你当前的比赛"
+msgstr "全速演示将使你离开当前的竞赛"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
@@ -9942,7 +9951,7 @@ msgstr "路径点编辑菜单"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr "离开当前比赛"
+msgstr "离开当前竞赛"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
@@ -9966,11 +9975,11 @@ msgstr "离开当前任务关卡"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr "离开当前单人比赛"
+msgstr "离开当前单人竞赛"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr "离开当前多人比赛 / 断开与服务器的连接"
+msgstr "离开当前多人竞赛 / 断开与服务器的连接"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:75 qcsrc/menu/xonotic/mainwindow.qc:78
 msgid "Do not press this button again!"
@@ -9979,7 +9988,7 @@ msgstr "不要再按这个按钮 ！"
 #: qcsrc/menu/xonotic/maplist.qc:294
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
-msgstr "嗯？无法游玩此地图（m 为 NULL）。正在重新过滤，使之不再发生。"
+msgstr "嗯？无法游玩此地图（m 为 NULL）。正在重新过滤，使这不再发生。"
 
 #: qcsrc/menu/xonotic/maplist.qc:302
 #, c-format
@@ -9990,7 +9999,7 @@ msgstr "%s 的 Xonotic 服务器"
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
-msgstr "嗯？无法游玩此地图（无效游戏模式）。正在重新过滤，使之不再发生。"
+msgstr "嗯？无法游玩此地图（无效游戏模式）。正在重新过滤，使这不再发生。"
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
@@ -10233,7 +10242,7 @@ msgstr "加入："
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr "最后的比赛："
+msgstr "最后的竞赛："
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
@@ -10247,7 +10256,7 @@ msgstr "最喜欢的地图："
 #: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
-msgstr "比赛局数："
+msgstr "竞赛局数："
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
