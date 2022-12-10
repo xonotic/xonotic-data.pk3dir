@@ -46,6 +46,7 @@
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
@@ -137,6 +138,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (observe_blocked_if_eliminated && INGAME(to))
+	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -255,7 +258,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		{
 			if (vote_called) { VoteCount(false); }
 			this.ready = false;
-			recount_ready = true;
+			if (warmup_stage || game_starttime > time) recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -306,7 +309,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	TRANSMUTE(Observer, this);
 
-	if(recount_ready) ReadyCount();
+	if(recount_ready) ReadyCount(); // FIXME: please add comment about why this is delayed
 
 	WaypointSprite_PlayerDead(this);
 	accuracy_resend(this);
@@ -808,6 +811,9 @@ void PutPlayerInServer(entity this)
 		this.alivetime = time;
 
 	antilag_clear(this, CS(this));
+
+	if (warmup_stage == -1)
+		ReadyCount();
 }
 
 /** Called when a client spawns in the server */
@@ -1036,6 +1042,8 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
+	WriteByte(msg_type, map_minplayers);
+	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
@@ -1138,12 +1146,18 @@ void ClientConnect(entity this)
 	{
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
+		// quickmenu file must be put in a subfolder with an unique name
+		// to reduce chances of overriding custom client quickmenus
+		if (waypointeditor_enabled)
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", "wpeditor.txt"));
+		else if (autocvar_sv_quickmenu_file != "" && strstrofs(autocvar_sv_quickmenu_file, "/", 0) && fexists(autocvar_sv_quickmenu_file))
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", autocvar_sv_quickmenu_file));
 	}
 
 	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
 			send_CSQC_teamnagger();
 
@@ -1229,7 +1243,7 @@ void ClientDisconnect(entity this)
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
-	ReadyCount();
+	if (warmup_stage || game_starttime > time) ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
 	player_powerups_remove_all(this); // stop powerup sound
@@ -1938,7 +1952,8 @@ bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
-	stuffcmd(this, "menu_showteamselect\n");
+	if (frametime) // once per frame is more than enough
+		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
 void Join(entity this)
@@ -1972,10 +1987,11 @@ int GetPlayerLimit()
 {
 	if(g_duel)
 		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
-	int player_limit = autocvar_g_maxplayers;
+	// don't return map_maxplayers during intermission as it would interfere with MapHasRightSize()
+	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
 	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
 	player_limit = M_ARGV(0, int);
-	return player_limit;
+	return player_limit < maxclients ? player_limit : 0;
 }
 
 /**
@@ -2020,7 +2036,7 @@ int nJoinAllowed(entity this, entity ignore)
 	static float msg_time = 0;
 	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
 		msg_time = time + 0.5;
 	}
 
@@ -2239,10 +2255,12 @@ void ObserverOrSpectatorThink(entity this)
 				}
 				CS(this).impulse = 0;
 			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				this.would_spectate = false;
-				this.flags &= ~FL_JUMPRELEASED;
-				TRANSMUTE(Observer, this);
-				PutClientInServer(this);
+				if(!observe_blocked_if_eliminated || !INGAME(this)) {
+					this.would_spectate = false;
+					this.flags &= ~FL_JUMPRELEASED;
+					TRANSMUTE(Observer, this);
+					PutClientInServer(this);
+				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
