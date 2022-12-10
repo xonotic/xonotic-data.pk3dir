@@ -27,6 +27,8 @@ float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -114,7 +116,7 @@ float g_weapon_stay;
 float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
 
 float g_grappling_hook;
-float warmup_stage;
+int warmup_stage;
 
 bool sv_ready_restart_after_countdown;
 
@@ -143,12 +145,16 @@ void ReadyRestart(bool forceWarmupEnd);
 
 void DumpStats(float final);
 
-bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
 void CheckRules_World();
 float RedirectionThink();
+
+// quake 3 music compatibility
+.string music;
+.string noise;
 
 void readplayerstartcvars();
 
@@ -159,3 +165,5 @@ void droptofloor(entity this);
 
 IntrusiveList g_moveables;
 STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }
+
+bool observe_blocked_if_eliminated = false; // forbids eliminated players from observing

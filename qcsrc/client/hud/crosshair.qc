@@ -63,9 +63,8 @@ float EnemyHitCheck()
 	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
 	t = entcs_GetTeam(n - 1);
-	if(teamplay)
-		if(t == myteam)
-			return SHOTTYPE_HITTEAM;
+	if(teamplay && t == myteam)
+		return SHOTTYPE_HITTEAM;
 	if(t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;

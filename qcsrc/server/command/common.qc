@@ -187,6 +187,10 @@ void timeout_handler_reset(entity this)
 	timeout_leadtime = 0;
 
 	delete(this);
+
+	// ReadyCount() does nothing when a timeout is active or pending
+	// so check readiness now to support g_warmup_allow_timeout
+	if (warmup_stage) ReadyCount();
 }
 
 void timeout_handler_think(entity this)
@@ -347,7 +351,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					string mon_oldname = mon.monster_name;
 
 					mon.monster_name = argument;
-					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null);
+					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
 					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
 					return;
 				}

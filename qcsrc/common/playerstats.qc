@@ -40,8 +40,10 @@ void PlayerStats_GameReport_Reset_All()
 	strfree(PS_GR_OUT_EVL);
 
 	if (PS_GR_OUT_DB >= 0)
+	{
 		db_close(PS_GR_OUT_DB);
-	PlayerStats_GameReport_Init();
+		PlayerStats_GameReport_Init();
+	}
 	if(PS_GR_OUT_DB < 0)
 		return;
 
@@ -203,9 +205,15 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	{
 		if(CS(p).latency_cnt)
 		{
-			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
+			float latency = max(0, CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency)
-				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
+			{
+				// if previous average latency exists (player disconnected and reconnected)
+				// make the average of previous and current average latency
+				float prev_latency = PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, 0);
+				float new_latency = !prev_latency ? latency : (prev_latency + latency) / 2;
+				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, -prev_latency + new_latency);
+			}
 		}
 
 		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS_CVAR(p).cvar_cl_allow_uidranking));
@@ -270,6 +278,9 @@ void PlayerStats_GameReport(bool finished)
 
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
 {
+	serverflags &= ~SERVERFLAG_PLAYERSTATS;
+	serverflags &= ~SERVERFLAG_PLAYERSTATS_CUSTOM;
+
 	if(autocvar_g_playerstats_gamereport_uri == "") { return; }
 
 	PS_GR_OUT_DB = db_create();
@@ -364,6 +375,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * i: player index
 		 * n: nickname of the player (optional)
 		 * t: team ID
+		 * r: player ranking enabled / disabled
 		 * e: followed by an event name, a space, and the event count/score
 		 *  event names can be:
 		 *   alivetime: total playing time of the player

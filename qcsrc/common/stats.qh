@@ -125,19 +125,13 @@ REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(NADE_BONUS, float)
 REGISTER_STAT(NADE_BONUS_TYPE, int)
 REGISTER_STAT(NADE_BONUS_SCORE, float)
-REGISTER_STAT(HEALING_ORB, float)
-REGISTER_STAT(HEALING_ORB_ALPHA, float)
 REGISTER_STAT(PLASMA, int)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
 REGISTER_STAT(ROUNDLOST, int)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
-REGISTER_STAT(ENTRAP_ORB, float)
-REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
-REGISTER_STAT(VEIL_ORB, float)
-REGISTER_STAT(VEIL_ORB_ALPHA, float)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 0;
@@ -208,7 +202,7 @@ int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
 float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
-int autocvar_sv_gameplayfix_unstickplayers = 2;
+int autocvar_sv_gameplayfix_unstickplayers = 0;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
 int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
@@ -366,6 +360,7 @@ REGISTER_STAT(Q3COMPAT, int, q3compat)
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
 float round_limit;
+int rounds_played;
 #endif
 
 #ifdef SVQC
@@ -405,6 +400,7 @@ REGISTER_STAT(MOVEVARS_AIRCONTROL, float)
 REGISTER_STAT(FRAGLIMIT, float, autocvar_fraglimit)
 REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
 REGISTER_STAT(WARMUP_TIMELIMIT, float, warmup_limit)
+REGISTER_STAT(ROUNDS_PLAYED, int, rounds_played)
 REGISTER_STAT(ROUND_TIMELIMIT, float, round_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;

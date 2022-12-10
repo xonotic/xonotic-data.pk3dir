@@ -28,6 +28,7 @@
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
 #include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
@@ -63,10 +64,16 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * min(14 / (skill + this.bot_aiskill + 14), 1));
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
+		if (IS_PLAYER(this))
+		{
+			.entity weaponentity = weaponentities[0];
+			if(this.(weaponentity).m_weapon == WEP_Null)
+				W_NextWeapon(this, 0, weaponentity);
+		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
@@ -106,6 +113,9 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
+		.entity weaponentity = weaponentities[0];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;
@@ -160,7 +170,7 @@ void bot_setnameandstuff(entity this)
 		int smallest_count = -1;
 		if (teamplay)
 		{
-			for (int i = 1; i <= AvailableTeams(); ++i)
+			for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 			{
 				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
 				// TeamBalance_GetNumberOfPlayers(balance, i); returns the number of players + 1
@@ -200,7 +210,7 @@ void bot_setnameandstuff(entity this)
 			});
 			if (!conflict)
 				prio += 1;
-			if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+			if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 			{
 				int forced_team = stof(argv(5));
 				if (!Team_IsValidIndex(forced_team))
@@ -232,8 +242,12 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
+	{
 		this.bot_forced_team = stof(argv(5));
+		if (!Team_IsValidIndex(this.bot_forced_team))
+			this.bot_forced_team = 0;
+	}
 	else
 		this.bot_forced_team = 0;
 
@@ -428,7 +442,6 @@ void bot_clientconnect(entity this)
 	if (!IS_BOT_CLIENT(this)) return;
 	this.bot_preferredcolors = this.clientcolors;
 	this.bot_nextthink = time - random();
-	this.lag_func = bot_lagfunc;
 	this.isbot = true;
 	this.createdtime = this.bot_nextthink;
 
@@ -436,16 +449,6 @@ void bot_clientconnect(entity this)
 	{
 		bot_setnameandstuff(this);
 		bot_setclientfields(this);
-	}
-
-	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
-	{
-		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-	}
-	else
-	{
-		this.bot_forced_team = 0;
-		TeamBalance_JoinBestTeam(this);
 	}
 
 	havocbot_setupbot(this);
@@ -607,13 +610,13 @@ bool bot_fixcount(bool multiple_per_frame)
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
+	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		int minplayers = max(0, floor(autocvar_minplayers));
 		if (teamplay)
-			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AVAILABLE_TEAMS);
 		int minbots = max(0, floor(autocvar_bot_number));
 
 		// add bots to reach minplayers if needed
@@ -677,6 +680,7 @@ void bot_serverframe()
 	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
 	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
 	// either intentionally or automatically (sv_spectate 0)
+	// A working workaround for this bug was implemented in commit fbd145044, see entcs_attach
 	if (time < 2.5)
 	{
 		currentbots = -1;

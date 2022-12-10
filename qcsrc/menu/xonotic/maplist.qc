@@ -79,7 +79,8 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
-		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems));
+		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems)
+			|| (gamestatus & (GAME_ISSERVER | GAME_CONNECTED) && cvar("g_campaign")));
 	SUPER(XonoticMapList).draw(me);
 }
 
@@ -156,7 +157,12 @@ void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 	}
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
-		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	{
+		if(!draw_PictureExists(strcat("/levelshots/", MapInfo_Map_bspname)))
+			draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+		else
+			draw_Picture(me.columnPreviewOrigin * eX, strcat("/levelshots/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	}
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 

@@ -45,9 +45,17 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 	noref float ReplicateVars_time;
 	ACCUMULATE void ReplicateVars(int mode)
 	{
-		if (time < ReplicateVars_time)
+		if (!ReplicateVars_time || time < ReplicateVars_time)
 			return;
 		ReplicateVars_time = time + 0.8 + random() * 0.4; // check cvars periodically
+	}
+	void ReplicateVars_Start()
+	{
+		if (!ReplicateVars_time) // make sure it gets executed only once
+		{
+			ReplicateVars_time = time;
+			ReplicateVars(REPLICATEVARS_SEND_ALL);
+		}
 	}
 	#endif
 

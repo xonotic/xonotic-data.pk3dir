@@ -7,9 +7,25 @@ workflow:
 before_script:
   - ln -s $PWD data/xonotic-data.pk3dir
 
-  - git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
-  - cd ..
+  - export MAKEFLAGS=-j$(nproc); echo MAKEFLAGS=$MAKEFLAGS
+#   FIXME: -march=native -mtune=native _changes the hash_, why?!?
+# - export CC="gcc -pipe -march=native -mtune=native"
+  - export CC="gcc -pipe"
+
+  - >
+    if wget -nv https://beta.xonotic.org/pipeline-bin/gmqcc ; then
+      export QCC="$PWD/gmqcc"
+      chmod +x "$QCC"
+    else
+      git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
+      make -C gmqcc || exit 1
+      export QCC="$PWD/gmqcc/gmqcc"
+    fi
+
+  # Makefile: don't complain about lack of tags (fetching them is slow)
+  - export QCCFLAGS_WATERMARK=gitlab_pipeline
+  # Makefile: don't compress anything or complain about lack of zip program
+  - export ZIP=/bin/true
 
 test_compilation_units:
   rules:
@@ -17,23 +33,44 @@ test_compilation_units:
       - qcsrc/**/*
   stage: test
   script:
-    - ./qcsrc/tools/compilationunits.sh
+    - make test
 
 test_sv_game:
   stage: test
   script:
-    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
-    - cd ..
+    - >
+      if wget -nv https://beta.xonotic.org/pipeline-bin/xonotic-linux64-dedicated ; then
+        export ENGINE="$PWD/xonotic-linux64-dedicated"
+        chmod +x "$ENGINE"
+      else
+        git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
+        make -C darkplaces sv-release || exit 1
+        export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic"
+      fi
+    - export ENGINE="$ENGINE -noconfig -nohome"
+
+    - make qc || exit 1
 
     - mkdir -p data/maps
-    - wget -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
-    - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
-    - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
-    - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
-    - make
-    - EXPECT=cb0177a1c87753d7f7793f55fbf2ca2b
-    - HASH=$(${ENGINE} -noconfig -nohome +timestamps 1 +exec serverbench.cfg
+    - wget -nv -O data/maps/_init.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+
+    - while read LINE; do
+        echo $LINE;
+        [ "$LINE" = "All tests OK" ] && PASS=1;
+      done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
+    - test "$PASS" = "1" || { echo 'sv_cmd runtest failed!'; exit 1; }
+
+    - ${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
+    - diff notifications.cfg data/data/notifications_dump.cfg ||
+        { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
+
+    - wget -nv -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
+    - wget -nv -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
+    - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
+    - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
+
+    - EXPECT=4c834aa9b5950ffe25deec1880f21641
+    - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
       | tee /dev/stderr
       | sed -e 's,^\[[^]]*\] ,,'
       | grep '^:'
@@ -45,20 +82,6 @@ test_sv_game:
     - test "$HASH" == "$EXPECT"
     - exit $?
 
-test_sv_unit:
-  stage: test
-  script:
-    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
-    - cd ..
-
-    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
-    - make
-    - while read line; do
-        echo $line;
-        if [[ $line == "All tests OK" ]]; then exit 0; fi;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
-    - exit 1
 
 # NOTE: The generated docs are incomplete - they don't contain code behind SVQC CSQC MENUQC GAMEQC ifdefs.
 # With them added to PREDEFINED, it would take over half an hour to generate the docs and even then

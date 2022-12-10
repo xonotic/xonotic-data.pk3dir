@@ -27,6 +27,7 @@ void door_go_up(entity this, entity actor, entity trigger);
 
 void door_blocked(entity this, entity blocker)
 {
+	bool reverse = false;
 	if((this.spawnflags & DOOR_CRUSH)
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
@@ -69,6 +70,7 @@ void door_blocked(entity this, entity blocker)
 					else
 						door_rotating_go_down(this);
 				}
+				reverse = true;
 			}
 		}
 #ifdef SVQC
@@ -80,6 +82,8 @@ void door_blocked(entity this, entity blocker)
 		}
 #endif
 	}
+	if (!reverse)
+		SUB_CalcMovePause(this);
 }
 
 void door_hit_top(entity this)
@@ -655,7 +659,7 @@ void door_init_shared(entity this)
 	// TODO: other soundpacks
 	if (this.sounds > 0 || q3compat)
 	{
-		// Doors in Q3 always have sounds (they're hard coded in Q3 engine)
+		// Doors in Q3 always have sounds (they're hard coded)
 		this.noise2 = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
@@ -683,14 +687,14 @@ void door_init_shared(entity this)
 		precache_sound(this.noise2);
 	}
 
-        if(autocvar_sv_doors_always_open)
-        {
-                 this.wait = -1;
-        }
-        else if (!this.wait)
-        {
-              	this.wait = 3;
-        }
+	if(autocvar_sv_doors_always_open)
+	{
+		this.wait = -1;
+	}
+	else if (!this.wait)
+	{
+		this.wait = 3;
+	}
 
 	if (!this.lip)
 	{
@@ -699,7 +703,7 @@ void door_init_shared(entity this)
 
 	this.state = STATE_BOTTOM;
 
-	if (GetResource(this, RES_HEALTH))
+	if (GetResource(this, RES_HEALTH) || (q3compat && this.targetname == ""))
 	{
 		//this.canteamdamage = true; // TODO
 		this.takedamage = DAMAGE_YES;
@@ -744,17 +748,17 @@ spawnfunc(func_door)
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
-        if(autocvar_sv_doors_always_open)
-        {
-                this.speed = max(750, this.speed);
-        }
-        else if (!this.speed)
-        {
+	if(autocvar_sv_doors_always_open)
+	{
+		this.speed = max(750, this.speed);
+	}
+	else if (!this.speed)
+	{
 		if (q3compat)
 			this.speed = 400;
 		else
-	                this.speed = 100;
-        }
+			this.speed = 100;
+	}
 
 	settouch(this, door_touch);
 

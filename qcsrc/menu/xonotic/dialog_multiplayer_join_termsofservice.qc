@@ -21,8 +21,8 @@ void XonoticServerToSTab_fill(entity me)
 {
 	entity e;
 	me.TR(me);
-	me.TD(me, me.rows, me.columns, e = makeXonoticTextBox());
-	me.textBox = e;
+	me.TD(me, me.rows, me.columns, e = me.textBox = makeXonoticTextBox());
+		e.allowColors = true;
 }
 
 void AdditionalServerInfo_OnGet(entity fh, entity me, int status)
