@@ -24,6 +24,7 @@
 # Marcin Nogaj, 2022
 # Piotr Kozica <koza91@gmail.com>, 2016
 # qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc, 2022
+# qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc, 2022
 # Rafał Szymański <okavasly@gmail.com>, 2017
 # Robert Wolniak <robert.wolniak@gmail.com>, 2015,2018
 # Saikuru Zero, 2021
@@ -39,8 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc "
-"qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc, 2022\n"
+"Last-Translator: Wojciech Sikora, 2022\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
