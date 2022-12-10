@@ -129,7 +129,6 @@ void CSQC_Init()
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
 		minimapname = strcat("gfx/", mi_shortname, "_radar");
-		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
@@ -461,6 +460,10 @@ void Release_Common_Keys()
 	localcmd("-use\n");
 	localcmd("-hook\n");
 	localcmd("-jump\n");
+	localcmd("-forward\n");
+	localcmd("-back\n");
+	localcmd("-moveleft\n");
+	localcmd("-moveright\n");
 }
 
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
@@ -654,6 +657,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{
@@ -1420,34 +1424,56 @@ bool net_handle_ServerWelcome()
 	}
 
 	strcpy(hostname, ReadString());
-
 	string hostversion = ReadString();
 	bool version_mismatch = ReadByte();
 	bool version_check = ReadByte();
-	string ver = GetVersionMessage(hostversion, version_mismatch, version_check);
-
+	srv_minplayers = ReadByte();
+	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
 	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 
-	string msg = "";
-	msg = strcat(msg, ver);
-	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+	string msg = GetVersionMessage(hostversion, version_mismatch, version_check);
+
+	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
+
+	msg = strcat(msg, "\n", _("Map:"), " ^2");
+	if (world.message == "")
+		msg = strcat(msg, mi_shortname, "\n");
+	else
+	{
+		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
+		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
+		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
+	}
+
+	if (srv_minplayers || srv_maxplayers)
+	{
+		msg = strcat(msg, "\n", _("This match supports"), " ^5");
+		if (srv_minplayers == srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d players"), srv_maxplayers), "\n");
+		else if (srv_minplayers && srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d to %d players"), srv_minplayers, srv_maxplayers), "\n");
+		else if (srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d players maximum"), srv_maxplayers), "\n");
+		else
+			msg = strcat(msg, sprintf(_("%d players minimum"), srv_minplayers), "\n");
+	}
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
-		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
+		msg = strcat(msg, "\n", _("Active modifications:"), " ^3", modifications, "\n");
 
 	if (cache_mutatormsg != "")
-		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
+		msg = strcat(msg, "\n", _("Special gameplay tips:"), " ^7", cache_mutatormsg, "\n");
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
 	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
 
 	if (motd != "")
-		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+		msg = strcat(msg, "\n^9↓ ", _("Server's message"), " ↓\n", motd);
 
 	strcpy(welcome_msg, msg);
 	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
@@ -1467,10 +1493,26 @@ void Welcome_Message_Show_Try()
 			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
-			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+
 			if (intermission || isdemo() || !autocvar_cl_welcome)
-				// close it after it's been initialized so it can still be opened manually
-				localcmd("\ntogglemenu 0\n");
+			{
+				if (cvar("_menu_cmd_closemenu_available"))
+				{
+					// initialize the dialog without opening it
+					localcmd("\nmenu_cmd closemenu Welcome ", welcomedialog_args, "\n");
+				}
+				else
+				{
+					// legacy code for clients with old menus
+					// since togglemenu 0 doesn't close the dialog but only hides it,
+					// playing back a demo the Welcome dialog will pop up on the first ESC press
+					localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+					// close it after it's been initialized so it can still be opened manually
+					localcmd("\ntogglemenu 0\n");
+				}
+			}
+			else
+				localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		}
 
 		strfree(welcome_msg);

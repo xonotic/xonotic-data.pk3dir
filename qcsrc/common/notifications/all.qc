@@ -838,14 +838,14 @@ void Dump_Notifications(int fh, bool alsoprint)
 		}
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = print to console, "
@@ -853,21 +853,21 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = centerprint"
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"Enable this multiple notification"
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
 			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
@@ -962,11 +962,8 @@ void Dump_Notifications(int fh, bool alsoprint)
 		"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement"
 	);
 
-	NOTIF_WRITE(sprintf(
-		(
-			"\n// Notification counts (total = %d): "
-			"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
-		),
+	LOG_INFOF("Notification counts (total = %d): "
+		"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n",
 		(
 			NOTIF_ANNCE_COUNT +
 			NOTIF_INFO_COUNT +
@@ -979,7 +976,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 		NOTIF_CENTER_COUNT,
 		NOTIF_MULTI_COUNT,
 		NOTIF_CHOICE_COUNT
-	));
+	);
 	#undef NOTIF_WRITE_HARDCODED
 	#undef NOTIF_WRITE_ENTITY
 	#undef NOTIF_WRITE

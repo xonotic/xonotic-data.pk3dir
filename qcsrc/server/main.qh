@@ -35,7 +35,8 @@ float client_cefc_accumulatortime;
 
 float servertime, serverprevtime, serverframetime;
 
-.vector oldvelocity; // for fall damage
+// set in CreatureFrame_All for entities that can be damaged by fall (players) and contents (projectiles)
+.vector oldvelocity;
 
 .float watersound_finished;
 
@@ -43,6 +44,8 @@ float servertime, serverprevtime, serverframetime;
 .float species;
 
 .float contents_damagetime;
+
+string GetField_fullspawndata(entity e, string f, ...);
 
 /*
 ==================

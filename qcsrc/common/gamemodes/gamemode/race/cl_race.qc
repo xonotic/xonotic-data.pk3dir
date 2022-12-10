@@ -57,10 +57,10 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
-	float t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
+	float t = stof(db_get(ClientProgsDB, strcat(mi_shortname, rr, "time")));
 
 	if(score && (score < t || !t)) {
-		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));
+		db_put(ClientProgsDB, strcat(mi_shortname, rr, "time"), ftos(score));
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
 			float f = autocvar_cl_autodemo_delete;

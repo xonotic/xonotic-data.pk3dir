@@ -208,11 +208,11 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	else
 		forcemul = 1;
 
-    FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
+	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
 		vector nearest = NearestPointOnBox(it, w_org);
 		if (rad)
 		{
-			thisdmg = ((vlen (nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
+			thisdmg = ((vlen(nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 			if(thisdmg >= 1)
 				continue;
 			if(thisdmg < 0)
@@ -258,11 +258,12 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
+		vector force_dir = normalize(force);
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
-			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
+			w_backoff = -1 * normalize(w_org - (w_org + force_dir * 16));
 
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
@@ -307,7 +308,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				vector ang, vel;
 				for(i = 1; i < 4; ++i)
 				{
-					vel = normalize(w_org - (w_org + normalize(force) * 16)) + randomvec() * 128;
+					vel = normalize(w_org - (w_org + force_dir * 16)) + randomvec() * 128;
 					ang = vectoangles(vel);
 					RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
 				}
@@ -332,57 +333,57 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISTURRET(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
+		vector force_dir = normalize(force);
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
-			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
+			w_backoff = -1 * normalize(w_org - (w_org + force_dir * 16));
 
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		switch(DEATH_ENT(w_deathtype))
 		{
-			 case DEATH_TURRET_EWHEEL:
+			case DEATH_TURRET_EWHEEL:
 				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_BLASTER_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_FLAC:
+			case DEATH_TURRET_FLAC:
 				pointparticles(EFFECT_HAGAR_EXPLODE, w_org, '0 0 0', 1);
 				sound(this, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
-			 case DEATH_TURRET_MLRS:
-			 case DEATH_TURRET_HK:
-			 case DEATH_TURRET_WALK_ROCKET:
-			 case DEATH_TURRET_HELLION:
+			case DEATH_TURRET_MLRS:
+			case DEATH_TURRET_HK:
+			case DEATH_TURRET_WALK_ROCKET:
+			case DEATH_TURRET_HELLION:
 				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_MACHINEGUN:
-			 case DEATH_TURRET_WALK_GUN:
+			case DEATH_TURRET_MACHINEGUN:
+			case DEATH_TURRET_WALK_GUN:
 				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 				pointparticles(EFFECT_MACHINEGUN_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_PLASMA:
+			case DEATH_TURRET_PLASMA:
 				sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ELECTRO_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_WALK_MELEE:
+			case DEATH_TURRET_WALK_MELEE:
 				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_TE_SPARK, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_PHASER:
+			case DEATH_TURRET_PHASER:
 				break;
 
-			 case DEATH_TURRET_TESLA:
+			case DEATH_TURRET_TESLA:
 				te_smallflash(this.origin);
 				break;
-
 		}
 	}
 
@@ -395,11 +396,12 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
 		w_random = prandom();
 
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
+		vector force_dir = normalize(force);
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
 			w_backoff = trace_plane_normal;
 		else
-			w_backoff = -1 * normalize(force);
+			w_backoff = -force_dir;
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))

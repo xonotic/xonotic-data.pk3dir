@@ -278,6 +278,9 @@ void PlayerStats_GameReport(bool finished)
 
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
 {
+	serverflags &= ~SERVERFLAG_PLAYERSTATS;
+	serverflags &= ~SERVERFLAG_PLAYERSTATS_CUSTOM;
+
 	if(autocvar_g_playerstats_gamereport_uri == "") { return; }
 
 	PS_GR_OUT_DB = db_create();
