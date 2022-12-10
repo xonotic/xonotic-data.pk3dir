@@ -3,6 +3,7 @@
 #include "../menu.qh"
 #include "../item.qh"
 
+#include <menu/item/dialog.qh>
 #include <menu/mutators/_mod.qh>
 
 #include <common/command/_mod.qh>
@@ -50,6 +51,7 @@ void GameCommand(string theCommand)
 		LOG_HELP("Usage:^3 menu_cmd <command> [<item>], where possible commands are:");
 		LOG_HELP("  'sync' reloads all cvars on the current menu page");
 		LOG_HELP("  'directmenu' shows the menu window named <item> (or the menu window containing an item named <item>)");
+		LOG_HELP("  'closemenu' closes the menu window named <item> (or the menu window containing an item named <item>)");
 		LOG_HELP("   if <item> is not specified it shows the list of available items in the console");
 		LOG_HELP("  'dumptree' dumps the state of the menu as a tree to the console");
 
@@ -73,14 +75,25 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if (argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
+	string cmd = argv(0);
+	string filter = string_null;
+	bool close_mode = false;
+	if (cmd == "closemenu")
 	{
-		string filter = string_null;
-		if (argv(0) == "directpanelhudmenu") filter = "HUD";
+		close_mode = true;
+		cmd = "directmenu";
+	}
+	else if (cmd == "directpanelhudmenu")
+	{
+		filter = "HUD";
+		cmd = "directmenu";
+	}
 
+	if (cmd == "directmenu")
+	{
 		if (argc == 1)
 		{
-			LOG_HELP("Available items:");
+			LOG_HELP("Available items (* = closable):");
 
 			FOREACH_ENTITY_ORDERED(it.name != "", {
 				if (it.classname == "vtbl") continue;
@@ -90,10 +103,13 @@ void GameCommand(string theCommand)
 					if (!startsWith(s, filter)) continue;
 					s = substring(s, strlen(filter), strlen(s) - strlen(filter));
 				}
-				LOG_HELP(" ", s);
+				if (it.instanceOfContainer && it.closable)
+					LOG_HELP(" * ", s);
+				else
+					LOG_HELP("   ", s);
 			});
 		}
-		else if (argc == 2 && (!isdemo() || argv(1) == "Welcome")) // don't allow this command in demos
+		else if (argc == 2 && !close_mode && (!isdemo() || argv(1) == "Welcome")) // don't allow this command in demos
 		{
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
@@ -113,10 +129,18 @@ void GameCommand(string theCommand)
 						for(i = 2; i < argc; ++i)
 							bufstr_add(argsbuf, argv(i), 1);
 						e.readInputArgs(e, argsbuf);
-						m_goto(strcat(filter, s));
+						if (!close_mode)
+							m_goto(strcat(filter, s));
 					}
 					if(argsbuf >= 0)
 						buf_del(argsbuf);
+
+					// NOTE input args are read even in close mode
+					if (close_mode)
+					{
+						if (e.instanceOfContainer && e.closable && e.focused)
+							Dialog_Close(e, e);
+					}
 				}
 		}
 		return;
@@ -149,6 +173,12 @@ void GameCommand(string theCommand)
 	if (argv(0) == "languageselect")
 	{
 		m_goto("languageselector");
+		return;
+	}
+
+	if (argv(0) == "settings")
+	{
+		m_goto("settings");
 		return;
 	}
 

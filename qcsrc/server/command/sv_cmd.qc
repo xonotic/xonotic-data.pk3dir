@@ -729,7 +729,7 @@ void GameCommand_gametype(int request, int argc)
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				Gametype t = MapInfo_Type_FromString(s, false), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s, false, false), tsave = MapInfo_CurrentGametype();
 
 				if (t)
 				{

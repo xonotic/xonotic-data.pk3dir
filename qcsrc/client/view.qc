@@ -287,7 +287,7 @@ void viewmodel_draw(entity this)
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, NULL, c, this);
+	vector g = weaponentity_glowmod(wep, c, this);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
@@ -1711,6 +1711,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Debug_Draw();
 #endif
 
+	if (autocvar__scoreboard_team_selection)
+	{
+		Scoreboard_UI_Enable(1);
+		cvar_set("_scoreboard_team_selection", "0");
+	}
 	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function

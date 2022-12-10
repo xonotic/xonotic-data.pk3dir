@@ -344,10 +344,10 @@ STATIC_INIT(register_weapons_done)
 
 .entity weaponchild;
 .entity exteriorweaponentity;
-vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
+vector weaponentity_glowmod(Weapon wep, int c, entity wepent)
 {
     vector g;
-    if (!(g = wep.wr_glow(wep, actor, wepent))) g = colormapPaletteColor(c & 0x0F, true);
+    if (!(g = wep.wr_glow(wep, c, wepent))) g = colormapPaletteColor(c & 0x0F, true);
     return g;
 }
 

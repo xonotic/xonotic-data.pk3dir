@@ -114,7 +114,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 					else if (teamplay && !autocvar_sv_spectate && !(Player_GetForcedTeamIndex(caller) > 0))
 					{
 						TRANSMUTE(Observer, caller);  // really?
-						stuffcmd(caller, "menu_showteamselect\n");
+						stuffcmd(caller, "scoreboard_team_selection\n");
 					}
 				}
 
@@ -393,9 +393,7 @@ void ClientCommand_ready(entity caller, int request)
 					}
 
 					caller.last_ready = time;
-
-					// cannot reset the game while a timeout is active!
-					if (!timeout_status) ReadyCount();
+					ReadyCount();
 				}
 			}
 			return;  // never fall through to usage
