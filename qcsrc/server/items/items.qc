@@ -1101,7 +1101,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	//this.effects |= EF_LOWPRECISION;
 
 	// support skinned models for powerups
-	this.skin = def.m_skin;
+	if(!this.skin)
+		this.skin = def.m_skin;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
