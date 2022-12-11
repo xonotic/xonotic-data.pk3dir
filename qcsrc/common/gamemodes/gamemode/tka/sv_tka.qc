@@ -438,12 +438,16 @@ MUTATOR_HOOKFUNCTION(tka, PlayerUseKey)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force values that are applied to players
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
+
+	// as a gamemode rule, only apply scaling to player versus player combat
+	if(!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+		return;
 
 	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
@@ -452,13 +456,13 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 			frag_damage *= autocvar_g_tka_ballcarrier_selfdamage;
 			frag_force *= autocvar_g_tka_ballcarrier_selfforce;
 		}
-		else // damage done to noncarriers
+		else // damage done to other ballcarriers
 		{
 			frag_damage *= autocvar_g_tka_ballcarrier_damage;
 			frag_force *= autocvar_g_tka_ballcarrier_force;
 		}
 	}
-	else if (IS_PLAYER(frag_attacker) && !frag_target.ballcarried) // if the target is a noncarrier
+	else // if the attacker is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{

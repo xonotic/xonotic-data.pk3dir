@@ -431,7 +431,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players in damage.qc
+MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -447,13 +447,13 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_selfdamage;
 			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_selfforce;
 		}
-		else // damage done to noncarriers
+		else // damage done to other ballcarriers
 		{
 			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage;
 			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force;
 		}
 	}
-	else // if the target is a noncarrier
+	else // if the attacker is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{

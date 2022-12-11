@@ -13,15 +13,15 @@ int autocvar_g_tka_teams_override;
 IntrusiveList g_tkaballs;
 REGISTER_MUTATOR(tka, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
-        GameRules_spawning_teams(autocvar_g_tka_team_spawns);
+		GameRules_spawning_teams(autocvar_g_tka_team_spawns);
 		GameRules_limit_score(autocvar_g_tka_point_limit);
-        GameRules_limit_lead(autocvar_g_tka_point_leadlimit);
+		GameRules_limit_lead(autocvar_g_tka_point_leadlimit);
 
-        tka_Initialize();
+		tka_Initialize();
 	}
 	return false;
 }
