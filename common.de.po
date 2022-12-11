@@ -7,8 +7,8 @@
 # Wuzzy <Wuzzy@disroot.org>, 2016-2018
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
-# divVerent <divVerent@xonotic.org>, 2011,2013
-# divVerent <divVerent@xonotic.org>, 2013-2015
+# divVerent <divVerent@gmail.com>, 2011,2013
+# divVerent <divVerent@gmail.com>, 2013-2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # Yepoleb <huberg18@gmail.com>, 2013
@@ -17,7 +17,7 @@
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
 # Mirio <opivy@hotmail.de>, 2014-2017,2019-2022
 # Robert Katzinsky <hbmctextures.unknown@gmail.com>, 2020
-# divVerent <divVerent@xonotic.org>, 2011
+# divVerent <divVerent@gmail.com>, 2011
 # Sless <sless@gmx.net>, 2014
 # Sless <sless@gmx.net>, 2014
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
