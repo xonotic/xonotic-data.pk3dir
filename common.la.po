@@ -2115,7 +2115,7 @@ msgstr "Granata"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^8est ^3flatrum obvium^8, ^3%s^8 preme ut eo utaris"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
@@ -3357,12 +3357,12 @@ msgstr "^BG%s^K1 suis auribus M@!%% Harmonica nocuit%s%s"
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1, ^BG%s^K1 Arco, electrice occisus est%s%s"
+msgstr "^BG%s%s^K1, Arco ^BG%s^K1, electrice occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1, ^BG%s^K1 Arci scintillis, divisus est%s%s"
+msgstr "^BG%s%s^K1, scintillis ^BG%s^K1 Arci, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
@@ -3372,82 +3372,82 @@ msgstr "^BG%s^K1 Arci scintillas lusit%s%s"
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Flatro ^BG%s^K1, immissus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
 msgid "^BG%s^K1 shot themself to hell with their Blaster%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo Flatro se immisit%s%s"
 
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
 msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 potentem tractum, ^BG%s^K1 Crilictri, sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:453
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sui Crilictri potentem tractum sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, missile igneum ^BG%s^K1, edit%s%s"
 
 #: qcsrc/common/notifications/all.inc:455
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad ^BG%s^K1 missile igneum proxime fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo Devastatro se rupit%s%s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, scintillis ^BG%s^K1 Electri, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 compositionem electrizantem, ^BG%s^K1 Electri, sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:459
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Electro orb%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad ^BG%s^K1 Electri orbem proxime fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Electri scintillas lusit%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 oblitus est ubi Electri orbes posuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's fireball%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad ^BG%s^K1 globum igneum proxime fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, tribulo igneo ^BG%s^K1, crematus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr ""
+msgstr "^BG%s^K1 arma minora usurus fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sui tribuli ignei oblitus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
@@ -3457,12 +3457,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, missilibus ^BG%s^K1 Hagaris, afflictatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:468
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Hagaris missilia minima lusit%s%s"
 
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
@@ -5914,7 +5914,7 @@ msgstr "Iaponica"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Kazakh"
-msgstr ""
+msgstr "Casachica"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Korean"
