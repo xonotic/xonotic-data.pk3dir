@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
+"Last-Translator: NaitLee, 2022\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -299,7 +299,7 @@ msgstr "hi / 祝你好运，玩的开心"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^Send in English"
-msgstr "英文发送"
+msgstr "以英文发送"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 #: qcsrc/client/hud/panel/quickmenu.qc:822
@@ -368,11 +368,11 @@ msgstr "防守中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "漫游中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "游荡中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^roaming, icon"
-msgstr "漫游中, icon"
+msgstr "游荡中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -384,11 +384,11 @@ msgstr "攻击中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "夺旗人已被干掉 (l:%y^7)"
+msgstr "干掉了夺旗人 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "夺旗人已被干掉, icon"
+msgstr "干掉了夺旗人, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #, c-format
@@ -443,7 +443,7 @@ msgstr "名字显示在玩家上方"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^Crosshair per weapon"
-msgstr "每个武器的十字准线"
+msgstr "每个武器的十字准心"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^FPS"
@@ -586,7 +586,7 @@ msgstr "持球时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr "在远离模式中持球的总时间"
+msgstr "在驱离模式中持球的总时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -662,11 +662,11 @@ msgstr "最快跑圈时间（竞速 / CTS）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of faults committed"
-msgstr "提交的错误数"
+msgstr "失误数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^faults"
-msgstr "故障"
+msgstr "失误"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
@@ -744,7 +744,7 @@ msgstr "圈数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
-msgstr "存活人数（最后的生存者）"
+msgstr "存活人数（笑到最后）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
@@ -769,7 +769,7 @@ msgstr "名字"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^nick"
-msgstr "昵称"
+msgstr "暱称"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
@@ -782,7 +782,7 @@ msgstr "目标"
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr "旗子（夺旗战）或钥匙（钥匙猎取）或球（远离）被捡起的频率"
+msgstr "旗帜（夺旗战）或钥匙（钥匙猎取）或球（驱离）被捡起的频率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^pickups"
@@ -1484,7 +1484,7 @@ msgstr "此轮竞赛结束所需要的分数"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr "决斗场"
+msgstr "决斗"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -1492,17 +1492,17 @@ msgstr "在一对一的竞技场决斗，以决定最终胜者"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
-msgstr "冻结式对战"
+msgstr "冰封战"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
-msgstr "杀死敌人以将他们冰冻，站在被冰冻的队友边以复活他们；冰冻所有敌人即胜利"
+msgstr "杀死敌人以将他们冻结；站在被冻结的队友边以复活他们；冻结所有敌人即胜利"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
-msgstr "入侵"
+msgstr "侵袭"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
@@ -1514,7 +1514,7 @@ msgstr "带着球杀敌得分"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
-msgstr "远离"
+msgstr "驱离"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
@@ -1530,7 +1530,7 @@ msgstr "^1你已经用尽你的生命"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
-msgstr "最后的生存者"
+msgstr "笑到最后"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
@@ -1546,7 +1546,7 @@ msgstr "Nex 球赛"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr "把球踢进对方球门，保护自己的球门"
+msgstr "把球踢进对方球门；守住自己的球门"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -1652,7 +1652,7 @@ msgstr "超级血包"
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Jetpack"
-msgstr "火箭背包"
+msgstr "火箭揹包"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
@@ -2210,7 +2210,7 @@ msgstr "【危险】"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Frozen!"
-msgstr "被冰冻！"
+msgstr "被冻结！"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
@@ -2249,11 +2249,11 @@ msgstr "推"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "Flag carrier"
-msgstr "持旗者"
+msgstr "持旗人"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Enemy carrier"
-msgstr "敌方持旗者"
+msgstr "敌方持旗人"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Dropped flag"
@@ -2487,7 +2487,7 @@ msgstr "^F2抛出硬币……结果：%s^F2！"
 
 #: qcsrc/common/notifications/all.inc:254
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BG你的^F1喷气背包^BG没有任何燃料"
+msgstr "^BG你的^F1喷气揹包^BG没有任何燃料"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -2528,7 +2528,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 不公正地消灭了%s%s"
 #: qcsrc/common/notifications/all.inc:266
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 淹在水下%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 浸在水中%s%s"
 
 #: qcsrc/common/notifications/all.inc:267
 #, c-format
@@ -2619,12 +2619,12 @@ msgstr "^BG%s%s^K1 意外地死在 ^BG%s^K1 旁%s%s"
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
-msgstr "^BG%s%s^K1 在 ^BG%s^K1 的野峰爆炸时被炸飞了%s%s"
+msgstr "^BG%s%s^K1 在 ^BG%s^K1 的野蜂爆炸时被炸飞了%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
-msgstr "^BG%s%s^K1 见识到了 ^BG%s^K1 野峰枪的闪光%s%s"
+msgstr "^BG%s%s^K1 见识到了 ^BG%s^K1 野蜂枪的闪光%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
@@ -2690,7 +2690,7 @@ msgstr "^BG%s^K1 被移动到了%s%s"
 #: qcsrc/common/notifications/all.inc:296
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr "^BG%s^K1 在团队游戏中唱反调%s%s"
+msgstr "^BG%s^K1 妄图在团队游戏中唱反调%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
@@ -2755,7 +2755,7 @@ msgstr "^BG%s^K1 被魔法师引爆了%s%s"
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr "^BG%s^K1 的内脏被钢铁巨人扯了出来%s%s"
+msgstr "^BG%s^K1 的内脏被钢铁巨人变成了外脏%s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
@@ -2785,7 +2785,7 @@ msgstr "^BG%s^K1 参演行尸走肉%s%s"
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr "^K1僵尸给 ^BG%s^K1 上了一节功夫课%s%s"
+msgstr "^BG%s^K1 亲身体验了僵尸的一堂功夫课%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #: qcsrc/common/notifications/all.inc:315
@@ -2812,7 +2812,7 @@ msgstr "^BG%s^K1 觉得有点冷%s%s"
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr "^BG%s^K1 被自己的冰冻榴弹冻死了%s%s"
+msgstr "^BG%s^K1 被自己的冻结榴弹冻死了%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
@@ -2842,7 +2842,7 @@ msgstr "^BG%s^K1 变成了天空中最亮的星%s%s"
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
 msgid "^BG%s^K1 was slimed%s%s"
-msgstr "^BG%s^K1 被史莱姆融化%s%s"
+msgstr "^BG%s^K1 融在了史莱姆中%s%s"
 
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
@@ -2907,7 +2907,7 @@ msgstr "^BG%s^K1 被炮塔相位移出%s%s"
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
-msgstr "^BG%s^K1 被炮台发出的高温离子弹教会做人%s%s"
+msgstr "^BG%s^K1 被炮塔发出的高温离子弹教会做人%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
@@ -2932,7 +2932,7 @@ msgstr "^BG%s^K1 被行走者炮塔炸飞了%s%s"
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr "^BG%s^K1 被笼罩在野峰的爆炸中%s%s"
+msgstr "^BG%s^K1 被笼罩在野蜂的爆炸中%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
@@ -2982,7 +2982,7 @@ msgstr "^BG%s^BG%s^BG（可获得 %s %s，间隔 %s 秒）"
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr "^BG%s^K1 被 ^BG%s^K1 冰冻"
+msgstr "^BG%s^K1 被 ^BG%s^K1 冻结"
 
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
@@ -3007,7 +3007,7 @@ msgstr "^BG%s^K3 在 %s 秒后自动复活"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K1 froze themself"
-msgstr "^BG%s^K1 把自己冰冻了"
+msgstr "^BG%s^K1 把自己冻结了"
 
 #: qcsrc/common/notifications/all.inc:360
 #: qcsrc/common/notifications/all.inc:676
@@ -3415,7 +3415,7 @@ msgstr "^BG%s%s^K1 离 ^BG%s^K1 的火箭弹太近%s%s"
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr "^BG%s^K1 被自己的灭世炸上天%s%s"
+msgstr "^BG%s^K1 被自己的灭世炸上了天%s%s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
@@ -3908,7 +3908,7 @@ msgstr "^K1%s你被 ^BG%s^K1 杀死了^BG"
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr "^K3%s你让 ^BG%s^K3 得分^BG"
+msgstr "^K1%s你让 ^BG%s^K1 得分^BG"
 
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
@@ -4120,7 +4120,7 @@ msgstr "^K1你被行走者炮塔杀死了！"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr "^K1你被笼罩在野峰的爆炸中！"
+msgstr "^K1你被笼罩在野蜂的爆炸中！"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You were crushed by a vehicle!"
@@ -4230,7 +4230,7 @@ msgstr "^BG你在 %s 秒后被自动复活"
 
 #: qcsrc/common/notifications/all.inc:673
 msgid "^BGThe generator is under attack!"
-msgstr "^BG发电机正在被攻击！"
+msgstr "^BG发电机正在遭受攻击！"
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^TC^TT^BG team loses the round"
@@ -4238,7 +4238,7 @@ msgstr "^TC^TT队^BG输了这一轮"
 
 #: qcsrc/common/notifications/all.inc:679
 msgid "^K1You froze yourself"
-msgstr "^K1你把自己冰冻了"
+msgstr "^K1你把自己冻结了"
 
 #: qcsrc/common/notifications/all.inc:680
 msgid "^K1Round already started, you spawn as frozen"
@@ -4255,7 +4255,7 @@ msgstr "^BG你得到了^F1燃料再生器"
 
 #: qcsrc/common/notifications/all.inc:687
 msgid "^BGYou got the ^F1Jetpack"
-msgstr "^BG你得到了^F1喷气背包"
+msgstr "^BG你得到了^F1喷气揹包"
 
 #: qcsrc/common/notifications/all.inc:695
 msgid ""
@@ -4312,7 +4312,7 @@ msgstr "^F4此轮在 ^COUNT 秒后开始"
 
 #: qcsrc/common/notifications/all.inc:707
 msgid "^BGScanning frequency range..."
-msgstr "^BG正在搜索频率范围……"
+msgstr "^BG正在扫描频率范围……"
 
 #: qcsrc/common/notifications/all.inc:708
 msgid "^BGYou are starting with the ^TC^TT Key"
@@ -4350,7 +4350,7 @@ msgstr "^BG等待 %s 位玩家加入……"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr "^BG你的武器被降级，找到一些弹药以恢复！"
+msgstr "^BG你的武器被降级，找到一些弹药来恢复！"
 
 #: qcsrc/common/notifications/all.inc:719
 msgid "^F4^COUNT^BG left to find some ammo!"
@@ -4480,7 +4480,7 @@ msgstr "^BG创建了^K1入口^BG传送门"
 
 #: qcsrc/common/notifications/all.inc:742
 msgid "^F3Out^BG-portal created"
-msgstr "^BG创建了^K1出口^BG传送门"
+msgstr "^BG创建了^F3出口^BG传送门"
 
 #: qcsrc/common/notifications/all.inc:743
 msgid "^F1Portal creation failed"
@@ -5493,7 +5493,7 @@ msgstr "没有左舷炮架！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
-msgstr "野峰"
+msgstr "野蜂"
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:21
 msgid "Racer"
@@ -6096,7 +6096,7 @@ msgstr "文字语言："
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr "允许 stats.xonotic.org 在玩家统计中使用你的昵称吗？"
+msgstr "允许 stats.xonotic.org 在玩家统计中使用你的暱称吗？"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:89
 msgid "Undecided"
@@ -6457,7 +6457,7 @@ msgstr "靠外"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
-msgstr "调换速度条/加速度条的位置"
+msgstr "调换速度条与加速度条的位置"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
@@ -6489,7 +6489,7 @@ msgstr "包括垂直加速度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr "物理面板"
+msgstr "物理参数面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -7118,11 +7118,11 @@ msgstr "超神"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
 msgid "Mutators..."
-msgstr "插件……"
+msgstr "修改……"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Mutators and weapon arenas"
-msgstr "插件与武器竞技"
+msgstr "修改与武器竞技"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:171
 msgid "Maplist"
@@ -7202,7 +7202,7 @@ msgstr "无"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
-msgstr "游戏插件："
+msgstr "游戏修改："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
 msgid ""
@@ -7244,7 +7244,7 @@ msgstr "让事物下落得慢些（相对正常重力的百分比）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:166
 msgid "Weapon & item mutators:"
-msgstr "武器与物品插件："
+msgstr "武器与物品修改："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
@@ -7254,7 +7254,7 @@ msgstr "玩家生成时携带钩爪。按下“钩爪”按键以使用"
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
-msgstr "玩家生成时携带喷气背包。双击“跳跃”键或按下“喷气背包”按键以使用"
+msgstr "玩家生成时携带喷气揹包。双击“跳跃”键或按下“喷气揹包”按键以使用"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
 msgid ""
@@ -7346,7 +7346,7 @@ msgstr "除了有 Nix 模式的随机武器外，总是随附一把镭射枪"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:9
 msgid "Mutators"
-msgstr "插件"
+msgstr "修改"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
@@ -7700,7 +7700,7 @@ msgstr "允许玩家统计跟踪你的客户端"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:131
 msgid "Allow player statistics to use your nickname"
-msgstr "允许玩家统计使用你的昵称"
+msgstr "允许玩家统计使用你的暱称"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
@@ -9174,7 +9174,7 @@ msgstr "当按住跳跃键时自动连续跳跃"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
-msgstr "起跳时使用喷气背包："
+msgstr "起跳时使用喷气揹包："
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
@@ -9779,7 +9779,7 @@ msgstr "不接受（退出游戏）"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr "允许玩家统计使用你的昵称吗？"
+msgstr "允许玩家统计使用你的暱称吗？"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
@@ -9823,7 +9823,7 @@ msgstr "蹲下/潜水"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
-msgstr "喷气背包"
+msgstr "喷气揹包"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "Attacking"

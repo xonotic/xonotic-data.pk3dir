@@ -3442,7 +3442,7 @@ msgstr "^BG%s%s^K1, tribulo igneo ^BG%s^K1, crematus est%s%s"
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr "^BG%s^K1 arma minora usurus fuit%s%s"
+msgstr "^BG%s^K1 armis minoribus usurus fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
