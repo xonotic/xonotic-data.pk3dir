@@ -13,7 +13,7 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, this.oldorigin.x);
+	WriteVector(MSG_ENTITY, this.velocity);
 	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
@@ -38,7 +38,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-	e.oldorigin_x = compressShortVector(e.velocity);
 	e.species = bloodtype;
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
@@ -192,7 +191,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
-	force = decompressShortVector(ReadShort());
+	force = ReadVector();
 	species = ReadByte();
 
 	return = true;
