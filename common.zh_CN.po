@@ -1652,7 +1652,7 @@ msgstr "超级血包"
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Jetpack"
-msgstr "火箭揹包"
+msgstr "火箭背包"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
@@ -2487,7 +2487,7 @@ msgstr "^F2抛出硬币……结果：%s^F2！"
 
 #: qcsrc/common/notifications/all.inc:254
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BG你的^F1喷气揹包^BG没有任何燃料"
+msgstr "^BG你的^F1喷气背包^BG没有任何燃料"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -4255,7 +4255,7 @@ msgstr "^BG你得到了^F1燃料再生器"
 
 #: qcsrc/common/notifications/all.inc:687
 msgid "^BGYou got the ^F1Jetpack"
-msgstr "^BG你得到了^F1喷气揹包"
+msgstr "^BG你得到了^F1喷气背包"
 
 #: qcsrc/common/notifications/all.inc:695
 msgid ""
@@ -7254,7 +7254,7 @@ msgstr "玩家生成时携带钩爪。按下“钩爪”按键以使用"
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
-msgstr "玩家生成时携带喷气揹包。双击“跳跃”键或按下“喷气揹包”按键以使用"
+msgstr "玩家生成时携带喷气背包。双击“跳跃”键或按下“喷气背包”按键以使用"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
 msgid ""
@@ -9174,7 +9174,7 @@ msgstr "当按住跳跃键时自动连续跳跃"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
-msgstr "起跳时使用喷气揹包："
+msgstr "起跳时使用喷气背包："
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
@@ -9823,7 +9823,7 @@ msgstr "蹲下/潜水"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
-msgstr "喷气揹包"
+msgstr "喷气背包"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "Attacking"
