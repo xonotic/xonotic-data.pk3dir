@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
+"Last-Translator: NaitLee, 2022\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -40,7 +40,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2成功导出至 %s！（提示：它被保存到 data/data/）"
+msgstr "^2成功导出至 %s！（提示：它保存到了 data/data/）"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -614,7 +614,7 @@ msgstr "死亡"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of keys destroyed by pushing them into void"
-msgstr "被推入虚空而销毁的钥匙数"
+msgstr "推入虚空而销毁的钥匙数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^destroyed"
@@ -670,11 +670,11 @@ msgstr "失误"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of flag carrier kills"
-msgstr "夺旗者击杀数"
+msgstr "持旗者击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^fckills"
-msgstr "杀死夺旗者"
+msgstr "杀死持旗者"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "FPS"
@@ -736,7 +736,7 @@ msgstr "击杀"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of laps finished (Race/CTS)"
-msgstr "完成圈数（竞速 / CTS）"
+msgstr "跑完的圈数（竞速 / CTS）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
@@ -744,7 +744,7 @@ msgstr "圈数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
-msgstr "存活人数（笑到最后）"
+msgstr "剩余的生命数（笑到最后）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^lives"
@@ -756,7 +756,7 @@ msgstr "钥匙丢失次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^losses"
-msgstr "失败"
+msgstr "丢失"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 #: qcsrc/client/hud/panel/scoreboard.qc:146
@@ -769,7 +769,7 @@ msgstr "名字"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^nick"
-msgstr "暱称"
+msgstr "昵称"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of objectives destroyed"
@@ -782,11 +782,11 @@ msgstr "目标"
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr "旗帜（夺旗战）或钥匙（钥匙猎取）或球（驱离）被捡起的频率"
+msgstr "捡起旗帜/钥匙/球的频率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^pickups"
-msgstr "拾起"
+msgstr "捡起"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Ping time"
@@ -798,7 +798,7 @@ msgstr "延迟"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Packet loss"
-msgstr "丢包"
+msgstr "网络通讯包丢失"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^pl"
@@ -806,7 +806,7 @@ msgstr "丢包"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of players pushed into void"
-msgstr "被推入虚空的玩家数量"
+msgstr "推入虚空的玩家数量"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^pushes"
@@ -838,7 +838,7 @@ msgstr "重生"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of rounds won"
-msgstr "赢得场数"
+msgstr "获胜的竞赛数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^rounds won"
@@ -870,7 +870,7 @@ msgstr "总和"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
-msgstr "统治点占领数（统治模式）"
+msgstr "统治点占领数（统治）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^takes"
@@ -886,7 +886,7 @@ msgstr "杀死队友"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of ticks (Domination)"
-msgstr "刻数量（统治模式）"
+msgstr "占领刻数量（统治模式）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^ticks"
@@ -925,7 +925,7 @@ msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
-"  ^5注意：^7不含参数的 scoreboard_columns_set 在每次开始地图前都会执行一次"
+"  ^5注意：^7不含参数的 scoreboard_columns_set 在每张地图开始前都会执行一次"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:690
 msgid ""
@@ -937,11 +937,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:691
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr "你可以用 ^3|^7 开头来开始右对齐的域"
+msgstr "你可以用 ^3|^7 开头以使域右对齐"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:692
 msgid "The following field names are recognized (case insensitive):"
-msgstr "可识别以下域名称（大小写不敏感）"
+msgstr "可使用以下域名称（大小写不敏感）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:698
 msgid ""
@@ -950,9 +950,9 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
-"在域前你可以放一个 + 或 - 号，后跟一个以逗号分割的游戏类型列表，\n"
-"之后一个斜杠，以使此域仅显示在这些或除了这些游戏类型中。你也可以指定‘all’为一"
-"个域以显示当前游戏模式可用的所有域。"
+"在域前你可以放一个 +（或 -）号，后跟一个以逗号分割的游戏类型列表，\n"
+"之后一个斜杠，以使此域仅显示在这些（或除了这些）游戏类型中。你也可以使"
+"用‘all’以显示当前游戏模式的所有域。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid ""
@@ -1082,7 +1082,7 @@ msgstr "^1在 ^3%s^1 后重生……"
 #: qcsrc/client/hud/panel/scoreboard.qc:2515
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr "你死了,等待 ^3%s^7 后重生"
+msgstr "你死了，等待 ^3%s^7 后重生"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2524
 #, c-format
@@ -1405,7 +1405,7 @@ msgstr "在一定时间内摧毁障碍物以寻找并摧毁敌方能量核心"
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "Point limit:"
-msgstr "得分限制："
+msgstr "目标得分："
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1418,7 +1418,7 @@ msgstr "歼灭所有敌方团队玩家来取得胜利"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr "此轮限制："
+msgstr "目标取胜数："
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
@@ -1441,11 +1441,11 @@ msgstr "找到并将敌人的旗帜带到你的基地，保护你方基地旗帜
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr "夺取限制："
+msgstr "目标夺旗数："
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "此轮竞赛结束所需要的夺旗数"
+msgstr "团队夺旗数达到目标后，一轮竞赛结束"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1480,7 +1480,7 @@ msgstr "统治"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "此轮竞赛结束所需要的分数"
+msgstr "团队分数达到目标后，一轮竞赛结束"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1538,7 +1538,7 @@ msgstr "生存并杀敌，直到敌人耗尽生命"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
-msgstr "生命："
+msgstr "生命数："
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1550,11 +1550,11 @@ msgstr "把球踢进对方球门；守住自己的球门"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr "进球限制"
+msgstr "目标进球数："
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "此轮竞赛结束所需要的进球数"
+msgstr "团队进球数达到目标后，一轮竞赛结束"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1674,11 +1674,11 @@ msgstr "扔乱音大号"
 #: qcsrc/common/mapinfo.qh:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 msgid "Frag limit:"
-msgstr "击杀限制："
+msgstr "目标击杀数："
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "此轮竞赛结束所需要的杀敌数"
+msgstr "杀敌数达到目标后，一轮竞赛结束"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -2491,7 +2491,7 @@ msgstr "^BG你的^F1喷气背包^BG没有任何燃料"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
-msgstr "^F2你缺少一个 UID，超标准选项将不被保存或恢复"
+msgstr "^F2你缺少一个 UID，将不保存或恢复超标准选项"
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^F1Round already started, you will join the game in the next round"
@@ -3390,7 +3390,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用镭射枪杀害%s%s"
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
 msgid "^BG%s^K1 shot themself to hell with their Blaster%s%s"
-msgstr "^BG%s^K1 被自己的镭射枪送进地狱%s%s"
+msgstr "^BG%s^K1 被自己的镭射枪折磨%s%s"
 
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
@@ -3450,17 +3450,17 @@ msgstr "^BG%s%s^K1 离 ^BG%s^K1 的火球太近%s%s"
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的火雷烧着了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 放的小火球烧着了%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr "^BG%s^K1 应该使用更小的枪%s%s"
+msgstr "^BG%s^K1 驾驭不了这么大的抢%s%s"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s"
-msgstr "^BG%s^K1 忘记自己放置了火雷%s%s"
+msgstr "^BG%s^K1 忘记自己放了小火球%s%s"
 
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
@@ -3485,7 +3485,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用重型镭射突击大炮切开%s%s"
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr "^BG%s^K1 被自己的重型镭射突击大炮打到飞起%s%s"
+msgstr "^BG%s^K1 被自己的重型镭射突击大炮震飞了%s%s"
 
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
@@ -3547,7 +3547,7 @@ msgstr "^BG%s^K1 没能躲过自己的榴弹%s%s"
 #: qcsrc/common/notifications/all.inc:482
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr "^BG%s^K1 被自己的榴弹炸成碎尸%s%s"
+msgstr "^BG%s^K1 被自己的榴弹炸飞了%s%s"
 
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
@@ -3588,7 +3588,7 @@ msgstr "^BG%s%s^K1 差一点躲过 ^BG%s^K1 的绝灭火箭炮链锯%s%s"
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
-msgstr "^BG%s%s^K1 被自己的绝灭火箭炮链锯锯成两份%s%s"
+msgstr "^BG%s^K1 被自己的绝灭火箭炮链锯锯成两份%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -3614,12 +3614,12 @@ msgstr "^BG%s%s^K1 死在了 ^BG%s^K1 的步枪弹下%s%s"
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "^BG%s%s^K1 没有逃过 ^BG%s^K1 的步枪弹%s%s"
+msgstr "^BG%s%s^K1 没能逃过 ^BG%s^K1 的步枪弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr "^BG%s%s^K1 没有逃过 ^BG%s^K1 的步枪攻击%s%s"
+msgstr "^BG%s%s^K1 没能逃过 ^BG%s^K1 的步枪攻击%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
@@ -3701,7 +3701,7 @@ msgstr "^BG在 ^F4%s^BG内摧毁了目标！"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr "此轮竞赛需要 %s 位玩家。"
+msgstr "这一轮竞赛需要 %s 位玩家。"
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -3880,11 +3880,11 @@ msgstr "^BG你归还了^TC^TT队^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:576
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr "^BG停滞！敌人现在可以在雷达上看到你！"
+msgstr "^BG停滞！敌人现在能在雷达上看到你！"
 
 #: qcsrc/common/notifications/all.inc:577
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr "^BG停滞！带旗人现在可在雷达上被敌人看到！"
+msgstr "^BG停滞！敌人现在能在雷达上看到持旗者！"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
@@ -3913,12 +3913,12 @@ msgstr "^K1%s你让 ^BG%s^K1 得分^BG"
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr "^K3%s你让 ^BG%s^K3 烧了起来^BG"
+msgstr "^K3%s你点燃了 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr "^K1%s你被 ^BG%s^K1 点着了^BG"
+msgstr "^K1%s你被 ^BG%s^K1 点燃了^BG"
 
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
@@ -3987,7 +3987,7 @@ msgstr "^K1你不公平地消灭了自己！"
 #: qcsrc/common/notifications/all.inc:624
 #, c-format
 msgid "^K1You were %s"
-msgstr "^K1你"
+msgstr "^K1你%s"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You couldn't catch your breath!"
@@ -4088,7 +4088,7 @@ msgstr "^K1你陷入了沼泽里！"
 #: qcsrc/common/notifications/all.inc:641
 #, c-format
 msgid "^BGYou are now on: %s"
-msgstr "^BG你当前在："
+msgstr "^BG你换到了%s"
 
 #: qcsrc/common/notifications/all.inc:642
 msgid "^K1You died in an accident!"
@@ -4221,12 +4221,12 @@ msgstr "^K3你复活了自己"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3你被 ^BG%s^K3 复活了"
+msgstr "^BG%s^K3 复活了你"
 
 #: qcsrc/common/notifications/all.inc:671
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr "^BG你在 %s 秒后被自动复活"
+msgstr "^BG你在 %s 秒后自动复活"
 
 #: qcsrc/common/notifications/all.inc:673
 msgid "^BGThe generator is under attack!"
@@ -4242,7 +4242,7 @@ msgstr "^K1你把自己冻结了"
 
 #: qcsrc/common/notifications/all.inc:680
 msgid "^K1Round already started, you spawn as frozen"
-msgstr "^K1此轮已经开始，你以冻结状态生成"
+msgstr "^K1这一轮已经开始，你以冻结状态生成"
 
 #: qcsrc/common/notifications/all.inc:682
 #, c-format
@@ -4308,7 +4308,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:706
 msgid "^F4Round will start in ^COUNT"
-msgstr "^F4此轮在 ^COUNT 秒后开始"
+msgstr "^F4这一轮将在 ^COUNT 秒后开始"
 
 #: qcsrc/common/notifications/all.inc:707
 msgid "^BGScanning frequency range..."
@@ -4903,7 +4903,7 @@ msgstr "粉"
 #: qcsrc/common/turrets/cl_turrets.qc:126
 #, c-format
 msgid "%s under attack!"
-msgstr "%s 正在被攻击！"
+msgstr "%s正遭受攻击！"
 
 #: qcsrc/common/turrets/turret.qh:11
 msgid "Turret"
@@ -5380,72 +5380,72 @@ msgstr "返回键"
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "左操纵杆按下"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "右操纵杆按下"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "手柄左前按钮"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "手柄右前按钮"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "手柄左扳机键"
 
 #: qcsrc/common/util.qc:1560
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "手柄右扳机键"
 
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "左操纵杆向上"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "左操纵杆向下"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "左操纵杆向左"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "左操纵杆向右"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "右操纵杆向上"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "右操纵杆向下"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "右操纵杆向左"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "右操纵杆向右"
 
 #: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
 #: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
@@ -6036,11 +6036,11 @@ msgstr "强制保存到了 config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr "将不会被保存"
+msgstr "将不会保存"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr "将被保存到 config.cfg"
+msgstr "将保存到 config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
@@ -6096,7 +6096,7 @@ msgstr "文字语言："
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr "允许 stats.xonotic.org 在玩家统计中使用你的暱称吗？"
+msgstr "允许 stats.xonotic.org 在玩家统计中使用你的昵称吗？"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:89
 msgid "Undecided"
@@ -6942,7 +6942,7 @@ msgstr "跟随"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wander"
-msgstr "浮游"
+msgstr "游荡"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
@@ -7010,7 +7010,7 @@ msgstr "时间限制："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Timelimit in minutes that when hit, will end the match"
-msgstr "以分钟计的时间限制，当超过时会结束竞赛"
+msgstr "每轮竞赛的时间限制（分钟）"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 #, c-format
@@ -7700,7 +7700,7 @@ msgstr "允许玩家统计跟踪你的客户端"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:131
 msgid "Allow player statistics to use your nickname"
-msgstr "允许玩家统计使用你的暱称"
+msgstr "允许玩家统计使用你的昵称"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
@@ -8349,7 +8349,7 @@ msgstr "距离："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:173
 msgid "Decals further away than this will not be drawn"
-msgstr "比此距离远的涂鸦将不被绘制"
+msgstr "将不绘制比此距离远的涂鸦"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
 msgid "Time:"
@@ -8357,7 +8357,7 @@ msgstr "时间："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:180
 msgid "Time in seconds before decals fade away"
-msgstr "以秒计的时间，在此之后涂鸦会淡出消失"
+msgstr "涂鸦在淡出消失前保留的时间（秒）"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
 msgid "Damage effects:"
@@ -8539,7 +8539,7 @@ msgstr "对准星进行击中测试"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "Blur if obstructed by an obstacle"
-msgstr "在被障碍物阻挡时模糊"
+msgstr "当有障碍物阻挡时模糊"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid "Blur if obstructed by a teammate"
@@ -8867,7 +8867,7 @@ msgstr "使所有玩家颜色与我相同"
 msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
-msgstr "警告：若在团队游戏中启用，你的团队颜色可能和敌人的一样"
+msgstr "警告：若在团队游戏中启用，你的团队颜色会和敌人的一样"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
@@ -8963,7 +8963,7 @@ msgstr "视野："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 msgid "Field of vision in degrees"
-msgstr "以度计的视场角度"
+msgstr "视场角度（度）"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:75
 msgid "ZOOM^Zoom factor:"
@@ -9779,7 +9779,7 @@ msgstr "不接受（退出游戏）"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr "允许玩家统计使用你的暱称吗？"
+msgstr "允许玩家统计使用你的昵称吗？"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
@@ -9895,11 +9895,11 @@ msgstr "显示对话历史"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "vote YES"
-msgstr "投票 赞成"
+msgstr "投赞成票"
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "vote NO"
-msgstr "投票 反对"
+msgstr "投反对票"
 
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "Client"
