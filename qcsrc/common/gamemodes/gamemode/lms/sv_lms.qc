@@ -112,7 +112,7 @@ int WinningCondition_LMS()
 			else
 			{
 				// a winner!
-				// and assign him his first place
+				// and assign them their first place
 				GameRules_scoring_add(first_player, LMS_RANK, 1);
 				first_player.winning = 1;
 				return WINNING_YES;

@@ -551,7 +551,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 			}
 		}
 	}
-	// if we replace someone, will we be banned longer than him (so long-term
+	// if we replace someone, will we be banned longer than them (so long-term
 	// bans never get overridden by short-term bans)
 	if(i < ban_count)
 	if(ban_expire[i] > time + bantime)
