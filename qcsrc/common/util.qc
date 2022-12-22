@@ -442,7 +442,7 @@ vector decompressShortVector(int data)
 	float q	= (data & 0x0F80) / 0x80;
 	int len = (data & 0x007F);
 
-	//print("\ndecompress: p ", ftos(p)); print("q ", ftos(q)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p:", ftos(p)); print(" q:", ftos(q)); print(" len:", ftos(len), "\n");
 
 	if(p == 0)
 	{
@@ -455,7 +455,7 @@ vector decompressShortVector(int data)
 	}
 	else
 	{
-		q   = .19634954084936207740 * q;
+		q = .19634954084936207740 * q;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
 		out.x = cos(q) *  cos(p);
 		out.y = sin(q) *  cos(p);
@@ -491,10 +491,10 @@ float compressShortVector(vector vec)
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang.y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * 32 / 360) & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
-	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
+	//print("compressed: p:", ftos(p)); print(" y:", ftos(y)); print(" len:", ftos(len), "\n");
 
 	return (p * 0x1000) + (y * 0x80) + len;
 }
