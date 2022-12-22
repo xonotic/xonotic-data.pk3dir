@@ -738,13 +738,14 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnIconsOrigin = 0;
-	me.columnIconsSize = me.realFontSize.x * 4 * me.iconsSizeFactor;
+	me.columnIconsSize = me.realFontSize.x * 5 * me.iconsSizeFactor;
 	me.columnPingSize = me.realFontSize.x * 3;
 	me.columnMapSize = me.realFontSize.x * 10;
 	me.columnTypeSize = me.realFontSize.x * 4;
 	me.columnPlayersSize = me.realFontSize.x * 5;
-	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize.x;
-	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize.x;
+	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 4 * me.realFontSize.x;
+	// no me.realFontSize.x separation between icons and ping columns because in practice they are already separated
+	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize;
 	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize.x;
 	me.columnMapOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 	me.columnTypeOrigin = me.columnMapOrigin + me.columnMapSize + me.realFontSize.x;
@@ -984,11 +985,14 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	//  RENDER ICONS
 	// --------------
 	vector iconSize = '0 0 0';
-	iconSize_y = me.realFontSize.y * me.iconsSizeFactor;
-	iconSize_x = me.realFontSize.x * me.iconsSizeFactor * me.serversHeight;
+	iconSize_y = me.realFontSize.y * me.iconsSizeFactor / me.serversHeight;
+	iconSize_x = me.realFontSize.x * me.iconsSizeFactor;
 
 	vector iconPos = '0 0 0';
-	iconPos_x = (me.columnIconsSize - 3 * iconSize.x) * 0.5;
+	if(me.seenIPv4 && me.seenIPv6)
+		iconPos_x = (me.columnIconsSize - 4 * iconSize.x) * 0.5;
+	else
+		iconPos_x = (me.columnIconsSize - 3 * iconSize.x) * 0.5;
 	iconPos_y = (1 - iconSize.y) * 0.5;
 
 	// IP
@@ -998,9 +1002,9 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			draw_Picture(iconPos, "icon_ipv6", iconSize, '1 1 1', 1);
 		else if(isv4)
 			draw_Picture(iconPos, "icon_ipv4", iconSize, '1 1 1', 1);
-	}
 
-	iconPos.x += iconSize.x;
+		iconPos.x += iconSize.x;
+	}
 
 	// AES
 	if(crypto > 0)
@@ -1100,7 +1104,13 @@ float XonoticServerList_mouseMove(entity me, vector pos)
 		return 1;
 	}
 
-	me.mouseOverIcons = (pos_x <= me.columnIconsSize);
+	float iconSize_x = me.realFontSize.x * me.iconsSizeFactor;
+	float iconPos_x;
+	if(me.seenIPv4 && me.seenIPv6)
+		iconPos_x = (me.columnIconsSize - 4 * iconSize_x) * 0.5;
+	else
+		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
+	me.mouseOverIcons = (pos.x >= me.columnIconsOrigin + iconPos_x && pos.x <= me.columnIconsOrigin + me.columnIconsSize - iconPos_x);
 	if(!me.mouseOverIcons)
 		clearTooltip(me);
 	return 1;
