@@ -814,8 +814,8 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		if(catent)
 		{
 			SET_YRANGE(
-				(me.categoriesHeight - 1) / (me.categoriesHeight + 1),
-				me.categoriesHeight / (me.categoriesHeight + 1)
+				(me.categoriesHeight - me.realFontSize.y) / (me.categoriesHeight + me.serversHeight),
+				me.categoriesHeight / (me.categoriesHeight + me.serversHeight)
 			);
 			draw_Text(
 				eY * me.realUpperMargin
@@ -832,7 +832,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 				SKINALPHA_SERVERLIST_CATEGORY,
 				0
 			);
-			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
+			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + me.serversHeight), 1);
 		}
 	}
 
@@ -1193,7 +1193,6 @@ float XonoticServerList_getItemHeight(entity me, int item)
 {
 	for (int i = 0; i < category_draw_count; ++i) {
 		// Matches exactly the headings with increased height.
-		// FIXME server row next to the heading is slightly smaller than others if (autocvar_menu_slist_categories <= 0)
 		if (item == category_item[i])
 			return me.itemHeight * (me.categoriesHeight + me.serversHeight);
 	}
