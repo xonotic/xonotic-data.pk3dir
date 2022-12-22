@@ -15,6 +15,7 @@
 # Nait Lee, 2022
 # sapphireliu <balancedliu@gmail.com>, 2014
 # 韬 刘 <jiegushijia@gmail.com>, 2019
+# 韬 刘 <jiegushijia@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
