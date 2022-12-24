@@ -167,7 +167,6 @@ NET_HANDLE(casings, bool isNew)
     casing.velocity += 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
     set_movetype(casing, MOVETYPE_BOUNCE);
-    casing.bouncefactor = 0.25;
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;
@@ -177,10 +176,12 @@ NET_HANDLE(casings, bool isNew)
     {
         case 1:
             setmodel(casing, MDL_CASING_SHELL);
+            casing.bouncefactor = 0.25;
             casing.cnt = time + autocvar_cl_casings_shell_time;
             break;
         default:
             setmodel(casing, MDL_CASING_BULLET);
+            casing.bouncefactor = 0.5;
             casing.cnt = time + autocvar_cl_casings_bronze_time;
             break;
     }
