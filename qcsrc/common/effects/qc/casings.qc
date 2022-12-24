@@ -165,7 +165,7 @@ NET_HANDLE(casings, bool isNew)
     casing.draw = Casing_Draw;
     if (isNew) IL_PUSH(g_drawables, casing);
     casing.velocity += 2 * prandomvec();
-    casing.avelocity = '0 250 0' + 100 * prandomvec();
+    casing.avelocity = '0 10 0' + 100 * prandomvec();
     set_movetype(casing, MOVETYPE_BOUNCE);
     settouch(casing, Casing_Touch);
     casing.move_time = time;
