@@ -57,6 +57,7 @@ classfield(Casing) .bool silent;
 classfield(Casing) .int state;
 classfield(Casing) .float cnt;
 
+// this is only needed because LimitedChildrenRubble() takes a func pointer
 void Casing_Delete(entity this)
 {
     delete(this);
@@ -76,7 +77,7 @@ void Casing_Draw(entity this)
 
     if (this.alpha < ALPHA_MIN_VISIBLE)
     {
-        Casing_Delete(this);
+        delete(this);
         this.drawmask = 0;
         return;
     }
@@ -103,7 +104,7 @@ void Casing_Touch(entity this, entity toucher)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
-        Casing_Delete(this);
+        delete(this);
         return;
     }
 
