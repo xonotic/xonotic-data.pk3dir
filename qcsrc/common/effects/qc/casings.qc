@@ -82,9 +82,19 @@ void Casing_Draw(entity this)
         return;
     }
 
+    trace_startsolid = 0; // due to cl_casings_ticrate, traces are not always performed
     Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
     //if (wasfreed(this))
     //    return; // deleted by touch function
+
+    // prevent glitchy casings when the gun model is poking into a wall
+    // doing this here is cheaper than doing it on the server as the client performs the trace anyway
+    if (trace_startsolid)
+    {
+        delete(this);
+        this.drawmask = 0;
+        return;
+    }
 }
 
 SOUND(BRASS1, W_Sound("brass1"));
