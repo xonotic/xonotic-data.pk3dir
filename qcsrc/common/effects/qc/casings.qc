@@ -197,8 +197,6 @@ NET_HANDLE(casings, bool isNew)
             break;
     }
 
-    setsize(casing, '0 0 -1', '0 0 -1');
-
     LimitedChildrenRubble(CasingsNGibs, "casing", autocvar_cl_casings_maxcount, Casing_Delete, NULL);
 }
 
