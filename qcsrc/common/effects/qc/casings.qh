@@ -5,7 +5,7 @@ float autocvar_cl_casings_bronze_time;
 int autocvar_cl_casings_maxcount = 100;
 float autocvar_cl_casings_shell_time;
 bool autocvar_cl_casings_sloppy = 1;
-float autocvar_cl_casings_ticrate = 0.1;
+float autocvar_cl_casings_ticrate;
 #endif
 
 #ifdef GAMEQC
