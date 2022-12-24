@@ -16,5 +16,5 @@ REPLICATE_INIT(int, cvar_r_drawviewmodel);
 #ifdef SVQC
 int autocvar_g_casings;
 
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
+void SpawnCasing(vector vel, vector ang, int casingtype, entity casingowner, .entity weaponentity);
 #endif

@@ -14,7 +14,7 @@ REPLICATE(cvar_cl_casings, bool, "cl_casings");
 REPLICATE(cvar_r_drawviewmodel, int, "r_drawviewmodel");
 
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
+void SpawnCasing(vector vel, vector ang, int casingtype, entity casingowner, .entity weaponentity)
 {
 	vector org = casingowner.(weaponentity).spawnorigin;
 	org = casingowner.origin + casingowner.view_ofs + org.x * v_forward - org.y * v_right + org.z * v_up;
