@@ -45,7 +45,7 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 		WriteShort(MSG_ONE, compressShortVector(vel)); // actually compressed velocity
 		WriteByte(MSG_ONE, ang.x * 256 / 360);
 		WriteByte(MSG_ONE, ang.y * 256 / 360);
-		WriteByte(MSG_ONE, ang.z * 256 / 360);
+		// weapons only have pitch and yaw, so no need to send ang.z
 	});
 }
 #endif
@@ -150,7 +150,6 @@ NET_HANDLE(casings, bool isNew)
     casing.velocity = decompressShortVector(ReadShort());
     casing.angles_x = ReadByte() * 360 / 256;
     casing.angles_y = ReadByte() * 360 / 256;
-    casing.angles_z = ReadByte() * 360 / 256;
 
     return = true;
 
