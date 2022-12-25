@@ -1162,7 +1162,7 @@ void StartItem(entity this, GameItem def)
 	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
 	{
 		delete(this);
-		return;
+		return; // TODO does not set startitem_failed
 	}
 
 	this.classname = def.m_canonical_spawnfunc;
