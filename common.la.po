@@ -3352,7 +3352,7 @@ msgstr "^BG%s%s^K1, magno cantu ^BG%s^K1 M@!#%% Harmonicae, occisus est%s%s"
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"
-msgstr "^BG%s^K1 suis auribus M@!%% Harmonica nocuit%s%s"
+msgstr "^BG%s^K1 suis auribus M@!#%% Harmonica nocuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:447
 #, c-format
@@ -3477,18 +3477,18 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, gravitatis bombo ^BG%s^K1 Unci, offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, magno canto ^BG%s^K1 M@!#%% Klein Lagenae, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:473
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suis auribus M@!#%% Klein Lagena nocuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:474
 #, c-format
@@ -3498,43 +3498,43 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo ^BG%s^K1, perforatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #: qcsrc/common/notifications/all.inc:783
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr ""
+msgstr "^F2%s^BG tribuli simul ponere non potes"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's mine%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad ^BG%s^K1 tribulum proxime fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:478
 #, c-format
 msgid "^BG%s^K1 forgot about their mine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sui tribuli oblitus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad ^BG%s^K1 Mortarii granatam proxime fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, granatam ^BG%s^K1 Mortarii, edit%s%s"
 
 #: qcsrc/common/notifications/all.inc:481
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sui ipsius Mortarii granatam non vidit%s%s"
 
 #: qcsrc/common/notifications/all.inc:482
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo Mortario se rupit%s%s"
 
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
@@ -3651,12 +3651,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, magno cantu ^BG%s^K1 M@!#%% Tubae, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:506
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suis auribus M@!#%% Tuba nocuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
@@ -3670,20 +3670,20 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:527
 msgid "^F4You are now alone!"
-msgstr ""
+msgstr "^F4Iam solus es!"
 
 #: qcsrc/common/notifications/all.inc:529
 msgid "^BGYou are attacking!"
-msgstr ""
+msgstr "^BGImpetis!"
 
 #: qcsrc/common/notifications/all.inc:530
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BGDefendis!"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BGObjective destroyed in ^F4%s^BG!"
-msgstr ""
+msgstr "^BGMeta ^F4%s^BG deleta est!"
 
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
@@ -3692,20 +3692,20 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGIncipe!"
 
 #: qcsrc/common/notifications/all.inc:535
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGLudus incipietur post"
 
 #: qcsrc/common/notifications/all.inc:536
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGTempus %sum incipietur post"
 
 #: qcsrc/common/notifications/all.inc:537
 msgid "^F4Round cannot start"
-msgstr ""
+msgstr "^F4Tempus incipi non potest"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F2Don't camp!"
@@ -3731,11 +3731,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGYou captured the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG cepisti!"
 
 #: qcsrc/common/notifications/all.inc:550
 msgid "^BGYou captured the flag!"
-msgstr ""
+msgstr "^BGVexillum cepisti!"
 
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
@@ -3745,119 +3745,119 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:552
 #, c-format
 msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BG%s^BG vexillum ^TC^TT^BG %s^BG dedit"
 
 #: qcsrc/common/notifications/all.inc:553
 #, c-format
 msgid "^BG%s^BG passed the flag to %s"
-msgstr ""
+msgstr "^BG%s^BG vexillum %s^BG dedit"
 
 #: qcsrc/common/notifications/all.inc:554
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG a %s^BG accepisti"
 
 #: qcsrc/common/notifications/all.inc:555
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr ""
+msgstr "^BGVexillum a %s^BG accepisti"
 
 #: qcsrc/common/notifications/all.inc:556
 #, c-format
 msgid "^BGPress ^F2%s^BG to receive the flag from %s^BG"
-msgstr ""
+msgstr "^F2%s^BG preme ut vexillum a %s^BG accipias"
 
 #: qcsrc/common/notifications/all.inc:557
 #, c-format
 msgid "^BGRequesting %s^BG to pass you the flag"
-msgstr ""
+msgstr "^BGRogatur ut ^BG%s^BG vexillum tibi det"
 
 #: qcsrc/common/notifications/all.inc:558
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG %s^BG dedisti"
 
 #: qcsrc/common/notifications/all.inc:559
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BGVexillum %s^BG dedisti"
 
 #: qcsrc/common/notifications/all.inc:560
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG tenes!"
 
 #: qcsrc/common/notifications/all.inc:561
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGVexillum tenes!"
 
 #: qcsrc/common/notifications/all.inc:562
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr ""
+msgstr "^BGTuae %smanus^BG vexillum tenes, id refer!"
 
 #: qcsrc/common/notifications/all.inc:563
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr ""
+msgstr "%sHostium^BG vexillum tenes, id refer!"
 
 #: qcsrc/common/notifications/all.inc:564
 #, c-format
 msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes^BG tuum vexillum tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:565
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes (^BG%s%s)^BG tuum vexillum tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:566
 #, c-format
 msgid "^BGThe %senemy^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes^BG vexillum tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:567
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes (^BG%s%s)^BG vexillum tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes^BG suum vexillum tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:569
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes (^BG%s%s)^BG suum vexillum tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:570
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega^BG vexillum ^TC^TT^BG tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:571
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega (^BG%s%s)^BG vexillum ^TC^TT^BG tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:572
 #, c-format
 msgid "^BGYour %steam mate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega^BG vexillum tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:573
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega (^BG%s%s)^BG vexillum tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:574
 #: qcsrc/common/notifications/all.inc:712
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BGInimici detectro te videre possunt!"
 
 #: qcsrc/common/notifications/all.inc:575
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGVexillum ^TC^TT^BG rettulisti!"
 
 #: qcsrc/common/notifications/all.inc:576
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -3870,7 +3870,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr ""
+msgstr "^K3%s^BG%s^K3 occidisti"
 
 #: qcsrc/common/notifications/all.inc:582
 #: qcsrc/common/notifications/all.inc:591
@@ -3882,7 +3882,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:583
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sA ^BG%s^K1 occisus es"
 
 #: qcsrc/common/notifications/all.inc:584
 #: qcsrc/common/notifications/all.inc:593
@@ -3894,27 +3894,27 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr ""
+msgstr "^K3%s^BG%s^K3 cremavisti"
 
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr ""
+msgstr "^K1%sA ^BG%s^K1 crematus es"
 
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr ""
+msgstr "^K3%s^BG%s^K3 gelavisti"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr ""
+msgstr "^K1%sA ^BG%s^K1 gelatus es"
 
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr ""
+msgstr "^K1%s^BG%s^K1 scribentem occidisti"
 
 #: qcsrc/common/notifications/all.inc:609
 #, c-format
@@ -3924,7 +3924,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sTu scribens a ^BG%s^K1 occisus es"
 
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
@@ -3934,11 +3934,11 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr ""
+msgstr "^F2%s^BG iterum preme ut granatam iacias!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr ""
+msgstr "^F2Tibi ^K1GRANATA DONATA^F2 est!"
 
 #: qcsrc/common/notifications/all.inc:620
 #, c-format
