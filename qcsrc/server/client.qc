@@ -878,7 +878,6 @@ void ClientInit_misc(entity this)
 	else
 		WriteString(channel, "");
 	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
-	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 }
@@ -889,11 +888,6 @@ void ClientInit_CheckUpdate(entity this)
 	if(this.count != autocvar_g_balance_armor_blockpercent)
 	{
 		this.count = autocvar_g_balance_armor_blockpercent;
-		this.SendFlags |= 1;
-	}
-	if(this.cnt != autocvar_g_balance_damagepush_speedfactor)
-	{
-		this.cnt = autocvar_g_balance_damagepush_speedfactor;
 		this.SendFlags |= 1;
 	}
 }

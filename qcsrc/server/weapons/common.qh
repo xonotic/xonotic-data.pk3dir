@@ -17,6 +17,8 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 
 .float misc_bulletcounter;
 
+.float damagepush_speedfactor;
+
 .int projectiledeathtype;
 
 .float fade_time;

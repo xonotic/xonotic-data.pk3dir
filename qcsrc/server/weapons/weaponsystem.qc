@@ -536,6 +536,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				this.m_weapon = newwep;
 				this.weaponname = newwep.mdl;
 				this.bulletcounter = 0;
+				this.damagepush_speedfactor = autocvar_g_balance_damagepush_speedfactor;
 				newwep.wr_setup(newwep, actor, weaponentity);
 				this.state = WS_RAISE;
 

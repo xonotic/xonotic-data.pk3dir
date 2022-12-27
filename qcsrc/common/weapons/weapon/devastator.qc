@@ -515,6 +515,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 METHOD(Devastator, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
     actor.(weaponentity).rl_release = 1;
+    actor.(weaponentity).damagepush_speedfactor = WEP_CVAR(devastator, damagepush_speedfactor);
 }
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
