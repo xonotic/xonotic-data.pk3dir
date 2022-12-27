@@ -30,12 +30,12 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 
 void W_Rifle_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, headshot_multiplier), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), thiswep.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE, actor);
+	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, headshot_multiplier), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), thiswep.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_RIFLE_FIRE, actor);
 }
 
 void W_Rifle_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, headshot_multiplier), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), thiswep.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2, actor);
+	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, headshot_multiplier), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), thiswep.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_RIFLE_FIRE2, actor);
 }
 
 .void(Weapon thiswep, entity actor, .entity weaponentity) rifle_bullethail_attackfunc;
@@ -211,7 +211,7 @@ METHOD(Rifle, wr_init, void(entity thiswep))
 {
     if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
     {
-        precache_pic("gfx/reticle_nex");
+        precache_pic("gfx/reticle_vortex");
     }
 }
 METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))

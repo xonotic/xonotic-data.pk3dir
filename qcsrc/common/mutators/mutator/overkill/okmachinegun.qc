@@ -22,7 +22,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 
 	W_DecreaseAmmo(WEP_OVERKILL_MACHINEGUN, actor, WEP_CVAR_PRI(okmachinegun, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okmachinegun, damage), WEP_OVERKILL_MACHINEGUN.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MACHINEGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okmachinegun, damage), WEP_OVERKILL_MACHINEGUN.m_id);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;

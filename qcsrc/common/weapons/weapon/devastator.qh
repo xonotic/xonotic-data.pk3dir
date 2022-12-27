@@ -7,15 +7,15 @@ CLASS(Devastator, Weapon)
 /* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
-/* modelname */ ATTRIB(Devastator, mdl, string, "rl");
+/* modelname */ ATTRIB(Devastator, mdl, string, "devastator");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
 /* flash mdl */ ATTRIB(Devastator, m_muzzlemodel, Model, MDL_DEVASTATOR_MUZZLEFLASH);
 /* flash eff */ ATTRIB(Devastator, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
-/* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairdevastator");
 /* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
+/* wepimg    */ ATTRIB(Devastator, model2, string, "weapondevastator");
 /* refname   */ ATTRIB(Devastator, netname, string, "devastator");
 /* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
 

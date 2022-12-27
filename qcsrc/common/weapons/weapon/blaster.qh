@@ -7,15 +7,15 @@ CLASS(Blaster, Weapon)
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
-/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
+/* modelname */ ATTRIB(Blaster, mdl, string, "blaster");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
 /* flash mdl */ ATTRIB(Blaster, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Blaster, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
 #endif
-/* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairblaster");
 /* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
-/* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
+/* wepimg    */ ATTRIB(Blaster, model2, string, "weaponblaster");
 /* refname   */ ATTRIB(Blaster, netname, string, "blaster");
 /* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
 

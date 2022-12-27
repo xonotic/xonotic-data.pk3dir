@@ -83,10 +83,10 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 5, SND_VORTEX_FIRE, CH_WEAPON_A, mydmg, thiswep.m_id);
 	if(charge > WEP_CVAR(oknex, charge_animlimit) && WEP_CVAR(oknex, charge_animlimit)) // if the OverkillNex is overcharged, we play an extra sound
 	{
-		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(oknex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(oknex, charge_animlimit)), ATTN_NORM);
+		sound(actor, CH_WEAPON_B, SND_VORTEX_CHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(oknex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(oknex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
@@ -327,14 +327,14 @@ METHOD(OverkillNex, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 6;
 	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	if(!w_issilent)
-		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+		sound(this, CH_SHOTS, SND_VORTEX_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 METHOD(OverkillNex, wr_init, void(entity thiswep))
 {
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 	{
-		precache_pic("gfx/reticle_nex");
+		precache_pic("gfx/reticle_vortex");
 	}
 }
 

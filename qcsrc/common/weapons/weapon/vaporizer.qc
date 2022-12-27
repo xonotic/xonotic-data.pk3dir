@@ -120,7 +120,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, thiswep.m_id);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
+	sound (actor, CH_WEAPON_A, SND_VAPORIZER_FIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	impressive_hits = 0;
@@ -363,14 +363,14 @@ METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
     else
     {
         pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
+        if(!w_issilent) { sound(actor, CH_SHOTS, SND_VORTEX_IMPACT, VOL_BASE, ATTN_NORM); }
     }
 }
 METHOD(Vaporizer, wr_init, void(entity thiswep))
 {
     if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
     {
-        precache_pic("gfx/reticle_nex");
+        precache_pic("gfx/reticle_vortex");
     }
 }
 METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
