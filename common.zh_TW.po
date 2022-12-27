@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
+"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -620,7 +620,7 @@ msgstr "推入虛空而銷燬的鑰匙數"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^destroyed"
-msgstr "銷燬"
+msgstr "摧毀"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^damage"
@@ -1528,7 +1528,7 @@ msgstr "鑰匙獵取"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
-msgstr "^1你已經用盡你的生命"
+msgstr "^1你已耗盡生命"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -4122,7 +4122,7 @@ msgstr "^K1你被行走者砲塔殺死了！"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr "^K1你被籠罩在野蜂的爆炸中！"
+msgstr "^K1你被野蜂的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You were crushed by a vehicle!"
@@ -4130,23 +4130,23 @@ msgstr "^K1你被載具壓扁了！"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr "^K1你被籠罩在猛禽的集束爆破中！"
+msgstr "^K1你被猛禽的集束爆破吞噬！"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr "^K1你被籠罩在猛禽的爆炸中！"
+msgstr "^K1你被猛禽的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr "^K1你被籠罩在蜘蛛機器人的爆炸中！"
+msgstr "^K1你被蜘蛛機器人的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr "^K1你被蜘蛛機器人炸成了碎片！"
+msgstr "^K1你被蜘蛛機器人火箭彈炸成了碎片！"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr "^K1你被籠罩在競速者的爆炸中！"
+msgstr "^K1你被競速者的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You couldn't find shelter from a Racer rocket!"
@@ -4322,14 +4322,14 @@ msgstr "^BG你帶著^TC^TT隊^BG鑰匙開局"
 
 #: qcsrc/common/notifications/all.inc:710
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr "^BG你已耗盡生命，你必須等待至下一輪競賽"
+msgstr "^BG你已耗盡生命，請靜候下一輪競賽"
 
 #: qcsrc/common/notifications/all.inc:711
 msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
-"^F4警告：^BG在進入旁觀模式後，不能重新加入此局競賽。\n"
+"^F4警告：^BG進入旁觀模式後，將不能重新加入這一局競賽。\n"
 "再次執行此指令以旁觀。"
 
 #: qcsrc/common/notifications/all.inc:713
@@ -4352,7 +4352,7 @@ msgstr "^BG等待 %s 位玩家加入……"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr "^BG你的武器被降級，找到一些彈藥來恢復！"
+msgstr "^BG你的武器被降級，去找些彈藥來恢復！"
 
 #: qcsrc/common/notifications/all.inc:719
 msgid "^F4^COUNT^BG left to find some ammo!"
@@ -4442,16 +4442,16 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
-"^F2現在是^F4超時階段^F2！\n"
-"繼續殺敵、直到決勝！"
+"^F2現在是^F4決勝時刻^F2！\n"
+"繼續殺敵、看花落誰家！"
 
 #: qcsrc/common/notifications/all.inc:737
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
-"^F2現在是^F4超時階段^F2！\n"
-"盡全力進球、直到決勝！"
+"^F2現在是^F4決勝時刻^F2！\n"
+"盡全力進球、力拔頭籌！"
 
 #: qcsrc/common/notifications/all.inc:738
 msgid ""
@@ -4461,11 +4461,11 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
-"^F2現在是^F4超時階段^F2！\n"
+"^F2現在是^F4決勝時刻^F2！\n"
 "\n"
 "發電機開始衰減。\n"
 "團隊佔領的控制點越多，\n"
-"敵方的發電機衰減越快"
+"敵方發電機衰減越快"
 
 #: qcsrc/common/notifications/all.inc:739
 #, c-format
@@ -4473,7 +4473,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
-"^F2現在是^F4超時階段^F2！\n"
+"^F2現在是^F4決勝時刻^F2！\n"
 "^BG為遊戲添加了 ^F4%s^BG！"
 
 #: qcsrc/common/notifications/all.inc:741
@@ -4969,7 +4969,7 @@ msgstr "相位砲塔"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr "相位炮"
+msgstr "相位儀"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -5487,11 +5487,11 @@ msgstr "按 %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No right gunner!"
-msgstr "沒有右舷炮架！"
+msgstr "右舷炮架沒有炮手！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:962
 msgid "No left gunner!"
-msgstr "沒有左舷炮架！"
+msgstr "左舷炮架沒有炮手！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
@@ -10236,7 +10236,7 @@ msgstr "十二月"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "%Y 年 %m %d日"
+msgstr "%Y 年 %m %d 日"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
@@ -10299,11 +10299,11 @@ msgstr "%d（無排名）"
 
 #: qcsrc/menu/xonotic/util.qc:419
 msgid "Update can be downloaded at:"
-msgstr "可從這裡下載更新："
+msgstr "可在這裡下載更新："
 
 #: qcsrc/menu/xonotic/util.qc:509
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "正在自動生成新增地圖的地圖資訊..."
+msgstr "正在自動生成新增地圖的地圖資訊 (mapinfo)..."
 
 #: qcsrc/menu/xonotic/util.qc:544
 #, c-format

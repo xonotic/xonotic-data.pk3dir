@@ -1526,7 +1526,7 @@ msgstr "钥匙猎取"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
-msgstr "^1你已经用尽你的生命"
+msgstr "^1你已耗尽生命"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -4120,7 +4120,7 @@ msgstr "^K1你被行走者炮塔杀死了！"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr "^K1你被笼罩在野蜂的爆炸中！"
+msgstr "^K1你被野蜂的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You were crushed by a vehicle!"
@@ -4128,23 +4128,23 @@ msgstr "^K1你被载具压扁了！"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr "^K1你被笼罩在猛枭的集束爆破中！"
+msgstr "^K1你被猛枭的集束爆破吞噬！"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr "^K1你被笼罩在猛枭的爆炸中！"
+msgstr "^K1你被猛枭的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr "^K1你被笼罩在蜘蛛机器人的爆炸中！"
+msgstr "^K1你被蜘蛛机器人的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr "^K1你被蜘蛛机器人炸成了碎片！"
+msgstr "^K1你被蜘蛛机器人火箭弹炸成了碎片！"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr "^K1你被笼罩在竞速者的爆炸中！"
+msgstr "^K1你被竞速者的爆炸吞噬！"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You couldn't find shelter from a Racer rocket!"
@@ -4320,14 +4320,14 @@ msgstr "^BG你带着^TC^TT队^BG钥匙开局"
 
 #: qcsrc/common/notifications/all.inc:710
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr "^BG你已耗尽生命，你必须等待至下一轮竞赛"
+msgstr "^BG你已耗尽生命，请静候下一轮竞赛"
 
 #: qcsrc/common/notifications/all.inc:711
 msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
-"^F4警告：^BG在进入旁观模式后，不能重新加入此局竞赛。\n"
+"^F4警告：^BG进入旁观模式后，将不能重新加入这一局竞赛。\n"
 "再次运行此指令以旁观。"
 
 #: qcsrc/common/notifications/all.inc:713
@@ -4350,7 +4350,7 @@ msgstr "^BG等待 %s 位玩家加入……"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr "^BG你的武器被降级，找到一些弹药来恢复！"
+msgstr "^BG你的武器被降级，去找些弹药来恢复！"
 
 #: qcsrc/common/notifications/all.inc:719
 msgid "^F4^COUNT^BG left to find some ammo!"
@@ -4440,16 +4440,16 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
-"^F2现在是^F4超时阶段^F2！\n"
-"继续杀敌、直到决胜！"
+"^F2现在是^F4决胜时刻^F2！\n"
+"继续杀敌、看花落谁家！"
 
 #: qcsrc/common/notifications/all.inc:737
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
-"^F2现在是^F4超时阶段^F2！\n"
-"尽全力进球、直到决胜！"
+"^F2现在是^F4决胜时刻^F2！\n"
+"尽全力进球、力拔头筹！"
 
 #: qcsrc/common/notifications/all.inc:738
 msgid ""
@@ -4459,11 +4459,11 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
-"^F2现在是^F4超时阶段^F2！\n"
+"^F2现在是^F4决胜时刻^F2！\n"
 "\n"
 "发电机开始衰减。\n"
 "团队占领的控制点越多，\n"
-"敌方的发电机衰减越快"
+"敌方发电机衰减越快"
 
 #: qcsrc/common/notifications/all.inc:739
 #, c-format
@@ -4471,7 +4471,7 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
-"^F2现在是^F4超时阶段^F2！\n"
+"^F2现在是^F4决胜时刻^F2！\n"
 "^BG为游戏添加了 ^F4%s^BG！"
 
 #: qcsrc/common/notifications/all.inc:741
@@ -4967,7 +4967,7 @@ msgstr "相位炮塔"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr "相位炮"
+msgstr "相位仪"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -5485,11 +5485,11 @@ msgstr "按 %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No right gunner!"
-msgstr "没有右舷炮架！"
+msgstr "右舷炮架没有炮手！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:962
 msgid "No left gunner!"
-msgstr "没有左舷炮架！"
+msgstr "左舷炮架没有炮手！"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
@@ -10234,7 +10234,7 @@ msgstr "十二月"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "%Y 年 %m %d日"
+msgstr "%Y 年 %m %d 日"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
@@ -10297,11 +10297,11 @@ msgstr "%d（无排名）"
 
 #: qcsrc/menu/xonotic/util.qc:419
 msgid "Update can be downloaded at:"
-msgstr "可从这里下载更新："
+msgstr "可在这里下载更新："
 
 #: qcsrc/menu/xonotic/util.qc:509
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "正在自动生成新增地图的地图信息..."
+msgstr "正在自动生成新增地图的地图信息 (mapinfo)..."
 
 #: qcsrc/menu/xonotic/util.qc:544
 #, c-format
