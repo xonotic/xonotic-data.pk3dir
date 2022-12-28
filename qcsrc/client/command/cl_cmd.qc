@@ -403,9 +403,9 @@ void LocalCommand_sendcvar(int request, int argc)
 				string s = cvar_string(thiscvar);
 
 				if (thiscvar == "cl_weaponpriority")
-					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
+					s = W_FIXWEAPONORDER(W_NUMBERWEAPONORDER(s), 1);
 				else if (substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
-					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
+					s = W_FIXWEAPONORDER(W_NUMBERWEAPONORDER(s), 0);
 
 				localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
 				strfree(thiscvar);

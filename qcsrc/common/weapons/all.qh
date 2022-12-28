@@ -409,7 +409,7 @@ void wframe_send(entity actor, entity weaponentity, int wepframe, float attackra
 
 void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
 
-string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
+string W_FIXWEAPNORDER_FORCECOMPLETE_AndBuildImpulseList(entity this, string wo);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 

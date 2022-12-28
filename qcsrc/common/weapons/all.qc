@@ -92,10 +92,6 @@ WepSet _WepSet_FromWeapon(int a)
 	}
 #endif
 
-string W_FixWeaponOrder(string order, float complete)
-{
-	return fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete);
-}
 string W_NameWeaponOrder_MapFunc(string s)
 {
 	int i = stof(s);
@@ -106,36 +102,12 @@ string W_NameWeaponOrder_MapFunc(string s)
 	}
 	return s;
 }
-
-string W_UndeprecateName(string s)
-{
-	switch (s)
-	{
-		case "nex": return "vortex";
-		case "rocketlauncher": return "devastator";
-		case "laser": return "blaster";
-		case "minstanex": return "vaporizer";
-		case "grenadelauncher": return "mortar";
-		case "uzi": return "machinegun";
-		case "hmg": return "okhmg";
-		case "rpc": return "okrpc";
-		default: return s;
-	}
-}
-string W_NameWeaponOrder(string order)
-{
-	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
-}
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
-	s = W_UndeprecateName(s);
+	s = W_UNDEPRECATENAME(s);
 	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
 	return s;
-}
-string W_NumberWeaponOrder(string order)
-{
-	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
 float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
@@ -176,13 +148,7 @@ string W_FixWeaponOrder_BuildImpulseList(string o)
 
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order)
 {
-	return W_FixWeaponOrder(order, 0);
-}
-
-string W_FixWeaponOrder_ForceComplete(string order)
-{
-	if (order == "") order = W_NumberWeaponOrder(cvar_defstring("cl_weaponpriority"));
-	return W_FixWeaponOrder(order, 1);
+	return W_FIXWEAPONORDER(order, 0);
 }
 
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
@@ -203,6 +169,10 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 }
 
 // TODO: registry handles for below functions
+// drjaska: made these functions into macros in
+// common/weapons/weapon.qh
+// instead of registry handles
+#if 0
 string GetAmmoPicture(Resource ammotype)
 {
 	switch (ammotype)
@@ -230,6 +200,7 @@ string GetAmmoName(Resource ammotype)
 		default:          return "batteries";
 	}
 }
+#endif
 
 entity GetAmmoItem(Resource ammotype)
 {
@@ -245,38 +216,8 @@ entity GetAmmoItem(Resource ammotype)
 	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
 	// WEAPONTODO: use this generic func to reduce duplication ?
-	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
+	// GETAMMOPICTURE  GETAMMONAME  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
-
-#ifdef CSQC
-Resource GetAmmoTypeFromNum(int i)
-{
-	switch (i)
-	{
-		case 0: return RES_SHELLS;
-		case 1: return RES_BULLETS;
-		case 2: return RES_ROCKETS;
-		case 3: return RES_CELLS;
-		case 4: return RES_PLASMA;
-		case 5: return RES_FUEL;
-		default: return RES_NONE;
-	}
-}
-
-int GetAmmoStat(Resource ammotype)
-{
-	switch (ammotype)
-	{
-		case RES_SHELLS: return STAT_SHELLS;
-		case RES_BULLETS: return STAT_NAILS;
-		case RES_ROCKETS: return STAT_ROCKETS;
-		case RES_CELLS: return STAT_CELLS;
-		case RES_PLASMA: return STAT_PLASMA.m_id;
-		case RES_FUEL: return STAT_FUEL.m_id;
-		default: return -1;
-	}
-}
-#endif
 
 string W_Sound(string w_snd)
 {
@@ -829,9 +770,9 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 #endif
 
 #ifdef SVQC
-string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
+string W_FIXWEAPNORDER_FORCECOMPLETE_AndBuildImpulseList(entity this, string wo)
 {
-	string o = W_FixWeaponOrder_ForceComplete(wo);
+	string o = W_FIXWEAPNORDER_FORCECOMPLETE(wo);
 	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
@@ -847,7 +788,7 @@ REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
 REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
 REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
-REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FIXWEAPNORDER_FORCECOMPLETE_AndBuildImpulseList);
 REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
 REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
 REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);

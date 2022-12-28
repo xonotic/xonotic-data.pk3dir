@@ -831,7 +831,7 @@ float ammo_pickupevalfunc(entity player, entity item)
 	{
 		entity ammo = NULL;
 		if(GetResource(item, RES_SHELLS))       { need_shells  = true; ammo = ITEM_Shells;      }
-		else if(GetResource(item, RES_BULLETS))   { need_nails   = true; ammo = ITEM_Bullets;     }
+		else if(GetResource(item, RES_BULLETS)) { need_nails   = true; ammo = ITEM_Bullets;     }
 		else if(GetResource(item, RES_ROCKETS)) { need_rockets = true; ammo = ITEM_Rockets;     }
 		else if(GetResource(item, RES_CELLS))   { need_cells   = true; ammo = ITEM_Cells;       }
 		else if(GetResource(item, RES_PLASMA))  { need_plasma  = true; ammo = ITEM_Plasma;      }
@@ -1298,7 +1298,7 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					string s = W_UndeprecateName(argv(j));
+					string s = W_UNDEPRECATENAME(argv(j));
 					if(s == it.netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
@@ -1364,7 +1364,7 @@ spawnfunc(target_items)
 	n = tokenize_console(this.netname);
 	for(int j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
+		FOREACH(Weapons, it != WEP_Null && W_UNDEPRECATENAME(argv(j)) == it.netname, {
 			it.wr_init(it);
 			break;
 		});
@@ -1668,7 +1668,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					got += GiveBuff(e, it, op, val);
 					break;
 				});
-				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
+				FOREACH(Weapons, it != WEP_Null && W_UNDEPRECATENAME(cmd) == it.netname, {
                     got += GiveWeapon(e, it.m_id, op, val);
                     break;
 				});
