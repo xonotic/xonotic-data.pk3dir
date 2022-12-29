@@ -76,6 +76,8 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, netname, string, "");
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+    /** M: deprecated refname : old reference name for compatibility with weapons that were renamed */
+    ATTRIB(Weapon, m_deprecated_netname, string, "");
 
     ATTRIB(Weapon, m_pickup, entity);
 

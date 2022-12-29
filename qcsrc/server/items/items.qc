@@ -1288,7 +1288,7 @@ spawnfunc(target_items)
 			{
 				FOREACH(StatusEffect, it.instanceOfBuff,
 				{
-					string s = Buff_UndeprecateName(argv(j));
+					string s = Buff_CompatName(argv(j));
 					if(s == it.netname)
 					{
 						this.buffdef = it;
@@ -1663,7 +1663,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
-				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_UndeprecateName(cmd) == it.netname,
+				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_CompatName(cmd) == it.netname,
 				{
 					got += GiveBuff(e, it, op, val);
 					break;

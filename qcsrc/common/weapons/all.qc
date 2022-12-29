@@ -109,18 +109,8 @@ string W_NameWeaponOrder_MapFunc(string s)
 
 string W_UndeprecateName(string s)
 {
-	switch (s)
-	{
-		case "nex": return "vortex";
-		case "rocketlauncher": return "devastator";
-		case "laser": return "blaster";
-		case "minstanex": return "vaporizer";
-		case "grenadelauncher": return "mortar";
-		case "uzi": return "machinegun";
-		case "hmg": return "okhmg";
-		case "rpc": return "okrpc";
-		default: return s;
-	}
+	FOREACH(Weapons, it != WEP_Null && it.m_deprecated_netname == s, return it.netname);
+	return s;
 }
 string W_NameWeaponOrder(string order)
 {
