@@ -171,7 +171,7 @@ void HUD_Weapons()
 	{
 		weapons_orderbyimpulse_old = autocvar_hud_panel_weapons_orderbyimpulse;
 		strcpy(cl_weaponpriority_old, autocvar_cl_weaponpriority);
-		string weporder = W_FIXWEAPNORDER_FORCECOMPLETE(W_NUMBERWEAPONORDER(cl_weaponpriority_old));
+		string weporder = W_FIXWEAPONORDER_FORCECOMPLETE(W_NUMBERWEAPONORDER(cl_weaponpriority_old));
 		if(autocvar_hud_panel_weapons_orderbyimpulse)
 		{
 			weporder = W_FixWeaponOrder_BuildImpulseList(weporder);

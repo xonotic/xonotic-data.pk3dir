@@ -632,8 +632,8 @@ string notif_arg_item_wepammo(float f1, float f2)
 {
 	string ammoitems = "";
 	Weapon wep = REGISTRY_GET(Weapons, f1);
-	if (wep.ammo_type.m_name)
-		ammoitems = wep.ammo_type.m_name;
+	if (GETAMMONAME(wep.ammo_type))
+		ammoitems = GETAMMONAME(wep.ammo_type);
 	return sprintf(_(" with %d %s"), f2, ammoitems);
 }
 

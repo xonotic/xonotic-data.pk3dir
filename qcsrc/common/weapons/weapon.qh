@@ -233,12 +233,8 @@ string W_NumberWeaponOrder_MapFunc(string s);
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
-#define W_FIXWEAPNORDER_FORCECOMPLETE(order) \
+#define W_FIXWEAPONORDER_FORCECOMPLETE(order) \
 	W_FIXWEAPONORDER(((order == "") ? W_NUMBERWEAPONORDER(cvar_defstring("cl_weaponpriority")) : order), 1)
-
-#define GETAMMOPICTURE(ammotype) GetAmmoItem(ammotype).m_icon
-#define GETAMMONAME(ammotype) GetAmmoItem(ammotype).m_name
-entity GetAmmoItem(Resource ammotype);
 
 #ifdef CSQC
 #define GETAMMOTYPEFROMNUM(i) \

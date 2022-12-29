@@ -10,6 +10,16 @@
 void WriteWepSet(float dest, WepSet w);
 #endif
 
+#define GETAMMOPICTURE(ammotype) GETAMMOITEM(ammotype).m_icon
+#define GETAMMONAME(ammotype) GETAMMOITEM(ammotype).m_name
+#define GETAMMOITEM(ammotype) \
+	(ammotype == RES_SHELLS ? ITEM_Shells : \
+	ammotype == RES_BULLETS ? ITEM_Bullets : \
+	ammotype == RES_ROCKETS ? ITEM_Rockets : \
+	ammotype == RES_CELLS ? ITEM_Cells : \
+	ammotype == RES_PLASMA ? ITEM_Plasma : \
+	ammotype == RES_FUEL ? ITEM_JetpackFuel : NULL)
+
 #ifdef CSQC
 WepSet WepSet_GetFromStat();
 WepSet WepSet_GetFromStat_InMap();
@@ -409,7 +419,7 @@ void wframe_send(entity actor, entity weaponentity, int wepframe, float attackra
 
 void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
 
-string W_FIXWEAPNORDER_FORCECOMPLETE_AndBuildImpulseList(entity this, string wo);
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 

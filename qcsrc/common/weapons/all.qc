@@ -170,7 +170,7 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 
 // TODO: registry handles for below functions
 // drjaska: made these functions into macros in
-// common/weapons/weapon.qh
+// common/weapons/all.qh
 // instead of registry handles
 #if 0
 string GetAmmoPicture(Resource ammotype)
@@ -200,9 +200,8 @@ string GetAmmoName(Resource ammotype)
 		default:          return "batteries";
 	}
 }
-#endif
 
-entity GetAmmoItem(Resource ammotype)
+entity GETAMMOITEM(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -218,6 +217,7 @@ entity GetAmmoItem(Resource ammotype)
 	// WEAPONTODO: use this generic func to reduce duplication ?
 	// GETAMMOPICTURE  GETAMMONAME  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
+#endif
 
 string W_Sound(string w_snd)
 {
@@ -770,9 +770,9 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 #endif
 
 #ifdef SVQC
-string W_FIXWEAPNORDER_FORCECOMPLETE_AndBuildImpulseList(entity this, string wo)
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
-	string o = W_FIXWEAPNORDER_FORCECOMPLETE(wo);
+	string o = W_FIXWEAPONORDER_FORCECOMPLETE(wo);
 	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
@@ -788,7 +788,7 @@ REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
 REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
 REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
-REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FIXWEAPNORDER_FORCECOMPLETE_AndBuildImpulseList);
+REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
 REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
 REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
 REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
