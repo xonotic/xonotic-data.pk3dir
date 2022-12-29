@@ -102,10 +102,27 @@ string W_NameWeaponOrder_MapFunc(string s)
 	}
 	return s;
 }
+
+string W_UndeprecateName(string s)
+{
+	switch (s)
+	{
+		case "nex": return "vortex";
+		case "rocketlauncher": return "devastator";
+		case "laser": return "blaster";
+		case "minstanex": return "vaporizer";
+		case "grenadelauncher": return "mortar";
+		case "uzi": return "machinegun";
+		case "hmg": return "okhmg";
+		case "rpc": return "okrpc";
+		default: return s;
+	}
+}
+
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
-	s = W_UNDEPRECATENAME(s);
+	s = W_UndeprecateName(s);
 	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
 	return s;
 }

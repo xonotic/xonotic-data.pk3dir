@@ -1299,7 +1299,7 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					s = W_UNDEPRECATENAME(s);
+					s = W_UndeprecateName(s);
 					if(s == it.netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
@@ -1366,7 +1366,7 @@ spawnfunc(target_items)
 	for(int j = 0; j < n; ++j)
 	{
 		string s = argv(j);
-		FOREACH(Weapons, it != WEP_Null && W_UNDEPRECATENAME(s) == it.netname, {
+		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(s) == it.netname, {
 			it.wr_init(it);
 			break;
 		});
@@ -1670,7 +1670,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					got += GiveBuff(e, it, op, val);
 					break;
 				});
-				FOREACH(Weapons, it != WEP_Null && W_UNDEPRECATENAME(cmd) == it.netname, {
+				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
 					got += GiveWeapon(e, it.m_id, op, val);
 					break;
 				});

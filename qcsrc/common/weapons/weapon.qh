@@ -214,18 +214,8 @@ const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not
 string weaponorder_byid;
 
 // functions:
+string W_UndeprecateName(string s);
 #define W_FIXWEAPONORDER(order, complete) fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete)
-
-#define W_UNDEPRECATENAME(s) \
-	(s == "nex" ? "vortex" : \
-	s == "rocketlauncher" ? "devastator" : \
-	s == "laser" ? "blaster" : \
-	s == "minstanex" ? "vaporizer" : \
-	s == "grenadelauncher" ? "mortar" : \
-	s == "uzi" ? "machinegun" : \
-	s == "hmg" ? "okhmg" : \
-	s == "rpc" ? "okrpc" : s)
-
 string W_NameWeaponOrder_MapFunc(string s);
 string W_NumberWeaponOrder_MapFunc(string s);
 #define W_NAMEWEAPONORDER(order) mapPriorityList(order, W_NameWeaponOrder_MapFunc)
