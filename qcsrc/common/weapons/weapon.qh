@@ -217,7 +217,6 @@ string weaponorder_byid;
 
 // functions:
 string W_FixWeaponOrder(string order, float complete);
-string W_UndeprecateName(string s);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);

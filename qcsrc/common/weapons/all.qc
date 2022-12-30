@@ -107,11 +107,6 @@ string W_NameWeaponOrder_MapFunc(string s)
 	return s;
 }
 
-string W_UndeprecateName(string s)
-{
-	FOREACH(Weapons, it != WEP_Null && it.m_deprecated_netname == s, return it.netname);
-	return s;
-}
 string W_NameWeaponOrder(string order)
 {
 	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
@@ -119,8 +114,7 @@ string W_NameWeaponOrder(string order)
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
-	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
+	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
