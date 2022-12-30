@@ -416,6 +416,8 @@ void ClientCommand_say(entity caller, int request, int argc, string command)
 		case CMD_REQUEST_COMMAND:
 		{
 			if (argc >= 2)   Say(caller, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			else // trying to send an empty message opens quickmenu and allows selecting a player to send a message to
+				stuffcmd(caller, "quickmenu default \"Send public message to\"\n");
 			return;  // never fall through to usage
 		}
 
@@ -437,6 +439,8 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 		{
 			if (argc >= 2)
 				Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			else // trying to send an empty message opens quickmenu and allows selecting a player to send a message to
+				stuffcmd(caller, "quickmenu default \"Send team message to\"\n");
 			return;  // never fall through to usage
 		}
 
