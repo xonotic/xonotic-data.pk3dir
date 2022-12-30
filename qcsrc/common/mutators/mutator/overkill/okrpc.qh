@@ -9,13 +9,13 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
 /* color     */ ATTRIB(OverkillRocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
-/* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
+/* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rpc");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
 /* flash mdl */ ATTRIB(OverkillRocketPropelledChainsaw, m_muzzlemodel, Model, MDL_RPC_MUZZLEFLASH);
 /* flash eff */ ATTRIB(OverkillRocketPropelledChainsaw, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
-/* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairdevastator");
 /* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(OverkillRocketPropelledChainsaw, model2, string, "weaponrpc");
 /* refname   */ ATTRIB(OverkillRocketPropelledChainsaw, netname, string, "okrpc");
