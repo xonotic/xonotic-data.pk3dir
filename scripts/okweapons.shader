@@ -1,4 +1,4 @@
-OK_SMG
+OK_SMG // ok_mg
 {
 	dpglossexponentmod 64
 	dpreflectcube env/exomorph/exomorph
@@ -8,7 +8,7 @@ OK_SMG
 	}
 }
 
-OK_Railgun
+OK_Railgun // ok_nex
 {
 	dpglossexponentmod 64
 	dpreflectcube env/exomorph/exomorph
@@ -39,7 +39,7 @@ minsta
 	}
 }
 
-okrocketthrust
+okrocketthrust // ok_rpc rocket
 {
 	deformVertexes autosprite2
 	cull none
@@ -50,7 +50,7 @@ okrocketthrust
 	}
 }
 
-okrocketthrust2
+okrocketthrust2 // ok_rpc rocketthrust2
 {
 	deformVertexes autosprite
 	{

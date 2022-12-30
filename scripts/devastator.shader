@@ -1,4 +1,4 @@
-RL
+RL // devastator
 {
 	dpreflectcube cubemaps/default/sky
 	{
@@ -6,7 +6,7 @@ RL
 		rgbgen lightingDiffuse
 	}
 }
-RocketThrust
+RocketThrust // devastator_rocket
 {
 	cull none
 	{
