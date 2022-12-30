@@ -1288,7 +1288,7 @@ spawnfunc(target_items)
 			{
 				FOREACH(StatusEffect, it.instanceOfBuff,
 				{
-					string s = Buff_UndeprecateName(argv(j));
+					string s = Buff_CompatName(argv(j));
 					if(s == it.netname)
 					{
 						this.buffdef = it;
@@ -1298,8 +1298,8 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					string s = W_UndeprecateName(argv(j));
-					if(s == it.netname)
+					string s = argv(j);
+					if(s == it.netname || s == it.m_deprecated_netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
 						if(this.spawnflags == 0 || this.spawnflags == 2)
@@ -1364,7 +1364,8 @@ spawnfunc(target_items)
 	n = tokenize_console(this.netname);
 	for(int j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
+		string cmd = argv(j);
+		FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
 			it.wr_init(it);
 			break;
 		});
@@ -1663,12 +1664,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
-				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_UndeprecateName(cmd) == it.netname,
+				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_CompatName(cmd) == it.netname,
 				{
 					got += GiveBuff(e, it, op, val);
 					break;
 				});
-				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
+				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
                     got += GiveWeapon(e, it.m_id, op, val);
                     break;
 				});
