@@ -917,6 +917,7 @@ void HUD_Draw(entity this)
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
+	Local_Notification_Queue_Process();
 }
 
 void ViewLocation_Mouse()
