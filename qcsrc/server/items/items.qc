@@ -821,7 +821,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float ammo_pickupevalfunc(entity player, entity item)
 {
-	entity needed_resource = NULL;
+	entity item_resource = NULL; // pointer to the resource that may be associated with the given item
 	entity wpn = NULL;
 	float c = 0;
 	float rating = 0;
@@ -831,11 +831,11 @@ float ammo_pickupevalfunc(entity player, entity item)
 	{
 		entity res = item.itemdef.m_weapon.ammo_type;
 		entity ammo = (res != RES_NONE) ? GetAmmoItem(res) : NULL;
-		if(res != RES_NONE && GetResource(item, res) && (GetResource(player, res) < GetResourceLimit(player, res)))
-			needed_resource = res;
-
 		if(!ammo)
 			return 0;
+		if(res != RES_NONE && GetResource(item, res))
+			item_resource = res;
+
 		wpn = item;
 		rating = ammo.m_botvalue;
 	}
@@ -847,9 +847,9 @@ float ammo_pickupevalfunc(entity player, entity item)
 			if(it.ammo_type == RES_NONE)
 				continue;
 
-			if(GetResource(item, it.ammo_type) && (GetResource(player, it.ammo_type) < GetResourceLimit(player, it.ammo_type)))
+			if(GetResource(item, it.ammo_type))
 			{
-				needed_resource = it.ammo_type;
+				item_resource = it.ammo_type;
 				break;
 			}
 		});
@@ -858,8 +858,8 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	float noammorating = 0.5;
 
-	if(needed_resource)
-		c = GetResource(item, needed_resource) / max(noammorating, GetResource(player, needed_resource));
+	if(item_resource && (GetResource(player, item_resource) < GetResourceLimit(player, item_resource)))
+		c = GetResource(item, item_resource) / max(noammorating, GetResource(player, item_resource));
 
 	rating *= min(c, 2);
 	if(wpn)
