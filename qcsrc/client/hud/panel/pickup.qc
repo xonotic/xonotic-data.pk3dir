@@ -51,10 +51,10 @@ void HUD_Pickup()
 	}
 
 	float last_pickup_time = STAT(LAST_PICKUP);
+	float display_time = min(5, autocvar_hud_panel_pickup_time);
 	entity it = last_pickup_item;
 
-	if((last_pickup_time && last_pickup_time > time - 3 && it) || autocvar__hud_configure) {
-		float a;
+	if((last_pickup_time && last_pickup_time > time - display_time && it) || autocvar__hud_configure) {
 		string str_timer, str_name, icon;
 		vector sz, sz2;
 		vector fontsize = '1 1 0' * mySize.y;
@@ -72,8 +72,8 @@ void HUD_Pickup()
 		else
 			str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
 
-		float fade_out_time = min(5, autocvar_hud_panel_pickup_fade_out);
-		float display_time = max(fade_out_time, autocvar_hud_panel_pickup_time);
+		float a;
+		float fade_out_time = min(display_time, autocvar_hud_panel_pickup_fade_out);
 
 		if(autocvar__hud_configure)
 			a = 1;
