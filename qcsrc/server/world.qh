@@ -28,6 +28,7 @@ float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
 bool autocvar_sv_gameplayfix_droptofloorstartsolid;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
 
 // z411
 bool autocvar_sv_jingle_end;

@@ -121,11 +121,14 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	// mirror-impact of something hitting the projectile instead of the
 	// projectile hitting the something, or a touchareagrid one. Neither of
 	// these stop the projectile from moving, so...
+	// NOTE: this notice is disabled to prevent spam as projectiles can hit content-less objects (other projectiles!)
+#if 0
 	if(trace_dphitcontents == 0)
 	{
 		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
 		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
 	}
+#endif
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;
     if (toucher == NULL && this.size != '0 0 0')
@@ -136,7 +139,8 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
         traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
         if (trace_fraction >= 1)
         {
-            LOG_TRACE("Odd... did not hit...?");
+            // NOTE: this notice can occur when projectiles hit non-world objects, better to not spam the console!
+            //LOG_TRACE("Odd... did not hit...?");
         }
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {

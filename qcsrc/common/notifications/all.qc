@@ -1246,13 +1246,16 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif, float f1)
 
 void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time, float f1)
 {	
-	//LOG_INFOF("Comparison %d > %d", time, notif_queue_next_time);
+	// Guess length if required
+	if(queue_time == 0)
+		queue_time = soundlength(AnnouncerFilename(notif.nent_snd));
+
 	if(queue_time == -1 || time > notif_queue_next_time) {
-		//LOG_INFOF("Running NOW!");
+		// Run immediately
 		Local_Notification_Queue_Run(net_type, notif, f1);
 		notif_queue_next_time = time + queue_time;
 	} else {
-		//LOG_INFOF("Queueing: %d %d", notif_queue_length, notif_queue_next_time);
+		// Put in queue
 		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
 	
 		notif_queue_type[notif_queue_length] = net_type;
@@ -1267,24 +1270,18 @@ void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time, 
 
 void Local_Notification_Queue_Process()
 {
-	if(!notif_queue_length)
+	if(!notif_queue_length || notif_queue_time[0] > time)
 		return;
 
-	int j;
-	
-	if(notif_queue_time[0] <= time) {
-		//LOG_INFOF("Process running: %d <= %d", notif_queue_time[0], time);
-		Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0], notif_queue_f1[0]);
-		
-		// Shift queue to the left
-		for (j = 0; j < notif_queue_length - 1; j++) { 
-			notif_queue_type[j] = notif_queue_type[j+1];
-			notif_queue_entity[j] = notif_queue_entity[j+1];
-			notif_queue_time[j] = notif_queue_time[j+1];
-			notif_queue_f1[j] = notif_queue_f1[j+1];
-		} 
-		
-		--notif_queue_length;
+	Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0], notif_queue_f1[0]);
+
+	// Shift queue to the left
+	--notif_queue_length;
+	for (int j = 0; j < notif_queue_length; j++) {
+		notif_queue_type[j] = notif_queue_type[j+1];
+		notif_queue_entity[j] = notif_queue_entity[j+1];
+		notif_queue_time[j] = notif_queue_time[j+1];
+		notif_queue_f1[j] = notif_queue_f1[j+1];
 	}
 }
 
@@ -1360,12 +1357,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		case MSG_ANNCE:
 		{
 			#ifdef CSQC
-			//Local_Notification_sound(notif.nent_channel, notif.nent_snd, notif.nent_vol, notif.nent_position);
-			Local_Notification_Queue_Add(
-				net_type,
-				notif,
-				notif.nent_queuetime,
-				f1);
+			Local_Notification_Queue_Add(net_type, notif, notif.nent_queuetime, f1);
 			#else
 			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
 			#endif

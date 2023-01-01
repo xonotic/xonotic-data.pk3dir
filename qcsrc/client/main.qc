@@ -529,7 +529,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			Scoreboard_UI_Enable(0);
 			return true;
 		}
-		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		if (autocvar_menu_gamemenu && !isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
 			return true;

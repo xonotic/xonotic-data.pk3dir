@@ -857,24 +857,21 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float ammo_pickupevalfunc(entity player, entity item)
 {
-	bool need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
+	entity item_resource = NULL; // pointer to the resource that may be associated with the given item
 	entity wpn = NULL;
 	float c = 0;
 	float rating = 0;
 
-	// Detect needed ammo
+	// detect needed ammo
 	if(item.itemdef.instanceOfWeaponPickup)
 	{
-		entity ammo = NULL;
-		if(GetResource(item, RES_SHELLS))       { need_shells  = true; ammo = ITEM_Shells;      }
-		else if(GetResource(item, RES_BULLETS))   { need_nails   = true; ammo = ITEM_Bullets;     }
-		else if(GetResource(item, RES_ROCKETS)) { need_rockets = true; ammo = ITEM_Rockets;     }
-		else if(GetResource(item, RES_CELLS))   { need_cells   = true; ammo = ITEM_Cells;       }
-		else if(GetResource(item, RES_PLASMA))  { need_plasma  = true; ammo = ITEM_Plasma;      }
-		else if(GetResource(item, RES_FUEL))    { need_fuel    = true; ammo = ITEM_JetpackFuel; }
-
+		entity res = item.itemdef.m_weapon.ammo_type;
+		entity ammo = (res != RES_NONE) ? GetAmmoItem(res) : NULL;
 		if(!ammo)
 			return 0;
+		if(res != RES_NONE && GetResource(item, res))
+			item_resource = res;
+
 		wpn = item;
 		rating = ammo.m_botvalue;
 	}
@@ -883,15 +880,13 @@ float ammo_pickupevalfunc(entity player, entity item)
 		FOREACH(Weapons, it != WEP_Null, {
 			if(!(STAT(WEAPONS, player) & (it.m_wepset)))
 				continue;
+			if(it.ammo_type == RES_NONE)
+				continue;
 
-			switch(it.ammo_type)
+			if(GetResource(item, it.ammo_type))
 			{
-				case RES_SHELLS:  need_shells  = true; break;
-				case RES_BULLETS: need_nails   = true; break;
-				case RES_ROCKETS: need_rockets = true; break;
-				case RES_CELLS:   need_cells   = true; break;
-				case RES_PLASMA:  need_plasma  = true; break;
-				case RES_FUEL:    need_fuel    = true; break;
+				item_resource = it.ammo_type;
+				break;
 			}
 		});
 		rating = item.bot_pickupbasevalue;
@@ -899,23 +894,8 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	float noammorating = 0.5;
 
-	if ((need_shells) && GetResource(item, RES_SHELLS) && (GetResource(player, RES_SHELLS) < g_pickup_shells_max))
-		c = GetResource(item, RES_SHELLS) / max(noammorating, GetResource(player, RES_SHELLS));
-
-	if ((need_nails) && GetResource(item, RES_BULLETS) && (GetResource(player, RES_BULLETS) < g_pickup_nails_max))
-		c = GetResource(item, RES_BULLETS) / max(noammorating, GetResource(player, RES_BULLETS));
-
-	if ((need_rockets) && GetResource(item, RES_ROCKETS) && (GetResource(player, RES_ROCKETS) < g_pickup_rockets_max))
-		c = GetResource(item, RES_ROCKETS) / max(noammorating, GetResource(player, RES_ROCKETS));
-
-	if ((need_cells) && GetResource(item, RES_CELLS) && (GetResource(player, RES_CELLS) < g_pickup_cells_max))
-		c = GetResource(item, RES_CELLS) / max(noammorating, GetResource(player, RES_CELLS));
-
-	if ((need_plasma) && GetResource(item, RES_PLASMA) && (GetResource(player, RES_PLASMA) < g_pickup_plasma_max))
-		c = GetResource(item, RES_PLASMA) / max(noammorating, GetResource(player, RES_PLASMA));
-
-	if ((need_fuel) && GetResource(item, RES_FUEL) && (GetResource(player, RES_FUEL) < g_pickup_fuel_max))
-		c = GetResource(item, RES_FUEL) / max(noammorating, GetResource(player, RES_FUEL));
+	if(item_resource && (GetResource(player, item_resource) < GetResourceLimit(player, item_resource)))
+		c = GetResource(item, item_resource) / max(noammorating, GetResource(player, item_resource));
 
 	rating *= min(c, 2);
 	if(wpn)
@@ -1137,7 +1117,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	//this.effects |= EF_LOWPRECISION;
 
 	// support skinned models for powerups
-	this.skin = def.m_skin;
+	if(!this.skin)
+		this.skin = def.m_skin;
 
 	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
@@ -1197,7 +1178,7 @@ void StartItem(entity this, GameItem def)
 	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
 	{
 		delete(this);
-		return;
+		return; // TODO does not set startitem_failed
 	}
 
 	this.classname = def.m_canonical_spawnfunc;
@@ -1323,7 +1304,7 @@ spawnfunc(target_items)
 			{
 				FOREACH(StatusEffect, it.instanceOfBuff,
 				{
-					string s = Buff_UndeprecateName(argv(j));
+					string s = Buff_CompatName(argv(j));
 					if(s == it.netname)
 					{
 						this.buffdef = it;
@@ -1333,8 +1314,8 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					string s = W_UndeprecateName(argv(j));
-					if(s == it.netname)
+					string s = argv(j);
+					if(s == it.netname || s == it.m_deprecated_netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
 						if(this.spawnflags == 0 || this.spawnflags == 2)
@@ -1399,7 +1380,8 @@ spawnfunc(target_items)
 	n = tokenize_console(this.netname);
 	for(int j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
+		string cmd = argv(j);
+		FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
 			it.wr_init(it);
 			break;
 		});
@@ -1698,12 +1680,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
-				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_UndeprecateName(cmd) == it.netname,
+				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_CompatName(cmd) == it.netname,
 				{
 					got += GiveBuff(e, it, op, val);
 					break;
 				});
-				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
+				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
                     got += GiveWeapon(e, it.m_id, op, val);
                     break;
 				});

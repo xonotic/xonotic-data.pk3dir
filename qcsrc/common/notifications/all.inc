@@ -99,6 +99,14 @@
 #define N__ALWAYS 2
 #define ANNCE_DEFTIME 2
 
+// default time for announcer queue (time to wait before the next announcer is played)
+// -1 = bypass queue and play the announcer immediately
+// 0 = use the announcer sound length
+// >0 = use the specified time in seconds
+#define ANNCE_INSTANT -1
+#define ANNCE_LENGTH 0
+#define ANNCE_DEFTIME 2
+
 #define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position, queuetime) \
     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, defaultvalue) \
     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position, queuetime) \
