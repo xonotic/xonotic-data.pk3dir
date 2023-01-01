@@ -1604,9 +1604,15 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
 	if(autocvar_r_drawviewmodel)
+	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
 			if(viewmodels[slot].activeweapon)
+			{
 				viewmodel_draw(viewmodels[slot]);
+			}
+		}
+	}
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
