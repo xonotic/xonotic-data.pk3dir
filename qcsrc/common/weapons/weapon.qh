@@ -231,8 +231,6 @@ string GetAmmoName(Resource ammotype);
 entity GetAmmoItem(Resource ammotype);
 
 #ifdef CSQC
-Resource GetAmmoTypeFromNum(int i);
-
 int GetAmmoStat(Resource ammotype);
 #endif
 
