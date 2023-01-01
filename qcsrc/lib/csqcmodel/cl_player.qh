@@ -29,6 +29,8 @@ const int CSQCPLAYERSTATUS_UNPREDICTED = 0;
 const int CSQCPLAYERSTATUS_FROMSERVER = 1;
 const int CSQCPLAYERSTATUS_PREDICTED = 2;
 
+bool use_engine_refdef; // debug option for testing legacy engine code
+
 // only ever READ these!
 .int pmove_flags;
 const int PMF_JUMP_HELD = 1;

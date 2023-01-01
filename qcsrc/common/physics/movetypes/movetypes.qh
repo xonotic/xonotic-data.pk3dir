@@ -3,8 +3,6 @@
 #ifdef SVQC
 // undefined on client, engine cvar
 bool autocvar_physics_ode;
-
-int autocvar_sv_qcphysics = 1; // TODO this is for testing - remove when qcphysics work
 #endif
 
 // water levels

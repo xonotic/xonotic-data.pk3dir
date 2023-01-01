@@ -241,6 +241,7 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 		delete(this.move_controller);
 	}
 	controller = new_pure(SUB_CalcMove_controller);
+	set_movetype(controller, MOVETYPE_NONE); // mark the entity as physics driven so that thinking is handled by QC
 	controller.owner = this;
 	this.move_controller = controller;
 	controller.platmovetype = this.platmovetype;
