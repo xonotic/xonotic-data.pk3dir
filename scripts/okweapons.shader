@@ -1,4 +1,4 @@
-OK_SMG // ok_mg
+OK_SMG // ok_mg material
 {
 	dpglossexponentmod 64
 	dpreflectcube env/exomorph/exomorph
@@ -8,7 +8,7 @@ OK_SMG // ok_mg
 	}
 }
 
-OK_Railgun // ok_nex
+OK_Railgun // ok_nex material
 {
 	dpglossexponentmod 64
 	dpreflectcube env/exomorph/exomorph
@@ -39,7 +39,7 @@ minsta
 	}
 }
 
-okrocketthrust // ok_rpc rocket
+okrocketthrust // ok_rpc rocketthrust tail material
 {
 	deformVertexes autosprite2
 	cull none
@@ -50,7 +50,7 @@ okrocketthrust // ok_rpc rocket
 	}
 }
 
-okrocketthrust2 // ok_rpc rocketthrust2
+okrocketthrust2 // ok_rpc rocketthrust2 tail material
 {
 	deformVertexes autosprite
 	{

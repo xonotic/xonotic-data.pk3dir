@@ -1,4 +1,4 @@
-nexgun // vortex
+nexgun // vortex material
 {
 	dpreflectcube cubemaps/default/sky
  	dpoffsetmapping - 0.3 match8 64
@@ -7,7 +7,7 @@ nexgun // vortex
 		rgbgen lightingDiffuse
 	}
 }
-uzi // machinegun
+uzi // machinegun material
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -39,7 +39,7 @@ shotgun2
 		rgbgen lightingDiffuse
 	}
 }
-models/weapons/laser // blaster
+models/weapons/laser // blaster material
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -87,7 +87,7 @@ shotgun
 		rgbgen lightingDiffuse
 	}
 }
-SniperRifle // rifle
+SniperRifle // rifle material
 {
 	dpreflectcube cubemaps/default/sky
  	{

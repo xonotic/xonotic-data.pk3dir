@@ -1,4 +1,4 @@
-RL // devastator
+RL // devastator material
 {
 	dpreflectcube cubemaps/default/sky
 	{
@@ -6,7 +6,7 @@ RL // devastator
 		rgbgen lightingDiffuse
 	}
 }
-RocketThrust // devastator_rocket
+RocketThrust // rocket tail material
 {
 	cull none
 	{
