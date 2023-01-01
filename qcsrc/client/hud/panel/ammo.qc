@@ -218,7 +218,7 @@ void HUD_Ammo()
 	else
 	{
 		row = column = 0;
-		FOREACH(Resources, it.instanceOfAmmoResource && !it.m_hidden,
+		IL_EACH(default_order_resources, it.instanceOfAmmoResource && !it.m_hidden,
 		{
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
