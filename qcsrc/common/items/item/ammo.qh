@@ -26,6 +26,46 @@ CLASS(Ammo, Pickup)
 ENDCLASS(Ammo)
 
 
+// NOTE: ammo resource registration order should match ammo (as item) registration order
+// see REGISTER_RESOURCE calls order
+
+// ammo type #1: shells
+#ifdef GAMEQC
+MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_shells);
+void ammo_shells_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_SHELLS))
+        SetResourceExplicit(item, RES_SHELLS, g_pickup_shells);
+}
+#endif
+
+CLASS(Shells, Ammo)
+ENDCLASS(Shells)
+
+REGISTER_ITEM(Shells, Shells) {
+    this.m_canonical_spawnfunc = "item_shells";
+#ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Shells_ITEM;
+#endif
+    this.netname    = "shells";
+    this.m_name     = _("shells");
+    this.m_icon     = "ammo_shells";
+#ifdef SVQC
+    this.m_botvalue = 1000;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_shells_init;
+#endif
+}
+
+SPAWNFUNC_ITEM(item_shells, ITEM_Shells)
+
+
+// ammo type #2: bullets
 #ifdef GAMEQC
 MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 #endif
@@ -60,6 +100,40 @@ REGISTER_ITEM(Bullets, Bullets) {
 
 SPAWNFUNC_ITEM(item_bullets, ITEM_Bullets)
 
+
+// ammo type #3: rockets
+#ifdef GAMEQC
+MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_rockets);
+void ammo_rockets_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_ROCKETS))
+        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
+}
+#endif
+REGISTER_ITEM(Rockets, Ammo) {
+    this.m_canonical_spawnfunc = "item_rockets";
+#ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Rockets_ITEM;
+#endif
+    this.netname    = "rockets";
+    this.m_name     = _("rockets");
+    this.m_icon     = "ammo_rockets";
+#ifdef SVQC
+    this.m_botvalue = 1500;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_rockets_init;
+#endif
+}
+
+SPAWNFUNC_ITEM(item_rockets, ITEM_Rockets)
+
+
+// ammo type #4: cells
 #ifdef GAMEQC
 MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 #endif
@@ -90,6 +164,8 @@ REGISTER_ITEM(Cells, Ammo) {
 
 SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
 
+
+// ammo type #5: plasma
 #ifdef GAMEQC
 MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
 #endif
@@ -119,67 +195,3 @@ REGISTER_ITEM(Plasma, Ammo) {
 }
 
 SPAWNFUNC_ITEM(item_plasma, ITEM_Plasma)
-
-#ifdef GAMEQC
-MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
-#endif
-
-#ifdef SVQC
-PROPERTY(int, g_pickup_rockets);
-void ammo_rockets_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_ROCKETS))
-        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
-}
-#endif
-REGISTER_ITEM(Rockets, Ammo) {
-    this.m_canonical_spawnfunc = "item_rockets";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Rockets_ITEM;
-#endif
-    this.netname    =   "rockets";
-    this.m_name     =   _("rockets");
-    this.m_icon     =   "ammo_rockets";
-#ifdef SVQC
-    this.m_botvalue =   1500;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_rockets_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_rockets, ITEM_Rockets)
-
-#ifdef GAMEQC
-MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
-#endif
-
-#ifdef SVQC
-PROPERTY(int, g_pickup_shells);
-void ammo_shells_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_SHELLS))
-        SetResourceExplicit(item, RES_SHELLS, g_pickup_shells);
-}
-#endif
-
-CLASS(Shells, Ammo)
-ENDCLASS(Shells)
-
-REGISTER_ITEM(Shells, Shells) {
-    this.m_canonical_spawnfunc = "item_shells";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Shells_ITEM;
-#endif
-    this.netname    =   "shells";
-    this.m_name     =   _("shells");
-    this.m_icon     =   "ammo_shells";
-#ifdef SVQC
-    this.m_botvalue =   1000;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_shells_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_shells, ITEM_Shells)
