@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDPickupDialog, XonoticRootDialog)
+	METHOD(XonoticHUDPickupDialog, fill, void(entity));
+	ATTRIB(XonoticHUDPickupDialog, title, string, _("Pickup Panel"));
+	ATTRIB(XonoticHUDPickupDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDPickupDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDPickupDialog, rows, float, 15.5);
+	ATTRIB(XonoticHUDPickupDialog, columns, float, 4);
+	ATTRIB(XonoticHUDPickupDialog, name, string, "HUDpickup");
+	ATTRIB(XonoticHUDPickupDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDPickupDialog)

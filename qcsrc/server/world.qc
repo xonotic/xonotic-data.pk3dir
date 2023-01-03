@@ -2100,6 +2100,10 @@ void readlevelcvars()
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
+	serverflags &= ~SERVERFLAG_FORBID_PICKUPTIMER;
+	if(cvar("sv_forbid_pickuptimer"))
+		serverflags |= SERVERFLAG_FORBID_PICKUPTIMER;
+
 	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
 	warmup_stage = cvar("g_warmup");
