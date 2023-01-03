@@ -12,6 +12,7 @@
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
 bool autocvar_g_cts_removeprojectiles;
+bool autocvar_g_cts_drop_monster_items;
 
 // legacy bot roles
 .float race_checkpoint;
@@ -284,6 +285,8 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 
 	if (Item_IsLoot(item))
 	{
+		if(item.monster_loot && autocvar_g_cts_drop_monster_items)
+			return false;
 		return true;
 	}
 }

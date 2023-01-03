@@ -18,6 +18,7 @@ CLASS(Devastator, Weapon)
 /* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
 /* refname   */ ATTRIB(Devastator, netname, string, "devastator");
 /* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
+/* legacy    */ ATTRIB(Devastator, m_deprecated_netname, string, "rocketlauncher");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

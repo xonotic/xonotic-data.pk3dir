@@ -241,6 +241,7 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 		delete(this.move_controller);
 	}
 	controller = new_pure(SUB_CalcMove_controller);
+	set_movetype(controller, MOVETYPE_NONE); // mark the entity as physics driven so that thinking is handled by QC
 	controller.owner = this;
 	this.move_controller = controller;
 	controller.platmovetype = this.platmovetype;
@@ -404,7 +405,7 @@ void ApplyMinMaxScaleAngles(entity e)
 		e.mins_y = -e.maxs.x;
 	}
 	if(e.scale)
-		setsize(e, e.mins * e.scale, e.maxs * e.scale);
+		setsize(e, RoundPerfectVector(e.mins * e.scale), RoundPerfectVector(e.maxs * e.scale));
 	else
 		setsize(e, e.mins, e.maxs);
 }
