@@ -76,6 +76,8 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, netname, string, "");
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+    /** M: deprecated refname : old reference name for compatibility with weapons that were renamed */
+    ATTRIB(Weapon, m_deprecated_netname, string, "");
 
     ATTRIB(Weapon, m_pickup, entity);
 
@@ -215,7 +217,6 @@ string weaponorder_byid;
 
 // functions:
 string W_FixWeaponOrder(string order, float complete);
-string W_UndeprecateName(string s);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
@@ -230,8 +231,6 @@ string GetAmmoName(Resource ammotype);
 entity GetAmmoItem(Resource ammotype);
 
 #ifdef CSQC
-Resource GetAmmoTypeFromNum(int i);
-
 int GetAmmoStat(Resource ammotype);
 #endif
 
