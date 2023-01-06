@@ -60,7 +60,10 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();
-					copyentity(this, replacement);
+					Item_CopyFields(this, replacement);
+					// copyentity is an engine function which unintentionally copies intrusive list data
+					// DO NOTE USE, causes #2792
+					//copyentity(this, replacement);
 					replacement.m_isreplaced = true;
 					weapon_defaultspawnfunc(replacement, wep);
 				}
