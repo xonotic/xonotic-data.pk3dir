@@ -55,6 +55,8 @@ void monster_dropitem(entity this, entity attacker)
 	{
 		e.noalign = true;
 		StartItem(e, e.monster_loot);
+		if(startitem_failed || wasfreed(e))
+			return;
 		e.gravity = 1;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
@@ -884,6 +886,12 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 
 void Monster_Reset(entity this)
 {
+	if(this.spawnflags & MONSTERFLAG_SPAWNED)
+	{
+		Monster_Remove(this);
+		return;
+	}
+
 	setorigin(this, this.pos1);
 	this.angles = this.pos2;
 
@@ -1428,7 +1436,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	if((mon.spawnflags & MONSTER_SIZE_QUAKE) && autocvar_g_monsters_quake_resize && !(this.spawnflags & MONSTERFLAG_RESPAWNED))
 		this.scale *= 1.3;
 
-	setsize(this, mon.m_mins * this.scale, mon.m_maxs * this.scale);
+	setsize(this, RoundPerfectVector(mon.m_mins * this.scale), RoundPerfectVector(mon.m_maxs * this.scale));
 	this.view_ofs			= '0 0 0.7' * (this.maxs_z * 0.5);
 
 	this.ticrate = bound(sys_frametime, ((!this.ticrate) ? autocvar_g_monsters_think_delay : this.ticrate), 60);
