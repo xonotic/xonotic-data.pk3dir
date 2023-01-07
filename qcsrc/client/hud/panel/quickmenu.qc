@@ -197,7 +197,10 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 
 		// forcedly add this entry
 		if (autocvar_hud_panel_quickmenu_server_is_default && autocvar__hud_panel_quickmenu_file_from_server != "")
-			QUICKMENU_ENTRY_SPECIAL(_("Standard quick menu"), "quickmenu; wait; quickmenu")
+		{
+			string prev_value = cvar_string("hud_panel_quickmenu_server_is_default");
+			QUICKMENU_ENTRY_SPECIAL(_("Standard quick menu"), sprintf("hud_panel_quickmenu_server_is_default 0; quickmenu; wait; quickmenu; wait; hud_panel_quickmenu_server_is_default \"%s\"", prev_value))
+		}
 	}
 	else
 	{
