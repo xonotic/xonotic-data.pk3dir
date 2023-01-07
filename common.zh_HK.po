@@ -734,7 +734,7 @@ msgstr "跑完的圈數（競速 / CTS）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
-msgstr "圈數"
+msgstr "圈"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
@@ -1604,7 +1604,7 @@ msgstr "等離子"
 
 #: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
-msgstr "火箭"
+msgstr "火箭彈"
 
 #: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
@@ -2140,7 +2140,7 @@ msgstr "絕滅機槍"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr "絕滅星旋槍"
+msgstr "絕滅星璇槍"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -2497,7 +2497,7 @@ msgstr "^F2你將在下一輪旁觀"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr "^F2正在重新開始競賽……"
+msgstr "^F2競賽即將重新開始……"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
@@ -3379,7 +3379,7 @@ msgstr "^BG%s^K1 試圖把玩弧光電束%s%s"
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用鐳射槍殺害%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用鐳射槍擊斃%s%s"
 
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
@@ -3563,7 +3563,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅重機槍掃射得滿身瘡痍%s%s"
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅星旋槍刺到人間蒸發%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅星璇槍刺到人間蒸發%s%s"
 
 #: qcsrc/common/notifications/all.inc:487
 #, c-format
@@ -3673,7 +3673,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用汽化者刺得昇華為微粒子%s%s"
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用星旋槍刺得從人間蒸發%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用星璇槍刺到人間蒸發%s%s"
 
 #: qcsrc/common/notifications/all.inc:527
 msgid "^F4You are now alone!"
@@ -4559,11 +4559,11 @@ msgstr "^K1在 ^COUNT 秒後自殺"
 
 #: qcsrc/common/notifications/all.inc:772
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4超時在 ^COUNT 秒後開始"
+msgstr "^F4時限在 ^COUNT 秒後開始"
 
 #: qcsrc/common/notifications/all.inc:773
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4超時在 ^COUNT 秒後結束"
+msgstr "^F4時限在 ^COUNT 秒後結束"
 
 #: qcsrc/common/notifications/all.inc:775
 msgid "^K1Cannot join given minigame session!"
@@ -5597,7 +5597,7 @@ msgstr "汽化者"
 
 #: qcsrc/common/weapons/weapon/vortex.qh:21
 msgid "Vortex"
-msgstr "星旋槍"
+msgstr "星璇槍"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format

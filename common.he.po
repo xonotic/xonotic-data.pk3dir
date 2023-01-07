@@ -5,8 +5,8 @@
 # Translators:
 # nad le <nadavlevi726@gmail.com>, 2018
 # Omer I.S., 2020
-# Omer I.S. <omeritzicschwartz@gmail.com>, 2020
-# Omer I.S. <omeritzicschwartz@gmail.com>, 2020
+# עומר א״ש <omeritzicschwartz@gmail.com>, 2020
+# עומר א״ש <omeritzicschwartz@gmail.com>, 2020
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2020
 # Tal Leibman <leibman2@gmail.com>, 2019
 msgid ""

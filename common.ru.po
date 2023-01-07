@@ -19,14 +19,14 @@
 # Simple88, 2016
 # Simple88, 2016
 # Артём Котлубай, 2022
-# Артём Котлубай <artemkotlubai@yandex.ru>, 2022
+# Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-04 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022\n"
+"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -603,7 +603,7 @@ msgstr "времязахвата"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Time of fastest capture (CTF)"
-msgstr "Время быстрейшего захвата (CTF)"
+msgstr "Время быстрейшего захвата"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of deaths"
@@ -968,7 +968,7 @@ msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
-"Специальные имена режимов 'teams' и 'noteams' можно\n"
+"Специальные имена режимов «teams» и «noteams» можно\n"
 "использовать для включения/исключения ВСЕХ командных\n"
 "или некомандных режимов."
 
@@ -989,7 +989,7 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
-"'field3' будет отображаться только в CTF, и 'field4' во всех других режимах "
+"«field3» будет отображаться только в CTF, и «field4» во всех других режимах "
 "кроме DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:990
@@ -2070,11 +2070,11 @@ msgstr "Показывать значение урона в числах"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr "Мин. размер шрифта:"
+msgstr "Наим. размер шрифта:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr "Макс. размер шрифта:"
+msgstr "Наиб. размер шрифта:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
@@ -7060,7 +7060,7 @@ msgstr "Играть по сети, смотреть демки или смен�
 #: qcsrc/menu/xonotic/util.qc:764 qcsrc/menu/xonotic/util.qc:773
 #: qcsrc/menu/xonotic/util.qc:781 qcsrc/menu/xonotic/util.qc:793
 msgid "Default"
-msgstr "Стандартно"
+msgstr "По умолчанию"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:42
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
@@ -8255,7 +8255,7 @@ msgstr "Низкое"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr "Нормальное"
+msgstr "Приемлемое"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
@@ -9366,7 +9366,7 @@ msgstr "Каждый пакет включает в себя копию пред
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr "Компенсация ошибок прогнозирования движения"
+msgstr "Смягчение ошибок предрасчёта движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
@@ -9621,7 +9621,7 @@ msgstr "Глубина цвета:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
-msgstr "Сколько бит на пиксель использовать для вывода, рекомендуется 32"
+msgstr "Сколько бит на пиксель использовать для вывода, желательно 32"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
@@ -9795,7 +9795,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:148
 msgid "Intensity:"
-msgstr "Интенсивность:"
+msgstr "Величина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Global rendering brightness"

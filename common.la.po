@@ -2790,7 +2790,7 @@ msgstr "^BG%s^K1 Napalm Granata sua crematus est%s%s"
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1 felt a little chilly%s%s"
-msgstr "^BG%s^K1 se frigidulus sensit%s%s"
+msgstr "^BG%s^K1 se frigidulum sensit%s%s"
 
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
@@ -3688,7 +3688,7 @@ msgstr "^BGMeta ^F4%s^BG deleta est!"
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "%s ludentes necesse sunt ut hic ludus incipiatur."
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^BGBegin!"
@@ -3709,7 +3709,7 @@ msgstr "^F4Tempus incipi non potest"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F2Don't camp!"
-msgstr ""
+msgstr "^F2Stativus esse noli!"
 
 #: qcsrc/common/notifications/all.inc:546
 msgid ""
@@ -3717,6 +3717,9 @@ msgid ""
 "^BGFeel free to ^F2try to capture^BG the flag again\n"
 "^BGif you think you will succeed."
 msgstr ""
+"^BGLiber iam es.\n"
+"^BGSi vis, vexillum ^F2capere conare^BG iterum\n"
+"^BGsiquidem te effecturum putes."
 
 #: qcsrc/common/notifications/all.inc:547
 msgid "^BGThis flag is currently inactive"
@@ -3728,6 +3731,9 @@ msgid ""
 "^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
 "^BGMake some defensive scores before trying again."
 msgstr ""
+"^BGVexillo ^F1prohibendus^BG iam es\n"
+"^BGquia in captibus ^F2defuisti etiam atque etiam^BG.\n"
+"^BGDefensiones age antequam iterum coneris."
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGYou captured the ^TC^TT^BG flag!"
@@ -3740,7 +3746,7 @@ msgstr "^BGVexillum cepisti!"
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
 msgid "^BGToo many flag throws! Throwing disabled for %s."
-msgstr ""
+msgstr "^BGTot vexilli iactus! Non iacietur %s."
 
 #: qcsrc/common/notifications/all.inc:552
 #, c-format
@@ -3861,11 +3867,11 @@ msgstr "^BGVexillum ^TC^TT^BG rettulisti!"
 
 #: qcsrc/common/notifications/all.inc:576
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr ""
+msgstr "^BGMorati! Inimici detectro te iam videre possunt!"
 
 #: qcsrc/common/notifications/all.inc:577
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGMorati! Vexilliferi a hostes detectro iam videri possunt!"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
@@ -3946,22 +3952,24 @@ msgid ""
 "^BGYou have been moved into a different team\n"
 "You are now on: %s"
 msgstr ""
+"^BGIn aliam manum motus es\n"
+"Iam es in: %s"
 
 #: qcsrc/common/notifications/all.inc:621
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1Punitus es quia tuos collegas laedebas!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1Die camper!"
-msgstr ""
+msgstr "^K1Stative moriaris!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1Reconsider your tactics, camper!"
-msgstr ""
+msgstr "^K1Tuos modos delibera, stative!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You unfairly eliminated yourself!"
-msgstr ""
+msgstr "^K1Iniuste te exclusisti!"
 
 #: qcsrc/common/notifications/all.inc:624
 #, c-format
@@ -3970,19 +3978,19 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You couldn't catch your breath!"
-msgstr ""
+msgstr "^K1Inspirare non potuisti!"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You hit the ground with a crunch!"
-msgstr ""
+msgstr "^K1In solum cecidisti crepitans!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You felt a little too hot!"
-msgstr ""
+msgstr "^K1Te calidulum sensisti!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1Frictulus factus es!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You fragged yourself!"
@@ -3990,23 +3998,23 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You need to be more careful!"
-msgstr ""
+msgstr "^K1Magis curare debiturus fuisti!"
 
 #: qcsrc/common/notifications/all.inc:629
 msgid "^K1You couldn't stand the heat!"
-msgstr ""
+msgstr "^K1Ardorem non passus es!"
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1You need to watch out for monsters!"
-msgstr ""
+msgstr "^K1A beluis cauturus fuisti!"
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1You were killed by a monster!"
-msgstr ""
+msgstr "^K1A belua occisus es!"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1Tastes like chicken!"
-msgstr ""
+msgstr "^K1Pullum sapit!"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You forgot to put the pin back in!"
@@ -4014,15 +4022,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:632
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr ""
+msgstr "^K1Malum est ad Napalm eruptionem adstare!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You felt a little chilly!"
-msgstr ""
+msgstr "^K1Te frigidulum sensisti!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You got a little bit too cold!"
-msgstr ""
+msgstr "^K1Nimis alsisti!"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1Your Healing Nade is a bit defective"
@@ -4030,11 +4038,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1You are respawning for running out of ammo..."
-msgstr ""
+msgstr "^K1Renasceris quia missilia exhausisti..."
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1You were killed for running out of ammo..."
-msgstr ""
+msgstr "^K1Occisus es quia missilia exhausisti..."
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You grew too old without taking your medicine"
@@ -4042,19 +4050,19 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You need to preserve your health"
-msgstr ""
+msgstr "^K1Tuam sanitatem conservaturus fuisti"
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^K1You became a shooting star!"
-msgstr ""
+msgstr "^K1Stella labens factus es!"
 
 #: qcsrc/common/notifications/all.inc:638
 msgid "^K1You melted away in slime!"
-msgstr ""
+msgstr "^K1In muco liquatus es!"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You committed suicide!"
-msgstr ""
+msgstr "^K1Temet interfecisti!"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You ended it all!"
@@ -4067,11 +4075,11 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:641
 #, c-format
 msgid "^BGYou are now on: %s"
-msgstr ""
+msgstr "^BGIam es in: %s"
 
 #: qcsrc/common/notifications/all.inc:642
 msgid "^K1You died in an accident!"
-msgstr ""
+msgstr "^K1Temere mortuus es!"
 
 #: qcsrc/common/notifications/all.inc:643
 msgid "^K1You had an unfortunate run in with a turret!"

@@ -154,7 +154,7 @@ msgstr "^1按 ^3%s^1 切換鏡頭模式"
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1按 ^3%s^1 瞭解遊戲型別詳情"
+msgstr "^1按 ^3%s^1 瞭解遊戲類型詳情"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #: qcsrc/menu/xonotic/keybinder.qc:103
@@ -742,7 +742,7 @@ msgstr "跑完的圈數（競速 / CTS）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^laps"
-msgstr "圈數"
+msgstr "圈"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of lives (LMS)"
@@ -934,8 +934,8 @@ msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
-"^2scoreboard_columns_set ^3expand_default ^7載入預設佈局並將它擴充套件到 "
-"cvar scoreboard_columns 以便你更改"
+"^2scoreboard_columns_set ^3expand_default ^7載入預設佈局並將它擴展到 cvar "
+"scoreboard_columns 以便你更改"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:691
 msgid "You can use a ^3|^7 to start the right-aligned fields."
@@ -954,14 +954,14 @@ msgid ""
 msgstr ""
 "在域前你可以放一個 +（或 -）號，後跟一個以逗號分割的遊戲型別列表，\n"
 "之後一個斜槓，以使此域僅顯示在這些（或除了這些）遊戲型別中。你也可以使"
-"用‘all’以顯示當前遊戲型別的所有域。"
+"用‘all’以顯示當前遊戲類型的所有域。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
-"特殊遊戲型別‘teams’和‘noteams’可用於包含/除去所有團隊合作/非團隊的遊戲型別。"
+"特殊遊戲類型‘teams’和‘noteams’可用於包含/除去所有團隊合作/非團隊的遊戲類型。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -977,7 +977,8 @@ msgstr "會左對齊顯示名稱、延遲和丟包，右對齊顯示豎槓符號
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
-msgstr "“field3”將只在奪旗戰顯示，“field4”將在除死亡競技的所有遊戲型別顯示。"
+msgstr ""
+"「field3」將只在奪旗戰顯示，「field4」將在除死亡競技的所有遊戲類型顯示。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:990
 #: qcsrc/client/hud/panel/scoreboard.qc:997
@@ -1146,7 +1147,7 @@ msgstr "^1你必須在進入 hud 配置模式之前回應"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr "在統計資訊中顯示^2玩家名^7而非“^1匿名玩家^7”"
+msgstr "在統計資訊中顯示^2玩家名^7而非「^1匿名玩家^7」"
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
@@ -1612,7 +1613,7 @@ msgstr "等離子"
 
 #: qcsrc/common/items/item/ammo.qh:142
 msgid "rockets"
-msgstr "火箭"
+msgstr "火箭彈"
 
 #: qcsrc/common/items/item/ammo.qh:176
 msgid "shells"
@@ -1734,7 +1735,7 @@ msgstr "遊戲結束！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "完成！點選“下一關”以繼續"
+msgstr "完成！點選「下一關」以繼續"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -1752,11 +1753,11 @@ msgstr "祝你下次好運！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1189
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "簡直完美！按“下一關”繼續！"
+msgstr "簡直完美！按「下一關」繼續！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr "棒極了！按“下一關”繼續！"
+msgstr "棒極了！按「下一關」繼續！"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1195
 msgid "Press the space bar to change your currently selected tile"
@@ -1880,14 +1881,14 @@ msgstr "推拉"
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "選擇選單上的“^1下一輪^7”再進行一輪遊戲！"
+msgstr "選擇選單上的「^1下一輪^7」再進行一輪遊戲！"
 
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/pp.qc:463
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 #: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr "選擇選單上的“^1下一輪^7”開始新遊戲！"
+msgstr "選擇選單上的「^1下一輪^7」開始新遊戲！"
 
 #: qcsrc/common/minigames/minigame/pp.qc:464
 #: qcsrc/common/minigames/minigame/ttt.qc:347
@@ -2148,7 +2149,7 @@ msgstr "絕滅機槍"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr "絕滅星旋槍"
+msgstr "絕滅星璇槍"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -2505,7 +2506,7 @@ msgstr "^F2你將在下一輪旁觀"
 
 #: qcsrc/common/notifications/all.inc:261
 msgid "^F2Match is restarting..."
-msgstr "^F2正在重新開始競賽……"
+msgstr "^F2競賽即將重新開始……"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:533
@@ -3387,7 +3388,7 @@ msgstr "^BG%s^K1 試圖把玩弧光電束%s%s"
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用鐳射槍殺害%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用鐳射槍擊斃%s%s"
 
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
@@ -3571,7 +3572,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅重機槍掃射得滿身瘡痍%s%s"
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅星旋槍刺到人間蒸發%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅星璇槍刺到人間蒸發%s%s"
 
 #: qcsrc/common/notifications/all.inc:487
 #, c-format
@@ -3681,7 +3682,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用汽化者刺得昇華為微粒子%s%s"
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用星旋槍刺得從人間蒸發%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用星璇槍刺到人間蒸發%s%s"
 
 #: qcsrc/common/notifications/all.inc:527
 msgid "^F4You are now alone!"
@@ -4567,11 +4568,11 @@ msgstr "^K1在 ^COUNT 秒後自殺"
 
 #: qcsrc/common/notifications/all.inc:772
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4超時在 ^COUNT 秒後開始"
+msgstr "^F4時限在 ^COUNT 秒後開始"
 
 #: qcsrc/common/notifications/all.inc:773
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4超時在 ^COUNT 秒後結束"
+msgstr "^F4時限在 ^COUNT 秒後結束"
 
 #: qcsrc/common/notifications/all.inc:775
 msgid "^K1Cannot join given minigame session!"
@@ -5605,7 +5606,7 @@ msgstr "汽化者"
 
 #: qcsrc/common/weapons/weapon/vortex.qh:21
 msgid "Vortex"
-msgstr "星旋槍"
+msgstr "星璇槍"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format
@@ -5846,7 +5847,7 @@ msgstr "核心團隊"
 
 #: qcsrc/menu/xonotic/credits.qc:14
 msgid "Extended Team"
-msgstr "擴充套件團隊"
+msgstr "擴展團隊"
 
 #: qcsrc/menu/xonotic/credits.qc:32
 msgid "Website"
@@ -6108,7 +6109,7 @@ msgstr "未決定"
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
-msgstr "玩家統計預設啟用，你可以在“用家檔案”選單更改"
+msgstr "玩家統計預設啟用，你可以在「用家檔案」選單更改"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:95
 msgid "Save settings"
@@ -6254,7 +6255,7 @@ msgstr "粗體字比例："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr "中心訊息板面"
+msgstr "中心訊息面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
 msgid "Chat entries:"
@@ -6340,7 +6341,7 @@ msgstr "對齊到另一邊"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
-msgstr "提示訊息板面"
+msgstr "提示訊息面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
@@ -6729,7 +6730,7 @@ msgstr "投票後的透明度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr "投票板面"
+msgstr "投票面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 msgid "Fade out after:"
@@ -7004,7 +7005,7 @@ msgstr "無限制"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:76
 msgid "Gametype"
-msgstr "遊戲型別"
+msgstr "遊戲類型"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Time limit:"
@@ -7183,7 +7184,7 @@ msgstr "作者："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Game types:"
-msgstr "遊戲型別："
+msgstr "遊戲類型："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -7250,13 +7251,13 @@ msgstr "武器與物品修改："
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr "玩家生成時攜帶鉤爪。按下“鉤爪”按鍵以使用"
+msgstr "玩家生成時攜帶鉤爪。按下「鉤爪」按鍵以使用"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:174
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
-msgstr "玩家生成時攜帶噴氣揹包。雙擊“跳躍”鍵或按下“噴氣揹包”按鍵以使用"
+msgstr "玩家生成時攜帶噴氣揹包。雙擊「跳躍」鍵或按下「噴氣揹包」按鍵以使用"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
 msgid ""
@@ -8295,7 +8296,7 @@ msgstr "偏移對映"
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
-msgstr "偏移對映效果，使有突起對映的材質看起來從 2D 平面上“隆起”"
+msgstr "偏移對映效果，使有突起對映的材質看起來從 2D 平面上「隆起」"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
 msgid "Relief mapping"
@@ -8601,7 +8602,7 @@ msgstr "在地圖上顯示目標的路徑點標記"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
-msgstr "顯示不同遊戲型別下的路徑點"
+msgstr "顯示不同遊戲類型下的路徑點"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
@@ -8756,7 +8757,7 @@ msgstr "當可用時在死亡訊息顯示殺敵資訊"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
-msgstr "遊戲型別設定"
+msgstr "遊戲類型設定"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Display capture times in Capture The Flag"
@@ -9164,7 +9165,7 @@ msgstr "使用 DGA 滑鼠輸入"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr "按“進入控制檯”鍵也可以關閉控制檯"
+msgstr "按「進入控制檯」鍵也可以關閉控制檯"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
@@ -9736,7 +9737,7 @@ msgstr "獲勝者"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr "加入“最佳”的團隊（自動選擇）"
+msgstr "加入「最佳」的團隊（自動選擇）"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
@@ -9785,7 +9786,7 @@ msgstr "允許玩家統計使用你的暱稱嗎？"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "如果回答“否”，你將會以“匿名玩家”的形式出現"
+msgstr "如果回答「否」，你將會以「匿名玩家」的形式出現"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
@@ -10001,7 +10002,7 @@ msgstr "%s 的 Xonotic 伺服器"
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
-msgstr "嗯？無法遊玩此地圖（無效遊戲型別）。正在重新過濾，使這不再發生。"
+msgstr "嗯？無法遊玩此地圖（無效遊戲類型）。正在重新過濾，使這不再發生。"
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
