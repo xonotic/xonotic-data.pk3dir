@@ -324,7 +324,7 @@ METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))
 METHOD(OverkillNex, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	entity this = actor;
-	vector org2 = w_org + w_backoff * 6;
+	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	if(!w_issilent)
 		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);

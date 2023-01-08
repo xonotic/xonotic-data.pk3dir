@@ -354,7 +354,7 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);

@@ -396,8 +396,12 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		w_random = prandom();
 
 		vector force_dir = normalize(force);
+		// this traceline usually starts in solid when a hitscan shot hits a surface with a very small angle
+		// if so, try another traceline starting further back (may still start in solid but only with extremely small angles)
 		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
+		if(trace_startsolid)
+			traceline(w_org - force_dir * 40, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+		if(trace_fraction < 1)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -force_dir;
