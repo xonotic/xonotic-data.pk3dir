@@ -106,12 +106,15 @@ void HUD_StrafeHUD()
         static int   dt_time                 = 0;
         static float dt_sum                  = 0;
         static float dt                      = 0;
+        static bool  onslick_last            = false;
 
         // physics
         int    keys                          = STAT(PRESSED_KEYS);
         bool   jumpheld                      = islocal ? (PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) : (keys & KEY_JUMP); // doesn't work in spectator mode if spectated player uses +jetpack
         bool   onground                      = (islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR)) && !jumpheld; // if jump is held assume we are in air
+        bool   onslick                       = false;
         bool   real_onground                 = onground; // doesn't get changed by ground timeout
+        bool   real_onslick                  = onslick; // doesn't get changed by ground timeout
         bool   onground_expired;
         bool   strafekeys;
         bool   swimming                      = strafe_waterlevel >= WATERLEVEL_SWIMMING; // the hud will not work well while swimming
@@ -173,8 +176,22 @@ void HUD_StrafeHUD()
         float  range_minangle;
         float  arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0); // there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 
-        if(onground) onground_lasttime = time;
-        else if(jumpheld) onground_lasttime = 0;
+        if(onground)
+        {
+            if(PHYS_FRICTION(strafeplayer) == 0) {
+                onslick = true;
+            }
+            else { // don't use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
+                trace_dphitq3surfaceflags = 0;
+                tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
+                onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
+            }
+            real_onslick = onslick;
+
+            onground_lasttime = time;
+            onslick_last = onslick;
+        }
+        else if(jumpheld || swimming) onground_lasttime = 0;
 
         if(onground_lasttime == 0)
             onground_expired = true;
@@ -184,6 +201,7 @@ void HUD_StrafeHUD()
         if(!onground && !onground_expired) // if ground timeout hasn't expired yet use ground physics
         {
             onground = true;
+            onslick = onslick_last;
 
             if(!autocvar__hud_configure)
             {
@@ -390,7 +408,7 @@ void HUD_StrafeHUD()
 
         if((speed > 0) && onground)
         {
-            float strafefriction = IS_ONSLICK(strafeplayer) ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
+            float strafefriction = onslick ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
 
             frictionspeed = speed * dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
             strafespeed = max(speed - frictionspeed, 0);
@@ -702,7 +720,7 @@ void HUD_StrafeHUD()
                 slicksteps = min(slicksteps, 4);
             slicksteps = 90 / 2 ** slicksteps;
 
-            if(islocal) slickdetected = (IS_ONSLICK(strafeplayer) || (IS_ONGROUND(strafeplayer) && (PHYS_FRICTION(strafeplayer) == 0))); // don't need to traceline if already touching slick
+            slickdetected = real_onslick; // don't need to traceline if already touching slick
 
             // traceline into every direction
             trace_dphitq3surfaceflags = 0;
