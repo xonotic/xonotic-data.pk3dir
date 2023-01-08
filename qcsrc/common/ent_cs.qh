@@ -130,7 +130,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	string entcs_GetName(int i)
 	{
 		entity e = entcs_receiver(i);
-		return ColorTranslateRGB(e ? e.netname : "");
+		return e ? ColorTranslateRGB(e.netname) : "";
 	}
 
     /**
