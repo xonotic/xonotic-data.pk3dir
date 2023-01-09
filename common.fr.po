@@ -16,14 +16,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2022
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1627,19 +1627,19 @@ msgstr "Match à Mort en Équipe"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Cartouches"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Balles"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Roquettes"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Cellules"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1686,7 +1686,7 @@ msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Carburant"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -3963,12 +3963,12 @@ msgstr "^BGL'ennemi %s(^BG%s%s)^BG a son drapeau ! Récupérez-le !"
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BGL'ennemi %s^BG a le drapeau ^TC^TT^BG ! Récupérez-le !"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BGL'ennemi %s (^BG%s%s)^BG a le drapeau ^TC^TT^BG ! Récupérez-le !"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format

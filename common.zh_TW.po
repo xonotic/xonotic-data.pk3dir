@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
+"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -1601,19 +1601,19 @@ msgstr "團隊死亡競技"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "霰彈"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "子彈"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "火箭彈"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "電池"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1626,7 +1626,7 @@ msgstr "小護甲"
 
 #: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
-msgstr "中型護甲"
+msgstr "中護甲"
 
 #: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
 msgid "Big armor"
@@ -1642,7 +1642,7 @@ msgstr "小補血包"
 
 #: qcsrc/common/items/item/health.qh:84
 msgid "Medium health"
-msgstr "中型補血包"
+msgstr "中補血包"
 
 #: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
 msgid "Big health"
@@ -1660,7 +1660,7 @@ msgstr "火箭揹包"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "燃料"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -2325,7 +2325,7 @@ msgstr "帶球人"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
 msgid "Leader"
-msgstr "領隊者"
+msgstr "鰲頭"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Goal"
@@ -2460,12 +2460,12 @@ msgstr "^BG旗子已回到基地"
 #: qcsrc/common/notifications/all.inc:253
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr "^BG%s^BG丟掉了^TC^TT隊^BG旗子"
+msgstr "^BG%s^BG 丟失了^TC^TT隊^BG旗子"
 
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr "^BG%s^BG 丟掉了旗子"
+msgstr "^BG%s^BG 丟失了旗子"
 
 #: qcsrc/common/notifications/all.inc:255
 #, c-format
@@ -3858,12 +3858,12 @@ msgstr "^BG%s敵人（^BG%s%s）^BG拿到了自己的旗子！奪回它！"
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敵人^BG拿到了^TC^TT隊^BG旗子！奪回它！"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敵人（^BG%s%s）^BG拿到了^TC^TT隊^BG旗子！奪回它！"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
@@ -4348,7 +4348,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr "^BG敵人現在可在雷達上看到領導者！"
+msgstr "^BG現在可在雷達上看到鰲頭！"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -6507,11 +6507,11 @@ msgstr "物理引數板面"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "拾取訊息："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "顯示計時："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6530,15 +6530,15 @@ msgstr "總是"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "旁觀時"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "圖示大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "拾取提示欄"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -9704,7 +9704,7 @@ msgstr "全域性渲染亮度"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
 msgid "Wait for GPU to finish each frame"
-msgstr "等待 GPU 來完成每一幀的渲染"
+msgstr "等待 GPU 完成每一幀的渲染"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:154
 msgid ""

@@ -6,7 +6,7 @@
 # 8fb942b4466cdbffede843a6379dce7e_4dc4284 <cbc8558ff26f685f62baa2a2eaee30b3_1013263>, 2021
 # Antoni Das <Antonidas159@gmail.com>, 2017
 # LegendGuard, 2020
-# LegendGuard, 2020-2022
+# LegendGuard, 2020-2023
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
 # RYU N. <ryusho2523@yahoo.co.jp>, 2021
 # z 411 <winrar.hurr@gmail.com>, 2021-2022
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -135,7 +135,7 @@ msgstr "サブ射撃"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1カメラモードを変更するには^3%s^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -1053,7 +1053,7 @@ msgstr "^3%1.0f 分"
 #: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7選手達"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1441
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1295,22 +1295,22 @@ msgstr ""
 #: qcsrc/client/main.qc:1455
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d選手達"
 
 #: qcsrc/client/main.qc:1457
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d～%d選手達"
 
 #: qcsrc/client/main.qc:1459
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "最大%d選手達"
 
 #: qcsrc/client/main.qc:1461
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "最低%d選手達"
 
 #: qcsrc/client/main.qc:1466
 msgid "Active modifications:"
@@ -1322,7 +1322,7 @@ msgstr "特別なゲームプレイのヒント:"
 
 #: qcsrc/client/main.qc:1476
 msgid "Server's message"
-msgstr ""
+msgstr "サーバーのメッセージ"
 
 #: qcsrc/client/main.qc:1570
 #, c-format
@@ -1598,19 +1598,19 @@ msgstr "チームデスマッチ (TDM)"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "シェル"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "弾丸"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "ロケット"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "セル"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1657,7 +1657,7 @@ msgstr "ジェットパック"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "燃料"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -2505,7 +2505,7 @@ msgstr "^F2次のラウンドで観戦します"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2試合を再開中..."
 
 #: qcsrc/common/notifications/all.inc:270
 #: qcsrc/common/notifications/all.inc:541
@@ -6535,11 +6535,11 @@ msgstr "物理パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "ピックアップメッセージ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "タイマーを表示:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6558,7 +6558,7 @@ msgstr "常に"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "観戦中"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
@@ -6566,7 +6566,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "ピックアップパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"

@@ -14,7 +14,7 @@
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
 # LegendGuard, 2020
-# LegendGuard, 2020-2022
+# LegendGuard, 2020-2023
 # LegendGuard, 2020
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yllelder, 2016\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -153,7 +153,7 @@ msgstr "disparo secundario"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Pulsa ^3%s^1 para cambiar el modo de cámara"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -188,12 +188,12 @@ msgstr "^2¡Actualmente en etapa de ^1calentamiento^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^2Se necesita ^31^2 jugador más para que comience la partida."
 
 #: qcsrc/client/hud/panel/infomessages.qc:161
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^2Se necesita ^3%d^2 jugador más para que comience la partida."
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 #, c-format
@@ -525,11 +525,11 @@ msgstr "QMCMD^Barajar equipos"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "Menú rápido personalizado del servidor"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
-msgstr ""
+msgstr "Menú rápido de puntos de encuentro"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Spectate a player"
@@ -1080,7 +1080,7 @@ msgstr "^3%1.0f minutos"
 #: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d^7jugadores"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1441
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1138,11 +1138,11 @@ msgstr "Calentamiento"
 
 #: qcsrc/client/hud/panel/timer.qc:128
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Calentamiento: sin límite de tiempo"
 
 #: qcsrc/client/hud/panel/timer.qc:128
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Calentamiento: pocos jugadores"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Timeout"
@@ -1318,27 +1318,27 @@ msgstr "Modo de juego:"
 
 #: qcsrc/client/main.qc:1453
 msgid "This match supports"
-msgstr ""
+msgstr "Esta partida soporta "
 
 #: qcsrc/client/main.qc:1455
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d jugadores"
 
 #: qcsrc/client/main.qc:1457
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "de %d a %d jugadores"
 
 #: qcsrc/client/main.qc:1459
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "Máximo %djugadores"
 
 #: qcsrc/client/main.qc:1461
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "Mínimo %d jugadores"
 
 #: qcsrc/client/main.qc:1466
 msgid "Active modifications:"
@@ -1350,7 +1350,7 @@ msgstr "Consejos especiales del juego:"
 
 #: qcsrc/client/main.qc:1476
 msgid "Server's message"
-msgstr ""
+msgstr "Mensaje del servidor"
 
 #: qcsrc/client/main.qc:1570
 #, c-format
@@ -1444,12 +1444,12 @@ msgstr "Mata a todos los compañeros del enemigo para ganar la ronda"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Límite de rondas:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Cantidad de rondas ganadas necesarias antes de que termine la partida"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1582,7 +1582,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Límite de goles:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1633,19 +1633,19 @@ msgstr "Combate a muerte por equipos"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Cartuchos"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Balas"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Cohetes"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Células"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1692,7 +1692,7 @@ msgstr "Mochila propulsora"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Combustible"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1927,7 +1927,7 @@ msgstr "¡Selecciona \"^1Siguiente Partida^7\" en el menú para una revancha!"
 #: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
-"¡Selecciona \"^Siguiente Partida^7\" en el menú para empezar una nueva "
+"¡Selecciona \"^1Siguiente Partida^7\" en el menú para empezar una nueva "
 "partida!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:464
@@ -2554,12 +2554,12 @@ msgstr "^F2Tendrás que espectar en la siguiente ronda"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Reiniciando partida..."
 
 #: qcsrc/common/notifications/all.inc:270
 #: qcsrc/common/notifications/all.inc:541
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4¡Se paró la cuenta atrás!"
 
 #: qcsrc/common/notifications/all.inc:272
 #, c-format
@@ -3813,7 +3813,7 @@ msgstr "^BG¡Objetivo destruido en ^F4%s^BG!"
 #: qcsrc/common/notifications/all.inc:541
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "Se necesitan %s jugadores para esta partida."
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^BGBegin!"
@@ -3966,12 +3966,12 @@ msgstr "^BG¡El enemigo %s (^BG%s%s)^BG tiene su bandera! ¡Recupérala!"
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG¡El enemigo %s^BG tiene la ^TC^TT^BG bandera! ¡Recupérala!"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG¡El enemigo %s (^BG%s%s) tiene la ^TC^TT^BG bandera! ¡Recupérala!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
@@ -4398,6 +4398,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1No puedes unirte al juego en este momento.\n"
+"Esta partida está limitada a ^F2%s^BG jugadores."
 
 #: qcsrc/common/notifications/all.inc:712
 msgid "^BGYou picked up the ball"
@@ -6624,11 +6626,11 @@ msgstr "Panel de Físicas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Mensajes de recolección:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Mostrar reloj:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6647,15 +6649,15 @@ msgstr "Siempre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "Observando"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Escala de tamaño del icono:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Panel de Recolección:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -7518,9 +7520,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
-"Sin objetos Xonotic - en vez de recoger objetos, todos juegan con la misma "
-"arma. Después de algún tiempo, comienza una cuenta regresiva, después todos "
-"juegan con otra arma."
+"Sin objetos de Xonotic - en vez de recoger objetos, todos juegan con la "
+"misma arma. Después de algún tiempo, comienza una cuenta regresiva, después "
+"todos juegan con otra arma."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:251
 msgid "with blaster"
