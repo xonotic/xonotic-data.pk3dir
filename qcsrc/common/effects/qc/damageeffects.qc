@@ -13,7 +13,12 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
-	WriteVector(MSG_ENTITY, this.velocity);
+	// we can't send the force vector compressed with compressShortVector as it's too inaccurate
+	// it would break decals when hit angle on a surface is small
+	// (the traceline performed by the client to spawn a decal wouldn't hit the surface at all)
+	WriteShort(MSG_ENTITY, floor(this.velocity.x / 4));
+	WriteShort(MSG_ENTITY, floor(this.velocity.y / 4));
+	WriteShort(MSG_ENTITY, floor(this.velocity.z / 4));
 	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
@@ -191,7 +196,10 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
-	force = ReadVector();
+	force.x = ReadShort() * 4 + 2;
+	force.y = ReadShort() * 4 + 2;
+	force.z = ReadShort() * 4 + 2;
+
 	species = ReadByte();
 
 	return = true;
