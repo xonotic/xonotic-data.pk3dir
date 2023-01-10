@@ -791,7 +791,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^pickups"
-msgstr "collectés"
+msgstr "ramassés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Ping time"
@@ -6629,11 +6629,11 @@ msgstr "Effets Physiques"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Messages de collecte :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Afficher le minuteur :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6652,15 +6652,15 @@ msgstr "Toujours"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "En spectateur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Échelle des icônes :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Collecte"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -6874,7 +6874,7 @@ msgstr "Strafe"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"
-msgstr "Chronomètre :"
+msgstr "Minuteur :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
@@ -6882,7 +6882,7 @@ msgstr "Afficher le temps écoulé"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 msgid "Secondary timer:"
-msgstr "Chronomètre secondaire :"
+msgstr "Minuteur secondaire :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
 msgid "Swapped"
@@ -6890,7 +6890,7 @@ msgstr "Échangé"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
-msgstr "Chronomètre"
+msgstr "Minuteur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
@@ -7483,7 +7483,7 @@ msgid ""
 "without weapon pickups"
 msgstr ""
 "Les joueurs se voient attribuer un ensemble d'armes ainsi que des munitions "
-"illimitées, il n'y a aucune arme à collecter."
+"illimitées, il n'y a aucune arme à ramasser."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:206
 msgid "Weapon arenas:"
@@ -9281,7 +9281,7 @@ msgstr "Toujours basculer vers une arme disponible"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
 msgid "Auto switch weapons on pickup"
-msgstr "Changer d'arme automatiquement"
+msgstr "Changer d'arme automatiquement au ramassage"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid ""
