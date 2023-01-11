@@ -99,6 +99,7 @@ void HUD_StrafeHUD()
 
         // persistent
         static float onground_lasttime       = 0;
+        static bool  onslick_last            = false;
         static float turn_lasttime           = 0;
         static bool  turn                    = false;
         static float turnangle;
@@ -106,15 +107,14 @@ void HUD_StrafeHUD()
         static int   dt_time                 = 0;
         static float dt_sum                  = 0;
         static float dt                      = 0;
-        static bool  onslick_last            = false;
 
         // physics
         int    keys                          = STAT(PRESSED_KEYS);
         bool   jumpheld                      = islocal ? (PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) : (keys & KEY_JUMP); // doesn't work in spectator mode if spectated player uses +jetpack
-        bool   onground                      = (islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR)) && !jumpheld; // if jump is held assume we are in air
-        bool   onslick                       = false;
-        bool   real_onground                 = onground; // doesn't get changed by ground timeout
-        bool   real_onslick                  = onslick; // doesn't get changed by ground timeout
+        bool   real_onground                 = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR); // doesn't get changed by ground timeout and isn't affected by jump input
+        bool   real_onslick                  = false; // doesn't get changed by ground timeout
+        bool   onground                      = real_onground && !jumpheld; // if jump is held assume we are in air
+        bool   onslick                       = real_onslick;
         bool   onground_expired;
         bool   strafekeys;
         bool   swimming                      = strafe_waterlevel >= WATERLEVEL_SWIMMING; // the hud will not work well while swimming
@@ -152,10 +152,11 @@ void HUD_StrafeHUD()
         vector currentangle_color            = autocvar_hud_panel_strafehud_angle_neutral_color;
         float  currentangle_offset;
         vector currentangle_size;
+        float  real_bestangle; // positive with no wishangle offset
+        float  real_prebestangle;  // positive with no wishangle offset
         float  bestangle;
         float  prebestangle;
         float  odd_bestangle;
-        bool   bestangle_anywhere            = false;
         float  bestangle_offset;
         float  switch_bestangle_offset;
         bool   odd_angles                    = false;
@@ -544,8 +545,9 @@ void HUD_StrafeHUD()
         }
 
         // best angle to strafe at
-        bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
-        prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG : 0); // in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
+        // in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
+        real_bestangle = bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
+        real_prebestangle = prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG : 0);
         if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
         {
             bestangle *= -1;
@@ -780,66 +782,40 @@ void HUD_StrafeHUD()
             drawfill(panel_pos + eX * (indicator_direction ? 0 : panel_size.x - direction_size_horizontal.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
 
-        if(strafespeed <= bestspeed && !immobile)
-        {
-            bestangle_anywhere = true; // moving forward should suffice to gain speed
-        }
-
         // draw the actual strafe angle
-        if(!bestangle_anywhere && !immobile) // player gains speed with strafing
-        {
-            if((direction == STRAFEHUD_DIRECTION_RIGHT && (angle >= bestangle || angle <= -(bestangle + wishangle*2))) ||
-               (direction == STRAFEHUD_DIRECTION_LEFT && (angle <= bestangle || angle >= -(bestangle + wishangle*2))))
-            currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-        }
+        if(!immobile) {
+            float moveangle = fabs(angle + wishangle);
+            float strafe_ratio = 0;
 
-        if(fabs(angle + wishangle) > 90) // player is overturning
-        {
-            currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
-        }
-        else if(bestangle_anywhere) // player gains speed without strafing
-        {
-            currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+            // player is overturning
+            if(moveangle >= 90)
+            {
+                currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
+                strafe_ratio = (moveangle - 90) / 90;
+                if(strafe_ratio > 1) strafe_ratio = 2 - strafe_ratio;
+                strafe_ratio *= -1;
+            }
+            // player gains speed by strafing
+            else if(moveangle >= real_bestangle)
+            {
+                currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+                strafe_ratio = (90 - moveangle) / (90 - real_bestangle);
+            }
+            else if(moveangle >= real_prebestangle)
+            {
+                currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+                strafe_ratio = (moveangle - real_prebestangle) / (real_bestangle - real_prebestangle);
+            }
+
+            if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
+            {
+                currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, currentangle_color, fabs(strafe_ratio));
+            }
         }
 
         if(mode == STRAFEHUD_MODE_VIEW_CENTERED || straight_overturn)
         {
             currentangle_offset = panel_size.x/2;
-        }
-
-        if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT && !immobile)
-        {
-            float moveangle = angle + wishangle;
-            float strafeangle = bestangle + wishangle;
-            if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
-            {
-                strafeangle *= -1;
-            }
-            float strafe_ratio = 0;
-            if(fabs(moveangle) > 90)
-            {
-                strafe_ratio = -((fabs(moveangle) - 90) / 90);
-                if(strafe_ratio < -1) strafe_ratio = -2 - strafe_ratio;
-            }
-            else
-            {
-                if(moveangle >= strafeangle)
-                {
-                    strafe_ratio = 1 - (moveangle - strafeangle) / (90 - strafeangle);
-                }
-                else if(moveangle <= -strafeangle)
-                {
-                    strafe_ratio = 1 - (moveangle + strafeangle) / (-90 + strafeangle);
-                }
-            }
-            if(strafe_ratio < 0)
-            {
-                currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, autocvar_hud_panel_strafehud_angle_overturn_color, -strafe_ratio);
-            }
-            else
-            {
-                currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, autocvar_hud_panel_strafehud_angle_accel_color, strafe_ratio);
-            }
         }
 
         float angleheight_offset = currentangle_size.y;
