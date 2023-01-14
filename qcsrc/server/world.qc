@@ -2267,7 +2267,10 @@ void DropToFloor_Handler(entity this)
 
 	// NOTE: SV_NudgeOutOfSolid is used in the engine here
 	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		_Movetype_UnstickEntity(this);
 		move_out_of_solid(this);
+	}
 
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
 
@@ -2291,7 +2294,10 @@ void DropToFloor_Handler(entity this)
 			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
 			setorigin(this, trace_endpos);
 			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				_Movetype_UnstickEntity(this);
 				move_out_of_solid(this);
+			}
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
