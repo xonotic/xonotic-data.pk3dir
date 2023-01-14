@@ -638,7 +638,10 @@ void HUD_StrafeHUD()
         {
             // calculate various zones of the strafe-o-meter
             accelzone_width = (90 - fabs(bestangle + wishangle))/hudangle * panel_size.x;
-            preaccelzone_width = (fabs(bestangle - prebestangle))/hudangle * panel_size.x;
+            if(autocvar_hud_panel_strafehud_bar_preaccel)
+                preaccelzone_width = (fabs(bestangle - prebestangle))/hudangle * panel_size.x;
+            else
+                preaccelzone_width = 0;
             overturn_offset = accelzone_width + preaccelzone_width;
             accelzone_right_offset = preaccelzone_width;
             accelzone_left_offset = overturn_offset + overturn_width;
@@ -669,11 +672,13 @@ void HUD_StrafeHUD()
 
             // draw left acceleration zone
             HUD_Panel_DrawStrafeHUD(accelzone_left_offset, accelzone_width, hidden_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT);
-            HUD_Panel_DrawStrafeHUD(preaccelzone_left_offset, preaccelzone_width, hidden_width, autocvar_hud_panel_strafehud_bar_preaccel_color, autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE);
+            if(autocvar_hud_panel_strafehud_bar_preaccel)
+                HUD_Panel_DrawStrafeHUD(preaccelzone_left_offset, preaccelzone_width, hidden_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT);
 
             // draw right acceleration zone
             HUD_Panel_DrawStrafeHUD(accelzone_right_offset, accelzone_width, hidden_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT);
-            HUD_Panel_DrawStrafeHUD(preaccelzone_right_offset, preaccelzone_width, hidden_width, autocvar_hud_panel_strafehud_bar_preaccel_color, autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE);
+            if(autocvar_hud_panel_strafehud_bar_preaccel)
+                HUD_Panel_DrawStrafeHUD(preaccelzone_right_offset, preaccelzone_width, hidden_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT);
 
             // draw overturn zone (technically incorrect, acceleration decreases at 90 degrees but speed loss happens a little bit after 90 degrees, however due to sv_airstopaccelerate that's hard to calculate)
             HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, hidden_width, autocvar_hud_panel_strafehud_bar_overturn_color, autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH);
@@ -803,7 +808,8 @@ void HUD_StrafeHUD()
             }
             else if(moveangle >= real_prebestangle)
             {
-                currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+                if(autocvar_hud_panel_strafehud_bar_preaccel)
+                    currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
                 strafe_ratio = (moveangle - real_prebestangle) / (real_bestangle - real_prebestangle);
             }
 
