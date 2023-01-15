@@ -878,20 +878,20 @@ void HUD_StrafeHUD()
 
         draw_beginBoldFont();
         // show speed when crossing the start trigger
-        if(autocvar_hud_panel_strafehud_startspeed_fade > 0)
+        if(autocvar_hud_panel_strafehud_startspeed_fade > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
         {
             static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
 
             if((race_nextcheckpoint == 1) || (race_checkpoint == 254 && race_nextcheckpoint == 255)) // check if the start trigger was hit (will also trigger if the finish trigger was hit if those have the same ID)
             {
-                if(starttime != race_checkpointtime)
+                if((race_checkpointtime > 0) && (starttime != race_checkpointtime))
                 {
                     starttime = race_checkpointtime;
                     startspeed = speed;
                 }
             }
 
-            if((starttime > 0) && ((time - starttime) <= autocvar_hud_panel_strafehud_startspeed_fade) && autocvar_hud_panel_strafehud_startspeed_size > 0)
+            if((starttime > 0) && ((time - starttime) <= autocvar_hud_panel_strafehud_startspeed_fade))
             {
                 float text_alpha = cos(((time - starttime) / autocvar_hud_panel_strafehud_startspeed_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
                 vector startspeed_size = panel_size;
@@ -914,6 +914,10 @@ void HUD_StrafeHUD()
 
                 string speed_unit = GetSpeedUnit(autocvar_hud_panel_strafehud_unit);
                 drawstring_aspect(panel_pos + eY * (panel_size.y + text_offset), strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            }
+            else
+            {
+                starttime = 0;
             }
         }
 
@@ -942,7 +946,7 @@ void HUD_StrafeHUD()
                 }
             }
 
-            if((jumptime > 0) && (time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade)
+            if((jumptime > 0) && ((time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade))
             {
                 float text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
                 vector jumpheight_size = panel_size;
@@ -965,6 +969,10 @@ void HUD_StrafeHUD()
 
                 string length_unit = GetLengthUnit(autocvar_hud_panel_strafehud_unit);
                 drawstring_aspect(panel_pos - eY * (jumpheight_size.y + text_offset), strcat(ftos_decimals(jumpheight, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            }
+            else
+            {
+                jumptime = 0;
             }
         }
         draw_endBoldFont();
