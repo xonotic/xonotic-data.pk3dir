@@ -10,12 +10,11 @@ AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "\"0\" = no styling, \"1\" = pr
 AUTOCVAR_SAVE(hud_panel_strafehud_unit, int, 1, "speed unit (1 = qu/s, 2 = m/s, 3 = km/h, 4 = mph, 5 = knots), length unit (1 = qu, 2 = m, 3 = km, 4 = mi, 5 = nmi)");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
 AUTOCVAR_SAVE(hud_panel_strafehud_uncapped, bool, false, "set to \"1\" to remove some safety restrictions, useful to set thinner indicator lines down to 1px or for trying out higher values for some performance degrading operations (warning: elements may turn invisible if too thin, other configurations may crash your game or look horribly ugly)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel, bool, true, "set to \"1\" to extend the acceleration zone by the strafe meter zone before full acceleration can be achieved");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_color, vector, '1 1 1', "color of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_alpha, float, 0.1, "opacity of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_color, vector, '0 1 0', "color of the strafe meter acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_alpha, float, 0.5, "opacity of the strafe meter acceleration zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_color, vector, '1 0.75 0', "color of the strafe meter zone before full acceleration can be achieved");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_alpha, float, 0.5, "opacity of the strafe meter zone before full acceleration can be achieved");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_color, vector, '1 0 1', "color of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_alpha, float, 0.5, "opacity of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_style, int, 0, "set the angle indicator style: 0 = none, 1 = solid line, 2 = dashed line");
