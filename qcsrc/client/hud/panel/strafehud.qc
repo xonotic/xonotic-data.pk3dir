@@ -634,8 +634,6 @@ void HUD_StrafeHUD()
         direction_size_horizontal.x = panel_size.x * min(autocvar_hud_panel_strafehud_direction_length, .5);
         direction_size_horizontal.y = direction_size_vertical.x;
         direction_size_horizontal.z = 0;
-        // overturn
-        overturn_width = 180/hudangle * panel_size.x;
 
         // the neutral zone fills the whole strafe bar
         if(immobile)
@@ -658,18 +656,33 @@ void HUD_StrafeHUD()
         else
         {
             // calculate various zones of the strafe-o-meter
-            accelzone_width = (90 - fabs(bestangle + wishangle))/hudangle * panel_size.x;
             if(autocvar_hud_panel_strafehud_bar_preaccel)
                 preaccelzone_width = (fabs(bestangle - prebestangle))/hudangle * panel_size.x;
             else
                 preaccelzone_width = 0;
-            overturn_offset = accelzone_width + preaccelzone_width;
-            accelzone_right_offset = preaccelzone_width;
-            accelzone_left_offset = overturn_offset + overturn_width;
-            preaccelzone_right_offset = 0;
-            preaccelzone_left_offset = accelzone_left_offset + accelzone_width;
+            accelzone_width = (90 - fabs(bestangle + wishangle))/hudangle * panel_size.x;
+            overturn_width = 180/hudangle * panel_size.x;
             neutral_width = 360/hudangle * panel_size.x - accelzone_width*2 - preaccelzone_width*2 - overturn_width;
-            neutral_offset = direction == STRAFEHUD_DIRECTION_LEFT ? preaccelzone_left_offset + preaccelzone_width : -neutral_width;
+
+            {
+                float current_offset = 0;
+                preaccelzone_right_offset = current_offset;
+                current_offset += preaccelzone_width;
+
+                accelzone_right_offset = current_offset;
+                current_offset += accelzone_width;
+
+                overturn_offset = current_offset;
+                current_offset += overturn_width;
+
+                accelzone_left_offset = current_offset;
+                current_offset += accelzone_width;
+
+                preaccelzone_left_offset = current_offset;
+                current_offset += preaccelzone_width;
+
+                neutral_offset = direction == STRAFEHUD_DIRECTION_LEFT ? current_offset : -neutral_width; // the wrapping code may struggle if we always append it on the right side
+            }
 
             // shift hud if operating in view angle centered mode
             if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
@@ -1176,6 +1189,8 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 // draw the strafe arrows (inspired by drawspritearrow() in common/mutators/mutator/waypoints/waypointsprites.qc)
 void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped)
 {
+    origin = HUD_Shift(origin);
+    size = HUD_ScaleX(size);
     if(flipped) origin -= size*eY;
     R_BeginPolygon("", DRAWFLAG_NORMAL, true);
     R_PolygonVertex(origin + (flipped ? size*eY : '0 0 0')          , '0 0 0', color, alpha);
