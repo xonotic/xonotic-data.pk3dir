@@ -54,6 +54,14 @@ AUTOCVAR_SAVE(hud_panel_strafehud_timeout_ground, float, 0.1, "time (in seconds)
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_turn, float, 0.1, "time (in seconds) after releasing the strafe keys before changing mode (visually more consistent hud while switching between left/right strafe turning)");
 AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_angle, float, 0.01, "how many degrees from 0° to 180° the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 AUTOCVAR_SAVE(hud_panel_strafehud_fps_update, float, 0.5, "update interval (in seconds) of the frametime to calculate the optimal angle, smaller values may cause flickering");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar, bool, false, "set to \"1\" to enable the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_audio, string, "misc/talk", "audio to play for sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_start, float, 0.5, "how optimal from 0 to 1 your strafing angle has to be for the strafe sonar to activate");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval, float, 0.333333, "strafe sonar sound interval in seconds");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_start, float, 0.333333, "sound volume of the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_range, float, 0.666666, "dynamic volume range of the strafe sonar as you approach the optimal angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed of the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playback speed range of the strafe sonar as you approach the optimal angle");
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
 vector StrafeHUD_mixColors(vector, vector, float);
