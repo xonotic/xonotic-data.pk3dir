@@ -58,6 +58,14 @@ float autocvar_hud_panel_strafehud_timeout_ground = 0.1;
 float autocvar_hud_panel_strafehud_timeout_turn = 0.1;
 float autocvar_hud_panel_strafehud_antiflicker_angle = 0.01;
 float autocvar_hud_panel_strafehud_fps_update = 0.5;
+bool autocvar_hud_panel_strafehud_sonar = false;
+string autocvar_hud_panel_strafehud_sonar_audio = "misc/talk";
+float autocvar_hud_panel_strafehud_sonar_start = 0.5;
+float autocvar_hud_panel_strafehud_sonar_interval = 0.333333;
+float autocvar_hud_panel_strafehud_sonar_volume_start = 0.333333;
+float autocvar_hud_panel_strafehud_sonar_volume_range = 0.666666;
+float autocvar_hud_panel_strafehud_sonar_pitch_start = 0.9;
+float autocvar_hud_panel_strafehud_sonar_pitch_range = 0.1;
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
 vector StrafeHUD_mixColors(vector, vector, float);

@@ -872,6 +872,30 @@ void HUD_StrafeHUD()
 				DRAWFLAG_NORMAL);
 		}
 
+		string newsound = autocvar_hud_panel_strafehud_sonar_audio;
+		static string cursound = string_null;
+		static string sonarsound = string_null;
+		if(newsound != cursound)
+		{
+			if(cursound != "") strunzone(cursound);
+
+			if(newsound != "") cursound = strzone(newsound);
+			else cursound = string_null;
+
+			if(sonarsound != "") strunzone(sonarsound);
+			sonarsound = strzone(_Sound_fixpath(newsound));
+
+			if(sonarsound != "")
+			{
+				precache_sound(sonarsound);
+			}
+			else
+			{
+				strunzone(sonarsound);
+				sonarsound = string_null;
+			}
+		}
+
 		// draw the actual strafe angle
 		if(!immobile)
 		{
@@ -901,6 +925,33 @@ void HUD_StrafeHUD()
 
 			if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
 				currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, currentangle_color, fabs(strafe_ratio));
+
+			// reuse strafe ratio for strafe sonar
+			static float sonar_time = 0;
+			bool sonar_ready = ((time - sonar_time) >= autocvar_hud_panel_strafehud_sonar_interval) || (sonar_time == 0);
+			if(autocvar_hud_panel_strafehud_sonar && sonar_ready)
+			{
+				float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
+				if(strafe_ratio >= sonar_start)
+				{
+					sonar_time = time;
+
+					float sonar_ratio = strafe_ratio - sonar_start;
+					if(sonar_start != 1)
+						sonar_ratio /= 1 - sonar_start;
+					else
+						sonar_ratio = 1;
+
+					float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
+					sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio;
+
+					float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
+					sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio;
+
+					if(sonar_volume > 0)
+						sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
+				}
+			}
 		}
 
 		if(mode == STRAFEHUD_MODE_VIEW_CENTERED || straight_overturn)
