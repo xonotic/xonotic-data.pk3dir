@@ -1005,9 +1005,9 @@ void HUD_StrafeHUD()
             else if(strafeplayer.origin.z > height_max)
             {
                 height_max = strafeplayer.origin.z;
-                float jumpheight_new = (height_max - height_min) * length_conversion_factor;
+                float jumpheight_new = height_max - height_min;
 
-                if(jumpheight_new > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
+                if((jumpheight_new * length_conversion_factor) > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
                 {
                     jumpheight = jumpheight_new;
                     jumptime = time;
@@ -1036,7 +1036,7 @@ void HUD_StrafeHUD()
                 }
 
                 string length_unit = GetLengthUnit(autocvar_hud_panel_strafehud_unit);
-                drawstring_aspect(panel_pos - eY * (jumpheight_size.y + text_offset), strcat(ftos_decimals(jumpheight, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                drawstring_aspect(panel_pos - eY * (jumpheight_size.y + text_offset), strcat(ftos_decimals(jumpheight * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
             else
             {
