@@ -52,15 +52,15 @@ test_sv_game:
     - make qc || exit 1
 
     - mkdir -p data/maps
-    - wget -nv -O data/maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - wget -nv -O data/maps/_init.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
     - while read LINE; do
         echo $LINE;
         [ "$LINE" = "All tests OK" ] && PASS=1;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +wait +quit)
+      done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
     - test "$PASS" = "1" || { echo 'sv_cmd runtest failed!'; exit 1; }
 
-    - ${ENGINE} +map gitlab-ci +sv_cmd dumpnotifs +wait +quit
+    - ${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
     - diff notifications.cfg data/data/notifications_dump.cfg ||
         { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
@@ -69,7 +69,7 @@ test_sv_game:
     - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-    - EXPECT=4c834aa9b5950ffe25deec1880f21641
+    - EXPECT=8fb740a3cb3754ca7b9295ddc5c911b5
     - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
       | tee /dev/stderr
       | sed -e 's,^\[[^]]*\] ,,'

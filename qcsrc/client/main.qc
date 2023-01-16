@@ -551,7 +551,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			Scoreboard_UI_Enable(0);
 			return true;
 		}
-		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		if (autocvar_menu_gamemenu && !isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
 			return true;
@@ -682,6 +682,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{

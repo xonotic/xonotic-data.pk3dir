@@ -20,6 +20,7 @@ bool autocvar_developer_csqcentities;
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
+bool autocvar_menu_gamemenu = true;
 
 // Map coordinate base calculations need these
 vector mi_center;
@@ -97,6 +98,7 @@ vector view_origin, view_forward, view_right, view_up;
 
 bool button_zoom;
 bool spectatorbutton_zoom;
+bool observe_blocked;
 bool button_attack2;
 
 float current_viewzoom;
