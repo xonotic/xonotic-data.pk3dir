@@ -2257,11 +2257,18 @@ void InitializeEntitiesRun()
 // ported from VM_SV_droptofloor TODO: make a common function for the client-side?
 void DropToFloor_Handler(entity this)
 {
+	vector org_save = this.origin;
+	WITHSELF(this, builtin_droptofloor());
+	if (!cvar("qc_droptofloor"))
+		return;
+
 	if(!this || wasfreed(this))
 	{
 		// no modifying free entities
 		return;
 	}
+	vector engine_org = this.origin;
+	setorigin(this, org_save);
 
 	vector end = this.origin - '0 0 256';
 
@@ -2322,6 +2329,12 @@ void DropToFloor_Handler(entity this)
 		}
 	}
 	this.dropped_origin = this.origin;
+	if(vlen(engine_org - this.origin) > cvar("qc_droptofloor"))
+	{
+		LOG_INFOF("^1 ent %d:   ^2dist %f\n", etof(this), vlen(engine_org - this.origin));
+		LOG_INFOF("^3  engine origin = %v\n", engine_org);
+		LOG_INFOF("^4    (qc) origin = %v\n", this.origin);
+	}
 }
 
 void droptofloor(entity this)
