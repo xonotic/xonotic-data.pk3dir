@@ -66,7 +66,7 @@ SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
 // Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_Q3_COND(weapon_nailgun, ammo_nails, cvar("sv_mapformat_is_quake3"), WEP_CRYLINK, WEP_ELECTRO)
+SPAWNFUNC_Q3_COND(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3, WEP_CRYLINK, WEP_ELECTRO)
 
 // LG -> Electro
 SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)

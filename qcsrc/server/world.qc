@@ -2263,7 +2263,13 @@ void DropToFloor_Handler(entity this)
 		return;
 	}
 
-	vector end = this.origin - '0 0 256';
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
 
 	// NOTE: SV_NudgeOutOfSolid is used in the engine here
 	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
