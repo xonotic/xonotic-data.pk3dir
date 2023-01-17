@@ -768,28 +768,21 @@ void HUD_StrafeHUD()
             // traceline into every direction
             trace_dphitq3surfaceflags = 0;
             vector traceorigin = strafeplayer.origin + eZ * strafeplayer.mins.z;
-            for(float i = 0; i < 360 && !slickdetected; i += slicksteps)
+            for(float i = 0; i < 90 && !slickdetected; i += slicksteps)
             {
                 vector slickoffset;
                 float slickrotate;
                 slickoffset.z = -cos(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
                 slickrotate = sin(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
-                if(i != 0 && i != 180)
-                {
-                    for(float j = 0; j < 180 && !slickdetected; j += slicksteps)
-                    {
-                        slickoffset.x = sin(j * DEG2RAD) * slickrotate;
-                        slickoffset.y = cos(j * DEG2RAD) * slickrotate;
 
-                        traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, strafeplayer);
-                        if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1) || trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) slickdetected = true;
-                    }
-                }
-                else
+                for(float j = 0; j < 360 && !slickdetected; j += slicksteps)
                 {
-                    slickoffset.x = slickoffset.y = 0;
+                    slickoffset.x = sin(j * DEG2RAD) * slickrotate;
+                    slickoffset.y = cos(j * DEG2RAD) * slickrotate;
+
                     traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, strafeplayer);
                     if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1) || trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) slickdetected = true;
+                    if(i == 0) break;
                 }
             }
 
