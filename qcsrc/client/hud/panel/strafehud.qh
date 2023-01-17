@@ -5,17 +5,16 @@ AUTOCVAR_SAVE(hud_panel_strafehud, int, 3, "enable this panel, 1 = show if not o
 AUTOCVAR_SAVE(_hud_panel_strafehud_demo, bool, false, "strafehud changes angle during configure");
 AUTOCVAR_SAVE(hud_panel_strafehud_dynamichud, bool, true, "apply the dynamic hud effects to this panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at \"0\" = view angle, \"1\" = velocity angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 0, "the angle range up to 360 degrees displayed on the strafehud, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
+AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
 AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "\"0\" = no styling, \"1\" = progress bar style for the strafe bar, \"2\" = gradient for the strafe bar");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit, int, 1, "speed unit (1 = qu/s, 2 = m/s, 3 = km/h, 4 = mph, 5 = knots), length unit (1 = qu, 2 = m, 3 = km, 4 = mi, 5 = nmi)");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
 AUTOCVAR_SAVE(hud_panel_strafehud_uncapped, bool, false, "set to \"1\" to remove some safety restrictions, useful to set thinner indicator lines down to 1px or for trying out higher values for some performance degrading operations (warning: elements may turn invisible if too thin, other configurations may crash your game or look horribly ugly)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel, bool, true, "set to \"1\" to extend the acceleration zone by the strafe meter zone before full acceleration can be achieved");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_color, vector, '1 1 1', "color of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_alpha, float, 0.1, "opacity of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_color, vector, '0 1 0', "color of the strafe meter acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_alpha, float, 0.5, "opacity of the strafe meter acceleration zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_color, vector, '1 0.75 0', "color of the strafe meter zone before full acceleration can be achieved");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_alpha, float, 0.5, "opacity of the strafe meter zone before full acceleration can be achieved");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_color, vector, '1 0 1', "color of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_alpha, float, 0.5, "opacity of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_style, int, 0, "set the angle indicator style: 0 = none, 1 = solid line, 2 = dashed line");
@@ -55,6 +54,14 @@ AUTOCVAR_SAVE(hud_panel_strafehud_timeout_ground, float, 0.1, "time (in seconds)
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_turn, float, 0.1, "time (in seconds) after releasing the strafe keys before changing mode (visually more consistent hud while switching between left/right strafe turning)");
 AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_angle, float, 0.01, "how many degrees from 0° to 180° the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 AUTOCVAR_SAVE(hud_panel_strafehud_fps_update, float, 0.5, "update interval (in seconds) of the frametime to calculate the optimal angle, smaller values may cause flickering");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar, bool, false, "set to \"1\" to enable the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_audio, string, "misc/talk", "audio to play for sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_start, float, 0.5, "how optimal from 0 to 1 your strafing angle has to be for the strafe sonar to activate");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval, float, 0.333333, "strafe sonar sound interval in seconds");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_start, float, 0.333333, "sound volume of the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_range, float, 0.666666, "dynamic volume range of the strafe sonar as you approach the optimal angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed of the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playback speed range of the strafe sonar as you approach the optimal angle");
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
 vector StrafeHUD_mixColors(vector, vector, float);
@@ -62,6 +69,7 @@ void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, 
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
+bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
@@ -82,3 +90,10 @@ const int STRAFEHUD_GRADIENT_NONE = 0;
 const int STRAFEHUD_GRADIENT_LEFT = 1;
 const int STRAFEHUD_GRADIENT_RIGHT = 2;
 const int STRAFEHUD_GRADIENT_BOTH = 3;
+
+const int STRAFEHUD_INDICATOR_NONE = 0;
+const int STRAFEHUD_INDICATOR_SOLID = 1;
+const int STRAFEHUD_INDICATOR_DASHED = 2;
+
+const int STRAFEHUD_TEXT_TOP = 0;
+const int STRAFEHUD_TEXT_BOTTOM = 1;
