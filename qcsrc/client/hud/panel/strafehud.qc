@@ -1171,7 +1171,7 @@ void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float al
 // draw a fading text indicator above or below the strafe meter, return true if something was displayed
 bool StrafeHUD_drawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, float offset, int position)
 {
-    if((height <= 0) || (lasttime <= 0) || ((time - lasttime) >= fadetime))
+    if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
         return false;
 
     float alpha = cos(((time - lasttime) / fadetime) * 90 * DEG2RAD); // fade non-linear like the physics panel does
