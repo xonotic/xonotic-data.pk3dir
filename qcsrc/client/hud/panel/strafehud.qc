@@ -110,10 +110,10 @@ void HUD_StrafeHUD()
 
         // physics
         int    keys                          = STAT(PRESSED_KEYS);
-        bool   jumpheld                      = islocal ? (PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) : (keys & KEY_JUMP); // doesn't work in spectator mode if spectated player uses +jetpack
+        bool   jumpheld                      = (islocal ? ((PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer))) && !PHYS_CL_TRACK_CANJUMP(strafeplayer) : (keys & KEY_JUMP)) && !PHYS_TRACK_CANJUMP(strafeplayer); // try to ignore if track_canjump is enabled, doesn't work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
         bool   real_onground                 = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR); // doesn't get changed by ground timeout and isn't affected by jump input
         bool   real_onslick                  = false; // doesn't get changed by ground timeout
-        bool   onground                      = real_onground && !jumpheld; // if jump is held assume we are in air
+        bool   onground                      = real_onground && !jumpheld; // if jump is held assume we are in air, avoids flickering of the hud when hitting the ground
         bool   onslick                       = real_onslick;
         bool   onground_expired;
         bool   strafekeys;
