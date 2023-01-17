@@ -197,6 +197,8 @@ void HUD_StrafeHUD()
         vector direction_size_horizontal;
         float  range_minangle;
         float  arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0); // there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
+        float  text_offset_top = 0;
+        float  text_offset_bottom = 0;
 
         if(onground)
         {
@@ -800,6 +802,8 @@ void HUD_StrafeHUD()
                 drawfill(panel_pos - eY * slickdetector_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 // bottom horizontal line
                 drawfill(panel_pos + eY * panel_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+                text_offset_top = text_offset_bottom = slickdetector_height;
             }
         }
 
@@ -940,6 +944,12 @@ void HUD_StrafeHUD()
                 angleheight_offset = panel_size.y;
         }
 
+        float angle_offset_top = 0, angle_offset_bottom = 0;
+
+        // offset text if any angle indicator is drawn
+        if((autocvar_hud_panel_strafehud_angle_alpha > 0) || (autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha > 0))
+            angle_offset_top = angle_offset_bottom = (angleheight_offset - panel_size.y) / 2; // offset text by amount the angle indicator extrudes from the strafehud bar
+
         if(autocvar_hud_panel_strafehud_angle_arrow > 0)
         {
             if(arrow_size > 0)
@@ -948,18 +958,26 @@ void HUD_StrafeHUD()
                 {
                     if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true);
                     StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true);
+
+                    angle_offset_top += arrow_size; // further offset the top text offset if the top arrow is drawn
                 }
                 if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
                 {
                     if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false);
                     StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false);
+
+                    angle_offset_bottom += arrow_size; // further offset the bottom text offset if the bottom arrow is drawn
                 }
             }
         }
 
+        // make sure text doesn't draw inside the strafehud bar
+        text_offset_top = max(angle_offset_top, text_offset_top);
+        text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
+
         draw_beginBoldFont();
+
         // show speed when crossing the start trigger
-        if(autocvar_hud_panel_strafehud_startspeed_fade > 0 && autocvar_hud_panel_strafehud_startspeed_size > 0)
         {
             static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
 
@@ -972,40 +990,18 @@ void HUD_StrafeHUD()
                 }
             }
 
-            if((starttime > 0) && ((time - starttime) <= autocvar_hud_panel_strafehud_startspeed_fade))
-            {
-                float text_alpha = cos(((time - starttime) / autocvar_hud_panel_strafehud_startspeed_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
-                vector startspeed_size = panel_size;
-                startspeed_size.y = autocvar_hud_panel_strafehud_startspeed_size;
-                if(!autocvar_hud_panel_strafehud_uncapped)
-                    startspeed_size.y = min(startspeed_size.y, 10);
-                startspeed_size.y *= panel_size.y;
-                if(!autocvar_hud_panel_strafehud_uncapped)
-                    startspeed_size.y = max(startspeed_size.y, 1);
+            float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
+            string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
+            if(autocvar_hud_panel_strafehud_unit_show)
+                startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
 
-                float text_offset = 0;
-                if((autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0) || (autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha > 0))
-                {
-                    text_offset = (angleheight_offset - panel_size.y) / 2;
-                    if(arrow_size > 0 && autocvar_hud_panel_strafehud_angle_arrow >= 2)
-                        text_offset += arrow_size;
-                    // make sure text doesn't draw inside the strafehud bar
-                    text_offset = max(text_offset, 0);
-                }
-
-                string speed_unit = GetSpeedUnit(autocvar_hud_panel_strafehud_unit);
-                drawstring_aspect(panel_pos + eY * (panel_size.y + text_offset), strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            }
-            else
-            {
-                starttime = 0;
-            }
+            if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
+                text_offset_bottom += startspeed_height;
         }
 
         // show height achieved by a single jump
         // FIXME: checking z position differences is unreliable (warpzones, teleporter, kill, etc) but using velocity to calculate jump height would be
         //        inaccurate in hud code (possibly different tick rate than physics, doesn't run when hud isn't drawn, rounding errors)
-        if(autocvar_hud_panel_strafehud_jumpheight_fade > 0 && autocvar_hud_panel_strafehud_jumpheight_size > 0)
         {
             static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
             static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
@@ -1027,35 +1023,15 @@ void HUD_StrafeHUD()
                 }
             }
 
-            if((jumptime > 0) && ((time - jumptime) <= autocvar_hud_panel_strafehud_jumpheight_fade))
-            {
-                float text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
-                vector jumpheight_size = panel_size;
-                jumpheight_size.y = autocvar_hud_panel_strafehud_jumpheight_size;
-                if(!autocvar_hud_panel_strafehud_uncapped)
-                    jumpheight_size.y = min(jumpheight_size.y, 10);
-                jumpheight_size.y *= panel_size.y;
-                if(!autocvar_hud_panel_strafehud_uncapped)
-                    jumpheight_size.y = max(jumpheight_size.y, 1);
+            float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
+            string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
+            if(autocvar_hud_panel_strafehud_unit_show)
+                jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
 
-                float text_offset = 0;
-                if((autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0) || (autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha > 0))
-                {
-                    text_offset = (angleheight_offset - panel_size.y) / 2;
-                    if(arrow_size > 0 && autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
-                        text_offset += arrow_size;
-                    // make sure text doesn't draw inside the strafehud bar
-                    text_offset = max(text_offset, 0);
-                }
-
-                string length_unit = GetLengthUnit(autocvar_hud_panel_strafehud_unit);
-                drawstring_aspect(panel_pos - eY * (jumpheight_size.y + text_offset), strcat(ftos_decimals(jumpheight * length_conversion_factor, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            }
-            else
-            {
-                jumptime = 0;
-            }
+            if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
+                text_offset_top += jumpheight_height;
         }
+
         draw_endBoldFont();
     }
     hud_lasttime = time;
@@ -1197,6 +1173,30 @@ void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float al
     R_PolygonVertex(origin + (flipped ? '0 0 0' : size*eY) - size*eX, '0 0 0', color, alpha);
     R_PolygonVertex(origin + (flipped ? '0 0 0' : size*eY) + size*eX, '0 0 0', color, alpha);
     R_EndPolygon();
+}
+
+// draw a fading text indicator above or below the strafe meter, return true if something was displayed
+bool StrafeHUD_drawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, float offset, int position)
+{
+    if((height <= 0) || (lasttime <= 0) || ((time - lasttime) >= fadetime))
+        return false;
+
+    float alpha = cos(((time - lasttime) / fadetime) * 90 * DEG2RAD); // fade non-linear like the physics panel does
+    vector size = panel_size;
+    size.y = height;
+
+    switch(position) {
+        case STRAFEHUD_TEXT_TOP:
+            offset += size.y;
+            offset *= -1;
+            break;
+        case STRAFEHUD_TEXT_BOTTOM:
+            offset += panel_size.y;
+            break;
+    }
+
+    drawstring_aspect(panel_pos + eY * offset, text, size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+    return true;
 }
 
 // length unit conversion (km and miles are only included to match the GetSpeedUnit* functions)

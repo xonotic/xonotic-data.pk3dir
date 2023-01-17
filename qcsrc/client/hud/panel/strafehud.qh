@@ -69,6 +69,7 @@ void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, 
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
+bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
@@ -93,3 +94,6 @@ const int STRAFEHUD_GRADIENT_BOTH = 3;
 const int STRAFEHUD_INDICATOR_NONE = 0;
 const int STRAFEHUD_INDICATOR_SOLID = 1;
 const int STRAFEHUD_INDICATOR_DASHED = 2;
+
+const int STRAFEHUD_TEXT_TOP = 0;
+const int STRAFEHUD_TEXT_BOTTOM = 1;
