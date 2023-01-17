@@ -22,6 +22,7 @@
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
@@ -303,6 +304,7 @@ void cvar_changes_init()
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_q3compat");
 		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
@@ -313,6 +315,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
+		BADCVAR("sv_termsofservice_url");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
@@ -466,7 +469,6 @@ void cvar_changes_init()
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
-		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
@@ -506,7 +508,7 @@ void cvar_changes_init()
 		BADVALUE("sys_ticrate", "0.0333333");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
-		BADPREFIX("g_warmup_");
+		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
@@ -589,15 +591,17 @@ spawnfunc(__init_dedicated_server)
 
 	e = new(info_player_deathmatch);  // safeguard against player joining
 
-    // assign reflectively to avoid "assignment to world" warning
-    for (int i = 0, n = numentityfields(); i < n; ++i) {
-        string k = entityfieldname(i);
-        if (k == "classname") {
-            // safeguard against various stuff ;)
-            putentityfieldstring(i, this, "worldspawn");
-            break;
-        }
-    }
+	// assign reflectively to avoid "assignment to world" warning
+	for (int i = 0, n = numentityfields(); i < n; ++i)
+	{
+		string k = entityfieldname(i);
+		if (k == "classname")
+		{
+			// safeguard against various stuff ;)
+			putentityfieldstring(i, this, "worldspawn");
+			break;
+		}
+	}
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -624,8 +628,42 @@ STATIC_INIT_EARLY(maxclients)
 
 void GameplayMode_DelayedInit(entity this)
 {
+	// at this stage team entities are spawned, teamplay contains the number of them
+
 	if(!scores_initialized)
 		ScoreRules_generic();
+
+	if (warmup_stage >= 0 && autocvar_g_maxplayers >= 0)
+		return;
+	if (!g_duel)
+		MapReadSizes(mapname);
+
+	if (autocvar_g_maxplayers < 0 && teamplay)
+	{
+		// automatic maxplayers should be a multiple of team count
+		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+			map_maxplayers = maxclients; // unlimited, but may need rounding
+		int d = map_maxplayers % AVAILABLE_TEAMS;
+		int u = AVAILABLE_TEAMS - d;
+		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+	}
+
+	if (warmup_stage < 0)
+	{
+		int m = GetPlayerLimit();
+		if (m <= 0) m = maxclients;
+		map_minplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_minplayers, m);
+		if (teamplay)
+		{
+			// automatic minplayers should be a multiple of team count
+			int d = map_minplayers % AVAILABLE_TEAMS;
+			int u = AVAILABLE_TEAMS - d;
+			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+		}
+		warmup_limit = -1;
+	}
+	else
+		map_minplayers = 0; // don't display a minimum if it's not used
 }
 
 void InitGameplayMode()
@@ -635,12 +673,15 @@ void InitGameplayMode()
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
 	// assign reflectively to avoid "assignment to world" warning
-	int done = 0; for (int i = 0, n = numentityfields(); i < n; ++i) {
-	    string k = entityfieldname(i); vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
-	    if (v) {
-            putentityfieldstring(i, world, sprintf("%v", v));
-            if (++done == 2) break;
-        }
+	for (int i = 0, done = 0, n = numentityfields(); i < n; ++i)
+	{
+		string k = entityfieldname(i);
+		vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
+		if (v)
+		{
+			putentityfieldstring(i, world, sprintf("%v", v));
+			if (++done == 2) break;
+		}
 	}
 	// currently, NetRadiant's limit is 131072 qu for each side
 	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
@@ -678,6 +719,7 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	cvar_set("_endmatch", "0");
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
 	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
@@ -824,7 +866,7 @@ spawnfunc(worldspawn)
 	GameRules_limit_fallbacks();
 
 	if(warmup_limit == 0)
-		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
+		warmup_limit = autocvar_timelimit * 60;
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -856,8 +898,22 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
-	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, _MapInfo_FindArenaFile(mapname, ".arena") != "");
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
+
+	// quake 3 music support
+	if(world.music || world.noise)
+	{
+		// prefer .music over .noise
+		string chosen_music;
+		if(world.music)
+			chosen_music = world.music;
+		else
+			chosen_music = world.noise;
+
+		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+		strcpy(clientstuff, newstuff);
+	}
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -994,59 +1050,59 @@ spawnfunc(light)
 
 bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos)
 {
-    float m = e.dphitcontentsmask;
-    e.dphitcontentsmask = goodcontents | badcontents;
+	float m = e.dphitcontentsmask;
+	e.dphitcontentsmask = goodcontents | badcontents;
 
-    vector org = boundmin;
-    vector delta = boundmax - boundmin;
+	vector org = boundmin;
+	vector delta = boundmax - boundmin;
 
-    vector start, end;
-    start = end = org;
-    int j; // used after the loop
-    for(j = 0; j < attempts; ++j)
-    {
-        start.x = org.x + random() * delta.x;
-        start.y = org.y + random() * delta.y;
-        start.z = org.z + random() * delta.z;
+	vector start, end;
+	start = end = org;
+	int j; // used after the loop
+	for(j = 0; j < attempts; ++j)
+	{
+		start.x = org.x + random() * delta.x;
+		start.y = org.y + random() * delta.y;
+		start.z = org.z + random() * delta.z;
 
-        // rule 1: start inside world bounds, and outside
-        // solid, and don't start from somewhere where you can
-        // fall down to evil
-        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        if (trace_startsolid)
-            continue;
-        if (trace_dphitcontents & badcontents)
-            continue;
-        if (trace_dphitq3surfaceflags & badsurfaceflags)
-            continue;
+		// rule 1: start inside world bounds, and outside
+		// solid, and don't start from somewhere where you can
+		// fall down to evil
+		tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
+		if (trace_fraction >= 1)
+			continue;
+		if (trace_startsolid)
+			continue;
+		if (trace_dphitcontents & badcontents)
+			continue;
+		if (trace_dphitq3surfaceflags & badsurfaceflags)
+			continue;
 
-        // rule 2: if we are too high, lower the point
-        if (trace_fraction * delta.z > maxaboveground)
-            start = trace_endpos + '0 0 1' * maxaboveground;
-        vector enddown = trace_endpos;
+		// rule 2: if we are too high, lower the point
+		if (trace_fraction * delta.z > maxaboveground)
+			start = trace_endpos + '0 0 1' * maxaboveground;
+		vector enddown = trace_endpos;
 
-        // rule 3: make sure we aren't outside the map. This only works
-        // for somewhat well formed maps. A good rule of thumb is that
-        // the map should have a convex outside hull.
-        // these can be traceLINES as we already verified the starting box
-        vector mstart = start + 0.5 * (e.mins + e.maxs);
-        traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
+		// rule 3: make sure we aren't outside the map. This only works
+		// for somewhat well formed maps. A good rule of thumb is that
+		// the map should have a convex outside hull.
+		// these can be traceLINES as we already verified the starting box
+		vector mstart = start + 0.5 * (e.mins + e.maxs);
+		traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
 
 		// rule 4: we must "see" some spawnpoint or item
 		entity sp = NULL;
@@ -1086,40 +1142,40 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 				continue;
 		}
 
-        // find a random vector to "look at"
-        end.x = org.x + random() * delta.x;
-        end.y = org.y + random() * delta.y;
-        end.z = org.z + random() * delta.z;
-        end = start + normalize(end - start) * vlen(delta);
+		// find a random vector to "look at"
+		end.x = org.x + random() * delta.x;
+		end.y = org.y + random() * delta.y;
+		end.z = org.z + random() * delta.z;
+		end = start + normalize(end - start) * vlen(delta);
 
-        // rule 4: start TO end must not be too short
-        tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
-        if(trace_startsolid)
-            continue;
-        if(trace_fraction < minviewdistance / vlen(delta))
-            continue;
+		// rule 4: start TO end must not be too short
+		tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
+		if(trace_startsolid)
+			continue;
+		if(trace_fraction < minviewdistance / vlen(delta))
+			continue;
 
-        // rule 5: don't want to look at sky
-        if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-            continue;
+		// rule 5: don't want to look at sky
+		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+			continue;
 
-        // rule 6: we must not end up in trigger_hurt
-        if(tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
-            continue;
+		// rule 6: we must not end up in trigger_hurt
+		if(tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
+			continue;
 
-        break;
-    }
+		break;
+	}
 
-    e.dphitcontentsmask = m;
+	e.dphitcontentsmask = m;
 
-    if(j < attempts)
-    {
-        setorigin(e, start);
-        e.angles = vectoangles(end - start);
-        LOG_DEBUG("Needed ", ftos(j + 1), " attempts");
-        return true;
-    }
-    return false;
+	if(j < attempts)
+	{
+		setorigin(e, start);
+		e.angles = vectoangles(end - start);
+		LOG_DEBUG("Needed ", ftos(j + 1), " attempts");
+		return true;
+	}
+	return false;
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
@@ -2040,8 +2096,13 @@ void readplayerstartcvars()
 
 void readlevelcvars()
 {
+	serverflags &= ~SERVERFLAG_ALLOW_FULLBRIGHT;
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
+
+	serverflags &= ~SERVERFLAG_FORBID_PICKUPTIMER;
+	if(cvar("sv_forbid_pickuptimer"))
+		serverflags |= SERVERFLAG_FORBID_PICKUPTIMER;
 
 	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
@@ -2107,11 +2168,11 @@ void readlevelcvars()
 	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
 	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
-    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
-    if(!g_weapon_stay)
-        g_weapon_stay = cvar("g_weapon_stay");
+	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+	if(!g_weapon_stay)
+		g_weapon_stay = cvar("g_weapon_stay");
 
-    MUTATOR_CALLHOOK(ReadLevelCvars);
+	MUTATOR_CALLHOOK(ReadLevelCvars);
 
 	if (!warmup_stage && !autocvar_g_campaign)
 		game_starttime = time + cvar("g_start_delay");
@@ -2123,79 +2184,149 @@ void readlevelcvars()
 
 void InitializeEntity(entity e, void(entity this) func, int order)
 {
-    entity prev, cur;
+	entity prev, cur;
 
-    if (!e || e.initialize_entity)
-    {
-        // make a proxy initializer entity
-        entity e_old = e;
-        e = new(initialize_entity);
-        e.enemy = e_old;
-    }
+	if (!e || e.initialize_entity)
+	{
+		// make a proxy initializer entity
+		entity e_old = e;
+		e = new(initialize_entity);
+		e.enemy = e_old;
+	}
 
-    e.initialize_entity = func;
-    e.initialize_entity_order = order;
+	e.initialize_entity = func;
+	e.initialize_entity_order = order;
 
-    cur = initialize_entity_first;
-    prev = NULL;
-    for (;;)
-    {
-        if (!cur || cur.initialize_entity_order > order)
-        {
-            // insert between prev and cur
-            if (prev)
-                prev.initialize_entity_next = e;
-            else
-                initialize_entity_first = e;
-            e.initialize_entity_next = cur;
-            return;
-        }
-        prev = cur;
-        cur = cur.initialize_entity_next;
-    }
+	cur = initialize_entity_first;
+	prev = NULL;
+	for (;;)
+	{
+		if (!cur || cur.initialize_entity_order > order)
+		{
+			// insert between prev and cur
+			if (prev)
+				prev.initialize_entity_next = e;
+			else
+				initialize_entity_first = e;
+			e.initialize_entity_next = cur;
+			return;
+		}
+		prev = cur;
+		cur = cur.initialize_entity_next;
+	}
 }
 void InitializeEntitiesRun()
 {
-    entity startoflist = initialize_entity_first;
-    initialize_entity_first = NULL;
-    delete_fn = remove_except_protected;
-    for (entity e = startoflist; e; e = e.initialize_entity_next)
-    {
+	entity startoflist = initialize_entity_first;
+	initialize_entity_first = NULL;
+	delete_fn = remove_except_protected;
+	for (entity e = startoflist; e; e = e.initialize_entity_next)
+	{
 		e.remove_except_protected_forbidden = 1;
-    }
-    for (entity e = startoflist; e; )
-    {
+	}
+	for (entity e = startoflist; e; )
+	{
 		e.remove_except_protected_forbidden = 0;
-        e.initialize_entity_order = 0;
-    	entity next = e.initialize_entity_next;
-        e.initialize_entity_next = NULL;
-        var void(entity this) func = e.initialize_entity;
-        e.initialize_entity = func_null;
-        if (e.classname == "initialize_entity")
-        {
-            entity wrappee = e.enemy;
-            builtin_remove(e);
-            e = wrappee;
-        }
-        //dprint("Delayed initialization: ", e.classname, "\n");
-        if (func)
-        {
-        	func(e);
-        }
-        else
-        {
-            eprint(e);
-            backtrace(strcat("Null function in: ", e.classname, "\n"));
-        }
-        e = next;
-    }
-    delete_fn = remove_unsafely;
+		e.initialize_entity_order = 0;
+		entity next = e.initialize_entity_next;
+		e.initialize_entity_next = NULL;
+		var void(entity this) func = e.initialize_entity;
+		e.initialize_entity = func_null;
+		if (e.classname == "initialize_entity")
+		{
+			entity wrappee = e.enemy;
+			builtin_remove(e);
+			e = wrappee;
+		}
+		//dprint("Delayed initialization: ", e.classname, "\n");
+		if (func)
+		{
+			func(e);
+		}
+		else
+		{
+			eprint(e);
+			backtrace(strcat("Null function in: ", e.classname, "\n"));
+		}
+		e = next;
+	}
+	delete_fn = remove_unsafely;
 }
 
 // deferred dropping
+// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
 void DropToFloor_Handler(entity this)
 {
-	WITHSELF(this, builtin_droptofloor());
+	if(!this || wasfreed(this))
+	{
+		// no modifying free entities
+		return;
+	}
+
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
+
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		_Movetype_UnstickEntity(this);
+		move_out_of_solid(this);
+	}
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
+			this.groundentity = NULL;
+		}
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			setorigin(this, trace_endpos);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				_Movetype_UnstickEntity(this);
+				move_out_of_solid(this);
+			}
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	else
+	{
+		if(!trace_allsolid && trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+		else
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
+	}
 	this.dropped_origin = this.origin;
 }
 

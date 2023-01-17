@@ -15,7 +15,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE)
-		this.velocity = this.oldvelocity;
+		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
@@ -40,7 +40,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE)
-		this.velocity = this.oldvelocity;
+		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
@@ -98,7 +98,7 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
-		this.oldvelocity = this.velocity;
+		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
 		this.velocity = '0 0 0';
 		set_movetype(this, MOVETYPE_NONE); // also disables gravity
 		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
@@ -134,7 +134,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
-		this.oldvelocity = this.velocity;
+		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
 		this.velocity = '0 0 0';
 		set_movetype(this, MOVETYPE_NONE); // also disables gravity
 		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
@@ -256,7 +256,7 @@ METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(actor.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true, true))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
             if(random() < 0.01) actor.bot_secondary_grenademooth = 1;
@@ -264,7 +264,7 @@ METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
     }
     else
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true, true))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.02) actor.bot_secondary_grenademooth = 0;
@@ -358,9 +358,7 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 12;
-    pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
+    pointparticles(EFFECT_GRENADE_EXPLODE, w_org + w_backoff, '0 0 0', 1);
     if(!w_issilent)
         sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
 }

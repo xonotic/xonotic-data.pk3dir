@@ -82,6 +82,17 @@ void XonoticWelcomeDialog_draw(entity me)
 		localcmd("\n+show_info0; defer 2 -show_info0\n");
 		me.close(me);
 	}
+
+	if (isdemo())
+	{
+		me.joinButton_ent.disabled = true;
+		me.spectateButton_ent.disabled = true;
+	}
+	else
+	{
+		me.joinButton_ent.disabled = false;
+		me.spectateButton_ent.disabled = false;
+	}
 }
 
 void XonoticWelcomeDialog_fill(entity me)
@@ -101,5 +112,5 @@ void XonoticWelcomeDialog_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns / 2, me.joinButton_ent = makeXonoticCommandButton(_("Join"), '0 1 0', "cmd join", COMMANDBUTTON_CLOSE));
 			me.joinButton_ent.preferredFocusPriority = 1;
-		me.TD(me, 1, me.columns / 2, makeXonoticCommandButton(_("Spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns / 2, me.spectateButton_ent = makeXonoticCommandButton(_("Spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
 }

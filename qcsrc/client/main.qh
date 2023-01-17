@@ -19,7 +19,8 @@ bool autocvar__hud_showbinds_reload;
 bool autocvar_developer_csqcentities;
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
-bool autocvar_cl_welcome_in_menu_dialog = true;
+bool autocvar_cl_welcome = true;
+bool autocvar_menu_gamemenu = true;
 
 // Map coordinate base calculations need these
 vector mi_center;
@@ -97,6 +98,7 @@ vector view_origin, view_forward, view_right, view_up;
 
 bool button_zoom;
 bool spectatorbutton_zoom;
+bool observe_blocked;
 bool button_attack2;
 
 float current_viewzoom;
@@ -105,8 +107,9 @@ bool warmup_stage;
 
 string hostname;
 string welcome_msg;
+int srv_minplayers;
+int srv_maxplayers;
 float welcome_msg_menu_check_maxtime;
-bool welcome_msg_force_centerprint;
 void Welcome_Message_Show_Try();
 
 void Fog_Force();
@@ -114,6 +117,8 @@ void Fog_Force();
 string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
+
+void Release_Common_Keys();
 
 string vote_called_vote;
 bool ready_waiting;
@@ -123,7 +128,6 @@ bool vote_waiting_for_me;
 
 float current_zoomfraction;
 
-int cs_project_is_b0rked;
 int vid_width, vid_height;
 float vid_pixelheight;
 
@@ -174,9 +178,6 @@ float spectatee_status;
 float spectatee_status_changed_time;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
-
-// short mapname
-string shortmapname;
 
 // database for misc stuff
 int tempdb;

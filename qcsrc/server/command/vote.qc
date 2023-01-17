@@ -429,7 +429,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	if (time <= game_starttime && game_stopped)
 		return;
 	if (!is_fake_round_start)
-		bprint("^1Match is restarting...\n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_COUNTDOWN_RESTART);
 
 	VoteReset();
 
@@ -503,23 +503,53 @@ void ReadyRestart(bool forceWarmupEnd)
 	ReadyRestart_force(false);
 }
 
-// Count the players who are ready and determine whether or not to restart the match
+/* Count the players who are ready and determine whether or not to restart the match when:
+ * a player presses F4                      server/command/cmd.qc  ClientCommand_ready()
+ * a player switches from players to specs  server/client.qc       PutObserverInServer()
+ * a player joins (from specs or directly)  server/client.qc       PutPlayerInServer()
+ * a player disconnects                     server/client.qc       ClientDisconnect()	*/
 void ReadyCount()
 {
+	// cannot reset the game while a timeout is active or pending
+	if (timeout_status) return;
+
 	float ready_needed_factor, ready_needed_count;
-	float t_ready = 0, t_players = 0;
+	float t_players = 0;
+	readycount = 0;
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
 		++t_players;
-		if (it.ready) ++t_ready;
+		if (it.ready) ++readycount;
 	});
-
-	readycount = t_ready;
 
 	Nagger_ReadyCounted();
 
-	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
-	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
+	if (t_players < map_minplayers) // map_minplayers will only be set if g_warmup -1 at worldspawn
+	{
+		if (game_starttime > time) // someone bailed during countdown, back to warmup
+		{
+			warmup_stage = -1; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
+			game_starttime = time;
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, map_minplayers);
+		}
+		if (warmup_limit > 0)
+			warmup_limit = -1;
+		return; // don't ReadyRestart if players are ready but too few
+	}
+	else if (map_minplayers && warmup_limit <= 0)
+	{
+		// there's enough players now but we're still in infinite warmup
+		warmup_limit = cvar("g_warmup_limit");
+		if (warmup_limit == 0)
+			warmup_limit = autocvar_timelimit * 60;
+		if (warmup_limit > 0)
+			game_starttime = time;
+		// implicit else: g_warmup -1 && g_warmup_limit -1 means
+		// warmup continues until enough players AND enough RUPs (no time limit)
+	}
+
+	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 1);
+	ready_needed_count = ceil(t_players * ready_needed_factor);
 
 	if (readycount >= ready_needed_count) ReadyRestart(true);
 }
@@ -529,9 +559,9 @@ void ReadyCount()
 //  Supporting functions for VoteCommand
 // ======================================
 
-float Votecommand_check_assignment(entity caller, float assignment)
+bool Votecommand_check_assignment(entity caller, float assignment)
 {
-	float from_server = (!caller);
+	bool from_server = (!caller);
 
 	if ((assignment == VC_ASGNMNT_BOTH)
 	    || ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY)
@@ -550,33 +580,32 @@ string VoteCommand_extractcommand(string input, float startpos, int argc)
 	return output;
 }
 
-float VoteCommand_checknasty(string vote_command)
+bool VoteCommand_checknasty(string vote_command)
 {
-	if ((strstrofs(vote_command, ";", 0) >= 0)
+	return !((strstrofs(vote_command, ";", 0) >= 0)
 	    || (strstrofs(vote_command, "\n", 0) >= 0)
 	    || (strstrofs(vote_command, "\r", 0) >= 0)
-	    || (strstrofs(vote_command, "$", 0) >= 0)) return false;
-
-	return true;
+	    || (strstrofs(vote_command, "$", 0) >= 0));
 }
 
 // NOTE: requires input to be surrounded by spaces
 string VoteCommand_checkreplacements(string input)
 {
-	string output = input;
+	// add a space around the input so the start and end of the list is captured
+	string output = strcat(" ", input, " ");
 	// allow gotomap replacements
 	output = strreplace(" map ", " gotomap ", output);
 	output = strreplace(" chmap ", " gotomap ", output);
 	return output;
 }
 
-float VoteCommand_checkinlist(string vote_command, string list)
+bool VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
+	if (vote_command == "" || list == "")
+		return false;
 
-	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
-
-	return false;
+	string l = VoteCommand_checkreplacements(list);
+	return (strstrofs(l, VoteCommand_checkreplacements(vote_command), 0) >= 0);
 }
 
 string ValidateMap(string validated_map, entity caller)

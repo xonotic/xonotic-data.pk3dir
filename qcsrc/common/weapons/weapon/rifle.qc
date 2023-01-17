@@ -24,7 +24,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 	if(autocvar_g_casings >= 2)
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), vectoangles(v_forward), 3, actor, weaponentity);
 	}
 }
 
@@ -94,7 +94,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
         actor.bot_secondary_riflemooth = 0;
     if(actor.bot_secondary_riflemooth == 0)
     {
-        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false))
+        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
             if(random() < 0.01) actor.bot_secondary_riflemooth = 1;
@@ -102,7 +102,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
     }
     else
     {
-        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false))
+        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.03) actor.bot_secondary_riflemooth = 0;

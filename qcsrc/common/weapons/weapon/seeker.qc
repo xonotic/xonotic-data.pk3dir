@@ -169,7 +169,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, missile_ammo), weaponentity);
 
 	makevectors(actor.v_angle);
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
 	w_shotorg += f_diff;
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -406,7 +406,7 @@ void W_Seeker_Tag_Explode(entity this)
 {
 	//if(other==this.realowner)
 	//    return;
-	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
+	Damage_DamageInfo(this.origin, false, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
 
 	delete(this);
 }
@@ -434,7 +434,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 	te_knightspike(org2);
 
 	this.event_damage = func_null;
-	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
+	Damage_DamageInfo(this.origin, false, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
 
 	if(toucher.takedamage == DAMAGE_AIM && !IS_DEAD(toucher))
 	{
@@ -533,12 +533,12 @@ METHOD(Seeker, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
     if(WEP_CVAR(seeker, type) == 1)
     {
         if(W_Seeker_Tagged_Info(actor, weaponentity, actor.enemy) != NULL)
-            PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
+            PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false, false);
         else
-            PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+            PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false, false);
     }
     else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false, true);
 }
 METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {

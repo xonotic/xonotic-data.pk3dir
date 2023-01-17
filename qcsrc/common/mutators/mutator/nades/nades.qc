@@ -41,29 +41,6 @@ entity Nade_TrailEffect(int proj, int nade_team)
 
 #ifdef CSQC
 REGISTER_MUTATOR(cl_nades, true);
-MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
-{
-	// TODO: make a common orb state!
-	if (STAT(HEALING_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
-		M_ARGV(1, float) = STAT(HEALING_ORB_ALPHA);
-		return true;
-	}
-	if (STAT(ENTRAP_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_ENTRAP.m_color;
-		M_ARGV(1, float) = STAT(ENTRAP_ORB_ALPHA);
-		return true;
-	}
-	if (STAT(VEIL_ORB) > time)
-	{
-		M_ARGV(0, vector) = NADE_TYPE_VEIL.m_color;
-		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
-		return true;
-	}
-	return false;
-}
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
 	entity proj = M_ARGV(0, entity);
@@ -124,7 +101,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
 	{
 		string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
 		M_ARGV(0, string) = strcat(M_ARGV(0, string),
-			"\n\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
+			"\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
 	}
 }
 
@@ -418,7 +395,7 @@ void nade_ice_think(entity this)
 
 			RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
-			Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+			Damage_DamageInfo(this.origin, false, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 		}
 		delete(this);
@@ -604,12 +581,7 @@ void nade_entrap_touch(entity this, entity toucher)
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
-
-		float tint_alpha = 0.75;
-		if(SAME_TEAM(toucher, this.realowner))
-			tint_alpha = 0.45;
-		STAT(ENTRAP_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+		show_tint.nade_entrap_time = time + 0.1;
 	}
 }
 
@@ -656,13 +628,6 @@ void nade_heal_touch(entity this, entity toucher)
 		}
 
 	}
-
-	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
-	{
-		entity show_red = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		STAT(HEALING_ORB, show_red) = time+0.1;
-		STAT(HEALING_ORB_ALPHA, show_red) = 0.75 * (this.ltime - time) / this.orb_lifetime;
-	}
 }
 
 void nade_heal_boom(entity this)
@@ -675,9 +640,13 @@ void nade_heal_boom(entity this)
 
 void nade_monster_boom(entity this)
 {
+	if(!autocvar_g_monsters)
+		return;
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
 	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
+	if(!e)
+		return; // monster failed to be spawned
 
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
@@ -694,14 +663,13 @@ void nade_veil_touch(entity this, entity toucher)
 		if(SAME_TEAM(toucher, this.realowner))
 		{
 			tint_alpha = 0.45;
-			if(!STAT(VEIL_ORB, show_tint))
+			if(!show_tint.nade_veil_time)
 			{
 				toucher.nade_veil_prevalpha = toucher.alpha;
 				toucher.alpha = -1;
 			}
 		}
-		STAT(VEIL_ORB, show_tint) = time + 0.1;
-		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+		show_tint.nade_veil_time = time + 0.1;
 	}
 }
 
@@ -732,6 +700,11 @@ void nade_boom(entity this)
 			nade_blast = false;
 			break;
 		case NADE_TYPE_MONSTER:
+			if(!autocvar_g_monsters)
+			{
+				expef = EFFECT_NADE_EXPLODE(this.realowner.team);
+				break; // fall back to a standard nade explosion
+			}
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
 			switch(this.realowner.team)
@@ -776,7 +749,7 @@ void nade_boom(entity this)
 	{
 		RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				 autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
-		Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
+		Damage_DamageInfo(this.origin, false, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 	}
 
 	if(this.takedamage)
@@ -1343,9 +1316,9 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
 		}
 
-		if(STAT(VEIL_ORB, player) && STAT(VEIL_ORB, player) <= time)
+		if(player.nade_veil_time && player.nade_veil_time <= time)
 		{
-			STAT(VEIL_ORB, player) = 0;
+			player.nade_veil_time = 0;
 			if(player.vehicle)
 				player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
 			else
@@ -1417,7 +1390,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(STAT(ENTRAP_ORB, player) > time)
+	if(player.nade_entrap_time > time)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nades_entrap_speed;
 }
 
@@ -1425,16 +1398,16 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 {
     entity mon = M_ARGV(0, entity);
 
-	if (STAT(ENTRAP_ORB, mon) > time)
+	if (mon.nade_entrap_time > time)
 	{
 		M_ARGV(1, float) *= autocvar_g_nades_entrap_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_nades_entrap_speed; // walk speed
 	}
 
-	if (STAT(VEIL_ORB, mon) && STAT(VEIL_ORB, mon) <= time)
+	if (mon.nade_veil_time && mon.nade_veil_time <= time)
 	{
 		mon.alpha = mon.nade_veil_prevalpha;
-		STAT(VEIL_ORB, mon) = 0;
+		mon.nade_veil_time = 0;
 	}
 }
 
@@ -1567,12 +1540,6 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	client.pokenade_type = spectatee.pokenade_type;
 	STAT(NADE_BONUS, client) = STAT(NADE_BONUS, spectatee);
 	STAT(NADE_BONUS_SCORE, client) = STAT(NADE_BONUS_SCORE, spectatee);
-	STAT(HEALING_ORB, client) = STAT(HEALING_ORB, spectatee);
-	STAT(HEALING_ORB_ALPHA, client) = STAT(HEALING_ORB_ALPHA, spectatee);
-	STAT(ENTRAP_ORB, client) = STAT(ENTRAP_ORB, spectatee);
-	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
-	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
-	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
