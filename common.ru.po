@@ -6,7 +6,7 @@
 # adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov, 2014-2022
+# Andrei Stepanov, 2014-2023
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Blueberryy <igory.ygr200@gmail.com>, 2021
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2023\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -1620,7 +1620,7 @@ msgstr "Командная битва"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Патроны"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
@@ -1632,7 +1632,7 @@ msgstr "Ракеты"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Заряды"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1679,7 +1679,7 @@ msgstr "Реактивный ранец"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Топливо"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -2565,7 +2565,7 @@ msgstr "^BG%s%s^K1 был утоплен ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 был впечатан в землю ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был впечатан в землю руками ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
@@ -3318,7 +3318,7 @@ msgstr "^BG%s^BG закончил гонку"
 #: qcsrc/common/notifications/all.inc:432
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
-msgstr "^BG%s^BG побил рекорд %s^BG %s%s^BG места со временем %s%s %s"
+msgstr "^BG%s^BG побил рекорд %s с^BG %s%s^BG местом и временем %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
@@ -3915,12 +3915,12 @@ msgstr "^BG%sПротивник (^BG%s%s)^BG забрал свой флаг! В�
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sПротивник^BG забрал ^TC^TT^BG флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG %sПротивник (^BG%s%s)^BG забрал ^TC^TT^BG флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
@@ -6456,7 +6456,7 @@ msgstr "Скрывать появившиеся предметы"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
-msgstr "Скрывать большую броню и аптечку"
+msgstr "Скрывать большие броню и аптечку"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
@@ -6571,11 +6571,11 @@ msgstr "Панель физики"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Сообщения подбора:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Показывать таймер:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6598,11 +6598,11 @@ msgstr "Наблюдение"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Размер значков:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Панель подбора"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"

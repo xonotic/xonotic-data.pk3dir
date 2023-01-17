@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2023\n"
 "Language-Team: Latin (http://www.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -130,7 +130,7 @@ msgstr "emissio secundaria"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^3%s^1 preme ut photographicam mutes"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -216,19 +216,19 @@ msgstr "^1Spectaris a:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^3ESC ^7preme ut Notarum Superpositarum optiones videas."
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^7Quadri partem ^3bis clicca ^7ut eius partis optiones videas."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7preme ut collisio neglegatur, ^3SHIFT ^7 vel"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3SAGITTAE CLAVEM ^7preme ut minutias mutes."
 
 #: qcsrc/client/hud/panel/notify.qc:145 qcsrc/client/hud/panel/notify.qc:146
 #: qcsrc/client/hud/panel/score.qc:66
@@ -410,7 +410,7 @@ msgstr "Optiones"
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "Notarum Superpositarum optiones"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^3rd person view"
@@ -501,7 +501,7 @@ msgstr "Manus miscere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "Server's custom quickmenu"
-msgstr ""
+msgstr "Moderatri index celer specialis"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "Waypoint editor quickmenu"
@@ -993,12 +993,12 @@ msgstr "Spectatores"
 #: qcsrc/client/hud/panel/scoreboard.qc:2159
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2159
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2160
 msgid "SCO^points"
@@ -4007,7 +4007,7 @@ msgstr "^K1Frictulus factus es!"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1Temet occidisti!"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You need to be more careful!"
@@ -4100,7 +4100,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:655
 msgid "^K1You were fragged by a turret!"
-msgstr ""
+msgstr "^K1Turriola occisus es!"
 
 #: qcsrc/common/notifications/all.inc:656
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
@@ -4120,23 +4120,23 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr ""
+msgstr "^K1Bombi Apis eruptione offensus es!"
 
 #: qcsrc/common/notifications/all.inc:659
 msgid "^K1You were crushed by a vehicle!"
-msgstr ""
+msgstr "^K1Vehiculo compressus es!"
 
 #: qcsrc/common/notifications/all.inc:660
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr ""
+msgstr "^K1Raptoris iactatis occisus es!"
 
 #: qcsrc/common/notifications/all.inc:661
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr ""
+msgstr "^K1Raptoris eruptione offensus es!"
 
 #: qcsrc/common/notifications/all.inc:662
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr ""
+msgstr "^K1Araneae Automatae eruptione offensus es!"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
@@ -4144,7 +4144,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:664
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr ""
+msgstr "^K1Cursoris eruptione offensus es!"
 
 #: qcsrc/common/notifications/all.inc:665
 msgid "^K1You couldn't find shelter from a Racer rocket!"
@@ -4152,39 +4152,43 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1Watch your step!"
-msgstr ""
+msgstr "^K1Cave ne cadas!"
 
 #: qcsrc/common/notifications/all.inc:668
 #, c-format
 msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr ""
+msgstr "^K1Proditor! Collegam ^BG%s^K1 prodidisti"
 
 #: qcsrc/common/notifications/all.inc:668
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1Proditor! Collegam ^BG%s^K1 occidisti"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
 msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr ""
+msgstr "^K1A collega ^BG%s^K1 proditus es"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1A collega ^BG%s^K1 occisus es"
 
 #: qcsrc/common/notifications/all.inc:671
 msgid ""
 "^K1Stop idling!\n"
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
+"^K1Noli conquiescere!\n"
+"^BGDinecteris ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:672
 msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1Noli conquiescere!\n"
+"^BGIn spectatores ferris ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:674
 #, c-format
@@ -4208,25 +4212,25 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr ""
+msgstr "^BG%s^K3 restituisti"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K3You revived yourself"
-msgstr ""
+msgstr "^K3Temet restituisti"
 
 #: qcsrc/common/notifications/all.inc:682
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr ""
+msgstr "^K3A ^BG%s^K3 restitutus es"
 
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGRestitutus es quia %s secunda expectavisti"
 
 #: qcsrc/common/notifications/all.inc:685
 msgid "^BGThe generator is under attack!"
-msgstr ""
+msgstr "^BGGeneratrum impetitur!"
 
 #: qcsrc/common/notifications/all.inc:687
 msgid "^TC^TT^BG team loses the round"
@@ -4234,11 +4238,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:691
 msgid "^K1You froze yourself"
-msgstr ""
+msgstr "^K1Temet congelavisti"
 
 #: qcsrc/common/notifications/all.inc:692
 msgid "^K1Round already started, you spawn as frozen"
-msgstr ""
+msgstr "^K1Tempus iam inceptum est, nasceris congelatus"
 
 #: qcsrc/common/notifications/all.inc:694
 #, c-format
@@ -10149,56 +10153,56 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "Ianuarii"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Februarii"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Martii"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Aprilis"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Maii"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Iunii"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Iulii"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Augusti"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Septembris"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Octobris"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Novembris"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Decembris"
 
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "%d %m %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
