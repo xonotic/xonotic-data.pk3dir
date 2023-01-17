@@ -902,9 +902,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			else
 				force = normalize(force);
 			if(forceintensity >= 0)
-				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, false, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
 			else
-				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, false, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 		}
 
 	stat_damagedone = 0;
@@ -931,11 +931,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
 			if (dist <= rad)
 			{
-				float power = 1;
-				if (rad > 0)
-					power -= (dist / rad);
-				// at this point power can't be < 0 or > 1
-				float finaldmg = coredamage * power + edgedamage * (1 - power);
+				float f = (rad > 0) ? 1 - (dist / rad) : 1;
+				// at this point f can't be < 0 or > 1
+				float finaldmg = coredamage * f + edgedamage * (1 - f);
 				if (finaldmg > 0)
 				{
 					float a;

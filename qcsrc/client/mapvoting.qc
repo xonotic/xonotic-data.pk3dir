@@ -682,7 +682,7 @@ void GameTypeVote_ReadOption(int i)
 	}
 	else
 	{
-		Gametype type = MapInfo_Type_FromString(gt, false);
+		Gametype type = MapInfo_Type_FromString(gt, false, false);
 		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}
@@ -843,7 +843,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	TC(int, bInputType);
 
 	static int first_digit = 0;
-	if (!mv_active)
+	if (!mv_active || isdemo())
 		return false;
 
 	if(bInputType == 3)

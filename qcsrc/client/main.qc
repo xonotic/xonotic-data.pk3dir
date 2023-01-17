@@ -460,6 +460,10 @@ void Release_Common_Keys()
 	localcmd("-use\n");
 	localcmd("-hook\n");
 	localcmd("-jump\n");
+	localcmd("-forward\n");
+	localcmd("-back\n");
+	localcmd("-moveleft\n");
+	localcmd("-moveright\n");
 }
 
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
@@ -522,7 +526,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			Scoreboard_UI_Enable(0);
 			return true;
 		}
-		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		if (autocvar_menu_gamemenu && !isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
 			return true;
@@ -653,6 +657,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{
@@ -1488,10 +1493,26 @@ void Welcome_Message_Show_Try()
 			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
-			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+
 			if (intermission || isdemo() || !autocvar_cl_welcome)
-				// close it after it's been initialized so it can still be opened manually
-				localcmd("\ntogglemenu 0\n");
+			{
+				if (cvar("_menu_cmd_closemenu_available"))
+				{
+					// initialize the dialog without opening it
+					localcmd("\nmenu_cmd closemenu Welcome ", welcomedialog_args, "\n");
+				}
+				else
+				{
+					// legacy code for clients with old menus
+					// since togglemenu 0 doesn't close the dialog but only hides it,
+					// playing back a demo the Welcome dialog will pop up on the first ESC press
+					localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+					// close it after it's been initialized so it can still be opened manually
+					localcmd("\ntogglemenu 0\n");
+				}
+			}
+			else
+				localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		}
 
 		strfree(welcome_msg);

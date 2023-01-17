@@ -4,11 +4,7 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	if (mt == MOVETYPE_PHYSICS) {
-		this.move_qcphysics = false;
-	} else if (autocvar_sv_qcphysics == 2) {
-		this.move_qcphysics = true;
-	}
+	this.move_qcphysics = (mt != MOVETYPE_PHYSICS);
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCENTITY : mt;
@@ -129,14 +125,14 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		return 0;
 
 	int blockedflag = 0;
-	int i, j, numplanes = 0;
+	int numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
 	vector primal_velocity, original_velocity;
 	vector restore_velocity = this.velocity;
 
-	for(i = 0; i < MAX_CLIP_PLANES; ++i)
-		planes[i] = '0 0 0';
+	for(int j = 0; j < MAX_CLIP_PLANES; ++j)
+		planes[j] = '0 0 0';
 
 	if(applygravity)
 	{
@@ -160,7 +156,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			break;
 
 		push = this.velocity * time_left;
-		if(!_Movetype_PushEntity(this, push, true, false))
+		if(!_Movetype_PushEntity(this, push, false))
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -205,22 +201,22 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		{
 			// step - handle it immediately
 			vector org = this.origin;
-			vector steppush = '0 0 1' * stepheight;
+			vector steppush = vec3(0, 0, stepheight);
 			push = this.velocity * time_left;
 
-			if(!_Movetype_PushEntity(this, steppush, true, false))
+			if(!_Movetype_PushEntity(this, steppush, false))
 			{
 				blockedflag |= 8;
 				break;
 			}
-			if(!_Movetype_PushEntity(this, push, true, false))
+			if(!_Movetype_PushEntity(this, push, false))
 			{
 				blockedflag |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
 			steppush = vec3(0, 0, org.z - this.origin_z);
-			if(!_Movetype_PushEntity(this, steppush, true, false))
+			if(!_Movetype_PushEntity(this, steppush, false))
 			{
 				blockedflag |= 8;
 				break;
@@ -268,23 +264,25 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 		// modify original_velocity so it parallels all of the clip planes
 		vector new_velocity = '0 0 0';
-		for (i = 0;i < numplanes;i++)
+		int plane;
+		for (plane = 0;plane < numplanes;plane++)
 		{
-			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[i], 1);
-			for (j = 0;j < numplanes;j++)
+			int newplane;
+			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
+			for (newplane = 0;newplane < numplanes;newplane++)
 			{
-				if(j != i)
+				if(newplane != plane)
 				{
 					// not ok
-					if((new_velocity * planes[j]) < 0)
+					if((new_velocity * planes[newplane]) < 0)
 						break;
 				}
 			}
-			if(j == numplanes)
+			if(newplane == numplanes)
 				break;
 		}
 
-		if(i != numplanes)
+		if(plane != numplanes)
 		{
 			// go along this plane
 			this.velocity = new_velocity;
@@ -300,12 +298,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			}
 			vector dir = cross(planes[0], planes[1]);
 			// LordHavoc: thanks to taniwha of QuakeForge for pointing out this fix for slowed falling in corners
-			float ilength = sqrt((dir * dir));
-			if(ilength)
-				ilength = 1.0 / ilength;
-			dir.x *= ilength;
-			dir.y *= ilength;
-			dir.z *= ilength;
+			dir = normalize(dir);
 			float d = (dir * this.velocity);
 			this.velocity = dir * d;
 		}
@@ -696,12 +689,12 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 	tracebox(this.origin, this.mins, this.maxs, end, type, this);
 }
 
-bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool dolink)  // SV_PushEntity
+bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEntity
 {
 	_Movetype_PushEntityTrace(this, push);
 
 	// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
-	if(trace_startsolid && failonstartsolid)
+	if(trace_startsolid)
 	{
 		int oldtype = this.move_nomonsters;
 		this.move_nomonsters = MOVE_WORLDONLY;
@@ -782,15 +775,11 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			this.angles = this.angles + movedt * this.avelocity;
 			break;
 		case MOVETYPE_STEP:
-			if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
-				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Step(this, movedt);
 			break;
 		case MOVETYPE_WALK:
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
-			if (movedt > 0 && GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
-				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Walk(this, movedt);
 			break;
 		case MOVETYPE_TOSS:

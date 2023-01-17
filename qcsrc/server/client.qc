@@ -138,6 +138,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (observe_blocked_if_eliminated && INGAME(to))
+	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -1166,7 +1168,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = autocvar_sv_qcphysics;
+	this.move_qcphysics = true;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -2253,10 +2255,12 @@ void ObserverOrSpectatorThink(entity this)
 				}
 				CS(this).impulse = 0;
 			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				this.would_spectate = false;
-				this.flags &= ~FL_JUMPRELEASED;
-				TRANSMUTE(Observer, this);
-				PutClientInServer(this);
+				if(!observe_blocked_if_eliminated || !INGAME(this)) {
+					this.would_spectate = false;
+					this.flags &= ~FL_JUMPRELEASED;
+					TRANSMUTE(Observer, this);
+					PutClientInServer(this);
+				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;

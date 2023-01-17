@@ -12,9 +12,15 @@ before_script:
 # - export CC="gcc -pipe -march=native -mtune=native"
   - export CC="gcc -pipe"
 
-  - git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - make -C gmqcc || exit 1
-  - export QCC="$PWD/gmqcc/gmqcc"
+  - >
+    if wget -nv https://beta.xonotic.org/pipeline-bin/gmqcc ; then
+      export QCC="$PWD/gmqcc"
+      chmod +x "$QCC"
+    else
+      git clone --depth=1 --branch=main https://gitlab.com/xonotic/gmqcc.git gmqcc
+      make -C gmqcc || exit 1
+      export QCC="$PWD/gmqcc/gmqcc"
+    fi
 
   # Makefile: don't complain about lack of tags (fetching them is slow)
   - export QCCFLAGS_WATERMARK=gitlab_pipeline
@@ -32,30 +38,38 @@ test_compilation_units:
 test_sv_game:
   stage: test
   script:
-    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
-    - make -C darkplaces sv-release || exit 1
-    - export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic -noconfig -nohome"
+    - >
+      if wget -nv https://beta.xonotic.org/pipeline-bin/xonotic-linux64-dedicated ; then
+        export ENGINE="$PWD/xonotic-linux64-dedicated"
+        chmod +x "$ENGINE"
+      else
+        git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
+        make -C darkplaces sv-release || exit 1
+        export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic"
+      fi
+    - export ENGINE="$ENGINE -noconfig -nohome"
+
     - make qc || exit 1
 
     - mkdir -p data/maps
-    - wget -O data/maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - wget -nv -O data/maps/_init.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
     - while read LINE; do
         echo $LINE;
         [ "$LINE" = "All tests OK" ] && PASS=1;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +wait +quit)
+      done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
     - test "$PASS" = "1" || { echo 'sv_cmd runtest failed!'; exit 1; }
 
-    - ${ENGINE} +map gitlab-ci +sv_cmd dumpnotifs +wait +quit
+    - ${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
     - diff notifications.cfg data/data/notifications_dump.cfg ||
         { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
-    - wget -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
-    - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
-    - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
-    - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
+    - wget -nv -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
+    - wget -nv -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
+    - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
+    - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-    - EXPECT=38f7947d353ec3645e90baefac3d180e
+    - EXPECT=7c97367ef0e1f04b38350d9990d0de0e
     - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
       | tee /dev/stderr
       | sed -e 's,^\[[^]]*\] ,,'
