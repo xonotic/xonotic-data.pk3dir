@@ -10,6 +10,7 @@
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/weapons/spawning.qh>
+#include <server/world.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 /// \brief Holds whether strength, shield or superweapon timers expire while
