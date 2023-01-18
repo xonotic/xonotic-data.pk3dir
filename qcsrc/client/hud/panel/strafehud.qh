@@ -57,7 +57,8 @@ AUTOCVAR_SAVE(hud_panel_strafehud_fps_update, float, 0.5, "update interval (in s
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar, bool, false, "set to \"1\" to enable the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_audio, string, "misc/talk", "audio to play for sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_start, float, 0.5, "how optimal from 0 to 1 your strafing angle has to be for the strafe sonar to activate");
-AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval, float, 0.333333, "strafe sonar sound interval in seconds");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval_start, float, 0.333333, "strafe sonar sound interval in seconds");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval_range, float, -0.222222, "dynamic sound interval range in seconds of the strafe sonar as you approach the optimal angle");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_start, float, 0.333333, "sound volume of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_range, float, 0.666666, "dynamic volume range of the strafe sonar as you approach the optimal angle");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed of the strafe sonar");
