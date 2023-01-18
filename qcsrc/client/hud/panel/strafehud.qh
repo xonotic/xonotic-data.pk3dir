@@ -68,6 +68,9 @@ AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_start, float, 0.333333, "sound vo
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_range, float, 0.666666, "dynamic volume range of the strafe sonar as you approach the optimal angle");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playback speed range of the strafe sonar as you approach the optimal angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_vangle, bool, false, "set to \"1\" to enable the vertical angle indicator");
+AUTOCVAR_SAVE(hud_panel_strafehud_vangle_color, vector, '0.75 0.75 0.75', "color of the vertical angle text");
+AUTOCVAR_SAVE(hud_panel_strafehud_vangle_size, float, 1, "size of the vertical angle text (relative to the panel height)");
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
 vector StrafeHUD_mixColors(vector, vector, float);

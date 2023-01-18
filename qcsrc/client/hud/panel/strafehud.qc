@@ -969,6 +969,19 @@ void HUD_StrafeHUD()
         text_offset_top = max(angle_offset_top, text_offset_top);
         text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
 
+        // vertical angle for weapon jumps
+        {
+            if(autocvar_hud_panel_strafehud_vangle)
+            {
+                float vangle = -PHYS_INPUT_ANGLES(strafeplayer).x;
+                float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
+                string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
+
+                if(StrafeHUD_drawTextIndicator(vangle_text, vangle_height, autocvar_hud_panel_strafehud_vangle_color, 1, time, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
+                    text_offset_bottom += vangle_height;
+            }
+        }
+
         draw_beginBoldFont();
 
         // show speed when crossing the start trigger
