@@ -259,8 +259,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if((it.isplayermodel & ISPLAYER_MODEL))
-			hitplayer = true; // this impact damaged a player
+		if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
+			hitplayer = true; // this impact damaged another player
 	});
 
 	if(DEATH_ISVEHICLE(w_deathtype))
