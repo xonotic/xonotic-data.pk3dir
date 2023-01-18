@@ -701,7 +701,7 @@ void HUD_StrafeHUD()
             // draw neutral zone
             HUD_Panel_DrawStrafeHUD(neutral_offset, neutral_width, hidden_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE);
 
-            if(speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0) // only draw indicators if minspeed is reached
+            if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0) // only draw indicators if minspeed is reached
             {
                 // draw the switch indicator(s)
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
@@ -733,7 +733,7 @@ void HUD_StrafeHUD()
         if(!autocvar_hud_panel_strafehud_uncapped)
              slickdetector_height = min(slickdetector_height, 1);
         slickdetector_height *= panel_size.y;
-        if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0)
+        if(autocvar_hud_panel_strafehud_slickdetector && autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0)
         {
             float slicksteps = max(autocvar_hud_panel_strafehud_slickdetector_granularity, 0);
             bool slickdetected = false;
@@ -779,7 +779,7 @@ void HUD_StrafeHUD()
             }
         }
 
-        if(direction != STRAFEHUD_DIRECTION_NONE && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
+        if(autocvar_hud_panel_strafehud_direction && direction != STRAFEHUD_DIRECTION_NONE && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
         {
             bool indicator_direction = direction == STRAFEHUD_DIRECTION_LEFT;
             // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
@@ -915,13 +915,16 @@ void HUD_StrafeHUD()
                 }
             }
 
-            float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
-            string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
-            if(autocvar_hud_panel_strafehud_unit_show)
-                startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
+            if(autocvar_hud_panel_strafehud_startspeed)
+            {
+                float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
+                string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
+                if(autocvar_hud_panel_strafehud_unit_show)
+                    startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
 
-            if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
-                text_offset_bottom += startspeed_height;
+                if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
+                    text_offset_bottom += startspeed_height;
+            }
         }
 
         // show height achieved by a single jump
@@ -948,13 +951,16 @@ void HUD_StrafeHUD()
                 }
             }
 
-            float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
-            string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
-            if(autocvar_hud_panel_strafehud_unit_show)
-                jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
+            if(autocvar_hud_panel_strafehud_jumpheight)
+            {
+                float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
+                string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
+                if(autocvar_hud_panel_strafehud_unit_show)
+                    jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
 
-            if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
-                text_offset_top += jumpheight_height;
+                if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
+                    text_offset_top += jumpheight_height;
+            }
         }
 
         draw_endBoldFont();
