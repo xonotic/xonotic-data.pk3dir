@@ -928,29 +928,29 @@ void HUD_StrafeHUD()
 
 			// reuse strafe ratio for strafe sonar
 			static float sonar_time = 0;
-			bool sonar_ready = ((time - sonar_time) >= autocvar_hud_panel_strafehud_sonar_interval) || (sonar_time == 0);
-			if(autocvar_hud_panel_strafehud_sonar && sonar_ready)
+
+			float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
+			float sonar_ratio = strafe_ratio - sonar_start;
+			if(sonar_start != 1)
+				sonar_ratio /= 1 - sonar_start;
+			else
+				sonar_ratio = 1;
+
+			float sonar_interval = max(0, autocvar_hud_panel_strafehud_sonar_interval_start);
+			sonar_interval += autocvar_hud_panel_strafehud_sonar_interval_range * sonar_ratio;
+			bool sonar_ready = (sonar_time == 0) || ((time - sonar_time) >= sonar_interval);
+			if(autocvar_hud_panel_strafehud_sonar && sonar_ready && (strafe_ratio >= sonar_start))
 			{
-				float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
-				if(strafe_ratio >= sonar_start)
-				{
-					sonar_time = time;
+				sonar_time = time;
 
-					float sonar_ratio = strafe_ratio - sonar_start;
-					if(sonar_start != 1)
-						sonar_ratio /= 1 - sonar_start;
-					else
-						sonar_ratio = 1;
+				float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
+				sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio;
 
-					float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
-					sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio;
+				float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
+				sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio;
 
-					float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
-					sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio;
-
-					if(sonar_volume > 0)
-						sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
-				}
+				if(sonar_volume > 0)
+					sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
 			}
 		}
 
