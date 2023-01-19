@@ -722,7 +722,7 @@ void HUD_StrafeHUD()
             // draw neutral zone
             HUD_Panel_DrawStrafeHUD(neutral_offset, neutral_width, hidden_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE);
 
-            if(speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0) // only draw indicators if minspeed is reached
+            if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0) // only draw indicators if minspeed is reached
             {
                 // draw the switch indicator(s)
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
@@ -754,7 +754,7 @@ void HUD_StrafeHUD()
         if(!autocvar_hud_panel_strafehud_uncapped)
              slickdetector_height = min(slickdetector_height, 1);
         slickdetector_height *= panel_size.y;
-        if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0)
+        if(autocvar_hud_panel_strafehud_slickdetector && autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0)
         {
             float slicksteps = max(autocvar_hud_panel_strafehud_slickdetector_granularity, 0);
             bool slickdetected = false;
@@ -800,7 +800,7 @@ void HUD_StrafeHUD()
             }
         }
 
-        if(direction != STRAFEHUD_DIRECTION_NONE && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
+        if(autocvar_hud_panel_strafehud_direction && direction != STRAFEHUD_DIRECTION_NONE && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
         {
             bool indicator_direction = direction == STRAFEHUD_DIRECTION_LEFT;
             // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
@@ -872,27 +872,28 @@ void HUD_StrafeHUD()
 
             // reuse strafe ratio for strafe sonar
             static float sonar_time = 0;
-            bool sonar_ready = ((time - sonar_time) >= autocvar_hud_panel_strafehud_sonar_interval) || (sonar_time == 0);
-            if(autocvar_hud_panel_strafehud_sonar && sonar_ready) {
-                float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
-                if(strafe_ratio >= sonar_start) {
-                    sonar_time = time;
 
-                    float sonar_ratio = strafe_ratio - sonar_start;
-                    if(sonar_start != 1)
-                        sonar_ratio /= 1 - sonar_start;
-                    else
-                        sonar_ratio = 1;
+            float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
+            float sonar_ratio = strafe_ratio - sonar_start;
+            if(sonar_start != 1)
+                sonar_ratio /= 1 - sonar_start;
+            else
+                sonar_ratio = 1;
 
-                    float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
-                    sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio;
+            float sonar_interval = max(0, autocvar_hud_panel_strafehud_sonar_interval_start);
+            sonar_interval += autocvar_hud_panel_strafehud_sonar_interval_range * sonar_ratio;
+            bool sonar_ready = (sonar_time == 0) || ((time - sonar_time) >= sonar_interval);
+            if(autocvar_hud_panel_strafehud_sonar && sonar_ready && (strafe_ratio >= sonar_start)) {
+                sonar_time = time;
 
-                    float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
-                    sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio;
+                float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
+                sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio;
 
-                    if(sonar_volume > 0) {
-                        sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
-                    }
+                float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
+                sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio;
+
+                if(sonar_volume > 0) {
+                    sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
                 }
             }
         }
@@ -968,6 +969,19 @@ void HUD_StrafeHUD()
         text_offset_top = max(angle_offset_top, text_offset_top);
         text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
 
+        // vertical angle for weapon jumps
+        {
+            if(autocvar_hud_panel_strafehud_vangle)
+            {
+                float vangle = -PHYS_INPUT_ANGLES(strafeplayer).x;
+                float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
+                string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
+
+                if(StrafeHUD_drawTextIndicator(vangle_text, vangle_height, autocvar_hud_panel_strafehud_vangle_color, 1, time, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
+                    text_offset_bottom += vangle_height;
+            }
+        }
+
         draw_beginBoldFont();
 
         // show speed when crossing the start trigger
@@ -983,13 +997,16 @@ void HUD_StrafeHUD()
                 }
             }
 
-            float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
-            string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
-            if(autocvar_hud_panel_strafehud_unit_show)
-                startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
+            if(autocvar_hud_panel_strafehud_startspeed)
+            {
+                float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
+                string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
+                if(autocvar_hud_panel_strafehud_unit_show)
+                    startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
 
-            if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
-                text_offset_bottom += startspeed_height;
+                if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
+                    text_offset_bottom += startspeed_height;
+            }
         }
 
         // show height achieved by a single jump
@@ -1016,13 +1033,16 @@ void HUD_StrafeHUD()
                 }
             }
 
-            float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
-            string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
-            if(autocvar_hud_panel_strafehud_unit_show)
-                jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
+            if(autocvar_hud_panel_strafehud_jumpheight)
+            {
+                float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
+                string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
+                if(autocvar_hud_panel_strafehud_unit_show)
+                    jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
 
-            if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
-                text_offset_top += jumpheight_height;
+                if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
+                    text_offset_top += jumpheight_height;
+            }
         }
 
         draw_endBoldFont();
@@ -1171,7 +1191,7 @@ void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float al
 // draw a fading text indicator above or below the strafe meter, return true if something was displayed
 bool StrafeHUD_drawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, float offset, int position)
 {
-    if((height <= 0) || (lasttime <= 0) || ((time - lasttime) >= fadetime))
+    if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
         return false;
 
     float alpha = cos(((time - lasttime) / fadetime) * 90 * DEG2RAD); // fade non-linear like the physics panel does

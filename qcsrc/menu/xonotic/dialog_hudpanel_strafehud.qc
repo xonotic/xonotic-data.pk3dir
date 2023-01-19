@@ -24,7 +24,7 @@ void StrafeHUD_ColorReset(entity btn, entity me)
     cvar_set("hud_panel_strafehud_angle_neutral_color", cvar_defstring("hud_panel_strafehud_angle_neutral_color"));
     cvar_set("hud_panel_strafehud_angle_overturn_color", cvar_defstring("hud_panel_strafehud_angle_overturn_color"));
     cvar_set("hud_panel_strafehud_switch_color", cvar_defstring("hud_panel_strafehud_switch_color"));
-    cvar_set("hud_panel_strafehud_direction_color", cvar_defstring("hud_panel_strafehud_direction_color"));
+    cvar_set("hud_panel_strafehud_bestangle_color", cvar_defstring("hud_panel_strafehud_bestangle_color"));
 }
 
 void XonoticHUDStrafeHUDDialog_fill(entity me)
@@ -120,22 +120,26 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
         me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_angle_alpha"));
     me.TR(me);
-        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Switch indicators:")));
+        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Switch indicator:")));
 
         me.TDempty(me, 0.2);
 
-        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Direction caps:")));
+        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Best angle indicator:")));
     me.TR(me);
         me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_switch_color", "hud_panel_strafehud_switch_color"));
 
         me.TDempty(me, 0.2);
 
-        me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_direction_color", "hud_panel_strafehud_direction_color"));
+        me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_bestangle_color", "hud_panel_strafehud_bestangle_color"));
     me.TR(me);
     me.TR(me);
-        me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
+        me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
+        me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.9, e = makeXonoticCheckBoxString("1", "0", "hud_panel_strafehud_switch", _("Enable")));
 
         me.TDempty(me, 0.2);
 
-        me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_direction_alpha"));
+        me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
+        me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.9, e = makeXonoticCheckBoxString("1", "0", "hud_panel_strafehud_bestangle", _("Enable")));
 }
