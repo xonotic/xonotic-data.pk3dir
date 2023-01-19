@@ -15,14 +15,14 @@
 # LINUX-SAUNA, 2022
 # LINUX-SAUNA, 2022
 # LINUX-SAUNA, 2022
-# Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022
+# Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022-2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022\n"
+"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022-2023\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -144,7 +144,7 @@ msgstr "toissijainen tulitus"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Paina ^3%s^1 vaihtaaksesi kameratilaa"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -1431,12 +1431,12 @@ msgstr "Tapa kaikki vihollisjoukkueen jäsenet voittaaksesi kierroksen"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Kierrosraja:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Voitettujen kierrosten määrä ennen ottelun päättymistä"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1569,7 +1569,7 @@ msgstr "Ammu ja potkaise pallo vihollisen maaliin, pidä oma maalisi puhtaana"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Maaliraja:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1617,19 +1617,19 @@ msgstr "Joukkuemättö (Team Deatchmatch)"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Ammukset"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Luodit"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Raketit"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Kennot"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1676,7 +1676,7 @@ msgstr "Lentopakkaus"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Polttoaine"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -3941,11 +3941,14 @@ msgstr "^BGVihollinen %ssai (^BG%s%s)^BG lippunsa! Nouda se!"
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
 msgstr ""
+"^BGVihollinen %son^BG ottanut ^TC^TT^BG lipun haltuunsa! Hanki se takaisin!"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
 msgstr ""
+"^BGVihollinen %son (^BG%s%s)^BG ottanut ^TC^TT^BG lipun haltuunsa! Hanki se "
+"takaisin!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
@@ -6599,11 +6602,11 @@ msgstr "Fysiikkapaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Poimimisviestit:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Näytä ajastin:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6622,15 +6625,15 @@ msgstr "Aina"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "Katsellaan"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Kuvakekoon mittakaava:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Poimintalaatta"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"

@@ -131,7 +131,7 @@ msgstr "sekundäreld"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Tryck på ^3%s^1 för att ändra kameraläge"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -1420,12 +1420,12 @@ msgstr "Döda alla fiender i andra lag för att vinna omgången"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Rondgräns:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Antal ronder som måste vinnas innan matchen slutar"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1449,7 +1449,7 @@ msgstr "Fångningsgräns:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "Mängden tagningar som krävs innan matchen slutar"
+msgstr "Antal tagningar som krävs innan matchen slutar"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1484,7 +1484,7 @@ msgstr "Domination"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "Mängden poäng som krävs för att matchen ska ta slut"
+msgstr "Antal poäng som krävs för att matchen ska ta slut"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1556,11 +1556,11 @@ msgstr "Skjut och sparka bollen in i fiendens mål, håll ditt mål tomt"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Målgräns:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "Mängden mål som krävs innan matchen slutar"
+msgstr "Antal mål som krävs innan matchen slutar"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1604,19 +1604,19 @@ msgstr "Team Deathmatch"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Patroner"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Kulor"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Raketer"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Celler"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1663,7 +1663,7 @@ msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Bensin"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1685,7 +1685,7 @@ msgstr "Fraggräns:"
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "Mängden fragningar som krävs innan matchen tar slut"
+msgstr "Antal fraggningar som krävs innan matchen tar slut"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -3904,12 +3904,12 @@ msgstr "^BG%sFienden (^BG%s%s)^BG har deras flagga! Hämta den!"
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sFienden^BG har den ^TC^TT^BG flaggan! Hämta den!"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sFienden (^BG%s%s)^BG har den ^TC^TT^BG flaggan! Hämta den!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
@@ -6285,7 +6285,7 @@ msgstr "Ammunutionspanel"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:21
 msgid "Message duration:"
-msgstr "Meddelandets gång:"
+msgstr "Meddelandets varaktighet:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
@@ -6558,11 +6558,11 @@ msgstr "Fysikpanel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Meddelanden för upplockning:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Visa timer:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6581,15 +6581,15 @@ msgstr "Alltid"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "Åskådar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Storlek på ikoner:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Upplockningspanel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -7159,7 +7159,7 @@ msgstr "Antal bottar:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Amount of bots on your server"
-msgstr "Mängden bottar på din server"
+msgstr "Antal bottar på din server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Bot skill:"
@@ -7676,7 +7676,7 @@ msgstr "Musikspelare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
-msgstr "Spela in demos automatiskt"
+msgstr "Spela in demon automatiskt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
 msgid "Timedemo"
@@ -9956,7 +9956,7 @@ msgstr "lagspel"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr "fritt för alla"
+msgstr "alla mot alla"
 
 #: qcsrc/menu/xonotic/keybinder.qc:35
 msgid "Moving"
