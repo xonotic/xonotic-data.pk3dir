@@ -70,14 +70,17 @@ float autocvar_hud_panel_strafehud_sonar_pitch_range = 0.1;
 bool autocvar_hud_panel_strafehud_vangle = false;
 vector autocvar_hud_panel_strafehud_vangle_color = '0.75 0.75 0.75';
 float autocvar_hud_panel_strafehud_vangle_size = 1;
+int autocvar_hud_panel_strafehud_projection = 1;
 
-void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
+void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);
 vector StrafeHUD_mixColors(vector, vector, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int, float);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool, float);
 bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
+float StrafeHUD_projectOffset(float, float);
+float StrafeHUD_projectWidth(float, float, float);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
@@ -105,3 +108,7 @@ const int STRAFEHUD_INDICATOR_DASHED = 2;
 
 const int STRAFEHUD_TEXT_TOP = 0;
 const int STRAFEHUD_TEXT_BOTTOM = 1;
+
+const int STRAFEHUD_PROJECTION_LINEAR = 0;
+const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
+const int STRAFEHUD_PROJECTION_PANORAMIC = 2;
