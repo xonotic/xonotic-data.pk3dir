@@ -5,7 +5,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud, int, 3, "enable this panel, 1 = show if not o
 AUTOCVAR_SAVE(_hud_panel_strafehud_demo, bool, false, "strafehud changes angle during configure");
 AUTOCVAR_SAVE(hud_panel_strafehud_dynamichud, bool, true, "apply the dynamic hud effects to this panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at \"0\" = view angle, \"1\" = velocity angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
+AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"-1\" = current fov, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
 AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "\"0\" = no styling, \"1\" = progress bar style for the strafe bar, \"2\" = gradient for the strafe bar");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit, int, 1, "speed unit (1 = qu/s, 2 = m/s, 3 = km/h, 4 = mph, 5 = knots), length unit (1 = qu, 2 = m, 3 = km, 4 = mi, 5 = nmi)");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
@@ -71,14 +71,17 @@ AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playba
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle, bool, false, "set to \"1\" to enable the vertical angle indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_color, vector, '0.75 0.75 0.75', "color of the vertical angle text");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_size, float, 1, "size of the vertical angle text (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 1, "strafehud projection mode, \"0\" = Linear, \"1\" = Perspective, \"2\" = Panoramic");
 
-void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
+void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);
 vector StrafeHUD_mixColors(vector, vector, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int, float);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
 bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
+float StrafeHUD_projectOffset(float, float);
+float StrafeHUD_projectWidth(float, float, float);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
@@ -106,3 +109,7 @@ const int STRAFEHUD_INDICATOR_DASHED = 2;
 
 const int STRAFEHUD_TEXT_TOP = 0;
 const int STRAFEHUD_TEXT_BOTTOM = 1;
+
+const int STRAFEHUD_PROJECTION_LINEAR = 0;
+const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
+const int STRAFEHUD_PROJECTION_PANORAMIC = 2;
