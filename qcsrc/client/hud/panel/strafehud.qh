@@ -74,7 +74,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_exponent, float, 1, "exponent of t
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle, bool, false, "set to \"1\" to enable the vertical angle indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_color, vector, '0.75 0.75 0.75', "color of the vertical angle text");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_size, float, 1, "size of the vertical angle text (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 1, "strafehud projection mode, \"0\" = Linear, \"1\" = Perspective, \"2\" = Panoramic");
+AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 0, "strafehud projection mode, \"0\" = linear, \"1\" = perspective, \"2\" = panoramic");
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);
 vector StrafeHUD_mixColors(vector, vector, float);
