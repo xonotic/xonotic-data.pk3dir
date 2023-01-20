@@ -961,17 +961,17 @@ void HUD_StrafeHUD()
 				sonar_ratio = 1;
 
 			float sonar_interval = max(0, autocvar_hud_panel_strafehud_sonar_interval_start);
-			sonar_interval += autocvar_hud_panel_strafehud_sonar_interval_range * sonar_ratio;
+			sonar_interval += autocvar_hud_panel_strafehud_sonar_interval_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_interval_exponent);
 			bool sonar_ready = (sonar_time == 0) || ((time - sonar_time) >= sonar_interval);
 			if(autocvar_hud_panel_strafehud_sonar && sonar_ready && (strafe_ratio >= sonar_start))
 			{
 				sonar_time = time;
 
 				float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
-				sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio;
+				sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_volume_exponent);
 
 				float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
-				sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio;
+				sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_pitch_exponent);
 
 				if(sonar_volume > 0)
 					sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
