@@ -5,7 +5,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud, int, 3, "enable this panel, 1 = show if not o
 AUTOCVAR_SAVE(_hud_panel_strafehud_demo, bool, false, "strafehud changes angle during configure");
 AUTOCVAR_SAVE(hud_panel_strafehud_dynamichud, bool, true, "apply the dynamic hud effects to this panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at \"0\" = view angle, \"1\" = velocity angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
+AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"-1\" = current fov, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
 AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "\"0\" = no styling, \"1\" = progress bar style for the strafe bar, \"2\" = gradient for the strafe bar");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit, int, 1, "speed unit (1 = qu/s, 2 = m/s, 3 = km/h, 4 = mph, 5 = knots), length unit (1 = qu, 2 = m, 3 = km, 4 = mi, 5 = nmi)");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
@@ -64,21 +64,27 @@ AUTOCVAR_SAVE(hud_panel_strafehud_sonar_audio, string, "misc/talk", "audio to pl
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_start, float, 0.5, "how optimal from 0 to 1 your strafing angle has to be for the strafe sonar to activate");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval_start, float, 0.333333, "strafe sonar sound interval in seconds");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval_range, float, -0.222222, "dynamic sound interval range in seconds of the strafe sonar as you approach the optimal angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval_exponent, float, 1, "exponent of the dynamic sound interval range of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_start, float, 0.333333, "sound volume of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_range, float, 0.666666, "dynamic volume range of the strafe sonar as you approach the optimal angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_exponent, float, 1, "exponent of the dynamic volume range of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playback speed range of the strafe sonar as you approach the optimal angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_exponent, float, 1, "exponent of the dynamic playback speed range of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle, bool, false, "set to \"1\" to enable the vertical angle indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_color, vector, '0.75 0.75 0.75', "color of the vertical angle text");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_size, float, 1, "size of the vertical angle text (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 0, "strafehud projection mode, \"0\" = linear, \"1\" = perspective, \"2\" = panoramic");
 
-void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
+void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);
 vector StrafeHUD_mixColors(vector, vector, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int, float);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
 bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
+float StrafeHUD_projectOffset(float, float);
+float StrafeHUD_projectWidth(float, float, float);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
@@ -106,3 +112,7 @@ const int STRAFEHUD_INDICATOR_DASHED = 2;
 
 const int STRAFEHUD_TEXT_TOP = 0;
 const int STRAFEHUD_TEXT_BOTTOM = 1;
+
+const int STRAFEHUD_PROJECTION_LINEAR = 0;
+const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
+const int STRAFEHUD_PROJECTION_PANORAMIC = 2;
