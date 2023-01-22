@@ -674,10 +674,9 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 	entity e = spawn();
 	setthink(e, lms_extralife);
 
+	Item_CopyFields(ent, e);
+
 	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
 	return true;
 }

@@ -75,6 +75,8 @@ void Item_Reset(entity this);
 
 void Item_FindTeam(entity this);
 
+void Item_CopyFields(entity this, entity to);
+
 bool ItemSend(entity this, entity to, int sf);
 void ItemUpdate(entity this);
 
