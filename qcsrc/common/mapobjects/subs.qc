@@ -9,7 +9,7 @@ void SUB_CalcAngleMoveDone(entity this);
 spawnfunc(info_null)
 {
 	delete(this);
-	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
+	// if anything breaks, tell the mapper to fix their map! info_null is meant to remove itself immediately.
 }
 #endif
 
