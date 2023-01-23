@@ -239,7 +239,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_instagib", "1", _("InstaGib"),
-			_("Players will be given only one weapon, which can instantly kill the opponent with a single shot. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode does not inflict any damage but is good for doing trickjumps.")));
+			_("Players will be given only one weapon, which can instantly kill the opponent with a single shot. If the player runs out of ammo, they will have 10 seconds to find some or if they fail to do so, face death. The secondary fire mode does not inflict any damage but is good for doing trickjumps.")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
