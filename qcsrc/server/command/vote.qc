@@ -406,7 +406,7 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 			{
 				// PlayerScore_Clear(it);
 				CS(it).killcount = 0;
-				// stop the player from moving so that he stands still once he gets respawned
+				// stop the player from moving so that they stand still once they get respawned
 				it.velocity = '0 0 0';
 				it.avelocity = '0 0 0';
 				CS(it).movement = '0 0 0';
