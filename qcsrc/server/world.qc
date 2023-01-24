@@ -2100,6 +2100,10 @@ void readlevelcvars()
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
+	serverflags &= ~SERVERFLAG_FORBID_PICKUPTIMER;
+	if(cvar("sv_forbid_pickuptimer"))
+		serverflags |= SERVERFLAG_FORBID_PICKUPTIMER;
+
 	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
 	warmup_stage = cvar("g_warmup");
@@ -2259,11 +2263,20 @@ void DropToFloor_Handler(entity this)
 		return;
 	}
 
-	vector end = this.origin - '0 0 256';
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
 
 	// NOTE: SV_NudgeOutOfSolid is used in the engine here
 	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		_Movetype_UnstickEntity(this);
 		move_out_of_solid(this);
+	}
 
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
 
@@ -2287,7 +2300,10 @@ void DropToFloor_Handler(entity this)
 			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
 			setorigin(this, trace_endpos);
 			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				_Movetype_UnstickEntity(this);
 				move_out_of_solid(this);
+			}
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)

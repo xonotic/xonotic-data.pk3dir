@@ -37,7 +37,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		// TODO for fireBullet, find how far the shot will penetrate and aim at that
 		//      for fireRailgunbullet, find the farthest target and aim at that
 		//      this will avoid issues when another player is passing in front of you when you shoot
-		//      (currently such a shot will hit him but then miss the original target)
+		//      (currently such a shot will hit them but then miss the original target)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	}
 	else
@@ -256,7 +256,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		}
 
 		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, this);
+			Damage_DamageInfo(trace_endpos, (trace_ent.solid == SOLID_BSP), bdamage, 0, 0, force, deathtype, trace_ent.species, this);
 
 		// if it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
@@ -417,7 +417,7 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 			is_weapclip = true;
 
 		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(start, damage * damage_fraction, 0, 0, max(1, force) * dir * damage_fraction, dtype, hit.species, this);
+			Damage_DamageInfo(start, (hit && hit.solid == SOLID_BSP), damage * damage_fraction, 0, 0, max(1, force) * dir * damage_fraction, dtype, hit.species, this);
 
 		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)  // Avoid self-damage (except after going through a warp); avoid hitting the same entity twice (engine bug).
 		{
@@ -486,7 +486,7 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 		start = trace_endpos;
 
 		if(hit.solid == SOLID_BSP)
-			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
+			Damage_DamageInfo(start, true, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
 	}
 
 	if(headshot)

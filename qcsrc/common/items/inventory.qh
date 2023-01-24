@@ -37,7 +37,10 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
+#include <client/hud/panel/pickup.qh>
+
 Inventory g_inventory;
+
 void Inventory_remove(entity this)
 {
     if(g_inventory == this)
@@ -63,10 +66,19 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             .int fld = inv_items[it.m_id];
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
+
+            Pickup_Update(it, next - prev);
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
     return true;
+}
+
+NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
+{
+	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
+	Pickup_Update(it, 1);
+	return true;
 }
 #endif
 

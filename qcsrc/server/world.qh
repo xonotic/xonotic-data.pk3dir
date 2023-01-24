@@ -30,6 +30,9 @@ float autocvar_timelimit_suddendeath;
 bool autocvar_sv_gameplayfix_droptofloorstartsolid;
 bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
 
+bool autocvar_sv_mapformat_is_quake3;
+bool autocvar_sv_mapformat_is_quake2;
+
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;

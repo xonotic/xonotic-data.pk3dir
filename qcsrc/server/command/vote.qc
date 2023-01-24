@@ -406,7 +406,7 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 			{
 				// PlayerScore_Clear(it);
 				CS(it).killcount = 0;
-				// stop the player from moving so that he stands still once he gets respawned
+				// stop the player from moving so that they stand still once they get respawned
 				it.velocity = '0 0 0';
 				it.avelocity = '0 0 0';
 				CS(it).movement = '0 0 0';
@@ -559,9 +559,9 @@ void ReadyCount()
 //  Supporting functions for VoteCommand
 // ======================================
 
-float Votecommand_check_assignment(entity caller, float assignment)
+bool Votecommand_check_assignment(entity caller, float assignment)
 {
-	float from_server = (!caller);
+	bool from_server = (!caller);
 
 	if ((assignment == VC_ASGNMNT_BOTH)
 	    || ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY)
@@ -580,33 +580,32 @@ string VoteCommand_extractcommand(string input, float startpos, int argc)
 	return output;
 }
 
-float VoteCommand_checknasty(string vote_command)
+bool VoteCommand_checknasty(string vote_command)
 {
-	if ((strstrofs(vote_command, ";", 0) >= 0)
+	return !((strstrofs(vote_command, ";", 0) >= 0)
 	    || (strstrofs(vote_command, "\n", 0) >= 0)
 	    || (strstrofs(vote_command, "\r", 0) >= 0)
-	    || (strstrofs(vote_command, "$", 0) >= 0)) return false;
-
-	return true;
+	    || (strstrofs(vote_command, "$", 0) >= 0));
 }
 
 // NOTE: requires input to be surrounded by spaces
 string VoteCommand_checkreplacements(string input)
 {
-	string output = input;
+	// add a space around the input so the start and end of the list is captured
+	string output = strcat(" ", input, " ");
 	// allow gotomap replacements
 	output = strreplace(" map ", " gotomap ", output);
 	output = strreplace(" chmap ", " gotomap ", output);
 	return output;
 }
 
-float VoteCommand_checkinlist(string vote_command, string list)
+bool VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
+	if (vote_command == "" || list == "")
+		return false;
 
-	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
-
-	return false;
+	string l = VoteCommand_checkreplacements(list);
+	return (strstrofs(l, VoteCommand_checkreplacements(vote_command), 0) >= 0);
 }
 
 string ValidateMap(string validated_map, entity caller)

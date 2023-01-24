@@ -358,9 +358,7 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 12;
-    pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
+    pointparticles(EFFECT_GRENADE_EXPLODE, w_org + w_backoff, '0 0 0', 1);
     if(!w_issilent)
         sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
 }

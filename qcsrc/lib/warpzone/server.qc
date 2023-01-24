@@ -117,7 +117,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 			o1 = o1 - v1 * (d / dv);
 	}
 
-	// put him out of solid
+	// put them out of solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{

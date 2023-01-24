@@ -18,6 +18,7 @@ CLASS(Blaster, Weapon)
 /* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
 /* refname   */ ATTRIB(Blaster, netname, string, "blaster");
 /* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
+/* legacy    */ ATTRIB(Blaster, m_deprecated_netname, string, "laser");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
