@@ -30,8 +30,17 @@
 #include <server/spawnpoints.qh>
 #include <server/weapons/common.qh>
 #include <server/world.qh>
+#include <server/strafe.qh>
 
 .string stored_netname; // TODO: store this information independently of race-based gamemodes
+
+.float race_startspeed;
+.float race_startspeed_best;
+.float race_avgspeed_sum;
+.float race_avgspeed_time;
+.float race_avgspeed_best;
+.float race_topspeed;
+.float race_topspeed_best;
 
 string uid2name(string myuid)
 {
@@ -486,7 +495,21 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 	{
 		int s = GameRules_scoring_add(e, RACE_FASTEST, 0);
 		if(!s || t < s)
+		{
 			GameRules_scoring_add(e, RACE_FASTEST, t - s);
+
+			e.strafe_efficiency_best = e.strafe_efficiency_sum / e.strafe_efficiency_time;
+			PlayerScore_Set(e, SP_CTS_STRAFE, e.strafe_efficiency_best * 10000);
+
+			e.race_startspeed_best = e.race_startspeed;
+			PlayerScore_Set(e, SP_CTS_STARTSPEED, e.race_startspeed_best * 100);
+
+			e.race_avgspeed_best = e.race_avgspeed_sum / e.race_avgspeed_time;
+			PlayerScore_Set(e, SP_CTS_AVGSPEED, e.race_avgspeed_best * 100);
+
+			e.race_topspeed_best = e.race_topspeed;
+			PlayerScore_Set(e, SP_CTS_TOPSPEED, e.race_topspeed_best * 100);
+		}
 		if(!g_race_qualifying)
 		{
 			s = GameRules_scoring_add(e, RACE_TIME, 0);
@@ -771,6 +794,7 @@ void checkpoint_passed(entity this, entity player)
 
 		if(!this.race_checkpoint) // start line
 		{
+			player.race_startspeed = vlen(vec2(player.velocity));
 			player.race_laptime = time;
 			player.race_movetime = player.race_movetime_frac = player.race_movetime_count = 0;
 			player.race_penalty_accumulator = 0;
