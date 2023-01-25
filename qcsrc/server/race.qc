@@ -499,16 +499,16 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			GameRules_scoring_add(e, RACE_FASTEST, t - s);
 
 			e.strafe_efficiency_best = e.strafe_efficiency_sum / e.strafe_efficiency_time;
-			PlayerScore_Set(e, SP_CTS_STRAFE, e.strafe_efficiency_best * 10000);
+			PlayerScore_Set(e, SP_CTS_STRAFE, floor(e.strafe_efficiency_best * 1000 + .5));
 
 			e.race_startspeed_best = e.race_startspeed;
-			PlayerScore_Set(e, SP_CTS_STARTSPEED, e.race_startspeed_best * 100);
+			PlayerScore_Set(e, SP_CTS_STARTSPEED, floor(e.race_startspeed_best + .5));
 
 			e.race_avgspeed_best = e.race_avgspeed_sum / e.race_avgspeed_time;
-			PlayerScore_Set(e, SP_CTS_AVGSPEED, e.race_avgspeed_best * 100);
+			PlayerScore_Set(e, SP_CTS_AVGSPEED, floor(e.race_avgspeed_best + .5));
 
 			e.race_topspeed_best = e.race_topspeed;
-			PlayerScore_Set(e, SP_CTS_TOPSPEED, e.race_topspeed_best * 100);
+			PlayerScore_Set(e, SP_CTS_TOPSPEED, floor(e.race_topspeed_best + .5));
 		}
 		if(!g_race_qualifying)
 		{
