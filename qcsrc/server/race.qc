@@ -118,7 +118,7 @@ void race_writeTime(string map, float t, string myuid)
 	}
 	if (prevpos)
 	{
-		// player improved his existing record, only have to iterate on ranks between new and old recs
+		// player improved their existing record, only have to iterate on ranks between new and old recs
 		for (i = prevpos; i > newpos; --i)
 		{
 			db_put(ServerProgsDB, strcat(map, record_type, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
@@ -1050,7 +1050,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity
 			if(pl > race_highest_place_spawn)
 				pl = 0;
 			if(pl == 0 && !player.race_started)
-				pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
+				pl = race_highest_place_spawn; // use last place if they have not even touched finish yet
 			if(spot.race_place != pl)
 				return '-1 0 0';
 		}

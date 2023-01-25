@@ -126,7 +126,7 @@ void W_MineLayer_RemoteExplode(entity this)
 
 void W_MineLayer_ProximityExplode(entity this)
 {
-	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
+	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until they're at a safe distance
 	if(WEP_CVAR(minelayer, protection) && this.mine_explodeanyway == 0)
 	{
 		entity head;
@@ -179,7 +179,7 @@ void W_MineLayer_Think(entity this)
 		this.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
 
-	// a player's mines shall explode if he disconnects or dies
+	// a player's mines shall explode if they disconnect or die
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
 	{

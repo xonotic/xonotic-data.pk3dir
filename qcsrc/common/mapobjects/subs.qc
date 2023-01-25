@@ -9,7 +9,7 @@ void SUB_CalcAngleMoveDone(entity this);
 spawnfunc(info_null)
 {
 	delete(this);
-	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
+	// if anything breaks, tell the mapper to fix their map! info_null is meant to remove itself immediately.
 }
 #endif
 
@@ -499,7 +499,7 @@ void LODmodel_attach(entity this)
 		this.lodmodel1 = this.lodmodel2 = ""; // don't even initialize
 	}
 
-	if(this.lodmodel1 != "")
+	if(this.lodmodel1 != "" && fexists(this.lodmodel1))
 	{
 		vector mi, ma;
 		mi = this.mins;
@@ -509,7 +509,7 @@ void LODmodel_attach(entity this)
 		_setmodel(this, this.lodmodel1);
 		this.lodmodelindex1 = this.modelindex;
 
-		if(this.lodmodel2 != "")
+		if(this.lodmodel2 != "" && fexists(this.lodmodel2))
 		{
 			precache_model(this.lodmodel2);
 			_setmodel(this, this.lodmodel2);

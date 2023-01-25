@@ -5,6 +5,7 @@
 # Translators:
 # 8fb942b4466cdbffede843a6379dce7e_4dc4284 <cbc8558ff26f685f62baa2a2eaee30b3_1013263>, 2021
 # Antoni Das <Antonidas159@gmail.com>, 2017
+# Antonio <piuntn@gmail.com>, 2023
 # LegendGuard, 2020
 # LegendGuard, 2020-2023
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
@@ -10200,7 +10201,7 @@ msgstr "公式設定"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
-msgstr "好きなサーバー:"
+msgstr "好きなサーバー"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"

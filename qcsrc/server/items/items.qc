@@ -795,6 +795,19 @@ void Item_FindTeam(entity this)
 	});
 }
 
+void Item_CopyFields(entity this, entity to)
+{
+	setorigin(to, this.origin);
+	to.spawnflags = this.spawnflags;
+	to.noalign = Item_ShouldKeepPosition(this);
+	to.cnt = this.cnt;
+	to.team = this.team;
+	to.spawnfunc_checked = true;
+	// TODO: copy respawn times? this may not be desirable in some cases
+	//to.respawntime = this.respawntime;
+	//to.respawntimejitter = this.respawntimejitter;
+}
+
 // Savage: used for item garbage-collection
 void RemoveItem(entity this)
 {

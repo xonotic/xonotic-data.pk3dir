@@ -1269,27 +1269,27 @@ msgstr "Ludi modus:"
 
 #: qcsrc/client/main.qc:1453
 msgid "This match supports"
-msgstr ""
+msgstr "Hoc ludo sinuntur"
 
 #: qcsrc/client/main.qc:1455
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d ludentes"
 
 #: qcsrc/client/main.qc:1457
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d ludentes aut plures, sed non plures quam %d"
 
 #: qcsrc/client/main.qc:1459
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "non plures quam %d ludentes"
 
 #: qcsrc/client/main.qc:1461
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d ludentes aut plures"
 
 #: qcsrc/client/main.qc:1466
 msgid "Active modifications:"
@@ -3842,12 +3842,12 @@ msgstr "%sHostes (^BG%s%s)^BG suum vexillum tenent! Id recipe!"
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes^BG vexillum ^TC^TT^BG tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "%sHostes (^BG%s%s)^BG vexillum ^TC^TT^BG tenent! Id recipe!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
@@ -3884,7 +3884,7 @@ msgstr "^BGMorati! Inimici detectro te iam videre possunt!"
 
 #: qcsrc/common/notifications/all.inc:589
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr "^BGMorati! Vexilliferi a hostes detectro iam videri possunt!"
+msgstr "^BGMorati! Vexilliferi ab hostibus detectro iam videri possunt!"
 
 #: qcsrc/common/notifications/all.inc:593
 #, c-format
@@ -4262,6 +4262,8 @@ msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
+"^K1Non est ubi nascaris!\n"
+"Utinam tua manus agat..."
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
@@ -4269,36 +4271,44 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Nunc ludere non potes.\n"
+"Hic non plures quam ^F2%s^BG ludentes ludere possunt."
 
 #: qcsrc/common/notifications/all.inc:712
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGPilam cepisti"
 
 #: qcsrc/common/notifications/all.inc:713
 msgid "^BGKilling people while you don't have the ball gives no points!"
-msgstr ""
+msgstr "^BGInterficis dum pilam non tenes, tuae rationi igitur non additur!"
 
 #: qcsrc/common/notifications/all.inc:715
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
+"^BGOmnes claves tua manus tenet!\n"
+"Iuva ut claves portantes conveniant!"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
+"^BGOmnes claves ^TCmanus ^TT^BG tenet!\n"
+"Obsta ^F4NUNC^BG!"
 
 #: qcsrc/common/notifications/all.inc:717
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
+"^BGOmnes claves tua manus tenet!\n"
+"Alios claves portantes conveni ^F4NUNC^BG!"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^F4Round will start in ^COUNT"
-msgstr ""
+msgstr "^F4Tempus incipietur post ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:719
 msgid "^BGScanning frequency range..."
@@ -4306,21 +4316,23 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr ""
+msgstr "^BGIncipis portans ^TCclavem ^TT"
 
 #: qcsrc/common/notifications/all.inc:722
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr ""
+msgstr "^BGIam nullam vitam habes, posteriorem ludum expectabis"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
 "^F4WARNING:^BG you can't rejoin this match after spectating.\n"
 "Use the same command again to spectate anyway."
 msgstr ""
+"^F4MONERE:^BG ad hunc ludum redire non potes si spectas.\n"
+"Iterum ipso iussu utere ut spectes tamen."
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGPrincipes ab inimicis detectro iam videri possunt!"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -4328,11 +4340,13 @@ msgid ""
 "^BGWaiting for players to join...\n"
 "Need active players for: %s"
 msgstr ""
+"^BGExpectatur ut plures ludant...\n"
+"Ludentibus deest: %s"
 
 #: qcsrc/common/notifications/all.inc:728
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
-msgstr ""
+msgstr "^BGExpectatur ut %s plures ludant..."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYour weapon has been downgraded until you find some ammo!"

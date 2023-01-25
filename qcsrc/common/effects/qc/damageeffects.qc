@@ -76,8 +76,8 @@ void DamageEffect_Think(entity this)
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
 	{
-		// if the player was dead but is now alive, it means he respawned
-		// if so, clear his damage effects, or damages from his dead body will be copied back
+		// if the player was dead but is now alive, it means they respawned
+		// if so, clear their damage effects, or damages from their dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
 		delete(this);
 		return;
