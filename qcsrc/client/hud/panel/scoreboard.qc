@@ -1076,31 +1076,19 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 
 		case SP_CTS_STRAFE:
 		{
-			float strafe_efficiency = pl.(scores(field)) / 10000;
+			float strafe_efficiency = pl.(scores(field)) / 1000;
 			if(strafe_efficiency < -1) return "";
 			sbt_field_rgb = '1 1 1' - (strafe_efficiency > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_efficiency);
-			return sprintf("%.2f%%", strafe_efficiency * 100);
+			return sprintf("%.1f%%", strafe_efficiency * 100);
 		}
 
 		case SP_CTS_STARTSPEED:
-		{
-			float startspeed = pl.(scores(field)) / 100;
-			if(startspeed < 0) return "";
-			return sprintf("%.2f qu/s", startspeed);
-		}
-
 		case SP_CTS_AVGSPEED:
-		{
-			float avgspeed = pl.(scores(field)) / 100;
-			if(avgspeed < 0) return "";
-			return sprintf("%.2f qu/s", avgspeed);
-		}
-
 		case SP_CTS_TOPSPEED:
 		{
-			float topspeed = pl.(scores(field)) / 100;
-			if(topspeed < 0) return "";
-			return sprintf("%.2f qu/s", topspeed);
+			float speed = pl.(scores(field)) * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			if(speed < 0) return "";
+			return sprintf("%d%s", speed, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 		}
 
 		default: case SP_SCORE:
