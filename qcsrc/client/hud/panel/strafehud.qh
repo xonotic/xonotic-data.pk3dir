@@ -78,7 +78,7 @@ AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 0, "strafehud projection mode
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);
 vector StrafeHUD_mixColors(vector, vector, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int, float);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int, bool, float);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
