@@ -761,6 +761,9 @@ void HUD_StrafeHUD()
 				float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
 				float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
 
+				offset = StrafeHUD_projectOffset(offset, hudangle);
+				switch_offset = StrafeHUD_projectOffset(switch_offset, hudangle);
+
 				// remove switch indicator width from offset
 				if(direction == STRAFEHUD_DIRECTION_LEFT)
 				{
@@ -1209,7 +1212,7 @@ float StrafeHUD_projectWidth(float offset, float width, float range)
 }
 
 // functions to make hud elements align perfectly in the hud area
-void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vector color, float alpha, int type, int gradientType, bool projectWidth, float range)
+void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vector color, float alpha, int type, int gradientType, bool doProject, float range)
 {
 	float mirror_offset, mirror_width;
 	vector size = panel_size;
@@ -1246,8 +1249,11 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vect
 
 	vector original_size = size;
 	float original_offset = offset;
-	if(projectWidth && size.x > 0) size.x = StrafeHUD_projectWidth(offset, size.x, range);
-	offset = StrafeHUD_projectOffset(offset, range);
+	if(doProject)
+	{
+		if(size.x > 0) size.x = StrafeHUD_projectWidth(offset, size.x, range);
+		offset = StrafeHUD_projectOffset(offset, range);
+	}
 
 	if(mirror_offset < 0)
 	{
@@ -1265,8 +1271,11 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vect
 
 	vector original_mirror_size = mirror_size;
 	float original_mirror_offset = mirror_offset;
-	if(projectWidth && mirror_size.x > 0) mirror_size.x = StrafeHUD_projectWidth(mirror_offset, mirror_size.x, range);
-	mirror_offset = StrafeHUD_projectOffset(mirror_offset, range);
+	if(doProject)
+	{
+		if(mirror_size.x > 0) mirror_size.x = StrafeHUD_projectWidth(mirror_offset, mirror_size.x, range);
+		mirror_offset = StrafeHUD_projectOffset(mirror_offset, range);
+	}
 
 	switch(type)
 	{
@@ -1323,12 +1332,12 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vect
 			StrafeHUD_drawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
 				original_mirror_size, original_width, original_mirror_offset,
-				alpha, gradient_mirror_offset, gradientType, range);
+				alpha, gradient_mirror_offset, gradientType, doProject, range);
 
 			StrafeHUD_drawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
 				original_size, original_width, original_offset,
-				alpha, gradient_offset, gradientType, range);
+				alpha, gradient_offset, gradientType, doProject, range);
 	}
 }
 
@@ -1343,7 +1352,7 @@ vector StrafeHUD_mixColors(vector color1, vector color2, float ratio)
 	return mixedColor;
 }
 
-void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType, float range)
+void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType, bool doProject, float range)
 {
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
@@ -1354,10 +1363,13 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 	for(int i = 0; i < size.x; ++i)
 	{
 		float ratio, alpha_ratio, combine_ratio1, combine_ratio2, segment_offset;
-		segment_offset = offset + i;
 		segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
-		segment_size.x = StrafeHUD_projectWidth(segment_offset, segment_size.x, range);
-		segment_offset = StrafeHUD_projectOffset(segment_offset, range);
+		segment_offset = offset + i;
+		if(doProject)
+		{
+			segment_size.x = StrafeHUD_projectWidth(segment_offset, segment_size.x, range);
+			segment_offset = StrafeHUD_projectOffset(segment_offset, range);
+		}
 		ratio = (i + segment_size.x / 2 + gradientOffset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
 		if(ratio > 1) ratio = 2 - ratio;
 		if(gradientType != STRAFEHUD_GRADIENT_RIGHT) ratio = 1 - ratio;
