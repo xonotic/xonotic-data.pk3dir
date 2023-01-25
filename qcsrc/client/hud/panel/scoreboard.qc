@@ -154,6 +154,8 @@ string Label_getInfo(string label, int mode)
 		case "revivals":     if (!mode) return CTX(_("SCO^revivals"));     else LOG_HELP(strcat("^3", "revivals", "           ^7", _("Number of revivals")));
 		case "rounds":       if (!mode) return CTX(_("SCO^rounds won"));   else LOG_HELP(strcat("^3", "rounds", "             ^7", _("Number of rounds won")));
 		case "score":        if (!mode) return CTX(_("SCO^score"));        else LOG_HELP(strcat("^3", "score", "              ^7", _("Total score")));
+		case "avgspeed":     if (!mode) return CTX(_("SCO^average speed"));else LOG_HELP(strcat("^3", "avgspeed", "           ^7", _("Average speed (CTS)")));
+		case "topspeed":     if (!mode) return CTX(_("SCO^top speed"));    else LOG_HELP(strcat("^3", "topspeed", "           ^7", _("Top speed (CTS)")));
 		case "startspeed":   if (!mode) return CTX(_("SCO^start speed"));  else LOG_HELP(strcat("^3", "startspeed", "         ^7", _("Start speed (CTS)")));
 		case "strafe":       if (!mode) return CTX(_("SCO^strafe"));       else LOG_HELP(strcat("^3", "strafe", "             ^7", _("Strafe efficiency (CTS)")));
 		case "suicides":     if (!mode) return CTX(_("SCO^suicides"));     else LOG_HELP(strcat("^3", "suicides", "           ^7", _("Number of suicides")));
@@ -730,7 +732,7 @@ void Cmd_Scoreboard_Help()
 " +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
 " +lms/lives +lms/rank" \
 " +kh/kckills +kh/losses +kh/caps" \
-" ?+rc/laps ?+rc/time ?+cts/strafe ?+cts/startspeed +rc,cts/fastest" \
+" ?+rc/laps ?+rc/time ?+cts/strafe ?+cts/startspeed ?+cts/avgspeed ?+cts/topspeed +rc,cts/fastest" \
 " +as/objectives +nb/faults +nb/goals" \
 " +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
 " +dom/ticks +dom/takes" \
@@ -1085,6 +1087,20 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			float startspeed = pl.(scores(field)) / 100;
 			if(startspeed < 0) return "";
 			return sprintf("%.2f qu/s", startspeed);
+		}
+
+		case SP_CTS_AVGSPEED:
+		{
+			float avgspeed = pl.(scores(field)) / 100;
+			if(avgspeed < 0) return "";
+			return sprintf("%.2f qu/s", avgspeed);
+		}
+
+		case SP_CTS_TOPSPEED:
+		{
+			float topspeed = pl.(scores(field)) / 100;
+			if(topspeed < 0) return "";
+			return sprintf("%.2f qu/s", topspeed);
 		}
 
 		default: case SP_SCORE:
