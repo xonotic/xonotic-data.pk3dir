@@ -19,6 +19,11 @@ bool autocvar_g_cts_drop_monster_items;
 .float race_oldcheckpoint;
 .bool startspeed_recorded;
 .float startspeed;
+.float race_avgspeed_sum;
+.float race_avgspeed_time;
+.float race_avgspeed_best;
+.float race_topspeed;
+.float race_topspeed_best;
 void havocbot_role_cts(entity this)
 {
 	if(IS_DEAD(this))
@@ -62,6 +67,8 @@ void cts_ScoreRules()
         if (g_race_qualifying) {
             field(SP_CTS_STRAFE, "strafe", 0);
             field(SP_CTS_STARTSPEED, "startspeed", 0);
+            field(SP_CTS_AVGSPEED, "avgspeed", 0);
+            field(SP_CTS_TOPSPEED, "topspeed", 0);
             field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
         } else {
             field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
@@ -147,16 +154,31 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 		}
 	}
 	player.strafe_efficiency_sum += calculate_strafe_efficiency(player, CS(player).movement, dt) * dt;
-	if(!player.race_started) player.startspeed_recorded = false;
-	if(player.race_started && !player.startspeed_recorded && player.race_checkpoint != 0 && player.race_oldcheckpoint == 0)
+	if(player.race_started)
 	{
-		float new_startspeed = vlen(vec2(player.velocity));
-		player.startspeed_recorded = true;
-		if(new_startspeed > player.startspeed)
-		{
-			player.startspeed = new_startspeed;
-			PlayerScore_Set(player, SP_CTS_STARTSPEED, player.startspeed * 100);
-		}
+	    if(!player.startspeed_recorded && player.race_checkpoint != 0 && player.race_oldcheckpoint == 0)
+	    {
+		    float new_startspeed = vlen(vec2(player.velocity));
+		    player.startspeed_recorded = true;
+		    if(new_startspeed > player.startspeed)
+		    {
+			    player.startspeed = new_startspeed;
+			    PlayerScore_Set(player, SP_CTS_STARTSPEED, player.startspeed * 100);
+		    }
+	    }
+
+	    float current_speed = vlen(vec2(player.velocity));
+	    if(player.race_topspeed < current_speed)
+	    {
+	        player.race_topspeed = current_speed;
+	    }
+	    player.race_avgspeed_sum += current_speed * dt;
+	    player.race_avgspeed_time += dt;
+	}
+	else
+	{
+	    player.startspeed_recorded = false;
+		player.race_avgspeed_sum = player.race_avgspeed_time = player.race_topspeed = 0;
 	}
 	player.race_oldcheckpoint = player.race_checkpoint;
 }
@@ -176,6 +198,10 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 		it.startspeed_recorded = false;
 		it.race_oldcheckpoint = 0;
 		PlayerScore_Set(it, SP_CTS_STARTSPEED, -1);
+        it.race_avgspeed_sum = it.race_avgspeed_time = it.race_topspeed = 0;
+        it.race_avgspeed_best = it.race_topspeed_best = -1;
+        PlayerScore_Set(it, SP_CTS_AVGSPEED, -1);
+        PlayerScore_Set(it, SP_CTS_TOPSPEED, -1);
 
 		if(it.race_place)
 		{
@@ -209,6 +235,10 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	player.startspeed_recorded = false;
 	player.race_oldcheckpoint = 0;
 	PlayerScore_Set(player, SP_CTS_STARTSPEED, -1);
+    player.race_avgspeed_sum = player.race_avgspeed_time = player.race_topspeed = 0;
+    player.race_avgspeed_best = player.race_topspeed_best = -1;
+    PlayerScore_Set(player, SP_CTS_AVGSPEED, -1);
+    PlayerScore_Set(player, SP_CTS_TOPSPEED, -1);
 
 	race_SendAll(player, false);
 }
@@ -280,6 +310,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 
 	frag_target.strafe_efficiency_sum = frag_target.strafe_efficiency_time = 0;
 	frag_target.startspeed_recorded = false;
+	frag_target.race_avgspeed_sum = frag_target.race_avgspeed_time = frag_target.race_topspeed = 0;
 
 	if(autocvar_g_cts_removeprojectiles)
 	{
@@ -380,6 +411,19 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 	{
 		player.strafe_efficiency_best = strafe_efficiency_average;
 		PlayerScore_Set(player, SP_CTS_STRAFE, player.strafe_efficiency_best * 10000);
+	}
+
+	float race_speed_average = player.race_avgspeed_sum / player.race_avgspeed_time;
+	if(player.race_avgspeed_best < race_speed_average)
+	{
+		player.race_avgspeed_best = race_speed_average;
+		PlayerScore_Set(player, SP_CTS_AVGSPEED, player.race_avgspeed_best * 100);
+	}
+
+	if(player.race_topspeed_best < player.race_topspeed)
+	{
+		player.race_topspeed_best = player.race_topspeed;
+		PlayerScore_Set(player, SP_CTS_TOPSPEED, player.race_topspeed_best * 100);
 	}
 
 	// useful to prevent cheating by running back to the start line and starting out with more speed
