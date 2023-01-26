@@ -2513,7 +2513,7 @@ msgstr "^BG%s^BG вернул ^TC^TT^BG флаг"
 #: qcsrc/common/notifications/all.inc:552
 #, c-format
 msgid "^F2Throwing coin... Result: %s^F2!"
-msgstr "^F2Бросаем монетку… Результат: %s^F2!"
+msgstr "^F2Бросаем монетку… Исход: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:262
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
