@@ -14,6 +14,7 @@ void trigger_push_use(entity this, entity actor, entity trigger)
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_PUSH)
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_PUSH_VELOCITY)
 REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 
 /*
@@ -128,10 +129,109 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	return sdir * vs + '0 0 1' * vz;
 }
 
-bool jumppad_push(entity this, entity targ)
+vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity)
+{
+	vector sdir = normalize(vec2(pushed_entity.velocity));
+	float zdir = copysign(1, pushed_entity.velocity.z);
+	if(pushed_entity.velocity.z == 0) zdir = 1; // copysign is negative on zero, we don't want that
+
+	vector vs_tgt = '0 0 0';
+	float vz_tgt = 0;
+	if (!(this.spawnflags & PLAYERDIR_XY) || !(this.spawnflags & PLAYERDIR_Z))
+	{
+		vector vel_tgt = trigger_push_calculatevelocity(org, tgt, 0, pushed_entity);
+		vs_tgt = vec2(vel_tgt);
+		vz_tgt = vel_tgt.z;
+
+		if (this.spawnflags & BIDIRECTIONAL_XY)
+		{
+			if (normalize(vs_tgt) * sdir < 0)
+			{
+				vs_tgt *= -1;
+			}
+		}
+
+		if (this.spawnflags & BIDIRECTIONAL_Z)
+		{
+			if (signbit(vz_tgt) != signbit(zdir))
+			{
+				vz_tgt *= -1;
+			}
+		}
+	}
+
+	vector vs;
+	if (this.spawnflags & PLAYERDIR_XY)
+	{
+		vs = sdir * speed;
+	}
+	else
+	{
+		vs = vs_tgt;
+	}
+
+	float vz;
+	if (this.spawnflags & PLAYERDIR_Z)
+	{
+		vz = zdir * count;
+	}
+	else
+	{
+		vz = vz_tgt;
+	}
+
+	if (this.spawnflags & ADD_XY)
+	{
+		vs += vec2(pushed_entity.velocity);
+		if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
+		{
+			if ((normalize(vs) * sdir) < 0)
+			{
+				vs = '0 0 0';
+			}
+		}
+	}
+
+	if (this.spawnflags & ADD_Z)
+	{
+		vz += pushed_entity.velocity.z;
+		if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
+		{
+			if (signbit(vz) != signbit(zdir))
+			{
+				vz = 0;
+			}
+		}
+	}
+
+	return vs + '0 0 1' * vz;
+}
+
+void check_pushed(entity this)
+{
+	IL_EACH(this.pushed, WarpZoneLib_ExactTrigger_Touch(this, it),
+	{
+		IL_REMOVE(this.pushed, it);
+	});
+	if(!IL_EMPTY(this.pushed))
+	{
+		this.nextthink = time;
+	}
+}
+
+bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 {
 	if (!isPushable(targ))
 		return false;
+
+	if(is_velocity_pad && IL_CONTAINS(this.pushed, targ))
+		return false;
+
+	if(is_velocity_pad)
+	{
+		IL_PUSH(this.pushed, targ); // may be briefly out of sync between client and server if client prediction is toggled
+		this.nextthink = time;
+	}
 
 	vector org = targ.origin;
 
@@ -143,7 +243,14 @@ bool jumppad_push(entity this, entity targ)
 
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
+		if(!is_velocity_pad)
+		{
+			targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
+		}
+		else
+		{
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, this.enemy, this.speed, this.count, targ);
+		}
 	}
 	else if(this.target && this.target != "")
 	{
@@ -156,11 +263,28 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
+		if(!is_velocity_pad)
+		{
+			targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
+		}
+		else
+		{
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, RandomSelection_chosen_ent, this.speed, this.count, targ);
+		}
 	}
 	else
 	{
-		targ.velocity = this.movedir;
+		if(!is_velocity_pad)
+		{
+			targ.velocity = this.movedir;
+		}
+		else
+		{
+#ifdef SVQC
+			objerror (this, "Jumppad with no target");
+#endif
+			return false;
+		}
 	}
 
 	UNSET_ONGROUND(targ);
@@ -268,7 +392,7 @@ void trigger_push_touch(entity this, entity toucher)
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
-	noref bool success = jumppad_push(this, toucher);
+	noref bool success = jumppad_push(this, toucher, false);
 
 #ifdef SVQC
 	if (success && (this.spawnflags & PUSH_ONCE))
@@ -278,6 +402,19 @@ void trigger_push_touch(entity this, entity toucher)
 		this.nextthink = time;
 	}
 #endif
+}
+
+void trigger_push_velocity_touch(entity this, entity toucher)
+{
+	if (this.active == ACTIVE_NOT)
+		return;
+
+	if(this.team && DIFF_TEAM(this, toucher))
+		return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
+
+	noref bool success = jumppad_push(this, toucher, true);
 }
 
 #ifdef SVQC
@@ -575,6 +712,21 @@ float trigger_push_send(entity this, entity to, float sf)
 	return true;
 }
 
+float trigger_push_velocity_send(entity this, entity to, float sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH_VELOCITY);
+
+	WriteByte(MSG_ENTITY, this.team);
+	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteByte(MSG_ENTITY, this.active);
+	WriteCoord(MSG_ENTITY, this.speed);
+	WriteCoord(MSG_ENTITY, this.count);
+
+	trigger_common_write(this, true);
+
+	return true;
+}
+
 void trigger_push_updatelink(entity this)
 {
 	this.SendFlags |= SF_TRIGGER_INIT;
@@ -583,6 +735,11 @@ void trigger_push_updatelink(entity this)
 void trigger_push_link(entity this)
 {
 	trigger_link(this, trigger_push_send);
+}
+
+void trigger_push_velocity_link(entity this)
+{
+	trigger_link(this, trigger_push_velocity_send);
 }
 
 /*
@@ -624,6 +781,34 @@ spawnfunc(trigger_push)
 	InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
 
+/*
+ * ENTITY PARAMETERS:
+ *
+ *   target:  this points to the target_position to which the player will jump.
+ *   speed:   XY speed for player-directional velocity pads - either sets or adds to the player's horizontal velocity.
+ *   count:   Z speed for player-directional velocity pads - either sets or adds to the player's vertical velocity.
+ */
+spawnfunc(trigger_push_velocity)
+{
+	SetMovedir(this);
+
+	trigger_init(this);
+
+	this.active = ACTIVE_ACTIVE;
+	this.use = trigger_push_use;
+	settouch(this, trigger_push_velocity_touch);
+
+	// normal push setup
+	if (!this.noise)
+		this.noise = "misc/jumppad.wav";
+	precache_sound (this.noise);
+
+	trigger_push_velocity_link(this); // link it now
+
+	this.pushed = IL_NEW();
+	setthink(this, check_pushed);
+}
+
 
 bool target_push_send(entity this, entity to, float sf)
 {
@@ -643,7 +828,7 @@ void target_push_use(entity this, entity actor, entity trigger)
 	if(trigger.classname == "trigger_push" || trigger == this)
 		return; // WTF, why is this a thing
 
-	jumppad_push(this, actor);
+	jumppad_push(this, actor, false);
 }
 
 void target_push_link(entity this)
@@ -701,6 +886,26 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	settouch(this, trigger_push_touch);
 	this.move_time = time;
 	defer(this, 0.25, trigger_push_findtarget);
+
+	return true;
+}
+
+NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH_VELOCITY, bool isnew)
+{
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	this.spawnflags = ReadInt24_t();
+	this.active = ReadByte();
+	this.speed = ReadCoord();
+	this.count = ReadCoord();
+
+	trigger_common_read(this, true);
+
+	this.entremove = trigger_remove_generic;
+	this.solid = SOLID_TRIGGER;
+	settouch(this, trigger_push_velocity_touch);
+	this.move_time = time;
+	this.pushed = IL_NEW();
+	setthink(this, check_pushed);
 
 	return true;
 }
