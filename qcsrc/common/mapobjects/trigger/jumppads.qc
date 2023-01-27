@@ -129,11 +129,10 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	return sdir * vs + '0 0 1' * vz;
 }
 
-vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity)
+vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool is_pushed)
 {
 	vector sdir = normalize(vec2(pushed_entity.velocity));
 	float zdir = copysign(1, pushed_entity.velocity.z);
-	if(pushed_entity.velocity.z == 0) zdir = 1; // copysign is negative on zero, we don't want that
 
 	vector vs_tgt = '0 0 0';
 	float vz_tgt = 0;
@@ -182,24 +181,42 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 
 	if (this.spawnflags & ADD_XY)
 	{
-		vs += vec2(pushed_entity.velocity);
-		if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
+		vector vs_add = vec2(pushed_entity.velocity);
+		if (is_pushed)
 		{
-			if ((normalize(vs) * sdir) < 0)
+			vs = vs_add;
+		}
+		else
+		{
+			vs += vs_add;
+
+			if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
 			{
-				vs = '0 0 0';
+				if ((normalize(vs) * sdir) < 0)
+				{
+					vs = '0 0 0';
+				}
 			}
 		}
 	}
 
 	if (this.spawnflags & ADD_Z)
 	{
-		vz += pushed_entity.velocity.z;
-		if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
+		float vz_add = pushed_entity.velocity.z;
+		if (is_pushed)
 		{
-			if (signbit(vz) != signbit(zdir))
+			vz = vz_add;
+		}
+		else
+		{
+			vz += vz_add;
+
+			if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
 			{
-				vz = 0;
+				if (signbit(vz) != signbit(zdir))
+				{
+					vz = 0;
+				}
 			}
 		}
 	}
@@ -224,15 +241,6 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 	if (!isPushable(targ))
 		return false;
 
-	if(is_velocity_pad && IL_CONTAINS(this.pushed, targ))
-		return false;
-
-	if(is_velocity_pad)
-	{
-		IL_PUSH(this.pushed, targ); // may be briefly out of sync between client and server if client prediction is toggled
-		this.nextthink = time;
-	}
-
 	vector org = targ.origin;
 
 	if(STAT(Q3COMPAT))
@@ -240,6 +248,8 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		org.z += targ.mins_z;
 		org.z += 1; // off by 1!
 	}
+
+	bool is_pushed = is_velocity_pad && IL_CONTAINS(this.pushed, targ);
 
 	if(this.enemy)
 	{
@@ -249,7 +259,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 		else
 		{
-			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, this.enemy, this.speed, this.count, targ);
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, this.enemy, this.speed, this.count, targ, is_pushed);
 		}
 	}
 	else if(this.target && this.target != "")
@@ -269,7 +279,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 		else
 		{
-			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, RandomSelection_chosen_ent, this.speed, this.count, targ);
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, RandomSelection_chosen_ent, this.speed, this.count, targ, is_pushed);
 		}
 	}
 	else
@@ -287,7 +297,13 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 	}
 
-	UNSET_ONGROUND(targ);
+	if(is_velocity_pad && !is_pushed)
+	{
+		IL_PUSH(this.pushed, targ); // may be briefly out of sync between client and server if client prediction is toggled
+		this.nextthink = time;
+	}
+
+	if(!is_pushed) UNSET_ONGROUND(targ);
 
 #ifdef CSQC
 	if (targ.flags & FL_PROJECTILE)
@@ -315,7 +331,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 		// prevent sound spam when a player hits the jumppad more than once
 		// or when a dead player gets stuck in the jumppad for some reason
-		if(this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
+		if(!is_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
