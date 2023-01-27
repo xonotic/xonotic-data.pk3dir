@@ -4,12 +4,21 @@
 const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
 const int PUSH_SILENT = BIT(1); // not used?
 
+const int PLAYERDIR_XY = BIT(0); // if set, trigger will apply the horizontal speed in the player's horizontal direction of travel, otherwise it uses the target XY component.
+const int ADD_XY = BIT(1); // if set, trigger will add to the player's horizontal velocity, otherwise it sets the player's horizontal velocity.
+const int PLAYERDIR_Z = BIT(2); // if set, trigger will apply the vertical speed in the player's vertical direction of travel, otherwise it uses the target Z component.
+const int ADD_Z = BIT(3); // if set, trigger will add to the player's vertical velocity, otherwise it sets the player's vertical velocity.
+const int BIDIRECTIONAL_XY = BIT(4); // if set, non-playerdir velocity pads will function in 2 directions based on the target specified. The chosen direction is based on the current direction of travel. Applies to horizontal direction.
+const int BIDIRECTIONAL_Z = BIT(5); // if set, non-playerdir velocity pads will function in 2 directions based on the target specified. The chosen direction is based on the current direction of travel. Applies to vertical direction.
+const int CLAMP_NEGATIVE_ADDS = BIT(6); // if set, then a velocity pad that adds negative velocity will be clamped to 0, if the resultant velocity would bounce the player in the opposite direction.
+
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 
 .float pushltime;
 .bool istypefrag;
 .float height;
+.IntrusiveList pushed;
 
 const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
@@ -54,8 +63,17 @@ void trigger_push_findtarget(entity this);
  *            values to target a point on the ceiling.
  *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
  */
+
+/*
+ * ENTITY PARAMETERS:
+ *
+ *   target:  this points to the target_position to which the player will jump.
+ *   speed:   XY speed for player-directional velocity pads - either sets or adds to the player's horizontal velocity.
+ *   count:   Z speed for player-directional velocity pads - either sets or adds to the player's vertical velocity.
+ */
 #ifdef SVQC
 spawnfunc(trigger_push);
+spawnfunc(trigger_push_velocity);
 
 spawnfunc(target_push);
 spawnfunc(info_notnull);
