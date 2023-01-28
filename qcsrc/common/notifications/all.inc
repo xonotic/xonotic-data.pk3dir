@@ -98,12 +98,20 @@
 #define N_GNTLOFF 1
 #define N__ALWAYS 2
 
-#define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position) \
+// default time for announcer queue (time to wait before the next announcer is played)
+// -1 = bypass queue and play the announcer immediately
+// 0 = use the announcer sound length
+// >0 = use the specified time in seconds
+#define ANNCE_INSTANT -1
+#define ANNCE_LENGTH 0
+#define ANNCE_DEFTIME 2
+
+#define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position, queuetime) \
     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, defaultvalue) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position, queuetime) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position, queuetime) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position, queuetime) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position, queuetime)
 
 // MSG_ANNCE_NOTIFICATIONS
     MSG_ANNCE_NOTIF(ACHIEVEMENT_AIRSHOT,        N_GNTLOFF, "airshot",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
@@ -202,16 +210,16 @@
     MSG_ANNCE_NOTIF(VOTE_CALL,                  N__ALWAYS, "votecall",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
     MSG_ANNCE_NOTIF(VOTE_FAIL,                  N__ALWAYS, "votefail",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
-    MULTITEAM_ANNCE(TEAM_SCORES,                N__ALWAYS, "scores_%s",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MULTITEAM_ANNCE(TEAM_SCORES,                N__ALWAYS, "scores_%s",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(CTF_PICKUP_YOU,             N__ALWAYS, "ctf_pickup_you",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(CTF_PICKUP_TEAM,            N__ALWAYS, "ctf_pickup_team",   CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(CTF_PICKUP_ENEMY,           N__ALWAYS, "ctf_pickup_enemy",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MULTITEAM_ANNCE(CTF_PICKUP,                 N__ALWAYS, "ctf_pickup_%s",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(CTF_PICKUP_YOU,             N__ALWAYS, "ctf_pickup_you",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(CTF_PICKUP_TEAM,            N__ALWAYS, "ctf_pickup_team",   CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(CTF_PICKUP_ENEMY,           N__ALWAYS, "ctf_pickup_enemy",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MULTITEAM_ANNCE(CTF_PICKUP,                 N__ALWAYS, "ctf_pickup_%s",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(CTF_RETURN_TEAM,            N__ALWAYS, "ctf_return_team",   CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(CTF_RETURN_ENEMY,           N__ALWAYS, "ctf_return_enemy",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MULTITEAM_ANNCE(CTF_RETURN,                 N__ALWAYS, "ctf_return_%s",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(CTF_RETURN_TEAM,            N__ALWAYS, "ctf_return_team",   CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(CTF_RETURN_ENEMY,           N__ALWAYS, "ctf_return_enemy",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MULTITEAM_ANNCE(CTF_RETURN,                 N__ALWAYS, "ctf_return_%s",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
 #undef N___NEVER
 #undef N_GNTLOFF
