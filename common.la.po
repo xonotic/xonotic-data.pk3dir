@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2023\n"
 "Language-Team: Latin (http://www.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -2312,7 +2312,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:60
 msgid "Generator"
-msgstr ""
+msgstr "Generatrum"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Weapon"
@@ -4316,7 +4316,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr "^BGIncipis portans ^TCclavem ^TT"
+msgstr "^BGIncipis portans ^TCclavem ^TTm"
 
 #: qcsrc/common/notifications/all.inc:722
 msgid "^BGYou have no lives left, you must wait until the next match"
@@ -4863,28 +4863,28 @@ msgstr "Roseum"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Red"
-msgstr ""
+msgstr "Rubrum"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Blue"
-msgstr ""
+msgstr "Caeruleum"
 
 #: qcsrc/common/teams.qh:49
 msgid "GENERATOR^Yellow"
-msgstr ""
+msgstr "Flavum"
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
-msgstr ""
+msgstr "Roseum"
 
 #: qcsrc/common/turrets/cl_turrets.qc:126
 #, c-format
 msgid "%s under attack!"
-msgstr ""
+msgstr "%s impetitur!"
 
 #: qcsrc/common/turrets/turret.qh:11
 msgid "Turret"
-msgstr ""
+msgstr "Turriola"
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
@@ -4974,55 +4974,55 @@ msgstr ""
 #: qcsrc/common/util.qc:248
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:121
 msgid "Dodging"
-msgstr ""
+msgstr "Vitatio"
 
 #: qcsrc/common/util.qc:249
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:241
 msgid "InstaGib"
-msgstr ""
+msgstr "InstaGib"
 
 #: qcsrc/common/util.qc:250
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:182
 msgid "New Toys"
-msgstr ""
+msgstr "Crepundiae Novae"
 
 #: qcsrc/common/util.qc:251
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid "NIX"
-msgstr ""
+msgstr "NIX"
 
 #: qcsrc/common/util.qc:252
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:187
 msgid "Rocket Flying"
-msgstr ""
+msgstr "Missili Igneo Volare"
 
 #: qcsrc/common/util.qc:253
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:177
 msgid "Invincible Projectiles"
-msgstr ""
+msgstr "Missilia Indelebilia"
 
 #: qcsrc/common/util.qc:254
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Low gravity"
-msgstr ""
+msgstr "Gravitas parva"
 
 #: qcsrc/common/util.qc:255
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
 msgid "Cloaked"
-msgstr ""
+msgstr "Palliatus"
 
 #: qcsrc/common/util.qc:256
 msgid "Hook"
-msgstr ""
+msgstr "Uncus"
 
 #: qcsrc/common/util.qc:257
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "Midair"
-msgstr ""
+msgstr "In Aere"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Pugna Modo Pugno"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -5032,21 +5032,21 @@ msgstr ""
 #: qcsrc/common/util.qc:261
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:197
 msgid "Weapons stay"
-msgstr ""
+msgstr "Arma manent"
 
 #: qcsrc/common/util.qc:262
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:149
 msgid "Blood loss"
-msgstr ""
+msgstr "Exsanguis"
 
 #: qcsrc/common/util.qc:264
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
 msgid "Buffs"
-msgstr ""
+msgstr "Firmamina"
 
 #: qcsrc/common/util.qc:265
 msgid "Overkill"
-msgstr ""
+msgstr "Immoderatio"
 
 #: qcsrc/common/util.qc:266
 msgid "No powerups"
@@ -5059,24 +5059,24 @@ msgstr ""
 #: qcsrc/common/util.qc:268
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Touch explode"
-msgstr ""
+msgstr "Tactus eruptio"
 
 #: qcsrc/common/util.qc:269
 msgid "Wall jumping"
-msgstr ""
+msgstr "Pariete salire"
 
 #: qcsrc/common/util.qc:270
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:256
 msgid "No start weapons"
-msgstr ""
+msgstr "Sine armis incipere"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr ""
+msgstr "Granatae"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Flatrum obvium"
 
 #: qcsrc/common/util.qc:1397
 msgid "Male"
@@ -5088,148 +5088,148 @@ msgstr "Femina"
 
 #: qcsrc/common/util.qc:1399
 msgid "Undisclosed"
-msgstr ""
+msgstr "Sexus Velatus"
 
 #: qcsrc/common/util.qc:1446
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<CLAVIS INCOGNITA>"
 
 #: qcsrc/common/util.qc:1447
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<CLAVNUM INCOGNITUS>"
 
 #: qcsrc/common/util.qc:1452
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1453 qcsrc/common/util.qc:1524
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "INTRARE"
 
 #: qcsrc/common/util.qc:1454
 msgid "ESCAPE"
-msgstr ""
+msgstr "EXCIDERE"
 
 #: qcsrc/common/util.qc:1455
 msgid "SPACE"
-msgstr ""
+msgstr "SPATIUM"
 
 #: qcsrc/common/util.qc:1457
 msgid "BACKSPACE"
-msgstr ""
+msgstr "RETROCEDERE"
 
 #: qcsrc/common/util.qc:1458 qcsrc/common/util.qc:1515
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "SAGITTASUPERA"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1510
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "SAGITTAINFERA"
 
 #: qcsrc/common/util.qc:1460 qcsrc/common/util.qc:1512
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "SAGITTASINISTRA"
 
 #: qcsrc/common/util.qc:1461 qcsrc/common/util.qc:1513
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "SAGITTADEXTRA"
 
 #: qcsrc/common/util.qc:1463
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #: qcsrc/common/util.qc:1464
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #: qcsrc/common/util.qc:1465
 msgid "SHIFT"
-msgstr ""
+msgstr "SHIFT"
 
 #: qcsrc/common/util.qc:1467 qcsrc/common/util.qc:1508
 #, c-format
 msgid "INS"
-msgstr ""
+msgstr "INS"
 
 #: qcsrc/common/util.qc:1468 qcsrc/common/util.qc:1518
 #, c-format
 msgid "DEL"
-msgstr ""
+msgstr "DEL"
 
 #: qcsrc/common/util.qc:1469 qcsrc/common/util.qc:1511
 #, c-format
 msgid "PGDN"
-msgstr ""
+msgstr "PGDEOR"
 
 #: qcsrc/common/util.qc:1470 qcsrc/common/util.qc:1516
 #, c-format
 msgid "PGUP"
-msgstr ""
+msgstr "PGSURS"
 
 #: qcsrc/common/util.qc:1471 qcsrc/common/util.qc:1514
 #, c-format
 msgid "HOME"
-msgstr ""
+msgstr "DOMUS"
 
 #: qcsrc/common/util.qc:1472 qcsrc/common/util.qc:1509
 #, c-format
 msgid "END"
-msgstr ""
+msgstr "FINIS"
 
 #: qcsrc/common/util.qc:1474
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSA"
 
 #: qcsrc/common/util.qc:1476
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUMCLAUSTRA"
 
 #: qcsrc/common/util.qc:1477
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "CAPCLAUSTRA"
 
 #: qcsrc/common/util.qc:1478
 msgid "SCROLLOCK"
-msgstr ""
+msgstr "CURSCLAUSTRA"
 
 #: qcsrc/common/util.qc:1480
 msgid "SEMICOLON"
-msgstr ""
+msgstr "VIRGPUNCT"
 
 #: qcsrc/common/util.qc:1481
 msgid "TILDE"
-msgstr ""
+msgstr "PERISPOMENE"
 
 #: qcsrc/common/util.qc:1482
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "DIPLEINVERSA"
 
 #: qcsrc/common/util.qc:1483
 msgid "QUOTE"
-msgstr ""
+msgstr "DIPLE"
 
 #: qcsrc/common/util.qc:1484
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "APOSTROPHUS"
 
 #: qcsrc/common/util.qc:1485
 msgid "BACKSLASH"
-msgstr ""
+msgstr "LINEAINVERSA"
 
 #: qcsrc/common/util.qc:1493
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1503
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "CN_%d"
 
 #: qcsrc/common/util.qc:1508 qcsrc/common/util.qc:1509
 #: qcsrc/common/util.qc:1510 qcsrc/common/util.qc:1511
@@ -5242,59 +5242,59 @@ msgstr ""
 #: qcsrc/common/util.qc:1524 qcsrc/common/util.qc:1525
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "CN_%s"
 
 #: qcsrc/common/util.qc:1517
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "PUNCTUM"
 
 #: qcsrc/common/util.qc:1519
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "DIVIDERE"
 
 #: qcsrc/common/util.qc:1520
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "LINEA"
 
 #: qcsrc/common/util.qc:1521
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "MULTIPLIC"
 
 #: qcsrc/common/util.qc:1522
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "MINUS"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "PLUS"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "AEQUALIS"
 
 #: qcsrc/common/util.qc:1530
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "QUADRIIMAGO"
 
 #: qcsrc/common/util.qc:1533
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "MUS%d"
 
 #: qcsrc/common/util.qc:1535
 msgid "MWHEELUP"
-msgstr ""
+msgstr "MROTASURS"
 
 #: qcsrc/common/util.qc:1536
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "MROTADEORS"
 
 #: qcsrc/common/util.qc:1539
 #, c-format
@@ -5304,7 +5304,7 @@ msgstr ""
 #: qcsrc/common/util.qc:1542
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1549
 #, c-format
@@ -5323,7 +5323,7 @@ msgstr ""
 #: qcsrc/common/util.qc:1567 qcsrc/common/util.qc:1568
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1550
 #, c-format
@@ -5343,32 +5343,32 @@ msgstr ""
 #: qcsrc/common/util.qc:1553
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "INCIPERE"
 
 #: qcsrc/common/util.qc:1554
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "REDIRE"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "SINISTER_POLLEX"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "DEXTER_POLLEX"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "SINISTER_UMERUS"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "DEXTER_UMERUS"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
@@ -5383,42 +5383,42 @@ msgstr ""
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "SINISTER_POLLEX_SURS"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "SINISTER_POLLEX_DEORS"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "SINISTER_POLLEX_SINIS"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "SINISTER_POLLEX_DEXTR"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "DEXTER_POLLEX_SURS"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "DEXTER_POLLEX_DEORS"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "DEXTER_POLLEX_SINIS"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "DEXTER_POLLEX_DEXTR"
 
 #: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
 #: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
@@ -5429,22 +5429,22 @@ msgstr ""
 #: qcsrc/common/util.qc:1578
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "SURSUM"
 
 #: qcsrc/common/util.qc:1579
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "DEORSUM"
 
 #: qcsrc/common/util.qc:1580
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "SINISTRUM"
 
 #: qcsrc/common/util.qc:1581
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "DEXTRUM"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
@@ -5454,23 +5454,23 @@ msgstr ""
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "%s preme"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No right gunner!"
-msgstr ""
+msgstr "Armato dextro deest!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:962
 msgid "No left gunner!"
-msgstr ""
+msgstr "Armato sinistro deest!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
-msgstr ""
+msgstr "Bombus Apis"
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:21
 msgid "Racer"
-msgstr ""
+msgstr "Cursor"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
@@ -5478,7 +5478,7 @@ msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
-msgstr ""
+msgstr "Raptor"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
@@ -5486,43 +5486,43 @@ msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
-msgstr ""
+msgstr "Raptoris bomba"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:25
 msgid "Raptor flare"
-msgstr ""
+msgstr "Raptoris flamma"
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:21
 msgid "Spiderbot"
-msgstr ""
+msgstr "Aranea Automata"
 
 #: qcsrc/common/weapons/weapon/arc.qh:20
 msgid "Arc"
-msgstr ""
+msgstr "Arcus"
 
 #: qcsrc/common/weapons/weapon/blaster.qh:20
 msgid "Blaster"
-msgstr ""
+msgstr "Flatrum"
 
 #: qcsrc/common/weapons/weapon/crylink.qh:20
 msgid "Crylink"
-msgstr ""
+msgstr "Crilictrum"
 
 #: qcsrc/common/weapons/weapon/devastator.qh:20
 msgid "Devastator"
-msgstr ""
+msgstr "Devastatrum"
 
 #: qcsrc/common/weapons/weapon/electro.qh:20
 msgid "Electro"
-msgstr ""
+msgstr "Electrum"
 
 #: qcsrc/common/weapons/weapon/fireball.qh:20
 msgid "Fireball"
-msgstr ""
+msgstr "Globum Igneum"
 
 #: qcsrc/common/weapons/weapon/hagar.qh:20
 msgid "Hagar"
-msgstr ""
+msgstr "Hagar"
 
 #: qcsrc/common/weapons/weapon/hlac.qh:20
 msgid "Heavy Laser Assault Cannon"
@@ -5531,11 +5531,11 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/hook.qh:20
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:169
 msgid "Grappling Hook"
-msgstr ""
+msgstr "Uncus Scandendo"
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:20
 msgid "MachineGun"
-msgstr ""
+msgstr "Polybolus"
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:20
 msgid "Mine Layer"
@@ -5543,7 +5543,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/mortar.qh:20
 msgid "Mortar"
-msgstr ""
+msgstr "Mortarium"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
@@ -5563,20 +5563,20 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:20
 msgid "Shotgun"
-msgstr ""
+msgstr "Sclopetum"
 
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr ""
+msgstr "M@!#% Tuba"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:21
 msgid "Vaporizer"
-msgstr ""
+msgstr "Vaporatrum"
 
 #: qcsrc/common/weapons/weapon/vortex.qh:21
 msgid "Vortex"
-msgstr ""
+msgstr "Vortex"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format
@@ -5780,7 +5780,7 @@ msgstr "%dus"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
-msgstr ""
+msgstr "Nulla descriptio"
 
 #: qcsrc/lib/spawnfunc.qh:260
 #, c-format
@@ -5792,17 +5792,17 @@ msgstr ""
 #: qcsrc/lib/string.qh:186
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr ""
+msgstr "%d dies, %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:187
 #, c-format
 msgid "%02d:%02d:%02d"
-msgstr ""
+msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
 msgid "Item %d"
-msgstr ""
+msgstr "Versus %dus"
 
 #: qcsrc/menu/item/textslider.qc:11 qcsrc/menu/item/textslider.qc:12
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:37
@@ -5821,19 +5821,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:32
 msgid "Website"
-msgstr ""
+msgstr "Situs Interretialis"
 
 #: qcsrc/menu/xonotic/credits.qc:38
 msgid "Stats"
-msgstr ""
+msgstr "Stats"
 
 #: qcsrc/menu/xonotic/credits.qc:42
 msgid "Art"
-msgstr ""
+msgstr "Ars"
 
 #: qcsrc/menu/xonotic/credits.qc:50
 msgid "Animation"
-msgstr ""
+msgstr "Animatio"
 
 #: qcsrc/menu/xonotic/credits.qc:54
 msgid "Campaign"
@@ -6005,19 +6005,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr ""
+msgstr "in config.cfg servabitur, quia obligatur"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr ""
+msgstr "non servabitur"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr ""
+msgstr "in config.cfg servabitur"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "privatum"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
@@ -6025,7 +6025,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
-msgstr ""
+msgstr "legendum modo"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
