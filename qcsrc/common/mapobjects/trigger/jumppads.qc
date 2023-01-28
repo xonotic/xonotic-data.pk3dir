@@ -132,7 +132,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool is_pushed)
 {
 	vector sdir = normalize(vec2(pushed_entity.velocity));
-	float zdir = copysign(1, pushed_entity.velocity.z);
+	float zdir = pushed_entity.velocity.z;
+	if(zdir != 0) zdir = copysign(1, pushed_entity.velocity.z);
 
 	vector vs_tgt = '0 0 0';
 	float vz_tgt = 0;
@@ -142,6 +143,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 		vs_tgt = vec2(vel_tgt);
 		vz_tgt = vel_tgt.z;
 
+		// bidirectional jump pads do not play nicely with xonotic's jump pad targets
 		if (this.spawnflags & BIDIRECTIONAL_XY)
 		{
 			if (normalize(vs_tgt) * sdir < 0)
