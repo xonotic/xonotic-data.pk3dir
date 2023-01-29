@@ -137,8 +137,7 @@ bool jumppad_push(entity this, entity targ)
 
 	if(STAT(Q3COMPAT))
 	{
-		org.z += targ.mins_z;
-		org.z += 1; // off by 1!
+		org = (this.absmin + this.absmax) * 0.5;
 	}
 
 	if(this.enemy)
