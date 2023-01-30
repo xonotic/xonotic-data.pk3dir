@@ -421,12 +421,19 @@ float PlayerScore_Compare(entity t1, entity t2, bool strict)
 
 bool Score_NewLeader()
 {
-	// Returns true if the game leader has changed (no teamplay support yet)
-	if (teamplay) return false;
-	if (WinningConditionHelper_winner != WinningConditionHelper_winner_last && (WinningConditionHelper_second || WinningConditionHelper_equality))
-	{
-		WinningConditionHelper_winner_last = WinningConditionHelper_winner;
-		return true;
+	// Returns true if the game leader has changed
+	if(teamplay) {
+		if (WinningConditionHelper_winnerteam != WinningConditionHelper_winnerteam_last && (WinningConditionHelper_secondteam || WinningConditionHelper_equality))
+		{
+			WinningConditionHelper_winnerteam_last = WinningConditionHelper_winnerteam;
+			return true;
+		}
+	} else {
+		if (WinningConditionHelper_winner != WinningConditionHelper_winner_last && (WinningConditionHelper_second || WinningConditionHelper_equality))
+		{
+			WinningConditionHelper_winner_last = WinningConditionHelper_winner;
+			return true;
+		}
 	}
 	return false;
 }
