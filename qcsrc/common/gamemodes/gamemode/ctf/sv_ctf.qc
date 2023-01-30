@@ -612,6 +612,9 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	if(!old_time || new_time < old_time)
 		GameRules_scoring_add(player, CTF_CAPTIME, new_time - old_time);
 
+	// announcer
+	AnnounceScores(player.team);
+
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
 #if 0

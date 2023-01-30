@@ -1429,24 +1429,37 @@ void ClearWinners()
 
 void AnnounceNewLeader()
 {
-	LOG_INFO("Announce new leader");
 	// Don't announce if in warmup or just started
 	if(warmup_stage || time - game_starttime < 1) return;
-	if(teamplay) return; // Not implemented in teamplay yet. We need an announcer for that.
 
-	if (WinningConditionHelper_equality)
-	{
-		Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
-		Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
-	}
-	else
-	{
-		Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
-		Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
+	if(teamplay) {
+		if (WinningConditionHelper_equality)
+			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TEAM_LEADS_TIED);
+		else
+			FOREACH_CLIENT(IS_PLAYER(it), {
+				if(it.team == WinningConditionHelper_winnerteam)
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_TEAM);
+				else
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_ENEMY);
+			});
+			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
+	} else {
+		if (WinningConditionHelper_equality)
+		{
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
+		}
+		else
+		{
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
+		}
 	}
 }
 
+int team_scores;
 int fragsleft_last;
+#define AnnounceScores(tm) team_scores = tm;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
@@ -1512,12 +1525,22 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		}
 	}
 
-	// Announce new leader if any
-	if(MUTATOR_CALLHOOK(Scores_AnnounceLeads)) {
+	// Announce scores and new leader if any
+	if(team_scores) {
 		if (Score_NewLeader()) {
 			AnnounceNewLeader();
+		} else {
+			FOREACH_CLIENT(IS_PLAYER(it), {
+				if(it.team == team_scores)
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_TEAM);
+				else
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_ENEMY);
+			});
+			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(team_scores, ANNCE_TEAM_SCORES));
 		}
-	}
+		team_scores = 0;
+	} else if(MUTATOR_CALLHOOK(Scores_AnnounceLeads) && Score_NewLeader()) {
+		AnnounceNewLeader();
 
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
 	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
