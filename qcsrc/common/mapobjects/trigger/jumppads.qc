@@ -342,7 +342,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 	}
 
-	if(!is_pushed) UNSET_ONGROUND(targ);
+	if(!is_pushed || !(this.spawnflags & ADD_Z)) UNSET_ONGROUND(targ);
 
 #ifdef CSQC
 	if (targ.flags & FL_PROJECTILE)
@@ -370,7 +370,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 		// prevent sound spam when a player hits the jumppad more than once
 		// or when a dead player gets stuck in the jumppad for some reason
-		if(!is_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
+		if((!is_pushed || !((this.spawnflags & ADD_XY) && (this.spawnflags & ADD_Z))) && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
