@@ -132,7 +132,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool is_pushed)
 {
 	vector sdir = normalize(vec2(pushed_entity.velocity));
-	float zdir = copysign(1, pushed_entity.velocity.z);
+	float zdir = pushed_entity.velocity.z;
+	if(zdir != 0) zdir = copysign(1, pushed_entity.velocity.z);
 
 	vector vs_tgt = '0 0 0';
 	float vz_tgt = 0;
@@ -142,6 +143,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 		vs_tgt = vec2(vel_tgt);
 		vz_tgt = vel_tgt.z;
 
+		// bidirectional jump pads do not play nicely with xonotic's jump pad targets
 		if (this.spawnflags & BIDIRECTIONAL_XY)
 		{
 			if (normalize(vs_tgt) * sdir < 0)
@@ -224,13 +226,28 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	return vs + '0 0 1' * vz;
 }
 
-void check_pushed(entity this)
+void check_pushed(entity this) // first jump pad to think thinks for every jump pad
 {
-	IL_EACH(this.pushed, WarpZoneLib_ExactTrigger_Touch(this, it),
+	IL_EACH(are_pushed, true,
 	{
-		IL_REMOVE(this.pushed, it);
+		bool empty = true;
+		for(int i = 0; i < MAX_PUSHED; ++i)
+		{
+			if(!it.has_pushed[i]) continue;
+			if(WarpZoneLib_ExactTrigger_Touch(it.has_pushed[i], it))
+			{
+				it.has_pushed[i] = NULL;
+				continue;
+			}
+			empty = false;
+		}
+		if(empty)
+		{
+			IL_REMOVE(are_pushed, it);
+		}
 	});
-	if(!IL_EMPTY(this.pushed))
+
+	if(!IL_EMPTY(are_pushed))
 	{
 		this.nextthink = time;
 	}
@@ -249,7 +266,35 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		org.z += 1; // off by 1!
 	}
 
-	bool is_pushed = is_velocity_pad && IL_CONTAINS(this.pushed, targ);
+	bool is_pushed = false;
+	if(is_velocity_pad)
+	{
+		for(int i = 0; i < MAX_PUSHED; ++i)
+		{
+			if(this == targ.has_pushed[i])
+			{
+				is_pushed = true;
+				break;
+			}
+		}
+
+		if(!is_pushed && ((this.spawnflags & ADD_XY) || (this.spawnflags & ADD_Z))) // remember jump pads which boost on initial touch
+		{
+			bool limit_reached = true;
+			for(int i = 0; i < MAX_PUSHED; ++i)
+			{
+				if(targ.has_pushed[i]) continue;
+				limit_reached = false;
+				targ.has_pushed[i] = this; // may be briefly out of sync between client and server if client prediction is toggled
+			}
+			if(limit_reached)
+			{
+				return false; // too many overlapping jump pads
+			}
+			IL_PUSH(are_pushed, targ);
+			this.nextthink = time;
+		}
+	}
 
 	if(this.enemy)
 	{
@@ -297,13 +342,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 	}
 
-	if(is_velocity_pad && !is_pushed)
-	{
-		IL_PUSH(this.pushed, targ); // may be briefly out of sync between client and server if client prediction is toggled
-		this.nextthink = time;
-	}
-
-	if(!is_pushed) UNSET_ONGROUND(targ);
+	if(!is_pushed || !(this.spawnflags & ADD_Z)) UNSET_ONGROUND(targ);
 
 #ifdef CSQC
 	if (targ.flags & FL_PROJECTILE)
@@ -331,7 +370,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 		// prevent sound spam when a player hits the jumppad more than once
 		// or when a dead player gets stuck in the jumppad for some reason
-		if(!is_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
+		if((!is_pushed || !((this.spawnflags & ADD_XY) && (this.spawnflags & ADD_Z))) && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
@@ -821,7 +860,6 @@ spawnfunc(trigger_push_velocity)
 
 	trigger_push_velocity_link(this); // link it now
 
-	this.pushed = IL_NEW();
 	setthink(this, check_pushed);
 }
 
@@ -920,7 +958,6 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH_VELOCITY, bool isnew)
 	this.solid = SOLID_TRIGGER;
 	settouch(this, trigger_push_velocity_touch);
 	this.move_time = time;
-	this.pushed = IL_NEW();
 	setthink(this, check_pushed);
 
 	return true;
