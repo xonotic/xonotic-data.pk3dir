@@ -1442,7 +1442,8 @@ void AnnounceNewLeader()
 				else
 					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_LEADS_ENEMY);
 			});
-			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
+			// TODO : This needs relative announcing to be merged!
+			//Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(WinningConditionHelper_winnerteam, ANNCE_TEAM_LEADS));
 	} else {
 		if (WinningConditionHelper_equality)
 		{
@@ -1459,7 +1460,11 @@ void AnnounceNewLeader()
 
 int team_scores;
 int fragsleft_last;
-#define AnnounceScores(tm) team_scores = tm;
+void AnnounceScores(int tm)
+{
+	team_scores = tm;
+}
+
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
@@ -1536,10 +1541,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 				else
 					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_TEAM_SCORES_ENEMY);
 			});
-			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(team_scores, ANNCE_TEAM_SCORES));
+			// TODO : This needs relative announcing to be merged!
+			//Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(team_scores, ANNCE_TEAM_SCORES));
 		}
 		team_scores = 0;
-	} else if(MUTATOR_CALLHOOK(Scores_AnnounceLeads) && Score_NewLeader()) {
+	} else if(MUTATOR_CALLHOOK(Scores_AnnounceLeads) && Score_NewLeader())
 		AnnounceNewLeader();
 
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
