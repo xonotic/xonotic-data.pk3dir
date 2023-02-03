@@ -193,7 +193,7 @@ void WarpZone_Touch(entity this, entity toucher)
 	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))
+	if(!WarpZoneLib_ExactTrigger_Touch(this, toucher))
 		return;
 
 	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
@@ -815,7 +815,7 @@ void WarpZone_StartFrame()
 			if (warpzone_warpzones_exist) {
 				entity e = WarpZone_Find(it.origin + it.mins, it.origin + it.maxs);
 				if (e)
-				if (!WarpZoneLib_ExactTrigger_Touch(e, it))
+				if (WarpZoneLib_ExactTrigger_Touch(e, it))
 				if (WarpZone_PlaneDist(e, it.origin + it.view_ofs) <= 0)
 					WarpZone_Teleport(e, it, -1, 0); // NOT triggering targets by this!
 			}
@@ -825,7 +825,7 @@ void WarpZone_StartFrame()
 			{
 				entity ent = Teleport_Find(it.origin + it.mins, it.origin + it.maxs);
 				if (ent)
-				if (!WarpZoneLib_ExactTrigger_Touch(ent, it))
+				if (WarpZoneLib_ExactTrigger_Touch(ent, it))
 					Simple_TeleportPlayer(ent, it); // NOT triggering targets by this!
 			}
 		}

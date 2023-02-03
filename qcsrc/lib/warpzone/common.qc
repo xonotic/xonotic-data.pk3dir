@@ -818,7 +818,7 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 		emin += '1 1 1';
 		emax -= '1 1 1';
 	}
-	return !WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
+	return WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
 }
 
 

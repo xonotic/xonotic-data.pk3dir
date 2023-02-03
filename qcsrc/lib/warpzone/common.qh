@@ -113,5 +113,5 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher);
 void WarpZoneLib_ExactTrigger_Init(entity this);
 
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH(e,t) if(WarpZoneLib_ExactTrigger_Touch((e), (t))) return
+#define EXACTTRIGGER_TOUCH(e,t) if(!WarpZoneLib_ExactTrigger_Touch((e), (t))) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this)
