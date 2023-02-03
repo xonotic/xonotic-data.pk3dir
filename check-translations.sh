@@ -61,10 +61,10 @@ if [ x"$mode" = x"txt" ]; then
 			fi
 			# Note: we're only reporting EXISTING fuzzy matches in the Fuzzy count, thus -N.
 			po=`msgmerge -N "$X" common.pot`
-			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l`
-			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#:`
-			nf=`printf "%s\n" "$po" | msgattrib --fuzzy - | grep -c ^#:`
-			nt=`printf "%s\n" "$po" | grep -c ^#:`
+			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l || true`
+			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#: || true`
+			nf=`printf "%s\n" "$po" | msgattrib --fuzzy - | grep -c ^#: || true`
+			nt=`printf "%s\n" "$po" | grep -c ^#: || true`
 			n=$(($ne + $nu + $nf))
 			p=$(( (nt - n) * 100 / nt ))
 			echo >&2 "TODO for translation $X:"
