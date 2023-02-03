@@ -109,9 +109,9 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
 bool WarpZoneLib_MoveOutOfSolid(entity e);
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
-bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher);
+bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc);
 void WarpZoneLib_ExactTrigger_Init(entity this);
 
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH(e,t) if(!WarpZoneLib_ExactTrigger_Touch((e), (t))) return
+#define EXACTTRIGGER_TOUCH(e,t) if(!WarpZoneLib_ExactTrigger_Touch((e), (t), true)) return // intended for use in touch funcs
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this)
