@@ -31,36 +31,12 @@ case "$1" in
 esac
 
 if [ x"$mode" = x"pot" ]; then
-	make QCC="../../../../gmqcc/gmqcc" clean
-	make QCC="../../../../gmqcc/gmqcc"
 	{
-		grep -h '^\.' .tmp/*_includes.txt | cut -d ' ' -f 2 | sed -e 's,^,qcsrc/,' | while IFS= read -r name; do
-			while :; do
-				case "$name" in
-					*/./*)
-						name=${name%%/./*}/${name#*/./}
-						;;
-					./*)
-						name=${name#./}
-						;;
-					*/*/../*)
-						before=${name%%/../*}
-						before=${before%/*}
-						name=$before/${name#*/../}
-						;;
-					*/../*)
-						name=${name#*/../}
-						;;
-					*)
-						break
-						;;
-				esac
-			done
-			echo "$name"
-		done | sort -u
+		git ls-files qcsrc | sort -u
 	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new >&2
 	if msgcmp -N --use-untranslated common.pot common.pot.new && msgcmp -N --use-untranslated common.pot.new common.pot; then
 		echo "No contentful changes to common.pot - OK."
+		ls -la common.pot common.pot.new
 		rm -f common.pot.new
 	else
 		echo "Updating common.pot. This probably should be committed."
