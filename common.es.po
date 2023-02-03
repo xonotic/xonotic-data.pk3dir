@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-29 07:22+0100\n"
+"POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yllelder, 2016\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1733,8 +1733,7 @@ msgid "It's your turn"
 msgstr "Es tu turno"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
-#: qcsrc/menu/xonotic/dialog_quit.qh:6
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
 msgstr "Salir"
 
@@ -7019,13 +7018,11 @@ msgstr "Guardar apariencia"
 msgid "Panel background defaults:"
 msgstr "Fondo por defecto del panel:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:746
 msgid "Background:"
 msgstr "Fondo:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:762
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:762
 msgid "Border size:"
 msgstr "Grosor del borde:"
 
@@ -7034,13 +7031,11 @@ msgstr "Grosor del borde:"
 msgid "Team color:"
 msgstr "Color del equipo:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:788
 msgid "Test team color in configure mode"
 msgstr "Probar el color del equipo en modo configuración"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:791
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:791
 msgid "Padding:"
 msgstr "Tamaño de letra:"
 
@@ -8061,8 +8056,7 @@ msgstr "Juego"
 msgid "User"
 msgstr "Usuario"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:25
-#: qcsrc/menu/xonotic/keybinder.qc:118
+#: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:118
 msgid "Misc"
 msgstr "Misc"
 

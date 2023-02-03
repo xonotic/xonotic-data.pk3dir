@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-29 07:22+0100\n"
+"POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (Hong Kong) (http://www.transifex.com/team-xonotic/"
@@ -1692,8 +1692,7 @@ msgid "It's your turn"
 msgstr "輪到你了"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
-#: qcsrc/menu/xonotic/dialog_quit.qh:6
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
 msgstr "退出"
 
@@ -6891,13 +6890,11 @@ msgstr "保存當前皮膚"
 msgid "Panel background defaults:"
 msgstr "面板背景默認值："
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:746
 msgid "Background:"
 msgstr "背景："
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:762
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:762
 msgid "Border size:"
 msgstr "邊框大小："
 
@@ -6906,13 +6903,11 @@ msgstr "邊框大小："
 msgid "Team color:"
 msgstr "隊伍顏色："
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:788
 msgid "Test team color in configure mode"
 msgstr "在配置模式下測試團隊的顏色"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:791
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:791
 msgid "Padding:"
 msgstr "墊邊："
 
@@ -7907,8 +7902,7 @@ msgstr "遊戲"
 msgid "User"
 msgstr "用户"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:25
-#: qcsrc/menu/xonotic/keybinder.qc:118
+#: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:118
 msgid "Misc"
 msgstr "雜項"
 

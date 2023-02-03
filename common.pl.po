@@ -38,7 +38,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-29 07:22+0100\n"
+"POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Wojciech Sikora, 2022\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1715,8 +1715,7 @@ msgid "It's your turn"
 msgstr "Twoja kolej"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
-#: qcsrc/menu/xonotic/dialog_quit.qh:6
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
 msgstr "Wyjdź"
 
@@ -6901,13 +6900,11 @@ msgstr "Zapisz aktualną skórę"
 msgid "Panel background defaults:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:746
 msgid "Background:"
 msgstr "Tło:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:762
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:762
 msgid "Border size:"
 msgstr "Rozmiar ramki:"
 
@@ -6916,13 +6913,11 @@ msgstr "Rozmiar ramki:"
 msgid "Team color:"
 msgstr "Kolor drużyny:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:788
 msgid "Test team color in configure mode"
 msgstr "Testuj kolory drużyn w trybie konfiguracji"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:791
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:791
 msgid "Padding:"
 msgstr "Odstęp:"
 
@@ -7909,8 +7904,7 @@ msgstr "Gra"
 msgid "User"
 msgstr "Użytkownik"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:25
-#: qcsrc/menu/xonotic/keybinder.qc:118
+#: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:118
 msgid "Misc"
 msgstr "Różne"
 
