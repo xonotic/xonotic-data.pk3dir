@@ -1222,12 +1222,12 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
         float ratio, alpha_ratio, combine_ratio1, combine_ratio2, segment_offset;
         segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
         segment_offset = offset + i;
+        ratio = (i + segment_size.x/2 + gradientOffset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
         if(doProject)
         {
             segment_size.x = StrafeHUD_projectWidth(segment_offset, segment_size.x, range);
             segment_offset = StrafeHUD_projectOffset(segment_offset, range);
         }
-        ratio = (i + gradientOffset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
         if(ratio > 1) ratio = 2 - ratio;
         if(gradientType != STRAFEHUD_GRADIENT_RIGHT) ratio = 1 - ratio;
         alpha_ratio = alpha1 - (alpha1 - alpha2) * ratio;
