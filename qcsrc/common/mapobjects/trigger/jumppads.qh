@@ -4,13 +4,13 @@
 const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
 const int PUSH_SILENT = BIT(1); // not used?
 
-const int PLAYERDIR_XY = BIT(0); // if set, trigger will apply the horizontal speed in the player's horizontal direction of travel, otherwise it uses the target XY component.
-const int ADD_XY = BIT(1); // if set, trigger will add to the player's horizontal velocity, otherwise it sets the player's horizontal velocity.
-const int PLAYERDIR_Z = BIT(2); // if set, trigger will apply the vertical speed in the player's vertical direction of travel, otherwise it uses the target Z component.
-const int ADD_Z = BIT(3); // if set, trigger will add to the player's vertical velocity, otherwise it sets the player's vertical velocity.
-const int BIDIRECTIONAL_XY = BIT(4); // if set, non-playerdir velocity pads will function in 2 directions based on the target specified. The chosen direction is based on the current direction of travel. Applies to horizontal direction.
-const int BIDIRECTIONAL_Z = BIT(5); // if set, non-playerdir velocity pads will function in 2 directions based on the target specified. The chosen direction is based on the current direction of travel. Applies to vertical direction.
-const int CLAMP_NEGATIVE_ADDS = BIT(6); // if set, then a velocity pad that adds negative velocity will be clamped to 0, if the resultant velocity would bounce the player in the opposite direction.
+const int PUSH_VELOCITY_PLAYERDIR_XY = BIT(0);
+const int PUSH_VELOCITY_ADD_XY = BIT(1);
+const int PUSH_VELOCITY_PLAYERDIR_Z = BIT(2);
+const int PUSH_VELOCITY_ADD_Z = BIT(3);
+const int PUSH_VELOCITY_BIDIRECTIONAL_XY = BIT(4);
+const int PUSH_VELOCITY_BIDIRECTIONAL_Z = BIT(5);
+const int PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS = BIT(6);
 
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
@@ -56,7 +56,7 @@ bool trigger_push_test(entity this, entity item);
 void trigger_push_findtarget(entity this);
 
 /*
- * ENTITY PARAMETERS:
+ * ENTITY PARAMETERS trigger_push:
  *
  *   target:  target of jump
  *   height:  the absolute value is the height of the highest point of the jump
@@ -69,7 +69,7 @@ void trigger_push_findtarget(entity this);
  */
 
 /*
- * ENTITY PARAMETERS:
+ * ENTITY PARAMETERS trigger_push_velocity:
  *
  *   target:  this points to the target_position to which the player will jump.
  *   speed:   XY speed for player-directional velocity pads - either sets or adds to the player's horizontal velocity.
