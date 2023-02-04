@@ -902,24 +902,21 @@ void HUD_StrafeHUD()
 		string newsound = autocvar_hud_panel_strafehud_sonar_audio;
 		static string cursound = string_null;
 		static string sonarsound = string_null;
-		if(newsound != cursound)
+		if(newsound == "")
 		{
-			if(cursound != "") strunzone(cursound);
+			cursound = sonarsound = string_null;
+		}
+		else if(newsound != cursound)
+		{
+			strfree(cursound);
+			cursound = strzone(newsound);
 
-			if(newsound != "") cursound = strzone(newsound);
-			else cursound = string_null;
-
-			if(sonarsound != "") strunzone(sonarsound);
-			sonarsound = strzone(_Sound_fixpath(newsound));
-
-			if(sonarsound != "")
+			strfree(sonarsound);
+			sonarsound = _Sound_fixpath(newsound);
+			if(sonarsound)
 			{
+				sonarsound = strzone(sonarsound);
 				precache_sound(sonarsound);
-			}
-			else
-			{
-				strunzone(sonarsound);
-				sonarsound = string_null;
 			}
 		}
 
@@ -976,7 +973,7 @@ void HUD_StrafeHUD()
 				float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
 				sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_pitch_exponent);
 
-				if(sonar_volume > 0)
+				if(sonarsound && (sonar_volume > 0))
 					sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
 			}
 		}
