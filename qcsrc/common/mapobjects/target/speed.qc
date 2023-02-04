@@ -50,6 +50,12 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 
 	float launcherspeed = 0;
 
+	if(!STAT(Q3COMPAT)) // no need to simulate this bug
+	{
+		launcherspeed += speed;
+		if(is_add) launcherspeed += oldspeed; // add the add speed in the same variable as it goes in the same direction
+	}
+
 	FOR_XYZ(i)
 	{
 		if(((pushvel[i] != 0) || is_launcher) && (is_positive[i] != is_negative[i]))
@@ -57,8 +63,11 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 			if(is_launcher)
 			{
 				pushvel[i] = 1; // every direction weighs the same amount on launchers, movedir does not matter
-				launcherspeed += speed;
-				if(is_add) launcherspeed += oldspeed; // add the add speed in the same variable as it goes in the same direction
+				if(STAT(Q3COMPAT))
+				{
+					launcherspeed += speed;
+					if(is_add) launcherspeed += oldspeed; // add the add speed in the same variable as it goes in the same direction
+				}
 			}
 
 			if(is_positive[i])
