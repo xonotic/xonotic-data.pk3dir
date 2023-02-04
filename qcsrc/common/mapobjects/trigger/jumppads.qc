@@ -131,20 +131,28 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 
 vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool is_pushed)
 {
+	bool is_playerdir_xy = boolean(this.spawnflags & PUSH_VELOCITY_PLAYERDIR_XY);
+	bool is_add_xy = boolean(this.spawnflags & PUSH_VELOCITY_ADD_XY);
+	bool is_playerdir_z = boolean(this.spawnflags & PUSH_VELOCITY_PLAYERDIR_Z);
+	bool is_add_z = boolean(this.spawnflags & PUSH_VELOCITY_ADD_Z);
+	bool is_bidirectional_xy = boolean(this.spawnflags & PUSH_VELOCITY_BIDIRECTIONAL_XY);
+	bool is_bidirectional_z = boolean(this.spawnflags & PUSH_VELOCITY_BIDIRECTIONAL_Z);
+	bool is_clamp_negative_adds = boolean(this.spawnflags & PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS);
+
 	vector sdir = normalize(vec2(pushed_entity.velocity));
 	float zdir = pushed_entity.velocity.z;
-	if(zdir != 0) zdir = copysign(1, pushed_entity.velocity.z);
+	if(zdir != 0) zdir = copysign(1, zdir);
 
 	vector vs_tgt = '0 0 0';
 	float vz_tgt = 0;
-	if (!(this.spawnflags & PLAYERDIR_XY) || !(this.spawnflags & PLAYERDIR_Z))
+	if (!is_playerdir_xy || !is_playerdir_z)
 	{
 		vector vel_tgt = trigger_push_calculatevelocity(org, tgt, 0, pushed_entity);
 		vs_tgt = vec2(vel_tgt);
 		vz_tgt = vel_tgt.z;
 
 		// bidirectional jump pads do not play nicely with xonotic's jump pad targets
-		if (this.spawnflags & BIDIRECTIONAL_XY)
+		if (is_bidirectional_xy)
 		{
 			if (normalize(vs_tgt) * sdir < 0)
 			{
@@ -152,7 +160,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 			}
 		}
 
-		if (this.spawnflags & BIDIRECTIONAL_Z)
+		if (is_bidirectional_z)
 		{
 			if (signbit(vz_tgt) != signbit(zdir))
 			{
@@ -162,7 +170,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	}
 
 	vector vs;
-	if (this.spawnflags & PLAYERDIR_XY)
+	if (is_playerdir_xy)
 	{
 		vs = sdir * speed;
 	}
@@ -172,7 +180,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	}
 
 	float vz;
-	if (this.spawnflags & PLAYERDIR_Z)
+	if (is_playerdir_z)
 	{
 		vz = zdir * count;
 	}
@@ -181,7 +189,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 		vz = vz_tgt;
 	}
 
-	if (this.spawnflags & ADD_XY)
+	if (is_add_xy)
 	{
 		vector vs_add = vec2(pushed_entity.velocity);
 		if (is_pushed)
@@ -192,7 +200,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 		{
 			vs += vs_add;
 
-			if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
+			if (is_clamp_negative_adds)
 			{
 				if ((normalize(vs) * sdir) < 0)
 				{
@@ -202,7 +210,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 		}
 	}
 
-	if (this.spawnflags & ADD_Z)
+	if (is_add_z)
 	{
 		float vz_add = pushed_entity.velocity.z;
 		if (is_pushed)
@@ -213,7 +221,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 		{
 			vz += vz_add;
 
-			if (this.spawnflags & CLAMP_NEGATIVE_ADDS)
+			if (is_clamp_negative_adds)
 			{
 				if (signbit(vz) != signbit(zdir))
 				{
@@ -226,6 +234,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	return vs + '0 0 1' * vz;
 }
 
+// TODO: move this check to player/projectile physics?
 void check_pushed(entity this) // first jump pad to think thinks for every jump pad
 {
 	IL_EACH(are_pushed, true,
@@ -278,7 +287,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 			}
 		}
 
-		if(!is_pushed && ((this.spawnflags & ADD_XY) || (this.spawnflags & ADD_Z))) // remember jump pads which boost on initial touch
+		if(!is_pushed) // remember velocity jump pads
 		{
 			bool limit_reached = true;
 			for(int i = 0; i < MAX_PUSHED; ++i)
@@ -286,6 +295,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 				if(targ.has_pushed[i]) continue;
 				limit_reached = false;
 				targ.has_pushed[i] = this; // may be briefly out of sync between client and server if client prediction is toggled
+				break;
 			}
 			if(limit_reached)
 			{
@@ -342,7 +352,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 	}
 
-	if(!is_pushed || !(this.spawnflags & ADD_Z)) UNSET_ONGROUND(targ);
+	if(!is_velocity_pad) UNSET_ONGROUND(targ);
 
 #ifdef CSQC
 	if (targ.flags & FL_PROJECTILE)
@@ -370,7 +380,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 		// prevent sound spam when a player hits the jumppad more than once
 		// or when a dead player gets stuck in the jumppad for some reason
-		if((!is_pushed || !((this.spawnflags & ADD_XY) && (this.spawnflags & ADD_Z))) && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
+		if(!is_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
@@ -845,8 +855,6 @@ spawnfunc(trigger_push)
  */
 spawnfunc(trigger_push_velocity)
 {
-	SetMovedir(this);
-
 	trigger_init(this);
 
 	this.active = ACTIVE_ACTIVE;
