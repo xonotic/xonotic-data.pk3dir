@@ -839,21 +839,18 @@ void HUD_StrafeHUD()
         string newsound = autocvar_hud_panel_strafehud_sonar_audio;
         static string cursound = string_null;
         static string sonarsound = string_null;
-        if(newsound != cursound) {
-            if(cursound != "") strunzone(cursound);
+        if(newsound == "") {
+            cursound = sonarsound = string_null;
+        }
+        else if(newsound != cursound) {
+            strfree(cursound);
+            cursound = strzone(newsound);
 
-            if(newsound != "") cursound = strzone(newsound);
-            else cursound = string_null;
-
-            if(sonarsound != "") strunzone(sonarsound);
-            sonarsound = strzone(_Sound_fixpath(newsound));
-
-            if(sonarsound != "") {
+            strfree(sonarsound);
+            sonarsound = _Sound_fixpath(newsound);
+            if(sonarsound) {
+                sonarsound = strzone(sonarsound);
                 precache_sound(sonarsound);
-            }
-            else {
-                strunzone(sonarsound);
-                sonarsound = string_null;
             }
         }
 
@@ -910,7 +907,7 @@ void HUD_StrafeHUD()
                 float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
                 sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_pitch_exponent);
 
-                if(sonar_volume > 0) {
+                if(sonarsound && (sonar_volume > 0)) {
                     sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
                 }
             }
@@ -1222,12 +1219,12 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
         float ratio, alpha_ratio, combine_ratio1, combine_ratio2, segment_offset;
         segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
         segment_offset = offset + i;
+        ratio = (i + segment_size.x/2 + gradientOffset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
         if(doProject)
         {
             segment_size.x = StrafeHUD_projectWidth(segment_offset, segment_size.x, range);
             segment_offset = StrafeHUD_projectOffset(segment_offset, range);
         }
-        ratio = (i + gradientOffset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
         if(ratio > 1) ratio = 2 - ratio;
         if(gradientType != STRAFEHUD_GRADIENT_RIGHT) ratio = 1 - ratio;
         alpha_ratio = alpha1 - (alpha1 - alpha2) * ratio;
