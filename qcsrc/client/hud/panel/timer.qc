@@ -125,7 +125,13 @@ void HUD_Timer()
 		if (STAT(WARMUP_TIMELIMIT) > 0)
 			subtext = _("Warmup");
 		else
-			subtext = srv_minplayers ? _("Warmup: too few players") : _("Warmup: no time limit");
+		{
+			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
+			if (srv_minplayers - numplayers > 0)
+				subtext = _("Warmup: too few players");
+			else
+				subtext = _("Warmup: no time limit");
+		}
 	}
 	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");

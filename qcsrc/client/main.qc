@@ -709,7 +709,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
 	make_pure(this);
-	int i, j, b, f;
 
 	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
@@ -736,20 +735,11 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		strcpy(vote_called_vote, ReadString());
 	}
 
-	if(nags & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
-				playerslots[j].ready = true;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].ready = false;
-		}
-	}
+	if(nags & BIT(0))
+		for(int i = 0; i < maxclients;)
+			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
+				if(playerslots[i])
+					playerslots[i].ready = f & BIT(b);
 
 	return = true;
 
@@ -1404,7 +1394,7 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	bool campaign = ReadByte();
+	campaign = ReadByte();
 	if (campaign)
 	{
 		string campaign_title = ReadString();

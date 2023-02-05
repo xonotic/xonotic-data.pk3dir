@@ -105,6 +105,7 @@ float current_viewzoom;
 float zoomin_effect;
 bool warmup_stage;
 
+bool campaign;
 string hostname;
 string welcome_msg;
 int srv_minplayers;

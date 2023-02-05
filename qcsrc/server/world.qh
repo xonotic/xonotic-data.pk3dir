@@ -6,6 +6,7 @@ bool autocvar__sv_init;
 bool autocvar__endmatch;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_jetpack;
+int autocvar_g_warmup;
 bool autocvar_g_warmup_allguns;
 bool autocvar_g_warmup_allow_timeout;
 #define autocvar_g_weaponarena cvar_string("g_weaponarena")

@@ -660,10 +660,9 @@ void GameplayMode_DelayedInit(entity this)
 			int u = AVAILABLE_TEAMS - d;
 			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
 		}
-		warmup_limit = -1;
 	}
 	else
-		map_minplayers = 0; // don't display a minimum if it's not used
+		map_minplayers = 0; // don't display a minimum if it's not used (g_maxplayers < 0 && g_warmup >= 0)
 }
 
 void InitGameplayMode()
@@ -863,9 +862,6 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 
 	GameRules_limit_fallbacks();
-
-	if(warmup_limit == 0)
-		warmup_limit = autocvar_timelimit * 60;
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -2105,11 +2101,21 @@ void readlevelcvars()
 
 	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
-	warmup_stage = cvar("g_warmup");
-	warmup_limit = cvar("g_warmup_limit");
-
 	if(cvar("g_campaign"))
 		warmup_stage = 0; // no warmup during campaign
+	else
+	{
+		warmup_stage = autocvar_g_warmup;
+		if (warmup_stage < 0 || warmup_stage > 1)
+			warmup_limit = -1; // don't start until there's enough players
+		else if (warmup_stage == 1)
+		{
+			// this code is duplicated in ReadyCount()
+			warmup_limit = cvar("g_warmup_limit");
+			if(warmup_limit == 0)
+				warmup_limit = autocvar_timelimit * 60;
+		}
+	}
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
