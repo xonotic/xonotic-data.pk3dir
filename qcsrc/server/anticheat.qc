@@ -117,9 +117,12 @@ void anticheat_physics(entity this)
 			float f = bound(0, dt * 4, 1);  // About 0.25 seconds horizon for snapping back.
 			vector aim_move = v_forward - CS(this).anticheat_div0_strafebot_forward_prev;
 			vector snapback_prev = CS(this).anticheat_div0_snapback_prev;
-			float aim_snap = max(0, (aim_move * snapback_prev) / -vlen(snapback_prev));
-			// Scales with aim_move, but is positive only when snapping back, otherwise zero.
-			MEAN_ACCUMULATE(CS(this), anticheat_div0_snapback, aim_snap, dt);
+			float snapback_len = vlen(snapback_prev);
+			if (snapback_len != 0) {
+				float aim_snap = max(0, (aim_move * snapback_prev) / -snapback_len);
+				// Scales with aim_move, but is positive only when snapping back, otherwise zero.
+				MEAN_ACCUMULATE(CS(this), anticheat_div0_snapback, aim_snap, dt);
+			}
 			CS(this).anticheat_div0_snapback_prev = snapback_prev * (1 - f) + aim_move * f;
 		}
 	}
