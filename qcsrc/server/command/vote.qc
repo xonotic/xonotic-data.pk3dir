@@ -877,29 +877,6 @@ void print_available_commands_to(entity caller)
 	print_to(caller, strcat("You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 }
 
-bool VoteCommand_checkclients()
-{
-	float c = 0, nc = 0;
-	FOREACH_CLIENT(true,
-	{
-		//if(!IS_DISCONNECTED_CLIENT(it)) c++;
-		if(!IS_BOT_CLIENT(it)) c++; // test code, counts bots as unconnected
-		else nc++;
-	});
-	LOG_INFOF("^x8f0 %d / %d\n", c, nc);
-	if (!nc)
-		return false;
-	// if true vote is not allowed
-	// connessi 2 non connessi 1  false   allowed
-	// connessi 3 non connessi 1  false   allowed
-	// connessi 2 non connessi 2  true  not allowed
-	// connessi 3 non connessi 2  true  not allowed
-	// connessi 5 non connessi 3  true  not allowed
-	// connessi 5 non connessi 2  false   allowed
-	// if the not connected are half or less
-	return (c < nc * 2);
-}
-
 void VoteCommand_call(int request, entity caller, int argc, string vote_command)  // BOTH
 {
 	switch (request)
@@ -919,10 +896,6 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				print_to(caller, "^1Vote calling is not allowed before the match has started.");
 			}
-			else if (time < 10) // test, change to 4 or somthing
-			{
-				print_to(caller, "^1Vote calling is not allowed in the very first seconds of the game.");
-			}
 			else if (vote_called)
 			{
 				print_to(caller, "^1There is already a vote called.");
@@ -930,10 +903,6 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			else if (!spectators_allowed && (caller && !IS_PLAYER(caller)))
 			{
 				print_to(caller, "^1Only players can call a vote.");
-			}
-			else if (VoteCommand_checkclients())
-			{
-				print_to(caller, "^1Too many unconnected clients.");
 			}
 			else if (caller && !IS_CLIENT(caller))
 			{
