@@ -140,39 +140,44 @@ void HUD_InfoMessages()
 			InfoMessage(s);
 		}
 
-		if(warmup_stage)
-		{
-			s = _("^2Currently in ^1warmup^2 stage!");
-			InfoMessage(s);
-		}
-
 		string blinkcolor;
 		if(time % 1 >= 0.5)
 			blinkcolor = "^1";
 		else
 			blinkcolor = "^3";
 
-		if(warmup_stage && STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
+		if(warmup_stage)
 		{
-			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
-			if(srv_minplayers - numplayers == 1)
-				s = _("^31^2 more player is needed for the match to start.");
-			else
-				s = sprintf(_("^3%d^2 more players are needed for the match to start."), srv_minplayers - numplayers);
-			InfoMessage(s);
-		}
-		else if(ready_waiting && !spectatee_status)
-		{
-			if(ready_waiting_for_me)
-				s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
-			else
-				s = _("^2Waiting for others to ready up to end warmup...");
-			InfoMessage(s);
-		}
-		else if(warmup_stage && !spectatee_status)
-		{
-			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
-			InfoMessage(s);
+			InfoMessage(_("^2Currently in ^1warmup^2 stage!"));
+
+			int players_needed = 0;
+			if(STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
+			{
+				Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
+				players_needed = srv_minplayers - numplayers;
+			}
+
+			if(players_needed > 0)
+			{
+				if(players_needed == 1)
+					s = _("^31^2 more player is needed for the match to start.");
+				else
+					s = sprintf(_("^3%d^2 more players are needed for the match to start."), players_needed);
+				InfoMessage(s);
+			}
+			else if(!spectatee_status)
+			{
+				if(ready_waiting)
+				{
+					if(ready_waiting_for_me)
+						s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
+					else
+						s = _("^2Waiting for others to ready up to end warmup...");
+				}
+				else
+					s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
+				InfoMessage(s);
+			}
 		}
 
 		if(teamplay && !spectatee_status && teamnagger)
