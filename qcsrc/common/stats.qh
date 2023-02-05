@@ -354,7 +354,11 @@ bool autocvar_sv_slick_applygravity;
 #endif
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
+#ifdef SVQC
+int autocvar_sv_q3compat_jumppads;
+#endif
 REGISTER_STAT(Q3COMPAT, int, q3compat)
+REGISTER_STAT(Q3COMPAT_JUMPPADS, int, autocvar_sv_q3compat_jumppads)
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
