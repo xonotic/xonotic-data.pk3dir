@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -7249,7 +7249,7 @@ msgid ""
 "Delete to clear; Enter when done."
 msgstr ""
 "Щёлкните здесь или Ctrl+F, чтобы задать ключевое слово для сужения списка "
-"арен. Ctrl+Delete, чтобы очистить; Enter, когда закончите."
+"арен. Ctrl+Delete, чтобы очистить; ВВОД, когда закончите."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
 msgid "Add shown"
@@ -8608,7 +8608,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "Сила размытия при движении — желательно 0.4"
+msgstr "Сила размытия при движении — желательно 0,4"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Motion blur:"
@@ -9895,7 +9895,7 @@ msgstr "Тяжёлый"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr "Играть кампанию!"
+msgstr "Играть в кампанию!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9915,7 +9915,7 @@ msgstr "автовыбор «лучшей» команды"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr "Автовыбор команды (рекомендуется)"
+msgstr "Автовыбор команды (желателен)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
