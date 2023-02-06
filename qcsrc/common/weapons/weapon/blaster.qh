@@ -55,11 +55,3 @@ CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
 OffhandBlaster OFFHAND_BLASTER;
 STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
-
-#ifdef SVQC
-// Will be demacroed after WEP_CVAR macros are also demacroed.
-#define BLASTER_SECONDARY_ATTACK(weapon_name, actor, weaponentity) \
-	makevectors(actor.v_angle); \
-	W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
-
-#endif
