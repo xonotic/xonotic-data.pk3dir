@@ -269,7 +269,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 	vector org = targ.origin;
 
-	if(STAT(Q3COMPAT) && (STAT(Q3COMPAT_JUMPPADS) >= 1) || (STAT(Q3COMPAT_JUMPPADS) >= 2))
+	if(STAT(Q3COMPAT, targ) || this.spawnflags & PUSH_STATIC)
 	{
 		org = (this.absmin + this.absmax) * 0.5;
 	}
