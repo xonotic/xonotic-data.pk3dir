@@ -135,7 +135,7 @@ bool jumppad_push(entity this, entity targ)
 
 	vector org = targ.origin;
 
-	if(STAT(Q3COMPAT))
+	if(STAT(Q3COMPAT) || this.spawnflags & PUSH_STATIC)
 	{
 		org = (this.absmin + this.absmax) * 0.5;
 	}
