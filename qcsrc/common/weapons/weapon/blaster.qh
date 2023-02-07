@@ -55,32 +55,3 @@ CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
 OffhandBlaster OFFHAND_BLASTER;
 STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
-
-#ifdef SVQC
-.float blaster_damage;
-.float blaster_edgedamage;
-.float blaster_radius;
-.float blaster_force;
-.float blaster_force_zscale;
-.float blaster_lifetime;
-
-// Will be demacroed after WEP_CVAR macros are also demacroed.
-#define BLASTER_SECONDARY_ATTACK(weapon_name, actor, weaponentity) \
-	makevectors(actor.v_angle); \
-	W_Blaster_Attack( \
-		actor, \
-		weaponentity, \
-		WEP_BLASTER.m_id | HITTYPE_SECONDARY, \
-		WEP_CVAR_SEC(weapon_name, shotangle), \
-		WEP_CVAR_SEC(weapon_name, damage), \
-		WEP_CVAR_SEC(weapon_name, edgedamage), \
-		WEP_CVAR_SEC(weapon_name, radius), \
-		WEP_CVAR_SEC(weapon_name, force), \
-		WEP_CVAR_SEC(weapon_name, force_zscale), \
-		WEP_CVAR_SEC(weapon_name, speed), \
-		WEP_CVAR_SEC(weapon_name, spread), \
-		WEP_CVAR_SEC(weapon_name, delay), \
-		WEP_CVAR_SEC(weapon_name, lifetime) \
-	);
-
-#endif

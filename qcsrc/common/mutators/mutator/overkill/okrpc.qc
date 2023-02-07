@@ -139,7 +139,8 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
 		actor.jump_interval = time + WEP_CVAR_SEC(okrpc, refire) * W_WeaponRateFactor(actor);
-		BLASTER_SECONDARY_ATTACK(okrpc, actor, weaponentity);
+		makevectors(actor.v_angle);
+		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -176,7 +177,8 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 		{
 			return;
 		}
-		BLASTER_SECONDARY_ATTACK(okrpc, actor, weaponentity);
+		makevectors(actor.v_angle);
+		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(okrpc, animtime), w_ready);
 	}
 }
