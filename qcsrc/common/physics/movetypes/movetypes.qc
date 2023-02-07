@@ -427,6 +427,7 @@ void _Movetype_Impact(entity this, entity toucher)  // SV_Impact
 	if(toucher.solid != SOLID_NOT && gettouch(toucher) && !wasfreed(this) && !wasfreed(toucher))
 	{
 		trace_endpos = toucher.origin;
+		trace_plane_normal = -trace_plane_normal;
 		trace_plane_dist = -trace_plane_dist;
 		trace_ent = this;
 		trace_dpstartcontents = 0;
