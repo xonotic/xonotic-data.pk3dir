@@ -81,9 +81,13 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
 	if(!solution.z)
-		solution_y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+		// just in case it is not solvable due to roundoff errors,
+		// assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+		solution_y = solution.x;
 	if(zdist == 0)
-		solution_x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		// solution_x is 0 in this case, so don't use it,
+		// but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		solution_x = solution.y;
 
 	float flighttime;
 	if(zdist < 0)
