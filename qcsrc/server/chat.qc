@@ -208,7 +208,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if(autocvar_g_chat_flood_notify_flooder)
 		{
-			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
+			sourcemsgstr = strcat(msgstr, "\n^3CHAT FLOOD CONTROL: ^7message too long, trimmed\n");
 			sourcecmsgstr = "";
 		}
 		else
@@ -247,7 +247,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else

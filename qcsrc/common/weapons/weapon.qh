@@ -76,6 +76,8 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, netname, string, "");
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+    /** M: deprecated refname : old reference name for compatibility with weapons that were renamed */
+    ATTRIB(Weapon, m_deprecated_netname, string, "");
 
     ATTRIB(Weapon, m_pickup, entity);
 
@@ -214,7 +216,6 @@ const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not
 string weaponorder_byid;
 
 // functions:
-string W_UndeprecateName(string s);
 #define W_FIXWEAPONORDER(order, complete) fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete)
 string W_NameWeaponOrder_MapFunc(string s);
 string W_NumberWeaponOrder_MapFunc(string s);

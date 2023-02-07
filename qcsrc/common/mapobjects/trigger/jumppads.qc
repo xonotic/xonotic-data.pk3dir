@@ -69,7 +69,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 		and ti.
 	 */
 
-	// push him so high...
+	// push them so high...
 	vz = sqrt(fabs(2 * grav * jumpheight)); // NOTE: sqrt(positive)!
 
 	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!

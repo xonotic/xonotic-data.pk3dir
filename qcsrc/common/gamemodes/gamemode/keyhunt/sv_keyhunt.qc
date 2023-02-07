@@ -583,7 +583,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	{
 		if(lostkey.kh_previous_owner)
 			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
-			// don't actually GIVE him the -nn points, just log
+			// don't actually GIVE them the -nn points, just log
 		kh_Scores_Event(attacker, NULL, "push", autocvar_g_balance_keyhunt_score_push, 0);
 		GameRules_scoring_add(attacker, KH_PUSHES, 1);
 		//centerprint(attacker, "Your push is the best!"); // does this really need to exist?
@@ -603,7 +603,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 
 		if(lostkey.kh_previous_owner)
 			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "destroyed", 0, -autocvar_g_balance_keyhunt_score_destroyed);
-			// don't actually GIVE him the -nn points, just log
+			// don't actually GIVE them the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
 			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);

@@ -103,27 +103,11 @@ string W_NameWeaponOrder_MapFunc(string s)
 	return s;
 }
 
-string W_UndeprecateName(string s)
-{
-	switch (s)
-	{
-		case "nex": return "vortex";
-		case "rocketlauncher": return "devastator";
-		case "laser": return "blaster";
-		case "minstanex": return "vaporizer";
-		case "grenadelauncher": return "mortar";
-		case "uzi": return "machinegun";
-		case "hmg": return "okhmg";
-		case "rpc": return "okrpc";
-		default: return s;
-	}
-}
 
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
-	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
+	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
 }
 
@@ -218,7 +202,7 @@ string GetAmmoName(Resource ammotype)
 	}
 }
 
-entity GETAMMOITEM(Resource ammotype)
+entity GetAmmoItem(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -352,6 +336,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  *   this.origin, this.angles
  *   this.weaponchild
  *   this.movedir, this.view_ofs, this.movedir_aligned
+ *   this.spawnorigin (SVQC only)
  *   attachment stuff
  *   anim stuff
  * to free:
@@ -368,7 +353,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
+#ifdef SVQC
 		this.spawnorigin = '0 0 0';
+#endif
 		this.oldorigin = '0 0 0';
 		this.anim_fire1  = '0 1 0.01';
 		this.anim_fire2  = '0 1 0.01';
@@ -440,6 +427,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.movedir = '0 0 0';
 			}
 		}
+#ifdef SVQC
 		{
 			int idx = 0;
 			// v_ model attached to invisible h_ model
@@ -459,6 +447,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.spawnorigin = this.movedir;
 			}
 		}
+#endif
 		if (v_shot_idx)
 		{
 			this.oldorigin = '0 0 0';  // use regular attachment
@@ -505,7 +494,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
-		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
+		this.view_ofs = this.movedir_aligned - v;
 	}
 	int compressed_shotorg = compressShotOrigin(this.movedir);
 	// make them match perfectly
@@ -515,7 +504,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 #endif
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 
+#ifdef SVQC
 	this.spawnorigin += this.view_ofs;  // offset the casings origin by the same amount
+#endif
 
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);

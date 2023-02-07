@@ -13,12 +13,12 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, this.oldorigin.x);
+	WriteVector(MSG_ENTITY, this.velocity);
 	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
+void Damage_DamageInfo(vector org, bool is_solid_hit, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -38,8 +38,9 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-	e.oldorigin_x = compressShortVector(e.velocity);
 	e.species = bloodtype;
+	if(is_solid_hit)
+		e.species |= 0x80;
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -75,8 +76,8 @@ void DamageEffect_Think(entity this)
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
 	{
-		// if the player was dead but is now alive, it means he respawned
-		// if so, clear his damage effects, or damages from his dead body will be copied back
+		// if the player was dead but is now alive, it means they respawned
+		// if so, clear their damage effects, or damages from their dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
 		delete(this);
 		return;
@@ -192,8 +193,10 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
-	force = decompressShortVector(ReadShort());
+	force = ReadVector();
 	species = ReadByte();
+	bool is_solid_hit = (species & 0x80);
+	species = (species & 0x7F);
 
 	return = true;
 
@@ -397,11 +400,16 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		w_random = prandom();
 
 		vector force_dir = normalize(force);
-		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
-			w_backoff = trace_plane_normal;
-		else
+		if (is_solid_hit) // traceline not needed
 			w_backoff = -force_dir;
+		else
+		{
+			traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+			if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
+				w_backoff = trace_plane_normal;
+			else
+				w_backoff = -force_dir;
+		}
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))

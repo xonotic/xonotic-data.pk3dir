@@ -279,6 +279,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_Shockwave_Send(actor);
 	Damage_DamageInfo(
 		attack_hitpos,
+		trace_ent && trace_ent.solid == SOLID_BSP,
 		WEP_CVAR(shockwave, blast_splash_damage),
 		WEP_CVAR(shockwave, blast_splash_edgedamage),
 		WEP_CVAR(shockwave, blast_splash_radius),
