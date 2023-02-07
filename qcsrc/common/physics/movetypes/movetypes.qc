@@ -4,7 +4,7 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	this.move_qcphysics = (mt != MOVETYPE_PHYSICS);
+	this.move_qcphysics = (mt != MOVETYPE_PHYSICS && !use_engine_physics);
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCENTITY : mt;
