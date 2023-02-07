@@ -28,7 +28,7 @@ bool Teleport_Active(entity this, entity player)
 	if(IS_TURRET(player))
 		return false;
 
-	if((this.spawnflags & TELEPORT_SPECTATOR) && !IS_SPEC(player))
+	if(this.classname == "trigger_teleport" && this.spawnflags & TELEPORT_SPECTATOR && !IS_SPEC(player))
 		return false;
 #elif defined(CSQC)
 	if(!IS_PLAYER(player))
