@@ -69,15 +69,18 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		{
 			if(is_launcher)
 			{
-				// every direction weighs the same amount on launchers, movedir does not matter
+				// every direction weighs the same amount on launchers
+				// movedir does not matter
 				pushvel[i] = 1;
 
-				// this does not belong inside the loop, only simulate this bug when playing a Q3 map
+				// this does not belong inside the loop
+				// only simulate this bug when playing a Q3 map
 				if(STAT(Q3COMPAT, pushed_entity))
 				{
 					launcherspeed += speed;
 
-					// add the add speed in the same variable as it goes in the same direction
+					// add the add speed in the same variable
+					// as it goes in the same direction
 					if(is_add) launcherspeed += oldspeed;
 				}
 			}
