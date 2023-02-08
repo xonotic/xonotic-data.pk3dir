@@ -717,7 +717,7 @@ bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEnti
 
 	_Movetype_LinkEdict(this, dolink);
 
-	if((this.solid >= SOLID_TRIGGER && trace_fraction < 1 && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
+	if((this.solid >= SOLID_TRIGGER && trace_ent && trace_fraction < 1 && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
 		_Movetype_Impact(this, trace_ent);
 
 	return (this.origin == last_origin); // false if teleported by touch
