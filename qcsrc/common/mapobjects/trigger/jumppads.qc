@@ -301,8 +301,11 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 			{
 				return false; // too many overlapping jump pads
 			}
-			IL_PUSH(are_pushed, targ);
-			this.nextthink = time;
+			if(!IL_CONTAINS(are_pushed, targ))
+			{
+				IL_PUSH(are_pushed, targ);
+				this.nextthink = time;
+			}
 		}
 	}
 
