@@ -3,7 +3,7 @@
 
 const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
 const int PUSH_SILENT = BIT(1); // not used?
-#define PUSH_STATIC BIT(12)
+#define PUSH_STATIC BIT(12) // xonotic-only, Q3 already behaves like this by default
 
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
