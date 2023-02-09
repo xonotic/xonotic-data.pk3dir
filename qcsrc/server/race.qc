@@ -736,7 +736,7 @@ void checkpoint_passed(entity this, entity player)
 		}
 	}
 
-	if((player.race_checkpoint == -1 && this.race_checkpoint == 0) || (player.race_checkpoint == this.race_checkpoint))
+	if((player.race_checkpoint == -1 && this.race_checkpoint == 0) || (player.race_checkpoint == this.race_checkpoint) || (q3compat && this.race_checkpoint == race_timed_checkpoint && player.race_checkpoint > 0))
 	{
 		if(this.race_penalty)
 		{
@@ -825,7 +825,9 @@ bool race_waypointsprite_visible_for_player(entity this, entity player, entity v
 	if(this.realowner)
 		own = this.realowner; // target support
 
-	if(view.race_checkpoint == -1 || own.race_checkpoint == -2)
+	if(q3compat && own.race_checkpoint == race_timed_checkpoint && player.race_checkpoint > 0)
+		return true;
+	else if(view.race_checkpoint == -1 || own.race_checkpoint == -2)
 		return true;
 	else if(view.race_checkpoint == own.race_checkpoint)
 		return true;
