@@ -59,7 +59,8 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 	{
 		launcherspeed += speed;
 
-		// add the add speed in the same variable as it goes in the same direction
+		// add the add speed in the same variable
+		// as it goes in the same direction
 		if(is_add) launcherspeed += oldspeed;
 	}
 
