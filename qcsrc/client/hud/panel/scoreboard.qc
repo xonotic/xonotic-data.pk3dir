@@ -169,7 +169,7 @@ bool scoreboard_ui_disabling;
 void HUD_Scoreboard_UI_Disable()
 {
 	scoreboard_ui_disabling = true;
-	scoreboard_showscores = false;
+	sb_showscores = false;
 }
 
 void HUD_Scoreboard_UI_Disable_Instantly()
@@ -1564,7 +1564,7 @@ bool Scoreboard_WouldDraw()
 		return false;
 	else if (HUD_Radar_Clickable())
 		return false;
-	else if (scoreboard_showscores)
+	else if (sb_showscores) // set by +showscores engine command
 		return true;
 	else if (intermission == 1)
 		return true;
