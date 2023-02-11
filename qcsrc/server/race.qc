@@ -32,6 +32,7 @@
 #include <server/world.qh>
 #include <server/strafe.qh>
 
+
 .string stored_netname; // TODO: store this information independently of race-based gamemodes
 
 .float race_startspeed;
@@ -189,6 +190,7 @@ float race_checkpoint_lastlaps[MAX_CHECKPOINTS];
 entity race_checkpoint_lastplayers[MAX_CHECKPOINTS];
 
 .float race_checkpoint_record[MAX_CHECKPOINTS];
+.float current_checkpoint_record[MAX_CHECKPOINTS];
 
 float race_highest_checkpoint;
 float race_timed_checkpoint;
@@ -391,9 +393,9 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 {
 	// netname only used TEMPORARILY for printing
 	int newpos = race_readPos(map, t);
-
+  int i;
 	int player_prevpos = 0;
-	for(int i = 1; i <= RANKINGS_CNT; ++i)
+	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
 			player_prevpos = i;
@@ -419,6 +421,27 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		return;
 	}
 
+	string body = sprintf("RECORDv1\n%s\n%s\n%s\n%s\n%d\n", strftime(false, "%Y-%m-%dT%H:%M:%SZ"), map, e.crypto_idfp, e.netaddress, t);
+        bool first_cp = true;
+        for (i=0; i < MAX_CHECKPOINTS; i++) {
+		if (e.current_checkpoint_record[i] > 0) {
+                        if (first_cp) {
+                            body = strcat(body, sprintf("%d %d", i, TIME_ENCODE(e.current_checkpoint_record[i])));
+                            first_cp = false;
+                        } else {
+                          body = strcat(body, sprintf(";%d %d", i, TIME_ENCODE(e.current_checkpoint_record[i])));
+                        }
+		}
+		}
+	body = strcat(body, sprintf("\n%f\n%f\n%f\n%f\n%s", e.race_topspeed_best, e.race_avgspeed_best, e.race_startspeed_best, e.strafe_efficiency_best, e.netname));
+        float r;
+        float buf = buf_create();
+        bufstr_set(buf, 0, body);
+        r = crypto_uri_postbuf(autocvar_sv_checkpoint_house_url, URI_GET_CURL + curl_uri_get_pos, "text/plain", "&", buf, 0);
+        if (r) {
+            curl_uri_get_pos = (curl_uri_get_pos + 1) % (URI_GET_CURL_END - URI_GET_CURL + 1);
+          }
+        buf_del(buf);
         write_recordmarker(e, newpos, time - TIME_DECODE(t), TIME_DECODE(t));
 
 	// if we didn't hit a return yet, we have a new record!
@@ -821,7 +844,12 @@ void checkpoint_passed(entity this, entity player)
 			player.race_movetime = player.race_movetime_frac = player.race_movetime_count = 0;
 			player.race_penalty_accumulator = 0;
 			player.race_lastpenalty = NULL;
-		}
+		  for (int i=0; i < MAX_CHECKPOINTS; i++) {
+				player.current_checkpoint_record[i] = 0;
+			}
+		} else {
+		    player.current_checkpoint_record[this.race_checkpoint] = player.race_movetime; 
+	}
 
 		if(g_race_qualifying)
 			race_SendNextCheckpoint(player, 0);

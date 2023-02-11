@@ -1,6 +1,7 @@
 #pragma once
 
 bool autocvar_g_allow_checkpoints;
+string autocvar_sv_checkpoint_house_url;
 
 float race_teams;
 
