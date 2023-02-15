@@ -20,9 +20,10 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 	is_negative[1] = boolean(this.spawnflags & SPEED_NEGATIVE_Y);
 	is_negative[2] = boolean(this.spawnflags & SPEED_NEGATIVE_Z);
 
+	// speed cannot be negative except when subtracting
 	if(!is_add)
 	{
-		speed = max(speed, 0); // speed cannot be negative except when subtracting
+		speed = max(speed, 0);
 	}
 
 	XYZ_ARRAY(pushvel);
@@ -30,30 +31,37 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 
 	FOR_XYZ(i)
 	{
+		// launcher can only be either positive or negative not both
 		if(is_launcher && is_positive[i] && is_negative[i])
 		{
-			is_positive[i] = is_negative[i] = false; // launcher can only be either positive or negative not both
+			is_positive[i] = is_negative[i] = false;
 		}
 
+		// ignore this direction
 		if(!is_positive[i] && !is_negative[i])
 		{
-			pushvel[i] = 0; // ignore this direction
+			pushvel[i] = 0;
 		}
 	}
 
 	float oldspeed = vlen(ARRAY_AS_VECTOR(pushvel));
 
+	// the speed field is used to specify the percentage of the current speed
 	if(is_percentage)
 	{
-		speed = oldspeed * speed / 100; // the speed field is used to specify the percentage of the current speed
+		speed = oldspeed * speed / 100;
 	}
 
 	float launcherspeed = 0;
 
-	if(!STAT(Q3COMPAT, pushed_entity)) // no need to simulate this bug
+	// do this properly when not playing a Q3 map, do not put this in the loop
+	if(!STAT(Q3COMPAT, pushed_entity))
 	{
 		launcherspeed += speed;
-		if(is_add) launcherspeed += oldspeed; // add the add speed in the same variable as it goes in the same direction
+
+		// add the add speed in the same variable
+		// as it goes in the same direction
+		if(is_add) launcherspeed += oldspeed;
 	}
 
 	FOR_XYZ(i)
@@ -62,11 +70,19 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		{
 			if(is_launcher)
 			{
-				pushvel[i] = 1; // every direction weighs the same amount on launchers, movedir does not matter
+				// every direction weighs the same amount on launchers
+				// movedir does not matter
+				pushvel[i] = 1;
+
+				// this does not belong inside the loop
+				// only simulate this bug when playing a Q3 map
 				if(STAT(Q3COMPAT, pushed_entity))
 				{
 					launcherspeed += speed;
-					if(is_add) launcherspeed += oldspeed; // add the add speed in the same variable as it goes in the same direction
+
+					// add the add speed in the same variable
+					// as it goes in the same direction
+					if(is_add) launcherspeed += oldspeed;
 				}
 			}
 
@@ -86,7 +102,9 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 
 	if(is_launcher)
 	{
-		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * fabs(launcherspeed)); // launcher will always launch you in the correct direction even if speed is negative, fabs() is correct
+		// launcher will always launch you in the correct direction
+		// even if speed is set to a negative value, fabs() is correct
+		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * fabs(launcherspeed));
 	}
 	else
 	{
@@ -100,9 +118,10 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 
 	FOR_XYZ(i)
 	{
+		// preserve unaffected directions
 		if(!is_positive[i] && !is_negative[i])
 		{
-			pushvel[i] = oldvel[i]; // preserve unaffected directions
+			pushvel[i] = oldvel[i];
 		}
 	}
 
