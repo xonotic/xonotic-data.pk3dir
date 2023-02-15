@@ -1,5 +1,5 @@
 #pragma once
 
 
-const int TELEPORT_SPECTATOR = BIT(0);
-const int TELEPORT_KEEP_SPEED = BIT(1);
+#define TELEPORT_SPECTATOR BIT(0) // q3df compat, also useful in xonotic
+#define TELEPORT_KEEP_SPEED BIT(1) // q3df compat, also useful in xonotic
