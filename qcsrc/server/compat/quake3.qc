@@ -256,12 +256,23 @@ spawnfunc(target_score)
 	this.use = score_use;
 }
 
+#define FRAGSFILTER_REMOVER BIT(0)
+#define FRAGSFILTER_RUNONCE BIT(1) // unused
+#define FRAGSFILTER_SILENT  BIT(2) // unused in xonotic
+#define FRAGSFILTER_RESET   BIT(3)
+
 void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
 	if(actor.fragsfilter_cnt >= this.frags)
+	{
+		if(this.spawnflags & FRAGSFILTER_RESET)
+			actor.fragsfilter_cnt = 0;
+		else if(this.spawnflags & FRAGSFILTER_REMOVER)
+			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
 }
 spawnfunc(target_fragsFilter)
 {
