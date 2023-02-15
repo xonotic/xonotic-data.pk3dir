@@ -44,7 +44,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	// This discrepancy can be simulated accurately with a multiplier which here ensures that
 	// all entities will arrive where they would in Q3 at 125fps, even if entity-specific gravity is applied.
 	// See physicsCPMA.cfg for the source of the magic number.
-	if (STAT(Q3COMPAT, pushed_entity) && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+	if (STAT(Q3COMPAT) && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		grav *= 1.056530513;
 
 	zdist = torg.z - org.z;
