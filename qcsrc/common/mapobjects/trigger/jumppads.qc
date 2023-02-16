@@ -41,11 +41,12 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 		grav *= pushed_entity.gravity;
 
 	// Q3 has frametime-dependent gravity, but its trigger_push velocity calculation doesn't account for that.
-	// This discrepancy can be simulated accurately with a multiplier which here ensures that
-	// all entities will arrive where they would in Q3 at 125fps, even if entity-specific gravity is applied.
-	// See physicsCPMA.cfg for the source of the magic number.
-	if (STAT(Q3COMPAT) && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-		grav *= 1.056530513;
+	// This discrepancy can be simulated accurately which ensures that all entities will arrive
+	// where they would in Q3 with gravity 800 at 125fps, even if entity-specific gravity is applied.
+	// This can be hard-coded because we don't support the Q3 world.gravity field at this time.
+	// See physicsCPMA.cfg for maths and test results.
+	if (Q3COMPAT_COMMON)
+		grav /= 750/800; // exact float, unlike 800/750
 
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
