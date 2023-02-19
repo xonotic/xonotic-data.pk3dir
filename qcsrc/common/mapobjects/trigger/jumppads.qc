@@ -129,7 +129,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	return sdir * vs + '0 0 1' * vz;
 }
 
-vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool is_pushed)
+vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool already_pushed)
 {
 	bool is_playerdir_xy = boolean(this.spawnflags & PUSH_VELOCITY_PLAYERDIR_XY);
 	bool is_add_xy = boolean(this.spawnflags & PUSH_VELOCITY_ADD_XY);
@@ -192,7 +192,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	if (is_add_xy)
 	{
 		vector vs_add = vec2(pushed_entity.velocity);
-		if (is_pushed)
+		if (already_pushed)
 		{
 			vs = vs_add;
 		}
@@ -213,7 +213,7 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	if (is_add_z)
 	{
 		float vz_add = pushed_entity.velocity.z;
-		if (is_pushed)
+		if (already_pushed)
 		{
 			vz = vz_add;
 		}
@@ -234,34 +234,6 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	return vs + '0 0 1' * vz;
 }
 
-// TODO: move this check to player/projectile physics?
-void check_pushed(entity this) // first jump pad to think thinks for every jump pad
-{
-	IL_EACH(are_pushed, true,
-	{
-		bool empty = true;
-		for(int i = 0; i < MAX_PUSHED; ++i)
-		{
-			if(!it.has_pushed[i]) continue;
-			if(WarpZoneLib_ExactTrigger_Touch(it.has_pushed[i], it))
-			{
-				it.has_pushed[i] = NULL;
-				continue;
-			}
-			empty = false;
-		}
-		if(empty)
-		{
-			IL_REMOVE(are_pushed, it);
-		}
-	});
-
-	if(!IL_EMPTY(are_pushed))
-	{
-		this.nextthink = time;
-	}
-}
-
 bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 {
 	if (!isPushable(targ))
@@ -275,37 +247,16 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		org.z += 1; // off by 1!
 	}
 
-	bool is_pushed = false;
-	if(is_velocity_pad)
+	bool already_pushed = false;
+	if(is_velocity_pad) // remember velocity jump pads
 	{
-		for(int i = 0; i < MAX_PUSHED; ++i)
+		if(this == targ.last_pushed || (targ.last_pushed && !STAT(Q3COMPAT, targ))) // if q3compat is active overwrite last stored jump pad, otherwise ignore
 		{
-			if(this == targ.has_pushed[i])
-			{
-				is_pushed = true;
-				break;
-			}
+			already_pushed = true;
 		}
-
-		if(!is_pushed) // remember velocity jump pads
+		else
 		{
-			bool limit_reached = true;
-			for(int i = 0; i < MAX_PUSHED; ++i)
-			{
-				if(targ.has_pushed[i]) continue;
-				limit_reached = false;
-				targ.has_pushed[i] = this; // may be briefly out of sync between client and server if client prediction is toggled
-				break;
-			}
-			if(limit_reached)
-			{
-				return false; // too many overlapping jump pads
-			}
-			if(!IL_CONTAINS(are_pushed, targ))
-			{
-				IL_PUSH(are_pushed, targ);
-				this.nextthink = time;
-			}
+			targ.last_pushed = this; // may be briefly out of sync between client and server if client prediction is toggled
 		}
 	}
 
@@ -317,7 +268,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 		else
 		{
-			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, this.enemy, this.speed, this.count, targ, is_pushed);
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, this.enemy, this.speed, this.count, targ, already_pushed);
 		}
 	}
 	else if(this.target && this.target != "")
@@ -337,7 +288,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 		else
 		{
-			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, RandomSelection_chosen_ent, this.speed, this.count, targ, is_pushed);
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, RandomSelection_chosen_ent, this.speed, this.count, targ, already_pushed);
 		}
 	}
 	else
@@ -383,7 +334,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 		// prevent sound spam when a player hits the jumppad more than once
 		// or when a dead player gets stuck in the jumppad for some reason
-		if(!is_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
+		if(!already_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
@@ -482,7 +433,7 @@ void trigger_push_velocity_touch(entity this, entity toucher)
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
-	noref bool success = jumppad_push(this, toucher, true);
+	jumppad_push(this, toucher, true);
 }
 
 #ifdef SVQC
@@ -870,8 +821,6 @@ spawnfunc(trigger_push_velocity)
 	precache_sound (this.noise);
 
 	trigger_push_velocity_link(this); // link it now
-
-	setthink(this, check_pushed);
 }
 
 
@@ -969,7 +918,6 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH_VELOCITY, bool isnew)
 	this.solid = SOLID_TRIGGER;
 	settouch(this, trigger_push_velocity_touch);
 	this.move_time = time;
-	setthink(this, check_pushed);
 
 	return true;
 }

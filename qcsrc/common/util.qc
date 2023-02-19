@@ -1675,6 +1675,21 @@ void Skeleton_SetBones(entity e)
 string to_execute_next_frame;
 void execute_next_frame()
 {
+#ifdef SVQC
+	IL_EACH(g_moveables, it.last_pushed,
+	{
+		if(WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it))
+		{
+			it.last_pushed = NULL;
+		}
+	});
+#elif defined(CSQC)
+	if(csqcplayer.last_pushed && WarpZoneLib_ExactTrigger_Touch(csqcplayer.last_pushed, csqcplayer))
+	{
+		csqcplayer.last_pushed = NULL;
+	}
+#endif
+
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");
