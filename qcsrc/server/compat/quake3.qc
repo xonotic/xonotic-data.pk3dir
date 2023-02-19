@@ -308,20 +308,9 @@ void target_print_use(entity this, entity actor, entity trigger)
 	{
 		target_print_message(this, actor);
 	}
-	else if(red || blue)
-	{
-		if(red)
-		{
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.team == NUM_TEAM_1, target_print_message(this, it));
-		}
-		if(blue)
-		{
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.team == NUM_TEAM_2, target_print_message(this, it));
-		}
-	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), target_print_message(this, it));
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && ((!red && !blue) || (red && it.team == NUM_TEAM_1) || (blue && it.team == NUM_TEAM_2)), target_print_message(this, it));
 	}
 }
 
