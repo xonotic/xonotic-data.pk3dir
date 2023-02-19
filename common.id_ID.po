@@ -3,6 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Angeline Meilia, 2023
+# Ariesandy Hidayat, 2023
 # red koala, 2023
 # red koala, 2023
 msgid ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: red koala, 2023\n"
+"Last-Translator: Angeline Meilia, 2023\n"
 "Language-Team: Indonesian (Indonesia) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/id_ID/)\n"
 "Language: id_ID\n"
@@ -28,17 +30,17 @@ msgstr "^2Berhasil diekspor ke %s! (Catatan: Tersimpan di data/data/)"
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Tidak bisa menulis ke%s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Judul di %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Pesan hitung mundur pada waktu %s,  detik tersisa: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -46,15 +48,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Pesan multiline pada waktu %situ\n"
+"^BOLDberlangsung lebih lama dari biasanya"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Pesan pada saat %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "Pesan Umum"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
@@ -92,7 +96,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
+msgstr "^1Tekan ^3%s^1 atau ^3%s^1 untuk pemain selanjutnya atau sebelumnya"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
@@ -192,7 +196,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:195
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "Jumlah tim tidak seimbang!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:198
 #, c-format
@@ -218,7 +222,7 @@ msgstr "^7Tekan ^3ESC ^7untuk menampilkan pilihan HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Klik dua kali panel ^7a untuk pilihan khusus panel."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -691,7 +695,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Jumlah gol yang dicetak"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^goals"
@@ -713,7 +717,7 @@ msgstr "SCO^k/d"
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Rasio membunuh-mati"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^kdr"

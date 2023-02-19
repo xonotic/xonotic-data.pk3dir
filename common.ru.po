@@ -174,7 +174,7 @@ msgstr "прыжок"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1Старт игры через ^3%d^1 секунд"
+msgstr "^1Начало игры через ^3%d^1 секунд"
 
 #: qcsrc/client/hud/panel/infomessages.qc:145
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -885,7 +885,7 @@ msgstr "итог"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of domination points taken (Domination)"
-msgstr "Число захваченных точек доминации (Доминация)"
+msgstr "Число захваченных точек превосходства (Превосходство)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^takes"
@@ -901,7 +901,7 @@ msgstr "убсоюзн"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of ticks (Domination)"
-msgstr "Число тиков (Доминация)"
+msgstr "Число тиков (Превосходство)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^ticks"
@@ -1504,7 +1504,7 @@ msgstr "Захватите и защитите все контрольные т�
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
-msgstr "Доминация"
+msgstr "Превосходство"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
@@ -2119,7 +2119,7 @@ msgstr "Патроны испарителя"
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
 msgid "Extra life"
-msgstr "Экстра жизнь"
+msgstr "Доп. жизнь"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"

@@ -16,8 +16,8 @@ ro    "Romanian" "Romana" 68%
 fi    "Finnish" "Suomi" 99%
 sv    "Swedish" "Svenska" 99%
 tr    "Turkish" "Türkçe" 50%
-id_ID "id_ID" "id_ID" 39%
-la "la" "la" 44%
+id_ID "id_ID" "id_ID" 40%
+la "la" "la" 45%
 cs    "Czech" "Čeština" 31%
 el    "Greek" "Ελληνική" 44%
 be    "Belarusian" "Беларуская" 49%

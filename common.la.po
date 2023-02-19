@@ -505,7 +505,7 @@ msgstr "Manus miscere"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Moderatri index celer"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
@@ -1267,7 +1267,7 @@ msgstr "Salve, es in %s"
 #: qcsrc/client/main.qc:1417 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr "Actus %dus:"
+msgstr "Munus %dum:"
 
 #: qcsrc/client/main.qc:1419
 #, c-format
@@ -1344,7 +1344,7 @@ msgstr "Harenam decernite"
 #: qcsrc/client/mapvoting.qc:418
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "%d secunda manentia"
 
 #: qcsrc/client/mapvoting.qc:558
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
@@ -1759,7 +1759,7 @@ msgstr "Moles pelle in metas"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1434
 msgid "Next Level"
-msgstr "Actus Posterior"
+msgstr "Posterior"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1435
 msgid "Restart"
@@ -2131,15 +2131,15 @@ msgstr "^8est ^3flatrum obvium^8, ^3%s^8 preme ut eo utaris"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Polybolus Gravis Immoderatus"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:20
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Polybolus Immoderatus"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Nex Immoderata"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -2147,7 +2147,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Sclopetum Immoderatum"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -2817,7 +2817,7 @@ msgstr "^BG%s^K1 Granata Sanatrice se non sanavit%s%s"
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr "^BG%s^K1 mortuus est%s%s. Nonne ingratum est sine missile vivere?"
+msgstr "^BG%s^K1 mortuus est%s%s. Nonne ingratum est sine missili vivere?"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -3907,7 +3907,7 @@ msgstr "^K3%s^BG%s^K3 occidisti"
 #: qcsrc/common/notifications/all.inc:612
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
-msgstr ""
+msgstr "^K3%sTuae rationi ^BG%s^K3 addidisti"
 
 #: qcsrc/common/notifications/all.inc:595
 #, c-format
@@ -3919,7 +3919,7 @@ msgstr "^K1%sA ^BG%s^K1 occisus es"
 #: qcsrc/common/notifications/all.inc:614
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr ""
+msgstr "^K1%sA ^BG%s^K1 eius rationi additus es"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
@@ -3949,7 +3949,7 @@ msgstr "^K1%s^BG%s^K1 scribentem occidisti"
 #: qcsrc/common/notifications/all.inc:621
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr ""
+msgstr "^K1%sTuae rationi ^BG%s^K1 scribentem addidisti"
 
 #: qcsrc/common/notifications/all.inc:622
 #, c-format
@@ -3959,7 +3959,7 @@ msgstr "^K1%sTu scribens a ^BG%s^K1 occisus es"
 #: qcsrc/common/notifications/all.inc:623
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr ""
+msgstr "^K1%sTu scribens a ^BG%s^K1 eius rationi additus es"
 
 #: qcsrc/common/notifications/all.inc:629
 #, c-format
@@ -4070,7 +4070,7 @@ msgstr "^K1Occisus es quia missilia exhausisti..."
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You grew too old without taking your medicine"
-msgstr ""
+msgstr "^K1Nimis senuisti nec medicamentum tuum sumpsisti"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You need to preserve your health"
@@ -4090,11 +4090,11 @@ msgstr "^K1Temet interfecisti!"
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You ended it all!"
-msgstr ""
+msgstr "^K1Perpessionem tuam finivisti!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You got stuck in a swamp!"
-msgstr ""
+msgstr "^K1In palude haerebas!"
 
 #: qcsrc/common/notifications/all.inc:653
 #, c-format
@@ -4151,7 +4151,7 @@ msgstr "^K1Araneae Automatae eruptione offensus es!"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr ""
+msgstr "^K1Araneae Automatae missili igneo divisus es!"
 
 #: qcsrc/common/notifications/all.inc:664
 msgid "^K1You got caught in the blast of a Racer explosion!"
@@ -4274,7 +4274,7 @@ msgid ""
 "Hope your team can fix it..."
 msgstr ""
 "^K1Non est ubi nascaris!\n"
-"Utinam tua manus agat..."
+"Utinam manus tua agat..."
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
@@ -4327,7 +4327,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr "^BGIncipis portans ^TCclavem ^TTm"
+msgstr "^BGIncipis portans ^TCClavem ^TTm"
 
 #: qcsrc/common/notifications/all.inc:722
 msgid "^BGYou have no lives left, you must wait until the next match"
@@ -4361,24 +4361,24 @@ msgstr "^BGExpectatur ut %s plures ludant..."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr ""
+msgstr "^BGArma tua degenerata erit dum missili deeris!"
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^F4^COUNT^BG left to find some ammo!"
-msgstr ""
+msgstr "^BGAnte ^F4^COUNT^BG secunda, missile inveni!"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr ""
+msgstr "^BGMissile cape ne morieris ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
-msgstr ""
+msgstr "^BGMissile cape! Manent ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
-msgstr ""
+msgstr "^F2Vitae additae manentes: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
@@ -4386,6 +4386,8 @@ msgid ""
 "^F2^COUNT^BG until weapon change...\n"
 "Next weapon: ^F1%s"
 msgstr ""
+"^BGArma commutabuntur ^F2^COUNT^BG...\n"
+"Arma posteriora: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:736
 #, c-format
@@ -4433,7 +4435,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:746
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr ""
+msgstr "^F2%s^BG preme ut teleporteris"
 
 #: qcsrc/common/notifications/all.inc:747
 #, c-format
@@ -4445,12 +4447,16 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
+"^F2Iam ludus ^F4PROROGATUS^F2 est!\n"
+"Interficere sequere quoad aliquis vicerit!"
 
 #: qcsrc/common/notifications/all.inc:749
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
+"^F2Iam ludus ^F4PROROGATUS^F2 est!\n"
+"Rationi addere sequere quoad aliquis vicerit!"
 
 #: qcsrc/common/notifications/all.inc:750
 msgid ""
@@ -4467,6 +4473,8 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
+"^F2Iam ludus ^F4PROROGATUS^F2 est!\n"
+"^F4%s^BG ludo addita sunt!"
 
 #: qcsrc/common/notifications/all.inc:753
 msgid "^K1In^BG-portal created"
@@ -4482,39 +4490,39 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:757
 msgid "^F2Strength infuses your weapons with devastating power"
-msgstr ""
+msgstr "^F2Per Vim potentia armorum omnibus praestas"
 
 #: qcsrc/common/notifications/all.inc:758
 msgid "^F2Strength has worn off"
-msgstr ""
+msgstr "^F2Vis evanuit"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^F2Shield surrounds you"
-msgstr ""
+msgstr "^F2Scutum te obtegit"
 
 #: qcsrc/common/notifications/all.inc:761
 msgid "^F2Shield has worn off"
-msgstr ""
+msgstr "^F2Scutum evanuit"
 
 #: qcsrc/common/notifications/all.inc:763
 msgid "^F2You are on speed"
-msgstr ""
+msgstr "^F2Celeritas te venit"
 
 #: qcsrc/common/notifications/all.inc:764
 msgid "^F2Speed has worn off"
-msgstr ""
+msgstr "^F2Celeritas evanuit"
 
 #: qcsrc/common/notifications/all.inc:766
 msgid "^F2You are invisible"
-msgstr ""
+msgstr "^F2Invisibilis videris"
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^F2Invisibility has worn off"
-msgstr ""
+msgstr "^F2Invisibilitas evanuit"
 
 #: qcsrc/common/notifications/all.inc:769
 msgid "^F2The race is over, finish your lap!"
-msgstr ""
+msgstr "^F2Cursus terminatus est, circumitum tuum fini!"
 
 #: qcsrc/common/notifications/all.inc:771
 msgid "^BGSequence completed!"
@@ -4531,15 +4539,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:775
 msgid "^F2Superweapons have broken down"
-msgstr ""
+msgstr "^F2Perarma perfracta sunt"
 
 #: qcsrc/common/notifications/all.inc:776
 msgid "^F2Superweapons have been lost"
-msgstr ""
+msgstr "^F2Perarma perdita sunt"
 
 #: qcsrc/common/notifications/all.inc:777
 msgid "^F2You now have a superweapon"
-msgstr ""
+msgstr "^F2Perarma tenes"
 
 #: qcsrc/common/notifications/all.inc:779
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4601,11 +4609,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:427 qcsrc/common/notifications/all.qh:428
 msgid "primary"
-msgstr ""
+msgstr "primaria"
 
 #: qcsrc/common/notifications/all.qh:427 qcsrc/common/notifications/all.qh:428
 msgid "secondary"
-msgstr ""
+msgstr "secundaria"
 
 #: qcsrc/common/notifications/all.qh:430
 msgid "point"
@@ -4617,11 +4625,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:439
 msgid "drop flag"
-msgstr ""
+msgstr "vexillum demittere"
 
 #: qcsrc/common/notifications/all.qh:440
 msgid "throw nade"
-msgstr ""
+msgstr "granatam iacere"
 
 #: qcsrc/common/notifications/all.qh:466
 #, c-format
@@ -4995,7 +5003,7 @@ msgstr "InstaGib"
 #: qcsrc/common/util.qc:250
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:182
 msgid "New Toys"
-msgstr "Crepundiae Novae"
+msgstr "Crepundia Nova"
 
 #: qcsrc/common/util.qc:251
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
