@@ -6,6 +6,9 @@
 
 .vector origin;
 
+// entities can be labeled pure if they aren't linked to the world
+// that is, if they never call setorigin / setsize / setmodel (/ Net_LinkEntity)
+
 .bool pure_data;
 #define is_pure(e) ((e).pure_data)
 /** @deprecated use new_pure or NEW(class) */

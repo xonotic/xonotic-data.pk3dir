@@ -28,7 +28,7 @@ void Damage_DamageInfo(vector org, bool is_solid_hit, float coredamage, float ed
 	if(!sound_allowed(MSG_BROADCAST, dmgowner))
 		deathtype |= 0x8000;
 
-	e = new_pure(damageinfo);
+	e = new(damageinfo);
 	// origin is just data to be sent
 	//setorigin(e, org);
 	e.origin = org;

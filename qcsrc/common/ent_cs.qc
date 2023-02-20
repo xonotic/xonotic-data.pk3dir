@@ -241,7 +241,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 
 	void entcs_attach(entity player)
 	{
-		entity e = CS(player).entcs = new_pure(entcs_sender);
+		entity e = CS(player).entcs = new(entcs_sender);
 		e.owner = player;
 		setthink(e, entcs_think);
 		e.nextthink = time;

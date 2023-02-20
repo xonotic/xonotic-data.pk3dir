@@ -580,13 +580,17 @@ bool WarpZoneLib_BadEntity(entity e)
 	switch(s)
 	{
 		case "weaponentity":
+		case "eliminatedPlayers":
 		case "exteriorweaponentity":
+		case "entcs_sender":
+		case "damageinfo":
 		case "sprite_waypoint":
 		case "waypoint":
 		case "spawnfunc":
 		case "weaponchild":
 		case "chatbubbleentity":
 		case "buff_model":
+		case "wepent_sender":
 		//case "net_linked": // actually some real entities are linked without classname, fail
 		case "":
 			return true;
