@@ -101,17 +101,12 @@ void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang) // we assume 
 
 .entity enemy;
 
-vector WarpZoneLib_BoxTouchesBrush_mins;
-vector WarpZoneLib_BoxTouchesBrush_maxs;
-entity WarpZoneLib_BoxTouchesBrush_ent;
-entity WarpZoneLib_BoxTouchesBrush_ignore;
-float WarpZoneLib_BoxTouchesBrush_Recurse()
+float WarpZoneLib_BoxTouchesBrush_Recurse(vector mi, vector ma, entity e, entity ig)
 {
-	float s;
+	float f, s;
 	entity se;
-	float f;
 
-	tracebox('0 0 0', WarpZoneLib_BoxTouchesBrush_mins, WarpZoneLib_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZoneLib_BoxTouchesBrush_ignore);
+	tracebox('0 0 0', mi, ma, '0 0 0', MOVE_NOMONSTERS, ig);
 #ifdef CSQC
 	if (trace_networkentity)
 	{
@@ -123,13 +118,13 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 #endif
 	if (!trace_ent)
 		return 0;
-	if (trace_ent == WarpZoneLib_BoxTouchesBrush_ent)
+	if (trace_ent == e)
 		return 1;
 
 	se = trace_ent;
 	s = se.solid;
 	se.solid = SOLID_NOT;
-	f = WarpZoneLib_BoxTouchesBrush_Recurse();
+	f = WarpZoneLib_BoxTouchesBrush_Recurse(mi, ma, e, ig);
 	se.solid = s;
 
 	return f;
@@ -137,6 +132,9 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
+	// bones_was_here: TODO: when findbox() builtin is available, use it to
+	// optimise this into a single non-recursive function that only calls tracebox once
+
 	float f, s;
 
 	if(!e.modelindex || e.warpzone_isboxy)
@@ -144,11 +142,7 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 
 	s = e.solid;
 	e.solid = SOLID_BSP;
-	WarpZoneLib_BoxTouchesBrush_mins = mi;
-	WarpZoneLib_BoxTouchesBrush_maxs = ma;
-	WarpZoneLib_BoxTouchesBrush_ent = e;
-	WarpZoneLib_BoxTouchesBrush_ignore = ig;
-	f = WarpZoneLib_BoxTouchesBrush_Recurse();
+	f = WarpZoneLib_BoxTouchesBrush_Recurse(mi, ma, e, ig);
 	e.solid = s;
 
 	return f;
