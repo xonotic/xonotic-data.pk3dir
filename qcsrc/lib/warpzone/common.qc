@@ -137,21 +137,21 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
-    float f, s;
+	float f, s;
 
-    if(!e.modelindex || e.warpzone_isboxy)
-        return 1;
+	if(!e.modelindex || e.warpzone_isboxy)
+		return 1;
 
-    s = e.solid;
-    e.solid = SOLID_BSP;
-    WarpZoneLib_BoxTouchesBrush_mins = mi;
-    WarpZoneLib_BoxTouchesBrush_maxs = ma;
-    WarpZoneLib_BoxTouchesBrush_ent = e;
-    WarpZoneLib_BoxTouchesBrush_ignore = ig;
-    f = WarpZoneLib_BoxTouchesBrush_Recurse();
-    e.solid = s;
+	s = e.solid;
+	e.solid = SOLID_BSP;
+	WarpZoneLib_BoxTouchesBrush_mins = mi;
+	WarpZoneLib_BoxTouchesBrush_maxs = ma;
+	WarpZoneLib_BoxTouchesBrush_ent = e;
+	WarpZoneLib_BoxTouchesBrush_ignore = ig;
+	f = WarpZoneLib_BoxTouchesBrush_Recurse();
+	e.solid = s;
 
-    return f;
+	return f;
 }
 
 entity WarpZone_Find(vector mi, vector ma)
