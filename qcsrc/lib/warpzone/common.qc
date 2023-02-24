@@ -140,10 +140,18 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 	if(!e.modelindex || e.warpzone_isboxy)
 		return 1;
 
+	// work around trigger_hurt on geit3ctf1 not being detected by tracebox
+	// bones_was_here: FIXME: WHY do these triggers only have supercontents == 128 ?!
+	if (Q3COMPAT_COMMON && ig != world)
+		ig.dphitcontentsmask |= 128;
+
 	s = e.solid;
 	e.solid = SOLID_BSP;
 	f = WarpZoneLib_BoxTouchesBrush_Recurse(mi, ma, e, ig);
 	e.solid = s;
+
+	if (Q3COMPAT_COMMON && ig != world)
+		ig.dphitcontentsmask &= ~128;
 
 	return f;
 }
