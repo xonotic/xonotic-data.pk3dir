@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2023\n"
 "Language-Team: Latin (http://www.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -238,7 +238,7 @@ msgstr "Ludens %dus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Index celer ordinarius"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -1127,7 +1127,7 @@ msgstr "Prorogatio %da"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1Respondere necesse est antequam notas superpositas mutes"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1143,7 +1143,7 @@ msgstr "Moderatra nomen tuum meminisse et nuntiare sinis?"
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Notas Superpositas Mutare"
 
 #: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -1305,7 +1305,7 @@ msgstr "%d ludentes aut plures"
 
 #: qcsrc/client/main.qc:1466
 msgid "Active modifications:"
-msgstr ""
+msgstr "Mutationes praesentes:"
 
 #: qcsrc/client/main.qc:1469
 msgid "Special gameplay tips:"
@@ -1318,7 +1318,7 @@ msgstr "Moderatri nuntium"
 #: qcsrc/client/main.qc:1570
 #, c-format
 msgid "%s (not bound)"
-msgstr ""
+msgstr "%s (sine clavi)"
 
 #: qcsrc/client/mapvoting.qc:72
 msgid " (1 vote)"
@@ -1407,12 +1407,12 @@ msgstr "Omnes hostes interficite ut tempore vincetis"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Temporum numerus terminalis:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Quot temporibus vincere necesse est ut ludus finiatur"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1432,11 +1432,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr ""
+msgstr "Captuum numerus terminalis:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "Quotiens vexillum capere necesse est ut ludus finiatur"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1595,20 +1595,20 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Glandes"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Missilia Ignea"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Cellulae"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -4634,100 +4634,100 @@ msgstr "granatam iacere"
 #: qcsrc/common/notifications/all.qh:466
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr ""
+msgstr "%s^K1 MORTEM TRIPLICEM attulit! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:466
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
-msgstr ""
+msgstr "%s^K1 mortium rationi TER ADDIDIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:466
 msgid "TRIPLE FRAG! "
-msgstr ""
+msgstr "MORS TRIPLEX! "
 
 #: qcsrc/common/notifications/all.qh:467
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 QUINQUE MORTES CONTINUAVIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:467
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr ""
+msgstr "%s^K1 IRAM concepit! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:467
 msgid "RAGE! "
-msgstr ""
+msgstr "IRA! "
 
 #: qcsrc/common/notifications/all.qh:468
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 DECEM MORTES CONTINUAVIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:468
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
-msgstr ""
+msgstr "%s^K1 TRUCIDATIONEM coepit! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:468
 msgid "MASSACRE! "
-msgstr ""
+msgstr "TRUCIDATIO! "
 
 #: qcsrc/common/notifications/all.qh:469
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr ""
+msgstr "%s^K1 MUTILATIONEM fecit! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:469
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 QUINDECIM MORTES CONTINUAVIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:469
 msgid "MAYHEM! "
-msgstr ""
+msgstr "MUTILATIO! "
 
 #: qcsrc/common/notifications/all.qh:470
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr ""
+msgstr "%s^K1 FURIOSUS est! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:470
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 VIGINTI MORTES CONTINUAVIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:470
 msgid "BERSERKER! "
-msgstr ""
+msgstr "FURIOSUS! "
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr ""
+msgstr "%s^K1 CARNIFEX est! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 VIGINTI QUINQUE MORTES CONTINUAVIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:471
 msgid "CARNAGE! "
-msgstr ""
+msgstr "CARNIFEX! "
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 TRIGINTA MORTES CONTINUAVIT! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr ""
+msgstr "%s^K1 HARMAGEDDON coepit! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:472
 msgid "ARMAGEDDON! "
-msgstr ""
+msgstr "HARMAGEDDON! "
 
 #: qcsrc/common/notifications/all.qh:479
 #, c-format
@@ -6983,11 +6983,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Find servers to play on"
-msgstr ""
+msgstr "Moderatra quibus ludas quaerere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Host your own game"
-msgstr ""
+msgstr "Ludi tui ipsius hospes esse"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:18
 msgid "Media"
@@ -7217,53 +7217,60 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
-msgstr ""
+msgstr "Ludi mutationes:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
 msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Vitare (statim ire quorsum velit) sinere. Clavem directionalem bis preme ut "
+"vites"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "Fit eruptio cum alter ludens alterum tangit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid "All players are almost invisible"
-msgstr ""
+msgstr "Omnes ludentes vix videntur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Firmamina (dona fortuita, e.g. Medicus, Invisibilitas etc.) apparent in "
+"harenis quae ea contineant"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Only possible to inflict damage on your enemy while they're airborne"
-msgstr ""
+msgstr "Quisque inimicus non vulneratur cum in solo stat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
 msgid "Damage done to your enemy gets added to your own health"
-msgstr ""
+msgstr "Vulnus qui inimico infers, sanitati tuae addetur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Quanta sanitas quae, quisque ludens ea egens sanguinem mittet (sanitas "
+"putrescet neque salire poterit)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:157
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
-msgstr ""
+msgstr "Res tardius in solo cadunt (gravitatis communis fractio)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:166
 msgid "Weapon & item mutators:"
-msgstr ""
+msgstr "Armorum & utilium mutationes:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Ludentes cum unco scandendo nascuntur. Clavem 'uncum' preme ut eo utaris"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:174
 msgid ""
@@ -7276,6 +7283,8 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"Missilia missilia delere non possunt, nisi Electri orbes, qui Electri "
+"emissione primaria delentur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid ""
@@ -7289,44 +7298,49 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"Devastatri missilia ignea ab utente rumpi possunt statim (ne brevis mora "
+"quidem est). Itaque ludentes Devastatri missile emittere rumpereque possunt "
+"dum solo distant, ut eruptione iaciantur et celerius eant"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:193
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr ""
+msgstr "Ludentes omnia arma tenta demittent cum occiduntur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
 msgid "Weapons stay after they are picked up"
-msgstr ""
+msgstr "Arma manent postquam capta sunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:203
 msgid "Regular (no arena)"
-msgstr ""
+msgstr "Communis (non armorum harena)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:204
 msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
+"Ludentes cum nascentur quaedam arma habebunt, cum missilibus ad infinitum, "
+"sine aliis armis colligendis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:206
 msgid "Weapon arenas:"
-msgstr ""
+msgstr "Armorum harenae:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
 msgid "Custom weapons"
-msgstr ""
+msgstr "Arma quae velis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:231
 msgid "Most weapons"
-msgstr ""
+msgstr "Plurima arma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "All weapons"
-msgstr ""
+msgstr "Omnia arma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:238
 msgid "Special arenas:"
-msgstr ""
+msgstr "Harenae insignes:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:242
 msgid ""
@@ -7335,6 +7349,10 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Quisque ludens una arma tenebit, quibus inimici statim per singulas "
+"emissiones occiduntur. Si ludens missilibus exhauriet, in 10 secunda plura "
+"missilia invenire necesse erit, ne morietur. Ludens emissione secundaria non "
+"vulnerat tamen, atque per eam perniciter salire potest."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
 msgid ""
@@ -7342,18 +7360,21 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"Xonoticus sine utilibus - non sunt utilia colligenda, sed ludentes aequa "
+"arma habent. Post aliquod tempus, numeratio regredientis fiet, et postea pro "
+"eis armis alia arma aequa commutabuntur."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:251
 msgid "with blaster"
-msgstr ""
+msgstr "cum flatro"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:252
 msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr ""
+msgstr "Praeter altera arma, flatrum semper portare in Nix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:9
 msgid "Mutators"
-msgstr ""
+msgstr "Mutationes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"

@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
+"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -1082,12 +1082,12 @@ msgstr "地圖："
 #: qcsrc/client/hud/panel/scoreboard.qc:2467
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr "速度獎勵：%d%s ^7(%s^7)"
+msgstr "速度領先：%d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2471
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr "一直領先：%d%s ^7(%s^7)"
+msgstr "史上最快：%d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2505
 #, c-format
@@ -2181,7 +2181,7 @@ msgstr "隱身"
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:57
 msgid "Shield"
-msgstr "護盾"
+msgstr "神佑"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -3224,17 +3224,17 @@ msgstr "^BG%s^K1 撿到了隱身"
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr "^BG%s^K1 撿到了護盾"
+msgstr "^BG%s^K1 拿到了神佑"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^K1 picked up Speed"
-msgstr "^BG%s^K1 撿到了加速"
+msgstr "^BG%s^K1 拿到了加速"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr "^BG%s^K1 撿到了神力"
+msgstr "^BG%s^K1 拿到了神力"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
@@ -4523,11 +4523,11 @@ msgstr "^F2神力已解除"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^F2Shield surrounds you"
-msgstr "^F2護盾環繞著你"
+msgstr "^F2神佑盾環繞著你"
 
 #: qcsrc/common/notifications/all.inc:761
 msgid "^F2Shield has worn off"
-msgstr "^F2護盾已解除"
+msgstr "^F2神佑盾已解除"
 
 #: qcsrc/common/notifications/all.inc:763
 msgid "^F2You are on speed"
@@ -5887,7 +5887,7 @@ msgstr "動畫"
 
 #: qcsrc/menu/xonotic/credits.qc:54
 msgid "Campaign"
-msgstr "任務"
+msgstr "戰役"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Level Design"
@@ -9744,7 +9744,7 @@ msgstr "即刻行動！（與電腦玩家隨機遊戲）"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
-msgstr "任務難度："
+msgstr "戰役難度："
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "CSKL^Easy"
@@ -9760,7 +9760,7 @@ msgstr "困難"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr "開始任務！"
+msgstr "開始戰役！"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9768,7 +9768,7 @@ msgstr "單人遊戲"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr "遊玩單人任務，或者即刻行動對抗電腦玩家"
+msgstr "遊玩單人戰役，或者即刻行動對抗電腦玩家"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9829,11 +9829,11 @@ msgstr "如果回答「否」，你將會以「匿名玩家」的形式出現"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
-msgstr "合作模式"
+msgstr "團隊競技"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr "自由戰役"
+msgstr "自由競技"
 
 #: qcsrc/menu/xonotic/keybinder.qc:35
 msgid "Moving"
@@ -10001,7 +10001,7 @@ msgstr "停止演示"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr "離開任務"
+msgstr "離開戰役"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
@@ -10013,7 +10013,7 @@ msgstr "離開多人遊戲"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr "離開當前任務關卡"
+msgstr "離開當前戰役關卡"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
@@ -10025,7 +10025,7 @@ msgstr "離開當前多人競賽 / 斷開與伺服器的連線"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:76 qcsrc/menu/xonotic/mainwindow.qc:79
 msgid "Do not press this button again!"
-msgstr "不要再按這個按鈕 ！"
+msgstr "不要再按這個按鈕！"
 
 #: qcsrc/menu/xonotic/maplist.qc:294
 msgid ""
@@ -10057,7 +10057,7 @@ msgstr "取消收藏"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr "從書籤中移除所選擇的伺服器"
+msgstr "從書籤中移除所選伺服器"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"
@@ -10067,7 +10067,7 @@ msgstr "收藏"
 msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
-msgstr "收藏當前選擇的伺服器以便日後查詢"
+msgstr "收藏所選伺服器以便日後查詢"
 
 #: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Ping"
@@ -10139,7 +10139,7 @@ msgstr "有修改的伺服器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr "絕滅模式"
+msgstr "Overkill（絕滅模式）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
@@ -10147,7 +10147,7 @@ msgstr "InstaGib（瞬殺）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr "Defrag/無殺戮模式"
+msgstr "Defrag（無殺戮模式）"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
