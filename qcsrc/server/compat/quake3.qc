@@ -292,16 +292,16 @@ void target_print_use(entity this, entity actor, entity trigger)
 		return;
 
 	bool priv, red, blue;
-	if(g_cts || g_race) // use Q3DF spawnflags in race game modes
-	{
-		priv = !boolean(this.spawnflags & PRINT_BROADCAST);
-		red = blue = false;
-	}
-	else // use vanilla Q3 spawnflags otherwise
+	if(!(q3compat & Q3COMPAT_DEFI)) // Q3 spawnflags
 	{
 		priv = boolean(this.spawnflags & PRINT_PRIVATE);
 		red = boolean(this.spawnflags & PRINT_REDTEAM);
 		blue = boolean(this.spawnflags & PRINT_BLUETEAM);
+	}
+	else // Q3DF spawnflags
+	{
+		priv = !boolean(this.spawnflags & PRINT_BROADCAST);
+		red = blue = false;
 	}
 
 	if(priv)
