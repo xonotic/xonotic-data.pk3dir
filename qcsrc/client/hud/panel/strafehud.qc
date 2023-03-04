@@ -774,9 +774,9 @@ void HUD_StrafeHUD()
                 drawfill(panel_pos - eY * slickdetector_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 // bottom horizontal line
                 drawfill(panel_pos + eY * panel_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-
-                text_offset_top = text_offset_bottom = slickdetector_height;
             }
+
+            text_offset_top = text_offset_bottom = slickdetector_height;
         }
 
         if(autocvar_hud_panel_strafehud_direction && direction != STRAFEHUD_DIRECTION_NONE && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
