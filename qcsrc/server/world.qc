@@ -285,6 +285,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
+		BADCVAR("g_mayhem");
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
@@ -299,6 +300,8 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_tmayhem");
+		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
@@ -376,6 +379,10 @@ void cvar_changes_init()
 		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_mayhem_point_limit");
+		BADCVAR("g_mayhem_point_leadlimit");
+		BADCVAR("g_tmayhem_point_limit");
+		BADCVAR("g_tmayhem_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
@@ -453,6 +460,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_point_limit");
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
+		BADCVAR("g_mayhem_powerups");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
@@ -469,6 +477,8 @@ void cvar_changes_init()
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
+		BADCVAR("g_tmayhem_teams_override");
+		BADCVAR("g_tmayhem_powerups");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
