@@ -182,7 +182,7 @@ msgstr "^2Идёт ^1разминка^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:159
 msgid "^31^2 more player is needed for the match to start."
-msgstr "^3Требуется ещё 1^2 игрок для старта матча."
+msgstr "^3Требуется ещё 1^2 игрок для начала матча."
 
 #: qcsrc/client/hud/panel/infomessages.qc:161
 #, c-format
@@ -7132,7 +7132,7 @@ msgstr "%d минут"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "TIMLIM^Default"
-msgstr "Стандартно"
+msgstr "По умолчанию"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:171
@@ -7253,11 +7253,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
 msgid "Add shown"
-msgstr "Добавить показанные"
+msgstr "Выбрать показанные"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Add the maps shown in the list to your selection"
-msgstr "Добавить арены, показываемые в вашем списке"
+msgstr "Выбрать арены, показываемые в вашем списке"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:194
 msgid "Remove shown"
@@ -7269,11 +7269,11 @@ msgstr "Удалить все арены, показываемые в вашем
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Add all"
-msgstr "Добавить все"
+msgstr "Выбрать все"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Add every available map to your selection"
-msgstr "Добавить каждую доступную арену к ваш выбор"
+msgstr "Выбрать каждую доступную арену"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:204
 msgid "Remove all"
@@ -8673,7 +8673,7 @@ msgstr "Отображать состояние оружия в кольце"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:93
 msgid "Enable center crosshair dot"
-msgstr "Точка в центре"
+msgstr "Точка посередине"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:111
 msgid "Use normal crosshair color"
@@ -8837,7 +8837,7 @@ msgstr "Содрогание интерфейса при получении ур
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr "Открыть редактор HUD"
+msgstr "Открыть редактор оболочки"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
@@ -9183,7 +9183,7 @@ msgstr "Вид"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:33
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr "Приоритет оружия (* = из мутатора)"
+msgstr "Очерёдность оружия (* = из мутатора)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
@@ -9195,7 +9195,7 @@ msgstr "Вниз"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
-msgstr "Использовать приоритет при переключении оружия"
+msgstr "Использовать очерёдность при переключении оружия"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid ""
@@ -9398,7 +9398,7 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr "Компенсация потери пакетов (п/п)"
+msgstr "Смягчение потери пакетов (п/п)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"

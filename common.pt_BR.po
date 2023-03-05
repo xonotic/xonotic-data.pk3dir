@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-03 12:41+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2023\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2564,8 +2564,7 @@ msgstr "^BG%s%s^K1 foi morto pelo bônus de ^BG%s^K1 de ^BG%s^K1 ^K1%s%s"
 #: qcsrc/common/notifications/all.inc:272
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
-"^BG%s%s^K1 foi pontuado contra pelo bônus de ^BG%s^K1 de ^BG%s^K1 ^K1%s%s"
+msgstr "^BG%s^K1Contra ^BG%s^K1 o bônus de ^BG%s^K1, ^BG%s^K1, pontuou ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:273
 #, c-format
@@ -3320,12 +3319,12 @@ msgstr "^BG%s^BG abandonou a corrida"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
-msgstr "^BG%s^BG não puderam quebrar o recorde de lugar %s%s^BG de %s%s %s"
+msgstr "^BG%s^BG não pôde quebrar o recorde de lugar %s%s^BG de %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
-msgstr "^BG%s^BG não pode quebrar o recorde de lugar %s%s^BG de %s%s %s"
+msgstr "^BG%s^BG não pôde quebrar o recorde de lugar %s%s^BG de %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3342,7 +3341,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
-msgstr "^BG%s^BG melhoraram seus %s%s^BG com %s%s %s"
+msgstr "^BG%s^BG melhorou seu recorde de lugar %s%s^BG com %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
@@ -4014,7 +4013,7 @@ msgstr "^K1%sVocê foi executado por ^BG%s"
 #: qcsrc/common/notifications/all.inc:614
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr "^K1%sVocê foi pontuado contra por ^BG%s"
+msgstr "^K1%sContra você ^BG%s^K1 pontuou"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
@@ -4044,7 +4043,7 @@ msgstr "^K1%sVocê executou ^BG%s enquanto digitava"
 #: qcsrc/common/notifications/all.inc:621
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr "^K1%sVocê pontuou contra ^BG%s^K1 enquanto estavam digitando"
+msgstr "^K1%sVocê pontuou contra ^BG%s^K1 enquanto este digitava"
 
 #: qcsrc/common/notifications/all.inc:622
 #, c-format
@@ -4054,7 +4053,7 @@ msgstr "^K1%sVocê foi executado enquanto digitava por ^BG%s"
 #: qcsrc/common/notifications/all.inc:623
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr "^K1%sVocê foi pontuado contra enquanto digitava por ^BG%s^K1"
+msgstr "^K1%sContra você enquanto digitava ^BG%s^K1 pontuou"
 
 #: qcsrc/common/notifications/all.inc:629
 #, c-format
