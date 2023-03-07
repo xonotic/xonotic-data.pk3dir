@@ -112,7 +112,7 @@ int WinningCondition_LMS()
 			else
 			{
 				// a winner!
-				// and assign him his first place
+				// and assign them their first place
 				GameRules_scoring_add(first_player, LMS_RANK, 1);
 				first_player.winning = 1;
 				return WINNING_YES;
@@ -678,10 +678,9 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 	entity e = spawn();
 	setthink(e, lms_extralife);
 
+	Item_CopyFields(ent, e);
+
 	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
 	return true;
 }

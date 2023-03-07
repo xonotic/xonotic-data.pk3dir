@@ -169,7 +169,7 @@ bool scoreboard_ui_disabling;
 void HUD_Scoreboard_UI_Disable()
 {
 	scoreboard_ui_disabling = true;
-	scoreboard_showscores = false;
+	sb_showscores = false;
 }
 
 void HUD_Scoreboard_UI_Disable_Instantly()
@@ -1564,7 +1564,7 @@ bool Scoreboard_WouldDraw()
 		return false;
 	else if (HUD_Radar_Clickable())
 		return false;
-	else if (scoreboard_showscores)
+	else if (sb_showscores) // set by +showscores engine command
 		return true;
 	else if (intermission == 1)
 		return true;
@@ -2301,7 +2301,10 @@ void Scoreboard_Draw()
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 		// map name and player count
-		str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		if (campaign)
+			str = "";
+		else
+			str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
 		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}

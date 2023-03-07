@@ -122,7 +122,8 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
 		_setmodel(e, e.model); // reset mins and maxs based on mesh
-		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+		// apply object scaling and prevent any float precision issues like #2742
+		setsize(e, RoundPerfectVector(e.mins * e.scale), RoundPerfectVector(e.maxs * e.scale));
 	}
 }
 
@@ -185,7 +186,7 @@ entity sandbox_ObjectSpawn(entity this, float database)
 	if(!database)
 	{
 		// set the object's owner via player UID
-		// if the player does not have an UID, the owner cannot be stored and his objects may be edited by anyone
+		// if the player does not have an UID, the owner cannot be stored and their objects may be edited by anyone
 		if(this.crypto_idfp != "")
 			e.crypto_idfp = strzone(this.crypto_idfp);
 		else
@@ -497,7 +498,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				print_to(player, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(player, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(player, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
-				print_to(player, "^7\"^2object_claim^7\" sets the player as the owner of the object, if he has the right to edit it");
+				print_to(player, "^7\"^2object_claim^7\" sets the player as the owner of the object, if they have the right to edit it");
 				print_to(player, "^7\"^2object_info ^3value^7\" shows public information about the object");
 				print_to(player, "^3object ^7- prints general information about the object, such as owner and creation / editing date");
 				print_to(player, "^3mesh ^7- prints information about the object's mesh, including skeletal bones");
@@ -749,7 +750,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				{
 					// update the owner's name
 					// Do this before checking if you're already the owner and skipping if such, so we
-					// also update the player's nickname if he changed it (but has the same player UID)
+					// also update the player's nickname if they changed it (but has the same player UID)
 					if(e.netname != player.netname)
 					{
 						strcpy(e.netname, player.netname);

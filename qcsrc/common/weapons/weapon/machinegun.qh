@@ -18,6 +18,7 @@ CLASS(MachineGun, Weapon)
 /* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
 /* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
 /* wepname   */ ATTRIB(MachineGun, m_name, string, _("MachineGun"));
+/* legacy    */ ATTRIB(MachineGun, m_deprecated_netname, string, "uzi");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
