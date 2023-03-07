@@ -29,6 +29,9 @@ void KeyBinds_BuildList()
 	#define KEYBIND_EMPTY_LINE() KEYBIND_DEF("", "")
 	#define KEYBIND_HEADER(str) KEYBIND_DEF("", str)
 
+	// Special keybinds can't be edited or selected
+	// If a special keybind description matches the previous one
+	// then it's considered as an alternative keybind of the previous one
 	#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
 	#define KEYBIND_SPECIAL_DEF(key, desc) KEYBIND_DEF(strcat("*", key), desc)
 
@@ -105,7 +108,7 @@ void KeyBinds_BuildList()
 	// non-English keyboard layouts, unlike default keys (` and ~)
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
 		string console_shortcut = strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE"));
-		KEYBIND_SPECIAL_DEF(console_shortcut, _("enter console"));
+		KEYBIND_SPECIAL_DEF(console_shortcut            , _("enter console"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_EMPTY_LINE();
 
@@ -119,6 +122,8 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("+use"                                  , _("drop key/flag, exit vehicle"));
 	KEYBIND_DEF("kill"                                  , _("suicide / respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
+	string scoreboard_ui_shortcut = strcat(translate_key("TAB"), "+", translate_key("ESCAPE"));
+	KEYBIND_SPECIAL_DEF(scoreboard_ui_shortcut          , _("scoreboard user interface"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("User defined"));
@@ -354,7 +359,8 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
 	if (KEYBIND_IS_SPECIAL(KeyBinds_Functions[i]))
 	{
-		SUPER(XonoticKeyBinder).setSelected(me, i - 1);
+		if (i > 0 && KeyBinds_Descriptions[i] == KeyBinds_Descriptions[i - 1])
+			SUPER(XonoticKeyBinder).setSelected(me, i - 1);
 		return;
 	}
 	if(me.pressed == 0 || me.pressed == 1) // keyboard or scrolling - skip unselectable items
