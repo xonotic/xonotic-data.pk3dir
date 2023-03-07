@@ -208,6 +208,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
+	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
 	me.keyGrabButton.forcePressed = 1;
 	me.clearButton.disabled = 1;
 	keyGrabber = me;
@@ -302,6 +303,8 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 	string descr = KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
+
+	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
 	descr = substring(descr, 1, strlen(descr) - 1);
 
 	// Hooray! It IS a user bind!
@@ -316,6 +319,8 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	string func = KeyBinds_Functions[me.selectedItem];
 	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
+
+	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 	for(j = 0; j < n; ++j)
