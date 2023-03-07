@@ -202,8 +202,9 @@
 		}
 		else if (me.pressed == 2)
 		{
-			me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
-			me.setFocusedItem(me, me.selectedItem);
+			int clickeditem = me.getItemAtPos(me, me.scrollPos + pos.y);
+			me.setSelected(me, clickeditem);
+			me.setFocusedItem(me, clickeditem);
 			me.mouseMoveOffset = -1;
 		}
 		return 1;
@@ -241,8 +242,9 @@
 			// continue doing that while dragging (even when dragging outside). When releasing, forward the click to the then selected item.
 			this.pressed = 2;
 			// an item has been clicked. Select it, ...
-			this.setSelected(this, this.getItemAtPos(this, this.scrollPos + pos.y));
-			this.setFocusedItem(this, this.selectedItem);
+			int clickeditem = this.getItemAtPos(this, this.scrollPos + pos.y);
+			this.setSelected(this, clickeditem);
+			this.setFocusedItem(this, clickeditem);
 		}
 		return true;
 	}
@@ -268,15 +270,18 @@
 			me.pressed = 3;  // do that here, so setSelected can know the mouse has been released
 			// item dragging mode
 			// select current one one last time...
-			me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
-			me.setFocusedItem(me, me.selectedItem);
+			int clickeditem = me.getItemAtPos(me, me.scrollPos + pos.y);
+			me.setSelected(me, clickeditem);
+			me.setFocusedItem(me, clickeditem);
 			// and give it a nice click event
 			if (me.nItems > 0)
 			{
 				vector where = globalToBox(pos, eY * (me.getItemStart(me, me.selectedItem) - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, me.selectedItem));
 
-				if ((me.selectedItem == me.lastClickedItem) && (time < me.lastClickedTime + 0.3)) me.doubleClickListBoxItem(me, me.selectedItem, where);
-				else me.clickListBoxItem(me, me.selectedItem, where);
+				if ((me.selectedItem == me.lastClickedItem && clickeditem == me.selectedItem) && (time < me.lastClickedTime + 0.3))
+					me.doubleClickListBoxItem(me, me.selectedItem, where);
+				else
+					me.clickListBoxItem(me, me.selectedItem, where);
 
 				me.lastClickedItem = me.selectedItem;
 				me.lastClickedTime = time;
