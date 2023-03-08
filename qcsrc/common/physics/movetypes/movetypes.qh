@@ -105,7 +105,6 @@ vector move_stepnormal;
 bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
 void _Movetype_WallFriction(entity this, vector stepnormal);
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
-void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
