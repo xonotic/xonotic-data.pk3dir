@@ -127,6 +127,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	float time_left = dt, grav = 0;
 	vector push;
 	vector restore_velocity = this.velocity;
+	vector old_trace_plane_normal = '0 0 0';
 
 	if(applygravity)
 	{
@@ -249,6 +250,16 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			blockedflag = 3;
 			break;
 		}
+
+		// bones_was_here: this is from Q3 and helps avoid sticking when surfing on slopes
+		// if this is the same plane we hit before, nudge velocity out along it,
+		// which fixes some epsilon issues with non-axial planes
+		if (trace_plane_normal * old_trace_plane_normal > 0.99) // 0.99 in Q3, 0.999 in DOOM 3
+		{
+			this.velocity += trace_plane_normal;
+			continue; // for this to help we must try the move again now
+		}
+		old_trace_plane_normal = trace_plane_normal;
 
 		// modify velocity so it parallels the clip plane
 		// bones_was_here: we don't need the logic from Quake that tests planes for trajectory interaction,
