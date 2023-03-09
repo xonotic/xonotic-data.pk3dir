@@ -268,7 +268,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		for (int plane1 = 0; plane1 < numplanes; ++plane1)
 		{
 			// slide along the plane
-			vector clipvelocity = _Movetype_ClipVelocity(this.velocity, planes[plane1], 1);
+			vector clipvelocity = _Movetype_ClipVelocity(this.velocity, planes[plane1], OVERCLIP);
 
 			// see if there is a second plane that the new move enters
 			for (int plane2 = 0; plane2 < numplanes; ++plane2)
@@ -277,7 +277,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 					continue;
 
 				// try clipping the move to the plane
-				clipvelocity = _Movetype_ClipVelocity(clipvelocity, planes[plane2], 1);
+				clipvelocity = _Movetype_ClipVelocity(clipvelocity, planes[plane2], OVERCLIP);
 
 				// see if it goes back into the first clip plane
 				if (clipvelocity * planes[plane1] >= 0)
@@ -668,9 +668,9 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 	}
 }
 
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // ClipVelocity
+vector _Movetype_ClipVelocity(vector vel, vector norm, float overbounce)  // ClipVelocity
 {
-	vel -= ((vel * norm) * norm) * f;
+	vel -= ((vel * norm) * norm) * overbounce;
 
 	if(vel.x > -0.1 && vel.x < 0.1) vel.x = 0;
 	if(vel.y > -0.1 && vel.y < 0.1) vel.y = 0;
