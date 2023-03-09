@@ -254,7 +254,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		// bones_was_here: we don't need the logic from Quake that tests planes for trajectory interaction,
 		// which was flawed in Quake and somewhat complex in Q3 and DOOM 3 due to their lack of tracebox.
 		// When tracebox moves a player according to velocity, the plane returned definitely was hit.
-		this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+		this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, OVERCLIP);
 
 		// if current velocity is against the original velocity,
 		// stop dead to avoid tiny occilations in sloping corners
@@ -620,9 +620,9 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 	}
 }
 
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // ClipVelocity
+vector _Movetype_ClipVelocity(vector vel, vector norm, float overbounce)  // ClipVelocity
 {
-	vel -= ((vel * norm) * norm) * f;
+	vel -= ((vel * norm) * norm) * overbounce;
 
 	if(vel.x > -0.1 && vel.x < 0.1) vel.x = 0;
 	if(vel.y > -0.1 && vel.y < 0.1) vel.y = 0;
