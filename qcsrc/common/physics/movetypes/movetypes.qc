@@ -116,7 +116,6 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 	}*/
 }
 
-vector planes[MAX_CLIP_PLANES];
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
 	move_stepnormal = '0 0 0';
@@ -125,14 +124,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		return 0;
 
 	int blockedflag = 0;
-	int numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
-	vector primal_velocity, original_velocity;
 	vector restore_velocity = this.velocity;
-
-	for(int j = 0; j < MAX_CLIP_PLANES; ++j)
-		planes[j] = '0 0 0';
 
 	if(applygravity)
 	{
@@ -148,7 +142,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		}
 	}
 
-	original_velocity = primal_velocity = this.velocity;
+	vector primal_velocity = this.velocity;
 
 	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
@@ -247,15 +241,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 				move_stepnormal = trace_plane_normal;
 		}
 
-		if(trace_fraction >= 0.001)
-		{
-			// actually covered some distance
-			original_velocity = this.velocity;
-			numplanes = 0;
-		}
-
 		// clipped to another plane
-		if(numplanes >= MAX_CLIP_PLANES)
+		if(bumpcount >= MAX_CLIP_PLANES - 1)
 		{
 			// this shouldn't really happen
 			this.velocity = '0 0 0';
@@ -263,49 +250,11 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			break;
 		}
 
-		planes[numplanes] = trace_plane_normal;
-		numplanes++;
-
-		// modify original_velocity so it parallels all of the clip planes
-		vector new_velocity = '0 0 0';
-		int plane;
-		for (plane = 0;plane < numplanes;plane++)
-		{
-			int newplane;
-			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
-			for (newplane = 0;newplane < numplanes;newplane++)
-			{
-				if(newplane != plane)
-				{
-					// not ok
-					if((new_velocity * planes[newplane]) < 0)
-						break;
-				}
-			}
-			if(newplane == numplanes)
-				break;
-		}
-
-		if(plane != numplanes)
-		{
-			// go along this plane
-			this.velocity = new_velocity;
-		}
-		else
-		{
-			// go along the crease
-			if(numplanes != 2)
-			{
-				this.velocity = '0 0 0';
-				blockedflag = 7;
-				break;
-			}
-			vector dir = cross(planes[0], planes[1]);
-			// LordHavoc: thanks to taniwha of QuakeForge for pointing out this fix for slowed falling in corners
-			dir = normalize(dir);
-			float d = (dir * this.velocity);
-			this.velocity = dir * d;
-		}
+		// modify velocity so it parallels the clip plane
+		// bones_was_here: we don't need the logic from Quake that tests planes for trajectory interaction,
+		// which was flawed in Quake and somewhat complex in Q3 and DOOM 3 due to their lack of tracebox.
+		// When tracebox moves a player according to velocity, the plane returned definitely was hit.
+		this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
 
 		// if current velocity is against the original velocity,
 		// stop dead to avoid tiny occilations in sloping corners
