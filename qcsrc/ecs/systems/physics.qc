@@ -85,8 +85,6 @@ void sys_phys_update(entity this, float dt)
 		return;
 	}
 
-	PM_check_slick(this);
-
 	if (IS_SVQC && !PHYS_FIXANGLE(this))
 		this.angles = eY * this.v_angle.y;
 	if (IS_PLAYER(this)) // bones_was_here: should this instead check for MOVETYPE_WALK ?
