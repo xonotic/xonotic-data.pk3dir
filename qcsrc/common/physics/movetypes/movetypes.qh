@@ -47,7 +47,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
 #define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
 
-#define PHYS_WALLCLIP(s)					STAT(MOVEVARS_WALLCLIP)
+#define PHYS_SKIMMING(s)					STAT(MOVEVARS_SKIMMING)
 
 #ifdef CSQC
 .float bouncestop;

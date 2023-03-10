@@ -344,7 +344,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
-	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
+	if(PHYS_SKIMMING(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
 	if(applygravity)

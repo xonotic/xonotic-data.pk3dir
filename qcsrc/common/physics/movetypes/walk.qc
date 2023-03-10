@@ -17,7 +17,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
 
-	if(PHYS_WALLCLIP(this) && this.pm_time)
+	if(PHYS_SKIMMING(this) && this.pm_time)
 	{
 		if(dt >= this.pm_time || (this.flags & FL_WATERJUMP))
 			this.pm_time = 0;
@@ -72,7 +72,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		UNSET_NOSTEPS(this);
 		UNSET_METALSTEPS(this);
 	}
-	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
+	else if(PHYS_SKIMMING(this) && !this.groundentity && (PHYS_SKIMMING(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
 		this.pm_time = 0.25;
 
 	_Movetype_LinkEdict(this, true);

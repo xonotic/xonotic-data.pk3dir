@@ -426,9 +426,9 @@ REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
 #ifdef SVQC
-int autocvar_sv_wallclip;
+int autocvar_sv_skimming;
 #endif
-REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
+REGISTER_STAT(MOVEVARS_SKIMMING, int, autocvar_sv_skimming)
 
 REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
