@@ -95,10 +95,7 @@ void sys_phys_update(entity this, float dt)
 		// because some parts of the movetype are here and also need values set by this.
 		PM_GroundTrace(this, true);
 		if (IS_ONGROUND(this))
-		{
-			PM_check_hitground(this);
-			PM_Footsteps(this);
-		}
+			PM_Footsteps(this); // NB: reads global trace_dphitq3surfaceflags set by PM_GroundTrace()
 		else if (IsFlying(this))
 			this.wasFlying = true;
 		CheckPlayerJump(this);
