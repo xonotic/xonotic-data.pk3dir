@@ -701,19 +701,6 @@ void PM_Footsteps(entity this)
 #endif
 }
 
-void PM_check_slick(entity this)
-{
-	if(!IS_ONGROUND(this))
-		return;
-
-	trace_dphitq3surfaceflags = 0;
-	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-		SET_ONSLICK(this);
-	else
-		UNSET_ONSLICK(this);
-}
-
 void PM_check_blocked(entity this)
 {
 	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))
@@ -737,6 +724,12 @@ int PM_GroundDetected(entity this)
 	SET_ONGROUND(this);
 	// set groundentity so we get carried when walking onto a mover
 	this.groundentity = trace_ent;
+
+	if (((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) && PHYS_FRICTION_SLICK(this) >= 0)
+	|| PHYS_FRICTION(this) <= PHYS_FRICTION_SLICK(this)) // for easier XDF mapping
+		SET_ONSLICK(this);
+	else
+		UNSET_ONSLICK(this);
 
 	PM_check_hitground(this);
 
@@ -770,6 +763,7 @@ int PM_GroundTrace(entity this, bool do_touch)
 	else
 	{
 		UNSET_ONGROUND(this);
+		UNSET_ONSLICK(this);
 		this.groundentity = NULL;
 	}
 
