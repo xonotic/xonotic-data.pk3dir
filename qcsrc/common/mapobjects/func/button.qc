@@ -131,7 +131,9 @@ void button_touch(entity this, entity toucher)
 		return;
 	if (!toucher.iscreature)
 		return;
-	if(toucher.velocity * this.movedir < 0)
+	// give onground toucher some "weight"
+	if (vec3(toucher.velocity.x, toucher.velocity.y, IS_ONGROUND(toucher) ? -0.25 * PHYS_GRAVITY(toucher) : toucher.velocity.z)
+	* this.movedir < this.speed)
 		return;
 	this.enemy = toucher;
 	if (toucher.owner)
