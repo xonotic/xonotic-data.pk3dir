@@ -213,6 +213,18 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 						blockedflag |= 8;
 						break;
 					}
+					if (trace_fraction < 1 && PHYS_DOUBLEJUMP(this))
+					{
+						// Q3 always clips velocity like this, but it's only noticeable in CPM physics
+						// because VQ3 has restrictions on when stepping up is allowed (which we don't implement)
+						// we need it for both types of doublejump
+						this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, OVERCLIP);
+						if (trace_plane_normal.z > 0.7)
+						{
+							SET_ONGROUND(this);
+							blockedflag |= 1;
+						}
+					}
 
 					if (time_left <= 0)
 						break;

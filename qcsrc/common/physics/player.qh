@@ -107,6 +107,8 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 
 #define PHYS_DODGING_FROZEN(s)              STAT(DODGING_FROZEN, s)
 
+#define PHYS_DOUBLEJUMP(s)                  STAT(DOUBLEJUMP, s)
+
 #define PHYS_FRICTION(s)                    STAT(MOVEVARS_FRICTION, s)
 #define PHYS_FRICTION_ONLAND(s)             STAT(MOVEVARS_FRICTION_ONLAND, s)
 #define PHYS_FRICTION_SLICK(s)              STAT(MOVEVARS_FRICTION_SLICK, s)
