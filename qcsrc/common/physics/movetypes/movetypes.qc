@@ -117,17 +117,16 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
 	move_stepnormal = '0 0 0';
 
-	if(dt <= 0)
+	if(time_left <= 0)
 		return 0;
 
 	int blockedflag = 0;
 	int numplanes = 0;
-	float time_left = dt, grav = 0;
-	vector push;
+	float grav = 0;
 	vector restore_velocity = this.velocity;
 
 	for(int j = 0; j < MAX_CLIP_PLANES; ++j)
@@ -136,7 +135,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
+		grav = time_left * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
@@ -149,13 +148,12 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 	vector primal_velocity = this.velocity;
 
-	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
+	for(int bumpcount = 0; bumpcount < MAX_CLIP_PLANES; ++bumpcount)
 	{
 		if(this.velocity == '0 0 0')
 			break;
 
-		push = this.velocity * time_left;
-		if(!_Movetype_PushEntity(this, push, false))
+		if(!_Movetype_PushEntity(this, this.velocity * time_left, false))
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -183,14 +181,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 				// floor
 				blockedflag |= 1;
 
-				if(!trace_ent)
-				{
-					//dprint("_Movetype_FlyMove: !trace_ent\n");
-					trace_ent = NULL;
-				}
-
 				SET_ONGROUND(this);
-				this.groundentity = trace_ent;
+				this.groundentity = trace_ent; // NULL if we hit a world plane
 			}
 		}
 		else if(stepheight)
@@ -271,7 +263,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			continue;
 
 		planes[numplanes] = trace_plane_normal;
-		numplanes++;
+		++numplanes;
 
 		// modify velocity so it parallels all of the clip planes
 
