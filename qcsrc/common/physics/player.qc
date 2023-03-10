@@ -769,7 +769,12 @@ void PM_GroundTrace(entity this)
 	PM_GroundDetect(this);
 
 	if (IS_ONGROUND(this))
+	{
+		// call any touch func so we press buttons when walking onto them
+		if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
+			gettouch(trace_ent)(trace_ent, this);
 		this.velocity = _Movetype_ClipVelocity(this.velocity, this.groundplane_normal, 1);
+	}
 }
 
 void PM_jetpack(entity this, float maxspd_mod, float dt)
