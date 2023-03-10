@@ -768,6 +768,11 @@ void PM_GroundTrace(entity this)
 
 	PM_GroundDetect(this);
 
+	if (IS_ONGROUND(this))
+		// call any touch func so we press buttons when walking onto them
+		if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
+			gettouch(trace_ent)(trace_ent, this);
+
 	// Q3: slide along the ground plane
 	if (this.groundplane_normal.z > 0)
 		this.velocity = _Movetype_ClipVelocity(this.velocity, this.groundplane_normal,
