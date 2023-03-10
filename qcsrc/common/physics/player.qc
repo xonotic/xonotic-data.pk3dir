@@ -771,7 +771,12 @@ int PM_GroundTrace(entity this, bool do_touch)
 	if (clip & 1)
 	{
 		if (do_touch)
+		{
+			// call any touch func so we press buttons when walking onto them
+			if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
+				gettouch(trace_ent)(trace_ent, this);
 			this.velocity = _Movetype_ClipVelocity(this.velocity, this.groundplane_normal, 1);
+		}
 	}
 	else
 	{
