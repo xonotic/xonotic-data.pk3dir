@@ -177,9 +177,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 		time_left *= 1 - trace_fraction;
 
-		float my_trace_fraction = trace_fraction;
-		vector my_trace_plane_normal = trace_plane_normal;
-
 		if(trace_plane_normal.z)
 		{
 			if(trace_plane_normal.z > 0.7)
@@ -201,38 +198,45 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		{
 			// step - handle it immediately
 			vector org = this.origin;
-			vector steppush = vec3(0, 0, stepheight);
-			push = this.velocity * time_left;
+			vector trace1_plane_normal = trace_plane_normal;
 
-			if(!_Movetype_PushEntity(this, steppush, false))
+			if(!_Movetype_PushEntity(this, vec3(0, 0, stepheight), false))
 			{
 				blockedflag |= 8;
 				break;
 			}
-			if(!_Movetype_PushEntity(this, push, false))
+			float pushdown = org.z - this.origin.z;
+			if (pushdown >= 0) // couldn't step up, still obstructed by the plane we hit before trying
+				trace_plane_normal = trace1_plane_normal;
+			else // gained some height, try to continue the move from this position
 			{
-				blockedflag |= 8;
-				break;
-			}
-			float trace2_fraction = trace_fraction;
-			steppush = vec3(0, 0, org.z - this.origin_z);
-			if(!_Movetype_PushEntity(this, steppush, false))
-			{
-				blockedflag |= 8;
-				break;
+				if(!_Movetype_PushEntity(this, this.velocity * time_left, false))
+				{
+					blockedflag |= 8;
+					break;
+				}
+				// accept the new position if it made some progress...
+				// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
+				if(this.origin_x - org.x || this.origin_y - org.y)
+				{
+					time_left *= 1 - trace_fraction;
+
+					if(!_Movetype_PushEntity(this, vec3(0, 0, pushdown), false))
+					{
+						blockedflag |= 8;
+						break;
+					}
+
+					if (time_left <= 0)
+						break;
+					else
+						continue;
+				}
 			}
 
-			// accept the new position if it made some progress...
-			// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
-			if(this.origin_x - org.x || this.origin_y - org.y)
-			{
-				trace_endpos = this.origin;
-				time_left *= 1 - trace2_fraction;
-				numplanes = 0;
-				continue;
-			}
-			else
-				this.origin = org;
+			// failed to step up; trace_plane_normal is set to the obstructing plane
+			// so velocity will be modified accordingly below
+			this.origin = org;
 		}
 		else
 		{
@@ -243,7 +247,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 				move_stepnormal = trace_plane_normal;
 		}
 
-		if(my_trace_fraction >= 0.001)
+		if(trace_fraction >= 0.001)
 		{
 			// actually covered some distance
 			original_velocity = this.velocity;
@@ -259,7 +263,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			break;
 		}
 
-		planes[numplanes] = my_trace_plane_normal;
+		planes[numplanes] = trace_plane_normal;
 		numplanes++;
 
 		// modify original_velocity so it parallels all of the clip planes
