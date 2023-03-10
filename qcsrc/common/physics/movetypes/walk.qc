@@ -51,6 +51,9 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			clip |= 1;  // but we HAVE found a floor
 			// set groundentity so we get carried when walking onto a mover
 			this.groundentity = trace_ent;
+			// call its touch func so we reliably activate buttons etc
+			if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
+				gettouch(trace_ent)(trace_ent, this);
 		}
 	}
 
