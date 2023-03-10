@@ -182,6 +182,10 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) SET_ONSLICK(this);
 				else UNSET_ONSLICK(this);
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) SET_NOSTEPS(this);
+				else UNSET_NOSTEPS(this);
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) SET_METALSTEPS(this);
+				else UNSET_METALSTEPS(this);
 			}
 		}
 		else if(stepheight)
