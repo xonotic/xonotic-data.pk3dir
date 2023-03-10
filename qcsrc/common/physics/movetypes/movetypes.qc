@@ -134,7 +134,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 		this.move_didgravity = 1;
 		grav = time_left * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
+		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5;
@@ -362,7 +362,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 
 	if(applygravity)
 	{
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
+		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5f;
