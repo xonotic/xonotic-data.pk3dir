@@ -675,12 +675,9 @@ void PM_check_hitground(entity this)
 			return;
 	}
 	this.nextstep = time + 0.3 + random() * 0.1;
-	trace_dphitq3surfaceflags = 0;
-	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-	entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-		? GS_FALL_METAL
-		: GS_FALL;
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+		return;
+	entity gs = trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS ? GS_FALL_METAL : GS_FALL;
 	float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
 	GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
 #endif
@@ -696,12 +693,9 @@ void PM_Footsteps(entity this)
 	if ((time > this.nextstep) || (time < (this.nextstep - 10.0)))
 	{
 		this.nextstep = time + 0.3 + random() * 0.1;
-		trace_dphitq3surfaceflags = 0;
-		tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-		entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-			? GS_STEP_METAL
-			: GS_STEP;
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+			return;
+		entity gs = trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS ? GS_STEP_METAL : GS_STEP;
 		GlobalSound(this, gs, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	}
 #endif
@@ -743,6 +737,8 @@ int PM_GroundDetected(entity this)
 	SET_ONGROUND(this);
 	// set groundentity so we get carried when walking onto a mover
 	this.groundentity = trace_ent;
+
+	PM_check_hitground(this);
 
 	return 1;
 }
@@ -887,7 +883,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	}
 }
 
-// used for calculating airshots
+// used for calculating airshots and landing sounds
 bool IsFlying(entity this)
 {
 	if(IS_ONGROUND(this))
