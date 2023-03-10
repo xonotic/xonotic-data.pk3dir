@@ -86,6 +86,8 @@ const int FL_SPAWNING 				= BIT(16);
 const int FL_PICKUPITEMS 			= BIT(17);
 const int FL_DUCKED 				= BIT(18);
 const int FL_ONSLICK 				= BIT(19);
+const int FL_NOSTEPS				= BIT(20); // Q3SURFACEFLAG_NOSTEPS
+const int FL_METALSTEPS				= BIT(21); // Q3SURFACEFLAG_METALSTEPS
 
 // initialization stages
 const int INITPRIO_FIRST 				= 0;

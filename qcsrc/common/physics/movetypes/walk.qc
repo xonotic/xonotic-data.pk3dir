@@ -55,6 +55,10 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) SET_ONSLICK(this);
 			else UNSET_ONSLICK(this);
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) SET_NOSTEPS(this);
+			else UNSET_NOSTEPS(this);
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) SET_METALSTEPS(this);
+			else UNSET_METALSTEPS(this);
 		}
 	}
 
@@ -63,6 +67,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	{
 		UNSET_ONGROUND(this);
 		UNSET_ONSLICK(this);
+		UNSET_NOSTEPS(this);
+		UNSET_METALSTEPS(this);
 	}
 	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
 		this.pm_time = 0.25;
