@@ -330,6 +330,7 @@ When you press the jump key
 returns true if handled
 =============
 */
+.float jump_time;
 bool PlayerJump(entity this)
 {
 	if (PHYS_FROZEN(this))
@@ -412,6 +413,32 @@ bool PlayerJump(entity this)
 		if(this.jumppadcount > 1)
 			LOG_TRACE(ftos(this.jumppadcount), "x jumppad combo");
 		this.jumppadcount = 0;
+#endif
+	}
+
+	// bones_was_here: CPM double jumps (step up, ramp, headbang, teleport)
+	if (PHYS_DOUBLEJUMP(this) == 2)
+	{
+#ifdef CSQC
+		// CSQC prediction of timed physics features requires tracking the moveframe range
+		static int singlejump_moveframe = 0, last_moveframe = 0;
+
+		if (last_moveframe < csqcplayer_moveframe)
+		{
+			if (time < this.jump_time + 0.4)
+				last_moveframe = csqcplayer_moveframe;
+			this.jump_time = time;
+		}
+
+		if (singlejump_moveframe < csqcplayer_moveframe && last_moveframe >= csqcplayer_moveframe)
+			this.velocity_z += 100;
+		else
+			singlejump_moveframe = csqcplayer_moveframe;
+
+#elif defined(SVQC)
+		if (time < this.jump_time + 0.4)
+			this.velocity_z += 100;
+		this.jump_time = time;
 #endif
 	}
 
