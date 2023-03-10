@@ -147,7 +147,7 @@ void GameCommand_adminmsg(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd adminmsg <clients> \"<message>\" [<infobartime>]");
@@ -251,7 +251,7 @@ void GameCommand_anticheat(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd anticheat <client>");
@@ -458,7 +458,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd bot_cmd <client> <command> [<arguments>]");
@@ -533,7 +533,7 @@ void GameCommand_database(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd database <action> <filename>");
@@ -576,7 +576,7 @@ void GameCommand_defer_clear(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd defer_clear <client>");
@@ -636,7 +636,7 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd delrec <ranking> [<map>]");
@@ -804,7 +804,7 @@ void GameCommand_gametype(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd gametype <mode>");
@@ -869,7 +869,7 @@ void GameCommand_gettaginfo(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd gettaginfo <model> <frame> <index> [<command1>] [<command2>]");
@@ -928,7 +928,7 @@ void GameCommand_animbench(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd animbench <model> <frame1> <frame2>");
@@ -957,7 +957,7 @@ void GameCommand_gotomap(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd gotomap <map>");
@@ -1164,7 +1164,7 @@ void GameCommand_moveplayer(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd moveplayer <clients> <destination>");
@@ -1246,7 +1246,7 @@ void GameCommand_radarmap(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]");
@@ -1301,7 +1301,7 @@ void GameCommand_setbots(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd setbots <botnumber>");
@@ -1447,7 +1447,7 @@ void GameCommand_stuffto(int request, int argc)
 			}
 
 			default:
-				LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+				LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 			case CMD_REQUEST_USAGE:
 			{
 				LOG_HELP("Usage:^3 sv_cmd stuffto <client> \"<command>\"");
@@ -1628,7 +1628,7 @@ void GameCommand_trace(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd trace <command> [<startpos> <endpos>] [<endpos_height>]");
