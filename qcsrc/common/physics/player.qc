@@ -132,6 +132,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction", autocvar_sv_friction);
 	STAT(MOVEVARS_FRICTION_SLICK, this) = Physics_ClientOption(this, "friction_slick", autocvar_sv_friction_slick);
 	STAT(MOVEVARS_STEPHEIGHT, this) = Physics_ClientOption(this, "stepheight", autocvar_sv_stepheight);
+	STAT(MOVEVARS_STEPTYPE, this) = Physics_ClientOption(this, "steptype", autocvar_sv_steptype);
 	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate", autocvar_sv_accelerate);
 	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed", autocvar_sv_stopspeed);
 	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
@@ -492,11 +493,11 @@ bool PlayerJump(entity this)
 
 #ifdef SVQC
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, WOULD_DJ(this) ? 0.7 : 1);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, PHYS_DOUBLEJUMP(this) == 2 && WOULD_DJ(this) ? 0.7 : 1);
 #endif
 
 	// CPMA double jumps (step up, ramp, headbang, teleport)
-	if (PHYS_DOUBLEJUMP(this) == 2)
+	if (PHYS_DOUBLEJUMP(this) == 2 || PHYS_STEPTYPE(this) == 2)
 	{
 		if (PHYS_DOUBLEJUMP(this) == 2 && WOULD_DJ(this))
 			this.velocity_z += 100;

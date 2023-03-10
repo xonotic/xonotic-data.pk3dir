@@ -192,6 +192,126 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 
 		vector my_trace_plane_normal = trace_plane_normal;
 
+		if (stepheight)
+		if (trace_plane_normal * this.groundplane_normal <= 0.999) // it's not the same as the ground plane
+		if (trace_plane_normal.x * this.velocity.x + trace_plane_normal.y * this.velocity.y < 0) // it's obstructing horizontal movement
+		{
+			// step - handle it immediately
+			vector prestep_org = this.origin;
+
+			// Q3's PM_WaterMove() doesn't step up, PM_WaterJumpMove() does
+			if (PHYS_STEPTYPE(this) > 1 && this.waterlevel > WATERLEVEL_WETFEET && !(this.flags & FL_WATERJUMP))
+				goto NoStep;
+
+			// Q3: never step up when you still have up velocity
+			if (PHYS_STEPTYPE(this) > 1 && this.velocity.z > 0)
+			// bones_was_here: CPM conditions first to skip the trace when possible,
+			if (PHYS_STEPTYPE(this) == 3 /* VQ3 */ || this.velocity.z > 370 || !WOULD_DJ(this))
+			// can also skip it when onground, but due to spurious '1 0 0' edge collisions in some creases (likely engine issue)
+			if (!this.groundplane_normal.z) // we also must always allow stepping up while sliding up a steep plane, eg on dkr14.
+			{
+				_Movetype_PushEntityTrace(this, vec3(0, 0, -stepheight)); // always -18 in VQ3 and CPM
+				if (trace_fraction == 1 || trace_plane_normal.z < MIN_WALK_NORMAL)
+					goto NoStep;
+			}
+
+			// step up
+			if (!_Movetype_PushEntity(this, vec3(0, 0, stepheight), false))
+			{
+				blockedflag |= 8;
+				break;
+			}
+			if (!trace_fraction) // no room to step up
+				goto NoStep;
+			float pushdown = prestep_org.z - this.origin.z;
+
+			// gained some height, try to continue the move from this position
+			// bones_was_here: hack time to step over tiny ramps (brush misalignments) consistently,
+			// in Q3 there's 1 step per frame and frametime is usually 8ms so ~4ms median for this.
+			float move_time = my_trace_plane_normal.z > 0 ? 1/256 : time_left;
+			if (!_Movetype_PushEntity(this, this.velocity * move_time, false))
+			{
+				blockedflag |= 8;
+				break;
+			}
+			if (this.origin.x == prestep_org.x && this.origin.y == prestep_org.y) // no horizontal progress
+			{
+				my_trace_plane_normal = trace_plane_normal; // so the next move attempt could succeed
+				goto NoStep;
+			}
+			move_time *= trace_fraction;
+
+			// push down the final amount
+			if (!_Movetype_PushEntity(this, vec3(0, 0, pushdown), false))
+			{
+				blockedflag |= 8;
+				break;
+			}
+			int clip = 0;
+			if (trace_fraction < 1)
+			{
+				// Cancel the step up (so we don't jitter up steep ramps or jump from higher up) when
+				if (PHYS_STEPTYPE(this) < 1) // we're only allowed to step over tiny ramps that are likely brush misalignments,
+					// and land on any steep plane (might be curved) whilst having a walkable ground plane,
+					if ((trace_plane_normal.z < MIN_WALK_NORMAL && this.groundplane_normal.z >= MIN_WALK_NORMAL)
+					|| trace_plane_normal * my_trace_plane_normal > 0.99) // or land on ~ the same plane we're trying to step over.
+						goto NoStep; // NB: the main test maps for this code path are dkr14 and ctctf3.
+
+				if ((PHYS_DOUBLEJUMP(this) && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
+					clip = PM_GroundDetected(this);
+
+				if ((PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
+					this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+				else if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
+				{
+					float f = this.velocity * trace_plane_normal;
+					if (f < 0)
+						this.velocity -= f * trace_plane_normal;
+				}
+			}
+
+			if (move_time > time_left) // hacking too much time!
+			{
+				// with the right computer algorithms I can hack you back in time
+				_Movetype_PushEntityTrace(this, (time_left - move_time)
+				* (trace_fraction < 1 ? _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1) : this.velocity));
+				this.origin = trace_endpos;
+			}
+			time_left -= move_time;
+
+			// frametime-independent jumping, although the step up can't be fully frametime-independent
+			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)) // no need for jumporigin check
+			{
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
+				{
+					if (time_left <= 0)
+						return blockedflag; // no more gravity, new jump's height would be too low
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
+				}
+			}
+
+			if (time_left <= 0)
+				break;
+			// Hit a plane above the step (or move_time < time_left), the pushdown may have cleared it
+			// or presented a different one, so try to move again before clipping velocity.
+			numplanes = 1;
+			continue;
+
+			LABEL(NoStep)
+			// failed to step up, velocity will be clipped to my_trace_plane_normal
+			this.origin = prestep_org;
+		}
+		if (!stepheight)
+		{
+			// step - return it to caller
+			blockedflag |= 2;
+			// save the trace for player extrafriction
+			if(applystepnormal)
+				move_stepnormal = trace_plane_normal;
+		}
+
 		if (my_trace_plane_normal.z > 0) // landed on a ground plane or got an edge collision
 		{
 			// trace to confirm it's really ground to prevent the wallwalk bug
@@ -209,87 +329,6 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 					goto ReapplyGravityContinue;
 				}
 			}
-		}
-		else if(stepheight)
-		{
-			// step - handle it immediately
-			vector prestep_org = this.origin;
-
-			if (!_Movetype_PushEntity(this, vec3(0, 0, stepheight), false))
-			{
-				blockedflag |= 8;
-				break;
-			}
-			if (!trace_fraction) // no room to step up
-				goto NoStep;
-			float pushdown = prestep_org.z - this.origin.z;
-
-			// gained some height, try to continue the move from this position
-			if (!_Movetype_PushEntity(this, this.velocity * time_left, false))
-			{
-				blockedflag |= 8;
-				break;
-			}
-			if (this.origin.x == prestep_org.x && this.origin.y == prestep_org.y) // no horizontal progress
-			{
-				my_trace_plane_normal = trace_plane_normal; // so the next move attempt could succeed
-				goto NoStep;
-			}
-			time_left *= 1 - trace_fraction;
-
-			// push down the final amount
-			if (!_Movetype_PushEntity(this, vec3(0, 0, pushdown), false))
-			{
-				blockedflag |= 8;
-				break;
-			}
-			int clip = 0;
-			if (trace_fraction < 1)
-			{
-				if (PHYS_DOUBLEJUMP(this) && PHYS_INPUT_BUTTON_JUMP(this))
-					clip = PM_GroundDetected(this);
-
-				if (PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this))
-					this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
-				else if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
-				{
-					float f = this.velocity * trace_plane_normal;
-					if (f < 0)
-						this.velocity -= f * trace_plane_normal;
-				}
-			}
-
-			// frametime-independent jumping, although the step up can't be fully frametime-independent
-			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)) // no need for jumporigin check
-			{
-				PlayerJump(this);
-				if (!IS_ONGROUND(this)) // definitely did jump
-				{
-					if (time_left <= 0)
-						return blockedflag; // no more gravity, new jump's height would be too low
-					jumporigin = this.origin;
-					goto ReapplyGravityContinue;
-				}
-			}
-
-			if (time_left <= 0)
-				break;
-			// Hit a plane above the step, the pushdown may have cleared it
-			// or presented a different one, so try to move again before clipping velocity.
-			numplanes = 1;
-			continue;
-
-			LABEL(NoStep)
-			// failed to step up, velocity will be clipped to my_trace_plane_normal
-			this.origin = prestep_org;
-		}
-		else
-		{
-			// step - return it to caller
-			blockedflag |= 2;
-			// save the trace for player extrafriction
-			if(applystepnormal)
-				move_stepnormal = trace_plane_normal;
 		}
 
 		// clipped to another plane
