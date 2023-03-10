@@ -661,19 +661,6 @@ void PM_Footsteps(entity this)
 #endif
 }
 
-void PM_check_slick(entity this)
-{
-	if(!IS_ONGROUND(this))
-		return;
-
-	trace_dphitq3surfaceflags = 0;
-	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-		SET_ONSLICK(this);
-	else
-		UNSET_ONSLICK(this);
-}
-
 void PM_check_blocked(entity this)
 {
 	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))

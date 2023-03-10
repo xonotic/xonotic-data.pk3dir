@@ -52,12 +52,18 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 				}
 				SET_ONGROUND(this);
 			}
+
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) SET_ONSLICK(this);
+			else UNSET_ONSLICK(this);
 		}
 	}
 
 	// if the move did not hit the ground at any point, we're not on ground
 	if (!(clip & 1))
+	{
 		UNSET_ONGROUND(this);
+		UNSET_ONSLICK(this);
+	}
 	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
 		this.pm_time = 0.25;
 

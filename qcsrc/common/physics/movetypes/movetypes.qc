@@ -183,6 +183,9 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 
 				SET_ONGROUND(this);
 				this.groundentity = trace_ent; // NULL if we hit a world plane
+
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) SET_ONSLICK(this);
+				else UNSET_ONSLICK(this);
 			}
 		}
 		else if(stepheight)
