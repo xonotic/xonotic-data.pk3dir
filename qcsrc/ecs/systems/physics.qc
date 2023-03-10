@@ -85,8 +85,6 @@ void sys_phys_update(entity this, float dt)
 		return;
 	}
 
-	PM_check_slick(this);
-
 	if (IS_SVQC && !PHYS_FIXANGLE(this))
 		this.angles = eY * this.v_angle.y;
 
