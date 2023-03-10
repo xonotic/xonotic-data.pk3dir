@@ -90,6 +90,11 @@ void GameCommand_adminmsg(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity client;
 			float accepted;
 
@@ -162,6 +167,11 @@ void GameCommand_allready(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if(warmup_stage)
 			{
 				ReadyRestart(true);
@@ -188,6 +198,11 @@ void GameCommand_allspec(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
@@ -216,6 +231,11 @@ void GameCommand_anticheat(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity client = GetIndexedEntity(argc, 1);
 			float accepted = VerifyClientEntity(client, false, false);
 
@@ -320,6 +340,11 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity bot;
 
 			if (argv(1) == "reset")
@@ -454,6 +479,11 @@ void GameCommand_cointoss(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
 			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
@@ -521,6 +551,11 @@ void GameCommand_defer_clear(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity client;
 			float accepted;
 
@@ -558,6 +593,11 @@ void GameCommand_defer_clear_all(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			int n = 0;
 			int argc;
 
@@ -700,6 +740,11 @@ void GameCommand_extendmatchtime(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			changematchtime(autocvar_timelimit_increment * 60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
@@ -723,7 +768,7 @@ void GameCommand_gametype(int request, int argc)
 		{
 			if (!world_initialized)
 			{
-				LOG_INFOF("This command works only when the server is running.");
+				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
 			if (argv(1) != "")
@@ -901,7 +946,7 @@ void GameCommand_gotomap(int request, int argc)
 		{
 			if (!world_initialized)
 			{
-				LOG_INFOF("This command works only when the server is running.");
+				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
 			if (argv(1))
@@ -929,6 +974,11 @@ void GameCommand_lockteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (teamplay)
 			{
 				lockteams = 1;
@@ -984,6 +1034,11 @@ void GameCommand_moveplayer(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			float accepted;
 			entity client;
 
@@ -1130,6 +1185,11 @@ void GameCommand_nospectators(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
@@ -1156,6 +1216,11 @@ void GameCommand_printstats(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			DumpStats(false);
 			LOG_INFO("stats dumped.");
 			return;
@@ -1199,6 +1264,11 @@ void GameCommand_reducematchtime(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			changematchtime(autocvar_timelimit_decrement * -60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
@@ -1290,6 +1360,11 @@ void GameCommand_shuffleteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (shuffleteams_on_reset_map)
 			{
 				bprint("Players will be shuffled when this round is over.\n");
@@ -1317,6 +1392,11 @@ void GameCommand_resetmatch(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			ReadyRestart(false);
 			return;
 		}
@@ -1342,6 +1422,11 @@ void GameCommand_stuffto(int request, int argc)
 		{
 			case CMD_REQUEST_COMMAND:
 			{
+				if (!world_initialized)
+				{
+					LOG_HELPF("This command works only when the server is running.");
+					return;
+				}
 				if (argv(2))
 				{
 					entity client = GetIndexedEntity(argc, 1);
@@ -1562,6 +1647,11 @@ void GameCommand_unlockteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (teamplay)
 			{
 				lockteams = 0;
@@ -1591,6 +1681,11 @@ void GameCommand_warp(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (autocvar_g_campaign)
 			{
 				if (argc >= 2)
@@ -1630,6 +1725,11 @@ void GameCommand_(int request)
     {
         case CMD_REQUEST_COMMAND:
         {
+		    if (!world_initialized)
+		    {
+		        LOG_HELPF("This command works only when the server is running.");
+		        return;
+		    }
 
             return;
         }
