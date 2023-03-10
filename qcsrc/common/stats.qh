@@ -356,11 +356,6 @@ REGISTER_STAT(CAMERA_SPECTATOR, INT)
 
 REGISTER_STAT(SPECTATORSPEED, FLOAT)
 
-#ifdef SVQC
-bool autocvar_sv_slick_applygravity;
-#endif
-REGISTER_STAT(SLICK_APPLYGRAVITY, BOOL, autocvar_sv_slick_applygravity)
-
 REGISTER_STAT(Q3COMPAT, INT, q3compat)
 // FIXME: workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2812
 #ifdef SVQC
