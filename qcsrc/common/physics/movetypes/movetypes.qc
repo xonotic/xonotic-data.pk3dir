@@ -194,30 +194,34 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 		if (i < numplanes)
 			continue;
 
-		vector my_trace_plane_normal = trace_plane_normal;
-
-		if (my_trace_plane_normal.z > 0) // landed on a ground plane
-		{
-			PM_GroundDetect(this, true);
-
-			// frametime-independent jumping
-			if (PHYS_INPUT_BUTTON_JUMP(this) && IS_ONGROUND(this)
-			&& this.origin != jumporigin) // prevents infinite looping when wedged
-			{
-				this.velocity = _Movetype_ClipVelocity(this.velocity, my_trace_plane_normal, 1);
-				PlayerJump(this);
-				if (!IS_ONGROUND(this)) // definitely did jump
-				{
-					jumporigin = this.origin;
-					goto ReapplyGravityContinue;
-				}
-			}
-		}
-		else if(stepheight)
+		if (stepheight)
+		if (trace_plane_normal * this.groundplane_normal <= 0.999) // it's not the same as the ground plane
 		{
 			// step - handle it immediately
 			vector prestep_org = this.origin;
+			vector my_trace_plane_normal = trace_plane_normal;
+			entity my_trace_ent = trace_ent;
+			int my_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
 
+			if (PHYS_STEPTYPE(this) > 1)
+			{
+				// Q3's PM_WaterMove() doesn't step up, PM_WaterJumpMove() does
+				if (this.waterlevel > WATERLEVEL_WETFEET && !(this.flags & FL_WATERJUMP))
+					goto NoStep;
+
+				// Q3: never step up when you still have up velocity
+				clipvelocity = _Movetype_ClipVelocity(this.velocity, my_trace_plane_normal, OVERCLIP);
+				if (clipvelocity.z > 0)
+				// bones_was_here: CPM conditions first to skip the trace when possible
+				if (PHYS_STEPTYPE(this) == 3 /* VQ3 */ || clipvelocity.z > PHYS_JUMPVELOCITY(this)+100 || !WOULD_DJ(this))
+				{
+					_Movetype_PushEntityTrace(this, vec3(0, 0, -stepheight));
+					if (trace_fraction == 1 || trace_plane_normal.z < MIN_WALK_NORMAL)
+						goto NoStep;
+				}
+			}
+
+			// step up
 			if (!_Movetype_PushEntity(this, vec3(0, 0, stepheight), false))
 			{
 				blockedflag |= 8;
@@ -228,7 +232,14 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			float pushdown = prestep_org.z - this.origin.z;
 
 			// gained some height, try to continue the move from this position
-			if (!_Movetype_PushEntity(this, this.velocity * time_left, false))
+			// bones_was_here: hack time to step over tiny ramps (brush misalignments) consistently,
+			// in Q3 there's 1 step per frame and frametime is usually 8ms so ~4ms median for this.
+			float move_time = my_trace_plane_normal.z > 0 ? 1/256 : time_left;
+			// Limit distance for reliable jump placement at high speed,
+			float hvlen2 = (this.velocity.x * move_time)**2 + (this.velocity.y * move_time)**2;
+			if (hvlen2 > 16) // 4u should be more than plenty for brush misalignments.
+				move_time *= 16/hvlen2;
+			if (!_Movetype_PushEntity(this, this.velocity * move_time, false))
 			{
 				blockedflag |= 8;
 				break;
@@ -239,7 +250,10 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 					my_trace_plane_normal = trace_plane_normal; // so the next move and step could succeed
 				goto NoStep;
 			}
-			time_left *= 1 - trace_fraction;
+			move_time *= trace_fraction;
+			clipvelocity = this.velocity;
+			if (move_time > time_left) // hacking too much time!
+				pushdown -= (move_time - time_left) * this.velocity.z; // don't miss ground because of it
 
 			// push down the final amount
 			if (!_Movetype_PushEntity(this, vec3(0, 0, pushdown), false))
@@ -249,7 +263,14 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			}
 			if (trace_plane_normal.z > 0)
 			{
-				if (PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this))
+				// Only allow stepping over tiny ramps that are likely brush misalignments;
+				// so we don't jitter up steep ramps or jump from higher up, cancel when
+				// we step onto any steep plane (might be curved) from a walkable ground plane,
+				if ((trace_plane_normal.z < MIN_WALK_NORMAL && this.groundplane_normal.z >= MIN_WALK_NORMAL)
+				|| trace_plane_normal * my_trace_plane_normal > 0.99) // or onto ~ the same plane we're trying to step over.
+					goto NoStep;
+
+				if ((PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
 				{
 					if (IS_DJING(this))
 					{
@@ -272,6 +293,16 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				}
 			}
 
+			if (move_time > time_left) // hacking too much time!
+			{
+				// With the right computer algorithms I can hack you back in time.
+				_Movetype_PushEntityTrace(this, (time_left - move_time) * (trace_plane_normal.z > 0
+					? _Movetype_ClipVelocity(clipvelocity, trace_plane_normal, OVERCLIP)
+					: clipvelocity));
+				this.origin = trace_endpos;
+			}
+			time_left -= move_time;
+
 			// frametime-independent jumping, although the step up can't be fully frametime-independent
 			if (PHYS_INPUT_BUTTON_JUMP(this) && IS_ONGROUND(this)) // no need for jumporigin check
 			{
@@ -288,7 +319,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			if (time_left <= 0)
 				break;
 			// Hit a plane above the step which the pushdown may have cleared or changed to another,
-			// so try to move again before clipping velocity.
+			// or move_time < time_left, so try to move again before clipping velocity.
 			numplanes = 1;
 			bumpcount = 0;
 			continue;
@@ -296,8 +327,11 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			LABEL(NoStep)
 			// failed to step up, velocity will be clipped to my_trace_plane_normal
 			this.origin = prestep_org;
+			trace_plane_normal = my_trace_plane_normal;
+			trace_ent = my_trace_ent;
+			trace_dphitq3surfaceflags = my_trace_dphitq3surfaceflags;
 		}
-		else
+		if (!stepheight)
 		{
 			// step - return it to caller
 			blockedflag |= 2;
@@ -314,8 +348,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			return 3;
 		}
 
-		planes[numplanes] = my_trace_plane_normal;
-		++numplanes;
+		planes[numplanes++] = trace_plane_normal;
 
 		// Q3: modify velocity so it parallels all of the clip planes
 		// bones_was_here: Q3 and DOOM 3 use 0.1 epsilons, changed to 0 here because >= 0 is
@@ -368,6 +401,24 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			break;
 		}
 		LABEL(AbortMission)
+
+		if (trace_plane_normal.z > 0) // landed on a ground plane
+		{
+			PM_GroundDetect(this, true);
+
+			// frametime-independent jumping
+			if (PHYS_INPUT_BUTTON_JUMP(this) && IS_ONGROUND(this)
+			&& this.origin != jumporigin) // prevents infinite looping when wedged
+			{
+				this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
+				{
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
+				}
+			}
+		}
 	}
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
