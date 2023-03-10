@@ -17,14 +17,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
 
-	if(PHYS_SKIMMING(this) && this.pm_time)
-	{
-		if(dt >= this.pm_time || (this.flags & FL_WATERJUMP))
-			this.pm_time = 0;
-		else
-			this.pm_time -= dt;
-	}
-
 	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
 	if (GAMEPLAYFIX_DOWNTRACEONGROUND(this) && !(clip & 1))
@@ -65,8 +57,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		UNSET_NOSTEPS(this);
 		UNSET_METALSTEPS(this);
 	}
-	else if(PHYS_SKIMMING(this) && !this.groundentity && (PHYS_SKIMMING(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
-		this.pm_time = 0.25;
 
 	_Movetype_LinkEdict(this, true);
 
