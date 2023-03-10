@@ -149,7 +149,7 @@ void sys_phys_update(entity this, float dt)
 	}
 	else if (ITEMS_STAT(this) & IT_USING_JETPACK)
 		PM_jetpack(this, maxspeed_mod, dt);
-	else if (IS_ONGROUND(this) && (!IS_ONSLICK(this) || !PHYS_SLICK_APPLYGRAVITY(this)))
+	else if (IS_ONGROUND(this))
 	{
 		if (!WAS_ONGROUND(this))
 		{
