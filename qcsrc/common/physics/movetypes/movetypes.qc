@@ -176,6 +176,21 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 		time_left *= 1 - trace_fraction;
 
+		// Q3: if this is the same plane we hit before, nudge velocity
+		// out along it, which fixes some epsilon issues with non-axial planes
+		for (i = 0; i < numplanes; ++i)
+		{
+			if (trace_plane_normal * planes[i] > 0.99) // very loose, DOOM 3 uses 0.999 but that fails on dkr14
+			{
+				// bones_was_here: clip first to prevent this from causing sticking on some concave curves.
+				this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+				this.velocity += trace_plane_normal;
+				break;
+			}
+		}
+		if (i < numplanes)
+			continue;
+
 		vector my_trace_plane_normal = trace_plane_normal;
 
 		if(trace_plane_normal.z)
