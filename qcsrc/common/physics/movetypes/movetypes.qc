@@ -128,7 +128,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	int numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
-	vector primal_velocity, original_velocity;
 	vector restore_velocity = this.velocity;
 
 	for(int j = 0; j < MAX_CLIP_PLANES; ++j)
@@ -148,7 +147,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		}
 	}
 
-	original_velocity = primal_velocity = this.velocity;
+	vector primal_velocity = this.velocity;
 
 	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
@@ -247,13 +246,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 				move_stepnormal = trace_plane_normal;
 		}
 
-		if(trace_fraction >= 0.001)
-		{
-			// actually covered some distance
-			original_velocity = this.velocity;
-			numplanes = 0;
-		}
-
 		// clipped to another plane
 		if(numplanes >= MAX_CLIP_PLANES)
 		{
@@ -266,45 +258,50 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		planes[numplanes] = trace_plane_normal;
 		numplanes++;
 
-		// modify original_velocity so it parallels all of the clip planes
-		vector new_velocity = '0 0 0';
-		int plane;
-		for (plane = 0;plane < numplanes;plane++)
+		// modify velocity so it parallels all of the clip planes
+
+		// bones_was_here: this is a port of the Quake 3 / DOOM 3 approach,
+		// which avoids the flaws of the Quake approach (used previously),
+		// with some simplifications made possible by tracebox.
+
+		// find a plane that it enters
+		for (int plane1 = 0; plane1 < numplanes; ++plane1)
 		{
-			int newplane;
-			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
-			for (newplane = 0;newplane < numplanes;newplane++)
+			// slide along the plane
+			vector clipvelocity = _Movetype_ClipVelocity(this.velocity, planes[plane1], 1);
+
+			// see if there is a second plane that the new move enters
+			for (int plane2 = 0; plane2 < numplanes; ++plane2)
 			{
-				if(newplane != plane)
+				if (plane2 == plane1)
+					continue;
+
+				// try clipping the move to the plane
+				clipvelocity = _Movetype_ClipVelocity(clipvelocity, planes[plane2], 1);
+
+				// see if it goes back into the first clip plane
+				if (clipvelocity * planes[plane1] >= 0)
+					continue;
+
+				// slide the original velocity along the crease
+				vector dir = normalize(cross(planes[plane1], planes[plane2]));
+				clipvelocity = dir * (dir * this.velocity);
+
+				// see if there is a third plane the the new move enters
+				for (int plane3 = 0; plane3 < numplanes; ++plane3)
 				{
-					// not ok
-					if((new_velocity * planes[newplane]) < 0)
-						break;
+					if (plane3 == plane1 || plane3 == plane2)
+						continue;
+
+					// stop dead at a triple plane interaction
+					this.velocity = '0 0 0';
+					return 7;
 				}
 			}
-			if(newplane == numplanes)
-				break;
-		}
 
-		if(plane != numplanes)
-		{
-			// go along this plane
-			this.velocity = new_velocity;
-		}
-		else
-		{
-			// go along the crease
-			if(numplanes != 2)
-			{
-				this.velocity = '0 0 0';
-				blockedflag = 7;
-				break;
-			}
-			vector dir = cross(planes[0], planes[1]);
-			// LordHavoc: thanks to taniwha of QuakeForge for pointing out this fix for slowed falling in corners
-			dir = normalize(dir);
-			float d = (dir * this.velocity);
-			this.velocity = dir * d;
+			// if we have fixed all interactions, try another move
+			this.velocity = clipvelocity;
+			break;
 		}
 
 		// if current velocity is against the original velocity,
