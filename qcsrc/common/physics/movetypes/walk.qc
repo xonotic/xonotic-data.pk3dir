@@ -32,20 +32,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		// only try this if there was no floor in the way in the trace (no,
 		// this check seems to be not REALLY necessary, because if clip & 1,
 		// our trace will hit that thing too)
-		vector upmove = this.origin + '0 0 1';
-		vector downmove = this.origin - '0 0 1';
-		int type;
-		if (this.move_nomonsters)
-			type = max(0, this.move_nomonsters);
-		else if (this.move_movetype == MOVETYPE_FLYMISSILE)
-			type = MOVE_MISSILE;
-		else if (this.move_movetype == MOVETYPE_FLY_WORLDONLY)
-			type = MOVE_WORLDONLY;
-		else if (this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT)
-			type = MOVE_NOMONSTERS;
-		else
-			type = MOVE_NORMAL;
-		tracebox(upmove, this.mins, this.maxs, downmove, type, this);
+		_Movetype_PushEntityTrace(this, '0 0 -0.25'); // same down trace as in Q3 PM_GroundTrace()
 		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
 		{
 			clip |= 1;  // but we HAVE found a floor
@@ -54,6 +41,17 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			// call its touch func so we reliably activate buttons etc
 			if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
 				gettouch(trace_ent)(trace_ent, this);
+
+			if (PHYS_DOUBLEJUMP(this))
+			{
+				if (PHYS_DOUBLEJUMP(this) == 1)
+				{
+					float f = this.velocity * trace_plane_normal;
+					if (f < 0)
+						this.velocity -= f * trace_plane_normal;
+				}
+				SET_ONGROUND(this);
+			}
 		}
 	}
 
