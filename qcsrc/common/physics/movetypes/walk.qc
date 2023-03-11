@@ -50,6 +50,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 					if (f < 0)
 						this.velocity -= f * trace_plane_normal;
 				}
+				else if (PHYS_DOUBLEJUMP(this) == 2)
+					this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, OVERCLIP);
 				SET_ONGROUND(this);
 			}
 

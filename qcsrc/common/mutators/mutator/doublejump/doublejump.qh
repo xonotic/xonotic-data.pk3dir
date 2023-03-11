@@ -1,5 +1,5 @@
 #pragma once
 
 #ifdef SVQC
-bool autocvar_sv_doublejump;
+int autocvar_sv_doublejump;
 #endif
