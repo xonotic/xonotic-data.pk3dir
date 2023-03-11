@@ -255,6 +255,21 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			break;
 		}
 
+		// if this is the same plane we hit before, nudge velocity out along it,
+		// which fixes some epsilon issues with non-axial planes
+		// bones_was_here: this is from Quake 3 and helps avoid sticking when surfing on slopes
+		int plane;
+		for (plane = 0; plane < numplanes; ++plane)
+		{
+			if (trace_plane_normal * planes[plane] > 0.99) // 0.99 in Q3, 0.999 in DOOM 3
+			{
+				this.velocity += trace_plane_normal;
+				break;
+			}
+		}
+		if (plane < numplanes)
+			continue;
+
 		planes[numplanes] = trace_plane_normal;
 		numplanes++;
 
