@@ -133,6 +133,8 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_MAXAIRSTRAFESPEED(s)           STAT(MOVEVARS_MAXAIRSTRAFESPEED, s)
 #define PHYS_MAXSPEED(s)                    STAT(MOVEVARS_MAXSPEED, s)
 
+#define PHYS_SKIMMING(s)                    STAT(MOVEVARS_SKIMMING, s)
+
 #define PHYS_STOPSPEED(s)                   STAT(MOVEVARS_STOPSPEED, s)
 
 #define PHYS_TRACK_CANJUMP(s)               STAT(MOVEVARS_TRACK_CANJUMP, s)

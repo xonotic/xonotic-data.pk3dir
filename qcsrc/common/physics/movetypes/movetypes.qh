@@ -47,8 +47,6 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
 #define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
 
-#define PHYS_SKIMMING(s)					STAT(MOVEVARS_SKIMMING)
-
 #ifdef CSQC
 .float bouncestop;
 .float bouncefactor;
@@ -78,7 +76,15 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 void set_movetype(entity this, int mt);
 
+// Q3 skimming
 .float pm_time;
+#ifdef CSQC
+	// CSQC prediction of timed physics features requires tracking the moveframe range
+	int first_skimming_moveframe = 0, last_skimming_moveframe = 0;
+	#define IS_SKIMMING(s) (csqcplayer_moveframe >= first_skimming_moveframe && csqcplayer_moveframe <= last_skimming_moveframe)
+#elif defined(SVQC)
+	#define IS_SKIMMING(s) (time < s.pm_time)
+#endif
 
 .float move_movetype;
 .float move_time;

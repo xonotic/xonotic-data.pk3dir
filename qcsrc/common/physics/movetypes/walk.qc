@@ -17,13 +17,12 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
 
-	if(PHYS_SKIMMING(this) && this.pm_time)
-	{
-		if(dt >= this.pm_time || (this.flags & FL_WATERJUMP))
-			this.pm_time = 0;
-		else
-			this.pm_time -= dt;
-	}
+#ifdef CSQC
+	// Q3 skimming: init
+	if(PHYS_SKIMMING(this) && !(this.flags & FL_WATERJUMP))
+		if (time < this.pm_time && last_skimming_moveframe < csqcplayer_moveframe)
+			last_skimming_moveframe = csqcplayer_moveframe;
+#endif
 
 	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
@@ -41,6 +40,19 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			// call its touch func so we reliably activate buttons etc
 			if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
 				gettouch(trace_ent)(trace_ent, this);
+
+			// Q3 skimming: set timer and first csqc moveframe
+			if(PHYS_SKIMMING(this) && !(this.flags & FL_WATERJUMP) && !IS_ONGROUND(this))
+			if(this.velocity.z < -200) // don't do landing time if we were just going down a slope
+#ifdef CSQC
+			if (first_skimming_moveframe < csqcplayer_moveframe) // do not allow timer resets during replay
+#endif
+			{
+#ifdef CSQC
+				first_skimming_moveframe = csqcplayer_moveframe;
+#endif
+				this.pm_time = time + 0.25;
+			}
 
 			if (PHYS_DOUBLEJUMP(this))
 			{
@@ -72,8 +84,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		UNSET_NOSTEPS(this);
 		UNSET_METALSTEPS(this);
 	}
-	else if(PHYS_SKIMMING(this) && !this.groundentity && (PHYS_SKIMMING(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
-		this.pm_time = 0.25;
 
 	_Movetype_LinkEdict(this, true);
 

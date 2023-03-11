@@ -181,6 +181,19 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				// floor
 				blockedflag |= 1;
 
+				// Q3 skimming: set timer and first csqc moveframe
+				if(PHYS_SKIMMING(this) && !(this.flags & FL_WATERJUMP) && !IS_ONGROUND(this))
+				if(restore_velocity.z < -200) // don't do landing time if we were just going down a slope
+#ifdef CSQC
+				if (first_skimming_moveframe < csqcplayer_moveframe) // do not allow timer resets during replay
+#endif
+				{
+#ifdef CSQC
+					first_skimming_moveframe = csqcplayer_moveframe;
+#endif
+					this.pm_time = time + 0.25;
+				}
+
 				SET_ONGROUND(this);
 				this.groundentity = trace_ent; // NULL if we hit a world plane
 
@@ -191,6 +204,10 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) SET_METALSTEPS(this);
 				else UNSET_METALSTEPS(this);
 			}
+
+			// Q3 skimming doesn't undo clipping of velocity to any ground plane (even steep ones can't be skimmed)
+			if (IS_SKIMMING(this))
+				primal_velocity = _Movetype_ClipVelocity(primal_velocity, trace_plane_normal, OVERCLIP);
 		}
 		else if(stepheight)
 		{
@@ -233,9 +250,25 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 
 						if (trace_plane_normal.z > 0.7)
 						{
+							// Q3 skimming: set timer and first csqc moveframe
+							if(PHYS_SKIMMING(this) && !(this.flags & FL_WATERJUMP) && !IS_ONGROUND(this))
+							if(restore_velocity.z < -200) // don't do landing time if we were just going down a slope
+#ifdef CSQC
+							if (first_skimming_moveframe < csqcplayer_moveframe) // do not allow timer resets during replay
+#endif
+							{
+#ifdef CSQC
+								first_skimming_moveframe = csqcplayer_moveframe;
+#endif
+								this.pm_time = time + 0.25;
+							}
 							SET_ONGROUND(this);
 							blockedflag |= 1;
 						}
+
+						// Q3 skimming doesn't undo clipping of velocity to any ground plane (even steep ones can't be skimmed)
+						if (IS_SKIMMING(this))
+							primal_velocity = _Movetype_ClipVelocity(primal_velocity, trace_plane_normal, OVERCLIP);
 					}
 
 					if (time_left <= 0)
@@ -341,11 +374,10 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 	}
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
-		this.velocity = primal_velocity;
-
-	if(PHYS_SKIMMING(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
-		this.velocity = primal_velocity;
+	// bones_was_here: Q3 skimming also restores primal_velocity
+	if (!(blockedflag & 8)) // but not if we got teleported
+		if((GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP)) || IS_SKIMMING(this))
+			this.velocity = primal_velocity;
 
 	if(applygravity)
 	{
