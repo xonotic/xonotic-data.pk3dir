@@ -985,13 +985,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	precache_model(this.model);
 	precache_sound(this.item_pickupsound);
 
-	if(q3compat && !this.team)
-	{
-		string t = GetField_fullspawndata(this, "team", false);
-		// bones_was_here: this hack is cheaper than changing to a .string strcmp()
-		if(t) this.team = crc16(false, t);
-	}
-
 	if (Item_IsLoot(this))
 	{
 		this.reset = RemoveItem;
@@ -1033,6 +1026,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
+
+		if(q3compat && !this.team)
+		{
+			string t = GetField_fullspawndata(this, "team");
+			// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+			if(t) this.team = crc16(false, t);
+		}
 
 		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
