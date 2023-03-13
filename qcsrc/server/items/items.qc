@@ -98,6 +98,9 @@ void UpdateItemAfterTeleport(entity this)
 
 bool have_pickup_item(entity this)
 {
+	if (this.itemdef.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+		return false;
+
 	if(this.itemdef.instanceOfPowerup)
 	{
 		if(autocvar_g_powerups > 0)
@@ -1164,12 +1167,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 void StartItem(entity this, GameItem def)
 {
 	def = def.m_spawnfunc_hookreplace(def, this);
-
-	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
-	{
-		delete(this);
-		return; // TODO does not set startitem_failed
-	}
 
 	this.classname = def.m_canonical_spawnfunc;
 
