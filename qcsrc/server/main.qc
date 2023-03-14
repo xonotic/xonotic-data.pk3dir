@@ -186,6 +186,12 @@ void CreatureFrame_All()
 	});
 }
 
+void Pause_TryPause_Dedicated(entity this)
+{
+	if (player_count == 0)
+		setpause(1);
+}
+
 void Pause_TryPause(bool ispaused)
 {
 	int n = 0;
@@ -268,7 +274,6 @@ Called before each frame by the server
 
 bool game_delay_last;
 
-bool autocvar_sv_autopause = false;
 void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
