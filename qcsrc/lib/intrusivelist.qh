@@ -27,6 +27,7 @@ CLASS(IntrusiveList, Object)
 	ATTRIB(IntrusiveList, il_tail, entity);
 	ATTRIB(IntrusiveList, il_nextfld, .entity, nil);
 	ATTRIB(IntrusiveList, il_prevfld, .entity, nil);
+	ATTRIB(IntrusiveList, il_loop_item, entity, nil);
 	INIT(IntrusiveList) { IL_INIT(this); }
 	DESTRUCTOR(IntrusiveList) { IL_DTOR(this); }
 ENDCLASS(IntrusiveList)
@@ -142,6 +143,8 @@ void IL_REMOVE(IntrusiveList this, entity it)
 	next ? next.(il_prev) = prev : this.il_tail = prev;
 	prev ? prev.(il_next) = next : this.il_head = next;
 	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
+	if (this.il_loop_item == it)
+		this.il_loop_item = it.(il_next);
 	it.(il_next) = it.(il_prev) = NULL;
 }
 
@@ -175,9 +178,15 @@ void IL_REMOVE(IntrusiveList this, entity it)
 		for (entity _next, _it = _il.il_head; _it; (_it = _next, ++i)) \
 		{ \
 			const noref entity it = _it; \
+			this.il_loop_item = it; \
 			_next = it.(il_next); \
 			if (cond) { LAMBDA(body) } \
+			if (this.il_loop_item != it) /* current item removed? */ \
+				_next = this.il_loop_item; \
+			else \
+				_next = it.(il_next); /* in case next item has changed */ \
 		} \
+		this.il_loop_item = nil; \
 	MACRO_END
 
 .int il_id;
