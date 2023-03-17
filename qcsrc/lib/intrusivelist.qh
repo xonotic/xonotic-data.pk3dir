@@ -153,11 +153,17 @@ void IL_REMOVE(IntrusiveList this, entity it)
  */
 #define IL_CLEAR(this) \
 	MACRO_BEGIN \
-		IntrusiveList __il = this; \
-		assert(__il); \
-		.entity il_prev = __il.il_prevfld; \
-		IL_EACH(__il, true, it.(il_next) = it.(il_prev) = NULL); \
-		__il.il_head = __il.il_tail = NULL; \
+		IntrusiveList _il = this; \
+		assert(_il); \
+		.entity il_prev = _il.il_prevfld; \
+		.entity il_next = _il.il_nextfld; \
+		noref int i = 0; \
+		for (entity _next, _it = _il.il_head; _it; (_it = _next, ++i)) \
+		{ \
+			_next = _it.(il_next); \
+			_it.(il_next) = _it.(il_prev) = NULL; \
+		} \
+		_il.il_head = _il.il_tail = NULL; \
 	MACRO_END
 
 /**
