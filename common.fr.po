@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-12 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1584,15 +1584,17 @@ msgstr "Vies :"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"Concourez pour infliger le plus de dommages et de frags dans ce combat "
+"chaotique !"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Grabuge"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Score nécessaire pour terminer la partie"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1657,10 +1659,12 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"Concourez avec votre équipe pour infliger le plus de dommages et de frags "
+"dans ce combat chaotique !"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Grabuge en équipe"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -10226,7 +10230,7 @@ msgstr "menu rapide"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "interface utilisateur du tableau des scores"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"

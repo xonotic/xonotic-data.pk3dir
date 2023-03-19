@@ -1574,16 +1574,16 @@ msgstr "Vidas:"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
-msgstr ""
+msgstr "Compita pelo máximo de dano e execuções neste alvoroço caótico!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Mayhem"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Qual a pontuação necessária para acabar a partida"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1646,10 +1646,12 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"Compita com sua equipe pelo máximo de dano e execuções neste alvoroço "
+"caótico!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Mayhem por Equipe"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -10193,7 +10195,7 @@ msgstr "menu rápido"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "interface de usuário para o placar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"

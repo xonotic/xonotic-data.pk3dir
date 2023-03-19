@@ -1102,7 +1102,7 @@ msgstr "Exercitium"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Exercitium: ludentes desunt"
+msgstr "Exercitium: ludentibus eget"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -1538,15 +1538,16 @@ msgstr "Vitae:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"Tanta vulnera mortesque infer quam haec inordinatio tumultuosa postulat!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Tumultus"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Quanta ratio necesse est ut ludus finiatur"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1610,14 +1611,16 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"Manus collegas iuvate ut tanta vulnera mortesque inferatis quam haec "
+"inordinatio tumultuosa postulat!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Manuum Tumultus"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Missilia Operta"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
@@ -1672,7 +1675,7 @@ msgstr "Sanitas maxima"
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Jetpack"
-msgstr ""
+msgstr "Sarcina Volatilis"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
@@ -1818,7 +1821,7 @@ msgstr "%s^7 ludo vicit!"
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Draw"
-msgstr ""
+msgstr "Neuter vicit"
 
 #: qcsrc/common/minigames/minigame/c4.qc:389
 #: qcsrc/common/minigames/minigame/nmm.qc:610
@@ -2369,7 +2372,7 @@ msgstr "Irrumpens!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:69
 msgid "Tagged"
-msgstr ""
+msgstr "Indicatus"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
 #, c-format
@@ -2508,7 +2511,7 @@ msgstr "^F2Denarium iacere... Ecce: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:262
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr ""
+msgstr "^F1Sarcina Volatilis^BG tua lignis caret"
 
 #: qcsrc/common/notifications/all.inc:264
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -2893,7 +2896,7 @@ msgstr "^BG%s^K1 turriolae occurrit%s%s"
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriola E-Rota deletus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
@@ -2908,12 +2911,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriolam Venatricem non fugit%s%s"
 
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Polyboli Turriola continenter foratus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
@@ -2928,7 +2931,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriolae plasma fervens accepit%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
@@ -2943,12 +2946,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriola Pedite transfixus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriola Pedite deletus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
@@ -2978,7 +2981,7 @@ msgstr "^BG%s^K1 eruptione Araneae Automatae offensus est%s%s"
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Araneae Automatae missili igneo divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
@@ -2988,7 +2991,7 @@ msgstr "^BG%s^K1 eruptione Cursoris offensus est%s%s"
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 a Cursoris missili igneo perfugium non invenit%s%s"
 
 #: qcsrc/common/notifications/all.inc:357
 #, c-format
@@ -3188,7 +3191,7 @@ msgstr "^BG%s^F3 iam nullam vitam habet"
 
 #: qcsrc/common/notifications/all.inc:405
 msgid "^BGMonsters are currently disabled"
-msgstr ""
+msgstr "^BGNunc beluae non apparent"
 
 #: qcsrc/common/notifications/all.inc:407
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
@@ -3197,30 +3200,30 @@ msgstr "^TCManus ^TT^BG nimis diu pilam tenebat"
 #: qcsrc/common/notifications/all.inc:409
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr ""
+msgstr "^BG%s^BG dominationis locum %s^BG cepit"
 
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG dominationis locum cepit"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr ""
+msgstr "^BGManus ^TC^TTe^BG dominationis locus %s^BG a %s^BG deletus est"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "^BGManus ^TC^TTe^BG dominationis locus a %s^BG deletus est"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^BGGeneratrum ^TC^TT^BG deletum est"
 
 #: qcsrc/common/notifications/all.inc:414
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr ""
+msgstr "^BGGeneratrum ^TC^TT^BG ob prorogationem sua sponte se incendit!"
 
 #: qcsrc/common/notifications/all.inc:416
 #, c-format
@@ -3333,7 +3336,7 @@ msgstr "^F4A ^BG%s^F4 invitaris ut ^F2%s^F4 (^F1%s^F4) ludatur"
 
 #: qcsrc/common/notifications/all.inc:440
 msgid "^TC^TT ^BGteam scores!"
-msgstr ""
+msgstr "^BGManus ^TC^TT ^BGrationi addidit!"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -3589,7 +3592,7 @@ msgstr ""
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, perforatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
@@ -4024,7 +4027,7 @@ msgstr "^K1Iniuste te exclusisti!"
 #: qcsrc/common/notifications/all.inc:636
 #, c-format
 msgid "^K1You were %s"
-msgstr ""
+msgstr "^K1%s es"
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^K1You couldn't catch your breath!"
@@ -4068,7 +4071,7 @@ msgstr "^K1Pullum sapit!"
 
 #: qcsrc/common/notifications/all.inc:643
 msgid "^K1You forgot to put the pin back in!"
-msgstr ""
+msgstr "^K1Granatae paxillum reponere oblitus es!"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1Hanging around a napalm explosion is bad!"
@@ -4133,7 +4136,7 @@ msgstr "^K1Temere mortuus es!"
 
 #: qcsrc/common/notifications/all.inc:655
 msgid "^K1You had an unfortunate run in with a turret!"
-msgstr ""
+msgstr "^K1Turriolae calamitose occurristi!"
 
 #: qcsrc/common/notifications/all.inc:655
 msgid "^K1You were fragged by a turret!"
@@ -4141,19 +4144,19 @@ msgstr "^K1Turriola occisus es!"
 
 #: qcsrc/common/notifications/all.inc:656
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr ""
+msgstr "^K1Turriolae E-Rotae calamitose occurristi!"
 
 #: qcsrc/common/notifications/all.inc:656
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr ""
+msgstr "^K1Turriola E-Rota occisus es!"
 
 #: qcsrc/common/notifications/all.inc:657
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr ""
+msgstr "^K1Turriolae Pediti calamitose occurristi!"
 
 #: qcsrc/common/notifications/all.inc:657
 msgid "^K1You were fragged by a Walker turret!"
-msgstr ""
+msgstr "^K1Turriola Pedite occisus es!"
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
@@ -4185,7 +4188,7 @@ msgstr "^K1Cursoris eruptione offensus es!"
 
 #: qcsrc/common/notifications/all.inc:665
 msgid "^K1You couldn't find shelter from a Racer rocket!"
-msgstr ""
+msgstr "^K1A Cursoris missili igneo perfugium non invenisti!"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1Watch your step!"
@@ -4230,21 +4233,21 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:674
 #, c-format
 msgid "^BGYou need %s^BG!"
-msgstr ""
+msgstr "^BG%s^BG necesse est!"
 
 #: qcsrc/common/notifications/all.inc:675
 #, c-format
 msgid "^BGYou also need %s^BG!"
-msgstr ""
+msgstr "^BG%s^BG quoque necesse est!"
 
 #: qcsrc/common/notifications/all.inc:676
 msgid "^BGDoor unlocked!"
-msgstr ""
+msgstr "^BGPorta patefacta est!"
 
 #: qcsrc/common/notifications/all.inc:678
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2Vitae additae: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
@@ -4284,15 +4287,15 @@ msgstr "^K1Tempus iam inceptum est, nasceris congelatus"
 #: qcsrc/common/notifications/all.inc:694
 #, c-format
 msgid "^K1A %s has arrived!"
-msgstr ""
+msgstr "^K1%s pervenit!"
 
 #: qcsrc/common/notifications/all.inc:698
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr ""
+msgstr "^F1Lignorum regeneratrum^BG tenes"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^BGYou got the ^F1Jetpack"
-msgstr ""
+msgstr "^F1Sarcinam Volatilem^BG tenes"
 
 #: qcsrc/common/notifications/all.inc:707
 msgid ""
@@ -4418,45 +4421,49 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:736
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
-msgstr ""
+msgstr "^F2Nunc arma sunt: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:738
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr ""
+msgstr "^BGDominationis locum %s^BG cepisti"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGDominationis locum cepisti"
 
 #: qcsrc/common/notifications/all.inc:740
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr ""
+msgstr "^BGManus ^TC^TT^BG dominationis locum %s^BG cepit"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^BGManus ^TC^TT^BG dominationis locum cepit"
 
 #: qcsrc/common/notifications/all.inc:742
 msgid "^BGThis control point currently cannot be captured"
-msgstr ""
+msgstr "^BGNunc hunc dominationis locum capere non potes"
 
 #: qcsrc/common/notifications/all.inc:743
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
 msgstr ""
+"^BGHostium generatrum delere nondum potes\n"
+"^F2Aliquot dominationis locos capite ut id non protegetur"
 
 #: qcsrc/common/notifications/all.inc:744
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
-msgstr ""
+msgstr "^TCHostium^BG generatrum iam non protegitur!"
 
 #: qcsrc/common/notifications/all.inc:745
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
 msgstr ""
+"^K1Generatrum vestrum iam NON protegitur!\n"
+"^BGRursus dominationis locos cape ut protegetur!"
 
 #: qcsrc/common/notifications/all.inc:746
 #, c-format
@@ -4466,7 +4473,7 @@ msgstr "^F2%s^BG preme ut teleporteris"
 #: qcsrc/common/notifications/all.inc:747
 #, c-format
 msgid "^BGTeleporting disabled for %s"
-msgstr ""
+msgstr "^BGTeleportari non potes %s"
 
 #: qcsrc/common/notifications/all.inc:749
 msgid ""
@@ -4492,6 +4499,11 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
+"^F2Iam ludus ^F4PROROGATUS^F2 est!\n"
+"\n"
+"Generatra putescunt.\n"
+"Si plures dominationis locos manus tua tenet,\n"
+"celerius hostium generatrum putescit."
 
 #: qcsrc/common/notifications/all.inc:751
 #, c-format
@@ -4872,7 +4884,7 @@ msgstr "Manus"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
-msgstr ""
+msgstr "Sine Colore"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
@@ -4933,11 +4945,11 @@ msgstr "Turriola"
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
-msgstr ""
+msgstr "Turriola E-Rota"
 
 #: qcsrc/common/turrets/turret/ewheel_weapon.qh:7
 msgid "eWheel"
-msgstr ""
+msgstr "E-Rota"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
@@ -4961,19 +4973,19 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
-msgstr ""
+msgstr "Turriola Venatrix-Necatrix"
 
 #: qcsrc/common/turrets/turret/hk_weapon.qh:7
 msgid "Hunter-Killer"
-msgstr ""
+msgstr "Venatrix-Necatrix"
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr ""
+msgstr "Polyboli Turriola"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr ""
+msgstr "Polybolus"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -5010,11 +5022,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
-msgstr ""
+msgstr "Turriola Pedes"
 
 #: qcsrc/common/turrets/turret/walker_weapon.qh:7
 msgid "Walker"
-msgstr ""
+msgstr "Pedes"
 
 #: qcsrc/common/util.qc:248
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:121

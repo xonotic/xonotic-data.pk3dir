@@ -1556,16 +1556,16 @@ msgstr "生命数："
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
-msgstr ""
+msgstr "在这场混乱中争斗，造成尽可能多的伤害！"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "大乱斗"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "分数达到目标后，一轮竞赛结束"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1627,11 +1627,11 @@ msgstr "团队死亡竞技"
 msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
-msgstr ""
+msgstr "在这场混乱中与队友合作争斗，造成尽可能多的伤害！"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "团队大乱斗"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -9995,7 +9995,7 @@ msgstr "快速菜单"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "记分板用户界面"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
