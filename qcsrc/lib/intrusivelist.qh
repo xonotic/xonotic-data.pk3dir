@@ -188,6 +188,8 @@ void IL_REMOVE(IntrusiveList this, entity it)
 		assert(_il); \
 		.entity il_next = _il.il_nextfld; \
 		noref int i = 0; \
+		entity il_loop_item_save = this.il_loop_item; \
+		this.il_loop_item = NULL; \
 		for (entity _next, _it = _il.il_head; _it; (_it = _next, ++i)) \
 		{ \
 			const noref entity it = _it; \
@@ -199,7 +201,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 			else \
 				_next = it.(il_next); /* in case next item has changed */ \
 		} \
-		this.il_loop_item = NULL; \
+		this.il_loop_item = il_loop_item_save; \
 	MACRO_END
 
 .int il_id;
@@ -342,6 +344,25 @@ TEST(intrusivelist, ModificationsWhileLooping)
 		if (it == ent4) IL_POP(il_test);
 	});
 	EXPECT_TRUE(s == "1234");
+
+	IL_TEST_BUILD();
+	IL_EACH(il_test, true,
+	{
+		s = strcat(s, it.classname);
+		if (it == ent2)
+			IL_EACH(il_test, true,
+			{
+				s = strcat(s, it.classname);
+				if (it == ent3)
+					IL_EACH(il_test, true,
+					{
+						s = strcat(s, it.classname);
+					});
+				if (it == ent4)
+					break;
+			});
+	});
+	EXPECT_TRUE(s == "12123123454345");
 
 	IL_DELETE(il_test);
 	delete(ent1); delete(ent2); delete(ent3); delete(ent4); delete(ent5);
