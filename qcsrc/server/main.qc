@@ -192,20 +192,29 @@ void Pause_TryPause_Dedicated(entity this)
 		setpause(1);
 }
 
-void Pause_TryPause(bool ispaused)
+void Pause_TryPause()
 {
-	int n = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
+	int n = 0, p = 0;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+		if (PHYS_INPUT_BUTTON_CHAT(it)) ++p;
 		++n;
 	});
 	if (!n) return;
-	setpause(ispaused);
+	if (n == p)
+		setpause(1);
+	else
+		setpause(0);
 }
 
 void SV_PausedTic(float elapsedtime)
 {
-	if (!server_is_dedicated) Pause_TryPause(false);
+	if (!server_is_dedicated)
+	{
+		if (autocvar_sv_autopause)
+			Pause_TryPause();
+		else
+			setpause(0);
+	}
 }
 
 void dedicated_print(string input)
@@ -283,7 +292,7 @@ void StartFrame()
     IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
-	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
+	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause();
 
 	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
