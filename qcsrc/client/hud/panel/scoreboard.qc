@@ -2455,7 +2455,8 @@ void Scoreboard_Draw()
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
-		string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
+		string unit = GetSpeedUnit(autocvar_hud_speed_unit);
+		float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		if(race_speedaward_alltimebest)
 		{
 			string name;
@@ -2464,11 +2465,11 @@ void Scoreboard_Draw()
 			if(race_speedaward)
 			{
 				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
-				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, name);
+				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward * conversion_factor, unit, name);
 				str = strcat(str, " / ");
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
-			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, name));
+			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest * conversion_factor, unit, name));
 			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}

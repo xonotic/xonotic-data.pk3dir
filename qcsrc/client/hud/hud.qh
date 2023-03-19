@@ -203,6 +203,8 @@ string autocvar_hud_skin;
 float autocvar_hud_progressbar_alpha;
 float autocvar_hud_panel_update_interval;
 
+int autocvar_hud_speed_unit;
+
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
 vector autocvar_hud_dynamic_follow_scale_xyz;

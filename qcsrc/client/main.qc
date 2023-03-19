@@ -1254,11 +1254,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_server_record = ReadInt24_t();
 			break;
 		case RACE_NET_SPEED_AWARD:
-			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward = ReadInt24_t();
 			strcpy(race_speedaward_holder, ReadString());
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
-			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward_alltimebest = ReadInt24_t();
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
 			break;
 		case RACE_NET_RANKINGS_CNT:
