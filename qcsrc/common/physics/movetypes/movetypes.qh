@@ -110,7 +110,7 @@ void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
+vector _Movetype_ClipVelocity(vector vel, vector norm, float ob);
 void _Movetype_PushEntityTrace(entity this, vector push);
 bool _Movetype_PushEntity(entity this, vector push, bool dolink);
 
@@ -123,7 +123,8 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 
 int _Movetype_UnstickEntity(entity this);
 
-const int MAX_CLIP_PLANES = 5;
+const int MAX_CLIP_PLANES = 5; ///< same as in Q3 and DOOM 3, should be enough for all cases that are worth the CPU time
+const float OVERCLIP = 1.001; ///< from Q3 and DOOM 3, used to fix wedging with velocity in corners above steep ramps
 
 #ifdef CSQC
 const int MOVETYPE_NONE             = 0;
