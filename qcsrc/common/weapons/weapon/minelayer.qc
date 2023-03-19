@@ -494,8 +494,7 @@ METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 12;
+    vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
         sound(actor, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
