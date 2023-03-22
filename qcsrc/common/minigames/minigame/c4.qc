@@ -375,7 +375,7 @@ void c4_hud_status(vector pos, vector mySize)
 	int specs = 0;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
+		if (e.classname == "minigame_player" && e.team == C4_SPECTATOR_TEAM)
 		{
 			++specs;
 		}
@@ -393,7 +393,7 @@ void c4_hud_status(vector pos, vector mySize)
 		pos_y += 14;
 		FOREACH_MINIGAME_ENTITY(e)
 		{
-			if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
+			if (e.classname == "minigame_player" && e.team == C4_SPECTATOR_TEAM)
 			{
 				++i;
 				string current_spec = "";
