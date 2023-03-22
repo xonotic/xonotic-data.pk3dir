@@ -377,7 +377,7 @@ void c4_hud_status(vector pos, vector mySize)
 	{
 		if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
 		{
-			specs++;
+			++specs;
 		}
 	}
 
@@ -395,7 +395,7 @@ void c4_hud_status(vector pos, vector mySize)
 		{
 			if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
 			{
-				i++;
+				++i;
 				string current_spec = "";
 
 				string cmpctString = entcs_GetName(e.minigame_playerslot - 1);
