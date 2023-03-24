@@ -23,7 +23,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (toucher.iscreature)
 	{
-		if (time >= toucher.triggerhurttime + ((q3compat && !(this.spawnflags & HURT_SLOW)) ? autocvar_sys_ticrate : 1))
+		if (time >= toucher.triggerhurttime + (q3compat && !(this.spawnflags & HURT_SLOW) ? 0.05 : 1))
 		{
 			EXACTTRIGGER_TOUCH(this, toucher);
 			toucher.triggerhurttime = time;
