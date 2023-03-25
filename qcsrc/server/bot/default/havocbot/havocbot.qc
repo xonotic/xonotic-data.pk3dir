@@ -1297,7 +1297,7 @@ void havocbot_chooseenemy(entity this)
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(targ_pos - this.origin, <, 1000))
 			{
-				// remain tracking him for a shot while (case he went after a small corner or pilar
+				// remain tracking them for a shot while (case they went after a small corner or pilar
 				this.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}

@@ -1,5 +1,9 @@
 #include "models.qh"
 
+#ifdef CSQC
+	#include <client/csqcmodel_hooks.qh>
+#endif
+
 #ifdef SVQC
 #include <common/constants.qh>
 #include <common/mapobjects/bgmscript.qh>
@@ -69,13 +73,21 @@ void g_model_dropbyspawnflags(entity this)
 	}
 }
 
+void g_clientmodel_think(entity this)
+{
+	this.nextthink = time;
+	if(this.oldorigin != this.origin)
+		this.SendFlags |= BIT(1);
+	this.oldorigin = this.origin;
+}
+
 void g_clientmodel_dropbyspawnflags(entity this)
 {
 	vector o0;
 	o0 = this.origin;
 	g_model_dropbyspawnflags(this);
 	if(this.origin != o0)
-		this.SendFlags |= 2;
+		this.SendFlags |= BIT(1);
 }
 
 bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
@@ -151,42 +163,48 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	return true;
 }
 
-
-#define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
-	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent,true); \
-	ent.use = g_model_setcolormaptoactivator; \
-	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); \
+void g_model_init(entity ent, float sol)
+{
+	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS);
+	if(!ent.scale) ent.scale = ent.modelscale;
+	SetBrushEntityModel(ent,true);
+	ent.use = g_model_setcolormaptoactivator;
+	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
+	if(!ent.solid) ent.solid = (sol);
 	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+}
 
-#define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
-	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent,true); \
-	ent.use = g_clientmodel_use; \
-	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); \
-	else if(ent.solid < 0) ent.solid = SOLID_NOT; \
-	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; \
-	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
-	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); \
+void g_clientmodel_init(entity ent, float sol)
+{
+	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS);
+	if(!ent.scale) ent.scale = ent.modelscale;
+	SetBrushEntityModel(ent,true);
+	ent.use = g_clientmodel_use;
+	setthink(ent, g_clientmodel_think);
+	ent.nextthink = time;
+	ent.oldorigin = ent.origin; // don't run an initial double update
+	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
+	if(!ent.solid) ent.solid = (sol);
+	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1;
+	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0;
+	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity);
 	ent.default_solid = sol;
+}
 
 // non-solid model entities:
-spawnfunc(misc_gamemodel)         { this.angles_x = -this.angles.x; G_MODEL_INIT      (this, SOLID_NOT) } // model entity
-spawnfunc(misc_clientmodel)       { this.angles_x = -this.angles.x; G_CLIENTMODEL_INIT(this, SOLID_NOT) } // model entity
-spawnfunc(misc_models)            { this.angles_x = -this.angles.x; G_MODEL_INIT      (this, SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+spawnfunc(misc_gamemodel)         { this.angles_x = -this.angles.x; g_model_init(this, SOLID_NOT); } // model entity
+spawnfunc(misc_clientmodel)       { this.angles_x = -this.angles.x; g_clientmodel_init(this, SOLID_NOT); } // model entity
+spawnfunc(misc_models)            { this.angles_x = -this.angles.x; g_model_init(this, SOLID_NOT); } // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
-spawnfunc(func_illusionary)       { G_MODEL_INIT      (this, SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
-spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(this, SOLID_NOT) } // brush entity
+spawnfunc(func_illusionary)       { g_model_init(this, SOLID_NOT); } // Q1 name (WARNING: MISPREDICTED)
+spawnfunc(func_clientillusionary) { g_clientmodel_init(this, SOLID_NOT); } // brush entity
 
 // solid brush entities
-spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
-spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
-spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_BSP) } // DEPRECATED old alias name from some other game
+spawnfunc(func_wall)              { g_model_init(this, SOLID_BSP); } // Q1 name
+spawnfunc(func_clientwall)        { g_clientmodel_init(this, SOLID_BSP); } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_static)            { g_model_init(this, SOLID_BSP); } // DEPRECATED old alias name from some other game
 #elif defined(CSQC)
 .float alpha;
 .float scale;
@@ -243,30 +261,7 @@ void Ent_Wall_Draw(entity this)
 		fld = origin;
 	this.(fld) = this.saved;
 
-	if(this.lodmodelindex1)
-	{
-		if(autocvar_cl_modeldetailreduction <= 0)
-		{
-			if(this.lodmodelindex2 && autocvar_cl_modeldetailreduction <= -2)
-				this.modelindex = this.lodmodelindex2;
-			else if(autocvar_cl_modeldetailreduction <= -1)
-				this.modelindex = this.lodmodelindex1;
-			else
-				this.modelindex = this.lodmodelindex0;
-		}
-		else
-		{
-			float distance = vlen(NearestPointOnBox(this, view_origin) - view_origin);
-			f = (distance * current_viewzoom + 100.0) * autocvar_cl_modeldetailreduction;
-			f *= 1.0 / bound(0.01, view_quality, 1);
-			if(this.lodmodelindex2 && f > this.loddistance2)
-				this.modelindex = this.lodmodelindex2;
-			else if(f > this.loddistance1)
-				this.modelindex = this.lodmodelindex1;
-			else
-				this.modelindex = this.lodmodelindex0;
-		}
-	}
+	CSQCModel_LOD_Apply(this, false);
 
 	InterpolateOrigin_Do(this);
 
@@ -343,10 +338,21 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.lodmodelindex1 = ReadShort();
 			this.loddistance2 = ReadShort();
 			this.lodmodelindex2 = ReadShort();
+			this.modelindex = this.lodmodelindex0;
+			vector pmin = this.mins, pmax = this.maxs;
+			setmodelindex(this, this.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
+			setsize(this, pmin, pmax);
+			// if there's no second LOD model, fall back to the first
+			// avoids using the high quality model at a distance
+			if(!this.lodmodelindex2 && this.lodmodelindex1)
+				this.lodmodelindex2 = this.lodmodelindex1;
 		}
 		else
 		{
 			this.modelindex = ReadShort();
+			vector pmin = this.mins, pmax = this.maxs;
+			setmodelindex(this, this.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
+			setsize(this, pmin, pmax);
 			this.loddistance1 = 0;
 			this.loddistance2 = 0;
 		}

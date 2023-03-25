@@ -1,0 +1,21 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+
+// autocvars defined here so they can be imported in FFA sv_mayhem.qc
+float autocvar_g_tmayhem_scoring_upscaler;
+float autocvar_g_tmayhem_scoring_kill_weight;
+float autocvar_g_tmayhem_scoring_damage_weight;
+bool autocvar_g_tmayhem_scoring_disable_selfdamage2score;
+
+void tmayhem_Initialize();
+
+REGISTER_MUTATOR(tmayhem, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		tmayhem_Initialize();
+	}
+	return 0;
+}

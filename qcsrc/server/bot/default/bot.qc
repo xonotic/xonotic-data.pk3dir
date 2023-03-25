@@ -30,6 +30,7 @@
 #include <server/weapons/accuracy.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
+#include <server/command/vote.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
@@ -118,7 +119,6 @@ void bot_think(entity this)
 			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
-		this.bot_nextthink = game_starttime;
 		return;
 	}
 
@@ -145,6 +145,12 @@ void bot_think(entity this)
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
 		navigation_unstuck(this);
+
+	if (warmup_stage && !this.ready)
+	{
+		this.ready = true;
+		ReadyCount(); // this must be delayed until the bot has spawned
+	}
 
 	// now call the current bot AI (havocbot for example)
 	this.bot_ai(this);

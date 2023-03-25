@@ -35,6 +35,20 @@ ENDCLASS(Resource)
 #define REGISTER_RESOURCE(id, inst) REGISTER(Resources, RES, id, m_id, inst)
 REGISTRY(Resources, BITS(4));
 REGISTER_REGISTRY(Resources)
+
+#ifdef CSQC
+// Copy Resources registry here before it gets sorted alphabetically by REGISTRY_SORT
+// so we can keep resources sorted by categories (as they appear in the code)
+IntrusiveList default_order_resources;
+STATIC_INIT(default_order_resources)
+{
+	default_order_resources = IL_NEW();
+	FOREACH(Resources, true, {
+		IL_PUSH(default_order_resources, it);
+	});
+}
+#endif
+
 REGISTRY_SORT(Resources);
 REGISTRY_CHECK(Resources);
 

@@ -67,7 +67,7 @@ STATIC_INIT(REGISTER_BUFFS) {
 	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r)
 #endif
 
-string Buff_UndeprecateName(string buffname);
+string Buff_CompatName(string buffname);
 
 BUFF_SPAWNFUNCS(random, NULL)
 

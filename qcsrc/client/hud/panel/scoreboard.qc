@@ -169,7 +169,7 @@ bool scoreboard_ui_disabling;
 void HUD_Scoreboard_UI_Disable()
 {
 	scoreboard_ui_disabling = true;
-	scoreboard_showscores = false;
+	sb_showscores = false;
 }
 
 void HUD_Scoreboard_UI_Disable_Instantly()
@@ -1564,7 +1564,7 @@ bool Scoreboard_WouldDraw()
 		return false;
 	else if (HUD_Radar_Clickable())
 		return false;
-	else if (scoreboard_showscores)
+	else if (sb_showscores) // set by +showscores engine command
 		return true;
 	else if (intermission == 1)
 		return true;
@@ -2301,7 +2301,10 @@ void Scoreboard_Draw()
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 		// map name and player count
-		str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		if (campaign)
+			str = "";
+		else
+			str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
 		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
@@ -2455,7 +2458,8 @@ void Scoreboard_Draw()
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
-		string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
+		string unit = GetSpeedUnit(autocvar_hud_speed_unit);
+		float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		if(race_speedaward_alltimebest)
 		{
 			string name;
@@ -2464,11 +2468,11 @@ void Scoreboard_Draw()
 			if(race_speedaward)
 			{
 				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
-				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, name);
+				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward * conversion_factor, unit, name);
 				str = strcat(str, " / ");
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
-			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, name));
+			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest * conversion_factor, unit, name));
 			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}

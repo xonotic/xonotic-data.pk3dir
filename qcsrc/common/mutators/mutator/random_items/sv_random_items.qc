@@ -269,6 +269,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	entity new_item;
 	if (!MUTATOR_IS_ENABLED(ok))
 	{
+		// TODO: doesn't copy many fields from items
 		new_item = Item_Create(strzone(new_classname), item.origin,
 			Item_ShouldKeepPosition(item));
 		random_items_is_spawning = false;
@@ -280,9 +281,8 @@ entity RandomItems_ReplaceMapItem(entity item)
 	else
 	{
 		new_item = spawn();
+		Item_CopyFields(item, new_item);
 		new_item.classname = strzone(new_classname);
-		new_item.spawnfunc_checked = true;
-		new_item.noalign = Item_ShouldKeepPosition(item);
 		new_item.ok_item = true;
 		Item_Initialize(new_item, new_classname);
 		random_items_is_spawning = false;
@@ -290,7 +290,6 @@ entity RandomItems_ReplaceMapItem(entity item)
 		{
 			return NULL;
 		}
-		setorigin(new_item, item.origin);
 	}
 	if (item.team)
 	{

@@ -297,7 +297,8 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
             if(WEP_CVAR_SEC(vaporizer, ammo))
                 W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(vaporizer, ammo), weaponentity);
 
-            BLASTER_SECONDARY_ATTACK(vaporizer, actor, weaponentity);
+            makevectors(actor.v_angle);
+            W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 
             // now do normal refire
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
@@ -354,7 +355,7 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);

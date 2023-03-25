@@ -60,7 +60,9 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();
-					copyentity(this, replacement);
+					Item_CopyFields(this, replacement);
+					// DO NOT USE, causes #2792
+					//copyentity(this, replacement);
 					replacement.m_isreplaced = true;
 					weapon_defaultspawnfunc(replacement, wep);
 				}
