@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(cl_sv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 {
 	if(!ISGAMETYPE(SURVIVAL))
 		return false;
-		
+
 	entity player = M_ARGV(0, entity);
 	entity e = entcs_receiver(player.entnum - 1);
 	int surv_status = ((e) ? e.survival_status : 0);
