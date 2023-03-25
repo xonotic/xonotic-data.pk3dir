@@ -35,8 +35,7 @@
 //  Nagger for players to know status of voting
 bool Nagger_SendEntity(entity this, entity to, float sendflags)
 {
-	int nags, i, f, b;
-	entity e;
+	int nags = 0;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_NAGGER);
 
 	// bits:
@@ -49,25 +48,23 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 	//  64 = vote counts
 	// 128 = vote string
 
-	nags = 0;
-	if (readycount)
+	if (warmup_stage)
 	{
-		nags |= BIT(0);
-		if (to.ready == 0) nags |= BIT(1);
+		if (readycount)
+		{
+			nags |= BIT(0);
+			if (!to.ready) nags |= BIT(1);
+		}
+		nags |= BIT(4);
 	}
+
 	if (vote_called)
 	{
 		nags |= BIT(2);
 		if (to.vote_selection == 0) nags |= BIT(3);
+		nags |= sendflags & BIT(6);
+		nags |= sendflags & BIT(7);
 	}
-	if (warmup_stage) nags |= BIT(4);
-
-	if (sendflags & BIT(6)) nags |= BIT(6);
-
-	if (sendflags & BIT(7)) nags |= BIT(7);
-
-	if (!(nags & 4))  // no vote called? send no string
-		nags &= ~(BIT(6) | BIT(7));
 
 	WriteByte(MSG_ENTITY, nags);
 
@@ -81,13 +78,14 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 	if (nags & BIT(7)) WriteString(MSG_ENTITY, vote_called_display);
 
-	if (nags & 1)
+	if (nags & BIT(0))
 	{
-		for (i = 1; i <= maxclients; i += 8)
+		for (int i = 1; i <= maxclients;)
 		{
-			for (f = 0, e = edict_num(i), b = BIT(0); b < BIT(8); b <<= 1, e = nextent(e))
-				if (!IS_REAL_CLIENT(e) || e.ready)
-					f |= b;
+			int f = 0;
+			for (int b = 0; b < 8 && i <= maxclients; ++b, ++i)
+				if (edict_num(i).ready)
+					f |= BIT(b);
 			WriteByte(MSG_ENTITY, f);
 		}
 	}
@@ -160,7 +158,7 @@ void VoteAccept()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ^1", vote_called_display, "^2 was accepted\n");
 
-	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = 1;
+	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = true;
 	else localcmd(strcat(vote_called_command, "\n"));
 
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
@@ -219,23 +217,23 @@ void VoteCount(float first_count)
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_CLIENT(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		++vote_player_count;
-		if (IS_PLAYER(it))   ++vote_real_player_count;
+		if (IS_PLAYER(it) || INGAME(it)) ++vote_real_player_count;
 		switch (it.vote_selection)
 		{
 			case VOTE_SELECT_REJECT:
-			{ ++vote_reject_count;
-			  { if (IS_PLAYER(it)) ++vote_real_reject_count; } break;
-			}
+				++vote_reject_count;
+				if (IS_PLAYER(it) || INGAME(it)) ++vote_real_reject_count;
+				break;
 			case VOTE_SELECT_ACCEPT:
-			{ ++vote_accept_count;
-			  { if (IS_PLAYER(it)) ++vote_real_accept_count; } break;
-			}
+				++vote_accept_count;
+				if (IS_PLAYER(it) || INGAME(it)) ++vote_real_accept_count;
+				break;
 			case VOTE_SELECT_ABSTAIN:
-			{ ++vote_abstain_count;
-			  { if (IS_PLAYER(it)) ++vote_real_abstain_count; } break;
-			}
+				++vote_abstain_count;
+				if (IS_PLAYER(it) || INGAME(it)) ++vote_real_abstain_count;
+				break;
 			default: break;
 		}
 	});
@@ -337,7 +335,7 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(bool dorespawn, bool is_fake_round_start)
+void reset_map(bool is_fake_round_start)
 {
 	if (time <= game_starttime)
 	{
@@ -398,28 +396,26 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
-	if (dorespawn)
+	if (!MUTATOR_CALLHOOK(reset_map_players))
 	{
-		if (!MUTATOR_CALLHOOK(reset_map_players))
+		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			FOREACH_CLIENT(IS_PLAYER(it),
-			{
-				// PlayerScore_Clear(it);
-				CS(it).killcount = 0;
-				// stop the player from moving so that he stands still once he gets respawned
-				it.velocity = '0 0 0';
-				it.avelocity = '0 0 0';
-				CS(it).movement = '0 0 0';
-				PutClientInServer(it);
-			});
-		}
+			// PlayerScore_Clear(it);
+			CS(it).killcount = 0;
+			// stop the player from moving so that they stand still once they get respawned
+			it.velocity = '0 0 0';
+			it.avelocity = '0 0 0';
+			CS(it).movement = '0 0 0';
+			PutClientInServer(it);
+		});
 	}
 }
 
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think(entity this)
 {
-	reset_map(true, false);
+	if (!warmup_stage) // if the countdown was not aborted
+		reset_map(false);
 	delete(this);
 }
 
@@ -428,7 +424,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 {
 	if (time <= game_starttime && game_stopped)
 		return;
-	if (!is_fake_round_start)
+	if (!is_fake_round_start && !autocvar_g_campaign)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_COUNTDOWN_RESTART);
 
 	VoteReset();
@@ -455,8 +451,8 @@ void ReadyRestart_force(bool is_fake_round_start)
 	if(!is_fake_round_start && !warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
 
-	// reset the .ready status of all players (also spectators)
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { it.ready = false; });
+	// reset the .ready status of all clients (including spectators and bots)
+	FOREACH_CLIENT(true, { it.ready = false; });
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
@@ -479,7 +475,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	}
 
 	if (!sv_ready_restart_after_countdown || warmup_stage)
-		reset_map(true, is_fake_round_start);
+		reset_map(is_fake_round_start);
 
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
@@ -498,7 +494,7 @@ void ReadyRestart(bool forceWarmupEnd)
 	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
 	else
-		warmup_stage = cvar("g_warmup"); // go into warmup if it's enabled, otherwise restart into match stage
+		warmup_stage = autocvar_g_warmup; // go into warmup if it's enabled, otherwise restart into match stage
 
 	ReadyRestart_force(false);
 }
@@ -513,30 +509,41 @@ void ReadyCount()
 	// cannot reset the game while a timeout is active or pending
 	if (timeout_status) return;
 
-	float ready_needed_factor, ready_needed_count;
-	float t_players = 0;
+	int total_players = 0, human_players = 0, humans_ready = 0;
 	readycount = 0;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME_JOINED(it)), {
-		++t_players;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME_JOINED(it), {
+		++total_players;
 		if (it.ready) ++readycount;
+		if (IS_REAL_CLIENT(it))
+		{
+			++human_players;
+			if (it.ready) ++humans_ready;
+		}
 	});
 
 	Nagger_ReadyCounted();
 
-	if (t_players < map_minplayers) // map_minplayers will only be set if g_warmup -1 at worldspawn
+	// can't read warmup_stage here as it could have been set to 0 by ReadyRestart()
+	// and we need to use this when checking if we should abort the countdown
+	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
+	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
+
+	if (total_players < minplayers)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
 		{
-			warmup_stage = -1; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
+			warmup_stage = autocvar_g_warmup; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
 			game_starttime = time;
-			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, map_minplayers);
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
+			if (!sv_ready_restart_after_countdown) // if we ran reset_map() at start of countdown
+				FOREACH_CLIENT(IS_PLAYER(it), { GiveWarmupResources(it); });
 		}
 		if (warmup_limit > 0)
 			warmup_limit = -1;
 		return; // don't ReadyRestart if players are ready but too few
 	}
-	else if (map_minplayers && warmup_limit <= 0)
+	else if (minplayers && warmup_limit <= 0)
 	{
 		// there's enough players now but we're still in infinite warmup
 		warmup_limit = cvar("g_warmup_limit");
@@ -548,10 +555,8 @@ void ReadyCount()
 		// warmup continues until enough players AND enough RUPs (no time limit)
 	}
 
-	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 1);
-	ready_needed_count = ceil(t_players * ready_needed_factor);
-
-	if (readycount >= ready_needed_count) ReadyRestart(true);
+	if (humans_ready && humans_ready >= rint(human_players * bound(0.5, cvar("g_warmup_majority_factor"), 1)))
+		ReadyRestart(true);
 }
 
 
@@ -559,9 +564,9 @@ void ReadyCount()
 //  Supporting functions for VoteCommand
 // ======================================
 
-float Votecommand_check_assignment(entity caller, float assignment)
+bool Votecommand_check_assignment(entity caller, float assignment)
 {
-	float from_server = (!caller);
+	bool from_server = (!caller);
 
 	if ((assignment == VC_ASGNMNT_BOTH)
 	    || ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY)
@@ -580,33 +585,32 @@ string VoteCommand_extractcommand(string input, float startpos, int argc)
 	return output;
 }
 
-float VoteCommand_checknasty(string vote_command)
+bool VoteCommand_checknasty(string vote_command)
 {
-	if ((strstrofs(vote_command, ";", 0) >= 0)
+	return !((strstrofs(vote_command, ";", 0) >= 0)
 	    || (strstrofs(vote_command, "\n", 0) >= 0)
 	    || (strstrofs(vote_command, "\r", 0) >= 0)
-	    || (strstrofs(vote_command, "$", 0) >= 0)) return false;
-
-	return true;
+	    || (strstrofs(vote_command, "$", 0) >= 0));
 }
 
 // NOTE: requires input to be surrounded by spaces
 string VoteCommand_checkreplacements(string input)
 {
-	string output = input;
+	// add a space around the input so the start and end of the list is captured
+	string output = strcat(" ", input, " ");
 	// allow gotomap replacements
 	output = strreplace(" map ", " gotomap ", output);
 	output = strreplace(" chmap ", " gotomap ", output);
 	return output;
 }
 
-float VoteCommand_checkinlist(string vote_command, string list)
+bool VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
+	if (vote_command == "" || list == "")
+		return false;
 
-	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
-
-	return false;
+	string l = VoteCommand_checkreplacements(list);
+	return (strstrofs(l, VoteCommand_checkreplacements(vote_command), 0) >= 0);
 }
 
 string ValidateMap(string validated_map, entity caller)

@@ -766,8 +766,7 @@ void Net_ReadShockwaveParticle()
 METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 {
     // handled by Net_ReadShockwaveParticle
-    //vector org2;
-    //org2 = w_org + w_backoff * 2;
+    //vector org2 = w_org + w_backoff * 2;
     //pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 }
 

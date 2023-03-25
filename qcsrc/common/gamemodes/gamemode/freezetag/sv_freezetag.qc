@@ -356,7 +356,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
 		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
-		// let the player die, he will be automatically frozen when he respawns
+		// let the player die, they will be automatically frozen when they respawn
 		if (STAT(FROZEN, frag_target) != FROZEN_NORMAL)
 		{
 			freezetag_Add_Score(frag_target, frag_attacker);

@@ -21,6 +21,11 @@ float autocvar_g_balance_powerup_invisibility_alpha = 0.15;
 float autocvar_g_balance_powerup_invisibility_time = 30;
 void powerup_invisibility_init(Pickup this, entity item)
 {
+    if(autocvar_g_powerups_invisibility)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
     if(!item.invisibility_finished)
         item.invisibility_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invisibility_time;
 }
@@ -28,11 +33,6 @@ void powerup_invisibility_init(Pickup this, entity item)
 REGISTER_ITEM(Invisibility, Powerup) {
     this.m_canonical_spawnfunc = "item_invisibility";
 #ifdef SVQC
-    if(autocvar_g_powerups_invisibility)
-        this.spawnflags = ITEM_FLAG_NORMAL;
-    else
-        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
-
     this.m_iteminit         =   powerup_invisibility_init;
 #endif
 #ifdef GAMEQC

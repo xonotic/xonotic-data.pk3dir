@@ -453,11 +453,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	w.wpflags = f;
 	w.solid = SOLID_TRIGGER;
 	w.createdtime = time;
-	w.origin = (m1 + m2) * 0.5;
-	if (waypointeditor_enabled)
-		setorigin(w, w.origin);
-	else // don't link into the world, only bots are aware of waypoints
-		make_pure(w);
+	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);
 	if (w.size)
 		w.wpisbox = true;
@@ -1295,10 +1291,7 @@ spawnfunc(waypoint)
 {
 	IL_PUSH(g_waypoints, this);
 
-	if (waypointeditor_enabled)
-		setorigin(this, this.origin);
-	else
-		make_pure(this);
+	setorigin(this, this.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(this);
 	//waypoint_schedulerelink(this);

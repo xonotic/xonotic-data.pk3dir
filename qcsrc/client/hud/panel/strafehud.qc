@@ -116,9 +116,9 @@ void HUD_StrafeHUD()
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
-        float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_panel_strafehud_unit);
-        float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_panel_strafehud_unit);
-        int    length_decimals               = autocvar_hud_panel_strafehud_unit >= 3 && autocvar_hud_panel_strafehud_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
+        float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+        float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_speed_unit);
+        int    length_decimals               = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
         float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
         float  antiflicker_speed             = max(0, autocvar_hud_panel_strafehud_antiflicker_speed);
         float  minspeed;
@@ -639,7 +639,7 @@ void HUD_StrafeHUD()
             {
                 vector startspeed_size = panel_size;
                 startspeed_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_startspeed_size, 5);
-                string speed_unit = GetSpeedUnit(autocvar_hud_panel_strafehud_unit);
+                string speed_unit = GetSpeedUnit(autocvar_hud_speed_unit);
                 drawstring_aspect(panel_pos + eY * panel_size.y, strcat(ftos_decimals(startspeed * speed_conversion_factor, 2), autocvar_hud_panel_strafehud_unit_show ? speed_unit : ""), startspeed_size, autocvar_hud_panel_strafehud_startspeed_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
@@ -674,7 +674,7 @@ void HUD_StrafeHUD()
                 float text_alpha = cos(((time - jumptime) / autocvar_hud_panel_strafehud_jumpheight_fade) * 90 * DEG2RAD); // fade non-linear like the physics panel does
                 vector jumpheight_size = panel_size;
                 jumpheight_size.y = panel_size.y * min(autocvar_hud_panel_strafehud_jumpheight_size, 5);
-                string length_unit = GetLengthUnit(autocvar_hud_panel_strafehud_unit);
+                string length_unit = GetLengthUnit(autocvar_hud_speed_unit);
                 drawstring_aspect(panel_pos - eY * jumpheight_size.y, strcat(ftos_decimals(jumpheight, length_decimals), autocvar_hud_panel_strafehud_unit_show ? length_unit : ""), jumpheight_size, autocvar_hud_panel_strafehud_jumpheight_color, text_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }

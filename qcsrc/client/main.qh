@@ -20,6 +20,7 @@ bool autocvar_developer_csqcentities;
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
+bool autocvar_menu_gamemenu = true;
 
 // Map coordinate base calculations need these
 vector mi_center;
@@ -104,6 +105,7 @@ float current_viewzoom;
 float zoomin_effect;
 bool warmup_stage;
 
+bool campaign;
 string hostname;
 string welcome_msg;
 int srv_minplayers;

@@ -227,28 +227,20 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	if (item.classname == "item_strength")
 	{
 		entity wep = new(weapon_okhmg);
-		setorigin(wep, item.origin);
+		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.noalign = Item_ShouldKeepPosition(item);
-		wep.cnt = item.cnt;
-		wep.team = item.team;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		wep.spawnfunc_checked = true;
 		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
 		return true;
 	}
 	else if (item.classname == "item_shield")
 	{
 		entity wep = new(weapon_okrpc);
-		setorigin(wep, item.origin);
+		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.noalign = Item_ShouldKeepPosition(item);
-		wep.cnt = item.cnt;
-		wep.team = item.team;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		wep.spawnfunc_checked = true;
 		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
 		return true;
 	}

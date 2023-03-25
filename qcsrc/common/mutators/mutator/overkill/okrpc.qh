@@ -20,6 +20,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* wepimg    */ ATTRIB(OverkillRocketPropelledChainsaw, model2, string, "weaponrpc");
 /* refname   */ ATTRIB(OverkillRocketPropelledChainsaw, netname, string, "okrpc");
 /* wepname   */ ATTRIB(OverkillRocketPropelledChainsaw, m_name, string, _("Overkill Rocket Propelled Chainsaw"));
+/* legacy    */ ATTRIB(OverkillRocketPropelledChainsaw, m_deprecated_netname, string, "rpc");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

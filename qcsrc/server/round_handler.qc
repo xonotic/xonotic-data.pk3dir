@@ -28,7 +28,7 @@ void round_handler_Think(entity this)
 		this.wait = false;
 		this.cnt = this.count + 1;  // init countdown
 		round_starttime = time + this.count;
-		reset_map(true, false);
+		reset_map(false);
 	}
 
 	if (this.cnt > 0)  // countdown running
