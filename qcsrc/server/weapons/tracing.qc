@@ -433,7 +433,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 				headshot = true;
 			}
 			bool gooddamage = accuracy_isgooddamage(this, hit);
-			
+
 			// start, end and trace_endpos seem completely unreliable to use for falloff calculations, using entity.origins
 			// dist is only used to measure distance between shooter and target entities and do math based on the distance
 			// target's location = hit.origin
@@ -452,8 +452,8 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 
 			// same as the Damage() in above comment but without auxiliary variables for falloff, preserved in comment for readability and debugging
 			Damage(hit, this, this, damage * damage_fraction * ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_halflife, dist),
-				   dtype, weaponentity, start, force * dir * damage_fraction * ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_forcehalflife, dist));
-			
+				dtype, weaponentity, start, force * dir * damage_fraction * ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_forcehalflife, dist));
+
 			// calculate hits for ballistic weapons
 			if(gooddamage)
 			{
