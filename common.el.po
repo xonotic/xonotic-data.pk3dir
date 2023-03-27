@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 07:22+0100\n"
+"POT-Creation-Date: 2023-03-26 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Γιώργος Καρδάμης <kardamisgiorgos@gmail.com>, 2021\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
@@ -98,7 +98,7 @@ msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Πατήστε ^3%s^1 για παρακολούθηση"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
-#: qcsrc/menu/xonotic/keybinder.qc:47
+#: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
 msgstr "βασική λειτουργία όπλου"
 
@@ -134,7 +134,7 @@ msgid "drop weapon"
 msgstr "ρίξτε το όπλο"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
-#: qcsrc/menu/xonotic/keybinder.qc:48
+#: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
 msgstr "εναλλακτική λειτουργία όπλου"
 
@@ -149,7 +149,7 @@ msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Πατήστε ^3%s^1 για πληροφορίες τύπου παιχνιδιού"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
-#: qcsrc/menu/xonotic/keybinder.qc:103
+#: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "server info"
 msgstr "πληροφορίες server"
 
@@ -160,7 +160,7 @@ msgstr "^1Πατήστε ^3%s^1 για σύνδεση"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/client/hud/panel/scoreboard.qc:2263
-#: qcsrc/client/hud/panel/scoreboard.qc:2265 qcsrc/client/main.qc:1415
+#: qcsrc/client/hud/panel/scoreboard.qc:2265 qcsrc/client/main.qc:1405
 #: qcsrc/common/notifications/all.qh:441
 msgid "jump"
 msgstr "άλμα"
@@ -170,78 +170,78 @@ msgstr "άλμα"
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1Το παιχνίδι ξεκινάει σε ^3%d^1 δευτερόλεπτα"
 
-#: qcsrc/client/hud/panel/infomessages.qc:145
+#: qcsrc/client/hud/panel/infomessages.qc:151
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Στάδιο ^1προθέρμανσης^2!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:159
+#: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:161
+#: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
+#: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%sΠατήστε ^3%s%s για να τελειώσετε την προθέρμανση"
 
-#: qcsrc/client/hud/panel/infomessages.qc:167
-#: qcsrc/client/hud/panel/infomessages.qc:174
-#: qcsrc/menu/xonotic/keybinder.qc:99
+#: qcsrc/client/hud/panel/infomessages.qc:173
+#: qcsrc/client/hud/panel/infomessages.qc:178
+#: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "ready"
 msgstr "έτοιμος/η"
 
-#: qcsrc/client/hud/panel/infomessages.qc:169
+#: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2Περιμένοντας να τελειώσουν οι υπόλοιποι την προθέρμανση..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:174
+#: qcsrc/client/hud/panel/infomessages.qc:178
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Πατήστε ^3%s^2 για να τελειώσετε την προθέρμανση"
 
-#: qcsrc/client/hud/panel/infomessages.qc:195
+#: qcsrc/client/hud/panel/infomessages.qc:200
 msgid "Teamnumbers are unbalanced!"
 msgstr "Οι πληθυσμοί των ομάδων είναι εκτός ισορροπίας!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:198
+#: qcsrc/client/hud/panel/infomessages.qc:203
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr "Πατήστε ^3%s%s για ρύθμιση"
 
-#: qcsrc/client/hud/panel/infomessages.qc:198
-#: qcsrc/menu/xonotic/keybinder.qc:114
+#: qcsrc/client/hud/panel/infomessages.qc:203
+#: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:208
+#: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
 msgstr "^1Παρακολουθείτε αυτόν τον παίκτη:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:208
+#: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating you:"
 msgstr "^1Σε παρακολουθούν:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:224
+#: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr ""
 "^7Πατήστε ^3ESC ^7για να δείτε τις επιλογές προβολής στοιχείων στην οθόνη."
 
-#: qcsrc/client/hud/panel/infomessages.qc:225
+#: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 "^3Κάντε διπλό κλικ ^7σε κάποιο ταμπλό για επιλογές ειδικευμένες για αυτό το "
 "ταμπλό."
 
-#: qcsrc/client/hud/panel/infomessages.qc:226
+#: qcsrc/client/hud/panel/infomessages.qc:231
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 "^3CTRL ^7για να απενεργοποιήσετε την δοκιμασία σύγκρουσης, ^3SHIFT ^7 και"
 
-#: qcsrc/client/hud/panel/infomessages.qc:227
+#: qcsrc/client/hud/panel/infomessages.qc:232
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3ΚΑΤΕΥΘΗΝΤΗΡΙΑ ΒΕΛΗ ^7για λεπτομερείς ρυθμίσεις."
 
@@ -251,278 +251,290 @@ msgstr "^3ALT ^7+ ^3ΚΑΤΕΥΘΗΝΤΗΡΙΑ ΒΕΛΗ ^7για λεπτομε�
 msgid "Player %d"
 msgstr "Παίχτης %d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:604
-#: qcsrc/client/hud/panel/quickmenu.qc:606
+#: qcsrc/client/hud/panel/quickmenu.qc:202
+msgid "Standard quick menu"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:634
+#: qcsrc/client/hud/panel/quickmenu.qc:636
 #, c-format
 msgid "Submenu%d"
 msgstr "Υπό - μενού%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:611
+#: qcsrc/client/hud/panel/quickmenu.qc:641
 #, c-format
 msgid "Command%d"
 msgstr "Εντολή%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:637
+#: qcsrc/client/hud/panel/quickmenu.qc:667
 msgid "Continue..."
 msgstr "Συνέχεια..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:795
-#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:818
+#: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "Chat"
 msgstr "Συνομιλία"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:796
+#: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^Send public message to"
 msgstr "QMCMD^Στείλτε δημόσιο μήνυμα σε"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:797
+#: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^:-) / nice one"
 msgstr "QMCMD^:-) / καλό!"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:797
+#: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^nice one"
 msgstr "QMCMD^καλό!"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:798
+#: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^good game"
 msgstr "QMCMD^ωραίο παιχνίδι"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:799
+#: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^hi / good luck"
 msgstr "QMCMD^γεια / καλή τύχη"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:799
+#: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "QMCMD^γεια / καλή τύχη και καλή διασκέδαση"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:801
+#: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Send in English"
 msgstr "QMCMD^Στέιλε στα αγγλικά"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:806
-#: qcsrc/client/hud/panel/quickmenu.qc:822
+#: qcsrc/client/hud/panel/quickmenu.qc:829
+#: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Team chat"
 msgstr "QMCMD^Συνομιλία ομάδας"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:807
+#: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^strength soon"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:808
+#: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "QMCMD^Ελέυθερο αντικείμενο %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:808
+#: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^free item, icon"
 msgstr "QMCMD^Ελέυθερο αντικείμενο, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:809
+#: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "QMCMD^αντικείμενο πάρθηκε (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:809
+#: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^took item, icon"
 msgstr "QMCMD^αντικείμενο πάρθηκε, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:810
+#: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^negative"
 msgstr "QMCMD^αρνητικό"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:811
+#: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^positive"
 msgstr "QMCMD^θετικό"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:812
+#: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^χρειάζομαι βοήθεια (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:812
+#: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^need help, icon"
 msgstr "QMCMD^χρειάζομαι βοήθεια, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:813
+#: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "QMCMD^εχθρός εθεάθη (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:813
+#: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^enemy seen, icon"
 msgstr "QMCMD^εχθρός εθεάθη, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:814
+#: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "QMCMD^η σημαία εθεάθη (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:814
+#: qcsrc/client/hud/panel/quickmenu.qc:837
 msgid "QMCMD^flag seen, icon"
 msgstr "QMCMD^η σημαία εθεάθη, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:815
+#: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^αμυνόμενος/η (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:815
+#: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^defending, icon"
 msgstr "QMCMD^αμυνόμενος/η, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:816
+#: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^περιπλανώμενος/η (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:816
+#: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^roaming, icon"
 msgstr "QMCMD^περιπλανώμενος/η, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:817
+#: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^επιτιθέμενος/η (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:817
+#: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^attacking, icon"
 msgstr "QMCMD^επιτιθέμενος/η, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:818
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:818
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^killed flagcarrier, icon"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:819
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:819
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^dropped flag, icon"
 msgstr "QMCMD^πεζμένει σημαία, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^drop weapon, icon"
 msgstr "QMCMD^πεζμένο όπλο, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
 msgstr "QMCMD^πεζμένο όπλο %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^drop flag/key, icon"
 msgstr "QMCMD^πεζμένει σημαία/κλειδί, εικονίδιο"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "QMCMD^πεζμένει σημαία/κλειδί %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:825
+#: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Send private message to"
 msgstr "QMCMD^Στείλτε ιδιοτικό μήνυμα σε"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:827
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^Settings"
 msgstr "QMCMD^Ρυθμίσεις"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:828
-#: qcsrc/client/hud/panel/quickmenu.qc:835
+#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^View/HUD settings"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:829
+#: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^3rd person view"
 msgstr "QMCMD^Προοπτική 3ου προσώπου"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:830
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Player models like mine"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:831
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Names above players"
 msgstr "QMCMD^Ονόματα πάνω από του παίκτες"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:832
+#: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "QMCMD^Crosshair per weapon"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^FPS"
 msgstr "QMCMD^FPS"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:834
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Net graph"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:837
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:860
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Sound settings"
 msgstr "QMCMD^Ρυθμίσεις ήχου"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:838
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^Hit sound"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^Chat sound"
 msgstr "QMCMD^Ήχος συζήτησης"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Change spectator camera"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:849
-#: qcsrc/client/hud/panel/quickmenu.qc:853
+#: qcsrc/client/hud/panel/quickmenu.qc:872
+#: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Observer camera"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^Increase speed"
 msgstr "QMCMD^Αύξηση ταχύτητας"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^Decrease speed"
 msgstr "QMCMD^Μείωση Ταχύτητας"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:852
+#: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Wall collision"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:856
+#: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Fullscreen"
 msgstr "QMCMD^Πλήρης οθόνη"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:859
-#: qcsrc/client/hud/panel/quickmenu.qc:869
+#: qcsrc/client/hud/panel/quickmenu.qc:882
+#: qcsrc/client/hud/panel/quickmenu.qc:892
 msgid "QMCMD^Call a vote"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:860
+#: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Restart the map"
 msgstr "QMCMD^Ανανέωση τον χάρτη"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:884
 msgid "QMCMD^End match"
 msgstr "QMCMD^Τέλος match"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:887
 msgid "QMCMD^Reduce match time"
 msgstr "QMCMD^Μείωση χρόνου παιχνιδιού"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:865
+#: qcsrc/client/hud/panel/quickmenu.qc:888
 msgid "QMCMD^Extend match time"
 msgstr "QMCMD^Επέκταση χρόνου παιχνιδιού"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:868
+#: qcsrc/client/hud/panel/quickmenu.qc:891
 msgid "QMCMD^Shuffle teams"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:873
-msgid "Server's custom quickmenu"
+#: qcsrc/client/hud/panel/quickmenu.qc:896
+msgid "Server quick menu"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:875
-msgid "Waypoint editor quickmenu"
+#: qcsrc/client/hud/panel/quickmenu.qc:898
+msgid "Waypoint editor menu"
 msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:881
+#: qcsrc/client/hud/panel/quickmenu.qc:901
+msgid "Waypoint editor menu as default"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:903
+msgid "Server quick menu as default"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
 msgstr ""
 
@@ -558,7 +570,7 @@ msgstr "Ενδιάμεση %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1247
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1237
 msgid "missing a checkpoint"
 msgstr ""
 
@@ -1044,37 +1056,37 @@ msgstr ""
 msgid "^3%1.0f minutes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2304
+#: qcsrc/client/hud/panel/scoreboard.qc:2307
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2305 qcsrc/client/main.qc:1441
+#: qcsrc/client/hud/panel/scoreboard.qc:2308 qcsrc/client/main.qc:1431
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Χάρτης:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2467
+#: qcsrc/client/hud/panel/scoreboard.qc:2471
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2471
+#: qcsrc/client/hud/panel/scoreboard.qc:2475
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2505
+#: qcsrc/client/hud/panel/scoreboard.qc:2509
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2515
+#: qcsrc/client/hud/panel/scoreboard.qc:2519
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2524
+#: qcsrc/client/hud/panel/scoreboard.qc:2528
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Πέθανες, πάτα ^2%s^7 για να ξαναγεννηθείς"
@@ -1103,27 +1115,27 @@ msgstr ""
 msgid "Warmup"
 msgstr ""
 
-#: qcsrc/client/hud/panel/timer.qc:128
-msgid "Warmup: no time limit"
-msgstr ""
-
-#: qcsrc/client/hud/panel/timer.qc:128
+#: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
 msgstr ""
 
-#: qcsrc/client/hud/panel/timer.qc:131
-msgid "Timeout"
-msgstr ""
-
 #: qcsrc/client/hud/panel/timer.qc:133
-msgid "Sudden Death"
-msgstr ""
-
-#: qcsrc/client/hud/panel/timer.qc:135
-msgid "Overtime"
+msgid "Warmup: no time limit"
 msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:137
+msgid "Timeout"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:139
+msgid "Sudden Death"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:141
+msgid "Overtime"
+msgstr ""
+
+#: qcsrc/client/hud/panel/timer.qc:143
 #, c-format
 msgid "Overtime #%d"
 msgstr ""
@@ -1187,139 +1199,139 @@ msgstr "Μη διαθέσιμο"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 
-#: qcsrc/client/main.qc:1149 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/client/main.qc:1139 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1150 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/client/main.qc:1140 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "μέτρα/δευτερόλεπτο"
 
-#: qcsrc/client/main.qc:1151 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
+#: qcsrc/client/main.qc:1141 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "χλμ/ώρα"
 
-#: qcsrc/client/main.qc:1152 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
+#: qcsrc/client/main.qc:1142 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "μίλια/ώρα"
 
-#: qcsrc/client/main.qc:1153 qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
+#: qcsrc/client/main.qc:1143 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "κόμβοι"
 
-#: qcsrc/client/main.qc:1364
+#: qcsrc/client/main.qc:1354
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Όλα τα όπλα στην αρένα"
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1355
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1366
+#: qcsrc/client/main.qc:1356
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1367
+#: qcsrc/client/main.qc:1357
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1370 qcsrc/client/main.qc:1384
+#: qcsrc/client/main.qc:1360 qcsrc/client/main.qc:1374
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1382
+#: qcsrc/client/main.qc:1372
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s Αρένα"
 
-#: qcsrc/client/main.qc:1393 qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1383 qcsrc/client/main.qc:1388
 #, c-format
 msgid "This is %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1394
+#: qcsrc/client/main.qc:1384
 msgid "Your client version is outdated."
 msgstr ""
 
-#: qcsrc/client/main.qc:1395
+#: qcsrc/client/main.qc:1385
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr ""
 
-#: qcsrc/client/main.qc:1396
+#: qcsrc/client/main.qc:1386
 msgid "Please update!"
 msgstr ""
 
-#: qcsrc/client/main.qc:1399
+#: qcsrc/client/main.qc:1389
 msgid "This server is using an outdated Xonotic version."
 msgstr ""
 
-#: qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1390
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr ""
 
-#: qcsrc/client/main.qc:1402
+#: qcsrc/client/main.qc:1392
 #, c-format
 msgid "Welcome to %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1417 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1407 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1419
+#: qcsrc/client/main.qc:1409
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr ""
 
-#: qcsrc/client/main.qc:1439
+#: qcsrc/client/main.qc:1429
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Τύπος παιχνιδιού:"
 
-#: qcsrc/client/main.qc:1453
+#: qcsrc/client/main.qc:1443
 msgid "This match supports"
 msgstr ""
 
-#: qcsrc/client/main.qc:1455
+#: qcsrc/client/main.qc:1445
 #, c-format
 msgid "%d players"
 msgstr ""
 
-#: qcsrc/client/main.qc:1457
+#: qcsrc/client/main.qc:1447
 #, c-format
 msgid "%d to %d players"
 msgstr ""
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1449
 #, c-format
 msgid "%d players maximum"
 msgstr ""
 
-#: qcsrc/client/main.qc:1461
+#: qcsrc/client/main.qc:1451
 #, c-format
 msgid "%d players minimum"
 msgstr ""
 
-#: qcsrc/client/main.qc:1466
+#: qcsrc/client/main.qc:1456
 msgid "Active modifications:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1469
+#: qcsrc/client/main.qc:1459
 msgid "Special gameplay tips:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1476
+#: qcsrc/client/main.qc:1466
 msgid "Server's message"
 msgstr ""
 
-#: qcsrc/client/main.qc:1570
+#: qcsrc/client/main.qc:1560
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (μη δεσμευμένο)"
@@ -1393,8 +1405,10 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:27
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
+#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "Point limit:"
 msgstr "Όριο βαθμολογίας:"
 
@@ -1531,6 +1545,19 @@ msgstr ""
 msgid "Lives:"
 msgstr "Ζωές"
 
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
+msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
+msgid "Mayhem"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
+#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
+msgid "How much score is needed before the match will end"
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
 msgstr "Θανατόμπαλα"
@@ -1586,6 +1613,16 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
 msgstr "Team Deathmatch"
+
+#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
+msgid ""
+"Compete with your team for the most damage dealt and frags in this chaotic "
+"mayhem!"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
+msgid "Team Mayhem"
+msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -1677,8 +1714,7 @@ msgid "It's your turn"
 msgstr "Είναι η σειρά σου"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67
-#: qcsrc/menu/xonotic/dialog_quit.qh:6
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:67 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
 msgstr "Έξοδος"
 
@@ -2050,7 +2086,7 @@ msgstr "Μέγιστο μέγεθος γραμματοσειράς:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:754
+#: qcsrc/menu/xonotic/util.qc:756
 msgid "Color:"
 msgstr "Χρώμα:"
 
@@ -2060,7 +2096,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:10
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
-#: qcsrc/menu/xonotic/keybinder.qc:42
+#: qcsrc/menu/xonotic/keybinder.qc:45
 msgid "off-hand hook"
 msgstr ""
 
@@ -2111,7 +2147,7 @@ msgid "Veil grenade"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:102
-#: qcsrc/menu/xonotic/keybinder.qc:57
+#: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr ""
 
@@ -5772,7 +5808,7 @@ msgstr "%d μέρες, %02d:%02d:%02d"
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
-#: qcsrc/menu/item/listbox.qc:413
+#: qcsrc/menu/item/listbox.qc:418
 #, c-format
 msgid "Item %d"
 msgstr "Αντικείμενο %d"
@@ -5788,191 +5824,191 @@ msgstr "Προσαρμογή"
 msgid "Core Team"
 msgstr "Βασική ομάδα"
 
-#: qcsrc/menu/xonotic/credits.qc:14
+#: qcsrc/menu/xonotic/credits.qc:13
 msgid "Extended Team"
 msgstr "Εκτεταμένη ομάδα"
 
-#: qcsrc/menu/xonotic/credits.qc:32
+#: qcsrc/menu/xonotic/credits.qc:31
 msgid "Website"
 msgstr "Ιστοσελίδα"
 
-#: qcsrc/menu/xonotic/credits.qc:38
+#: qcsrc/menu/xonotic/credits.qc:37
 msgid "Stats"
 msgstr "Στατιστικά"
 
-#: qcsrc/menu/xonotic/credits.qc:42
+#: qcsrc/menu/xonotic/credits.qc:41
 msgid "Art"
 msgstr "Τέχνη"
 
-#: qcsrc/menu/xonotic/credits.qc:50
+#: qcsrc/menu/xonotic/credits.qc:49
 msgid "Animation"
 msgstr "Κινούμενα σχέδια"
 
-#: qcsrc/menu/xonotic/credits.qc:54
+#: qcsrc/menu/xonotic/credits.qc:53
 msgid "Campaign"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:57
+#: qcsrc/menu/xonotic/credits.qc:56
 msgid "Level Design"
 msgstr "Σχεδιασμός επιπέδων"
 
-#: qcsrc/menu/xonotic/credits.qc:82
+#: qcsrc/menu/xonotic/credits.qc:81
 msgid "Music / Sound FX"
 msgstr "Μουσική / Ηχητικά εφέ"
 
-#: qcsrc/menu/xonotic/credits.qc:98
+#: qcsrc/menu/xonotic/credits.qc:97
 msgid "Game Code"
 msgstr "Κώδικας παιχνιδιού"
 
-#: qcsrc/menu/xonotic/credits.qc:114
+#: qcsrc/menu/xonotic/credits.qc:113
 msgid "Marketing / PR"
 msgstr "Μάρκετινγκ / Δημόσιες σχέσεις"
 
-#: qcsrc/menu/xonotic/credits.qc:120
+#: qcsrc/menu/xonotic/credits.qc:119
 msgid "Legal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:125
+#: qcsrc/menu/xonotic/credits.qc:124
 msgid "Game Engine"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:129
+#: qcsrc/menu/xonotic/credits.qc:128
 msgid "Engine Additions"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:135
+#: qcsrc/menu/xonotic/credits.qc:134
 msgid "Compiler"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:141
+#: qcsrc/menu/xonotic/credits.qc:140
 msgid "Other Active Contributors"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:148
+#: qcsrc/menu/xonotic/credits.qc:147
 msgid "Translators"
 msgstr "Μεταφραστές"
 
-#: qcsrc/menu/xonotic/credits.qc:150
+#: qcsrc/menu/xonotic/credits.qc:149
 msgid "Asturian"
 msgstr "Αστουριανά"
 
-#: qcsrc/menu/xonotic/credits.qc:155
+#: qcsrc/menu/xonotic/credits.qc:154
 msgid "Belarusian"
 msgstr "Λευκορωσικά"
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:157
 msgid "Bulgarian"
 msgstr "Βουλγαρικά"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:165
 msgid "Chinese (China)"
 msgstr "Κινεζικά (Κίνα)"
 
-#: qcsrc/menu/xonotic/credits.qc:179
+#: qcsrc/menu/xonotic/credits.qc:178
 msgid "Chinese (Taiwan)"
 msgstr "Chinese (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:185
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Cornish"
 msgstr "Cornish"
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:187
 msgid "Czech"
 msgstr "Τσεχικά "
 
-#: qcsrc/menu/xonotic/credits.qc:198
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "Dutch"
 msgstr "Ολλανδικά"
 
-#: qcsrc/menu/xonotic/credits.qc:206
+#: qcsrc/menu/xonotic/credits.qc:205
 msgid "English (Australia)"
 msgstr "Αγγλικά (Αυστραλία)"
 
-#: qcsrc/menu/xonotic/credits.qc:212
+#: qcsrc/menu/xonotic/credits.qc:211
 msgid "Finnish"
 msgstr "Φιλανδικά"
 
-#: qcsrc/menu/xonotic/credits.qc:221
+#: qcsrc/menu/xonotic/credits.qc:220
 msgid "French"
 msgstr "Γαλλικά"
 
-#: qcsrc/menu/xonotic/credits.qc:231
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "German"
 msgstr "Γερμανικά"
 
-#: qcsrc/menu/xonotic/credits.qc:244
+#: qcsrc/menu/xonotic/credits.qc:243
 msgid "Greek"
 msgstr "Ελληνικά"
 
-#: qcsrc/menu/xonotic/credits.qc:254
+#: qcsrc/menu/xonotic/credits.qc:253
 msgid "Hungarian"
 msgstr "Ουγγρικά"
 
-#: qcsrc/menu/xonotic/credits.qc:261
+#: qcsrc/menu/xonotic/credits.qc:260
 msgid "Irish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:264
+#: qcsrc/menu/xonotic/credits.qc:263
 msgid "Italian"
 msgstr "Ιταλικά"
 
-#: qcsrc/menu/xonotic/credits.qc:271
+#: qcsrc/menu/xonotic/credits.qc:270
 msgid "Japanese"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:279
+#: qcsrc/menu/xonotic/credits.qc:278
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: qcsrc/menu/xonotic/credits.qc:282
+#: qcsrc/menu/xonotic/credits.qc:281
 msgid "Korean"
 msgstr "Korean"
 
-#: qcsrc/menu/xonotic/credits.qc:287
+#: qcsrc/menu/xonotic/credits.qc:286
 msgid "Polish"
 msgstr "Πολωνικά"
 
-#: qcsrc/menu/xonotic/credits.qc:305
+#: qcsrc/menu/xonotic/credits.qc:304
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
-#: qcsrc/menu/xonotic/credits.qc:314
+#: qcsrc/menu/xonotic/credits.qc:313
 msgid "Portuguese (Brazil)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:320
+#: qcsrc/menu/xonotic/credits.qc:319
 msgid "Romanian"
 msgstr "Ρουμανικά"
 
-#: qcsrc/menu/xonotic/credits.qc:329
+#: qcsrc/menu/xonotic/credits.qc:328
 msgid "Russian"
 msgstr "Ρωσικά"
 
-#: qcsrc/menu/xonotic/credits.qc:344
+#: qcsrc/menu/xonotic/credits.qc:343
 msgid "Scottish Gaelic"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:347
+#: qcsrc/menu/xonotic/credits.qc:346
 msgid "Serbian"
 msgstr "Σερβικά"
 
-#: qcsrc/menu/xonotic/credits.qc:353
+#: qcsrc/menu/xonotic/credits.qc:352
 msgid "Spanish"
 msgstr "Ισπανικά"
 
-#: qcsrc/menu/xonotic/credits.qc:371
+#: qcsrc/menu/xonotic/credits.qc:370
 msgid "Swedish"
 msgstr "Σουηδικά "
 
-#: qcsrc/menu/xonotic/credits.qc:376
+#: qcsrc/menu/xonotic/credits.qc:375
 msgid "Turkish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:385
+#: qcsrc/menu/xonotic/credits.qc:384
 msgid "Ukrainian"
 msgstr "Ουκρανικά"
 
-#: qcsrc/menu/xonotic/credits.qc:393
+#: qcsrc/menu/xonotic/credits.qc:392
 msgid "Past Contributors"
 msgstr ""
 
@@ -6301,8 +6337,8 @@ msgstr "Πίνακας Πληροφοριών"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:749 qcsrc/menu/xonotic/util.qc:765
-#: qcsrc/menu/xonotic/util.qc:782
+#: qcsrc/menu/xonotic/util.qc:751 qcsrc/menu/xonotic/util.qc:767
+#: qcsrc/menu/xonotic/util.qc:784
 msgid "Disable"
 msgstr "Απενεργοποίηση"
 
@@ -6370,7 +6406,7 @@ msgstr "Πίνακας Ανακοινώσεων"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
-#: qcsrc/menu/xonotic/util.qc:737
+#: qcsrc/menu/xonotic/util.qc:739
 msgid "Enable"
 msgstr "Ενεργοποίηση"
 
@@ -6419,22 +6455,18 @@ msgid "Include vertical speed"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
-msgid "Speed unit:"
-msgstr "Μονάδα ταχύτητας:"
+msgid "Show speed unit"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
-msgid "Show"
-msgstr "Εμφάνιση"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
 msgstr "Μέγιστη ταχύτητα"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:58
 msgid "Acceleration:"
 msgstr "Επιτάχυνση:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:59
 msgid "Include vertical acceleration"
 msgstr ""
 
@@ -6519,7 +6551,7 @@ msgstr "Ραντάρ:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:771
+#: qcsrc/menu/xonotic/util.qc:773
 msgid "Alpha:"
 msgstr ""
 
@@ -6825,13 +6857,11 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
-#: qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:748
 msgid "Background:"
 msgstr "Φόντο:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
-#: qcsrc/menu/xonotic/util.qc:762
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:764
 msgid "Border size:"
 msgstr "Μέγεθος περιθωρίου:"
 
@@ -6840,13 +6870,11 @@ msgstr "Μέγεθος περιθωρίου:"
 msgid "Team color:"
 msgstr "Χρώμα ομάδας:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:790
 msgid "Test team color in configure mode"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
-#: qcsrc/menu/xonotic/util.qc:791
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:793
 msgid "Padding:"
 msgstr ""
 
@@ -6968,9 +6996,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:748
-#: qcsrc/menu/xonotic/util.qc:764 qcsrc/menu/xonotic/util.qc:773
-#: qcsrc/menu/xonotic/util.qc:781 qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:750
+#: qcsrc/menu/xonotic/util.qc:766 qcsrc/menu/xonotic/util.qc:775
+#: qcsrc/menu/xonotic/util.qc:783 qcsrc/menu/xonotic/util.qc:795
 msgid "Default"
 msgstr "Προεπιλογή"
 
@@ -7295,9 +7323,9 @@ msgstr "Ειδικές αρένες:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:242
 msgid ""
 "Players will be given only one weapon, which can instantly kill the opponent "
-"with a single shot. If the player runs out of ammo, he will have 10 seconds "
-"to find some or if he fails to do so, face death. The secondary fire mode "
-"does not inflict any damage but is good for doing trickjumps."
+"with a single shot. If the player runs out of ammo, they will have 10 "
+"seconds to find some or if they fail to do so, face death. The secondary "
+"fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
@@ -7833,8 +7861,7 @@ msgstr "Παιχνίδι"
 msgid "User"
 msgstr "Χρήστης"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:25
-#: qcsrc/menu/xonotic/keybinder.qc:118
+#: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:121
 msgid "Misc"
 msgstr "Λοιπά"
 
@@ -8618,7 +8645,7 @@ msgid "Decolorize:"
 msgstr "Αποχρωματισμός:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:146
-#: qcsrc/menu/xonotic/keybinder.qc:112
+#: qcsrc/menu/xonotic/keybinder.qc:115
 msgid "Teamplay"
 msgstr ""
 
@@ -8631,22 +8658,26 @@ msgid "Display health and armor"
 msgstr "Εμφάνιση υγείας και πανοπλίας"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
+msgid "Speed unit:"
+msgstr "Μονάδα ταχύτητας:"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:172
 msgid "Damage overlay:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
 msgid "Dynamic HUD"
 msgstr "Dynamic HUD"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:176
 msgid "HUD moves around following player's movement"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:178
 msgid "Shake the HUD when hurt"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:173
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
 msgstr "Έναρξη επεγεργασίας HUD"
@@ -8983,7 +9014,7 @@ msgid "Release zoom when you switch weapons"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
-#: qcsrc/menu/xonotic/keybinder.qc:83
+#: qcsrc/menu/xonotic/keybinder.qc:86
 msgid "View"
 msgstr "Προβολή"
 
@@ -9053,7 +9084,7 @@ msgid "Gun model bobbing"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
-#: qcsrc/menu/xonotic/keybinder.qc:51
+#: qcsrc/menu/xonotic/keybinder.qc:54
 msgid "Weapons"
 msgstr "Όπλα"
 
@@ -9727,7 +9758,7 @@ msgid "pink"
 msgstr "ροζ"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
-#: qcsrc/menu/xonotic/keybinder.qc:115
+#: qcsrc/menu/xonotic/keybinder.qc:118
 msgid "spectate"
 msgstr "θέαση"
 
@@ -9763,159 +9794,163 @@ msgstr ""
 msgid "free for all"
 msgstr "free for all"
 
-#: qcsrc/menu/xonotic/keybinder.qc:35
+#: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "Moving"
 msgstr "Κινείται"
 
-#: qcsrc/menu/xonotic/keybinder.qc:36
+#: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "move forwards"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:37
+#: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "move backwards"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:38
+#: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "strafe left"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:39
+#: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "strafe right"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:40
+#: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jump / swim"
 msgstr "άλμα / κολύμπι"
 
-#: qcsrc/menu/xonotic/keybinder.qc:41
+#: qcsrc/menu/xonotic/keybinder.qc:44
 msgid "crouch / sink"
 msgstr "σκύψιμο / βύθιση"
 
-#: qcsrc/menu/xonotic/keybinder.qc:43
+#: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "jetpack"
 msgstr " Σακίδιο ώθησης"
 
-#: qcsrc/menu/xonotic/keybinder.qc:46
+#: qcsrc/menu/xonotic/keybinder.qc:49
 msgid "Attacking"
 msgstr "Επιτίθειτε"
 
-#: qcsrc/menu/xonotic/keybinder.qc:52
+#: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^previous"
 msgstr "ΟΠΛΟ^προηγούμενο"
 
-#: qcsrc/menu/xonotic/keybinder.qc:53
+#: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "WEAPON^next"
 msgstr "ΟΠΛΟ^επόμενο"
 
-#: qcsrc/menu/xonotic/keybinder.qc:54
+#: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "WEAPON^previously used"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:55
+#: qcsrc/menu/xonotic/keybinder.qc:58
 msgid "WEAPON^best"
 msgstr "WEAPON^καλύτερο"
 
-#: qcsrc/menu/xonotic/keybinder.qc:56
+#: qcsrc/menu/xonotic/keybinder.qc:59
 msgid "reload"
 msgstr "γέμισμα"
 
-#: qcsrc/menu/xonotic/keybinder.qc:84
+#: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "hold zoom"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:85
+#: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "toggle zoom"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:86
+#: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "show scores"
 msgstr "εμφάνιση βαθμολογιών"
 
-#: qcsrc/menu/xonotic/keybinder.qc:87
+#: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "screen shot"
 msgstr "στιγμιότυπο οθόνης"
 
-#: qcsrc/menu/xonotic/keybinder.qc:88
+#: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "maximize radar"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:89
+#: qcsrc/menu/xonotic/keybinder.qc:92
 msgid "3rd person view"
 msgstr "Προοπτική 3ου προσώπου"
 
-#: qcsrc/menu/xonotic/keybinder.qc:90
+#: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "enter spectator mode"
 msgstr "εισέλθετε σε λειτουργία θεατή"
 
-#: qcsrc/menu/xonotic/keybinder.qc:93
+#: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "Communication"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:94
+#: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "public chat"
 msgstr "δημόσια συζήτηση"
 
-#: qcsrc/menu/xonotic/keybinder.qc:95
+#: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "team chat"
 msgstr "συζήτηση ομάδας"
 
-#: qcsrc/menu/xonotic/keybinder.qc:96
+#: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "show chat history"
 msgstr "εμφάνιση ιστορικού συνομιλιών"
 
-#: qcsrc/menu/xonotic/keybinder.qc:97
+#: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote YES"
 msgstr "ψηφίστε ΝΑΙ"
 
-#: qcsrc/menu/xonotic/keybinder.qc:98
+#: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "vote NO"
 msgstr "ψηφίστε ΟΧΙ"
 
-#: qcsrc/menu/xonotic/keybinder.qc:102
+#: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Client"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:106 qcsrc/menu/xonotic/keybinder.qc:108
+#: qcsrc/menu/xonotic/keybinder.qc:109 qcsrc/menu/xonotic/keybinder.qc:111
 msgid "enter console"
 msgstr "εισέλθετε στην κονσόλα"
 
-#: qcsrc/menu/xonotic/keybinder.qc:109
+#: qcsrc/menu/xonotic/keybinder.qc:112
 msgid "quit"
 msgstr "έξοδος"
 
-#: qcsrc/menu/xonotic/keybinder.qc:113
+#: qcsrc/menu/xonotic/keybinder.qc:116
 msgid "auto-join team"
 msgstr "Ενταχθείτε αυτόματα σε ομάδα"
 
-#: qcsrc/menu/xonotic/keybinder.qc:119
+#: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "drop key/flag, exit vehicle"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:120
+#: qcsrc/menu/xonotic/keybinder.qc:123
 msgid "suicide / respawn"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:121
+#: qcsrc/menu/xonotic/keybinder.qc:124
 msgid "quick menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:124
+#: qcsrc/menu/xonotic/keybinder.qc:126
+msgid "scoreboard user interface"
+msgstr ""
+
+#: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:131
+#: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "Development"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:132
+#: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "sandbox menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:133
+#: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "drag object (sandbox)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:134
+#: qcsrc/menu/xonotic/keybinder.qc:139
 msgid "waypoint editor menu"
 msgstr ""
 
@@ -10286,10 +10321,10 @@ msgid ""
 "^1Expect visual problems."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:759
+#: qcsrc/menu/xonotic/util.qc:761
 msgid "Use default"
 msgstr "Χρήση προεπιλογής"
 
-#: qcsrc/menu/xonotic/util.qc:779
+#: qcsrc/menu/xonotic/util.qc:781
 msgid "Team Color:"
 msgstr "Χρώμα Ομαδάς:"

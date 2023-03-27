@@ -285,6 +285,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
+		BADCVAR("g_mayhem");
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
@@ -299,6 +300,8 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_tmayhem");
+		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
@@ -376,6 +379,10 @@ void cvar_changes_init()
 		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_mayhem_point_limit");
+		BADCVAR("g_mayhem_point_leadlimit");
+		BADCVAR("g_tmayhem_point_limit");
+		BADCVAR("g_tmayhem_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
@@ -453,6 +460,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_point_limit");
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
+		BADCVAR("g_mayhem_powerups");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
@@ -469,6 +477,8 @@ void cvar_changes_init()
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
+		BADCVAR("g_tmayhem_teams_override");
+		BADCVAR("g_tmayhem_powerups");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
@@ -660,10 +670,9 @@ void GameplayMode_DelayedInit(entity this)
 			int u = AVAILABLE_TEAMS - d;
 			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
 		}
-		warmup_limit = -1;
 	}
 	else
-		map_minplayers = 0; // don't display a minimum if it's not used
+		map_minplayers = 0; // don't display a minimum if it's not used (g_maxplayers < 0 && g_warmup >= 0)
 }
 
 void InitGameplayMode()
@@ -735,8 +744,7 @@ spawnfunc(worldspawn)
 	{
 		if (!server_is_dedicated)
 		{
-			// force unloading of server pk3 files when starting a listen server
-			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
+			// DP unloads dlcache pk3s before starting a listen server since https://gitlab.com/xonotic/darkplaces/-/merge_requests/134
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
 			wantrestart = cvar_string("csqc_progname") != expect;
@@ -864,9 +872,6 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 
 	GameRules_limit_fallbacks();
-
-	if(warmup_limit == 0)
-		warmup_limit = autocvar_timelimit * 60;
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -2106,11 +2111,21 @@ void readlevelcvars()
 
 	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
-	warmup_stage = cvar("g_warmup");
-	warmup_limit = cvar("g_warmup_limit");
-
 	if(cvar("g_campaign"))
 		warmup_stage = 0; // no warmup during campaign
+	else
+	{
+		warmup_stage = autocvar_g_warmup;
+		if (warmup_stage < 0 || warmup_stage > 1)
+			warmup_limit = -1; // don't start until there's enough players
+		else if (warmup_stage == 1)
+		{
+			// this code is duplicated in ReadyCount()
+			warmup_limit = cvar("g_warmup_limit");
+			if(warmup_limit == 0)
+				warmup_limit = autocvar_timelimit * 60;
+		}
+	}
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");

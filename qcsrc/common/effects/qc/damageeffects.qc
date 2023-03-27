@@ -13,12 +13,17 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
-	WriteVector(MSG_ENTITY, this.velocity);
+	// we can't send the force vector compressed with compressShortVector as it's too inaccurate
+	// it would break decals when hit angle on a surface is small
+	// (the traceline performed by the client to spawn a decal wouldn't hit the surface at all)
+	WriteShort(MSG_ENTITY, floor(this.velocity.x / 4));
+	WriteShort(MSG_ENTITY, floor(this.velocity.y / 4));
+	WriteShort(MSG_ENTITY, floor(this.velocity.z / 4));
 	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
 
-void Damage_DamageInfo(vector org, bool is_solid_hit, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -39,8 +44,6 @@ void Damage_DamageInfo(vector org, bool is_solid_hit, float coredamage, float ed
 	e.dmg_force = vlen(force);
 	e.velocity = force;
 	e.species = bloodtype;
-	if(is_solid_hit)
-		e.species |= 0x80;
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -76,8 +79,8 @@ void DamageEffect_Think(entity this)
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
 	{
-		// if the player was dead but is now alive, it means he respawned
-		// if so, clear his damage effects, or damages from his dead body will be copied back
+		// if the player was dead but is now alive, it means they respawned
+		// if so, clear their damage effects, or damages from their dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
 		delete(this);
 		return;
@@ -193,10 +196,11 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
-	force = ReadVector();
+	force.x = ReadShort() * 4 + 2;
+	force.y = ReadShort() * 4 + 2;
+	force.z = ReadShort() * 4 + 2;
+
 	species = ReadByte();
-	bool is_solid_hit = (species & 0x80);
-	species = (species & 0x7F);
 
 	return = true;
 
@@ -255,8 +259,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if((it.isplayermodel & ISPLAYER_MODEL))
-			hitplayer = true; // this impact damaged a player
+		if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
+			hitplayer = true; // this impact damaged another player
 	});
 
 	if(DEATH_ISVEHICLE(w_deathtype))
@@ -400,16 +404,15 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		w_random = prandom();
 
 		vector force_dir = normalize(force);
-		if (is_solid_hit) // traceline not needed
-			w_backoff = -force_dir;
+		// this traceline usually starts in solid when a hitscan shot hits a surface with a very small angle
+		// if so, try another traceline starting further back (may still start in solid but only with extremely small angles)
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+		if(trace_startsolid)
+			traceline(w_org - force_dir * 40, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+		if(trace_fraction < 1)
+			w_backoff = trace_plane_normal;
 		else
-		{
-			traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
-			if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
-				w_backoff = trace_plane_normal;
-			else
-				w_backoff = -force_dir;
-		}
+			w_backoff = -force_dir;
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))

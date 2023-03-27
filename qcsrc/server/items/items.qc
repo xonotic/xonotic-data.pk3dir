@@ -98,6 +98,9 @@ void UpdateItemAfterTeleport(entity this)
 
 bool have_pickup_item(entity this)
 {
+	if (this.itemdef.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+		return false;
+
 	if(this.itemdef.instanceOfPowerup)
 	{
 		if(autocvar_g_powerups > 0)
@@ -795,6 +798,19 @@ void Item_FindTeam(entity this)
 	});
 }
 
+void Item_CopyFields(entity this, entity to)
+{
+	setorigin(to, this.origin);
+	to.spawnflags = this.spawnflags;
+	to.noalign = Item_ShouldKeepPosition(this);
+	to.cnt = this.cnt;
+	to.team = this.team;
+	to.spawnfunc_checked = true;
+	// TODO: copy respawn times? this may not be desirable in some cases
+	//to.respawntime = this.respawntime;
+	//to.respawntimejitter = this.respawntimejitter;
+}
+
 // Savage: used for item garbage-collection
 void RemoveItem(entity this)
 {
@@ -969,13 +985,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	precache_model(this.model);
 	precache_sound(this.item_pickupsound);
 
-	if(q3compat && !this.team)
-	{
-		string t = GetField_fullspawndata(this, "team", false);
-		// bones_was_here: this hack is cheaper than changing to a .string strcmp()
-		if(t) this.team = crc16(false, t);
-	}
-
 	if (Item_IsLoot(this))
 	{
 		this.reset = RemoveItem;
@@ -1017,6 +1026,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
+
+		if(q3compat && !this.team)
+		{
+			string t = GetField_fullspawndata(this, "team");
+			// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+			if(t) this.team = crc16(false, t);
+		}
 
 		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
@@ -1151,12 +1167,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 void StartItem(entity this, GameItem def)
 {
 	def = def.m_spawnfunc_hookreplace(def, this);
-
-	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
-	{
-		delete(this);
-		return; // TODO does not set startitem_failed
-	}
 
 	this.classname = def.m_canonical_spawnfunc;
 
