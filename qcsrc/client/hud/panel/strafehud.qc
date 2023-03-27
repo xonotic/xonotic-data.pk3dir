@@ -152,10 +152,10 @@ void HUD_StrafeHUD()
 
 		// HUD
 		int    mode;
-		float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_panel_strafehud_unit);
-		float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_panel_strafehud_unit);
+		float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+		float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_speed_unit);
 		// use more decimals when displaying km or miles
-		int    length_decimals               = autocvar_hud_panel_strafehud_unit >= 3 && autocvar_hud_panel_strafehud_unit <= 5 ? 6 : 2;
+		int    length_decimals               = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2;
 		float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
 		float  minspeed;
 		float  shift_offset                  = 0;
@@ -1027,7 +1027,7 @@ void HUD_StrafeHUD()
 				float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
 				string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
 				if(autocvar_hud_panel_strafehud_unit_show)
-					startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
+					startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_speed_unit));
 
 				bool was_drawn = StrafeHUD_drawTextIndicator(
 					startspeed_text, startspeed_height,
@@ -1069,7 +1069,7 @@ void HUD_StrafeHUD()
 				float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
 				string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
 				if(autocvar_hud_panel_strafehud_unit_show)
-					jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
+					jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_speed_unit));
 
 				bool was_drawn = StrafeHUD_drawTextIndicator(
 					jumpheight_text, jumpheight_height,

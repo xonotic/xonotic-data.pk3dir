@@ -74,7 +74,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Fontsize:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Font size:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider(5, 16, 1, "g_waypointsprite_fontsize"));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
@@ -127,7 +127,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Fontsize:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Font size:")));
 			setDependent(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(5, 16, 1, "hud_shownames_fontsize"));
 			setDependent(e, "hud_shownames", 1, 1);
@@ -159,6 +159,15 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "hud_shownames", 1, 1);
 
 	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed unit:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_speed_unit"));
+			e.addValue(e, _("qu/s") , "1");
+			e.addValue(e, _("m/s")  , "2");
+			e.addValue(e, _("km/h") , "3");
+			e.addValue(e, _("mph")  , "4");
+			e.addValue(e, _("knots"), "5");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));

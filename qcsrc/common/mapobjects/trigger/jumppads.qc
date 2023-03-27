@@ -69,7 +69,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 		and ti.
 	 */
 
-	// push him so high...
+	// push them so high...
 	vz = sqrt(fabs(2 * grav * jumpheight)); // NOTE: sqrt(positive)!
 
 	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
@@ -135,11 +135,8 @@ bool jumppad_push(entity this, entity targ)
 
 	vector org = targ.origin;
 
-	if(STAT(Q3COMPAT))
-	{
-		org.z += targ.mins_z;
-		org.z += 1; // off by 1!
-	}
+	if(Q3COMPAT_COMMON || this.spawnflags & PUSH_STATIC)
+		org = (this.absmin + this.absmax) * 0.5;
 
 	if(this.enemy)
 	{

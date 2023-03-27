@@ -342,18 +342,18 @@ METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(actor.bot_primary_fireballmooth == 0)
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false, false))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
-            if(random() < 0.02) actor.bot_primary_fireballmooth = 0;
+            if(random() < 0.02) actor.bot_primary_fireballmooth = 1;
         }
     }
     else
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true, false))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-            if(random() < 0.01) actor.bot_primary_fireballmooth = 1;
+            if(random() < 0.01) actor.bot_primary_fireballmooth = 0;
         }
     }
 }
@@ -413,14 +413,13 @@ METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         // firemine goes out silently
     }
     else
     {
-        org2 = w_org + w_backoff * 16;
+        vector org2 = w_org + w_backoff * 2;
         pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
         if(!w_issilent)
             sound(actor, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom

@@ -136,8 +136,8 @@ USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
 USING(textLengthUpToLength_lenFunction_t, float(string s));
 float textLengthUpToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
 string textShortenToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
-float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
-string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
+float textLengthUpToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
+string textShortenToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
 
 string getWrappedLine_remaining;
 string getWrappedLine(float w, vector size, textLengthUpToWidth_widthFunction_t tw);

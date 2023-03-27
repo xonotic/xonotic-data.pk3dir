@@ -356,6 +356,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	flag.angles = '0 0 0';
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.ctf_droptime = time;
+	flag.ctf_landtime = 0;
 	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
 
@@ -473,6 +474,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
+	flag.ctf_landtime = 0;
 
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
@@ -732,12 +734,9 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	if(flag.team)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(CTF_SAMETEAM(flag, it))
-			{
-				if(SAME_TEAM(player, it))
-					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
-				else
-					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
-			}
+				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
+			else if(DIFF_TEAM(player, it))
+				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_ENEMY_OTHER), Team_ColorCode(player.team), player.netname);
 		});
 
 	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
@@ -949,7 +948,7 @@ void ctf_FlagThink(entity this)
 				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 					if(tmp_entity.ctf_status == FLAG_DROPPED)
 					if(vdist(this.origin - tmp_entity.origin, <, autocvar_g_ctf_dropped_capture_radius))
-					if(time > tmp_entity.ctf_droptime + autocvar_g_ctf_dropped_capture_delay)
+					if((this.noalign || tmp_entity.ctf_landtime) && time > ((this.noalign) ? tmp_entity.ctf_droptime : tmp_entity.ctf_landtime) + autocvar_g_ctf_dropped_capture_delay)
 						ctf_Handle_Capture(this, tmp_entity, CAPTURE_DROPPED);
 			}
 			return;
@@ -958,6 +957,8 @@ void ctf_FlagThink(entity this)
 		case FLAG_DROPPED:
 		{
 			this.angles = '0 0 0'; // reset flag angles in case warpzones adjust it
+			if(IS_ONGROUND(this) && !this.ctf_landtime)
+				this.ctf_landtime = time; // landtime is reset when thrown, and we don't want to restart the timer if the flag is pushed
 
 			if(autocvar_g_ctf_flag_dropped_floatinwater)
 			{
@@ -1114,7 +1115,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 					ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the neutral flag
 			}
 			else if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, flag) && is_not_monster)
-				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
+				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to their base
 			else if(CTF_DIFFTEAM(toucher, flag) && (toucher.flagcarried) && CTF_SAMETEAM(toucher.flagcarried, toucher) && (!toucher.ctf_captureshielded) && autocvar_g_ctf_flag_return_carrying && (time > toucher.next_take_time) && is_not_monster)
 			{
 				ctf_Handle_Return(toucher.flagcarried, toucher); // return their current flag
@@ -1128,7 +1129,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 		case FLAG_DROPPED:
 		{
 			if(CTF_SAMETEAM(toucher, flag) && ctf_Immediate_Return_Allowed(flag, toucher))
-				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
+				ctf_Handle_Return(flag, toucher); // toucher just returned their own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
 			break;
@@ -1210,6 +1211,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = NULL;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
+	flag.ctf_landtime = 0;
 	flag.ctf_flagdamaged_byworld = false;
 	navigation_dynamicgoal_unset(flag);
 
@@ -1555,7 +1557,7 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 	{
 		if (head.ctf_status == FLAG_CARRY)
 		{
-			// adjust rating of our flag carrier depending on his health
+			// adjust rating of our flag carrier depending on their health
 			head = head.tag_entity;
 			float f = bound(0, (GetResource(head, RES_HEALTH) + GetResource(head, RES_ARMOR)) / 100, 2) - 1;
 			ratingscale += ratingscale * f * 0.1;
@@ -1753,7 +1755,7 @@ void havocbot_role_ctf_carrier(entity this)
 
 		entity goal = this.goalentity;
 		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
-			this.goalentity_lock_timeout = time + ((this.bot_aimtarg) ? 2 : 3);
+			this.goalentity_lock_timeout = time + ((this.enemy) ? 2 : 3);
 
 		if (goal)
 			this.havocbot_cantfindflag = time + 10;

@@ -45,16 +45,8 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 		// me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("qu/s")));
 			// setDependent(e, "hud_panel_physics_progressbar", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Speed unit:")));
-		me.TD(me, 1, 2.6/3*2, e = makeXonoticTextSlider("hud_panel_physics_speed_unit"));
-			e.addValue(e, _("qu/s") , "1");
-			e.addValue(e, _("m/s")  , "2");
-			e.addValue(e, _("km/h") , "3");
-			e.addValue(e, _("mph")  , "4");
-			e.addValue(e, _("knots"), "5");
-			e.configureXonoticTextSliderValues(e);
-		me.TD(me, 1, 2.6/3, e = makeXonoticCheckBox(0, "hud_panel_physics_speed_unit_show", _("Show")));
+		me.TDempty(me, 1);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_speed_unit_show", _("Show speed unit")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_physics_topspeed", _("Top speed")));
