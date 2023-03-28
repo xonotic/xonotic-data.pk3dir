@@ -611,7 +611,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
             WEP_CVAR(arc, beam_botaimspeed),
             0,
             WEP_CVAR(arc, beam_botaimlifetime),
-            false
+            false, true
         );
     }
     else
@@ -622,7 +622,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
             1000000,
             0,
             0.001,
-            false
+            false, true
         );
     }
 }
@@ -711,6 +711,13 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     }
     #endif
 }
+METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_ARC_SUICIDE_BOLT;
+    else
+    	return WEAPON_THINKING_WITH_PORTALS;
+}
 METHOD(Arc, wr_init, void(entity thiswep))
 {
     if(!arc_shotorigin[0])
@@ -788,8 +795,7 @@ METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
     if(w_deathtype & HITTYPE_SECONDARY)
     {
-        vector org2;
-        org2 = w_org + w_backoff * 6;
+        vector org2 = w_org + w_backoff * 2;
         pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
         if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
     }

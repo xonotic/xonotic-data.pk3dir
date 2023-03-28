@@ -442,7 +442,7 @@ vector decompressShortVector(int data)
 	float q	= (data & 0x0F80) / 0x80;
 	int len = (data & 0x007F);
 
-	//print("\ndecompress: p ", ftos(p)); print("q ", ftos(q)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p:", ftos(p)); print(" q:", ftos(q)); print(" len:", ftos(len), "\n");
 
 	if(p == 0)
 	{
@@ -455,7 +455,7 @@ vector decompressShortVector(int data)
 	}
 	else
 	{
-		q   = .19634954084936207740 * q;
+		q = .19634954084936207740 * q;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
 		out.x = cos(q) *  cos(p);
 		out.y = sin(q) *  cos(p);
@@ -491,10 +491,10 @@ float compressShortVector(vector vec)
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang.y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * 32 / 360) & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
-	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
+	//print("compressed: p:", ftos(p)); print(" y:", ftos(y)); print(" len:", ftos(len), "\n");
 
 	return (p * 0x1000) + (y * 0x80) + len;
 }
@@ -870,14 +870,14 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	return left;
 }
 
-float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t w)
+float textLengthUpToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t w)
 {
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
 	// DO NOT CALL THIS AT HOME.
 	// No really, don't.
-	if(w(theText) <= maxWidth)
+	if(w(theText) <= maxLength)
 		return strlen(theText); // yeah!
 
 	bool colors = (w("^7") == 0);
@@ -896,7 +896,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 			ofs = (!res.x) ? 0 : res.x - res.y;
 		}
 
-		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
+		if(w(substring(theText, 0, middle + ofs)) <= maxLength)
 			left = middle + ofs;
 		else
 			right = middle;
@@ -941,17 +941,17 @@ string find_last_color_code(string s)
 	return "";
 }
 
-string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
+string getWrappedLine(float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
 
-	if(w <= 0)
+	if(maxWidth <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	int take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	int take_until = textLengthUpToWidth(s, maxWidth, theFontSize, tw);
 	if(take_until > 0 && take_until < strlen(s))
 	{
 		int last_word = take_until - 1;
@@ -979,17 +979,17 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	}
 }
 
-string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
+string getWrappedLineLen(int maxLength, textLengthUpToLength_lenFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
 
-	if(w <= 0)
+	if(maxLength <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
-	int take_until = textLengthUpToLength(s, w, tw);
+	int take_until = textLengthUpToLength(s, maxLength, tw);
 	if(take_until > 0 && take_until < strlen(s))
 	{
 		int last_word = take_until - 1;

@@ -12,6 +12,26 @@ bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_items;
 bool autocvar_g_lms_regenerate;
+int autocvar_g_lms_leader_lives_diff = 2;
+float autocvar_g_lms_leader_minpercent = 0.5;
+float autocvar_g_lms_leader_wp_interval = 25;
+float autocvar_g_lms_leader_wp_interval_jitter = 10;
+float autocvar_g_lms_leader_wp_time = 5;
+float autocvar_g_lms_dynamic_respawn_delay = 1;
+float autocvar_g_lms_dynamic_respawn_delay_base = 2;
+float autocvar_g_lms_dynamic_respawn_delay_increase = 3;
+float autocvar_g_lms_dynamic_respawn_delay_max = 20;
+bool autocvar_g_lms_dynamic_vampire = 1;
+float autocvar_g_lms_dynamic_vampire_factor_base = 0.1;
+float autocvar_g_lms_dynamic_vampire_factor_increase = 0.1;
+float autocvar_g_lms_dynamic_vampire_factor_max = 0.5;
+int autocvar_g_lms_dynamic_vampire_min_lives_diff = 2;
+
+.float lms_leader;
+int lms_leaders;
+float lms_visible_leaders_time;
+bool lms_visible_leaders = true; // triggers lms_visible_leaders_time update in the first frame
+bool lms_visible_leaders_prev;
 bool autocvar_g_lms_rot;
 
 // main functions
@@ -77,13 +97,13 @@ int WinningCondition_LMS()
 			// exactly one player?
 
 			ClearWinners();
-			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
 
 			if (LMS_NewPlayerLives())
 			{
 				if (totalplayed && game_starttime > 0 && time > game_starttime + autocvar_g_lms_forfeit_min_match_time) // give players time to join
 				{
 					GameRules_scoring_add(first_player, LMS_RANK, 1);
+					first_player.winning = 1;
 					return WINNING_YES;
 				}
 				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
@@ -92,8 +112,9 @@ int WinningCondition_LMS()
 			else
 			{
 				// a winner!
-				// and assign him his first place
+				// and assign them their first place
 				GameRules_scoring_add(first_player, LMS_RANK, 1);
+				first_player.winning = 1;
 				return WINNING_YES;
 			}
 		}
@@ -133,6 +154,65 @@ int WinningCondition_LMS()
 	return WINNING_NO;
 }
 
+// runs on waypoints which are attached to leaders, updates once per frame
+bool lms_waypointsprite_visible_for_player(entity this, entity player, entity view)
+{
+	if(view.lms_leader)
+		if(IS_SPEC(player))
+			return false; // we don't want spectators of leaders to see the attached waypoint on the top of their screen
+
+	if (!lms_visible_leaders)
+		return false;
+
+	return true;
+}
+
+int lms_leaders_lives_diff;
+void lms_UpdateLeaders()
+{
+	int max_lives = 0;
+	int pl_cnt = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives > max_lives)
+			max_lives = lives;
+		pl_cnt++;
+	});
+
+	int second_max_lives = 0;
+	int pl_cnt_with_max_lives = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives == max_lives)
+			pl_cnt_with_max_lives++;
+		else if (lives > second_max_lives)
+			second_max_lives = lives;
+	});
+
+	lms_leaders_lives_diff = max_lives - second_max_lives;
+
+	int lives_diff = autocvar_g_lms_leader_lives_diff;
+	if (lms_leaders_lives_diff >= lives_diff && pl_cnt_with_max_lives <= pl_cnt * autocvar_g_lms_leader_minpercent)
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+			int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+			if (lives == max_lives)
+			{
+				if (!it.lms_leader)
+					it.lms_leader = true;
+			}
+			else
+			{
+				it.lms_leader = false;
+			}
+		});
+	else
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+			if (it.waypointsprite_attachedforcarrier)
+				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
+			it.lms_leader = false;
+		});
+}
+
 // mutator hooks
 MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
@@ -162,6 +242,9 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 
 		TRANSMUTE(Player, it);
 		PutClientInServer(it);
+		it.lms_leader = false;
+		if (it.waypointsprite_attachedforcarrier)
+			WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 	});
 }
 
@@ -256,20 +339,6 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, PlayerDies)
-{
-	entity frag_target = M_ARGV(2, entity);
-
-	float tl = GameRules_scoring_add(frag_target, LMS_LIVES, 0);
-	if (tl <= 0)
-	{
-		frag_target.respawn_flags = RESPAWN_SILENT;
-		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
-		frag_target.respawn_time = time + 2;
-	}
-	frag_target.respawn_flags |= RESPAWN_FORCE;
-}
-
 void lms_RemovePlayer(entity player)
 {
 	if (warmup_stage || time < game_starttime)
@@ -313,6 +382,8 @@ void lms_RemovePlayer(entity player)
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			TRANSMUTE(Observer, player);
 		}
+		if (autocvar_g_lms_leader_lives_diff > 0)
+			lms_UpdateLeaders();
 	}
 
 	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
@@ -370,8 +441,62 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
+	// recycled REDALIVE and BLUEALIVE to avoid adding a dedicated stat
+	STAT(REDALIVE, player) = lms_leaders;
+	STAT(BLUEALIVE, player) = lms_leaders_lives_diff;
+
 	if(player.deadflag == DEAD_DYING)
 		player.deadflag = DEAD_RESPAWNING;
+}
+
+MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
+{
+	if (intermission_running)
+		return;
+
+	lms_leaders = 0;
+	FOREACH_CLIENT(true, {
+		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME && it.lms_leader)
+			lms_leaders++;
+	});
+
+	float leader_time = autocvar_g_lms_leader_wp_time;
+	float leader_interval = leader_time + autocvar_g_lms_leader_wp_interval;
+	lms_visible_leaders_prev = lms_visible_leaders;
+	lms_visible_leaders = (lms_leaders && time > lms_visible_leaders_time && time < lms_visible_leaders_time + leader_time);
+	if (!lms_leaders || (lms_visible_leaders_prev && !lms_visible_leaders))
+		lms_visible_leaders_time = time + leader_interval + random() * autocvar_g_lms_leader_wp_interval_jitter;
+
+	FOREACH_CLIENT(true, {
+		STAT(OBJECTIVE_STATUS, it) = lms_visible_leaders;
+		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+		{
+			if (it.lms_leader)
+			{
+				if (!it.waypointsprite_attachedforcarrier)
+				{
+					WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
+					it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
+					WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+					vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
+					WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
+					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+				}
+				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
+			}
+			else // if (!it.lms_leader)
+			{
+				if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+				{
+					if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
+						Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_OTHER);
+				}
+				if (it.waypointsprite_attachedforcarrier)
+					WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
+			}
+		}
+	});
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
@@ -383,9 +508,89 @@ MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
 	return (!autocvar_g_lms_regenerate && !autocvar_g_lms_rot);
 }
 
+MUTATOR_HOOKFUNCTION(lms, PlayerPowerups)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.waypointsprite_attachedforcarrier)
+		player.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+	else
+		player.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+}
+
 MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 {
 	// forbode!
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(lms, Damage_Calculate)
+{
+	if (!autocvar_g_lms_dynamic_vampire)
+		return;
+
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+
+	if (IS_PLAYER(frag_attacker) && !IS_DEAD(frag_attacker)
+		&& IS_PLAYER(frag_target) && !IS_DEAD(frag_target) && frag_attacker != frag_target)
+	{
+		float vampire_factor = 0;
+
+		int frag_attacker_lives = GameRules_scoring_add(frag_attacker, LMS_LIVES, 0);
+		int frag_target_lives = GameRules_scoring_add(frag_target, LMS_LIVES, 0);
+		int diff = frag_target_lives - frag_attacker_lives - autocvar_g_lms_dynamic_vampire_min_lives_diff;
+
+		if (diff >= 0)
+			vampire_factor = autocvar_g_lms_dynamic_vampire_factor_base + diff * autocvar_g_lms_dynamic_vampire_factor_increase;
+		if (vampire_factor > 0)
+		{
+			vampire_factor = min(vampire_factor, autocvar_g_lms_dynamic_vampire_factor_max);
+			SetResourceExplicit(frag_attacker, RES_HEALTH,
+				min(GetResource(frag_attacker, RES_HEALTH) + frag_damage * vampire_factor, start_health));
+		}
+	}
+}
+
+MUTATOR_HOOKFUNCTION(lms, PlayerDied)
+{
+	if (!warmup_stage && autocvar_g_lms_leader_lives_diff > 0)
+		lms_UpdateLeaders();
+}
+
+MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
+{
+	entity player = M_ARGV(0, entity);
+	player.respawn_flags |= RESPAWN_FORCE;
+
+	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+	if (pl_lives <= 0)
+	{
+		player.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		player.respawn_time = time + 2;
+		return true;
+	}
+
+	if (autocvar_g_lms_dynamic_respawn_delay <= 0)
+		return false;
+
+	int max_lives = 0;
+	int pl_cnt = 0;
+	FOREACH_CLIENT(it != player && IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives > max_lives)
+			max_lives = lives;
+		pl_cnt++;
+	});
+
+	// min delay with only 2 players
+	if (pl_cnt == 1) // player wasn't counted
+		max_lives = 0;
+
+	float dlay = autocvar_g_lms_dynamic_respawn_delay_base +
+		autocvar_g_lms_dynamic_respawn_delay_increase * max(0, max_lives - pl_lives);
+	player.respawn_time = time + min(autocvar_g_lms_dynamic_respawn_delay_max, dlay);
 	return true;
 }
 
@@ -469,10 +674,9 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 	entity e = spawn();
 	setthink(e, lms_extralife);
 
+	Item_CopyFields(ent, e);
+
 	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
 	return true;
 }

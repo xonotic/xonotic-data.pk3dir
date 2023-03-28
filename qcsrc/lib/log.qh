@@ -91,10 +91,14 @@ string(string, string...) strcat1n = #115;
 		if (autocvar_developer > 1) dprint(msg); \
 	MACRO_END
 
-// simpler version for help messages
+// same as LOG_INFO but without any debug information that bloats console output and compiled program files
 #define  LOG_HELP(...) _LOG_HELP(strcat1n(__VA_ARGS__))
 #define  LOG_HELPF(...) _LOG_HELP(sprintf(__VA_ARGS__))
-#define _LOG_HELP(s) print("^7", s, "\n")
+#define _LOG_HELP(s) \
+	MACRO_BEGIN \
+		string __s = s; \
+		print("^7", __s, (str2chr(__s, strlen(__s) - 1) != '\n') ? "\n" : ""); \
+	MACRO_END
 
 // TODO: this sucks, lets find a better way to do backtraces?
 #define _backtrace() builtin_remove(NULL)

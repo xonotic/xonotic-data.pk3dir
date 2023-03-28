@@ -100,6 +100,10 @@ void CSQC_Init()
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
+	if (cvar_type("_scoreboard_team_selection_available") & CVAR_TYPEFLAG_EXISTS)
+		cvar_settemp("_scoreboard_team_selection_available", "1");
+	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
+
 	gametype = NULL;
 
 	postinit = false;
@@ -125,7 +129,6 @@ void CSQC_Init()
 	{
 		get_mi_min_max_texcoords(1); // try the CLEVER way first
 		minimapname = strcat("gfx/", mi_shortname, "_radar");
-		shortmapname = mi_shortname;
 
 		if (precache_pic(minimapname) == "")
 		{
@@ -450,6 +453,19 @@ void PostInit()
 	postinit = true;
 }
 
+void Release_Common_Keys()
+{
+	localcmd("-fire\n");
+	localcmd("-fire2\n");
+	localcmd("-use\n");
+	localcmd("-hook\n");
+	localcmd("-jump\n");
+	localcmd("-forward\n");
+	localcmd("-back\n");
+	localcmd("-moveleft\n");
+	localcmd("-moveright\n");
+}
+
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.
@@ -461,6 +477,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
 	bool override = false;
+
+	override |= HUD_Scoreboard_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
 
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
 	if (override)
@@ -489,16 +509,24 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
 	}
 
+	// NOTE: Shift-Escape must be filtered out because it's the hardcoded console shortcut
 	if (nPrimary == K_ESCAPE && !(hudShiftState & S_SHIFT) && key_pressed)
 	{
-		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		if (hudShiftState & S_TAB)
+		{
+			Scoreboard_UI_Enable(0);
+			return true;
+		}
+		if (autocvar_menu_gamemenu && !isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
 			return true;
@@ -629,6 +657,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{
@@ -680,7 +709,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
 	make_pure(this);
-	int i, j, b, f;
 
 	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
@@ -707,20 +735,11 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		strcpy(vote_called_vote, ReadString());
 	}
 
-	if(nags & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
-				playerslots[j].ready = true;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].ready = false;
-		}
-	}
+	if(nags & BIT(0))
+		for(int i = 0; i < maxclients;)
+			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
+				if(playerslots[i])
+					playerslots[i].ready = f & BIT(b);
 
 	return = true;
 
@@ -1225,11 +1244,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_server_record = ReadInt24_t();
 			break;
 		case RACE_NET_SPEED_AWARD:
-			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward = ReadInt24_t();
 			strcpy(race_speedaward_holder, ReadString());
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
-			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward_alltimebest = ReadInt24_t();
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
 			break;
 		case RACE_NET_RANKINGS_CNT:
@@ -1375,7 +1394,7 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	bool campaign = ReadByte();
+	campaign = ReadByte();
 	if (campaign)
 	{
 		string campaign_title = ReadString();
@@ -1394,36 +1413,57 @@ bool net_handle_ServerWelcome()
 		return true;
 	}
 
-	welcome_msg_force_centerprint = ReadByte();
 	strcpy(hostname, ReadString());
-
 	string hostversion = ReadString();
 	bool version_mismatch = ReadByte();
 	bool version_check = ReadByte();
-	string ver = GetVersionMessage(hostversion, version_mismatch, version_check);
-
+	srv_minplayers = ReadByte();
+	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
 	string weaponarena_list = translate_weaponarena(ReadString());
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 
-	string msg = "";
-	msg = strcat(msg, ver);
-	msg = strcat(msg, "^8\n\n", strcat(_("Gametype:"), " ^1", MapInfo_Type_ToText(gametype)), "^8\n");
+	string msg = GetVersionMessage(hostversion, version_mismatch, version_check);
+
+	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
+
+	msg = strcat(msg, "\n", _("Map:"), " ^2");
+	if (world.message == "")
+		msg = strcat(msg, mi_shortname, "\n");
+	else
+	{
+		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
+		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
+		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
+	}
+
+	if (srv_minplayers || srv_maxplayers)
+	{
+		msg = strcat(msg, "\n", _("This match supports"), " ^5");
+		if (srv_minplayers == srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d players"), srv_maxplayers), "\n");
+		else if (srv_minplayers && srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d to %d players"), srv_minplayers, srv_maxplayers), "\n");
+		else if (srv_maxplayers)
+			msg = strcat(msg, sprintf(_("%d players maximum"), srv_maxplayers), "\n");
+		else
+			msg = strcat(msg, sprintf(_("%d players minimum"), srv_minplayers), "\n");
+	}
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
 	if(modifications != "")
-		msg = strcat(msg, "^8\n", _("Active modifications:"), " ^3", modifications, "^8\n");
+		msg = strcat(msg, "\n", _("Active modifications:"), " ^3", modifications, "\n");
 
 	if (cache_mutatormsg != "")
-		msg = strcat(msg, "\n\n^8", _("Special gameplay tips:"), " ^7", cache_mutatormsg);
+		msg = strcat(msg, "\n", _("Special gameplay tips:"), " ^7", cache_mutatormsg, "\n");
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
 	mutator_msg = M_ARGV(0, string);
 	msg = strcat(msg, mutator_msg); // trust that the mutator will do proper formatting
 
 	if (motd != "")
-		msg = strcat(msg, "\n\n^8", _("MOTD:"), " ^7", motd);
+		msg = strcat(msg, "\n^9↓ ", _("Server's message"), " ↓\n", motd);
 
 	strcpy(welcome_msg, msg);
 	welcome_msg_menu_check_maxtime = time + 1; // wait for menu to load before showing the welcome dialog
@@ -1435,21 +1475,35 @@ void Welcome_Message_Show_Try()
 	if (!welcome_msg_menu_check_maxtime)
 		return;
 
-	bool want_dialog = (!welcome_msg_force_centerprint && !isdemo() && autocvar_cl_welcome_in_menu_dialog);
 	// if want dialog check if menu is initialized but for a short time
-	if (!want_dialog || cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
+	if (cvar("_menu_initialized") == 2 || time > welcome_msg_menu_check_maxtime)
 	{
-		if (want_dialog && cvar("_menu_welcome_dialog_available"))
+		if (cvar("_menu_welcome_dialog_available"))
 		{
 			string welcomedialog_args = strcat("HOSTNAME \"", hostname, "\"");
 			string msg = MakeConsoleSafe(strreplace("\n", "\\n", welcome_msg));
 			welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
-			localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-			if (intermission) // close it after it's been initialized so it can still be opened manually
-				localcmd("\ntogglemenu 0\n");
+
+			if (intermission || isdemo() || !autocvar_cl_welcome)
+			{
+				if (cvar("_menu_cmd_closemenu_available"))
+				{
+					// initialize the dialog without opening it
+					localcmd("\nmenu_cmd closemenu Welcome ", welcomedialog_args, "\n");
+				}
+				else
+				{
+					// legacy code for clients with old menus
+					// since togglemenu 0 doesn't close the dialog but only hides it,
+					// playing back a demo the Welcome dialog will pop up on the first ESC press
+					localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+					// close it after it's been initialized so it can still be opened manually
+					localcmd("\ntogglemenu 0\n");
+				}
+			}
+			else
+				localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		}
-		else
-			centerprint_Add(ORDINAL(CPID_MOTD), strcat(hostname, "\n\n\n", welcome_msg), -1, 0);
 
 		strfree(welcome_msg);
 		welcome_msg_menu_check_maxtime = 0;

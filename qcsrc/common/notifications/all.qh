@@ -62,7 +62,6 @@ ENUMCLASS(CPID)
 	CASE(CPID, MISSING_TEAMS)
 	CASE(CPID, MISSING_PLAYERS)
 	CASE(CPID, INSTAGIB_FINDAMMO)
-	CASE(CPID, MOTD)
 	CASE(CPID, NIX)
 	CASE(CPID, ONSLAUGHT)
 	CASE(CPID, ONS_CAPSHIELD)
@@ -124,7 +123,8 @@ void Create_Notification_Entity_Annce(entity notif,
 										float channel,
 										string snd,
 										float vol,
-										float position);
+										float position,
+										float queuetime);
 
 void Create_Notification_Entity_InfoCenter(entity notif,
 											float var_cvar,
@@ -385,6 +385,18 @@ const float NOTIF_MAX_ARGS = 7;
 const float NOTIF_MAX_HUDARGS = 2;
 const float NOTIF_MAX_DURCNT = 2;
 
+#ifdef CSQC
+const int NOTIF_QUEUE_MAX = 10;
+entity notif_queue_entity[NOTIF_QUEUE_MAX];
+MSG notif_queue_type[NOTIF_QUEUE_MAX];
+float notif_queue_time[NOTIF_QUEUE_MAX];
+
+float notif_queue_next_time;
+int notif_queue_length;
+
+void Local_Notification_Queue_Process();
+#endif
+
 string arg_slot[NOTIF_MAX_ARGS];
 
 const float ARG_CS_SV_HA = 1; // enabled on CSQC, SVQC, and Hudargs
@@ -644,7 +656,7 @@ string notif_arg_item_wepammo(float f1, float f2)
 		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 		default: return ""; // doesn't use ammo
 	}
-	return sprintf(_(" with %d %s"), f2, ammoitems);
+	return sprintf(_(" with %d %s"), f2, strtolower(ammoitems));
 }
 
 
@@ -666,6 +678,7 @@ string notif_arg_item_wepammo(float f1, float f2)
 .string nent_snd;
 .float nent_vol;
 .float nent_position;
+.float nent_queuetime;
 
 // MSG_INFO and MSG_CENTER entity values
 .string nent_args; // used by both
@@ -744,21 +757,22 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	return it;
 }
 
-#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position) \
-	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, defaultvalue, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position, queuetime) \
+	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, defaultvalue, sound, channel, volume, position, queuetime)
 
-#define MSG_ANNCE_NOTIF(name, defaultvalue, sound, channel, volume, position) \
+#define MSG_ANNCE_NOTIF(name, defaultvalue, sound, channel, volume, position, queuetime) \
 	NOTIF_ADD_AUTOCVAR(ANNCE_##name, defaultvalue) \
-	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, defaultvalue, sound, channel, volume, position)
+	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, defaultvalue, sound, channel, volume, position, queuetime)
 
-#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position) \
+#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position, queuetime) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_annce_notification)) { \
 		Create_Notification_Entity      (this, defaultvalue, ACVNN(cvarname), MSG_ANNCE, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_Annce(this, ACVNN(cvarname), strtoupper(#name), \
-			channel,   /* channel  */ \
-			sound,     /* snd      */ \
-			volume,    /* vol      */ \
-			position); /* position */ \
+			channel,    /* channel   */ \
+			sound,      /* snd       */ \
+			volume,     /* vol       */ \
+			position,   /* position  */ \
+			queuetime); /* queuetime */ \
 	}
 
 #define MSG_INFO_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle) \

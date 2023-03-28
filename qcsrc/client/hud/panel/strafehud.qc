@@ -158,9 +158,9 @@ void HUD_StrafeHUD()
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : STRAFEHUD_MODE_VIEW_CENTERED;
-        float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_panel_strafehud_unit);
-        float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_panel_strafehud_unit);
-        int    length_decimals               = autocvar_hud_panel_strafehud_unit >= 3 && autocvar_hud_panel_strafehud_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
+        float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+        float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_speed_unit);
+        int    length_decimals               = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
         float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
         float  minspeed;
         float  shift_offset                  = 0;
@@ -1021,7 +1021,7 @@ void HUD_StrafeHUD()
                 float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
                 string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
                 if(autocvar_hud_panel_strafehud_unit_show)
-                    startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
+                    startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_speed_unit));
 
                 if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
                     text_offset_bottom += startspeed_height;
@@ -1057,7 +1057,7 @@ void HUD_StrafeHUD()
                 float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
                 string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
                 if(autocvar_hud_panel_strafehud_unit_show)
-                    jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
+                    jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_speed_unit));
 
                 if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
                     text_offset_top += jumpheight_height;

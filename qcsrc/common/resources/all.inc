@@ -17,6 +17,9 @@ CLASS(AmmoResource, Resource)
 #endif
 ENDCLASS(AmmoResource)
 
+// NOTE: ammo resource registration order should match ammo (item) registration order
+// see REGISTER_ITEM calls order
+
 REGISTER_RESOURCE(SHELLS, NEW(AmmoResource)) {
 	this.netname = "shells";
 #ifdef GAMEQC

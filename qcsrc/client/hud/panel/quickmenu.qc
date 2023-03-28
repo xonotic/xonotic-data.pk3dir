@@ -45,6 +45,20 @@ float QuickMenu_TimeOut;
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
+#define QUICKMENU_ENTRY(title,command) { \
+	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
+	{ \
+		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
+		++QuickMenu_Buffer_Size; \
+		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
+	} \
+	++QuickMenu_Buffer_Size; \
+}
+
+// special entries are shown with a different color
+#define QUICKMENU_ENTRY_SPECIAL(title, command) QUICKMENU_ENTRY(title, strcat("\n", command))
+
+
 void QuickMenu_TimeOut_Set()
 {
 	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
@@ -70,6 +84,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()
 		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));
@@ -91,6 +106,15 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 			mode = "default";
 		else
 			mode = "file";
+	}
+
+	if(mode == "default")
+	{
+		if (autocvar_hud_panel_quickmenu_server_is_default && autocvar__hud_panel_quickmenu_file_from_server != "")
+		{
+			mode = "file";
+			file = autocvar__hud_panel_quickmenu_file_from_server;
+		}
 	}
 
 	if(mode == "file")
@@ -170,6 +194,13 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 			++QuickMenu_Buffer_Size;
 		}
 		fclose(fh);
+
+		// forcedly add this entry
+		if (autocvar_hud_panel_quickmenu_server_is_default && autocvar__hud_panel_quickmenu_file_from_server != "")
+		{
+			string prev_value = cvar_string("hud_panel_quickmenu_server_is_default");
+			QUICKMENU_ENTRY_SPECIAL(_("Standard quick menu"), sprintf("hud_panel_quickmenu_server_is_default 0; quickmenu; wait; quickmenu; wait; hud_panel_quickmenu_server_is_default \"%s\"", prev_value))
+		}
 	}
 	else
 	{
@@ -192,12 +223,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	mouseClicked = 0;
 	hudShiftState = 0;
 
-	// we must unset the player's buttons, as they aren't released elsewhere
-	localcmd("-fire\n");
-	localcmd("-fire2\n");
-	localcmd("-use\n");
-	localcmd("-hook\n");
-	localcmd("-jump\n");
+	Release_Common_Keys();
 
 	QuickMenu_TimeOut_Set();
 	return true;
@@ -651,7 +677,10 @@ void HUD_QuickMenu()
 			color = "^4";
 		else
 		{
-			color = "^3";
+			if (substring(QuickMenu_Page_Command[i], 0, 1) == "\n")
+				color = "^6"; // special command
+			else
+				color = "^3";
 			if(QuickMenu_Page_Command_Type[i] == 1) // toggle command
 			{
 				int end = strstrofs(QuickMenu_Page_Command[i], ";", 0);
@@ -717,16 +746,6 @@ void HUD_QuickMenu()
 		QuickMenu_Buffer_Size = 0; /* enable load of next entries */ \
 		target_submenu_found = true; \
 	} \
-}
-
-#define QUICKMENU_ENTRY(title,command) { \
-	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
-	{ \
-		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
-		++QuickMenu_Buffer_Size; \
-		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
-	} \
-	++QuickMenu_Buffer_Size; \
 }
 
 #define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
@@ -871,6 +890,19 @@ void QuickMenu_Default(string target_submenu)
 		if(teamplay)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
+
+	if (autocvar__hud_panel_quickmenu_file_from_server != "")
+	{
+	string entry_name = _("Server quick menu");
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = _("Waypoint editor menu");
+	QUICKMENU_ENTRY_SPECIAL(entry_name, "quickmenu; wait; quickmenu \"\" \"\" $_hud_panel_quickmenu_file_from_server")
+	if (autocvar__hud_panel_quickmenu_file_from_server == "wpeditor.txt")
+		entry_name = _("Waypoint editor menu as default");
+	else
+		entry_name = _("Server quick menu as default");
+	QUICKMENU_ENTRY(entry_name, "toggle hud_panel_quickmenu_server_is_default")
+	}
 
 	if(spectatee_status != 0)
 	{

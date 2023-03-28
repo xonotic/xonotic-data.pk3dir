@@ -92,6 +92,7 @@ vector autocvar_cl_eventchase_viewoffset = '0 0 20';
 string autocvar__togglezoom;
 int autocvar_cl_nade_timer;
 bool autocvar_r_drawviewmodel;
+vector autocvar_cl_gunoffset;
 
 void calc_followmodel_ofs(entity view);
 
