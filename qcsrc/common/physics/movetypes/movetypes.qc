@@ -331,12 +331,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	return blockedflag;
 }
 
-void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
-{
-	// if(vlen(this.velocity) < 0.0001)
-	// this.velocity = '0 0 0';
-}
-
 bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 {
 	vector point = this.origin;
@@ -779,11 +773,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 	}
 
-	//_Movetype_CheckVelocity(this);
-
 	_Movetype_LinkEdict(this, true);
-
-	//_Movetype_CheckVelocity(this);
 }
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame

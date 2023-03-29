@@ -11,8 +11,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));
 
-	_Movetype_CheckVelocity(this);
-
 	// do a regular slide move unless it looks like you ran into a step
 	bool oldonground = IS_ONGROUND(this);
 
@@ -62,7 +60,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
 		this.pm_time = 0.25;
 
-	_Movetype_CheckVelocity(this);
 	_Movetype_LinkEdict(this, true);
 
 	if (clip & 8)  // teleport
@@ -123,7 +120,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			return;
 		}
 
-		_Movetype_CheckVelocity(this);
 		_Movetype_LinkEdict(this, true);
 
 		// check for stuckness, possibly due to the limited precision of floats
@@ -190,6 +186,5 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.groundentity = originalmove_groundentity;
 	}
 
-	_Movetype_CheckVelocity(this);
 	_Movetype_LinkEdict(this, true);
 }
