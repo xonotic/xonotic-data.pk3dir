@@ -235,8 +235,8 @@ ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NO
 		}
 
 		// always send origin of players even if they stand still otherwise
-		// if a teammate isn't in my pvs and his health (or view angle or name
-		// etc...) changes then his tag disappears
+		// if a teammate isn't in my pvs and their health (or view angle or name
+		// etc...) changes then their tag disappears
 		if (IS_PLAYER(this.owner))
 			this.SendFlags |= BIT(ENTCS_PROP_ORIGIN_id);
 

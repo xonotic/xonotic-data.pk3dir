@@ -77,6 +77,13 @@ ACCUMULATE void ONREMOVE(entity this) {}
     /* this = NULL; */  \
 MACRO_END
 
+void IL_REMOVE_RAW(entity it);
+void copyentity_qc(entity src, entity dst)
+{
+	copyentity(src, dst); // builtin function
+	IL_REMOVE_RAW(dst);
+}
+
 entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
@@ -88,7 +95,7 @@ void clearentity(entity e)
 		int n = e.entnum;
 #endif
 	bool was_pure = is_pure(e);
-	copyentity(_clearentity_ent, e);
+	copyentity_qc(_clearentity_ent, e);
 	if (!was_pure) make_impure(e);
 #ifdef CSQC
 		e.entnum = n;
@@ -175,7 +182,7 @@ void clearentity(entity e)
 	{                                                                                              \
 		if (cname##_vtbl && !this.transmute)                                                       \
 		{                                                                                          \
-			copyentity(cname##_vtbl, this);                                                        \
+			copyentity_qc(cname##_vtbl, this);                                                     \
 			return;                                                                                \
 		}                                                                                          \
 		spawn##base##_static(this);                                                                \

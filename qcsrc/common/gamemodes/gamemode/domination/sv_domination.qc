@@ -183,7 +183,7 @@ void dompointthink(entity this)
 		TeamScore_AddToTeam(this.goalentity.team, ST_SCORE, fragamt);
 		TeamScore_AddToTeam(this.goalentity.team, ST_DOM_TICKS, fragamt);
 
-		// give credit to the individual player, if he is still there
+		// give credit to the individual player, if they are still there
 		if (this.enemy.playerid == this.enemy_playerid)
 		{
 			GameRules_scoring_add(this.enemy, SCORE, fragamt);

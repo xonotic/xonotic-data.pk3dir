@@ -37,13 +37,16 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		vector upmove = this.origin + '0 0 1';
 		vector downmove = this.origin - '0 0 1';
 		int type;
-		if (this.move_movetype == MOVETYPE_FLYMISSILE)
+		if (this.move_nomonsters)
+			type = max(0, this.move_nomonsters);
+		else if (this.move_movetype == MOVETYPE_FLYMISSILE)
 			type = MOVE_MISSILE;
 		else if (this.move_movetype == MOVETYPE_FLY_WORLDONLY)
 			type = MOVE_WORLDONLY;
 		else if (this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT)
 			type = MOVE_NOMONSTERS;
-		else type = MOVE_NORMAL;
+		else
+			type = MOVE_NORMAL;
 		tracebox(upmove, this.mins, this.maxs, downmove, type, this);
 		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
 		{
@@ -103,7 +106,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// move up
 		vector upmove = '0 0 1' * PHYS_STEPHEIGHT(this);
-		if(!_Movetype_PushEntity(this, upmove, true, true))
+		if(!_Movetype_PushEntity(this, upmove, true))
 		{
 			// we got teleported when upstepping... must abort the move
 			return;
@@ -157,7 +160,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	// move down
 	vector downmove = '0 0 0';
 	downmove.z = -PHYS_STEPHEIGHT(this) + start_velocity.z * dt;
-	if(!_Movetype_PushEntity(this, downmove, true, true))
+	if(!_Movetype_PushEntity(this, downmove, true))
 	{
 		// we got teleported when downstepping... must abort the move
 		return;
