@@ -1086,9 +1086,9 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 		case SP_CTS_AVGSPEED:
 		case SP_CTS_TOPSPEED:
 		{
-			float speed = pl.(scores(field)) * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			float speed = pl.(scores(field)) * GetSpeedUnitFactor(autocvar_hud_speed_unit);
 			if(speed < 0) return "";
-			return sprintf("%d%s", speed, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
+			return sprintf("%d%s", speed, GetSpeedUnit(autocvar_hud_speed_unit));
 		}
 
 		default: case SP_SCORE:
