@@ -57,9 +57,9 @@ CLASS(TeamKeepaway, Gametype)
 ENDCLASS(TeamKeepaway)
 REGISTER_GAMETYPE(TEAM_KEEPAWAY, NEW(TeamKeepaway));
 
-const int TKA_BALL_TAKEN_RED			= BIT(0);
-const int TKA_BALL_TAKEN_BLUE			= BIT(1);
-const int TKA_BALL_TAKEN_YELLOW			= BIT(2);
-const int TKA_BALL_TAKEN_PINK			= BIT(3);
-const int TKA_BALL_CARRYING				= BIT(4);
-const int TKA_BALL_DROPPED				= BIT(5);
+const int TKA_BALL_TAKEN_RED            = BIT(0);
+const int TKA_BALL_TAKEN_BLUE           = BIT(1);
+const int TKA_BALL_TAKEN_YELLOW         = BIT(2);
+const int TKA_BALL_TAKEN_PINK           = BIT(3);
+const int TKA_BALL_CARRYING             = BIT(4);
+const int TKA_BALL_DROPPED              = BIT(5);
