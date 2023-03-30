@@ -551,8 +551,6 @@ void GameCommand(string command)
 // Please add client commands to the function above this, as this is only for special reasons.
 // NOTE: showaccuracy is kept as legacy command
 #define CONSOLE_COMMANDS_NORMAL() \
-	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
-	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
 	CONSOLE_COMMAND("+showaccuracy", { }) \
 	CONSOLE_COMMAND("-showaccuracy", { }) \
 	/* nothing */

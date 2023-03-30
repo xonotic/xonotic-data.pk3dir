@@ -82,7 +82,7 @@ void door_blocked(entity this, entity blocker)
 		}
 #endif
 	}
-	if (!reverse)
+	if (!reverse && this.classname == "door")
 		SUB_CalcMovePause(this);
 }
 
