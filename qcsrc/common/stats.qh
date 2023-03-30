@@ -356,6 +356,12 @@ bool autocvar_sv_slick_applygravity;
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 REGISTER_STAT(Q3COMPAT, int, q3compat)
+// FIXME: workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2812
+#ifdef SVQC
+	#define Q3COMPAT_COMMON q3compat
+#elif defined(CSQC)
+	#define Q3COMPAT_COMMON STAT(Q3COMPAT)
+#endif
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"

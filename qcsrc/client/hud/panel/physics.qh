@@ -14,7 +14,6 @@ int autocvar_hud_panel_physics_baralign;
 bool autocvar_hud_panel_physics_flip;
 bool autocvar_hud_panel_physics_dynamichud      = true;
 float autocvar_hud_panel_physics_speed_max;
-int autocvar_hud_panel_physics_speed_unit;
 bool autocvar_hud_panel_physics_speed_unit_show;
 bool autocvar_hud_panel_physics_speed_vertical;
 int autocvar_hud_panel_physics_text;
