@@ -1,5 +1,11 @@
 #pragma once
 
 
-#define TELEPORT_SPECTATOR BIT(0) // q3df compat, also useful in xonotic
-#define TELEPORT_KEEP_SPEED BIT(1) // q3df compat, also useful in xonotic
+// q3df compat spawnflags, they may also be useful in xonotic
+
+// trigger_teleport
+#define TELEPORT_SPECTATOR BIT(0) // exists in q3 but is only documented in q3df
+#define TELEPORT_KEEP_SPEED BIT(1)
+
+// target_teleporter
+#define TELEPORTER_KEEP_SPEED BIT(0)
