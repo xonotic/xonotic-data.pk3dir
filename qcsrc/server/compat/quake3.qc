@@ -258,7 +258,7 @@ spawnfunc(target_score)
 
 #define FRAGSFILTER_REMOVER BIT(0)
 #define FRAGSFILTER_RUNONCE BIT(1) // unused
-#define FRAGSFILTER_SILENT  BIT(2) // unused in xonotic
+#define FRAGSFILTER_SILENT  BIT(2)
 #define FRAGSFILTER_RESET   BIT(3)
 
 void fragsfilter_use(entity this, entity actor, entity trigger)
@@ -272,6 +272,12 @@ void fragsfilter_use(entity this, entity actor, entity trigger)
 		else if(this.spawnflags & FRAGSFILTER_REMOVER)
 			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
+	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
+	{
+		int req_frags = this.frags - actor.fragsfilter_cnt;
+		centerprint(actor, sprintf("%d more frag%s needed", req_frags, req_frags > 1 ? "s" : ""));
+		play2(actor, SND(TALK));
 	}
 }
 spawnfunc(target_fragsFilter)
