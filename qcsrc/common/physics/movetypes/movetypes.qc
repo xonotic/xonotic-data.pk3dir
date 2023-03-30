@@ -127,7 +127,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	int blockedflag = 0;
 	int numplanes = 0;
 	float time_left = dt, grav = 0;
-	vector push;
 	vector primal_velocity, original_velocity;
 	vector restore_velocity = this.velocity;
 
@@ -155,8 +154,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		if(this.velocity == '0 0 0')
 			break;
 
-		push = this.velocity * time_left;
-		if(!_Movetype_PushEntity(this, push, false))
+		if (!_Movetype_PushEntity(this, this.velocity * time_left, false))
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -200,39 +198,47 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		else if(stepheight)
 		{
 			// step - handle it immediately
-			vector org = this.origin;
-			vector steppush = vec3(0, 0, stepheight);
-			push = this.velocity * time_left;
+			vector prestep_org = this.origin;
 
-			if(!_Movetype_PushEntity(this, steppush, false))
+			if (!_Movetype_PushEntity(this, vec3(0, 0, stepheight), false))
 			{
 				blockedflag |= 8;
 				break;
 			}
-			if(!_Movetype_PushEntity(this, push, false))
+			if (!trace_fraction) // no room to step up
+				goto NoStep;
+			float pushdown = prestep_org.z - this.origin.z;
+
+			// gained some height, try to continue the move from this position
+			if (!_Movetype_PushEntity(this, this.velocity * time_left, false))
 			{
 				blockedflag |= 8;
 				break;
 			}
-			float trace2_fraction = trace_fraction;
-			steppush = vec3(0, 0, org.z - this.origin_z);
-			if(!_Movetype_PushEntity(this, steppush, false))
+			if (this.origin.x == prestep_org.x && this.origin.y == prestep_org.y) // no horizontal progress
+			{
+				my_trace_plane_normal = trace_plane_normal; // so the next move attempt could succeed
+				goto NoStep;
+			}
+			time_left *= 1 - trace_fraction;
+
+			// push down the final amount
+			if (!_Movetype_PushEntity(this, vec3(0, 0, pushdown), false))
 			{
 				blockedflag |= 8;
 				break;
 			}
 
-			// accept the new position if it made some progress...
-			// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
-			if(this.origin_x - org.x || this.origin_y - org.y)
-			{
-				trace_endpos = this.origin;
-				time_left *= 1 - trace2_fraction;
-				numplanes = 0;
-				continue;
-			}
-			else
-				this.origin = org;
+			if (time_left <= 0)
+				break;
+			// Hit a plane above the step, the pushdown may have cleared it
+			// or presented a different one, so try to move again before clipping velocity.
+			numplanes = 0;
+			continue;
+
+			LABEL(NoStep)
+			// failed to step up, velocity will be clipped to my_trace_plane_normal
+			this.origin = prestep_org;
 		}
 		else
 		{
