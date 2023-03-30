@@ -20,12 +20,7 @@ STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 .bool istypefrag;
 .float height;
 
-// maximum amount of jump pads which are allowed to push simultaneously
-#define MAX_PUSHED 16
-
-.entity has_pushed[MAX_PUSHED];
-IntrusiveList are_pushed;
-STATIC_INIT(are_pushed) { are_pushed = IL_NEW(); }
+.entity last_pushed;
 
 const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
