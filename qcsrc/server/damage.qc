@@ -902,9 +902,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			else
 				force = normalize(force);
 			if(forceintensity >= 0)
-				Damage_DamageInfo(inflictororigin, false, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
 			else
-				Damage_DamageInfo(inflictororigin, false, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 		}
 
 	stat_damagedone = 0;

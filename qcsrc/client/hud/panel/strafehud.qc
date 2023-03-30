@@ -158,9 +158,9 @@ void HUD_StrafeHUD()
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : STRAFEHUD_MODE_VIEW_CENTERED;
-        float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_panel_strafehud_unit);
-        float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_panel_strafehud_unit);
-        int    length_decimals               = autocvar_hud_panel_strafehud_unit >= 3 && autocvar_hud_panel_strafehud_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
+        float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+        float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_speed_unit);
+        int    length_decimals               = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2; // use more decimals when displaying km or miles
         float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
         float  minspeed;
         float  shift_offset                  = 0;
@@ -813,9 +813,9 @@ void HUD_StrafeHUD()
                 drawfill(panel_pos - eY * slickdetector_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 // bottom horizontal line
                 drawfill(panel_pos + eY * panel_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-
-                text_offset_top = text_offset_bottom = slickdetector_height;
             }
+
+            text_offset_top = text_offset_bottom = slickdetector_height;
         }
 
         if(autocvar_hud_panel_strafehud_direction && direction != STRAFEHUD_DIRECTION_NONE && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
@@ -954,6 +954,7 @@ void HUD_StrafeHUD()
             default:
                 // don't offset text and arrows if the angle indicator line isn't drawn
                 angleheight_offset = panel_size.y;
+                currentangle_size = '0 0 0';
         }
 
         float angle_offset_top = 0, angle_offset_bottom = 0;
@@ -968,15 +969,15 @@ void HUD_StrafeHUD()
             {
                 if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
                 {
-                    if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true);
-                    StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true);
+                    if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true, currentangle_size.x);
+                    StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true, currentangle_size.x);
 
                     angle_offset_top += arrow_size; // further offset the top text offset if the top arrow is drawn
                 }
                 if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
                 {
-                    if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false);
-                    StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false);
+                    if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE) StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset, arrow_size, autocvar_hud_panel_strafehud_bestangle_color, autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false, currentangle_size.x);
+                    StrafeHUD_drawStrafeArrow(panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset, arrow_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false, currentangle_size.x);
 
                     angle_offset_bottom += arrow_size; // further offset the bottom text offset if the bottom arrow is drawn
                 }
@@ -1020,7 +1021,7 @@ void HUD_StrafeHUD()
                 float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
                 string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
                 if(autocvar_hud_panel_strafehud_unit_show)
-                    startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_panel_strafehud_unit));
+                    startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_speed_unit));
 
                 if(StrafeHUD_drawTextIndicator(startspeed_text, startspeed_height, autocvar_hud_panel_strafehud_startspeed_color, autocvar_hud_panel_strafehud_startspeed_fade, starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM))
                     text_offset_bottom += startspeed_height;
@@ -1056,7 +1057,7 @@ void HUD_StrafeHUD()
                 float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
                 string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
                 if(autocvar_hud_panel_strafehud_unit_show)
-                    jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_panel_strafehud_unit));
+                    jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_speed_unit));
 
                 if(StrafeHUD_drawTextIndicator(jumpheight_text, jumpheight_height, autocvar_hud_panel_strafehud_jumpheight_color, autocvar_hud_panel_strafehud_jumpheight_fade, jumptime, text_offset_top, STRAFEHUD_TEXT_TOP))
                     text_offset_top += jumpheight_height;
@@ -1236,15 +1237,24 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 }
 
 // draw the strafe arrows (inspired by drawspritearrow() in common/mutators/mutator/waypoints/waypointsprites.qc)
-void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped)
+void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped, float connection_width)
 {
     origin = HUD_Shift(origin);
-    size = HUD_ScaleX(size);
-    if(flipped) origin -= size*eY;
+    float width = HUD_ScaleX(size * 2 + connection_width);
+    float height = HUD_ScaleY(size);
+    if(flipped) origin -= size * eY;
     R_BeginPolygon("", DRAWFLAG_NORMAL, true);
-    R_PolygonVertex(origin + (flipped ? size*eY : '0 0 0')          , '0 0 0', color, alpha);
-    R_PolygonVertex(origin + (flipped ? '0 0 0' : size*eY) - size*eX, '0 0 0', color, alpha);
-    R_PolygonVertex(origin + (flipped ? '0 0 0' : size*eY) + size*eX, '0 0 0', color, alpha);
+    if(connection_width > 0)
+    {
+        R_PolygonVertex(origin + (connection_width / 2 * eX) + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+        R_PolygonVertex(origin - (connection_width / 2 * eX) + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+    }
+    else
+    {
+        R_PolygonVertex(origin + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+    }
+    R_PolygonVertex(origin + (flipped ? '0 0 0' : height * eY) - (width / 2) * eX, '0 0 0', color, alpha);
+    R_PolygonVertex(origin + (flipped ? '0 0 0' : height * eY) + (width / 2) * eX, '0 0 0', color, alpha);
     R_EndPolygon();
 }
 

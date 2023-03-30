@@ -335,7 +335,7 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(bool dorespawn, bool is_fake_round_start)
+void reset_map(bool is_fake_round_start)
 {
 	if (time <= game_starttime)
 	{
@@ -396,21 +396,18 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
-	if (dorespawn)
+	if (!MUTATOR_CALLHOOK(reset_map_players))
 	{
-		if (!MUTATOR_CALLHOOK(reset_map_players))
+		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			FOREACH_CLIENT(IS_PLAYER(it),
-			{
-				// PlayerScore_Clear(it);
-				CS(it).killcount = 0;
-				// stop the player from moving so that they stand still once they get respawned
-				it.velocity = '0 0 0';
-				it.avelocity = '0 0 0';
-				CS(it).movement = '0 0 0';
-				PutClientInServer(it);
-			});
-		}
+			// PlayerScore_Clear(it);
+			CS(it).killcount = 0;
+			// stop the player from moving so that they stand still once they get respawned
+			it.velocity = '0 0 0';
+			it.avelocity = '0 0 0';
+			CS(it).movement = '0 0 0';
+			PutClientInServer(it);
+		});
 	}
 }
 
@@ -418,7 +415,7 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 void ReadyRestart_think(entity this)
 {
 	if (!warmup_stage) // if the countdown was not aborted
-		reset_map(true, false);
+		reset_map(false);
 	delete(this);
 }
 
@@ -478,7 +475,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	}
 
 	if (!sv_ready_restart_after_countdown || warmup_stage)
-		reset_map(true, is_fake_round_start);
+		reset_map(is_fake_round_start);
 
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }

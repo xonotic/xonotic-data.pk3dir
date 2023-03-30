@@ -7,7 +7,6 @@ AUTOCVAR_SAVE(hud_panel_strafehud_dynamichud, bool, true, "apply the dynamic hud
 AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at \"0\" = view angle, \"1\" = velocity angle");
 AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"-1\" = current fov, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
 AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "\"0\" = no styling, \"1\" = progress bar style for the strafe bar, \"2\" = gradient for the strafe bar");
-AUTOCVAR_SAVE(hud_panel_strafehud_unit, int, 1, "speed unit (1 = qu/s, 2 = m/s, 3 = km/h, 4 = mph, 5 = knots), length unit (1 = qu, 2 = m, 3 = km, 4 = mi, 5 = nmi)");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
 AUTOCVAR_SAVE(hud_panel_strafehud_uncapped, bool, false, "set to \"1\" to remove some safety restrictions, useful to set thinner indicator lines down to 1px or for trying out higher values for some performance degrading operations (warning: elements may turn invisible if too thin, other configurations may crash your game or look horribly ugly)");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel, bool, true, "set to \"1\" to extend the acceleration zone by the strafe meter zone before full acceleration can be achieved");
@@ -81,7 +80,7 @@ vector StrafeHUD_mixColors(vector, vector, float);
 void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int, bool, float);
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
-void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool);
+void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool, float);
 bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
 float StrafeHUD_projectOffset(float, float);
 float StrafeHUD_projectWidth(float, float, float);

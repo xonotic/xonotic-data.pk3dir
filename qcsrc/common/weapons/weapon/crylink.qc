@@ -623,8 +623,7 @@ METHOD(Crylink, wr_killmessage, Notification(entity thiswep))
 #ifdef CSQC
 METHOD(Crylink, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 2;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_CRYLINK_IMPACT2, org2, '0 0 0', 1);
