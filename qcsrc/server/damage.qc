@@ -728,11 +728,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		    {
-		    	.entity went = weaponentities[slot];
-		    	if(targ.(went).hook && targ.(went).hook.aiment == attacker)
-		    		RemoveHook(targ.(went).hook);
-		    }
+			{
+				.entity went = weaponentities[slot];
+				if(targ.(went).hook && targ.(went).hook.aiment == attacker)
+					RemoveHook(targ.(went).hook);
+			}
 		}
 
 		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
