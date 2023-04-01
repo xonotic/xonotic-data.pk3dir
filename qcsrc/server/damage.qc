@@ -714,11 +714,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		// It is only intended to be used with 250 base force for devastator which matches Q3 if our
 		// target's damageforcescale is also 2
 		if(force)
+		if(q3compat & Q3COMPAT_DEFI)
 		if(autocvar_g_balance_damagepush_speedfactor == 0)
 		if(attacker.(weaponentity).m_weapon == WEP_DEVASTATOR)
 		if(autocvar_g_balance_devastator_force == 250)
 		if(targ.damageforcescale == 2)
-		if(q3compat & Q3COMPAT_DEFI)
 		if((cvar_string("g_mod_physics") == "CPMA") || (cvar_string("g_mod_physics") == "XDF"))
 		{
 			force.x *= 1.2;
