@@ -976,9 +976,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
-	precache_model(this.model);
-	precache_sound(this.item_pickupsound);
-
 	if (Item_IsLoot(this))
 	{
 		this.reset = RemoveItem;
@@ -1162,6 +1159,10 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		delete(this);
 		return;
 	}
+
+	// we should be sure this item will spawn before loading its assets
+	precache_model(this.model);
+	precache_sound(this.item_pickupsound);
 
 	setItemGroup(this);
 }
