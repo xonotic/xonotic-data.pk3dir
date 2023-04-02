@@ -6645,7 +6645,7 @@ msgstr "Inclure la vitesse verticale"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "Afficher l'unité de vitesse"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"

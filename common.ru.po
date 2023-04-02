@@ -6587,7 +6587,7 @@ msgstr "С вертикальной скоростью"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "Показать единицу измерения скорости"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"

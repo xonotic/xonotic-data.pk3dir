@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-26 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2023\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -6608,7 +6608,7 @@ msgstr "Incluir velocidade vertical"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "Exibir unidade de velocidade"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
