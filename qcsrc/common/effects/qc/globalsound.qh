@@ -137,10 +137,10 @@ float GlobalSound_pitch(float _pitch);
 
 #ifdef SVQC
 
-	void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float vol, float voicetype, bool fake);
-	#define GlobalSound(this, def, chan, vol, voicetype) _GlobalSound(this, def, NULL, string_null, chan, vol, voicetype, false)
-	#define GlobalSound_string(this, def, chan, vol, voicetype) _GlobalSound(this, NULL, NULL, def, chan, vol, voicetype, false)
-	#define PlayerSound(this, def, chan, vol, voicetype) _GlobalSound(this, NULL, def, string_null, chan, vol, voicetype, false)
+	void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float vol, float voicetype, bool fake, float pitchscale);
+	#define GlobalSound(this, def, chan, vol, voicetype) _GlobalSound(this, def, NULL, string_null, chan, vol, voicetype, false, 1)
+	#define GlobalSound_string(this, def, chan, vol, voicetype) _GlobalSound(this, NULL, NULL, def, chan, vol, voicetype, false, 1)
+	#define PlayerSound(this, def, chan, vol, voicetype, pitchscale) _GlobalSound(this, NULL, def, string_null, chan, vol, voicetype, false, pitchscale)
 	#define VoiceMessage(this, def, msg) \
 		MACRO_BEGIN \
 			entity VM = def; \
@@ -151,7 +151,7 @@ float GlobalSound_pitch(float _pitch);
 			if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true; \
 			else if (flood > 0) fake = false; \
 			else break; \
-			_GlobalSound(this, NULL, VM, string_null, CH_VOICE, VOL_BASEVOICE, voicetype, fake); \
+			_GlobalSound(this, NULL, VM, string_null, CH_VOICE, VOL_BASEVOICE, voicetype, fake, 1); \
 		MACRO_END
 
 #endif

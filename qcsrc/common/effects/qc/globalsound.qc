@@ -318,13 +318,15 @@
 
 	#ifdef SVQC
 
-		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, float vol, int voicetype, bool fake)
+		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, float vol, int voicetype, bool fake, float pitchscale)
 		{
 			if (gs == NULL && ps == NULL && sample == "") return;
 			if(this.classname == "body") return;
 			float r = random();
-			float myscale = ((this.scale) ? this.scale : 1); // safety net
-			float thepitch = ((myscale == 1) ? 0 : GlobalSound_pitch(myscale * 100));
+			// sv_q3compat_changehitbox model scaling should not cause pitch shifting
+			if (this.scale > 0 && !(autocvar_sv_q3compat_changehitbox && q3compat))
+				pitchscale *= this.scale;
+			float thepitch = (pitchscale == 1) ? 0 : GlobalSound_pitch(pitchscale * 100);
 			if (sample != "") sample = GlobalSound_sample(sample, r);
 			switch (voicetype)
 			{
