@@ -1311,6 +1311,38 @@ void GameCommand_nospectators(int request)
 	}
 }
 
+void GameCommand_printplayer(int request, int argc)
+{
+	switch (request)
+        {
+			case CMD_REQUEST_COMMAND:
+			{
+			entity player = GetIndexedEntity(argc, 1);
+						if (player.playerid)
+						{
+							GameLogEcho(strcat(
+											strcat(
+													":playerinfo:", ftos(player.playerid),
+													":", ftos(etof(player)),
+													":", ftos(CS_CVAR(player).cvar_cl_allow_uidtracking),
+													":", ftos(CS_CVAR(player).cvar_cl_allow_uid2name)),
+											strcat(
+													":", ftos(CS_CVAR(player).cvar_cl_allow_uidranking),
+													":", ((IS_REAL_CLIENT(player)) ? GameLog_ProcessIP(player.netaddress) : "bot"),
+													":", player.crypto_idfp,
+													":", playername(player.netname, player.team, false))));
+						}
+					return;
+				}
+			default:
+				case CMD_REQUEST_USAGE:
+				{
+					LOG_HELP("Usage:^3 sv_cmd printplayer <player_entity_id>");
+						return;
+				}
+		}
+}
+
 void GameCommand_printstats(int request)
 {
 	switch (request)
@@ -1834,6 +1866,7 @@ SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter te
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
+SERVER_COMMAND(printplayer, "Print information about a player") { GameCommand_printplayer(request, arguments); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
