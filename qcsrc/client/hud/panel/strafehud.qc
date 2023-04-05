@@ -191,6 +191,7 @@ void HUD_StrafeHUD()
 		float  range_minangle;
 		float  text_offset_top               = 0;
 		float  text_offset_bottom            = 0;
+		float  hfov                          = getproperty(VF_FOVX);
 
 		// real_* variables which are always positive with no wishangle offset
 		float real_bestangle;
@@ -358,9 +359,24 @@ void HUD_StrafeHUD()
 			else
 				hudangle = range_minangle; // use minimum angle required if dynamically setting hud angle
 		}
+		else if(autocvar_hud_panel_strafehud_range < 0)
+		{
+			hudangle = hfov;
+		}
 		else
 		{
 			hudangle = bound(0, fabs(autocvar_hud_panel_strafehud_range), 360); // limit HUD range to 360 degrees, higher values don't make sense
+		}
+
+		// limit strafe-meter angle to values suitable for the current projection mode
+		switch(autocvar_hud_panel_strafehud_projection)
+		{
+			case STRAFEHUD_PROJECTION_PERSPECTIVE:
+				hudangle = min(hudangle, 170);
+				break;
+			case STRAFEHUD_PROJECTION_PANORAMIC:
+				hudangle = min(hudangle, 350);
+				break;
 		}
 
 		// detect air strafe turning
@@ -692,28 +708,32 @@ void HUD_StrafeHUD()
 				accelzone_left_offset, accelzone_width, hidden_width,
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT);
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
+				true, hudangle);
 
 			if(autocvar_hud_panel_strafehud_bar_preaccel)
 				HUD_Panel_DrawStrafeHUD(
 					preaccelzone_left_offset, preaccelzone_width, hidden_width,
 					autocvar_hud_panel_strafehud_bar_accel_color,
 					autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-					autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT);
+					autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
+					true, hudangle);
 
 			// draw right acceleration zone
 			HUD_Panel_DrawStrafeHUD(
 				accelzone_right_offset, accelzone_width, hidden_width,
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT);
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
+				true, hudangle);
 
 			if(autocvar_hud_panel_strafehud_bar_preaccel)
 				HUD_Panel_DrawStrafeHUD(
 					preaccelzone_right_offset, preaccelzone_width, hidden_width,
 					autocvar_hud_panel_strafehud_bar_accel_color,
 					autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-					autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT);
+					autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
+					true, hudangle);
 
 			// draw overturn zone
 			//   this is technically incorrect
@@ -723,14 +743,16 @@ void HUD_StrafeHUD()
 				overturn_offset, overturn_width, hidden_width,
 				autocvar_hud_panel_strafehud_bar_overturn_color,
 				autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha,
-				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH);
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH,
+				true, hudangle);
 
 			// draw neutral zone
 			HUD_Panel_DrawStrafeHUD(
 				neutral_offset, neutral_width, hidden_width,
 				autocvar_hud_panel_strafehud_bar_neutral_color,
 				autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
-				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE);
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
+				true, hudangle);
 
 			// only draw indicators if minspeed is reached
 			if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0)
@@ -738,6 +760,9 @@ void HUD_StrafeHUD()
 				// draw the switch indicator(s)
 				float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
 				float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
+
+				offset = StrafeHUD_projectOffset(offset, hudangle);
+				switch_offset = StrafeHUD_projectOffset(switch_offset, hudangle);
 
 				// remove switch indicator width from offset
 				if(direction == STRAFEHUD_DIRECTION_LEFT)
@@ -759,14 +784,16 @@ void HUD_StrafeHUD()
 					switch_offset, bestangle_width, hidden_width,
 					autocvar_hud_panel_strafehud_switch_color,
 					autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
-					STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE);
+					STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
+					false, hudangle);
 
 				if(direction == STRAFEHUD_DIRECTION_NONE)
 					HUD_Panel_DrawStrafeHUD(
 						offset, bestangle_width, hidden_width,
 						autocvar_hud_panel_strafehud_switch_color,
 						autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
-						STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE);
+						STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
+						false, hudangle);
 			}
 		}
 
@@ -872,6 +899,27 @@ void HUD_StrafeHUD()
 				DRAWFLAG_NORMAL);
 		}
 
+		string newsound = autocvar_hud_panel_strafehud_sonar_audio;
+		static string cursound = string_null;
+		static string sonarsound = string_null;
+		if(newsound == "")
+		{
+			cursound = sonarsound = string_null;
+		}
+		else if(newsound != cursound)
+		{
+			strfree(cursound);
+			cursound = strzone(newsound);
+
+			strfree(sonarsound);
+			sonarsound = _Sound_fixpath(newsound);
+			if(sonarsound)
+			{
+				sonarsound = strzone(sonarsound);
+				precache_sound(sonarsound);
+			}
+		}
+
 		// draw the actual strafe angle
 		if(!immobile)
 		{
@@ -901,6 +949,33 @@ void HUD_StrafeHUD()
 
 			if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
 				currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, currentangle_color, fabs(strafe_ratio));
+
+			// reuse strafe ratio for strafe sonar
+			static float sonar_time = 0;
+
+			float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
+			float sonar_ratio = strafe_ratio - sonar_start;
+			if(sonar_start != 1)
+				sonar_ratio /= 1 - sonar_start;
+			else
+				sonar_ratio = 1;
+
+			float sonar_interval = max(0, autocvar_hud_panel_strafehud_sonar_interval_start);
+			sonar_interval += autocvar_hud_panel_strafehud_sonar_interval_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_interval_exponent);
+			bool sonar_ready = (sonar_time == 0) || ((time - sonar_time) >= sonar_interval);
+			if(autocvar_hud_panel_strafehud_sonar && sonar_ready && (strafe_ratio >= sonar_start))
+			{
+				sonar_time = time;
+
+				float sonar_volume = bound(0, autocvar_hud_panel_strafehud_sonar_volume_start, 1);
+				sonar_volume += autocvar_hud_panel_strafehud_sonar_volume_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_volume_exponent);
+
+				float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
+				sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_pitch_exponent);
+
+				if(sonarsound && (sonar_volume > 0))
+					sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
+			}
 		}
 
 		if(mode == STRAFEHUD_MODE_VIEW_CENTERED || straight_overturn)
@@ -910,6 +985,9 @@ void HUD_StrafeHUD()
 		float ghost_offset = 0;
 		if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
 			ghost_offset = bound(0, (odd_angles ? odd_bestangle_offset : bestangle_offset), panel_size.x);
+
+		currentangle_offset = StrafeHUD_projectOffset(currentangle_offset, hudangle);
+		ghost_offset = StrafeHUD_projectOffset(ghost_offset, hudangle);
 
 		switch(autocvar_hud_panel_strafehud_angle_style)
 		{
@@ -1006,6 +1084,24 @@ void HUD_StrafeHUD()
 		text_offset_top = max(angle_offset_top, text_offset_top);
 		text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
 
+		// vertical angle for weapon jumps
+		{
+			if(autocvar_hud_panel_strafehud_vangle)
+			{
+				float vangle = -PHYS_INPUT_ANGLES(strafeplayer).x;
+				float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
+				string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
+
+				bool was_drawn = StrafeHUD_drawTextIndicator(
+					vangle_text, vangle_height,
+					autocvar_hud_panel_strafehud_vangle_color, 1,
+					time, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM);
+
+				if(was_drawn)
+					text_offset_bottom += vangle_height;
+			}
+		}
+
 		draw_beginBoldFont();
 
 		// show speed when crossing the start trigger
@@ -1087,8 +1183,33 @@ void HUD_StrafeHUD()
 	hud_lasttime = time;
 }
 
+float StrafeHUD_projectOffset(float offset, float range)
+{
+	range *= DEG2RAD / 2;
+	float angle = (offset - (panel_size.x / 2)) / (panel_size.x / 2) * range;
+	switch(autocvar_hud_panel_strafehud_projection)
+	{
+		default:
+		case STRAFEHUD_PROJECTION_LINEAR:
+			return offset;
+		case STRAFEHUD_PROJECTION_PERSPECTIVE:
+			offset = tan(angle) / tan(range);
+			break;
+		case STRAFEHUD_PROJECTION_PANORAMIC:
+			offset = tan(angle / 2) / tan(range / 2);
+			break;
+	}
+	offset = offset * (panel_size.x / 2) + (panel_size.x / 2);
+	return offset;
+}
+
+float StrafeHUD_projectWidth(float offset, float width, float range)
+{
+	return StrafeHUD_projectOffset(offset + width, range) - StrafeHUD_projectOffset(offset, range);
+}
+
 // functions to make hud elements align perfectly in the hud area
-void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vector color, float alpha, int type, int gradientType)
+void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vector color, float alpha, int type, int gradientType, bool doProject, float range)
 {
 	float mirror_offset, mirror_width;
 	vector size = panel_size;
@@ -1123,6 +1244,14 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vect
 	}
 	size.x = width;
 
+	vector original_size = size;
+	float original_offset = offset;
+	if(doProject)
+	{
+		if(size.x > 0) size.x = StrafeHUD_projectWidth(offset, size.x, range);
+		offset = StrafeHUD_projectOffset(offset, range);
+	}
+
 	if(mirror_offset < 0)
 	{
 		mirror_width += mirror_offset;
@@ -1136,6 +1265,14 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vect
 		mirror_width = panel_size.x - mirror_offset;
 	}
 	mirror_size.x = mirror_width;
+
+	vector original_mirror_size = mirror_size;
+	float original_mirror_offset = mirror_offset;
+	if(doProject)
+	{
+		if(mirror_size.x > 0) mirror_size.x = StrafeHUD_projectWidth(mirror_offset, mirror_size.x, range);
+		mirror_offset = StrafeHUD_projectOffset(mirror_offset, range);
+	}
 
 	switch(type)
 	{
@@ -1191,13 +1328,13 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, float hidden_width, vect
 
 			StrafeHUD_drawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
-				mirror_size, original_width, mirror_offset,
-				alpha, gradient_mirror_offset, gradientType);
+				original_mirror_size, original_width, original_mirror_offset,
+				alpha, gradient_mirror_offset, gradientType, doProject, range);
 
 			StrafeHUD_drawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
-				size, original_width, offset,
-				alpha, gradient_offset, gradientType);
+				original_size, original_width, original_offset,
+				alpha, gradient_offset, gradientType, doProject, range);
 	}
 }
 
@@ -1212,7 +1349,7 @@ vector StrafeHUD_mixColors(vector color1, vector color2, float ratio)
 	return mixedColor;
 }
 
-void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType)
+void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType, bool doProject, float range)
 {
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
@@ -1222,8 +1359,14 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 	color_ratio = alpha1 / (alpha1 + alpha2);
 	for(int i = 0; i < size.x; ++i)
 	{
-		float ratio, alpha_ratio, combine_ratio1, combine_ratio2;
+		float ratio, alpha_ratio, combine_ratio1, combine_ratio2, segment_offset;
 		segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
+		segment_offset = offset + i;
+		if(doProject)
+		{
+			segment_size.x = StrafeHUD_projectWidth(segment_offset, segment_size.x, range);
+			segment_offset = StrafeHUD_projectOffset(segment_offset, range);
+		}
 		ratio = (i + segment_size.x / 2 + gradientOffset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
 		if(ratio > 1) ratio = 2 - ratio;
 		if(gradientType != STRAFEHUD_GRADIENT_RIGHT) ratio = 1 - ratio;
@@ -1234,7 +1377,7 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 
 		if(alpha_ratio > 0)
 			drawfill(
-				panel_pos + eX * (offset + i),
+				panel_pos + eX * segment_offset,
 				segment_size,
 				StrafeHUD_mixColors(color1, color2, ratio),
 				alpha_ratio,
