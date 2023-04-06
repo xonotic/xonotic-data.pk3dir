@@ -19,6 +19,7 @@ float hud_configure_checkcollisions;
 vector hud_configure_gridSize;
 vector hud_configure_realGridSize;
 float hud_configure_menu_open; // 1 showing the entire HUD, 2 showing only the clicked panel
+float hud_configure_centerline_time;
 
 void HUD_Panel_ExportCfg(string cfgname);
 
