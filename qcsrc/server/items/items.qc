@@ -98,6 +98,9 @@ void UpdateItemAfterTeleport(entity this)
 
 bool have_pickup_item(entity this)
 {
+	if (this.itemdef.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+		return false;
+
 	if(this.itemdef.instanceOfPowerup)
 	{
 		if(autocvar_g_powerups > 0)
@@ -946,12 +949,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if(def.m_iteminit)
 		def.m_iteminit(def, this);
 
-	if(!this.respawntime) // both need to be set
-	{
-		this.respawntime = defaultrespawntime;
-		this.respawntimejitter = defaultrespawntimejitter;
-	}
-
 	if(!this.pickup_anyway && def.m_pickupanyway)
 		this.pickup_anyway = def.m_pickupanyway();
 
@@ -977,16 +974,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		startitem_failed = true;
 		delete(this);
 		return;
-	}
-
-	precache_model(this.model);
-	precache_sound(this.item_pickupsound);
-
-	if(q3compat && !this.team)
-	{
-		string t = GetField_fullspawndata(this, "team", false);
-		// bones_was_here: this hack is cheaper than changing to a .string strcmp()
-		if(t) this.team = crc16(false, t);
 	}
 
 	if (Item_IsLoot(this))
@@ -1021,6 +1008,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 	else
 	{
+		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
@@ -1028,8 +1016,22 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			return;
 		}
 
+		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may have null func ptrs)
+		if(!this.respawntime) // both need to be set
+		{
+			this.respawntime = defaultrespawntime ? defaultrespawntime : def.m_respawntime();
+			this.respawntimejitter = defaultrespawntimejitter ? defaultrespawntimejitter : def.m_respawntimejitter();
+		}
+
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
+
+		if(q3compat && !this.team)
+		{
+			string t = GetField_fullspawndata(this, "team");
+			// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+			if(t) this.team = crc16(false, t);
+		}
 
 		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
@@ -1158,6 +1160,10 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
+	// we should be sure this item will spawn before loading its assets
+	precache_model(this.model);
+	precache_sound(this.item_pickupsound);
+
 	setItemGroup(this);
 }
 
@@ -1165,19 +1171,13 @@ void StartItem(entity this, GameItem def)
 {
 	def = def.m_spawnfunc_hookreplace(def, this);
 
-	if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
-	{
-		delete(this);
-		return; // TODO does not set startitem_failed
-	}
-
 	this.classname = def.m_canonical_spawnfunc;
 
 	_StartItem(
 		this,
 		this.itemdef = def,
-		def.m_respawntime(), // defaultrespawntime
-		def.m_respawntimejitter() // defaultrespawntimejitter
+		0, // call def.m_respawntime() to get defaultrespawntime
+		0  // call def.m_respawntimejitter() to get defaultrespawntimejitter
 	);
 }
 

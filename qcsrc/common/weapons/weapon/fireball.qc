@@ -413,14 +413,13 @@ METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         // firemine goes out silently
     }
     else
     {
-        org2 = w_org + w_backoff * 16;
+        vector org2 = w_org + w_backoff * 2;
         pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
         if(!w_issilent)
             sound(actor, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom

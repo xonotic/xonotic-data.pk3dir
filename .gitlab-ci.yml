@@ -64,12 +64,18 @@ test_sv_game:
     - diff notifications.cfg data/data/notifications_dump.cfg ||
         { echo 'Please update notifications.cfg using `dumpnotifs`!'; exit 1; }
 
-    - wget -nv -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
+#    - wget -nv -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
+# ^^ INCORRECT: /latest/stormkeep.pk3 is the most recently built, not necessarily the one built from master!
+# we can't get the one from master directly as there's no /stable/stormkeep.pk3 or /master/stormkeep.pk3
+# and we can't run misc/tools/xonotic-map-compiler-autobuild as it uses commit hashes from xonotic-maps.pk3dir to generate filenames
+# but the autobuild server can run it and provide us the resulting pk3:
+    - wget -nv -O data/stormkeep.pk3 https://beta.xonotic.org/pipeline-bin/stormkeep.pk3
+# see also: misc/infrastructure/xonotic-release-build.cron
     - wget -nv -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
     - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-    - EXPECT=55338fabce73c671336171e6cb055f74
+    - EXPECT=fe5dec36cb304c55acee73afd1e09c0a
     - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
       | tee /dev/stderr
       | sed -e 's,^\[[^]]*\] ,,'

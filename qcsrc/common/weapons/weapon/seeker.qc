@@ -406,7 +406,7 @@ void W_Seeker_Tag_Explode(entity this)
 {
 	//if(other==this.realowner)
 	//    return;
-	Damage_DamageInfo(this.origin, false, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
+	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
 
 	delete(this);
 }
@@ -434,7 +434,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 	te_knightspike(org2);
 
 	this.event_damage = func_null;
-	Damage_DamageInfo(this.origin, false, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
+	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
 
 	if(toucher.takedamage == DAMAGE_AIM && !IS_DEAD(toucher))
 	{
@@ -635,8 +635,7 @@ METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_BOUNCE)
     {
         if(w_deathtype & HITTYPE_SECONDARY)

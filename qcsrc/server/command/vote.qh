@@ -67,7 +67,7 @@ int readycount;                    // amount of players who are ready
 .int team_saved;                   // team number to restore upon map reset
 .void(entity this) reset;          // if set, an entity is reset using this
 .void(entity this) reset2;         // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
-void reset_map(float dorespawn, bool is_fake_round_start);
+void reset_map(bool is_fake_round_start);
 void ReadyCount();
 void ReadyRestart_force(bool is_fake_round_start);
 void VoteCount(float first_count);
