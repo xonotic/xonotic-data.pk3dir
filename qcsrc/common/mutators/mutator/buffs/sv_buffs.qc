@@ -694,6 +694,19 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		dmgent.nextthink = time + 0.1;
 	}
 
+	if(StatusEffects_active(BUFF_BASH, frag_target))
+	if(frag_attacker != frag_target)
+		frag_force = '0 0 0';
+
+	if(StatusEffects_active(BUFF_BASH, frag_attacker))
+	if(frag_force)
+	{
+		if(frag_attacker == frag_target)
+			frag_force *= autocvar_g_buffs_bash_force_self;
+		else
+			frag_force *= autocvar_g_buffs_bash_force;
+	}
+
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
 	if(frag_target != frag_attacker)
 		StatusEffects_apply(STATUSEFFECT_Disabled, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);

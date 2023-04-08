@@ -27,6 +27,17 @@ models/relics/sign_ammo
 	}
 }
 
+models/relics/sign_bash
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_bash
+		blendfunc add
+	}
+}
+
 models/relics/sign_blessed
 {
 	deformVertexes autosprite
@@ -71,6 +82,17 @@ models/relics/sign_inferno
 	}
 }
 
+models/relics/sign_invisible
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_invisible
+		blendfunc add
+	}
+}
+
 models/relics/sign_jump
 {
 	deformVertexes autosprite
@@ -111,6 +133,17 @@ models/relics/sign_resistance
 	nopicmip
 	{
 		map models/relics/sign_resistance
+		blendfunc add
+	}
+}
+
+models/relics/sign_speed
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_speed
 		blendfunc add
 	}
 }

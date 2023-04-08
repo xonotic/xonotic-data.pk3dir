@@ -1,3 +1,21 @@
+DEF(relic_resistance);
+SUB(relic_resistance) {
+    MY(airfriction) = 0.200000;
+    MY(alpha_min) = 128;
+    MY(alpha_max) = 256;
+    MY(alpha_fade) = 256;
+    MY(color_min) = "0x00ff80";
+    MY(color_max) = "0x00ff80";
+    MY(count) = 20;
+    MY(gravity) = -0.100000;
+    MY(liquidfriction) = 0.800000;
+    MY(originjitter) = '8.0 8.0 32.0';
+    MY(size_min) = 1.500000;
+    MY(size_max) = 1.500000;
+    MY(type) = "static";
+    MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
 DEF(relic_regeneration);
 SUB(relic_regeneration) {
     MY(airfriction) = 0.200000;
@@ -276,24 +294,6 @@ SUB(relic_vengeance) {
     MY(alpha_fade) = 256;
     MY(color_min) = "0xff8080";
     MY(color_max) = "0xff8080";
-    MY(count) = 20;
-    MY(gravity) = -0.100000;
-    MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
-    MY(size_min) = 1.500000;
-    MY(size_max) = 1.500000;
-    MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
-}
-
-DEF(relic_resistance);
-SUB(relic_resistance) {
-    MY(airfriction) = 0.200000;
-    MY(alpha_min) = 128;
-    MY(alpha_max) = 256;
-    MY(alpha_fade) = 256;
-    MY(color_min) = "0x00ff80";
-    MY(color_max) = "0x00ff80";
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
