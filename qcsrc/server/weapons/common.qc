@@ -17,10 +17,10 @@
 #include <server/mutators/_mod.qh>
 #include <server/weapons/csqcprojectile.qh>
 
-bool W_DualWielding(entity player)
+bool W_MultiWielding(entity player)
 {
 	int held_weapons = 0;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(player.(weaponentity) && player.(weaponentity).m_switchweapon != WEP_Null)

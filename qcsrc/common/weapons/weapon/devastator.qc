@@ -6,7 +6,7 @@
 
 void W_Devastator_Unregister(entity this)
 {
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(this.realowner.(weaponentity).lastrocket == this)
@@ -241,7 +241,7 @@ void W_Devastator_Think(entity this)
 
 			vector dv = v_right * -vecs.y + v_up * vecs.z;
 
-			if(!W_DualWielding(this.realowner))
+			if(!W_MultiWielding(this.realowner))
 				dv = '0 0 0'; // don't override!
 
 			velspeed = vlen(this.velocity);
@@ -558,7 +558,7 @@ METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor, .entity wea
 }
 METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
     	actor.(weaponentity).lastrocket = NULL; // stop rocket guiding, no revenge from the grave!

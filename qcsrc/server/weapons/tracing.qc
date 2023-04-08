@@ -97,7 +97,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		tracebox(w_shotorg, mi, ma, w_shotorg + forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	if(W_DualWielding(ent))
+	if(W_MultiWielding(ent))
 		w_shotdir = s_forward;
 	else
 		w_shotdir = normalize(w_shotend - w_shotorg);
@@ -155,7 +155,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != SND_Null) {
-		sound(ent, chan, snd, (W_DualWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
+		sound(ent, chan, snd, (W_MultiWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 

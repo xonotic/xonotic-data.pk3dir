@@ -102,7 +102,7 @@ void update_mousepos();
 
 void CSQC_Demo_Camera();
 
-entity viewmodels[MAX_WEAPONSLOTS];
+entity viewmodels[MAX_WEAPON_PER_SLOT];
 
 vector viewloc_mousepos;
 

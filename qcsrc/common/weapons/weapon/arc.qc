@@ -52,7 +52,7 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 
 void Reset_ArcBeam(entity player, vector forward)
 {
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(!player.(weaponentity).arc_beam)
@@ -772,7 +772,7 @@ METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
 {
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
     	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;

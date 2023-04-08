@@ -316,10 +316,10 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 		float arate = W_WeaponRateFactor(actor);
 		ATTACK_FINISHED(actor, weaponentity) = ATTACK_FINISHED(actor, weaponentity) + attacktime * arate;
 
-		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
+		if(autocvar_g_weaponswitch_debug_alternate && W_MultiWielding(actor))
 		{
 			int slot = weaponslot(weaponentity);
-			for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot)
+			for(int wepslot = 0; wepslot < autocvar_g_max_weaponslots; ++wepslot)
 			{
 				if(slot == wepslot)
 					continue;
@@ -330,7 +330,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 						continue; // still cooling down!
 					if (ATTACK_FINISHED(actor, wepent) < time - actor.(wepent).weapon_frametime * 1.5)
 						ATTACK_FINISHED(actor, wepent) = time;
-					ATTACK_FINISHED(actor, wepent) = ATTACK_FINISHED(actor, wepent) + (attacktime * arate) / MAX_WEAPONSLOTS;
+					ATTACK_FINISHED(actor, wepent) = ATTACK_FINISHED(actor, wepent) + (attacktime * arate) / autocvar_g_max_weaponslots;
 				}
 			}
 		}
@@ -435,11 +435,11 @@ bool weaponLocked(entity player)
 
 void W_ResetGunAlign(entity player, int preferred_alignment)
 {
-	if(W_DualWielding(player))
+	if(W_MultiWielding(player))
 		preferred_alignment = 3; // right align, the second gun will default to left
 
 	// clear current weapon slots' alignments so we can redo the calculations!
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if (player.(weaponentity))
@@ -447,7 +447,7 @@ void W_ResetGunAlign(entity player, int preferred_alignment)
 	}
 
 	// now set the new values
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if (player.(weaponentity))
@@ -488,7 +488,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		entity wep1 = actor.(wepe1);
 		this.m_switchweapon = wep1.m_switchweapon;
 		entity store = IS_PLAYER(actor) ? PS(actor) : actor;
-		if(!(this.m_switchweapon.spawnflags & WEP_FLAG_DUALWIELD) && !(store.dual_weapons & wep1.m_switchweapon.m_wepset))
+		if(!(this.m_switchweapon.spawnflags & WEP_FLAG_MULTIWIELD) && !(store.multi_weapons & wep1.m_switchweapon.m_wepset))
 		{
 			this.m_weapon = WEP_Null;
 			this.m_switchingweapon = WEP_Null;

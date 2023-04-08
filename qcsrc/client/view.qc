@@ -346,7 +346,7 @@ void viewmodel_draw(entity this)
 }
 
 STATIC_INIT(viewmodel) {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     	viewmodels[slot] = new(viewmodel);
 }
 
@@ -420,7 +420,7 @@ vector GetCurrentFov(float fov)
 
 	if(hud == HUD_NORMAL && !spectatee_status)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			entity wepent = viewmodels[slot];
 			if(wepent.switchweapon != wepent.activeweapon)
@@ -784,7 +784,7 @@ void HitSound()
 	// varying sound pitch
 
 	bool have_arc = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		entity wepent = viewmodels[slot];
 
@@ -1385,7 +1385,7 @@ void View_CheckButtonStatus()
 		minigame_wasactive = false;
 	}
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		entity wepent = viewmodels[slot];
 
@@ -1604,7 +1604,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
 	if(autocvar_r_drawviewmodel)
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 			if(viewmodels[slot].activeweapon)
 				viewmodel_draw(viewmodels[slot]);
 

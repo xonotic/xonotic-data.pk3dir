@@ -9,7 +9,7 @@ bool autocvar_g_weaponswitch_debug_alternate;
 
 .int selectweapon; // last selected weapon of the player
 
-.WepSet dual_weapons;
+.WepSet multi_weapons;
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);

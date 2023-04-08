@@ -72,7 +72,7 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 	if(!WEP_CVAR(vortex, charge) || !WEP_CVAR(vortex, charge_velocity_rate))
 		return;
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 
@@ -287,7 +287,7 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
 METHOD(Vortex, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	if (WEP_CVAR(vortex, charge)) {
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			actor.(weaponentity).vortex_charge = WEP_CVAR(vortex, charge_start);

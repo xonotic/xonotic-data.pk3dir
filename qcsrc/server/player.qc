@@ -490,7 +490,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		excess = max(0, damage - take - save);
 
 		//Weapon wep = this.(weaponentity).m_weapon;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity went = weaponentities[slot];
 			if(!this.(went))
@@ -523,7 +523,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
 		// throw a weapon
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity went = weaponentities[slot];
 			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_weapon, went);
@@ -595,7 +595,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			FOREACH(Weapons, it != WEP_Null,
 			{
 				it.wr_resetplayer(it, this);
-				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 				{
 					ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
 				}

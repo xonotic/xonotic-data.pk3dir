@@ -15,7 +15,7 @@ void Porto_Draw(entity this)
 {
 	if (spectatee_status || intermission == 1 || intermission == 2 || STAT(HEALTH) <= 0 || WEP_CVAR(porto, secondary)) return;
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		entity wepent = viewmodels[slot];
 

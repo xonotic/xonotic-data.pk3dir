@@ -495,7 +495,7 @@ bool Item_GiveTo(entity item, entity player)
 
 	if(CS_CVAR(player).cvar_cl_autoswitch)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
@@ -532,7 +532,7 @@ bool Item_GiveTo(entity item, entity player)
 
 				if(wp & (it.m_wepset))
 				{
-					for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+					for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 					{
 						.entity weaponentity = weaponentities[slot];
 						if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
@@ -617,7 +617,7 @@ bool Item_GiveTo(entity item, entity player)
 	// crude hack to enforce switching weapons
 	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS_CVAR(player).cvar_cl_cts_noautoswitch)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
@@ -628,7 +628,7 @@ bool Item_GiveTo(entity item, entity player)
 
 	if(_switchweapon)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(_switchweapon & BIT(slot))
@@ -1532,7 +1532,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	if(CS_CVAR(e).cvar_cl_autoswitch)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
@@ -1727,7 +1727,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 		StatusEffects_update(e);
 	}
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
@@ -1737,7 +1737,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	if(_switchweapon)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(_switchweapon & BIT(slot))

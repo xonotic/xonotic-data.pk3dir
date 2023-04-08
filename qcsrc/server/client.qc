@@ -375,7 +375,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	//this.spawnpoint_targ = NULL; // keep it so they can return to where they were?
 
 	this.weaponmodel = "";
-	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		this.weaponentities[slot] = NULL;
 	}
@@ -612,7 +612,7 @@ void PutPlayerInServer(entity this)
 	}
 	SetSpectatee_status(this, 0);
 
-	PS(this).dual_weapons = '0 0 0';
+	PS(this).multi_weapons = '0 0 0';
 
 	if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
 		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0);
@@ -741,7 +741,7 @@ void PutPlayerInServer(entity this)
 		CS(this).startplaytime = time;
 	}
 
-	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		CL_SpawnWeaponentity(this, weaponentity);
@@ -762,7 +762,7 @@ void PutPlayerInServer(entity this)
 		it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 		if (it.spawnflags & WEP_FLAG_RELOADABLE) {
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
 				this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
@@ -788,7 +788,7 @@ void PutPlayerInServer(entity this)
 		delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 	}
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		entity w_ent = this.(weaponentity);
@@ -807,7 +807,7 @@ void PutPlayerInServer(entity this)
 	if (CS(this).impulse) ImpulseCommands(this);
 
 	W_ResetGunAlign(this, CS_CVAR(this).cvar_cl_gunalign);
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_WeaponFrame(this, weaponentity);
@@ -1844,7 +1844,7 @@ void SetSpectatee(entity this, entity spectatee)
 	// these are required to fix the spectator bug with arc
 	if(old_spectatee)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(old_spectatee.(weaponentity).arc_beam)
@@ -1853,7 +1853,7 @@ void SetSpectatee(entity this, entity spectatee)
 	}
 	if(spectatee)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(spectatee.(weaponentity).arc_beam)
@@ -2061,7 +2061,7 @@ bool joinAllowed(entity this)
 }
 
 .string shootfromfixedorigin;
-.bool dualwielding_prev;
+.bool MULTIWIELDing_prev;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2166,17 +2166,17 @@ bool PlayerThink(entity this)
 
 	// reset gun alignment when dual wielding status changes
 	// to ensure guns are always aligned right and left
-	bool dualwielding = W_DualWielding(this);
-	if(this.dualwielding_prev != dualwielding)
+	bool MULTIWIELDing = W_MultiWielding(this);
+	if(this.MULTIWIELDing_prev != MULTIWIELDing)
 	{
 		W_ResetGunAlign(this, CS_CVAR(this).cvar_cl_gunalign);
-		this.dualwielding_prev = dualwielding;
+		this.MULTIWIELDing_prev = MULTIWIELDing;
 	}
 
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(WEP_CVAR(vortex, charge_always))
@@ -2189,7 +2189,7 @@ bool PlayerThink(entity this)
 	{
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
@@ -2515,7 +2515,7 @@ void PlayerPreThink (entity this)
 	// WEAPONTODO: Add weapon request for this
 	if (!zoomstate_set) {
 		bool wep_zoomed = false;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			Weapon thiswep = this.(weaponentity).m_weapon;

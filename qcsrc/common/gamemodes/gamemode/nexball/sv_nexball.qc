@@ -817,7 +817,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 		}
 		else
 		{
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
 
@@ -852,7 +852,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	STAT(NB_METERSTART, player) = 0;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		STAT(WEAPONS, player.(weaponentity)) = '0 0 0';

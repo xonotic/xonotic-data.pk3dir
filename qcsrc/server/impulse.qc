@@ -58,7 +58,7 @@ void weapon_group_handle(entity this, int number, int imp)
 		this.impulse = imp;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeaponOnImpulse(this, number, weaponentity);
@@ -94,7 +94,7 @@ void weapon_priority_handle(entity this, int dir, int number, int imp)
 		this.impulse = imp;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_CycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriorities[number], dir, weaponentity);
@@ -155,7 +155,7 @@ void weapon_byid_handle(entity this, int number, int imp)
 		this.impulse = imp;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + number), weaponentity);
@@ -203,7 +203,7 @@ IMPULSE(weapon_next_byid)
 		this.impulse = IMP_weapon_next_byid.impulse;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 0, weaponentity);
@@ -221,7 +221,7 @@ IMPULSE(weapon_prev_byid)
 		this.impulse = IMP_weapon_prev_byid.impulse;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 0, weaponentity);
@@ -239,7 +239,7 @@ IMPULSE(weapon_next_bygroup)
 		this.impulse = IMP_weapon_next_bygroup.impulse;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 1, weaponentity);
@@ -257,7 +257,7 @@ IMPULSE(weapon_prev_bygroup)
 		this.impulse = IMP_weapon_prev_bygroup.impulse;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 1, weaponentity);
@@ -275,7 +275,7 @@ IMPULSE(weapon_next_bypriority)
 		this.impulse = IMP_weapon_next_bypriority.impulse;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 2, weaponentity);
@@ -293,7 +293,7 @@ IMPULSE(weapon_prev_bypriority)
 		this.impulse = IMP_weapon_prev_bypriority.impulse;
 		return;
 	}
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 2, weaponentity);
@@ -307,7 +307,7 @@ IMPULSE(weapon_last)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_LastWeapon(this, weaponentity);
@@ -321,7 +321,7 @@ IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
@@ -335,14 +335,14 @@ IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	bool is_dualwielding = W_DualWielding(this);
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	bool is_multiwielding = W_MultiWielding(this);
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		vector md = this.(weaponentity).movedir;
 		vector vecs = ((md.x > 0) ? md : '0 0 0');
 		vector dv = v_right * -vecs.y;
-		if(!is_dualwielding)
+		if(!is_multiwielding)
 			dv = '0 0 0'; // don't override!
 		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), dv, true);
 
@@ -357,7 +357,7 @@ IMPULSE(weapon_reload)
 	if (IS_DEAD(this)) return;
 	if (weaponLocked(this)) return;
 	entity actor = this;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		Weapon w = this.(weaponentity).m_weapon;

@@ -271,7 +271,7 @@ CLASS(Player, Client)
 
     // custom
 
-    ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
+    ATTRIB(Player, multi_weapons, vector, this.multi_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
     ATTRIB(Player, ballistics_density, float, this.ballistics_density);
 

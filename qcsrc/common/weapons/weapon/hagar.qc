@@ -447,7 +447,7 @@ METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponen
 }
 METHOD(Hagar, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
     	actor.(weaponentity).hagar_load = 0;

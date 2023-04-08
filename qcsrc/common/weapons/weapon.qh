@@ -10,12 +10,15 @@
 
 USING(WepSet, vector);
 
-const int MAX_WEAPONSLOTS = 2;
-.entity weaponentities[MAX_WEAPONSLOTS];
+// TODO: Change this into a multiple weapon slot, it cannot be constant
+int autocvar_g_max_weaponslots = 3;
+
+const int MAX_WEAPON_PER_SLOT = 3;
+.entity weaponentities[MAX_WEAPON_PER_SLOT];
 
 int weaponslot(.entity weaponentity)
 {
-	for (int i = 0; i < MAX_WEAPONSLOTS; ++i)
+	for (int i = 0; i < autocvar_g_max_weaponslots; ++i)
 	{
 		if (weaponentities[i] == weaponentity)
 		{
@@ -205,8 +208,8 @@ const int WEP_FLAG_SUPERWEAPON    =  BIT(7); // powerup timer
 const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
-const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
-const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
+const int WEP_FLAG_MULTIWIELD      =  BIT(11); // weapon can be dual wielded
+const int WEP_FLAG_NOMULTI         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
 const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
 const int WEP_FLAG_NOTRUEAIM      =  BIT(15); // weapon doesn't aim directly at targets

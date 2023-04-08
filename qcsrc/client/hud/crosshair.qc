@@ -685,7 +685,7 @@ void DrawReticle(entity this)
 	float is_dead = (STAT(HEALTH) <= 0);
 	string reticle_image = string_null;
 	bool wep_zoomed = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		entity wepe = viewmodels[slot];
 		Weapon wep = wepe.activeweapon;

@@ -148,7 +148,7 @@ vector findperpendicular(vector v)
 		for(int j = 4; j > 1; --j) // > 1 as 1 is just center again
 		{
 			int taken = 0;
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
 				if(own.(weaponentity).m_gunalign == j) // we know it can't be ours thanks to the above check

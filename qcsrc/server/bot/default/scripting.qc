@@ -579,7 +579,7 @@ float bot_cmd_select_weapon(entity this)
 
 	bool success = false;
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
