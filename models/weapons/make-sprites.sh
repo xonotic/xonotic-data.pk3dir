@@ -60,23 +60,23 @@ sprite()
 
 # grep '* color' ../../qcsrc/common/weapons/w_*.qc | awk '{ print $1 "  \t" $4 " " $5 " " $6 }'
 # def h(r,g,b): return '#{:02x}{:02x}{:02x}'.format(int(round(r*255)),int(round(g*255)),int(round(b*255)))
-sprite arc			"Arc"				ffffff # White
-sprite blaster		"Blaster"			ff8080 # Vivid Tangerine
-sprite crylink		"Crylink"			ff80ff # Blush Pink
-sprite devastator	"Devastator"		ffff00 # Yellow
-sprite electro		"Electro"			0080ff # Azure Radiance
-sprite fireball		"Fireball"			ff8000 # Flush Orange
-sprite hagar		"Hagar"				ffff80 # Dolly
-sprite hlac			"HLAC"				00ff00 # Green
-sprite hook			"Grappling\nHook"	008000 # Japanese Laurel
-sprite machinegun	"Machine\nGun"		ffff00 # Yellow
-sprite minelayer	"Mine\nLayer"		bfff00 # Lime
-sprite mortar		"Mortar"			ff0000 # Red
-sprite porto		"Port-O-Launch"		808080 # Gray
-sprite rifle		"Rifle"				80ff00 # Chartreuse
-sprite seeker		"T.A.G.\nSeeker"	80ff00 # Chartreuse
-#sprite shockwave	"Shockwave"			804000 # Cinnamon
-sprite shotgun		"Shotgun"			804000 # Cinnamon
-sprite tuba			"Tuba" 				00ff00 # Green
-sprite vaporizer	"Vaporizer"			80ffff # Anakiwa
-sprite vortex		"Vortex"			80ffff # Anakiwa
+sprite arc          "Arc"               ffffff # White
+sprite blaster      "Blaster"           ff8080 # Vivid Tangerine
+sprite crylink      "Crylink"           ff80ff # Blush Pink
+sprite devastator   "Devastator"        ffff00 # Yellow
+sprite electro      "Electro"           0080ff # Azure Radiance
+sprite fireball     "Fireball"          ff8000 # Flush Orange
+sprite hagar        "Hagar"             ffff80 # Dolly
+sprite hlac         "HLAC"              00ff00 # Green
+sprite hook         "Grappling\nHook"   008000 # Japanese Laurel
+sprite machinegun   "Machine\nGun"      ffff00 # Yellow
+sprite minelayer    "Mine\nLayer"       bfff00 # Lime
+sprite mortar       "Mortar"            ff0000 # Red
+sprite porto        "Port-O-Launch"     808080 # Gray
+sprite rifle        "Rifle"             80ff00 # Chartreuse
+sprite seeker       "T.A.G.\nSeeker"    80ff00 # Chartreuse
+#sprite shockwave   "Shockwave"         804000 # Cinnamon
+sprite shotgun      "Shotgun"           804000 # Cinnamon
+sprite tuba         "Tuba"              00ff00 # Green
+sprite vaporizer    "Vaporizer"         80ffff # Anakiwa
+sprite vortex       "Vortex"            80ffff # Anakiwa
