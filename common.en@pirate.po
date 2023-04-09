@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-26 07:22+0200\n"
+"POT-Creation-Date: 2023-04-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Pirate English (http://www.transifex.com/team-xonotic/xonotic/"
+"Language-Team: Pirate English (http://app.transifex.com/team-xonotic/xonotic/"
 "language/en@pirate/)\n"
 "Language: en@pirate\n"
 "MIME-Version: 1.0\n"
@@ -1072,23 +1072,23 @@ msgstr ""
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr ""
 
-#: qcsrc/client/hud/panel/strafehud.qc:879
+#: qcsrc/client/hud/panel/strafehud.qc:1312
 msgid "qu"
 msgstr ""
 
-#: qcsrc/client/hud/panel/strafehud.qc:880
+#: qcsrc/client/hud/panel/strafehud.qc:1313
 msgid "m"
 msgstr ""
 
-#: qcsrc/client/hud/panel/strafehud.qc:881
+#: qcsrc/client/hud/panel/strafehud.qc:1314
 msgid "km"
 msgstr ""
 
-#: qcsrc/client/hud/panel/strafehud.qc:882
+#: qcsrc/client/hud/panel/strafehud.qc:1315
 msgid "mi"
 msgstr ""
 
-#: qcsrc/client/hud/panel/strafehud.qc:883
+#: qcsrc/client/hud/panel/strafehud.qc:1316
 msgid "nmi"
 msgstr ""
 
@@ -5764,7 +5764,7 @@ msgstr ""
 msgid "%dth"
 msgstr ""
 
-#: qcsrc/lib/oo.qh:324
+#: qcsrc/lib/oo.qh:331
 msgid "No description"
 msgstr ""
 
@@ -6303,7 +6303,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
@@ -6376,19 +6376,21 @@ msgid "Notification Panel"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:138
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:144
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
 #: qcsrc/menu/xonotic/util.qc:739
 msgid "Enable"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
 msgid "Enable even observing"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
 msgid "Enable only in Race/CTS"
 msgstr ""
 
@@ -6604,87 +6606,79 @@ msgstr ""
 msgid "Score Panel"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:46
 msgid "StrafeHUD mode:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "View angle centered"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Velocity angle centered"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:54
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "StrafeHUD style:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
 msgid "no styling"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "progress bar"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
 msgid "gradient"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:62
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:61
 msgid "Demo mode"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:65
 msgid "Range:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
 msgid "Center panel"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
 msgid "Reset colors"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:78
 msgid "Strafe bar:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:83
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:82
 msgid "Angle indicator:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:85
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:93
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:84
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:92
 msgid "Neutral:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:87
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:95
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:86
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:94
 msgid "Good:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:89
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:97
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:88
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:96
 msgid "Overturn:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
-msgid "Switch indicators:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
+msgid "Switch indicator:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
-msgid "Direction caps:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
-msgid "Active:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:134
-msgid "Inactive:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
+msgid "Best angle indicator:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
