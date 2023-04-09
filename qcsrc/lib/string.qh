@@ -402,7 +402,6 @@ bool isInvisibleString(string s)
 			case 0xE0A0: // invisible char of the utf8 quake charmap
 			case 0xE020: // invisible char of the utf8 quake charmap
 			case 0x00A0: // NO-BREAK SPACE
-			//case 0x1680: // OGHAM SPACE MARK
 			case 0x180E: // MONGOLIAN VOWEL SEPARATOR
 			case 0x2000: // EN QUAD
 			case 0x2001: // EM QUAD
@@ -420,6 +419,8 @@ bool isInvisibleString(string s)
 			case 0x205F: // MEDIUM MATHEMATICAL SPACE
 			case 0x3000: // IDEOGRAPHIC SPACE
 			case 0xFEFF: // ZERO WIDTH NO-BREAK SPACE
+			case 0xFFA0: // Halfwidth Hangul Filler
+			case 0x3164: // Hangul Filler
 				if (utf8) break;
 			default:
 				return false;

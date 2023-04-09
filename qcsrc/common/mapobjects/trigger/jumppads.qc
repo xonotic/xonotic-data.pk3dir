@@ -39,6 +39,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	if(pushed_entity && pushed_entity.gravity)
 		grav *= pushed_entity.gravity;
 
+	// Q3 has frametime-dependent gravity, but its trigger_push velocity calculation doesn't account for that.
+	// This discrepancy can be simulated accurately which ensures that all entities will arrive
+	// where they would in Q3 with gravity 800 at 125fps, even if entity-specific gravity is applied.
+	// This can be hard-coded because we don't support the Q3 world.gravity field at this time.
+	// See physicsCPMA.cfg for maths and test results.
+	if (Q3COMPAT_COMMON)
+		grav /= 750/800; // exact float, unlike 800/750
+
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
@@ -69,7 +77,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 		and ti.
 	 */
 
-	// push him so high...
+	// push them so high...
 	vz = sqrt(fabs(2 * grav * jumpheight)); // NOTE: sqrt(positive)!
 
 	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
@@ -135,11 +143,8 @@ bool jumppad_push(entity this, entity targ)
 
 	vector org = targ.origin;
 
-	if(STAT(Q3COMPAT))
-	{
-		org.z += targ.mins_z;
-		org.z += 1; // off by 1!
-	}
+	if(Q3COMPAT_COMMON || this.spawnflags & PUSH_STATIC)
+		org = (this.absmin + this.absmax) * 0.5;
 
 	if(this.enemy)
 	{
