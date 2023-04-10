@@ -4,7 +4,7 @@
 #include <common/scores.qh>
 void surv_Initialize();
 
-REGISTER_MUTATOR(sv, false)
+REGISTER_MUTATOR(surv, false)
 {
     MUTATOR_STATIC();
 	MUTATOR_ONADD
