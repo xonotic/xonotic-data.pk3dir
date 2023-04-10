@@ -1056,7 +1056,12 @@ void HUD_Configure_DrawGrid()
 		vector s;
 		// vertical center line, wider than vertical grid lines so that it's more visible
 		// NOTE: depending on grid size the vertical center line may not overlap any vertical grid line
-		drawfill(eX * (0.5 * vid_conwidth - 1), vec2(3, vid_conheight), '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		int n = tokenize(autocvar_hud_configure_vertical_lines);
+		for (i = 0; i < n; ++i)
+		{
+			float xpos_rel = stof(argv(i));
+			drawfill(eX * (xpos_rel * vid_conwidth - 1), vec2(3, vid_conheight), '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		}
 		// x-axis
 		s = vec2(1, vid_conheight);
 		for(i = 1; i < 1/hud_configure_gridSize.x; ++i)
@@ -1124,15 +1129,20 @@ void HUD_Panel_HlCenterLine(float myBorder)
 	if (time > hud_configure_centerline_time)
 		return;
 	float panel_centerpos_x = (panel_pos.x + panel_size.x * 0.5);
-	float ofs = fabs(panel_centerpos_x / vid_conwidth - 0.5);
-	if (ofs < 0.02) // don't bother showing the center line if it's evident that the panel is not centered
+	int n = tokenize(autocvar_hud_configure_vertical_lines);
+	for (int i = 0; i < n; ++i)
 	{
-		float f = map_bound_ranges(ofs, 0.001, 0.01, 0, 1);
-		vector col = '1 0 0' * f + '0 1 0' * (1 - f); // from red (far) to green (close)
-		float theAlpha = 0.3 + 0.1 * sin(6 * time); // blink
-		theAlpha *= (1 - autocvar__menu_alpha) * bound(0, hud_configure_centerline_time - time, 0.5) * 2; // fade
-		vector pos = vec2(panel_centerpos_x - 1, panel_pos.y - myBorder);
-		drawfill(pos, vec2(3, panel_size.y + 2 * myBorder), col, theAlpha, DRAWFLAG_NORMAL);
+		float xpos_rel = stof(argv(i));
+		float ofs = fabs(panel_centerpos_x / vid_conwidth - xpos_rel);
+		if (ofs < 0.02) // don't bother showing the center line if it's evident that the panel is not centered
+		{
+			float f = map_bound_ranges(ofs, 0.001, 0.01, 0, 1);
+			vector col = '1 0 0' * f + '0 1 0' * (1 - f); // from red (far) to green (close)
+			float theAlpha = 0.3 + 0.1 * sin(6 * time); // blink
+			theAlpha *= (1 - autocvar__menu_alpha) * bound(0, hud_configure_centerline_time - time, 0.5) * 2; // fade
+			vector pos = vec2(panel_centerpos_x - 1, panel_pos.y - myBorder);
+			drawfill(pos, vec2(3, panel_size.y + 2 * myBorder), col, theAlpha, DRAWFLAG_NORMAL);
+		}
 	}
 }
 
