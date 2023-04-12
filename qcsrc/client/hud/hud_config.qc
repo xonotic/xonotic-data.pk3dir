@@ -1133,6 +1133,8 @@ void HUD_Panel_HlCenterLine(float myBorder)
 	for (int i = 0; i < n; ++i)
 	{
 		float xpos_rel = stof(argv(i));
+		if (xpos_rel <= 0 || xpos_rel >= 1)
+			continue;
 		float ofs = fabs(panel_centerpos_x / vid_conwidth - xpos_rel);
 		if (ofs < 0.02) // don't bother showing the center line if it's evident that the panel is not centered
 		{
