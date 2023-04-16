@@ -6690,7 +6690,7 @@ msgstr "得分面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:46
 msgid "StrafeHUD mode:"
-msgstr "動力角指示模式："
+msgstr "漂移指示模式："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "View angle centered"
@@ -6702,7 +6702,7 @@ msgstr "動力角放在中央"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "StrafeHUD style:"
-msgstr "動力角指示風格："
+msgstr "漂移指示風格："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
 msgid "no styling"
@@ -6757,15 +6757,15 @@ msgstr "過轉："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "Switch indicator:"
-msgstr ""
+msgstr "掉頭指示："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "最佳角度指示："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr "動力角指示面板"
+msgstr "漂移面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Timer:"

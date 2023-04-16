@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2023\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -40,7 +40,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2Успешно экспортировано в %s! (Примечание: записано в data/data/)"
+msgstr "^2Успешный экспорт в %s! (Примечание: записано в data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -1577,8 +1577,8 @@ msgstr "Жизни:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
-"Соревнуйтесь за наибольшее количество нанесённого урона и фрагов в этой "
-"неразберихе!"
+"Соревнуйтесь за наибольшее количество нанесённого урона и фрагов в этом "
+"беспределе!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -1657,7 +1657,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr "Командный Беспредел"
+msgstr "Командный беспредел"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -5231,11 +5231,11 @@ msgstr "Не указан"
 
 #: qcsrc/common/util.qc:1446
 msgid "<KEY NOT FOUND>"
-msgstr "<KEY NOT FOUND>"
+msgstr "<КЛАВИША НЕ НАЙДЕНА>"
 
 #: qcsrc/common/util.qc:1447
 msgid "<UNKNOWN KEYNUM>"
-msgstr "<UNKNOWN KEYNUM>"
+msgstr "<НЕИЗВЕСТНЫЙ НОМЕР КЛАВИШИ>"
 
 #: qcsrc/common/util.qc:1452
 msgid "TAB"
@@ -5261,22 +5261,22 @@ msgstr "BACKSPACE"
 #: qcsrc/common/util.qc:1458 qcsrc/common/util.qc:1515
 #, c-format
 msgid "UPARROW"
-msgstr "UPARROW"
+msgstr "СТРЕЛКА ВВЕРХ"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1510
 #, c-format
 msgid "DOWNARROW"
-msgstr "DOWNARROW"
+msgstr "СТРЕЛКА ВНИЗ"
 
 #: qcsrc/common/util.qc:1460 qcsrc/common/util.qc:1512
 #, c-format
 msgid "LEFTARROW"
-msgstr "LEFTARROW"
+msgstr "СТРЕЛКА ВЛЕВО"
 
 #: qcsrc/common/util.qc:1461 qcsrc/common/util.qc:1513
 #, c-format
 msgid "RIGHTARROW"
-msgstr "RIGHTARROW"
+msgstr "СТРЕЛКА ВПРАВО"
 
 #: qcsrc/common/util.qc:1463
 msgid "ALT"
@@ -5338,27 +5338,27 @@ msgstr "SCROLLOCK"
 
 #: qcsrc/common/util.qc:1480
 msgid "SEMICOLON"
-msgstr "SEMICOLON"
+msgstr "ТОЧКА С ЗАПЯТОЙ"
 
 #: qcsrc/common/util.qc:1481
 msgid "TILDE"
-msgstr "TILDE"
+msgstr "ТИЛЬДА"
 
 #: qcsrc/common/util.qc:1482
 msgid "BACKQUOTE"
-msgstr "BACKQUOTE"
+msgstr "ОБРАТНАЯ КАВЫЧКА"
 
 #: qcsrc/common/util.qc:1483
 msgid "QUOTE"
-msgstr "QUOTE"
+msgstr "КАВЫЧКА"
 
 #: qcsrc/common/util.qc:1484
 msgid "APOSTROPHE"
-msgstr "APOSTROPHE"
+msgstr "АПОСТРОФ"
 
 #: qcsrc/common/util.qc:1485
 msgid "BACKSLASH"
-msgstr "BACKSLASH"
+msgstr "ОБРАТНАЯ КОСАЯ ЧЕРТА"
 
 #: qcsrc/common/util.qc:1493
 #, c-format
@@ -5386,37 +5386,37 @@ msgstr "KP_%s"
 #: qcsrc/common/util.qc:1517
 #, c-format
 msgid "PERIOD"
-msgstr "PERIOD"
+msgstr "ТОЧКА"
 
 #: qcsrc/common/util.qc:1519
 #, c-format
 msgid "DIVIDE"
-msgstr "DIVIDE"
+msgstr "КОСАЯ ЧЕРТА"
 
 #: qcsrc/common/util.qc:1520
 #, c-format
 msgid "SLASH"
-msgstr "SLASH"
+msgstr "КОСАЯ ЧЕРТА"
 
 #: qcsrc/common/util.qc:1521
 #, c-format
 msgid "MULTIPLY"
-msgstr "MULTIPLY"
+msgstr "УМНОЖЕНИЕ"
 
 #: qcsrc/common/util.qc:1522
 #, c-format
 msgid "MINUS"
-msgstr "MINUS"
+msgstr "МИНУС"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PLUS"
-msgstr "PLUS"
+msgstr "ПЛЮС"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "EQUALS"
-msgstr "EQUALS"
+msgstr "РАВНО"
 
 #: qcsrc/common/util.qc:1530
 msgid "PRINTSCREEN"
@@ -5425,15 +5425,15 @@ msgstr "PRINTSCREEN"
 #: qcsrc/common/util.qc:1533
 #, c-format
 msgid "MOUSE%d"
-msgstr "MOUSE%d"
+msgstr "МЫШЬ %d"
 
 #: qcsrc/common/util.qc:1535
 msgid "MWHEELUP"
-msgstr "MWHEELUP"
+msgstr "КОЛЕСО МЫШИ ВВЕРХ"
 
 #: qcsrc/common/util.qc:1536
 msgid "MWHEELDOWN"
-msgstr "MWHEELDOWN"
+msgstr "КОЛЕСО МЫШИ ВНИЗ"
 
 #: qcsrc/common/util.qc:1539
 #, c-format
@@ -5568,22 +5568,22 @@ msgstr "JOY_%s"
 #: qcsrc/common/util.qc:1578
 #, c-format
 msgid "UP"
-msgstr "UP"
+msgstr "ВВЕРХ"
 
 #: qcsrc/common/util.qc:1579
 #, c-format
 msgid "DOWN"
-msgstr "DOWN"
+msgstr "ВНИЗ"
 
 #: qcsrc/common/util.qc:1580
 #, c-format
 msgid "LEFT"
-msgstr "LEFT"
+msgstr "ВЛЕВО"
 
 #: qcsrc/common/util.qc:1581
 #, c-format
 msgid "RIGHT"
-msgstr "RIGHT"
+msgstr "ВПРАВО"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
@@ -5994,7 +5994,7 @@ msgstr "Код игры"
 
 #: qcsrc/menu/xonotic/credits.qc:113
 msgid "Marketing / PR"
-msgstr "Маркетинг / Связи с общественностью"
+msgstr "Маркетинг / связи с общественностью"
 
 #: qcsrc/menu/xonotic/credits.qc:119
 msgid "Legal"
@@ -6175,7 +6175,7 @@ msgstr "только чтение"
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr "ОК"
+msgstr "Хорошо"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
@@ -6398,7 +6398,7 @@ msgstr "Сведения о движке:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
-msgstr "Исп. алгоритм усреднения частоты кадров"
+msgstr "Усреднять счётчик частоты кадров"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -6448,7 +6448,7 @@ msgstr "Панель здоровья и брони"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
 msgid "Info messages:"
-msgstr "Инф. сообщения:"
+msgstr "Справочные сообщения:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:19
 msgid "Flip align"
@@ -6771,11 +6771,11 @@ msgstr "Режим интерфейса:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "View angle centered"
-msgstr "Угол обзора по центру"
+msgstr "Угол обзора в центре"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Velocity angle centered"
-msgstr "Угол скорости по центру"
+msgstr "Угол скорости в центре"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "StrafeHUD style:"
@@ -6803,7 +6803,7 @@ msgstr "Диапазон:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
 msgid "Center panel"
-msgstr "Центральная панель"
+msgstr "Панель в центр"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
 msgid "Reset colors"
@@ -6815,12 +6815,12 @@ msgstr "Шкала стрейфа:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:82
 msgid "Angle indicator:"
-msgstr "Угловой индикатор:"
+msgstr "Указатель угла:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:84
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:92
 msgid "Neutral:"
-msgstr "Нейтрально:"
+msgstr "Нейтраль:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:86
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:94
@@ -6834,11 +6834,11 @@ msgstr "Переповорот:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "Switch indicator:"
-msgstr ""
+msgstr "Указатель переключения:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "Указатель лучшего угла:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
@@ -7180,7 +7180,7 @@ msgstr "4 команды"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
-msgstr "Слоты игроков:"
+msgstr "Места для игроков:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid ""
@@ -7519,7 +7519,7 @@ msgstr "Полные"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
 msgid "Show full servers that have no slots available"
-msgstr "Показывать полные серверы, не имеющие свободных мест"
+msgstr "Показывать полные серверы без свободных мест"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
@@ -7675,7 +7675,7 @@ msgstr "Боты:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:75
 msgid "Free slots:"
-msgstr "Пустые слоты:"
+msgstr "Пустые места:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:81
 msgid "Encryption:"
@@ -8674,7 +8674,8 @@ msgid ""
 "Set a different crosshair for each weapon, good if you play without weapon "
 "models"
 msgstr ""
-"Разные прицелы для каждого оружия; хорошо, если вы играете без моделей оружия"
+"Разные прицелы для каждого оружия; полезно, если вы играете без моделей "
+"оружия"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
@@ -8860,7 +8861,7 @@ msgstr "Содрогание интерфейса при получении ур
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr "Открыть редактор оболочки"
+msgstr "Открыть редактор интерфейса"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
@@ -9285,7 +9286,7 @@ msgstr "Сменить клавишу…"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:42
 msgid "Edit..."
-msgstr "Изменить…"
+msgstr "Править…"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:48
 msgid "Clear"
@@ -9458,7 +9459,7 @@ msgstr "Широкополосный"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"
-msgstr "Местная задержка:"
+msgstr "Локальная задержка:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
@@ -9486,7 +9487,7 @@ msgstr "Показывать число отрисованных кадров в
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Maximum:"
-msgstr "Предельная:"
+msgstr "Предел:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:96
 msgid "MAXFPS^Unlimited"
@@ -9987,7 +9988,7 @@ msgstr "Разрешить статистике использовать ваш�
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "В случае ответа «Нет» вы станете известны как «Anonymous player»"
+msgstr "В случае ответа «Нет» вас будут звать «Anonymous player»"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
@@ -10227,7 +10228,7 @@ msgstr "SERVER^Убрать из избранного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr "Убрать выбранный сервер из избранного"
+msgstr "Убрать текущий выбранный сервер из избранного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"
@@ -10343,7 +10344,7 @@ msgstr "%s дБ"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
-msgstr "ОМГ"
+msgstr "НИЧОСИ"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
@@ -10363,11 +10364,11 @@ msgstr "Высокий"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr "Ультра"
+msgstr "Чрезмерный"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr "Максимальный"
+msgstr "Предельный"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
