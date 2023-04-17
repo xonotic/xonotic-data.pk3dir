@@ -274,9 +274,12 @@ void IL_ENDFRAME()
 // it should be used only in very particular cases such as after a copyentity call
 void IL_REMOVE_RAW(entity it)
 {
-	it.il_lists = '0 0 0';
-	for (int i = 0; i < IL_MAX * 2; ++i)
-		it.il_links_flds[i] = nil;
+	if (it.il_lists)
+	{
+		it.il_lists = '0 0 0';
+		for (int i = 0; i < IL_MAX * 2; ++i)
+			it.il_links_flds[i] = nil;
+	}
 }
 
 // called when an entity is deleted with delete() / remove()
