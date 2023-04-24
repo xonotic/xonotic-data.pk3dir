@@ -52,6 +52,7 @@ REGISTER_ITEM(Invisibility, Powerup) {
 }
 
 SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)
+SPAWNFUNC_ITEM(item_buff_invisibility, ITEM_Invisibility)
 
 CLASS(Invisibility, Powerups)
     ATTRIB(Invisibility, netname, string, "invisibility");
