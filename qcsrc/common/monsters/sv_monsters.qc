@@ -55,6 +55,8 @@ void monster_dropitem(entity this, entity attacker)
 	{
 		e.noalign = true;
 		StartItem(e, e.monster_loot);
+		if(startitem_failed || wasfreed(e))
+			return;
 		e.gravity = 1;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
@@ -884,6 +886,12 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 
 void Monster_Reset(entity this)
 {
+	if(this.spawnflags & MONSTERFLAG_SPAWNED)
+	{
+		Monster_Remove(this);
+		return;
+	}
+
 	setorigin(this, this.pos1);
 	this.angles = this.pos2;
 

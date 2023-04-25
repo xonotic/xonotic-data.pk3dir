@@ -9,7 +9,6 @@
 		PERSON(Merlijn Hofstra) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Tyler "-z-" Mulligan) \
-		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
 		PERSON(bones_was_here) \
@@ -489,6 +488,7 @@
 		PERSON(William Libert) \
 		PERSON(William "Willis" Weilep) \
 		PERSON(Yves "EviLair" Allaire) \
+		PERSON(Zac "Mario" Jardine) \
 		PERSON(Zenex) \
 		PERSON(... and a goat) \
 		/**/
