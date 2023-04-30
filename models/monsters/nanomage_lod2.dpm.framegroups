@@ -1,0 +1,18 @@
+/*
+Generated framegroups file for nanomage
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 61 12 1 // nanomage idle
+62 9 10 1 // nanomage run
+71 71 30 0 // nanomage attack01
+142 43 30 0 // nanomage attack02
+185 61 30 0 // nanomage attack03
+246 101 30 0 // nanomage attack04
+347 11 30 0 // nanomage pain01
+358 16 30 0 // nanomage pain02
+374 31 30 0 // nanomage pain03
+405 86 30 0 // nanomage death01
+491 56 30 0 // nanomage death02
+547 2 1 0 // nanomage dead01
+549 2 1 0 // nanomage dead02

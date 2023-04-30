@@ -75,7 +75,7 @@ void W_Electro_ExplodeCombo(entity this)
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(electro, combo_comboradius), this.realowner);
 
 	this.event_damage = func_null;
-	this.velocity = this.movedir; // particle fx and decals need .velocity
+	this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	if(WEP_CVAR(electro, combo_duration))
 	{
@@ -128,7 +128,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	this.velocity = this.movedir; // particle fx and decals need .velocity
+	this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	if(this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
 	{
@@ -660,8 +660,7 @@ METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);

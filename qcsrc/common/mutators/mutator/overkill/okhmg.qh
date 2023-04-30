@@ -20,6 +20,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 /* wepimg    */ ATTRIB(OverkillHeavyMachineGun, model2, string, "weaponhmg");
 /* refname   */ ATTRIB(OverkillHeavyMachineGun, netname, string, "okhmg");
 /* wepname   */ ATTRIB(OverkillHeavyMachineGun, m_name, string, _("Overkill Heavy Machine Gun"));
+/* legacy    */ ATTRIB(OverkillHeavyMachineGun, m_deprecated_netname, string, "hmg");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

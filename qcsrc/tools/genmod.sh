@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eu
 
+export LC_ALL=C.UTF-8
+
 # This script creates / updates the _mod.qc / _mod.qh / _mod.inc files based on
 # the qc / qh files present in the qcsrc folder.
 
@@ -27,21 +29,16 @@ function genmod() {
     fi
     echo '// generated file; do not modify' > ${MOD}.inc
     echo '// generated file; do not modify' > ${MOD}.qh
-    for f in $(ls | sort -k 1,1 -t .); do
-          if [[ "$f" == cl_* ]]; then f="${f#cl_}"; if [[ -f "$f" ]]; then continue; fi
-        elif [[ "$f" == sv_* ]]; then f="${f#sv_}"; if [[ -f "$f" ]]; then continue; fi
-        elif [[ "$f" == ui_* ]]; then f="${f#ui_}"; if [[ -f "$f" ]]; then continue; fi
-        fi
-        if [[ "$f" == *.qc ]]; then
-            if [[ -f "$f" ]]; then echo -e "#include <${CTX}$f>" >> ${MOD}.inc; fi
-            if [[ -f "${f%.qc}.qh" ]]; then echo -e "#include <${CTX}${f%.qc}.qh>" >> ${MOD}.qh; fi
-            if [[ -f "cl_$f" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_$f>\n#endif" >> ${MOD}.inc; fi
-            if [[ -f "cl_${f%.qc}.qh" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
-            if [[ -f "sv_$f" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_$f>\n#endif" >> ${MOD}.inc; fi
-            if [[ -f "sv_${f%.qc}.qh" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
-            if [[ -f "ui_$f" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_$f>\n#endif" >> ${MOD}.inc; fi
-            if [[ -f "ui_${f%.qc}.qh" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
-        fi
+    for f in $(ls | sed -e "s/^cl_//" -e "s/^sv_//" -e "s/^ui_//" | sort -u); do
+        if [[ "$f" != *.qc ]]; then continue; fi
+        if [[ -f "$f" ]]; then echo -e "#include <${CTX}$f>" >> ${MOD}.inc; fi
+        if [[ -f "${f%.qc}.qh" ]]; then echo -e "#include <${CTX}${f%.qc}.qh>" >> ${MOD}.qh; fi
+        if [[ -f "cl_$f" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_$f>\n#endif" >> ${MOD}.inc; fi
+        if [[ -f "cl_${f%.qc}.qh" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
+        if [[ -f "sv_$f" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_$f>\n#endif" >> ${MOD}.inc; fi
+        if [[ -f "sv_${f%.qc}.qh" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
+        if [[ -f "ui_$f" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_$f>\n#endif" >> ${MOD}.inc; fi
+        if [[ -f "ui_${f%.qc}.qh" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
     done
     declare -l rec=1
     if [[ -f "_all.inc" ]]; then rec=0; fi

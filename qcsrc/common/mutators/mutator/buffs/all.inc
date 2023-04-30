@@ -1,4 +1,4 @@
-string Buff_UndeprecateName(string buffname)
+string Buff_CompatName(string buffname)
 {
     switch(buffname)
     {
