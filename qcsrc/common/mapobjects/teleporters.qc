@@ -223,9 +223,11 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 		if(vdist(player.velocity, >, e.speed))
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
 
-	if(STAT(TELEPORT_MAXSPEED, player))
-		if(vdist(player.velocity, >, STAT(TELEPORT_MAXSPEED, player)))
-			player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
+	if(!(teleporter.classname == "trigger_teleport" && teleporter.spawnflags & TELEPORT_KEEP_SPEED) &&
+	   !(teleporter.classname == "target_teleporter" && teleporter.spawnflags & TARGET_TELEPORTER_KEEP_SPEED))
+		if(STAT(TELEPORT_MAXSPEED, player))
+			if(vdist(player.velocity, >, STAT(TELEPORT_MAXSPEED, player)))
+				player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
 
 	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 
