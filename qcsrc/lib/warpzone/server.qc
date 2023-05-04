@@ -809,8 +809,7 @@ void WarpZone_StartFrame()
 		if(warpzone_warpzones_exist)
 			WarpZone_StoreProjectileData(it); // TODO: not actually needed
 
-		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
-		if(IS_CLIENT(it)) // we don't care about it being a bot
+		if((IS_OBSERVER(it) || it.solid == SOLID_NOT) && !IS_BOT_CLIENT(it))
 		{
 			// warpzones
 			if (warpzone_warpzones_exist) {
