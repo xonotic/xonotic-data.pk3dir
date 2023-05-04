@@ -27,9 +27,6 @@ bool Teleport_Active(entity this, entity player)
 
 	if(IS_TURRET(player))
 		return false;
-
-	if(this.classname == "trigger_teleport" && this.spawnflags & TELEPORT_SPECTATOR && !IS_SPEC(player))
-		return false;
 #elif defined(CSQC)
 	if(!IS_PLAYER(player))
 		return false;
@@ -41,6 +38,10 @@ bool Teleport_Active(entity this, entity player)
 	if(this.team)
 		if(((this.spawnflags & INVERT_TEAMS) == 0) == (DIFF_TEAM(this, player)))
 			return false;
+
+	// no need to call IS_OBSERVER(), observers never call use/touch functions which means this is never an observer
+	if(this.classname == "trigger_teleport" && this.spawnflags & TELEPORT_OBSERVERS_ONLY)
+		return false;
 
 	return true;
 }
