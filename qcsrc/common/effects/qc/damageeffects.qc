@@ -219,7 +219,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	forcemul = (rad_negative ? -1 : 1);
 
-	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
+	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity && !is_pure(it), {
 		vector nearest = NearestPointOnBox(it, w_org);
 		if (rad)
 		{
