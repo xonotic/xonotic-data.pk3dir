@@ -28,22 +28,30 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
 
-	entity e;
-
 	if(!sound_allowed(MSG_BROADCAST, dmgowner))
 		deathtype |= 0x8000;
 
-	e = new_pure(damageinfo);
+	entity e = new_pure(damageinfo);
 	// origin is just data to be sent
 	//setorigin(e, org);
 	e.origin = org;
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
 	e.dmg_edge = edgedamage;
+	bool rad_negative = false;
+	if(rad < 0)
+	{
+		// make it positive (unsigned) so it can be sent as byte
+		rad_negative = true;
+		rad = -rad;
+	}
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-	e.species = bloodtype;
+
+	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
+	if(rad_negative)
+		e.species |= BIT(7);
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -201,19 +209,15 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	force.z = ReadShort() * 4 + 2;
 
 	species = ReadByte();
+	bool rad_negative = (species & BIT(7));
+	species = (species & BITS(4));
 
 	return = true;
 
 	if (!isNew)
 		return;
 
-	if(rad < 0)
-	{
-		rad = -rad;
-		forcemul = -1;
-	}
-	else
-		forcemul = 1;
+	forcemul = (rad_negative ? -1 : 1);
 
 	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
 		vector nearest = NearestPointOnBox(it, w_org);
