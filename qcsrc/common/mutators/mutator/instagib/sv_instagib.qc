@@ -17,21 +17,30 @@ bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
 
-void instagib_invisibility(entity this)
+void instagib_replace_with_invisibility(entity this)
 {
-	this.invisibility_finished = autocvar_g_instagib_invisibility_time;
-	StartItem(this, ITEM_Invisibility);
+	entity e = new(item_invisibility);
+	Item_CopyFields(this, e);
+
+	e.invisibility_finished = autocvar_g_instagib_invisibility_time;
+	StartItem(e, ITEM_Invisibility);
 }
 
-void instagib_extralife(entity this)
+void instagib_replace_with_extralife(entity this)
 {
-	StartItem(this, ITEM_ExtraLife);
+	entity e = new(item_extralife);
+	Item_CopyFields(this, e);
+
+	StartItem(e, ITEM_ExtraLife);
 }
 
-void instagib_speed(entity this)
+void instagib_replace_with_speed(entity this)
 {
-	this.speed_finished = autocvar_g_instagib_speed_time;
-	StartItem(this, ITEM_Speed);
+	entity e = new(item_speed);
+	Item_CopyFields(this, e);
+
+	e.speed_finished = autocvar_g_instagib_speed_time;
+	StartItem(e, ITEM_Speed);
 }
 
 /// \brief Returns a random classname of the instagib item.
@@ -304,6 +313,21 @@ void replace_with_insta_cells(entity item)
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
+	entity def = item.itemdef;
+	if(def == ITEM_Strength || def == ITEM_Shield || def == ITEM_HealthMega || def == ITEM_ArmorMega)
+	{
+		if(autocvar_g_powerups)
+		{
+			float r = random();
+			if (r < 0.3)
+				instagib_replace_with_invisibility(item);
+			else if (r < 0.6)
+				instagib_replace_with_extralife(item);
+			else
+				instagib_replace_with_speed(item);
+		}
+		return true;
+	}
 
 	if(item.classname == "item_cells")
 	{
@@ -404,40 +428,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	}
 
 	return MUT_ITEMTOUCH_CONTINUE;
-}
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
-{
-	if (MUTATOR_RETURNVALUE) return false;
-	if (!autocvar_g_powerups) { return; }
-	entity ent = M_ARGV(0, entity);
-	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
-		return;
-
-	entity e = spawn();
-
-	float r = random();
-	if (r < 0.3)
-	{
-		e.classname = "item_invisibility";
-		setthink(e, instagib_invisibility);
-	}
-	else if (r < 0.6)
-	{
-		e.classname = "item_extralife";
-		setthink(e, instagib_extralife);
-	}
-	else
-	{
-		e.classname = "item_speed";
-		setthink(e, instagib_speed);
-	}
-
-	Item_CopyFields(ent, e);
-	e.nextthink = time + 0.1;
-
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
