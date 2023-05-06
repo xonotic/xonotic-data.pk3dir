@@ -303,11 +303,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
-void replace_with_insta_cells(entity item)
+void instagib_replace_with_vaporizer_cells(entity item)
 {
 	entity e = new(item_vaporizer_cells);
 	Item_CopyFields(item, e);
-	spawnfunc_item_vaporizer_cells(e);
+	StartItem(e, ITEM_VaporizerCells);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -329,36 +329,28 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.classname == "item_cells")
+	if(def == ITEM_Cells)
 	{
 		if(autocvar_g_instagib_ammo_convert_cells)
-		{
-			replace_with_insta_cells(item);
-		}
+			instagib_replace_with_vaporizer_cells(item);
 		return true;
 	}
-	else if(item.classname == "item_rockets")
+	else if(def == ITEM_Rockets)
 	{
 		if(autocvar_g_instagib_ammo_convert_rockets)
-		{
-			replace_with_insta_cells(item);
-		}
+			instagib_replace_with_vaporizer_cells(item);
 		return true;
 	}
-	else if(item.classname == "item_shells")
+	else if(def == ITEM_Shells)
 	{
 		if(autocvar_g_instagib_ammo_convert_shells)
-		{
-			replace_with_insta_cells(item);
-		}
+			instagib_replace_with_vaporizer_cells(item);
 		return true;
 	}
-	else if(item.classname == "item_bullets")
+	else if(def == ITEM_Bullets)
 	{
 		if(autocvar_g_instagib_ammo_convert_bullets)
-		{
-			replace_with_insta_cells(item);
-		}
+			instagib_replace_with_vaporizer_cells(item);
 		return true;
 	}
 
@@ -370,7 +362,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 
 	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
 	{
-		replace_with_insta_cells(item);
+		instagib_replace_with_vaporizer_cells(item);
 		return true;
 	}
 
