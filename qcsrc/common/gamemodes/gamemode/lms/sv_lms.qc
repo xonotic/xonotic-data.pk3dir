@@ -646,39 +646,33 @@ MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 	if (autocvar_g_lms_items)
 		return false;
 
-	entity definition = M_ARGV(0, entity);
+	entity def = M_ARGV(0, entity);
 
-	if (autocvar_g_lms_extra_lives && definition == ITEM_ExtraLife)
-	{
+	if (autocvar_g_powerups && autocvar_g_lms_extra_lives && (def == ITEM_ExtraLife || def == ITEM_HealthMega))
 		return false;
-	}
 	return (autocvar_g_pickup_items <= 0); // only allow items if explicitly enabled
 }
 
-void lms_extralife(entity this)
+void lms_replace_with_extralife(entity this)
 {
-	StartItem(this, ITEM_ExtraLife);
+	entity e = new(item_extralife);
+	Item_CopyFields(this, e);
+
+	StartItem(e, ITEM_ExtraLife);
 }
 
-MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(lms, FilterItem)
 {
-	if (MUTATOR_RETURNVALUE) return false;
-	if (!autocvar_g_powerups) return false;
-	if (!autocvar_g_lms_extra_lives) return false;
+	entity item = M_ARGV(0, entity);
+	entity def = item.itemdef;
+	if(def == ITEM_HealthMega)
+	{
+		if(autocvar_g_powerups && autocvar_g_lms_extra_lives)
+			lms_replace_with_extralife(item);
+		return true;
+	}
 
-	entity ent = M_ARGV(0, entity);
-
-	// Can't use .itemdef here
-	if (ent.classname != "item_health_mega") return false;
-
-	entity e = spawn();
-	setthink(e, lms_extralife);
-
-	Item_CopyFields(ent, e);
-
-	e.nextthink = time + 0.1;
-
-	return true;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
