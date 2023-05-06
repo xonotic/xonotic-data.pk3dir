@@ -643,14 +643,14 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
-	if (autocvar_g_lms_items)
+	if (autocvar_g_lms_items || autocvar_g_pickup_items > 0)
 		return false;
 
 	entity def = M_ARGV(0, entity);
-
 	if (autocvar_g_powerups && autocvar_g_lms_extra_lives && (def == ITEM_ExtraLife || def == ITEM_HealthMega))
 		return false;
-	return (autocvar_g_pickup_items <= 0); // only allow items if explicitly enabled
+
+	return true;
 }
 
 void lms_replace_with_extralife(entity this)
@@ -665,7 +665,7 @@ MUTATOR_HOOKFUNCTION(lms, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 	entity def = item.itemdef;
-	if(def == ITEM_HealthMega)
+	if(def == ITEM_HealthMega && !(autocvar_g_lms_items || autocvar_g_pickup_items > 0))
 	{
 		if(autocvar_g_powerups && autocvar_g_lms_extra_lives)
 			lms_replace_with_extralife(item);
