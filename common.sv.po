@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-09 07:22+0200\n"
+"POT-Creation-Date: 2023-05-07 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Hanicef <gustaf@hanicef.me>, 2021\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -2046,35 +2046,31 @@ msgstr "Vampyr"
 msgid "Disability"
 msgstr "Funktionshinder"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:89
-msgid "Disabled"
-msgstr "Funktionshindrad"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:100
+#: qcsrc/common/mutators/mutator/buffs/all.inc:85
 msgid "Vengeance"
 msgstr "Hämnd"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:111
+#: qcsrc/common/mutators/mutator/buffs/all.inc:96
 msgid "Jump"
 msgstr "Hopp"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:122
+#: qcsrc/common/mutators/mutator/buffs/all.inc:107
 msgid "Inferno"
 msgstr "Inferno"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:133
+#: qcsrc/common/mutators/mutator/buffs/all.inc:118
 msgid "Swapper"
 msgstr "Växlare"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:144
+#: qcsrc/common/mutators/mutator/buffs/all.inc:129
 msgid "Magnet"
 msgstr "Magnet"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:154
+#: qcsrc/common/mutators/mutator/buffs/all.inc:139
 msgid "Luck"
 msgstr "Tur"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:164
+#: qcsrc/common/mutators/mutator/buffs/all.inc:149
 msgid "Flight"
 msgstr "Flyg"
 
@@ -2233,6 +2229,10 @@ msgstr "Brinnande"
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
 msgstr "Skapningssköld"
+
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
+msgid "Stunned"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -5899,7 +5899,7 @@ msgstr "%d:e"
 msgid "%dth"
 msgstr "%d:e"
 
-#: qcsrc/lib/oo.qh:331
+#: qcsrc/lib/oo.qh:336
 msgid "No description"
 msgstr "Ingen beskrivning"
 
@@ -7010,23 +7010,34 @@ msgstr "Stor"
 msgid "Grid settings:"
 msgstr "Rutnätsinställningar:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:122
 msgid "Snap panels to grid"
 msgstr "Knäpp paneler till rutnätet"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:125
 msgid "Grid size:"
 msgstr "Rutnätsstorlek:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:129
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "X:"
 msgstr "X:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:136
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
 msgid "Y:"
 msgstr "Y:"
 
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
+msgid "Center line"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
+#, c-format
+msgid ""
+"Show a vertical centerline to help align panels. It's possible to show more "
+"vertical lines by editing %s in the console"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
 msgstr "Lämna inställningar"
 
