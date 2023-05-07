@@ -416,6 +416,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	{
 		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
+		Inventory_pickupitem(item.itemdef, toucher);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 

@@ -686,6 +686,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 	{
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_lms_extra_lives);
 		GameRules_scoring_add(toucher, LMS_LIVES, autocvar_g_lms_extra_lives);
+		Inventory_pickupitem(item.itemdef, toucher);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
