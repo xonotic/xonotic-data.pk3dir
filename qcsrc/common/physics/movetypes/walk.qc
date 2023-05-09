@@ -145,7 +145,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.groundentity = originalmove_groundentity;
 	}
 	else if (GAMEPLAYFIX_STEPDOWN(this) == 2)
-		PM_GroundDetect(this);
+		PM_GroundDetect(this, false);
 
 	_Movetype_LinkEdict(this, true);
 }

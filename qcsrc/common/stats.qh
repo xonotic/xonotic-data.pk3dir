@@ -9,7 +9,6 @@
 #include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/trigger/secret.qh>
-#include <common/mutators/mutator/doublejump/doublejump.qh>
 #include <common/mutators/mutator/itemstime/itemstime.qh>
 #include <common/physics/player.qh>
 #endif

@@ -44,6 +44,7 @@ float autocvar_g_maxspeed;
 float autocvar_g_movement_highspeed = 1;
 bool autocvar_g_movement_highspeed_q3_compat = 0;
 bool autocvar_speedmeter;
+bool autocvar_sv_doublejump;
 float autocvar_sv_jumpspeedcap_max;
 bool autocvar_sv_jumpspeedcap_max_disable_on_ramps;
 float autocvar_sv_jumpspeedcap_min;
@@ -110,6 +111,8 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_AMMO_FUEL(s)                   STAT(FUEL, s)
 
 #define PHYS_DODGING_FROZEN(s)              STAT(DODGING_FROZEN, s)
+
+#define PHYS_DOUBLEJUMP(s)                  STAT(DOUBLEJUMP, s)
 
 #define PHYS_FRICTION(s)                    STAT(MOVEVARS_FRICTION, s)
 #define PHYS_FRICTION_ONLAND(s)             STAT(MOVEVARS_FRICTION_ONLAND, s)
