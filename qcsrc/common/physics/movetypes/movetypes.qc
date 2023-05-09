@@ -243,6 +243,32 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				blockedflag |= 8;
 				break;
 			}
+			int clip = 0;
+			if (trace_fraction < 1)
+			{
+				if (PHYS_DOUBLEJUMP(this))
+					clip = PM_GroundDetected(this);
+
+				if (PHYS_DOUBLEJUMP(this) == 1 && trace_plane_normal.z >= MIN_WALK_NORMAL)
+				{
+					float f = this.velocity * trace_plane_normal;
+					if (f < 0)
+						this.velocity -= f * trace_plane_normal;
+				}
+			}
+
+			// frametime-independent jumping, although the step up can't be fully frametime-independent
+			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)) // no need for jumporigin check
+			{
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
+				{
+					if (time_left <= 0)
+						return blockedflag; // no more gravity, new jump's height would be too low
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
+				}
+			}
 
 			if (time_left <= 0)
 				break;
