@@ -249,7 +249,9 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				if (PHYS_DOUBLEJUMP(this) && PHYS_INPUT_BUTTON_JUMP(this))
 					clip = PM_GroundDetected(this);
 
-				if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
+				if (PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this))
+					this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+				else if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
 				{
 					float f = this.velocity * trace_plane_normal;
 					if (f < 0)
