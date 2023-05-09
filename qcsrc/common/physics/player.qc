@@ -147,6 +147,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_JUMPSPEEDCAP_MAX, this) = Physics_ClientOption(this, "jumpspeedcap_max", autocvar_sv_jumpspeedcap_max);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
+	STAT(MOVEVARS_SKIMMING, this) = Physics_ClientOption(this, "skimming", autocvar_sv_skimming);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -727,7 +728,7 @@ void PM_check_blocked(entity this)
 #endif
 }
 
-/// Timer and prediction updates for CPMA double jumping
+/// Timer and prediction updates for CPMA double jumping and Q3 skimming
 void PM_DropTimers(entity this, float dt)
 {
 #ifdef CSQC
@@ -740,6 +741,10 @@ void PM_DropTimers(entity this, float dt)
 		// using counters instead of saved times so time sync jitter won't cause prediction errors
 		if (this.pm_dj_time > 0)
 			this.pm_dj_time -= dt;
+		if (this.pm_time > 0)
+			this.pm_time -= dt;
+		if (this.pm_time <= 0)
+			this.flags &= ~FL_KNOCKBACK;
 #ifdef CSQC
 	}
 
@@ -753,6 +758,12 @@ void PM_DropTimers(entity this, float dt)
 		csqcplayer_current_moveflags = 0;
 		if (this.pm_dj_time > 0)
 			csqcplayer_current_moveflags |= PMF_DJING;
+		if (this.pm_time > 0)
+		{
+			csqcplayer_current_moveflags |= PMF_SKIMMING;
+			if (this.flags & FL_KNOCKBACK)
+				csqcplayer_current_moveflags |= PMF_TIME_KNOCKBACK;
+		}
 		csqcplayer_saved_moveflags[i] = csqcplayer_current_moveflags;
 	}
 	else // when extending the newest CSQC frame or replaying a previous one, restore its initial flags
@@ -760,13 +771,24 @@ void PM_DropTimers(entity this, float dt)
 #endif
 }
 
-int PM_GroundDetected(entity this)
+int PM_GroundDetected(entity this, vector previous_velocity)
 {
 	this.groundplane_normal = trace_plane_normal;
 
 	// Q3: slopes that are too steep will not be considered onground
 	if (trace_plane_normal.z < MIN_WALK_NORMAL)
 		return 4;
+
+	// Q3 skimming: set timer and first csqc moveframe
+	if (PHYS_SKIMMING(this) && !IS_ONGROUND(this) && !(this.flags & FL_WATERJUMP))
+	if (previous_velocity.z < -200) // Q3: don't do landing time if we were just going down a slope
+	{
+		#ifdef CSQC
+		csqcplayer_current_moveflags |= PMF_SKIMMING;
+		if (csqcplayer_moveframe == clientcommandframe)
+		#endif
+			this.pm_time = 0.25;
+	}
 
 	SET_ONGROUND(this);
 	// set groundentity so we get carried when walking onto a mover
@@ -782,7 +804,7 @@ int PM_GroundDetected(entity this)
 	return 1;
 }
 
-int PM_GroundTrace(entity this, bool do_touch)
+int PM_GroundTrace(entity this, vector previous_velocity, bool do_touch)
 {
 	int clip = 0;
 
@@ -794,7 +816,7 @@ int PM_GroundTrace(entity this, bool do_touch)
 	|| (this.velocity.z > 0 && this.velocity * trace_plane_normal > 10))
 		this.groundplane_normal = '0 0 0';
 	else
-		clip = PM_GroundDetected(this);
+		clip = PM_GroundDetected(this, previous_velocity);
 
 	if (clip & 1)
 	{
