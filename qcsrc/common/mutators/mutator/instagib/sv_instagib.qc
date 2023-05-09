@@ -17,32 +17,6 @@ bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
 
-void instagib_replace_with_invisibility(entity this)
-{
-	entity e = new(item_invisibility);
-	Item_CopyFields(this, e);
-
-	e.invisibility_finished = autocvar_g_instagib_invisibility_time;
-	StartItem(e, ITEM_Invisibility);
-}
-
-void instagib_replace_with_extralife(entity this)
-{
-	entity e = new(item_extralife);
-	Item_CopyFields(this, e);
-
-	StartItem(e, ITEM_ExtraLife);
-}
-
-void instagib_replace_with_speed(entity this)
-{
-	entity e = new(item_speed);
-	Item_CopyFields(this, e);
-
-	e.speed_finished = autocvar_g_instagib_speed_time;
-	StartItem(e, ITEM_Speed);
-}
-
 /// \brief Returns a random classname of the instagib item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
 /// \return Random classname of the instagib item.
@@ -303,11 +277,30 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
-void instagib_replace_with_vaporizer_cells(entity item)
+void instagib_replace_item_with(entity this, GameItem def)
 {
-	entity e = new(item_vaporizer_cells);
-	Item_CopyFields(item, e);
-	StartItem(e, ITEM_VaporizerCells);
+	entity new_item = NULL;
+	switch (def)
+	{
+		case ITEM_Invisibility:
+			new_item = new(item_invisibility);
+			new_item.invisibility_finished = autocvar_g_instagib_invisibility_time;
+			break;
+		case ITEM_Speed:
+			new_item = new(item_speed);
+			new_item.speed_finished = autocvar_g_instagib_speed_time;
+			break;
+		case ITEM_ExtraLife:
+			new_item = new(item_extralife);
+			break;
+		case ITEM_VaporizerCells:
+			new_item = new(item_vaporizer_cells);
+			break;
+		default:
+			error("Unhandled replacement item.");
+	}
+	Item_CopyFields(this, new_item);
+	StartItem(new_item, def);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -320,11 +313,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		{
 			float r = random();
 			if (r < 0.3)
-				instagib_replace_with_invisibility(item);
+				instagib_replace_item_with(item, ITEM_Invisibility);
 			else if (r < 0.6)
-				instagib_replace_with_extralife(item);
+				instagib_replace_item_with(item, ITEM_ExtraLife);
 			else
-				instagib_replace_with_speed(item);
+				instagib_replace_item_with(item, ITEM_Speed);
 		}
 		return true;
 	}
@@ -332,25 +325,25 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 	if(def == ITEM_Cells)
 	{
 		if(autocvar_g_instagib_ammo_convert_cells)
-			instagib_replace_with_vaporizer_cells(item);
+			instagib_replace_item_with(item, ITEM_VaporizerCells);
 		return true;
 	}
 	else if(def == ITEM_Rockets)
 	{
 		if(autocvar_g_instagib_ammo_convert_rockets)
-			instagib_replace_with_vaporizer_cells(item);
+			instagib_replace_item_with(item, ITEM_VaporizerCells);
 		return true;
 	}
 	else if(def == ITEM_Shells)
 	{
 		if(autocvar_g_instagib_ammo_convert_shells)
-			instagib_replace_with_vaporizer_cells(item);
+			instagib_replace_item_with(item, ITEM_VaporizerCells);
 		return true;
 	}
 	else if(def == ITEM_Bullets)
 	{
 		if(autocvar_g_instagib_ammo_convert_bullets)
-			instagib_replace_with_vaporizer_cells(item);
+			instagib_replace_item_with(item, ITEM_VaporizerCells);
 		return true;
 	}
 
@@ -362,7 +355,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 
 	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
 	{
-		instagib_replace_with_vaporizer_cells(item);
+		instagib_replace_item_with(item, ITEM_VaporizerCells);
 		return true;
 	}
 
