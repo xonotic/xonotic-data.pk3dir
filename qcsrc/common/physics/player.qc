@@ -492,8 +492,21 @@ bool PlayerJump(entity this)
 
 #ifdef SVQC
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, WOULD_DJ(this) ? 0.7 : 1);
 #endif
+
+	// CPMA double jumps (step up, ramp, headbang, teleport)
+	if (PHYS_DOUBLEJUMP(this) == 2)
+	{
+		if (PHYS_DOUBLEJUMP(this) == 2 && WOULD_DJ(this))
+			this.velocity_z += 100;
+#ifdef CSQC
+		csqcplayer_current_moveflags |= PMF_DJING;
+		if (csqcplayer_moveframe == clientcommandframe)
+#endif
+			this.pm_dj_time = 0.4;
+	}
+
 	return true;
 }
 
@@ -710,6 +723,39 @@ void PM_check_blocked(entity this)
 		return;
 	PHYS_CS(this).movement = '0 0 0';
 	this.disableclientprediction = 1;
+#endif
+}
+
+/// Timer and prediction updates for CPMA double jumping
+void PM_DropTimers(entity this, float dt)
+{
+#ifdef CSQC
+	// when we've completed a CSQC frame, decrement timers by its frametime
+	static int csqcplayer_moveframe_latestcomplete = 0;
+	if (csqcplayer_moveframe == clientcommandframe - 1 && csqcplayer_moveframe > csqcplayer_moveframe_latestcomplete)
+	{
+		csqcplayer_moveframe_latestcomplete = csqcplayer_moveframe;
+#endif
+		// using counters instead of saved times so time sync jitter won't cause prediction errors
+		if (this.pm_dj_time > 0)
+			this.pm_dj_time -= dt;
+#ifdef CSQC
+	}
+
+	// when starting a new CSQC frame, save its initial flags
+	int i = csqcplayer_moveframe & CL_MAX_USERCMDS-1; // optimised for power of 2 modulus
+	static int csqcplayer_moveframe_latestwip = 0;
+	if (csqcplayer_moveframe == clientcommandframe && csqcplayer_moveframe > csqcplayer_moveframe_latestwip)
+	{
+		csqcplayer_moveframe_latestwip = csqcplayer_moveframe;
+
+		csqcplayer_current_moveflags = 0;
+		if (this.pm_dj_time > 0)
+			csqcplayer_current_moveflags |= PMF_DJING;
+		csqcplayer_saved_moveflags[i] = csqcplayer_current_moveflags;
+	}
+	else // when extending the newest CSQC frame or replaying a previous one, restore its initial flags
+		csqcplayer_current_moveflags = csqcplayer_saved_moveflags[i];
 #endif
 }
 
