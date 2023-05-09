@@ -198,7 +198,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 
 		if (my_trace_plane_normal.z > 0) // landed on a ground plane
 		{
-			PM_GroundDetect(this);
+			PM_GroundDetect(this, true);
 
 			// frametime-independent jumping
 			if (PHYS_INPUT_BUTTON_JUMP(this) && IS_ONGROUND(this)
@@ -246,6 +246,29 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			{
 				blockedflag |= 8;
 				break;
+			}
+			if (trace_plane_normal.z > 0)
+			{
+				if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
+				{
+					float f = this.velocity * trace_plane_normal;
+					if (f < 0)
+						this.velocity -= f * trace_plane_normal;
+					PM_GroundDetect(this, false);
+				}
+			}
+
+			// frametime-independent jumping, although the step up can't be fully frametime-independent
+			if (PHYS_INPUT_BUTTON_JUMP(this) && IS_ONGROUND(this)) // no need for jumporigin check
+			{
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
+				{
+					if (time_left <= 0)
+						return blockedflag; // no more gravity, new jump's height would be too low
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
+				}
 			}
 
 			if (time_left <= 0)
