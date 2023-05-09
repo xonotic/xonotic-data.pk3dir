@@ -127,14 +127,14 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 	vector clipvelocity;
 	LABEL(ReapplyGravityContinue)
 	float grav = 0;
-	vector restore_velocity = this.velocity;
+	vector previous_velocity = this.velocity;
 
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
 		grav = time_left * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
-		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this))
+		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this) || HAS_KNOCKBACK(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5;
@@ -170,7 +170,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 		// abort move if we're stuck in the world (and didn't make it out)
 		if(trace_startsolid && trace_allsolid)
 		{
-			this.velocity = restore_velocity;
+			this.velocity = previous_velocity;
 			return 3;
 		}
 
@@ -270,6 +270,9 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				|| trace_plane_normal * my_trace_plane_normal > 0.99) // or onto ~ the same plane we're trying to step over.
 					goto NoStep;
 
+				if (IS_SKIMMING(this))
+					this.velocity = primal_velocity; // so it's not lost when jumping and to save double clipping
+
 				if ((PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
 				{
 					if (IS_DJING(this))
@@ -282,15 +285,17 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 					else
 						this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal,
 							PHYS_INPUT_BUTTON_JUMP(this) ? 1 : OVERCLIP);
-					PM_GroundDetect(this, true);
+					PM_GroundDetect(this, previous_velocity, true);
 				}
 				else if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
 				{
 					float f = this.velocity * trace_plane_normal;
 					if (f < 0)
 						this.velocity -= f * trace_plane_normal;
-					PM_GroundDetect(this, false);
+					PM_GroundDetect(this, previous_velocity, false);
 				}
+
+				primal_velocity = this.velocity; // Q3 skimming doesn't undo clipping to a plane hit during pushdown
 			}
 
 			if (move_time > time_left) // hacking too much time!
@@ -402,9 +407,16 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 		}
 		LABEL(AbortMission)
 
+		// if we start skimming during this move don't undo clipping done before that
+		if (PHYS_SKIMMING(this) && !IS_SKIMMING(this))
+			primal_velocity = this.velocity;
+
 		if (trace_plane_normal.z > 0) // landed on a ground plane
 		{
-			PM_GroundDetect(this, true);
+			if (IS_SKIMMING(this) && PHYS_INPUT_BUTTON_JUMP(this))
+				this.velocity = primal_velocity; // apply skimming now else it'll be lost
+
+			PM_GroundDetect(this, previous_velocity, true);
 
 			// frametime-independent jumping
 			if (PHYS_INPUT_BUTTON_JUMP(this) && IS_ONGROUND(this)
@@ -425,12 +437,12 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
-	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
+	if (IS_SKIMMING(this) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
 	if(applygravity)
 	{
-		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this))
+		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this) || HAS_KNOCKBACK(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5f;

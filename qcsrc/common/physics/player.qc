@@ -147,6 +147,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_JUMPSPEEDCAP_MAX, this) = Physics_ClientOption(this, "jumpspeedcap_max", autocvar_sv_jumpspeedcap_max);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
+	STAT(MOVEVARS_SKIMMING, this) = Physics_ClientOption(this, "skimming", autocvar_sv_skimming);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -734,7 +735,7 @@ void PM_check_blocked(entity this)
 #endif
 }
 
-/// Timer and prediction updates for CPMA double jumping
+/// Timer and prediction updates for CPMA double jumping and Q3 skimming
 void PM_DropTimers(entity this, float dt)
 {
 #ifdef CSQC
@@ -749,6 +750,11 @@ void PM_DropTimers(entity this, float dt)
 			this.pm_dj_time -= dt;
 		if (this.pm_dj_time <= 0)
 			this.flags &= ~(FL_DJING);
+
+		if (this.pm_time > 0)
+			this.pm_time -= dt;
+		if (this.pm_time <= 0)
+			this.flags &= ~FL_KNOCKBACK;
 #ifdef CSQC
 	}
 
@@ -761,6 +767,8 @@ void PM_DropTimers(entity this, float dt)
 
 		if (this.pm_dj_time <= 0)
 			csqcplayer_current_moveflags &= ~(PMF_WOULD_DJ | PMF_DJING);
+		if (this.pm_time <= 0)
+			csqcplayer_current_moveflags &= ~(PMF_SKIMMING | PMF_TIME_KNOCKBACK);
 		csqcplayer_saved_moveflags[i] = csqcplayer_current_moveflags;
 	}
 	else // when extending the newest CSQC frame or replaying a previous one, restore its initial flags
@@ -768,7 +776,7 @@ void PM_DropTimers(entity this, float dt)
 #endif
 }
 
-void PM_GroundDetect(entity this, bool checkthrown)
+void PM_GroundDetect(entity this, vector previous_velocity, bool checkthrown)
 {
 	if (checkthrown && trace_plane_normal.z
 	// Q3: check if getting thrown off the ground
@@ -785,6 +793,17 @@ void PM_GroundDetect(entity this, bool checkthrown)
 		UNSET_ONSLICK(this);
 		this.groundentity = NULL;
 		return;
+	}
+
+	// Q3 skimming: set timer and first csqc moveframe
+	if (PHYS_SKIMMING(this) && !IS_ONGROUND(this) && !(this.flags & FL_WATERJUMP))
+	if (previous_velocity.z < -200) // Q3: don't do landing time if we were just going down a slope
+	{
+		#ifdef CSQC
+		csqcplayer_current_moveflags |= PMF_SKIMMING;
+		if (csqcplayer_moveframe == clientcommandframe)
+		#endif
+			this.pm_time = 0.25;
 	}
 
 	SET_ONGROUND(this);
@@ -804,7 +823,7 @@ void PM_GroundTrace(entity this)
 {
 	_Movetype_PushEntityTrace(this, '0 0 -0.25'); // same distance as in Q3's PM_GroundTrace()
 
-	PM_GroundDetect(this, true);
+	PM_GroundDetect(this, this.velocity, true);
 
 	if (IS_ONGROUND(this))
 	{

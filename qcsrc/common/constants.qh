@@ -81,6 +81,7 @@ const int FL_PICKUPITEMS                  = BIT(18);
 const int FL_DUCKED                       = BIT(19);
 const int FL_ONSLICK                      = BIT(20);
 const int FL_DJING                        = BIT(21); // Got a CPMA double jump in the last 400ms
+const int FL_KNOCKBACK                    = BIT(22); // Q3's PMF_TIME_KNOCKBACK (.pm_time grants slick as well as skimming)
 const int FL_STATICOWNER                  = BIT(23);
 
 // initialization stages
