@@ -832,7 +832,7 @@ void vehicles_exit(entity vehic, bool eject)
 		player.view_ofs			= STAT(PL_VIEW_OFS, player);
 		player.event_damage		= PlayerDamage;
 		STAT(HUD, player)		= HUD_NORMAL;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++ slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++ slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			player.(weaponentity).m_switchweapon = vehic.(weaponentity).m_switchweapon;
@@ -1020,7 +1020,7 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		veh.(weaponentity) = new(temp_wepent);
@@ -1154,7 +1154,7 @@ void vehicles_spawn(entity this)
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	    {
 	    	.entity weaponentity = weaponentities[slot];
 	    	if(it.(weaponentity).hook.aiment == this)

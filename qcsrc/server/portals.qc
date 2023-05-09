@@ -492,7 +492,7 @@ void Portal_Think(entity this)
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g, o);
 
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	    {
 	    	.entity weaponentity = weaponentities[slot];
 	    	if(it.(weaponentity).hook)

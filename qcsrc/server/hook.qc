@@ -80,7 +80,7 @@ void RemoveGrapplingHooks(entity pl)
 	if(pl.move_movetype == MOVETYPE_FLY)
 		set_movetype(pl, MOVETYPE_WALK);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
     	if(!pl.(weaponentity))

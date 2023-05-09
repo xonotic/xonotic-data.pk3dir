@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(oknex_charge, GetPressedKeys)
 	if(!WEP_CVAR(oknex, charge) || !WEP_CVAR(oknex, charge_velocity_rate))
 		return;
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 
@@ -291,7 +291,7 @@ METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity we
 METHOD(OverkillNex, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	if (WEP_CVAR(oknex, charge)) {
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			actor.(weaponentity).oknex_charge = WEP_CVAR(oknex, charge_start);

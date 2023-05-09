@@ -32,10 +32,10 @@ entity weapon_dropevent_item;
 .int old_clip_load;
 .int clip_size;
 
-.float attack_finished_for[REGISTRY_MAX(Weapons) * MAX_WEAPONSLOTS];
-.float attack_finished_single[MAX_WEAPONSLOTS];
+.float attack_finished_for[REGISTRY_MAX(Weapons) * MAX_WEAPON_PER_SLOT];
+.float attack_finished_single[MAX_WEAPON_PER_SLOT];
 #if INDEPENDENT_ATTACK_FINISHED
-#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * MAX_WEAPONSLOTS + (slot)]))
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * autocvar_g_max_weaponslots + (slot)]))
 #else
 #define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif

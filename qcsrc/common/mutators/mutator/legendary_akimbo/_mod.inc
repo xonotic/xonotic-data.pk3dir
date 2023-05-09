@@ -1,0 +1,4 @@
+// generated file; do not modify
+#ifdef SVQC
+    #include <common/mutators/mutator/legendary_akimbo/akimbo.qc>
+#endif

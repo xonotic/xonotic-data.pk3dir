@@ -140,7 +140,7 @@ void CreatureFrame_FallDamage(entity this)
 
 	// check for falling damage
 	bool have_hook = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 	    .entity weaponentity = weaponentities[slot];
 	    if(this.(weaponentity).hook && this.(weaponentity).hook.state)

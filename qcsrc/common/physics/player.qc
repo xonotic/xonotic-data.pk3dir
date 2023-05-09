@@ -128,7 +128,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		return;
 
 	bool have_hook = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 	#if defined(CSQC)
 		entity wepent = viewmodels[slot];
@@ -631,7 +631,7 @@ void PM_check_hitground(entity this)
 	this.wasFlying = false;
 	if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
 	if (this.ladder_entity) return;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(this.(weaponentity).hook)

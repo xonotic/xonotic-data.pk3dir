@@ -457,7 +457,7 @@ void FixIntermissionClient(entity e)
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
 		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for (int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(e.(weaponentity))

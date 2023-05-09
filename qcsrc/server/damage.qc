@@ -86,7 +86,7 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 
 string AppendItemcodes(string s, entity player)
 {
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		int w = player.(weaponentity).m_weapon.m_id;
@@ -530,7 +530,7 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	    {
 	    	.entity weaponentity = weaponentities[slot];
 	    	if(it.(weaponentity).hook.aiment == targ)
@@ -564,7 +564,7 @@ void Unfreeze(entity targ, bool reset_health)
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	    {
 	    	.entity weaponentity = weaponentities[slot];
 	    	if(it.(weaponentity).hook.aiment == targ)
@@ -709,7 +709,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		    {
 		    	.entity went = weaponentities[slot];
 		    	if(targ.(went).hook && targ.(went).hook.aiment == attacker)

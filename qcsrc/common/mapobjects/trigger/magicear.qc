@@ -22,7 +22,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if (!(ear.spawnflags & MAGICEAR_TUBA))
 			return msgin;
 
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(!W_Tuba_HasPlayed(source, weaponentity, ear.message, ear.movedir_x, !(ear.spawnflags & MAGICEAR_TUBA_EXACTPITCH), ear.movedir_y, ear.movedir_z))

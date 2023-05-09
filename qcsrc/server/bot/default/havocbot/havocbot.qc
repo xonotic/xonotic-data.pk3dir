@@ -120,7 +120,7 @@ void havocbot_ai(entity this)
 
 	havocbot_chooseenemy(this);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(this.(weaponentity).m_weapon != WEP_Null || slot == 0)
@@ -146,7 +146,7 @@ void havocbot_ai(entity this)
 			}
 			else
 			{
-				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 				{
 					.entity weaponentity = weaponentities[slot];
 					Weapon w = this.(weaponentity).m_weapon;
@@ -183,7 +183,7 @@ void havocbot_ai(entity this)
 	// if the bot is not attacking, consider reloading weapons
 	if (!(this.aistatus & AI_STATUS_ATTACKING))
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 
@@ -635,7 +635,7 @@ void havocbot_movetogoal(entity this)
 		{
 			if(this.velocity.z < 0)
 			{
-				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 				{
 					.entity weaponentity = weaponentities[slot];
 

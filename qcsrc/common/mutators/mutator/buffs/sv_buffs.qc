@@ -542,7 +542,7 @@ METHOD(AmmoBuff, m_apply, void(StatusEffects this, entity actor, float eff_time,
     {
         actor.buff_ammo_prev_infitems = (actor.items & IT_UNLIMITED_AMMO);
         actor.items |= IT_UNLIMITED_AMMO;
-        for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+        for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(!actor.(weaponentity))
@@ -561,7 +561,7 @@ METHOD(AmmoBuff, m_remove, void(StatusEffects this, entity actor, int removal_ty
 	if(wasactive)
 	{
 		actor.items = BITSET(actor.items, IT_UNLIMITED_AMMO, actor.buff_ammo_prev_infitems);
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(!actor.(weaponentity))
@@ -580,7 +580,7 @@ METHOD(AmmoBuff, m_tick, void(StatusEffects this, entity actor))
 {
 	if(IS_PLAYER(actor))
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(actor.(weaponentity).clip_size)

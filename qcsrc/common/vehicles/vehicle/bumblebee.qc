@@ -250,7 +250,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	player.event_damage   = PlayerDamage;
 	STAT(HUD, player)     = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		player.(weaponentity).m_switchweapon = gunner.(weaponentity).m_switchweapon;
@@ -325,7 +325,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 
 	RemoveGrapplingHooks(player);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 

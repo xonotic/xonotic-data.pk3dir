@@ -67,7 +67,7 @@ REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED
 			SetResource(it, RES_PLASMA, start_ammo_plasma);
 			SetResource(it, RES_FUEL, start_ammo_fuel);
 			STAT(WEAPONS, it) = start_weapons;
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
 				if(it.(weaponentity).m_weapon == WEP_Null && slot != 0)
@@ -180,7 +180,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		// all weapons must be fully loaded when we spawn
 		if (wpn.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 		{
-			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for (int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
 				this.(weaponentity).(weapon_load[nix_weapon]) = wpn.reloading_ammo;
@@ -217,7 +217,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		STAT(WEAPONS, this) |= WEPSET(BLASTER);
 	STAT(WEAPONS, this) |= wpn.m_wepset;
 
-	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if (this.(weaponentity).m_weapon == WEP_Null && slot != 0)

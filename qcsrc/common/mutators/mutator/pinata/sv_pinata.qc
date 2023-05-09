@@ -8,7 +8,7 @@ MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 

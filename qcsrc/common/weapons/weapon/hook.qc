@@ -226,7 +226,7 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentit
 METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {
     RemoveGrapplingHooks(actor);
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
     	actor.(weaponentity).hook_time = 0;
@@ -425,7 +425,7 @@ void Remove_GrapplingHook(entity this)
 {
 	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		entity wep = viewmodels[slot];
 		if(wep.hook == this)

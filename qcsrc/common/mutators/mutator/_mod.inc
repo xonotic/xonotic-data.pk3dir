@@ -16,6 +16,7 @@
 #include <common/mutators/mutator/invincibleproj/_mod.inc>
 #include <common/mutators/mutator/itemstime/_mod.inc>
 #include <common/mutators/mutator/kick_teamkiller/_mod.inc>
+#include <common/mutators/mutator/legendary_akimbo/_mod.inc>
 #include <common/mutators/mutator/melee_only/_mod.inc>
 #include <common/mutators/mutator/midair/_mod.inc>
 #include <common/mutators/mutator/multijump/_mod.inc>

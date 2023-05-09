@@ -470,7 +470,7 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weap
 }
 METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
     	actor.(weaponentity).minelayer_mines = 0;

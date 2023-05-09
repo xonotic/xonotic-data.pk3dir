@@ -66,7 +66,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 			sprint(this, "Invalid weapon\n");
 		return false;
 	}
-	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(PS(this).dual_weapons & wpn.m_wepset))
+	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_MULTIWIELD) && !(PS(this).multi_weapons & wpn.m_wepset))
 		return false; // no complaints needed
 	if (STAT(WEAPONS, this) & WepSet_FromWeapon(wpn))
 	{
@@ -349,7 +349,7 @@ void W_LastWeapon(entity this, .entity weaponentity)
 
 // fix switchweapon (needed when spectating is disabled, as PutClientInServer comes too early)
 REPLICATE_APPLYCHANGE("cl_weaponpriority",
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))

@@ -9,7 +9,7 @@ bool autocvar_g_overkill_itemwaypoints = true;
 bool autocvar_g_overkill_blaster_keepforce = false;
 bool autocvar_g_overkill_blaster_keepdamage = false;
 
-.Weapon ok_lastwep[MAX_WEAPONSLOTS];
+.Weapon ok_lastwep[MAX_WEAPON_PER_SLOT];
 
 /// \brief Returns a random classname of the overkill item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
@@ -95,7 +95,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 
 	ok_DropItem(frag_target, targ);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 
@@ -138,7 +138,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		return;
 	}
 	// Allow secondary blaster during countdown.
-	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		Weapon weapon = player.(weaponentity).m_weapon;
@@ -160,7 +160,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for(int slot = 0; slot < autocvar_g_max_weaponslots; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		entity thiswep = player.(weaponentity);

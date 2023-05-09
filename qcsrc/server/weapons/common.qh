@@ -5,7 +5,7 @@ bool autocvar_g_projectiles_keep_owner;
 float autocvar_sv_strengthsound_antispam_refire_threshold;
 float autocvar_sv_strengthsound_antispam_time;
 
-bool W_DualWielding(entity player);
+bool W_MultiWielding(entity player);
 void W_GiveWeapon (entity e, float wep);
 void W_PlayStrengthSound(entity player);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
