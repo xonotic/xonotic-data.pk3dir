@@ -80,7 +80,8 @@ const int FL_SPAWNING                     = BIT(17);
 const int FL_PICKUPITEMS                  = BIT(18);
 const int FL_DUCKED                       = BIT(19);
 const int FL_ONSLICK                      = BIT(20);
-const int FL_STATICOWNER                  = BIT(21);
+const int FL_DJING                        = BIT(21); // Got a CPMA double jump in the last 400ms
+const int FL_STATICOWNER                  = BIT(23);
 
 // initialization stages
 const int INITPRIO_FIRST                  = 0;

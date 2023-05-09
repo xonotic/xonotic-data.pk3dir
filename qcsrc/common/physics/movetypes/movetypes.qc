@@ -249,7 +249,21 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			}
 			if (trace_plane_normal.z > 0)
 			{
-				if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
+				if (PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this))
+				{
+					if (IS_DJING(this))
+					{
+						float backoff = this.velocity * trace_plane_normal;
+						backoff < 0 ? backoff *= OVERCLIP : backoff /= OVERCLIP;
+						this.velocity.x -= trace_plane_normal.x * backoff;
+						this.velocity.y -= trace_plane_normal.y * backoff;
+					}
+					else
+						this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal,
+							PHYS_INPUT_BUTTON_JUMP(this) ? 1 : OVERCLIP);
+					PM_GroundDetect(this, true);
+				}
+				else if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
 				{
 					float f = this.velocity * trace_plane_normal;
 					if (f < 0)
