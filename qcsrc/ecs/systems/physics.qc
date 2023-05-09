@@ -82,10 +82,11 @@ void sys_phys_update(entity this, float dt)
 			// { this.velocity_z = 70; }
 		}
 
-		// no double jumping past respawns (part of MOVETYPE_WALK but it's not used while dead)
-		if (this.pm_dj_time)
+		// no skimming or double jumping past respawns (part of MOVETYPE_WALK but it's not used while dead)
+		if (this.pm_time || this.pm_dj_time)
 		{
-			this.pm_dj_time = 0;
+			this.pm_time = this.pm_dj_time = 0;
+			this.flags &= ~FL_KNOCKBACK;
 #ifdef CSQC
 			for (int i = 0; i < CL_MAX_USERCMDS; ++i)
 				csqcplayer_saved_moveflags[i] = 0;
@@ -105,7 +106,7 @@ void sys_phys_update(entity this, float dt)
 	if (IS_PLAYER(this)) // bones_was_here: should this instead check for MOVETYPE_WALK ?
 	{
 		PM_DropTimers(this, dt);
-		PM_GroundTrace(this, true);
+		PM_GroundTrace(this, this.velocity, true);
 		if (IS_ONGROUND(this))
 			PM_Footsteps(this); // NB: reads global trace_dphitq3surfaceflags set by PM_GroundTrace()
 		else if (IsFlying(this))
@@ -448,7 +449,7 @@ void sys_phys_simulate(entity this, float dt)
 		{
 			// apply edge friction
 			const float f2 = vlen2(vec2(this.velocity));
-			const int realfriction = (IS_ONSLICK(this))
+			const int realfriction = (IS_ONSLICK(this) || HAS_KNOCKBACK(this))
 				? PHYS_FRICTION_SLICK(this)
 				: PHYS_FRICTION(this);
 			if (f2 > 0 && realfriction > 0)
@@ -484,7 +485,7 @@ void sys_phys_simulate(entity this, float dt)
 			const float addspeed = wishspeed - this.velocity * wishdir;
 			if (addspeed > 0)
 			{
-				const float accel = (IS_ONSLICK(this))
+				const float accel = (IS_ONSLICK(this) || HAS_KNOCKBACK(this))
 					? PHYS_SLICKACCELERATE(this)
 					: PHYS_ACCELERATE(this);
 				const float accelspeed = min(accel * dt * wishspeed, addspeed);
