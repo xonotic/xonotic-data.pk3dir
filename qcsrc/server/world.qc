@@ -388,6 +388,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_announcer");
+		BADCVAR("sv_autopause");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
@@ -1047,6 +1048,10 @@ spawnfunc(worldspawn)
 	modname = strzone(modname);
 
 	WinningConditionHelper(this); // set worldstatus
+
+	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
+		// INITPRIO_LAST is to soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
+		defer(this, 5, Pause_TryPause_Dedicated);
 
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
