@@ -16,21 +16,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
 
-	if(PHYS_WALLCLIP(this) && this.pm_time)
-	{
-		if(dt >= this.pm_time || (this.flags & FL_WATERJUMP))
-			this.pm_time = 0;
-		else
-			this.pm_time -= dt;
-	}
-
 	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
-
-	// if the move did not hit the ground at any point, we're not on ground
-	if (!(clip & 1))
-		;
-	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
-		this.pm_time = 0.25;
 
 	_Movetype_LinkEdict(this, true);
 
@@ -145,7 +131,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.groundentity = originalmove_groundentity;
 	}
 	else if (GAMEPLAYFIX_STEPDOWN(this) == 2)
-		PM_GroundDetected(this);
+		PM_GroundDetected(this, start_velocity);
 
 	_Movetype_LinkEdict(this, true);
 }

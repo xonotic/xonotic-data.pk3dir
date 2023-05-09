@@ -88,6 +88,7 @@ const int FL_SPAWNING                     = BIT(17);
 const int FL_PICKUPITEMS                  = BIT(18);
 const int FL_DUCKED                       = BIT(19);
 const int FL_ONSLICK                      = BIT(20);
+const int FL_KNOCKBACK                    = BIT(21); // Q3's PMF_TIME_KNOCKBACK (.pm_time grants slick as well as skimming)
 
 // initialization stages
 const int INITPRIO_FIRST                  = 0;
