@@ -396,21 +396,20 @@ bool PlayerJump(entity this)
 		return true; // no jumping while blocked
 #endif
 
-	bool doublejump = false;
 	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
-	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
-
-	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
+	bool airjump = false;
+	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, airjump))
 		return true;
-
 	mjumpheight = M_ARGV(1, float);
-	doublejump = M_ARGV(2, bool);
+	airjump = M_ARGV(2, bool);
+
+	bool track_jump = PHYS_CL_TRACK_CANJUMP(this) || PHYS_TRACK_CANJUMP(this);
 
 	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		if(this.viewloc)
 		{
-			doublejump = true;
+			airjump = true;
 			mjumpheight *= 0.7;
 			track_jump = true;
 		}
@@ -421,12 +420,9 @@ bool PlayerJump(entity this)
 		}
 	}
 
-	if (!doublejump)
+	if (!airjump)
 		if (!IS_ONGROUND(this))
 			return IS_JUMP_HELD(this);
-
-	if(PHYS_TRACK_CANJUMP(this))
-		track_jump = true;
 
 	if (track_jump)
 		if (IS_JUMP_HELD(this))
