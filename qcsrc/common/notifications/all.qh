@@ -645,17 +645,8 @@ string notif_arg_item_wepammo(float f1, float f2)
 {
 	string ammoitems = "";
 	Weapon wep = REGISTRY_GET(Weapons, f1);
-	// TODO: registry handles
-	switch (wep.ammo_type)
-	{
-		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
-		case RES_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
-		case RES_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
-		case RES_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
-		case RES_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
-		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
-		default: return ""; // doesn't use ammo
-	}
+	if (GETAMMONAME(wep.ammo_type))
+		ammoitems = GETAMMONAME(wep.ammo_type);
 	return sprintf(_(" with %d %s"), f2, strtolower(ammoitems));
 }
 

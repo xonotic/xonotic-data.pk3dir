@@ -364,7 +364,7 @@ void bot_custom_weapon_priority_setup()
 	#define PARSE_WEAPON_PRIORITIES(dist) MACRO_BEGIN \
 		if (bot_priority_##dist##_prev != autocvar_bot_ai_custom_weapon_priority_##dist) { \
 			strcpy(bot_priority_##dist##_prev, autocvar_bot_ai_custom_weapon_priority_##dist); \
-			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
+			tokens = tokenizebyseparator(W_NUMBERWEAPONORDER(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
 			bot_weapons_##dist[0] = -1; \
 			c = 0; \
 			for(i = 0; i < tokens && c < REGISTRY_COUNT(Weapons); ++i) { \

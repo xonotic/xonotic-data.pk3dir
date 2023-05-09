@@ -859,7 +859,7 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if(item.itemdef.instanceOfWeaponPickup)
 	{
 		entity res = item.itemdef.m_weapon.ammo_type;
-		entity ammo = (res != RES_NONE) ? GetAmmoItem(res) : NULL;
+		entity ammo = (res != RES_NONE) ? GETAMMOITEM(res) : NULL;
 		if(!ammo)
 			return 0;
 		if(res != RES_NONE && GetResource(item, res))
@@ -1279,22 +1279,23 @@ spawnfunc(target_items)
 	{
 		for(int j = 0; j < n; ++j)
 		{
+			string s = argv(j);
 			// this is from a time when unlimited superweapons were handled together with ammo in some parts of the code
-			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_AMMO;
-			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
-			else if(argv(j) == "invincible")             this.items |= ITEM_Shield.m_itemid;
-			else if(argv(j) == "speed")                  this.items |= ITEM_Speed.m_itemid;
-			else if(argv(j) == "invisibility")           this.items |= ITEM_Invisibility.m_itemid;
-			else if(argv(j) == "superweapons")           this.items |= IT_SUPERWEAPON;
-			else if(argv(j) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
-			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
+			if     (s == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+			else if(s == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_AMMO;
+			else if(s == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
+			else if(s == "strength")               this.items |= ITEM_Strength.m_itemid;
+			else if(s == "invincible")             this.items |= ITEM_Shield.m_itemid;
+			else if(s == "speed")                  this.items |= ITEM_Speed.m_itemid;
+			else if(s == "invisibility")           this.items |= ITEM_Invisibility.m_itemid;
+			else if(s == "superweapons")           this.items |= IT_SUPERWEAPON;
+			else if(s == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
+			else if(s == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
 				FOREACH(StatusEffect, it.instanceOfBuff,
 				{
-					string s = Buff_CompatName(argv(j));
+					s = Buff_CompatName(s);
 					if(s == it.netname)
 					{
 						this.buffdef = it;
@@ -1304,7 +1305,7 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					string s = argv(j);
+					s = argv(j);
 					if(s == it.netname || s == it.m_deprecated_netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
@@ -1370,8 +1371,8 @@ spawnfunc(target_items)
 	n = tokenize_console(this.netname);
 	for(int j = 0; j < n; ++j)
 	{
-		string cmd = argv(j);
-		FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
+		string s = argv(j);
+		FOREACH(Weapons, it != WEP_Null && (s == it.netname || s == it.m_deprecated_netname), {
 			it.wr_init(it);
 			break;
 		});
@@ -1676,8 +1677,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 					break;
 				});
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
-                    got += GiveWeapon(e, it.m_id, op, val);
-                    break;
+					got += GiveWeapon(e, it.m_id, op, val);
+					break;
 				});
 				break;
 		}

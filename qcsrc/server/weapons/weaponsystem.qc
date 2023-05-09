@@ -464,7 +464,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	entity this = actor.(weaponentity);
 	if (frametime) this.weapon_frametime = frametime;
 
-	if (!this || GetResource(actor, RES_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!this || GetResource(actor, RES_HEALTH) < 1) return;  // Dead player can't use weapons or injure impulse commands
 
 	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
 	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);
@@ -710,7 +710,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 			backtrace(sprintf(
 				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
 				"Please notify the developers immediately with a copy of this backtrace!\n",
-				ammo_use, wep.netname, GetAmmoPicture(wep.ammo_type), actor.netname, ammo));
+				ammo_use, wep.netname, GETAMMOPICTURE(wep.ammo_type), actor.netname, ammo));
 		}
 		SetResource(actor, wep.ammo_type, ammo - ammo_use);
 	}

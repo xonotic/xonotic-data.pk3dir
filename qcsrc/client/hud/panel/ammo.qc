@@ -47,7 +47,7 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 		ammo = 60;
 	}
 	else
-		ammo = getstati(GetAmmoStat(ammoType));
+		ammo = getstati(GETAMMOSTAT(ammoType));
 
 	if(!isCurrent)
 	{
@@ -102,7 +102,7 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 	if(autocvar_hud_panel_ammo_text)
 		drawstring_aspect(textPos, text, eX * (2/3) * mySize.x + eY * mySize.y, textColor, alpha, DRAWFLAG_NORMAL);
 
-	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize.y, iconColor, alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(iconPos, GETAMMOPICTURE(ammoType), '1 1 0' * mySize.y, iconColor, alpha, DRAWFLAG_NORMAL);
 }
 
 int nade_prevstatus;

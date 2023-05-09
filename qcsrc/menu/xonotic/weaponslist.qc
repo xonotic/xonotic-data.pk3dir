@@ -19,10 +19,10 @@ void XonoticWeaponsList_draw(entity me)
 {
 	// read in cvar?
 	string s, t;
-	s = W_NumberWeaponOrder(cvar_string("cl_weaponpriority"));
-	t = W_FixWeaponOrder(s, 1);
+	s = W_NUMBERWEAPONORDER(cvar_string("cl_weaponpriority"));
+	t = W_FIXWEAPONORDER(s, 1);
 	if(t != s)
-		cvar_set("cl_weaponpriority", W_NameWeaponOrder(t));
+		cvar_set("cl_weaponpriority", W_NAMEWEAPONORDER(t));
 	me.nItems = tokenize_console(t);
 	SUPER(XonoticWeaponsList).draw(me);
 }
@@ -72,7 +72,7 @@ string XonoticWeaponsList_toString(entity me)
 	float n, i;
 	string s;
 	entity e;
-	n = tokenize_console(W_NumberWeaponOrder(cvar_string("cl_weaponpriority")));
+	n = tokenize_console(W_NUMBERWEAPONORDER(cvar_string("cl_weaponpriority")));
 	s = "";
 	for(i = 0; i < n; ++i)
 	{

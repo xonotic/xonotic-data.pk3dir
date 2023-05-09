@@ -171,7 +171,7 @@ void HUD_Weapons()
 	{
 		weapons_orderbyimpulse_old = autocvar_hud_panel_weapons_orderbyimpulse;
 		strcpy(cl_weaponpriority_old, autocvar_cl_weaponpriority);
-		string weporder = W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(cl_weaponpriority_old));
+		string weporder = W_FIXWEAPONORDER_FORCECOMPLETE(W_NUMBERWEAPONORDER(cl_weaponpriority_old));
 		if(autocvar_hud_panel_weapons_orderbyimpulse)
 		{
 			weporder = W_FixWeaponOrder_BuildImpulseList(weporder);
@@ -577,7 +577,7 @@ void HUD_Weapons()
 			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
+				a = getstati(GETAMMOSTAT(it.ammo_type)); // how much ammo do we have?
 
 				if(a > 0)
 				{

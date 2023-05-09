@@ -92,10 +92,6 @@ WepSet _WepSet_FromWeapon(int a)
 	}
 #endif
 
-string W_FixWeaponOrder(string order, float complete)
-{
-	return fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete);
-}
 string W_NameWeaponOrder_MapFunc(string s)
 {
 	int i = stof(s);
@@ -107,19 +103,12 @@ string W_NameWeaponOrder_MapFunc(string s)
 	return s;
 }
 
-string W_NameWeaponOrder(string order)
-{
-	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
-}
+
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
 	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
-}
-string W_NumberWeaponOrder(string order)
-{
-	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
 float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
@@ -160,13 +149,7 @@ string W_FixWeaponOrder_BuildImpulseList(string o)
 
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order)
 {
-	return W_FixWeaponOrder(order, 0);
-}
-
-string W_FixWeaponOrder_ForceComplete(string order)
-{
-	if (order == "") order = W_NumberWeaponOrder(cvar_defstring("cl_weaponpriority"));
-	return W_FixWeaponOrder(order, 1);
+	return W_FIXWEAPONORDER(order, 0);
 }
 
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
@@ -187,6 +170,10 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 }
 
 // TODO: registry handles for below functions
+// drjaska: made these functions into macros in
+// common/weapons/all.qh
+// instead of registry handles
+#if 0
 string GetAmmoPicture(Resource ammotype)
 {
 	switch (ammotype)
@@ -229,22 +216,7 @@ entity GetAmmoItem(Resource ammotype)
 	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
 	// WEAPONTODO: use this generic func to reduce duplication ?
-	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
-}
-
-#ifdef CSQC
-int GetAmmoStat(Resource ammotype)
-{
-	switch (ammotype)
-	{
-		case RES_SHELLS: return STAT_SHELLS;
-		case RES_BULLETS: return STAT_NAILS;
-		case RES_ROCKETS: return STAT_ROCKETS;
-		case RES_CELLS: return STAT_CELLS;
-		case RES_PLASMA: return STAT_PLASMA.m_id;
-		case RES_FUEL: return STAT_FUEL.m_id;
-		default: return -1;
-	}
+	// GETAMMOPICTURE  GETAMMONAME  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
 #endif
 
@@ -808,7 +780,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 #ifdef SVQC
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
-	string o = W_FixWeaponOrder_ForceComplete(wo);
+	string o = W_FIXWEAPONORDER_FORCECOMPLETE(wo);
 	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }

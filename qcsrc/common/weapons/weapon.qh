@@ -216,22 +216,33 @@ const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not
 string weaponorder_byid;
 
 // functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
+#define W_FIXWEAPONORDER(order, complete) fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete)
+string W_NameWeaponOrder_MapFunc(string s);
+string W_NumberWeaponOrder_MapFunc(string s);
+#define W_NAMEWEAPONORDER(order) mapPriorityList(order, W_NameWeaponOrder_MapFunc)
+#define W_NUMBERWEAPONORDER(order) mapPriorityList(order, W_NumberWeaponOrder_MapFunc)
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
-string W_FixWeaponOrder_ForceComplete(string order);
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
-
-string GetAmmoPicture(Resource ammotype);
-
-string GetAmmoName(Resource ammotype);
-
-entity GetAmmoItem(Resource ammotype);
+#define W_FIXWEAPONORDER_FORCECOMPLETE(order) \
+	W_FIXWEAPONORDER(((order == "") ? W_NUMBERWEAPONORDER(cvar_defstring("cl_weaponpriority")) : order), 1)
 
 #ifdef CSQC
-int GetAmmoStat(Resource ammotype);
+#define GETAMMOTYPEFROMNUM(i) \
+	i == 0 ? RES_SHELLS : \
+	i == 1 ? RES_BULLETS : \
+	i == 2 ? RES_ROCKETS : \
+	i == 3 ? RES_CELLS : \
+	i == 4 ? RES_PLASMA : \
+	i == 5 ? RES_FUEL : RES_NONE
+
+#define GETAMMOSTAT(res) \
+	res == RES_SHELLS ? STAT_SHELLS : \
+	res == RES_BULLETS ? STAT_NAILS : \
+	res == RES_ROCKETS ? STAT_ROCKETS : \
+	res == RES_CELLS ? STAT_CELLS : \
+	res == RES_PLASMA ? STAT_PLASMA.m_id : \
+	res == RES_FUEL ? STAT_FUEL.m_id : -1
 #endif
 
 string W_Sound(string w_snd);
