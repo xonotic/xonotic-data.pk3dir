@@ -170,6 +170,7 @@ void cvar_changes_init()
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
 #define BADVALUE(p, val) if (k == p && v == val) continue
+#define BADPRESUFFIXVALUE(p,s,val) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -512,6 +513,9 @@ void cvar_changes_init()
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
+
 		// mutators that announce themselves properly to the server browser
 		BADCVAR("g_instagib");
 		BADCVAR("g_new_toys");
@@ -523,6 +527,7 @@ void cvar_changes_init()
 #undef BADPREFIX
 #undef BADCVAR
 #undef BADVALUE
+#undef BADPRESUFFIXVALUE
 
 		if(pureadding)
 		{
