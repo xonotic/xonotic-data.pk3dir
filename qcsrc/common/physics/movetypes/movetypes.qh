@@ -72,6 +72,21 @@ const int MIN_WALK_NORMAL = 0.7;
 
 void set_movetype(entity this, int mt);
 
+#ifdef CSQC // For CSQC prediction of timer-based physics features
+	#define CL_MAX_USERCMDS 128 // must be a power of 2 and == engine CL_MAX_USERCMDS
+	int csqcplayer_saved_moveflags[CL_MAX_USERCMDS];
+	int csqcplayer_current_moveflags; // tracks state changes during moves (because timers can start during a move)
+	#define PMF_DJING 16
+#endif
+
+// CPMA double jumps
+.float pm_dj_time;
+#ifdef CSQC
+	#define WOULD_DJ(s) (csqcplayer_current_moveflags & PMF_DJING)
+#elifdef SVQC
+	#define WOULD_DJ(s) ((s).pm_dj_time > 0)
+#endif
+
 .float pm_time;
 
 .float move_movetype;
