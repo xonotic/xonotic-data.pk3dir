@@ -81,6 +81,18 @@ void sys_phys_update(entity this, float dt)
 			// if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
 			// { this.velocity_z = 70; }
 		}
+
+		// no double jumping past respawns (part of MOVETYPE_WALK but it's not used while dead)
+		if (this.pm_dj_time)
+		{
+			this.pm_dj_time = 0;
+#ifdef CSQC
+			for (int i = 0; i < CL_MAX_USERCMDS; ++i)
+				csqcplayer_saved_moveflags[i] = 0;
+			csqcplayer_current_moveflags = 0;
+#endif
+		}
+
 		sys_phys_postupdate(this);
 		return;
 	}
@@ -92,6 +104,7 @@ void sys_phys_update(entity this, float dt)
 	// to set values needed in sys_phys_simulate() and _Movetype_Physics_Walk()
 	if (IS_PLAYER(this)) // bones_was_here: should this instead check for MOVETYPE_WALK ?
 	{
+		PM_DropTimers(this, dt);
 		PM_GroundTrace(this, true);
 		if (IS_ONGROUND(this))
 			PM_Footsteps(this); // NB: reads global trace_dphitq3surfaceflags set by PM_GroundTrace()
