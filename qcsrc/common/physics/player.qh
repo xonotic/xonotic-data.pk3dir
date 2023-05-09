@@ -44,7 +44,7 @@ float autocvar_g_maxspeed;
 float autocvar_g_movement_highspeed = 1;
 bool autocvar_g_movement_highspeed_q3_compat = 0;
 bool autocvar_speedmeter;
-bool autocvar_sv_doublejump;
+int autocvar_sv_doublejump;
 float autocvar_sv_jumpspeedcap_max;
 bool autocvar_sv_jumpspeedcap_max_disable_on_ramps;
 float autocvar_sv_jumpspeedcap_min;
