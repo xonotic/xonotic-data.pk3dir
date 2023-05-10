@@ -8,6 +8,7 @@
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/resources/sv_resources.qh>
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
@@ -21,7 +22,6 @@
 #include <server/items/items.qh>
 #include <server/hook.qh>
 #include <server/mutators/_mod.qh>
-#include <server/resources.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
@@ -165,7 +165,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	else this.alpha = 1;
 
 	Weapon wep = this.owner.(weaponentity).m_weapon;
-	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors, this.owner.(weaponentity));
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors, this.owner.(weaponentity));
 	this.colormap = this.owner.colormap;
 	this.skin = w_ent.skin;
 
@@ -670,7 +670,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
-	copyentity(flash, xflash);
+	copyentity_qc(flash, xflash);
 
 	flash.viewmodelforclient = actor;
 

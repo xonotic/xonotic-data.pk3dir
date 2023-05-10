@@ -121,8 +121,14 @@
 		if (me.clickTime > 0 && me.clickTime <= frametime)
 		{
 			// keyboard click timer expired? Fire the event then.
-			if (!me.disabled)
-				if (me.onClick) me.onClick(me, me.onClickEntity);
+			if (!me.disabled && me.onClick)
+			{
+				if(me.applyButton)
+					me.applyButton.disabled = false;
+				me.onClick(me, me.onClickEntity);
+				if(me.disableOnClick)
+					me.disabled = true;
+			}
 		}
 		me.clickTime -= frametime;
 

@@ -11,6 +11,7 @@
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <server/campaign.qh>
 #include <server/client.qh>
 #include <server/command/banning.qh>
 #include <server/command/common.qh>
@@ -23,6 +24,7 @@
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/world.qh>
 
 // =============================================
@@ -33,8 +35,7 @@
 //  Nagger for players to know status of voting
 bool Nagger_SendEntity(entity this, entity to, float sendflags)
 {
-	int nags, i, f, b;
-	entity e;
+	int nags = 0;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_NAGGER);
 
 	// bits:
@@ -47,25 +48,23 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 	//  64 = vote counts
 	// 128 = vote string
 
-	nags = 0;
-	if (readycount)
+	if (warmup_stage)
 	{
-		nags |= BIT(0);
-		if (to.ready == 0) nags |= BIT(1);
+		if (readycount)
+		{
+			nags |= BIT(0);
+			if (!to.ready) nags |= BIT(1);
+		}
+		nags |= BIT(4);
 	}
+
 	if (vote_called)
 	{
 		nags |= BIT(2);
 		if (to.vote_selection == 0) nags |= BIT(3);
+		nags |= sendflags & BIT(6);
+		nags |= sendflags & BIT(7);
 	}
-	if (warmup_stage) nags |= BIT(4);
-
-	if (sendflags & BIT(6)) nags |= BIT(6);
-
-	if (sendflags & BIT(7)) nags |= BIT(7);
-
-	if (!(nags & 4))  // no vote called? send no string
-		nags &= ~(BIT(6) | BIT(7));
 
 	WriteByte(MSG_ENTITY, nags);
 
@@ -79,13 +78,14 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 	if (nags & BIT(7)) WriteString(MSG_ENTITY, vote_called_display);
 
-	if (nags & 1)
+	if (nags & BIT(0))
 	{
-		for (i = 1; i <= maxclients; i += 8)
+		for (int i = 1; i <= maxclients;)
 		{
-			for (f = 0, e = edict_num(i), b = BIT(0); b < BIT(8); b <<= 1, e = nextent(e))
-				if (!IS_REAL_CLIENT(e) || e.ready)
-					f |= b;
+			int f = 0;
+			for (int b = 0; b < 8 && i <= maxclients; ++b, ++i)
+				if (edict_num(i).ready)
+					f |= BIT(b);
 			WriteByte(MSG_ENTITY, f);
 		}
 	}
@@ -158,7 +158,7 @@ void VoteAccept()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ^1", vote_called_display, "^2 was accepted\n");
 
-	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = 1;
+	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = true;
 	else localcmd(strcat(vote_called_command, "\n"));
 
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
@@ -217,23 +217,23 @@ void VoteCount(float first_count)
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_CLIENT(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		++vote_player_count;
-		if (IS_PLAYER(it))   ++vote_real_player_count;
+		if (IS_PLAYER(it) || INGAME(it)) ++vote_real_player_count;
 		switch (it.vote_selection)
 		{
 			case VOTE_SELECT_REJECT:
-			{ ++vote_reject_count;
-			  { if (IS_PLAYER(it)) ++vote_real_reject_count; } break;
-			}
+				++vote_reject_count;
+				if (IS_PLAYER(it) || INGAME(it)) ++vote_real_reject_count;
+				break;
 			case VOTE_SELECT_ACCEPT:
-			{ ++vote_accept_count;
-			  { if (IS_PLAYER(it)) ++vote_real_accept_count; } break;
-			}
+				++vote_accept_count;
+				if (IS_PLAYER(it) || INGAME(it)) ++vote_real_accept_count;
+				break;
 			case VOTE_SELECT_ABSTAIN:
-			{ ++vote_abstain_count;
-			  { if (IS_PLAYER(it)) ++vote_real_abstain_count; } break;
-			}
+				++vote_abstain_count;
+				if (IS_PLAYER(it) || INGAME(it)) ++vote_real_abstain_count;
+				break;
 			default: break;
 		}
 	});
@@ -335,12 +335,19 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(bool dorespawn)
+void reset_map(bool is_fake_round_start)
 {
 	if (time <= game_starttime)
 	{
 		if (game_stopped)
 			return;
+
+		if (!is_fake_round_start)
+		{
+			Score_ClearAll();
+			PlayerStats_GameReport_Reset_All();
+		}
+
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
 	}
@@ -351,8 +358,11 @@ void reset_map(bool dorespawn)
 		shuffleteams_on_reset_map = false;
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
+	FOREACH_CLIENT(true, {
+		if (time <= game_starttime)
+			accuracy_reset(it); // for spectators too because weapon accuracy is persistent
+		if (!IS_PLAYER(it))
+			continue;
 		if (STAT(FROZEN, it))
 			Unfreeze(it, false);
 		player_powerups_remove_all(it);
@@ -386,89 +396,72 @@ void reset_map(bool dorespawn)
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
-	if (dorespawn)
+	if (!MUTATOR_CALLHOOK(reset_map_players))
 	{
-		if (!MUTATOR_CALLHOOK(reset_map_players))
+		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if (restart_mapalreadyrestarted || (time < game_starttime))
-			{
-				FOREACH_CLIENT(IS_PLAYER(it),
-				{
-					/*
-					only reset players if a restart countdown is active
-					this can either be due to cvar sv_ready_restart_after_countdown having set
-					restart_mapalreadyrestarted to 1 after the countdown ended or when
-					sv_ready_restart_after_countdown is not used and countdown is still running
-					*/
-					// PlayerScore_Clear(it);
-					CS(it).killcount = 0;
-					// stop the player from moving so that he stands still once he gets respawned
-					it.velocity = '0 0 0';
-					it.avelocity = '0 0 0';
-					CS(it).movement = '0 0 0';
-					PutClientInServer(it);
-				});
-			}
-		}
+			// PlayerScore_Clear(it);
+			CS(it).killcount = 0;
+			// stop the player from moving so that they stand still once they get respawned
+			it.velocity = '0 0 0';
+			it.avelocity = '0 0 0';
+			CS(it).movement = '0 0 0';
+			PutClientInServer(it);
+		});
 	}
 }
 
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think(entity this)
 {
-	restart_mapalreadyrestarted = true;
-	reset_map(true);
-	Score_ClearAll();
+	if (!warmup_stage) // if the countdown was not aborted
+		reset_map(false);
 	delete(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
-void ReadyRestart_force()
+void ReadyRestart_force(bool is_fake_round_start)
 {
 	if (time <= game_starttime && game_stopped)
 		return;
-
-	bprint("^1Server is restarting...\n");
+	if (!is_fake_round_start && !autocvar_g_campaign)
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_COUNTDOWN_RESTART);
 
 	VoteReset();
 
 	// clear overtime, we have to decrease timelimit to its original value again.
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
 		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
-	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
+	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = overtimes = 0;
 
-	readyrestart_happened = true;
-	game_starttime = time + RESTART_COUNTDOWN;
+	if(warmup_stage)
+		game_starttime = time; // Warmup: No countdown in warmup
+	else if (autocvar_g_campaign)
+		game_starttime = time + 3;
+	else
+		game_starttime = time + RESTART_COUNTDOWN; // Go into match mode
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.alivetime = 0;
 		CS(it).killcount = 0;
-		float val = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
-		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, -val);
 	});
 
-	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
-
-	// disable the warmup global for the server
-	if(warmup_stage)
+	// if we're ending the warmup stage call the corresponding hook
+	if(!is_fake_round_start && !warmup_stage)
 		localcmd("\nsv_hook_warmupend\n");
-	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
-	// reset the .ready status of all players (also spectators)
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { it.ready = false; });
+	// reset the .ready status of all clients (including spectators and bots)
+	FOREACH_CLIENT(true, { it.ready = false; });
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
 	// lock teams with lockonrestart
 	if (autocvar_teamplay_lockonrestart && teamplay)
-	{
-		lockteams = true;
-		bprint("^1The teams are now locked.\n");
-	}
+		lockteams = !warmup_stage;
 
 	// initiate the restart-countdown-announcer entity
-	if (sv_ready_restart_after_countdown)
+	if (!is_fake_round_start && sv_ready_restart_after_countdown && !warmup_stage)
 	{
 		entity restart_timer = new_pure(restart_timer);
 		setthink(restart_timer, ReadyRestart_think);
@@ -481,40 +474,89 @@ void ReadyRestart_force()
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
-	if (!sv_ready_restart_after_countdown) reset_map(true);
+	if (!sv_ready_restart_after_countdown || warmup_stage)
+		reset_map(is_fake_round_start);
+
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
-void ReadyRestart()
+void ReadyRestart(bool forceWarmupEnd)
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing)
+	{
+		// NOTE: ReadyRestart support is mandatory in campaign
+		if (autocvar_g_campaign)
+			error("ReadyRestart must be supported in campaign mode!");
+		localcmd("restart\n"); // if ReadyRestart is denied, restart the server
+	}
 	else localcmd("\nsv_hook_readyrestart\n");
 
-	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
-	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) Score_ClearAll();
-	ReadyRestart_force();
+	if(forceWarmupEnd || autocvar_g_campaign)
+		warmup_stage = 0; // forcefully end warmup and go to match stage
+	else
+		warmup_stage = autocvar_g_warmup; // go into warmup if it's enabled, otherwise restart into match stage
+
+	ReadyRestart_force(false);
 }
 
-// Count the players who are ready and determine whether or not to restart the match
+/* Count the players who are ready and determine whether or not to restart the match when:
+ * a player presses F4                      server/command/cmd.qc  ClientCommand_ready()
+ * a player switches from players to specs  server/client.qc       PutObserverInServer()
+ * a player joins (from specs or directly)  server/client.qc       PutPlayerInServer()
+ * a player disconnects                     server/client.qc       ClientDisconnect()	*/
 void ReadyCount()
 {
-	float ready_needed_factor, ready_needed_count;
-	float t_ready = 0, t_players = 0;
+	// cannot reset the game while a timeout is active or pending
+	if (timeout_status) return;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || it.caplayer == 1), {
-		++t_players;
-		if (it.ready) ++t_ready;
+	int total_players = 0, human_players = 0, humans_ready = 0;
+	readycount = 0;
+
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME_JOINED(it), {
+		++total_players;
+		if (it.ready) ++readycount;
+		if (IS_REAL_CLIENT(it))
+		{
+			++human_players;
+			if (it.ready) ++humans_ready;
+		}
 	});
-
-	readycount = t_ready;
 
 	Nagger_ReadyCounted();
 
-	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
-	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
+	// can't read warmup_stage here as it could have been set to 0 by ReadyRestart()
+	// and we need to use this when checking if we should abort the countdown
+	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
+	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
 
-	if (readycount >= ready_needed_count) ReadyRestart();
+	if (total_players < minplayers)
+	{
+		if (game_starttime > time) // someone bailed during countdown, back to warmup
+		{
+			warmup_stage = autocvar_g_warmup; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
+			game_starttime = time;
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
+			if (!sv_ready_restart_after_countdown) // if we ran reset_map() at start of countdown
+				FOREACH_CLIENT(IS_PLAYER(it), { GiveWarmupResources(it); });
+		}
+		if (warmup_limit > 0)
+			warmup_limit = -1;
+		return; // don't ReadyRestart if players are ready but too few
+	}
+	else if (minplayers && warmup_limit <= 0)
+	{
+		// there's enough players now but we're still in infinite warmup
+		warmup_limit = cvar("g_warmup_limit");
+		if (warmup_limit == 0)
+			warmup_limit = autocvar_timelimit * 60;
+		if (warmup_limit > 0)
+			game_starttime = time;
+		// implicit else: g_warmup -1 && g_warmup_limit -1 means
+		// warmup continues until enough players AND enough RUPs (no time limit)
+	}
+
+	if (humans_ready && humans_ready >= rint(human_players * bound(0.5, cvar("g_warmup_majority_factor"), 1)))
+		ReadyRestart(true);
 }
 
 
@@ -522,9 +564,9 @@ void ReadyCount()
 //  Supporting functions for VoteCommand
 // ======================================
 
-float Votecommand_check_assignment(entity caller, float assignment)
+bool Votecommand_check_assignment(entity caller, float assignment)
 {
-	float from_server = (!caller);
+	bool from_server = (!caller);
 
 	if ((assignment == VC_ASGNMNT_BOTH)
 	    || ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY)
@@ -543,33 +585,32 @@ string VoteCommand_extractcommand(string input, float startpos, int argc)
 	return output;
 }
 
-float VoteCommand_checknasty(string vote_command)
+bool VoteCommand_checknasty(string vote_command)
 {
-	if ((strstrofs(vote_command, ";", 0) >= 0)
+	return !((strstrofs(vote_command, ";", 0) >= 0)
 	    || (strstrofs(vote_command, "\n", 0) >= 0)
 	    || (strstrofs(vote_command, "\r", 0) >= 0)
-	    || (strstrofs(vote_command, "$", 0) >= 0)) return false;
-
-	return true;
+	    || (strstrofs(vote_command, "$", 0) >= 0));
 }
 
 // NOTE: requires input to be surrounded by spaces
 string VoteCommand_checkreplacements(string input)
 {
-	string output = input;
+	// add a space around the input so the start and end of the list is captured
+	string output = strcat(" ", input, " ");
 	// allow gotomap replacements
 	output = strreplace(" map ", " gotomap ", output);
 	output = strreplace(" chmap ", " gotomap ", output);
 	return output;
 }
 
-float VoteCommand_checkinlist(string vote_command, string list)
+bool VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
+	if (vote_command == "" || list == "")
+		return false;
 
-	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
-
-	return false;
+	string l = VoteCommand_checkreplacements(list);
+	return (strstrofs(l, VoteCommand_checkreplacements(vote_command), 0) >= 0);
 }
 
 string ValidateMap(string validated_map, entity caller)
@@ -770,6 +811,18 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			vote_parsed_command = strcat("defer 1 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
+			break;
+		}
+
+		case "allready":
+		{
+			if(!warmup_stage) {
+				print_to(caller, "Game already started. Use the resetmatch command to restart the match.");
+				return -1;
+			}
+
+			vote_parsed_command = vote_command;
+			vote_parsed_display = strzone(strcat("^1", vote_command));
 			break;
 		}
 

@@ -107,21 +107,6 @@ string W_NameWeaponOrder_MapFunc(string s)
 	return s;
 }
 
-string W_UndeprecateName(string s)
-{
-	switch (s)
-	{
-		case "nex": return "vortex";
-		case "rocketlauncher": return "devastator";
-		case "laser": return "blaster";
-		case "minstanex": return "vaporizer";
-		case "grenadelauncher": return "mortar";
-		case "uzi": return "machinegun";
-		case "hmg": return "okhmg";
-		case "rpc": return "okrpc";
-		default: return s;
-	}
-}
 string W_NameWeaponOrder(string order)
 {
 	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
@@ -129,8 +114,7 @@ string W_NameWeaponOrder(string order)
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
-	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
+	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -202,7 +186,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	return result;
 }
 
-string GetAmmoPicture(int ammotype)
+// TODO: registry handles for below functions
+string GetAmmoPicture(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -216,7 +201,7 @@ string GetAmmoPicture(int ammotype)
 	}
 }
 
-string GetAmmoName(int ammotype)
+string GetAmmoName(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -230,7 +215,7 @@ string GetAmmoName(int ammotype)
 	}
 }
 
-entity GetAmmoItem(int ammotype)
+entity GetAmmoItem(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -241,28 +226,14 @@ entity GetAmmoItem(int ammotype)
 		case RES_PLASMA:  return ITEM_Plasma;
 		case RES_FUEL:    return ITEM_JetpackFuel;
 	}
-	LOG_WARNF("Invalid ammo type %d ", ammotype);
+	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
 	// WEAPONTODO: use this generic func to reduce duplication ?
 	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
 
 #ifdef CSQC
-int GetAmmoTypeFromNum(int i)
-{
-	switch (i)
-	{
-		case 0: return RES_SHELLS;
-		case 1: return RES_BULLETS;
-		case 2: return RES_ROCKETS;
-		case 3: return RES_CELLS;
-		case 4: return RES_PLASMA;
-		case 5: return RES_FUEL;
-		default: return RES_NONE;
-	}
-}
-
-int GetAmmoStat(int ammotype)
+int GetAmmoStat(Resource ammotype)
 {
 	switch (ammotype)
 	{
@@ -393,6 +364,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  *   this.origin, this.angles
  *   this.weaponchild
  *   this.movedir, this.view_ofs, this.movedir_aligned
+ *   this.spawnorigin (SVQC only)
  *   attachment stuff
  *   anim stuff
  * to free:
@@ -409,7 +381,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
+#ifdef SVQC
 		this.spawnorigin = '0 0 0';
+#endif
 		this.oldorigin = '0 0 0';
 		this.anim_fire1  = '0 1 0.01';
 		this.anim_fire2  = '0 1 0.01';
@@ -481,6 +455,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.movedir = '0 0 0';
 			}
 		}
+#ifdef SVQC
 		{
 			int idx = 0;
 			// v_ model attached to invisible h_ model
@@ -500,6 +475,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.spawnorigin = this.movedir;
 			}
 		}
+#endif
 		if (v_shot_idx)
 		{
 			this.oldorigin = '0 0 0';  // use regular attachment
@@ -546,7 +522,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
-		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
+		this.view_ofs = this.movedir_aligned - v;
 	}
 	int compressed_shotorg = compressShotOrigin(this.movedir);
 	// make them match perfectly
@@ -556,7 +532,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 #endif
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 
+#ifdef SVQC
 	this.spawnorigin += this.view_ofs;  // offset the casings origin by the same amount
+#endif
 
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);
@@ -825,4 +803,36 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 
 #endif
 
+#endif
+
+#ifdef SVQC
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
+{
+	string o = W_FixWeaponOrder_ForceComplete(wo);
+	strcpy(CS_CVAR(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
+	return o;
+}
+#endif
+
+#ifdef CSQC
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+#endif
+
+#ifdef GAMEQC
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
+REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
+REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
+REPLICATE(cvar_cl_weaponpriority, string, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+REPLICATE(cvar_cl_weaponpriorities[0], string, "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[1], string, "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[2], string, "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[3], string, "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[4], string, "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[5], string, "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[6], string, "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 #endif

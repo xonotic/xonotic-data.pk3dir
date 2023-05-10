@@ -65,7 +65,6 @@ entity bot_list;
 .float bot_pickup;
 .float bot_pickupbasevalue;
 .bool bot_pickup_respawning;
-.float bot_canfire;
 .float bot_strategytime;
 .float bot_jump_time;
 
@@ -90,7 +89,7 @@ int _content_type;
  */
 
 entity bot_spawn();
-bool bot_fixcount();
+bool bot_fixcount(bool multiple_per_frame);
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);

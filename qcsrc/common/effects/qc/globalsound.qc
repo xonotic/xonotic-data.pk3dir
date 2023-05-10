@@ -7,6 +7,12 @@
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
+	#ifdef GAMEQC
+		REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
+		REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
+		REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
+	#endif
+
 	#ifdef SVQC
 		/**
 		 * @param from the source entity, its position is sent

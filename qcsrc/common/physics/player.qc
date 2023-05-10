@@ -3,6 +3,12 @@
 #include <common/mapobjects/_mod.qh>
 #include <common/viewloc.qh>
 
+#ifdef GAMEQC
+REPLICATE(cvar_cl_physics, string, "cl_physics");
+REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
+REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
+#endif
+
 #ifdef SVQC
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -42,35 +48,38 @@ void Physics_UpdateStats(entity this)
 
 	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this);
 	float maxspd_mod = PHYS_HIGHSPEED(this) * ((this.swampslug.active == ACTIVE_ACTIVE) ? this.swampslug.swamp_slowdown : 1);
-        STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
-        if (autocvar_g_movement_highspeed_q3_compat) {
-          STAT(MOVEVARS_AIRACCEL_QW, this) = Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw);
-          STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw);
-          STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw);
-        } else {
-          STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw), maxspd_mod);
-          STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw))
-            ? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw), maxspd_mod)
-            : 0;
-          STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
-        }
+	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
+	if (autocvar_g_movement_highspeed_q3_compat)
+	{
+		STAT(MOVEVARS_AIRACCEL_QW, this) = Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw);
+		STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw);
+		STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw);
+	}
+	else
+	{
+		STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw), maxspd_mod);
+		STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw))
+			? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw), maxspd_mod)
+			: 0;
+		STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
+	}
+
 	bool q3hb = q3compat && autocvar_sv_q3compat_changehitbox;
-	STAT(PL_MIN, this) = (q3hb) ? '-15 -15 -20' : autocvar_sv_player_mins;
-	STAT(PL_MAX, this) = (q3hb) ? '15 15 36' : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = (q3hb) ? '0 0 30' : autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this) = (q3hb) ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this) = (q3hb) ? '15 15 20' : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = (q3hb) ? '0 0 16' : autocvar_sv_player_crouch_viewoffset;
+	STAT(PL_MIN, this)             = q3hb ? '-15 -15 -24' : autocvar_sv_player_mins;
+	STAT(PL_MAX, this)             = q3hb ? '15 15 32'    : autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this)        = q3hb ? '0 0 26'      : autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this)      = q3hb ? '-15 -15 -24' : autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this)      = q3hb ? '15 15 16'    : autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = q3hb ? '0 0 12'      : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings
 	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
 	STAT(MOVEVARS_MAXAIRSTRAFESPEED, this) = Physics_ClientOption(this, "maxairstrafespeed", autocvar_sv_maxairstrafespeed);
-        if (autocvar_g_movement_highspeed_q3_compat) {
-          STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed", autocvar_sv_maxairspeed) * maxspd_mod;
-        } else {
-          STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed", autocvar_sv_maxairspeed);
-        }
+		if (autocvar_g_movement_highspeed_q3_compat)
+			STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed", autocvar_sv_maxairspeed) * maxspd_mod;
+		else
+			STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed", autocvar_sv_maxairspeed);
 
 	STAT(MOVEVARS_AIRSTRAFEACCELERATE, this) = Physics_ClientOption(this, "airstrafeaccelerate", autocvar_sv_airstrafeaccelerate);
 	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel", autocvar_sv_warsowbunny_turnaccel);
@@ -144,10 +153,10 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		do_crouch = false;
 	} else if (STAT(FROZEN, this) || IS_DEAD(this)) {
 		do_crouch = false;
-    }
+	}
 
-    MUTATOR_CALLHOOK(PlayerCanCrouch, this, do_crouch);
-    do_crouch = M_ARGV(1, bool);
+	MUTATOR_CALLHOOK(PlayerCanCrouch, this, do_crouch);
+	do_crouch = M_ARGV(1, bool);
 
 	if (do_crouch) {
 		if (!IS_DUCKED(this)) {
@@ -157,12 +166,12 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
 	} else if (IS_DUCKED(this)) {
-        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-        if (!trace_startsolid) {
-            UNSET_DUCKED(this);
-            this.view_ofs = STAT(PL_VIEW_OFS, this);
-            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-        }
+		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
+		if (!trace_startsolid) {
+			UNSET_DUCKED(this);
+			this.view_ofs = STAT(PL_VIEW_OFS, this);
+			setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+		}
 	}
 
 	_Movetype_CheckWater(this); // needs to be run on the client, might as well use the latest on the server too!
@@ -619,24 +628,24 @@ void PM_check_hitground(entity this)
 {
 #ifdef SVQC
 	if (!this.wasFlying) return;
-    this.wasFlying = false;
-    if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
-    if (this.ladder_entity) return;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	if(this.(weaponentity).hook)
-    		return;
-    }
-    this.nextstep = time + 0.3 + random() * 0.1;
-    trace_dphitq3surfaceflags = 0;
-    tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-    entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-    	? GS_FALL_METAL
-    	: GS_FALL;
-    float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
-    GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
+	this.wasFlying = false;
+	if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
+	if (this.ladder_entity) return;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).hook)
+			return;
+	}
+	this.nextstep = time + 0.3 + random() * 0.1;
+	trace_dphitq3surfaceflags = 0;
+	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
+	entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+		? GS_FALL_METAL
+		: GS_FALL;
+	float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
+	GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
 #endif
 }
 

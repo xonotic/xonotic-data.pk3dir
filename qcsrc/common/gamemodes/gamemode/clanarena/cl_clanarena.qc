@@ -2,9 +2,18 @@
 
 #include <client/draw.qh>
 
+#include <common/mutators/base.qh>
+
 void HUD_Mod_CA_Export(int fh)
 {
 	HUD_Write_Cvar("hud_panel_modicons_ca_layout");
+}
+
+REGISTER_MUTATOR(cl_ca, true);
+
+MUTATOR_HOOKFUNCTION(cl_ca, DrawInfoMessages)
+{
+	return (ISGAMETYPE(CA) && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_IN_SCOREBOARD);
 }
 
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)

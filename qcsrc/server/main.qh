@@ -16,6 +16,9 @@ bool autocvar_g_balance_falldamage_onlyvertical;
 #define autocvar_slowmo cvar("slowmo")
 float autocvar_sys_ticrate;
 
+bool autocvar_sv_autopause;
+void Pause_TryPause_Dedicated(entity this);
+
 bool dropclient_schedule(entity this);
 
 /** print(), but only print if the server is not local */
@@ -28,9 +31,6 @@ void remove_safely(entity e);
 
 void remove_unsafely(entity e);
 
-// copies a string to a tempstring (so one can strunzone it)
-string strcat1(string s) = #115; // FRIK_FILE
-
 #ifdef PROFILING
 float client_cefc_accumulator;
 float client_cefc_accumulatortime;
@@ -38,7 +38,8 @@ float client_cefc_accumulatortime;
 
 float servertime, serverprevtime, serverframetime;
 
-.vector oldvelocity; // for fall damage
+// set in CreatureFrame_All for entities that can be damaged by fall (players) and contents (projectiles)
+.vector oldvelocity;
 
 .float watersound_finished;
 
@@ -46,6 +47,8 @@ float servertime, serverprevtime, serverframetime;
 .float species;
 
 .float contents_damagetime;
+
+string GetField_fullspawndata(entity e, string f, ...);
 
 /*
 ==================

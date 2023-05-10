@@ -2,7 +2,7 @@
 
 CLASS(Vaporizer, Weapon)
 /* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");
-/* ammotype  */ ATTRIB(Vaporizer, ammo_type, int, RES_CELLS);
+/* ammotype  */ ATTRIB(Vaporizer, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
@@ -19,6 +19,7 @@ CLASS(Vaporizer, Weapon)
 /* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
 /* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
 /* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
+/* legacy    */ ATTRIB(Vaporizer, m_deprecated_netname, string, "minstanex");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -63,7 +64,5 @@ SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)
 .float jump_interval;
 .float jump_interval2;
 .bool held_down;
-.float rm_force;
-.float rm_damage;
-.float rm_edmg;
+.int rm_laser_count;
 #endif

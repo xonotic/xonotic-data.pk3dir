@@ -2,25 +2,10 @@
 
 #include "pickup.qh"
 #include <common/items/all.qh>
+#include <common/resources/resources.qh>
 #ifdef SVQC
-    #include <common/stats.qh>
+    #include <common/resources/sv_resources.qh>
     #include <server/items/items.qh>
-    #include <server/resources.qh>
-#endif
-
-#if 1
-.int ammo_none;
-.int ammo_shells;
-.int ammo_nails;
-.int ammo_rockets;
-.int ammo_cells;
-#ifdef SVQC
-const .int ammo_plasma = _STAT(PLASMA);
-const .int ammo_fuel = _STAT(FUEL);
-#else
-.int ammo_plasma;
-.int ammo_fuel;
-#endif
 #endif
 
 #ifdef GAMEQC
@@ -41,130 +26,10 @@ CLASS(Ammo, Pickup)
 ENDCLASS(Ammo)
 
 
-#ifdef GAMEQC
-MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
-#endif
+// NOTE: ammo resource registration order should match ammo (as item) registration order
+// see REGISTER_RESOURCE calls order
 
-#ifdef SVQC
-PROPERTY(int, g_pickup_nails);
-void ammo_bullets_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_BULLETS))
-        SetResourceExplicit(item, RES_BULLETS, g_pickup_nails);
-}
-#endif
-
-CLASS(Bullets, Ammo)
-ENDCLASS(Bullets)
-
-REGISTER_ITEM(Bullets, Bullets) {
-    this.m_canonical_spawnfunc = "item_bullets";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Bullets_ITEM;
-#endif
-    this.netname    =   "bullets";
-    this.m_name     =   _("bullets");
-    this.m_icon     =   "ammo_bullets";
-#ifdef SVQC
-    this.m_botvalue =   1500;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_bullets_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_bullets, ITEM_Bullets)
-
-#ifdef GAMEQC
-MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
-#endif
-
-#ifdef SVQC
-PROPERTY(int, g_pickup_cells);
-void ammo_cells_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_CELLS))
-        SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
-}
-#endif
-REGISTER_ITEM(Cells, Ammo) {
-    this.m_canonical_spawnfunc = "item_cells";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Cells_ITEM;
-#endif
-    this.netname    =   "cells";
-    this.m_name     =   _("cells");
-    this.m_icon     =   "ammo_cells";
-#ifdef SVQC
-    this.m_botvalue =   1500;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_cells_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
-
-#ifdef GAMEQC
-MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
-#endif
-
-#ifdef SVQC
-PROPERTY(int, g_pickup_plasma);
-void ammo_plasma_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_PLASMA))
-        SetResourceExplicit(item, RES_PLASMA, g_pickup_plasma);
-}
-#endif
-REGISTER_ITEM(Plasma, Ammo) {
-    this.m_canonical_spawnfunc = "item_plasma";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Plasma_ITEM;
-#endif
-    this.netname    =   "plasma";
-    this.m_name     =   _("plasma");
-    this.m_icon     =   "ammo_plasma";
-#ifdef SVQC
-    this.m_botvalue =   1500;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_plasma_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_plasma, ITEM_Plasma)
-
-#ifdef GAMEQC
-MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
-#endif
-
-#ifdef SVQC
-PROPERTY(int, g_pickup_rockets);
-void ammo_rockets_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_ROCKETS))
-        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
-}
-#endif
-REGISTER_ITEM(Rockets, Ammo) {
-    this.m_canonical_spawnfunc = "item_rockets";
-#ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Rockets_ITEM;
-#endif
-    this.netname    =   "rockets";
-    this.m_name     =   _("rockets");
-    this.m_icon     =   "ammo_rockets";
-#ifdef SVQC
-    this.m_botvalue =   1500;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_rockets_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_rockets, ITEM_Rockets)
-
+// ammo type #1: shells
 #ifdef GAMEQC
 MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 #endif
@@ -184,17 +49,149 @@ ENDCLASS(Shells)
 REGISTER_ITEM(Shells, Shells) {
     this.m_canonical_spawnfunc = "item_shells";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_Shells_ITEM;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Shells_ITEM;
 #endif
-    this.netname    =   "shells";
-    this.m_name     =   _("shells");
-    this.m_icon     =   "ammo_shells";
+    this.netname    = "shells";
+    this.m_name     = _("Shells");
+    this.m_icon     = "ammo_shells";
 #ifdef SVQC
-    this.m_botvalue =   1000;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_shells_init;
+    this.m_botvalue = 1000;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_shells_init;
 #endif
 }
 
 SPAWNFUNC_ITEM(item_shells, ITEM_Shells)
+
+
+// ammo type #2: bullets
+#ifdef GAMEQC
+MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_nails);
+void ammo_bullets_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_BULLETS))
+        SetResourceExplicit(item, RES_BULLETS, g_pickup_nails);
+}
+#endif
+
+CLASS(Bullets, Ammo)
+ENDCLASS(Bullets)
+
+REGISTER_ITEM(Bullets, Bullets) {
+    this.m_canonical_spawnfunc = "item_bullets";
+#ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Bullets_ITEM;
+#endif
+    this.netname    = "bullets";
+    this.m_name     = _("Bullets");
+    this.m_icon     = "ammo_bullets";
+#ifdef SVQC
+    this.m_botvalue = 1500;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_bullets_init;
+#endif
+}
+
+SPAWNFUNC_ITEM(item_bullets, ITEM_Bullets)
+
+
+// ammo type #3: rockets
+#ifdef GAMEQC
+MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_rockets);
+void ammo_rockets_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_ROCKETS))
+        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
+}
+#endif
+REGISTER_ITEM(Rockets, Ammo) {
+    this.m_canonical_spawnfunc = "item_rockets";
+#ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Rockets_ITEM;
+#endif
+    this.netname    = "rockets";
+    this.m_name     = _("Rockets");
+    this.m_icon     = "ammo_rockets";
+#ifdef SVQC
+    this.m_botvalue = 1500;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_rockets_init;
+#endif
+}
+
+SPAWNFUNC_ITEM(item_rockets, ITEM_Rockets)
+
+
+// ammo type #4: cells
+#ifdef GAMEQC
+MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_cells);
+void ammo_cells_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_CELLS))
+        SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
+}
+#endif
+REGISTER_ITEM(Cells, Ammo) {
+    this.m_canonical_spawnfunc = "item_cells";
+#ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Cells_ITEM;
+#endif
+    this.netname    = "cells";
+    this.m_name     = _("Cells");
+    this.m_icon     = "ammo_cells";
+#ifdef SVQC
+    this.m_botvalue = 1500;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_cells_init;
+#endif
+}
+
+SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
+
+
+// ammo type #5: plasma
+#ifdef GAMEQC
+MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_plasma);
+void ammo_plasma_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_PLASMA))
+        SetResourceExplicit(item, RES_PLASMA, g_pickup_plasma);
+}
+#endif
+REGISTER_ITEM(Plasma, Ammo) {
+    this.m_canonical_spawnfunc = "item_plasma";
+#ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model    = MDL_Plasma_ITEM;
+#endif
+    this.netname    = "plasma";
+    this.m_name     = _("Plasma");
+    this.m_icon     = "ammo_plasma";
+#ifdef SVQC
+    this.m_botvalue = 1500;
+    this.m_itemid   = IT_RESOURCE;
+    this.m_iteminit = ammo_plasma_init;
+#endif
+}
+
+SPAWNFUNC_ITEM(item_plasma, ITEM_Plasma)

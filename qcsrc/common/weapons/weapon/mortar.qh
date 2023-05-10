@@ -2,7 +2,7 @@
 
 CLASS(Mortar, Weapon)
 /* spawnfunc */ ATTRIB(Mortar, m_canonical_spawnfunc, string, "weapon_mortar");
-/* ammotype  */ ATTRIB(Mortar, ammo_type, int, RES_ROCKETS);
+/* ammotype  */ ATTRIB(Mortar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Mortar, impulse, int, 4);
 /* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
@@ -18,6 +18,7 @@ CLASS(Mortar, Weapon)
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
 /* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
+/* legacy    */ ATTRIB(Mortar, m_deprecated_netname, string, "grenadelauncher");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

@@ -496,6 +496,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		panel_pos_backup = highlightedPanel_initial_pos;
 		panel_size_backup = highlightedPanel_initial_size;
 		highlightedPanel_backup = highlightedPanel;
+		hud_configure_centerline_time = time + 1;
 	}
 }
 
@@ -537,27 +538,21 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
-	// allow console bind to work
-	string con_keys = findkeysforcommand("toggleconsole", 0);
-	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
-	bool hit_con_bind = false;
-	int i;
-	for (i = 0; i < keys; ++i)
-	{
-		if(nPrimary == stof(argv(i)))
-			hit_con_bind = true;
-	}
-
+	int hudShiftState_prev = hudShiftState;
+	int mouseClicked_prev = mouseClicked;
 	if(key_pressed) {
 		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
 		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 	}
 	else {
 		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
 		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 
 	if(nPrimary == K_CTRL)
@@ -576,21 +571,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 	}
 
-	if(nPrimary == K_MOUSE1)
-	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE1;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE1);
-	}
-	else if(nPrimary == K_MOUSE2)
-	{
-		if(key_pressed)
-			mouseClicked |= S_MOUSE2;
-		else
-			mouseClicked -= (mouseClicked & S_MOUSE2);
-	}
-	else if(nPrimary == K_ESCAPE)
+	if(nPrimary == K_ESCAPE)
 	{
 		if (!key_pressed)
 			return true;
@@ -639,7 +620,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		vector candidate_pos = '0 0 0';
 		const float LEVELS_NUM = 4;
 		float level_height = vid_conheight / LEVELS_NUM;
-LABEL(find_tab_panel)
+		LABEL(find_tab_panel)
 		level = floor(tab_panel_pos.y / level_height) * level_height; //starting level
 		candidate_pos.x = (!tab_backward) ? vid_conwidth : 0;
 		start_posX = tab_panel_pos.x;
@@ -647,7 +628,7 @@ LABEL(find_tab_panel)
 		k=0;
 		while(++k)
 		{
-			for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
+			for(int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			{
 				panel = REGISTRY_GET(hud_panels, i);
 				if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
@@ -787,8 +768,19 @@ LABEL(find_tab_panel)
 		if (highlightedPanel)
 			HUD_Panel_EnableMenu();
 	}
-	else if(hit_con_bind || nPrimary == K_PAUSE)
+	else if(nPrimary == K_PAUSE)
 		return false;
+	else if (hudShiftState_prev == hudShiftState && mouseClicked_prev == mouseClicked)
+	{
+		// allow console bind to work
+		string con_keys = findkeysforcommand("toggleconsole", 0);
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false; // hit console bind
+		}
+	}
 
 	return true;
 }
@@ -953,6 +945,7 @@ void HUD_Panel_EnableMenu()
 	hud_configure_menu_open = 2;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
+
 void HUD_Panel_Mouse()
 {
 	if(autocvar__menu_alpha == 1)
@@ -1013,6 +1006,9 @@ void HUD_Panel_Mouse()
 				// moving it, avoid the immediate "fix" of its position/size
 				// (often unwanted and hateful) by disabling collisions check
 				hud_configure_checkcollisions = false;
+
+			if (time - prevMouseClickedTime > 0.25) // avoid showing the center line immediately on mouse click
+				hud_configure_centerline_time = time + 0.5;
 		}
 
 		if(highlightedAction == 1)
@@ -1050,7 +1046,7 @@ void HUD_Panel_Mouse()
 }
 void HUD_Configure_DrawGrid()
 {
-	float i;
+	int i;
 	if(autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
 	{
 		hud_configure_gridSize.x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
@@ -1058,6 +1054,14 @@ void HUD_Configure_DrawGrid()
 		hud_configure_realGridSize.x = hud_configure_gridSize.x * vid_conwidth;
 		hud_configure_realGridSize.y = hud_configure_gridSize.y * vid_conheight;
 		vector s;
+		// vertical center line, wider than vertical grid lines so that it's more visible
+		// NOTE: depending on grid size the vertical center line may not overlap any vertical grid line
+		int n = tokenize(autocvar_hud_configure_vertical_lines);
+		for (i = 0; i < n; ++i)
+		{
+			float xpos_rel = stof(argv(i));
+			drawfill(eX * (xpos_rel * vid_conwidth - 1), vec2(3, vid_conheight), '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		}
 		// x-axis
 		s = vec2(1, vid_conheight);
 		for(i = 1; i < 1/hud_configure_gridSize.x; ++i)
@@ -1120,6 +1124,30 @@ void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 	drawpic_tiled(pos + eX * (panel_size.x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, vec2(hlBorderSize, panel_size.y + 2 * myBorder - 2 * hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
 }
 
+void HUD_Panel_HlCenterLine(float myBorder)
+{
+	if (time > hud_configure_centerline_time)
+		return;
+	float panel_centerpos_x = (panel_pos.x + panel_size.x * 0.5);
+	int n = tokenize(autocvar_hud_configure_vertical_lines);
+	for (int i = 0; i < n; ++i)
+	{
+		float xpos_rel = stof(argv(i));
+		if (xpos_rel <= 0 || xpos_rel >= 1)
+			continue;
+		float ofs = fabs(panel_centerpos_x / vid_conwidth - xpos_rel);
+		if (ofs < 0.02) // don't bother showing the center line if it's evident that the panel is not centered
+		{
+			float f = map_bound_ranges(ofs, 0.001, 0.01, 0, 1);
+			vector col = '1 0 0' * f + '0 1 0' * (1 - f); // from red (far) to green (close)
+			float theAlpha = 0.3 + 0.1 * sin(6 * time); // blink
+			theAlpha *= (1 - autocvar__menu_alpha) * bound(0, hud_configure_centerline_time - time, 0.5) * 2; // fade
+			vector pos = vec2(panel_centerpos_x - 1, panel_pos.y - myBorder);
+			drawfill(pos, vec2(3, panel_size.y + 2 * myBorder), col, theAlpha, DRAWFLAG_NORMAL);
+		}
+	}
+}
+
 void HUD_Configure_PostDraw()
 {
 	if(autocvar__hud_configure)
@@ -1135,6 +1163,7 @@ void HUD_Configure_PostDraw()
 			panel = highlightedPanel;
 			HUD_Panel_UpdatePosSize();
 			HUD_Panel_HlBorder(panel_bg_border * hlBorderSize, '0 0.5 1', 0.4 * (1 - autocvar__menu_alpha));
+			HUD_Panel_HlCenterLine(panel_bg_border * hlBorderSize);
 		}
 	}
 }

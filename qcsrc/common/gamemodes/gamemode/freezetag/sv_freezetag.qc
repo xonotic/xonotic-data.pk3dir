@@ -1,7 +1,7 @@
 #include "sv_freezetag.qh"
 
+#include <common/resources/sv_resources.qh>
 #include <server/elimination.qh>
-#include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
@@ -9,6 +9,15 @@ float autocvar_g_freezetag_round_timelimit;
 //int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
+
+float autocvar_g_ft_start_health = 100;
+float autocvar_g_ft_start_armor = 100;
+float autocvar_g_ft_start_ammo_shells = 60;
+float autocvar_g_ft_start_ammo_nails = 320;
+float autocvar_g_ft_start_ammo_rockets = 160;
+float autocvar_g_ft_start_ammo_cells = 180;
+float autocvar_g_ft_start_ammo_plasma = 180;
+float autocvar_g_ft_start_ammo_fuel = 0;
 
 void freezetag_count_alive_players()
 {
@@ -31,14 +40,10 @@ void freezetag_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
-			1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
-			Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 
 	eliminatedPlayers.SendFlags |= 1;
@@ -78,31 +83,6 @@ bool freezetag_CheckTeams()
 	return false;
 }
 
-int freezetag_getWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no player left
-}
-
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
@@ -122,12 +102,10 @@ bool freezetag_CheckWinner()
 		return true;
 	}
 
-	if (Team_GetNumberOfAliveTeams() > 1)
-	{
+	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
 		return false;
-	}
 
-	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
@@ -378,7 +356,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
 		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
-		// let the player die, he will be automatically frozen when he respawns
+		// let the player die, they will be automatically frozen when they respawn
 		if (STAT(FROZEN, frag_target) != FROZEN_NORMAL)
 		{
 			freezetag_Add_Score(frag_target, frag_attacker);
@@ -695,14 +673,17 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
 	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	start_health       = warmup_start_health       = cvar("g_ft_start_health");
-	start_armorvalue   = warmup_start_armorvalue   = cvar("g_ft_start_armor");
-	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_ft_start_ammo_shells");
-	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_ft_start_ammo_nails");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_ft_start_ammo_rockets");
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_ft_start_ammo_cells");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_ft_start_ammo_plasma");
-	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_ft_start_ammo_fuel");
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
+	start_health       = warmup_start_health       = autocvar_g_ft_start_health;
+	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_ft_start_armor;
+	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_ft_start_ammo_shells;
+	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ft_start_ammo_nails;
+	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
+	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ft_start_ammo_plasma;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)

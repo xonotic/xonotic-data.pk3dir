@@ -269,7 +269,6 @@ void viewmodel_animate(entity this)
 		this.origin += bobmodel_ofs(view);
 }
 
-.vector viewmodel_origin, viewmodel_angles;
 .float weapon_nextthink;
 .float weapon_eta_last;
 .float weapon_switchdelay;
@@ -278,8 +277,6 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	if(!this.activeweapon || !autocvar_r_drawviewmodel)
-		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	int wepskin = this.m_skin;
@@ -287,7 +284,7 @@ void viewmodel_draw(entity this)
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, NULL, c, this);
+	vector g = weaponentity_glowmod(wep, c, this);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
@@ -313,8 +310,7 @@ void viewmodel_draw(entity this)
 		{
 			this.name_last = name;
 			CL_WeaponEntity_SetModel(this, name, swap);
-			this.viewmodel_origin = this.origin;
-			this.viewmodel_angles = this.angles;
+			this.origin += autocvar_cl_gunoffset;
 		}
 		anim_update(this);
 		if ((!this.animstate_override && !this.animstate_looping) || time > this.animstate_endtime)
@@ -343,8 +339,6 @@ void viewmodel_draw(entity this)
 		}
 	}
 	this.weapon_eta_last = f;
-	this.origin = this.viewmodel_origin;
-	this.angles = this.viewmodel_angles;
 	this.angles_x = (-90 * f * f);
 	viewmodel_animate(this);
 	MUTATOR_CALLHOOK(DrawViewModel, this);
@@ -359,11 +353,6 @@ STATIC_INIT(viewmodel) {
 vector project_3d_to_2d(vector vec)
 {
 	vec = cs_project(vec);
-	if(cs_project_is_b0rked > 0)
-	{
-		vec.x *= vid_conwidth / vid_width;
-		vec.y *= vid_conheight / vid_height;
-	}
 	return vec;
 }
 
@@ -770,7 +759,7 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(HITSOUND_DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
@@ -868,41 +857,46 @@ void HUD_Draw(entity this)
 	Hud_Dynamic_Frame();
 
 	if(!intermission)
-	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
-	}
-	else if(STAT(FROZEN))
-	{
-		vector col = '0.25 0.90 1';
-		float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
-		float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
-		if(col_fade)
-			col += vec3(col_fade, -col_fade, -col_fade);
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
+		{
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+		}
+		else if(STAT(FROZEN))
+		{
+			vector col = '0.25 0.90 1';
+			float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
+			float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
+			if(col_fade)
+				col += vec3(col_fade, -col_fade, -col_fade);
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+		}
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
-	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(STAT(CAPTURE_PROGRESS))
-	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(STAT(REVIVE_PROGRESS))
-	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+		{
+			vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(STAT(CAPTURE_PROGRESS))
+		{
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(STAT(REVIVE_PROGRESS))
+		{
+			DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
 	}
 	HUD_Scale_Disable();
 
 	if(autocvar_r_letterbox == 0)
+	{
 		if(autocvar_viewsize < 120)
 		{
 			if(!MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
@@ -911,11 +905,13 @@ void HUD_Draw(entity this)
 			HUD_Main();
 			HUD_Scale_Disable();
 		}
+	}
 
 	// crosshair goes VERY LAST
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
+	Local_Notification_Queue_Process();
 }
 
 void ViewLocation_Mouse()
@@ -1540,9 +1536,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	stats_get();
 	hud = STAT(HUD);
 
-	ReplicateVars(false);
-	if (ReplicateVars_NOT_SENDING())
-		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+	ReplicateVars(REPLICATEVARS_CHECK);
 
 	HUD_Scale_Disable();
 
@@ -1593,7 +1587,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
 
-	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 	if(!local_player)
 		local_player = this; // fall back!
@@ -1610,8 +1603,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		viewmodel_draw(viewmodels[slot]);
+	if(autocvar_r_drawviewmodel)
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			if(viewmodels[slot].activeweapon)
+				viewmodel_draw(viewmodels[slot]);
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -1641,14 +1636,26 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(intermission && !intermission_time)
 		intermission_time = time;
 
+	if(STAT(GAME_STOPPED) && !game_stopped_time)
+		game_stopped_time = time;
+	else if(game_stopped_time && !STAT(GAME_STOPPED))
+		game_stopped_time = 0;
+
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
 		if(calledhooks & HOOK_START)
 		{
+			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
 		}
 	}
+
+	Welcome_Message_Show_Try();
 
 	Announcer();
 
@@ -1670,7 +1677,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Draw the World (and sky)
 	setproperty(VF_DRAWWORLD, 1);
 
-	// Set the console size vars
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
@@ -1679,18 +1685,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	View_DemoCamera();
 
-	// Draw the Crosshair
-	setproperty(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-
-	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, 0);
-
-	// Update the mouse position
-	/*
-	   mousepos_x = vid_conwidth;
-	   mousepos_y = vid_conheight;
-	   mousepos = mousepos*0.5 + getmousepos();
-	 */
+	setproperty(VF_DRAWCROSSHAIR, 0); // hide engine crosshair
+	setproperty(VF_DRAWENGINESBAR, 0); // hide engine status bar
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 
@@ -1712,6 +1708,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Debug_Draw();
 #endif
 
+	if (autocvar__scoreboard_team_selection)
+	{
+		Scoreboard_UI_Enable(1);
+		cvar_set("_scoreboard_team_selection", "0");
+	}
 	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
@@ -1720,34 +1721,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	{
 		localcmd("\n", NextFrameCommand, "\n");
 		NextFrameCommand = string_null;
-	}
-
-	// we must do this check AFTER a frame was rendered, or it won't work
-	if(cs_project_is_b0rked == 0)
-	{
-		string w0, h0;
-		w0 = ftos(autocvar_vid_conwidth);
-		h0 = ftos(autocvar_vid_conheight);
-		//setproperty(VF_VIEWPORT, '0 0 0', '640 480 0');
-		//setproperty(VF_FOV, '90 90 0');
-		setproperty(VF_ORIGIN, '0 0 0');
-		setproperty(VF_ANGLES, '0 0 0');
-		setproperty(VF_PERSPECTIVE, 1);
-		vector forward, right, up;
-		MAKE_VECTORS('0 0 0', forward, right, up);
-		vector v1, v2;
-		cvar_set("vid_conwidth", "800");
-		cvar_set("vid_conheight", "600");
-		v1 = cs_project(forward);
-		cvar_set("vid_conwidth", "640");
-		cvar_set("vid_conheight", "480");
-		v2 = cs_project(forward);
-		if(v1 == v2)
-			cs_project_is_b0rked = 1;
-		else
-			cs_project_is_b0rked = -1;
-		cvar_set("vid_conwidth", w0);
-		cvar_set("vid_conheight", h0);
 	}
 
 	HUD_Mouse(local_player);

@@ -10,6 +10,6 @@ stuffcmds
 //startdemos demos/demo1 demos/demo2 demos/demo3
 //startdemos
 //play announcer/male/welcome.ogg
-crypto_keygen 0 http://ca.xonotic.org/?ca=0&key=
+crypto_keygen 0 https://ca.xonotic.org/?ca=0&key=
 
 exec post-config.cfg

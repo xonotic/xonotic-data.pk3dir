@@ -221,8 +221,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 				armor -= 1;
 				SetResource(frag_target, RES_ARMOR, armor);
 				frag_damage = 0;
-				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1;
+				frag_target.hitsound_damage_dealt += 1;
+				frag_attacker.hitsound_damage_dealt += 1;
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			}
 		}
@@ -258,7 +258,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 			armor -= 1;
 			SetResource(frag_attacker, RES_ARMOR, armor);
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
-			frag_attacker.damage_dealt += frag_mirrordamage;
+			frag_attacker.hitsound_damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
 	}
@@ -297,11 +297,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 void replace_with_insta_cells(entity item)
 {
 	entity e = new(item_vaporizer_cells);
-	setorigin(e, item.origin);
-	e.noalign = Item_ShouldKeepPosition(item);
-	e.cnt = item.cnt;
-	e.team = item.team;
-	e.spawnfunc_checked = true;
+	Item_CopyFields(item, e);
 	spawnfunc_item_vaporizer_cells(e);
 }
 
@@ -438,10 +434,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 		setthink(e, instagib_speed);
 	}
 
+	Item_CopyFields(ent, e);
 	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
 	return true;
 }
@@ -453,7 +447,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", instagib");
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", InstaGib");
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)

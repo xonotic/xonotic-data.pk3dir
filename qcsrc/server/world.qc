@@ -22,6 +22,7 @@
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
@@ -35,7 +36,6 @@
 #include <server/damage.qh>
 #include <server/gamelog.qh>
 #include <server/hook.qh>
-#include <server/intermission.qh>
 #include <server/ipban.qh>
 #include <server/items/items.qh>
 #include <server/main.qh>
@@ -46,7 +46,6 @@
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
-#include <server/weapons/common.qh>
 #include <server/weapons/weaponstats.qh>
 
 const float LATENCY_THINKRATE = 10;
@@ -171,6 +170,7 @@ void cvar_changes_init()
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
 #define BADVALUE(p, val) if (k == p && v == val) continue
+#define BADPRESUFFIXVALUE(p,s,val) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -279,7 +279,6 @@ void cvar_changes_init()
 		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
-		BADCVAR("g_invasion_teams");
 		BADCVAR("g_invasion_type");
 		BADCVAR("g_jailbreak");
 		BADCVAR("g_jailbreak_teams");
@@ -287,6 +286,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
+		BADCVAR("g_mayhem");
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
@@ -301,11 +301,14 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_tmayhem");
+		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_q3compat");
 		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
@@ -316,6 +319,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
+		BADCVAR("sv_termsofservice_url");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
@@ -337,7 +341,6 @@ void cvar_changes_init()
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("condump_stripcolors");
-		BADCVAR("gameversion");
 		BADCVAR("fs_gamedir");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
@@ -377,10 +380,15 @@ void cvar_changes_init()
 		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_mayhem_point_limit");
+		BADCVAR("g_mayhem_point_leadlimit");
+		BADCVAR("g_tmayhem_point_limit");
+		BADCVAR("g_tmayhem_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_announcer");
+		BADCVAR("sv_autopause");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
@@ -397,7 +405,7 @@ void cvar_changes_init()
 		BADCVAR("w_prop_interval");
 		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
-		BADPREFIX("gameversion_");
+		BADPREFIX("gameversion");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_hats_");
@@ -416,6 +424,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
+		BADPRESUFFIX("g_", "_round_timelimit");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -453,6 +462,7 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_point_limit");
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
+		BADCVAR("g_mayhem_powerups");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
@@ -461,6 +471,7 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_powerups_drop_ondeath");
 		BADCVAR("g_player_brightness");
 		BADCVAR("g_rocket_flying");
 		BADCVAR("g_rocket_flying_disabledelays");
@@ -468,7 +479,8 @@ void cvar_changes_init()
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
-		BADCVAR("g_warmup");
+		BADCVAR("g_tmayhem_teams_override");
+		BADCVAR("g_tmayhem_powerups");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
@@ -493,8 +505,8 @@ void cvar_changes_init()
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
-		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_showfps");
+		BADCVAR("sv_showspectators");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
@@ -508,9 +520,12 @@ void cvar_changes_init()
 		BADVALUE("sys_ticrate", "0.0333333");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
-		BADPREFIX("g_warmup_");
+		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
+
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
 
 		// mutators that announce themselves properly to the server browser
 		BADCVAR("g_instagib");
@@ -519,17 +534,11 @@ void cvar_changes_init()
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
 
-		// temporary for testing
-		// TODO remove before 0.8.3 release
-		BADCVAR("g_ca_weaponarena");
-		BADCVAR("g_freezetag_weaponarena");
-		BADCVAR("g_lms_weaponarena");
-		BADCVAR("g_ctf_stalemate_time");
-
 #undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
 #undef BADVALUE
+#undef BADPRESUFFIXVALUE
 
 		if(pureadding)
 		{
@@ -598,15 +607,17 @@ spawnfunc(__init_dedicated_server)
 
 	e = new(info_player_deathmatch);  // safeguard against player joining
 
-    // assign reflectively to avoid "assignment to world" warning
-    for (int i = 0, n = numentityfields(); i < n; ++i) {
-        string k = entityfieldname(i);
-        if (k == "classname") {
-            // safeguard against various stuff ;)
-            putentityfieldstring(i, this, "worldspawn");
-            break;
-        }
-    }
+	// assign reflectively to avoid "assignment to world" warning
+	for (int i = 0, n = numentityfields(); i < n; ++i)
+	{
+		string k = entityfieldname(i);
+		if (k == "classname")
+		{
+			// safeguard against various stuff ;)
+			putentityfieldstring(i, this, "worldspawn");
+			break;
+		}
+	}
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -633,8 +644,41 @@ STATIC_INIT_EARLY(maxclients)
 
 void GameplayMode_DelayedInit(entity this)
 {
+	// at this stage team entities are spawned, teamplay contains the number of them
+
 	if(!scores_initialized)
 		ScoreRules_generic();
+
+	if (warmup_stage >= 0 && autocvar_g_maxplayers >= 0)
+		return;
+	if (!g_duel)
+		MapReadSizes(mapname);
+
+	if (autocvar_g_maxplayers < 0 && teamplay)
+	{
+		// automatic maxplayers should be a multiple of team count
+		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+			map_maxplayers = maxclients; // unlimited, but may need rounding
+		int d = map_maxplayers % AVAILABLE_TEAMS;
+		int u = AVAILABLE_TEAMS - d;
+		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+	}
+
+	if (warmup_stage < 0)
+	{
+		int m = GetPlayerLimit();
+		if (m <= 0) m = maxclients;
+		map_minplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_minplayers, m);
+		if (teamplay)
+		{
+			// automatic minplayers should be a multiple of team count
+			int d = map_minplayers % AVAILABLE_TEAMS;
+			int u = AVAILABLE_TEAMS - d;
+			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+		}
+	}
+	else
+		map_minplayers = 0; // don't display a minimum if it's not used (g_maxplayers < 0 && g_warmup >= 0)
 }
 
 void InitGameplayMode()
@@ -644,12 +688,15 @@ void InitGameplayMode()
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
 	// assign reflectively to avoid "assignment to world" warning
-	int done = 0; for (int i = 0, n = numentityfields(); i < n; ++i) {
-	    string k = entityfieldname(i); vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
-	    if (v) {
-            putentityfieldstring(i, world, sprintf("%v", v));
-            if (++done == 2) break;
-        }
+	for (int i = 0, done = 0, n = numentityfields(); i < n; ++i)
+	{
+		string k = entityfieldname(i);
+		vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
+		if (v)
+		{
+			putentityfieldstring(i, world, sprintf("%v", v));
+			if (++done == 2) break;
+		}
 	}
 	// currently, NetRadiant's limit is 131072 qu for each side
 	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
@@ -687,14 +734,23 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	cvar_set("_endmatch", "0");
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
+
+	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
+	{
+		strcpy(sv_termsofservice_url_escaped, strreplace(":", "|", autocvar_sv_termsofservice_url));
+	}
+	else
+	{
+		strcpy(sv_termsofservice_url_escaped, "INVALID");
+	}
 
 	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
 		{
-			// force unloading of server pk3 files when starting a listen server
-			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
+			// DP unloads dlcache pk3s before starting a listen server since https://gitlab.com/xonotic/darkplaces/-/merge_requests/134
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
 			wantrestart = cvar_string("csqc_progname") != expect;
@@ -811,10 +867,10 @@ spawnfunc(worldspawn)
 
 	if(autocvar_g_campaign)
 		CampaignPreInit();
+	else
+		PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	Map_MarkAsRecent(mapname);
-
-	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	InitGameplayMode();
 	static_init_late();
@@ -822,9 +878,6 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 
 	GameRules_limit_fallbacks();
-
-	if(warmup_limit == 0)
-		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -834,46 +887,15 @@ spawnfunc(worldspawn)
 
 	WaypointSprite_Init();
 
-	GameLogInit(); // prepare everything
 	// NOTE for matchid:
 	// changing the logic generating it is okay. But:
 	// it HAS to stay <= 64 chars
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
+	// strftime(false, "%s") isn't reliable, see strftime_s description
+	matchid = strzone(sprintf("%d.%s.%06d", autocvar_sv_eventlog_files_counter, strftime_s(), random() * 1000000));
+
 	if(autocvar_sv_eventlog)
-	{
-		string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), num, floor(random() * 1000000));
-		matchid = strzone(s);
-
-		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
-		s = ":gameinfo:mutators:LIST";
-
-		MUTATOR_CALLHOOK(BuildMutatorsString, s);
-		s = M_ARGV(0, string);
-
-		// initialiation stuff, not good in the mutator system
-		if(!autocvar_g_use_ammunition)
-			s = strcat(s, ":no_use_ammunition");
-
-		// initialiation stuff, not good in the mutator system
-		if(autocvar_g_pickup_items == 0)
-			s = strcat(s, ":no_pickup_items");
-		if(autocvar_g_pickup_items > 0)
-			s = strcat(s, ":pickup_items");
-
-		// initialiation stuff, not good in the mutator system
-		if(autocvar_g_weaponarena != "0")
-			s = strcat(s, ":", autocvar_g_weaponarena, " arena");
-
-		// TODO to mutator system
-		if(autocvar_g_norecoil)
-			s = strcat(s, ":norecoil");
-
-		GameLogEcho(s);
-		GameLogEcho(":gameinfo:end");
-	}
-	else
-		matchid = strzone(ftos(random()));
+		GameLogInit(); // requires matchid to be set
 
 	cvar_set("nextmap", "");
 
@@ -887,8 +909,22 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
-	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, _MapInfo_FindArenaFile(mapname, ".arena") != "");
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
+
+	// quake 3 music support
+	if(world.music || world.noise)
+	{
+		// prefer .music over .noise
+		string chosen_music;
+		if(world.music)
+			chosen_music = world.music;
+		else
+			chosen_music = world.noise;
+
+		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
+		strcpy(clientstuff, newstuff);
+	}
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -1013,6 +1049,10 @@ spawnfunc(worldspawn)
 
 	WinningConditionHelper(this); // set worldstatus
 
+	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
+		// INITPRIO_LAST is to soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
+		defer(this, 5, Pause_TryPause_Dedicated);
+
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
 }
@@ -1023,72 +1063,80 @@ spawnfunc(light)
 	delete(this);
 }
 
-bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance)
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos)
 {
-    float m = e.dphitcontentsmask;
-    e.dphitcontentsmask = goodcontents | badcontents;
+	float m = e.dphitcontentsmask;
+	e.dphitcontentsmask = goodcontents | badcontents;
 
-    vector org = boundmin;
-    vector delta = boundmax - boundmin;
+	vector org = boundmin;
+	vector delta = boundmax - boundmin;
 
-    vector start, end;
-    start = end = org;
-    int j; // used after the loop
-    for(j = 0; j < attempts; ++j)
-    {
-        start.x = org.x + random() * delta.x;
-        start.y = org.y + random() * delta.y;
-        start.z = org.z + random() * delta.z;
+	vector start, end;
+	start = end = org;
+	int j; // used after the loop
+	for(j = 0; j < attempts; ++j)
+	{
+		start.x = org.x + random() * delta.x;
+		start.y = org.y + random() * delta.y;
+		start.z = org.z + random() * delta.z;
 
-        // rule 1: start inside world bounds, and outside
-        // solid, and don't start from somewhere where you can
-        // fall down to evil
-        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        if (trace_startsolid)
-            continue;
-        if (trace_dphitcontents & badcontents)
-            continue;
-        if (trace_dphitq3surfaceflags & badsurfaceflags)
-            continue;
+		// rule 1: start inside world bounds, and outside
+		// solid, and don't start from somewhere where you can
+		// fall down to evil
+		tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
+		if (trace_fraction >= 1)
+			continue;
+		if (trace_startsolid)
+			continue;
+		if (trace_dphitcontents & badcontents)
+			continue;
+		if (trace_dphitq3surfaceflags & badsurfaceflags)
+			continue;
 
-        // rule 2: if we are too high, lower the point
-        if (trace_fraction * delta.z > maxaboveground)
-            start = trace_endpos + '0 0 1' * maxaboveground;
-        vector enddown = trace_endpos;
+		// rule 2: if we are too high, lower the point
+		if (trace_fraction * delta.z > maxaboveground)
+			start = trace_endpos + '0 0 1' * maxaboveground;
+		vector enddown = trace_endpos;
 
-        // rule 3: make sure we aren't outside the map. This only works
-        // for somewhat well formed maps. A good rule of thumb is that
-        // the map should have a convex outside hull.
-        // these can be traceLINES as we already verified the starting box
-        vector mstart = start + 0.5 * (e.mins + e.maxs);
-        traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
-        traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
-            continue;
+		// rule 3: make sure we aren't outside the map. This only works
+		// for somewhat well formed maps. A good rule of thumb is that
+		// the map should have a convex outside hull.
+		// these can be traceLINES as we already verified the starting box
+		vector mstart = start + 0.5 * (e.mins + e.maxs);
+		traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
+		traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
+		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+			continue;
 
 		// rule 4: we must "see" some spawnpoint or item
-	    entity sp = NULL;
-	    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
-	    {
-	    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-	    	{
-	    		sp = it;
-	    		break;
-	    	}
-	    });
+		entity sp = NULL;
+		if(frompos)
+		{
+			if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				sp = e;
+		}
+		if(!sp)
+		{
+			IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+			{
+				if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				{
+					sp = it;
+					break;
+				}
+			});
+		}
 		if(!sp)
 		{
 			int items_checked = 0;
@@ -1109,45 +1157,45 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 				continue;
 		}
 
-        // find a random vector to "look at"
-        end.x = org.x + random() * delta.x;
-        end.y = org.y + random() * delta.y;
-        end.z = org.z + random() * delta.z;
-        end = start + normalize(end - start) * vlen(delta);
+		// find a random vector to "look at"
+		end.x = org.x + random() * delta.x;
+		end.y = org.y + random() * delta.y;
+		end.z = org.z + random() * delta.z;
+		end = start + normalize(end - start) * vlen(delta);
 
-        // rule 4: start TO end must not be too short
-        tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
-        if(trace_startsolid)
-            continue;
-        if(trace_fraction < minviewdistance / vlen(delta))
-            continue;
+		// rule 4: start TO end must not be too short
+		tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
+		if(trace_startsolid)
+			continue;
+		if(trace_fraction < minviewdistance / vlen(delta))
+			continue;
 
-        // rule 5: don't want to look at sky
-        if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-            continue;
+		// rule 5: don't want to look at sky
+		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+			continue;
 
-        // rule 6: we must not end up in trigger_hurt
-        if(tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
-            continue;
+		// rule 6: we must not end up in trigger_hurt
+		if(tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
+			continue;
 
-        break;
-    }
+		break;
+	}
 
-    e.dphitcontentsmask = m;
+	e.dphitcontentsmask = m;
 
-    if(j < attempts)
-    {
-        setorigin(e, start);
-        e.angles = vectoangles(end - start);
-        LOG_DEBUG("Needed ", ftos(j + 1), " attempts");
-        return true;
-    }
-    return false;
+	if(j < attempts)
+	{
+		setorigin(e, start);
+		e.angles = vectoangles(end - start);
+		LOG_DEBUG("Needed ", ftos(j + 1), " attempts");
+		return true;
+	}
+	return false;
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
-	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance, false);
 }
 
 /*
@@ -1213,7 +1261,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+		if(IS_PLAYER(it) || INGAME_JOINED(it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
@@ -1266,6 +1314,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	cvar_set("_endmatch", "0");
 	game_stopped = true;
 	intermission_running = true; // game over
 
@@ -1299,10 +1348,18 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	int winner_team = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(playername(it.netname, it.team, false), " ^7wins.\n");
+		{
+			if (teamplay && !winner_team)
+			{
+				winner_team = it.team;
+				bprint(Team_ColorCode(winner_team), Team_ColorName_Upper(winner_team), "^7 team wins the match\n");
+			}
+			bprint(playername(it.netname, it.team, false), " ^7wins\n");
+		}
 	});
 
 	target_music_kill();
@@ -1316,7 +1373,7 @@ void NextLevel()
 }
 
 
-float InitiateSuddenDeath()
+int InitiateSuddenDeath()
 {
 	// Check first whether normal overtimes could be added before initiating suddendeath mode
 	// - for this timelimit_overtime needs to be >0 of course
@@ -1333,9 +1390,14 @@ float InitiateSuddenDeath()
 		if(!checkrules_suddendeathend)
 		{
 			if(autocvar_g_campaign)
+			{
 				checkrules_suddendeathend = time; // no suddendeath in campaign
+			}
 			else
+			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
+				overtimes = -1;
+			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
 		}
@@ -1346,6 +1408,7 @@ float InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
@@ -1382,13 +1445,13 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		if(it.(field) == value)
 			it.winning = 1;
 	});
@@ -1397,7 +1460,7 @@ void AddWinners(.float field, float value)
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), { it.winning = 0; });
 }
 
 int fragsleft_last;
@@ -1596,19 +1659,18 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(timelimit > 0)
-	{
-		timelimit += game_starttime;
-	}
-	else if (timelimit < 0)
+	if (autocvar__endmatch || timelimit < 0)
 	{
 		// endmatch
 		NextLevel();
 		return;
 	}
 
-	float wantovertime;
-	wantovertime = 0;
+	if(timelimit > 0)
+		timelimit += game_starttime;
+
+	int overtimes_prev = overtimes;
+	int wantovertime = 0;
 
 	if(checkrules_suddendeathend)
 	{
@@ -1644,7 +1706,7 @@ void CheckRules_World()
 				if(readyplayers || playerswithlaps >= 2)
 				{
 					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
+					ReadyRestart(true); // go to race
 					return;
 				}
 				else
@@ -1694,6 +1756,12 @@ void CheckRules_World()
 
 	if(checkrules_status == WINNING_YES)
 	{
+		if (overtimes == -1 && overtimes != overtimes_prev)
+		{
+			// if suddendeathend overtime has just begun, revert it
+			checkrules_suddendeathend = 0;
+			overtimes = overtimes_prev;
+		}
 		//print("WINNING\n");
 		NextLevel();
 	}
@@ -1855,25 +1923,25 @@ void readplayerstartcvars()
 	else if (s == "all" || s == "1")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "All Weapons";
+		g_weaponarena_list = "All Weapons Arena";
 		g_weaponarena_weapons = weapons_all();
 	}
 	else if (s == "devall")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Dev All Weapons";
+		g_weaponarena_list = "Dev All Weapons Arena";
 		g_weaponarena_weapons = weapons_devall();
 	}
 	else if (s == "most")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Most Weapons";
+		g_weaponarena_list = "Most Weapons Arena";
 		g_weaponarena_weapons = weapons_most();
 	}
 	else if (s == "all_available")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "All Available Weapons";
+		g_weaponarena_list = "All Available Weapons Arena";
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_all_update, INITPRIO_FINDTARGET);
@@ -1881,7 +1949,7 @@ void readplayerstartcvars()
 	else if (s == "devall_available")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Dev All Available Weapons";
+		g_weaponarena_list = "Dev All Available Weapons Arena";
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_devall_update, INITPRIO_FINDTARGET);
@@ -1889,7 +1957,7 @@ void readplayerstartcvars()
 	else if (s == "most_available")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "Most Available Weapons";
+		g_weaponarena_list = "Most Available Weapons Arena";
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_most_update, INITPRIO_FINDTARGET);
@@ -1897,7 +1965,7 @@ void readplayerstartcvars()
 	else if (s == "none")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "No Weapons";
+		g_weaponarena_list = "No Weapons Arena";
 	}
 	else
 	{
@@ -1911,10 +1979,13 @@ void readplayerstartcvars()
 			if(wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
-				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
+				g_weaponarena_list = strcat(g_weaponarena_list, wep.netname, " & ");
 			}
 		}
-		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
+		if (g_weaponarena_list != "") // remove trailing " & "
+			g_weaponarena_list = substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3);
+		else // no valid weapon found
+			g_weaponarena_list = "No Weapons Arena";
 	}
 
 	if (g_weaponarena)
@@ -1922,6 +1993,7 @@ void readplayerstartcvars()
 		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena_weapons;
 		start_items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+		g_weaponarena_list = strzone(g_weaponarena_list);
 	}
 	else
 	{
@@ -2039,16 +2111,31 @@ void readplayerstartcvars()
 
 void readlevelcvars()
 {
+	serverflags &= ~SERVERFLAG_ALLOW_FULLBRIGHT;
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
-	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
+	serverflags &= ~SERVERFLAG_FORBID_PICKUPTIMER;
+	if(cvar("sv_forbid_pickuptimer"))
+		serverflags |= SERVERFLAG_FORBID_PICKUPTIMER;
 
-	warmup_stage = cvar("g_warmup");
-	warmup_limit = cvar("g_warmup_limit");
+	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
 	if(cvar("g_campaign"))
 		warmup_stage = 0; // no warmup during campaign
+	else
+	{
+		warmup_stage = autocvar_g_warmup;
+		if (warmup_stage < 0 || warmup_stage > 1)
+			warmup_limit = -1; // don't start until there's enough players
+		else if (warmup_stage == 1)
+		{
+			// this code is duplicated in ReadyCount()
+			warmup_limit = cvar("g_warmup_limit");
+			if(warmup_limit == 0)
+				warmup_limit = autocvar_timelimit * 60;
+		}
+	}
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
@@ -2106,13 +2193,13 @@ void readlevelcvars()
 	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
 	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
-    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
-    if(!g_weapon_stay)
-        g_weapon_stay = cvar("g_weapon_stay");
+	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+	if(!g_weapon_stay)
+		g_weapon_stay = cvar("g_weapon_stay");
 
-    MUTATOR_CALLHOOK(ReadLevelCvars);
+	MUTATOR_CALLHOOK(ReadLevelCvars);
 
-	if (!warmup_stage)
+	if (!warmup_stage && !autocvar_g_campaign)
 		game_starttime = time + cvar("g_start_delay");
 
 	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
@@ -2122,79 +2209,149 @@ void readlevelcvars()
 
 void InitializeEntity(entity e, void(entity this) func, int order)
 {
-    entity prev, cur;
+	entity prev, cur;
 
-    if (!e || e.initialize_entity)
-    {
-        // make a proxy initializer entity
-        entity e_old = e;
-        e = new(initialize_entity);
-        e.enemy = e_old;
-    }
+	if (!e || e.initialize_entity)
+	{
+		// make a proxy initializer entity
+		entity e_old = e;
+		e = new(initialize_entity);
+		e.enemy = e_old;
+	}
 
-    e.initialize_entity = func;
-    e.initialize_entity_order = order;
+	e.initialize_entity = func;
+	e.initialize_entity_order = order;
 
-    cur = initialize_entity_first;
-    prev = NULL;
-    for (;;)
-    {
-        if (!cur || cur.initialize_entity_order > order)
-        {
-            // insert between prev and cur
-            if (prev)
-                prev.initialize_entity_next = e;
-            else
-                initialize_entity_first = e;
-            e.initialize_entity_next = cur;
-            return;
-        }
-        prev = cur;
-        cur = cur.initialize_entity_next;
-    }
+	cur = initialize_entity_first;
+	prev = NULL;
+	for (;;)
+	{
+		if (!cur || cur.initialize_entity_order > order)
+		{
+			// insert between prev and cur
+			if (prev)
+				prev.initialize_entity_next = e;
+			else
+				initialize_entity_first = e;
+			e.initialize_entity_next = cur;
+			return;
+		}
+		prev = cur;
+		cur = cur.initialize_entity_next;
+	}
 }
 void InitializeEntitiesRun()
 {
-    entity startoflist = initialize_entity_first;
-    initialize_entity_first = NULL;
-    delete_fn = remove_except_protected;
-    for (entity e = startoflist; e; e = e.initialize_entity_next)
-    {
+	entity startoflist = initialize_entity_first;
+	initialize_entity_first = NULL;
+	delete_fn = remove_except_protected;
+	for (entity e = startoflist; e; e = e.initialize_entity_next)
+	{
 		e.remove_except_protected_forbidden = 1;
-    }
-    for (entity e = startoflist; e; )
-    {
+	}
+	for (entity e = startoflist; e; )
+	{
 		e.remove_except_protected_forbidden = 0;
-        e.initialize_entity_order = 0;
-    	entity next = e.initialize_entity_next;
-        e.initialize_entity_next = NULL;
-        var void(entity this) func = e.initialize_entity;
-        e.initialize_entity = func_null;
-        if (e.classname == "initialize_entity")
-        {
-            entity wrappee = e.enemy;
-            builtin_remove(e);
-            e = wrappee;
-        }
-        //dprint("Delayed initialization: ", e.classname, "\n");
-        if (func)
-        {
-        	func(e);
-        }
-        else
-        {
-            eprint(e);
-            backtrace(strcat("Null function in: ", e.classname, "\n"));
-        }
-        e = next;
-    }
-    delete_fn = remove_unsafely;
+		e.initialize_entity_order = 0;
+		entity next = e.initialize_entity_next;
+		e.initialize_entity_next = NULL;
+		var void(entity this) func = e.initialize_entity;
+		e.initialize_entity = func_null;
+		if (e.classname == "initialize_entity")
+		{
+			entity wrappee = e.enemy;
+			builtin_remove(e);
+			e = wrappee;
+		}
+		//dprint("Delayed initialization: ", e.classname, "\n");
+		if (func)
+		{
+			func(e);
+		}
+		else
+		{
+			eprint(e);
+			backtrace(strcat("Null function in: ", e.classname, "\n"));
+		}
+		e = next;
+	}
+	delete_fn = remove_unsafely;
 }
 
 // deferred dropping
+// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
 void DropToFloor_Handler(entity this)
 {
-	WITHSELF(this, builtin_droptofloor());
+	if(!this || wasfreed(this))
+	{
+		// no modifying free entities
+		return;
+	}
+
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
+
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		_Movetype_UnstickEntity(this);
+		move_out_of_solid(this);
+	}
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
+			this.groundentity = NULL;
+		}
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			setorigin(this, trace_endpos);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				_Movetype_UnstickEntity(this);
+				move_out_of_solid(this);
+			}
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	else
+	{
+		if(!trace_allsolid && trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+		else
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
+	}
 	this.dropped_origin = this.origin;
 }
 
@@ -2286,9 +2443,10 @@ void EndFrame()
 			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
 			STAT(KILL_TIME, it) = time;
-		} else if (e.damage_dealt) {
+		} else if (e.hitsound_damage_dealt) {
 			STAT(HIT_TIME, it) = time;
-			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
+			// NOTE: this is not accurate as client code doesn't need so much accuracy for its purposes
+			STAT(HITSOUND_DAMAGE_DEALT_TOTAL, it) += ceil(e.hitsound_damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics
@@ -2299,7 +2457,7 @@ void EndFrame()
 	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
-		it.damage_dealt = 0;
+		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
 	});
@@ -2421,6 +2579,8 @@ void Shutdown()
 
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
+
+		strfree(sv_termsofservice_url_escaped);
 	}
 	else if(world_initialized == 0)
 	{

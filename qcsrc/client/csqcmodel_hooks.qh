@@ -17,6 +17,7 @@ string autocvar__cl_playermodel;
 float autocvar_cl_deathglow;
 float autocvar_cl_deathglow_min = 0.5;
 float autocvar_cl_jetpack_attenuation = 2;
+float autocvar_r_hdr_glowintensity;
 
 // FEATURE: EF_NODRAW workalike
 const int EF_BRIGHTFIELD       = BIT(0);
@@ -46,5 +47,7 @@ const int MF_TRACER3 =  BIT(7);  // purple trail
 .int isplayermodel;
 
 void CSQCModel_Effects_Apply(entity this);
+
+void CSQCModel_LOD_Apply(entity this, bool isplayer);
 
 void CSQCModel_Hook_PreDraw(entity this, bool isplayer);

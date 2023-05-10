@@ -2,12 +2,12 @@
 
 #if defined(CSQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
+	#include <common/resources/resources.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include <common/gamemodes/_mod.qh>
-	#include <common/resources.qh>
-	#include <server/resources.qh>
+	#include <common/resources/resources.qh>
+	#include <common/resources/sv_resources.qh>
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
@@ -115,7 +115,7 @@ ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
-#define DEC_FACTOR (360 / 32)
+#define DEC_FACTOR (360 / 64)
 ENTCS_PROP_CODED(ANGLES, false, angles_y, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
 	{ WriteByte(chan, ent.angles.y / DEC_FACTOR); },
 	{ vector v = '0 0 0'; v.y = ReadByte() * DEC_FACTOR; ent.angles = v; })
@@ -188,7 +188,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			{
 				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
-				if (!(IS_PLAYER(to) || to.caplayer)) break;
+				if (!(IS_PLAYER(to) || INGAME(to))) break;
 			}
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
@@ -230,8 +230,8 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		}
 
 		// always send origin of players even if they stand still otherwise
-		// if a teammate isn't in my pvs and his health (or view angle or name
-		// etc...) changes then his tag disappears
+		// if a teammate isn't in my pvs and their health (or view angle or name
+		// etc...) changes then their tag disappears
 		if (IS_PLAYER(this.owner))
 			this.SendFlags |= BIT(ENTCS_PROP_ORIGIN_id);
 

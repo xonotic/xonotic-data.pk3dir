@@ -1,11 +1,13 @@
 #pragma once
 
+#include <common/resources/resources.qh>
 #include <common/sounds/sound.qh>
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
 float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
+float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;
 bool autocvar_g_nodepthtestitems;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
@@ -16,8 +18,6 @@ void StartItem(entity this, entity a);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
-
-bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
@@ -63,7 +63,7 @@ void Item_ScheduleInitialRespawn(entity e);
 /// \return No return.
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names, entity ammo_entity);
 
-bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
+bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammomax);
 
 bool Item_GiveTo(entity item, entity player);
 
@@ -72,12 +72,15 @@ void Item_Touch(entity this, entity toucher);
 void Item_Reset(entity this);
 
 void Item_FindTeam(entity this);
-// Savage: used for item garbage-collection
+
+void Item_CopyFields(entity this, entity to);
 
 bool ItemSend(entity this, entity to, int sf);
 void ItemUpdate(entity this);
 
 void UpdateItemAfterTeleport(entity this);
+
+void RemoveItem(entity this);
 
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots

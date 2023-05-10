@@ -601,13 +601,13 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
 	entity e = new(onslaught_controlpoint_icon);
 
+	e.solid = SOLID_NOT; // before setsize/setorigin to prevent area grid linking
 	setsize(e, CPICON_MIN, CPICON_MAX);
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
-	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);
@@ -1126,7 +1126,7 @@ void Onslaught_count_generators()
 	total_generators = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
 	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
@@ -1136,35 +1136,10 @@ void Onslaught_count_generators()
 			continue;
 		}
 		entity team_ = Entity_GetTeam(e);
-		int num_control_points = Team_GetNumberOfControlPoints(team_);
-		++num_control_points;
-		Team_SetNumberOfControlPoints(team_, num_control_points);
+		int num_generators = Team_GetNumberOfOwnedItems(team_);
+		++num_generators;
+		Team_SetNumberOfOwnedItems(team_, num_generators);
 	}
-}
-
-int Onslaught_GetWinnerTeam()
-{
-	int winner_team = 0;
-	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) >= 1)
-	{
-		winner_team = NUM_TEAM_1;
-	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
-	{
-		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) >= 1)
-		{
-			if (winner_team != 0)
-			{
-				return 0;
-			}
-			winner_team = Team_IndexToTeam(i);
-		}
-	}
-	if (winner_team)
-	{
-		return winner_team;
-	}
-	return -1; // no generators left?
 }
 
 void nades_Clear(entity e);
@@ -1213,13 +1188,9 @@ bool Onslaught_CheckWinner()
 	else { wpforenemy_announced = false; ons_stalemate = false; }
 
 	Onslaught_count_generators();
-
-	if (Team_GetNumberOfTeamsWithControlPoints() > 1)
-	{
+	int winner_team = Team_GetWinnerTeam_WithOwnedItems(1);
+	if (!winner_team)
 		return 0;
-	}
-
-	int winner_team = Onslaught_GetWinnerTeam();
 
 	if(winner_team > 0)
 	{
