@@ -505,6 +505,8 @@ string formatmessage(entity this, string msg)
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
+			case "o": replacement = vtos(this.origin); break;
+			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
 			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
 			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
