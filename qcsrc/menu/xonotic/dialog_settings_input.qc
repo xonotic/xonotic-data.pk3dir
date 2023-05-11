@@ -58,7 +58,7 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Mouse")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 32, 0.2, "sensitivity",
+		me.TD(me, 1, 2, e = makeXonoticInputBox_T(0, "sensitivity",
 			_("Mouse speed multiplier")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "m_filter", _("Smooth aiming"),
