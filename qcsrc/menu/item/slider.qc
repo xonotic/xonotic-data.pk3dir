@@ -18,6 +18,9 @@
 			me.setSliderValue(me, val);
 		}
 		me.value = val;
+
+		if(me.onChange)
+			me.onChange(me, me.onChangeEntity);
 	}
 	void Slider_setValue_noAnim(entity me, float val)
 	{
