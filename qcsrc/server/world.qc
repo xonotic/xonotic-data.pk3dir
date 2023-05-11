@@ -170,6 +170,7 @@ void cvar_changes_init()
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
 #define BADVALUE(p, val) if (k == p && v == val) continue
+#define BADPRESUFFIXVALUE(p,s,val) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -387,6 +388,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_announcer");
+		BADCVAR("sv_autopause");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
@@ -522,6 +524,9 @@ void cvar_changes_init()
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
+
 		// mutators that announce themselves properly to the server browser
 		BADCVAR("g_instagib");
 		BADCVAR("g_new_toys");
@@ -533,6 +538,7 @@ void cvar_changes_init()
 #undef BADPREFIX
 #undef BADCVAR
 #undef BADVALUE
+#undef BADPRESUFFIXVALUE
 
 		if(pureadding)
 		{
@@ -1042,6 +1048,10 @@ spawnfunc(worldspawn)
 	modname = strzone(modname);
 
 	WinningConditionHelper(this); // set worldstatus
+
+	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
+		// INITPRIO_LAST is to soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
+		defer(this, 5, Pause_TryPause_Dedicated);
 
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
