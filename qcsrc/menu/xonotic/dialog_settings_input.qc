@@ -10,6 +10,7 @@
 #include "button.qh"
 #include "slider.qh"
 #include "checkbox.qh"
+#include "inputbox.qh"
 
 entity makeXonoticInputSettingsTab()
 {
