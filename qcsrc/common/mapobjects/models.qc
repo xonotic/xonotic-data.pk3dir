@@ -172,6 +172,8 @@ void g_model_init(entity ent, float sol)
 	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
 	if(!ent.solid) ent.solid = (sol);
 	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	// link entity after setting the .solid field to ensure that it gets linked to the area grid
+	setorigin(ent, ent.origin);
 }
 
 void g_clientmodel_init(entity ent, float sol)
