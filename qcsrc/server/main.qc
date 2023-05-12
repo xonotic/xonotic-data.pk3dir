@@ -186,20 +186,35 @@ void CreatureFrame_All()
 	});
 }
 
-void Pause_TryPause(bool ispaused)
+void Pause_TryPause_Dedicated(entity this)
 {
-	int n = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
+	if (player_count == 0)
+		setpause(1);
+}
+
+void Pause_TryPause()
+{
+	int n = 0, p = 0;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+		if (PHYS_INPUT_BUTTON_CHAT(it)) ++p;
 		++n;
 	});
 	if (!n) return;
-	setpause(ispaused);
+	if (n == p)
+		setpause(1);
+	else
+		setpause(0);
 }
 
 void SV_PausedTic(float elapsedtime)
 {
-	if (!server_is_dedicated) Pause_TryPause(false);
+	if (!server_is_dedicated)
+	{
+		if (autocvar_sv_autopause)
+			Pause_TryPause();
+		else
+			setpause(0);
+	}
 }
 
 void dedicated_print(string input)
@@ -268,7 +283,6 @@ Called before each frame by the server
 
 bool game_delay_last;
 
-bool autocvar_sv_autopause = false;
 void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
@@ -278,7 +292,7 @@ void StartFrame()
     IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
-	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
+	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause();
 
 	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
@@ -451,6 +465,32 @@ string GetField_fullspawndata(entity e, string f, ...)
 	}
 
 	return v;
+}
+
+/*
+=============
+FindFileInMapPack
+
+Returns the first matching VFS file path that exists in the current map's pack.
+Returns string_null if no files match or the map isn't packaged.
+=============
+*/
+string FindFileInMapPack(string pattern)
+{
+	if(!checkextension("DP_QC_FS_SEARCH_PACKFILE"))
+		return string_null;
+
+	string base_pack = whichpack(strcat("maps/", mapname, ".bsp"));
+	if(base_pack == "" || !base_pack) // this map isn't packaged or there was an error
+		return string_null;
+
+	int glob = search_packfile_begin(pattern, true, true, base_pack);
+	if(glob < 0)
+		return string_null;
+
+	string file = search_getfilename(glob, 0);
+	search_end(glob);
+	return file;
 }
 
 void WarpZone_PostInitialize_Callback()
