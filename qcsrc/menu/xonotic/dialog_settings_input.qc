@@ -82,11 +82,10 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		entity sensitivitySlider;
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
-		me.TD(me, 1, 1.5, e = makeXonoticSlider_T(0.1, 9.9, 0.1, "sensitivity",
+		me.TD(me, 1, 1, e = makeXonoticSlider_T(0.1, 9.9, 0.1, "sensitivity",
 			_("Mouse speed multiplier")));
 			sensitivitySlider = e;
-			e.fontSize = 0;
-			me.currentColumn -= 0.35;
+			e.textSpace = 0;
 		me.TD(me, 1, 1, e = makeXonoticInputBox_T(0, "sensitivity",
 			_("Mouse speed multiplier")));
 			e.saveImmediately = 1;
