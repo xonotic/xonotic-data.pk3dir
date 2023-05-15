@@ -120,8 +120,11 @@ bool br_SquadIsBotsOnly(entity squad)
 
 entity br_SquadGetRandomAvail()
 {
+    int min_members = max_squad_size;
+    IL_EACH(squads, it.br_squad_members < min_members, min_members = it.br_squad_members);
+
     int num_avail = 0;
-    IL_EACH(squads, it.br_squad_members < max_squad_size, ++num_avail);
+    IL_EACH(squads, it.br_squad_members == min_members, ++num_avail);
 
     if(num_avail == 0)
         return NULL;
@@ -129,7 +132,7 @@ entity br_SquadGetRandomAvail()
     int target_id = floor(random() * num_avail);
 
     int current_id = 0;
-    IL_EACH(squads, it.br_squad_members < max_squad_size,
+    IL_EACH(squads, it.br_squad_members == min_members,
     {
         if(current_id == target_id)
             return it;

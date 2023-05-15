@@ -1147,7 +1147,7 @@ void br_Start(){
         IL_PUSH(squads, new_squad);
     }
 
-    FOREACH_CLIENT(IS_PLAYER(it), {
+    FOREACH_CLIENT_RANDOM(IS_PLAYER(it), {
         entity current_squad = br_SquadGetRandomAvail();
         br_SquadMember_Add(current_squad, it);
         GameRules_scoring_add(it, BR_SQUAD, current_squad.br_squad_id);
