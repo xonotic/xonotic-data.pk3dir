@@ -932,6 +932,8 @@ void item_use(entity this, entity actor, entity trigger)
 	gettouch(this)(this, actor);
 }
 
+// if defaultrespawntime is 0 get respawntime from the item definition
+// if defaultrespawntimejitter is 0 get respawntimejitter from the item definition
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
 {
 	string itemname = def.m_name;
@@ -1173,12 +1175,8 @@ void StartItem(entity this, GameItem def)
 
 	this.classname = def.m_canonical_spawnfunc;
 
-	_StartItem(
-		this,
-		this.itemdef = def,
-		0, // call def.m_respawntime() to get defaultrespawntime
-		0  // call def.m_respawntimejitter() to get defaultrespawntimejitter
-	);
+	this.itemdef = def;
+	_StartItem(this, this.itemdef, 0, 0);
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))

@@ -156,12 +156,9 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true);
 
 	GameItem def = wpn.m_pickup;
-	_StartItem(
-		this,
-		this.itemdef = def,
-		this.respawntime, // defaultrespawntime
-		this.respawntimejitter // defaultrespawntimejitter
-	);
+	this.itemdef = def;
+	_StartItem(this, this.itemdef, this.respawntime, this.respawntimejitter);
+
 	#if 0 // WEAPONTODO
 	if (this.modelindex) { // don't precache if this was removed
 		wpn.wr_init(wpn);
