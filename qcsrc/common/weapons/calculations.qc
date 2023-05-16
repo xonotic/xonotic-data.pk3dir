@@ -184,6 +184,36 @@ int W_GetGunAlignment(entity player)
 }
 #endif
 
+vector W_CalculateSpreadPattern(int counter, int total, bool returnTransformVector)
+{
+	// first is always centered
+	if (counter == 0)
+		return '0 0 0';
+
+	vector s = '0 0 0';
+
+	// points form a round circle with even distribution
+	// this could be simplified to '0 360 0' * (counter / total)
+	// but it would lose ALL the specific placements
+	// for example with this 2 pellets is center + directly up
+	// while 3 pellets is a horizontal sweep and and 4 is an upside
+	// down Y shape, 5 is a star instead of a pentagram,
+	// 9 is a 3x3 grid and 13 is a circle with center + 3 per quadrant
+	makevectors('0 360 0' * ((0.25 * ((total + 1) % 2)) + (counter / (total - 1))));
+
+	if (returnTransformVector) // return transform vector
+	{
+		s.y = v_forward.x;
+		s.z = v_forward.y;
+	}
+	else // return original result normal vector
+	{
+		s = v_forward;
+	}
+
+	return s;
+}
+
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
 {
 	float sigma;

@@ -16,8 +16,23 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if(lag && bullets > 0)
 		antilag_takeback_all(actor, lag);
 
-	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
+	if (WEP_CVAR_PRI(shotgun, spread_fixed) > 0)
+	{
+		vector forward, right, up;
+		forward = v_forward;
+		right = v_right;
+		up = v_up;
+
+		for(int sc = 0; sc < bullets; ++sc)
+		{
+			vector s = W_CalculateSpreadPattern(sc, bullets, true);
+			s = s * (WEP_CVAR_PRI(shotgun, spread) / WEP_CVAR_PRI(shotgun, spread_fixed) * autocvar_g_weaponspreadfactor);
+			fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir + right * s.y + up * s.z, 0, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
+		}
+	}
+	else
+		for(int sc = 0; sc < bullets; ++sc)
+			fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
 
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);
@@ -28,7 +43,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if(autocvar_g_casings >= 1)
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+		//for(int sc = 0; sc < WEP_CVAR_PRI(shotgun, ammo); ++sc)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), vectoangles(v_forward), 1, actor, weaponentity);
 	}
 }

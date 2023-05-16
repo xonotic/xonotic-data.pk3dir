@@ -223,16 +223,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 		spread_pershot = (1 - (spread_pershot * WEP_CVAR_SEC(hagar, load_spread_bias)));
 		spread_pershot = (WEP_CVAR_SEC(hagar, spread) * spread_pershot * autocvar_g_weaponspreadfactor);
 
-		// pattern spread calculation
-		s = '0 0 0';
-		if(counter == 0)
-			s = '0 0 0';
-		else
-		{
-			makevectors('0 360 0' * ((0.25 * ((shots + 1) % 2)) + (counter / (shots - 1))));
-			s.y = v_forward.x;
-			s.z = v_forward.y;
-		}
+		s = W_CalculateSpreadPattern(counter, shots, true);
 		s = s * WEP_CVAR_SEC(hagar, load_spread) * autocvar_g_weaponspreadfactor;
 
 		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, false);
