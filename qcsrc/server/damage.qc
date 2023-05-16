@@ -830,8 +830,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	if (!IS_PLAYER(targ) || !StatusEffects_active(STATUSEFFECT_SpawnShield, targ) || targ == attacker)
 	{
 		vector farce = targ.damageforcescale * force;
-		if (attacker == targ && autocvar_g_balance_damagepush_speedfactor)
-			farce = damage_explosion_calcpush(farce, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
+		if (autocvar_g_balance_damagepush_speedfactor)
+			if (!autocvar_g_balance_damagepush_speedfactor_onlyself || (attacker == targ))
+				farce = damage_explosion_calcpush(farce, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
 
 		if(targ.move_movetype == MOVETYPE_PHYSICS)
 		{
