@@ -160,7 +160,7 @@ int Team_GetNumberOfTeamsWithOwnedItems()
 
 void setcolor(entity this, int clr)
 {
-#if 0
+#if 1
 	this.clientcolors = clr;
 	this.team = (clr & 15) + 1;
 #else

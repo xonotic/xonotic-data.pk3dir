@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 case "$1" in
 	pot)
 		mode=pot
@@ -29,36 +31,12 @@ case "$1" in
 esac
 
 if [ x"$mode" = x"pot" ]; then
-	make QCC="../../../../gmqcc/gmqcc" clean
-	make QCC="../../../../gmqcc/gmqcc"
 	{
-		grep -h '^\.' .tmp/*_includes.txt | cut -d ' ' -f 2 | sed -e 's,^,qcsrc/,' | while IFS= read -r name; do
-			while :; do
-				case "$name" in
-					*/./*)
-						name=${name%%/./*}/${name#*/./}
-						;;
-					./*)
-						name=${name#./}
-						;;
-					*/*/../*)
-						before=${name%%/../*}
-						before=${before%/*}
-						name=$before/${name#*/../}
-						;;
-					*/../*)
-						name=${name#*/../}
-						;;
-					*)
-						break
-						;;
-				esac
-			done
-			echo "$name"
-		done | sort -u
+		git ls-files qcsrc | sort -u
 	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new >&2
 	if msgcmp -N --use-untranslated common.pot common.pot.new && msgcmp -N --use-untranslated common.pot.new common.pot; then
 		echo "No contentful changes to common.pot - OK."
+		ls -la common.pot common.pot.new
 		rm -f common.pot.new
 	else
 		echo "Updating common.pot. This probably should be committed."
@@ -83,10 +61,10 @@ if [ x"$mode" = x"txt" ]; then
 			fi
 			# Note: we're only reporting EXISTING fuzzy matches in the Fuzzy count, thus -N.
 			po=`msgmerge -N "$X" common.pot`
-			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l`
-			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#:`
-			nf=`printf "%s\n" "$po" | msgattrib --fuzzy - | grep -c ^#:`
-			nt=`printf "%s\n" "$po" | grep -c ^#:`
+			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l || true`
+			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#: || true`
+			nf=`printf "%s\n" "$po" | msgattrib --fuzzy - | grep -c ^#: || true`
+			nt=`printf "%s\n" "$po" | grep -c ^#: || true`
 			n=$(($ne + $nu + $nf))
 			p=$(( (nt - n) * 100 / nt ))
 			echo >&2 "TODO for translation $X:"

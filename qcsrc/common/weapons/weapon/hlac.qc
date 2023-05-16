@@ -153,7 +153,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 METHOD(HLAC, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false, true);
 }
 METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -208,8 +208,7 @@ METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 
 METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
     if(!w_issilent)
         sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);

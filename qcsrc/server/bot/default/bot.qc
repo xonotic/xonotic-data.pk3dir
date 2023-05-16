@@ -30,6 +30,7 @@
 #include <server/weapons/accuracy.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
+#include <server/command/vote.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
@@ -64,7 +65,7 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * min(14 / (skill + this.bot_aiskill + 14), 1));
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
@@ -118,7 +119,6 @@ void bot_think(entity this)
 			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
-		this.bot_nextthink = game_starttime;
 		return;
 	}
 
@@ -145,6 +145,12 @@ void bot_think(entity this)
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
 		navigation_unstuck(this);
+
+	if (warmup_stage && !this.ready)
+	{
+		this.ready = true;
+		ReadyCount(); // this must be delayed until the bot has spawned
+	}
 
 	// now call the current bot AI (havocbot for example)
 	this.bot_ai(this);
@@ -442,7 +448,6 @@ void bot_clientconnect(entity this)
 	if (!IS_BOT_CLIENT(this)) return;
 	this.bot_preferredcolors = this.clientcolors;
 	this.bot_nextthink = time - random();
-	this.lag_func = bot_lagfunc;
 	this.isbot = true;
 	this.createdtime = this.bot_nextthink;
 

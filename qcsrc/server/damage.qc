@@ -608,7 +608,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		// These are ALWAYS lethal
 		// No damage modification here
-		// Instead, prepare the victim for his death...
+		// Instead, prepare the victim for their death...
 		if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			SetResourceExplicit(targ, RES_ARMOR, 0);
@@ -931,11 +931,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
 			if (dist <= rad)
 			{
-				float power = 1;
-				if (rad > 0)
-					power -= (dist / rad);
-				// at this point power can't be < 0 or > 1
-				float finaldmg = coredamage * power + edgedamage * (1 - power);
+				float f = (rad > 0) ? 1 - (dist / rad) : 1;
+				// at this point f can't be < 0 or > 1
+				float finaldmg = coredamage * f + edgedamage * (1 - f);
 				if (finaldmg > 0)
 				{
 					float a;
