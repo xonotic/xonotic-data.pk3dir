@@ -208,7 +208,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if(autocvar_g_chat_flood_notify_flooder)
 		{
-			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
+			sourcemsgstr = strcat(msgstr, "\n^3CHAT FLOOD CONTROL: ^7message too long, trimmed\n");
 			sourcecmsgstr = "";
 		}
 		else
@@ -247,7 +247,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
@@ -505,6 +505,8 @@ string formatmessage(entity this, string msg)
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
+			case "o": replacement = vtos(this.origin); break;
+			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
 			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
 			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;

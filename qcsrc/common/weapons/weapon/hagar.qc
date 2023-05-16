@@ -481,8 +481,7 @@ METHOD(Hagar, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
     {

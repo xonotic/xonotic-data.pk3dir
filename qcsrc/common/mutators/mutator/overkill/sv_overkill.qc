@@ -5,8 +5,9 @@
 #include "okrpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-
 bool autocvar_g_overkill_itemwaypoints = true;
+bool autocvar_g_overkill_blaster_keepforce = false;
+bool autocvar_g_overkill_blaster_keepdamage = false;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
@@ -69,11 +70,11 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 		if(frag_attacker != frag_target)
 		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
-		{
+		if(!autocvar_g_overkill_blaster_keepforce)
 			M_ARGV(6, vector) = '0 0 0'; // force
-		}
 
-		M_ARGV(4, float) = 0; // damage
+		if(!autocvar_g_overkill_blaster_keepdamage)
+			M_ARGV(4, float) = 0; // damage
 	}
 }
 
@@ -227,28 +228,20 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	if (item.classname == "item_strength")
 	{
 		entity wep = new(weapon_okhmg);
-		setorigin(wep, item.origin);
+		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.noalign = Item_ShouldKeepPosition(item);
-		wep.cnt = item.cnt;
-		wep.team = item.team;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		wep.spawnfunc_checked = true;
 		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
 		return true;
 	}
 	else if (item.classname == "item_shield")
 	{
 		entity wep = new(weapon_okrpc);
-		setorigin(wep, item.origin);
+		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.noalign = Item_ShouldKeepPosition(item);
-		wep.cnt = item.cnt;
-		wep.team = item.team;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		wep.spawnfunc_checked = true;
 		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
 		return true;
 	}
