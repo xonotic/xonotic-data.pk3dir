@@ -12,6 +12,7 @@
     || DEATH_ISWEAPON(dt, WEP_VAPORIZER))
 
 float br_CalculatePlayerDropAngle(entity this);
+bool br_PositionDropMember(entity this, entity leader, int position, float disconnect_range);
 void br_LastPlayerForSquad_Notify(entity squad);
 void br_RemovePlayer(entity player);
 void br_Revive(entity player);
@@ -25,12 +26,15 @@ bool squads_colored = false;
 
 const float br_drop_time_secs = 1;
 const float drop_speed_vertical_max = 0.9;
+const float drop_distance_disconnect = 32;
+const float drop_speed_crash = 0.9;
 bool br_started = false;
 .bool br_ring_warned;
 .float br_drop_time;
 .float br_force_drop_distance;
 .int br_drop_launch;
 .int br_drop_detached;
+.float br_drop_position;
 .bool br_drop_instructions;
 .float br_ring_damage_time;
 
@@ -399,15 +403,13 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                 {
                     player.br_squad.br_squad_drop_leader = player;
 
-                    vector drop_base_offset;
-                    drop_base_offset.x = cos((player.angles.y + 90) * DEG2RAD);
-                    drop_base_offset.y = sin((player.angles.y + 90) * DEG2RAD);
-                    drop_base_offset.z = 0;
-                    drop_base_offset = drop_base_offset * vlen(vec2(player.maxs - player.mins)) + drop_base_offset * 32; // I hope individual players never get different mins/maxs
+                    bool other_side = false;
+                    int drop_position = 1;
 
-                    vector drop_offset = drop_base_offset;
+                    if(random() < 0.5)
+                        drop_position *= -1;
 
-                    FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
+                    FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
                         it.effects &= ~EF_NODRAW;
                         it.takedamage = DAMAGE_AIM;
                         it.solid = SOLID_SLIDEBOX;
@@ -418,8 +420,13 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                         it.br_drop_detached = 0;
                         Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_BR_DROP_DETACH);
 
-                        setorigin(it, player.origin + drop_offset); // FIXME: this can teleport players into brushes/void
-                        drop_offset += drop_base_offset;
+                        it.br_drop_position = drop_position;
+                        if(other_side)
+                            drop_position += copysign(1, drop_position);
+                        drop_position *= -1;
+                        other_side = !other_side;
+
+                        br_PositionDropMember(it, player, it.br_drop_position, -1);
 
                         it.velocity = player.velocity;
                         it.angles = player.angles;
@@ -542,21 +549,23 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
 
     // TODO: improve dropping physics
     if(STAT(DROP, player) == DROP_FALLING){
-        if(!IS_ONGROUND(player) && (player.waterlevel < WATERLEVEL_SWIMMING) && ((tracebox(player.origin, player.mins, player.maxs, player.origin - '0 0 1', MOVE_NOMONSTERS, player), trace_fraction) >= 1)) // IS_ONGROUND doesn't work if jump is held (jump is theoretically blocked until landed)
+        float maxairspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1);
+        float mindropspeed = maxairspeed * max(autocvar_g_br_drop_speed_min, 0);
+        float dropspeed = vlen(vec2(player.velocity) + eZ * min(player.velocity.z, 0));
+        if(player.velocity.z > 0)
+            dropspeed -= vlen(player.velocity) - dropspeed;
+        if(!IS_ONGROUND(player) && (player.waterlevel < WATERLEVEL_SWIMMING) && (dropspeed >= (mindropspeed * drop_speed_crash)) && ((tracebox(player.origin, player.mins, player.maxs, player.origin - '0 0 1', MOVE_NOMONSTERS, player), trace_fraction) >= 1)) // IS_ONGROUND doesn't work if jump is held (jump is theoretically blocked until landed)
         {
             ITEMS_STAT(player) |= IT_USING_JETPACK;
             bool has_drop_leader = IN_SQUAD(player) && (player.br_drop_detached != 2) && (player.br_squad.br_squad_drop_leader && (STAT(DROP, player.br_squad.br_squad_drop_leader) == DROP_FALLING));
             bool player_is_drop_leader = has_drop_leader && (player == player.br_squad.br_squad_drop_leader);
             if(player_is_drop_leader || !has_drop_leader)
             {
-                float maxairspeed = PHYS_MAXAIRSPEED(player) * max(maxspeed_mod, 1);
                 float maxdropspeed = maxairspeed * max(autocvar_g_br_drop_speed_max, 0);
-                float mindropspeed = maxairspeed * max(autocvar_g_br_drop_speed_min, 0);
                 float maxdropspeed_ratio = drop_speed_vertical_max; // moving straight down is glitchy
                 float mindropspeed_ratio = bound(0, autocvar_g_br_drop_speed_vertical_min, drop_speed_vertical_max);
                 float accel_dive = max(autocvar_g_br_drop_accel_dive, 0);
                 float accel_turn = max(autocvar_g_br_drop_accel_turn, 0);
-                float dropspeed = vlen(player.velocity);
                 float dropspeed_xy = vlen(vec2(player.velocity));
                 float pitch_current = br_CalculatePlayerDropAngle(player);
                 float pitch_view = max(player.v_angle.x, 0);
@@ -582,9 +591,7 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
                 // vertical wishvel using forward movement and the previously calculated ratio
                 wishvel.z = pitch_ratio_wish * bound(0, CS(player).movement.x / maxairspeed, 1);
                 // apply turn acceleration to wishvel
-                wishvel.x *= accel_turn;
-                wishvel.y *= accel_turn;
-                wishvel.z *= accel_turn;
+                wishvel *= accel_turn;
                 player.velocity += wishvel * dt;
                 player.velocity = normalize(eZ * player.velocity.z + normalize(vec2(player.velocity)) * dropspeed_xy);
 
@@ -618,6 +625,13 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
                 if(player_is_drop_leader)
                 {
                     FOREACH_CLIENT(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (it.br_drop_detached != 2) && (STAT(DROP, it) == DROP_FALLING), {
+                        if(!br_PositionDropMember(it, player, it.br_drop_position, drop_distance_disconnect))
+                        {
+                            it.br_drop_detached = 2;
+                            Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_BR_DROP);
+                            continue;
+                        }
+
                         it.velocity = player.velocity;
                         it.angles = player.angles;
                     });
@@ -630,6 +644,12 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
             }
             else
             {
+                if(!br_PositionDropMember(player, player.br_squad.br_squad_drop_leader, player.br_drop_position, drop_distance_disconnect))
+                {
+                    player.br_drop_detached = 2;
+                    Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_BR_DROP);
+                }
+
                 player.velocity = player.br_squad.br_squad_drop_leader.velocity;
                 player.angles = player.br_squad.br_squad_drop_leader.angles; // no fixangles, only moves the player model not the player view
             }
@@ -997,6 +1017,31 @@ float br_CalculatePlayerDropAngle(entity this)
     return 0;
 }
 
+bool br_PositionDropMember(entity this, entity leader, int position, float disconnect_range) {
+    float pl_mins = min(leader.mins.x, leader.mins.y);
+    float pl_maxs = max(leader.maxs.x, leader.maxs.y);
+
+    vector member_offset;
+    member_offset.x = cos((leader.angles.y + 90) * DEG2RAD);
+    member_offset.y = sin((leader.angles.y + 90) * DEG2RAD);
+    member_offset.z = 0;
+    member_offset *= pl_maxs - pl_mins + 32; // I hope individual players never get different mins/maxs
+    member_offset *= position;
+
+    vector member_destination = leader.origin + member_offset;
+
+    tracebox(this.origin, this.mins, this.maxs, member_destination, MOVE_NORMAL, this);
+
+    if((trace_fraction < 1) && (disconnect_range >= 0))
+    {
+        if(vlen(member_destination - trace_endpos) > disconnect_range)
+            return false;
+    }
+
+    setorigin(this, trace_endpos);
+    return true;
+}
+
 void br_LastPlayerForSquad_Notify(entity squad)
 {
     entity player = br_SquadFindLastAlive(squad, false);
@@ -1152,7 +1197,7 @@ void br_Start(){
         br_SquadMember_Add(current_squad, it);
         GameRules_scoring_add(it, BR_SQUAD, current_squad.br_squad_id);
 
-        setorigin(it, dropship.origin + eZ * (dropship.mins.z - it.maxs.z - 64)); // FIXME: this can teleport players into brushes/void
+        setorigin(it, dropship.origin + eZ * (dropship.mins.z - it.maxs.z - 64));
         it.angles = vectoangles(dropship_path_direction) + '45 0 0';
         it.fixangle = true;
         it.velocity = '0 0 0';
