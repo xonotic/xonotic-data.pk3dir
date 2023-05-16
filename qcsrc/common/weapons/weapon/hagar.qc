@@ -229,7 +229,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 			s = '0 0 0';
 		else
 		{
-			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+			makevectors('0 360 0' * ((0.25 * ((shots + 1) % 2)) + (counter / (shots - 1))));
 			s.y = v_forward.x;
 			s.z = v_forward.y;
 		}
