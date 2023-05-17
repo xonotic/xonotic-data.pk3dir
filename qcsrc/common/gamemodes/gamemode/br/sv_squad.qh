@@ -28,3 +28,4 @@ void br_SquadMember_Remove(entity player);
 bool br_SquadIsBotsOnly(entity squad);
 entity br_SquadGetRandomAvail();
 entity br_SquadFindLastAlive(entity squad, bool healthy_only);
+void br_SendSquad(entity to);

@@ -203,6 +203,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
+	else if(ISGAMETYPE(BR))
+	    isfriend = br_isSameSquad(this);
 	else
 		isfriend = islocalplayer;
 
@@ -248,14 +250,19 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		if ((team_count == 2) && (myteam != NUM_SPECTATOR) && (fpc == 2 || fpc == 4 || fpc == 5))
 			forceplayercolors_enabled = true;
 	}
+	else if (ISGAMETYPE(BR))
+	{
+		if (br_inSquad() && (fpc == 2 || fpc == 5))
+			forceplayercolors_enabled = true;
+	}
 	else
 	{
-		if ((!(ISGAMETYPE(BR) && STAT(SQUADCOLORS)) && fpc == 1) || fpc == 2)
+		if (fpc == 1 || fpc == 2)
 			forceplayercolors_enabled = true;
 	}
 
 	// forceplayercolors too
-	if(teamplay)
+	if(teamplay || ISGAMETYPE(BR))
 	{
 		// own team's color is never forced
 		int forcecolor_friend = 0, forcecolor_enemy = 0;
@@ -267,7 +274,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		if(forceplayercolors_enabled)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
-		if(forcecolor_enemy && !forcecolor_friend)
+		if(!ISGAMETYPE(BR) && forcecolor_enemy && !forcecolor_friend)
 		{
 			// only enemy color is forced?
 			// verify it is not equal to the friend color
@@ -275,7 +282,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 				forcecolor_enemy = 0;
 		}
 
-		if(forcecolor_friend && !forcecolor_enemy)
+		if(!ISGAMETYPE(BR) && forcecolor_friend && !forcecolor_enemy)
 		{
 			// only friend color is forced?
 			// verify it is not equal to the enemy color
@@ -288,7 +295,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 					forcecolor_friend = 0;
 		}
 
-		if(cm == 1024 + 17 * myteam)
+		if((!ISGAMETYPE(BR) && (cm == 1024 + 17 * myteam)) || (ISGAMETYPE(BR) && br_isSameSquad(this)))
 		{
 			if(forcecolor_friend)
 				this.colormap = forcecolor_friend;

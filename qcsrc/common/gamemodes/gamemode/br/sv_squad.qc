@@ -49,6 +49,9 @@ int br_SquadUpdateInfo()
 
     FOREACH_CLIENT(IS_REAL_CLIENT(it),
     {
+        if(IN_SQUAD(it))
+            br_SendSquad(it);
+
         STAT(SQUADSALIVE, it) = alive_squads;
         STAT(PLAYERSALIVE, it) = alive_players;
     });
@@ -161,4 +164,21 @@ entity br_SquadFindLastAlive(entity squad, bool healthy_only)
     }
 
     return last_alive;
+}
+
+void br_SendSquad(entity to)
+{
+    msg_entity = to;
+    entity squad = to.br_squad;
+
+    if(!squad)
+        return;
+
+    WriteHeader(MSG_ONE, TE_CSQC_BR_SQUAD);
+    WriteByte(MSG_ONE, squad.br_squad_members);
+
+    for(entity member = squad.br_squad_first; member; member = member.br_squad_next)
+    {
+        WriteByte(MSG_ONE, etof(member));
+    }
 }

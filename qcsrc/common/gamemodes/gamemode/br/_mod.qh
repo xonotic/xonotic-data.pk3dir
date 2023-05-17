@@ -16,6 +16,9 @@
 #ifdef SVQC
     #include <common/gamemodes/gamemode/br/sv_dropship.qh>
 #endif
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/br/cl_squad.qh>
+#endif
 #ifdef SVQC
     #include <common/gamemodes/gamemode/br/sv_squad.qh>
 #endif

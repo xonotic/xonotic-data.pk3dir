@@ -1,0 +1,4 @@
+#pragma once
+
+bool br_isSameSquad(entity this);
+bool br_inSquad();

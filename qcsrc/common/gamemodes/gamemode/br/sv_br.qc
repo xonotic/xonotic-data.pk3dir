@@ -1219,6 +1219,7 @@ void br_Start(){
 
     FOREACH_CLIENT(IS_REAL_CLIENT(it),
     {
+        br_SendSquad(it);
         STAT(SQUADCOLORS, it) = squads_colored;
     });
 
@@ -1231,7 +1232,7 @@ void br_Start(){
 
             for(entity member = it.br_squad_first; member; member = member.br_squad_next)
             {
-                member.colormap = 1024 + squad_color;
+                member.clientcolors = 1024 + squad_color;
             }
         }
 

@@ -753,6 +753,22 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 		case SP_DMG: case SP_DMGTAKEN:
 			return sprintf("%.1f k", pl.(scores(field)) / 1000);
 
+		case SP_BR_SQUAD:
+			tmp = pl.(scores(field));
+			if(tmp == 0)
+				return string_null;
+
+			if(STAT(SQUADCOLORS))
+			{
+				int f = entcs_GetClientColors(pl.sv_entnum);
+				sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
+				sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
+				sbt_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
+				sbt_field_icon2 = "gfx/scoreboard/playercolor_pants";
+				sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
+			}
+			return ftos(tmp);
+
 		default: case SP_SCORE:
 			tmp = pl.(scores(field));
 			f = scores_flags(field);
