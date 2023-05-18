@@ -145,11 +145,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.angles = ReadAngleVector();
     }
 
-    if(sf & ISF_SIZE)
-    {
-        setsize(this, '-16 -16 0', '16 16 48');
-    }
-
     if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
     {
         this.ItemStatus = ReadByte();
@@ -230,9 +225,14 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         _setmodel(this, this.mdl);
 
         this.skin = ReadByte();
-
-        setsize(this, '-16 -16 0', '16 16 48');
     }
+
+	if(sf & ISF_SIZE && sf & ISF_SIZE2) // Default
+		setsize(this, ITEM_D_MINS, ITEM_D_MAXS);
+	else if(sf & ISF_SIZE && !(sf & ISF_SIZE2)) // Small
+		setsize(this, ITEM_S_MINS, ITEM_S_MAXS);
+	else if(!(sf & ISF_SIZE) && sf & ISF_SIZE2) // Large
+		setsize(this, ITEM_D_MINS, ITEM_L_MAXS);
 
     if(sf & ISF_COLORMAP)
     {
