@@ -45,8 +45,8 @@ const float KH_KEY_XYSPEED = 45;
 #endif
 const float KH_KEY_WP_ZSHIFT = 20;
 
-const vector KH_KEY_MIN = '-10 -10 -46';
-const vector KH_KEY_MAX = '10 10 3';
+const vector KH_KEY_MIN = '-25 -25 -46'; // 0.8.5 used '-10 -10 -46' with sv_legacy_bbox_expand 1
+const vector KH_KEY_MAX = '25 25 3';     // 0.8.5 used '10 10 3'     with sv_legacy_bbox_expand 1
 const float KH_KEY_BRIGHTNESS = 2;
 
 bool kh_no_radar_circles;

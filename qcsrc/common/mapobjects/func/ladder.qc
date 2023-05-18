@@ -3,6 +3,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
 
 void func_ladder_think(entity this)
 {
+
 #ifdef CSQC
 	// TODO: check if this is what is causing the glitchiness when switching between them
 	float dt = time - this.move_time;
@@ -19,21 +20,11 @@ void func_ladder_think(entity this)
 
 	FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.ladder_entity && IS_PLAYER(it) && it.move_movetype != MOVETYPE_NOCLIP && !IS_DEAD(it),
 	{
-		vector emin = it.absmin;
-		vector emax = it.absmax;
-		if(this.solid == SOLID_BSP || (IS_CSQC && this.solid == SOLID_TRIGGER)) // CSQC doesn't expand properly
+		if (WarpZoneLib_ExactTrigger_Touch(this, it, false))
 		{
-			emin -= '1 1 1';
-			emax += '1 1 1';
-		}
-		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
-		{
-			if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
-			{
-				if(!it.ladder_entity)
-					IL_PUSH(g_ladderents, it);
-				it.ladder_entity = this;
-			}
+			if(!it.ladder_entity)
+				IL_PUSH(g_ladderents, it);
+			it.ladder_entity = this;
 		}
 	});
 
@@ -177,10 +168,6 @@ NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
 
 	this.move_time = time;
 	this.entremove = func_ladder_remove;
-
-	// NOTE: CSQC's version of setorigin doesn't expand
-	this.absmin -= '1 1 1';
-	this.absmax += '1 1 1';
 
 	return true;
 }
