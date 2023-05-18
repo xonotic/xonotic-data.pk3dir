@@ -158,10 +158,11 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int f
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
+	missile.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
+	setsize(missile, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
 
 	set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
 	W_SetupProjVelocity_PRE(missile, arc, bolt_);

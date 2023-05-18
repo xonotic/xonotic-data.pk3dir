@@ -22,6 +22,9 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* wepname   */ ATTRIB(OverkillRocketPropelledChainsaw, m_name, string, _("Overkill Rocket Propelled Chainsaw"));
 /* legacy    */ ATTRIB(OverkillRocketPropelledChainsaw, m_deprecated_netname, string, "rpc");
 
+#define RPC_MINS '-4 -4 -4' // 0.8.5 used '-3 -3 -3' (before sv_legacy_bbox_expand 0)
+#define RPC_MAXS '4 4 4'    // 0.8.5 used '3 3 3'    (before sv_legacy_bbox_expand 0)
+
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, PRI) \

@@ -77,10 +77,11 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	set_movetype(gren, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(gren);
+	gren.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
 	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 0', '0 0 0');
+	setsize(gren, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
 
 	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
 	setthink(gren, adaptor_think2use_hittype_splash);

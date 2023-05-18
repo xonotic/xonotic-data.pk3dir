@@ -21,6 +21,9 @@ CLASS(Vaporizer, Weapon)
 /* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
 /* legacy    */ ATTRIB(Vaporizer, m_deprecated_netname, string, "minstanex");
 
+#define RM_MINS '-1 -1 -4' // 0.8.5 used '0 0 -3' (before sv_legacy_bbox_expand 0)
+#define RM_MAXS '1 1 -2'   // 0.8.5 used '0 0 -3' (before sv_legacy_bbox_expand 0)
+
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, PRI) \

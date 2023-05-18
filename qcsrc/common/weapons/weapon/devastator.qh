@@ -20,6 +20,9 @@ CLASS(Devastator, Weapon)
 /* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
 /* legacy    */ ATTRIB(Devastator, m_deprecated_netname, string, "rocketlauncher");
 
+#define ROCKET_MINS '-4 -4 -4' // 0.8.5 used '-3 -3 -3' (before sv_legacy_bbox_expand 0)
+#define ROCKET_MAXS '4 4 4'    // 0.8.5 used '3 3 3'    (before sv_legacy_bbox_expand 0)
+
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, NONE) \

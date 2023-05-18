@@ -165,7 +165,7 @@ void W_Nexball_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	PROJECTILE_MAKETRIGGER(missile);
 
 	//setmodel(missile, "models/elaser.mdl");  // precision set below
-	setsize(missile, '0 0 0', '0 0 0');
+	setsize(missile, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
 	setorigin(missile, w_shotorg);
 
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);

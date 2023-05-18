@@ -19,6 +19,13 @@ CLASS(Seeker, Weapon)
 /* refname   */ ATTRIB(Seeker, netname, string, "seeker");
 /* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
 
+#define MISSILE_MINS '-5 -5 -5' // 0.8.5 used '-4 -4 -4' (before sv_legacy_bbox_expand 0)
+#define MISSILE_MAXS '5 5 5'    // 0.8.5 used '4 4 4'    (before sv_legacy_bbox_expand 0)
+#define TAG_MINS     '-3 -3 -3' // 0.8.5 used '-2 -2 -2' (before sv_legacy_bbox_expand 0)
+#define TAG_MAXS     '3 3 3'    // 0.8.5 used '2 2 2'    (before sv_legacy_bbox_expand 0)
+#define FLAC_MINS    '-3 -3 -3' // 0.8.5 used '-2 -2 -2' (before sv_legacy_bbox_expand 0)
+#define FLAC_MAXS    '3 3 3'    // 0.8.5 used '2 2 2'    (before sv_legacy_bbox_expand 0)
+
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
     	P(class, prefix, flac_ammo, float, NONE) \

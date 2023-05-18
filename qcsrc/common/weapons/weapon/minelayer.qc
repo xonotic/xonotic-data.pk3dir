@@ -20,7 +20,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.realowner = this.realowner;
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
-	setsize(newmine, '-4 -4 -4', '4 4 4');
+	setsize(newmine, MINE_MINS, MINE_MAXS);
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newmine.movedir = -trace_plane_normal;
@@ -269,7 +269,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), thiswep.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, MINE_MINS, MINE_MAXS, false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity mine = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -295,7 +295,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	PROJECTILE_MAKETRIGGER(mine);
 	mine.projectiledeathtype = thiswep.m_id;
 	mine.weaponentity_fld = weaponentity;
-	setsize(mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
+	setsize(mine, MINE_MINS, MINE_MAXS);
 
 	setorigin(mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
 	W_SetupProjVelocity_Basic(mine, WEP_CVAR(minelayer, speed), 0);

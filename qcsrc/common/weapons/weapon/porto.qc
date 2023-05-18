@@ -298,10 +298,11 @@ void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float ty
 	gren.bot_dodgerating = 200;
 	set_movetype(gren, MOVETYPE_BOUNCEMISSILE);
 	PROJECTILE_MAKETRIGGER(gren);
+	gren.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 	gren.effects = EF_RED;
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 0', '0 0 0');
+	setsize(gren, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
 
 	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
 	setthink(gren, W_Porto_Think);
