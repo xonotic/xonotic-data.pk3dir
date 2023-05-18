@@ -4,17 +4,23 @@
 #include "nil.qh"
 #include "static.qh"
 
-.vector origin;
-
+// pure entities: not linked to the area grid
+// see: sv_areagrid_link_SOLID_NOT and cl_areagrid_link_SOLID_NOT
 .bool pure_data;
-#define is_pure(e) ((e).pure_data)
-/** @deprecated use new_pure or NEW(class) */
-#define make_pure(e) MACRO_BEGIN \
-	(e).pure_data = true; \
-MACRO_END
-#define make_impure(e) MACRO_BEGIN \
-	(e).pure_data = false; \
-MACRO_END
+
+#ifdef GAMEQC
+	/** direct use is @deprecated use new_pure or NEW(class) */
+	#define make_pure(e) \
+		(e).pure_data = true; \
+		(e).solid = SOLID_NOT;
+	#define is_pure(e) ((e).pure_data && (e).solid == SOLID_NOT)
+#else
+	#define make_pure(e) \
+		(e).pure_data = true;
+	#define is_pure(e) ((e).pure_data)
+#endif // GAMEQC
+#define make_impure(e) \
+	(e).pure_data = false;
 
 .string classname;
 /** Location entity was spawned from in source */
@@ -25,7 +31,6 @@ entity _spawn();
 #define SPAWN_PURE 0
 #endif
 
-// pure entities: need no .origin
 #if SPAWN_PURE
 entity spawn_pure() = #600;
 #else
@@ -56,9 +61,9 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	#define classfield(name) [[class(name)]]
 	#define _new(class, pure) ((class) __spawn(#class, __FILE__ ":" STR(__LINE__), pure))
 #endif
-/** entities you care about seeing (.origin works) */
+/** entities you care about collisions with */
 #define new(class) _new(class, false)
-/** purely logical entities (.origin doesn't work) */
+/** purely logical entities (not linked to the area grid) */
 #define new_pure(class) _new(class, true)
 #define spawn() __spawn("entity", __FILE__ ":" STR(__LINE__), false)
 
@@ -77,6 +82,13 @@ ACCUMULATE void ONREMOVE(entity this) {}
     /* this = NULL; */  \
 MACRO_END
 
+void IL_REMOVE_RAW(entity it);
+void copyentity_qc(entity src, entity dst)
+{
+	copyentity(src, dst); // builtin function
+	IL_REMOVE_RAW(dst);
+}
+
 entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
@@ -88,7 +100,7 @@ void clearentity(entity e)
 		int n = e.entnum;
 #endif
 	bool was_pure = is_pure(e);
-	copyentity(_clearentity_ent, e);
+	copyentity_qc(_clearentity_ent, e);
 	if (!was_pure) make_impure(e);
 #ifdef CSQC
 		e.entnum = n;
@@ -175,7 +187,7 @@ void clearentity(entity e)
 	{                                                                                              \
 		if (cname##_vtbl && !this.transmute)                                                       \
 		{                                                                                          \
-			copyentity(cname##_vtbl, this);                                                        \
+			copyentity_qc(cname##_vtbl, this);                                                     \
 			return;                                                                                \
 		}                                                                                          \
 		spawn##base##_static(this);                                                                \

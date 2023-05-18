@@ -601,13 +601,13 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
 	entity e = new(onslaught_controlpoint_icon);
 
+	e.solid = SOLID_NOT; // before setsize/setorigin to prevent area grid linking
 	setsize(e, CPICON_MIN, CPICON_MAX);
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
-	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);

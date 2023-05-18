@@ -40,11 +40,11 @@ void WarpZoneLib_ExactTrigger_Init(entity this)
 		}
  	}
 	setorigin(this, this.origin);
+	this.solid = SOLID_TRIGGER; // before setsize to ensure area grid linking
 	if(this.scale)
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else
 		setsize(this, this.mins, this.maxs);
 	set_movetype(this, MOVETYPE_NONE);
-	this.solid = SOLID_TRIGGER;
 	this.model = "";
 }

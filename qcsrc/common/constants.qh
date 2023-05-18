@@ -96,6 +96,9 @@ const int INITPRIO_DROPTOFLOOR 			= 20;
 const int INITPRIO_SETLOCATION 			= 90;
 const int INITPRIO_LINKDOORS 			= 91;
 const int INITPRIO_LAST 				= 99;
+
+// effects
+const int EF_SHOCK = 262144;
 #endif
 
 #if defined(SVQC)

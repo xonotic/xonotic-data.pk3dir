@@ -1188,7 +1188,11 @@ void ClientConnect(entity this)
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
 	if (player_count == 1)
+	{
+		if (autocvar_sv_autopause && server_is_dedicated)
+			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
+	}
 }
 /*
 =============

@@ -19,8 +19,6 @@ void StartItem(entity this, entity a);
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
 
-bool have_pickup_item(entity this);
-
 const float ITEM_RESPAWN_TICKS = 10;
 
 // string overrides entity

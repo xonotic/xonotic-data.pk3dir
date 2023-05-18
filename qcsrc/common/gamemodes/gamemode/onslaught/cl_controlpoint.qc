@@ -108,23 +108,22 @@ void cpicon_construct(entity this, bool isnew)
 {
 	this.netname = "Control Point Icon";
 
+	this.solid = SOLID_NOT; // before setmodel/setsize to prevent area grid linking
 	setmodel(this, MDL_ONS_CP);
 	setsize(this, CPICON_MIN, CPICON_MAX);
 
 	if(this.icon_realmodel == NULL)
 	{
 		this.icon_realmodel = new(cpicon_model);
+		this.icon_realmodel.solid = SOLID_NOT;
 		setmodel(this.icon_realmodel, MDL_Null);
 		setorigin(this.icon_realmodel, this.origin);
 		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);
 		set_movetype(this.icon_realmodel, MOVETYPE_NOCLIP);
-		this.icon_realmodel.solid = SOLID_NOT;
 	}
 
 	if(this.iscaptured) { this.icon_realmodel.solid = SOLID_BBOX; }
 
-	set_movetype(this, MOVETYPE_NOCLIP);
-	this.solid			= SOLID_NOT;
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.move_time		= time;
 	this.drawmask		= MASK_NORMAL;
