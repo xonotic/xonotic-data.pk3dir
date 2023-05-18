@@ -99,7 +99,7 @@ printf "%s\n" "$HASH" > progs.txt
 
 # find list of edited cfg files since last stable release
 # this doesn't handle deleted files and they will not be overridden. FIXME?
-EDITEDCFGS="$(git diff --name-status -w "$(git tag | tail -n 1)" | grep "\.cfg$" | cut -d "$(printf '\t')" -f 2)"
+EDITEDCFGS="$(git diff --name-status -w "$(git tag | sort -V | tail -n 1)" | grep "\.cfg$" | cut -d "$(printf '\t')" -f 2)"
 
 # try to include list of all changes in the package
 if [ "$BRANCH" = "headless" ]
