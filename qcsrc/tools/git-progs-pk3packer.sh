@@ -44,6 +44,16 @@
 
 
 
+# The pk3 is moved to Downloads directory for
+# easy sharing and house keeping. If the user
+# has set their xdg directories' DOWNLOAD dir
+# then it'll be respected. Second option is
+# ~/Downloads directory. If neither of those
+# exists then it's left in the current working
+# directory, the root of xonotic-data.pk3dir
+
+
+
 # abort on error(non-0 return code) and abort on unset variable
 set -eu
 
@@ -111,20 +121,20 @@ fi
 zip git-progspk3.zip csprogs.dat progs.dat menu.dat progs.txt "csprogs-$HASH.dat" "progs-$HASH.dat" $EDITEDCFGS changes.diff
 
 # Move the package to Downloads directory for easy sharing and house keeping
-if [ "$(xdg-user-dir DOWNLOAD)" != "$HOME" ]
+if [ "$(xdg-user-dir DOWNLOAD)" != "$HOME" ] && [ -d "$(xdg-user-dir DOWNLOAD)" ]
 then
 	mv -v "$PWD/git-progspk3.zip" "$(xdg-user-dir DOWNLOAD)/git-progs-$BRANCH-$HASH.pk3"
 	printf "\n%s\n%s\n\n" "Packaged progs based on $BRANCH's $HASH commit" \
 		"and moved them to $(xdg-user-dir DOWNLOAD)/git-progs-$BRANCH-$HASH.pk3"
 
-elif [ -d ~/Downloads ]
+elif [ -d "$HOME/Downloads" ]
 then
 	mv -v "$PWD/git-progspk3.zip" "$HOME/Downloads/git-progs-$BRANCH-$HASH.pk3"
 	printf "\n%s\n%s\n\n" "Packaged progs based on $BRANCH's $HASH commit" \
 		"and moved them to ~/Downloads/git-progs-$BRANCH-$HASH.pk3"
 
 else
-	mv -v "$PWD/git-progspk3.zip" "$PWD/git-progs-$BRANCH-$HASH.pk3"
+	mv -v "git-progspk3.zip" "git-progs-$BRANCH-$HASH.pk3"
 	printf "\n%s\n%s\n%s\n\n" "Packaged progs based on $BRANCH's $HASH commit" \
 		"but could not move it out to Downloads dir" \
 		"git-progs-$BRANCH-$HASH.pk3 resides in $PWD"
