@@ -864,7 +864,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 			{
 				fl = teamscores_flags(i);
 				sc = sk.(teamscores(i));
-				s = strcat(s, " ", Score_NicePrint_ItemColor(fl), ScoreString(fl, sc));
+				s = strcat(s, " ", Score_NicePrint_ItemColor(fl), ScoreString(fl, sc, 0));
 			}
 	}
 	else
@@ -912,7 +912,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 		{
 			fl = scores_flags(it);
 			sc = sk.(scores(it));
-			s = strcat(s, " ", Score_NicePrint_ItemColor(fl), strpad(-w, ScoreString(fl, sc)));
+			s = strcat(s, " ", Score_NicePrint_ItemColor(fl), strpad(-w, ScoreString(fl, sc, 0)));
 		}
     });
 

@@ -247,13 +247,13 @@ void ka_SpawnBall()
 {
 	entity e = new(keepawayball);
 	setmodel(e, MDL_KA_BALL);
+	e.solid = SOLID_TRIGGER; // before setsize to ensure area grid linking
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
 	e.event_damage = ka_DamageEvent;
 	e.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, e);
-	e.solid = SOLID_TRIGGER;
 	set_movetype(e, MOVETYPE_BOUNCE);
 	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = true;

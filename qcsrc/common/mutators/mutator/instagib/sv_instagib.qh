@@ -27,14 +27,9 @@ float autocvar_g_rm_laser_force;
 bool autocvar_g_instagib;
 int autocvar_g_instagib_extralives;
 
-/// \brief Time of invisibility powerup in seconds.
 float autocvar_g_instagib_invisibility_time;
-/// \brief Time of speed powerup in seconds.
 float autocvar_g_instagib_speed_time;
 
-void instagib_invisibility(entity this);
-void instagib_extralife(entity this);
-void instagib_speed(entity this);
 IntrusiveList g_instagib_items;
 
 REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !MapInfo_LoadedGametype.m_weaponarena)

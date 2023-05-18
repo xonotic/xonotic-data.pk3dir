@@ -73,7 +73,7 @@ noref string __fullspawndata;
     void __spawnfunc_spawn(entity prototype)
     {
         entity e = new(clone);
-        copyentity(prototype, e);
+        copyentity_qc(prototype, e);
         IL_PUSH(g_map_entities, e);
         #define X(T, fld, def) { e.fld = e.__spawnfunc_##fld; e.__spawnfunc_##fld = def; }
         SPAWNFUNC_INTERNAL_FIELDS(X);

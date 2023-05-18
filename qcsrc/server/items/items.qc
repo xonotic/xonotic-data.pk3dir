@@ -932,6 +932,8 @@ void item_use(entity this, entity actor, entity trigger)
 	gettouch(this)(this, actor);
 }
 
+// if defaultrespawntime is 0 get respawntime from the item definition
+// if defaultrespawntimejitter is 0 get respawntimejitter from the item definition
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
 {
 	string itemname = def.m_name;
@@ -948,12 +950,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(def.m_iteminit)
 		def.m_iteminit(def, this);
-
-	if(!this.respawntime) // both need to be set
-	{
-		this.respawntime = defaultrespawntime;
-		this.respawntimejitter = defaultrespawntimejitter;
-	}
 
 	if(!this.pickup_anyway && def.m_pickupanyway)
 		this.pickup_anyway = def.m_pickupanyway();
@@ -981,9 +977,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		delete(this);
 		return;
 	}
-
-	precache_model(this.model);
-	precache_sound(this.item_pickupsound);
 
 	if (Item_IsLoot(this))
 	{
@@ -1017,11 +1010,19 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 	else
 	{
+		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
 			delete(this);
 			return;
+		}
+
+		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may have null func ptrs)
+		if(!this.respawntime) // both need to be set
+		{
+			this.respawntime = defaultrespawntime ? defaultrespawntime : def.m_respawntime();
+			this.respawntimejitter = defaultrespawntimejitter ? defaultrespawntimejitter : def.m_respawntimejitter();
 		}
 
 		if(this.angles != '0 0 0')
@@ -1161,6 +1162,10 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
+	// we should be sure this item will spawn before loading its assets
+	precache_model(this.model);
+	precache_sound(this.item_pickupsound);
+
 	setItemGroup(this);
 }
 
@@ -1170,12 +1175,8 @@ void StartItem(entity this, GameItem def)
 
 	this.classname = def.m_canonical_spawnfunc;
 
-	_StartItem(
-		this,
-		this.itemdef = def,
-		def.m_respawntime(), // defaultrespawntime
-		def.m_respawntimejitter() // defaultrespawntimejitter
-	);
+	this.itemdef = def;
+	_StartItem(this, this.itemdef, 0, 0);
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))

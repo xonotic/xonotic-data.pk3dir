@@ -96,7 +96,7 @@ const float TIME_FACTOR = 100;
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
 #ifdef GAMEQC
-string ScoreString(float vflags, float value);
+string ScoreString(float vflags, float value, int rounds_played);
 #endif
 
 vector decompressShortVector(float data);

@@ -412,6 +412,8 @@ void ApplyMinMaxScaleAngles(entity e)
 
 void SetBrushEntityModel(entity this, bool with_lod)
 {
+	// Ensure .solid is set correctly before calling this (for area grid linking/unlinking)
+
 	if(this.model != "")
 	{
 		precache_model(this.model);
