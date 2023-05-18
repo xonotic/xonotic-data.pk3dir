@@ -40,17 +40,18 @@
 # changes.diff which tries to list all code changes
 #     since common ancestor with master branch.
 #
-# All .cfg files which have been edited.
+# All .cfg files which have been edited
+#     since the last stable release.
 
 
 
-# The pk3 is moved to Downloads directory for
-# easy sharing and house keeping. If the user
-# has set their xdg directories' DOWNLOAD dir
-# then it'll be respected. Second option is
-# ~/Downloads directory. If neither of those
-# exists then it's left in the current working
-# directory, the root of xonotic-data.pk3dir
+# The pk3 is moved to Downloads directory for easy
+#     sharing and house keeping. If the user has set
+#     their xdg directories' DOWNLOAD dir then it'll
+#     be respected. Second option is ~/Downloads
+#     directory. If neither of those exists then
+#     it's left in the script's current working
+#     directory, the root of xonotic-data.pk3dir
 
 
 
@@ -96,11 +97,9 @@ cp -v "$PWD/csprogs.dat" "csprogs-$HASH.dat"
 cp -v "$PWD/progs.dat" "progs-$HASH.dat"
 printf "%s\n" "$HASH" > progs.txt
 
-# find list of edited cfg files
-# changes of this branch from master
-EDITEDCFGS="$(git diff --name-status master...HEAD | grep "\.cfg$" | cut -d "$(printf '\t')" -f 2)"
-# include configs which have been outdated by a change in master
-EDITEDCFGS="$EDITEDCFGS $(git diff --name-status HEAD...master | grep "\.cfg$" | cut -d "$(printf '\t')" -f 2)"
+# find list of edited cfg files since last stable release
+# this doesn't handle deleted files and they will not be overridden. FIXME?
+EDITEDCFGS="$(git diff --name-status -w "$(git tag | tail -n 1)" | grep "\.cfg$" | cut -d "$(printf '\t')" -f 2)"
 
 # try to include list of all changes in the package
 if [ "$BRANCH" = "headless" ]
