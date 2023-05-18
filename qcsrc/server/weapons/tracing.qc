@@ -354,8 +354,6 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-
-
 void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float falloff_halflife, float falloff_mindist, float falloff_maxdist, float headshot_multiplier, float force, float falloff_forcehalflife, float dtype, entity tracer_effect, bool do_antilag)
 {
 	dir = normalize(dir + randomvec() * spread);
