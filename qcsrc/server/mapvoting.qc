@@ -473,7 +473,7 @@ bool MapVote_Finished(int mappos)
 	{
 		if ( GameTypeVote_Finished(mappos) )
 		{
-			gametypevote = false;
+			gametypevote = 0;
 			if(autocvar_nextmap != "")
 			{
 				Map_Goto_SetStr(autocvar_nextmap);
@@ -536,14 +536,14 @@ bool MapVote_CheckRules_2()
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
 			RandomSelection_AddFloat(i, 1, mapvote_selections[i]);
-			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
+			if ( gametypevote && mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
 			{
 				currentVotes = mapvote_selections[i];
 				currentPlace = i;
 			}
 		}
 	firstPlaceVotes = RandomSelection_best_priority;
-	if ( autocvar_sv_vote_gametype_default_current && firstPlaceVotes == 0 )
+	if (gametypevote && autocvar_sv_vote_gametype_default_current && firstPlaceVotes == 0)
 		firstPlace = currentPlace;
 	else
 		firstPlace = RandomSelection_chosen_float;
@@ -564,8 +564,12 @@ bool MapVote_CheckRules_2()
 	if(firstPlace == -1)
 		error("No first place in map vote... WTF?");
 
-	if(secondPlace == -1 || time > mapvote_timeout || (mapvote_voters_real - firstPlaceVotes) < firstPlaceVotes)
+	if(secondPlace == -1 || time > mapvote_timeout
+		|| (mapvote_voters_real - firstPlaceVotes) < firstPlaceVotes
+		|| mapvote_selections[mapvote_count - 1] == mapvote_voters)
+	{
 		return MapVote_Finished(firstPlace);
+	}
 
 	if(mapvote_keeptwotime)
 		if(time > mapvote_keeptwotime || (mapvote_voters_real - firstPlaceVotes - secondPlaceVotes) < secondPlaceVotes)
