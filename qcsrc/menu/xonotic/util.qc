@@ -453,7 +453,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
 
-string(string filename) whichpack = #503;
 void updateCheck()
 {
 	if(!_Nex_ExtResponseSystem_Queried)
