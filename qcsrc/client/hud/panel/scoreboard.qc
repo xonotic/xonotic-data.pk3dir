@@ -982,18 +982,18 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
-int autocvar_hud_panel_scoreboard_ping_best_milliseconds = 0;
-int autocvar_hud_panel_scoreboard_ping_medium_milliseconds = 70;
-int autocvar_hud_panel_scoreboard_ping_high_milliseconds = 100;
-int autocvar_hud_panel_scoreboard_ping_worst_milliseconds = 150;
+int autocvar_hud_panel_scoreboard_ping_best = 0;
+int autocvar_hud_panel_scoreboard_ping_medium = 70;
+int autocvar_hud_panel_scoreboard_ping_high = 100;
+int autocvar_hud_panel_scoreboard_ping_worst = 150;
 vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
 vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
 vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
 vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
-#define PING_BEST autocvar_hud_panel_scoreboard_ping_best_milliseconds
-#define PING_MED autocvar_hud_panel_scoreboard_ping_medium_milliseconds
-#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high_milliseconds
-#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst_milliseconds
+#define PING_BEST autocvar_hud_panel_scoreboard_ping_best
+#define PING_MED autocvar_hud_panel_scoreboard_ping_medium
+#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
+#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst
 #define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
 #define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
 #define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
