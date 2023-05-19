@@ -366,13 +366,13 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 		if ( gametypevote )
 		{
 			// gametype vote
-			WriteByte(MSG_ENTITY, 1);
+			WriteByte(MSG_ENTITY, BIT(0)); // gametypevote_flags
 			WriteString(MSG_ENTITY, autocvar_nextmap);
 		}
 		else if ( autocvar_sv_vote_gametype )
 		{
 			// map vote but gametype has been chosen via voting screen
-			WriteByte(MSG_ENTITY, 2);
+			WriteByte(MSG_ENTITY, BIT(1)); // gametypevote_flags
 			WriteString(MSG_ENTITY, MapInfo_Type_ToText(MapInfo_CurrentGametype()));
 		}
 		else
@@ -473,7 +473,7 @@ bool MapVote_Finished(int mappos)
 	{
 		if ( GameTypeVote_Finished(mappos) )
 		{
-			gametypevote = 0;
+			gametypevote = false;
 			if(autocvar_nextmap != "")
 			{
 				Map_Goto_SetStr(autocvar_nextmap);
@@ -829,7 +829,7 @@ bool GameTypeVote_Start()
 
 	mapvote_count_real = mapvote_count;
 
-	gametypevote = 1;
+	gametypevote = true;
 
 	if ( really_available == 0 )
 	{
