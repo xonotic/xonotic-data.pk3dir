@@ -982,6 +982,22 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
+int autocvar_hud_panel_scoreboard_ping_best_milliseconds = 0;
+int autocvar_hud_panel_scoreboard_ping_medium_milliseconds = 70;
+int autocvar_hud_panel_scoreboard_ping_high_milliseconds = 100;
+int autocvar_hud_panel_scoreboard_ping_worst_milliseconds = 150;
+vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
+vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
+vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
+vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
+#define PING_BEST autocvar_hud_panel_scoreboard_ping_best_milliseconds
+#define PING_MED autocvar_hud_panel_scoreboard_ping_medium_milliseconds
+#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high_milliseconds
+#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst_milliseconds
+#define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
+#define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
+#define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
+#define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1006,8 +1022,16 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
-			tmp = max(0, min(220, f-80)) / 220;
-			sbt_field_rgb = '1 1 1' - '0 1 1' * tmp;
+			if(f < PING_BEST)
+				sbt_field_rgb = COLOR_BEST;
+			else if(f < PING_MED)
+				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+			else if(f < PING_HIGH)
+				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
+			else if(f < PING_WORST)
+				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
+			else
+				sbt_field_rgb = COLOR_WORST;
 			return ftos(f);
 
 		case SP_PL:
