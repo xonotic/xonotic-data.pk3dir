@@ -935,7 +935,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 	return false;
 }
 
-#if defined(CSQC) || defined(MENUQC)
+#if defined(CSQC)
 string(string filename) whichpack = #503;
 #endif
 string _MapInfo_CheckArenaFile(string pFilename, string pMapname)
