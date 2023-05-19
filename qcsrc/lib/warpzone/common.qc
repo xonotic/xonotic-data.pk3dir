@@ -124,8 +124,10 @@ float WarpZoneLib_BoxTouchesBrush_Recurse(vector mi, vector ma, entity e, entity
 	se = trace_ent;
 	s = se.solid;
 	se.solid = SOLID_NOT;
+	setorigin(se, se.origin); // unlink
 	f = WarpZoneLib_BoxTouchesBrush_Recurse(mi, ma, e, ig);
 	se.solid = s;
+	setorigin(se, se.origin); // relink
 
 	return f;
 }
@@ -146,9 +148,17 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 		ig.dphitcontentsmask |= 128;
 
 	s = e.solid;
-	e.solid = SOLID_BSP;
+	if (e.solid != SOLID_BSP)
+	{
+		e.solid = SOLID_BSP;
+		setorigin(e, e.origin); // update linking
+	}
 	f = WarpZoneLib_BoxTouchesBrush_Recurse(mi, ma, e, ig);
-	e.solid = s;
+	if (e.solid != s) // if we needed to change .solid temporarily
+	{
+		e.solid = s; // restore it
+		setorigin(e, e.origin); // update linking
+	}
 
 	if (Q3COMPAT_COMMON && ig != world)
 		ig.dphitcontentsmask &= ~128;
