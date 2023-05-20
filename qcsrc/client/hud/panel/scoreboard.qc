@@ -2322,9 +2322,9 @@ void Scoreboard_Draw()
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
-			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), translate_key("SPACE"));
 		else
-			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), translate_key("SPACE"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
