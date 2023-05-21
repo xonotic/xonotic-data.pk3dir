@@ -808,19 +808,23 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	return e;
 }
 
-bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
+bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc)
 {
 	vector emin = toucher.absmin, emax = toucher.absmax;
-	if(STAT(Q3COMPAT))
+	if (!Q3COMPAT_COMMON)
 	{
-		// DP's tracebox enlarges absolute bounding boxes by a single quake unit
-		// we must undo that here to allow accurate touching
-		emin += '1 1 1';
-		emax -= '1 1 1';
+		// Xonotic and Nexuiz maps assume triggers will be activated by adjacent players
+		// prior to sv_legacy_bbox_expand 0 DP always did this for SVQC and never for CSQC
+		emin -= '1 1 1';
+		emax += '1 1 1';
 	}
-	return !WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
-}
 
+	// if called from a touch func, we can assume the boxes do overlap
+	if (!touchfunc && !boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+		return false;
+
+	return WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher); // accurate
+}
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {

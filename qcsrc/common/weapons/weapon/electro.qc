@@ -221,8 +221,8 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(
 		actor,
 		weaponentity,
-		'0 0 -3',
-		'0 0 -3',
+		BOLT_MINS,
+		BOLT_MAXS,
 		false,
 		2,
 		SND_ELECTRO_FIRE,
@@ -242,6 +242,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.nextthink = time;
 	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
+	proj.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 	proj.projectiledeathtype = thiswep.m_id;
 	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
@@ -251,7 +252,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_Electro_TouchExplode);
-	setsize(proj, '0 0 -3', '0 0 -3');
+	setsize(proj, BOLT_MINS, BOLT_MAXS);
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
@@ -422,8 +423,8 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(
 		actor,
 		weaponentity,
-		'-4 -4 -4',
-		'4 4 4',
+		ORB_MINS,
+		ORB_MAXS,
 		false,
 		2,
 		SND_ELECTRO_FIRE2,
@@ -454,7 +455,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_UP_SEC(proj, electro);
 	settouch(proj, W_Electro_Orb_Touch);
-	setsize(proj, '-4 -4 -4', '4 4 4');
+	setsize(proj, ORB_MINS, ORB_MAXS);
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_SEC(electro, damageforcescale);
 	SetResourceExplicit(proj, RES_HEALTH, WEP_CVAR_SEC(electro, health));

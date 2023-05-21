@@ -3,8 +3,6 @@
 #include "pickup.qh"
 CLASS(Armor, Pickup)
 #ifdef SVQC
-    ATTRIB(Armor, m_mins, vector, '-16 -16 0');
-    ATTRIB(Armor, m_maxs, vector, '16 16 48');
     ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
     ATTRIB(Armor, m_botvalue, int, 5000);
 #endif
@@ -46,6 +44,8 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     	this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
 #endif
 #ifdef SVQC
+    this.m_mins                 =   ITEM_S_MINS;
+    this.m_maxs                 =   ITEM_S_MAXS;
     this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
@@ -88,6 +88,8 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     	this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
 #endif
 #ifdef SVQC
+    this.m_mins                 =   ITEM_S_MINS;
+    this.m_maxs                 =   ITEM_S_MAXS;
     this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
@@ -177,7 +179,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_waypoint             =   _("Mega armor");
     this.m_waypointblink        =   2;
 #ifdef SVQC
-    this.m_maxs                 =   '16 16 70';
+    this.m_maxs                 =   ITEM_L_MAXS;
     this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);

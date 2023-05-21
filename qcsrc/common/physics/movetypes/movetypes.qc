@@ -515,44 +515,11 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 {
 	if(autocvar__movetype_debug)
 	{
-		vector mi, ma;
-		if(this.solid == SOLID_BSP)
-		{
-			// TODO set the absolute bbox
-			mi = this.mins;
-			ma = this.maxs;
-		}
-		else
-		{
-			mi = this.mins;
-			ma = this.maxs;
-		}
-		mi += this.origin;
-		ma += this.origin;
-
-		if(this.flags & FL_ITEM)
-		{
-			mi -= '15 15 1';
-			ma += '15 15 1';
-		}
-		else
-		{
-			mi -= '1 1 1';
-			ma += '1 1 1';
-		}
-
-		this.absmin = mi;
-		this.absmax = ma;
+		this.absmin = this.origin + this.mins;
+		this.absmax = this.origin + this.maxs;
 	}
 	else
-	{
 		setorigin(this, this.origin); // calls SV_LinkEdict
-	#ifdef CSQC
-		// NOTE: CSQC's version of setorigin doesn't expand
-		this.absmin -= '1 1 1';
-		this.absmax += '1 1 1';
-	#endif
-	}
 
 	if(touch_triggers)
 		_Movetype_LinkEdict_TouchAreaGrid(this);

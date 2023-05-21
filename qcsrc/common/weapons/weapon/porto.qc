@@ -118,7 +118,8 @@ void W_Porto_Fail(entity this, float failhard)
 
 	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
-		setsize(this, '-16 -16 0', '16 16 48');
+		// FIXME: item properties should be obtained from the registry
+		setsize(this, ITEM_D_MINS, ITEM_D_MAXS);
 		setorigin(this, this.origin + trace_plane_normal);
 		if(move_out_of_solid(this))
 		{
@@ -297,10 +298,11 @@ void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float ty
 	gren.bot_dodgerating = 200;
 	set_movetype(gren, MOVETYPE_BOUNCEMISSILE);
 	PROJECTILE_MAKETRIGGER(gren);
+	gren.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 	gren.effects = EF_RED;
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 0', '0 0 0');
+	setsize(gren, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
 
 	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
 	setthink(gren, W_Porto_Think);

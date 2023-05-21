@@ -297,7 +297,7 @@ void dom_controlpoint_setup(entity this)
 	if(!this.flags & FL_ITEM)
 		IL_PUSH(g_items, this);
 	this.flags = FL_ITEM;
-	setsize(this, '-32 -32 -32', '32 32 32');
+	setsize(this, '-48 -48 -32', '48 48 32'); // 0.8.5 used '-32 -32 -32', '32 32 32' with sv_legacy_bbox_expand 1
 	setorigin(this, this.origin + '0 0 20');
 	droptofloor(this);
 

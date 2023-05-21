@@ -370,7 +370,7 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	vector vs = hook_shotorigin[s];
 	vector oldmovedir = actor.(weaponentity).movedir;
 	actor.(weaponentity).movedir = vs;
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', true, 0, SND_HOOK_FIRE, CH_WEAPON_B, 0, WEP_HOOK.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, HOOK_MINS, HOOK_MAXS, true, 0, SND_HOOK_FIRE, CH_WEAPON_B, 0, WEP_HOOK.m_id);
 	W_MuzzleFlash(WEP_HOOK, actor, weaponentity, w_shotorg, '0 0 0');
 	actor.(weaponentity).movedir = oldmovedir;
 
@@ -388,7 +388,7 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	PROJECTILE_MAKETRIGGER(missile);
 
 	//setmodel (missile, MDL_HOOK); // precision set below
-	setsize (missile, '-3 -3 -3', '3 3 3');
+	setsize (missile, HOOK_MINS, HOOK_MAXS);
 	setorigin(missile, w_shotorg);
 
 	missile.state = 0; // not latched onto anything

@@ -57,9 +57,10 @@ void W_Blaster_Attack(
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
 	PROJECTILE_MAKETRIGGER(missile);
+	missile.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 
 	setorigin(missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
+	setsize(missile, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
 
 	float atk_speed = WEP_CVAR_BOTH(blaster, isprimary, speed);
 	float atk_spread = WEP_CVAR_BOTH(blaster, isprimary, spread);

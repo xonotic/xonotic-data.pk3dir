@@ -194,7 +194,7 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 	int laser_count = max(1, autocvar_g_rm_laser_count);
 	int total = (mode == 0) ? laser_count : 1;
 	Sound snd = (mode == 0) ? SND_CRYLINK_FIRE : SND_ELECTRO_FIRE2;
-	W_SetupShot_ProjectileSize(actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, snd, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, RM_MINS, RM_MAXS, false, 2, snd, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
 	// uses electro effects
 	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
@@ -230,7 +230,7 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 		proj.velocity = W_CalculateProjectileVelocity(actor, actor.velocity, proj.velocity, true);
 		proj.angles = vectoangles(proj.velocity);
 		settouch(proj, W_RocketMinsta_Laser_Touch);
-		setsize(proj, '0 0 -3', '0 0 -3');
+		setsize(proj, RM_MINS, RM_MAXS);
 		proj.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, proj);
 		IL_PUSH(g_bot_dodge, proj);

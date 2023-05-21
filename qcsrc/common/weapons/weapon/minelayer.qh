@@ -19,6 +19,9 @@ CLASS(MineLayer, Weapon)
 /* refname   */ ATTRIB(MineLayer, netname, string, "minelayer");
 /* wepname   */ ATTRIB(MineLayer, m_name, string, _("Mine Layer"));
 
+#define MINE_MINS '-5 -5 -5' // 0.8.5 used '-4 -4 -4' (before sv_legacy_bbox_expand 0)
+#define MINE_MAXS '5 5 5'    // 0.8.5 used '4 4 4'    (before sv_legacy_bbox_expand 0)
+
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, NONE) \
