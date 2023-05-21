@@ -1,10 +1,9 @@
 /*
-Generated framegroups file for h_uzi
+Generated framegroups file for h_ok_hmg
 Used by DarkPlaces to simulate frame groups in DPM models.
 */
 
-1 11 120 0 // h_uzi mgafire
-12 11 120 0 // h_uzi mgafire
-23 51 2 1 // h_uzi mgaidle
-74 11 30 0 // h_uzi mgafire
-85 11 30 0 // h_uzi mgafire
+1 11 120 0 // h_ok_hmg fire
+12 11 120 0 // h_ok_hmg fire
+23 52 2 1 // h_ok_hmg idle
+75 11 30 0 // h_ok_hmg fire

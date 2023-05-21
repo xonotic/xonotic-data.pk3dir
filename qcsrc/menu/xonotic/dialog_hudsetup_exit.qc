@@ -118,10 +118,8 @@ void XonoticHUDExitDialog_fill(entity me)
 					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Grid settings:")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_configure_grid", _("Snap panels to grid")));
+		me.TD(me, 1, 1.4, makeXonoticTextLabel(0, _("Grid settings:")));
+		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "hud_configure_grid", _("Snap panels to grid")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Grid size:")));
@@ -140,6 +138,11 @@ void XonoticHUDExitDialog_fill(entity me)
 					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
 				e.configureXonoticTextSliderValues(e);
 				setDependent(e, "hud_configure_grid", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		string vertical_lines_cvarname = "hud_configure_vertical_lines";
+		me.TD(me, 1, 3.6, e = makeXonoticCheckBoxEx_T(0.5, 0, vertical_lines_cvarname, _("Center line"),
+			sprintf(_("Show a vertical centerline to help align panels. It's possible to show more vertical lines by editing %s in the console"), vertical_lines_cvarname)));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Exit setup"), '0 0 0', "_hud_configure 0", COMMANDBUTTON_CLOSE));

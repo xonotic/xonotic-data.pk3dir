@@ -401,6 +401,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	GameRules_scoring_vip(player, true);
 
 	// reset flag
+	flag.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -414,7 +415,6 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	}
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
-	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
@@ -467,11 +467,11 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	// reset the flag
 	setattachment(flag, NULL, "");
 	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, trace_endpos);
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
-	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
 	flag.ctf_landtime = 0;
@@ -689,6 +689,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	flag.owner = player;
 	player.flagcarried = flag;
 	GameRules_scoring_vip(player, true);
+	flag.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -704,7 +705,6 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	// flag setup
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
-	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
@@ -1160,15 +1160,9 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 }
 
-.float last_respawn;
 void ctf_RespawnFlag(entity flag)
 {
 	flag.watertype = CONTENT_EMPTY; // TODO: it is unclear why this workaround is needed, likely many other potential breakage points!!
-	// check for flag respawn being called twice in a row
-	if(flag.last_respawn > time - 0.5)
-		{ backtrace("flag respawn called twice quickly! please notify Samual about this..."); }
-
-	flag.last_respawn = time;
 
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
@@ -1192,13 +1186,13 @@ void ctf_RespawnFlag(entity flag)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
+	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, flag.ctf_spawnorigin);
 
 	//set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS)); // would be desired, except maps that want floating flags have it set to fall!
 	set_movetype(flag, MOVETYPE_NONE); // match the initial setup handling (flag doesn't move when spawned)
 	flag.takedamage = DAMAGE_NO;
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
-	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
 	flag.flags = FL_ITEM | FL_NOTARGET;
