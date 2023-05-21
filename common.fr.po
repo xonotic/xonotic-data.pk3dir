@@ -863,11 +863,11 @@ msgstr "manches gagnées"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Nombre de manches jouées"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "manches jouées"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^score"

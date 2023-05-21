@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Andrei Stepanov, 2014-2023\n"
+"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -861,11 +861,11 @@ msgstr "раундов для победы"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Число сыгранных раундов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "раундов сыграно"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^score"
@@ -1413,11 +1413,11 @@ msgstr "Таймер гранаты"
 
 #: qcsrc/client/view.qc:888
 msgid "Capture progress"
-msgstr "Прогресс захвата"
+msgstr "Захватывание"
 
 #: qcsrc/client/view.qc:893
 msgid "Revival progress"
-msgstr "Прогресс оживления"
+msgstr "Оживление"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
@@ -10396,8 +10396,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
-"Изменение резкости текстур. Снижение повысит эффективность расхода памяти, "
-"но сделает текстуры размытыми."
+"Изменение резкости текстур. Снижение улучшит расход памяти, но сделает "
+"текстуры размытыми."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:131
 msgid "Screen resolution"
@@ -10417,7 +10417,7 @@ msgstr "Быстро"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr "Моментально"
+msgstr "Мгновенно"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"

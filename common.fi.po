@@ -15,6 +15,7 @@
 # LINUX-SAUNA, 2022
 # LINUX-SAUNA, 2022
 # LINUX-SAUNA, 2022
+# Oftox, 2023
 # Oi Suomi On! <oisuomion@protonmail.com>, 2020,2022-2023
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LINUX-SAUNA, 2022\n"
+"Last-Translator: Oftox, 2023\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -252,7 +253,7 @@ msgstr "Pelaaja %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Standardi pikavalikko"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -519,19 +520,19 @@ msgstr "QMCMD^Sekoita joukkueet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Palvelimen pikavalikko"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Välietapin muokkausvalikko"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Välietapin muokkausvalikko oletuksena"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Palvelimen pikavalikko oletuksena"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -856,11 +857,11 @@ msgstr "SCO^voitetut kierrokset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Pelattujen kierrosten määrä"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "SCO^pelatut kierrokset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^score"
@@ -1584,15 +1585,16 @@ msgstr "Elämät:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"Kilpaile vahingon- ja tappojen määrästä tässä kaoottisessa sekasortossa!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Sekasorto"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Paljonko pisteitä tarvitaan ennen ottelun loppumista"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1655,10 +1657,12 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"Kilpaile joukkueesi kanssa vahingon- ja tappojen määrästä tässä kaoottisessa "
+"sekasortossa!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Joukkue Sekasorto"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -2259,7 +2263,7 @@ msgstr "Uudelleensyntymäsuoja"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "Tainnutettu"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -6624,7 +6628,7 @@ msgstr "Huomioi pystysuora nopeus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "Näytä nopeusyksikkö"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
@@ -6869,11 +6873,11 @@ msgstr "Ylikääntymä:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "Switch indicator:"
-msgstr ""
+msgstr "Vaihdon ilmaisin:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "Parhaan kulman ilmaisin:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
@@ -7080,7 +7084,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "Keskilinja"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7088,6 +7092,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"Näytä pystysuora keskilinja paneeleiden linjaamisen avuksi. Keskilinjojen "
+"määrää voidaan korottaa muokkaamalla %s komentorivillä."
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
@@ -7527,6 +7533,11 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Pelaajille annetaan vain yksittäinen ase, joka yhdellä osumalla tappaa "
+"vastustajan. Mikäli pelaajalta loppuvat ammukset, hänellä on 10 sekuntia "
+"aikaa löytää niitä. Ellei pelaaja löydä ammuksia ajallaan, hän kohtaa "
+"kuoleman. Toissijainen tulitus ei aiheuta yhtään vahinkoa, mutta voi koitua "
+"hyödylliseksi temppuhyppyjä varten."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
 msgid ""
@@ -10200,7 +10211,7 @@ msgstr "pikavalikko"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "Tulostaulukon käyttöliittymä"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"

@@ -855,11 +855,11 @@ msgstr "rodadas vencidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Número de rodadas jogadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "rodadas jogadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^score"

@@ -860,11 +860,11 @@ msgstr "贏局"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds played"
-msgstr ""
+msgstr "參與的競賽數"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "參局"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^score"

@@ -858,11 +858,11 @@ msgstr "赢局"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds played"
-msgstr ""
+msgstr "参与的竞赛数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "参局"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^score"
