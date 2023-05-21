@@ -401,6 +401,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	GameRules_scoring_vip(player, true);
 
 	// reset flag
+	flag.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -414,7 +415,6 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	}
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
-	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
@@ -467,11 +467,11 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	// reset the flag
 	setattachment(flag, NULL, "");
 	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, trace_endpos);
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
-	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
 	flag.ctf_landtime = 0;
@@ -689,6 +689,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	flag.owner = player;
 	player.flagcarried = flag;
 	GameRules_scoring_vip(player, true);
+	flag.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -704,7 +705,6 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	// flag setup
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
-	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
@@ -734,12 +734,9 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	if(flag.team)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(CTF_SAMETEAM(flag, it))
-			{
-				if(SAME_TEAM(player, it))
-					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
-				else
-					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
-			}
+				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
+			else if(DIFF_TEAM(player, it))
+				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_ENEMY_OTHER), Team_ColorCode(player.team), player.netname);
 		});
 
 	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
@@ -1118,7 +1115,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 					ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the neutral flag
 			}
 			else if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, flag) && is_not_monster)
-				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
+				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to their base
 			else if(CTF_DIFFTEAM(toucher, flag) && (toucher.flagcarried) && CTF_SAMETEAM(toucher.flagcarried, toucher) && (!toucher.ctf_captureshielded) && autocvar_g_ctf_flag_return_carrying && (time > toucher.next_take_time) && is_not_monster)
 			{
 				ctf_Handle_Return(toucher.flagcarried, toucher); // return their current flag
@@ -1132,7 +1129,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 		case FLAG_DROPPED:
 		{
 			if(CTF_SAMETEAM(toucher, flag) && ctf_Immediate_Return_Allowed(flag, toucher))
-				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
+				ctf_Handle_Return(flag, toucher); // toucher just returned their own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
 			break;
@@ -1163,15 +1160,9 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 }
 
-.float last_respawn;
 void ctf_RespawnFlag(entity flag)
 {
 	flag.watertype = CONTENT_EMPTY; // TODO: it is unclear why this workaround is needed, likely many other potential breakage points!!
-	// check for flag respawn being called twice in a row
-	if(flag.last_respawn > time - 0.5)
-		{ backtrace("flag respawn called twice quickly! please notify Samual about this..."); }
-
-	flag.last_respawn = time;
 
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
@@ -1195,13 +1186,13 @@ void ctf_RespawnFlag(entity flag)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
+	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, flag.ctf_spawnorigin);
 
 	//set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS)); // would be desired, except maps that want floating flags have it set to fall!
 	set_movetype(flag, MOVETYPE_NONE); // match the initial setup handling (flag doesn't move when spawned)
 	flag.takedamage = DAMAGE_NO;
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
-	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
 	flag.flags = FL_ITEM | FL_NOTARGET;
@@ -1308,6 +1299,11 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	setthink(flag, ctf_FlagThink);
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
+
+	// set correct team colors
+	flag.glowmod = Team_ColorRGB(teamnum);
+	flag.colormap = (teamnum) ? (teamnum - 1) * 0x11 : 0x00;
+	flag.colormap |= BIT(10); // RENDER_COLORMAPPED
 
 	// crudely force them all to 0
 	if(autocvar_g_ctf_score_ignore_fields)
@@ -1560,7 +1556,7 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 	{
 		if (head.ctf_status == FLAG_CARRY)
 		{
-			// adjust rating of our flag carrier depending on his health
+			// adjust rating of our flag carrier depending on their health
 			head = head.tag_entity;
 			float f = bound(0, (GetResource(head, RES_HEALTH) + GetResource(head, RES_ARMOR)) / 100, 2) - 1;
 			ratingscale += ratingscale * f * 0.1;

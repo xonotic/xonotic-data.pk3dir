@@ -274,11 +274,13 @@ void GenericCommand_maplist(int request, int argc)
 				{
 					if(argc == 3)
 					{
+						// save argv(2) from being overridden by tokenize engine call
+						string del_map_name = argv(2);
 						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 
 						tmp_string = "";
 						for(i = 0; i < argc; ++i)
-							if(argv(i) != argv(2))
+							if(argv(i) != del_map_name)
 								tmp_string = strcat(tmp_string, " ", argv(i));
 
 						tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);

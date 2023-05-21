@@ -112,7 +112,7 @@ int WinningCondition_LMS()
 			else
 			{
 				// a winner!
-				// and assign him his first place
+				// and assign them their first place
 				GameRules_scoring_add(first_player, LMS_RANK, 1);
 				first_player.winning = 1;
 				return WINNING_YES;
@@ -643,43 +643,36 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
-	if (autocvar_g_lms_items)
+	if (autocvar_g_lms_items || autocvar_g_pickup_items > 0)
 		return false;
 
-	entity definition = M_ARGV(0, entity);
-
-	if (autocvar_g_lms_extra_lives && definition == ITEM_ExtraLife)
-	{
+	entity def = M_ARGV(0, entity);
+	if (autocvar_g_powerups && autocvar_g_lms_extra_lives && (def == ITEM_ExtraLife || def == ITEM_HealthMega))
 		return false;
-	}
-	return (autocvar_g_pickup_items <= 0); // only allow items if explicitly enabled
-}
-
-void lms_extralife(entity this)
-{
-	StartItem(this, ITEM_ExtraLife);
-}
-
-MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
-{
-	if (MUTATOR_RETURNVALUE) return false;
-	if (!autocvar_g_powerups) return false;
-	if (!autocvar_g_lms_extra_lives) return false;
-
-	entity ent = M_ARGV(0, entity);
-
-	// Can't use .itemdef here
-	if (ent.classname != "item_health_mega") return false;
-
-	entity e = spawn();
-	setthink(e, lms_extralife);
-
-	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
 	return true;
+}
+
+void lms_replace_with_extralife(entity this)
+{
+	entity e = new(item_extralife);
+	Item_CopyFields(this, e);
+
+	StartItem(e, ITEM_ExtraLife);
+}
+
+MUTATOR_HOOKFUNCTION(lms, FilterItem)
+{
+	entity item = M_ARGV(0, entity);
+	entity def = item.itemdef;
+	if(def == ITEM_HealthMega && !(autocvar_g_lms_items || autocvar_g_pickup_items > 0))
+	{
+		if(autocvar_g_powerups && autocvar_g_lms_extra_lives)
+			lms_replace_with_extralife(item);
+		return true;
+	}
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
@@ -693,6 +686,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 	{
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_lms_extra_lives);
 		GameRules_scoring_add(toucher, LMS_LIVES, autocvar_g_lms_extra_lives);
+		Inventory_pickupitem(item.itemdef, toucher);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 

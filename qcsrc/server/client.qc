@@ -536,6 +536,19 @@ void FixPlayermodel(entity player)
 				setcolor(player, stof(autocvar_sv_defaultplayercolors));
 }
 
+void GiveWarmupResources(entity this)
+{
+	SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+	SetResource(this, RES_HEALTH, warmup_start_health);
+	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
+	STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
+}
+
 void PutPlayerInServer(entity this)
 {
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -578,17 +591,10 @@ void PutPlayerInServer(entity this)
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
-	if (warmup_stage) {
-		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
-		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
-		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
-		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
-		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
-		SetResource(this, RES_HEALTH, warmup_start_health);
-		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
-		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
-	} else {
+	if (warmup_stage)
+		GiveWarmupResources(this);
+	else
+	{
 		SetResource(this, RES_SHELLS, start_ammo_shells);
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
@@ -812,7 +818,7 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 
-	if (warmup_stage == -1)
+	if (warmup_stage < 0 || warmup_stage > 1)
 		ReadyCount();
 }
 
@@ -1042,7 +1048,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
-	WriteByte(msg_type, map_minplayers);
+	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);
 	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
@@ -1168,7 +1174,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = autocvar_sv_qcphysics;
+	this.move_qcphysics = true;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -1182,7 +1188,11 @@ void ClientConnect(entity this)
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
 	if (player_count == 1)
+	{
+		if (autocvar_sv_autopause && server_is_dedicated)
+			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
+	}
 }
 /*
 =============

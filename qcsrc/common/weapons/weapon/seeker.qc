@@ -635,8 +635,7 @@ METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_BOUNCE)
     {
         if(w_deathtype & HITTYPE_SECONDARY)

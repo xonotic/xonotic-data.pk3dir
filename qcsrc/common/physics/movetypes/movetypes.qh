@@ -4,7 +4,7 @@
 // undefined on client, engine cvar
 bool autocvar_physics_ode;
 
-int autocvar_sv_qcphysics = 1; // TODO this is for testing - remove when qcphysics work
+bool use_engine_physics; // debug option for testing legacy engine code
 #endif
 
 // water levels

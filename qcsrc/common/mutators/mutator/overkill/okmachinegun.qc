@@ -39,7 +39,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	if(autocvar_g_casings >= 2) // casing code
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), vectoangles(v_forward), 3, actor, weaponentity);
 	}
 
 	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(okmachinegun, refire) * W_WeaponRateFactor(actor);
@@ -58,7 +58,8 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
 		actor.jump_interval = time + WEP_CVAR_SEC(okmachinegun, refire) * W_WeaponRateFactor(actor);
-		BLASTER_SECONDARY_ATTACK(okmachinegun, actor, weaponentity);
+		makevectors(actor.v_angle);
+		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -95,7 +96,8 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 		{
 			return;
 		}
-		BLASTER_SECONDARY_ATTACK(okmachinegun, actor, weaponentity);
+		makevectors(actor.v_angle);
+		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(okmachinegun, animtime), w_ready);
 	}
 }
@@ -136,8 +138,7 @@ METHOD(OverkillMachineGun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(OverkillMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-	vector org2;
-	org2 = w_org + w_backoff * 2;
+	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);

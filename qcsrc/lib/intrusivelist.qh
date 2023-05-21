@@ -1,6 +1,7 @@
 #pragma once
 
 #include "iter.qh"
+#include "test.qh"
 
 /**
  * Maximum amount of creatable lists.
@@ -27,6 +28,7 @@ CLASS(IntrusiveList, Object)
 	ATTRIB(IntrusiveList, il_tail, entity);
 	ATTRIB(IntrusiveList, il_nextfld, .entity, nil);
 	ATTRIB(IntrusiveList, il_prevfld, .entity, nil);
+	ATTRIB(IntrusiveList, il_loop_item, entity, NULL);
 	INIT(IntrusiveList) { IL_INIT(this); }
 	DESTRUCTOR(IntrusiveList) { IL_DTOR(this); }
 ENDCLASS(IntrusiveList)
@@ -104,6 +106,9 @@ entity IL_POP(IntrusiveList this)
 	entity prev = it.(il_prev);
 	if (prev) (this.il_tail = prev).(il_next) = NULL;
 	else this.il_head = this.il_tail = NULL;
+	if (this.il_loop_item == it)
+		this.il_loop_item = NULL;
+	it.(il_prev) = NULL;
 	return it;
 }
 
@@ -122,6 +127,9 @@ entity IL_SHIFT(IntrusiveList this)
 	entity next = it.(il_next);
 	if (next) (this.il_head = next).(il_prev) = NULL;
 	else this.il_head = this.il_tail = NULL;
+	if (this.il_loop_item == it)
+		this.il_loop_item = it.(il_next);
+	it.(il_next) = NULL;
 	return it;
 }
 
@@ -142,6 +150,8 @@ void IL_REMOVE(IntrusiveList this, entity it)
 	next ? next.(il_prev) = prev : this.il_tail = prev;
 	prev ? prev.(il_next) = next : this.il_head = next;
 	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
+	if (this.il_loop_item == it)
+		this.il_loop_item = it.(il_next);
 	it.(il_next) = it.(il_prev) = NULL;
 }
 
@@ -150,11 +160,17 @@ void IL_REMOVE(IntrusiveList this, entity it)
  */
 #define IL_CLEAR(this) \
 	MACRO_BEGIN \
-		IntrusiveList __il = this; \
-		assert(__il); \
-		.entity il_prev = __il.il_prevfld; \
-		IL_EACH(__il, true, it.(il_next) = it.(il_prev) = NULL); \
-		__il.il_head = __il.il_tail = NULL; \
+		IntrusiveList _il = this; \
+		assert(_il); \
+		.entity il_prev = _il.il_prevfld; \
+		.entity il_next = _il.il_nextfld; \
+		noref int i = 0; \
+		for (entity _next, _it = _il.il_head; _it; (_it = _next, ++i)) \
+		{ \
+			_next = _it.(il_next); \
+			_it.(il_next) = _it.(il_prev) = NULL; \
+		} \
+		_il.il_head = _il.il_tail = NULL; \
 	MACRO_END
 
 /**
@@ -172,12 +188,20 @@ void IL_REMOVE(IntrusiveList this, entity it)
 		assert(_il); \
 		.entity il_next = _il.il_nextfld; \
 		noref int i = 0; \
+		entity il_loop_item_save = this.il_loop_item; \
+		this.il_loop_item = NULL; \
 		for (entity _next, _it = _il.il_head; _it; (_it = _next, ++i)) \
 		{ \
 			const noref entity it = _it; \
+			this.il_loop_item = it; \
 			_next = it.(il_next); \
 			if (cond) { LAMBDA(body) } \
+			if (this.il_loop_item != it) /* current item removed? */ \
+				_next = this.il_loop_item; \
+			else \
+				_next = it.(il_next); /* in case next item has changed */ \
 		} \
+		this.il_loop_item = il_loop_item_save; \
 	MACRO_END
 
 .int il_id;
@@ -246,6 +270,18 @@ void IL_ENDFRAME()
 #endif
 }
 
+// clears any IL data from an entity (not an intrusive list)
+// it should be used only in very particular cases such as after a copyentity call
+void IL_REMOVE_RAW(entity it)
+{
+	if (it.il_lists)
+	{
+		it.il_lists = '0 0 0';
+		for (int i = 0; i < IL_MAX * 2; ++i)
+			it.il_links_flds[i] = nil;
+	}
+}
+
 // called when an entity is deleted with delete() / remove()
 // or when a player disconnects
 void ONREMOVE(entity this)
@@ -260,4 +296,79 @@ void ONREMOVE(entity this)
 			}
 		}
 	}
+}
+
+
+#define IL_TEST_BUILD() s = il_test_build(il_test, ent1, ent2, ent3, ent4, ent5)
+
+string il_test_build(entity il_test, entity ent1, entity ent2, entity ent3, entity ent4, entity ent5)
+{
+	IL_CLEAR(il_test);
+	IL_PUSH(il_test, ent1);
+	IL_PUSH(il_test, ent2);
+	IL_PUSH(il_test, ent3);
+	IL_PUSH(il_test, ent4);
+	IL_PUSH(il_test, ent5);
+	return "";
+}
+
+TEST(intrusivelist, ModificationsWhileLooping)
+{
+	IntrusiveList il_test = IL_NEW();
+	entity ent1 = new(1), ent2 = new(2), ent3 = new(3), ent4 = new(4), ent5 = new(5);
+	string s;
+
+	IL_TEST_BUILD();
+	IL_EACH(il_test, true,
+	{
+		s = strcat(s, it.classname);
+		if (it == ent2) IL_REMOVE(il_test, ent3);
+		if (it == ent4) IL_PUSH(il_test, ent3);
+	});
+	EXPECT_TRUE(s == "12453");
+
+	IL_TEST_BUILD();
+	IL_EACH(il_test, true,
+	{
+		s = strcat(s, it.classname);
+		if (it == ent2) IL_REMOVE(il_test, ent2);
+		if (it == ent3) IL_REMOVE(il_test, ent3);
+		if (it == ent3) IL_REMOVE(il_test, ent4);
+		if (it == ent5) IL_POP(il_test);
+	});
+	EXPECT_TRUE(s == "1235");
+
+	IL_TEST_BUILD();
+	IL_REMOVE(il_test, ent5);
+	IL_EACH(il_test, true,
+	{
+		s = strcat(s, it.classname);
+		if (it == ent1) IL_SHIFT(il_test);
+		if (it == ent4) IL_POP(il_test);
+	});
+	EXPECT_TRUE(s == "1234");
+
+	IL_TEST_BUILD();
+	IL_EACH(il_test, true,
+	{
+		s = strcat(s, it.classname);
+		if (it == ent2)
+			IL_EACH(il_test, true,
+			{
+				s = strcat(s, it.classname);
+				if (it == ent3)
+					IL_EACH(il_test, true,
+					{
+						s = strcat(s, it.classname);
+					});
+				if (it == ent4)
+					break;
+			});
+	});
+	EXPECT_TRUE(s == "12123123454345");
+
+	IL_DELETE(il_test);
+	delete(ent1); delete(ent2); delete(ent3); delete(ent4); delete(ent5);
+
+	SUCCEED();
 }

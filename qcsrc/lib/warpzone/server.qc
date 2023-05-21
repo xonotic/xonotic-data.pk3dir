@@ -117,7 +117,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 			o1 = o1 - v1 * (d / dv);
 	}
 
-	// put him out of solid
+	// put them out of solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
@@ -809,8 +809,7 @@ void WarpZone_StartFrame()
 		if(warpzone_warpzones_exist)
 			WarpZone_StoreProjectileData(it); // TODO: not actually needed
 
-		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
-		if(IS_CLIENT(it)) // we don't care about it being a bot
+		if((IS_OBSERVER(it) || it.solid == SOLID_NOT))
 		{
 			// warpzones
 			if (warpzone_warpzones_exist) {

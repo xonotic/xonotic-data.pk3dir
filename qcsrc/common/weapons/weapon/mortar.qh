@@ -18,6 +18,7 @@ CLASS(Mortar, Weapon)
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weaponmortar");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
 /* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
+/* legacy    */ ATTRIB(Mortar, m_deprecated_netname, string, "grenadelauncher");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
