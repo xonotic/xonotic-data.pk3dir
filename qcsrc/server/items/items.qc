@@ -702,7 +702,10 @@ LABEL(pickup)
 	STAT(LAST_PICKUP, toucher) = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
+	GameItem def = this.itemdef;
+	int ch = ((def.instanceOfPowerup && def.m_itemid != IT_RESOURCE) ? CH_TRIGGER_SINGLE : CH_TRIGGER);
+	string snd = (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent));
+	_sound(toucher, ch, snd, VOL_BASE, ATTEN_NORM);
 
 	MUTATOR_CALLHOOK(ItemTouched, this, toucher);
 	if (wasfreed(this))
@@ -932,6 +935,8 @@ void item_use(entity this, entity actor, entity trigger)
 	gettouch(this)(this, actor);
 }
 
+// if defaultrespawntime is 0 get respawntime from the item definition
+// if defaultrespawntimejitter is 0 get respawntimejitter from the item definition
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
 {
 	string itemname = def.m_name;
@@ -1173,12 +1178,8 @@ void StartItem(entity this, GameItem def)
 
 	this.classname = def.m_canonical_spawnfunc;
 
-	_StartItem(
-		this,
-		this.itemdef = def,
-		0, // call def.m_respawntime() to get defaultrespawntime
-		0  // call def.m_respawntimejitter() to get defaultrespawntimejitter
-	);
+	this.itemdef = def;
+	_StartItem(this, this.itemdef, 0, 0);
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))

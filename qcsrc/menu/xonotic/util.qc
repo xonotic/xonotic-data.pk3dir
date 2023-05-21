@@ -393,10 +393,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 				APPEND_TO_STRING(un_bannedservers, " ", s);
 				break;
 			}
-			case "E":
+			case "H":
 			{
-				if(cvar("menu_updatecheck_getpacks"))
-					APPEND_TO_STRING(un_emergency_pk3s, " ", s);
+				// Hotfix (version-specific pk3 supported in >= 0.8.6)
+				// replaces "E" (missing-file-specific pk3 supported in <= 0.8.5)
+				APPEND_TO_STRING(un_emergency_pk3s, " ", s);
 				break;
 			}
 			case "P":
@@ -469,8 +470,16 @@ void updateCheck()
 		allgood = true;
 		for(i = 0; i+1 < n; i += 2)
 		{
-			if(fexists(argv(i+1)))
+			if(strcmp(argv(i+1), cvar_string("g_xonoticversion"))) // these aren't the versions we're looking for
 				continue;
+			string packfn = whichpack("hotfix-autoexec.cfg");
+			if(packfn) // we have the cfg we're looking for in some pk3
+			{
+				if(!strncmp(packfn, "dlcache/", 8)) // it's in dlcache
+					packfn = substring(packfn, 8, strlen(packfn)); // strip prefix "dlcache/"
+				if(strstrofs(argv(i), packfn, strlen(argv(i)) - strlen(packfn)) > 0) // last chars of url == packfn
+					continue; // the pk3 we're looking for already provides the cfg we're looking for
+			}
 			allgood = false;
 			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
 				localcmd("\ncurl --pak \"", argv(i), "\"\n");
@@ -482,14 +491,14 @@ void updateCheck()
 				if(!Menu_Active)
 					cvar_set("_menu_initialized", "0");
 					// HACK: cause m_hide call on next start
-				localcmd("\nmenu_restart\n");
+				//localcmd("\nmenu_restart\n"); // <= 0.8.5
+				localcmd("\nexec hotfix-autoexec.cfg\n");
 			}
 			_Nex_ExtResponseSystem_PacksStep = 0;
 		}
 		else
 			_Nex_ExtResponseSystem_PacksStep = 2;
 	}
-
 }
 
 float preMenuInit()

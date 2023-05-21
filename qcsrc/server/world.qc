@@ -166,11 +166,14 @@ void cvar_changes_init()
 	{
 		k = bufstr_get(h, i);
 
-#define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
-#define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
+#define BADPREFIX_COND(p) (substring(k, 0, strlen(p)) == p)
+#define BADSUFFIX_COND(s) (substring(k, -strlen(s), -1) == s)
+
+#define BADPREFIX(p) if(BADPREFIX_COND(p)) continue
+#define BADPRESUFFIX(p, s) if(BADPREFIX_COND(p) && BADSUFFIX_COND(s)) continue
 #define BADCVAR(p) if(k == p) continue
 #define BADVALUE(p, val) if (k == p && v == val) continue
-#define BADPRESUFFIXVALUE(p,s,val) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s && v == val) continue
+#define BADPRESUFFIXVALUE(p, s, val) if(BADPREFIX_COND(p) && BADSUFFIX_COND(s) && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
