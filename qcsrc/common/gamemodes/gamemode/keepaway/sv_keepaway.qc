@@ -265,7 +265,7 @@ void ka_SpawnBall()
 	IL_PUSH(g_kaballs, e);
 	navigation_dynamicgoal_init(e, false);
 
-	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
+	ka_RespawnBall(e);
 }
 
 void ka_SpawnBalls(int ballcount)
@@ -291,14 +291,6 @@ void ka_Handler_CheckBall(entity this)
 	}
 
 	this.nextthink = time;
-}
-
-void ka_Initialize() // run at the start of a match, initiates game mode
-{
-	g_kaballs = IL_NEW();
-	ka_Handler = new_pure(ka_Handler);
-	setthink(ka_Handler, ka_Handler_CheckBall);
-	ka_Handler.nextthink = time;
 }
 
 
