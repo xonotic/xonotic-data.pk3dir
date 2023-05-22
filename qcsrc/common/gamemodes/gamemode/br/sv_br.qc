@@ -1005,6 +1005,12 @@ MUTATOR_HOOKFUNCTION(br, ClientCommand_Spectate)
     return MUT_SPECCMD_CONTINUE;
 }
 
+MUTATOR_HOOKFUNCTION(br, PlayerSpawn)
+{
+    if(!br_started && !warmup_stage && (time > game_starttime) && br_CheckPlayers())
+        br_Start();
+}
+
 float br_CalculatePlayerDropAngle(entity this)
 {
     if(this.velocity.z < 0)
@@ -1137,6 +1143,8 @@ bool br_CheckPlayers()
 }
 
 void br_Start(){
+    br_started = true;
+
     // battle royale does not need those, besides, the timelimit won't be visible anymore after the game started
     cvar_set("timelimit", "0");
     cvar_set("fraglimit", "0");
@@ -1150,8 +1158,6 @@ void br_Start(){
 
     if(!dropship)
     {
-        br_started = true;
-
         delete(ring);
         ring = NULL;
 
@@ -1246,7 +1252,6 @@ void br_Start(){
     });
 
     round_handler.cnt = 0; // emulate round handler round start
-    br_started = true;
 }
 
 void br_dummy_Think(entity this){}
