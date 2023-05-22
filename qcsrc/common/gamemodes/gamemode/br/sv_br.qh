@@ -38,3 +38,4 @@ float autocvar_g_br_bleedlinear = 1;
 int autocvar_g_br_squad_size = 3;
 int autocvar_g_br_minplayers = 2;
 bool autocvar_g_br_ring_exitvehicle = false;
+float autocvar_g_br_supply_interval = 30;

@@ -1011,6 +1011,17 @@ MUTATOR_HOOKFUNCTION(br, PlayerSpawn)
         br_Start();
 }
 
+MUTATOR_HOOKFUNCTION(br, SV_StartFrame)
+{
+    static float supply_time = 0;
+
+    if(autocvar_g_br_supply_interval > 0 && time - supply_time >= autocvar_g_br_supply_interval)
+    {
+        supply_time = time;
+        spawn_supply();
+    }
+}
+
 float br_CalculatePlayerDropAngle(entity this)
 {
     if(this.velocity.z < 0)
