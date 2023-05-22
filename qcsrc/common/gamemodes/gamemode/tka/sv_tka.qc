@@ -362,7 +362,7 @@ MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 	if(frag_attacker != frag_target && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_attacker, frag_target))
 	{
 		bool team_has_ball = false;
-		IL_EACH(g_tkaballs, it.owner != frag_attacker && SAME_TEAM(it, frag_attacker),
+		IL_EACH(g_tkaballs, it.owner != frag_attacker && SAME_TEAM(it.owner, frag_attacker),
 		{
 			team_has_ball = true;
 			break;
