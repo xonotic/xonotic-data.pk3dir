@@ -3,9 +3,9 @@
 // player squad entity
 .entity br_squad;
 
-#define IN_SQUAD(a) ((a).br_squad != NULL)
-#define SAME_SQUAD(a,b) (IN_SQUAD((a)) && ((a).br_squad == (b).br_squad))
-#define DIFF_SQUAD(a,b) (!IN_SQUAD((a)) || ((a).br_squad != (b).br_squad))
+#define IN_SQUAD(a) (((a).owner ? ((a).owner) : (a)).br_squad != NULL)
+#define SAME_SQUAD(a,b) ((a == b) || (IN_SQUAD(a) && (((a).owner ? ((a).owner) : (a)).br_squad == ((b).owner ? ((b).owner) : (b)).br_squad)))
+#define DIFF_SQUAD(a,b) ((!IN_SQUAD(a) && (a != b)) || (IN_SQUAD(a) && (((a).owner ? ((a).owner) : (a)).br_squad != ((b).owner ? ((b).owner) : (b)).br_squad)))
 
 int max_squad_size;
 
