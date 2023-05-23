@@ -24,9 +24,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-22 07:22+0200\n"
+"POT-Creation-Date: 2023-05-23 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -584,11 +584,11 @@ msgstr "Щёлкните для выбора точки возрождения"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Survivor"
-msgstr ""
+msgstr "Выживший"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Hunter"
-msgstr ""
+msgstr "Охотник"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of ball carrier kills"
@@ -721,11 +721,11 @@ msgstr "голы"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Число охот (Выживание)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^hunts"
-msgstr ""
+msgstr "охоты"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of keys carrier kills"
@@ -907,11 +907,11 @@ msgstr "итог"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of survivals"
-msgstr ""
+msgstr "Число выживаний"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^survivals"
-msgstr ""
+msgstr "выживания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of domination points taken (Domination)"
@@ -1607,7 +1607,7 @@ msgstr "Жизни:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
-"Соревнуйтесь за наибольшее количество нанесённого урона и фрагов в этом "
+"Соревнуйтесь за наибольшее количество нанесённого урона и фрагов в "
 "беспределе!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
@@ -3446,12 +3446,12 @@ msgstr "^BG%s^K1 подобрал Суперпушку"
 #: qcsrc/common/notifications/all.inc:446
 #: qcsrc/common/notifications/all.inc:783
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1Охотники^BG победили в раунде"
 
 #: qcsrc/common/notifications/all.inc:447
 #: qcsrc/common/notifications/all.inc:785
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1Выжившие^BG победили в раунде"
 
 #: qcsrc/common/notifications/all.inc:449
 msgid "^BGYou cannot change to a larger team"
@@ -4707,11 +4707,11 @@ msgstr "^F2Теперь у вас есть суперпушка"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr ""
+msgstr "^BGВы — ^K1охотник^BG! Устраните выживших, не вызывая подозрений!"
 
 #: qcsrc/common/notifications/all.inc:784
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGВы — ^F1выживший^BG! Распознайте и устраните охотников!"
 
 #: qcsrc/common/notifications/all.inc:787
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -6082,115 +6082,119 @@ msgstr "Белорусский"
 msgid "Bulgarian"
 msgstr "Болгарский"
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
 msgstr "Китайский"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:180
+msgid "Chinese (Hong Kong)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
 msgstr "Китайский (Тайвань)"
 
-#: qcsrc/menu/xonotic/credits.qc:184
-msgid "Cornish"
-msgstr "Корнуоллский"
-
-#: qcsrc/menu/xonotic/credits.qc:187
+#: qcsrc/menu/xonotic/credits.qc:200
 msgid "Czech"
 msgstr "Чешский"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:210
 msgid "Dutch"
 msgstr "Нидерландский"
 
-#: qcsrc/menu/xonotic/credits.qc:205
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "English (Australia)"
 msgstr "Английский (Австралия)"
 
-#: qcsrc/menu/xonotic/credits.qc:211
+#: qcsrc/menu/xonotic/credits.qc:224
 msgid "Finnish"
 msgstr "Финский"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:235
 msgid "French"
 msgstr "Французский"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:245
 msgid "German"
 msgstr "Немецкий"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:258
 msgid "Greek"
 msgstr "Греческий"
 
-#: qcsrc/menu/xonotic/credits.qc:253
+#: qcsrc/menu/xonotic/credits.qc:268
 msgid "Hungarian"
 msgstr "Венгерский"
 
-#: qcsrc/menu/xonotic/credits.qc:260
+#: qcsrc/menu/xonotic/credits.qc:275
+msgid "Indonesian"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
 msgstr "Ирландский"
 
-#: qcsrc/menu/xonotic/credits.qc:263
+#: qcsrc/menu/xonotic/credits.qc:283
 msgid "Italian"
 msgstr "Итальянский"
 
-#: qcsrc/menu/xonotic/credits.qc:270
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Japanese"
 msgstr "Японский"
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Kazakh"
 msgstr "Казахский"
 
-#: qcsrc/menu/xonotic/credits.qc:281
+#: qcsrc/menu/xonotic/credits.qc:301
 msgid "Korean"
 msgstr "Корейский"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:307
+msgid "Latin"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
 msgstr "Польский"
 
-#: qcsrc/menu/xonotic/credits.qc:304
+#: qcsrc/menu/xonotic/credits.qc:330
 msgid "Portuguese"
 msgstr "Португальский"
 
-#: qcsrc/menu/xonotic/credits.qc:313
+#: qcsrc/menu/xonotic/credits.qc:339
 msgid "Portuguese (Brazil)"
 msgstr "Бразильский португальский"
 
-#: qcsrc/menu/xonotic/credits.qc:319
+#: qcsrc/menu/xonotic/credits.qc:345
 msgid "Romanian"
 msgstr "Румынский"
 
-#: qcsrc/menu/xonotic/credits.qc:328
+#: qcsrc/menu/xonotic/credits.qc:354
 msgid "Russian"
 msgstr "Русский"
 
-#: qcsrc/menu/xonotic/credits.qc:343
-msgid "Scottish Gaelic"
-msgstr "Шотландский"
-
-#: qcsrc/menu/xonotic/credits.qc:346
+#: qcsrc/menu/xonotic/credits.qc:370
 msgid "Serbian"
 msgstr "Сербский"
 
-#: qcsrc/menu/xonotic/credits.qc:352
+#: qcsrc/menu/xonotic/credits.qc:376
 msgid "Spanish"
 msgstr "Испанский"
 
-#: qcsrc/menu/xonotic/credits.qc:370
+#: qcsrc/menu/xonotic/credits.qc:394
 msgid "Swedish"
 msgstr "Шведский"
 
-#: qcsrc/menu/xonotic/credits.qc:375
+#: qcsrc/menu/xonotic/credits.qc:399
 msgid "Turkish"
 msgstr "Турецкий"
 
-#: qcsrc/menu/xonotic/credits.qc:384
+#: qcsrc/menu/xonotic/credits.qc:409
 msgid "Ukrainian"
 msgstr "Украинский"
 
-#: qcsrc/menu/xonotic/credits.qc:392
+#: qcsrc/menu/xonotic/credits.qc:418
 msgid "Past Contributors"
 msgstr "Прошлые участники"
 

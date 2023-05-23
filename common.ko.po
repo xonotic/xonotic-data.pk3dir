@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-22 07:22+0200\n"
+"POT-Creation-Date: 2023-05-23 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Seokho Son, 2022\n"
 "Language-Team: Korean (http://app.transifex.com/team-xonotic/xonotic/"
@@ -5973,115 +5973,119 @@ msgstr "벨로루시어"
 msgid "Bulgarian"
 msgstr "불가리아어"
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
 msgstr "중국어(중국)"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:180
+msgid "Chinese (Hong Kong)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
 msgstr "중국어(대만)"
 
-#: qcsrc/menu/xonotic/credits.qc:184
-msgid "Cornish"
-msgstr "콘월어"
-
-#: qcsrc/menu/xonotic/credits.qc:187
+#: qcsrc/menu/xonotic/credits.qc:200
 msgid "Czech"
 msgstr "체코어"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:210
 msgid "Dutch"
 msgstr "네덜란드어"
 
-#: qcsrc/menu/xonotic/credits.qc:205
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "English (Australia)"
 msgstr "영어(호주)"
 
-#: qcsrc/menu/xonotic/credits.qc:211
+#: qcsrc/menu/xonotic/credits.qc:224
 msgid "Finnish"
 msgstr "핀란드어"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:235
 msgid "French"
 msgstr "프랑스어"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:245
 msgid "German"
 msgstr "독일어"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:258
 msgid "Greek"
 msgstr "그리스어"
 
-#: qcsrc/menu/xonotic/credits.qc:253
+#: qcsrc/menu/xonotic/credits.qc:268
 msgid "Hungarian"
 msgstr "헝가리어"
 
-#: qcsrc/menu/xonotic/credits.qc:260
+#: qcsrc/menu/xonotic/credits.qc:275
+msgid "Indonesian"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
 msgstr "아일렌드어"
 
-#: qcsrc/menu/xonotic/credits.qc:263
+#: qcsrc/menu/xonotic/credits.qc:283
 msgid "Italian"
 msgstr "이탈리아어"
 
-#: qcsrc/menu/xonotic/credits.qc:270
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Japanese"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Kazakh"
 msgstr "카자흐어"
 
-#: qcsrc/menu/xonotic/credits.qc:281
+#: qcsrc/menu/xonotic/credits.qc:301
 msgid "Korean"
 msgstr "한국어"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:307
+msgid "Latin"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
 msgstr "폴란드어"
 
-#: qcsrc/menu/xonotic/credits.qc:304
+#: qcsrc/menu/xonotic/credits.qc:330
 msgid "Portuguese"
 msgstr "포르투갈어"
 
-#: qcsrc/menu/xonotic/credits.qc:313
+#: qcsrc/menu/xonotic/credits.qc:339
 msgid "Portuguese (Brazil)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:319
+#: qcsrc/menu/xonotic/credits.qc:345
 msgid "Romanian"
 msgstr "로마니아어"
 
-#: qcsrc/menu/xonotic/credits.qc:328
+#: qcsrc/menu/xonotic/credits.qc:354
 msgid "Russian"
 msgstr "러시아어"
 
-#: qcsrc/menu/xonotic/credits.qc:343
-msgid "Scottish Gaelic"
-msgstr "스코트식 게일어"
-
-#: qcsrc/menu/xonotic/credits.qc:346
+#: qcsrc/menu/xonotic/credits.qc:370
 msgid "Serbian"
 msgstr "세르비아어"
 
-#: qcsrc/menu/xonotic/credits.qc:352
+#: qcsrc/menu/xonotic/credits.qc:376
 msgid "Spanish"
 msgstr "스페인어"
 
-#: qcsrc/menu/xonotic/credits.qc:370
+#: qcsrc/menu/xonotic/credits.qc:394
 msgid "Swedish"
 msgstr "스웨덴어"
 
-#: qcsrc/menu/xonotic/credits.qc:375
+#: qcsrc/menu/xonotic/credits.qc:399
 msgid "Turkish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:384
+#: qcsrc/menu/xonotic/credits.qc:409
 msgid "Ukrainian"
 msgstr "우크라이나어"
 
-#: qcsrc/menu/xonotic/credits.qc:392
+#: qcsrc/menu/xonotic/credits.qc:418
 msgid "Past Contributors"
 msgstr "기존 기여자"
 

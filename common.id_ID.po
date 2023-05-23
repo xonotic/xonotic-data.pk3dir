@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-22 07:22+0200\n"
+"POT-Creation-Date: 2023-05-23 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: red koala, 2023\n"
 "Language-Team: Indonesian (Indonesia) (http://app.transifex.com/team-xonotic/"
@@ -5978,115 +5978,119 @@ msgstr "Bahasa Belarusia"
 msgid "Bulgarian"
 msgstr "Bahasa Bulgaria"
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
 msgstr "Bahasa China (China)"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:180
+msgid "Chinese (Hong Kong)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
 msgstr "Bahasa China (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:184
-msgid "Cornish"
-msgstr "Bahasa Kernowek"
-
-#: qcsrc/menu/xonotic/credits.qc:187
+#: qcsrc/menu/xonotic/credits.qc:200
 msgid "Czech"
 msgstr "Bahasa Ceska"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:210
 msgid "Dutch"
 msgstr "Bahasa Belanda"
 
-#: qcsrc/menu/xonotic/credits.qc:205
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "English (Australia)"
 msgstr "Bahasa Inggris (Australia)"
 
-#: qcsrc/menu/xonotic/credits.qc:211
+#: qcsrc/menu/xonotic/credits.qc:224
 msgid "Finnish"
 msgstr "Bahasa Suomi"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:235
 msgid "French"
 msgstr "Bahasa Prancis"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:245
 msgid "German"
 msgstr "Bahasa Jerman"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:258
 msgid "Greek"
 msgstr "Bahasa Yunani"
 
-#: qcsrc/menu/xonotic/credits.qc:253
+#: qcsrc/menu/xonotic/credits.qc:268
 msgid "Hungarian"
 msgstr "Bahasa Hungaria"
 
-#: qcsrc/menu/xonotic/credits.qc:260
+#: qcsrc/menu/xonotic/credits.qc:275
+msgid "Indonesian"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
 msgstr "Bahasa Irlandia"
 
-#: qcsrc/menu/xonotic/credits.qc:263
+#: qcsrc/menu/xonotic/credits.qc:283
 msgid "Italian"
 msgstr "Bahasa Italia"
 
-#: qcsrc/menu/xonotic/credits.qc:270
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Japanese"
 msgstr "Bahasa Jepang"
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Kazakh"
 msgstr "Bahasa Kazakh"
 
-#: qcsrc/menu/xonotic/credits.qc:281
+#: qcsrc/menu/xonotic/credits.qc:301
 msgid "Korean"
 msgstr "Bahasa Korea"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:307
+msgid "Latin"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
 msgstr "Bahasa Polski"
 
-#: qcsrc/menu/xonotic/credits.qc:304
+#: qcsrc/menu/xonotic/credits.qc:330
 msgid "Portuguese"
 msgstr "Bahasa Portugis"
 
-#: qcsrc/menu/xonotic/credits.qc:313
+#: qcsrc/menu/xonotic/credits.qc:339
 msgid "Portuguese (Brazil)"
 msgstr "Bahasa Portugis (Brazil)"
 
-#: qcsrc/menu/xonotic/credits.qc:319
+#: qcsrc/menu/xonotic/credits.qc:345
 msgid "Romanian"
 msgstr "Bahasa Rumania"
 
-#: qcsrc/menu/xonotic/credits.qc:328
+#: qcsrc/menu/xonotic/credits.qc:354
 msgid "Russian"
 msgstr "Bahasa Rusia"
 
-#: qcsrc/menu/xonotic/credits.qc:343
-msgid "Scottish Gaelic"
-msgstr "Bahasa Gaelic Skotlandia "
-
-#: qcsrc/menu/xonotic/credits.qc:346
+#: qcsrc/menu/xonotic/credits.qc:370
 msgid "Serbian"
 msgstr "Bahasa Serbia"
 
-#: qcsrc/menu/xonotic/credits.qc:352
+#: qcsrc/menu/xonotic/credits.qc:376
 msgid "Spanish"
 msgstr "Bahasa Spanyol"
 
-#: qcsrc/menu/xonotic/credits.qc:370
+#: qcsrc/menu/xonotic/credits.qc:394
 msgid "Swedish"
 msgstr "Bahasa Swedia"
 
-#: qcsrc/menu/xonotic/credits.qc:375
+#: qcsrc/menu/xonotic/credits.qc:399
 msgid "Turkish"
 msgstr "Bahasa Turki"
 
-#: qcsrc/menu/xonotic/credits.qc:384
+#: qcsrc/menu/xonotic/credits.qc:409
 msgid "Ukrainian"
 msgstr "Bahasa Ukraina"
 
-#: qcsrc/menu/xonotic/credits.qc:392
+#: qcsrc/menu/xonotic/credits.qc:418
 msgid "Past Contributors"
 msgstr "Kontributor Lama"
 

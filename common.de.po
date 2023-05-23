@@ -16,7 +16,7 @@
 # Larson März <larson@protonmail.ch>, 2016
 # Larson März <larson@protonmail.ch>, 2016
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
-# Mirio <opivy@hotmail.de>, 2014-2017,2019-2022
+# Mirio <opivy@hotmail.de>, 2014-2017,2019-2023
 # Robert Katzinsky <hbmctextures.unknown@gmail.com>, 2020
 # divVerent <divVerent@gmail.com>, 2011
 # Sless <sless@gmx.net>, 2014
@@ -29,9 +29,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-22 07:22+0200\n"
+"POT-Creation-Date: 2023-05-23 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Mirio <opivy@hotmail.de>, 2014-2017,2019-2023\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -152,7 +152,7 @@ msgstr "Sekundärfeuer"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Drücke ^3%s^1 um den Kameramodus zu wechseln"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -259,7 +259,7 @@ msgstr "Spieler %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Standard Schnellmenü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -526,19 +526,19 @@ msgstr "QMCMD^Teams mischen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Server Schnellmenü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Wegpunkteeditormenü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Wegpunkteeditormenü als Standard"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Server Schnellmenü als Standard"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -590,11 +590,11 @@ msgstr "Klicke, um Startort zu auszuwählen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Survivor"
-msgstr ""
+msgstr "Überlebender"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Hunter"
-msgstr ""
+msgstr "Jäger"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of ball carrier kills"
@@ -728,11 +728,11 @@ msgstr "SCO^tore"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Anzahl der Jagden (Survival)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^hunts"
-msgstr ""
+msgstr "SCO^jagden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of keys carrier kills"
@@ -882,15 +882,15 @@ msgstr "SCO^rundensiege"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Anzahl gespielter Runden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "rundengespielt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^score"
-msgstr "SCO^punkte"
+msgstr "SCO^punktzahl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Total score"
@@ -1489,12 +1489,12 @@ msgstr "Töte alle feindlichen Teammitglieder, um zu gewinnen"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Rundenlimit:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Die Anzahl der benötigten Runden, bevor das Spiel endet"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1518,7 +1518,7 @@ msgstr "Eroberungs-Limit:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "Die Anzahl der benötigten Flaggeneroberungen, bevor die Runde endet"
+msgstr "Die Anzahl der benötigten Flaggeneroberungen, bevor das Spiel endet"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1553,7 +1553,7 @@ msgstr "Domination"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr "Die Anzahl der benötigten Punkte, bevor die Runde endet"
+msgstr "Die Anzahl der benötigten Punkte, bevor das Spiel endet"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1619,15 +1619,17 @@ msgstr "Leben:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"Kämpfe in diesem Chaos, um den meisten verursachten Schaden und die meisten "
+"Frags!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Mayhem"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Die Anzahl der benötigten Punktzahl, bevor das Spiel endet"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1640,11 +1642,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Torlimit:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "Die Anzahl der benötigten Tore, bevor die Runde endet"
+msgstr "Die Anzahl der benötigten Tore, bevor das Spiel endet"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -1693,26 +1695,28 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"Kämpfe mit deinem Team in diesem Chaos, um den meisten verursachten Schaden "
+"und die meisten Frags!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Team Mayhem"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Hülsen"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Kugeln"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Raketen"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Cells"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -1759,7 +1763,7 @@ msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Treibstoff"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1781,9 +1785,7 @@ msgstr "Punktelimit:"
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr ""
-"Wähle die Anzahl an Frags, die benötigt somd, damit die Map endet oder "
-"verwende den Map-Standard für diese Option"
+msgstr "Die Anzahl der benötigten Frags, bevor das Spiel endet"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -2296,7 +2298,7 @@ msgstr "Startschutz"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "Benommen"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -3483,12 +3485,12 @@ msgstr "^BG%s^K1 hat eine Superwaffe aufgesammelt"
 #: qcsrc/common/notifications/all.inc:446
 #: qcsrc/common/notifications/all.inc:783
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1Jäger^BG gewinnen die Runde"
 
 #: qcsrc/common/notifications/all.inc:447
 #: qcsrc/common/notifications/all.inc:785
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1Überlebende^BG gewinnen die Runde"
 
 #: qcsrc/common/notifications/all.inc:449
 msgid "^BGYou cannot change to a larger team"
@@ -4038,22 +4040,23 @@ msgstr "^BGDer %sFeind (^BG%s%s)^BG hat die Flagge! Bringt sie zurück!"
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr "^BGDer %sFeind^BG hat seine Flagge! Hol sie!"
+msgstr "^BGDer %sFeind^BG hat seine Flagge! Bringt sie zurück!"
 
 #: qcsrc/common/notifications/all.inc:580
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr "^BGDer %sFeind (^BG%s%s)^BG hat seine Flagge! Hol sie!"
+msgstr "^BGDer %sFeind (^BG%s%s)^BG hat seine Flagge! Bringt sie zurück!"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG Der %sFeind^BG hat die Flagge! Bringt sie zurück!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
 msgstr ""
+"^BGDer %sFeind (^BG%s%s)^BG hat die ^TC^TT^BG Flagge! Bringt sie zurück!"
 
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
@@ -4532,7 +4535,7 @@ msgstr "^BGDu beginnst mit dem ^TC^TT Schlüssel"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr "^BGDu hast keine Leben übrig und musst auf die nächste Runde warten"
+msgstr "^BGDu hast keine Leben übrig und musst auf das nächste Spiel warten"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid ""
@@ -4765,10 +4768,13 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
+"^BGDu bist ein ^k1Jäger^BG! Eliminiere die Überlebenden ohne Verdacht zu "
+"erregen!"
 
 #: qcsrc/common/notifications/all.inc:784
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
 msgstr ""
+"^BGDu bist ein ^F1Überlebender^BG! Identifiziere und eliminiere die Jäger!"
 
 #: qcsrc/common/notifications/all.inc:787
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -6139,115 +6145,119 @@ msgstr "Belarussisch"
 msgid "Bulgarian"
 msgstr "Bulgarisch"
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
 msgstr "Chinesisch (China)"
 
-#: qcsrc/menu/xonotic/credits.qc:178
+#: qcsrc/menu/xonotic/credits.qc:180
+msgid "Chinese (Hong Kong)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
 msgstr "Chinesisch (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:184
-msgid "Cornish"
-msgstr "Kornisch"
-
-#: qcsrc/menu/xonotic/credits.qc:187
+#: qcsrc/menu/xonotic/credits.qc:200
 msgid "Czech"
 msgstr "Tscheschich"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:210
 msgid "Dutch"
 msgstr "Niederländisch"
 
-#: qcsrc/menu/xonotic/credits.qc:205
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "English (Australia)"
 msgstr "Englisch (Australien)"
 
-#: qcsrc/menu/xonotic/credits.qc:211
+#: qcsrc/menu/xonotic/credits.qc:224
 msgid "Finnish"
 msgstr "Finnisch"
 
-#: qcsrc/menu/xonotic/credits.qc:220
+#: qcsrc/menu/xonotic/credits.qc:235
 msgid "French"
 msgstr "Französisch"
 
-#: qcsrc/menu/xonotic/credits.qc:230
+#: qcsrc/menu/xonotic/credits.qc:245
 msgid "German"
 msgstr "Deutsch"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:258
 msgid "Greek"
 msgstr "Griechisch"
 
-#: qcsrc/menu/xonotic/credits.qc:253
+#: qcsrc/menu/xonotic/credits.qc:268
 msgid "Hungarian"
 msgstr "Ungarisch"
 
-#: qcsrc/menu/xonotic/credits.qc:260
+#: qcsrc/menu/xonotic/credits.qc:275
+msgid "Indonesian"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
 msgstr "Irisch"
 
-#: qcsrc/menu/xonotic/credits.qc:263
+#: qcsrc/menu/xonotic/credits.qc:283
 msgid "Italian"
 msgstr "Italienisch"
 
-#: qcsrc/menu/xonotic/credits.qc:270
+#: qcsrc/menu/xonotic/credits.qc:290
 msgid "Japanese"
 msgstr "Japanisch"
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Kazakh"
 msgstr "Kasachisch"
 
-#: qcsrc/menu/xonotic/credits.qc:281
+#: qcsrc/menu/xonotic/credits.qc:301
 msgid "Korean"
 msgstr "Koreanisch"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:307
+msgid "Latin"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
 msgstr "Polnisch"
 
-#: qcsrc/menu/xonotic/credits.qc:304
+#: qcsrc/menu/xonotic/credits.qc:330
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
-#: qcsrc/menu/xonotic/credits.qc:313
+#: qcsrc/menu/xonotic/credits.qc:339
 msgid "Portuguese (Brazil)"
 msgstr "Portugiesisch (Brasilien)"
 
-#: qcsrc/menu/xonotic/credits.qc:319
+#: qcsrc/menu/xonotic/credits.qc:345
 msgid "Romanian"
 msgstr "Rumänisch"
 
-#: qcsrc/menu/xonotic/credits.qc:328
+#: qcsrc/menu/xonotic/credits.qc:354
 msgid "Russian"
 msgstr "Russisch"
 
-#: qcsrc/menu/xonotic/credits.qc:343
-msgid "Scottish Gaelic"
-msgstr "Schottisch-Gälisch"
-
-#: qcsrc/menu/xonotic/credits.qc:346
+#: qcsrc/menu/xonotic/credits.qc:370
 msgid "Serbian"
 msgstr "Serbisch"
 
-#: qcsrc/menu/xonotic/credits.qc:352
+#: qcsrc/menu/xonotic/credits.qc:376
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: qcsrc/menu/xonotic/credits.qc:370
+#: qcsrc/menu/xonotic/credits.qc:394
 msgid "Swedish"
 msgstr "Schwedisch"
 
-#: qcsrc/menu/xonotic/credits.qc:375
+#: qcsrc/menu/xonotic/credits.qc:399
 msgid "Turkish"
 msgstr "Türkisch"
 
-#: qcsrc/menu/xonotic/credits.qc:384
+#: qcsrc/menu/xonotic/credits.qc:409
 msgid "Ukrainian"
 msgstr "Ukrainisch"
 
-#: qcsrc/menu/xonotic/credits.qc:392
+#: qcsrc/menu/xonotic/credits.qc:418
 msgid "Past Contributors"
 msgstr "Frühere Mitwirkende"
 
@@ -6698,7 +6708,7 @@ msgstr "Mit vertikaler Geschwindigkeit"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "Geschwindigtkeitseinheit zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
@@ -6722,7 +6732,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Zeit anzeigen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6741,11 +6751,11 @@ msgstr "Immer"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "Zuschauen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Symbolgrößenskala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
@@ -6943,11 +6953,11 @@ msgstr "Sturz:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "Switch indicator:"
-msgstr ""
+msgstr "Wechselindikator"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "Bester-Winkel-Indikator:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
@@ -7154,7 +7164,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "Zentrale Linie"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7162,6 +7172,9 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"Eine vertikale Mittellinie anzeigen, um die Ausrichtung der Panels zu "
+"erleichtern. Durch Bearbeiten von %s in der Konsole ist es möglich, mehr "
+"vertikale Linien anzuzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
@@ -7606,6 +7619,11 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Die Spieler erhalten nur eine Waffe, welche den Gegner mit einem Schuss "
+"sofort töten kann. Wenn dem Spieler die Muntion ausgeht, hat er 10 Sekunden "
+"Zeit, um welche zu finden. Geschieht dies nicht, droht ihm der Tod. Der "
+"sekundäre Feuermodus verursacht keinen Schaden, eignet sich aber gut für "
+"Tricksprünge."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
 msgid ""
@@ -7860,7 +7878,7 @@ msgstr "DEMO^Abspielen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
 msgstr ""
-"Abspielen einer Wiederholung wird die Verbindung zum aktuellen Match trennen."
+"Abspielen einer Wiederholung wird die Verbindung zum aktuellen Spiel trennen."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
@@ -7875,7 +7893,7 @@ msgstr "Trennen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
 msgstr ""
-"Benchmarking einer Zeitwiederholung wird die Verbindung zum aktuellen Match "
+"Benchmarking einer Wiederholung wird die Verbindung zum aktuellen Spiel "
 "trennen."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
@@ -10294,7 +10312,7 @@ msgstr "Schnellmenü"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "Punktetafel-Benutzeroberfläche"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
