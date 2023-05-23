@@ -8,14 +8,14 @@ void ka_Handler_CheckBall(entity this);
 IntrusiveList g_kaballs;
 REGISTER_MUTATOR(ka, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-	    GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
-            field(SP_KEEPAWAY_PICKUPS, "pickups", 0);
-            field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
-            field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
-        });
+		GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
+			field(SP_KEEPAWAY_PICKUPS, "pickups", 0);
+			field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
+			field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
+		});
 
 		g_kaballs = IL_NEW();
 		entity ka_Handler = new_pure(ka_Handler);
