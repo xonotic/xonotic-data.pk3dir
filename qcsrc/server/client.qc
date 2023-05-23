@@ -2688,7 +2688,7 @@ void PlayerPostThink (entity this)
 			});
 		}
 
-		if (totalClients < autocvar_sv_maxidle_minplayers)
+		if ((totalClients < autocvar_sv_maxidle_minplayers) || IS_GAMETYPE(BR))
 		{
 			// idle kick disabled
 			CS(this).parm_idlesince = time;
