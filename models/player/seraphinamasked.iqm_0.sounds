@@ -19,7 +19,7 @@ needhelp sound/player/specop/coms/needhelp 0
 //seenenemy sound/player/carni-lycan/player/seenenemy 0
 seenflag sound/player/specop/coms/seenflag 0
 taunt sound/player/specop/coms/taunt 4
-teamshoot sound/player/specop/coms/teamshoot 4
+teamshoot sound/player/specop/coms/teamshoot 3
 death sound/player/specop/player/death 3
 drown sound/player/specop/player/drown 0
 fall sound/player/specop/player/fall 0
