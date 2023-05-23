@@ -28,6 +28,8 @@ const float br_drop_time_secs = 1;
 const float drop_speed_vertical_max = 0.9;
 const float drop_distance_disconnect = 32;
 const float drop_speed_crash = 0.9;
+float br_event_supply_time;
+float br_event_vehicle_time;
 bool br_started = false;
 .bool br_ring_warned;
 .float br_drop_time;
@@ -1013,12 +1015,19 @@ MUTATOR_HOOKFUNCTION(br, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(br, SV_StartFrame)
 {
-    static float supply_time = 0;
+    if(!br_started)
+        return false;
 
-    if(autocvar_g_br_supply_interval > 0 && time - supply_time >= autocvar_g_br_supply_interval)
+    if(autocvar_g_br_supply_interval > 0 && time - br_event_supply_time >= autocvar_g_br_supply_interval)
     {
-        supply_time = time;
+        br_event_supply_time = time;
         spawn_supply();
+    }
+
+    if(autocvar_g_br_vehicle_interval > 0 && time - br_event_vehicle_time >= autocvar_g_br_vehicle_interval)
+    {
+        br_event_vehicle_time = time;
+        spawn_vehicle();
     }
 }
 
@@ -1274,6 +1283,7 @@ void br_Start(){
             it.br_force_drop_distance = min_distance + random() * max(dropship_path_length - (min_distance + dropship_speed * br_drop_time_secs), 0);
     });
 
+    br_event_supply_time = br_event_vehicle_time = time;
     round_handler.cnt = 0; // emulate round handler round start
 }
 

@@ -509,6 +509,9 @@ void vehicles_showwp(entity this)
 
 void vehicles_setreturn(entity veh)
 {
+	if(veh.br_vehicle_drop)
+		return;
+
 	vehicles_clearreturn(veh);
 
 	entity ret = new(vehicle_return);
@@ -1160,7 +1163,8 @@ void vehicles_spawn(entity this)
 	this.angles = this.pos2;
 	setorigin(this, this.pos1);
 	// Show it
-	Send_Effect(EFFECT_TELEPORT, this.origin + '0 0 64', '0 0 0', 1);
+	if(!this.br_vehicle_drop)
+		Send_Effect(EFFECT_TELEPORT, this.origin + '0 0 64', '0 0 0', 1);
 
 	if(this.vehicle_controller)
 		this.team = this.vehicle_controller.team;

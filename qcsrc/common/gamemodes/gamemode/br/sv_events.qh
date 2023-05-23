@@ -1,6 +1,9 @@
 #pragma once
 
 void spawn_supply();
+void spawn_vehicle();
+
+.bool br_vehicle_drop;
 
 noref float autocvar_g_br_supply_health_probability = 0;
 noref float autocvar_g_br_supply_armor_probability = 0;
