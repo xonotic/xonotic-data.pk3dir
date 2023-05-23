@@ -363,7 +363,8 @@ bool vehicles_valid_pilot(entity this, entity toucher)
 	if((!IS_PLAYER(toucher))
 	|| (IS_DEAD(toucher))
 	|| (toucher.vehicle)
-	|| (DIFF_TEAM(toucher, this))
+	|| (!IS_GAMETYPE(BR) && DIFF_TEAM(toucher, this))
+	|| (IS_GAMETYPE(BR) && DIFF_SQUAD(toucher, this))
 	) { return false; }
 
 	return true;

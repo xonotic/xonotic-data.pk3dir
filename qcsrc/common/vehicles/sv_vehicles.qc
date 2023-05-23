@@ -126,6 +126,9 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 		if(SAME_TEAM(trace_ent, this))
 			trace_ent = NULL;
 
+		if(SAME_SQUAD(trace_ent, this))
+			trace_ent = NULL;
+
 		if(IS_DEAD(trace_ent))
 			trace_ent = NULL;
 
@@ -964,7 +967,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
-	if(veh.owner && SAME_TEAM(pl, veh))
+	if(veh.owner && ((!IS_GAMETYPE(BR) && SAME_TEAM(pl, veh)) || (IS_GAMETYPE(BR) && SAME_SQUAD(pl, veh))))
 	{
 		// we don't need a return value or anything here
 		// if successful the owner check below will prevent anything weird
