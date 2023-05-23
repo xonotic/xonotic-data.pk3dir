@@ -1112,11 +1112,12 @@ int br_WinningCondition()
         return WINNING_NEVER;
 
     entity winner_squad = NULL;
-    IL_EACH(squads, !it.br_squad_dead, winner_squad = it);
+    IL_EACH(squads, !it.br_squad_dead, { winner_squad = it; break; });
 
     for(entity member = winner_squad.br_squad_first; member; member = member.br_squad_next)
     {
         GameRules_scoring_add(member, BR_RANK, 1);
+        member.winning = true;
     }
 
     delete(round_handler);

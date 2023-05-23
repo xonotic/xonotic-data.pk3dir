@@ -1279,6 +1279,7 @@ void NextLevel()
 	GameLogClose();
 
 	int winner_team = 0;
+	int winner_squad = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
@@ -1287,6 +1288,11 @@ void NextLevel()
 			{
 				winner_team = it.team;
 				bprint(Team_ColorCode(winner_team), Team_ColorName_Upper(winner_team), "^7 team wins the match\n");
+			}
+			if(IS_GAMETYPE(BR) && !winner_squad)
+			{
+			    winner_squad = it.br_squad.br_squad_id;
+			    bprint("squad ", ftos(winner_squad), " wins the match\n");
 			}
 			bprint(playername(it.netname, it.team, false), " ^7wins\n");
 		}
