@@ -392,7 +392,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 		MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 	}
-	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
+	if(WEP_CVAR_PRI(crylink, joinspread) != 0 && WEP_CVAR_PRI(crylink, shots) > 1)
 	{
 		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -513,7 +513,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 		MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 	}
-	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
+	if(WEP_CVAR_SEC(crylink, joinspread) != 0 && WEP_CVAR_SEC(crylink, shots) > 1)
 	{
 		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
