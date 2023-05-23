@@ -255,8 +255,12 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     // if the laser uses load, we also consider its ammo for reloading
     if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
+        actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
+        return;
     } else if(WEP_CVAR(vaporizer, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
+        actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
+        return;
     }
     if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
     {
@@ -271,16 +275,17 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
         {
             bool rapid = autocvar_g_rm_laser_rapid;
-            if(actor.(weaponentity).jump_interval <= time && !actor.(weaponentity).held_down)
+            //hagar_load was previously named held_down
+            if(actor.(weaponentity).jump_interval <= time && !actor.(weaponentity).hagar_load)
             {
                 if(rapid)
-                    actor.(weaponentity).held_down = true;
+                    actor.(weaponentity).hagar_load = true;
                 actor.(weaponentity).jump_interval = time + autocvar_g_rm_laser_refire;
                 actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
                 impressive_hits = 0;
                 W_RocketMinsta_Attack(actor, weaponentity, 0);
             }
-            else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).held_down)
+            else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).hagar_load)
             {
                 actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
                 impressive_hits = 0;
@@ -305,7 +310,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         }
     }
     else
-        actor.(weaponentity).held_down = false;
+        actor.(weaponentity).hagar_load = false;
 }
 METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
