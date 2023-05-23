@@ -42,7 +42,7 @@ entity dropship_initialize()
 
     for(int i = 0; i < 100; ++i) // try to find a dropship path multiple times
     {
-        if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 100, 8192, 1024, false))
+        if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, this.dphitcontentsmask, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 100, 65536, 0, false))
             continue;
 
         vector mult;
@@ -68,6 +68,8 @@ entity dropship_initialize()
         tracebox(startorigin, this.mins, this.maxs, endorigin, MOVE_NORMAL, this);
         dropship_path_length = trace_fraction * vlen(endorigin - startorigin);
         if(dropship_path_length < (vlen(vec2(world.maxs - world.mins)) / 4)) // if the dropship path isn't atleast one quarter of the diagonal length of the map, retry, we're probably in a building
+            continue;
+        if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT | Q3SURFACEFLAG_NOMARKS))) // dropship did not reach the sky
             continue;
         endorigin = trace_endpos;
         dropship_path_direction = normalize(endorigin - startorigin);

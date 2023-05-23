@@ -46,7 +46,11 @@ entity ring_initialize()
     ring_parseStrength(this, has_invalid_timings);
 
     this.strength = this.br_ring_stage_strength[0];
-    MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, DPCONTENTS_SOLID, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 2500, 0, 0, false);
+    if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, DPCONTENTS_SOLID, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 1000, 0, 0, false))
+    {
+        delete(this);
+        return NULL;
+    }
     ring_alignPosition(this);
     ring_link(this);
 

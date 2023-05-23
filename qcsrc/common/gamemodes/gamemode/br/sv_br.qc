@@ -1155,8 +1155,6 @@ bool br_CheckPlayers()
 }
 
 void br_Start(){
-    br_started = true;
-
     // battle royale does not need those, besides, the timelimit won't be visible anymore after the game started
     cvar_set("timelimit", "0");
     cvar_set("fraglimit", "0");
@@ -1165,21 +1163,34 @@ void br_Start(){
     reset_map(true, false);
 
     ring = ring_initialize();
-
     dropship = dropship_initialize();
 
-    if(!dropship)
+    if(!ring || !dropship)
     {
-        delete(ring);
-        ring = NULL;
+        if(!ring)
+            LOG_WARN("Failed to determine ring starting point");
+        if(!dropship)
+            LOG_WARN("Failed to determine dropship route");
 
-        FOREACH_CLIENT(IS_PLAYER(it), {
-            TRANSMUTE(Observer, it);
-            PutClientInServer(it);
-        });
-        LOG_SEVERE("Failed to determine dropship route, aborting...");
+        LOG_WARN("Prerequisites not met. Cannot start battle royale, aborting...");
+
+        if(ring)
+        {
+            delete(ring);
+            ring = NULL;
+        }
+
+        if(dropship)
+        {
+            delete(dropship);
+            dropship = NULL;
+        }
+
+        NextLevel();
+        return;
     }
 
+    br_started = true;
     int num_players = 0;
 
     FOREACH_CLIENT(IS_PLAYER(it), {
