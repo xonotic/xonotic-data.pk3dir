@@ -1,6 +1,6 @@
 #include "sv_events.qh"
 
-void drop_from_sky(entity this);
+bool drop_from_sky(entity this);
 
 void spawn_supply()
 {
@@ -8,7 +8,11 @@ void spawn_supply()
     entity this = Item_CreateLoot(item_class, '0 0 0', '0 0 0', 999999999);
     this.reset = SUB_Remove;
 
-    drop_from_sky(this);
+    if(!drop_from_sky(this))
+    {
+        delete(this);
+        LOG_WARN("supply drop failed");
+    }
 }
 
 void spawn_vehicle()
@@ -20,22 +24,35 @@ void spawn_vehicle()
     vehicles_spawn(this);
     this.reset = SUB_Remove;
 
-    drop_from_sky(this);
+    if(!drop_from_sky(this))
+    {
+        delete(this);
+        LOG_WARN("vehicle drop failed");
+    }
 }
 
 // TODO: ensure spawn is within ring
-void drop_from_sky(entity this)
+bool drop_from_sky(entity this)
 {
+    bool move_success = false;
+
     for(int i = 0; i < 100; ++i)
     {
-        MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, DPCONTENTS_SOLID, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 0, 0, false);
+        if(!MoveToRandomLocationWithinBounds(this, world.mins, world.maxs, DPCONTENTS_SOLID, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 100, 0, 0, false))
+            continue;
+
+        move_success = true;
+
         tracebox(this.origin, this.mins, this.maxs, this.origin + '0 0 65536', MOVE_NORMAL, this);
         if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
             continue;
 
         setorigin(this, trace_endpos);
-        return;
+        return true;
     }
 
-    LOG_WARN("drop from sky not possible, spawning on floor");
+    if(move_success)
+        LOG_WARN("drop from sky not possible, spawning on floor");
+
+    return move_success;
 }
