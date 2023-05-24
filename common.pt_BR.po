@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2023\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -578,11 +578,11 @@ msgstr "Clique para selecionar o local de surgimento"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Survivor"
-msgstr ""
+msgstr "Sobrevivente"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Hunter"
-msgstr ""
+msgstr "Caçador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of ball carrier kills"
@@ -715,11 +715,11 @@ msgstr "gols"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Número de caças (Sobrevivência)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^hunts"
-msgstr ""
+msgstr "caças"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of keys carrier kills"
@@ -901,11 +901,11 @@ msgstr "soma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of survivals"
-msgstr ""
+msgstr "Número de sobrevivências"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^survivals"
-msgstr ""
+msgstr "sobrevivências"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of domination points taken (Domination)"
@@ -3453,12 +3453,12 @@ msgstr "^BG%s^K1 pegou uma Superarma"
 #: qcsrc/common/notifications/all.inc:446
 #: qcsrc/common/notifications/all.inc:783
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1Caçadores^BG vencem a rodada"
 
 #: qcsrc/common/notifications/all.inc:447
 #: qcsrc/common/notifications/all.inc:785
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1Sobreviventes^BG vencem a rodada"
 
 #: qcsrc/common/notifications/all.inc:449
 msgid "^BGYou cannot change to a larger team"
@@ -4726,10 +4726,13 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
+"^BGVocê é um ^K1caçador^BG! Elimine o(s) sobrevivente(s) sem levantar "
+"suspeitas!"
 
 #: qcsrc/common/notifications/all.inc:784
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
 msgstr ""
+"^BGVocê é um ^F1sobrevivente^BG! Identifique e elimine o(s) caçador(es)!"
 
 #: qcsrc/common/notifications/all.inc:787
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -6106,7 +6109,7 @@ msgstr "Chinês (China)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Chinês (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6146,7 +6149,7 @@ msgstr "Húngaro"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonésio"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6170,7 +6173,7 @@ msgstr "Coreano"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latim"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"

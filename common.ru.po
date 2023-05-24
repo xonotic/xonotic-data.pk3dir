@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023\n"
+"Last-Translator: Andrei Stepanov, 2014-2023\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -6088,7 +6088,7 @@ msgstr "Китайский"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Китайский (Гонконг)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6128,7 +6128,7 @@ msgstr "Венгерский"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Индонезийский"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6152,7 +6152,7 @@ msgstr "Корейский"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Латинский"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"

@@ -6147,7 +6147,7 @@ msgstr "Chinois (Chine)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Chinois (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6187,7 +6187,7 @@ msgstr "Hongrois"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonésien"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6211,7 +6211,7 @@ msgstr "Coréen"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latin"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
