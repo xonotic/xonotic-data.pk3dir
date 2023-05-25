@@ -87,6 +87,11 @@ noref string __fullspawndata;
         e.__spawnfunc_constructor(e);
     }
 
+// enables/disables warnings if a map entity has a field that doesn't exist
+// useful for debugging and compatibility testing
+#define SPAWNFUNC_CHECK_FIELDS 1
+#if SPAWNFUNC_CHECK_FIELDS
+
 	#define FIELD_SCALAR(fld, n) \
 		fld(n)
 	#define FIELD_VEC(fld, n) \
@@ -244,10 +249,12 @@ noref string __fullspawndata;
 		FIELD_VEC(fld, modelscale_vec) \
 		FIELD_VEC(fld, velocity) \
 		/**/
+#endif
 
 ERASEABLE
 void _checkWhitelisted(entity this, string id)
 {
+#if SPAWNFUNC_CHECK_FIELDS
 	for (int i = 0, n = numentityfields(); i < n; ++i)
 	{
 		string value = getentityfieldstring(i, this);
@@ -259,6 +266,7 @@ void _checkWhitelisted(entity this, string id)
 		FIELDS_UNION(_spawnfunc_check)
 		LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), id, s, value);
 	}
+#endif
 }
 
 // this function simply avoids expanding IL_NEW during compilation
