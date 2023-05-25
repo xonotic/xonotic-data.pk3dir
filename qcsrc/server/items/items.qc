@@ -36,26 +36,6 @@ bool ItemSend(entity this, entity to, int sf)
 	else
 		sf &= ~ISF_DROP;
 
-	// if the client must set the bbox or model,
-	// reuse ISF_SIZE and ISF_SIZE2 to also tell it which bbox
-	if(sf & ISF_SIZE || sf & ISF_MODEL)
-	{
-		if(this.maxs == ITEM_S_MAXS) // Small
-		{
-			sf |= ISF_SIZE;
-			sf &= ~ISF_SIZE2;
-		}
-		else if(this.maxs == ITEM_L_MAXS) // Large
-		{
-			sf &= ~ISF_SIZE;
-			sf |= ISF_SIZE2;
-		}
-		else // Default
-			sf |= ISF_SIZE | ISF_SIZE2;
-	}
-	else // don't set the bbox
-		sf &= ~ISF_SIZE & ~ISF_SIZE2;
-
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -69,6 +49,9 @@ bool ItemSend(entity this, entity to, int sf)
 	{
 		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
+
+	// sets size on the client, unused on server
+	//if(sf & ISF_SIZE)
 
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
