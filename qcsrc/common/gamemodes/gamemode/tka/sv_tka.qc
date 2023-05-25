@@ -49,13 +49,8 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	vector oldballorigin = this.origin;
 
 	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-	{
-		entity spot = SelectSpawnPoint(this, true);
-		setorigin(this, spot.origin);
-		this.angles = spot.angles;
-	}
+		setorigin(this, SelectSpawnPoint(this, true).origin);
 
-	makevectors(this.angles);
 	set_movetype(this, MOVETYPE_BOUNCE);
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
@@ -206,53 +201,45 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 
 MODEL(TKA_BALL, "models/orbs/orbblue.md3");
 
-void tka_RemoveBall(entity ball)
-{
-	entity player = ball.owner;
-	if (player) // it was attached
-		tka_PlayerReset(player);
-	else
-		WaypointSprite_DetachCarrier(ball);
-	delete(ball);
-}
-
 void tka_RemoveBalls()
 {
 	IL_EACH(g_tkaballs, true,
 	{
-		tka_RemoveBall(it);
+		if (it.owner) // it was attached
+			tka_PlayerReset(it.owner);
+		else
+			WaypointSprite_DetachCarrier(it);
+		delete(it);
 	});
 }
 
-void tka_SpawnBall()
+void tka_SpawnBalls()
 {
-	entity e = new(keepawayball);
-	setmodel(e, MDL_TKA_BALL);
-	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
-	e.damageforcescale = autocvar_g_tkaball_damageforcescale;
-	e.takedamage = DAMAGE_YES;
-	e.solid = SOLID_TRIGGER;
-	set_movetype(e, MOVETYPE_BOUNCE);
-	e.glow_color = autocvar_g_tkaball_trail_color;
-	e.glow_trail = true;
-	e.flags = FL_ITEM;
-	IL_PUSH(g_items, e);
-	e.pushable = true;
-	settouch(e, tka_TouchEvent);
-	e.owner = NULL;
-	IL_PUSH(g_tkaballs, e);
-	navigation_dynamicgoal_init(e, false);
-
-	InitializeEntity(e, tka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
-}
-
-void tka_SpawnBalls(int ballcount)
-{
-	int realballcount = max(1, ballcount); // never allow less than 1 ball to spawn
-	for(int j = 0; j < realballcount; ++j)
+	int i = 0;
+	do // never allow less than 1 ball to spawn
 	{
-		tka_SpawnBall();
+		entity e = new(keepawayball);
+		setmodel(e, MDL_TKA_BALL);
+		setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
+		e.damageforcescale = autocvar_g_tkaball_damageforcescale;
+		e.takedamage = DAMAGE_YES;
+		e.solid = SOLID_TRIGGER;
+		set_movetype(e, MOVETYPE_BOUNCE);
+		e.glow_color = autocvar_g_tkaball_trail_color;
+		e.glow_trail = true;
+		e.flags = FL_ITEM;
+		IL_PUSH(g_items, e);
+		e.pushable = true;
+		settouch(e, tka_TouchEvent);
+		e.owner = NULL;
+		IL_PUSH(g_tkaballs, e);
+		navigation_dynamicgoal_init(e, false);
+
+		tka_RespawnBall(e);
+
+		++i;
 	}
+	while (i < TKA_BALL_COUNT);
 }
 
 void tka_Handler_CheckBall(entity this)
@@ -265,18 +252,10 @@ void tka_Handler_CheckBall(entity this)
 	else
 	{
 		if (IL_EMPTY(g_tkaballs))
-			tka_SpawnBalls(TKA_BALL_COUNT);
+			tka_SpawnBalls();
 	}
 
 	this.nextthink = time;
-}
-
-void tka_DelayedInit(entity this) // run at the start of a match, initiates game mode
-{
-	g_tkaballs = IL_NEW();
-	tka_Handler = new(tka_Handler);
-	setthink(tka_Handler, tka_Handler_CheckBall);
-	tka_Handler.nextthink = time;
 }
 
 
@@ -580,5 +559,8 @@ void tka_Initialize()
 		field(SP_TKA_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
 	});
 
-	InitializeEntity(NULL, tka_DelayedInit, INITPRIO_GAMETYPE);
+	g_tkaballs = IL_NEW();
+	entity tka_Handler = new_pure(tka_Handler);
+	setthink(tka_Handler, tka_Handler_CheckBall);
+	InitializeEntity(tka_Handler, tka_Handler_CheckBall, INITPRIO_GAMETYPE);
 }
