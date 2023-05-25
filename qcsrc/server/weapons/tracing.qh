@@ -29,11 +29,11 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 #define W_SetupShot_ProjectileSize(ent, wepent, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype) \
 	W_SetupShot_Dir_ProjectileSize(ent, wepent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype)
 #define W_SetupShot_Dir(ent, wepent, s_forward, antilag, recoil, snd, chan, maxdamage, deathtype) \
-	W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS, antilag, recoil, snd, chan, maxdamage, deathtype)
+	W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
 #define W_SetupShot(ent, wepent, antilag, recoil, snd, chan, maxdamage, deathtype) \
-	W_SetupShot_ProjectileSize(ent, wepent, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS, antilag, recoil, snd, chan, maxdamage, deathtype)
+	W_SetupShot_ProjectileSize(ent, wepent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
 #define W_SetupShot_Range(ent, wepent, antilag, recoil, snd, chan, maxdamage, range, deathtype) \
-	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, v_forward, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS, antilag, recoil, snd, chan, maxdamage, range, deathtype)
+	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range, deathtype)
 
 vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvelocity, float forceAbsolute);
 

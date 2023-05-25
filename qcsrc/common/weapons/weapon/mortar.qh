@@ -20,9 +20,6 @@ CLASS(Mortar, Weapon)
 /* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
 /* legacy    */ ATTRIB(Mortar, m_deprecated_netname, string, "grenadelauncher");
 
-#define GREN_MINS '-4 -4 -4' // 0.8.5 used '-3 -3 -3' (before sv_legacy_bbox_expand 0)
-#define GREN_MAXS '4 4 4'    // 0.8.5 used '3 3 3'    (before sv_legacy_bbox_expand 0)
-
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, BOTH) \

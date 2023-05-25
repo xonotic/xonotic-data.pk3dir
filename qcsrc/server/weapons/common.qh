@@ -24,14 +24,7 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 
 .entity realowner;
 
-// if these are too big the max possible blaster jump height is increased a little
-const vector UNHITTABLEPROJ_MINS = '-0.015625 -0.015625 -0.015625'; // 0.8.5 set '0 0 0' (before sv_legacy_bbox_expand 0)
-const vector UNHITTABLEPROJ_MAXS = '0.015625 0.015625 0.015625';    // 0.8.5 set '0 0 0' (before sv_legacy_bbox_expand 0)
-const int CLIPGROUP_UNHITTABLEPROJ = 1;        // these projectiles cannot deflect or destroy each other
-// TODO: remove the following clipgroup comparison, which is included for backwards compatibility, after upgrading DP:
-// in DP versions with DP_RM_CLIPGROUP, the touch func isn't called when the clipgroup is a matching non zero integer.
-// see: https://gitlab.com/xonotic/xonotic-data.pk3dir/-/merge_requests/1131
-#define PROJECTILE_TOUCH(e,t) if (((e).clipgroup && (e).clipgroup == (t).clipgroup) || ((e).solid == SOLID_TRIGGER && (t).solid == SOLID_TRIGGER) || WarpZone_Projectile_Touch(e,t)) return
+#define PROJECTILE_TOUCH(e,t) MACRO_BEGIN if (WarpZone_Projectile_Touch(e,t)) return; MACRO_END
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

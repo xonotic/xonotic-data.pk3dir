@@ -341,12 +341,11 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 		set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		PROJECTILE_MAKETRIGGER(proj);
-		proj.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 		proj.projectiledeathtype = thiswep.m_id;
 		//proj.gravity = 0.001;
 
 		setorigin(proj, w_shotorg);
-		setsize(proj, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
+		setsize(proj, '0 0 0', '0 0 0');
 
 
 		s = '0 0 0';
@@ -455,12 +454,11 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 		set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		PROJECTILE_MAKETRIGGER(proj);
-		proj.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 		proj.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 		//proj.gravity = 0.001;
 
 		setorigin(proj, w_shotorg);
-		setsize(proj, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
+		setsize(proj, '0 0 0', '0 0 0');
 
 		if(WEP_CVAR_SEC(crylink, spreadtype) == 1)
 		{

@@ -151,7 +151,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(mortar, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, GREN_MINS, GREN_MAXS, false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage), thiswep.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage), thiswep.m_id);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -167,7 +167,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.projectiledeathtype = thiswep.m_id;
 	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
-	setsize(gren, GREN_MINS, GREN_MAXS);
+	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.cnt = time + WEP_CVAR_PRI(mortar, lifetime);
 	gren.nextthink = time;
@@ -203,7 +203,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(mortar, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, GREN_MINS, GREN_MAXS, false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage), thiswep.m_id | HITTYPE_SECONDARY);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage), thiswep.m_id | HITTYPE_SECONDARY);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -219,7 +219,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
-	setsize(gren, GREN_MINS, GREN_MAXS);
+	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.nextthink = time + WEP_CVAR_SEC(mortar, lifetime);
 	setthink(gren, adaptor_think2use_hittype_splash);

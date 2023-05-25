@@ -45,10 +45,9 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 
 	setorigin(missile, w_shotorg);
-	setsize(missile, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
+	setsize(missile, '0 0 0', '0 0 0');
 
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR_PRI(hlac, speed), spread);
 	//missile.angles = vectoangles(missile.velocity); // csqc
@@ -91,10 +90,9 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 		set_movetype(missile, MOVETYPE_FLY);
 		PROJECTILE_MAKETRIGGER(missile);
-		missile.clipgroup = CLIPGROUP_UNHITTABLEPROJ;
 
 		setorigin(missile, w_shotorg);
-		setsize(missile, UNHITTABLEPROJ_MINS, UNHITTABLEPROJ_MAXS);
+		setsize(missile, '0 0 0', '0 0 0');
 
 		W_SetupProjVelocity_Basic(missile, WEP_CVAR_SEC(hlac, speed), spread);
 		//missile.angles = vectoangles(missile.velocity); // csqc
