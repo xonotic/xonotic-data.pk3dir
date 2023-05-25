@@ -998,6 +998,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
+	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
+	setmodel(this, MDL_Null); // precision set below
+
+	// set item size before we spawn a waypoint or droptofloor or MoveOutOfSolid
+	setsize (this, this.pos1 = def.m_mins, this.pos2 = def.m_maxs);
+	this.SendFlags |= ISF_SIZE;
+
 	if (Item_IsLoot(this))
 	{
 		this.reset = RemoveItem;
@@ -1027,6 +1034,11 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			delete(this);
 			return;
 		}
+
+		// most loot items have a bigger horizontal size than a player
+		WarpZoneLib_MoveOutOfSolid(this);
+
+		this.gravity = 1;
 	}
 	else
 	{
@@ -1068,9 +1080,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		{
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(this, this.origin + '0 0 1');
-			// set item size before we spawn a spawnfunc_waypoint
-			setsize(this, def.m_mins, def.m_maxs);
-			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
 				droptofloor(this);
@@ -1119,24 +1128,20 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		}
 
 		Item_ItemsTime_SetTime(this, 0);
+
+		this.glowmod = def.m_color;
 	}
 
 	this.bot_pickup = true;
 	this.bot_pickupevalfunc = pickupevalfunc;
 	this.bot_pickupbasevalue = pickupbasevalue;
-	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
 	this.netname = itemname;
 	settouch(this, Item_Touch);
-	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
 
 	// support skinned models for powerups
 	if(!this.skin)
 		this.skin = def.m_skin;
-
-	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
-
-	this.SendFlags |= ISF_SIZE;
 
 	if (!(this.spawnflags & 1024)) {
 		if(def.instanceOfPowerup)
@@ -1145,11 +1150,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(GetResource(this, RES_ARMOR) || GetResource(this, RES_HEALTH))
 			this.ItemStatus |= ITS_ANIMATE2;
 	}
-
-	if(Item_IsLoot(this))
-		this.gravity = 1;
-	else
-		this.glowmod = def.m_color;
 
 	if(def.instanceOfWeaponPickup)
 	{
