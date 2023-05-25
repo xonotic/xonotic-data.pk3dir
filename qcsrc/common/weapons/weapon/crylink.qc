@@ -234,6 +234,23 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 	return (hit_enemy ? false : hit_friendly);
 }
 
+.entity spike_toucher;
+void W_Crylink_Explode_Think(entity this)
+{
+	float isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
+	float f = bound(0, 1 - (time - this.fade_time) * this.fade_rate, 1);
+	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * f, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * f, WEP_CVAR_BOTH(crylink, isprimary, radius),
+					NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * f, this.projectiledeathtype, this.weaponentity_fld, this.spike_toucher);
+
+	.entity weaponentity = this.weaponentity_fld;
+	if(this == this.crylink_owner.(weaponentity).crylink_lastgroup)
+		this.crylink_owner.(weaponentity).crylink_lastgroup = NULL;
+	W_Crylink_LinkExplode(this.queuenext, this, this.spike_toucher);
+	this.classname = "spike_oktoremove";
+	delete(this);
+	return;
+}
+
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch(entity this, entity toucher)
 {
@@ -258,11 +275,19 @@ void W_Crylink_Touch(entity this, entity toucher)
 
 	if(totaldamage && ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 2) || ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 1) && !W_Crylink_Touch_WouldHitFriendly(this, WEP_CVAR_BOTH(crylink, isprimary, radius)))))
 	{
-		.entity weaponentity = this.weaponentity_fld;
-		if(this == this.crylink_owner.(weaponentity).crylink_lastgroup)
-			this.crylink_owner.(weaponentity).crylink_lastgroup = NULL;
-		W_Crylink_LinkExplode(this.queuenext, this, toucher);
-		this.classname = "spike_oktoremove";
+		entity it = this;
+		while ((it = it.queuenext) && it != this)
+		{
+			it.spike_toucher = toucher;
+			// delay link explosion a little because when one spike hit the enemy, other spikes
+			// may have their origin not updated yet and explode a little farther from enemy,
+			// especially with high speed, dealing less damage than expected on direct hit
+			setthink(it, W_Crylink_Explode_Think);
+			// NOTE: only one of the spikes not hitting the enemy will actually call
+			// W_Crylink_Explode_Think and remove recursively all spikes
+			it.nextthink = time + 0.05;
+		}
+
 		delete(this);
 		return;
 	}
