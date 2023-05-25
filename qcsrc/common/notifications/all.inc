@@ -231,7 +231,11 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
 
 // MSG_INFO_NOTIFICATIONS
+    MSG_INFO_NOTIF(CHAT_DISABLED,                           N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGChat is currently disabled on this server"), "")
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
+    MSG_INFO_NOTIF(CHAT_PRIVATE_DISABLED,                   N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGPrivate chat is currently disabled on this server"), "")
+    MSG_INFO_NOTIF(CHAT_SPECTATOR_DISABLED,                 N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is currently disabled on this server"), "")
+    MSG_INFO_NOTIF(CHAT_TEAM_DISABLED,                      N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGTeam chat is currently disabled on this server"), "")
 
     MULTITEAM_INFO(CTF_CAPTURE,                             N_CONSOLE,  1, 0, "s1", "s1",                       "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag"), "", FLAG)
     MULTITEAM_INFO(CTF_CAPTURE_BROKEN,                      N_CONSOLE,  2, 2, "s1 f1dtime s2 f2dtime", "s1",    "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "", FLAG)
@@ -423,6 +427,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(MOVETOSPEC_IDLING,                       N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"), "")
     MSG_INFO_NOTIF(QUIT_KICK_SPECTATING,                    N_CONSOLE,  0, 0, "", "",           "",             _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "")
     MSG_INFO_NOTIF(QUIT_KICK_TEAMKILL,                      N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for excessive teamkilling"), "")
+    MSG_INFO_NOTIF(QUIT_PLAYBAN_TEAMKILL,                   N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was forced to spectate for excessive teamkilling"), "")
     MSG_INFO_NOTIF(QUIT_SPECTATE,                           N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 is now^BG spectating"), "")
 
     MSG_INFO_NOTIF(RACE_ABANDONED,                          N_CONSOLE,  1, 0, "s1", "",                                                                     "",                         _("^BG%s^BG has abandoned the race"), "")
@@ -709,6 +714,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
     MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
+    MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server, but you can play minigames")), "")
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
@@ -769,6 +775,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(POWERUP_INVISIBILITY,              N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You are invisible"), "")
     MSG_CENTER_NOTIF(POWERDOWN_INVISIBILITY,            N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Invisibility has worn off"), "")
 
+    MSG_CENTER_NOTIF(QUIT_PLAYBAN_TEAMKILL,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You are forced to spectate and you aren't allowed to play because you are banned in this server")), "")
+
     MSG_CENTER_NOTIF(RACE_FINISHLAP,                    N_ENABLE,    0, 0, "",               CPID_RACE_FINISHLAP,    "0 0",  _("^F2The race is over, finish your lap!"), "")
 
     MSG_CENTER_NOTIF(SEQUENCE_COMPLETED,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGSequence completed!"), "")
@@ -799,6 +807,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to steal this vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL,                     N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2Intruder detected, disabling shields!"), "")
+
+    MSG_CENTER_NOTIF(VOTEBAN,                           N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You aren't allowed to call a vote because you are banned in this server")), "")
+    MSG_CENTER_NOTIF(VOTEBANYN,                         N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You aren't allowed to vote because you are banned in this server")), "")
 
     MSG_CENTER_NOTIF(WEAPON_MINELAYER_LIMIT,            N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "")
 

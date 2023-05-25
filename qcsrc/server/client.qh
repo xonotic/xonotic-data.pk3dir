@@ -359,6 +359,10 @@ void calculate_player_respawn_time(entity this);
 
 bool PlayerInList(entity player, string list);
 
+bool PlayerInIDList(entity p, string idlist);
+
+bool PlayerInIPList(entity p, string iplist);
+
 void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);

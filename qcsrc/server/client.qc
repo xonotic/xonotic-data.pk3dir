@@ -51,7 +51,8 @@
 #include <server/chat.qh>
 #include <server/cheats.qh>
 #include <server/clientkill.qh>
-#include <server/command/common.qh>
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
 #include <server/command/common.qh>
 #include <server/command/vote.qh>
 #include <server/compat/quake3.qh>
@@ -1186,6 +1187,13 @@ void ClientConnect(entity this)
 
 	Handicap_Initialize(this);
 
+	// playban
+	if (PlayerInList(this, autocvar_g_playban_list))
+		TRANSMUTE(Observer, this);
+
+	if (PlayerInList(this, autocvar_g_muteban_list)) // muteban
+		CS(this).muted = true;
+
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
 	if (player_count == 1)
@@ -1208,6 +1216,20 @@ void player_powerups_remove_all(entity this);
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
+
+	/* from "ignore" command */
+	strfree(this.ignore_list);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	{
+		if(it.crypto_idfp && it.crypto_idfp != "")
+			continue;
+		string mylist = ignore_removefromlist(it, this);
+		if(it.ignore_list)
+			strunzone(it.ignore_list);
+
+		it.ignore_list = strzone(mylist);
+	});
+	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -2026,6 +2048,17 @@ int nJoinAllowed(entity this, entity ignore)
 	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 		return 0; // forced spectators can never join
 
+	static float msg_time = 0;
+	if(this && !INGAME(this) && ignore && PlayerInList(this, autocvar_g_playban_list))
+	{
+		if(time > msg_time)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
+			msg_time = time + 0.5;
+		}
+		return 0;
+	}
+
 	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
@@ -2044,7 +2077,6 @@ int nJoinAllowed(entity this, entity ignore)
 	else if(player_limit > 0 && currentlyPlaying < player_limit)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
-	static float msg_time = 0;
 	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
@@ -2288,6 +2320,7 @@ void ObserverOrSpectatorThink(entity this)
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
+			// primary attack pressed
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
