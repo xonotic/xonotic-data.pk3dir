@@ -204,7 +204,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
 	else if(ISGAMETYPE(BR))
-	    isfriend = br_isSameSquad(this);
+	    isfriend = br_isSameSquad(this.entnum);
 	else
 		isfriend = islocalplayer;
 
@@ -295,7 +295,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 					forcecolor_friend = 0;
 		}
 
-		if((!ISGAMETYPE(BR) && (cm == 1024 + 17 * myteam)) || (ISGAMETYPE(BR) && br_isSameSquad(this)))
+		if((!ISGAMETYPE(BR) && (cm == 1024 + 17 * myteam)) || (ISGAMETYPE(BR) && br_isSameSquad(this.entnum)))
 		{
 			if(forcecolor_friend)
 				this.colormap = forcecolor_friend;

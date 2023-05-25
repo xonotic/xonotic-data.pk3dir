@@ -6,6 +6,9 @@
 #include <common/ent_cs.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/resources/cl_resources.qh>
+#include <common/gamemodes/gamemode/br/br.qh>
+#include <common/gamemodes/gamemode/br/cl_ring.qh>
+#include <common/gamemodes/gamemode/br/cl_squad.qh>
 
 // Radar (#6)
 
@@ -204,7 +207,7 @@ void HUD_Radar()
 		else
 		{
 			if (autocvar_hud_panel_radar == 0) return;
-			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+			if (autocvar_hud_panel_radar != 2 && (!teamplay && !ISGAMETYPE(BR))) return;
 			if(radar_panel_modified)
 			{
 				panel.update_time = time; // forces reload of panel attributes
@@ -310,6 +313,9 @@ void HUD_Radar()
 
 	drawsetcliparea(pos.x, pos.y, mySize.x, mySize.y);
 
+	if(ISGAMETYPE(BR))
+		draw_teamradar_ring(pos, mySize, panel_fg_alpha);
+
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
 	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
@@ -337,8 +343,15 @@ void HUD_Radar()
 	AL_EACH(_entcs, e, it != NULL, {
 		if (!it.m_entcs_private) continue;
 		if (it.sv_entnum == current_player) continue;
-		color2 = entcs_GetTeam(it.sv_entnum);
-		draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
+		if(!(ISGAMETYPE(BR) && br_isSameSquad(it.sv_entnum + 1)))
+		{
+			color2 = entcs_GetTeam(it.sv_entnum);
+			draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
+		}
+		else
+		{
+			draw_teamradar_player(it.origin, it.angles, '0.0625 1 0.0625'); // 0x0FFF0F
+		}
 	});
 	draw_teamradar_player(entcs_receiver(current_player).origin, view_angles, '1 1 1');
 

@@ -161,6 +161,9 @@ void Ent_WaypointSprite(entity this, bool isnew)
     if (sendflags & 2)
     {
         strcpy(this.netname, ReadString());
+
+        if (this.netname == WP_BRAlly.netname && IL_CONTAINS(g_radaricons, this))
+            IL_REMOVE(g_radaricons, this);
     }
 
     if (sendflags & 4)

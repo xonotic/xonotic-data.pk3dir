@@ -22,13 +22,13 @@ NET_HANDLE(TE_CSQC_BR_SQUAD, bool isNew)
     return true;
 }
 
-bool br_isSameSquad(entity this)
+bool br_isSameSquad(int entnum)
 {
     for(int i = 0; i < csqcsquad_cnt; ++i)
     {
         int member = csqcsquad[i];
 
-        if(this.entnum == member)
+        if(entnum == member)
             return true;
     }
 

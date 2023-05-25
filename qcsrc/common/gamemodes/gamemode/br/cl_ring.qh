@@ -1,1 +1,3 @@
 #pragma once
+
+void draw_teamradar_ring(vector clip_pos, vector clip_size, float fg);
