@@ -288,7 +288,6 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
-	WarpZoneLib_MoveOutOfSolid(key); // a key has a bigger bbox than a player
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
 	set_movetype(key, MOVETYPE_TOSS);

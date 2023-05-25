@@ -466,9 +466,9 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
+	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
 	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
-	setorigin(flag, player.origin);
-	WarpZoneLib_MoveOutOfSolid(flag); // a flag has a bigger bbox than a player
+	setorigin(flag, trace_endpos);
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
