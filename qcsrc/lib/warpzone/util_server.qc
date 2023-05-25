@@ -47,10 +47,4 @@ void WarpZoneLib_ExactTrigger_Init(entity this)
 		setsize(this, this.mins, this.maxs);
 	set_movetype(this, MOVETYPE_NONE);
 	this.model = "";
-
-	// Xonotic and Nexuiz maps assume triggers will be activated by adjacent players
-	// this causes the touch func to be called in that case
-	// prior to sv_legacy_bbox_expand 0 DP always did this for SVQC and never for CSQC
-	if (!Q3COMPAT_COMMON)
-		setsize(this, this.mins - '1 1 1', this.maxs + '1 1 1');
 }

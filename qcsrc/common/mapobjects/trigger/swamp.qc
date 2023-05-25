@@ -31,12 +31,20 @@ void swamp_think(entity this)
 	{
 		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, it.swampslug.active == ACTIVE_NOT && IS_PLAYER(it) && !IS_DEAD(it),
 		{
-			if (WarpZoneLib_ExactTrigger_Touch(this, it, false))
+			vector emin = it.absmin;
+			vector emax = it.absmax;
+			if(this.solid == SOLID_BSP)
 			{
-				if(!it.swampslug)
-					IL_PUSH(g_swamped, it);
-				it.swampslug = this;
+				emin -= '1 1 1';
+				emax += '1 1 1';
 			}
+			if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+				if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+				{
+					if(!it.swampslug)
+						IL_PUSH(g_swamped, it);
+					it.swampslug = this;
+				}
 		});
 
 		IL_EACH(g_swamped, it.swampslug == this,

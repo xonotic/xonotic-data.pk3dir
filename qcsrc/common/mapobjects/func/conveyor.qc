@@ -21,12 +21,20 @@ void conveyor_think(entity this)
 	{
 		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, it.conveyor.active == ACTIVE_NOT && isPushable(it),
 		{
-			if (WarpZoneLib_ExactTrigger_Touch(this, it, false))
+			vector emin = it.absmin;
+			vector emax = it.absmax;
+			if(this.solid == SOLID_BSP)
 			{
-				if(!it.conveyor)
-					IL_PUSH(g_conveyed, it);
-				it.conveyor = this;
+				emin -= '1 1 1';
+				emax += '1 1 1';
 			}
+			if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+				if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+				{
+					if(!it.conveyor)
+						IL_PUSH(g_conveyed, it);
+					it.conveyor = this;
+				}
 		});
 
 		IL_EACH(g_conveyed, it.conveyor == this,

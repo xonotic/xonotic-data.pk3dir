@@ -58,14 +58,6 @@ const int ITS_ALLOWFB           = BIT(4);
 const int ITS_ALLOWSI           = BIT(5);
 const int ITS_GLOW              = BIT(6);
 
-// item bboxes for sv_legacy_bbox_expand 0
-// Small, Default and Large (large maxs are used with default mins)
-const vector ITEM_S_MINS = '-16 -16 0'; // smaller items now get the same "unexpanded" bbox that normal items
-const vector ITEM_S_MAXS = '16 16 48';  // had during MoveOutOfSolid and DropToFloor (before expansion) in 0.8.5
-const vector ITEM_D_MINS = '-30 -30 0'; // 0.8.5 set '-16 -16 0' then DP subtracted '15 15 1' but NetRadiant used '-30 -30 0'
-const vector ITEM_D_MAXS = '30 30 48';  // 0.8.5 set '16 16 48' then DP added '15 15 1' but NetRadiant used '30 30 32'
-const vector ITEM_L_MAXS = '30 30 70';  // 0.8.5 set '16 16 80' for powerups, '16 16 70' for megas, '16 16 60' for buffs
-
 .float fade_start;
 .float fade_end;
 

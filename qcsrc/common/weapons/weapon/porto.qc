@@ -118,8 +118,7 @@ void W_Porto_Fail(entity this, float failhard)
 
 	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
-		// FIXME: item properties should be obtained from the registry
-		setsize(this, ITEM_D_MINS, ITEM_D_MAXS);
+		setsize(this, '-16 -16 0', '16 16 48');
 		setorigin(this, this.origin + trace_plane_normal);
 		if(move_out_of_solid(this))
 		{

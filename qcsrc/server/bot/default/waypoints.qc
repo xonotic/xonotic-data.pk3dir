@@ -647,7 +647,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 			e = it; break;
 		});
 		if (!e)
-			e = waypoint_spawn(jp.absmin - PL_MAX_CONST, jp.absmax - PL_MIN_CONST, WAYPOINTFLAG_TELEPORT);
+			e = waypoint_spawn(jp.absmin - PL_MAX_CONST + '1 1 1', jp.absmax - PL_MIN_CONST + '-1 -1 -1', WAYPOINTFLAG_TELEPORT);
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
@@ -2062,7 +2062,7 @@ void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
 {
 	destination = waypoint_fixorigin(destination, tracetest_ent);
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST, e.absmax - PL_MIN_CONST, destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST + '1 1 1', e.absmax - PL_MIN_CONST + '-1 -1 -1', destination, destination, timetaken);
 }
 
 entity waypoint_spawnpersonal(entity this, vector position)
