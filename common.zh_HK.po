@@ -578,11 +578,11 @@ msgstr "點擊選擇出生點"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Survivor"
-msgstr ""
+msgstr "生存者"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Hunter"
-msgstr ""
+msgstr "狩獵者"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of ball carrier kills"
@@ -714,11 +714,11 @@ msgstr "進球"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "獵殺數（生存模式）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^hunts"
-msgstr ""
+msgstr "獵殺"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of keys carrier kills"
@@ -898,11 +898,11 @@ msgstr "總和"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of survivals"
-msgstr ""
+msgstr "生存數"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^survivals"
-msgstr ""
+msgstr "生存"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of domination points taken (Domination)"
@@ -3388,12 +3388,12 @@ msgstr "^BG%s^K1 拿到了超級武器"
 #: qcsrc/common/notifications/all.inc:446
 #: qcsrc/common/notifications/all.inc:783
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1狩獵者^BG贏得此局！"
 
 #: qcsrc/common/notifications/all.inc:447
 #: qcsrc/common/notifications/all.inc:785
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1生存者^BG贏得此局！"
 
 #: qcsrc/common/notifications/all.inc:449
 msgid "^BGYou cannot change to a larger team"
@@ -4634,11 +4634,11 @@ msgstr "^F2你現在擁有一把超級武器"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr ""
+msgstr "^BG你是^K1狩獵者^BG！消滅生存者，但不要引起懷疑！"
 
 #: qcsrc/common/notifications/all.inc:784
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BG你是^F1生存者^BG！辨識並消滅狩獵者！"
 
 #: qcsrc/common/notifications/all.inc:787
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -6013,7 +6013,7 @@ msgstr "中文（中國）"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "中文（香港）"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6053,7 +6053,7 @@ msgstr "匈牙利語"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "印度尼西亞語"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6077,7 +6077,7 @@ msgstr "韓語"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "拉丁語"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
