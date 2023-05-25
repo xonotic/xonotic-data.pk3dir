@@ -849,6 +849,13 @@ void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from voting.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBANYN);
+				return;
+			}
+
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if (caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change)
 			{
@@ -890,6 +897,13 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 		{
 			float tmp_playercount = 0;
 			int parse_error;
+
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from calling a vote.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBAN);
+				return;
+			}
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
@@ -1106,6 +1120,13 @@ void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from voting.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBANYN);
+				return;
+			}
+
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if (caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change)
 			{
@@ -1188,6 +1209,13 @@ void VoteCommand_yes(int request, entity caller)  // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from voting.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBANYN);
+				return;
+			}
+
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if (caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change)
 			{
