@@ -808,7 +808,7 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	return e;
 }
 
-bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
+bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc)
 {
 	vector emin = toucher.absmin, emax = toucher.absmax;
 	if(STAT(Q3COMPAT))
@@ -818,7 +818,12 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 		emin += '1 1 1';
 		emax -= '1 1 1';
 	}
-	return !WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher);
+
+	// if called from a touch func, we can assume the boxes do overlap
+	if (!touchfunc && !boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+		return false;
+
+	return WarpZoneLib_BoxTouchesBrush(emin, emax, this, toucher); // accurate
 }
 
 

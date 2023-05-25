@@ -70,6 +70,35 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 	}
 }
 
+void ClientCommand_clear_ignores(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
+
+			if(!advanced)
+			{
+				sprint(caller, "You don't have a stats UID, unable to clear your ignore list.\n");
+				return;
+			}
+
+			ignore_clearall(caller);
+			sprint(caller, "All permanent ignores cleared!\n");
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd clear_ignores\n");
+			sprint(caller, "  Removes all existing ignored clients whose are kept out of personal chat log.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_clientversion(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
@@ -244,6 +273,78 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			sprint(caller, "   ^7 where <p1> <p2> ... <pX> are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical"
 								" so you can determine origin/axis of symmetry of maps without ctf flags or where flags aren't perfectly symmetrical\n");
 			sprint(caller, "  See ^5wpeditor_menu^7 for a selectable list of various commands and useful settings to edit waypoints.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_ignore(entity caller, int request, int argc, string command)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2)
+			{
+				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
+
+				if(!argv(1) || argv(1) == "")
+				{
+					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
+					return;
+				}
+
+				entity ignore_to = GetIndexedEntity(argc, 1);
+				float ignore_accepted = VerifyClientEntity(ignore_to, true, false);
+
+				if (ignore_accepted > 0 && IS_REAL_CLIENT(ignore_to))   // the target is a real client
+				{
+					if (ignore_to != caller) // and we're allowed to ignore them heh
+					{
+						if(ignore_playerinlist(ignore_to, caller))
+						{
+							sprint(caller, ignore_to.netname, " ^7is already ignored!\n");
+							return;
+						}
+
+						// advanced ignore mode, works if both the player and the sender have a stats UID
+						if(advanced && ignore_to.crypto_idfp && ignore_to.crypto_idfp != "")
+						{
+							for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+							{
+								string pos = db_get(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)));
+								if(pos == "")
+								{
+									db_put(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)), ignore_to.crypto_idfp);
+									sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+									return;
+								}
+							}
+
+							sprint(caller, "You may only ignore up to ", ftos(IGNORE_MAXPLAYERS), " players, remove one before trying again.\n");
+							return;
+						}
+
+						if(caller.ignore_list)
+							strunzone(caller.ignore_list);
+						caller.ignore_list = strzone(cons(caller.ignore_list, ftos(etof(ignore_to))));
+
+						sprint(caller, "You no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+					}
+					else { sprint(caller, "You can't ^2ignore^7 yourself.\n"); }
+				}
+				else { print_to(caller, strcat("ignore: ", GetClientErrorString(ignore_accepted, argv(1)), ".\nUnable to ignore this player, check their ID.")); }
+
+				return;
+			}
+		}
+
+		default:
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd ignore <client>\n");
+			sprint(caller, "  Where <client> is the entity number or name of the player to ignore keeping out of personal chat log.\n");
 			return;
 		}
 	}
@@ -573,7 +674,7 @@ void ClientCommand_spectate(entity caller, int request)
 					if(IS_SPEC(caller) || IS_OBSERVER(caller))
 					{
 						entity client = GetFilteredEntity(argv(1));
-						int spec_accepted = VerifyClientEntity(client, false, false);
+						float spec_accepted = VerifyClientEntity(client, false, false);
 						if(spec_accepted > 0 && IS_PLAYER(client))
 						{
 							bool caller_is_observer = (IS_OBSERVER(caller));
@@ -691,6 +792,60 @@ void ClientCommand_tell(entity caller, int request, int argc, string command)
 	}
 }
 
+void ClientCommand_unignore(entity caller, int request, int argc, string command)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2)
+			{
+				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
+
+				if(!argv(1) || argv(1) == "")
+				{
+					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
+					return;
+				}
+
+				entity unignore_to = GetIndexedEntity(argc, 1);
+				float unignore_accepted = VerifyClientEntity(unignore_to, true, false);
+
+				if (unignore_accepted > 0 && IS_REAL_CLIENT(unignore_to))   // the target is a real client
+				{
+					if (unignore_to != caller)
+					{
+						string mylist = ignore_removefromlist(caller, unignore_to);
+						if(!advanced)
+						{
+							if(caller.ignore_list)
+								strunzone(caller.ignore_list);
+
+							caller.ignore_list = strzone(mylist);
+						}
+
+						sprint(caller, "You can now receive messages from ", unignore_to.netname, " ^7again.\n");
+						return;
+					}
+					else { sprint(caller, "You can't ^2unignore^7 yourself.\n"); }
+				}
+				else {  print_to(caller, strcat("unignore: ", GetClientErrorString(unignore_accepted, argv(1)), ".\nUnable to stop ignoring this player, check their ID.")); }
+
+				return;
+			}
+		}
+
+		default:
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd unignore <client>\n");
+			sprint(caller, "  Where <client> is the entity number or name of the player to stop ignoring when is keeping out of personal chat log.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_voice(entity caller, int request, int argc, string command)
 {
 	switch (request)
@@ -770,7 +925,9 @@ void ClientCommand_(entity caller, int request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(ent, request, arguments, command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
+	CLIENT_COMMAND("clear_ignores", ClientCommand_clear_ignores(ent, request), "Remove all existing ignored clients") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
+	CLIENT_COMMAND("ignore", ClientCommand_ignore(ent, request, arguments, command), "Ignore a client in the game keeping out of personal chat log for a match") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
 	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
 	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
@@ -786,6 +943,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("unignore", ClientCommand_unignore(ent, request, arguments, command), "Remove an existing ignored player") \
 	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") \
 	/* nothing */
 
