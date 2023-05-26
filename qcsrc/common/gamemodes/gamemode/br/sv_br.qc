@@ -1031,6 +1031,82 @@ MUTATOR_HOOKFUNCTION(br, SV_StartFrame)
     }
 }
 
+void(entity this) havocbot_role_br_reviving;
+void(entity this) havocbot_role_br_generic;
+
+bool squad_needs_revive(entity this)
+{
+    for(entity member = this.br_squad.br_squad_first; member; member = member.br_squad_next)
+    {
+        if(IS_DEAD(member) || !IS_PLAYER(member))
+            continue;
+
+        if(STAT(BLEEDING, member))
+            return true;
+    }
+
+    return false;
+}
+
+void havocbot_goalrating_br_findplayers(entity this, float ratingscale)
+{
+    if(!IN_SQUAD(this))
+        return;
+
+    for(entity member = this.br_squad.br_squad_first; member; member = member.br_squad_next)
+    {
+        if(IS_DEAD(member) || !IS_PLAYER(member) || (member == this))
+            continue;
+
+        // either wants to be revived by another player or wants to revive another player
+        if(STAT(BLEEDING, member) != STAT(BLEEDING, this))
+            navigation_routerating(this, member, ratingscale, 100000);
+    }
+}
+
+void havocbot_role_br_reviving(entity this)
+{
+    if(IS_DEAD(this))
+        return;
+
+    if(!squad_needs_revive(this))
+    {
+        LOG_TRACE("changing role to generic");
+        this.havocbot_role = havocbot_role_br_generic;
+        navigation_goalrating_timeout_force(this);
+        return;
+    }
+
+    navigation_goalrating_start(this);
+    havocbot_goalrating_br_findplayers(this, 20000);
+    navigation_goalrating_end(this);
+}
+
+void havocbot_role_br_generic(entity this)
+{
+    if(IS_DEAD(this))
+        return;
+
+    if(squad_needs_revive(this))
+    {
+        LOG_TRACE("changing role to reviving");
+        this.havocbot_role = havocbot_role_br_reviving;
+        return;
+    }
+
+    havocbot_role_generic(this);
+}
+
+MUTATOR_HOOKFUNCTION(br, HavocBot_ChooseRole)
+{
+    entity bot = M_ARGV(0, entity);
+
+    if(!IS_DEAD(bot))
+        bot.havocbot_role = havocbot_role_br_generic;
+
+    return true;
+}
+
 float br_CalculatePlayerDropAngle(entity this)
 {
     if(this.velocity.z < 0)
