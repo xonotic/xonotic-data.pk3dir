@@ -1000,6 +1000,9 @@ void vehicles_enter(entity pl, entity veh)
 	}
 	else return;
 
+	if(veh.br_vehicle_drop && veh.waypointsprite_attached)
+		WaypointSprite_Kill(veh.waypointsprite_attached);
+
 	RemoveGrapplingHooks(pl);
 
 	veh.vehicle_ammo1 = 0;

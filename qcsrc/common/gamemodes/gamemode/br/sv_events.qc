@@ -12,6 +12,25 @@ void spawn_supply()
     {
         delete(this);
         LOG_WARN("supply drop failed");
+        return;
+    }
+
+    entity wi = REGISTRY_GET(Weapons, this.weapon);
+    entity ii = this.itemdef;
+
+    if (wi != WEP_Null)
+    {
+        entity wp = WaypointSprite_Spawn(WP_Weapon, autocvar_g_br_supply_interval, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Weapon);
+        wp.wp_extra = wi.m_id;
+    }
+    else if (ii != NULL)
+    {
+        entity wp = WaypointSprite_Spawn(WP_Item, autocvar_g_br_supply_interval, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Item);
+        wp.wp_extra = ii.m_id;
+    }
+    else
+    {
+        LOG_WARN("supply drop has no waypoint");
     }
 }
 
@@ -28,7 +47,11 @@ void spawn_vehicle()
     {
         delete(this);
         LOG_WARN("vehicle drop failed");
+        return;
     }
+
+    entity wp = WaypointSprite_Spawn(WP_Vehicle, autocvar_g_br_vehicle_interval, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Vehicle);
+    wp.wp_extra = this.vehicleid;
 }
 
 // TODO: ensure spawn is within ring

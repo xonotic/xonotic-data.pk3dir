@@ -976,7 +976,7 @@ MUTATOR_HOOKFUNCTION(br, CustomizeWaypoint)
     if((wp == wp.owner.br_allywaypoint) && (vdist(wp.owner.origin - player.origin, <, autocvar_g_br_squad_waypoint_distance) || STAT(BLEEDING, wp.owner)))
         return true;
 
-    if(!IS_PLAYER(player) || DIFF_SQUAD(wp.owner, player))
+    if(!IS_PLAYER(player) || (IN_SQUAD(wp.owner) && DIFF_SQUAD(wp.owner, player)))
         return true;
 }
 
