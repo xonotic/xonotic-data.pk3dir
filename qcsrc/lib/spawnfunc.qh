@@ -89,7 +89,6 @@ noref string __fullspawndata;
 
 // enables/disables warnings if a map entity has a field that doesn't exist
 // useful for debugging and compatibility testing
-#define SPAWNFUNC_CHECK_FIELDS 1
 #if SPAWNFUNC_CHECK_FIELDS
 
 	#define FIELD_SCALAR(fld, n) \
