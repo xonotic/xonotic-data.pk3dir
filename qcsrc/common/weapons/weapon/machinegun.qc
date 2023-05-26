@@ -312,9 +312,27 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         {
             if(WEP_CVAR(machinegun, spread_decay) != 0)
             {
+                // update spread accumulation
                 actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
                 actor.(weaponentity).lastShotTime = time;
-                if(actor.(weaponentity).machinegun_spread_accumulation > 0)
+
+                //check if max is lower or higher than min so it can be used invertedly, accurate with more firing, like Hyperion weapons from Borderlands
+                if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
+                {
+                        lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
+                        higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
+                        inversedSpread = false;
+                }
+                else
+                {
+                        lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
+                        higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
+                        inversedSpread = true;
+                }
+                spreadSpectrumDistance = higherEndOfSpreadSpectrum - lowerEndOfSpreadSpectrum;
+
+                // block alt fire if spread accumulation is >50%
+                if(actor.(weaponentity).machinegun_spread_accumulation > (higherEndOfSpreadSpectrum + lowerEndOfSpreadSpectrum) / 2)
                 {
                     w_ready(thiswep, actor, weaponentity, fire);
                     return;
