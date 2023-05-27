@@ -351,30 +351,37 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	frag_target.respawn_time = time + 1;
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 
-	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
-	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
-	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
-		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
+	// let the player die, they will be automatically frozen when they respawn
+	// it fixes a bug where you both really die (gibbing) and get frozen
+	// if you succeed changing team through the menu
+	if (frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
-		// let the player die, they will be automatically frozen when they respawn
-		if (STAT(FROZEN, frag_target) != FROZEN_NORMAL)
-		{
-			freezetag_Add_Score(frag_target, frag_attacker);
-			freezetag_count_alive_players();
-			freezetag_LastPlayerForTeam_Notify(frag_target);
-			frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
-		}
-		else
-		{
-			float t = frag_target.freezetag_frozen_timeout;
-			float t2 = frag_target.freezetag_frozen_time;
-			Unfreeze(frag_target, false); // remove ice
-			// keep timeout value so it can be restored when player will be refrozen on respawn
-			// NOTE this can't be exactly -2 since game starts from time 2
-			frag_target.freezetag_frozen_timeout = -t;
-			frag_target.freezetag_frozen_time = t2;
-		}
+		freezetag_Add_Score(frag_target, frag_attacker);
+		freezetag_count_alive_players();
+		freezetag_LastPlayerForTeam_Notify(frag_target);
+		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
+	}
+
+	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	{
+		// by restoring some health right after player death (soft-kill)
+		// weapons and ammo won't be reset
+		SetResourceExplicit(frag_target, RES_HEALTH, 1);
+		// restore armor as it was removed in PlayerDamage
+		SetResourceExplicit(frag_target, RES_ARMOR, frag_target.freezetag_frozen_armor);
+
+		// relocate
+		entity spot = SelectSpawnPoint(frag_target, true);
+		setorigin(frag_target, spot.origin);
+		frag_target.oldorigin = frag_target.origin;
+		frag_target.fixangle = true; // turn this way immediately
+		frag_target.angles = vec2(spot.angles);
+		frag_target.velocity = '0 0 0';
+		frag_target.oldvelocity = frag_target.velocity; // prevents fall damage, see CreatureFrame_FallDamage
+		frag_target.avelocity = '0 0 0';
+		frag_target.punchangle = '0 0 0';
+		frag_target.punchvector = '0 0 0';
 	}
 
 	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
@@ -406,14 +413,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 	if(player.freezetag_frozen_timeout <= -2) // player was dead
 	{
-		float t = player.freezetag_frozen_timeout;
-		float t2 = player.freezetag_frozen_time;
 		freezetag_Freeze(player, NULL);
-		if (t < -2)
-		{
-			player.freezetag_frozen_timeout = -t;
-			player.freezetag_frozen_time = t2;
-		}
 		return true;
 	}
 
@@ -462,6 +462,8 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 	//float frag_deathtype = M_ARGV(3, float);
 	//float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
+
+	frag_target.freezetag_frozen_armor = GetResource(frag_target, RES_ARMOR);
 
 	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto_reducible
 		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto)
