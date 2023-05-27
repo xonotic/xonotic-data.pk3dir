@@ -215,7 +215,6 @@ void VoteSpam(float notvoters, float mincount, string result)
 
 void VoteCount(float first_count)
 {
-	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 
 	float vote_player_count = 0, notvoters = 0;
@@ -227,7 +226,7 @@ void VoteCount(float first_count)
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_vote_debug, {
 		++vote_player_count;
 		if (IS_PLAYER(it) || INGAME(it)) ++vote_real_player_count;
 		switch (it.vote_selection)
@@ -978,6 +977,8 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++tmp_playercount; });
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
+				if (autocvar_sv_vote_debug)
+					bprint("\{1}^2* ^3", "^6DEBUG MODE ACTIVE: bots can vote too\n"); // so servers don't forget it on
 				if (autocvar_sv_eventlog)
 					GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
 				Nagger_VoteChanged();
