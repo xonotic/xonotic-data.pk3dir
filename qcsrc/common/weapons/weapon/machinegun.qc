@@ -261,15 +261,14 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), vectoangles(v_forward), 3, actor, weaponentity);
 	}
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
-	actor.(weaponentity).machinegun_spread_accumulation = actor.(weaponentity).machinegun_spread_accumulation + (WEP_CVAR(machinegun, spread_add) * 0.5);
-
-	if (actor.(weaponentity).machinegun_spread_accumulation > spreadSpectrumDistance)
+	actor.(weaponentity).machinegun_spread_accumulation += (WEP_CVAR(machinegun, spread_add) * 0.5);
+	if(actor.(weaponentity).machinegun_spread_accumulation > spreadSpectrumDistance)
 	{
 		actor.(weaponentity).machinegun_spread_accumulation = spreadSpectrumDistance;
 	}
 
-	if (actor.(weaponentity).misc_bulletcounter == 0)
+	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	if(actor.(weaponentity).misc_bulletcounter == 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(machinegun, burst_refire2) * W_WeaponRateFactor(actor);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(machinegun, burst_animtime), w_ready);
