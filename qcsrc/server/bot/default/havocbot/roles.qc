@@ -2,6 +2,7 @@
 
 #include <common/resources/sv_resources.qh>
 #include <common/stats.qh>
+#include <common/gamemodes/gamemode/br/sv_br.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/weapons/_all.qh>
