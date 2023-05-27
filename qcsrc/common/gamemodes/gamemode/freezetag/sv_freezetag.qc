@@ -365,7 +365,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		// soft-kill: setting health to something >= 1 after death, ammo won't be reset
+		// by restoring some health right after player death (soft-kill)
+		// weapons and ammo won't be reset
 		SetResourceExplicit(frag_target, RES_HEALTH, 1);
 		// restore armor as it was removed in PlayerDamage
 		SetResourceExplicit(frag_target, RES_ARMOR, frag_target.freezetag_frozen_armor);
