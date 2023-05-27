@@ -122,7 +122,6 @@ spawnfunc(trigger_teleport)
 	this.angles = '0 0 0';
 
 	this.active = ACTIVE_ACTIVE;
-	//trigger_init(this); // only for predicted triggers?
 	EXACTTRIGGER_INIT;
 	this.use = trigger_teleport_use;
 

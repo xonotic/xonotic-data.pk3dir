@@ -236,6 +236,9 @@ void cvar_changes_init()
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADCVAR("g_require_stats");
+		BADCVAR("g_muteban_list");
+		BADCVAR("g_playban_list");
+		BADCVAR("g_voteban_list");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
@@ -259,8 +262,6 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
-		BADCVAR("sv_muteban_list");
-		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 

@@ -52,13 +52,8 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	vector oldballorigin = this.origin;
 
 	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-	{
-		entity spot = SelectSpawnPoint(this, true);
-		setorigin(this, spot.origin);
-		this.angles = spot.angles;
-	}
+		setorigin(this, SelectSpawnPoint(this, true).origin);
 
-	makevectors(this.angles);
 	set_movetype(this, MOVETYPE_BOUNCE);
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
@@ -225,56 +220,48 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 
 MODEL(KA_BALL, "models/orbs/orbblue.md3");
 
-void ka_RemoveBall(entity ball)
-{
-	entity player = ball.owner;
-	if (player) // it was attached
-		ka_PlayerReset(player);
-	else
-		WaypointSprite_DetachCarrier(ball);
-	delete(ball);
-}
-
 void ka_RemoveBalls()
 {
 	IL_EACH(g_kaballs, true,
 	{
-		ka_RemoveBall(it);
+		if (it.owner) // it was attached
+			ka_PlayerReset(it.owner);
+		else
+			WaypointSprite_DetachCarrier(it);
+		delete(it);
 	});
 }
 
-void ka_SpawnBall()
+void ka_SpawnBalls()
 {
-	entity e = new(keepawayball);
-	setmodel(e, MDL_KA_BALL);
-	e.solid = SOLID_TRIGGER; // before setsize to ensure area grid linking
-	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
-	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
-	e.takedamage = DAMAGE_YES;
-	e.event_damage = ka_DamageEvent;
-	e.damagedbycontents = true;
-	IL_PUSH(g_damagedbycontents, e);
-	set_movetype(e, MOVETYPE_BOUNCE);
-	e.glow_color = autocvar_g_keepawayball_trail_color;
-	e.glow_trail = true;
-	e.flags = FL_ITEM;
-	IL_PUSH(g_items, e);
-	e.pushable = true;
-	settouch(e, ka_TouchEvent);
-	e.owner = NULL;
-	IL_PUSH(g_kaballs, e);
-	navigation_dynamicgoal_init(e, false);
-
-	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
-}
-
-void ka_SpawnBalls(int ballcount)
-{
-	int realballcount = max(1, ballcount); // never allow less than 1 ball to spawn
-	for(int j = 0; j < realballcount; ++j)
+	int i = 0;
+	do // never allow less than 1 ball to spawn
 	{
-		ka_SpawnBall();
+		entity e = new(keepawayball);
+		setmodel(e, MDL_KA_BALL);
+		e.solid = SOLID_TRIGGER; // before setsize to ensure area grid linking
+		setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
+		e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
+		e.takedamage = DAMAGE_YES;
+		e.event_damage = ka_DamageEvent;
+		e.damagedbycontents = true;
+		IL_PUSH(g_damagedbycontents, e);
+		set_movetype(e, MOVETYPE_BOUNCE);
+		e.glow_color = autocvar_g_keepawayball_trail_color;
+		e.glow_trail = true;
+		e.flags = FL_ITEM;
+		IL_PUSH(g_items, e);
+		e.pushable = true;
+		settouch(e, ka_TouchEvent);
+		e.owner = NULL;
+		IL_PUSH(g_kaballs, e);
+		navigation_dynamicgoal_init(e, false);
+
+		ka_RespawnBall(e);
+
+		++i;
 	}
+	while (i < KA_BALL_COUNT);
 }
 
 void ka_Handler_CheckBall(entity this)
@@ -287,18 +274,10 @@ void ka_Handler_CheckBall(entity this)
 	else
 	{
 		if (IL_EMPTY(g_kaballs))
-			ka_SpawnBalls(KA_BALL_COUNT); // ;)
+			ka_SpawnBalls(); // ;)
 	}
 
 	this.nextthink = time;
-}
-
-void ka_Initialize() // run at the start of a match, initiates game mode
-{
-	g_kaballs = IL_NEW();
-	ka_Handler = new_pure(ka_Handler);
-	setthink(ka_Handler, ka_Handler_CheckBall);
-	ka_Handler.nextthink = time;
 }
 
 

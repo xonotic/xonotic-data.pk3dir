@@ -303,6 +303,29 @@ void instagib_replace_item_with(entity this, GameItem def)
 	StartItem(new_item, def);
 }
 
+const int INSTAGIB_POWERUP_COUNT = 3;
+GameItem instagib_remaining_powerups[INSTAGIB_POWERUP_COUNT];
+
+// replaces item with a random powerup selected among the less spawned ones
+void instagib_replace_item_with_random_powerup(entity item)
+{
+	static int remaining_powerups_count = INSTAGIB_POWERUP_COUNT;
+	if (remaining_powerups_count == 0)
+		remaining_powerups_count = INSTAGIB_POWERUP_COUNT;
+	if (remaining_powerups_count == INSTAGIB_POWERUP_COUNT)
+	{
+		instagib_remaining_powerups[0] = ITEM_Invisibility;
+		instagib_remaining_powerups[1] = ITEM_ExtraLife;
+		instagib_remaining_powerups[2] = ITEM_Speed;
+	}
+
+	float r = floor(random() * remaining_powerups_count);
+	instagib_replace_item_with(item, instagib_remaining_powerups[r]);
+	for(int i = r; i < INSTAGIB_POWERUP_COUNT - 1; ++i)
+		instagib_remaining_powerups[i] = instagib_remaining_powerups[i + 1];
+	--remaining_powerups_count;
+}
+
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
@@ -310,15 +333,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 	if(def == ITEM_Strength || def == ITEM_Shield || def == ITEM_HealthMega || def == ITEM_ArmorMega)
 	{
 		if(autocvar_g_powerups)
-		{
-			float r = random();
-			if (r < 0.3)
-				instagib_replace_item_with(item, ITEM_Invisibility);
-			else if (r < 0.6)
-				instagib_replace_item_with(item, ITEM_ExtraLife);
-			else
-				instagib_replace_item_with(item, ITEM_Speed);
-		}
+			instagib_replace_item_with_random_powerup(item);
 		return true;
 	}
 
