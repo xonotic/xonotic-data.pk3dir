@@ -589,7 +589,21 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
                 makevectors(player.v_angle);
                 // horizontal wishvel as usual
                 vector wishvel = v_forward * CS(player).movement.x + v_right * CS(player).movement.y;
-                wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspeed);
+
+                // except make turning backwards easier by limiting the maximum turning angle to 90 degrees
+                vector wish_angles = vectoangles(vec2(wishvel));
+                vector vel_angles = vectoangles(vec2(player.velocity));
+
+                float diff_angle = wish_angles.y - vel_angles.y;
+                if(diff_angle > 180)
+                    diff_angle -= 360;
+                if(diff_angle < -180)
+                    diff_angle += 360;
+
+                wish_angles.y = (vel_angles.y + bound(-90, diff_angle, 90) + 360) % 360;
+                makevectors(wish_angles);
+
+                wishvel = normalize(v_forward) * min(1, vlen(wishvel) / maxairspeed);
                 // vertical wishvel using forward movement and the previously calculated ratio
                 wishvel.z = pitch_ratio_wish * bound(0, CS(player).movement.x / maxairspeed, 1);
                 // apply turn acceleration to wishvel
