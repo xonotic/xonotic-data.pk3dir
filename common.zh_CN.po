@@ -2430,7 +2430,7 @@ msgstr "^1服务器提示："
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此服务器当前禁用了聊天"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2438,15 +2438,15 @@ msgstr "^F4注意：^BG竞赛过程中旁观者的聊天不会发送给玩家"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此服务器当前禁用了私密聊天"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此服务器当前禁用了观察者聊天"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此服务器当前禁用了团队聊天"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3328,7 +3328,7 @@ msgstr "^BG%s^F3 因为杀死太多队友而被踢出"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 因为杀死太多队友而被转为观察者"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -4383,7 +4383,7 @@ msgstr ""
 msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
-msgstr ""
+msgstr "^K1由于你被此服务器封禁，你不可以加入游戏。不过你可以游玩小游戏"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4391,7 +4391,7 @@ msgstr "^BG你拾起了球"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BG捡起球再杀敌才可得分！"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4625,7 +4625,7 @@ msgstr "^F2隐身已解除"
 msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
-msgstr ""
+msgstr "^K1由于你被此服务器封禁，你被强制转为观察者，且不允许再参与游戏"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4724,11 +4724,11 @@ msgstr "^F2检测到入侵者，正在禁用护盾！"
 #: qcsrc/common/notifications/all.inc:809
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1由于你被此服务器封禁，你不可以发起投票"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1由于你被此服务器封禁，你不可以参与投票"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format

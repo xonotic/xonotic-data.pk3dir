@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2023\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2458,7 +2458,7 @@ msgstr "^1Avisos do servidor:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGBate-papo atualmente desativado neste servidor"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2468,15 +2468,16 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGBate-papo privado atualmente desativado neste servidor"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
 msgstr ""
+"^F4NOTA: ^BGBate-papo de espectadores atualmente desativado neste servidor"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGBate-papo de equipe atualmente desativado neste servidor"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3377,7 +3378,7 @@ msgstr "^BG%s^F3 foi expulso por matar excessivamente a equipe"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 foi obrigado a assistir por matar excessivamente a equipe"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -4467,6 +4468,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1Não é permitido você jogar porque você está banido neste servidor, mas "
+"você pode jogar minijogos"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4474,7 +4477,7 @@ msgstr "^BGVocê pegou a bola"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGPegue a bola para ganhar pontos pelas execuções!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4711,6 +4714,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Você é obrigado a assistir e não é permitido você jogar porque você está "
+"banido neste servidor"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4813,10 +4818,12 @@ msgstr "^F2Intruso detectado, desativando escudos!"
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1Não é permitido você iniciar uma votação porque você está banido neste "
+"servidor"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Não é permitido você votar porque você está banido neste servidor"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format

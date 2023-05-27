@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
+"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -2433,7 +2433,7 @@ msgstr "^1伺服器提示："
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此伺服器當前禁用了聊天"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2441,15 +2441,15 @@ msgstr "^F4注意：^BG競賽過程中旁觀者的聊天不會傳送給玩家"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此伺服器當前禁用了私密聊天"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此伺服器當前禁用了觀察者聊天"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注意：^BG此伺服器當前禁用了團隊聊天"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3331,7 +3331,7 @@ msgstr "^BG%s^F3 因為殺死太多隊友而被踢出"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 因為殺死太多隊友而被轉為觀察者"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -4386,7 +4386,7 @@ msgstr ""
 msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
-msgstr ""
+msgstr "^K1由於你被此伺服器封禁，你不可以加入遊戲。不過你可以遊玩小遊戲"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4394,7 +4394,7 @@ msgstr "^BG你拾起了球"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BG撿起球再殺敵才可得分！"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4628,7 +4628,7 @@ msgstr "^F2隱身已解除"
 msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
-msgstr ""
+msgstr "^K1由於你被此伺服器封禁，你被強制轉為觀察者，且不允許再參與遊戲"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4727,11 +4727,11 @@ msgstr "^F2檢測到入侵者，正在禁用護盾！"
 #: qcsrc/common/notifications/all.inc:809
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1由於你被此伺服器封禁，你不可以發起投票"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1由於你被此伺服器封禁，你不可以參與投票"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format

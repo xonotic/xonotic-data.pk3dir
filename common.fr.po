@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -2472,7 +2472,7 @@ msgstr "^1Notifications du serveur :"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE : ^BGLe tchat est actuellement désactivé sur ce serveur"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2481,15 +2481,17 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE : ^BGLe tchat privé est actuellement désactivé sur ce serveur"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
 msgstr ""
+"^F4NOTE : ^BGLe tchat spectateur est actuellement désactivé sur ce serveur"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
 msgstr ""
+"^F4NOTE : ^BGLe tchat d'équipe est actuellement désactivé sur ce serveur"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3403,6 +3405,8 @@ msgstr "^BG%s^F3 a été expulsé pour des meurtres équipe excessifs"
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
 msgstr ""
+"^BG%s^F3 a été déplacé de force vers les spectateurs en raison de meurtres "
+"équipe excessifs"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -4502,6 +4506,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1Vous n'êtes pas autorisé à jouer car vous êtes banni de ce serveur, mais "
+"vous pouvez jouer aux mini jeux"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4509,7 +4515,7 @@ msgstr "^BGVous avez ramassé la balle"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGRécupérez la balle pour que vos frags rapportent des points !"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4746,6 +4752,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Vous êtes contraint de rester spectateur et vous n'êtes pas autorisé à "
+"jouer car vous êtes banni de ce serveur"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4849,10 +4857,12 @@ msgstr "^F2Intrus détecté, boucliers désactivés !"
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1Vous n'êtes pas autorisé à lancer un vote car vous êtes banni de ce "
+"serveur"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Vous n'êtes pas autorisé à voter car vous êtes banni de ce serveur"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
