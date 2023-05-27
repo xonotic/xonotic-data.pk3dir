@@ -4,6 +4,8 @@ bool isPushable(entity e)
 {
 	if(e.pushable)
 		return true;
+	if(STAT(DROP, e) != DROP_LANDED)
+		return false;
 #ifdef SVQC
 	if(IS_VEHICLE(e))
 		return false;
