@@ -6,6 +6,7 @@
 entity ring;
 
 void br_Initialize();
+bool br_bot_ignore_in_ring(entity this);
 
 REGISTER_MUTATOR(br, false)
 {

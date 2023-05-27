@@ -26,7 +26,8 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 	{
 		IL_EACH(g_waypoints, vdist(it.origin - org, <, sradius)
 			&& vdist(it.origin - org, >, max(100, sradius - range))
-			&& !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+			&& !(it.wpflags & WAYPOINTFLAG_TELEPORT)
+			&& !br_bot_ignore_in_ring(it),
 		{
 			if(vdist(it.origin - this.wp_goal_prev0.origin, <, range * 1.5))
 				f = 0.1;
@@ -189,6 +190,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
 			continue;
 		if(vdist(vec2(it.velocity), >, autocvar_sv_maxspeed * 2))
+			continue;
+		if(br_bot_ignore_in_ring(it))
 			continue;
 
 		// rate only visible enemies

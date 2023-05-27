@@ -952,7 +952,7 @@ MUTATOR_HOOKFUNCTION(br, BotShouldAttack)
     entity bot = M_ARGV(0, entity);
     entity target = M_ARGV(1, entity);
 
-    return SAME_SQUAD(bot, target) || (STAT(DROP, target) == DROP_TRANSPORT);
+    return SAME_SQUAD(bot, target) || (STAT(DROP, bot) != DROP_LANDED) || (STAT(DROP, target) == DROP_TRANSPORT);
 }
 
 MUTATOR_HOOKFUNCTION(br, TurretValidateTarget)
@@ -1043,6 +1043,16 @@ MUTATOR_HOOKFUNCTION(br, SV_StartFrame)
         br_event_vehicle_time = time;
         spawn_vehicle();
     }
+
+    if(ring)
+    {
+        float current_radius = ring_calculate_current_radius(ring);
+
+        IL_EACH(g_items, it.bot_pickup, {
+            if(vdist(it.origin - ring.origin, >, current_radius))
+                it.bot_pickup = false;
+        });
+    }
 }
 
 void(entity this) havocbot_role_br_reviving;
@@ -1058,6 +1068,17 @@ bool squad_needs_revive(entity this)
         if(STAT(BLEEDING, member))
             return true;
     }
+
+    return false;
+}
+
+bool br_bot_ignore_in_ring(entity this)
+{
+    if(!ring)
+        return false;
+
+    if(vlen(this.origin - ring.origin) > ring_calculate_current_radius(ring))
+        return true;
 
     return false;
 }
