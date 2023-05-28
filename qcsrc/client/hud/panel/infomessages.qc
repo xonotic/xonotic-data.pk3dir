@@ -127,7 +127,13 @@ void HUD_InfoMessages()
 
 			if(!mutator_returnvalue)
 			{
-				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
+				if(entcs_GetWantsJoin(current_player))
+				{
+					int tm = Team_IndexToTeam(entcs_GetWantsJoin(current_player));
+					s = sprintf(_("^2You're queued to join the %s%s^2 team"), Team_ColorCode(tm), Team_ColorName(tm));
+				}
+				else
+					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
 				InfoMessage(s);
 			}
 		}

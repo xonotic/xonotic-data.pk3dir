@@ -243,7 +243,7 @@ entity SpectatorWantsJoin(entity this)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if(it == this) continue;
-		if(CS(it).wants_join) {
+		if(it.wants_join) {
 			LOG_DEBUGF("Player is waiting to join: %s", it.netname);
 			return it;
 		}
@@ -277,7 +277,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
-				CS(player).wants_join = true; // TODO : Refactor
+				player.wants_join = team_index; // Player queued to join
 			}
 			else
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
@@ -292,9 +292,9 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_IDLING);
 			CS(player).idlekick_lasttimeleft = 0;
 		}
-		else if (CS(player).wants_join)
+		else if (player.wants_join)
 		{
-			CS(player).wants_join = false;
+			player.wants_join = 0;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 		}
 		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)

@@ -26,7 +26,7 @@ void ClientKill_Now_TeamChange(entity this)
 		if (blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 
-		if (CS(this).wants_join)
+		if (this.wants_join)
 			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		else
 			PutObserverInServer(this, false, true);

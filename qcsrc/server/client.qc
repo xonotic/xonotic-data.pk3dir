@@ -412,8 +412,8 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
-	if (CS(this).wants_join)
-		CS(this).wants_join = false;
+	if (this.wants_join)
+		this.wants_join = 0;
 }
 
 int player_getspecies(entity this)
@@ -1118,7 +1118,7 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-	CS(this).wants_join = false;
+	this.wants_join = false;
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -2000,7 +2000,7 @@ void Join(entity this)
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
-		if(CS(this).wants_join)
+		if(this.wants_join)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	}
 	else
@@ -2008,7 +2008,7 @@ void Join(entity this)
 	this.team_selected = false;
 
 	if(queued_join)
-		CS(queued_join).wants_join = false;
+		this.wants_join = 0;
 }
 
 int GetPlayerLimit()
@@ -2079,7 +2079,7 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
-	if (CS(this).wants_join) return false;
+	if (this.wants_join) return false;
 	if (IsQueueNeeded(this) && autocvar_g_balance_teams)
 	{
 		TeamBalance_JoinBestTeam(this);
