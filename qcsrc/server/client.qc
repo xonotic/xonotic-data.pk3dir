@@ -1979,15 +1979,15 @@ void Join(entity this)
 
 	TRANSMUTE(Player, this);
 
-	entity to_join = SpectatorWantsJoin(this);
-	if(to_join)
+	entity queued_join = SpectatorWantsJoin(this);
+	if(queued_join)
 	{
-		Join(to_join);
+		Join(queued_join);
 		this.team_selected = false; // Don't let this player select team
 	}
 
 	if(!this.team_selected)
-	if(autocvar_g_campaign || autocvar_g_balance_teams || to_join)
+	if(autocvar_g_campaign || autocvar_g_balance_teams || queued_join)
 		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
@@ -2007,8 +2007,8 @@ void Join(entity this)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
 
-	if(to_join)
-		CS(to_join).wants_join = false;
+	if(queued_join)
+		CS(queued_join).wants_join = false;
 }
 
 int GetPlayerLimit()
