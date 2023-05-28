@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-26 07:22+0200\n"
+"POT-Creation-Date: 2023-05-28 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
+"Last-Translator: Hugo Locurcio, 2013-2014\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -6066,15 +6066,6 @@ msgstr "%dè"
 #: qcsrc/lib/oo.qh:336
 msgid "No description"
 msgstr "Aucune description"
-
-#: qcsrc/lib/spawnfunc.qh:267
-#, c-format
-msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
-"please file an issue."
-msgstr ""
-"Le champ d'entité %s.%s (%s) n'est pas en liste blanche. Si vous pensez "
-"qu'il s'agit d'une erreur, veuillez signaler le problème."
 
 #: qcsrc/lib/string.qh:186
 #, c-format

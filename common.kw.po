@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-26 07:22+0200\n"
+"POT-Creation-Date: 2023-05-28 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Nicky Rowe <nicky@kernowlingo.com>, 2016,2018\n"
 "Language-Team: Cornish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -5867,13 +5867,6 @@ msgstr ""
 
 #: qcsrc/lib/oo.qh:336
 msgid "No description"
-msgstr ""
-
-#: qcsrc/lib/spawnfunc.qh:267
-#, c-format
-msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
-"please file an issue."
 msgstr ""
 
 #: qcsrc/lib/string.qh:186

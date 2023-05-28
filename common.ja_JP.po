@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-26 07:22+0200\n"
+"POT-Creation-Date: 2023-05-28 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -169,12 +169,12 @@ msgstr "^2現在、^1ウォームアップ^2の段階に入っています!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^2試合を開始するには、もう^31^2人のプレイヤーが必要です。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^2試合を開始するには、もう^3%d^2人のプレイヤーが必要です。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
@@ -242,7 +242,7 @@ msgstr "プレイヤー %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "標準的なクイックメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -509,19 +509,19 @@ msgstr "QMCMD^チームをシャッフルする"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "サーバークイックメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "ウェイポイント編集メニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "デフォルトではウェイポイントエディタメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "デフォルトとしてのサーバークイックメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -573,11 +573,11 @@ msgstr "クリックして現れる場所を選択する"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Survivor"
-msgstr ""
+msgstr "サバイバー"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Hunter"
-msgstr ""
+msgstr "ハンター"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of ball carrier kills"
@@ -709,11 +709,11 @@ msgstr "ゴール"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "ハントの回数（サバイバル）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^hunts"
-msgstr ""
+msgstr "ハント"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of keys carrier kills"
@@ -862,11 +862,11 @@ msgstr "勝ったラウンド"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of rounds played"
-msgstr ""
+msgstr "プレイしたラウンド数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "プレイしたラウンド"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^score"
@@ -894,11 +894,11 @@ msgstr "和"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of survivals"
-msgstr ""
+msgstr "生存数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^survivals"
-msgstr ""
+msgstr "生存"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of domination points taken (Domination)"
@@ -1154,11 +1154,11 @@ msgstr "ウォームアップ"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "ウォームアップ：少数のプレイヤー"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "ウォームアップ：制限時間なし"
 
 #: qcsrc/client/hud/panel/timer.qc:137
 msgid "Timeout"
@@ -1333,7 +1333,7 @@ msgstr "ゲームモード:"
 
 #: qcsrc/client/main.qc:1443
 msgid "This match supports"
-msgstr ""
+msgstr "この試合は対応しています"
 
 #: qcsrc/client/main.qc:1445
 #, c-format
@@ -1460,12 +1460,12 @@ msgstr "ラウンドに勝つために全ての敵チームメイトを殺して
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "ラウンド制限:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要な勝利ラウンド数"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1587,16 +1587,16 @@ msgstr "命数:"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
-msgstr ""
+msgstr "この混沌のMAYHEMで、最も与えられたダメージとフラグの数で競い合って!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "MAYHEM"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要な得点数"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1608,7 +1608,7 @@ msgstr "ボールを撃って敵のゴールに蹴り込んで、あなたのゴ
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "ゴールの制限："
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1659,10 +1659,12 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"この混沌としたMAYHEMで、チーム内で最も与えたダメージとフラグの数で競い合いま"
+"しょう!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "TEAM MAYHEM"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -2255,7 +2257,7 @@ msgstr "スポーンシールド"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "麻痺した"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -2432,7 +2434,7 @@ msgstr "^1サーバー告知:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは現在、チャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2440,15 +2442,15 @@ msgstr "^F4注: ^BG観戦チャットは試合中に選手に送信されませ�
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは、現在プライベートチャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは現在、観客のチャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは現在、チームチャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -2593,7 +2595,7 @@ msgstr "^F2試合を再開中..."
 #: qcsrc/common/notifications/all.inc:274
 #: qcsrc/common/notifications/all.inc:548
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4カウントダウン停止!"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
@@ -3338,7 +3340,7 @@ msgstr "^BG%s^F3 はチームメイトを殺したために追い出された"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3は過剰なチームキルのために観戦を強制されました"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3424,12 +3426,12 @@ msgstr "^BG%s^K1 はスーパー武器を拾いた"
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1ハンター^BGがラウンドに勝ちました"
 
 #: qcsrc/common/notifications/all.inc:451
 #: qcsrc/common/notifications/all.inc:791
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1サバイバー^BGがラウンドに勝ちました"
 
 #: qcsrc/common/notifications/all.inc:453
 msgid "^BGYou cannot change to a larger team"
@@ -3821,7 +3823,7 @@ msgstr "^F4%s^BG で^BG目的を破壊された"
 #: qcsrc/common/notifications/all.inc:548
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "この試合には%s人のプレイヤーが必要です。"
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGBegin!"
@@ -3973,12 +3975,12 @@ msgstr "^BG%s敵 (^B%s%sG)^BG は旗を手に入れた! 取り戻せ!"
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敵が^TC^TT^BG旗を手に入れました! 取り戻して!"
 
 #: qcsrc/common/notifications/all.inc:586
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敵（^BG%s%s）が^TC^TT^BG旗を手に入れました! 取り戻して!"
 
 #: qcsrc/common/notifications/all.inc:589
 #, c-format
@@ -4403,12 +4405,16 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1現在、ゲームに参加することはできません。\n"
+"この試合は^F2%s^BGプレイヤーに制限されています。"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1このサーバーでは禁止されているため、プレイすることはできませんが、ミニゲー"
+"ムはプレイできます"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4416,7 +4422,7 @@ msgstr "^BGボールを拾いた"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGボールを取ってフラグのポイントを獲得しましょう!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4651,6 +4657,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1このサーバーで禁止されているため、観戦を強制され、プレイすることは許されて"
+"いません"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4685,11 +4693,11 @@ msgstr "^F2今、あなたはスーパー武器がある"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr ""
+msgstr "^BGあなたは^K1ハンター^BGです! 疑惑をかけずに生存者を排除しましょう!"
 
 #: qcsrc/common/notifications/all.inc:790
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGあなたは^F1生存者^BGです! ハンターを特定して排除しましょう!"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4749,11 +4757,11 @@ msgstr "^F2侵入者を検出した、シールドを無効中!"
 #: qcsrc/common/notifications/all.inc:809
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1このサーバーでは禁止されているため、投票することは許されていません"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1このサーバーでは禁止されているため、投票することは許されていません"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -5958,15 +5966,6 @@ msgstr "%dth"
 msgid "No description"
 msgstr "説明なし"
 
-#: qcsrc/lib/spawnfunc.qh:267
-#, c-format
-msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
-"please file an issue."
-msgstr ""
-"エンティティフィールド %s.%s (%s) がリストにありません。これがエラーだと思わ"
-"れる場合は、問題を報告してください。"
-
 #: qcsrc/lib/string.qh:186
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
@@ -6075,7 +6074,7 @@ msgstr "中国語 (中国)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "中国語（香港）"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6115,7 +6114,7 @@ msgstr "ハンガリー語"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "インドネシア語"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6139,7 +6138,7 @@ msgstr "韓国語"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "ラテン語"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
@@ -6632,7 +6631,7 @@ msgstr "垂直速度を含める"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "速度単位を表示"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
@@ -6679,7 +6678,7 @@ msgstr "観戦中"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "アイコンのサイズスケール："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
@@ -6877,11 +6876,11 @@ msgstr "過剰:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "Switch indicator:"
-msgstr ""
+msgstr "スイッチの指示灯："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "最適な角度指示灯："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
@@ -7088,7 +7087,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "中央線"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7096,6 +7095,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"パネルの整列を助けるために垂直中心線を表示します。コンソールで%sを編集するこ"
+"とで、さらに垂直線を表示することが可能です"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
@@ -7524,6 +7525,9 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"選手は一つの武器を与えられ、その一撃で相手を即座に倒すことができます。弾薬を"
+"使い切った場合、10秒以内に弾薬を見つけなければ死にます。セカンダリファイア"
+"モードはダメージを与えませんが、トリックジャンプに適しています。"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
 msgid ""
@@ -10169,7 +10173,7 @@ msgstr "クイックメニュー"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "スコアボードのユーザーインターフェース"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"

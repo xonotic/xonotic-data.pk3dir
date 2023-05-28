@@ -31,9 +31,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-26 07:22+0200\n"
+"POT-Creation-Date: 2023-05-28 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yllelder, 2016\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Spanish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -260,7 +260,7 @@ msgstr "Jugador %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Menú rápido estándar"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -527,19 +527,19 @@ msgstr "QMCMD^Barajar equipos"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Menú rápido del servidor"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Menú rápido de puntos de encuentro"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Menú del editor de puntos de encuentro por defecto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Menú rápido del servidor por defecto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -591,11 +591,11 @@ msgstr "Haz clic para seleccionar el lugar de reaparición"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Survivor"
-msgstr ""
+msgstr "Superviviente"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Hunter"
-msgstr ""
+msgstr "Cazador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of ball carrier kills"
@@ -728,11 +728,11 @@ msgstr "goles"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Número de cacerías (Supervivencia)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^hunts"
-msgstr ""
+msgstr "cacerías"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of keys carrier kills"
@@ -882,11 +882,11 @@ msgstr "rondas ganadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Número de rondas jugadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "Rondas jugadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^score"
@@ -914,11 +914,11 @@ msgstr "suma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of survivals"
-msgstr ""
+msgstr "Número de supervivencias"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^survivals"
-msgstr ""
+msgstr "supervivencias"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of domination points taken (Domination)"
@@ -1538,7 +1538,7 @@ msgstr "Combate a muerte"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr "Marca tantos frags como puedas"
+msgstr "Marca tantas eliminaciones como puedas"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
@@ -1617,15 +1617,17 @@ msgstr "Vidas:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"¡Compite por causar el mayor daño y obtener la mayor cantidad de "
+"eliminaciones en este caótico Mayhem!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Mayhem"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Puntuación necesaria antes de que termine la partida"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1693,10 +1695,12 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"¡Compite con tu equipo por causar el mayor daño y obtener frags en este "
+"caótico Mayhem!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Mayhem por equipos"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -1777,11 +1781,11 @@ msgstr "Lanzamiento de la @!#%'n Tuba"
 #: qcsrc/common/mapinfo.qh:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 msgid "Frag limit:"
-msgstr "Límite de muertes:"
+msgstr "Límite de eliminaciones:"
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr "Cantidad de puntos necesarios antes de que termine el combate"
+msgstr "Cantidad de eliminaciones necesarias antes de que termine el combate"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -2295,7 +2299,7 @@ msgstr "Reaparición del Escudo"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "Aturdido"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -2472,7 +2476,7 @@ msgstr "^1Avisos del servidor:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGActualmente, el chat está desactivado en este servidor"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2483,14 +2487,18 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
 msgstr ""
+"^F4NOTA: ^BGActualmente, el chat privado está desactivado en este servidor"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
 msgstr ""
+"^F4NOTA: ^BGActualmente, el chat de espectadores está desactivado en este "
+"servidor"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
 msgstr ""
+"^F4NOTA: ^BGActualmente, el chat de equipos está desactivado en este servidor"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3398,12 +3406,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:428
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr "^BG%s^F3 ha sido expulsado por matar a tus propios compañeros"
+msgstr "^BG%s^F3 ha sido expulsado por matar a sus propios compañeros"
 
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 ha sido forzado a espectar por matar a sus propios compañeros"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3494,12 +3502,12 @@ msgstr "^BG%s^K1 ha recogido una Superarma"
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "Los ^K1Cazadores^BG ganan la ronda"
 
 #: qcsrc/common/notifications/all.inc:451
 #: qcsrc/common/notifications/all.inc:791
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "Los ^F1Supervivientes^BG ganan la ronda"
 
 #: qcsrc/common/notifications/all.inc:453
 msgid "^BGYou cannot change to a larger team"
@@ -4498,6 +4506,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1No puedes jugar porque estás baneado en este servidor, pero puedes jugar "
+"minijuegos"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4505,7 +4515,7 @@ msgstr "^BGHas recogido la pelota"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BG¡Obtén la pelota para ganar puntos por eliminaciones!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4740,6 +4750,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Estás forzado a espectar y no puedes jugar porque estás baneado en este "
+"servidor"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4775,10 +4787,13 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
+"^BG¡Eres ^K1cazador^BG! ¡Elimina al/los superviviente(s) sin levantar "
+"sospechas!"
 
 #: qcsrc/common/notifications/all.inc:790
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
 msgstr ""
+"^BG¡Eres ^F1superviviente^BG! ¡Identifica y elimina al/los cazador(es)!"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4839,10 +4854,11 @@ msgstr "^F2¡Intruso detectado, desactivando escudos!"
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1No puedes realizar una votación porque estás baneado en este servidor"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1No puedes votar porque estás baneado en este servidor"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -4927,7 +4943,7 @@ msgstr "¡%s^K1 ha hecho QUINCE ACIERTOS SEGUIDOS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:470
 msgid "MAYHEM! "
-msgstr "¡CAOS!"
+msgstr "¡CAOTÍCO!"
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
@@ -6047,15 +6063,6 @@ msgstr "%dth"
 msgid "No description"
 msgstr "No hay descripción"
 
-#: qcsrc/lib/spawnfunc.qh:267
-#, c-format
-msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
-"please file an issue."
-msgstr ""
-"Campo de entidad %s.%s (%s) no está en la lista. Si crees que esto es un "
-"error, por favor reporte el problema."
-
 #: qcsrc/lib/string.qh:186
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
@@ -6164,7 +6171,7 @@ msgstr "Chino (China)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Chino (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6204,7 +6211,7 @@ msgstr "Húngaro"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesio"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6228,7 +6235,7 @@ msgstr "Coreano"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latín"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
@@ -6721,7 +6728,7 @@ msgstr "Incluir velocidad vertical"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "Mostrar unidad de velocidad"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
@@ -6966,11 +6973,11 @@ msgstr "Excesivo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "Switch indicator:"
-msgstr ""
+msgstr "Cambiar indicador:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "Indicador del mejor ángulo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
@@ -7177,7 +7184,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "Línea central"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7185,6 +7192,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"Muestra una línea vertical central para ayudar a alinear los paneles. Es "
+"posible mostrar más líneas verticales editando %s en la consola"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
@@ -7623,6 +7632,11 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Los jugadores recibirán una arma, la cual puede eliminar instantáneamente al "
+"oponente con un sólo disparo. Si el jugador se queda sin munición, esos "
+"tienen 10 segundos para encontrar munición, pero si no logran, morirán. El "
+"modo disparo secundario no inflige ningún daño pero es bueno para hacer "
+"saltos."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
 msgid ""
@@ -8885,7 +8899,7 @@ msgstr "Puntero"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr "Tabla de puntuación"
+msgstr "Tabla de puntuaciones"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:48
 msgid "Fading speed:"
@@ -10297,7 +10311,7 @@ msgstr "menú rápido"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "interfaz de usuario de la tabla de puntuaciones"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
