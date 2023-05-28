@@ -687,7 +687,7 @@ void GameplayMode_DelayedInit(entity this)
 
 void InitGameplayMode()
 {
-	VoteReset();
+	VoteReset(false);
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
@@ -1337,7 +1337,7 @@ void NextLevel()
 
 	//pos = FindIntermission ();
 
-	VoteReset();
+	VoteReset(true);
 
 	DumpStats(true);
 
