@@ -703,7 +703,7 @@ bool TeamBalance_AreEqual(entity ignore)
 	int total;
 	int prev_total = 0;
 
-	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		total = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
 		if(i > 1 && total != prev_total)
@@ -726,14 +726,14 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 
 	int min = 0;
 
-	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		int cur = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
 		if(cur < min)
 			min = cur;
 	}
 
-	for(int tmi = 1; tmi <= AVAILABLE_TEAMS; tmi++)
+	for(int tmi = 1; tmi <= AVAILABLE_TEAMS; ++tmi)
 	{
 		int cur = TeamBalance_GetTeamFromIndex(balance, tmi).m_num_players;
 		if(cur > 0 && cur > min)
