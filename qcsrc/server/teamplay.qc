@@ -236,7 +236,7 @@ bool Player_SetTeamIndex(entity player, int index)
 
 bool IsQueueNeeded(entity ignore)
 {
-	return (teamplay && autocvar_g_balance_teams_queue && TeamBalance_AreEqual(ignore));
+	return (teamplay && autocvar_g_balance_teams_queue && AVAILABLE_TEAMS == 2 && TeamBalance_AreEqual(ignore));
 }
 
 entity SpectatorWantsJoin(entity this)
@@ -719,6 +719,8 @@ bool TeamBalance_AreEqual(entity ignore)
 
 void TeamBalance_RemoveExcessPlayers(entity ignore)
 {
+	if(AVAILABLE_TEAMS != 2) return;
+
 	entity balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
