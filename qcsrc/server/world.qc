@@ -413,7 +413,6 @@ void cvar_changes_init()
 		BADCVAR("w_prop_interval");
 		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
-		BADPREFIX("gameversion");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_hats_");
