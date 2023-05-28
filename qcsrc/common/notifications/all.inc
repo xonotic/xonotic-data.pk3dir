@@ -786,6 +786,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    N_ENABLE,    0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
+    MSG_CENTER_NOTIF(JOIN_PREVENT_QUEUE,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou are now queued to join the game."), "")
 
     MSG_CENTER_NOTIF(VEHICLE_ENTER,                     N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter/exit the vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")

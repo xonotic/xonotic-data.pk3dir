@@ -276,6 +276,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			if (IsQueueNeeded(player) && !SpectatorWantsJoin(player))
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
 				CS(player).wants_join = true; // TODO : Refactor
 			}
 			else
@@ -290,6 +291,11 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			// this done here so it happens even when manually speccing during the countdown
 			Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_IDLING);
 			CS(player).idlekick_lasttimeleft = 0;
+		}
+		else if (CS(player).wants_join)
+		{
+			CS(player).wants_join = false;
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 		}
 		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
 		{

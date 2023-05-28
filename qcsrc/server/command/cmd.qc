@@ -593,7 +593,7 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
+				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || CS(caller).wants_join))
 				if (autocvar_sv_spectate == 1)
 					ClientKill_TeamChange(caller, -2); // observe
 			}
