@@ -301,8 +301,6 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
-			if(autocvar_g_balance_teams_remove)
-				TeamBalance_RemoveExcessPlayers(player);
 		}
 	}
 
@@ -729,7 +727,7 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		int cur = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
-		if(cur < min)
+		if(i == 1 || cur < min)
 			min = cur;
 	}
 

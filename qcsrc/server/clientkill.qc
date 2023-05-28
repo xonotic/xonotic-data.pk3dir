@@ -29,7 +29,11 @@ void ClientKill_Now_TeamChange(entity this)
 		if (this.wants_join)
 			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		else
+		{
 			PutObserverInServer(this, false, true);
+			if(autocvar_g_balance_teams_remove)
+				TeamBalance_RemoveExcessPlayers(this);
+		}
 	}
 	else
 	{

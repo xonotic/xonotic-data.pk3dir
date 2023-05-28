@@ -2691,6 +2691,8 @@ void PlayerPostThink (entity this)
 				{
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					PutObserverInServer(this, true, true);
+					if(autocvar_g_balance_teams_remove)
+						TeamBalance_RemoveExcessPlayers(this);
 				}
 				else
 				{
