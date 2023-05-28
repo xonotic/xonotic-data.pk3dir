@@ -116,10 +116,6 @@ SHUTDOWN(scoreboard)
 		cvar_set("hud_panel_scoreboard_scores_per_round", "0");
 }
 
-// TODO: remove these after merging pending-release which contains Survival code
-#define SURV_STATUS_HUNTER_TEMPSTRING _("Survivor")
-#define SURV_STATUS_PREY_TEMPSTRING _("Hunter")
-
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
 string Label_getInfo(string label, int mode)
