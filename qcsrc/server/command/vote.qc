@@ -746,6 +746,29 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
+		case "movetoauto":
+		case "movetored":
+		case "movetoblue":
+		case "movetoyellow":
+		case "movetopink":
+		case "movetospec":
+		{
+			entity victim = GetIndexedEntity(argc, (startpos + 1));
+			float accepted = VerifyClientEntity(victim, true, false);
+			if (accepted > 0)
+			{
+				vote_parsed_command = vote_command;
+				vote_parsed_display = sprintf("^1%s #%d ^7%s", first_command, etof(victim), victim.netname);
+			}
+			else
+			{
+				print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n"));
+				return 0;
+			}
+
+			break;
+		}
+
 		case "kick":
 		case "kickban":    // catch all kick/kickban commands
 		{
