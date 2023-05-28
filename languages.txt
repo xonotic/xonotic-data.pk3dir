@@ -7,18 +7,18 @@ en_AU "English (Australia)" "English (Australia)" 69%
 es    "Spanish" "Español" 98%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 29%
-it    "Italian" "Italiano" 99%
+it    "Italian" "Italiano" 98%
 la    "Latin" "Lingua Latina" 60%
 hu    "Hungarian" "Magyar" 43%
 nl    "Dutch" "Nederlands" 61%
 pl    "Polish" "Polski" 79%
 pt    "Portuguese" "Português" 77%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
-ro    "Romanian" "Romana" 68%
+ro    "Romanian" "Romana" 67%
 fi    "Finnish" "Suomi" 99%
-sv    "Swedish" "Svenska" 99%
+sv    "Swedish" "Svenska" 98%
 tr    "Turkish" "Türkçe" 50%
-cs    "Czech" "Čeština" 31%
+cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 44%
 be    "Belarusian" "Беларуская" 49%
 bg    "Bulgarian" "Български" 65%
@@ -28,5 +28,5 @@ uk    "Ukrainian" "Українська" 49%
 zh_TW "Chinese (Taiwan)" "中文（正體字）" 100%
 zh_CN "Chinese (China)" "中文（简体字）" 100%
 zh_HK "Chinese (Hong Kong)" "中文（香港字）" 100%
-ja_JP "Japanese" "日本語" 98%
+ja_JP "Japanese" "日本語" 97%
 ko    "Korean" "한국의" 35%
