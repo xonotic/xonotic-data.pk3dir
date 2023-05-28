@@ -236,7 +236,7 @@ bool Player_SetTeamIndex(entity player, int index)
 
 bool IsQueueNeeded(entity ignore)
 {
-	return (teamplay && TeamBalance_AreEqual(ignore));
+	return (teamplay && autocvar_g_balance_teams_queue && TeamBalance_AreEqual(ignore));
 }
 
 entity SpectatorWantsJoin(entity this)
@@ -276,7 +276,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			if (IsQueueNeeded(player) && !SpectatorWantsJoin(player))
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
-				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
 				player.wants_join = team_index; // Player queued to join
 			}
 			else
@@ -292,14 +292,17 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_IDLING);
 			CS(player).idlekick_lasttimeleft = 0;
 		}
-		else if (player.wants_join)
+		else if (player.wants_join > 0)
 		{
+			LOG_INFOF("Triggered by %s (%d)", player.netname, player.wants_join);
 			player.wants_join = 0;
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, player.netname);
 		}
 		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
+			if(autocvar_g_balance_teams_remove)
+				TeamBalance_RemoveExcessPlayers(player);
 		}
 	}
 
@@ -700,10 +703,10 @@ bool TeamBalance_AreEqual(entity ignore)
 	int total;
 	int prev_total = 0;
 
-	for(int i = 0; i < AVAILABLE_TEAMS; i++)
+	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
 	{
-		total = TeamBalance_GetTeamFromIndex(balance, i+1).m_num_players;
-		if(i > 0 && total != prev_total)
+		total = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		if(i > 1 && total != prev_total)
 		{
 			TeamBalance_Destroy(balance);
 			return false;
@@ -712,6 +715,49 @@ bool TeamBalance_AreEqual(entity ignore)
 	}
 	TeamBalance_Destroy(balance);
 	return true;
+}
+
+void TeamBalance_RemoveExcessPlayers(entity ignore)
+{
+	entity balance = TeamBalance_CheckAllowedTeams(ignore);
+	TeamBalance_GetTeamCounts(balance, ignore);
+
+	int min = 0;
+
+	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	{
+		int cur = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		if(cur < min)
+			min = cur;
+	}
+
+	for(int tmi = 1; tmi <= AVAILABLE_TEAMS; tmi++)
+	{
+		int cur = TeamBalance_GetTeamFromIndex(balance, tmi).m_num_players;
+		if(cur > 0 && cur > min)
+		{
+			// Get newest player
+			int latest_join = 0;
+			entity latest_join_pl = NULL;
+
+			FOREACH_CLIENT(IS_CLIENT(it) || INGAME(it), {
+				if(it.team == Team_IndexToTeam(tmi) && CS(it).startplaytime > latest_join)
+				{
+					latest_join = CS(it).startplaytime;
+					latest_join_pl = it;
+				}
+			});
+
+			// Force player to spectate
+			if(latest_join_pl)
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, latest_join_pl.netname);
+				PutObserverInServer(latest_join_pl, true, true);
+			}
+		}
+	}
+
+	TeamBalance_Destroy(balance);
 }
 
 bool TeamBalance_IsTeamAllowed(entity balance, int index)

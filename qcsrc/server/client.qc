@@ -1118,7 +1118,7 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-	this.wants_join = false;
+	this.wants_join = 0;
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1265,6 +1265,9 @@ void ClientDisconnect(entity this)
 
 	if (player_count == 0)
 		localcmd("\nsv_hook_lastleave\n");
+
+	if (teamplay && autocvar_g_balance_teams_remove)
+		TeamBalance_RemoveExcessPlayers(NULL);
 }
 
 void ChatBubbleThink(entity this)
@@ -2006,9 +2009,7 @@ void Join(entity this)
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
-
-	if(queued_join)
-		this.wants_join = 0;
+	this.wants_join = 0;
 }
 
 int GetPlayerLimit()
