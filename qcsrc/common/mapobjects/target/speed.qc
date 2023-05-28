@@ -174,7 +174,7 @@ bool target_speed_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TARGET_SPEED);
 
-	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteShort(MSG_ENTITY, this.spawnflags);
 	WriteByte(MSG_ENTITY, this.active);
 	WriteString(MSG_ENTITY, this.targetname);
 	WriteCoord(MSG_ENTITY, this.speed);
@@ -196,7 +196,7 @@ void target_speed_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_SPEED, bool isnew)
 {
-	this.spawnflags = ReadInt24_t();
+	this.spawnflags = ReadShort();
 	this.active = ReadByte();
 	this.targetname = strzone(ReadString());
 	this.speed = ReadCoord();
