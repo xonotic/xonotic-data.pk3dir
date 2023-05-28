@@ -1984,10 +1984,7 @@ void Join(entity this)
 
 	entity queued_join = SpectatorWantsJoin(this);
 	if(queued_join)
-	{
-		Join(queued_join);
 		this.team_selected = false; // Don't let this player select team
-	}
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams || queued_join)
@@ -2010,6 +2007,9 @@ void Join(entity this)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
 	this.wants_join = 0;
+
+	if(queued_join)
+		Join(queued_join);
 }
 
 int GetPlayerLimit()
