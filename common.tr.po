@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-28 07:22+0200\n"
+"POT-Creation-Date: 2023-05-29 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021\n"
 "Language-Team: Turkish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -575,406 +575,398 @@ msgstr "Işınlanacağınız yeri seçmek için dokunun"
 msgid "Click to select spawn location"
 msgstr "Yeniden doğma konumunu seçmek için tıklayın"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:120
-msgid "Survivor"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:121
-msgid "Hunter"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Number of ball carrier kills"
 msgstr "Top taşıyıcı öldürme sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^bckills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^bctime"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "Keepaway'de topu tutma süresi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^caps"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^captime"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Time of fastest capture (CTF)"
 msgstr "En hızlı yakalama süresi (CTF)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of deaths"
 msgstr "Ölüm sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^deaths"
 msgstr "ölümler"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "Boşluğa itilerek yok edilen anahtar sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^destroyed"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^damage"
 msgstr "hasar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "The total damage done"
 msgstr "Verilen toplam hasar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^dmgtaken"
 msgstr "alınan hasar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "The total damage taken"
 msgstr "Alınan toplam hasar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of flag drops"
 msgstr "Bayrak düşürme sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^drops"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Player ELO"
 msgstr "Oyuncu sıralaması"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^elo"
 msgstr "sıralama"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^fastest"
 msgstr "en hızlı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "En hızlı tur zamanı (Yarış/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of faults committed"
 msgstr "İşlenen hata sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^faults"
 msgstr "hatalar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of flag carrier kills"
 msgstr "Bayrak taşıyıcı öldürme sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^fckills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fps"
 msgstr "fps"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of kills minus suicides"
 msgstr "Öldürme sayısı eksi intiharlar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^frags"
 msgstr "öldürmeler"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of goals scored"
 msgstr "Atılan gollerin sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^goals"
 msgstr "goller"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of hunts (Survival)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^hunts"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of keys carrier kills"
 msgstr "Taşıyıcının öldürdüğü anahtar sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^kckills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^k/d"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
-#: qcsrc/client/hud/panel/scoreboard.qc:151
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "The kill-death ratio"
 msgstr "öldürme-ölme oranı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kdr"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^kdratio"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of kills"
 msgstr "Öldürme sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^kills"
 msgstr "öldürmeler"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of laps finished (Race/CTS)"
 msgstr "Biten tur sayısı (Yarış/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^laps"
 msgstr "turlar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of lives (LMS)"
 msgstr "Yaşam sayısı (LMS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^lives"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of times a key was lost"
 msgstr "Bir anahtarın kaybolma sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^losses"
 msgstr "yenilgiler"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Player name"
 msgstr "Oyuncu ismi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^name"
 msgstr "isim"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^nick"
 msgstr "takma ad"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of objectives destroyed"
 msgstr "Yok edilen hedef sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^objectives"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^pickups"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Ping time"
 msgstr "Ping süresi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^ping"
 msgstr "ping"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Packet loss"
 msgstr "Paket kaybı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pl"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of players pushed into void"
 msgstr "Boşluğa itilen oyuncu sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^pushes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Player rank"
 msgstr "Oyuncu rütbesi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^rank"
 msgstr "rütbe"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of flag returns"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^returns"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Number of revivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^revivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds won"
 msgstr "Kazanılan raunt sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds won"
 msgstr "kazanılan rauntlar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of rounds played"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^rounds played"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^score"
 msgstr "skor"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Total score"
 msgstr "Toplam skor"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of suicides"
 msgstr "İntihar sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^suicides"
 msgstr "intihar etme"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Number of kills minus deaths"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^sum"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
 msgstr "Alınan hakimiyet puanı sayısı (Hakimiyet)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^takes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of teamkills"
 msgstr "Takım arkadaşlarını öldürme sayısı"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^teamkills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of ticks (Domination)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^ticks"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^time"
 msgstr "Süre"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Total time raced (Race/CTS)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:705
+#: qcsrc/client/hud/panel/scoreboard.qc:701
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:706
+#: qcsrc/client/hud/panel/scoreboard.qc:702
 msgid "Usage:"
 msgstr "Kullanım:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:709
+#: qcsrc/client/hud/panel/scoreboard.qc:705
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:710
+#: qcsrc/client/hud/panel/scoreboard.qc:706
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:711
+#: qcsrc/client/hud/panel/scoreboard.qc:707
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:712
+#: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:713
+#: qcsrc/client/hud/panel/scoreboard.qc:709
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:719
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -982,32 +974,32 @@ msgid ""
 "field to show all fields available for the current game mode."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:729
+#: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:730
+#: qcsrc/client/hud/panel/scoreboard.qc:726
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:732
+#: qcsrc/client/hud/panel/scoreboard.qc:728
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1030
-#: qcsrc/client/hud/panel/scoreboard.qc:1045
-#: qcsrc/client/hud/panel/scoreboard.qc:1115
-#: qcsrc/client/hud/panel/scoreboard.qc:1126 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1026
+#: qcsrc/client/hud/panel/scoreboard.qc:1041
+#: qcsrc/client/hud/panel/scoreboard.qc:1111
+#: qcsrc/client/hud/panel/scoreboard.qc:1122 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1016,102 +1008,102 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1690
+#: qcsrc/client/hud/panel/scoreboard.qc:1686
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "İsabet istatistikleri (ortalama %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1847
+#: qcsrc/client/hud/panel/scoreboard.qc:1843
 msgid "Item stats"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1958
+#: qcsrc/client/hud/panel/scoreboard.qc:1954
 msgid "Map stats:"
 msgstr "Harita verileri:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1988
+#: qcsrc/client/hud/panel/scoreboard.qc:1984
 msgid "Monsters killed:"
 msgstr "Canavarlar öldürüldü:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1995
+#: qcsrc/client/hud/panel/scoreboard.qc:1991
 msgid "Secrets found:"
 msgstr "Sırlar bulundu:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2205
+#: qcsrc/client/hud/panel/scoreboard.qc:2201
 #, c-format
 msgid "Spectators"
 msgstr "Seyirciler"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2227
+#: qcsrc/client/hud/panel/scoreboard.qc:2223
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2227
+#: qcsrc/client/hud/panel/scoreboard.qc:2223
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2228
+#: qcsrc/client/hud/panel/scoreboard.qc:2224
 msgid "SCO^points"
 msgstr "puanlar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2319
+#: qcsrc/client/hud/panel/scoreboard.qc:2315
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Takım Seçimi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2331
+#: qcsrc/client/hud/panel/scoreboard.qc:2327
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2333
+#: qcsrc/client/hud/panel/scoreboard.qc:2329
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2337
+#: qcsrc/client/hud/panel/scoreboard.qc:2333
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2348
+#: qcsrc/client/hud/panel/scoreboard.qc:2344
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f dakika"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2375
+#: qcsrc/client/hud/panel/scoreboard.qc:2371
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2376 qcsrc/client/main.qc:1431
+#: qcsrc/client/hud/panel/scoreboard.qc:2372 qcsrc/client/main.qc:1431
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Harita:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2535
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Hız ödülü: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2543
+#: qcsrc/client/hud/panel/scoreboard.qc:2539
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Tüm zamanların en hızlısı: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2577
+#: qcsrc/client/hud/panel/scoreboard.qc:2573
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Yeniden doğuma son ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2587
+#: qcsrc/client/hud/panel/scoreboard.qc:2583
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Öldünüz, yeniden doğmadan önce ^3%s^7 bekleyin"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2596
+#: qcsrc/client/hud/panel/scoreboard.qc:2592
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Öldünüz, yeniden doğmak için ^2%s^7 basın"
@@ -1634,6 +1626,22 @@ msgstr "Bitiş çizgisine diğer oyunculara karşı yarışın"
 msgid "Laps:"
 msgstr "Turlar:"
 
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
+msgid "Hunter"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
+msgid "Survivor"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
+msgid "Identify and eliminate all the hunters before all your allies are gone"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
+msgid "Survival"
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
 msgstr ""
@@ -1642,6 +1650,14 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
 msgstr "Takım Kapışması"
+
+#: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
+msgid "Keep the ball in your team's possession to get points for kills"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
+msgid "Team Keepaway"
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2114,7 +2130,7 @@ msgstr "Azami yazı tipi boyutu:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:765
+#: qcsrc/menu/xonotic/util.qc:767
 msgid "Color:"
 msgstr "Renk:"
 
@@ -2349,9 +2365,9 @@ msgstr "Bayrağı buraya getir"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:36
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:56
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:61
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Control point"
 msgstr "Kontrol noktası"
 
@@ -2372,44 +2388,48 @@ msgid "Run here"
 msgstr "Burada koş"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:53
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Ball"
 msgstr "Küre"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:50
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:52
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Ball carrier"
 msgstr "Küre taşıyıcı"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Leader"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:54
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Goal"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:59
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:63
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Generator"
 msgstr "Dinamo"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Weapon"
 msgstr "Silah"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:68
 msgid "Monster"
 msgstr "Canavar"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:66
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:70
 msgid "Vehicle"
 msgstr "Araç"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:67
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:71
 msgid "Intruder!"
 msgstr "Davetsiz misafir!"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:69
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:73
 msgid "Tagged"
 msgstr "Etiketli"
 
@@ -6416,8 +6436,8 @@ msgstr "Bilgi Mesajları Paneli"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:776
-#: qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/util.qc:762 qcsrc/menu/xonotic/util.qc:778
+#: qcsrc/menu/xonotic/util.qc:795
 msgid "Disable"
 msgstr "Devredışı"
 
@@ -6487,7 +6507,7 @@ msgstr "Bildirim Paneli"
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:138
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:144
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
-#: qcsrc/menu/xonotic/util.qc:748
+#: qcsrc/menu/xonotic/util.qc:750
 msgid "Enable"
 msgstr "Etkinleştir"
 
@@ -6632,7 +6652,7 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:782
+#: qcsrc/menu/xonotic/util.qc:784
 msgid "Alpha:"
 msgstr "Alfa:"
 
@@ -6930,11 +6950,11 @@ msgstr "Mevcut biçimi kaydet"
 msgid "Panel background defaults:"
 msgstr "Panel arka plan varsayılanları:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:757
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:759
 msgid "Background:"
 msgstr "Arkaplan:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:773
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:775
 msgid "Border size:"
 msgstr "Kenarlık boyutu:"
 
@@ -6943,11 +6963,11 @@ msgstr "Kenarlık boyutu:"
 msgid "Team color:"
 msgstr "Takım rengi:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:799
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:801
 msgid "Test team color in configure mode"
 msgstr "Yapılandırma modunda ekip rengini test et"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:802
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:804
 msgid "Padding:"
 msgstr "Dolgu malzemesi:"
 
@@ -7080,9 +7100,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:759
-#: qcsrc/menu/xonotic/util.qc:775 qcsrc/menu/xonotic/util.qc:784
-#: qcsrc/menu/xonotic/util.qc:792 qcsrc/menu/xonotic/util.qc:804
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:761
+#: qcsrc/menu/xonotic/util.qc:777 qcsrc/menu/xonotic/util.qc:786
+#: qcsrc/menu/xonotic/util.qc:794 qcsrc/menu/xonotic/util.qc:806
 msgid "Default"
 msgstr "Varsayılan"
 
@@ -10402,10 +10422,10 @@ msgid ""
 "^1Expect visual problems."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:770
+#: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"
 msgstr "Varsayılanı kullan"
 
-#: qcsrc/menu/xonotic/util.qc:790
+#: qcsrc/menu/xonotic/util.qc:792
 msgid "Team Color:"
 msgstr "Takım Rengi:"
