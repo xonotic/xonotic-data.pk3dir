@@ -462,16 +462,16 @@ void BanCommand_(int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define BAN_COMMANDS(request, arguments, command) \
-	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
-	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
-	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
-	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
-	BAN_COMMAND("playban", BanCommand_playban(request, arguments, command), "Force to spectate a client permanently") \
-	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
-	BAN_COMMAND("unmute", BanCommand_unmute(request, arguments), "Unmute a client") \
-	BAN_COMMAND("unvoteban", BanCommand_unvoteban(request, arguments), "Remove an existing voting ban") \
-	BAN_COMMAND("unplayban", BanCommand_unplayban(request, arguments), "Remove an existing forced to spectate ban") \
-	BAN_COMMAND("voteban", BanCommand_voteban(request, arguments, command), "Disallow a client from voting") \
+	BAN_COMMAND("ban",          BanCommand_ban(request, arguments, command),        "Ban an IP address or a range of addresses (like 1.2.3)") \
+	BAN_COMMAND("banlist",      BanCommand_banlist(request),                        "List all existing bans") \
+	BAN_COMMAND("kickban",      BanCommand_kickban(request, arguments, command),    "Disconnect a client and ban it at the same time") \
+	BAN_COMMAND("mute",         BanCommand_mute(request, arguments, command),       "Disallow a client from talking by muting them") \
+	BAN_COMMAND("playban",      BanCommand_playban(request, arguments, command),    "Force to spectate a client permanently") \
+	BAN_COMMAND("unban",        BanCommand_unban(request, arguments),               "Remove an existing ban") \
+	BAN_COMMAND("unmute",       BanCommand_unmute(request, arguments),              "Unmute a client") \
+	BAN_COMMAND("unvoteban",    BanCommand_unvoteban(request, arguments),           "Remove an existing voting ban") \
+	BAN_COMMAND("unplayban",    BanCommand_unplayban(request, arguments),           "Remove an existing forced to spectate ban") \
+	BAN_COMMAND("voteban",      BanCommand_voteban(request, arguments, command),    "Disallow a client from voting") \
 	/* nothing */
 
 void BanCommand_macro_help()
