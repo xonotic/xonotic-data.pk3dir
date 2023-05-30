@@ -1963,7 +1963,6 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.bool team_selected;
 bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))

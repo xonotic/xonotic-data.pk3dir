@@ -71,6 +71,7 @@ float autocvar_sv_player_scale;
 .int spectatee_status;
 .bool zoomstate;
 
+.bool team_selected;
 .bool just_joined;
 .bool wants_join;
 
