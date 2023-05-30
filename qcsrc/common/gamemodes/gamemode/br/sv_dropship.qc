@@ -54,6 +54,9 @@ entity dropship_initialize()
             startorigin = dropship_seekPoint(this, startorigin, 1, 0, 1);
         } while((tracebox(startorigin, this.mins, this.maxs, startorigin + '0 0 1', MOVE_NORMAL, this), trace_fraction) >= 1);
 
+        if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT | Q3SURFACEFLAG_NOMARKS))) // dropship did not reach the sky
+            continue;
+
         mult = dropship_getMultipliers();
         startorigin = dropship_seekPoint(this, startorigin, 0, 1, mult.x);
         startorigin = dropship_seekPoint(this, startorigin, 1, 1, mult.y);
@@ -68,8 +71,6 @@ entity dropship_initialize()
         tracebox(startorigin, this.mins, this.maxs, endorigin, MOVE_NORMAL, this);
         dropship_path_length = trace_fraction * vlen(endorigin - startorigin);
         if(dropship_path_length < (vlen(vec2(world.maxs - world.mins)) / 4)) // if the dropship path isn't atleast one quarter of the diagonal length of the map, retry, we're probably in a building
-            continue;
-        if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT | Q3SURFACEFLAG_NOMARKS))) // dropship did not reach the sky
             continue;
         endorigin = trace_endpos;
         dropship_path_direction = normalize(endorigin - startorigin);
