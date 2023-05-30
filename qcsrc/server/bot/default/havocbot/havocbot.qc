@@ -396,8 +396,8 @@ entity havocbot_select_an_item_of_group(entity this, int gr)
 
 // Check for water/slime/lava and dangerous edges
 // (only when the bot is on the ground or jumping intentionally)
-// returns true for danger
-bool havocbot_checkdanger(entity this, vector dst_ahead)
+// returns a number > 0 for danger
+int havocbot_checkdanger(entity this, vector dst_ahead)
 {
 	vector dst_down = dst_ahead - '0 0 3000';
 	traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -415,16 +415,16 @@ bool havocbot_checkdanger(entity this, vector dst_ahead)
 		if (trace_endpos.z < this.origin.z + this.mins.z)
 		{
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-				return true;
+				return 1;
 			else if (trace_endpos.z < min(this.origin.z + this.mins.z, this.goalcurrent.origin.z) - 100)
-				return true;
+				return 1;
 			else
 			{
 				s = pointcontents(trace_endpos + '0 0 1');
 				if (s != CONTENT_SOLID)
 				{
 					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
-						return true;
+						return 1;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
 						// the traceline check isn't enough but is good as optimization,
@@ -432,7 +432,7 @@ bool havocbot_checkdanger(entity this, vector dst_ahead)
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
-							return true;
+							return 2;
 						}
 					}
 				}
@@ -1137,7 +1137,10 @@ void havocbot_movetogoal(entity this)
 			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : flatdir * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			bool unreachable = false;
-			if (havocbot_checkdanger(this, dst_ahead))
+			int r = havocbot_checkdanger(this, dst_ahead);
+			if (r == 1)
+				danger_detected = true;
+			else if (r == 2)
 			{
 				if (destorg.z > this.origin.z + jumpstepheightvec.z)
 				{
