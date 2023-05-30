@@ -273,7 +273,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (IsQueueNeeded(player) && !SpectatorWantsJoin(player))
+			if (!IS_BOT_CLIENT(player) && IsQueueNeeded(player) && !SpectatorWantsJoin(player))
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
@@ -740,7 +740,7 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 			int latest_join = 0;
 			entity latest_join_pl = NULL;
 
-			FOREACH_CLIENT(IS_CLIENT(it) || INGAME(it), {
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || INGAME(it), {
 				if(it.team == Team_IndexToTeam(tmi) && CS(it).startplaytime > latest_join)
 				{
 					latest_join = CS(it).startplaytime;
@@ -812,6 +812,10 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			if (it == ignore)
 			{
 				continue;
+			}
+			if (it.wants_join)
+			{
+				continue; // Queued players aren't actually in the game.
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
