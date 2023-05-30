@@ -292,10 +292,10 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			Kill_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CPID_IDLING);
 			CS(player).idlekick_lasttimeleft = 0;
 		}
-		else if (player.wants_join > 0)
+		else if (player.wants_join)
 		{
-			LOG_INFOF("Triggered by %s (%d)", player.netname, player.wants_join);
 			player.wants_join = 0;
+			player.team_selected = false;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, player.netname);
 		}
 		else if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
