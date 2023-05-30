@@ -157,6 +157,7 @@
 		FUNCTION(_("Bulgarian")) \
 			PERSON(Alexander "alex4o" Bonin) \
 			PERSON(ifohancroft) \
+			PERSON(Krasimir "kmikov" Mikov) \
 			PERSON(lokster) \
 			PERSON(Nik "cozmo" Dim) \
 			PERSON(set_killer) \
@@ -173,6 +174,20 @@
 			PERSON(Losier "losierb" Blackheath) \
 			PERSON(Matthew "wjjmatthew" Wu) \
 			PERSON(moetale) \
+			PERSON(NaitLee) \
+			PERSON(sapphireliu) \
+		NL() \
+		FUNCTION(_("Chinese (Hong Kong)")) \
+			PERSON(Antonidas) \
+			PERSON(CodingJellyfish) \
+			PERSON(gee "Largee" Lar) \
+			PERSON(jiegushijia) \
+			PERSON(kalawore) \
+			PERSON(Losier "losierb" Blackheath) \
+			PERSON(Matthew "wjjmatthew" Wu) \
+			PERSON(Liang "dxkliu" Liu) \
+			PERSON(moetale) \
+			PERSON(NaitLee) \
 			PERSON(sapphireliu) \
 		NL() \
 		FUNCTION(_("Chinese (Taiwan)")) \
@@ -180,9 +195,7 @@
 			PERSON(Armcoon) \
 			PERSON(Jeff "s8321414" Huang) \
 			PERSON(msn1018927464) \
-		NL() \
-		FUNCTION(_("Cornish")) \
-			PERSON(Nicky "nrowe" Rowe) \
+			PERSON(NaitLee) \
 		NL() \
 		FUNCTION(_("Czech")) \
 			PERSON(Adam "Admi335" Říha) \
@@ -214,6 +227,8 @@
 			PERSON(Henry "Exitium" Sanmark) \
 			PERSON(Jaakko Saarikko) \
 			PERSON(Jonas "PowaTree" Sahlberg) \
+			PERSON(LINUX SAUNA) \
+			PERSON(Oftox) \
 			PERSON(Oi Suomi On!) \
 			PERSON(Rasmus "FruitieX" Eskola) \
 		NL() \
@@ -257,6 +272,11 @@
 			PERSON(Ruszkai "CuBe0wL" Ákos) \
 			PERSON(xaN1C4n3) \
 		NL() \
+		FUNCTION(_("Indonesian")) \
+			PERSON(Angeline Meilia) \
+			PERSON(Ariesandy Hidayat) \
+			PERSON(red koala) \
+		NL() \
 		FUNCTION(_("Irish")) \
 			PERSON(Kevin "kscanne" Scannell) \
 		NL() \
@@ -282,6 +302,10 @@
 			PERSON(BYEONGJIN "ahnkoon" AN) \
 			PERSON(Jisoo "LimJiSoo0719" Lim) \
 			PERSON(Kim "coughingmouse" Lee) \
+			PERSON(Seokho Son) \
+		NL() \
+		FUNCTION(_("Latin")) \
+			PERSON(oblector o) \
 		NL() \
 		FUNCTION(_("Polish")) \
 			PERSON(4m) \
@@ -295,11 +319,13 @@
 			PERSON(Karol "kRkk" Kosek) \
 			PERSON(Kriss "Kriss7475" Chr) \
 			PERSON(Piotr "vipkoza" Kozica) \
+			PERSON(qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc) \
 			PERSON(Rafał "Okava" Szymański) \
 			PERSON(Robert "Szkodnix" Wolniak) \
 			PERSON(Saikuru "saikuru0" Zero) \
 			PERSON(Sertomas) \
 			PERSON(SFS Atlas) \
+			PERSON(Wojciech "g_host" Sikora) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
 			PERSON(Ivan Paulos "greylica" Tomé) \
@@ -330,6 +356,7 @@
 			PERSON(Alexandr "zrg") \
 			PERSON(Andrei "adem4ik" Stepanov) \
 			PERSON(Andrey "dekrY" P.) \
+			PERSON(Артём "Temak" Котлубай) \
 			PERSON(Artem Vorotnikov) \
 			PERSON(Blueberryy) \
 			PERSON(gravicappa) \
@@ -339,9 +366,6 @@
 			PERSON(Nikoli) \
 			PERSON(Sergej "Clearness High" Lutsyk) \
 			PERSON(Simple88) \
-		NL() \
-		FUNCTION(_("Scottish Gaelic")) \
-			PERSON_("GunChleoc") \
 		NL() \
 		FUNCTION(_("Serbian")) \
 			PERSON_("Саша \"salepetronije\" Петровић") \
@@ -379,11 +403,13 @@
 			PERSON(Demiray "tulliana" Muhterem) \
 			PERSON(Gokdeniz.Kucukali) \
 			PERSON(ibra kap) \
+			PERSON(Lucifer "Lucifer25x" Morningstar) \
 			PERSON(yutyocraft) \
 		NL() \
 		FUNCTION(_("Ukrainian")) \
 			PERSON(Dmitro "Gamebot" Sokhin) \
 			PERSON(Ihor "uandreew" Andreev) \
+			PERSON(Illia "imbirWIthSugar" Serediuk) \
 			PERSON(Oleh "BlaXpirit" Prypin) \
 			PERSON(Vasyl "Harmata" Melnyk) \
 			PERSON(Yuriy "herrniemand" Ackermann) \
