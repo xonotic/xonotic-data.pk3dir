@@ -1,6 +1,6 @@
 #include "dialog_hudpanel_strafehud.qh"
 
-#include "checkbox_string.qh"
+#include "checkbox.qh"
 #include "colorpicker_string.qh"
 #include "button.qh"
 #include "slider.qh"
@@ -53,7 +53,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Range:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_range"));
 	me.TR(me);
-		me.TD(me, 1, 1.9, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
+		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
 
 		me.TDempty(me, 0.2);
 
@@ -121,11 +121,11 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.9, e = makeXonoticCheckBoxString("1", "0", "hud_panel_strafehud_switch", _("Enable")));
+		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "hud_panel_strafehud_switch", _("Enable")));
 
 		me.TDempty(me, 0.2);
 
 		me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.9, e = makeXonoticCheckBoxString("1", "0", "hud_panel_strafehud_bestangle", _("Enable")));
+		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "hud_panel_strafehud_bestangle", _("Enable")));
 }
