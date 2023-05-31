@@ -417,14 +417,14 @@ int havocbot_checkdanger(entity this, vector dst_ahead)
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
 				return 1;
 			else if (trace_endpos.z < min(this.origin.z + this.mins.z, this.goalcurrent.origin.z) - 100)
-				return 1;
+				return 2;
 			else
 			{
 				s = pointcontents(trace_endpos + '0 0 1');
 				if (s != CONTENT_SOLID)
 				{
 					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
-						return 1;
+						return 3;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
 						// the traceline check isn't enough but is good as optimization,
@@ -432,7 +432,7 @@ int havocbot_checkdanger(entity this, vector dst_ahead)
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
-							return 2;
+							return 4;
 						}
 					}
 				}
@@ -1138,9 +1138,9 @@ void havocbot_movetogoal(entity this)
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			bool unreachable = false;
 			int r = havocbot_checkdanger(this, dst_ahead);
-			if (r == 1)
+			if (r > 0 && r < 4)
 				danger_detected = true;
-			else if (r == 2)
+			else if (r == 4)
 			{
 				if (destorg.z > this.origin.z + jumpstepheightvec.z)
 				{
