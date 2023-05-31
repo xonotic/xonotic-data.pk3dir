@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-29 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Mirio <opivy@hotmail.de>, 2014-2017,2019-2023\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -906,11 +906,11 @@ msgstr "SCO^summe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
-msgstr ""
+msgstr "Anzahl der überlebten Runden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
-msgstr ""
+msgstr "SCO^überlebt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
@@ -1685,10 +1685,12 @@ msgstr "Überlebender"
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
+"Identifiziere und eliminiere alle Jäger, bevor alle deine Verbündeten "
+"verschwunden sind"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Surivival"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1700,11 +1702,11 @@ msgstr "Team-Deathmatch"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
-msgstr ""
+msgstr "Halte den Ball im Besitz deines Teams, und töte, um Punkte zu sammeln"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "Team Keepaway"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2495,7 +2497,7 @@ msgstr "^1Serverbenachrichtigungen:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE: ^BGChat ist derzeit auf diesem Server deaktiviert"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2505,15 +2507,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE: ^BGPrivatchat ist derzeit auf diesem Server deaktiviert"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE: ^BGZuschauerchat ist derzeit auf diesem Server deaktiviert"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE: ^BGTeamchat ist derzeit auf diesem Server deaktiviert"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3428,6 +3430,7 @@ msgstr "^BG%s^F3 wurde für übertriebene Teamkills hinausgeworfen"
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
 msgstr ""
+"^BG%s^F3 musste wegen zu vielen Tötungungen von Teammitgliedern zusehen"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -4529,6 +4532,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1Du darfst nicht auf diesem Server spielen, weil du gesperrt bist, aber du "
+"kannst Minispiele spielen"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4536,7 +4541,7 @@ msgstr "^BGDu hast den Ball aufgenommen"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGBekomme den Ball, und töte, um Punkte zu sammeln!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4771,6 +4776,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Du bist zum Zuschauen gezwungen und darfst nicht spielen, weil du auf "
+"diesem Server gesperrt bist"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4873,10 +4880,12 @@ msgstr "^F2Eindringling entdeckt, deaktiviere Schilde!"
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1Du darfst keine Abstimmung starten, weil du auf diesem Server gesperrt "
+"bist"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Du darfst nicht abstimmen, weil du auf diesem Server gesperrt bist"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -6189,7 +6198,7 @@ msgstr "Chinesisch (China)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Chinesisch (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6229,7 +6238,7 @@ msgstr "Ungarisch"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesisch"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6253,7 +6262,7 @@ msgstr "Koreanisch"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latein"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
@@ -6766,7 +6775,7 @@ msgstr "Physik-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Aufssamelnachrichten:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
@@ -6797,7 +6806,7 @@ msgstr "Symbolgrössenskala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Aufsammel-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"

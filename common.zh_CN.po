@@ -896,11 +896,11 @@ msgstr "总和"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
-msgstr "生存数"
+msgstr "生还数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
-msgstr "生存"
+msgstr "生还"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
@@ -1647,11 +1647,11 @@ msgstr "生存者"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
-msgstr ""
+msgstr "在队友接连受害前认出并消灭所有狩猎者"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "生还"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1663,11 +1663,11 @@ msgstr "团队死亡竞技"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
-msgstr ""
+msgstr "争取让团队持球，杀敌得分"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "团队驱离"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
