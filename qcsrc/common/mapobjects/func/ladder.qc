@@ -64,7 +64,11 @@ void func_ladder_link(entity this)
 
 void func_ladder_init(entity this)
 {
+	string m = this.model;
 	EXACTTRIGGER_INIT;
+	// restore the model string unset in WarpZoneLib_ExactTrigger_Init()
+	// see: https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2838
+	this.model = m;
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	func_ladder_link(this);
 	setthink(this, func_ladder_think);
