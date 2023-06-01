@@ -7,7 +7,7 @@ en_AU "English (Australia)" "English (Australia)" 69%
 es    "Spanish" "Español" 99%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 29%
-it    "Italian" "Italiano" 98%
+it    "Italian" "Italiano" 100%
 la    "Latin" "Lingua Latina" 62%
 hu    "Hungarian" "Magyar" 43%
 nl    "Dutch" "Nederlands" 61%
@@ -16,7 +16,7 @@ pt    "Portuguese" "Português" 77%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 67%
 fi    "Finnish" "Suomi" 98%
-sv    "Swedish" "Svenska" 98%
+sv    "Swedish" "Svenska" 99%
 tr    "Turkish" "Türkçe" 50%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 44%

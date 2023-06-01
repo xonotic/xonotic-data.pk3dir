@@ -696,11 +696,11 @@ msgstr "mål"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Mängden jakt (Survival)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^hunts"
-msgstr ""
+msgstr "jakt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of keys carrier kills"
@@ -882,11 +882,11 @@ msgstr "summa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
-msgstr ""
+msgstr "Mängden överlevnader"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
-msgstr ""
+msgstr "överlevnader"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
@@ -1291,7 +1291,7 @@ msgstr "Din klientversion är utdaterad."
 
 #: qcsrc/client/main.qc:1385
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr "### DU KOMMER INTE ATT KUNNA SPELA PÅ DENNA SERVERN ###"
+msgstr "### DU KOMMER INTE ATT KUNNA SPELA PÅ DENNA SERVER ###"
 
 #: qcsrc/client/main.qc:1386
 msgid "Please update!"
@@ -1645,19 +1645,19 @@ msgstr "Varv:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
 msgid "Hunter"
-msgstr ""
+msgstr "Jägare"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
 msgid "Survivor"
-msgstr ""
+msgstr "Överlevande"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
-msgstr ""
+msgstr "Upptäck och eliminera alla jägare innan alla dina allierade försvinner"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Överlevnad"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1669,11 +1669,11 @@ msgstr "Team Deathmatch"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
-msgstr ""
+msgstr "Håll bollen i erat lag's innehav för att få poäng för mord"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "Team Keepaway"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2459,7 +2459,7 @@ msgstr "^1Servermeddelanden:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4ANMÄRKNING: ^BGChatten är för nuvarande avslagen på denna server"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2470,14 +2470,16 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
 msgstr ""
+"^F4ANMÄRKNING: ^BGPrivatchatten är för nuvarande avslagen på denna server"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
 msgstr ""
+"^F4ANMÄRKNING: ^BGÅskådarchatten är för nuvarande avslagen på denna server"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4ANMÄRKNING: ^BGLagchatten är för nuvarande avslagen på denna server"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3381,7 +3383,7 @@ msgstr "^BG%s^F3 blev kickad för överdriven lagmord"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 blev tvingad att åskåda för överdriven lagmord"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3471,12 +3473,12 @@ msgstr "^BG%s^K1 plockade upp ett Supervapen"
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1Jägarna^BG vinner omgången"
 
 #: qcsrc/common/notifications/all.inc:451
 #: qcsrc/common/notifications/all.inc:791
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1Överlevarna^BG vinner omgången"
 
 #: qcsrc/common/notifications/all.inc:453
 msgid "^BGYou cannot change to a larger team"
@@ -4453,6 +4455,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1Du har inte tillåtelse att spela för att du är bannad från denna server, "
+"men du kan spela minispel"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4460,7 +4464,7 @@ msgstr "^BGDu har plockat upp bollen"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGHämta bollen för att få poäng för fragg!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4695,6 +4699,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Du är tvingad att åskåda och har inte tillåtelse att spela för att du är "
+"bannad från denna server"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4730,10 +4736,11 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
+"^BGDu är en ^K1jägare^BG! Eliminera de överlevande utan att väcka misstankar!"
 
 #: qcsrc/common/notifications/all.inc:790
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGDu är en ^F1överlevare^BG! Identifiera och eliminera jägarna!"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4794,10 +4801,13 @@ msgstr "^F2Inkräktare upptäckt, slår av sköldarna!"
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1Du har inte tillåtelse att starta en röstning för att du är bannad från "
+"denna server"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr ""
+"^K1Du har inte tillåtelse att rösta för att du är bannad från denna server"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -6110,7 +6120,7 @@ msgstr "Kinesiska (Kina)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Kinesiska (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6150,7 +6160,7 @@ msgstr "Ungerska"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesiska"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6174,7 +6184,7 @@ msgstr "Koreanska"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latinska"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"

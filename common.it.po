@@ -485,7 +485,7 @@ msgstr "Schermo pieno"
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:892
 msgid "QMCMD^Call a vote"
-msgstr "Chiama una votazione"
+msgstr "Indici una votazione"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Restart the map"
@@ -702,11 +702,11 @@ msgstr "gol"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Numero di cacce (Sopravvivenza)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^hunts"
-msgstr ""
+msgstr "cacce"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of keys carrier kills"
@@ -856,11 +856,11 @@ msgstr "round vinti"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Numero di round giocati"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "round giocati"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^score"
@@ -888,11 +888,11 @@ msgstr "somma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
-msgstr ""
+msgstr "Numero di sopravvivenze"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
-msgstr ""
+msgstr "sopravvivenze"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
@@ -1657,19 +1657,21 @@ msgstr "Giri:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
 msgid "Hunter"
-msgstr ""
+msgstr "Cacciatore"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
 msgid "Survivor"
-msgstr ""
+msgstr "Sopravvissuto"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
+"Identifica e elimina tutti i cacciatori prima che tutti i tuoi alleati siano "
+"morti"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Sopravvivenza"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1682,10 +1684,12 @@ msgstr "Team Deathmatch"
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
 msgstr ""
+"Tieni la palla in possesso della tua squadra per ottenere punti dalle "
+"uccisioni"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "Team Keepaway"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2473,7 +2477,7 @@ msgstr "^1Note del server:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGLa chat è al momento disabilitata in questo server"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2483,15 +2487,17 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGLa chat privata è al momento disabilitata in questo server"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
 msgstr ""
+"^F4NOTA: ^BGLa chat tra spettatori è al momento disabilitata in questo server"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
 msgstr ""
+"^F4NOTA: ^BGLa chat di squadra è al momento disabilitata in questo server"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3423,6 +3429,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
 msgstr ""
+"^BG%s^F3 è stato costretto a fare da spettatore per le troppe uccisioni di "
+"compagni di squadra"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3515,12 +3523,12 @@ msgstr "^BG%s^K1 ha preso una Superarma"
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^BGI ^K1cacciatori ^BG hanno vinto il round"
 
 #: qcsrc/common/notifications/all.inc:451
 #: qcsrc/common/notifications/all.inc:791
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^BGI ^K1sopravvissuti ^BG hanno vinto il round"
 
 #: qcsrc/common/notifications/all.inc:453
 msgid "^BGYou cannot change to a larger team"
@@ -4529,6 +4537,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1Non ti è permesso giocare perché sei bannato in questo server, ma puoi "
+"giocare i minigiochi"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4536,7 +4546,7 @@ msgstr "^BGHai preso la palla"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGPrendi la palla per fare punti per le uccisioni!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4771,6 +4781,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Sei costretto a fare da spettatore e non ti è permesso giocare perché sei "
+"bannato in questo server"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4806,10 +4818,11 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
+"^BGSei un ^K1cacciatore^BG! Elimina i sopravvissuti senza destare sospetto!"
 
 #: qcsrc/common/notifications/all.inc:790
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGSei un ^F1sopravvissuto^BG! Identifica e elimina i cacciatori!"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4868,10 +4881,11 @@ msgstr "^F2Rilevato intruso, scudi disabilitati!"
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1Non ti è permesso indire una votazione perché sei bannato in questo server"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Non ti è permesso votare perché sei bannato in questo server"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -6184,7 +6198,7 @@ msgstr "Cinese (Cina)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Cinese (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6224,7 +6238,7 @@ msgstr "Ungherese"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesiano"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6248,7 +6262,7 @@ msgstr "Coreano"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latino"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
@@ -7018,7 +7032,7 @@ msgstr "Pannello tempo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr "Opacità dopo votazione:"
+msgstr "Opacità dopo il voto:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
