@@ -124,8 +124,15 @@ string OriginalCallerName()
 //  Game logic for voting
 // =======================
 
-void VoteReset()
+void VoteStop(entity stopper, bool show_name);
+void VoteReset(bool verbose)
 {
+	if (verbose && vote_called)
+	{
+		VoteStop(NULL, true);
+		return;
+	}
+
 	FOREACH_CLIENT(true, { it.vote_selection = 0; });
 
 	if (vote_called)
@@ -145,13 +152,16 @@ void VoteReset()
 	Nagger_VoteChanged();
 }
 
-void VoteStop(entity stopper)
+void VoteStop(entity stopper, bool canceled)
 {
-	bprint("\{1}^2* ^3", GetCallerName(stopper), "^2 stopped ^3", OriginalCallerName(), "^2's vote\n");
+	if (canceled)
+		bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote was canceled\n");
+	else
+		bprint("\{1}^2* ^3", GetCallerName(stopper), "^2 stopped ^3", OriginalCallerName(), "^2's vote\n");
 	if (autocvar_sv_eventlog)   GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid)));
 	// Don't force them to wait for next vote, this way they can e.g. correct their vote.
 	if ((vote_caller) && (stopper == vote_caller))   vote_caller.vote_waittime = time + autocvar_sv_vote_stop;
-	VoteReset();
+	VoteReset(false);
 }
 
 void VoteAccept()
@@ -163,21 +173,21 @@ void VoteAccept()
 
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
 
-	VoteReset();
+	VoteReset(false);
 	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
 }
 
 void VoteReject()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 was rejected\n");
-	VoteReset();
+	VoteReset(false);
 	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteTimeout()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 timed out\n");
-	VoteReset();
+	VoteReset(false);
 	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
@@ -205,7 +215,6 @@ void VoteSpam(float notvoters, float mincount, string result)
 
 void VoteCount(float first_count)
 {
-	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 
 	float vote_player_count = 0, notvoters = 0;
@@ -217,7 +226,7 @@ void VoteCount(float first_count)
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_vote_debug, {
 		++vote_player_count;
 		if (IS_PLAYER(it) || INGAME(it)) ++vote_real_player_count;
 		switch (it.vote_selection)
@@ -243,7 +252,7 @@ void VoteCount(float first_count)
 	{
 		if (vote_caller)   vote_caller.vote_waittime = 0;
 		print_to(vote_caller, "^1There are not enough players on this server to allow you to become vote master.");
-		VoteReset();
+		VoteReset(false);
 		return;
 	}
 
@@ -427,7 +436,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	if (!is_fake_round_start && !autocvar_g_campaign)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_COUNTDOWN_RESTART);
 
-	VoteReset();
+	VoteReset(true);
 
 	// clear overtime, we have to decrease timelimit to its original value again.
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
@@ -849,6 +858,13 @@ void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from voting.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBANYN);
+				return;
+			}
+
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if (caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change)
 			{
@@ -890,6 +906,13 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 		{
 			float tmp_playercount = 0;
 			int parse_error;
+
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from calling a vote.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBAN);
+				return;
+			}
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
@@ -954,6 +977,8 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++tmp_playercount; });
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
+				if (autocvar_sv_vote_debug)
+					bprint("\{1}^2* ^3", "^6DEBUG MODE ACTIVE: bots can vote too\n"); // so servers don't forget it on
 				if (autocvar_sv_eventlog)
 					GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
 				Nagger_VoteChanged();
@@ -1106,6 +1131,13 @@ void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from voting.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBANYN);
+				return;
+			}
+
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if (caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change)
 			{
@@ -1113,7 +1145,7 @@ void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 			}
 			else if (((caller == vote_caller) || caller.vote_master) && autocvar_sv_vote_no_stops_vote)
 			{
-				VoteStop(caller);
+				VoteStop(caller, true);
 			}
 
 			else  // everything went okay, continue changing vote
@@ -1167,7 +1199,7 @@ void VoteCommand_stop(int request, entity caller)  // BOTH
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called)   print_to(caller, "^1No vote called.");
-			else if ((caller == vote_caller) || !caller || caller.vote_master)   VoteStop(caller);
+			else if ((caller == vote_caller) || !caller || caller.vote_master)   VoteStop(caller, false);
 			else   print_to(caller, "^1You are not allowed to stop that vote.");
 			return;
 		}
@@ -1188,6 +1220,13 @@ void VoteCommand_yes(int request, entity caller)  // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (PlayerInList(caller, autocvar_g_voteban_list)) // voteban
+			{
+				print_to(caller, "^1You are banned from voting.");
+				Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_VOTEBANYN);
+				return;
+			}
+
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if (caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change)
 			{

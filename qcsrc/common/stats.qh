@@ -132,6 +132,7 @@ REGISTER_STAT(ROUNDLOST, int)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
+REGISTER_STAT(TKA_BALLSTATUS, int)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 0;

@@ -44,12 +44,20 @@ void g_clientmodel_use(entity this, entity actor, entity trigger)
 	if (this.antiwall_flag == 1)
 	{
 		this.inactive = 1;
-		this.solid = SOLID_NOT;
+		if (this.solid != SOLID_NOT)
+		{
+			this.solid = SOLID_NOT;
+			setorigin(this, this.origin); // unlink
+		}
 	}
 	else if (this.antiwall_flag == 2)
 	{
 		this.inactive = 0;
-		this.solid = this.default_solid;
+		if (this.solid != this.default_solid)
+		{
+			this.solid = this.default_solid;
+			setorigin(this, this.origin); // link
+		}
 	}
 	g_clientmodel_setcolormaptoactivator(this, actor, trigger);
 }
@@ -167,27 +175,29 @@ void g_model_init(entity ent, float sol)
 {
 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS);
 	if(!ent.scale) ent.scale = ent.modelscale;
-	SetBrushEntityModel(ent,true);
-	ent.use = g_model_setcolormaptoactivator;
-	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
+
 	if(!ent.solid) ent.solid = (sol);
 	else if(ent.solid < 0) ent.solid = SOLID_NOT;
-	// link entity after setting the .solid field to ensure that it gets linked to the area grid
-	setorigin(ent, ent.origin);
+	SetBrushEntityModel(ent,true); // called after setting .solid to ensure correct area grid linking/unlinking
+
+	ent.use = g_model_setcolormaptoactivator;
+	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
 }
 
 void g_clientmodel_init(entity ent, float sol)
 {
 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS);
 	if(!ent.scale) ent.scale = ent.modelscale;
-	SetBrushEntityModel(ent,true);
+
+	if(!ent.solid) ent.solid = (sol);
+	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	SetBrushEntityModel(ent,true); // called after setting .solid to ensure correct area grid linking/unlinking
+
 	ent.use = g_clientmodel_use;
 	setthink(ent, g_clientmodel_think);
 	ent.nextthink = time;
 	ent.oldorigin = ent.origin; // don't run an initial double update
 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
-	if(!ent.solid) ent.solid = (sol);
-	else if(ent.solid < 0) ent.solid = SOLID_NOT;
 	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1;
 	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0;
 	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity);

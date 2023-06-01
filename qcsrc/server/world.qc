@@ -166,11 +166,14 @@ void cvar_changes_init()
 	{
 		k = bufstr_get(h, i);
 
-#define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
-#define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
+#define BADPREFIX_COND(p) (substring(k, 0, strlen(p)) == p)
+#define BADSUFFIX_COND(s) (substring(k, -strlen(s), -1) == s)
+
+#define BADPREFIX(p) if(BADPREFIX_COND(p)) continue
+#define BADPRESUFFIX(p, s) if(BADPREFIX_COND(p) && BADSUFFIX_COND(s)) continue
 #define BADCVAR(p) if(k == p) continue
 #define BADVALUE(p, val) if (k == p && v == val) continue
-#define BADPRESUFFIXVALUE(p,s,val) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s && v == val) continue
+#define BADPRESUFFIXVALUE(p, s, val) if(BADPREFIX_COND(p) && BADSUFFIX_COND(s) && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -233,6 +236,9 @@ void cvar_changes_init()
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADCVAR("g_require_stats");
+		BADCVAR("g_muteban_list");
+		BADCVAR("g_playban_list");
+		BADCVAR("g_voteban_list");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
@@ -256,8 +262,6 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
-		BADCVAR("sv_muteban_list");
-		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 
@@ -301,6 +305,10 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_tka");
+		BADCVAR("g_tka_on_ka_maps");
+		BADCVAR("g_tka_on_tdm_maps");
+		BADCVAR("g_tka_teams");
 		BADCVAR("g_tmayhem");
 		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
@@ -405,7 +413,6 @@ void cvar_changes_init()
 		BADCVAR("w_prop_interval");
 		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
-		BADPREFIX("gameversion");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_hats_");
@@ -683,7 +690,7 @@ void GameplayMode_DelayedInit(entity this)
 
 void InitGameplayMode()
 {
-	VoteReset();
+	VoteReset(false);
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
@@ -1333,7 +1340,7 @@ void NextLevel()
 
 	//pos = FindIntermission ();
 
-	VoteReset();
+	VoteReset(true);
 
 	DumpStats(true);
 
