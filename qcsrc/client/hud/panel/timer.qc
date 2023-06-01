@@ -102,7 +102,9 @@ void HUD_Timer()
 	}
 
 	// Timer text
-	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
+	if (timelimit == -1)
+		timer = (autocvar_hud_panel_timer_increment ? 0 : STAT(TIMELIMIT) * 60);
+	else if (autocvar_hud_panel_timer_increment || timelimit <= 0)
 		timer = HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME));
 	else
 		timer = timeleft;
@@ -147,18 +149,7 @@ void HUD_Timer()
 	int overtimes = STAT(OVERTIMES);
 
 	if(warmup_stage || autocvar__hud_configure)
-	{
-		if (STAT(WARMUP_TIMELIMIT) > 0)
-			subtext = _("Warmup");
-		else
-		{
-			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
-			if (srv_minplayers - numplayers > 0)
-				subtext = _("Warmup: too few players");
-			else
-				subtext = _("Warmup: no time limit");
-		}
-	}
+		subtext = _("Warmup");
 	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");
 	else if(overtimes >= 2)
