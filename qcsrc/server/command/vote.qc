@@ -560,7 +560,7 @@ void ReadyCount()
 			game_starttime = time;
 			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
 			if (!sv_ready_restart_after_countdown) // if we ran reset_map() at start of countdown
-				FOREACH_CLIENT(IS_PLAYER(it), { GiveWarmupResources(it); });
+				FOREACH_CLIENT(IS_PLAYER(it), { ResetPlayerResources(it); });
 		}
 		if (warmup_limit > 0)
 			warmup_limit = -1;

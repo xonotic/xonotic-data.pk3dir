@@ -85,7 +85,6 @@ void HUD_Timer()
 	if(!intermission_time && !warmup_stage && timelimit > 0)
 		timer_color = HUD_Timer_Color(timeleft);
 
-<<<<<<< HEAD
 	// countdown sound
 	// if 3 use server dictated option, otherwise the client's
 	int countdown_type;

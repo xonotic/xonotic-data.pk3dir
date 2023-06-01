@@ -548,30 +548,18 @@ bool Item_GiveTo(entity item, entity player)
 		{
 			pickedup = true;
 			FOREACH(Weapons, it != WEP_Null, {
-<<<<<<< HEAD
-				Weapon wep = it;
-				
-				if(w & (wep.m_wepset)) {
-					// z411 Seriously find a better way to do this
-					Item_NotifyWeapon(player, wep.m_id);
-					FOREACH_CLIENT(IS_SPEC(it) && it.enemy == player, { Item_NotifyWeapon(it, wep.m_id); });
-				}
-				
-				if(wp & (wep.m_wepset))
-=======
 				if(w & (it.m_wepset))
 					Item_NotifyWeapon(player, it.m_id);
 
 				if(wp & (it.m_wepset))
->>>>>>> master
 				{
 					for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 					{
 						.entity weaponentity = weaponentities[slot];
 						if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
-							W_DropEvent(wr_pickup, player, wep.m_id, item, weaponentity);
+							W_DropEvent(wr_pickup, player, it.m_id, item, weaponentity);
 					}
-					W_GiveWeapon(player, wep.m_id);
+					W_GiveWeapon(player, it.m_id);
 				}
 			});
 		}

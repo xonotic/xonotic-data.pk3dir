@@ -419,7 +419,7 @@ void SetSpectatee_status(entity this, int spectatee_num);
 
 void FixPlayermodel(entity player);
 
-void GiveWarmupResources(entity this);
+void ResetPlayerResources(entity this);
 
 void ClientInit_misc(entity this);
 

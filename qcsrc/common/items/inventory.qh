@@ -64,8 +64,8 @@ void Inventory_handle(entity inv, bool mine)
             }
             const GameItem it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
             .int fld = inv_items[it.m_id];
-            int prev = this.(fld);
-            int next = this.(fld) = ReadByte();
+            int prev = inv.(fld);
+            int next = inv.(fld) = ReadByte();
 
             Pickup_Update(it, next - prev);
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);

@@ -1041,6 +1041,21 @@ vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
 #define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
 #define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
 #define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
+
+vector getPingColor(float f)
+{
+	if(f < PING_BEST)
+		return COLOR_BEST;
+	else if(f < PING_MED)
+		return COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+	else if(f < PING_HIGH)
+		return COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
+	else if(f < PING_WORST)
+		return COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
+	else
+		return COLOR_WORST;
+}
+
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1066,16 +1081,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
-			if(f < PING_BEST)
-				sbt_field_rgb = COLOR_BEST;
-			else if(f < PING_MED)
-				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
-			else if(f < PING_HIGH)
-				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
-			else if(f < PING_WORST)
-				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
-			else
-				sbt_field_rgb = COLOR_WORST;
+			sbt_field_rgb = getPingColor(f);
 			return ftos(f);
 
 		case SP_PL:
@@ -1502,7 +1508,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		
 		string flag_name = "";
 		vector flag_size = '0 0 0';
-		Scoreboard_GetField(pl, SP_COUNTRY);
+		Scoreboard_GetField(pl, SP_COUNTRY, autocvar_hud_panel_scoreboard_scores_per_round);
 		
 		if(sbt_field_icon3 != "") {
 			sz = draw_getimagesize(sbt_field_icon3);
@@ -1721,7 +1727,7 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	
 	//LegendGuard adds a conditional sentence for country column 05-04-2021
 	// Player country icon/flag
-	Scoreboard_GetField(pl, SP_COUNTRY);
+	Scoreboard_GetField(pl, SP_COUNTRY, autocvar_hud_panel_scoreboard_scores_per_round);
 	if(sbt_field_icon3 != "") {
 		vector rsz = draw_getimagesize(sbt_field_icon3);
 		sbt_fixcolumnwidth_iconlen = rsz.x / rsz.y;
@@ -1776,11 +1782,11 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 	else
 		i++;
 	
-	tmp_str = Scoreboard_GetField(pl, SP_PING);
+	tmp_str = Scoreboard_GetField(pl, SP_PING, autocvar_hud_panel_scoreboard_scores_per_round);
 	drawstring(tmp + eX * column_width * i + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 1.25) / 2),
 		tmp_str, hud_fontsize * 1.25, sbt_field_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-	tmp_str = Scoreboard_GetField(pl, SP_PL);
+	tmp_str = Scoreboard_GetField(pl, SP_PL, autocvar_hud_panel_scoreboard_scores_per_round);
 	drawstring(tmp + eX * column_width * (invert ? i-- : i++) + (eX * column_width / 2) - eX * (stringwidth(tmp_str, false, hud_fontsize * 0.75) / 2) + eY * (hud_fontsize.y * 1.25),
 		tmp_str, hud_fontsize * 0.75, sbt_field_rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 

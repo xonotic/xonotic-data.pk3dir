@@ -552,17 +552,34 @@ void FixPlayermodel(entity player)
 				setcolor(player, stof(autocvar_sv_defaultplayercolors));
 }
 
-void GiveWarmupResources(entity this)
+void ResetPlayerResources(entity this)
 {
-	SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
-	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
-	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
-	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
-	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
-	SetResource(this, RES_HEALTH, warmup_start_health);
-	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
-	STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
+	if (warmup_stage) {
+		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+		SetResource(this, RES_HEALTH, warmup_start_health);
+		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
+		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
+	} else {
+		SetResource(this, RES_SHELLS, start_ammo_shells);
+		SetResource(this, RES_BULLETS, start_ammo_nails);
+		SetResource(this, RES_ROCKETS, start_ammo_rockets);
+		SetResource(this, RES_CELLS, start_ammo_cells);
+		SetResource(this, RES_PLASMA, start_ammo_plasma);
+		SetResource(this, RES_FUEL, start_ammo_fuel);
+		SetResource(this, RES_HEALTH, start_health);
+		SetResource(this, RES_ARMOR, start_armorvalue);
+		STAT(WEAPONS, this) = start_weapons;
+		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
+		{
+			GiveRandomWeapons(this, random_start_weapons_count,
+				autocvar_g_random_start_weapons, random_start_ammo);
+		}
+	}
 }
 
 void PutPlayerInServer(entity this)
@@ -607,25 +624,8 @@ void PutPlayerInServer(entity this)
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
-	if (warmup_stage)
-		GiveWarmupResources(this);
-	else
-	{
-		SetResource(this, RES_SHELLS, start_ammo_shells);
-		SetResource(this, RES_BULLETS, start_ammo_nails);
-		SetResource(this, RES_ROCKETS, start_ammo_rockets);
-		SetResource(this, RES_CELLS, start_ammo_cells);
-		SetResource(this, RES_PLASMA, start_ammo_plasma);
-		SetResource(this, RES_FUEL, start_ammo_fuel);
-		SetResource(this, RES_HEALTH, start_health);
-		SetResource(this, RES_ARMOR, start_armorvalue);
-		STAT(WEAPONS, this) = start_weapons;
-		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
-		{
-			GiveRandomWeapons(this, random_start_weapons_count,
-				autocvar_g_random_start_weapons, random_start_ammo);
-		}
-	}
+	ResetPlayerResources(this);
+
 	SetSpectatee_status(this, 0);
 
 	PS(this).dual_weapons = '0 0 0';
