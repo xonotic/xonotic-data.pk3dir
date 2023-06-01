@@ -38,7 +38,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		// TODO for fireBullet, find how far the shot will penetrate and aim at that
 		//      for fireRailgunbullet, find the farthest target and aim at that
 		//      this will avoid issues when another player is passing in front of you when you shoot
-		//      (currently such a shot will hit him but then miss the original target)
+		//      (currently such a shot will hit them but then miss the original target)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	}
 	else

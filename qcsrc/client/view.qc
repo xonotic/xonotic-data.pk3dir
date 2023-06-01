@@ -1748,7 +1748,7 @@ vector camera_offset, current_camera_offset, mouse_angles, current_angles, curre
 void CSQC_Demo_Camera()
 {
 	float speed, attenuation, dimensions;
-	vector tmp, delta;
+	vector tmp;
 
 	if( autocvar_camera_reset || !camera_mode )
 	{
@@ -1789,30 +1789,22 @@ void CSQC_Demo_Camera()
 		}
 	}
 
-	while (mouse_angles.x < -180) mouse_angles.x = mouse_angles.x + 360;
-	while (mouse_angles.x > 180) mouse_angles.x = mouse_angles.x - 360;
-	while (mouse_angles.y < -180) mouse_angles.y = mouse_angles.y + 360;
-	while (mouse_angles.y > 180) mouse_angles.y = mouse_angles.y - 360;
-
-	// Fix difference when angles don't have the same sign
-	delta = '0 0 0';
-	if(mouse_angles.y < -60 && current_angles.y > 60)
-		delta = '0 360 0';
-	if(mouse_angles.y > 60 && current_angles.y < -60)
-		delta = '0 -360 0';
-
 	if(autocvar_camera_look_player)
 		attenuation = autocvar_camera_look_attenuation;
 	else
 		attenuation = autocvar_camera_speed_attenuation;
 
 	attenuation = 1 / max(1, attenuation);
-	current_angles += (mouse_angles - current_angles + delta) * attenuation;
+	current_angles += (mouse_angles - current_angles) * attenuation;
 
-	while (current_angles.x < -180) current_angles.x = current_angles.x + 360;
-	while (current_angles.x > 180) current_angles.x = current_angles.x - 360;
-	while (current_angles.y < -180) current_angles.y = current_angles.y + 360;
-	while (current_angles.y > 180) current_angles.y = current_angles.y - 360;
+	// limit current pitch angle to sane values
+	if (current_angles.x < -90) current_angles.x = -90;
+	if (current_angles.x > 90 ) current_angles.x = 90;
+
+	// limit mouse and current yaw angles to standard values simultaneously so that the difference
+	// between these angles is not altered
+	while (current_angles.y < -180 && mouse_angles.y < -180) {current_angles.y += 360; mouse_angles.y += 360;}
+	while (current_angles.y > 180  && mouse_angles.y > 180 ) {current_angles.y -= 360; mouse_angles.y -= 360;}
 
 	// Camera position
 	tmp = '0 0 0';

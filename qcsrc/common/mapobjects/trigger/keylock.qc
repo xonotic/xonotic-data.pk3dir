@@ -125,7 +125,7 @@ noise2: sound to play when a key is missing (default: misc/talk.wav)
 wait: prevent triggering again for this amount of time (default: 5) - applies to target2, target3, target4.
 ---------NOTES----------
 If spawned without any key specified in itemkeys, this trigger will display an error and remove itself.
-message2 and noise2 will be resent to the player every 2 seconds while he is in the trigger zone.
+message2 and noise2 will be resent to the player every 2 seconds while they are in the trigger zone.
 */
 spawnfunc(trigger_keylock)
 {

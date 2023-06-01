@@ -3,6 +3,8 @@
 #ifdef SVQC
 // undefined on client, engine cvar
 bool autocvar_physics_ode;
+
+bool use_engine_physics; // debug option for testing legacy engine code
 #endif
 
 // water levels

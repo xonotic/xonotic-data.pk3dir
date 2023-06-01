@@ -4,7 +4,7 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	this.move_qcphysics = (mt != MOVETYPE_PHYSICS);
+	this.move_qcphysics = (mt != MOVETYPE_PHYSICS && !use_engine_physics);
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCENTITY : mt;
@@ -404,11 +404,8 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 	}
 }
 
-void _Movetype_Impact(entity this, entity oth)  // SV_Impact
+void _Movetype_Impact(entity this, entity toucher)  // SV_Impact
 {
-	if(!this && !oth)
-		return;
-
 	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
 	bool save_trace_allsolid = trace_allsolid;
 	bool save_trace_startsolid = trace_startsolid;
@@ -424,11 +421,21 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
 	string save_trace_dphittexturename = trace_dphittexturename;
 
-	if(this.solid != SOLID_NOT && gettouch(this))
-		gettouch(this)(this, oth);
+	if(this.solid != SOLID_NOT && gettouch(this) && !wasfreed(this) && !wasfreed(toucher))
+		gettouch(this)(this, toucher);
 
-	if(oth.solid != SOLID_NOT && gettouch(oth))
-		gettouch(oth)(oth, this);
+	if(toucher.solid != SOLID_NOT && gettouch(toucher) && !wasfreed(this) && !wasfreed(toucher))
+	{
+		trace_endpos = toucher.origin;
+		trace_plane_normal = -trace_plane_normal;
+		trace_plane_dist = -trace_plane_dist;
+		trace_ent = this;
+		trace_dpstartcontents = 0;
+		trace_dphitcontents = 0;
+		trace_dphitq3surfaceflags = 0;
+		trace_dphittexturename = string_null;
+		gettouch(toucher)(toucher, this);
+	}
 
 	trace_allsolid = save_trace_allsolid;
 	trace_startsolid = save_trace_startsolid;

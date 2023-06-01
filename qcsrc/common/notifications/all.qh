@@ -739,7 +739,7 @@ string notif_arg_item_wepammo(float f1, float f2)
 		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 		default: return ""; // doesn't use ammo
 	}
-	return sprintf(_(" with %d %s"), f2, ammoitems);
+	return sprintf(_(" with %d %s"), f2, strtolower(ammoitems));
 }
 
 

@@ -372,7 +372,7 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 }
 
 #ifdef GAMEQC
-string ScoreString(int pFlags, float pValue)
+string ScoreString(int pFlags, float pValue, int rounds_played)
 {
 	string valstr;
 	float l;
@@ -385,6 +385,8 @@ string ScoreString(int pFlags, float pValue)
 		valstr = (pValue < 256 ? count_ordinal(pValue) : _("N/A"));
 	else if(pFlags & SFL_TIME)
 		valstr = TIME_ENCODED_TOSTRING(pValue, true);
+	else if (rounds_played)
+		valstr = sprintf("%.1f", pValue / rounds_played);
 	else
 		valstr = ftos(pValue);
 

@@ -220,7 +220,7 @@ void Announcer_Time()
 	{
 		float warmup_timelimit = STAT(WARMUP_TIMELIMIT);
 		if(warmup_timelimit > 0)
-			timeleft = max(0, warmup_timelimit - time);
+			timeleft = max(0, warmup_timelimit + starttime - time);
 		else
 			timeleft = 0;
 	}

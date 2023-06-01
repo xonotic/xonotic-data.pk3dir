@@ -80,7 +80,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	{
 		bool unconnected = !playerslots[i].gotscores;
 		entity e = entcs_receiver(i);
-		int fr = ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags")));
+		int fr = ((e) ? e.frags : 0);
 		if (unconnected || fr == FRAGS_SPECTATOR)
 			return ENTCS_SPEC_PURE;
 		int sol = ((e) ? e.sv_solid : SOLID_NOT);
@@ -95,7 +95,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	int entcs_GetClientColors(int i)
 	{
 		entity e = entcs_receiver(i);
-		return e ? e.colormap : stof(getplayerkeyvalue(i, "colors"));
+		return e ? e.colormap : 0;
 	}
 
 	/**
@@ -131,7 +131,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	string entcs_GetName(int i)
 	{
 		entity e = entcs_receiver(i);
-		return ColorTranslateRGB(e ? e.netname : getplayerkeyvalue(i, "name"));
+		return e ? ColorTranslateRGB(e.netname) : "";
 	}
 	
 	int entcs_GetCountryCode(int i)

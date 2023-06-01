@@ -38,13 +38,10 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
-#include <client/hud/hud.qh>
+#include <client/hud/panel/pickup.qh>
 
 //Inventory g_inventory;
 Inventory inventoryslots[255];
-float last_pickup_timer;
-entity last_pickup_item;
-int last_pickup_times;
 
 void Inventory_remove(entity this)
 {
@@ -67,16 +64,10 @@ void Inventory_handle(entity inv, bool mine)
             }
             const GameItem it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
             .int fld = inv_items[it.m_id];
-            int prev = inv.(fld);
-            int next = inv.(fld) = ReadByte();
-			
-			if(mine) {
-				if(last_pickup_item != it) last_pickup_times = 0;
-				last_pickup_timer = timer;
-				last_pickup_item = it;
-				last_pickup_times++;
-			}
-			
+            int prev = this.(fld);
+            int next = this.(fld) = ReadByte();
+
+            Pickup_Update(it, next - prev);
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
@@ -106,12 +97,7 @@ NET_HANDLE(TE_CSQC_INVENTORY, bool isnew)
 NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
 {
 	const Weapon it = REGISTRY_GET(Weapons, ReadByte());
-	
-	if(last_pickup_item != it) last_pickup_times = 0;
-	last_pickup_timer = timer;
-	last_pickup_item = it;
-	last_pickup_times++;
-	
+	Pickup_Update(it, 1);
 	return true;
 }
 #endif
@@ -205,6 +191,7 @@ void Inventory_new(PlayerState this)
 		Net_LinkEntity(inv, false, 0, Inventory_Send);
 	}
 }
+
 void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e)
 {
@@ -212,6 +199,14 @@ void Inventory_update(entity e)
 		Inventory_Broadcast(e.inventory);
 	else
 		e.inventory.SendFlags = 0xFFFFFF;
+}
+
+void Inventory_pickupitem(Pickup this, entity player)
+{
+	//LOG_DEBUGF("entity %i picked up %s", player, this.m_name);
+	entity store = IS_PLAYER(player) ? PS(player) : player;
+	++store.inventory.inv_items[this.m_id];
+	Inventory_update(store);
 }
 
 void Inventory_clear(entity store)

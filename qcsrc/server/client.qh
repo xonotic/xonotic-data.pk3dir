@@ -7,6 +7,7 @@
 #include <common/sounds/all.qh>
 
 bool autocvar__notarget;
+bool autocvar_sv_show_entnum;
 int autocvar_g_balance_armor_start;
 float autocvar_g_balance_pause_armor_rot_spawn;
 float autocvar_g_balance_pause_fuel_rot_spawn;
@@ -203,7 +204,6 @@ CLASS(Client, Object)
     ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
     ATTRIB(Client, hitplotfh, int, this.hitplotfh);
     ATTRIB(Client, clientdata, entity, this.clientdata);
-    ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
@@ -382,6 +382,10 @@ void calculate_player_respawn_time(entity this);
 
 bool PlayerInList(entity player, string list);
 
+bool PlayerInIDList(entity p, string idlist);
+
+bool PlayerInIPList(entity p, string iplist);
+
 void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
@@ -414,6 +418,8 @@ void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);
 
 void FixPlayermodel(entity player);
+
+void GiveWarmupResources(entity this);
 
 void ClientInit_misc(entity this);
 

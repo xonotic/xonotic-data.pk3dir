@@ -64,7 +64,8 @@ void HUD_Timer()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	string subtimer = string_null;
+	string timer_str = string_null;
+	string subtimer_str = string_null;
 	string subtext = string_null;
 	float curtime, timelimit, timeleft;
 	vector timer_size, subtext_size, subtimer_size;
@@ -74,17 +75,8 @@ void HUD_Timer()
 	float timeout_last = STAT(TIMEOUT_LAST);
 
 	// Use real or frozen time and get the time limit
-	if(intermission_time)
-		curtime = intermission_time;
-	else if(timeout_last)
-		curtime = timeout_last;
-	else
-		curtime = time;
-
-	if(warmup_stage)
-		timelimit = STAT(WARMUP_TIMELIMIT);
-	else
-		timelimit = STAT(TIMELIMIT) * 60;
+	curtime = (intermission_time ? intermission_time : time);
+	timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
 
 	// Calculate time left
 	timeleft = HUD_Timer_TimeLeft(curtime, STAT(GAMESTARTTIME), timelimit);
@@ -93,6 +85,7 @@ void HUD_Timer()
 	if(!intermission_time && !warmup_stage && timelimit > 0)
 		timer_color = HUD_Timer_Color(timeleft);
 
+<<<<<<< HEAD
 	// countdown sound
 	// if 3 use server dictated option, otherwise the client's
 	int countdown_type;
@@ -110,28 +103,17 @@ void HUD_Timer()
 	}
 
 	// Timer text
-	if (warmup_stage && timelimit == -1)
-	{
-		// Lock timer in infinite warmup
-		if (autocvar_hud_panel_timer_increment)
-			timer = 0;
-		else
-			timer = STAT(TIMELIMIT) * 60;
-	}
+	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
+		timer = HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME));
 	else
-	{
-		if (autocvar_hud_panel_timer_increment || timelimit <= 0)
-			timer = HUD_Timer_TimeElapsed(curtime, STAT(GAMESTARTTIME));
-		else
-			timer = timeleft;
-	}
+		timer = timeleft;
 
 	// Secondary timer for round-based game modes
 	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
 	{
 		if(STAT(ROUNDSTARTTIME) == -1) {
 			// Round can't start
-			subtimer = "--:--";
+			subtimer_str = "--:--";
 			subtimer_color = '1 0 0';
 		} else {
 			float round_curtime, round_endtime, round_timelimit, round_timeleft;
@@ -156,9 +138,9 @@ void HUD_Timer()
 
 			// Subtimer text
 			if (autocvar_hud_panel_timer_increment || round_timelimit <= 0)
-				subtimer = seconds_tostring(HUD_Timer_TimeElapsed(round_curtime, STAT(ROUNDSTARTTIME)));
+				subtimer_str = seconds_tostring(HUD_Timer_TimeElapsed(round_curtime, STAT(ROUNDSTARTTIME)));
 			else
-				subtimer = seconds_tostring(round_timeleft);
+				subtimer_str = seconds_tostring(round_timeleft);
 		}
 	}
 
@@ -170,7 +152,13 @@ void HUD_Timer()
 		if (STAT(WARMUP_TIMELIMIT) > 0)
 			subtext = _("Warmup");
 		else
-			subtext = srv_minplayers ? _("Warmup: too few players") : _("Warmup: no time limit");
+		{
+			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
+			if (srv_minplayers - numplayers > 0)
+				subtext = _("Warmup: too few players");
+			else
+				subtext = _("Warmup: no time limit");
+		}
 	}
 	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");
@@ -182,17 +170,18 @@ void HUD_Timer()
 	subtext_size  = vec2(mySize.x, mySize.y / 3);
 	timer_size    = vec2(mySize.x, mySize.y - subtext_size.y);
 	subtimer_size = vec2(mySize.x / 3, mySize.y - subtext_size.y);
+	timer_str     = seconds_tostring(timer);
 
 	panel_size.y -= subtext_size.y;
 	HUD_Panel_DrawBg();
 
-	if(subtimer) {
+	if(subtimer_str) {
 		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? seconds_tostring(timer) : subtimer), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? timer_str : subtimer_str), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	drawstring_aspect(pos, (swap ? subtimer : seconds_tostring(timer)), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, (swap ? subtimer_str : timer_str), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if(subtext)
 		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);

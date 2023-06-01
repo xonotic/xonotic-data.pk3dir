@@ -562,11 +562,11 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == targ)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 	// add waypoint
@@ -596,11 +596,11 @@ void Unfreeze(entity targ, bool reset_health)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == targ)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 	// remove the ice block
@@ -639,7 +639,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		// These are ALWAYS lethal
 		// No damage modification here
-		// Instead, prepare the victim for his death...
+		// Instead, prepare the victim for their death...
 		if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			SetResourceExplicit(targ, RES_ARMOR, 0);
@@ -741,11 +741,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		    {
-		    	.entity went = weaponentities[slot];
-		    	if(targ.(went).hook && targ.(went).hook.aiment == attacker)
-		    		RemoveHook(targ.(went).hook);
-		    }
+			{
+				.entity went = weaponentities[slot];
+				if(targ.(went).hook && targ.(went).hook.aiment == attacker)
+					RemoveHook(targ.(went).hook);
+			}
 		}
 
 		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
@@ -979,7 +979,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					center = CENTER_OR_VIEWOFS(targ);
 
 					force = normalize(center - myblastorigin);
-					force = force * (finaldmg / coredamage) * forceintensity;
+					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;
 					hitloc = nearest;
 
 					// apply special scaling along the z axis if set
@@ -1049,14 +1049,15 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 						if(autocvar_g_throughfloor_debug)
 							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
+
+						/*if (targ == attacker)
+						{
+							print("hits ", ftos(hits), " / ", ftos(total));
+							print(" finaldmg ", ftos(finaldmg), " force ", ftos(vlen(force)));
+							print(" (", vtos(force), ") (", ftos(a), ")\n");
+						}*/
 					}
 
-					//if (targ == attacker)
-					//{
-					//	print("hits ", ftos(hits), " / ", ftos(total));
-					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
-					//	print(" (", ftos(a), ")\n");
-					//}
 					if(finaldmg || force)
 					{
 						if(targ.iscreature)
@@ -1081,14 +1082,14 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	RadiusDamage_running = 0;
 
 	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(coredamage, stat_damagedone));
+		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(coredamage, edgedamage), stat_damagedone));
 
 	return total_damage_to_creatures;
 }
 
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad,
 									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
 }
 

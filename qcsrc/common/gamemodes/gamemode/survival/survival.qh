@@ -9,7 +9,7 @@ void HUD_Mod_Survival(vector pos, vector mySize);
 CLASS(Survival, Gametype)
     INIT(Survival)
     {
-        this.gametype_init(this, _("Survival"),"sv","g_survival",GAMETYPE_FLAG_USEPOINTS,"","timelimit=30 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
+        this.gametype_init(this, _("Survival"), "surv", "g_survival", GAMETYPE_FLAG_USEPOINTS, "", "timelimit=20 pointlimit=12", _("Identify and eliminate all the hunters before all your allies are gone"));
     }
     METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -34,10 +34,10 @@ REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
 #ifdef GAMEQC
 // shared state signalling the player's survival status
 .int survival_status;
-const int SV_STATUS_PREY = 1;
-const int SV_STATUS_HUNTER = 2;
+const int SURV_STATUS_PREY = 1;
+const int SURV_STATUS_HUNTER = 2;
 
 // hardcoded player colors for survival
-const int SV_COLOR_PREY = 51; // green
-const int SV_COLOR_HUNTER = 68; // red
+const int SURV_COLOR_PREY = 51; // green
+const int SURV_COLOR_HUNTER = 68; // red
 #endif

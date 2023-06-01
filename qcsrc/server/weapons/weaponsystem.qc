@@ -672,7 +672,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
-	copyentity(flash, xflash);
+	copyentity_qc(flash, xflash);
 
 	flash.viewmodelforclient = actor;
 

@@ -1,27 +1,10 @@
 #include "sv_survival.qh"
 
 float autocvar_g_survival_hunter_count = 0.25;
-float autocvar_g_survival_round_timelimit = 180;
+float autocvar_g_survival_round_timelimit = 120;
 float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
-
-void surv_FakeTimeLimit(entity e, float t)
-{
-	if(!IS_REAL_CLIENT(e))
-		return;
-#if 0
-	msg_entity = e;
-	WriteByte(MSG_ONE, 3); // svc_updatestat
-	WriteByte(MSG_ONE, 236); // STAT_TIMELIMIT
-	if(t < 0)
-		WriteCoord(MSG_ONE, autocvar_timelimit);
-	else
-		WriteCoord(MSG_ONE, (t + 1) / 60);
-#else
-	STAT(SURVIVAL_ROUNDTIMER, e) = t;
-#endif
-}
 
 void nades_Clear(entity player);
 
@@ -37,12 +20,12 @@ void Surv_UpdateScores(bool timed_out)
 		// player survived the round
 		if(IS_PLAYER(it) && !IS_DEAD(it))
 		{
-			if(autocvar_g_survival_reward_survival && timed_out && it.survival_status == SV_STATUS_PREY)
+			if(autocvar_g_survival_reward_survival && timed_out && it.survival_status == SURV_STATUS_PREY)
 				GameRules_scoring_add(it, SCORE, 1); // reward survivors who make it to the end of the round time limit
-			if(it.survival_status == SV_STATUS_PREY)
-				GameRules_scoring_add(it, SV_SURVIVALS, 1);
-			else if(it.survival_status == SV_STATUS_HUNTER)
-				GameRules_scoring_add(it, SV_HUNTS, 1);
+			if(it.survival_status == SURV_STATUS_PREY)
+				GameRules_scoring_add(it, SURV_SURVIVALS, 1);
+			else if(it.survival_status == SURV_STATUS_HUNTER)
+				GameRules_scoring_add(it, SURV_HUNTS, 1);
 		}
 	});
 }
@@ -58,7 +41,6 @@ float Surv_CheckWinner()
 		{
 			if(IS_PLAYER(it))
 				nades_Clear(it);
-			surv_FakeTimeLimit(it, -1);
 		});
 
 		Surv_UpdateScores(true);
@@ -72,9 +54,9 @@ float Surv_CheckWinner()
 	int survivor_count = 0, hunter_count = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		if(it.survival_status == SV_STATUS_PREY)
+		if(it.survival_status == SURV_STATUS_PREY)
 			survivor_count++;
-		else if(it.survival_status == SV_STATUS_HUNTER)
+		else if(it.survival_status == SURV_STATUS_HUNTER)
 			hunter_count++;
 	});
 	if(survivor_count > 0 && hunter_count > 0)
@@ -108,7 +90,6 @@ float Surv_CheckWinner()
 	{
 		if(IS_PLAYER(it))
 			nades_Clear(it);
-		surv_FakeTimeLimit(it, -1);
 	});
 
 	return 1;
@@ -123,7 +104,7 @@ void Surv_RoundStart()
 		if(IS_PLAYER(it) && !IS_DEAD(it))
 		{
 			++playercount;
-			it.survival_status = SV_STATUS_PREY;
+			it.survival_status = SURV_STATUS_PREY;
 		}
 		else
 			it.survival_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a survival status, clear it before the round starts!
@@ -136,17 +117,15 @@ void Surv_RoundStart()
 		if(total_hunters >= hunter_count)
 			break;
 		total_hunters++;
-		it.survival_status = SV_STATUS_HUNTER;
+		it.survival_status = SURV_STATUS_HUNTER;
 	});
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		if(it.survival_status == SV_STATUS_PREY)
+		if(it.survival_status == SURV_STATUS_PREY)
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR);
-		else if(it.survival_status == SV_STATUS_HUNTER)
+		else if(it.survival_status == SURV_STATUS_HUNTER)
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_HUNTER);
-
-		surv_FakeTimeLimit(it, round_handler_GetEndTime());
 	});
 }
 
@@ -194,8 +173,8 @@ bool surv_isEliminated(entity e)
 void surv_Initialize() // run at the start of a match, initiates game mode
 {
 	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
-		field(SP_SV_SURVIVALS, "survivals", 0);
-		field(SP_SV_HUNTS, "hunts", SFL_SORT_PRIO_SECONDARY);
+		field(SP_SURV_SURVIVALS, "survivals", 0);
+		field(SP_SURV_HUNTS, "hunts", SFL_SORT_PRIO_SECONDARY);
 	});
 
 	allowed_to_spawn = true;
@@ -209,7 +188,7 @@ void surv_Initialize() // run at the start of a match, initiates game mode
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(sv, ClientObituary)
+MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 {
 	// in survival, announcing a frag would tell everyone who the hunter is
 	entity frag_attacker = M_ARGV(1, entity);
@@ -224,10 +203,11 @@ MUTATOR_HOOKFUNCTION(sv, ClientObituary)
 			GiveFrags(frag_attacker, frag_target, ((autocvar_g_survival_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	}
 
-	M_ARGV(5, bool) = true; // anonymous attacker
+	if(frag_attacker.survival_status == SURV_STATUS_HUNTER)
+		M_ARGV(5, bool) = true; // anonymous attacker
 }
 
-MUTATOR_HOOKFUNCTION(sv, PlayerPreThink)
+MUTATOR_HOOKFUNCTION(surv, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -235,14 +215,14 @@ MUTATOR_HOOKFUNCTION(sv, PlayerPreThink)
 	{
 		// update the scoreboard colour display to out the real killer at the end of the round
 		// running this every frame to avoid cheats
-		int plcolor = SV_COLOR_PREY;
-		if(player.survival_status == SV_STATUS_HUNTER && game_stopped)
-			plcolor = SV_COLOR_HUNTER;
+		int plcolor = SURV_COLOR_PREY;
+		if(player.survival_status == SURV_STATUS_HUNTER && game_stopped)
+			plcolor = SURV_COLOR_HUNTER;
 		setcolor(player, plcolor);
 	}
 }
 
-MUTATOR_HOOKFUNCTION(sv, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -253,7 +233,7 @@ MUTATOR_HOOKFUNCTION(sv, PlayerSpawn)
 		eliminatedPlayers.SendFlags |= 1;
 }
 
-MUTATOR_HOOKFUNCTION(sv, ForbidSpawn)
+MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -265,7 +245,7 @@ MUTATOR_HOOKFUNCTION(sv, ForbidSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(sv, PutClientInServer)
+MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -280,12 +260,11 @@ MUTATOR_HOOKFUNCTION(sv, PutClientInServer)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(sv, reset_map_players)
+MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		it.survival_status = 0;
-		surv_FakeTimeLimit(it, -1); // restore original timelimit
 		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
@@ -297,7 +276,7 @@ MUTATOR_HOOKFUNCTION(sv, reset_map_players)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, reset_map_global)
+MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 {
 	allowed_to_spawn = true;
 	return true;
@@ -328,7 +307,7 @@ void surv_LastPlayerForTeam_Notify(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(sv, PlayerDies)
+MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -356,7 +335,7 @@ MUTATOR_HOOKFUNCTION(sv, PlayerDies)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, ClientDisconnect)
+MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -365,7 +344,7 @@ MUTATOR_HOOKFUNCTION(sv, ClientDisconnect)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 	bool is_forced = M_ARGV(1, bool);
@@ -384,19 +363,18 @@ MUTATOR_HOOKFUNCTION(sv, MakePlayerObserver)
 	{
 		player.survival_validkills = 0;
 		player.survival_status = 0;
-		surv_FakeTimeLimit(player, -1); // restore original timelimit
 		return false;  // allow team reset
 	}
 	return true;  // prevent team reset
 }
 
-MUTATOR_HOOKFUNCTION(sv, Scores_CountFragsRemaining)
+MUTATOR_HOOKFUNCTION(surv, Scores_CountFragsRemaining)
 {
 	// announce remaining frags?
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, GiveFragsForKill, CBC_ORDER_FIRST)
+MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	entity frag_attacker = M_ARGV(0, entity);
 	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
@@ -405,20 +383,20 @@ MUTATOR_HOOKFUNCTION(sv, GiveFragsForKill, CBC_ORDER_FIRST)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, AddPlayerScore)
+MUTATOR_HOOKFUNCTION(surv, AddPlayerScore)
 {
 	entity scorefield = M_ARGV(0, entity);
 	if(scorefield == SP_KILLS || scorefield == SP_DEATHS || scorefield == SP_SUICIDES || scorefield == SP_DMG || scorefield == SP_DMGTAKEN)
 		M_ARGV(1, float) = 0; // don't report that the player has killed or been killed, that would out them as a hunter!
 }
 
-MUTATOR_HOOKFUNCTION(sv, CalculateRespawnTime)
+MUTATOR_HOOKFUNCTION(surv, CalculateRespawnTime)
 {
 	// no respawn calculations needed, player is forced to spectate anyway
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(surv, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if (IS_PLAYER(it) || INGAME_JOINED(it))
@@ -428,7 +406,7 @@ MUTATOR_HOOKFUNCTION(sv, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sv, ClientCommand_Spectate)
+MUTATOR_HOOKFUNCTION(surv, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -443,7 +421,7 @@ MUTATOR_HOOKFUNCTION(sv, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(sv, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(surv, BotShouldAttack)
 {
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);

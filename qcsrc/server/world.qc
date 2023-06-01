@@ -187,10 +187,14 @@ void cvar_changes_init()
 	{
 		k = bufstr_get(h, i);
 
-#define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
-#define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
+#define BADPREFIX_COND(p) (substring(k, 0, strlen(p)) == p)
+#define BADSUFFIX_COND(s) (substring(k, -strlen(s), -1) == s)
+
+#define BADPREFIX(p) if(BADPREFIX_COND(p)) continue
+#define BADPRESUFFIX(p, s) if(BADPREFIX_COND(p) && BADSUFFIX_COND(s)) continue
 #define BADCVAR(p) if(k == p) continue
 #define BADVALUE(p, val) if (k == p && v == val) continue
+#define BADPRESUFFIXVALUE(p, s, val) if(BADPREFIX_COND(p) && BADSUFFIX_COND(s) && v == val) continue
 
 		// general excludes and namespaces for server admin used cvars
 		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
@@ -253,6 +257,9 @@ void cvar_changes_init()
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADCVAR("g_require_stats");
+		BADCVAR("g_muteban_list");
+		BADCVAR("g_playban_list");
+		BADCVAR("g_voteban_list");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
@@ -276,8 +283,6 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
-		BADCVAR("sv_muteban_list");
-		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 
@@ -321,6 +326,10 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_tka");
+		BADCVAR("g_tka_on_ka_maps");
+		BADCVAR("g_tka_on_tdm_maps");
+		BADCVAR("g_tka_teams");
 		BADCVAR("g_tmayhem");
 		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
@@ -406,11 +415,10 @@ void cvar_changes_init()
 		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
-		BADCVAR("g_mayhem_fraglimit");
-		BADCVAR("g_tmayhem_fraglimit");
-		BADCVAR("g_mayhem_visual_score_limit");
-		BADCVAR("g_tmayhem_visual_score_limit");
-		BADCVAR("g_tmayhem_score_leadlimit");
+		BADCVAR("g_mayhem_point_limit");
+		BADCVAR("g_mayhem_point_leadlimit");
+		BADCVAR("g_tmayhem_point_limit");
+		BADCVAR("g_tmayhem_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("g_mayhem_scoringmethod");
@@ -421,6 +429,7 @@ void cvar_changes_init()
 		BADCVAR("g_tmayhem_scoringmethod_frag_weight");
 		BADCVAR("pausable");
 		BADCVAR("sv_announcer");
+		BADCVAR("sv_autopause");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
@@ -437,7 +446,6 @@ void cvar_changes_init()
 		BADCVAR("w_prop_interval");
 		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
-		BADPREFIX("gameversion");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_hats_");
@@ -558,6 +566,9 @@ void cvar_changes_init()
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
+
 		// mutators that announce themselves properly to the server browser
 		BADCVAR("g_instagib");
 		BADCVAR("g_new_toys");
@@ -578,6 +589,7 @@ void cvar_changes_init()
 #undef BADPREFIX
 #undef BADCVAR
 #undef BADVALUE
+#undef BADPRESUFFIXVALUE
 
 		if(pureadding)
 		{
@@ -715,15 +727,14 @@ void GameplayMode_DelayedInit(entity this)
 			int u = AVAILABLE_TEAMS - d;
 			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
 		}
-		warmup_limit = -1;
 	}
 	else
-		map_minplayers = 0; // don't display a minimum if it's not used
+		map_minplayers = 0; // don't display a minimum if it's not used (g_maxplayers < 0 && g_warmup >= 0)
 }
 
 void InitGameplayMode()
 {
-	VoteReset();
+	VoteReset(false);
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
@@ -790,8 +801,7 @@ spawnfunc(worldspawn)
 	{
 		if (!server_is_dedicated)
 		{
-			// force unloading of server pk3 files when starting a listen server
-			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
+			// DP unloads dlcache pk3s before starting a listen server since https://gitlab.com/xonotic/darkplaces/-/merge_requests/134
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
 			wantrestart = cvar_string("csqc_progname") != expect;
@@ -919,9 +929,6 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 
 	GameRules_limit_fallbacks();
-
-	if(warmup_limit == 0)
-		warmup_limit = autocvar_timelimit * 60;
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -1101,6 +1108,10 @@ spawnfunc(worldspawn)
 		send_TotalShardsAll();
 	}
 	
+	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
+		// INITPRIO_LAST is to soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
+		defer(this, 5, Pause_TryPause_Dedicated);
+
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
 }
@@ -1383,7 +1394,7 @@ void NextLevel()
 	
 	sound(NULL, CH_INFO, SND_ENDMATCH, VOL_BASE, ATTN_NONE);
 
-	VoteReset();
+	VoteReset(true);
 
 	DumpStats(true);
 
@@ -2257,13 +2268,27 @@ void readlevelcvars()
 	if(cvar("sv_forbid_pickuptimer"))
 		serverflags |= SERVERFLAG_FORBID_PICKUPTIMER;
 
-	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
+	serverflags &= ~SERVERFLAG_FORBID_PICKUPTIMER;
+	if(cvar("sv_forbid_pickuptimer"))
+		serverflags |= SERVERFLAG_FORBID_PICKUPTIMER;
 
-	warmup_stage = cvar("g_warmup");
-	warmup_limit = cvar("g_warmup_limit");
+	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
 	if(cvar("g_campaign"))
 		warmup_stage = 0; // no warmup during campaign
+	else
+	{
+		warmup_stage = autocvar_g_warmup;
+		if (warmup_stage < 0 || warmup_stage > 1)
+			warmup_limit = -1; // don't start until there's enough players
+		else if (warmup_stage == 1)
+		{
+			// this code is duplicated in ReadyCount()
+			warmup_limit = cvar("g_warmup_limit");
+			if(warmup_limit == 0)
+				warmup_limit = autocvar_timelimit * 60;
+		}
+	}
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
@@ -2416,11 +2441,20 @@ void DropToFloor_Handler(entity this)
 		return;
 	}
 
-	vector end = this.origin - '0 0 256';
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
 
 	// NOTE: SV_NudgeOutOfSolid is used in the engine here
 	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		_Movetype_UnstickEntity(this);
 		move_out_of_solid(this);
+	}
 
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
 
@@ -2444,7 +2478,10 @@ void DropToFloor_Handler(entity this)
 			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
 			setorigin(this, trace_endpos);
 			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				_Movetype_UnstickEntity(this);
 				move_out_of_solid(this);
+			}
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)

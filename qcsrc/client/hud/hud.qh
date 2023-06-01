@@ -203,6 +203,8 @@ string autocvar_hud_skin;
 float autocvar_hud_progressbar_alpha;
 float autocvar_hud_panel_update_interval;
 
+int autocvar_hud_speed_unit;
+
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
 vector autocvar_hud_dynamic_follow_scale_xyz;
@@ -278,6 +280,7 @@ REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // QUICKMENU
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
 REGISTER_HUD_PANEL(STRAFEHUD,       HUD_StrafeHUD,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // STRAFEHUD
+REGISTER_HUD_PANEL(PICKUP,          HUD_Pickup,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PICKUP
 REGISTER_HUD_PANEL(SPECTHUD,        HUD_SpectHUD,       PANEL_CONFIG_NO   | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // SPECTHUD
 // always add new panels to the end of list
 
