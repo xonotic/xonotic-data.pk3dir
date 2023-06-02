@@ -234,16 +234,16 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 		newlist = "";
 		for(j = 1; j < insertpos; )                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
 		{
-			if (j + 2 < insertpos)
-				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			if (j + 4 < insertpos)
+				newlist = sprintf("%s %s %s %s %s %s", newlist, argv(j++), argv(j++), argv(j++), argv(j++), argv(j++));
 			else
 				newlist = strcat(newlist, " ", argv(j++));
 		}
 		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
 		for(j = insertpos; j < Map_Count; )         // i == Map_Count: no loop, has just been inserted as last
 		{
-			if (j + 2 < Map_Count)
-				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			if (j + 4 < Map_Count)
+				newlist = sprintf("%s %s %s %s %s %s", newlist, argv(j++), argv(j++), argv(j++), argv(j++), argv(j++));
 			else
 				newlist = strcat(newlist, " ", argv(j++));
 		}
