@@ -816,7 +816,8 @@ spawnfunc(trigger_push)
  */
 spawnfunc(trigger_push_velocity)
 {
-	trigger_init(this);
+	EXACTTRIGGER_INIT;
+	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;

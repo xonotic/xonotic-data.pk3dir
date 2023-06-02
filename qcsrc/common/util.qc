@@ -1680,13 +1680,13 @@ void execute_next_frame()
 #ifdef SVQC
 	IL_EACH(g_moveables, it.last_pushed,
 	{
-		if(WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it))
+		if(!WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it, false))
 		{
 			it.last_pushed = NULL;
 		}
 	});
 #elif defined(CSQC)
-	if(csqcplayer.last_pushed && WarpZoneLib_ExactTrigger_Touch(csqcplayer.last_pushed, csqcplayer))
+	if(csqcplayer.last_pushed && !WarpZoneLib_ExactTrigger_Touch(csqcplayer.last_pushed, csqcplayer, false))
 	{
 		csqcplayer.last_pushed = NULL;
 	}
