@@ -552,7 +552,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
 
-    if((actor.(weaponentity).crylink_waitrelease == 1 && !(primary_fire)) || (actor.(weaponentity).crylink_waitrelease == 2 && !(secondary_fire)))
+    if((actor.(weaponentity).crylink_waitrelease == 1 && !(fire & 1)) || (actor.(weaponentity).crylink_waitrelease == 2 && !(fire & 2)))
     {
         if(!actor.(weaponentity).crylink_lastgroup || time > actor.(weaponentity).crylink_lastgroup.teleport_time)
         {
