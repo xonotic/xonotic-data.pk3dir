@@ -279,7 +279,6 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_Shockwave_Send(actor);
 	Damage_DamageInfo(
 		attack_hitpos,
-		trace_ent && trace_ent.solid == SOLID_BSP,
 		WEP_CVAR(shockwave, blast_splash_damage),
 		WEP_CVAR(shockwave, blast_splash_edgedamage),
 		WEP_CVAR(shockwave, blast_splash_radius),
@@ -767,8 +766,7 @@ void Net_ReadShockwaveParticle()
 METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 {
     // handled by Net_ReadShockwaveParticle
-    //vector org2;
-    //org2 = w_org + w_backoff * 2;
+    //vector org2 = w_org + w_backoff * 2;
     //pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 }
 

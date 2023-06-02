@@ -215,6 +215,7 @@ vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it ca
 
 void kh_Key_Attach(entity key)  // runs when a player picks up a key and several times when a key is assigned to a player at the start of a round
 {
+	key.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 #ifdef KH_PLAYER_USE_ATTACHMENT
 	entity first = key.owner.kh_next;
 	if(key == first)
@@ -248,7 +249,6 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.flags = 0;
 	if(IL_CONTAINS(g_items, key))
 		IL_REMOVE(g_items, key);
-	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
 	key.nextthink = time;
@@ -260,6 +260,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
 {
+	key.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 #ifdef KH_PLAYER_USE_ATTACHMENT
 	entity first = key.owner.kh_next;
 	if(key == first)
@@ -289,7 +290,6 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.flags = FL_ITEM;
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
-	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
@@ -979,27 +979,24 @@ void kh_Initialize()  // sets up th KH environment
 		kh_teams = cvar("g_keyhunt_teams"); // read the cvar directly as it gets written earlier in the same frame
 	kh_teams = BITS(bound(2, kh_teams, 4));
 
-	// make a KH entity for controlling the game
-	kh_controller = new_pure(kh_controller);
-	setthink(kh_controller, kh_Controller_Think);
-	kh_Controller_SetThink(0, kh_WaitForPlayers);
+	// use a temp entity to avoid linking kh_controller to the world with setmodel
+	entity tmp_ent = spawn();
+	setmodel(tmp_ent, MDL_KH_KEY);
+	kh_key_dropped = tmp_ent.modelindex;
 
-	setmodel(kh_controller, MDL_KH_KEY);
-	kh_key_dropped = kh_controller.modelindex;
-	/*
-	dprint(vtos(kh_controller.mins));
-	dprint(vtos(kh_controller.maxs));
-	dprint("\n");
-	*/
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
-	setmodel(kh_controller, MDL_KH_KEY_CARRIED);
-	kh_key_carried = kh_controller.modelindex;
+	setmodel(tmp_ent, MDL_KH_KEY_CARRIED);
+	kh_key_carried = tmp_ent.modelindex;
 #else
 	kh_key_carried = kh_key_dropped;
 #endif
 
-	kh_controller.model = "";
-	kh_controller.modelindex = 0;
+	delete(tmp_ent);
+
+	// make a KH entity for controlling the game
+	kh_controller = new_pure(kh_controller);
+	setthink(kh_controller, kh_Controller_Think);
+	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
 	kh_ScoreRules(kh_teams);
 }

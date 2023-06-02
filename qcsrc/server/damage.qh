@@ -41,7 +41,7 @@ float autocvar_g_frozen_force;
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf);
 
-void Damage_DamageInfo(vector org, bool is_solid_hit, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
 
 float checkrules_firstblood;
 
