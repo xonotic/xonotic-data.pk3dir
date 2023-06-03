@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-26 07:22+0200\n"
+"POT-Creation-Date: 2023-06-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -169,12 +169,12 @@ msgstr "^2現在、^1ウォームアップ^2の段階に入っています!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^2試合を開始するには、もう^31^2人のプレイヤーが必要です。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^2試合を開始するには、もう^3%d^2人のプレイヤーが必要です。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
@@ -242,7 +242,7 @@ msgstr "プレイヤー %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "標準的なクイックメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -509,19 +509,19 @@ msgstr "QMCMD^チームをシャッフルする"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "サーバークイックメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "ウェイポイント編集メニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "デフォルトではウェイポイントエディタメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "デフォルトとしてのサーバークイックメニュー"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -571,381 +571,373 @@ msgstr "クリックしてテレポートの宛先を選択する"
 msgid "Click to select spawn location"
 msgstr "クリックして現れる場所を選択する"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:120
-msgid "Survivor"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:121
-msgid "Hunter"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Number of ball carrier kills"
 msgstr "ボール持ちキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^bckills"
 msgstr "ボール持ちキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^bctime"
 msgstr "ボール持ち時刻"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "キープアウェイでボールを保持している時刻の合計の量"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr "旗 (CTF) または鍵 (KeyHunt) が取った頻度"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^caps"
 msgstr "取れ数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^captime"
 msgstr "取れ時刻"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Time of fastest capture (CTF)"
 msgstr "最速の取れ時刻 (CTF)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Number of deaths"
 msgstr "デス数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^deaths"
 msgstr "デス数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "ボイドに押し込まれたことによって破壊された鍵の数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^destroyed"
 msgstr "破壊された"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^damage"
 msgstr "ダメージ"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "The total damage done"
 msgstr "合計ダメージ"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^dmgtaken"
 msgstr "受けたダメージ"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "The total damage taken"
 msgstr "受けたダメージ合計"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Number of flag drops"
 msgstr "旗が落ちた数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^drops"
 msgstr "旗が落ちた"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Player ELO"
 msgstr "選手ELO"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^elo"
 msgstr "ELO"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^fastest"
 msgstr "最速"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "最速のラップ時刻 （レース / CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of faults committed"
 msgstr "犯したフォールトの数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^faults"
 msgstr "フォールト"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of flag carrier kills"
 msgstr "旗持ちキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^fckills"
 msgstr "旗持ちキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fps"
 msgstr "fps"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of kills minus suicides"
 msgstr "キル数 - 自殺数 = "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^frags"
 msgstr "FRAG数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of goals scored"
 msgstr "得点したゴール数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^goals"
 msgstr "ゴール"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "ハントの回数（サバイバル）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^hunts"
-msgstr ""
+msgstr "ハント"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of keys carrier kills"
 msgstr "鍵持ちキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^kckills"
 msgstr "鍵持ちキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^k/d"
 msgstr "殺/死"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
-#: qcsrc/client/hud/panel/scoreboard.qc:151
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "The kill-death ratio"
 msgstr "キル・デス率"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kdr"
 msgstr "殺死害率"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^kdratio"
 msgstr "キル・デス率"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of kills"
 msgstr "キル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^kills"
 msgstr "キル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of laps finished (Race/CTS)"
 msgstr "終了したラップ数 （レース / CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^laps"
 msgstr "ラップ"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of lives (LMS)"
 msgstr "命の数 (LMS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^lives"
 msgstr "命"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of times a key was lost"
 msgstr "鍵が失われた回数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^losses"
 msgstr "失われた数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Player name"
 msgstr "選手名"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^name"
 msgstr "名前"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^nick"
 msgstr "ニック"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of objectives destroyed"
 msgstr "破壊された目的数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^objectives"
 msgstr "目的"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
 "旗 (CTF) または鍵 (KeyHunt) またはボール (Keepaway) が取り上げされた頻度"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^pickups"
 msgstr "取り上げた"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Ping time"
 msgstr "PING時刻"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^ping"
 msgstr "ping"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Packet loss"
 msgstr "失われたパケットの数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pl"
 msgstr "pl"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Number of players pushed into void"
 msgstr "ボイドに押し込まれた選手の数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^pushes"
 msgstr "押し込まれた"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Player rank"
 msgstr "選手ランク"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^rank"
 msgstr "ランク"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of flag returns"
 msgstr "返された旗の数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^returns"
 msgstr "返された旗"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Number of revivals"
 msgstr "復活された者数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^revivals"
 msgstr "復活された者"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of rounds won"
 msgstr "勝ったラウンドの数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^rounds won"
 msgstr "勝ったラウンド"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of rounds played"
-msgstr ""
+msgstr "プレイしたラウンド数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "プレイしたラウンド"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^score"
 msgstr "得点"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Total score"
 msgstr "合計得点"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of suicides"
 msgstr "自殺数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^suicides"
 msgstr "自殺"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Number of kills minus deaths"
 msgstr "キル数 - デス数 = "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^sum"
 msgstr "和"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
-msgstr ""
+msgstr "生存数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
-msgstr ""
+msgstr "生存"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
 msgstr "獲得したドミネートのポイントの数 (Domination)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^takes"
 msgstr "獲得した"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of teamkills"
 msgstr "チームメイトキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^teamkills"
 msgstr "チームメイトキル数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of ticks (Domination)"
 msgstr "ティック数 (Domination)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^ticks"
 msgstr "ティック"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^time"
 msgstr "時刻"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Total time raced (Race/CTS)"
 msgstr "合計レース時刻 （レース / CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:705
+#: qcsrc/client/hud/panel/scoreboard.qc:701
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "^2scoreboard_columns_set ^7コマンドを使用して得点表を変更できる。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:706
+#: qcsrc/client/hud/panel/scoreboard.qc:702
 msgid "Usage:"
 msgstr "使用方法:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:704
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:709
+#: qcsrc/client/hud/panel/scoreboard.qc:705
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -953,14 +945,14 @@ msgstr ""
 "^2scoreboard_columns_set ^7引数なしで、 cvar scoreboard_columns から引数を読"
 "み取る。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:710
+#: qcsrc/client/hud/panel/scoreboard.qc:706
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 "  ^5注：引数なしの ^7scoreboard_columns_set は、マップの開始時に毎回実行する"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:711
+#: qcsrc/client/hud/panel/scoreboard.qc:707
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -968,15 +960,15 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7デフォルトのレイアウトをロード"
 "し、それを cvar scoreboard_columns に展開して編集できるようにする"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:712
+#: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "^3 | ^7を使用して、右揃えのフィールドを開始できする。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:713
+#: qcsrc/client/hud/panel/scoreboard.qc:709
 msgid "The following field names are recognized (case insensitive):"
 msgstr "次のフィールド名が認識される (大文字と区別は区別されない):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:719
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -990,7 +982,7 @@ msgstr ""
 "これらのゲームタイプ以外の全て。また、フィールドとして「全」を指定して、\n"
 "現在のゲームモードで使用可能な全てのフィールドを表示することもできます。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -998,17 +990,17 @@ msgstr ""
 "特殊なゲームタイプ名 'team' および 'noteams' を使用して、\n"
 "全てのチーム / チームなしゲームモードを含めたり、除外したりできます。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:729
+#: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "例: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:730
+#: qcsrc/client/hud/panel/scoreboard.qc:726
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr "名前、ping、pl が左に、垂直バーの右側のフィールドが右に表示されます。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:732
+#: qcsrc/client/hud/panel/scoreboard.qc:728
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -1016,10 +1008,10 @@ msgstr ""
 "'field3' はCTFでのみ表示され、'field4' は DM を除く他の全てのゲームモードで表"
 "示される。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1030
-#: qcsrc/client/hud/panel/scoreboard.qc:1045
-#: qcsrc/client/hud/panel/scoreboard.qc:1115
-#: qcsrc/client/hud/panel/scoreboard.qc:1126 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1026
+#: qcsrc/client/hud/panel/scoreboard.qc:1041
+#: qcsrc/client/hud/panel/scoreboard.qc:1111
+#: qcsrc/client/hud/panel/scoreboard.qc:1122 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1028,102 +1020,102 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1690
+#: qcsrc/client/hud/panel/scoreboard.qc:1686
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "精度状態（平均 %d%%）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1847
+#: qcsrc/client/hud/panel/scoreboard.qc:1843
 msgid "Item stats"
 msgstr "アイテム状態"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1958
+#: qcsrc/client/hud/panel/scoreboard.qc:1954
 msgid "Map stats:"
 msgstr "マップ状態:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1988
+#: qcsrc/client/hud/panel/scoreboard.qc:1984
 msgid "Monsters killed:"
 msgstr "モンスターキル数:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1995
+#: qcsrc/client/hud/panel/scoreboard.qc:1991
 msgid "Secrets found:"
 msgstr "見つかった秘密:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2205
+#: qcsrc/client/hud/panel/scoreboard.qc:2201
 #, c-format
 msgid "Spectators"
 msgstr "観客"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2227
+#: qcsrc/client/hud/panel/scoreboard.qc:2223
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2227
+#: qcsrc/client/hud/panel/scoreboard.qc:2223
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2228
+#: qcsrc/client/hud/panel/scoreboard.qc:2224
 msgid "SCO^points"
 msgstr "点"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2319
+#: qcsrc/client/hud/panel/scoreboard.qc:2315
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "チームの選択"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2331
+#: qcsrc/client/hud/panel/scoreboard.qc:2327
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7選択されたチームを参加するために ^3%s ^7を押して"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2333
+#: qcsrc/client/hud/panel/scoreboard.qc:2329
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7チームを自動選択して参加するために ^3%s ^7を押して"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2337
+#: qcsrc/client/hud/panel/scoreboard.qc:2333
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7固有のチームを参加するために ^3%s ^7を押して"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2348
+#: qcsrc/client/hud/panel/scoreboard.qc:2344
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f 分"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2375
+#: qcsrc/client/hud/panel/scoreboard.qc:2371
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7選手達"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2376 qcsrc/client/main.qc:1431
+#: qcsrc/client/hud/panel/scoreboard.qc:2372 qcsrc/client/main.qc:1431
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "マップ:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2535
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "速度の賞: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2543
+#: qcsrc/client/hud/panel/scoreboard.qc:2539
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "史上最速: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2577
+#: qcsrc/client/hud/panel/scoreboard.qc:2573
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^3%s^1 後に再び現れ中..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2587
+#: qcsrc/client/hud/panel/scoreboard.qc:2583
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "死んだ、再び現れる前に ^3%s ^7待ってください"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2596
+#: qcsrc/client/hud/panel/scoreboard.qc:2592
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "死んだ、^2%s ^7を押して再び現れてください"
@@ -1154,11 +1146,11 @@ msgstr "ウォームアップ"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "ウォームアップ：少数のプレイヤー"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "ウォームアップ：制限時間なし"
 
 #: qcsrc/client/hud/panel/timer.qc:137
 msgid "Timeout"
@@ -1333,7 +1325,7 @@ msgstr "ゲームモード:"
 
 #: qcsrc/client/main.qc:1443
 msgid "This match supports"
-msgstr ""
+msgstr "この試合は対応しています"
 
 #: qcsrc/client/main.qc:1445
 #, c-format
@@ -1398,15 +1390,15 @@ msgstr "マップに投票する"
 msgid "%d seconds left"
 msgstr "残り %d 秒"
 
-#: qcsrc/client/mapvoting.qc:558
+#: qcsrc/client/mapvoting.qc:559
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3このコマンドを自分で使用しないでください!"
 
-#: qcsrc/client/mapvoting.qc:568
+#: qcsrc/client/mapvoting.qc:569
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1ERROR:^7 pak index が見つかりませんでした。"
 
-#: qcsrc/client/mapvoting.qc:577
+#: qcsrc/client/mapvoting.qc:578
 msgid "Requesting preview..."
 msgstr "プレビューをリクエスト中..."
 
@@ -1460,12 +1452,12 @@ msgstr "ラウンドに勝つために全ての敵チームメイトを殺して
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "ラウンド制限:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要な勝利ラウンド数"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1587,16 +1579,16 @@ msgstr "命数:"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
-msgstr ""
+msgstr "この混沌のMAYHEMで、最も与えられたダメージとフラグの数で競い合って!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "MAYHEM"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要な得点数"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1608,7 +1600,7 @@ msgstr "ボールを撃って敵のゴールに蹴り込んで、あなたのゴ
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "ゴールの制限："
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1646,6 +1638,22 @@ msgstr "フィニッシュラインに他の選手とのレース"
 msgid "Laps:"
 msgstr "ラップ数:"
 
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
+msgid "Hunter"
+msgstr "ハンター"
+
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
+msgid "Survivor"
+msgstr "サバイバー"
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
+msgid "Identify and eliminate all the hunters before all your allies are gone"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
+msgid "Survival"
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
 msgstr "あなたのチームが敵チームに対して最も多くの削除を獲得するのを助けて"
@@ -1654,15 +1662,25 @@ msgstr "あなたのチームが敵チームに対して最も多くの削除を
 msgid "Team Deathmatch"
 msgstr "チームデスマッチ (TDM)"
 
+#: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
+msgid "Keep the ball in your team's possession to get points for kills"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
+msgid "Team Keepaway"
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
+"この混沌としたMAYHEMで、チーム内で最も与えたダメージとフラグの数で競い合いま"
+"しょう!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "TEAM MAYHEM"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
@@ -2122,7 +2140,7 @@ msgstr "最大フォントサイズ:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:765
+#: qcsrc/menu/xonotic/util.qc:767
 msgid "Color:"
 msgstr "カラー:"
 
@@ -2255,7 +2273,7 @@ msgstr "スポーンシールド"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "麻痺した"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -2357,9 +2375,9 @@ msgstr "ここに旗を返して"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:36
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:56
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:61
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Control point"
 msgstr "コントロールポイント"
 
@@ -2380,44 +2398,48 @@ msgid "Run here"
 msgstr "ここに走って"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:53
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Ball"
 msgstr "ボール"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:50
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:52
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Ball carrier"
 msgstr "ボール持ち"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:51
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Leader"
 msgstr "リーダー"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:54
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Goal"
 msgstr "目的 / ゴール"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:59
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:60
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:63
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Generator"
 msgstr "発生器"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:62
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Weapon"
 msgstr "武器"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:64
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:68
 msgid "Monster"
 msgstr "モンスター"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:66
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:70
 msgid "Vehicle"
 msgstr "乗り物"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:67
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:71
 msgid "Intruder!"
 msgstr "侵入者!"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:69
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:73
 msgid "Tagged"
 msgstr "タグ付った"
 
@@ -2432,7 +2454,7 @@ msgstr "^1サーバー告知:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは現在、チャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2440,15 +2462,15 @@ msgstr "^F4注: ^BG観戦チャットは試合中に選手に送信されませ�
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは、現在プライベートチャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは現在、観客のチャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4注: ^BGこのサーバーでは現在、チームチャットは無効です。"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -2593,7 +2615,7 @@ msgstr "^F2試合を再開中..."
 #: qcsrc/common/notifications/all.inc:274
 #: qcsrc/common/notifications/all.inc:548
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4カウントダウン停止!"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
@@ -3338,7 +3360,7 @@ msgstr "^BG%s^F3 はチームメイトを殺したために追い出された"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3は過剰なチームキルのために観戦を強制されました"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3424,12 +3446,12 @@ msgstr "^BG%s^K1 はスーパー武器を拾いた"
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1ハンター^BGがラウンドに勝ちました"
 
 #: qcsrc/common/notifications/all.inc:451
 #: qcsrc/common/notifications/all.inc:791
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1サバイバー^BGがラウンドに勝ちました"
 
 #: qcsrc/common/notifications/all.inc:453
 msgid "^BGYou cannot change to a larger team"
@@ -3821,7 +3843,7 @@ msgstr "^F4%s^BG で^BG目的を破壊された"
 #: qcsrc/common/notifications/all.inc:548
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "この試合には%s人のプレイヤーが必要です。"
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGBegin!"
@@ -3973,12 +3995,12 @@ msgstr "^BG%s敵 (^B%s%sG)^BG は旗を手に入れた! 取り戻せ!"
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敵が^TC^TT^BG旗を手に入れました! 取り戻して!"
 
 #: qcsrc/common/notifications/all.inc:586
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%s敵（^BG%s%s）が^TC^TT^BG旗を手に入れました! 取り戻して!"
 
 #: qcsrc/common/notifications/all.inc:589
 #, c-format
@@ -4403,12 +4425,16 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1現在、ゲームに参加することはできません。\n"
+"この試合は^F2%s^BGプレイヤーに制限されています。"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1このサーバーでは禁止されているため、プレイすることはできませんが、ミニゲー"
+"ムはプレイできます"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4416,7 +4442,7 @@ msgstr "^BGボールを拾いた"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGボールを取ってフラグのポイントを獲得しましょう!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4651,6 +4677,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1このサーバーで禁止されているため、観戦を強制され、プレイすることは許されて"
+"いません"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4685,11 +4713,11 @@ msgstr "^F2今、あなたはスーパー武器がある"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr ""
+msgstr "^BGあなたは^K1ハンター^BGです! 疑惑をかけずに生存者を排除しましょう!"
 
 #: qcsrc/common/notifications/all.inc:790
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGあなたは^F1生存者^BGです! ハンターを特定して排除しましょう!"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4749,11 +4777,11 @@ msgstr "^F2侵入者を検出した、シールドを無効中!"
 #: qcsrc/common/notifications/all.inc:809
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1このサーバーでは禁止されているため、投票することは許されていません"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1このサーバーでは禁止されているため、投票することは許されていません"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -5958,15 +5986,6 @@ msgstr "%dth"
 msgid "No description"
 msgstr "説明なし"
 
-#: qcsrc/lib/spawnfunc.qh:267
-#, c-format
-msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
-"please file an issue."
-msgstr ""
-"エンティティフィールド %s.%s (%s) がリストにありません。これがエラーだと思わ"
-"れる場合は、問題を報告してください。"
-
 #: qcsrc/lib/string.qh:186
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
@@ -6075,7 +6094,7 @@ msgstr "中国語 (中国)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "中国語（香港）"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6115,7 +6134,7 @@ msgstr "ハンガリー語"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "インドネシア語"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6139,7 +6158,7 @@ msgstr "韓国語"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "ラテン語"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
@@ -6505,14 +6524,14 @@ msgstr "情報メッセージパネル"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:776
-#: qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/util.qc:762 qcsrc/menu/xonotic/util.qc:778
+#: qcsrc/menu/xonotic/util.qc:795
 msgid "Disable"
 msgstr "無効にする"
 
@@ -6578,21 +6597,21 @@ msgid "Notification Panel"
 msgstr "通知パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:138
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:144
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
-#: qcsrc/menu/xonotic/util.qc:748
+#: qcsrc/menu/xonotic/util.qc:750
 msgid "Enable"
 msgstr "有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
 msgid "Enable even observing"
 msgstr "観察さえに有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
 msgid "Enable only in Race/CTS"
 msgstr "レース / CTSでのみ有効にする"
 
@@ -6632,7 +6651,7 @@ msgstr "垂直速度を含める"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Show speed unit"
-msgstr ""
+msgstr "速度単位を表示"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Top speed"
@@ -6679,7 +6698,7 @@ msgstr "観戦中"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
-msgstr ""
+msgstr "アイコンのサイズスケール："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
@@ -6727,7 +6746,7 @@ msgstr "レーダー:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:782
+#: qcsrc/menu/xonotic/util.qc:784
 msgid "Alpha:"
 msgstr "アルファ:"
 
@@ -6808,80 +6827,76 @@ msgstr "純粋"
 msgid "Score Panel"
 msgstr "得点パネル"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
 msgid "StrafeHUD mode:"
 msgstr "StrafeHUDのモード:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "View angle centered"
 msgstr "視野の中心角"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "Velocity angle centered"
 msgstr "速度の中心角"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "StrafeHUD style:"
 msgstr "ストラフHUDのスタイル:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "no styling"
 msgstr "スタイルなし"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "progress bar"
 msgstr "進歩バー"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "gradient"
 msgstr "勾配"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:61
-msgid "Demo mode"
-msgstr "デモモード"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:65
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
 msgstr "範囲:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
-msgid "Center panel"
-msgstr "中央パネル"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
+msgid "Demo mode"
+msgstr "デモモード"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
 msgid "Reset colors"
 msgstr "色をリセットする"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:78
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:64
 msgid "Strafe bar:"
 msgstr "ストラフバー:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:82
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
 msgid "Angle indicator:"
 msgstr "角度インジケーター:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:84
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:92
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:70
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:78
 msgid "Neutral:"
 msgstr "中性:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:86
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:94
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:72
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:80
 msgid "Good:"
 msgstr "良い:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:88
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:96
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:82
 msgid "Overturn:"
 msgstr "過剰:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:109
 msgid "Switch indicator:"
-msgstr ""
+msgstr "スイッチの指示灯："
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:113
 msgid "Best angle indicator:"
-msgstr ""
+msgstr "最適な角度指示灯："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
@@ -7025,11 +7040,11 @@ msgstr "現在のスキンを保存する"
 msgid "Panel background defaults:"
 msgstr "パネルの背景のデフォルト:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:757
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:759
 msgid "Background:"
 msgstr "背景:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:773
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:775
 msgid "Border size:"
 msgstr "ボーダーサイズ:"
 
@@ -7038,11 +7053,11 @@ msgstr "ボーダーサイズ:"
 msgid "Team color:"
 msgstr "チームカラー:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:799
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:801
 msgid "Test team color in configure mode"
 msgstr "構成モードでのチームカラーのテストする"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:802
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:804
 msgid "Padding:"
 msgstr "パディング:"
 
@@ -7088,7 +7103,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "中央線"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7096,6 +7111,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"パネルの整列を助けるために垂直中心線を表示します。コンソールで%sを編集するこ"
+"とで、さらに垂直線を表示することが可能です"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
@@ -7176,9 +7193,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:759
-#: qcsrc/menu/xonotic/util.qc:775 qcsrc/menu/xonotic/util.qc:784
-#: qcsrc/menu/xonotic/util.qc:792 qcsrc/menu/xonotic/util.qc:804
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:761
+#: qcsrc/menu/xonotic/util.qc:777 qcsrc/menu/xonotic/util.qc:786
+#: qcsrc/menu/xonotic/util.qc:794 qcsrc/menu/xonotic/util.qc:806
 msgid "Default"
 msgstr "デフォルト"
 
@@ -7524,6 +7541,9 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"選手は一つの武器を与えられ、その一撃で相手を即座に倒すことができます。弾薬を"
+"使い切った場合、10秒以内に弾薬を見つけなければ死にます。セカンダリファイア"
+"モードはダメージを与えませんが、トリックジャンプに適しています。"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:247
 msgid ""
@@ -10169,7 +10189,7 @@ msgstr "クイックメニュー"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "スコアボードのユーザーインターフェース"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
@@ -10564,10 +10584,10 @@ msgstr ""
 "^1ERROR: テクスチャ圧縮が必要ですが、サポートされていません。\n"
 "^1視覚的な問題が予想されます。"
 
-#: qcsrc/menu/xonotic/util.qc:770
+#: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"
 msgstr "デフォルトで使用する"
 
-#: qcsrc/menu/xonotic/util.qc:790
+#: qcsrc/menu/xonotic/util.qc:792
 msgid "Team Color:"
 msgstr "チームカラー:"
