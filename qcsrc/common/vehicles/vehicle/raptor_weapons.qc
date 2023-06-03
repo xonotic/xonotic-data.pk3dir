@@ -66,6 +66,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
             _flare.effects = EF_LOWPRECISION | EF_FLAME;
             _flare.scale = 0.5;
+            _flare.solid = SOLID_CORPSE; // before setorigin so it will be linked to the area grid
             setorigin(_flare, actor.origin - '0 0 16');
             set_movetype(_flare, MOVETYPE_TOSS);
             _flare.gravity = 0.15;
@@ -73,7 +74,6 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             setthink(_flare, raptor_flare_think);
             _flare.nextthink = time;
             _flare.owner = veh ? veh : player;
-            _flare.solid = SOLID_CORPSE;
             _flare.takedamage = DAMAGE_YES;
             _flare.event_damage = raptor_flare_damage;
             SetResourceExplicit(_flare, RES_HEALTH, 20);
@@ -154,6 +154,7 @@ void raptor_bombdrop(entity this)
     entity bomb_2 = new(bombmount_right);
 
     vector org = gettaginfo(this, gettagindex(this, "bombmount_left"));
+    bomb_1.solid	 = bomb_2.solid	  = SOLID_BBOX; // before setorigin to ensure area grid linking
     setorigin(bomb_1, org);
     org = gettaginfo(this, gettagindex(this, "bombmount_right"));
     setorigin(bomb_2, org);
@@ -174,7 +175,6 @@ void raptor_bombdrop(entity this)
 
     bomb_1.owner	 = bomb_2.owner	  = this;
     bomb_1.realowner = bomb_2.realowner  = this.owner;
-    bomb_1.solid	 = bomb_2.solid	  = SOLID_BBOX;
     bomb_1.gravity   = bomb_2.gravity	= 1;
 
     PROJECTILE_MAKETRIGGER(bomb_1);
@@ -234,11 +234,11 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 {
     entity sfrag = new(RaptorCBShellfrag);
     setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
+    sfrag.solid = SOLID_CORPSE; // before setorigin to ensure area grid linking
     setorigin(sfrag, _org);
 
     set_movetype(sfrag, MOVETYPE_BOUNCE);
     sfrag.gravity = 0.15;
-    sfrag.solid = SOLID_CORPSE;
 
     sfrag.draw = RaptorCBShellfragDraw;
     IL_PUSH(g_drawables, sfrag);

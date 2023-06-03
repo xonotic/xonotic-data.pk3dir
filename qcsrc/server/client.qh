@@ -7,6 +7,7 @@
 #include <common/sounds/all.qh>
 
 bool autocvar__notarget;
+bool autocvar_sv_show_entnum;
 int autocvar_g_balance_armor_start;
 float autocvar_g_balance_pause_armor_rot_spawn;
 float autocvar_g_balance_pause_fuel_rot_spawn;
@@ -358,6 +359,10 @@ const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
 void calculate_player_respawn_time(entity this);
 
 bool PlayerInList(entity player, string list);
+
+bool PlayerInIDList(entity p, string idlist);
+
+bool PlayerInIPList(entity p, string iplist);
 
 void ClientData_Touch(entity e);
 

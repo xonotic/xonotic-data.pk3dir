@@ -141,6 +141,7 @@ string Label_getInfo(string label, int mode)
 		case "fps":          if (!mode) return CTX(_("SCO^fps"));          else LOG_HELP(strcat("^3", "fps", "                ^7", _("FPS")));
 		case "frags":        if (!mode) return CTX(_("SCO^frags"));        else LOG_HELP(strcat("^3", "frags", "              ^7", _("Number of kills minus suicides")));
 		case "goals":        if (!mode) return CTX(_("SCO^goals"));        else LOG_HELP(strcat("^3", "goals", "              ^7", _("Number of goals scored")));
+		case "hunts":        if (!mode) return CTX(_("SCO^hunts"));        else LOG_HELP(strcat("^3", "hunts", "              ^7", _("Number of hunts (Survival)")));
 		case "kckills":      if (!mode) return CTX(_("SCO^kckills"));      else LOG_HELP(strcat("^3", "kckills", "            ^7", _("Number of keys carrier kills")));
 		case "kd":           if (!mode) return CTX(_("SCO^k/d"));          else LOG_HELP(strcat("^3", "kd", "                 ^7", _("The kill-death ratio")));
 		case "kdr":          if (!mode) return CTX(_("SCO^kdr"));          else LOG_HELP(strcat("^3", "kdr", "                ^7", _("The kill-death ratio")));
@@ -164,6 +165,7 @@ string Label_getInfo(string label, int mode)
 		case "score":        if (!mode) return CTX(_("SCO^score"));        else LOG_HELP(strcat("^3", "score", "              ^7", _("Total score")));
 		case "suicides":     if (!mode) return CTX(_("SCO^suicides"));     else LOG_HELP(strcat("^3", "suicides", "           ^7", _("Number of suicides")));
 		case "sum":          if (!mode) return CTX(_("SCO^sum"));          else LOG_HELP(strcat("^3", "sum", "                ^7", _("Number of kills minus deaths")));
+		case "survivals":    if (!mode) return CTX(_("SCO^survivals"));    else LOG_HELP(strcat("^3", "survivals", "          ^7", _("Number of survivals")));
 		case "takes":        if (!mode) return CTX(_("SCO^takes"));        else LOG_HELP(strcat("^3", "takes", "              ^7", _("Number of domination points taken (Domination)")));
 		case "teamkills":    if (!mode) return CTX(_("SCO^teamkills"));    else LOG_HELP(strcat("^3", "teamkills", "          ^7", _("Number of teamkills")));
 		case "ticks":        if (!mode) return CTX(_("SCO^ticks"));        else LOG_HELP(strcat("^3", "ticks", "              ^7", _("Number of ticks (Domination)")));
@@ -733,19 +735,19 @@ void Cmd_Scoreboard_Help()
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
 "ping pl fps name |" \
-" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
-" -teams,lms/deaths +ft,tdm/deaths" \
+" -teams,rc,cts,inv,lms/kills +ft,tdm,tmayhem/kills ?+rc,inv/kills" \
+" -teams,lms/deaths +ft,tdm,tmayhem/deaths" \
 " +tdm/sum" \
-" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
-" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
-" +tdm,ft,dom,ons,as/teamkills"\
+" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm,tmayhem/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft,mayhem,tmayhem/frags" /* tdm already has this in "score" */ \
+" +tdm,ft,dom,ons,as,tmayhem/teamkills"\
 " -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
 " +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
 " +lms/lives +lms/rank" \
 " +kh/kckills +kh/losses +kh/caps" \
 " ?+rc/laps ?+rc/time +rc,cts/fastest" \
 " +as/objectives +nb/faults +nb/goals" \
-" +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
+" +ka,tka/pickups +ka,tka/bckills +ka,tka/bctime +ft/revivals" \
 " +dom/ticks +dom/takes" \
 " -lms,rc,cts,inv,nb/score"
 
@@ -982,6 +984,22 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
+int autocvar_hud_panel_scoreboard_ping_best = 0;
+int autocvar_hud_panel_scoreboard_ping_medium = 70;
+int autocvar_hud_panel_scoreboard_ping_high = 100;
+int autocvar_hud_panel_scoreboard_ping_worst = 150;
+vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
+vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
+vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
+vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
+#define PING_BEST autocvar_hud_panel_scoreboard_ping_best
+#define PING_MED autocvar_hud_panel_scoreboard_ping_medium
+#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
+#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst
+#define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
+#define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
+#define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
+#define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1006,8 +1024,16 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
-			tmp = max(0, min(220, f-80)) / 220;
-			sbt_field_rgb = '1 1 1' - '0 1 1' * tmp;
+			if(f < PING_BEST)
+				sbt_field_rgb = COLOR_BEST;
+			else if(f < PING_MED)
+				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+			else if(f < PING_HIGH)
+				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
+			else if(f < PING_WORST)
+				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
+			else
+				sbt_field_rgb = COLOR_WORST;
 			return ftos(f);
 
 		case SP_PL:
@@ -2298,9 +2324,9 @@ void Scoreboard_Draw()
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
-			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), translate_key("SPACE"));
 		else
-			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), translate_key("SPACE"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;

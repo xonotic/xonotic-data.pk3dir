@@ -3,10 +3,12 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/mapobjects/target/location.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/weapons/weapon.qh>
 #include <common/wepent.qh>
+#include <server/command/cmd.qh>
 #include <server/command/common.qh>
 #include <server/gamelog.qh>
 #include <server/main.qh>
@@ -24,6 +26,30 @@
  */
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
+	if(!autocvar_g_chat_allowed && IS_REAL_CLIENT(source))
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_DISABLED);
+		return 0;
+	}
+
+	if(!autocvar_g_chat_private_allowed && privatesay)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_PRIVATE_DISABLED);
+		return 0;
+	}
+
+	if(!autocvar_g_chat_spectator_allowed && IS_OBSERVER(source))
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_SPECTATOR_DISABLED);
+		return 0;
+	}
+
+	if(!autocvar_g_chat_team_allowed && teamsay)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_TEAM_DISABLED);
+		return 0;
+	}
+
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
 		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
@@ -283,6 +309,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
 			{
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, privatesay)) // check ignored players from personal chat log (from "ignore" command)
+					return -1; // no sending to this player, thank you very much
+
 				sprint(privatesay, msgstr);
 				if(cmsgstr != "")
 					centerprint(privatesay, cmsgstr);
@@ -293,6 +322,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
@@ -305,6 +337,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOREACH_CLIENT((IS_PLAYER(it) || INGAME(it)) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -316,6 +351,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(!(IS_PLAYER(it) || INGAME(it)) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
@@ -328,6 +366,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				MX_Say(strcat(playername(source.netname, source.team, IS_PLAYER(source)), "^7: ", msgin));
 			}
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
@@ -348,7 +389,7 @@ entity findnearest(vector point, bool checkitems, vector axismod)
 
     IL_EACH(((checkitems) ? g_items : g_locations), ((checkitems) ? (it.target == "###item###") : (it.classname == "target_location")),
     {
-    	if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
+        if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
             dist = it.oldorigin;
         else
             dist = it.origin;
