@@ -36,9 +36,10 @@ void monsters_setstatus(entity this)
 	STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
+bool autocvar_g_monsters_drop = true;
 void monster_dropitem(entity this, entity attacker)
 {
-	if(!this.candrop || !this.monster_loot)
+	if(!this.candrop || !this.monster_loot || !autocvar_g_monsters_drop)
 		return;
 
 	vector org = CENTER_OR_VIEWOFS(this);
@@ -55,6 +56,8 @@ void monster_dropitem(entity this, entity attacker)
 	{
 		e.noalign = true;
 		StartItem(e, e.monster_loot);
+		if(startitem_failed || wasfreed(e))
+			return;
 		e.gravity = 1;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
@@ -884,6 +887,12 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 
 void Monster_Reset(entity this)
 {
+	if(this.spawnflags & MONSTERFLAG_SPAWNED)
+	{
+		Monster_Remove(this);
+		return;
+	}
+
 	setorigin(this, this.pos1);
 	this.angles = this.pos2;
 
@@ -968,7 +977,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
 
-	if(this.candrop && this.weapon)
+	if(this.candrop && this.weapon && autocvar_g_monsters_drop)
 	{
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);

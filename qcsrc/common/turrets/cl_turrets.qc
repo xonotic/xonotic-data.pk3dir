@@ -221,6 +221,8 @@ void turret_construct(entity this, bool isnew)
 	setorigin(this, this.origin);
 	_setmodel(this, tur.model);
 	_setmodel(this.tur_head, tur.head_model);
+	this.solid = SOLID_BBOX; // before setsize so it will be linked to the area grid
+	this.tur_head.solid = SOLID_NOT;
 	setsize(this, tur.m_mins, tur.m_maxs);
 	setsize(this.tur_head, '0 0 0', '0 0 0');
 
@@ -235,8 +237,6 @@ void turret_construct(entity this, bool isnew)
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.tur_head.angles			= this.angles;
 	SetResourceExplicit(this, RES_HEALTH, 255);
-	this.solid						= SOLID_BBOX;
-	this.tur_head.solid				= SOLID_NOT;
 	set_movetype(this, MOVETYPE_NOCLIP);
 	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	this.draw						= turret_draw;

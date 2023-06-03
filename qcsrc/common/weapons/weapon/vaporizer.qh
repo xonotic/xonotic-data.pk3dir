@@ -19,6 +19,7 @@ CLASS(Vaporizer, Weapon)
 /* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
 /* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
 /* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
+/* legacy    */ ATTRIB(Vaporizer, m_deprecated_netname, string, "minstanex");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -62,6 +63,5 @@ SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)
 .float vaporizer_lasthit;
 .float jump_interval;
 .float jump_interval2;
-.bool held_down;
 .int rm_laser_count;
 #endif

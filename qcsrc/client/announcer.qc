@@ -128,19 +128,16 @@ void Announcer_Gamestart()
 {
 	float startTime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
-	if(roundstarttime > startTime)
+	if(time > startTime && roundstarttime > startTime)
 		startTime = roundstarttime;
 	if(intermission || warmup_stage)
 	{
-		Announcer_ClearTitle();
 		if(announcer_countdown)
 		{
+			Announcer_ClearTitle();
 			centerprint_Kill(ORDINAL(CPID_ROUND));
-			if(announcer_countdown)
-			{
-				delete(announcer_countdown);
-				announcer_countdown = NULL;
-			}
+			delete(announcer_countdown);
+			announcer_countdown = NULL;
 		}
 		return;
 	}
@@ -154,7 +151,7 @@ void Announcer_Gamestart()
 		{
 			if (!announcer_countdown)
 			{
-				announcer_countdown = new(announcer_countdown);
+				announcer_countdown = new_pure(announcer_countdown);
 				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
@@ -214,7 +211,7 @@ void Announcer_Time()
 	{
 		float warmup_timelimit = STAT(WARMUP_TIMELIMIT);
 		if(warmup_timelimit > 0)
-			timeleft = max(0, warmup_timelimit - time);
+			timeleft = max(0, warmup_timelimit + starttime - time);
 		else
 			timeleft = 0;
 	}

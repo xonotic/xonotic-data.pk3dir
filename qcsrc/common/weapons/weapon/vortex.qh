@@ -19,6 +19,7 @@ CLASS(Vortex, Weapon)
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
 /* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
+/* legacy    */ ATTRIB(Vortex, m_deprecated_netname, string, "nex");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
