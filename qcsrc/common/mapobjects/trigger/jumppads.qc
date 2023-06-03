@@ -606,7 +606,7 @@ spawnfunc(trigger_push)
 {
 	SetMovedir(this);
 
-	EXACTTRIGGER_INIT;
+	WarpZoneLib_ExactTrigger_Init(this, false);
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;

@@ -702,19 +702,9 @@ spawnfunc(trigger_warpzone)
 		this.scale = this.modelscale;
 	if(!this.scale)
 		this.scale = 1;
-	string m;
-	m = this.model;
-	WarpZoneLib_ExactTrigger_Init(this);
- 	if(m != "")
- 	{
- 		precache_model(m);
- 		_setmodel(this, m); // no precision needed
-	}
-	setorigin(this, this.origin);
-	if(this.scale)
-		setsize(this, this.mins * this.scale, this.maxs * this.scale);
-	else
-		setsize(this, this.mins, this.maxs);
+
+	WarpZoneLib_ExactTrigger_Init(this, false);
+
 	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);

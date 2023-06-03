@@ -174,7 +174,7 @@ void trigger_impulse_link(entity this)
 spawnfunc(trigger_impulse)
 {
 	this.active = ACTIVE_ACTIVE;
-	EXACTTRIGGER_INIT;
+	WarpZoneLib_ExactTrigger_Init(this, false);
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 
 	if(this.radius)
