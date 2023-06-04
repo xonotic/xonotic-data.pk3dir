@@ -89,6 +89,10 @@ int GameTypeVote_GetMask()
 	gametype_mask = 0;
 	for(j = 0; j < n; ++j)
 		gametype_mask |= GameTypeVote_Type_FromString(argv(j)).m_flags;
+
+	if (gametype_mask == 0)
+		gametype_mask |= MapInfo_CurrentGametype().m_flags;
+
 	return gametype_mask;
 }
 
