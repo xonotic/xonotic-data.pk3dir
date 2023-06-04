@@ -25,6 +25,7 @@
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 // =============================================
@@ -411,6 +412,13 @@ void reset_map(bool dorespawn, bool is_fake_round_start)
 				it.avelocity = '0 0 0';
 				CS(it).movement = '0 0 0';
 				PutClientInServer(it);
+
+				if(IS_BOT_CLIENT(it))
+				{
+					.entity weaponentity = weaponentities[0];
+					if(it.(weaponentity).m_weapon == WEP_Null)
+						W_NextWeapon(it, 0, weaponentity);
+				}
 			});
 		}
 	}
