@@ -73,12 +73,6 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		if (IS_PLAYER(this))
-		{
-			.entity weaponentity = weaponentities[0];
-			if(this.(weaponentity).m_weapon == WEP_Null)
-				W_NextWeapon(this, 0, weaponentity);
-		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
