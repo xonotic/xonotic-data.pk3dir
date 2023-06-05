@@ -719,15 +719,15 @@ bool TeamBalance_AreEqual(entity ignore)
 
 entity remove_countdown;
 entity remove_player;
-int remove_time;
+int remove_timeleft;
 
 void Remove_Countdown(entity this)
 {
-	if(remove_time <= 0 || TeamBalance_AreEqual(NULL))
+	if(remove_timeleft <= 0 || TeamBalance_AreEqual(NULL))
 	{
-		if(remove_time <= 0)
+		if(remove_timeleft <= 0)
 		{
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, remove_player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, playername(remove_player.netname, remove_player.team, true));
 			PutObserverInServer(remove_player, true, true);
 		}
 
@@ -742,8 +742,8 @@ void Remove_Countdown(entity this)
 		return;
 	}
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, remove_player.netname, remove_time);
-	--remove_time;
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, remove_player.netname, remove_timeleft);
+	--remove_timeleft;
 	this.nextthink = time + 1;
 }
 
@@ -784,17 +784,25 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 			if(latest_join_pl)
 			{
 				// Send player to spectate
-				remove_player = latest_join_pl;
-				remove_time = 10;
-
-				if (!remove_countdown)
+				if(autocvar_g_balance_teams_remove_wait)
 				{
-					remove_countdown = new_pure(remove_countdown);
-					setthink(remove_countdown, Remove_Countdown);
-					remove_countdown.nextthink = time;
+					// Give a warning before moving to spect
+					remove_player = latest_join_pl;
+					remove_timeleft = autocvar_g_balance_teams_remove_wait;
+
+					if (!remove_countdown)
+					{
+						remove_countdown = new_pure(remove_countdown);
+						setthink(remove_countdown, Remove_Countdown);
+						remove_countdown.nextthink = time;
+					}
 				}
-				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, latest_join_pl.netname);
-				//PutObserverInServer(latest_join_pl, true, true);
+				else
+				{
+					// Move to spects immediately
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, latest_join_pl.netname);
+					PutObserverInServer(latest_join_pl, true, true);
+				}
 			}
 		}
 	}

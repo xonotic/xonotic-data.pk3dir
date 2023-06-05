@@ -452,6 +452,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams");
 		BADCVAR("g_balance_teams_queue");
 		BADCVAR("g_balance_teams_remove");
+		BADCVAR("g_balance_teams_remove_wait");
 		BADCVAR("g_balance_teams_prevent_imbalance");
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
