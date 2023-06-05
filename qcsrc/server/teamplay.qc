@@ -717,6 +717,36 @@ bool TeamBalance_AreEqual(entity ignore)
 	return true;
 }
 
+entity remove_countdown;
+entity remove_player;
+int remove_time;
+
+void Remove_Countdown(entity this)
+{
+	if(remove_time <= 0 || TeamBalance_AreEqual(NULL))
+	{
+		if(remove_time <= 0)
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, remove_player.netname);
+			PutObserverInServer(remove_player, true, true);
+		}
+
+		Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_REMOVE);
+
+		delete(this);
+		remove_countdown = NULL;
+		remove_player = NULL;
+		remove_time = 0;
+
+		TeamBalance_RemoveExcessPlayers(NULL); // Check again for excess players in case someone also left while in countdown
+		return;
+	}
+
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, remove_player.netname, remove_time);
+	--remove_time;
+	this.nextthink = time + 1;
+}
+
 void TeamBalance_RemoveExcessPlayers(entity ignore)
 {
 	if(AVAILABLE_TEAMS != 2 || autocvar_g_campaign) return;
@@ -736,7 +766,7 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 	for(int tmi = 1; tmi <= AVAILABLE_TEAMS; ++tmi)
 	{
 		int cur = TeamBalance_GetTeamFromIndex(balance, tmi).m_num_players;
-		if(cur > 0 && cur > min)
+		if(cur > 0 && cur > min) // If this team has excess players
 		{
 			// Get newest player
 			int latest_join = 0;
@@ -753,8 +783,18 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 			// Force player to spectate
 			if(latest_join_pl)
 			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, latest_join_pl.netname);
-				PutObserverInServer(latest_join_pl, true, true);
+				// Send player to spectate
+				remove_player = latest_join_pl;
+				remove_time = 10;
+
+				if (!remove_countdown)
+				{
+					remove_countdown = new_pure(remove_countdown);
+					setthink(remove_countdown, Remove_Countdown);
+					remove_countdown.nextthink = time;
+				}
+				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, latest_join_pl.netname);
+				//PutObserverInServer(latest_join_pl, true, true);
 			}
 		}
 	}

@@ -680,6 +680,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGDisconnecting in ^COUNT...")), "")
     MSG_CENTER_NOTIF(MOVETOSPEC_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGMoving to spectators in ^COUNT...")), "")
+    MSG_CENTER_NOTIF(MOVETOSPEC_REMOVE,                 N_ENABLE,    1, 1, "s1",             CPID_REMOVE,            "1 f1", BOLD(_("^K1Teams unbalanced!\n^BGMoving %s^BG to spectators in ^COUNT...")), "")
 
     MSG_CENTER_NOTIF(DOOR_LOCKED_NEED,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou need %s^BG!"), "")
     MSG_CENTER_NOTIF(DOOR_LOCKED_ALSONEED,              N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou also need %s^BG!"), "")
