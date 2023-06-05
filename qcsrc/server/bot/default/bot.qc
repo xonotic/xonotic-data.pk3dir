@@ -118,9 +118,6 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
-		.entity weaponentity = weaponentities[0];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
 		return;
