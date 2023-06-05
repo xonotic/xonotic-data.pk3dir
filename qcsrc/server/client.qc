@@ -2104,6 +2104,17 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
+bool queuePlayer(entity this)
+{
+	if(IsQueueNeeded(this) && !SpectatorWantsJoin(this))
+	{
+		if(autocvar_g_balance_teams)
+			TeamBalance_JoinBestTeam(this);
+		return true;
+	}
+	return false;
+}
+
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
@@ -2113,11 +2124,7 @@ bool joinAllowed(entity this)
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
 	if (this.wants_join) return false;
-	if (IsQueueNeeded(this) && autocvar_g_balance_teams)
-	{
-		TeamBalance_JoinBestTeam(this);
-		return false;
-	}
+	if (queuePlayer(this)) return false;
 	return true;
 }
 

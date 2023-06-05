@@ -280,7 +280,9 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 				player.wants_join = team_index; // Player queued to join
 			}
 			else
+			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+			}
 		}
 	}
 
