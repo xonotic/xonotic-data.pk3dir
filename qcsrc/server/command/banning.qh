@@ -10,7 +10,7 @@ string autocvar_g_ban_sync_uri;
 bool autocvar_g_ban_telluser = true;
 string autocvar_g_banned_list;
 bool autocvar_g_banned_list_idmode;
-string autocvar_g_muteban_list; // "List of banned players from chat"
+string autocvar_g_chatban_list; // "List of banned players from chat"
 string autocvar_g_playban_list; // "List of banned players from playing (forced to spectate)"
 string autocvar_g_voteban_list; // "List of banned players from voting"
 
