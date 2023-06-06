@@ -72,6 +72,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
      * @param i zero indexed player
      */
     .int frags;
+    .int wants_join;
 	const int ENTCS_SPEC_PURE = 1; // real spectator
 	const int ENTCS_SPEC_IN_SCOREBOARD = 2; // spectator but still in game (can be in a team)
 	#define entcs_IsSpectating(i) boolean(entcs_GetSpecState(i))
@@ -87,6 +88,15 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		if (fr == FRAGS_PLAYER_OUT_OF_GAME && sol == SOLID_NOT)
 			return ENTCS_SPEC_IN_SCOREBOARD;
 		return 0;
+	}
+
+	/**
+     * @param i zero indexed player
+     */
+	int entcs_GetWantsJoin(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e.wants_join;
 	}
 
 	/**

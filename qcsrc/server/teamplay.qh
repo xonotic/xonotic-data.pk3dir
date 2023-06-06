@@ -7,6 +7,9 @@ bool autocvar_teamplay_lockonrestart;
 
 bool autocvar_g_balance_teams;
 bool autocvar_g_balance_teams_prevent_imbalance;
+bool autocvar_g_balance_teams_queue;
+bool autocvar_g_balance_teams_remove;
+int autocvar_g_balance_teams_remove_wait;
 
 string autocvar_g_forced_team_otherwise;
 
@@ -115,6 +118,9 @@ enum
 	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
 };
 
+bool IsQueueNeeded(entity ignore);
+entity SpectatorWantsJoin(entity this);
+
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_index Index of the team to set.
@@ -184,6 +190,9 @@ void TeamBalance_Destroy(entity balance);
 /// \param[in] balance Team balance entity.
 /// \return Bitmask of allowed teams.
 int TeamBalance_GetAllowedTeams(entity balance);
+
+bool TeamBalance_AreEqual(entity ignore);
+void TeamBalance_RemoveExcessPlayers(entity ignore);
 
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.
