@@ -9,6 +9,7 @@ bool autocvar_g_balance_teams;
 bool autocvar_g_balance_teams_prevent_imbalance;
 bool autocvar_g_balance_teams_queue;
 bool autocvar_g_balance_teams_remove;
+int autocvar_g_balance_teams_remove_wait;
 
 string autocvar_g_forced_team_otherwise;
 

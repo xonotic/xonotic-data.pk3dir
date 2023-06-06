@@ -736,13 +736,13 @@ void Remove_Countdown(entity this)
 		delete(this);
 		remove_countdown = NULL;
 		remove_player = NULL;
-		remove_time = 0;
+		remove_timeleft = 0;
 
 		TeamBalance_RemoveExcessPlayers(NULL); // Check again for excess players in case someone also left while in countdown
 		return;
 	}
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, remove_player.netname, remove_timeleft);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, playername(remove_player.netname, remove_player.team, true), remove_timeleft);
 	--remove_timeleft;
 	this.nextthink = time + 1;
 }
