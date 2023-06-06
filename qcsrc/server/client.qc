@@ -1192,7 +1192,7 @@ void ClientConnect(entity this)
 	if (PlayerInList(this, autocvar_g_playban_list))
 		TRANSMUTE(Observer, this);
 
-	if (PlayerInList(this, autocvar_g_muteban_list)) // muteban
+	if (PlayerInList(this, autocvar_g_chatban_list)) // chatban
 		CS(this).muted = true;
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
