@@ -31,6 +31,7 @@
 #include <menu/xonotic/dialog_hudpanel_modicons.qc>
 #include <menu/xonotic/dialog_hudpanel_notification.qc>
 #include <menu/xonotic/dialog_hudpanel_physics.qc>
+#include <menu/xonotic/dialog_hudpanel_pickup.qc>
 #include <menu/xonotic/dialog_hudpanel_powerups.qc>
 #include <menu/xonotic/dialog_hudpanel_pressedkeys.qc>
 #include <menu/xonotic/dialog_hudpanel_quickmenu.qc>

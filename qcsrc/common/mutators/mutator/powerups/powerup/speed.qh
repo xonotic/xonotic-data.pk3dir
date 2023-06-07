@@ -21,6 +21,11 @@ float autocvar_g_balance_powerup_speed_highspeed = 1.5;
 float autocvar_g_balance_powerup_speed_time = 30;
 void powerup_speed_init(Pickup this, entity item)
 {
+    if(autocvar_g_powerups_speed)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
     if(!item.speed_finished)
         item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
 }
@@ -28,11 +33,6 @@ void powerup_speed_init(Pickup this, entity item)
 REGISTER_ITEM(Speed, Powerup) {
     this.m_canonical_spawnfunc = "item_speed";
 #ifdef SVQC
-    if(autocvar_g_powerups_speed)
-        this.spawnflags = ITEM_FLAG_NORMAL;
-    else
-        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
-
     this.m_iteminit         =   powerup_speed_init;
 #endif
 #ifdef GAMEQC

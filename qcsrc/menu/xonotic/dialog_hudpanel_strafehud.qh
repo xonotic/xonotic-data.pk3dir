@@ -6,7 +6,7 @@ CLASS(XonoticHUDStrafeHUDDialog, XonoticRootDialog)
     ATTRIB(XonoticHUDStrafeHUDDialog, title, string, _("StrafeHUD Panel"));
     ATTRIB(XonoticHUDStrafeHUDDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
     ATTRIB(XonoticHUDStrafeHUDDialog, intendedWidth, float, 0.4);
-    ATTRIB(XonoticHUDStrafeHUDDialog, rows, float, 23.5);
+    ATTRIB(XonoticHUDStrafeHUDDialog, rows, float, 22.5);
     ATTRIB(XonoticHUDStrafeHUDDialog, columns, float, 4);
     ATTRIB(XonoticHUDStrafeHUDDialog, name, string, "HUDstrafehud");
     ATTRIB(XonoticHUDStrafeHUDDialog, requiresConnection, float, true);

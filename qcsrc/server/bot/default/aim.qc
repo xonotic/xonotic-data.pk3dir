@@ -161,6 +161,22 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	if (this.bot_prevaimtime == time)
 		return;
 
+	// if skill is high enough bots will not have any aim smoothing or aim errors
+	if (SUPERBOT)
+	{
+		this.v_angle = vectoangles(normalize(v));
+
+		this.v_angle.x *= -1;
+
+		makevectors(this.v_angle);
+		shotorg = this.origin + this.view_ofs;
+		shotdir = v_forward;
+
+		// bot will fire on the next tick
+		this.bot_firetimer = time + 0.001;
+		return;
+	}
+
 	// invalid aim dir (can happen when bot overlaps target)
 	if(!v) return;
 

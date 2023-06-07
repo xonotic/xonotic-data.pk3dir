@@ -64,13 +64,23 @@ void Physics_UpdateStats(entity this)
 		STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
 	}
 
+	/* Q3 uses the following:
+	 *             MIN '-15 -15 -24'
+	 *             MAX '15 15 32'
+	 *        VIEW_OFS '0 0 26'
+	 *      CROUCH_MIN '-15 -15 -24'
+	 *      CROUCH_MAX '15 15 16'
+	 * CROUCH_VIEW_OFS '0 0 12'
+	 * but xon player models have a different z offset to suit the origin at 24/69
+	 * at q3compat hitbox and model scale the equivalent offset is origin at 20/56
+	 */
 	bool q3hb = q3compat && autocvar_sv_q3compat_changehitbox;
-	STAT(PL_MIN, this)             = q3hb ? '-15 -15 -24' : autocvar_sv_player_mins;
-	STAT(PL_MAX, this)             = q3hb ? '15 15 32'    : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this)        = q3hb ? '0 0 26'      : autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this)      = q3hb ? '-15 -15 -24' : autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this)      = q3hb ? '15 15 16'    : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = q3hb ? '0 0 12'      : autocvar_sv_player_crouch_viewoffset;
+	STAT(PL_MIN, this)             = q3hb ? '-15 -15 -20' : autocvar_sv_player_mins;
+	STAT(PL_MAX, this)             = q3hb ? '15 15 36'    : autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this)        = q3hb ? '0 0 30'      : autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this)      = q3hb ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this)      = q3hb ? '15 15 20'    : autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = q3hb ? '0 0 16'      : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings
@@ -166,7 +176,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
 	} else if (IS_DUCKED(this)) {
-		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
+		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
 		if (!trace_startsolid) {
 			UNSET_DUCKED(this);
 			this.view_ofs = STAT(PL_VIEW_OFS, this);

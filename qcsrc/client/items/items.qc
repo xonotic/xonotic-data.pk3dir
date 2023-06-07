@@ -40,47 +40,47 @@ void Item_SetAlpha(entity this)
 
 void ItemDraw(entity this)
 {
-    if(this.gravity)
-    {
-        Movetype_Physics_MatchServer(this, false);
-        if(IS_ONGROUND(this))
-        { // For some reason avelocity gets set to '0 0 0' here ...
-            this.oldorigin = this.origin;
-            this.gravity = 0;
+	if(this.gravity)
+	{
+		Movetype_Physics_MatchServer(this, false);
+		if(IS_ONGROUND(this))
+		{ // For some reason avelocity gets set to '0 0 0' here ...
+			this.oldorigin = this.origin;
+			this.gravity = 0;
 
-            if(autocvar_cl_animate_items)
-            { // ... so reset it if animations are requested.
-                if(this.ItemStatus & ITS_ANIMATE1)
-                    this.avelocity = '0 180 0';
+			if(autocvar_cl_animate_items)
+			{ // ... so reset it if animations are requested.
+				if(this.ItemStatus & ITS_ANIMATE1)
+					this.avelocity = '0 180 0';
 
-                if(this.ItemStatus & ITS_ANIMATE2)
-                    this.avelocity = '0 -90 0';
-            }
+				if(this.ItemStatus & ITS_ANIMATE2)
+					this.avelocity = '0 -90 0';
+			}
 
-            // delay is for blocking item's position for a while;
-            // it's a workaround for dropped weapons that receive the position
-            // another time right after they spawn overriding animation position
-            this.onground_time = time + 0.5;
-        }
-    }
-    else if (autocvar_cl_animate_items && !this.item_simple) // no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
-    {
-        if(this.ItemStatus & ITS_ANIMATE1)
-        {
-        	this.angles += this.avelocity * frametime;
-            float fade_in = bound(0, time - this.onground_time, 1);
-            setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
-        }
+			// delay is for blocking item's position for a while;
+			// it's a workaround for dropped weapons that receive the position
+			// another time right after they spawn overriding animation position
+			this.onground_time = time + 0.5;
+		}
+	}
+	else if (autocvar_cl_animate_items && !this.item_simple) // no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
+	{
+		if(this.ItemStatus & ITS_ANIMATE1)
+		{
+			this.angles += this.avelocity * frametime;
+			float fade_in = bound(0, time - this.onground_time, 1);
+			setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
+		}
 
-        if(this.ItemStatus & ITS_ANIMATE2)
-        {
-        	this.angles += this.avelocity * frametime;
-            float fade_in = bound(0, time - this.onground_time, 1);
-            setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
-        }
-    }
+		if(this.ItemStatus & ITS_ANIMATE2)
+		{
+			this.angles += this.avelocity * frametime;
+			float fade_in = bound(0, time - this.onground_time, 1);
+			setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
+		}
+	}
 
-    Item_SetAlpha(this);
+	Item_SetAlpha(this);
 }
 
 void Item_PreDraw(entity this)
@@ -131,145 +131,145 @@ SHUTDOWN(ENT_CLIENT_ITEM_simple)
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 {
-    int sf = ReadByte();
+	int sf = ReadByte();
 
-    if(sf & ISF_LOCATION)
-    {
-        vector org = ReadVector();
-        setorigin(this, org);
-        this.oldorigin = org;
-    }
+	if(sf & ISF_LOCATION)
+	{
+		vector org = ReadVector();
+		setorigin(this, org);
+		this.oldorigin = org;
+	}
 
-    if(sf & ISF_ANGLES)
-    {
-        this.angles = ReadAngleVector();
-    }
+	if(sf & ISF_ANGLES)
+	{
+		this.angles = ReadAngleVector();
+	}
 
-    if(sf & ISF_SIZE)
-    {
-        setsize(this, '-16 -16 0', '16 16 48');
-    }
+	if(sf & ISF_SIZE)
+	{
+		setsize(this, '-16 -16 0', '16 16 48');
+	}
 
-    if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
-    {
-        this.ItemStatus = ReadByte();
+	if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
+	{
+		this.ItemStatus = ReadByte();
 
-        Item_SetAlpha(this);
+		Item_SetAlpha(this);
 
-        if(this.ItemStatus & ITS_ALLOWFB)
-            this.effects |= EF_FULLBRIGHT;
-        else
-            this.effects &= ~EF_FULLBRIGHT;
+		if(this.ItemStatus & ITS_ALLOWFB)
+			this.effects |= EF_FULLBRIGHT;
+		else
+			this.effects &= ~EF_FULLBRIGHT;
 
-        if(this.ItemStatus & ITS_GLOW)
-        {
-            if(this.ItemStatus & ITS_AVAILABLE)
-                this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
-            else
-                this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
-        }
-    }
+		if(this.ItemStatus & ITS_GLOW)
+		{
+			if(this.ItemStatus & ITS_AVAILABLE)
+				this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+			else
+				this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+		}
+	}
 
-    if(sf & ISF_MODEL)
-    {
-        this.drawmask  = MASK_NORMAL;
+	if(sf & ISF_MODEL)
+	{
+		this.drawmask = MASK_NORMAL;
 		set_movetype(this, MOVETYPE_TOSS);
 		if (isnew) IL_PUSH(g_drawables, this);
-        this.draw       = ItemDraw;
-        this.solid = SOLID_TRIGGER;
-        //this.flags |= FL_ITEM;
+		this.draw = ItemDraw;
+		this.solid = SOLID_TRIGGER;
+		//this.flags |= FL_ITEM;
 
-        this.fade_end = ReadShort();
-        this.fade_start = ReadShort();
-        if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
-        	setpredraw(this, Item_PreDraw);
+		this.fade_end = ReadShort();
+		this.fade_start = ReadShort();
+		if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
+			setpredraw(this, Item_PreDraw);
 
 		strfree(this.mdl);
 
-        string _fn = ReadString();
-        this.item_simple = false; // reset it!
+		string _fn = ReadString();
+		this.item_simple = false; // reset it!
 
-        if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
-        {
-            string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            this.item_simple = true;
+		if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
+		{
+			string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
+			this.item_simple = true;
 
-			#define extensions(x) \
-				x(md3) \
-				x(dpm) \
-				x(iqm) \
-				x(mdl) \
-				/**/
-			#define tryext(ext) { \
-				string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
-				string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
-				if (cached == "") { \
-					HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
-				} \
-				if (cached != "0") { \
-					strcpy(this.mdl, s); \
-					break; \
-				} \
-			}
-			do {
-				extensions(tryext);
-				this.item_simple = false;
-                LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
-			} while (0);
-			#undef tryext
-			#undef extensions
-        }
+				#define extensions(x) \
+					x(md3) \
+					x(dpm) \
+					x(iqm) \
+					x(mdl) \
+					/**/
+				#define tryext(ext) { \
+					string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
+					string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
+					if (cached == "") { \
+						HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
+					} \
+					if (cached != "0") { \
+						strcpy(this.mdl, s); \
+						break; \
+					} \
+				}
+				do {
+					extensions(tryext);
+					this.item_simple = false;
+					LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
+				} while (0);
+				#undef tryext
+				#undef extensions
+		}
 
-        if(!this.item_simple)
-            strcpy(this.mdl, _fn);
+		if(!this.item_simple)
+			strcpy(this.mdl, _fn);
 
-        if(this.mdl == "")
-            LOG_WARNF("this.mdl is unset for item %s", this.classname);
+		if(this.mdl == "")
+			LOG_WARNF("this.mdl is unset for item %s", this.classname);
 
-        precache_model(this.mdl);
-        _setmodel(this, this.mdl);
+		precache_model(this.mdl);
+		_setmodel(this, this.mdl);
 
-        this.skin = ReadByte();
+		this.skin = ReadByte();
 
-        setsize(this, '-16 -16 0', '16 16 48');
-    }
+		setsize(this, '-16 -16 0', '16 16 48');
+	}
 
-    if(sf & ISF_COLORMAP)
-    {
-        this.colormap = ReadShort();
-        this.item_glowmod_x = ReadByte() / 255.0;
-        this.item_glowmod_y = ReadByte() / 255.0;
-        this.item_glowmod_z = ReadByte() / 255.0;
-    }
+	if(sf & ISF_COLORMAP)
+	{
+		this.colormap = ReadShort();
+		this.item_glowmod_x = ReadByte() / 255.0;
+		this.item_glowmod_y = ReadByte() / 255.0;
+		this.item_glowmod_z = ReadByte() / 255.0;
+	}
 
-    if(sf & ISF_DROP)
-    {
-        this.gravity = 1;
-        this.pushable = true;
-        //this.angles = '0 0 0';
-        set_movetype(this, MOVETYPE_TOSS);
-        this.velocity = ReadVector();
-        setorigin(this, this.oldorigin);
+	if(sf & ISF_DROP)
+	{
+		this.gravity = 1;
+		this.pushable = true;
+		//this.angles = '0 0 0';
+		set_movetype(this, MOVETYPE_TOSS);
+		this.velocity = ReadVector();
+		setorigin(this, this.oldorigin);
 
-        if(!this.move_time)
-        {
-            this.move_time = time;
-            this.spawntime = time;
-        }
-        else
-            this.move_time = max(this.move_time, time);
-    }
+		if(!this.move_time)
+		{
+			this.move_time = time;
+			this.spawntime = time;
+		}
+		else
+			this.move_time = max(this.move_time, time);
+	}
 
-    if(autocvar_cl_animate_items)
-    {
-        if(this.ItemStatus & ITS_ANIMATE1)
-            this.avelocity = '0 180 0';
+	if(autocvar_cl_animate_items)
+	{
+		if(this.ItemStatus & ITS_ANIMATE1)
+			this.avelocity = '0 180 0';
 
-        if(this.ItemStatus & ITS_ANIMATE2)
-            this.avelocity = '0 -90 0';
-    }
+		if(this.ItemStatus & ITS_ANIMATE2)
+			this.avelocity = '0 -90 0';
+	}
 
-    this.entremove = ItemRemove;
+	this.entremove = ItemRemove;
 
-    return true;
+	return true;
 }
