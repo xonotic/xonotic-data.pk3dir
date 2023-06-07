@@ -476,7 +476,7 @@ models/items/g_strength_luma // strength
 	nopicmip
 	{
 		map models/items/g_strength_luma
-		blendfunc add
+		blendfunc blend
 	}
 }
 
@@ -487,7 +487,7 @@ models/items/g_invincible_luma // invincible
 	nopicmip
 	{
 		map models/items/g_invincible_luma
-		blendfunc add
+		blendfunc blend
 	}
 }
 
@@ -498,7 +498,7 @@ models/items/g_invisibility_luma // invisibility
 	nopicmip
 	{
 		map models/items/g_invisibility_luma
-		blendfunc add
+		blendfunc blend
 	}
 }
 
@@ -509,6 +509,6 @@ models/items/g_speed_luma // speed
 	nopicmip
 	{
 		map models/items/g_speed_luma
-		blendfunc add
+		blendfunc blend
 	}
 }
