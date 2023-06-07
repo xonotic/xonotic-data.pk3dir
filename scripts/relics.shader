@@ -89,7 +89,7 @@ models/relics/sign_invisible
 	nopicmip
 	{
 		map models/relics/sign_invisible
-		blendfunc add
+		blendfunc blend
 	}
 }
 
@@ -144,7 +144,7 @@ models/relics/sign_speed
 	nopicmip
 	{
 		map models/relics/sign_speed
-		blendfunc add
+		blendfunc blend
 	}
 }
 
