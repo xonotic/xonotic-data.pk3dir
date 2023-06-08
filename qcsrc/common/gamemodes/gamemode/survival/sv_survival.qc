@@ -211,7 +211,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(IS_PLAYER(player) || INGAME_JOINED(player))
+	if(IS_PLAYER(player) || INGAME(player))
 	{
 		// update the scoreboard colour display to out the real killer at the end of the round
 		// running this every frame to avoid cheats
