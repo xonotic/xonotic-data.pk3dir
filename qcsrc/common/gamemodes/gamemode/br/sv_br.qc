@@ -1372,12 +1372,53 @@ void br_Start(){
         STAT(SQUADCOLORS, it) = squads_colored;
     });
 
+    int squad_colors_taken = 0;
+    const int squad_colors_num = 6; // there are 6 colors which look distinct enough
+    const int squad_colors_taken_mask = 2 ** squad_colors_num - 1;
     IL_EACH(squads, true,
     {
         if(squads_colored)
         {
-            float squad_color;
-            squad_color = 16 * floor(random() * 15) + floor(random() * 15); // color 15 is special, don't select it as a squad color
+            float squad_color = 0;
+
+            while(true)
+            {
+                squad_color = floor(random() * squad_colors_num);
+                int squad_color_bit = 1 << squad_color;
+
+                if(!(squad_color_bit & squad_colors_taken))
+                {
+                    squad_colors_taken |= squad_color_bit;
+
+                    // only select easily distinguishable colors
+                    switch(squad_color)
+                    {
+                        case 0:
+                            squad_color = 0;
+                            break;
+                        case 1:
+                            squad_color = 1;
+                            break;
+                        case 2:
+                            squad_color = 3;
+                            break;
+                        case 3:
+                            squad_color = 5;
+                            break;
+                        case 4:
+                            squad_color = 9;
+                            break;
+                        case 5:
+                            squad_color = 12;
+                    }
+                    break;
+                }
+            }
+
+            if(squad_colors_taken == squad_colors_taken_mask)
+                squad_colors_taken = 0;
+
+            squad_color = 16 * squad_color + squad_color;
 
             for(entity member = it.br_squad_first; member; member = member.br_squad_next)
             {
