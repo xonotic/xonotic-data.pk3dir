@@ -831,7 +831,6 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				print_to(caller, strcat("Invalid fraglimit vote, accepted values are between ", ftos(fraglimit_min), " and ", ftos(fraglimit_max), "."));
 				return -1;
 			}
-			fraglimit_vote = bound(fraglimit_min, fraglimit_vote, fraglimit_max);
 			vote_parsed_command = strcat("fraglimit ", ftos(fraglimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
@@ -846,7 +845,6 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
 				return -1;
 			}
-			timelimit_vote = bound(autocvar_timelimit_min, timelimit_vote, autocvar_timelimit_max);
 			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
