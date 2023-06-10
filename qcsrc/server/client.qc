@@ -1439,7 +1439,7 @@ void calculate_player_respawn_time(entity this)
 	else if (c == 13) this.colormod = '0.10 0.10 1.73';
 	else this.colormod = '1 1 1';
 }*/
-
+void delay_respawn(entity this);
 void respawn(entity this)
 {
 	bool damagedbycontents_prev = this.damagedbycontents;
@@ -1467,7 +1467,25 @@ void respawn(entity this)
 	this.damagedbycontents = damagedbycontents_prev;
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
-	PutClientInServer(this);
+	entity e = spawn();
+	e.enemy = this;
+	e.count = 0;
+	setthink(e, delay_respawn);
+	e.nextthink = time;
+}
+
+// prevent darkplaces from interpolating the respawn angle by delaying respawn by one frame
+void delay_respawn(entity this)
+{
+	if(!this.count)
+	{
+		this.nextthink = time;
+		++this.count;
+		return;
+	}
+
+	PutClientInServer(this.enemy);
+	delete(this);
 }
 
 void play_countdown(entity this, float finished, Sound samp)
