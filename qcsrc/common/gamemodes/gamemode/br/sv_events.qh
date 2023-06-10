@@ -5,48 +5,60 @@ void spawn_vehicle();
 
 .bool br_vehicle_drop;
 
-noref float autocvar_g_br_supply_health_probability = 0;
-noref float autocvar_g_br_supply_armor_probability = 0;
+noref float autocvar_g_br_supply_health_probability = 0.25;
+noref float autocvar_g_br_supply_armor_probability = 0.25;
 noref float autocvar_g_br_supply_resource_probability = 0;
 noref float autocvar_g_br_supply_weapon_probability = 1;
 noref float autocvar_g_br_supply_powerup_probability = 0;
 
 noref float autocvar_g_br_supply_item_health_small_probability = 0;
 noref float autocvar_g_br_supply_item_health_medium_probability = 0;
-noref float autocvar_g_br_supply_item_health_big_probability = 0;
+noref float autocvar_g_br_supply_item_health_big_probability = 1;
 noref float autocvar_g_br_supply_item_health_mega_probability = 0;
 
 noref float autocvar_g_br_supply_item_armor_small_probability = 0;
 noref float autocvar_g_br_supply_item_armor_medium_probability = 0;
-noref float autocvar_g_br_supply_item_armor_big_probability = 0;
+noref float autocvar_g_br_supply_item_armor_big_probability = 1;
 noref float autocvar_g_br_supply_item_armor_mega_probability = 0;
 
 noref float autocvar_g_br_supply_item_bullets_probability = 0;
 noref float autocvar_g_br_supply_item_cells_probability = 0;
+noref float autocvar_g_br_supply_item_extralife_probability = 0;
 noref float autocvar_g_br_supply_item_fuel_probability = 0;
 noref float autocvar_g_br_supply_item_fuel_regen_probability = 0;
-noref float autocvar_g_br_supply_item_invisibility_probability = 0;
 noref float autocvar_g_br_supply_item_jetpack_probability = 0;
 noref float autocvar_g_br_supply_item_plasma_probability = 0;
 noref float autocvar_g_br_supply_item_rockets_probability = 0;
 noref float autocvar_g_br_supply_item_shells_probability = 0;
-noref float autocvar_g_br_supply_item_shield_probability = 0;
-noref float autocvar_g_br_supply_item_speed_probability = 0;
-noref float autocvar_g_br_supply_item_strength_probability = 0;
+noref float autocvar_g_br_supply_item_vaporizer_cells_probability = 0;
 
 noref float autocvar_g_br_supply_weapon_arc_probability = 0;
 noref float autocvar_g_br_supply_weapon_blaster_probability = 0;
-noref float autocvar_g_br_supply_weapon_crylink_probability = 0.1;
-noref float autocvar_g_br_supply_weapon_devastator_probability = 0.1;
-noref float autocvar_g_br_supply_weapon_electro_probability = 0.1;
+noref float autocvar_g_br_supply_weapon_crylink_probability = 1;
+noref float autocvar_g_br_supply_weapon_devastator_probability = 1;
+noref float autocvar_g_br_supply_weapon_electro_probability = 1;
 noref float autocvar_g_br_supply_weapon_fireball_probability = 0;
-noref float autocvar_g_br_supply_weapon_hagar_probability = 0;
+noref float autocvar_g_br_supply_weapon_hagar_probability = 1;
+noref float autocvar_g_br_supply_weapon_hlac_probability = 0;
 noref float autocvar_g_br_supply_weapon_hook_probability = 0;
-noref float autocvar_g_br_supply_weapon_machinegun_probability = 0.1;
-noref float autocvar_g_br_supply_weapon_mortar_probability = 0.1;
+noref float autocvar_g_br_supply_weapon_machinegun_probability = 1;
+noref float autocvar_g_br_supply_weapon_minelayer_probability = 0;
+noref float autocvar_g_br_supply_weapon_mortar_probability = 1;
+noref float autocvar_g_br_supply_weapon_okhmg_probability = 0;
+noref float autocvar_g_br_supply_weapon_okmachinegun_probability = 0;
+noref float autocvar_g_br_supply_weapon_oknex_probability = 0;
+noref float autocvar_g_br_supply_weapon_okrpc_probability = 0;
+noref float autocvar_g_br_supply_weapon_okshotgun_probability = 0;
 noref float autocvar_g_br_supply_weapon_porto_probability = 0;
+noref float autocvar_g_br_supply_weapon_rifle_probability = 0;
+noref float autocvar_g_br_supply_weapon_seeker_probability = 0;
 noref float autocvar_g_br_supply_weapon_shockwave_probability = 0;
-noref float autocvar_g_br_supply_weapon_shotgun_probability = 0.1;
-noref float autocvar_g_br_supply_weapon_tuba_probability = 0;
+noref float autocvar_g_br_supply_weapon_shotgun_probability = 1;
+noref float autocvar_g_br_supply_weapon_tuba_probability = 0.01;
 noref float autocvar_g_br_supply_weapon_vaporizer_probability = 0;
-noref float autocvar_g_br_supply_weapon_vortex_probability = 0.1;
+noref float autocvar_g_br_supply_weapon_vortex_probability = 1;
+
+noref float autocvar_g_br_supply_item_invisibility_probability = 0;
+noref float autocvar_g_br_supply_item_shield_probability = 0;
+noref float autocvar_g_br_supply_item_speed_probability = 0;
+noref float autocvar_g_br_supply_item_strength_probability = 0;
