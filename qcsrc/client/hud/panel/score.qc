@@ -4,6 +4,7 @@
 #include <client/hud/panel/scoreboard.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
+#include <common/gamemodes/gamemode/br/br.qh>
 #include <common/gamemodes/gamemode/br/cl_squad.qh>
 
 // Score (#7)
