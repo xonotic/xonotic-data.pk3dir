@@ -1,6 +1,7 @@
 #include "banning.qh"
 
 #include <common/command/_mod.qh>
+#include <common/minigames/sv_minigames.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
@@ -183,6 +184,8 @@ void BanCommand_playban(int request, int argc, string command)
 
 					LOG_INFO(strcat("Play-banning player ", GetCallerName(client), " (", argv(1), ")."));
 					PutObserverInServer(client, true, true);
+					if (autocvar_g_playban_minigames) 
+						part_minigame(client);
 					cvar_set("g_playban_list", cons(autocvar_g_playban_list, theid));
 
 					return;
