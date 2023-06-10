@@ -545,6 +545,9 @@ MUTATOR_HOOKFUNCTION(br, PM_Physics)
     float maxspeed_mod = M_ARGV(1, float);
     float dt = M_ARGV(2, float); // tick rate
 
+    if(!IS_PLAYER(player))
+        return false;
+
     if(STAT(DROP, player) == DROP_TRANSPORT)
         return true;
 
