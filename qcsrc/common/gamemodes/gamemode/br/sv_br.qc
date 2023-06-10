@@ -1436,22 +1436,12 @@ void br_Start(){
     });
 
     br_event_supply_time = br_event_vehicle_time = time;
-    round_handler.cnt = 0; // emulate round handler round start
 }
-
-void br_dummy_Think(entity this){}
 
 void br_Initialize()
 {
     br_started = false;
     squads_colored = autocvar_g_br_squad_colors;
-
-    // emulate the round handler, useful because this will cause a lot of code to correctly treat the stage before the match starts
-    round_handler = new_pure(round_handler);
-    round_handler.count = 0;
-    round_handler.cnt = 1;
-    round_handler.wait = false;
-    setthink(round_handler, br_dummy_Think);
 
     EliminatedPlayers_Init(br_isEliminated);
 }
