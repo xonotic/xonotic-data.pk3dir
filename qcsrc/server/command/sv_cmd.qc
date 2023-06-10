@@ -1069,7 +1069,7 @@ void GameCommand_moveplayer(int request, int argc)
 					else if (destination == "spectator")
 					{
 						string pl_name = playername(client.netname, client.team, false);
-						if (!IS_SPEC(client) && !IS_OBSERVER(client))
+						if (!(IS_SPEC(client) || IS_OBSERVER(client)) || INGAME(client))
 						{
 							PutObserverInServer(client, true, true);
 
