@@ -50,6 +50,9 @@ bool br_started = false;
 .Weapon br_weapon_prev[MAX_WEAPONSLOTS];
 .float br_lastweapon_prev[MAX_WEAPONSLOTS];
 
+// alpha restoring for drop
+.float br_alpha_old;
+
 float autocvar_g_br_revive_health = 0.25;
 float autocvar_g_br_bleeding_health = 0.5;
 float autocvar_g_br_bleeding_armor = 50;
@@ -374,7 +377,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
         else{
             if(!(IN_SQUAD(player) && player.br_squad.br_squad_drop_leader))
             {
-                player.effects &= ~EF_NODRAW;
+                player.alpha = player.br_alpha_old;
                 player.takedamage = DAMAGE_AIM;
                 player.solid = SOLID_SLIDEBOX;
                 if(!autocvar__notarget)
@@ -412,7 +415,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerPreThink, CBC_ORDER_FIRST)
                         drop_position *= -1;
 
                     FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && (it != player) && SAME_SQUAD(it, player) && (STAT(DROP, it) == DROP_TRANSPORT), {
-                        it.effects &= ~EF_NODRAW;
+                        it.alpha = it.br_alpha_old;
                         it.takedamage = DAMAGE_AIM;
                         it.solid = SOLID_SLIDEBOX;
                         if(!autocvar__notarget)
@@ -746,7 +749,7 @@ MUTATOR_HOOKFUNCTION(br, PlayerDies, CBC_ORDER_FIRST)
 
     if(STAT(DROP, frag_target) == DROP_TRANSPORT)
     {
-        frag_target.effects &= ~EF_NODRAW;
+        frag_target.alpha = frag_target.br_alpha_old;
         frag_target.takedamage = DAMAGE_AIM;
         frag_target.solid = SOLID_SLIDEBOX;
         if(!autocvar__notarget)
@@ -1357,7 +1360,8 @@ void br_Start(){
         it.flags &= ~FL_PICKUPITEMS;
         it.flags |= FL_NOTARGET;
         it.dphitcontentsmask &= ~DPCONTENTS_BODY;
-        it.effects |= EF_NODRAW;
+        it.br_alpha_old = it.alpha;
+        it.alpha = -1;
         it.takedamage = DAMAGE_NO;
         it.solid = SOLID_NOT;
         it.br_drop_instructions = false;
