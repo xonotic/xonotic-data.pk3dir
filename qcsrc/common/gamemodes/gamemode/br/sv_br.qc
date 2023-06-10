@@ -1328,9 +1328,12 @@ void br_Start(){
         ++num_players;
     });
 
-    max_squad_size = max(autocvar_g_br_squad_size, 1);
-    if(num_players <= max_squad_size)
-        max_squad_size = ceil(num_players / 2);
+    if(autocvar_g_br_squad_size >= 1)
+        max_squad_size = min(autocvar_g_br_squad_size, ceil(num_players / 2));
+    else if(autocvar_g_br_squad_size <= -1)
+        max_squad_size = min(-autocvar_g_br_squad_size, floor(num_players / 2));
+    else
+        max_squad_size = floor(num_players / 2);
 
     for(int num_squads = 0; (num_squads * max_squad_size) < num_players; ++num_squads)
     {
@@ -1372,12 +1375,53 @@ void br_Start(){
         STAT(SQUADCOLORS, it) = squads_colored;
     });
 
+    int squad_colors_taken = 0;
+    const int squad_colors_num = 6; // there are 6 colors which look distinct enough
+    const int squad_colors_taken_mask = 2 ** squad_colors_num - 1;
     IL_EACH(squads, true,
     {
         if(squads_colored)
         {
-            float squad_color;
-            squad_color = 16 * floor(random() * 15) + floor(random() * 15); // color 15 is special, don't select it as a squad color
+            float squad_color = 0;
+
+            while(true)
+            {
+                squad_color = floor(random() * squad_colors_num);
+                int squad_color_bit = 1 << squad_color;
+
+                if(!(squad_color_bit & squad_colors_taken))
+                {
+                    squad_colors_taken |= squad_color_bit;
+
+                    // only select easily distinguishable colors
+                    switch(squad_color)
+                    {
+                        case 0:
+                            squad_color = 0;
+                            break;
+                        case 1:
+                            squad_color = 1;
+                            break;
+                        case 2:
+                            squad_color = 3;
+                            break;
+                        case 3:
+                            squad_color = 5;
+                            break;
+                        case 4:
+                            squad_color = 9;
+                            break;
+                        case 5:
+                            squad_color = 12;
+                    }
+                    break;
+                }
+            }
+
+            if(squad_colors_taken == squad_colors_taken_mask)
+                squad_colors_taken = 0;
+
+            squad_color = 16 * squad_color + squad_color;
 
             for(entity member = it.br_squad_first; member; member = member.br_squad_next)
             {
@@ -1395,22 +1439,12 @@ void br_Start(){
     });
 
     br_event_supply_time = br_event_vehicle_time = time;
-    round_handler.cnt = 0; // emulate round handler round start
 }
-
-void br_dummy_Think(entity this){}
 
 void br_Initialize()
 {
     br_started = false;
     squads_colored = autocvar_g_br_squad_colors;
-
-    // emulate the round handler, useful because this will cause a lot of code to correctly treat the stage before the match starts
-    round_handler = new_pure(round_handler);
-    round_handler.count = 0;
-    round_handler.cnt = 1;
-    round_handler.wait = false;
-    setthink(round_handler, br_dummy_Think);
 
     EliminatedPlayers_Init(br_isEliminated);
 }

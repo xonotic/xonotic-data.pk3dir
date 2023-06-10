@@ -4,6 +4,8 @@
 #include <client/hud/panel/scoreboard.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
+#include <common/gamemodes/gamemode/br/br.qh>
+#include <common/gamemodes/gamemode/br/cl_squad.qh>
 
 // Score (#7)
 
@@ -32,6 +34,10 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	int i = 0, first_pl = 0;
 	bool me_printed = false;
 	string s;
+
+	if(ISGAMETYPE(BR))
+		name_size = mySize.x - spacing_size;
+
 	if (autocvar__hud_configure)
 	{
 		float players_per_team = 0;
@@ -69,9 +75,12 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 			if (team_count)
 				score_color = Team_ColorRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
+			else if(ISGAMETYPE(BR))
+				score_color = '0.0625 1 0.0625' * 0.8; // 0x0FFF0F
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			if(!ISGAMETYPE(BR))
+				drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += fontsize.y;
 		}
 		return;
@@ -102,7 +111,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	do
 	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 	{
-		if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR)
+		if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR || (ISGAMETYPE(BR) && (pl.eliminated || me.(scores(SP_BR_SQUAD)) != pl.(scores(SP_BR_SQUAD)))))
 			continue;
 
 		if (i == entries-1 && !me_printed && pl != me)
@@ -128,9 +137,12 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		}
 		if (team_count)
 			score_color = Team_ColorRGB(pl.team) * 0.8;
+		else if(ISGAMETYPE(BR))
+			score_color = '0.0625 1 0.0625' * 0.8; // 0x0FFF0F
 		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		if(!ISGAMETYPE(BR))
+			drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
 		++i;
 	}
@@ -168,7 +180,7 @@ void HUD_Score()
 
 	me = playerslots[current_player];
 
-	if((scores_flags(ps_primary) & SFL_TIME) && !teamplay) { // race/cts record display on HUD
+	if((scores_flags(ps_primary) & SFL_TIME) && !teamplay && !ISGAMETYPE(BR)) { // race/cts record display on HUD
 		string timer, distrtimer;
 
 		pl = players.sort_next;
@@ -203,7 +215,7 @@ void HUD_Score()
 			HUD_Panel_DrawHighlight(pos, vec2(0.75 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(pos, timer, vec2(0.75 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
-	} else if (!teamplay) { // non-teamgames
+	} else if (!teamplay && !ISGAMETYPE(BR)) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
 			HUD_Score_Rankings(pos, mySize, me);
@@ -246,6 +258,8 @@ void HUD_Score()
 		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize.x + eY * mySize.y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(pos + eX * 0.75 * mySize.x, distribution_str, vec2(0.25 * mySize.x, (1/3) * mySize.y), distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
+	} else if (ISGAMETYPE(BR)) { // teamgame (battle royale)
+		HUD_Score_Rankings(pos, mySize, me);
 	} else { // teamgames
 		float row, column, rows = 0, columns = 0;
 		vector offset = '0 0 0';

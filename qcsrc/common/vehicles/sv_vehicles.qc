@@ -710,6 +710,9 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 	if(GetResource(this, RES_HEALTH) <= 0)
 	{
+		if(this.br_vehicle_drop && this.waypointsprite_attached)
+			WaypointSprite_Kill(this.waypointsprite_attached);
+
 		if(this.owner)
 		{
 			if(this.vehicle_flags & VHF_DEATHEJECT)
