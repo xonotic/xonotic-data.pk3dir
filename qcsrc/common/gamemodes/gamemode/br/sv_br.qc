@@ -1328,9 +1328,12 @@ void br_Start(){
         ++num_players;
     });
 
-    max_squad_size = max(autocvar_g_br_squad_size, 1);
-    if(num_players <= max_squad_size)
-        max_squad_size = ceil(num_players / 2);
+    if(autocvar_g_br_squad_size >= 1)
+        max_squad_size = min(autocvar_g_br_squad_size, ceil(num_players / 2));
+    else if(autocvar_g_br_squad_size <= -1)
+        max_squad_size = min(-autocvar_g_br_squad_size, floor(num_players / 2));
+    else
+        max_squad_size = floor(num_players / 2);
 
     for(int num_squads = 0; (num_squads * max_squad_size) < num_players; ++num_squads)
     {
