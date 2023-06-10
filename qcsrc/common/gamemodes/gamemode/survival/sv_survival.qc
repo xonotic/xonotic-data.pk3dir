@@ -8,6 +8,53 @@ bool autocvar_g_survival_reward_survival = true;
 
 void nades_Clear(entity player);
 
+entity survivalStatuses;
+void SurvivalStatuses_Init();
+
+void SurvivalStatuses_Send()
+{
+	// SendFlags can be set to anything != 0, SurvivalStatuses_SendEntity won't use its value
+	survivalStatuses.SendFlags = 1;
+}
+
+bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
+{
+	Stream out = MSG_ENTITY;
+	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
+
+	sendflags = BIT(0) | BIT(1);
+
+	// send hunter statuses only to hunters
+	bool send_hunter_statuses = (dest.survival_status == SURV_STATUS_HUNTER || STAT(GAME_STOPPED));
+	if (!send_hunter_statuses)
+		sendflags &= !BIT(0);
+
+	serialize(byte, out, sendflags);
+	if (sendflags & BIT(0)) {
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			entity e = edict_num(i);
+			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+				bool is_hunter = (IS_PLAYER(e) && e.survival_status == SURV_STATUS_HUNTER);
+				if (is_hunter)
+					f |= BIT(b);
+			}
+			serialize(byte, out, f);
+		}
+	}
+	return true;
+}
+
+void SurvivalStatuses_Init()
+{
+	if(survivalStatuses)
+	{
+		backtrace("Can't spawn survivalStatuses again!");
+		return;
+	}
+	Net_LinkEntity(survivalStatuses = new_pure(survivalStatuses), false, 0, SurvivalStatuses_SendEntity);
+}
+
 void Surv_UpdateScores(bool timed_out)
 {
 	// give players their hard-earned kills now that the round is over
@@ -119,6 +166,7 @@ void Surv_RoundStart()
 		total_hunters++;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
+	SurvivalStatuses_Send();
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -181,6 +229,7 @@ void surv_Initialize() // run at the start of a match, initiates game mode
 	round_handler_Spawn(Surv_CheckPlayers, Surv_CheckWinner, Surv_RoundStart);
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	EliminatedPlayers_Init(surv_isEliminated);
+	SurvivalStatuses_Init();
 }
 
 
@@ -211,7 +260,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(IS_PLAYER(player) || INGAME_JOINED(player))
+	if(IS_PLAYER(player) || INGAME(player))
 	{
 		// update the scoreboard colour display to out the real killer at the end of the round
 		// running this every frame to avoid cheats
@@ -258,6 +307,9 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
+
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -273,6 +325,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
+	SurvivalStatuses_Send();
 	return true;
 }
 
