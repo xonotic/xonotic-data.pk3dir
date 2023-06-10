@@ -1478,7 +1478,7 @@ void respawn(entity this)
 // prevent darkplaces from interpolating the respawn angle by delaying respawn by one frame
 void delay_respawn(entity this)
 {
-	if(this.count <= time)
+	if(this.count >= time)
 	{
 		this.nextthink = time;
 		return;
