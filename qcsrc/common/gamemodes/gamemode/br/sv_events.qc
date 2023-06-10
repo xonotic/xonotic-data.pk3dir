@@ -67,7 +67,7 @@ bool drop_from_sky(entity this)
         move_success = true;
 
         tracebox(this.origin, this.mins, this.maxs, this.origin + '0 0 65536', MOVE_NORMAL, this);
-        if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+        if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT | Q3SURFACEFLAG_NOMARKS))
             continue;
 
         setorigin(this, trace_endpos);
