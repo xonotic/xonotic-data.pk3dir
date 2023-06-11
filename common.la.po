@@ -695,11 +695,11 @@ msgstr "SCO^pilport"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Quotiens venatus est (Superstites)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^hunts"
-msgstr ""
+msgstr "venatus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of keys carrier kills"
@@ -847,11 +847,11 @@ msgstr "SCO^quot vicit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Quot temporibus lusit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "quot lusit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^score"
@@ -879,11 +879,11 @@ msgstr "summa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of survivals"
-msgstr ""
+msgstr "Quotiens superstes fuit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^survivals"
-msgstr ""
+msgstr "superstes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of domination points taken (Domination)"
@@ -1639,19 +1639,21 @@ msgstr "Circumitus:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
 msgid "Hunter"
-msgstr ""
+msgstr "Venator"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
 msgid "Survivor"
-msgstr ""
+msgstr "Superstes"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
+"Supertites et venatores discerne, posteriores occide, ne omnes collegae tui "
+"moriantur"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Supertites"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1663,11 +1665,11 @@ msgstr "Manuum interfectio"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
-msgstr ""
+msgstr "Age ut manus tua pilam teneat, ut rationi addetur cum interficies"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "Manuum Abhibitio"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2452,7 +2454,7 @@ msgstr "^1Moderatri notae:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGLocutorium hoc moderatro nunc vetatur"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2461,15 +2463,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGLocutorium privatum hoc moderatro nunc vetatur"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGSpectatorum locutorium hoc moderatro nunc vetatur"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTA: ^BGManus locutorium hoc moderatro nunc vetatur"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3354,7 +3356,7 @@ msgstr "^BG%s^F3 expulsus est quia manus collegas nimis interficiebat"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 spectare debet quia manus collegas nimis interficiebat"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3437,12 +3439,12 @@ msgstr "^BG%s^K1 Perarma tenet"
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
 msgid "^K1Hunters^BG win the round"
-msgstr ""
+msgstr "^K1Venatores^BG tempore vincunt"
 
 #: qcsrc/common/notifications/all.inc:451
 #: qcsrc/common/notifications/all.inc:791
 msgid "^F1Survivors^BG win the round"
-msgstr ""
+msgstr "^F1Superstites^BG tempore vincunt"
 
 #: qcsrc/common/notifications/all.inc:453
 msgid "^BGYou cannot change to a larger team"
@@ -3717,7 +3719,7 @@ msgstr ""
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua se rupit%s%s"
 
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
@@ -3782,7 +3784,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s"
-msgstr ""
+msgstr "^BG%s^K1 cum teleportis nunc cogitat%s%s"
 
 #: qcsrc/common/notifications/all.inc:520
 #, c-format
@@ -4414,6 +4416,8 @@ msgid ""
 "^K1You aren't allowed to play because you are banned in this server, but you "
 "can play minigames"
 msgstr ""
+"^K1Te ludere vetatur quia hoc moderatro expulsus es, sed ludos parvos ludere "
+"potes"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4421,7 +4425,7 @@ msgstr "^BGPilam cepisti"
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGPilam cape ut rationi addetur cum interficies!"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid ""
@@ -4655,7 +4659,7 @@ msgstr "^F2Invisibilitas evanuit"
 msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
-msgstr ""
+msgstr "^K1Spectare debes et te ludere vetatur quia hoc moderatro expulsus es"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^F2The race is over, finish your lap!"
@@ -4690,11 +4694,11 @@ msgstr "^F2Perarma tenes"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr ""
+msgstr "^BGEs ^K1venator^BG! Superstites occide, age ut ei non suspicentur!"
 
 #: qcsrc/common/notifications/all.inc:790
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGEs ^F1superstes^BG! Venatores discerne et occide!"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -4754,11 +4758,11 @@ msgstr "^F2Irrumpens visus, scuta detrahuntur!"
 #: qcsrc/common/notifications/all.inc:809
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Te suffragia diribere vetatur quia hoc moderatro expulsus es"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Suffragio privaris quia hoc moderatro expulsus es"
 
 #: qcsrc/common/notifications/all.qh:420 qcsrc/common/notifications/all.qh:421
 #, c-format
@@ -6067,7 +6071,7 @@ msgstr "Sinica (Sina)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Sinica (Hong Cong)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
@@ -6107,7 +6111,7 @@ msgstr "Hungarica"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesica"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
@@ -6131,7 +6135,7 @@ msgstr "Coreana"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Latina"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
