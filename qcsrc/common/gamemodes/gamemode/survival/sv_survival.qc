@@ -15,6 +15,13 @@ void SurvivalStatuses_Send()
 {
 	// SendFlags can be set to anything != 0, SurvivalStatuses_SendEntity won't use its value
 	survivalStatuses.SendFlags = 1;
+	survivalStatuses.nextthink = 0; // clear delayed send
+}
+
+void SurvivalStatuses_Send_Delayed()
+{
+	survivalStatuses.think = SurvivalStatuses_Send;
+	survivalStatuses.nextthink = time + 0.2;
 }
 
 bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
@@ -22,12 +29,13 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 	Stream out = MSG_ENTITY;
 	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
 
-	sendflags = BIT(0) | BIT(1);
+	sendflags |= BIT(1); // make all players survivors
 
-	// send hunter statuses only to hunters
-	bool send_hunter_statuses = (dest.survival_status == SURV_STATUS_HUNTER || STAT(GAME_STOPPED));
-	if (!send_hunter_statuses)
-		sendflags &= !BIT(0);
+	if (dest.survival_status == SURV_STATUS_HUNTER);
+		sendflags |= BIT(0); // send hunter statuses
+
+	if (round_handler_AwaitingNextRound())
+		sendflags |= (BIT(0) | BIT(2)); // send hunter statuses and reveal hunters to survivors
 
 	serialize(byte, out, sendflags);
 	if (sendflags & BIT(0)) {
@@ -35,7 +43,7 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 			int f = 0;
 			entity e = edict_num(i);
 			for (int b = 0; b < 8; ++b, e = nextent(e)) {
-				bool is_hunter = (IS_PLAYER(e) && e.survival_status == SURV_STATUS_HUNTER);
+				bool is_hunter = (INGAME(e) && e.survival_status == SURV_STATUS_HUNTER);
 				if (is_hunter)
 					f |= BIT(b);
 			}
@@ -95,6 +103,7 @@ float Surv_CheckWinner()
 		allowed_to_spawn = false;
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+		SurvivalStatuses_Send();
 		return 1;
 	}
 
@@ -132,6 +141,7 @@ float Surv_CheckWinner()
 	allowed_to_spawn = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+	SurvivalStatuses_Send();
 
 	FOREACH_CLIENT(true,
 	{
@@ -256,21 +266,6 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 		M_ARGV(5, bool) = true; // anonymous attacker
 }
 
-MUTATOR_HOOKFUNCTION(surv, PlayerPreThink)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(IS_PLAYER(player) || INGAME(player))
-	{
-		// update the scoreboard colour display to out the real killer at the end of the round
-		// running this every frame to avoid cheats
-		int plcolor = SURV_COLOR_PREY;
-		if(player.survival_status == SURV_STATUS_HUNTER && game_stopped)
-			plcolor = SURV_COLOR_HUNTER;
-		setcolor(player, plcolor);
-	}
-}
-
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -310,6 +305,10 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+	// send statuses with a small delay to make sure a playerslot exists, otherwise
+	// personal colors for this player won't be overriden
+	// it also reduces network traffic when multiple clients join the server at once (at map start)
+	SurvivalStatuses_Send_Delayed();
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -325,6 +324,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
+	// this will also clear scheduled SurvivalStatuses_Send set by PutClientInServer
 	SurvivalStatuses_Send();
 	return true;
 }
@@ -383,7 +383,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 
 	// killed an ally! punishment is death
 	if(autocvar_g_survival_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.survival_status == frag_target.survival_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't
+	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
 }
