@@ -157,10 +157,7 @@ void Item_Show(entity e, int mode)
 		}
 		else
 		{
-			//setmodel(e, "null");
 			e.solid = SOLID_NOT;
-			e.colormod = '0 0 0';
-			//e.glowmod = e.colormod;
 			e.spawnshieldtime = 1;
 			e.ItemStatus &= ~ITS_AVAILABLE;
 		}
@@ -730,8 +727,7 @@ LABEL(pickup)
 
 	GameItem def = this.itemdef;
 	int ch = ((def.instanceOfPowerup && def.m_itemid != IT_RESOURCE) ? CH_TRIGGER_SINGLE : CH_TRIGGER);
-	string snd = (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent));
-	_sound(toucher, ch, snd, VOL_BASE, ATTEN_NORM);
+	_sound(toucher, ch, this.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	MUTATOR_CALLHOOK(ItemTouched, this, toucher);
 	if (wasfreed(this))
@@ -965,16 +961,15 @@ void item_use(entity this, entity actor, entity trigger)
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
 {
 	string itemname = def.m_name;
-	Model itemmodel = def.m_model;
-	Sound pickupsound = def.m_sound;
 	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
 	float pickupbasevalue = def.m_botvalue;
-	int itemflags = def.m_itemflags;
 
 	startitem_failed = false;
 
-	this.item_model_ent = itemmodel;
-	this.item_pickupsound_ent = pickupsound;
+	this.item_model_ent = def.m_model;
+	this.item_pickupsound_ent = def.m_sound;
+	if (!this.item_pickupsound)
+		this.item_pickupsound = Sound_fixpath(this.item_pickupsound_ent);
 
 	if(def.m_iteminit)
 		def.m_iteminit(def, this);
@@ -994,7 +989,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if(weaponid)
 		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
 
-	this.flags = FL_ITEM | itemflags;
+	this.flags = FL_ITEM | def.m_itemflags;
 	IL_PUSH(g_items, this);
 
 	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
@@ -1004,10 +999,17 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
+	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
+	setmodel(this, MDL_Null); // precision set below
+	// set item size before we spawn a waypoint or droptofloor or MoveOutOfSolid
+	setsize (this, this.pos1 = def.m_mins, this.pos2 = def.m_maxs);
+
 	if (Item_IsLoot(this))
 	{
 		this.reset = RemoveItem;
+
 		set_movetype(this, MOVETYPE_TOSS);
+		this.gravity = 1;
 
 		setthink(this, Item_Think);
 		this.nextthink = time + IT_UPDATE_INTERVAL;
@@ -1061,7 +1063,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			if(t) this.team = crc16(false, t);
 		}
 
-		this.reset = this.team ? Item_FindTeam : Item_Reset;
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
@@ -1074,9 +1075,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		{
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(this, this.origin + '0 0 1');
-			// set item size before we spawn a spawnfunc_waypoint
-			setsize(this, def.m_mins, def.m_maxs);
-			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
 				droptofloor(this);
@@ -1125,24 +1123,20 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		}
 
 		Item_ItemsTime_SetTime(this, 0);
+
+		this.glowmod = def.m_color;
 	}
 
 	this.bot_pickup = true;
 	this.bot_pickupevalfunc = pickupevalfunc;
 	this.bot_pickupbasevalue = pickupbasevalue;
-	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
 	this.netname = itemname;
 	settouch(this, Item_Touch);
-	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
 
 	// support skinned models for powerups
 	if(!this.skin)
 		this.skin = def.m_skin;
-
-	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
-
-	this.SendFlags |= ISF_SIZE;
 
 	if (!(this.spawnflags & 1024)) {
 		if(def.instanceOfPowerup)
@@ -1151,11 +1145,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(GetResource(this, RES_ARMOR) || GetResource(this, RES_HEALTH))
 			this.ItemStatus |= ITS_ANIMATE2;
 	}
-
-	if(Item_IsLoot(this))
-		this.gravity = 1;
-	else
-		this.glowmod = def.m_color;
 
 	if(def.instanceOfWeaponPickup)
 	{
@@ -1174,9 +1163,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		this.effects |= EF_NOGUNBOB; // marker for item team search
 		InitializeEntity(this, Item_FindTeam, INITPRIO_FINDTARGET);
+		this.reset = Item_FindTeam;
 	}
 	else
+	{
+		this.reset = Item_Reset;
 		Item_Reset(this);
+	}
 
 	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
 

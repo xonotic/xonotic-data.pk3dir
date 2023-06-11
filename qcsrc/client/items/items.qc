@@ -238,10 +238,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		this.angles = this.angles_held = ReadAngleVector();
 	}
 
+	/* bones_was_here TODO: network proper box size for sv_legacy_bbox_expand 0
 	if(sf & ISF_SIZE)
 	{
 		setsize(this, '-16 -16 0', '16 16 48');
 	}
+	*/
 
 	if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
 	{
@@ -283,9 +285,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 	if(sf & ISF_MODEL)
 	{
-		if (isnew) IL_PUSH(g_drawables, this);
-		this.draw = ItemDraw;
-		//this.flags |= FL_ITEM;
+		if(isnew)
+		{
+			IL_PUSH(g_drawables, this);
+			this.draw = ItemDraw;
+			this.flags |= FL_ITEM;
+		}
 
 		this.fade_end = ReadShort();
 
@@ -307,7 +312,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 	{
 		this.gravity = 1;
 		this.pushable = true;
-		//this.angles = '0 0 0';
 		set_movetype(this, MOVETYPE_TOSS);
 		this.velocity = ReadVector();
 	}
