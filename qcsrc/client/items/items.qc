@@ -14,6 +14,7 @@
 .bool pushable;
 .float anim_start_time; // reusing for bob waveform synchronisation
 .vector angles_held; // reusing for (re)storing original angles
+.float wait, delay, pointtime; // reusing for despawn effects
 
 void ItemDraw(entity this)
 {
@@ -122,6 +123,30 @@ void ItemDraw(entity this)
 	{
 		this.alpha *= autocvar_cl_ghost_items;
 		this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
+	}
+
+	if(!this.alpha)
+		return;
+
+	// loot item despawn effects
+	if(this.ItemStatus & ITS_EXPIRING)
+	{
+		if(!this.wait) // when receiving the first message with ITS_EXPIRING set
+		{
+			this.wait = time + IT_DESPAWNFX_TIME; // it will despawn then
+			this.delay = 0.25;
+		}
+
+		if(autocvar_cl_items_animate & 2)
+			this.alpha *= (this.wait - time) / IT_DESPAWNFX_TIME;
+
+		if(autocvar_cl_items_animate & 4 && time >= this.pointtime)
+		{
+			pointparticles(EFFECT_ITEM_DESPAWN, this.origin + '0 0 16', '0 0 0', 1);
+			if (this.delay > 0.0625)
+				this.delay *= 0.5;
+			this.pointtime = time + this.delay;
+		}
 	}
 
 	this.drawmask = this.alpha <= 0 ? 0 : MASK_NORMAL;

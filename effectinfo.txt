@@ -8390,3 +8390,19 @@ effect respawn_ghost
 	originoffset 0 0 -8
 	originjitter 28 28 16
 	velocityjitter 0 0 256
+effect item_despawn
+	type snow
+//	type smoke
+	blend add
+	alpha 192 256 256
+	color 0xff9600 0xffefb8
+	count 32
+	originjitter 8 8 8
+	sizeincrease 1
+	size 0.5 1
+	tex 48 55
+	velocityjitter 16 16 32
+	lightradius 48
+	lightradiusfade 64
+	lightcolor 1 0.75 0.36
+	lightshadow 1
