@@ -249,11 +249,26 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		else
 			this.effects &= ~EF_FULLBRIGHT;
 
-		if(this.ItemStatus & ITS_GLOW)
+		if(this.ItemStatus & ITS_AVAILABLE)
 		{
-			if(this.ItemStatus & ITS_AVAILABLE)
+			if(this.solid != SOLID_TRIGGER)
+			{
+				this.solid = SOLID_TRIGGER;
+				setorigin(this, this.origin); // link it to the area grid
+			}
+
+			if(this.ItemStatus & ITS_GLOW)
 				this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
-			else
+		}
+		else
+		{
+			if(this.solid != SOLID_NOT)
+			{
+				this.solid = SOLID_NOT;
+				setorigin(this, this.origin); // optimisation: unlink it from the area grid
+			}
+
+			if(this.ItemStatus & ITS_GLOW)
 				this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
 		}
 	}
@@ -262,7 +277,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 	{
 		if (isnew) IL_PUSH(g_drawables, this);
 		this.draw = ItemDraw;
-		this.solid = SOLID_TRIGGER;
 		//this.flags |= FL_ITEM;
 
 		this.fade_end = ReadShort();
