@@ -1194,7 +1194,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	// we should be sure this item will spawn before loading its assets
-	precache_model(this.model);
+	// CSQC handles model precaching: it may not use this model (eg simple items) and may not have connected yet
+	//precache_model(this.mdl);
 	precache_sound(this.item_pickupsound);
 
 	setItemGroup(this);
