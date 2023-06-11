@@ -9,15 +9,76 @@
 #include <lib/warpzone/common.qh>
 
 .vector item_glowmod;
-.bool item_simple; // probably not really needed, but better safe than sorry
+.int item_simple;
 .float alpha;
 .bool pushable;
 .float anim_start_time; // reusing for bob waveform synchronisation
 .vector angles_held; // reusing for (re)storing original angles
 .float wait, delay, pointtime; // reusing for despawn effects
 
+HashMap ENT_CLIENT_ITEM_simple;
+STATIC_INIT(ENT_CLIENT_ITEM_simple)
+{
+	HM_NEW(ENT_CLIENT_ITEM_simple);
+}
+SHUTDOWN(ENT_CLIENT_ITEM_simple)
+{
+	HM_DELETE(ENT_CLIENT_ITEM_simple);
+}
+
+void ItemSetModel(entity this, bool wantsimple)
+{
+	if(wantsimple)
+	{
+		string _fn2 = substring(this.mdl, 0 , strlen(this.mdl) -4);
+		#define extensions(x) \
+		x(iqm) \
+		x(dpm) \
+		x(md3) \
+		x(mdl) \
+		/**/
+		#define tryext(ext) { \
+			string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
+			string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
+			if (cached == "") { \
+				HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
+			} \
+			if (cached != "0") { \
+				this.model = s; \
+				this.item_simple = 1; \
+				break; \
+			} \
+		}
+		do {
+			extensions(tryext);
+			this.model = this.mdl; // fall back to 3d model
+			this.item_simple = -1; // don't retry every frame
+			LOG_TRACEF("Simple item requested for %s but no model exists for it", this.mdl);
+		} while (0);
+		#undef tryext
+		#undef extensions
+	}
+	else
+	{
+		this.model = this.mdl;
+		this.item_simple = 0;
+	}
+
+	// this.model is an engine string so it doesn't need to be zoned and can't be unzoned
+	if(this.model == "")
+		LOG_WARNF("this.model is unset for item %s", this.classname);
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	setsize(this, '-16 -16 0', '16 16 48');
+	// bones_was_here TODO: network proper box size for sv_legacy_bbox_expand 0
+}
+
 void ItemDraw(entity this)
 {
+	bool wantsimple = autocvar_cl_simple_items && this.ItemStatus & ITS_ALLOWSI;
+	if(wantsimple != this.item_simple && this.item_simple != -1)
+		ItemSetModel(this, wantsimple);
+
 	// no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
 	bool animate = autocvar_cl_items_animate & 1 && this.item_simple <= 0 && (this.ItemStatus & ITS_ANIMATE1 || this.ItemStatus & ITS_ANIMATE2);
 
@@ -157,16 +218,6 @@ void ItemRemove(entity this)
 	strfree(this.mdl);
 }
 
-HashMap ENT_CLIENT_ITEM_simple;
-STATIC_INIT(ENT_CLIENT_ITEM_simple)
-{
-	HM_NEW(ENT_CLIENT_ITEM_simple);
-}
-SHUTDOWN(ENT_CLIENT_ITEM_simple)
-{
-	HM_DELETE(ENT_CLIENT_ITEM_simple);
-}
-
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 {
 	int sf = ReadByte();
@@ -216,54 +267,10 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 		this.fade_end = ReadShort();
 
-		strfree(this.mdl);
-
-		string _fn = ReadString();
-		this.item_simple = false; // reset it!
-
-		if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
-		{
-			string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-			this.item_simple = true;
-
-				#define extensions(x) \
-					x(md3) \
-					x(dpm) \
-					x(iqm) \
-					x(mdl) \
-					/**/
-				#define tryext(ext) { \
-					string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
-					string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
-					if (cached == "") { \
-						HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
-					} \
-					if (cached != "0") { \
-						strcpy(this.mdl, s); \
-						break; \
-					} \
-				}
-				do {
-					extensions(tryext);
-					this.item_simple = false;
-					LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
-				} while (0);
-				#undef tryext
-				#undef extensions
-		}
-
-		if(!this.item_simple)
-			strcpy(this.mdl, _fn);
-
-		if(this.mdl == "")
-			LOG_WARNF("this.mdl is unset for item %s", this.classname);
-
-		precache_model(this.mdl);
-		_setmodel(this, this.mdl);
+		strcpy(this.mdl, ReadString());
+		this.item_simple = -2;
 
 		this.skin = ReadByte();
-
-		setsize(this, '-16 -16 0', '16 16 48');
 	}
 
 	if(sf & ISF_COLORMAP)
