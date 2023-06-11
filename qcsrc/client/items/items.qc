@@ -42,7 +42,7 @@ void ItemDraw(entity this)
 		// which requires running this even if the item is just outside visible range (it could be moving into range)
 		if(animate)
 			bobheight = this.origin_z - this.oldorigin_z;
-		Movetype_Physics_MatchServer(this, false);
+		Movetype_Physics_NoMatchTicrate(this, frametime, true);
 		this.oldorigin = this.origin; // update real (SVQC equivalent) origin
 		if(animate)
 		{
@@ -256,14 +256,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		//this.angles = '0 0 0';
 		set_movetype(this, MOVETYPE_TOSS);
 		this.velocity = ReadVector();
-
-		if(!this.move_time)
-		{
-			this.move_time = time;
-			this.spawntime = time;
-		}
-		else
-			this.move_time = max(this.move_time, time);
 	}
 
 	this.entremove = ItemRemove;
