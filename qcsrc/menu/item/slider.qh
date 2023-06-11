@@ -47,4 +47,6 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, colorC, vector, '1 1 1');
 	ATTRIB(Slider, colorF, vector, '1 1 1');
 	ATTRIB(Slider, disabledAlpha, float, 0.3);
+	ATTRIB(Slider, onChange, void(entity, entity));
+	ATTRIB(Slider, onChangeEntity, entity);
 ENDCLASS(Slider)
