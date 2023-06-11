@@ -973,7 +973,13 @@ string Scoreboard_GetName(entity pl)
 	}
 	else if(!teamplay)
 	{
-		int f = entcs_GetClientColors(pl.sv_entnum);
+		int f;
+		// NOTE: always adding 1024 allows saving the colormap 0 as a value != 0
+		if (playerslots[pl.sv_entnum].colormap >= 1024)
+			f = playerslots[pl.sv_entnum].colormap - 1024; // override server-side player colors
+		else
+			f = entcs_GetClientColors(pl.sv_entnum);
+
 		{
 			sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
 			sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
