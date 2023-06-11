@@ -243,9 +243,6 @@ void Item_Respawn(entity this)
 
 	setthink(this, Item_Think);
 	this.nextthink = time;
-
-	//Send_Effect(EFFECT_ITEM_RESPAWN, this.origin + this.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown(entity this)
@@ -731,7 +728,6 @@ LABEL(pickup)
 
 	STAT(LAST_PICKUP, toucher) = time;
 
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	GameItem def = this.itemdef;
 	int ch = ((def.instanceOfPowerup && def.m_itemid != IT_RESOURCE) ? CH_TRIGGER_SINGLE : CH_TRIGGER);
 	string snd = (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent));
@@ -850,7 +846,6 @@ void RemoveItem(entity this)
 	if(wasfreed(this) || !this) { return; }
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	delete(this);
 }
 

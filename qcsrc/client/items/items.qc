@@ -215,6 +215,9 @@ void ItemDraw(entity this)
 
 void ItemRemove(entity this)
 {
+	if(this.alpha)
+	if(!this.wait || time < this.wait - ticrate) // despawning loot items have their own effects
+		pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
 	strfree(this.mdl);
 }
 
@@ -242,6 +245,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 	if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
 	{
+		int prevItemStatus = this.ItemStatus;
 		this.ItemStatus = ReadByte();
 
 		if(this.ItemStatus & ITS_ALLOWFB)
@@ -259,6 +263,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 			if(this.ItemStatus & ITS_GLOW)
 				this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+			if(!(prevItemStatus & ITS_AVAILABLE) && this.alpha && !isnew)
+				pointparticles(EFFECT_ITEM_RESPAWN, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
 		}
 		else
 		{
@@ -270,6 +276,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 			if(this.ItemStatus & ITS_GLOW)
 				this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+			if(prevItemStatus & ITS_AVAILABLE && this.alpha)
+				pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
 		}
 	}
 
