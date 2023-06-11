@@ -12,47 +12,72 @@
 .bool item_simple; // probably not really needed, but better safe than sorry
 .float alpha;
 .bool pushable;
+.float anim_start_time; // reusing for bob waveform synchronisation
+.vector angles_held; // reusing for (re)storing original angles
 
 void ItemDraw(entity this)
 {
-	if(this.gravity)
+	// no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
+	bool animate = autocvar_cl_items_animate & 1 && this.item_simple <= 0 && (this.ItemStatus & ITS_ANIMATE1 || this.ItemStatus & ITS_ANIMATE2);
+
+	// rotation must be set before running physics
+	if(!animate)
 	{
-		Movetype_Physics_MatchServer(this, false);
-		if(IS_ONGROUND(this))
-		{ // For some reason avelocity gets set to '0 0 0' here ...
-			this.oldorigin = this.origin;
-			this.gravity = 0;
-
-			if(autocvar_cl_animate_items)
-			{ // ... so reset it if animations are requested.
-				if(this.ItemStatus & ITS_ANIMATE1)
-					this.avelocity = '0 180 0';
-
-				if(this.ItemStatus & ITS_ANIMATE2)
-					this.avelocity = '0 -90 0';
-			}
-
-			// delay is for blocking item's position for a while;
-			// it's a workaround for dropped weapons that receive the position
-			// another time right after they spawn overriding animation position
-			this.onground_time = time + 0.5;
-		}
+		this.avelocity_y = 0;
+		this.angles = this.angles_held; // restore angles sent from server
 	}
-	else if (autocvar_cl_animate_items && !this.item_simple) // no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
+	else if(!this.avelocity_y) // unset by MOVETYPE_TOSS or animation was disabled previously
 	{
 		if(this.ItemStatus & ITS_ANIMATE1)
-		{
-			this.angles += this.avelocity * frametime;
-			float fade_in = bound(0, time - this.onground_time, 1);
-			setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
-		}
+			this.avelocity_y = 180;
+		else if(this.ItemStatus & ITS_ANIMATE2)
+			this.avelocity_y = -90;
+	}
 
-		if(this.ItemStatus & ITS_ANIMATE2)
+	// CSQC physics OR bobbing (both would look weird)
+	float bobheight = 0; // reset bob offset if animations are disabled
+	if(this.move_movetype && (!IS_ONGROUND(this) || this.velocity != '0 0 0'))
+	{
+		// this isn't equivalent to player prediction but allows smooth motion with very low ISF_LOCATION rate
+		// which requires running this even if the item is just outside visible range (it could be moving into range)
+		if(animate)
+			bobheight = this.origin_z - this.oldorigin_z;
+		Movetype_Physics_MatchServer(this, false);
+		this.oldorigin = this.origin; // update real (SVQC equivalent) origin
+		if(animate)
 		{
-			this.angles += this.avelocity * frametime;
-			float fade_in = bound(0, time - this.onground_time, 1);
-			setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
+			if(bobheight)
+			{
+				this.anim_start_time += frametime; // bobbing is paused this frame
+				this.oldorigin_z -= bobheight; // restore bob offset (CSQC physics uses the offset bbox)
+			}
+			else
+			{
+				this.anim_start_time = time; // starting our bob animation from NOW
+				if(this.ItemStatus & ITS_ANIMATE1)
+					bobheight = 10; // height of wave at 0 time
+				else if(this.ItemStatus & ITS_ANIMATE2)
+					bobheight = 8; // height of wave at 0 time
+			}
 		}
+	}
+	else if(animate)
+	{
+		this.angles += this.avelocity * frametime; // MOVETYPE_TOSS does this while it's moving
+
+		if(this.ItemStatus & ITS_ANIMATE1)
+			bobheight = 10 + 8 * sin((time - this.anim_start_time) * 2);
+		else if(this.ItemStatus & ITS_ANIMATE2)
+			bobheight = 8 + 4 * sin((time - this.anim_start_time) * 3);
+	}
+
+	// apply new bob offset
+	if (bobheight != this.origin_z - this.oldorigin_z)
+	{
+		this.origin_z = this.oldorigin_z + bobheight;
+		this.mins_z = 0 - bobheight; // don't want the absmin and absmax to bob
+		this.maxs_z = 48 - bobheight;
+		// bones_was_here TODO: network proper box size for sv_legacy_bbox_expand 0
 	}
 
 	// set alpha based on distance
@@ -123,14 +148,15 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 	if(sf & ISF_LOCATION)
 	{
-		vector org = ReadVector();
-		setorigin(this, org);
-		this.oldorigin = org;
+		float bobheight = this.origin_z - this.oldorigin_z;
+		this.origin = this.oldorigin = ReadVector();
+		this.origin_z += bobheight; // restore animation offset (SVQC physics is unaware of CSQC bbox offset)
+		setorigin(this, this.origin); // link
 	}
 
 	if(sf & ISF_ANGLES)
 	{
-		this.angles = ReadAngleVector();
+		this.angles = this.angles_held = ReadAngleVector();
 	}
 
 	if(sf & ISF_SIZE)
@@ -158,7 +184,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 	if(sf & ISF_MODEL)
 	{
-		set_movetype(this, MOVETYPE_TOSS);
 		if (isnew) IL_PUSH(g_drawables, this);
 		this.draw = ItemDraw;
 		this.solid = SOLID_TRIGGER;
@@ -231,7 +256,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		//this.angles = '0 0 0';
 		set_movetype(this, MOVETYPE_TOSS);
 		this.velocity = ReadVector();
-		setorigin(this, this.oldorigin);
 
 		if(!this.move_time)
 		{
@@ -240,15 +264,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		}
 		else
 			this.move_time = max(this.move_time, time);
-	}
-
-	if(autocvar_cl_animate_items)
-	{
-		if(this.ItemStatus & ITS_ANIMATE1)
-			this.avelocity = '0 180 0';
-
-		if(this.ItemStatus & ITS_ANIMATE2)
-			this.avelocity = '0 -90 0';
 	}
 
 	this.entremove = ItemRemove;
