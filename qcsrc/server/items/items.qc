@@ -59,7 +59,6 @@ bool ItemSend(entity this, entity to, int sf)
 	if(sf & ISF_MODEL)
 	{
 		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
-		WriteShort(MSG_ENTITY, bound(0, this.fade_start, 32767));
 
 		if(this.mdl == "")
 			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now");
@@ -993,11 +992,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	int weaponid = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
 	this.weapon = weaponid;
 
+	// bones_was_here TODO: implement sv_cullentities_dist and replace g_items_maxdist with it
 	if(!this.fade_end)
-	{
-		this.fade_start = autocvar_g_items_mindist;
 		this.fade_end = autocvar_g_items_maxdist;
-	}
 
 	if(weaponid)
 		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));

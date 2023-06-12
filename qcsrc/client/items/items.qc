@@ -8,35 +8,10 @@
 #include <lib/csqcmodel/common.qh>
 #include <lib/warpzone/common.qh>
 
-bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
 .bool item_simple; // probably not really needed, but better safe than sorry
 .float alpha;
 .bool pushable;
-void Item_SetAlpha(entity this)
-{
-	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
-
-	if(!veh_hud && (this.ItemStatus & ITS_AVAILABLE))
-	{
-		this.alpha = 1;
-		this.colormod = '1 1 1';
-		this.glowmod = this.item_glowmod;
-	}
-	else
-	{
-		this.alpha = autocvar_cl_ghost_items;
-		this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
-	}
-
-	if((!veh_hud) && (this.ItemStatus & ITS_STAYWEP))
-	{
-		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
-		this.alpha = autocvar_cl_weapon_stay_alpha;
-	}
-
-	this.drawmask = ((this.alpha <= 0) ? 0 : MASK_NORMAL);
-}
 
 void ItemDraw(entity this)
 {
@@ -80,38 +55,51 @@ void ItemDraw(entity this)
 		}
 	}
 
-	Item_SetAlpha(this);
-}
-
-void Item_PreDraw(entity this)
-{
-	if(warpzone_warpzones_exist)
+	// set alpha based on distance
+	this.alpha = 1;
+	this.drawmask = 0;
+	if(this.fade_end && !warpzone_warpzones_exist)
 	{
-		setpredraw(this, func_null); // no need to keep running this
-		return;
-	}
-	float alph;
-	vector org = getpropertyvec(VF_ORIGIN);
-	//if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
-		//alph = 0; // this shouldn't be needed, since items behind walls are culled anyway
-	if(this.fade_start)
-	{
+		vector org = getpropertyvec(VF_ORIGIN);
 		if(vdist(org - this.origin, >, this.fade_end))
-			alph = 0; // save on some processing
-		else if(vdist(org - this.origin, <, this.fade_start))
-			alph = 1; // more processing saved
+			this.alpha = 0; // save on some processing
+		else if(autocvar_cl_items_fadedist > 0)
+		{
+			this.fade_start = max(500, this.fade_end - autocvar_cl_items_fadedist);
+			if(vdist(org - this.origin, >, this.fade_start))
+				this.alpha = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+		}
+	}
+
+	if(!this.alpha)
+		return;
+
+	// modify alpha based on availability and vehicle hud
+	if(this.ItemStatus & ITS_AVAILABLE)
+	{
+		if(hud) // apparently this means we're in a vehicle lol
+		{
+			this.alpha *= autocvar_cl_items_vehicle_alpha;
+			this.colormod = this.glowmod = autocvar_cl_items_vehicle_color;
+		}
+		else if(this.ItemStatus & ITS_STAYWEP)
+		{
+			this.alpha *= autocvar_cl_weapon_stay_alpha;
+			this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
+		}
 		else
-			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+		{
+			this.colormod = '1 1 1';
+			this.glowmod = this.item_glowmod;
+		}
 	}
 	else
-		alph = 1;
-	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
-	if(!hud && (this.ItemStatus & ITS_AVAILABLE))
-		this.alpha = alph;
-	if(alph <= 0)
-		this.drawmask = 0;
-	//else
-		//this.drawmask = MASK_NORMAL; // reset by the setalpha function
+	{
+		this.alpha *= autocvar_cl_ghost_items;
+		this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
+	}
+
+	this.drawmask = this.alpha <= 0 ? 0 : MASK_NORMAL;
 }
 
 void ItemRemove(entity this)
@@ -154,8 +142,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 	{
 		this.ItemStatus = ReadByte();
 
-		Item_SetAlpha(this);
-
 		if(this.ItemStatus & ITS_ALLOWFB)
 			this.effects |= EF_FULLBRIGHT;
 		else
@@ -172,7 +158,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 	if(sf & ISF_MODEL)
 	{
-		this.drawmask = MASK_NORMAL;
 		set_movetype(this, MOVETYPE_TOSS);
 		if (isnew) IL_PUSH(g_drawables, this);
 		this.draw = ItemDraw;
@@ -180,9 +165,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		//this.flags |= FL_ITEM;
 
 		this.fade_end = ReadShort();
-		this.fade_start = ReadShort();
-		if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
-			setpredraw(this, Item_PreDraw);
 
 		strfree(this.mdl);
 
