@@ -465,7 +465,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 			LOG_HELP("  <client> can be either the name of the bot or a progressive number (not the entity number!)");
 			LOG_HELP("           can also be '*' or 'all' to allow sending the command to all the bots");
 			LOG_HELP("  For full list of commands, see bot_cmd help [<command>].");
-			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc \"say something\"");
+			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc say something");
 			LOG_HELP("          sv_cmd bot_cmd 1 presskey jump");
 			LOG_HELP("          sv_cmd bot_cmd * pause");
 			return;

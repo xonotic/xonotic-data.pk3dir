@@ -785,9 +785,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
 
-    MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
     MSG_CENTER_NOTIF(SURVIVAL_HUNTER_WIN,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Hunters^BG win the round"), "")
-    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
     MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
     MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
