@@ -460,6 +460,10 @@ void Release_Common_Keys()
 	localcmd("-use\n");
 	localcmd("-hook\n");
 	localcmd("-jump\n");
+	localcmd("-forward\n");
+	localcmd("-back\n");
+	localcmd("-moveleft\n");
+	localcmd("-moveright\n");
 }
 
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
@@ -522,7 +526,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			Scoreboard_UI_Enable(0);
 			return true;
 		}
-		if (!isdemo() && cvar("_menu_gamemenu_dialog_available"))
+		if (autocvar_menu_gamemenu && !isdemo() && cvar("_menu_gamemenu_dialog_available"))
 		{
 			localcmd("\nmenu_showgamemenudialog\n");
 			return true;
@@ -653,6 +657,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		newspectatee_status = 0;
 
 	spectatorbutton_zoom = (f & BIT(2));
+	observe_blocked = (f & BIT(3));
 
 	if(f & BIT(4))
 	{
@@ -704,7 +709,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
 	make_pure(this);
-	int i, j, b, f;
 
 	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
@@ -731,20 +735,11 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		strcpy(vote_called_vote, ReadString());
 	}
 
-	if(nags & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
-				playerslots[j].ready = true;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].ready = false;
-		}
-	}
+	if(nags & BIT(0))
+		for(int i = 0; i < maxclients;)
+			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
+				if(playerslots[i])
+					playerslots[i].ready = f & BIT(b);
 
 	return = true;
 
@@ -1249,11 +1244,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_server_record = ReadInt24_t();
 			break;
 		case RACE_NET_SPEED_AWARD:
-			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward = ReadInt24_t();
 			strcpy(race_speedaward_holder, ReadString());
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
-			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward_alltimebest = ReadInt24_t();
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
 			break;
 		case RACE_NET_RANKINGS_CNT:
@@ -1399,7 +1394,7 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	bool campaign = ReadByte();
+	campaign = ReadByte();
 	if (campaign)
 	{
 		string campaign_title = ReadString();

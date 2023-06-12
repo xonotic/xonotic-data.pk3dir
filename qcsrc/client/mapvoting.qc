@@ -39,7 +39,7 @@ int mv_columns;
 int mv_mouse_selection;
 int mv_selection_keyboard;
 
-float gametypevote;
+bool gametypevote;
 string mapvote_chosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
@@ -732,14 +732,10 @@ void MapVote_Init()
 	mv_ownvote = -1;
 	mv_timeout = ReadCoord();
 
-	gametypevote = ReadByte();
-
-	if(gametypevote)
-	{
+	int gametypevote_flags = ReadByte();
+	gametypevote = boolean(gametypevote_flags & BIT(0));
+	if(gametypevote_flags)
 		mapvote_chosenmap = strzone(ReadString());
-		if ( gametypevote == 2 )
-			gametypevote = 0;
-	}
 
 	MapVote_ReadMask();
 	int i;
@@ -843,7 +839,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	TC(int, bInputType);
 
 	static int first_digit = 0;
-	if (!mv_active)
+	if (!mv_active || isdemo())
 		return false;
 
 	if(bInputType == 3)

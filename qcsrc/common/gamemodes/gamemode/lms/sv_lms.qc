@@ -112,7 +112,7 @@ int WinningCondition_LMS()
 			else
 			{
 				// a winner!
-				// and assign him his first place
+				// and assign them their first place
 				GameRules_scoring_add(first_player, LMS_RANK, 1);
 				first_player.winning = 1;
 				return WINNING_YES;
@@ -223,17 +223,11 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
-		{
-			// players who forfeited (rank >= 256) become spectators
-			if (it.lms_spectate_warning == 2)
-				it.frags = FRAGS_SPECTATOR;
-			else
-				it.frags = FRAGS_PLAYER;
-		}
+			it.frags = FRAGS_PLAYER;
 
 		CS(it).killcount = 0;
 		INGAME_STATUS_CLEAR(it);
-		it.lms_spectate_warning = 0;
+		it.lms_spectate = false;
 		GameRules_scoring_add(it, LMS_RANK, -GameRules_scoring_add(it, LMS_RANK, 0));
 		GameRules_scoring_add(it, LMS_LIVES, -GameRules_scoring_add(it, LMS_LIVES, 0));
 
@@ -271,14 +265,11 @@ bool lms_AddPlayer(entity player)
 	}
 	if (warmup_stage || time <= game_starttime)
 	{
-		if(player.lms_spectate_warning)
-		{
-			player.lms_spectate_warning = 0;
-			GameRules_scoring_add(player, LMS_RANK, -GameRules_scoring_add(player, LMS_RANK, 0));
-			int lives = GameRules_scoring_add(player, LMS_LIVES, 0);
-			if(lives <= 0)
-				GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
-		}
+		player.lms_spectate = false;
+		GameRules_scoring_add(player, LMS_RANK, -GameRules_scoring_add(player, LMS_RANK, 0));
+		int lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+		if(lives <= 0)
+			GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
 	}
 	else
 	{
@@ -301,6 +292,9 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	}
 }
 
+int last_forfeiter_lives;
+float last_forfeiter_health;
+float last_forfeiter_armorvalue;
 MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -315,6 +309,11 @@ MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 		int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
 		float min_health = start_health;
 		float min_armorvalue = start_armorvalue;
+		if (last_forfeiter_lives == pl_lives)
+		{
+			min_health = last_forfeiter_health;
+			min_armorvalue = last_forfeiter_armorvalue;
+		}
 		FOREACH_CLIENT(it != player && IS_PLAYER(it) && !IS_DEAD(it) && GameRules_scoring_add(it, LMS_LIVES, 0) == pl_lives, {
 			if (GetResource(it, RES_HEALTH) < min_health)
 				min_health = GetResource(it, RES_HEALTH);
@@ -347,7 +346,7 @@ void lms_RemovePlayer(entity player)
 	float player_rank = GameRules_scoring_add(player, LMS_RANK, 0);
 	if (!player_rank)
 	{
-		if (player.lms_spectate_warning < 2)
+		if (!player.lms_spectate)
 		{
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			int pl_cnt = 0;
@@ -358,40 +357,46 @@ void lms_RemovePlayer(entity player)
 		}
 		else if (INGAME(player))
 		{
-			int min_forfeiter_rank = 665; // different from 666
 			FOREACH_CLIENT(it != player, {
-				// update rank of other players that were eliminated
+				// update rank of other players
 				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
-				{
-					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
-					if (it_rank > player_rank && it_rank <= 256)
-						GameRules_scoring_add(it, LMS_RANK, -1);
-					if (it_rank > 256 && it_rank <= min_forfeiter_rank)
-						min_forfeiter_rank = it_rank - 1;
-				}
-				else if (it.frags != FRAGS_SPECTATOR)
-				{
-					float tl = GameRules_scoring_add(it, LMS_LIVES, 0);
-					if(tl < lms_lowest_lives)
-						lms_lowest_lives = tl;
-				}
+					GameRules_scoring_add(it, LMS_RANK, -1);
 			});
-			GameRules_scoring_add(player, LMS_RANK, min_forfeiter_rank);
+			int rank = GameRules_scoring_add(player, LMS_RANK, 0);
+			GameRules_scoring_add(player, LMS_RANK, -rank);
 			if(!warmup_stage)
-				GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
-			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+			{
+				int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+				float pl_health = IS_DEAD(player) ? start_health : GetResource(player, RES_HEALTH);
+				float pl_armor = IS_DEAD(player) ? start_armorvalue : GetResource(player, RES_ARMOR);
+				if (!last_forfeiter_lives || pl_lives < last_forfeiter_lives)
+				{
+					last_forfeiter_lives = pl_lives;
+					last_forfeiter_health = pl_health;
+					last_forfeiter_armorvalue = pl_armor;
+				}
+				else if (pl_lives == last_forfeiter_lives)
+				{
+					// these values actually can belong to a different forfeiter
+					last_forfeiter_health = min(last_forfeiter_health, pl_health);
+					last_forfeiter_armorvalue = min(last_forfeiter_armorvalue, pl_armor);
+				}
+				GameRules_scoring_add(player, LMS_LIVES, -pl_lives);
+			}
+			player.frags = FRAGS_SPECTATOR;
 			TRANSMUTE(Observer, player);
+			INGAME_STATUS_CLEAR(player);
+			player.lms_spectate = false;
+			CS(player).killcount = FRAGS_SPECTATOR;
 		}
 		if (autocvar_g_lms_leader_lives_diff > 0)
 			lms_UpdateLeaders();
 	}
 
-	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
+	if (CS(player).killcount != FRAGS_SPECTATOR)
 	{
-		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning < 2)
+		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
-		else
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
 	}
 }
 
@@ -399,8 +404,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	// no further message other than the disconnect message
-	player.lms_spectate_warning = 3;
+	player.lms_spectate = true;
 
 	lms_RemovePlayer(player);
 	INGAME_STATUS_CLEAR(player);
@@ -423,8 +427,8 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 	}
 	else
 	{
-		if (is_forced)
-			player.lms_spectate_warning = 2;
+		if (is_forced || player.killindicator_teamchange == -2) // player is forced or wants to spectate
+			player.lms_spectate = true;
 		if (!GameRules_scoring_add(player, LMS_RANK, 0))
 			lms_RemovePlayer(player);
 	}
@@ -643,43 +647,36 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
-	if (autocvar_g_lms_items)
+	if (autocvar_g_lms_items || autocvar_g_pickup_items > 0)
 		return false;
 
-	entity definition = M_ARGV(0, entity);
-
-	if (autocvar_g_lms_extra_lives && definition == ITEM_ExtraLife)
-	{
+	entity def = M_ARGV(0, entity);
+	if (autocvar_g_powerups && autocvar_g_lms_extra_lives && (def == ITEM_ExtraLife || def == ITEM_HealthMega))
 		return false;
-	}
-	return (autocvar_g_pickup_items <= 0); // only allow items if explicitly enabled
-}
-
-void lms_extralife(entity this)
-{
-	StartItem(this, ITEM_ExtraLife);
-}
-
-MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
-{
-	if (MUTATOR_RETURNVALUE) return false;
-	if (!autocvar_g_powerups) return false;
-	if (!autocvar_g_lms_extra_lives) return false;
-
-	entity ent = M_ARGV(0, entity);
-
-	// Can't use .itemdef here
-	if (ent.classname != "item_health_mega") return false;
-
-	entity e = spawn();
-	setthink(e, lms_extralife);
-
-	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
 	return true;
+}
+
+void lms_replace_with_extralife(entity this)
+{
+	entity e = new(item_extralife);
+	Item_CopyFields(this, e);
+
+	StartItem(e, ITEM_ExtraLife);
+}
+
+MUTATOR_HOOKFUNCTION(lms, FilterItem)
+{
+	entity item = M_ARGV(0, entity);
+	entity def = item.itemdef;
+	if(def == ITEM_HealthMega && !(autocvar_g_lms_items || autocvar_g_pickup_items > 0))
+	{
+		if(autocvar_g_powerups && autocvar_g_lms_extra_lives)
+			lms_replace_with_extralife(item);
+		return true;
+	}
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
@@ -693,6 +690,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 	{
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_lms_extra_lives);
 		GameRules_scoring_add(toucher, LMS_LIVES, autocvar_g_lms_extra_lives);
+		Inventory_pickupitem(item.itemdef, toucher);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
@@ -702,7 +700,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		if (INGAME(it) && it.lms_spectate_warning < 2)
+		if (INGAME(it))
 			++M_ARGV(0, int); // activerealplayers
 		++M_ARGV(1, int); // realplayers
 	});
@@ -713,23 +711,10 @@ MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
-
-	if(warmup_stage || time < game_starttime || player.lms_spectate_warning)
-	{
-		// for the forfeit message...
-		player.lms_spectate_warning = 2;
-	}
-	else
-	{
-		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
-		{
-			player.lms_spectate_warning = 1;
-			sprint(player, "^1WARNING:^7 you can't rejoin this match after spectating. Use the same command again to spectate anyway.\n");
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_LMS_SPECWARN);
-		}
-		return MUT_SPECCMD_RETURN;
-	}
-	return MUT_SPECCMD_CONTINUE;
+	if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
+		return MUT_SPECCMD_CONTINUE;
+	// ranked players (out of game) can no longer become real spectators
+	return MUT_SPECCMD_RETURN;
 }
 
 MUTATOR_HOOKFUNCTION(lms, CheckRules_World)

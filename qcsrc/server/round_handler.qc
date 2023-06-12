@@ -1,6 +1,7 @@
 #include "round_handler.qh"
 
 #include <common/mapobjects/triggers.qh>
+#include <common/scores.qh>
 #include <common/util.qh>
 #include <server/campaign.qh>
 #include <server/command/vote.qh>
@@ -28,7 +29,7 @@ void round_handler_Think(entity this)
 		this.wait = false;
 		this.cnt = this.count + 1;  // init countdown
 		round_starttime = time + this.count;
-		reset_map(true, false);
+		reset_map(false);
 	}
 
 	if (this.cnt > 0)  // countdown running
@@ -39,6 +40,9 @@ void round_handler_Think(entity this)
 			int f = this.cnt - 1;
 			if (f == 0)
 			{
+				FOREACH_CLIENT((IS_PLAYER(it) || INGAME(it)), {
+					GameRules_scoring_add(it, ROUNDS_PL, 1);
+				});
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;

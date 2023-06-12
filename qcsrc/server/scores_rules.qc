@@ -50,10 +50,16 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	if(score_enabled)
 		ScoreInfo_SetLabel_PlayerScore(SP_SCORE, "score", sprio);
 
-	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
-	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
+	if (!INDEPENDENT_PLAYERS)
+	{
+		ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
+		ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
 
-	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", SFL_NOT_SORTABLE);
+		ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", SFL_NOT_SORTABLE);
+	}
+
+	ScoreInfo_SetLabel_PlayerScore(SP_ROUNDS_PL, "rounds_pl", 0);
+
 	if(STAT(SHOWFPS))
 		ScoreInfo_SetLabel_PlayerScore(SP_FPS, "fps", SFL_NOT_SORTABLE);
 }

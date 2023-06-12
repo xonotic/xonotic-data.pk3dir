@@ -1,5 +1,5 @@
 // generated file; do not modify
-#include <common/mutators/mutator/instagib/items.qh>
 #ifdef SVQC
     #include <common/mutators/mutator/instagib/sv_instagib.qh>
 #endif
+#include <common/mutators/mutator/instagib/items.qh>

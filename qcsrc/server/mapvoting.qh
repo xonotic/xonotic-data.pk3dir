@@ -34,6 +34,6 @@ float GameTypeVote_Start();
 float GameTypeVote_Finished(float pos);
 string GameTypeVote_MapInfo_FixName(string m);
 
-float gametypevote;
+bool gametypevote;
 string getmapname_stored;
 float mapvote_initialized;

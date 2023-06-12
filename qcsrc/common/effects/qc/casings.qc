@@ -14,7 +14,7 @@ REPLICATE(cvar_cl_casings, bool, "cl_casings");
 REPLICATE(cvar_r_drawviewmodel, int, "r_drawviewmodel");
 
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
+void SpawnCasing(vector vel, vector ang, int casingtype, entity casingowner, .entity weaponentity)
 {
 	vector org = casingowner.(weaponentity).spawnorigin;
 	org = casingowner.origin + casingowner.view_ofs + org.x * v_forward - org.y * v_right + org.z * v_up;
@@ -22,10 +22,20 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	FOREACH_CLIENT(true, {
 		if (!(CS_CVAR(it).cvar_cl_casings))
 			continue;
-		if (it == casingowner && !(CS_CVAR(it).cvar_r_drawviewmodel))
+
+		casingtype &= 0x3F; // reset any bitflags that were set for the previous client
+
+		if (it == casingowner || (IS_SPEC(it) && it.enemy == casingowner))
+		{
+			if (!(CS_CVAR(it).cvar_r_drawviewmodel))
+				continue;
+
+			casingtype |= 0x40; // client will apply autocvar_cl_gunoffset in first person
+		}
+		else if (1 & ~checkpvs(it.origin + it.view_ofs, casingowner)) // 1 or 3 means visible
 			continue;
 
-		msg_entity = it;
+		msg_entity = it; // sound_allowed checks this
 		if (!sound_allowed(MSG_ONE, it))
 			casingtype |= 0x80; // silent
 
@@ -35,7 +45,7 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 		WriteShort(MSG_ONE, compressShortVector(vel)); // actually compressed velocity
 		WriteByte(MSG_ONE, ang.x * 256 / 360);
 		WriteByte(MSG_ONE, ang.y * 256 / 360);
-		WriteByte(MSG_ONE, ang.z * 256 / 360);
+		// weapons only have pitch and yaw, so no need to send ang.z
 	});
 }
 #endif
@@ -47,6 +57,7 @@ classfield(Casing) .bool silent;
 classfield(Casing) .int state;
 classfield(Casing) .float cnt;
 
+// this is only needed because LimitedChildrenRubble() takes a func pointer
 void Casing_Delete(entity this)
 {
     delete(this);
@@ -66,14 +77,24 @@ void Casing_Draw(entity this)
 
     if (this.alpha < ALPHA_MIN_VISIBLE)
     {
-        Casing_Delete(this);
+        delete(this);
         this.drawmask = 0;
         return;
     }
 
+    trace_startsolid = 0; // due to cl_casings_ticrate, traces are not always performed
     Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
     //if (wasfreed(this))
     //    return; // deleted by touch function
+
+    // prevent glitchy casings when the gun model is poking into a wall
+    // doing this here is cheaper than doing it on the server as the client performs the trace anyway
+    if (trace_startsolid)
+    {
+        delete(this);
+        this.drawmask = 0;
+        return;
+    }
 }
 
 SOUND(BRASS1, W_Sound("brass1"));
@@ -93,7 +114,7 @@ void Casing_Touch(entity this, entity toucher)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
-        Casing_Delete(this);
+        delete(this);
         return;
     }
 
@@ -133,30 +154,30 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 
 NET_HANDLE(casings, bool isNew)
 {
-    int _state = ReadByte();
-    vector org = ReadVector();
-    vector vel = decompressShortVector(ReadShort());
-    vector ang;
-    ang_x = ReadByte() * 360 / 256;
-    ang_y = ReadByte() * 360 / 256;
-    ang_z = ReadByte() * 360 / 256;
+    Casing casing = ListNewChildRubble(CasingsNGibs, new(casing));
+
+    casing.state = ReadByte();
+    casing.origin = ReadVector();
+    casing.velocity = decompressShortVector(ReadShort());
+    casing.angles_x = ReadByte() * 360 / 256;
+    casing.angles_y = ReadByte() * 360 / 256;
+
     return = true;
 
-    Casing casing = ListNewChildRubble(CasingsNGibs, new(casing));
-    casing.silent = (_state & 0x80);
-    casing.state = (_state & 0x7F);
-    casing.origin = org;
-    setorigin(casing, casing.origin);
-    casing.velocity = vel;
-    casing.angles = ang;
-    casing.drawmask = MASK_NORMAL;
+    casing.silent = casing.state & 0x80;
+    if (casing.state & 0x40 && !autocvar_chase_active)
+        casing.origin += autocvar_cl_gunoffset.x * v_forward
+                       - autocvar_cl_gunoffset.y * v_right
+                       + autocvar_cl_gunoffset.z * v_up;
+    casing.state &= 0x3F; // the 2 most significant bits are reserved for the silent and casingowner bitflags
 
+    setorigin(casing, casing.origin);
+    casing.drawmask = MASK_NORMAL;
     casing.draw = Casing_Draw;
     if (isNew) IL_PUSH(g_drawables, casing);
-    casing.velocity = casing.velocity + 2 * prandomvec();
-    casing.avelocity = '0 250 0' + 100 * prandomvec();
+    casing.velocity += 2 * prandomvec();
+    casing.avelocity = '0 10 0' + 100 * prandomvec();
     set_movetype(casing, MOVETYPE_BOUNCE);
-    casing.bouncefactor = 0.25;
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;
@@ -166,15 +187,15 @@ NET_HANDLE(casings, bool isNew)
     {
         case 1:
             setmodel(casing, MDL_CASING_SHELL);
+            casing.bouncefactor = 0.25;
             casing.cnt = time + autocvar_cl_casings_shell_time;
             break;
         default:
             setmodel(casing, MDL_CASING_BULLET);
+            casing.bouncefactor = 0.5;
             casing.cnt = time + autocvar_cl_casings_bronze_time;
             break;
     }
-
-    setsize(casing, '0 0 -1', '0 0 -1');
 
     LimitedChildrenRubble(CasingsNGibs, "casing", autocvar_cl_casings_maxcount, Casing_Delete, NULL);
 }

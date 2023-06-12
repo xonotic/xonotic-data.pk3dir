@@ -22,6 +22,11 @@ float autocvar_g_balance_powerup_strength_selfforce;
 float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(Pickup this, entity item)
 {
+    if(autocvar_g_powerups_strength)
+        this.spawnflags = ITEM_FLAG_NORMAL;
+    else
+        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+
     if(!item.strength_finished)
         item.strength_finished = (item.count) ? item.count : autocvar_g_balance_powerup_strength_time;
 }
@@ -29,11 +34,6 @@ void powerup_strength_init(Pickup this, entity item)
 REGISTER_ITEM(Strength, Powerup) {
     this.m_canonical_spawnfunc = "item_strength";
 #ifdef SVQC
-    if(autocvar_g_powerups_strength)
-        this.spawnflags = ITEM_FLAG_NORMAL;
-    else
-        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
-
     this.m_iteminit         =   powerup_strength_init;
 #endif
 #ifdef GAMEQC

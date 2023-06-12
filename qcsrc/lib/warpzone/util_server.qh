@@ -1,7 +1,6 @@
 #pragma once
 
 bool WarpZoneLib_MoveOutOfSolid(entity e);
-bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher);
 #ifdef SVQC
 void WarpZoneLib_ExactTrigger_Init(entity this);
 #endif

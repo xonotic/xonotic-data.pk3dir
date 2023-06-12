@@ -132,6 +132,7 @@ REGISTER_STAT(ROUNDLOST, int)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
+REGISTER_STAT(TKA_BALLSTATUS, int)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 0;
@@ -355,6 +356,12 @@ bool autocvar_sv_slick_applygravity;
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 REGISTER_STAT(Q3COMPAT, int, q3compat)
+// FIXME: workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2812
+#ifdef SVQC
+	#define Q3COMPAT_COMMON q3compat
+#elif defined(CSQC)
+	#define Q3COMPAT_COMMON STAT(Q3COMPAT)
+#endif
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"

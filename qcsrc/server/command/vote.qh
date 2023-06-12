@@ -3,6 +3,8 @@
 bool autocvar_sv_vote_call;
 bool autocvar_sv_vote_change;
 string autocvar_sv_vote_commands;
+bool autocvar_sv_vote_debug;
+bool autocvar_sv_vote_gamestart;
 int autocvar_sv_vote_limit;
 float autocvar_sv_vote_majority_factor;
 float autocvar_sv_vote_majority_factor_of_voted;
@@ -19,7 +21,6 @@ bool autocvar_sv_vote_singlecount;
 float autocvar_sv_vote_stop;
 float autocvar_sv_vote_timeout;
 float autocvar_sv_vote_wait;
-bool autocvar_sv_vote_gamestart;
 
 // definitions for command selection between progs
 const float VC_ASGNMNT_BOTH = 1;
@@ -40,15 +41,15 @@ const float VOTE_MASTER = 2;
 // global vote information declarations
 entity vote_caller;         // original caller of the current vote
 string vote_caller_name;    // name of the vote caller
-float vote_called;          // stores status of current vote (See VOTE_*)
+int vote_called;            // stores status of current vote (See VOTE_*)
 float vote_endtime;         // time when the vote is finished
-float vote_accept_count;    // total amount of players who accept the vote (counted by VoteCount() function)
-float vote_reject_count;    // same as above, but rejected
-float vote_abstain_count;   // same as above, but abstained
-float vote_needed_overall;  // total amount of players NEEDED for a vote to pass (based on sv_vote_majority_factor)
-.float vote_master;         // flag for if the player has vote master privelages
+int vote_accept_count;      // total amount of players who accept the vote (counted by VoteCount() function)
+int vote_reject_count;      // same as above, but rejected
+int vote_abstain_count;     // same as above, but abstained
+int vote_needed_overall;    // total amount of players NEEDED for a vote to pass (based on sv_vote_majority_factor)
+.bool vote_master;          // flag for if the player has vote master privileges
 .float vote_waittime;       // flag for how long the player must wait before they can vote again
-.float vote_selection;      // flag for which vote selection the player has made (See VOTE_SELECT_*)
+.int vote_selection;        // flag for which vote selection the player has made (See VOTE_SELECT_*)
 string vote_called_command; // command sent by client
 string vote_called_display; // visual string of command sent by client
 string vote_parsed_command; // command which is fixed after being parsed
@@ -56,19 +57,18 @@ string vote_parsed_display; // visual string which is fixed after being parsed
 
 // allow functions to be used in other code like world.qc and teamplay.qc
 void VoteThink();
-void VoteReset();
+void VoteReset(bool verbose);
 void VoteCommand(int request, entity caller, int argc, string vote_command);
 
 // warmup and nagger stuff
 const float RESTART_COUNTDOWN = 10;
 entity nagger;
 int readycount;                    // amount of players who are ready
-.float ready;                      // flag for if a player is ready
-.float last_ready;                 // last ready time for anti-spam
+.bool ready;                       // flag for if a player is ready
 .int team_saved;                   // team number to restore upon map reset
 .void(entity this) reset;          // if set, an entity is reset using this
 .void(entity this) reset2;         // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
-void reset_map(float dorespawn, bool is_fake_round_start);
+void reset_map(bool is_fake_round_start);
 void ReadyCount();
 void ReadyRestart_force(bool is_fake_round_start);
 void VoteCount(float first_count);

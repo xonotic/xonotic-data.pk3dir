@@ -13,7 +13,12 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, this.oldorigin.x);
+	// we can't send the force vector compressed with compressShortVector as it's too inaccurate
+	// it would break decals when hit angle on a surface is small
+	// (the traceline performed by the client to spawn a decal wouldn't hit the surface at all)
+	WriteShort(MSG_ENTITY, floor(this.velocity.x / 4));
+	WriteShort(MSG_ENTITY, floor(this.velocity.y / 4));
+	WriteShort(MSG_ENTITY, floor(this.velocity.z / 4));
 	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
@@ -23,23 +28,30 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
 
-	entity e;
-
 	if(!sound_allowed(MSG_BROADCAST, dmgowner))
 		deathtype |= 0x8000;
 
-	e = new_pure(damageinfo);
+	entity e = new_pure(damageinfo);
 	// origin is just data to be sent
 	//setorigin(e, org);
 	e.origin = org;
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
 	e.dmg_edge = edgedamage;
+	bool rad_negative = false;
+	if(rad < 0)
+	{
+		// make it positive (unsigned) so it can be sent as byte
+		rad_negative = true;
+		rad = -rad;
+	}
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-	e.oldorigin_x = compressShortVector(e.velocity);
-	e.species = bloodtype;
+
+	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
+	if(rad_negative)
+		e.species |= BIT(7);
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -75,8 +87,8 @@ void DamageEffect_Think(entity this)
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
 	{
-		// if the player was dead but is now alive, it means he respawned
-		// if so, clear his damage effects, or damages from his dead body will be copied back
+		// if the player was dead but is now alive, it means they respawned
+		// if so, clear their damage effects, or damages from their dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
 		delete(this);
 		return;
@@ -192,27 +204,26 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
-	force = decompressShortVector(ReadShort());
+	force.x = ReadShort() * 4 + 2;
+	force.y = ReadShort() * 4 + 2;
+	force.z = ReadShort() * 4 + 2;
+
 	species = ReadByte();
+	bool rad_negative = (species & BIT(7));
+	species = (species & BITS(4));
 
 	return = true;
 
 	if (!isNew)
 		return;
 
-	if(rad < 0)
-	{
-		rad = -rad;
-		forcemul = -1;
-	}
-	else
-		forcemul = 1;
+	forcemul = (rad_negative ? -1 : 1);
 
-    FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
+	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity && !is_pure(it), {
 		vector nearest = NearestPointOnBox(it, w_org);
 		if (rad)
 		{
-			thisdmg = ((vlen (nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
+			thisdmg = ((vlen(nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 			if(thisdmg >= 1)
 				continue;
 			if(thisdmg < 0)
@@ -252,17 +263,18 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if((it.isplayermodel & ISPLAYER_MODEL))
-			hitplayer = true; // this impact damaged a player
+		if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
+			hitplayer = true; // this impact damaged another player
 	});
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
+		vector force_dir = normalize(force);
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
-			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
+			w_backoff = -1 * normalize(w_org - (w_org + force_dir * 16));
 
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
@@ -307,7 +319,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				vector ang, vel;
 				for(i = 1; i < 4; ++i)
 				{
-					vel = normalize(w_org - (w_org + normalize(force) * 16)) + randomvec() * 128;
+					vel = normalize(w_org - (w_org + force_dir * 16)) + randomvec() * 128;
 					ang = vectoangles(vel);
 					RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
 				}
@@ -332,57 +344,57 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISTURRET(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
+		vector force_dir = normalize(force);
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
-			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
+			w_backoff = -1 * normalize(w_org - (w_org + force_dir * 16));
 
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		switch(DEATH_ENT(w_deathtype))
 		{
-			 case DEATH_TURRET_EWHEEL:
+			case DEATH_TURRET_EWHEEL:
 				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_BLASTER_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_FLAC:
+			case DEATH_TURRET_FLAC:
 				pointparticles(EFFECT_HAGAR_EXPLODE, w_org, '0 0 0', 1);
 				sound(this, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
-			 case DEATH_TURRET_MLRS:
-			 case DEATH_TURRET_HK:
-			 case DEATH_TURRET_WALK_ROCKET:
-			 case DEATH_TURRET_HELLION:
+			case DEATH_TURRET_MLRS:
+			case DEATH_TURRET_HK:
+			case DEATH_TURRET_WALK_ROCKET:
+			case DEATH_TURRET_HELLION:
 				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_MACHINEGUN:
-			 case DEATH_TURRET_WALK_GUN:
+			case DEATH_TURRET_MACHINEGUN:
+			case DEATH_TURRET_WALK_GUN:
 				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 				pointparticles(EFFECT_MACHINEGUN_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_PLASMA:
+			case DEATH_TURRET_PLASMA:
 				sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ELECTRO_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_WALK_MELEE:
+			case DEATH_TURRET_WALK_MELEE:
 				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_TE_SPARK, this.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_PHASER:
+			case DEATH_TURRET_PHASER:
 				break;
 
-			 case DEATH_TURRET_TESLA:
+			case DEATH_TURRET_TESLA:
 				te_smallflash(this.origin);
 				break;
-
 		}
 	}
 
@@ -395,11 +407,16 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
 		w_random = prandom();
 
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
+		vector force_dir = normalize(force);
+		// this traceline usually starts in solid when a hitscan shot hits a surface with a very small angle
+		// if so, try another traceline starting further back (may still start in solid but only with extremely small angles)
+		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+		if(trace_startsolid)
+			traceline(w_org - force_dir * 40, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+		if(trace_fraction < 1)
 			w_backoff = trace_plane_normal;
 		else
-			w_backoff = -1 * normalize(force);
+			w_backoff = -force_dir;
 		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))

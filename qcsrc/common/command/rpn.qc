@@ -213,7 +213,7 @@ void GenericCommand_rpn(int request, int argc, string command)
 					} else if(rpncmd == "exp") {
 						rpn_setf(exp(rpn_getf()));
 					} else if(rpncmd == "log") {
-						rpn_setf(exp(rpn_getf()));
+						rpn_setf(log(rpn_getf()));
 					} else if(rpncmd == "sin") {
 						rpn_setf(sin(rpn_getf()));
 					} else if(rpncmd == "cos") {

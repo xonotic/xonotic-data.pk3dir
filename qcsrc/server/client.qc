@@ -51,7 +51,8 @@
 #include <server/chat.qh>
 #include <server/cheats.qh>
 #include <server/clientkill.qh>
-#include <server/command/common.qh>
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
 #include <server/command/common.qh>
 #include <server/command/vote.qh>
 #include <server/compat/quake3.qh>
@@ -138,6 +139,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (observe_blocked_if_eliminated && INGAME(to))
+	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -534,6 +537,19 @@ void FixPlayermodel(entity player)
 				setcolor(player, stof(autocvar_sv_defaultplayercolors));
 }
 
+void GiveWarmupResources(entity this)
+{
+	SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+	SetResource(this, RES_HEALTH, warmup_start_health);
+	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
+	STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
+}
+
 void PutPlayerInServer(entity this)
 {
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -576,17 +592,10 @@ void PutPlayerInServer(entity this)
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
-	if (warmup_stage) {
-		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
-		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
-		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
-		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
-		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
-		SetResource(this, RES_HEALTH, warmup_start_health);
-		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
-		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
-	} else {
+	if (warmup_stage)
+		GiveWarmupResources(this);
+	else
+	{
 		SetResource(this, RES_SHELLS, start_ammo_shells);
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
@@ -633,7 +642,8 @@ void PutPlayerInServer(entity this)
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.9 : autocvar_sv_player_scale);
+	// DP model scaling uses 1/16 accuracy and 13/16 is closest to 56/69
+	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.8125 : autocvar_sv_player_scale);
 	this.fade_time = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
@@ -810,7 +820,7 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 
-	if (warmup_stage == -1)
+	if (warmup_stage < 0 || warmup_stage > 1)
 		ReadyCount();
 }
 
@@ -1040,7 +1050,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
-	WriteByte(msg_type, map_minplayers);
+	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);
 	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
@@ -1166,7 +1176,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = autocvar_sv_qcphysics;
+	this.move_qcphysics = true;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -1177,10 +1187,21 @@ void ClientConnect(entity this)
 
 	Handicap_Initialize(this);
 
+	// playban
+	if (PlayerInList(this, autocvar_g_playban_list))
+		TRANSMUTE(Observer, this);
+
+	if (PlayerInList(this, autocvar_g_muteban_list)) // muteban
+		CS(this).muted = true;
+
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
 	if (player_count == 1)
+	{
+		if (autocvar_sv_autopause && server_is_dedicated)
+			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
+	}
 }
 /*
 =============
@@ -1195,6 +1216,20 @@ void player_powerups_remove_all(entity this);
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
+
+	/* from "ignore" command */
+	strfree(this.ignore_list);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	{
+		if(it.crypto_idfp && it.crypto_idfp != "")
+			continue;
+		string mylist = ignore_removefromlist(it, this);
+		if(it.ignore_list)
+			strunzone(it.ignore_list);
+
+		it.ignore_list = strzone(mylist);
+	});
+	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -2013,6 +2048,17 @@ int nJoinAllowed(entity this, entity ignore)
 	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 		return 0; // forced spectators can never join
 
+	static float msg_time = 0;
+	if(this && !INGAME(this) && ignore && PlayerInList(this, autocvar_g_playban_list))
+	{
+		if(time > msg_time)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
+			msg_time = time + 0.5;
+		}
+		return 0;
+	}
+
 	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
@@ -2031,7 +2077,6 @@ int nJoinAllowed(entity this, entity ignore)
 	else if(player_limit > 0 && currentlyPlaying < player_limit)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
-	static float msg_time = 0;
 	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
@@ -2253,10 +2298,12 @@ void ObserverOrSpectatorThink(entity this)
 				}
 				CS(this).impulse = 0;
 			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				this.would_spectate = false;
-				this.flags &= ~FL_JUMPRELEASED;
-				TRANSMUTE(Observer, this);
-				PutClientInServer(this);
+				if(!observe_blocked_if_eliminated || !INGAME(this)) {
+					this.would_spectate = false;
+					this.flags &= ~FL_JUMPRELEASED;
+					TRANSMUTE(Observer, this);
+					PutClientInServer(this);
+				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
@@ -2273,6 +2320,7 @@ void ObserverOrSpectatorThink(entity this)
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
+			// primary attack pressed
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;

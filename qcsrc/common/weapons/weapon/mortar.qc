@@ -15,7 +15,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE)
-		this.velocity = this.oldvelocity;
+		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
@@ -40,7 +40,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	if(this.move_movetype == MOVETYPE_NONE)
-		this.velocity = this.oldvelocity;
+		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
@@ -98,7 +98,7 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
-		this.oldvelocity = this.velocity;
+		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
 		this.velocity = '0 0 0';
 		set_movetype(this, MOVETYPE_NONE); // also disables gravity
 		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
@@ -134,7 +134,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
-		this.oldvelocity = this.velocity;
+		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
 		this.velocity = '0 0 0';
 		set_movetype(this, MOVETYPE_NONE); // also disables gravity
 		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
@@ -358,8 +358,7 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 12;
+    vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
         sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);

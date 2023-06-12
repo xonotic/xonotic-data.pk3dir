@@ -157,10 +157,10 @@ void generator_construct(entity this, bool isnew)
 
 	setorigin(this, this.origin);
 	setmodel(this, MDL_ONS_GEN);
+	this.solid			= SOLID_BBOX; // before setsize to ensure area grid linking
 	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
 
 	set_movetype(this, MOVETYPE_NOCLIP);
-	this.solid			= SOLID_BBOX;
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.move_time		= time;
 	this.drawmask		= MASK_NORMAL;

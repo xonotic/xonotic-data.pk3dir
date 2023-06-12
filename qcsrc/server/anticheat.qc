@@ -26,6 +26,9 @@ MEAN_DECLARE(anticheat_div0_strafebot_old, 5);
 .vector anticheat_div0_strafebot_forward_prev;
 MEAN_DECLARE(anticheat_div0_strafebot_new, 5);
 
+.vector anticheat_div0_snapback_prev;
+MEAN_DECLARE(anticheat_div0_snapback, 5);
+
 // Snap-aim detection: we track the average angular speed of aiming over time, in "radians per second".
 // Signal: a high-power mean. Cheaters will have high "signal" here.
 // Noise: a low-power mean. Active/shivery players will have high "noise" here.
@@ -109,6 +112,18 @@ void anticheat_physics(entity this)
 			MEAN_ACCUMULATE(CS(this), anticheat_idle_snapaim_m4, anglespeed, dt);
 			MEAN_ACCUMULATE(CS(this), anticheat_idle_snapaim_m7, anglespeed, dt);
 			MEAN_ACCUMULATE(CS(this), anticheat_idle_snapaim_m10, anglespeed, dt);
+
+			// Detect snapping _back_.
+			float f = bound(0, dt * 4, 1);  // About 0.25 seconds horizon for snapping back.
+			vector aim_move = v_forward - CS(this).anticheat_div0_strafebot_forward_prev;
+			vector snapback_prev = CS(this).anticheat_div0_snapback_prev;
+			float snapback_len = vlen(snapback_prev);
+			if (snapback_len != 0) {
+				float aim_snap = max(0, (aim_move * snapback_prev) / -snapback_len);
+				// Scales with aim_move, but is positive only when snapping back, otherwise zero.
+				MEAN_ACCUMULATE(CS(this), anticheat_div0_snapback, aim_snap, dt);
+			}
+			CS(this).anticheat_div0_snapback_prev = snapback_prev * (1 - f) + aim_move * f;
 		}
 	}
 	CS(this).anticheat_div0_strafebot_forward_prev = v_forward;
@@ -190,7 +205,8 @@ string anticheat_display(float f, float t, float tmin, float mi, float ma)
 	ANTICHEAT("idle_snapaim_m3", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m3), 120, 0, 9999); \
 	ANTICHEAT("idle_snapaim_m4", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m4), 120, 0, 9999); \
 	ANTICHEAT("idle_snapaim_m7", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m7), 120, 0, 9999); \
-	ANTICHEAT("idle_snapaim_m10", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m10), 120, 0, 9999)
+	ANTICHEAT("idle_snapaim_m10", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m10), 120, 0, 9999); \
+	ANTICHEAT("div0_snapback", MEAN_EVALUATE(CS(this), anticheat_div0_snapback), 120, 0, 9999)
 
 void anticheat_report_to_eventlog(entity this) {
 	if(!autocvar_sv_eventlog)

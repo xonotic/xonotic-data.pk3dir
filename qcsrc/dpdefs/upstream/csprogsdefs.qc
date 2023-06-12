@@ -435,6 +435,7 @@ string(string s, float start, float length) substring = #116;
 vector(string) stov = #117;
 string(string s) strzone = #118;
 void(string s) strunzone = #119;
+void(string s, float chan, float vol) localsound = #177;
 
 // FTEQW range #200-#299
 
@@ -1182,6 +1183,16 @@ float CVAR_TYPEFLAG_READONLY = 32;
 //When caseinsensitive is set, the CRC is calculated of the lower cased string.
 float(float caseinsensitive, string s, ...) crc16 = #494;
 
+//DP_QC_WHICHPACK
+//idea: divVerent
+//darkplaces implementation: divVerent
+//builtin definitions:
+string(string filename) whichpack = #503;
+//description:
+//for files in a pak/pk3/whatever, returns the pack's file name in FRIK_FILE name space.
+//for physical files, returns "".
+//in case of error, returns string_null.
+
 //DP_QC_URI_ESCAPE
 //idea: divVerent
 //darkplaces implementation: divVerent
@@ -1474,3 +1485,5 @@ vector gettaginfo_forward;
 vector gettaginfo_right;
 vector gettaginfo_up;
 float checkpvs(vector viewpos, entity viewee) = #240;
+// bones_was_here: commented as QC wants to use this but we still need to support div0-stable:
+//float mod(float dividend, float divisor) = #245;

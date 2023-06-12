@@ -15,7 +15,7 @@ void trigger_gravity_remove(entity own)
 }
 void trigger_gravity_check_think(entity this)
 {
-	// This spawns when a player enters the gravity zone and checks if he left.
+	// This spawns when a player enters the gravity zone and checks if they left.
 	// Each frame, this.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
 	if(this.count <= 0)
