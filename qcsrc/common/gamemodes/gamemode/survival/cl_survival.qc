@@ -8,13 +8,13 @@ NET_HANDLE(ENT_CLIENT_SURVIVALSTATUSES, bool isnew)
 	make_pure(this);
 	int sf = 0;
 	serialize(byte, 0, sf);
-	if (sf & BIT(1)) // make all players survivors
+	if (sf & BIT(0)) // make all players survivors
 	{
 		for (int j = 0; j < maxclients; ++j)
 			if (playerslots[j])
 				playerslots[j].survival_status = SURV_STATUS_PREY;
 	}
-	if (sf & BIT(0)) // reveal hunters (to hunters)
+	if (sf & BIT(1)) // receive hunter statuses
 	{
 		for (int i = 1; i <= maxclients; i += 8)
 		{
@@ -30,18 +30,14 @@ NET_HANDLE(ENT_CLIENT_SURVIVALSTATUSES, bool isnew)
 		}
 	}
 
-	// we could check STAT(GAME_STOPPED) instead of this dedicated flag,
-	// unfortunately STAT(GAME_STOPPED) is still false right when we receive this
-	bool reveal_hunters_to_survivors = (sf & BIT(2)); // when a round ends
-
-	int mystatus = playerslots[player_localnum].survival_status;
+	// color all players
 	for (int i = 1; i <= maxclients; ++i)
 	{
 		entity e = playerslots[i - 1];
 		if (!e) continue;
 
-		int plcolor = SURV_COLOR_PREY;
-		if(e.survival_status == SURV_STATUS_HUNTER && (mystatus == SURV_STATUS_HUNTER || reveal_hunters_to_survivors))
+		int plcolor = SURV_COLOR_PREY; // default color
+		if(e.survival_status == SURV_STATUS_HUNTER) // if client knows this hunter
 			plcolor = SURV_COLOR_HUNTER;
 
 		e.colormap = 1024 + plcolor; // override scoreboard and player model colors
@@ -92,6 +88,18 @@ MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 	else
 		player.colormap = 1024 + SURV_COLOR_PREY;
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(cl_surv, DrawScoreboard)
+{
+	if(!ISGAMETYPE(SURVIVAL))
+		return false;
+
+	// initialize colors of new players
+	for(entity pl = players.sort_next; pl; pl = pl.sort_next)
+		if(pl.gotscores && pl.colormap == 0)
+			pl.colormap = 1024 + SURV_COLOR_PREY;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cl_surv, DrawScoreboard_Force)

@@ -14,14 +14,8 @@ void SurvivalStatuses_Init();
 void SurvivalStatuses_Send()
 {
 	// SendFlags can be set to anything != 0, SurvivalStatuses_SendEntity won't use its value
+	// Dr. Jaska: this was a lie, the flags were not reset until now
 	survivalStatuses.SendFlags = 1;
-	survivalStatuses.nextthink = 0; // clear delayed send
-}
-
-void SurvivalStatuses_Send_Delayed()
-{
-	survivalStatuses.think = SurvivalStatuses_Send;
-	survivalStatuses.nextthink = time + 0.2;
 }
 
 bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
@@ -29,16 +23,14 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 	Stream out = MSG_ENTITY;
 	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
 
-	sendflags |= BIT(1); // make all players survivors
+	// TODO: optimize this instead of always setting it on
+	sendflags = BIT(0); // reset all flags and make all players survivors
 
-	if (dest.survival_status == SURV_STATUS_HUNTER);
-		sendflags |= BIT(0); // send hunter statuses
-
-	if (round_handler_AwaitingNextRound())
-		sendflags |= (BIT(0) | BIT(2)); // send hunter statuses and reveal hunters to survivors
+	if ((dest.survival_status == SURV_STATUS_HUNTER) || round_handler_AwaitingNextRound())
+		sendflags |= BIT(1); // send hunter statuses
 
 	serialize(byte, out, sendflags);
-	if (sendflags & BIT(0)) {
+	if (sendflags & BIT(1)) {
 		for (int i = 1; i <= maxclients; i += 8) {
 			int f = 0;
 			entity e = edict_num(i);
@@ -50,6 +42,7 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 			serialize(byte, out, f);
 		}
 	}
+	//print(sprintf("sent flags %f to %s\n", sendflags, dest.netname));
 	return true;
 }
 
@@ -305,10 +298,6 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	// send statuses with a small delay to make sure a playerslot exists, otherwise
-	// personal colors for this player won't be overriden
-	// it also reduces network traffic when multiple clients join the server at once (at map start)
-	SurvivalStatuses_Send_Delayed();
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -324,7 +313,6 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
-	// this will also clear scheduled SurvivalStatuses_Send set by PutClientInServer
 	SurvivalStatuses_Send();
 	return true;
 }
