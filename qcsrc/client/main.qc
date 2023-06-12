@@ -550,6 +550,8 @@ void Ent_RemovePlayerScore(entity this)
 		FOREACH(Scores, true, {
 			this.owner.(scores(it)) = 0; // clear all scores
 		});
+		this.owner.ready = 0;
+		this.owner.eliminated = 0;
 		this.owner.colormap = 0;
 		// TODO add a hook to reset this Survival field
 		this.owner.survival_status = 0;
