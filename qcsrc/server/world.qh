@@ -6,6 +6,7 @@ bool autocvar__sv_init;
 bool autocvar__endmatch;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_jetpack;
+int autocvar_g_warmup;
 bool autocvar_g_warmup_allguns;
 bool autocvar_g_warmup_allow_timeout;
 #define autocvar_g_weaponarena cvar_string("g_weaponarena")
@@ -27,6 +28,11 @@ float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
+
+bool autocvar_sv_mapformat_is_quake3;
+bool autocvar_sv_mapformat_is_quake2;
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -150,6 +156,10 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 void CheckRules_World();
 float RedirectionThink();
 
+// quake 3 music compatibility
+.string music;
+.string noise;
+
 void readplayerstartcvars();
 
 void readlevelcvars();
@@ -159,3 +169,5 @@ void droptofloor(entity this);
 
 IntrusiveList g_moveables;
 STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }
+
+bool observe_blocked_if_eliminated = false; // forbids eliminated players from observing

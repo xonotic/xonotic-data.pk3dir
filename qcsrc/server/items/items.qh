@@ -19,8 +19,6 @@ void StartItem(entity this, entity a);
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
 
-bool have_pickup_item(entity this);
-
 const float ITEM_RESPAWN_TICKS = 10;
 
 // string overrides entity
@@ -74,12 +72,15 @@ void Item_Touch(entity this, entity toucher);
 void Item_Reset(entity this);
 
 void Item_FindTeam(entity this);
-// Savage: used for item garbage-collection
+
+void Item_CopyFields(entity this, entity to);
 
 bool ItemSend(entity this, entity to, int sf);
 void ItemUpdate(entity this);
 
 void UpdateItemAfterTeleport(entity this);
+
+void RemoveItem(entity this);
 
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots

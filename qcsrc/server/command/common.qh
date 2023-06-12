@@ -59,7 +59,7 @@ float orig_slowmo;       // contains the value of autocvar_slowmo so that, after
 float timeout_time;      // contains the time in seconds that the active timeout has left
 float timeout_leadtime;  // contains the number of seconds left of the leadtime (before the timeout starts)
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
-.vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
+.vector lastV_angle;     // used when pausing the game in order to force the player to keep their old view angle fixed
 
 // allow functions to be used in other code like world.qc and teamplay.qc
 void timeout_handler_think(entity this);

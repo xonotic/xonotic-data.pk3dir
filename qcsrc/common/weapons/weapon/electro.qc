@@ -56,7 +56,7 @@ void W_Electro_ExplodeCombo(entity this)
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(electro, combo_comboradius), this.realowner);
 
 	this.event_damage = func_null;
-	this.velocity = this.movedir; // particle fx and decals need .velocity
+	this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	RadiusDamage(
 		this,
@@ -86,7 +86,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	this.velocity = this.movedir; // particle fx and decals need .velocity
+	this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
 	if(this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
 	{
@@ -509,9 +509,9 @@ METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
         float shoot;
 
         if(WEP_CVAR_PRI(electro, speed))
-            shoot = bot_aim(actor, weaponentity, WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
+            shoot = bot_aim(actor, weaponentity, WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false, true);
         else
-            shoot = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
+            shoot = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
 
         if(shoot)
         {
@@ -521,7 +521,7 @@ METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
     }
     else
     {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true, true))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.03) actor.bot_secondary_electromooth = 0;
@@ -618,8 +618,7 @@ METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 6;
+    vector org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);

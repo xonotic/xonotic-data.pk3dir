@@ -106,8 +106,15 @@ float autocvar_hud_panel_scoreboard_minwidth = 0.4;
 bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
+bool autocvar_hud_panel_scoreboard_scores_per_round;
 
 float scoreboard_time;
+
+SHUTDOWN(scoreboard)
+{
+	if(autocvar_hud_panel_scoreboard_scores_per_round)
+		cvar_set("hud_panel_scoreboard_scores_per_round", "0");
+}
 
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
@@ -134,6 +141,7 @@ string Label_getInfo(string label, int mode)
 		case "fps":          if (!mode) return CTX(_("SCO^fps"));          else LOG_HELP(strcat("^3", "fps", "                ^7", _("FPS")));
 		case "frags":        if (!mode) return CTX(_("SCO^frags"));        else LOG_HELP(strcat("^3", "frags", "              ^7", _("Number of kills minus suicides")));
 		case "goals":        if (!mode) return CTX(_("SCO^goals"));        else LOG_HELP(strcat("^3", "goals", "              ^7", _("Number of goals scored")));
+		case "hunts":        if (!mode) return CTX(_("SCO^hunts"));        else LOG_HELP(strcat("^3", "hunts", "              ^7", _("Number of hunts (Survival)")));
 		case "kckills":      if (!mode) return CTX(_("SCO^kckills"));      else LOG_HELP(strcat("^3", "kckills", "            ^7", _("Number of keys carrier kills")));
 		case "kd":           if (!mode) return CTX(_("SCO^k/d"));          else LOG_HELP(strcat("^3", "kd", "                 ^7", _("The kill-death ratio")));
 		case "kdr":          if (!mode) return CTX(_("SCO^kdr"));          else LOG_HELP(strcat("^3", "kdr", "                ^7", _("The kill-death ratio")));
@@ -153,9 +161,11 @@ string Label_getInfo(string label, int mode)
 		case "returns":      if (!mode) return CTX(_("SCO^returns"));      else LOG_HELP(strcat("^3", "returns", "            ^7", _("Number of flag returns")));
 		case "revivals":     if (!mode) return CTX(_("SCO^revivals"));     else LOG_HELP(strcat("^3", "revivals", "           ^7", _("Number of revivals")));
 		case "rounds":       if (!mode) return CTX(_("SCO^rounds won"));   else LOG_HELP(strcat("^3", "rounds", "             ^7", _("Number of rounds won")));
+		case "rounds_pl":    if (!mode) return CTX(_("SCO^rounds played"));else LOG_HELP(strcat("^3", "rounds_pl", "          ^7", _("Number of rounds played")));
 		case "score":        if (!mode) return CTX(_("SCO^score"));        else LOG_HELP(strcat("^3", "score", "              ^7", _("Total score")));
 		case "suicides":     if (!mode) return CTX(_("SCO^suicides"));     else LOG_HELP(strcat("^3", "suicides", "           ^7", _("Number of suicides")));
 		case "sum":          if (!mode) return CTX(_("SCO^sum"));          else LOG_HELP(strcat("^3", "sum", "                ^7", _("Number of kills minus deaths")));
+		case "survivals":    if (!mode) return CTX(_("SCO^survivals"));    else LOG_HELP(strcat("^3", "survivals", "          ^7", _("Number of survivals")));
 		case "takes":        if (!mode) return CTX(_("SCO^takes"));        else LOG_HELP(strcat("^3", "takes", "              ^7", _("Number of domination points taken (Domination)")));
 		case "teamkills":    if (!mode) return CTX(_("SCO^teamkills"));    else LOG_HELP(strcat("^3", "teamkills", "          ^7", _("Number of teamkills")));
 		case "ticks":        if (!mode) return CTX(_("SCO^ticks"));        else LOG_HELP(strcat("^3", "ticks", "              ^7", _("Number of ticks (Domination)")));
@@ -169,7 +179,7 @@ bool scoreboard_ui_disabling;
 void HUD_Scoreboard_UI_Disable()
 {
 	scoreboard_ui_disabling = true;
-	scoreboard_showscores = false;
+	sb_showscores = false;
 }
 
 void HUD_Scoreboard_UI_Disable_Instantly()
@@ -467,6 +477,13 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 			}
 		}
 	}
+	else if(nPrimary == 'r' && (hudShiftState & S_CTRL))
+	{
+		if (!key_pressed)
+			return true;
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
+			localcmd("toggle hud_panel_scoreboard_scores_per_round\n");
+	}
 	else if(nPrimary == 't' && (hudShiftState & S_CTRL))
 	{
 		if (!key_pressed)
@@ -499,8 +516,6 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 void PrintScoresLabels() { Label_getInfo(string_null, 1); }
 string TranslateScoresLabel(string label) { return Label_getInfo(label, 0); }
 
-#define SB_EXTRA_SORTING_FIELDS 5
-PlayerScoreField sb_extra_sorting_field[SB_EXTRA_SORTING_FIELDS];
 void Scoreboard_InitScores()
 {
 	int i, f;
@@ -508,18 +523,13 @@ void Scoreboard_InitScores()
 	ps_primary = ps_secondary = NULL;
 	ts_primary = ts_secondary = -1;
 	FOREACH(Scores, true, {
+		if(scores_flags(it) & SFL_NOT_SORTABLE)
+			continue;
 		f = (scores_flags(it) & SFL_SORT_PRIO_MASK);
 		if(f == SFL_SORT_PRIO_PRIMARY)
 			ps_primary = it;
 		if(f == SFL_SORT_PRIO_SECONDARY)
 			ps_secondary = it;
-		if(ps_primary == it || ps_secondary == it)
-			continue;
-		if (scores_label(it) == "kills")      sb_extra_sorting_field[0] = it;
-		if (scores_label(it) == "deaths")     sb_extra_sorting_field[1] = it;
-		if (scores_label(it) == "suicides")   sb_extra_sorting_field[2] = it;
-		if (scores_label(it) == "dmg")        sb_extra_sorting_field[3] = it;
-		if (scores_label(it) == "dmgtaken")   sb_extra_sorting_field[4] = it;
 	});
 	if(ps_secondary == NULL)
 		ps_secondary = ps_primary;
@@ -607,26 +617,19 @@ float Scoreboard_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	entity fld = NULL;
-	int r;
-	for (int i = -2; i < SB_EXTRA_SORTING_FIELDS; ++i)
-	{
-		if (i < 0)
-		{
-			if (!fld) fld = ps_primary;
-			else if (ps_secondary == ps_primary) continue;
-			else fld = ps_secondary;
-		}
-		else
-		{
-			fld = sb_extra_sorting_field[i];
-			if (fld == ps_primary || fld == ps_secondary) continue;
-		}
-		if (!fld) continue;
+	int res = Scoreboard_CompareScore(left.scores(ps_primary), right.scores(ps_primary), scores_flags(ps_primary));
+	if (res >= 0) return res;
 
-		r = Scoreboard_CompareScore(left.scores(fld), right.scores(fld), scores_flags(fld));
-		if (r >= 0) return r;
+	if (ps_secondary && ps_secondary != ps_primary)
+	{
+		res = Scoreboard_CompareScore(left.scores(ps_secondary), right.scores(ps_secondary), scores_flags(ps_secondary));
+		if (res >= 0) return res;
 	}
+
+	FOREACH(Scores, (it != ps_primary && it != ps_secondary), {
+		res = Scoreboard_CompareScore(left.scores(it), right.scores(it), scores_flags(it));
+		if (res >= 0) return res;
+	});
 
 	if (left.sv_entnum < right.sv_entnum)
 		return true;
@@ -981,7 +984,23 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
-string Scoreboard_GetField(entity pl, PlayerScoreField field)
+int autocvar_hud_panel_scoreboard_ping_best = 0;
+int autocvar_hud_panel_scoreboard_ping_medium = 70;
+int autocvar_hud_panel_scoreboard_ping_high = 100;
+int autocvar_hud_panel_scoreboard_ping_worst = 150;
+vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
+vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
+vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
+vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
+#define PING_BEST autocvar_hud_panel_scoreboard_ping_best
+#define PING_MED autocvar_hud_panel_scoreboard_ping_medium
+#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
+#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst
+#define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
+#define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
+#define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
+#define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
+string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
 	int f;
@@ -993,6 +1012,9 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 	sbt_field_icon0_rgb = '1 1 1';
 	sbt_field_icon1_rgb = '1 1 1';
 	sbt_field_icon2_rgb = '1 1 1';
+	int rounds_played = 0;
+	if (per_round)
+		rounds_played = pl.(scores(SP_ROUNDS_PL));
 	switch(field)
 	{
 		case SP_PING:
@@ -1002,8 +1024,16 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
-			tmp = max(0, min(220, f-80)) / 220;
-			sbt_field_rgb = '1 1 1' - '0 1 1' * tmp;
+			if(f < PING_BEST)
+				sbt_field_rgb = COLOR_BEST;
+			else if(f < PING_MED)
+				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+			else if(f < PING_HIGH)
+				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
+			else if(f < PING_WORST)
+				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
+			else
+				sbt_field_rgb = COLOR_WORST;
 			return ftos(f);
 
 		case SP_PL:
@@ -1029,6 +1059,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 		case SP_FRAGS:
 			f = pl.(scores(SP_KILLS));
 			f -= pl.(scores(SP_SUICIDES));
+			if (rounds_played)
+				return sprintf("%.1f", f / rounds_played);
 			return ftos(f);
 
 		case SP_KDRATIO:
@@ -1037,12 +1069,23 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 
 			if(denom == 0) {
 				sbt_field_rgb = '0 1 0';
-				str = sprintf("%d", num);
+				if (rounds_played)
+					str = sprintf("%.1f", num / rounds_played);
+				else
+					str = sprintf("%d", num);
 			} else if(num <= 0) {
 				sbt_field_rgb = '1 0 0';
-				str = sprintf("%.1f", num/denom);
+				if (rounds_played)
+					str = sprintf("%.2f", num / (denom * rounds_played));
+				else
+					str = sprintf("%.1f", num / denom);
 			} else
-				str = sprintf("%.1f", num/denom);
+			{
+				if (rounds_played)
+					str = sprintf("%.2f", num / (denom * rounds_played));
+				else
+					str = sprintf("%.1f", num / denom);
+			}
 			return str;
 
 		case SP_SUM:
@@ -1056,6 +1099,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			} else {
 				sbt_field_rgb = '1 0 0';
 			}
+			if (rounds_played)
+				return sprintf("%.1f", f / rounds_played);
 			return ftos(f);
 
 		case SP_ELO:
@@ -1081,7 +1126,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			return ftos(fps);
 		}
 
+		case SP_ROUNDS_PL:
+			return ftos(pl.(scores(field)));
+
 		case SP_DMG: case SP_DMGTAKEN:
+			if (rounds_played)
+				return sprintf("%.2f k", pl.(scores(field)) / (1000 * rounds_played));
 			return sprintf("%.1f k", pl.(scores(field)) / 1000);
 
 		default: case SP_SCORE:
@@ -1093,7 +1143,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				sbt_field_rgb = '0 1 1';
 			else
 				sbt_field_rgb = '1 1 1';
-			return ScoreString(f, tmp);
+			return ScoreString(f, tmp, rounds_played);
 	}
 	//return "error";
 }
@@ -1267,7 +1317,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			pos.x += sbt_field_size[i] + hud_fontsize.x;
 			continue;
 		}
-		str = Scoreboard_GetField(pl, field);
+		str = Scoreboard_GetField(pl, field, autocvar_hud_panel_scoreboard_scores_per_round);
 		str = Scoreboard_FixColumnWidth(i, str);
 
 		pos.x += sbt_field_size[i] + hud_fontsize.x;
@@ -1303,7 +1353,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				continue;
 			}
 
-			str = Scoreboard_GetField(pl, field);
+			str = Scoreboard_GetField(pl, field, autocvar_hud_panel_scoreboard_scores_per_round);
 			str = Scoreboard_FixColumnWidth(i, str);
 
 			if(field == SP_NAME) {
@@ -1372,10 +1422,10 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if(this_team == NUM_SPECTATOR)
 		{
 			if(autocvar_hud_panel_scoreboard_spectators_showping)
-				field = Scoreboard_GetField(pl, SP_PING);
+				field = Scoreboard_GetField(pl, SP_PING, autocvar_hud_panel_scoreboard_scores_per_round);
 		}
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
-			field = Scoreboard_GetField(pl, SP_SCORE);
+			field = Scoreboard_GetField(pl, SP_SCORE, autocvar_hud_panel_scoreboard_scores_per_round);
 
 		string str = entcs_GetName(pl.sv_entnum);
 		if (autocvar_hud_panel_scoreboard_playerid)
@@ -1578,7 +1628,7 @@ bool Scoreboard_WouldDraw()
 		return false;
 	else if (HUD_Radar_Clickable())
 		return false;
-	else if (scoreboard_showscores)
+	else if (sb_showscores) // set by +showscores engine command
 		return true;
 	else if (intermission == 1)
 		return true;
@@ -2166,6 +2216,15 @@ vector Scoreboard_Spectators_Draw(vector pos) {
 	return pos;
 }
 
+string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
+{
+	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
+	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
+	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit, 0),
+		(s_label == "score") ? CTX(_("SCO^points")) :
+		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
+}
+
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -2265,9 +2324,9 @@ void Scoreboard_Draw()
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
-			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), translate_key("SPACE"));
 		else
-			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), getcommandkey(_("jump"), "+jump"));
+			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), translate_key("SPACE"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
@@ -2289,20 +2348,7 @@ void Scoreboard_Draw()
 			{
 				if(tl > 0)
 					str = strcat(str, "^7 / "); // delimiter
-				if(teamplay)
-				{
-					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
-						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-						(teamscores_label(ts_primary) == "fastest") ? "" :
-						TranslateScoresLabel(teamscores_label(ts_primary))));
-				}
-				else
-				{
-					str = strcat(str, sprintf(_("^5%s %s"), ScoreString(scores_flags(ps_primary), fl),
-						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-						(scores_label(ps_primary) == "fastest") ? "" :
-						TranslateScoresLabel(scores_label(ps_primary))));
-				}
+				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
 			if(ll > 0)
 			{
@@ -2314,26 +2360,15 @@ void Scoreboard_Draw()
 					else
 						str = strcat(str, "^7 / ");
 				}
-
-				if(teamplay)
-				{
-					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
-						(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-						(teamscores_label(ts_primary) == "fastest") ? "" :
-						TranslateScoresLabel(teamscores_label(ts_primary))));
-				}
-				else
-				{
-					str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
-						(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-						(scores_label(ps_primary) == "fastest") ? "" :
-						TranslateScoresLabel(scores_label(ps_primary))));
-				}
+				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true));
 			}
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 		// map name and player count
-		str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		if (campaign)
+			str = "";
+		else
+			str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
 		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
@@ -2487,7 +2522,8 @@ void Scoreboard_Draw()
 
 	if(MUTATOR_CALLHOOK(ShowRankings)) {
 		string ranktitle = M_ARGV(0, string);
-		string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
+		string unit = GetSpeedUnit(autocvar_hud_speed_unit);
+		float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		if(race_speedaward_alltimebest)
 		{
 			string name;
@@ -2496,11 +2532,11 @@ void Scoreboard_Draw()
 			if(race_speedaward)
 			{
 				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
-				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, unit, name);
+				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward * conversion_factor, unit, name);
 				str = strcat(str, " / ");
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
-			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, unit, name));
+			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest * conversion_factor, unit, name));
 			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}

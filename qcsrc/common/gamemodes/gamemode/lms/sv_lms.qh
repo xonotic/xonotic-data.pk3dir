@@ -3,10 +3,9 @@
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 
-// 1 when player presses F3 to spectate for the first time (he only gets a warning)
-// 2 when player goes spectator (presses F3 to spectate for the second time)
-// 3 when player disconnects
-.int lms_spectate_warning;
+// set before a lms_RemovePlayer call, if true player becomes a real spectator
+// otherwise it gets eliminated becoming spectator but as player out of game with a rank
+.bool lms_spectate;
 
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
 string autocvar_g_lms_weaponarena = "most_available";

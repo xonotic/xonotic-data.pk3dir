@@ -115,7 +115,7 @@ ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
-#define DEC_FACTOR (360 / 32)
+#define DEC_FACTOR (360 / 64)
 ENTCS_PROP_CODED(ANGLES, false, angles_y, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
 	{ WriteByte(chan, ent.angles.y / DEC_FACTOR); },
 	{ vector v = '0 0 0'; v.y = ReadByte() * DEC_FACTOR; ent.angles = v; })
@@ -156,6 +156,11 @@ ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
 	{ ent.sv_solid = ReadByte(); })
+
+// gamemode specific player survival status (independent of score and frags)
+ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NORMAL,
+	{ WriteShort(chan, ent.survival_status); },
+	{ ent.survival_status = ReadShort(); })
 
 #ifdef SVQC
 
@@ -230,8 +235,8 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		}
 
 		// always send origin of players even if they stand still otherwise
-		// if a teammate isn't in my pvs and his health (or view angle or name
-		// etc...) changes then his tag disappears
+		// if a teammate isn't in my pvs and their health (or view angle or name
+		// etc...) changes then their tag disappears
 		if (IS_PLAYER(this.owner))
 			this.SendFlags |= BIT(ENTCS_PROP_ORIGIN_id);
 
