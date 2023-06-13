@@ -1,8 +1,8 @@
 #include "sv_respawntime.qh"
 
 AUTOCVAR(g_killers_spawn_faster, bool, false, "Killers spawn faster: a mutator that penalizes dying, and rewards killing, by adjusting time to respawn");
-AUTOCVAR(g_killers_spawn_faster_frag_modifier, float, -0.25, "Killers spawn faster: respawntime factor change when fragging someone");
-AUTOCVAR(g_killers_spawn_faster_death_modifier, float, 0.5, "Killers spawn faster: respawntime factor change when dying");
+AUTOCVAR(g_killers_spawn_faster_frag_modifier, float, -0.125, "Killers spawn faster: respawntime factor change when fragging someone");
+AUTOCVAR(g_killers_spawn_faster_death_modifier, float, 0.25, "Killers spawn faster: respawntime factor change when dying");
 AUTOCVAR(g_killers_spawn_faster_min, float, 0.25, "Killers spawn faster: minimum factor the respawn time can be multiplied with");
 AUTOCVAR(g_killers_spawn_faster_max, float, 4.0, "Killers spawn faster: maximum factor the respawn time can be multiplied with");
 REGISTER_MUTATOR(mutator_killers_spawn_faster, autocvar_g_killers_spawn_faster);
