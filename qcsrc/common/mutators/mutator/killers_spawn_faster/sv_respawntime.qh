@@ -1,0 +1,3 @@
+#pragma once
+
+.float killers_spawn_faster_factor;

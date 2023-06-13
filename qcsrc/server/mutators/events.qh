@@ -63,6 +63,12 @@ MUTATOR_HOOKABLE(reset_map_global, EV_reset_map_global);
     /**/
 MUTATOR_HOOKABLE(reset_map_players, EV_reset_map_players);
 
+/** called when entering play after observing, or switching teams */
+#define EV_PlayerScore_Clear(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerScore_Clear, EV_PlayerScore_Clear);
+
 /** returns 1 if clearing player score shall not be allowed */
 #define EV_ForbidPlayerScore_Clear(i, o) \
     /**/
@@ -1206,7 +1212,9 @@ MUTATOR_HOOKABLE(HavocBot_Aim, EV_HavocBot_Aim);
 
 /** return true to skip respawn time calculations */
 #define EV_CalculateRespawnTime(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** player */      i(entity, MUTATOR_ARGV_0_entity) \
+    /** spawn delay */ i(float, MUTATOR_ARGV_1_float) \
+    /** spawn delay */ o(float, MUTATOR_ARGV_1_float) \
     /**/
 MUTATOR_HOOKABLE(CalculateRespawnTime, EV_CalculateRespawnTime);
 

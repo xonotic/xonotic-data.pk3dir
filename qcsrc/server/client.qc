@@ -1340,9 +1340,6 @@ void UpdateChatBubble(entity this)
 
 void calculate_player_respawn_time(entity this)
 {
-	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
-		return;
-
 	float gametype_setting_tmp;
 	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
 	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
@@ -1404,6 +1401,10 @@ void calculate_player_respawn_time(entity this)
 		sdelay = sdelay_large;
 	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
 		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
+
+	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this, sdelay))
+		return;
+	sdelay = M_ARGV(1, float);
 
 	if(waves)
 		this.respawn_time = ceil((time + sdelay) / waves) * waves;
