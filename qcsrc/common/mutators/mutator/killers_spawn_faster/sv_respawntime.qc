@@ -3,13 +3,15 @@
 AUTOCVAR(g_killers_spawn_faster, bool, false, "Killers spawn faster: a mutator that penalizes dying, and rewards killing, by adjusting time to respawn");
 AUTOCVAR(g_killers_spawn_faster_frag_modifier, float, -0.25, "Killers spawn faster: respawntime factor change when fragging someone");
 AUTOCVAR(g_killers_spawn_faster_death_modifier, float, 0.5, "Killers spawn faster: respawntime factor change when dying");
+AUTOCVAR(g_killers_spawn_faster_min, float, 0.2, "Minimum factor the respawn time can be multiplied with");
+AUTOCVAR(g_killers_spawn_faster_max, float, 5.0, "Maximum factor the respawn time can be multiplied with");
 REGISTER_MUTATOR(mutator_killers_spawn_faster, autocvar_g_killers_spawn_faster);
 
 float killers_spawn_faster_adjust(float base, float adj) {
 	if (adj < 0) {
 		adj *= base;
 	}
-	return base + adj;
+	return bound(autocvar_g_killers_spawn_faster_min, base + adj, autocvar_g_killers_spawn_faster_max);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_killers_spawn_faster, BuildMutatorsString) {
