@@ -28,12 +28,13 @@ MUTATOR_HOOKFUNCTION(mutator_killers_spawn_faster, ClientConnect) {
 	LOG_DEBUGF("Newly spawned player %i with respawntime factor %f", player, player.killers_spawn_faster_factor);
 }
 
-MUTATOR_HOOKFUNCTION(mutator_killers_spawn_faster, PlayerDies) {
+MUTATOR_HOOKFUNCTION(mutator_killers_spawn_faster, GiveFragsForKill, CBC_ORDER_FIRST) {
 	// Note: this runs BEFORE CalculateRespawnTime.
-	entity attacker = M_ARGV(1, entity);
-	entity target = M_ARGV(2, entity);
-	if (target.classname == "body") {
-		error("WAT");
+	entity attacker = M_ARGV(0, entity);
+	float frags = M_ARGV(2, float);
+	if (frags < 0) {
+		// Suicide, teamkill or similar.
+		// As the frags amount is an inout parameter, this must be CBC_ORDER_FIRST.
 		return false;
 	}
 	attacker.killers_spawn_faster_factor = killers_spawn_faster_adjust(
@@ -53,10 +54,6 @@ MUTATOR_HOOKFUNCTION(mutator_killers_spawn_faster, CalculateRespawnTime) {
 MUTATOR_HOOKFUNCTION(mutator_killers_spawn_faster, PlayerDied) {
 	// Note: this runs AFTER CalculateRespawnTime.
 	entity player = M_ARGV(0, entity);
-	if (player.classname == "body") {
-		error("WAT");
-		return false;
-	}
 	player.killers_spawn_faster_factor = killers_spawn_faster_adjust(
 		player.killers_spawn_faster_factor,
 		autocvar_g_killers_spawn_faster_death_modifier);

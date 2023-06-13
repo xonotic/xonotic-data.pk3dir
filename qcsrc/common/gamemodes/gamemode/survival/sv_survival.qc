@@ -431,7 +431,7 @@ MUTATOR_HOOKFUNCTION(surv, AddPlayerScore)
 		M_ARGV(1, float) = 0; // don't report that the player has killed or been killed, that would out them as a hunter!
 }
 
-MUTATOR_HOOKFUNCTION(surv, CalculateRespawnTime)
+MUTATOR_HOOKFUNCTION(surv, CalculateRespawnTime, CBC_ORDER_EXCLUSIVE)
 {
 	// no respawn calculations needed, player is forced to spectate anyway
 	return true;
