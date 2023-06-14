@@ -88,7 +88,7 @@ packagercleanup() {
 	rm progs.txt
 	rm changes.diff
 
-	rm git-progspk3.zip 2> /dev/null
+	rm z-git-progspk3.zip 2> /dev/null
 }
 trap 'packagercleanup' EXIT INT QUIT TERM
 
@@ -115,28 +115,28 @@ else
 	printf "%s\n" "No changes compared to latest local master branch." > changes.diff
 fi
 
-# zip everything into git-progspk3.zip
+# zip everything into z-git-progspk3.zip
 # shellcheck disable=SC2086 # Intended splitting of EDITEDCFGS
-zip git-progspk3.zip csprogs.dat progs.dat menu.dat progs.txt "csprogs-$HASH.dat" "progs-$HASH.dat" $EDITEDCFGS changes.diff
+zip z-git-progspk3.zip csprogs.dat progs.dat menu.dat progs.txt "csprogs-$HASH.dat" "progs-$HASH.dat" $EDITEDCFGS changes.diff
 
 # Move the package to Downloads directory for easy sharing and house keeping
 if [ "$(xdg-user-dir DOWNLOAD)" != "$HOME" ] && [ -d "$(xdg-user-dir DOWNLOAD)" ]
 then
-	mv -v "$PWD/git-progspk3.zip" "$(xdg-user-dir DOWNLOAD)/git-progs-$BRANCH-$HASH.pk3"
+	mv -v "$PWD/z-git-progspk3.zip" "$(xdg-user-dir DOWNLOAD)/z-git-progs-$BRANCH-$HASH.pk3"
 	printf "\n%s\n%s\n\n" "Packaged progs based on $BRANCH's $HASH commit" \
-		"and moved them to $(xdg-user-dir DOWNLOAD)/git-progs-$BRANCH-$HASH.pk3"
+		"and moved them to $(xdg-user-dir DOWNLOAD)/z-git-progs-$BRANCH-$HASH.pk3"
 
 elif [ -d "$HOME/Downloads" ]
 then
-	mv -v "$PWD/git-progspk3.zip" "$HOME/Downloads/git-progs-$BRANCH-$HASH.pk3"
+	mv -v "$PWD/z-git-progspk3.zip" "$HOME/Downloads/z-git-progs-$BRANCH-$HASH.pk3"
 	printf "\n%s\n%s\n\n" "Packaged progs based on $BRANCH's $HASH commit" \
-		"and moved them to ~/Downloads/git-progs-$BRANCH-$HASH.pk3"
+		"and moved them to ~/Downloads/z-git-progs-$BRANCH-$HASH.pk3"
 
 else
-	mv -v "git-progspk3.zip" "git-progs-$BRANCH-$HASH.pk3"
+	mv -v "z-git-progspk3.zip" "z-git-progs-$BRANCH-$HASH.pk3"
 	printf "\n%s\n%s\n%s\n\n" "Packaged progs based on $BRANCH's $HASH commit" \
 		"but could not move it out to Downloads dir" \
-		"git-progs-$BRANCH-$HASH.pk3 resides in $PWD"
+		"z-git-progs-$BRANCH-$HASH.pk3 resides in $PWD"
 fi
 
 printf '%s\n%s\n%s\n\n' "The pk3 can be moved to Xonotic's userdir which is:" \
