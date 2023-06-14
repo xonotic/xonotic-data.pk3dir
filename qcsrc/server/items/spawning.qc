@@ -115,7 +115,9 @@ bool Item_InitializeLoot(entity item, string class_name, vector position,
 	}
 	item.gravity = 1;
 	item.velocity = vel;
-	SUB_SetFade(item, time + time_to_live, 1);
+	// StartItem sets the default .wait expiry time which is respected by Item_Think()
+	if (time_to_live)
+		item.wait = time + time_to_live;
 	return true;
 }
 
