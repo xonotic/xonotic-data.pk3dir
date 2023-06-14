@@ -202,6 +202,9 @@ void Item_Think(entity this)
 			}
 		}
 
+		if (this.itemdef.instanceOfPowerup)
+			powerups_DropItem_Think(this);
+
 		// enable pickup by the player who threw it
 		this.owner = NULL;
 
