@@ -63,7 +63,8 @@ const int ITS_EXPIRING          = BIT(7);
 const float IT_DESPAWNFX_TIME = 1.5;
 
 // 2hz probably enough to correct a desync caused by serious lag
-const float IT_UPDATE_INTERVAL = 0.5;
+// FIXME but updating faster applies the kludge in Item_Think() sooner so it's less noticeable
+const float IT_UPDATE_INTERVAL = 0.0625;
 
 .float fade_start;
 .float fade_end;

@@ -205,6 +205,11 @@ void Item_Think(entity this)
 		if (this.itemdef.instanceOfPowerup)
 			powerups_DropItem_Think(this);
 
+		// caution: kludge FIXME (with sv_legacy_bbox_expand)
+		// this works around prediction errors caused by bbox discrepancy between SVQC and CSQC
+		if (this.velocity == '0 0 0' && IS_ONGROUND(this))
+			this.gravity = 0; // don't send ISF_DROP anymore
+
 		// send slow updates even if the item didn't move
 		// recovers prediction desyncs where server thinks item stopped, client thinks it didn't
 		ItemUpdate(this);

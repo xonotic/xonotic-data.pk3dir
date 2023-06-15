@@ -315,6 +315,15 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		set_movetype(this, MOVETYPE_TOSS);
 		this.velocity = ReadVector();
 	}
+	else if (this.gravity) // caution: kludge FIXME (with sv_legacy_bbox_expand)
+	{
+		// workaround for prediction errors caused by bbox discrepancy between SVQC and CSQC
+		this.gravity = 0; // don't do this kludge again
+		this.pushable = false; // no fun allowed
+		set_movetype(this, MOVETYPE_NONE); // disable physics
+		this.velocity = '0 0 0'; // disable it more
+		SET_ONGROUND(this); // extra overkill
+	}
 
 	this.entremove = ItemRemove;
 
