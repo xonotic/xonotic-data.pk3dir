@@ -57,6 +57,13 @@ const int ITS_AVAILABLE         = BIT(3);
 const int ITS_ALLOWFB           = BIT(4);
 const int ITS_ALLOWSI           = BIT(5);
 const int ITS_GLOW              = BIT(6);
+const int ITS_EXPIRING          = BIT(7);
+
+// enough to notice it's about to despawn and circle jump to grab it
+const float IT_DESPAWNFX_TIME = 1.5;
+
+// 2hz probably enough to correct a desync caused by serious lag
+const float IT_UPDATE_INTERVAL = 0.5;
 
 .float fade_start;
 .float fade_end;

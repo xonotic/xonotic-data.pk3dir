@@ -188,9 +188,40 @@ void Item_Show(entity e, int mode)
 
 void Item_Think(entity this)
 {
-	this.nextthink = time;
-	if(this.origin != this.oldorigin)
+	if (Item_IsLoot(this))
+	{
+		if (time < this.wait - IT_DESPAWNFX_TIME)
+			this.nextthink = min(time + IT_UPDATE_INTERVAL, this.wait - IT_DESPAWNFX_TIME); // ensuring full time for effects
+		else
+		{
+			// despawning soon, start effects
+			this.ItemStatus |= ITS_EXPIRING;
+			this.SendFlags |= ISF_STATUS;
+			if (time < this.wait - IT_UPDATE_INTERVAL)
+				this.nextthink = time + IT_UPDATE_INTERVAL;
+			else
+			{
+				setthink(this, RemoveItem);
+				this.nextthink = this.wait;
+			}
+		}
+
+		// enable pickup by the player who threw it
+		this.owner = NULL;
+
+		// send slow updates even if the item didn't move
+		// recovers prediction desyncs where server thinks item stopped, client thinks it didn't
 		ItemUpdate(this);
+	}
+	else
+	{
+		// bones_was_here: TODO: predict movers, enable client prediction of items with a groundentity,
+		// and then send those less often too (and not all on the same frame)
+		this.nextthink = time;
+
+		if(this.origin != this.oldorigin)
+			ItemUpdate(this);
+	}
 }
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it);
@@ -986,9 +1017,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.reset = RemoveItem;
 		set_movetype(this, MOVETYPE_TOSS);
 
-		// Savage: remove thrown items after a certain period of time ("garbage collection")
-		setthink(this, RemoveItem);
-		this.nextthink = time + autocvar_g_items_dropped_lifetime;
+		setthink(this, Item_Think);
+		this.nextthink = time + IT_UPDATE_INTERVAL;
+		this.wait = time + autocvar_g_items_dropped_lifetime;
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
