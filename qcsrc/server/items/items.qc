@@ -205,9 +205,6 @@ void Item_Think(entity this)
 		if (this.itemdef.instanceOfPowerup)
 			powerups_DropItem_Think(this);
 
-		// enable pickup by the player who threw it
-		this.owner = NULL;
-
 		// send slow updates even if the item didn't move
 		// recovers prediction desyncs where server thinks item stopped, client thinks it didn't
 		ItemUpdate(this);
@@ -1017,6 +1014,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		setthink(this, Item_Think);
 		this.nextthink = time + IT_UPDATE_INTERVAL;
 		this.wait = time + autocvar_g_items_dropped_lifetime;
+
+		this.owner = NULL; // anyone can pick this up, including the player who threw it
+		this.item_spawnshieldtime = time + 0.5; // but not straight away
 
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;

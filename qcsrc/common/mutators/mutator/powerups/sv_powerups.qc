@@ -122,8 +122,6 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 	if (!Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin, vel, time_to_live))
 		return;
 
-	e.item_spawnshieldtime = time + 0.5;
-
 	if(!freezeTimer)
 		Item_SetExpiring(e, true);
 
