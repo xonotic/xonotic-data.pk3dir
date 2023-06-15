@@ -1402,18 +1402,18 @@ bool net_handle_ServerWelcome()
 	campaign = ReadByte();
 	if (campaign)
 	{
-		string campaign_title = ReadString();
 		int campaign_level = ReadByte();
-		string campaign_msg = ReadString();
-		string welcomedialog_args;
-		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		// Menu can't build the whole campaign message because it lacks getcommandkey and CCR
+		// so we build part of the message here and let the menu insert the level description
+		// (that client doesn't know) by replacing the keyword _LEVEL_DESC
 		string key = getcommandkey(_("jump"), "+jump");
 		string msg = strcat(
 			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
-			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(" ^BG%s\n\n"), "_LEVEL_DESC"),
 			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		string welcomedialog_args = strcat("CAMPAIGN ", itos(campaign_level), " \"", msg, "\"");
+
 		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		return true;
 	}
