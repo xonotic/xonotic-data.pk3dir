@@ -1046,6 +1046,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 	else
 	{
+		this.reset = Item_Reset;
+
 		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
 		{
@@ -1174,10 +1176,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.reset = Item_FindTeam;
 	}
 	else
-	{
-		this.reset = Item_Reset;
 		Item_Reset(this);
-	}
 
 	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
 
