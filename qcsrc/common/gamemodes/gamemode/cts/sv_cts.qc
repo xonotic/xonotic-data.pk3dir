@@ -202,6 +202,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
+	return true; // don't clear .frags
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
