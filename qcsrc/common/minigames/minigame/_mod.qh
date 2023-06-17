@@ -6,3 +6,4 @@
 #include <common/minigames/minigame/pp.qh>
 #include <common/minigames/minigame/ps.qh>
 #include <common/minigames/minigame/ttt.qh>
+#include <common/minigames/minigame/xonogotchi.qh>
