@@ -72,6 +72,11 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+bool cts_isEliminated(entity e)
+{
+	return ((IS_SPEC(e) || IS_OBSERVER(e)) && e.frags == FRAGS_PLAYER_OUT_OF_GAME);
+}
+
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
@@ -199,6 +204,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	else
 		player.frags = FRAGS_SPECTATOR;
+	eliminatedPlayers.SendFlags |= 1;
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
@@ -235,6 +241,7 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 
 		race_AbandonRaceCheck(player);
 	}
+	eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerDamaged)
@@ -376,4 +383,5 @@ void cts_Initialize()
 {
 	record_type = CTS_RECORD;
 	cts_ScoreRules();
+	EliminatedPlayers_Init(cts_isEliminated);
 }
