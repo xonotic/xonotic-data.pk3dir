@@ -225,22 +225,26 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	}
 	if (item.classname == "item_strength")
 	{
-		entity wep = new(weapon_okhmg);
+		entity wep = spawn();
 		Item_CopyFields(item, wep);
 		wep.ok_item = true;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
+		wep.itemdef = WEP_OVERKILL_HMG;
+		wep.lifetime = -1;
+		Item_Initialise(wep);
 		return true;
 	}
 	else if (item.classname == "item_shield")
 	{
-		entity wep = new(weapon_okrpc);
+		entity wep = spawn();
 		Item_CopyFields(item, wep);
 		wep.ok_item = true;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
+		wep.itemdef = WEP_OVERKILL_RPC;
+		wep.lifetime = -1;
+		Item_Initialise(wep);
 		return true;
 	}
 	return true;
