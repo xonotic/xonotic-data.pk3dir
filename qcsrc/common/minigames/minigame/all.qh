@@ -103,7 +103,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 	MSLE(pong_paddle,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(MINIG_SF_UPDATE,Vector2D,origin)) \
 	MSLE(pong_ball,FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(PONG_SF_BALLTEAM,Byte,team) FIELD(MINIG_SF_UPDATE, Vector2D, velocity) FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
 	MSLE(pong_ai, FIELD(MINIG_SF_CREATE,Byte,team) FIELD(PONG_SF_PLAYERSCORE, Long, pong_score)) \
-	MSLE(xonogotchi_pet,FIELD(MINIG_SF_UPDATE, Vector2D, origin) FIELD(MINIG_SF_UPDATE, Byte, xonogotchi_pet_movedir) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_level) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_health) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_hunger) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_energy)) \
+	MSLE(xonogotchi_pet,FIELD(MINIG_SF_UPDATE, Vector2D, origin) FIELD(MINIG_SF_UPDATE, Byte, xonogotchi_pet_movedir) FIELD(MINIG_SF_UPDATE, Byte, xonogotchi_pet_action) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_level) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_health) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_hunger) FIELD(MINIG_SF_UPDATE, Float, xonogotchi_pet_energy)) \
 	MSLE(xonogotchi_nest,FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
 	MSLE(xonogotchi_bowl,FIELD(MINIG_SF_UPDATE, Vector2D, origin) FIELD(MINIG_SF_UPDATE, Float, count)) \
 	/*empty line*/

@@ -10,6 +10,9 @@ const vector XONOGOTCHI_PET_MINS = -XONOGOTCHI_PET_MAXS;
 const int XONOGOTCHI_PET_MOVE_LEFT = 0x01;
 const int XONOGOTCHI_PET_MOVE_RIGHT = 0x02;
 
+const int XONOGOTCHI_PET_ACTION_EAT = 1;
+const int XONOGOTCHI_PET_ACTION_SLEEP = 2;
+
 const float XONOGOTCHI_NEST_SIZE = 0.25;
 const vector XONOGOTCHI_NEST_MAXS = '1 1 0' * XONOGOTCHI_NEST_SIZE / 2;
 const vector XONOGOTCHI_NEST_MINS = -XONOGOTCHI_NEST_MAXS;
@@ -37,6 +40,7 @@ const float XONOGOTCHI_ANIM_DURATION = XONOGOTCHI_STEP_DURATION * XONOGOTCHI_STE
 .entity xonogotchi_bowl;
 
 .int xonogotchi_pet_movedir;
+.int xonogotchi_pet_action;
 .float xonogotchi_pet_goal;
 .float xonogotchi_pet_level;
 .float xonogotchi_pet_health;
@@ -82,7 +86,8 @@ void xonogotchi_pet_think(entity this)
 	entity minigame = this.owner;
 	entity bowl = minigame.xonogotchi_bowl;
 	float energy_goal = minigame.xonogotchi_nest.origin.x;
-	float hunger_goal = minigame.xonogotchi_bowl.origin.x;
+	float hunger_goal_min = minigame.xonogotchi_bowl.origin.x + XONOGOTCHI_BOWL_MINS.x;
+	float hunger_goal_max = minigame.xonogotchi_bowl.origin.x + XONOGOTCHI_BOWL_MAXS.x;
 	bool want_sleep = (this.xonogotchi_pet_energy < 10);
 	bool want_food = !want_sleep && (this.xonogotchi_pet_hunger < 10) && bowl.count;
 
@@ -93,7 +98,14 @@ void xonogotchi_pet_think(entity this)
 	else if(want_sleep)
 		this.xonogotchi_pet_goal = energy_goal;
 	else
-		this.xonogotchi_pet_goal = hunger_goal;
+	{
+		if((this.origin.x >= hunger_goal_min) && (this.origin.x <= hunger_goal_max))
+			this.xonogotchi_pet_goal = this.origin.x;
+		else if(this.origin.x < hunger_goal_min)
+			this.xonogotchi_pet_goal = hunger_goal_min;
+		else
+			this.xonogotchi_pet_goal = hunger_goal_max;
+	}
 
 	if(this.xonogotchi_pet_goal < this.origin.x)
 		this.xonogotchi_pet_movedir = XONOGOTCHI_PET_MOVE_LEFT;
@@ -110,7 +122,8 @@ void xonogotchi_pet_walkthink(entity this)
 	entity minigame = this.owner;
 	entity bowl = minigame.xonogotchi_bowl;
 	float energy_goal = minigame.xonogotchi_nest.origin.x;
-	float hunger_goal = minigame.xonogotchi_bowl.origin.x;
+	float hunger_goal_min = minigame.xonogotchi_bowl.origin.x + XONOGOTCHI_BOWL_MINS.x;
+	float hunger_goal_max = minigame.xonogotchi_bowl.origin.x + XONOGOTCHI_BOWL_MAXS.x;
 	bool want_sleep = (this.xonogotchi_pet_energy < 10);
 	bool want_food = !want_sleep && (this.xonogotchi_pet_hunger < 10) && bowl.count;
 
@@ -152,7 +165,7 @@ void xonogotchi_pet_walkthink(entity this)
 	if(goal_reached)
 		this.xonogotchi_pet_hunger = max(0, this.xonogotchi_pet_hunger - floor(random() * 5));
 
-	if(want_food && (this.xonogotchi_pet_goal != hunger_goal))
+	if(want_food && ((this.xonogotchi_pet_goal < hunger_goal_min) || (this.xonogotchi_pet_goal > hunger_goal_max)))
 	{
 		goal_reached = false;
 		setthink(this, xonogotchi_pet_think);
@@ -169,11 +182,13 @@ void xonogotchi_pet_walkthink(entity this)
 		}
 		else if(want_sleep)
 		{
+			this.xonogotchi_pet_action = XONOGOTCHI_PET_ACTION_SLEEP;
 			setthink(this, xonogotchi_pet_sleepthink);
 			this.nextthink = time;
 		}
 		else
 		{
+			this.xonogotchi_pet_action = XONOGOTCHI_PET_ACTION_EAT;
 			setthink(this, xonogotchi_pet_eatthink);
 			this.nextthink = time;
 		}
@@ -204,7 +219,10 @@ void xonogotchi_pet_sleepthink(entity this)
 		this.xonogotchi_pet_health = min(100, this.xonogotchi_pet_health + random() * 5);
 
 	if(this.xonogotchi_pet_energy == 100)
+	{
+		this.xonogotchi_pet_action = 0;
 		setthink(this, xonogotchi_pet_think);
+	}
 
 	this.nextthink = time + XONOGOTCHI_SLEEP_DURATION;
 	this.SendFlags |= MINIG_SF_UPDATE;
@@ -221,12 +239,16 @@ void xonogotchi_pet_eatthink(entity this)
 		bowl.count -= 5;
 
 		if(this.xonogotchi_pet_hunger == 100)
+		{
+			this.xonogotchi_pet_action = 0;
 			setthink(this, xonogotchi_pet_think);
+		}
 
 		bowl.SendFlags |= MINIG_SF_UPDATE;
 	}
 	else
 	{
+		this.xonogotchi_pet_action = 0;
 		setthink(this, xonogotchi_pet_think);
 	}
 
@@ -285,7 +307,7 @@ int xonogotchi_server_event(entity minigame, string event, ...)
 
 #elif defined(CSQC)
 
-const int XONOGOTCHI_PET_ANIM_WALK = 0x01;
+const int XONOGOTCHI_PET_ANIM_VARIANT = 0x01;
 const int XONOGOTCHI_PET_ANIM_LEFT = 0x02;
 const int XONOGOTCHI_PET_ANIM_RIGHT = 0x04;
 
@@ -353,16 +375,23 @@ void xonogotchi_hud_board(vector pos, vector mySize)
 
 			if(!e.anim_time || time > e.anim_time + XONOGOTCHI_ANIM_DURATION)
 			{
-				switch(e.xonogotchi_pet_movedir)
+				bool use_anim = false;
+
+				if(e.xonogotchi_pet_action)
+					use_anim = true;
+
+				if((e.xonogotchi_pet_movedir == XONOGOTCHI_PET_MOVE_LEFT) || (e.xonogotchi_pet_movedir == XONOGOTCHI_PET_MOVE_RIGHT))
+					use_anim = true;
+
+				if(use_anim)
 				{
-					case XONOGOTCHI_PET_MOVE_LEFT:
-					case XONOGOTCHI_PET_MOVE_RIGHT:
-						e.anim_time = time;
-						e.anim_state ^= XONOGOTCHI_PET_ANIM_WALK;
-						break;
-					default:
-						e.anim_time = 0;
-						e.anim_state &= ~XONOGOTCHI_PET_ANIM_WALK;
+					e.anim_time = time;
+					e.anim_state ^= XONOGOTCHI_PET_ANIM_VARIANT;
+				}
+				else
+				{
+					e.anim_time = 0;
+					e.anim_state &= ~XONOGOTCHI_PET_ANIM_VARIANT;
 				}
 			}
 
@@ -378,11 +407,19 @@ void xonogotchi_hud_board(vector pos, vector mySize)
 					break;
 			}
 
-			string anim_texture;
-			if(!(e.anim_state & XONOGOTCHI_PET_ANIM_WALK))
-				anim_texture = "xonogotchi/pet";
-			else
-				anim_texture = "xonogotchi/pet2";
+			string anim_texture = "xonogotchi/pet";;
+			switch(e.xonogotchi_pet_action)
+			{
+				case XONOGOTCHI_PET_ACTION_EAT:
+					anim_texture = strcat(anim_texture, "_eat");
+					break;
+				case XONOGOTCHI_PET_ACTION_SLEEP:
+					anim_texture = strcat(anim_texture, "_sleep");
+					break;
+			}
+
+			if(e.anim_state & XONOGOTCHI_PET_ANIM_VARIANT)
+				anim_texture = strcat(anim_texture, "2");
 
 			org = e.origin;
 			org.y -= XONOGOTCHI_PET_MINS.y;
