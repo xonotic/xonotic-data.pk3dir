@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	entity item = M_ARGV(1, entity);
 
-	item.monster_loot = ITEM_VaporizerCells;
+	item.itemdef = ITEM_VaporizerCells;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
