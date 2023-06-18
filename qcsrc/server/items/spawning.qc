@@ -12,10 +12,6 @@
 #include <server/weapons/spawning.qh>
 #include <server/world.qh>
 
-.bool m_isloot; ///< Holds whether item is loot.
-/// \brief Holds whether strength, shield or superweapon timers expire while
-/// this item is on the ground.
-.bool m_isexpiring;
 
 bool Item_IsDefinitionAllowed(entity definition)
 {
@@ -31,7 +27,7 @@ bool Item_Initialise(entity item)
 {
 	if (item.lifetime >= 0)
 	{
-		Item_SetLoot(item, true);
+		ITEM_SET_LOOT(item, true);
 		item.pickup_anyway = true; // these are ALWAYS pickable
 	}
 
@@ -69,30 +65,6 @@ bool Item_Initialise(entity item)
 	return true;
 }
 
-bool Item_IsLoot(entity item)
-{
-	return item.m_isloot || item.classname == "droppedweapon";
-}
-
-void Item_SetLoot(entity item, bool loot)
-{
-	item.m_isloot = loot;
-}
-
-bool Item_ShouldKeepPosition(entity item)
-{
-	return item.noalign || (item.spawnflags & 1);
-}
-
-bool Item_IsExpiring(entity item)
-{
-	return item.m_isexpiring;
-}
-
-void Item_SetExpiring(entity item, bool expiring)
-{
-	item.m_isexpiring = expiring;
-}
 
 // Compatibility spawn functions
 

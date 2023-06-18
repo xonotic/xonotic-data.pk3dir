@@ -102,7 +102,7 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 
 	// If we want the timer to keep running, we enable expiring then use the exact time the powerup will finish at.
 	// If we want the timer to freeze, we disable expiring and we just use the time left of the powerup.
-	// See Item_SetExpiring() below.
+	// See ITEM_SET_EXPIRING() below.
 	float finished = (freezeTimer ? timeleft : t);
 
 	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
@@ -125,7 +125,7 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 		return;
 
 	if(!freezeTimer)
-		Item_SetExpiring(e, true);
+		ITEM_SET_EXPIRING(e, true);
 
 	// Use armor as timer freezer
 	if(freezeTimer)

@@ -332,7 +332,7 @@ MUTATOR_HOOKFUNCTION(random_items, FilterItem, CBC_ORDER_LAST)
 		return false;
 	}
 	entity item = M_ARGV(0, entity);
-	if (Item_IsLoot(item))
+	if (ITEM_IS_LOOT(item))
 	{
 		return false;
 	}
@@ -352,7 +352,7 @@ MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 		return;
 	}
 	entity item = M_ARGV(0, entity);
-	if (Item_IsLoot(item))
+	if (ITEM_IS_LOOT(item))
 	{
 		return;
 	}

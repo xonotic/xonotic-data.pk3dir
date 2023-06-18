@@ -9,7 +9,7 @@ bool isPushable(entity e)
 		return false;
 	if(e.iscreature)
 		return true;
-	if (Item_IsLoot(e))
+	if (ITEM_IS_LOOT(e))
 	{
 		return true;
 	}
