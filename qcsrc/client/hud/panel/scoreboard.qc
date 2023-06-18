@@ -127,8 +127,7 @@ string Label_getInfo(string label, int mode)
 	case label: \
 		if (!mode) \
 			return CTX(strlabel); \
-		else \
-			LOG_HELP(strcat("^3", label, padding, "^7", help));
+		LOG_HELP("^3", label, padding, "^7", help);
 
 	switch(label)
 	{
