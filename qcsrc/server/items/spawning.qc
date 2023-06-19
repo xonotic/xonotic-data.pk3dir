@@ -121,6 +121,53 @@ bool Item_InitializeLoot(entity item, string class_name, vector position,
 	return true;
 }
 
+// An optimised and generic way to initialise items (loot or permanent)
+// required field: itemdef (faster, preferred) OR classname
+// optional fields: origin, velocity, lifetime, noalign
+// lifetime < 0 means permanent (not loot), lifetime > 0 overrides the default
+// permanent items only: noalign means the item is suspended (won't drop to floor)
+bool Item_Initialise(entity item)
+{
+	if (item.lifetime >= 0)
+	{
+		Item_SetLoot(item, true);
+		item.pickup_anyway = true; // these are ALWAYS pickable
+	}
+
+	if (item.itemdef) // no search required
+	{
+		if (item.itemdef.instanceOfWeapon)
+			weapon_defaultspawnfunc(item, item.itemdef);
+		else
+			StartItem(item, item.itemdef);
+	}
+	else // fall back to classname search
+	{
+		FOREACH(Weapons, it.m_canonical_spawnfunc == item.classname,
+		{
+			weapon_defaultspawnfunc(item, it);
+			goto classname_found;
+		});
+		FOREACH(Items, it.m_canonical_spawnfunc == item.classname,
+		{
+			StartItem(item, it);
+			goto classname_found;
+		});
+		LOG_FATALF("Item_Initialize: Invalid classname: %s", item.classname);
+		LABEL(classname_found)
+	}
+
+	if (wasfreed(item))
+		return false;
+
+	// StartItem sets the default .wait expiry time which is respected by Item_Think()
+	if (item.lifetime > 0)
+		item.wait = time + item.lifetime;
+
+	item.spawnfunc_checked = true;
+	return true;
+}
+
 bool Item_IsLoot(entity item)
 {
 	return item.m_isloot || item.classname == "droppedweapon";

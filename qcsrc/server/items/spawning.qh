@@ -6,6 +6,9 @@
 
 bool startitem_failed;
 
+/// \brief lifetime < 0 means permanent (not loot), lifetime > 0 overrides the default
+.float lifetime;
+
 /// \brief Returns the item definition corresponding to the given class name.
 /// \param[in] class_name Class name to search for.
 /// \return Item definition corresponding to the given class name or NULL is not
@@ -67,6 +70,15 @@ entity Item_CreateLoot(string class_name, vector position, vector vel,
 /// initialization.
 bool Item_InitializeLoot(entity item, string class_name, vector position,
 	vector vel, float time_to_live);
+
+/// \brief An optimised and generic way to initialise items (loot or permanent)
+/// \param[in] item The item entity to initialise
+/// \return True on success, false otherwise.
+/// \nore required field: itemdef (faster, preferred) OR classname
+/// optional fields: origin, velocity, lifetime, noalign
+/// lifetime < 0 means permanent (not loot), lifetime > 0 overrides the default
+/// permanent items only: noalign means the item is suspended (won't drop to floor)
+bool Item_Initialise(entity item);
 
 /// \brief Returns whether the item is loot.
 /// \param[in] item Item to check.
