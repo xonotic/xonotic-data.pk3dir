@@ -621,7 +621,10 @@ MUTATOR_HOOKABLE(SetWeaponreplace, EV_SetWeaponreplace);
     /**/
 MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
-/** called when a bot checks a target to attack */
+/**
+ * called when a bot checks a target to attack
+ * return false to allow the bot to attack the target (inverted logic)
+ */
 #define EV_BotShouldAttack(i, o) \
     /** bot */    i(entity, MUTATOR_ARGV_0_entity) \
     /** target */ i(entity, MUTATOR_ARGV_1_entity) \

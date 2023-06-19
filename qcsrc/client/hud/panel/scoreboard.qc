@@ -176,9 +176,9 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^teamkills"),     "teamkills", "          ", _("Number of teamkills"));
 		SCO_LABEL(_("SCO^ticks"),         "ticks", "              ", _("Number of ticks (Domination)"));
 		SCO_LABEL(_("SCO^time"),          "time", "               ", _("Total time raced (Race/CTS)"));
-		default: return label;
 	}
 	return label;
+#undef SCO_LABEL
 }
 
 bool scoreboard_ui_disabling;
