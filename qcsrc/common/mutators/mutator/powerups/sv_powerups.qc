@@ -92,12 +92,11 @@ void powerups_DropItem_Think(entity this)
 
 void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 {
-	entity item = Item_DefinitionFromInternalName(effect.netname);
 	float t = StatusEffects_gettime(effect, this);
 	float timeleft = t - time;
 	float maxtime = 0;
 
-	if(timeleft <= 1 || !item)
+	if(timeleft <= 1)
 		return;
 	entity e = spawn();
 
@@ -108,18 +107,21 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 
 	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
 	// otherwise it'll disappear after the timer runs out.
-	float time_to_live = (freezeTimer ? autocvar_g_items_dropped_lifetime : timeleft);
+	e.lifetime = (freezeTimer ? autocvar_g_items_dropped_lifetime : timeleft);
 
 	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
-	switch(item)
+	switch (effect)
 	{
-		case ITEM_Strength: e.strength_finished = finished; maxtime = autocvar_g_balance_powerup_strength_time; break;
-		case ITEM_Shield: e.invincible_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
-		case ITEM_Invisibility: e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
-		case ITEM_Speed: e.speed_finished = finished; maxtime = autocvar_g_balance_powerup_speed_time; break;
+		case STATUSEFFECT_Strength:     e.itemdef = ITEM_Strength;     e.strength_finished = finished;     maxtime = autocvar_g_balance_powerup_strength_time;   break;
+		case STATUSEFFECT_Shield:       e.itemdef = ITEM_Shield;       e.invincible_finished = finished;   maxtime = autocvar_g_balance_powerup_invincible_time; break;
+		case STATUSEFFECT_Invisibility: e.itemdef = ITEM_Invisibility; e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
+		case STATUSEFFECT_Speed:        e.itemdef = ITEM_Speed;        e.speed_finished = finished;        maxtime = autocvar_g_balance_powerup_speed_time;      break;
+		default: delete(e); return;
 	}
-	vector vel = W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false);
-	if (!Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin, vel, time_to_live))
+
+	e.origin = this.origin;
+	e.velocity = W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false);
+	if (!Item_Initialise(e))
 		return;
 
 	if(!freezeTimer)
@@ -131,7 +133,7 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 
 	// Create waypoint displaying time left of the powerup
 	entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, e, '0 0 1' * e.maxs.z, NULL, 0, e, waypointsprite_attached, true, RADARICON_Item);
-	wp.wp_extra = item.m_id;
+	wp.wp_extra = e.itemdef.m_id;
 	WaypointSprite_UpdateMaxHealth(e.waypointsprite_attached, maxtime);
 	WaypointSprite_UpdateHealth(e.waypointsprite_attached, timeleft);
 	// Item_Think() will call powerups_DropItem_Think() to update the waypoint
