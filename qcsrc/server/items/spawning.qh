@@ -9,67 +9,12 @@ bool startitem_failed;
 /// \brief lifetime < 0 means permanent (not loot), lifetime > 0 overrides the default
 .float lifetime;
 
-/// \brief Returns the item definition corresponding to the given class name.
-/// \param[in] class_name Class name to search for.
-/// \return Item definition corresponding to the given class name or NULL is not
-/// found.
-entity Item_FindDefinition(string class_name);
-
-/// \brief Returns the item definition corresponding to the given internal name.
-/// \param[in] item_name Internal netname to search for.
-/// \return Item definition corresponding to the given internal name or NULL is not
-/// found.
-entity Item_DefinitionFromInternalName(string item_name);
-
-/// \brief Checks whether the items with the specified class name are allowed to
-/// spawn.
-/// \param[in] class_name Item class name to check.
-/// \return True items with the specified class name are allowed to spawn, false
-/// otherwise.
-bool Item_IsAllowed(string class_name);
-
 /// \brief Checks whether the items with the specified definition are allowed to
 /// spawn.
 /// \param[in] definition Item definition to check.
 /// \return True items with the specified definition are allowed to spawn, false
 /// otherwise.
 bool Item_IsDefinitionAllowed(entity definition);
-
-/// \brief Creates a new item.
-/// \param[in] class_name Class name of the item.
-/// \param[in] position Position of the item.
-/// \param[in] no_align True if item should be placed directly at specified
-/// position, false to let it drop to the ground.
-/// \return Item on success, NULL otherwise.
-entity Item_Create(string class_name, vector position, bool no_align);
-
-/// \brief Initializes the item according to class name.
-/// \param[in,out] item Item to initialize.
-/// \param[in] class_name Class name to use.
-/// \return No return.
-/// \nore This function is useful if you want to set some item properties before
-/// initialization.
-void Item_Initialize(entity item, string class_name);
-
-/// \brief Creates a loot item.
-/// \param[in] class_name Class name of the item.
-/// \param[in] position Position of the item.
-/// \param[in] velocity of the item.
-/// \param[in] time_to_live Amount of time after which the item will disappear.
-/// \return Item on success, NULL otherwise.
-entity Item_CreateLoot(string class_name, vector position, vector vel,
-	float time_to_live);
-
-/// \brief Initializes the loot item.
-/// \param[in] class_name Class name of the item.
-/// \param[in] position Position of the item.
-/// \param[in] velocity of the item.
-/// \param[in] time_to_live Amount of time after which the item will disappear.
-/// \return True on success, false otherwise.
-/// \nore This function is useful if you want to set some item properties before
-/// initialization.
-bool Item_InitializeLoot(entity item, string class_name, vector position,
-	vector vel, float time_to_live);
 
 /// \brief An optimised and generic way to initialise items (loot or permanent)
 /// \param[in] item The item entity to initialise
