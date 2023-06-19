@@ -1025,6 +1025,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
 		case "say": case "say_team": case "tell": break;   // chat has its own flood control in chat.qc
+		case "minigame": break;                            // minigame commands do not require flood control
 		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
 			if(!IS_CLIENT(this)) // on connection
 			{
