@@ -2,6 +2,7 @@
 
 #include <common/csqcmodel_settings.qh>
 #include <common/deathtypes/all.qh>
+#include <common/debug.qh>
 #include <common/effects/all.qh>
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
@@ -46,11 +47,13 @@
 #include <server/antilag.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
 #include <server/clientkill.qh>
-#include <server/command/common.qh>
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
 #include <server/command/common.qh>
 #include <server/command/vote.qh>
 #include <server/compat/quake3.qh>
@@ -137,6 +140,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (observe_blocked_if_eliminated && INGAME(to))
+	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 
@@ -257,7 +262,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		{
 			if (vote_called) { VoteCount(false); }
 			this.ready = false;
-			recount_ready = true;
+			if (warmup_stage || game_starttime > time) recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -308,7 +313,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	TRANSMUTE(Observer, this);
 
-	if(recount_ready) ReadyCount();
+	if(recount_ready) ReadyCount(); // FIXME: please add comment about why this is delayed
 
 	WaypointSprite_PlayerDead(this);
 	accuracy_resend(this);
@@ -542,6 +547,19 @@ void FixPlayermodel(entity player)
 				setcolor(player, stof(autocvar_sv_defaultplayercolors));
 }
 
+void GiveWarmupResources(entity this)
+{
+	SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+	SetResource(this, RES_HEALTH, warmup_start_health);
+	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
+	STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
+}
+
 void PutPlayerInServer(entity this)
 {
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -584,17 +602,10 @@ void PutPlayerInServer(entity this)
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
-	if (warmup_stage) {
-		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
-		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
-		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
-		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
-		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
-		SetResource(this, RES_HEALTH, warmup_start_health);
-		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
-		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
-	} else {
+	if (warmup_stage)
+		GiveWarmupResources(this);
+	else
+	{
 		SetResource(this, RES_SHELLS, start_ammo_shells);
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
@@ -641,7 +652,8 @@ void PutPlayerInServer(entity this)
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.9 : autocvar_sv_player_scale);
+	// DP model scaling uses 1/16 accuracy and 13/16 is closest to 56/69
+	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.8125 : autocvar_sv_player_scale);
 	this.fade_time = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
@@ -820,6 +832,9 @@ void PutPlayerInServer(entity this)
 		this.alivetime = time;
 
 	antilag_clear(this, CS(this));
+
+	if (warmup_stage < 0 || warmup_stage > 1)
+		ReadyCount();
 }
 
 /** Called when a client spawns in the server */
@@ -979,7 +994,7 @@ bool findinlist_abbrev(string tofind, string list)
 		return false; // empty list or search, just return
 
 	// this function allows abbreviated strings!
-	FOREACH_WORD(list, it == substring(tofind, 0, strlen(it)),
+	FOREACH_WORD(list, it != "" && it == substring(tofind, 0, strlen(it)),
 	{
 		return true;
 	});
@@ -1007,6 +1022,8 @@ bool PlayerInIDList(entity p, string idlist)
 
 bool PlayerInList(entity player, string list)
 {
+	if (list == "")
+		return false;
 	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
 }
 
@@ -1031,31 +1048,23 @@ void ClientPreConnect(entity this)
 }
 #endif
 
-void SendWelcomemessage(entity this, bool force_centerprint)
-{
-	msg_entity = this;
-	WriteHeader(MSG_ONE, TE_CSQC_SERVERWELCOME);
-	SendWelcomemessage_msg_type(this, force_centerprint, MSG_ONE);
-}
-
 // NOTE csqc uses the active mutators list sent by this function
 // to understand which mutators are enabled
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
-void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type)
+void SendWelcomeMessage(entity this, int msg_type)
 {
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
-		WriteString(msg_type, Campaign_GetTitle());
 		WriteByte(msg_type, Campaign_GetLevelNum());
-		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
-	WriteByte(msg_type, force_centerprint);
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
 	WriteByte(msg_type, CS(this).version_mismatch);
 	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
+	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);
+	WriteByte(msg_type, GetPlayerLimit());
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
@@ -1158,12 +1167,18 @@ void ClientConnect(entity this)
 	{
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
+		// quickmenu file must be put in a subfolder with an unique name
+		// to reduce chances of overriding custom client quickmenus
+		if (waypointeditor_enabled)
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", "wpeditor.txt"));
+		else if (autocvar_sv_quickmenu_file != "" && strstrofs(autocvar_sv_quickmenu_file, "/", 0) && fexists(autocvar_sv_quickmenu_file))
+			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", autocvar_sv_quickmenu_file));
 	}
 
 	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
 			send_CSQC_teamnagger();
 
@@ -1174,7 +1189,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = autocvar_sv_qcphysics;
+	this.move_qcphysics = true;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -1185,13 +1200,21 @@ void ClientConnect(entity this)
 
 	Handicap_Initialize(this);
 
+	// playban
+	if (PlayerInList(this, autocvar_g_playban_list))
+		TRANSMUTE(Observer, this);
+
+	if (PlayerInList(this, autocvar_g_chatban_list)) // chatban
+		CS(this).muted = true;
+
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
 	if (player_count == 1)
+	{
+		if (autocvar_sv_autopause && server_is_dedicated)
+			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
-
-	if (IS_REAL_CLIENT(this) && !IS_PLAYER(this) && !autocvar_g_campaign)
-		CS(this).motd_actived_time = -1; // the welcome message is shown by the client
+	}
 }
 /*
 =============
@@ -1206,6 +1229,20 @@ void player_powerups_remove_all(entity this);
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
+
+	/* from "ignore" command */
+	strfree(this.ignore_list);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	{
+		if(it.crypto_idfp && it.crypto_idfp != "")
+			continue;
+		string mylist = ignore_removefromlist(it, this);
+		if(it.ignore_list)
+			strunzone(it.ignore_list);
+
+		it.ignore_list = strzone(mylist);
+	});
+	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1252,7 +1289,7 @@ void ClientDisconnect(entity this)
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
-	ReadyCount();
+	if (warmup_stage || game_starttime > time) ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
 	player_powerups_remove_all(this); // stop powerup sound
@@ -1961,7 +1998,8 @@ bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
-	stuffcmd(this, "menu_showteamselect\n");
+	if (frametime) // once per frame is more than enough
+		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
 void Join(entity this)
@@ -1995,10 +2033,11 @@ int GetPlayerLimit()
 {
 	if(g_duel)
 		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
-	int player_limit = autocvar_g_maxplayers;
+	// don't return map_maxplayers during intermission as it would interfere with MapHasRightSize()
+	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
 	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
 	player_limit = M_ARGV(0, int);
-	return player_limit;
+	return player_limit < maxclients ? player_limit : 0;
 }
 
 /**
@@ -2022,6 +2061,17 @@ int nJoinAllowed(entity this, entity ignore)
 	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 		return 0; // forced spectators can never join
 
+	static float msg_time = 0;
+	if(this && !INGAME(this) && ignore && PlayerInList(this, autocvar_g_playban_list))
+	{
+		if(time > msg_time)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
+			msg_time = time + 0.5;
+		}
+		return 0;
+	}
+
 	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
@@ -2040,70 +2090,13 @@ int nJoinAllowed(entity this, entity ignore)
 	else if(player_limit > 0 && currentlyPlaying < player_limit)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
-	static float msg_time = 0;
 	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
 	{
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
 		msg_time = time + 0.5;
 	}
 
 	return free_slots;
-}
-
-void PrintWelcomeMessage(entity this)
-{
-	if(CS(this).motd_actived_time == 0)
-	{
-		if (autocvar_g_campaign) {
-			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, false);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this)) {
-				CS(this).motd_actived_time = time;
-				SendWelcomemessage(this, true);
-			}
-		}
-	}
-	else if(CS(this).motd_actived_time > 0) // showing MOTD or campaign message
-	{
-		if (autocvar_g_campaign) {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		} else {
-			if (PHYS_INPUT_BUTTON_INFO(this))
-				CS(this).motd_actived_time = time;
-			else if (time - CS(this).motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-			}
-		}
-	}
-	else //if(CS(this).motd_actived_time < 0) // just connected, motd is active
-	{
-		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
-			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if (CS(this).motd_actived_time == -2)
-		{
-			// instantly hide MOTD
-			CS(this).motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
-		}
-		else if (IS_PLAYER(this) || IS_SPEC(this))
-		{
-			// FIXME occasionally for some reason MOTD never goes away
-			// delay MOTD removal a little bit in the hope it fixes this bug
-			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
-				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
-			else //if (CS(this).motd_actived_time < -2)
-				CS(this).motd_actived_time++;
-		}
-	}
 }
 
 bool joinAllowed(entity this)
@@ -2115,6 +2108,32 @@ bool joinAllowed(entity this)
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
 	return true;
+}
+
+void show_entnum(entity this)
+{
+	// waypoint editor implements a similar feature for waypoints
+	if (waypointeditor_enabled)
+		return;
+
+	if (wasfreed(this.wp_aimed))
+		this.wp_aimed = NULL;
+
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
+	entity ent = NULL;
+	if (trace_ent)
+	{
+		ent = trace_ent;
+		if (ent != this.wp_aimed)
+		{
+			string str = sprintf(
+				"^7ent #%d\n^8 netname: ^3%s\n^8 classname: ^5%s\n^8 origin: ^2'%s'",
+				etof(ent), ent.netname, ent.classname, vtos(ent.origin));
+			debug_text_3d((ent.absmin + ent.absmax) * 0.5, str, 0, 7, '0 0 0');
+		}
+	}
+	if (this.wp_aimed != ent)
+		this.wp_aimed = ent;
 }
 
 .string shootfromfixedorigin;
@@ -2137,6 +2156,8 @@ bool PlayerThink(entity this)
 	}
 
 	if (frametime) player_powerups(this);
+
+	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
 	if (IS_DEAD(this)) {
 		if (this.personal && g_race_qualifying) {
@@ -2282,11 +2303,18 @@ void ObserverOrSpectatorThink(entity this)
 		}
 	}
 
+	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
+
 	if (IS_BOT_CLIENT(this) && !CS(this).autojoin_checked)
 	{
 		CS(this).autojoin_checked = true;
 		TRANSMUTE(Player, this);
 		PutClientInServer(this);
+
+		.entity weaponentity = weaponentities[0];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			W_NextWeapon(this, 0, weaponentity);
+
 		return;
 	}
 
@@ -2318,10 +2346,12 @@ void ObserverOrSpectatorThink(entity this)
 				}
 				CS(this).impulse = 0;
 			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				this.would_spectate = false;
-				this.flags &= ~FL_JUMPRELEASED;
-				TRANSMUTE(Observer, this);
-				PutClientInServer(this);
+				if(!observe_blocked_if_eliminated || !INGAME(this)) {
+					this.would_spectate = false;
+					this.flags &= ~FL_JUMPRELEASED;
+					TRANSMUTE(Observer, this);
+					PutClientInServer(this);
+				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
@@ -2338,6 +2368,7 @@ void ObserverOrSpectatorThink(entity this)
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
+			// primary attack pressed
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
@@ -2536,9 +2567,6 @@ void PlayerPreThink (entity this)
 	if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 		PlayerUseKey(this);
 	CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
-
-	if (IS_REAL_CLIENT(this))
-		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)

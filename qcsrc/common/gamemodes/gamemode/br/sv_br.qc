@@ -1286,7 +1286,7 @@ void br_Start(){
     cvar_set("fraglimit", "0");
     cvar_set("leadlimit", "0");
 
-    reset_map(true, false);
+    reset_map(false);
 
     ring = ring_initialize();
     dropship = dropship_initialize();

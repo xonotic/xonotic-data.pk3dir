@@ -69,7 +69,6 @@ spawnfunc(trigger_swamp)
 	// Init stuff
 	EXACTTRIGGER_INIT;
 	this.active = ACTIVE_ACTIVE;
-	//trigger_init(this);
 	setthink(this, swamp_think);
 	this.nextthink = time;
 

@@ -450,7 +450,8 @@ void Create_Notification_Entity_Annce(entity notif,
 										float channel,
 										string snd,
 										float vol,
-										float position)
+										float position,
+										float queuetime)
 		{
 			// Set MSG_ANNCE information and handle precaching
 			#ifdef CSQC
@@ -466,6 +467,7 @@ void Create_Notification_Entity_Annce(entity notif,
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
 						notif.nent_position = position;
+						notif.nent_queuetime = queuetime;
 					}
 				}
 				else
@@ -838,14 +840,14 @@ void Dump_Notifications(int fh, bool alsoprint)
 		}
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = print to console, "
@@ -853,21 +855,21 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = centerprint"
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"Enable this multiple notification"
 		);
 	});
 
-	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
+	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
 			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
@@ -962,11 +964,8 @@ void Dump_Notifications(int fh, bool alsoprint)
 		"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement"
 	);
 
-	NOTIF_WRITE(sprintf(
-		(
-			"\n// Notification counts (total = %d): "
-			"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
-		),
+	LOG_INFOF("Notification counts (total = %d): "
+		"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n",
 		(
 			NOTIF_ANNCE_COUNT +
 			NOTIF_INFO_COUNT +
@@ -979,7 +978,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 		NOTIF_CENTER_COUNT,
 		NOTIF_MULTI_COUNT,
 		NOTIF_CHOICE_COUNT
-	));
+	);
 	#undef NOTIF_WRITE_HARDCODED
 	#undef NOTIF_WRITE_ENTITY
 	#undef NOTIF_WRITE
@@ -1180,6 +1179,58 @@ void Local_Notification_centerprint_Add(
 	#endif
 	centerprint_Add(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
+
+void Local_Notification_Queue_Run(MSG net_type, entity notif)
+{		
+	switch (net_type)
+	{
+		case MSG_ANNCE:
+		{
+			Local_Notification_sound(notif.nent_channel, notif.nent_snd, notif.nent_vol, notif.nent_position);
+			break;
+		}
+	}
+}
+
+void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
+{	
+	// Guess length if required
+	if(queue_time == 0)
+		queue_time = soundlength(AnnouncerFilename(notif.nent_snd));
+
+	if(queue_time == -1 || time > notif_queue_next_time) {
+		// Run immediately
+		Local_Notification_Queue_Run(net_type, notif);
+		notif_queue_next_time = time + queue_time;
+	} else {
+		// Put in queue
+		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
+	
+		notif_queue_type[notif_queue_length] = net_type;
+		notif_queue_entity[notif_queue_length] = notif;
+		notif_queue_time[notif_queue_length] = notif_queue_next_time;
+		
+		notif_queue_next_time += queue_time;
+		++notif_queue_length;
+	}
+}
+
+void Local_Notification_Queue_Process()
+{
+	if(!notif_queue_length || notif_queue_time[0] > time)
+		return;
+
+	Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0]);
+
+	// Shift queue to the left
+	--notif_queue_length;
+	for (int j = 0; j < notif_queue_length; j++) {
+		notif_queue_type[j] = notif_queue_type[j+1];
+		notif_queue_entity[j] = notif_queue_entity[j+1];
+		notif_queue_time[j] = notif_queue_time[j+1];
+	}
+}
+
 #endif
 
 void Local_Notification(MSG net_type, Notification net_name, ...count)
@@ -1252,7 +1303,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		case MSG_ANNCE:
 		{
 			#ifdef CSQC
-			Local_Notification_sound(notif.nent_channel, notif.nent_snd, notif.nent_vol, notif.nent_position);
+			Local_Notification_Queue_Add(net_type, notif, notif.nent_queuetime);
 			#else
 			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
 			#endif
@@ -1360,6 +1411,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 				found_choice.nent_floatcount,
 				s1, s2, s3, s4,
 				f1, f2, f3, f4);
+			break;
 		}
 	}
 }

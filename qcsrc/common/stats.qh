@@ -125,8 +125,6 @@ REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(NADE_BONUS, float)
 REGISTER_STAT(NADE_BONUS_TYPE, int)
 REGISTER_STAT(NADE_BONUS_SCORE, float)
-REGISTER_STAT(HEALING_ORB, float)
-REGISTER_STAT(HEALING_ORB_ALPHA, float)
 REGISTER_STAT(PLASMA, int)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
@@ -137,12 +135,9 @@ REGISTER_STAT(PLAYERSALIVE, int)
 REGISTER_STAT(SQUADCOLORS, bool)
 REGISTER_STAT(ROUNDLOST, int)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
-REGISTER_STAT(ENTRAP_ORB, float)
-REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
-REGISTER_STAT(VEIL_ORB, float)
-REGISTER_STAT(VEIL_ORB_ALPHA, float)
+REGISTER_STAT(TKA_BALLSTATUS, int)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 0;
@@ -213,7 +208,7 @@ int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
 float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
-int autocvar_sv_gameplayfix_unstickplayers = 2;
+int autocvar_sv_gameplayfix_unstickplayers = 0;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
 int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
@@ -366,6 +361,12 @@ bool autocvar_sv_slick_applygravity;
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 REGISTER_STAT(Q3COMPAT, int, q3compat)
+// FIXME: workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2812
+#ifdef SVQC
+	#define Q3COMPAT_COMMON q3compat
+#elif defined(CSQC)
+	#define Q3COMPAT_COMMON STAT(Q3COMPAT)
+#endif
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"

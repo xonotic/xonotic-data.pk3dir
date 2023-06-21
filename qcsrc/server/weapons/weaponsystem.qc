@@ -165,7 +165,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	else this.alpha = 1;
 
 	Weapon wep = this.owner.(weaponentity).m_weapon;
-	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors, this.owner.(weaponentity));
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors, this.owner.(weaponentity));
 	this.colormap = this.owner.colormap;
 	this.skin = w_ent.skin;
 
@@ -670,7 +670,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
-	copyentity(flash, xflash);
+	copyentity_qc(flash, xflash);
 
 	flash.viewmodelforclient = actor;
 

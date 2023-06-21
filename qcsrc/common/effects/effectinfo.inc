@@ -9107,4 +9107,29 @@ SUB(respawn_ghost) {
 	MY(velocityjitter) = '0 0 256';
 }
 
+// originally based on goldendust
+DEF(item_despawn);
+SUB(item_despawn) {
+	MY(type) = "snow";
+//	MY(type) = "smoke";
+	MY(blend) = "add";
+	MY(alpha_min) = 192;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xff9600";
+	MY(color_max) = "0xffefb8";
+	MY(count) = 32;
+	MY(originjitter) = '8 8 8';
+	MY(sizeincrease) = 1;
+	MY(size_min) = 0.5;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(velocityjitter) = '16 16 32';
+	MY(lightradius) = 48;
+	MY(lightradiusfade) 64;
+	MY(lightcolor) '1 0.75 0.36';
+	MY(lightshadow) 1;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!

@@ -33,7 +33,7 @@ float Campaign_Invalid()
 	string thismapname, wantedmapname;
 	thismapname = GetMapname();
 	wantedmapname = campaign_gametype[0];
-	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname, false))
+	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname, false, false))
 		return CampaignBailout("wrong game type!");
 	wantedmapname = campaign_mapname[0];
 	if(wantedmapname != thismapname)
@@ -41,19 +41,9 @@ float Campaign_Invalid()
 	return 0;
 }
 
-string Campaign_GetTitle()
-{
-	return campaign_title;
-}
-
 int Campaign_GetLevelNum()
 {
 	return campaign_level + 1;
-}
-
-string Campaign_GetMessage()
-{
-	return strcat(campaign_shortdesc[0], "\n^3\n", campaign_longdesc[0]);
 }
 
 void CampaignPreInit()
@@ -72,7 +62,7 @@ void CampaignPreInit()
 
 	if(autocvar_sv_cheats)
 	{
-		MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false));
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false, false));
 		CampaignFile_Unload();
 		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
 		return;
@@ -101,7 +91,7 @@ void CampaignPreInit()
 	cvar_settemp("skill", ftos(baseskill));
 	cvar_settemp("bot_number", ftos(campaign_bots[0]));
 
-	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false));
+	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false, false));
 
 	if(Campaign_Invalid())
 		return;

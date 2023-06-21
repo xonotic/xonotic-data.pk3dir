@@ -54,7 +54,7 @@ bool MapHasRightSize(string map)
 {
 	int minplayers = max(0, floor(autocvar_minplayers));
 	if (teamplay)
-		minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+		minplayers = max(0, floor(autocvar_minplayers_per_team) * AVAILABLE_TEAMS);
 	if (autocvar_g_maplist_check_waypoints
 		&& (currentbots || autocvar_bot_number || player_count < minplayers))
 	{
@@ -71,32 +71,32 @@ bool MapHasRightSize(string map)
 		return true;
 
 	// open map size restriction file
-	string opensize_msg = strcat("opensize ", map);
-	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	if(!MapReadSizes(map))
+		return true; // map has no size restrictions
+
+	string checksize_msg = strcat("MapHasRightSize ", map);
 	int player_limit = ((autocvar_g_maplist_sizes_count_maxplayers) ? GetPlayerLimit() : 0);
 	int pcount = ((player_limit > 0) ? min(player_count, player_limit) : player_count); // bind it to the player limit so that forced spectators don't influence the limits
+
 	if(!autocvar_g_maplist_sizes_count_bots)
 		pcount -= currentbots;
-	if(fh >= 0)
+	pcount -= rint(cvar("g_maplist_sizes_specparty") * pcount);
+
+	// ensure small maps can be selected when pcount is low
+	if(map_minplayers <= (_MapInfo_GetTeamPlayBool(MapInfo_CurrentGametype()) ? 4 : 2))
+		map_minplayers = 0;
+
+	if(pcount < map_minplayers)
 	{
-		opensize_msg = strcat(opensize_msg, ": ok, ");
-		int mapmin = stoi(fgets(fh));
-		int mapmax = stoi(fgets(fh));
-		fclose(fh);
-		if(pcount < mapmin)
-		{
-			LOG_TRACE(opensize_msg, "not enough");
-			return false;
-		}
-		if(mapmax && pcount > mapmax)
-		{
-			LOG_TRACE(opensize_msg, "too many");
-			return false;
-		}
-		LOG_TRACE(opensize_msg, "right size");
-		return true;
+		LOG_TRACE(checksize_msg, ": not enough");
+		return false;
 	}
-	LOG_TRACE(opensize_msg, ": not found");
+	if(map_maxplayers && pcount > map_maxplayers)
+	{
+		LOG_TRACE(checksize_msg, ": too many");
+		return false;
+	}
+	LOG_TRACE(checksize_msg, ": right size");
 	return true;
 }
 
@@ -210,9 +210,9 @@ float MaplistMethod_Random() // random map selection
 	return -1;
 }
 
-float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
+float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
@@ -232,11 +232,21 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 		// insert the current map there
 		newlist = "";
-		for(j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
-			newlist = strcat(newlist, " ", argv(j));
+		for(j = 1; j < insertpos; ) // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
+		{
+			if (j + 2 < insertpos)
+				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			else
+				newlist = strcat(newlist, " ", argv(j++));
+		}
 		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
-		for(j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
-			newlist = strcat(newlist, " ", argv(j));
+		for(j = insertpos; j < Map_Count; ) // i == Map_Count: no loop, has just been inserted as last
+		{
+			if (j + 2 < Map_Count)
+				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			else
+				newlist = strcat(newlist, " ", argv(j++));
+		}
 		newlist = substring(newlist, 1, strlen(newlist) - 1);
 		cvar_set("g_maplist", newlist);
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
@@ -399,7 +409,8 @@ string GotoMap(string m)
 	if(!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
 	cvar_set("nextmap", m);
-	cvar_set("_endmatch", "1");
+	if (!intermission_running)
+		cvar_set("_endmatch", "1");
 	if(mapvote_initialized || alreadychangedlevel)
 	{
 		if(DoNextMapOverride(0))

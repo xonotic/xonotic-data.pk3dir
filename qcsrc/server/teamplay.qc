@@ -160,7 +160,7 @@ int Team_GetNumberOfTeamsWithOwnedItems()
 
 void setcolor(entity this, int clr)
 {
-#if 0
+#if 1
 	this.clientcolors = clr;
 	this.team = (clr & 15) + 1;
 #else
@@ -527,7 +527,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if (autocvar_bot_vs_human && AvailableTeams() == 2 && for_whom)
+	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2 && for_whom)
 	{
 		if (autocvar_bot_vs_human > 0)
 		{

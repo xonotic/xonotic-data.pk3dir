@@ -269,7 +269,6 @@ void viewmodel_animate(entity this)
 		this.origin += bobmodel_ofs(view);
 }
 
-.vector viewmodel_origin, viewmodel_angles;
 .float weapon_nextthink;
 .float weapon_eta_last;
 .float weapon_switchdelay;
@@ -278,8 +277,6 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	if(!this.activeweapon || !autocvar_r_drawviewmodel)
-		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	int wepskin = this.m_skin;
@@ -287,7 +284,7 @@ void viewmodel_draw(entity this)
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, NULL, c, this);
+	vector g = weaponentity_glowmod(wep, c, this);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
@@ -313,8 +310,7 @@ void viewmodel_draw(entity this)
 		{
 			this.name_last = name;
 			CL_WeaponEntity_SetModel(this, name, swap);
-			this.viewmodel_origin = this.origin;
-			this.viewmodel_angles = this.angles;
+			this.origin += autocvar_cl_gunoffset;
 		}
 		anim_update(this);
 		if ((!this.animstate_override && !this.animstate_looping) || time > this.animstate_endtime)
@@ -343,8 +339,6 @@ void viewmodel_draw(entity this)
 		}
 	}
 	this.weapon_eta_last = f;
-	this.origin = this.viewmodel_origin;
-	this.angles = this.viewmodel_angles;
 	this.angles_x = (-90 * f * f);
 	viewmodel_animate(this);
 	MUTATOR_CALLHOOK(DrawViewModel, this);
@@ -359,11 +353,6 @@ STATIC_INIT(viewmodel) {
 vector project_3d_to_2d(vector vec)
 {
 	vec = cs_project(vec);
-	if(cs_project_is_b0rked > 0)
-	{
-		vec.x *= vid_conwidth / vid_width;
-		vec.y *= vid_conheight / vid_height;
-	}
 	return vec;
 }
 
@@ -922,6 +911,7 @@ void HUD_Draw(entity this)
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
+	Local_Notification_Queue_Process();
 }
 
 void ViewLocation_Mouse()
@@ -1613,8 +1603,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		viewmodel_draw(viewmodels[slot]);
+	if(autocvar_r_drawviewmodel)
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			if(viewmodels[slot].activeweapon)
+				viewmodel_draw(viewmodels[slot]);
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -1716,6 +1708,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Debug_Draw();
 #endif
 
+	if (autocvar__scoreboard_team_selection)
+	{
+		Scoreboard_UI_Enable(1);
+		cvar_set("_scoreboard_team_selection", "0");
+	}
 	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
@@ -1724,34 +1721,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	{
 		localcmd("\n", NextFrameCommand, "\n");
 		NextFrameCommand = string_null;
-	}
-
-	// we must do this check AFTER a frame was rendered, or it won't work
-	if(cs_project_is_b0rked == 0)
-	{
-		string w0, h0;
-		w0 = ftos(autocvar_vid_conwidth);
-		h0 = ftos(autocvar_vid_conheight);
-		//setproperty(VF_VIEWPORT, '0 0 0', '640 480 0');
-		//setproperty(VF_FOV, '90 90 0');
-		setproperty(VF_ORIGIN, '0 0 0');
-		setproperty(VF_ANGLES, '0 0 0');
-		setproperty(VF_PERSPECTIVE, 1);
-		vector forward, right, up;
-		MAKE_VECTORS('0 0 0', forward, right, up);
-		vector v1, v2;
-		cvar_set("vid_conwidth", "800");
-		cvar_set("vid_conheight", "600");
-		v1 = cs_project(forward);
-		cvar_set("vid_conwidth", "640");
-		cvar_set("vid_conheight", "480");
-		v2 = cs_project(forward);
-		if(v1 == v2)
-			cs_project_is_b0rked = 1;
-		else
-			cs_project_is_b0rked = -1;
-		cvar_set("vid_conwidth", w0);
-		cvar_set("vid_conheight", h0);
 	}
 
 	HUD_Mouse(local_player);
@@ -1773,7 +1742,7 @@ vector camera_offset, current_camera_offset, mouse_angles, current_angles, curre
 void CSQC_Demo_Camera()
 {
 	float speed, attenuation, dimensions;
-	vector tmp, delta;
+	vector tmp;
 
 	if( autocvar_camera_reset || !camera_mode )
 	{
@@ -1814,30 +1783,22 @@ void CSQC_Demo_Camera()
 		}
 	}
 
-	while (mouse_angles.x < -180) mouse_angles.x = mouse_angles.x + 360;
-	while (mouse_angles.x > 180) mouse_angles.x = mouse_angles.x - 360;
-	while (mouse_angles.y < -180) mouse_angles.y = mouse_angles.y + 360;
-	while (mouse_angles.y > 180) mouse_angles.y = mouse_angles.y - 360;
-
-	// Fix difference when angles don't have the same sign
-	delta = '0 0 0';
-	if(mouse_angles.y < -60 && current_angles.y > 60)
-		delta = '0 360 0';
-	if(mouse_angles.y > 60 && current_angles.y < -60)
-		delta = '0 -360 0';
-
 	if(autocvar_camera_look_player)
 		attenuation = autocvar_camera_look_attenuation;
 	else
 		attenuation = autocvar_camera_speed_attenuation;
 
 	attenuation = 1 / max(1, attenuation);
-	current_angles += (mouse_angles - current_angles + delta) * attenuation;
+	current_angles += (mouse_angles - current_angles) * attenuation;
 
-	while (current_angles.x < -180) current_angles.x = current_angles.x + 360;
-	while (current_angles.x > 180) current_angles.x = current_angles.x - 360;
-	while (current_angles.y < -180) current_angles.y = current_angles.y + 360;
-	while (current_angles.y > 180) current_angles.y = current_angles.y - 360;
+	// limit current pitch angle to sane values
+	if (current_angles.x < -90) current_angles.x = -90;
+	if (current_angles.x > 90 ) current_angles.x = 90;
+
+	// limit mouse and current yaw angles to standard values simultaneously so that the difference
+	// between these angles is not altered
+	while (current_angles.y < -180 && mouse_angles.y < -180) {current_angles.y += 360; mouse_angles.y += 360;}
+	while (current_angles.y > 180  && mouse_angles.y > 180 ) {current_angles.y -= 360; mouse_angles.y -= 360;}
 
 	// Camera position
 	tmp = '0 0 0';

@@ -4,7 +4,7 @@
 // undefined on client, engine cvar
 bool autocvar_physics_ode;
 
-int autocvar_sv_qcphysics = 1; // TODO this is for testing - remove when qcphysics work
+bool use_engine_physics; // debug option for testing legacy engine code
 #endif
 
 // water levels
@@ -113,7 +113,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
 void _Movetype_PushEntityTrace(entity this, vector push);
-bool _Movetype_PushEntity(entity this, vector push, float failonstartsolid, bool dolink);
+bool _Movetype_PushEntity(entity this, vector push, bool dolink);
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);
