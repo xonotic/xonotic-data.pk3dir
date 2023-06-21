@@ -2287,11 +2287,6 @@ void ObserverOrSpectatorThink(entity this)
 		CS(this).autojoin_checked = true;
 		TRANSMUTE(Player, this);
 		PutClientInServer(this);
-
-		.entity weaponentity = weaponentities[0];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			W_NextWeapon(this, 0, weaponentity);
-
 		return;
 	}
 
