@@ -89,26 +89,6 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	return false;
 }
 
-void lag_update(entity this)
-{
-	if (this.lag1_time && time > this.lag1_time) { this.lag_func(this, this.lag1_time, this.lag1_float1, this.lag1_float2, this.lag1_entity1, this.lag1_vec1, this.lag1_vec2, this.lag1_vec3, this.lag1_vec4); this.lag1_time = 0; }
-	if (this.lag2_time && time > this.lag2_time) { this.lag_func(this, this.lag2_time, this.lag2_float1, this.lag2_float2, this.lag2_entity1, this.lag2_vec1, this.lag2_vec2, this.lag2_vec3, this.lag2_vec4); this.lag2_time = 0; }
-	if (this.lag3_time && time > this.lag3_time) { this.lag_func(this, this.lag3_time, this.lag3_float1, this.lag3_float2, this.lag3_entity1, this.lag3_vec1, this.lag3_vec2, this.lag3_vec3, this.lag3_vec4); this.lag3_time = 0; }
-	if (this.lag4_time && time > this.lag4_time) { this.lag_func(this, this.lag4_time, this.lag4_float1, this.lag4_float2, this.lag4_entity1, this.lag4_vec1, this.lag4_vec2, this.lag4_vec3, this.lag4_vec4); this.lag4_time = 0; }
-	if (this.lag5_time && time > this.lag5_time) { this.lag_func(this, this.lag5_time, this.lag5_float1, this.lag5_float2, this.lag5_entity1, this.lag5_vec1, this.lag5_vec2, this.lag5_vec3, this.lag5_vec4); this.lag5_time = 0; }
-}
-
-float lag_additem(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
-{
-	if (this.lag1_time == 0) {this.lag1_time = t;this.lag1_float1 = f1;this.lag1_float2 = f2;this.lag1_entity1 = e1;this.lag1_vec1 = v1;this.lag1_vec2 = v2;this.lag1_vec3 = v3;this.lag1_vec4 = v4;return true;}
-	if (this.lag2_time == 0) {this.lag2_time = t;this.lag2_float1 = f1;this.lag2_float2 = f2;this.lag2_entity1 = e1;this.lag2_vec1 = v1;this.lag2_vec2 = v2;this.lag2_vec3 = v3;this.lag2_vec4 = v4;return true;}
-	if (this.lag3_time == 0) {this.lag3_time = t;this.lag3_float1 = f1;this.lag3_float2 = f2;this.lag3_entity1 = e1;this.lag3_vec1 = v1;this.lag3_vec2 = v2;this.lag3_vec3 = v3;this.lag3_vec4 = v4;return true;}
-	if (this.lag4_time == 0) {this.lag4_time = t;this.lag4_float1 = f1;this.lag4_float2 = f2;this.lag4_entity1 = e1;this.lag4_vec1 = v1;this.lag4_vec2 = v2;this.lag4_vec3 = v3;this.lag4_vec4 = v4;return true;}
-	if (this.lag5_time == 0) {this.lag5_time = t;this.lag5_float1 = f1;this.lag5_float2 = f2;this.lag5_entity1 = e1;this.lag5_vec1 = v1;this.lag5_vec2 = v2;this.lag5_vec3 = v3;this.lag5_vec4 = v4;return true;}
-	// no room for it (what is the best thing to do here??)
-	return false;
-}
-
 bool bot_shouldattack(entity this, entity targ)
 {
 	if (targ.team == this.team)
@@ -148,24 +128,6 @@ bool bot_shouldattack(entity this, entity targ)
 	return true;
 }
 
-void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
-{
-	this.bot_aimtarg = e1;
-	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
-	//this.bot_aimorigin = v1;
-	//this.bot_aimvelocity = v2;
-	this.bot_aimtargorigin = v3;
-	this.bot_aimtargvelocity = v4;
-	if(skill <= 0)
-		this.bot_canfire = (random() < 0.8);
-	else if(skill <= 1)
-		this.bot_canfire = (random() < 0.9);
-	else if(skill <= 2)
-		this.bot_canfire = (random() < 0.95);
-	else
-		this.bot_canfire = 1;
-}
-
 // this function should be called after bot_aim so the aim is reset the next frame
 void bot_aim_reset(entity this)
 {
@@ -199,24 +161,44 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	if (this.bot_prevaimtime == time)
 		return;
 
+	// if skill is high enough bots will not have any aim smoothing or aim errors
+	if (SUPERBOT)
+	{
+		this.v_angle = vectoangles(normalize(v));
+
+		this.v_angle.x *= -1;
+
+		makevectors(this.v_angle);
+		shotorg = this.origin + this.view_ofs;
+		shotdir = v_forward;
+
+		// bot will fire on the next tick
+		this.bot_firetimer = time + 0.001;
+		return;
+	}
+
 	// invalid aim dir (can happen when bot overlaps target)
 	if(!v) return;
 
 	float skill_save = skill;
 	// allow turning in a more natural way when bot is walking
-	if (!this.bot_aimtarg)
+	if (!this.enemy)
 		skill = max(4, skill);
 
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
-	v = normalize(v);
+	//v = normalize(v);
 	//te_lightning2(NULL, this.origin + this.view_ofs, this.origin + this.view_ofs + v * 200);
 	if (time >= this.bot_badaimtime)
 	{
-		this.bot_badaimtime = max(this.bot_badaimtime + 0.3, time);
-		this.bot_badaimoffset = randomvec() * bound(0, 5 - 0.5 * (skill+this.bot_offsetskill), 5) * autocvar_bot_ai_aimskill_offset;
+		this.bot_badaimtime = max(this.bot_badaimtime + 0.2 + 0.3 * random(), time);
+		int f = bound(0, 1 - 0.1 * (skill + this.bot_offsetskill), 1);
+		this.bot_badaimoffset = randomvec() * f * autocvar_bot_ai_aimskill_offset;
+		this.bot_badaimoffset.x *= 0.7; // smaller vertical offset
 	}
-	desiredang = vectoangles(v) + this.bot_badaimoffset;
+	float enemy_factor = ((this.enemy) ? 5 : 2);
+	// apply enemy_factor every frame so that the bigger offset is applied instantly when the bot aims to a new target
+	desiredang = vectoangles(v) + this.bot_badaimoffset * enemy_factor;
 	//dprint(" desired:", vtos(desiredang));
 	if (desiredang.x >= 180)
 		desiredang.x = desiredang.x - 360;
@@ -309,27 +291,11 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//this.v_angle = this.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
 	r = bound(delta_t, r * delta_t * (2 + ((skill + this.bot_mouseskill) ** 3) * 0.005 - random()), 1);
 	this.v_angle += diffang * (r + (1 - r) * bound(0, 1 - autocvar_bot_ai_aimskill_mouse, 1));
-
 	this.v_angle_z = 0;
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	//dprint(" turn:", vtos(this.v_angle));
 
-	makevectors(this.v_angle);
-	shotorg = this.origin + this.view_ofs;
-	shotdir = v_forward;
-
-	//dprint(" dir:", vtos(v_forward));
-	//te_lightning2(NULL, shotorg, shotorg + shotdir * 100);
-
-	// calculate turn angles again
-	//diffang = desiredang - this.v_angle;
-	//diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	//if (diffang_y >= 180)
-	//	diffang_y = diffang_y - 360;
-
 	skill = skill_save;
-
-	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	if (maxfiredeviation <= 0)
 		return;
@@ -340,8 +306,18 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 		return;
 	}
 
+	makevectors(this.v_angle);
+	shotorg = this.origin + this.view_ofs;
+	shotdir = v_forward;
+
 	// decide whether to fire this time
-	if (v * shotdir > cos(maxfiredeviation * DEG2RAD))
+	// v is the calculated trajectory, shotdir is bot view direction
+	// NOTE: checking if (v * shotdir > cos(maxfiredeviation * DEG2RAD)) would be cheaper
+	// but it gets evaluated to true even if v and shotdir have nearly opposite direction
+	vector deviation = vectoangles(v) - vectoangles(shotdir);
+	while (deviation.x < -180) deviation.x += 360; while (deviation.x > 180) deviation.x -= 360;
+	while (deviation.y < -180) deviation.y += 360; while (deviation.y > 180) deviation.y -= 360;
+	if (fabs(deviation.x) < maxfiredeviation && fabs(deviation.y) < maxfiredeviation)
 	{
 		traceline(shotorg, shotorg + shotdir * 1000, false, NULL);
 		if (vdist(trace_endpos - shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10))
@@ -350,8 +326,6 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 			this.bot_firetimer = time + bound(0.1, 0.5 - (skill + this.bot_aggresskill) * 0.05, 0.5);
 		}
 	}
-	//dprint(ftos(maxfiredeviation),"\n");
-	//dprint(" diff:", vtos(diffang), "\n");
 }
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
@@ -360,9 +334,9 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
 }
 
-bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
+bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity, bool shot_accurate)
 {
-	float r, hf, distanceratio;
+	float hf, distanceratio;
 	vector v;
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -383,31 +357,40 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 	makevectors(this.v_angle);
 	shotorg = this.origin + this.view_ofs;
 	shotdir = v_forward;
-	v = bot_shotlead(this.bot_aimtargorigin, this.bot_aimtargvelocity, shotspeed, this.bot_aimlatency);
-	distanceratio = sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
-	distanceratio = bound(0,distanceratio,1);
-	r =  (autocvar_bot_ai_aimskill_firetolerance_maxdegrees-autocvar_bot_ai_aimskill_firetolerance_mindegrees)
-		* (1-distanceratio) + autocvar_bot_ai_aimskill_firetolerance_mindegrees;
-	if (applygravity && this.bot_aimtarg)
+	vector enemy_org = (this.enemy.absmin + this.enemy.absmax) * 0.5;
+	v = bot_shotlead(enemy_org, this.enemy.velocity, shotspeed, this.bot_aimlatency);
+
+	// this formula was created starting from empiric values of distance and max hit angle
+	// with a player as target (32 qu wide) from the center of it right in front of the bot
+	//  distance: 32  50    75   100  150  200  300  400  500
+	//   max ang: 44  24  15.1  10.5  6.5  4.9  3.1  2.3  1.8
+	float dist = max(10, vlen(v - shotorg));
+	float maxfiredeviation = 1000 / (dist - 9) - 0.35;
+
+	float f = (shot_accurate) ? 1 : 1.6;
+	f += bound(0, (10 - (skill + this.bot_aimskill)) * 0.3, 3);
+	maxfiredeviation = min(90, maxfiredeviation * f);
+
+	if (applygravity && this.enemy)
 	{
-		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, this))
+		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.enemy, shotspeed, shotspeedupward, maxshottime, 0, this))
 		{
 			this.dphitcontentsmask = hf;
 			return false;
 		}
 
-		bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
+		bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', maxfiredeviation);
 	}
 	else
 	{
-		bot_aimdir(this, v - shotorg, r);
-		//dprint("AIM: ");dprint(vtos(this.bot_aimtargorigin));dprint(" + ");dprint(vtos(this.bot_aimtargvelocity));dprint(" * ");dprint(ftos(this.bot_aimlatency + vlen(this.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
+		bot_aimdir(this, v - shotorg, maxfiredeviation);
+		//dprint("AIM: ");dprint(vtos(enemy_org));dprint(" + ");dprint(vtos(this.enemy.velocity));dprint(" * ");dprint(ftos(this.bot_aimlatency + vlen(this.enemy.origin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
 		//traceline(shotorg, shotorg + shotdir * 10000, false, this);
 		//if (trace_ent.takedamage)
 		//if (trace_fraction < 1)
 		//if (!bot_shouldattack(this, trace_ent))
 		//	return false;
-		traceline(shotorg, this.bot_aimtargorigin, false, this);
+		traceline(shotorg, enemy_org, false, this);
 		if (trace_fraction < 1)
 		if (trace_ent != this.enemy)
 		if (!bot_shouldattack(this, trace_ent))

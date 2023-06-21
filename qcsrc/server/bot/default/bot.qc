@@ -30,6 +30,7 @@
 #include <server/weapons/accuracy.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
+#include <server/command/vote.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
@@ -64,16 +65,14 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
+	// if bot skill is high enough don't limit their think frequency
+	if (SUPERBOT)
+		this.bot_nextthink = max(time, this.bot_nextthink) + 0.005;
+	else
+		this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * min(14 / (skill + this.bot_aiskill + 14), 1));
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		if (IS_PLAYER(this))
-		{
-			.entity weaponentity = weaponentities[0];
-			if(this.(weaponentity).m_weapon == WEP_Null)
-				W_NextWeapon(this, 0, weaponentity);
-		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
@@ -90,13 +89,19 @@ void bot_think(entity this)
 	this.dmg_save = 0;
 	this.dmg_inflictor = NULL;
 
-	// calculate an aiming latency based on the skill setting
-	// (simulated network latency + naturally delayed reflexes)
-	//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
-	// minimum ping 20+10 random
-	CS(this).ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
-	// skill 10 = ping 0.2 (adrenaline)
-	// skill 0 = ping 0.7 (slightly drunk)
+	// if bot skill is high enough don't assign latency to them
+	if (SUPERBOT)
+		CS(this).ping = 0;
+	else
+	{
+		// calculate an aiming latency based on the skill setting
+		// (simulated network latency + naturally delayed reflexes)
+		//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
+		// minimum ping 20+10 random
+		CS(this).ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higher skill players take a less laggy server
+		// skill 10 = ping 0.2 (adrenaline)
+		// skill 0 = ping 0.7 (slightly drunk)
+	}
 
 	// clear buttons
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -113,12 +118,8 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
-		.entity weaponentity = weaponentities[0];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
-		this.bot_nextthink = game_starttime;
 		return;
 	}
 
@@ -146,6 +147,12 @@ void bot_think(entity this)
 	else if(this.aistatus & AI_STATUS_STUCK)
 		navigation_unstuck(this);
 
+	if (warmup_stage && !this.ready)
+	{
+		this.ready = true;
+		ReadyCount(); // this must be delayed until the bot has spawned
+	}
+
 	// now call the current bot AI (havocbot for example)
 	this.bot_ai(this);
 }
@@ -170,7 +177,7 @@ void bot_setnameandstuff(entity this)
 		int smallest_count = -1;
 		if (teamplay)
 		{
-			for (int i = 1; i <= AvailableTeams(); ++i)
+			for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 			{
 				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
 				// TeamBalance_GetNumberOfPlayers(balance, i); returns the number of players + 1
@@ -210,7 +217,7 @@ void bot_setnameandstuff(entity this)
 			});
 			if (!conflict)
 				prio += 1;
-			if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+			if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 			{
 				int forced_team = stof(argv(5));
 				if (!Team_IsValidIndex(forced_team))
@@ -242,7 +249,7 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+	if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 	{
 		this.bot_forced_team = stof(argv(5));
 		if (!Team_IsValidIndex(this.bot_forced_team))
@@ -279,6 +286,24 @@ void bot_setnameandstuff(entity this)
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
+	// if bot skill is high enough don't limit their skill
+	if (SUPERBOT)
+	{
+		// commented out means they're meaningless with this high skill
+		// no reason to set them, uncomment if this changes
+		//this.havocbot_keyboardskill = 10;
+		//this.bot_moveskill = 10; //midair modifier sets this to 0 to disable bhop
+		//this.bot_dodgeskill = 10;
+		//this.bot_pingskill = 10;
+		//this.bot_weaponskill = 10;
+		//this.bot_aggresskill = 10;
+		this.bot_rangepreference = 1; // no range preference modification
+		//this.bot_aimskill = 10;
+		//this.bot_offsetskill = 10;
+		//this.bot_mouseskill = 10;
+		//this.bot_thinkskill = 10;
+		//this.bot_aiskill = 10;
+	}
 	if (file >= 0 && argv(prio) != "")
 		LOG_INFOF("^1Warning^7: too many parameters for bot %s, please check format of %s", bot_name, autocvar_bot_config_file);
 
@@ -442,7 +467,6 @@ void bot_clientconnect(entity this)
 	if (!IS_BOT_CLIENT(this)) return;
 	this.bot_preferredcolors = this.clientcolors;
 	this.bot_nextthink = time - random();
-	this.lag_func = bot_lagfunc;
 	this.isbot = true;
 	this.createdtime = this.bot_nextthink;
 
@@ -611,13 +635,13 @@ bool bot_fixcount(bool multiple_per_frame)
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
+	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		int minplayers = max(0, floor(autocvar_minplayers));
 		if (teamplay)
-			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AVAILABLE_TEAMS);
 		int minbots = max(0, floor(autocvar_bot_number));
 
 		// add bots to reach minplayers if needed

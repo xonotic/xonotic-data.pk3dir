@@ -6,6 +6,8 @@ float autocvar_hud_panel_quickmenu_align;
 float autocvar_hud_panel_quickmenu_translatecommands;
 string autocvar_hud_panel_quickmenu_file;
 float autocvar_hud_panel_quickmenu_time;
+bool autocvar_hud_panel_quickmenu_server_is_default;
+string autocvar__hud_panel_quickmenu_file_from_server;
 
 bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 bool QuickMenu_IsOpened();

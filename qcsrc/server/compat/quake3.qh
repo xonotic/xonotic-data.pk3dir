@@ -21,7 +21,7 @@ int GetAmmoConsumptionQ3(string netname);
 	{ \
 		if(this.count && xonwep.ammo_type) \
 			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionQ3(xonwep.netname)); \
-	SPAWNFUNC_BODY(GetAmmoItem(xonwep.ammo_type)) \
+		SPAWNFUNC_BODY(GetAmmoItem(xonwep.ammo_type)) \
 	}
 
 // Ammo only, conditional

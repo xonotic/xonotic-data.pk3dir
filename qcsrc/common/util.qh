@@ -96,7 +96,7 @@ const float TIME_FACTOR = 100;
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
 #ifdef GAMEQC
-string ScoreString(float vflags, float value);
+string ScoreString(float vflags, float value, int rounds_played);
 #endif
 
 vector decompressShortVector(float data);
@@ -136,8 +136,8 @@ USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
 USING(textLengthUpToLength_lenFunction_t, float(string s));
 float textLengthUpToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
 string textShortenToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
-float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
-string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
+float textLengthUpToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
+string textShortenToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
 
 string getWrappedLine_remaining;
 string getWrappedLine(float w, vector size, textLengthUpToWidth_widthFunction_t tw);

@@ -393,10 +393,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 				APPEND_TO_STRING(un_bannedservers, " ", s);
 				break;
 			}
-			case "E":
+			case "H":
 			{
-				if(cvar("menu_updatecheck_getpacks"))
-					APPEND_TO_STRING(un_emergency_pk3s, " ", s);
+				// Hotfix (version-specific pk3 supported in >= 0.8.6)
+				// replaces "E" (missing-file-specific pk3 supported in <= 0.8.5)
+				APPEND_TO_STRING(un_emergency_pk3s, " ", s);
 				break;
 			}
 			case "P":
@@ -469,8 +470,16 @@ void updateCheck()
 		allgood = true;
 		for(i = 0; i+1 < n; i += 2)
 		{
-			if(fexists(argv(i+1)))
+			if(strcmp(argv(i+1), cvar_string("g_xonoticversion"))) // these aren't the versions we're looking for
 				continue;
+			string packfn = whichpack("hotfix-autoexec.cfg");
+			if(packfn) // we have the cfg we're looking for in some pk3
+			{
+				if(!strncmp(packfn, "dlcache/", 8)) // it's in dlcache
+					packfn = substring(packfn, 8, strlen(packfn)); // strip prefix "dlcache/"
+				if(strstrofs(argv(i), packfn, strlen(argv(i)) - strlen(packfn)) > 0) // last chars of url == packfn
+					continue; // the pk3 we're looking for already provides the cfg we're looking for
+			}
 			allgood = false;
 			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
 				localcmd("\ncurl --pak \"", argv(i), "\"\n");
@@ -482,25 +491,20 @@ void updateCheck()
 				if(!Menu_Active)
 					cvar_set("_menu_initialized", "0");
 					// HACK: cause m_hide call on next start
-				localcmd("\nmenu_restart\n");
+				//localcmd("\nmenu_restart\n"); // <= 0.8.5
+				localcmd("\nexec hotfix-autoexec.cfg\n");
 			}
 			_Nex_ExtResponseSystem_PacksStep = 0;
 		}
 		else
 			_Nex_ExtResponseSystem_PacksStep = 2;
 	}
-
 }
-
-bool show_propermenu = false;
 
 float preMenuInit()
 {
 	vector sz;
 	vector boxA, boxB;
-
-	if(random() < 0.1)
-		show_propermenu = true;
 
 	updateCheck();
 
@@ -546,11 +550,8 @@ void preMenuDraw()
 		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
 		line = eY * fs.y;
 		string l1, l2;
-		if(show_propermenu)
-			l1 = sprintf("Jeff pay 4 new weapons for %s", _Nex_ExtResponseSystem_UpdateTo);
-		else
-			l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
-		l2 = "http://www.xonotic.org/";
+		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
+		l2 = "https://xonotic.org";
 		if(_Nex_ExtResponseSystem_UpdateToURL)
 			l2 = _Nex_ExtResponseSystem_UpdateToURL;
 
@@ -661,13 +662,17 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_CTF) \
 	GAMETYPE(MAPINFO_TYPE_CA) \
 	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
+	GAMETYPE(MAPINFO_TYPE_MAYHEM) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_MAYHEM) \
 	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_KEEPAWAY) \
 	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
 	GAMETYPE(MAPINFO_TYPE_LMS) \
 	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_SURVIVAL) \
 	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/* GAMETYPE(MAPINFO_TYPE_BR) */ \
 	/**/

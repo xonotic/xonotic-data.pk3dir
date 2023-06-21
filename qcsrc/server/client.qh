@@ -7,6 +7,7 @@
 #include <common/sounds/all.qh>
 
 bool autocvar__notarget;
+bool autocvar_sv_show_entnum;
 int autocvar_g_balance_armor_start;
 float autocvar_g_balance_pause_armor_rot_spawn;
 float autocvar_g_balance_pause_fuel_rot_spawn;
@@ -50,11 +51,12 @@ string autocvar_hostname;
 int autocvar_spawn_debug;
 string autocvar_sv_motd;
 int autocvar_sv_name_maxlength = 64;
+string autocvar_sv_quickmenu_file;
 bool autocvar_sv_servermodelsonly;
+bool autocvar_sv_showspectators;
 int autocvar_sv_spectate;
 bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
-bool autocvar_sv_showspectators;
 
 // WEAPONTODO
 .string weaponorder_byimpulse;
@@ -64,7 +66,6 @@ bool autocvar_sv_showspectators;
 .float jointime; // time of connecting
 .float startplaytime; // time of switching from spectator to player
 .float alivetime; // time of being alive
-.float motd_actived_time; // used for both motd and campaign_message
 
 .bool wasplayer;
 
@@ -159,7 +160,6 @@ CLASS(Client, Object)
     ATTRIB(Client, teamkill_soundtime, float, this.teamkill_soundtime);
     ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
     ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
-    ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
     ATTRIB(Client, jointime, float, this.jointime);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
     ATTRIB(Client, startplaytime, float, this.startplaytime);
@@ -186,7 +186,6 @@ CLASS(Client, Object)
     ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
     ATTRIB(Client, hitplotfh, int, this.hitplotfh);
     ATTRIB(Client, clientdata, entity, this.clientdata);
-    ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
@@ -320,7 +319,7 @@ bool independent_players;
 .float nickspamtime; // time of last nick change
 .float nickspamcount;
 
-void SendWelcomemessage_msg_type(entity this, bool force_centerprint, int msg_type);
+void SendWelcomeMessage(entity this, int msg_type);
 
 // respawning
 .int respawn_flags;
@@ -361,6 +360,10 @@ void calculate_player_respawn_time(entity this);
 
 bool PlayerInList(entity player, string list);
 
+bool PlayerInIDList(entity p, string idlist);
+
+bool PlayerInIPList(entity p, string iplist);
+
 void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
@@ -393,6 +396,8 @@ void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);
 
 void FixPlayermodel(entity player);
+
+void GiveWarmupResources(entity this);
 
 void ClientInit_misc(entity this);
 

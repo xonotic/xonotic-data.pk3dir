@@ -79,22 +79,18 @@ MUTATOR_HOOKFUNCTION(powerups, MonsterValidTarget)
 
 void powerups_DropItem_Think(entity this)
 {
-	TakeResource(this, RES_HEALTH, 1);
-	
-	if(GetResource(this, RES_HEALTH) < 1) {
-		WaypointSprite_Kill(this.waypointsprite_attached);
-		delete(this);
-		return;
-	}
-	
 	// Only needed to update if the timer of the powerup is running
-	if(autocvar_g_powerups_drop_ondeath == 1)
-		WaypointSprite_UpdateHealth(this.waypointsprite_attached, GetResource(this, RES_HEALTH));
-	
-	this.nextthink = time + 1;
+	if(!GetResource(this, RES_ARMOR))
+	{
+		float timeleft = floor(this.wait - time);
+		if (timeleft)
+			WaypointSprite_UpdateHealth(this.waypointsprite_attached, timeleft);
+		else
+			WaypointSprite_Kill(this.waypointsprite_attached);
+	}
 }
 
-void powerups_DropItem(entity this, StatusEffects effect)
+void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 {
 	entity item = Item_DefinitionFromInternalName(effect.netname);
 	float t = StatusEffects_gettime(effect, this);
@@ -108,11 +104,11 @@ void powerups_DropItem(entity this, StatusEffects effect)
 	// If we want the timer to keep running, we enable expiring then use the exact time the powerup will finish at.
 	// If we want the timer to freeze, we disable expiring and we just use the time left of the powerup.
 	// See Item_SetExpiring() below.
-	float finished = (autocvar_g_powerups_drop_ondeath == 2 ? timeleft : t);
+	float finished = (freezeTimer ? timeleft : t);
 
 	// If the timer is frozen, the item will stay on the floor for 20 secs (same as weapons),
 	// otherwise it'll disappear after the timer runs out.
-	float time_to_live = (autocvar_g_powerups_drop_ondeath == 2 ? autocvar_g_items_dropped_lifetime : timeleft);
+	float time_to_live = (freezeTimer ? autocvar_g_items_dropped_lifetime : timeleft);
 
 	// TODO: items cannot hold their "item field" yet, so we need to list all the powerups here!
 	switch(item)
@@ -122,23 +118,23 @@ void powerups_DropItem(entity this, StatusEffects effect)
 		case ITEM_Invisibility: e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
 		case ITEM_Speed: e.speed_finished = finished; maxtime = autocvar_g_balance_powerup_speed_time; break;
 	}
-	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin + '0 0 32', randomvec() * 175 + '0 0 175', time_to_live);
+	vector vel = W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false);
+	if (!Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin, vel, time_to_live))
+		return;
 
-	if(autocvar_g_powerups_drop_ondeath != 2)
+	if(!freezeTimer)
 		Item_SetExpiring(e, true);
-	
-	// Use health as time left to live
-	SetResourceExplicit(e, RES_HEALTH, time_to_live);
-	
+
+	// Use armor as timer freezer
+	if(freezeTimer)
+		SetResourceExplicit(e, RES_ARMOR, 1);
+
 	// Create waypoint displaying time left of the powerup
 	entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, e, '0 0 1' * e.maxs.z, NULL, 0, e, waypointsprite_attached, true, RADARICON_Item);
 	wp.wp_extra = item.m_id;
 	WaypointSprite_UpdateMaxHealth(e.waypointsprite_attached, maxtime);
 	WaypointSprite_UpdateHealth(e.waypointsprite_attached, timeleft);
-	
-	// Start dropping its time to live
-	setthink(e, powerups_DropItem_Think);
-	e.nextthink = time + 1;
+	// Item_Think() will call powerups_DropItem_Think() to update the waypoint
 }
 
 MUTATOR_HOOKFUNCTION(powerups, ItemTouched)
@@ -158,7 +154,23 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 	FOREACH(StatusEffect, it.instanceOfPowerups,
 	{
 		if(StatusEffects_active(it, frag_target))
-			powerups_DropItem(frag_target, it);
+			powerups_DropItem(frag_target, it, autocvar_g_powerups_drop_ondeath == 2);
+	});
+}
+
+MUTATOR_HOOKFUNCTION(powerups, PlayerUseKey)
+{
+	if(MUTATOR_RETURNVALUE || game_stopped || !autocvar_g_powerups_drop) return;
+
+	entity player = M_ARGV(0, entity);
+
+	FOREACH(StatusEffect, it.instanceOfPowerups,
+	{
+		if(StatusEffects_active(it, player)) {
+			powerups_DropItem(player, it, autocvar_g_powerups_drop == 2);
+			StatusEffects_remove(it, player, STATUSEFFECT_REMOVE_NORMAL);
+			return true;
+		}
 	});
 }
 

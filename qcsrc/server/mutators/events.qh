@@ -40,7 +40,7 @@ MUTATOR_HOOKABLE(AutoJoinOnConnection, EV_AutoJoinOnConnection);
     /**/
 MUTATOR_HOOKABLE(ForbidRandomStartWeapons, EV_ForbidRandomStartWeapons);
 
-/** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
+/** called when a player spawns as player, after shared setup, before their weapon is chosen (so items may be changed in here) */
 #define EV_PlayerSpawn(i, o) \
 	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
     /** spot that was used, or NULL */ i(entity, MUTATOR_ARGV_1_entity) \
@@ -74,7 +74,7 @@ MUTATOR_HOOKABLE(ForbidPlayerScore_Clear, EV_ForbidPlayerScore_Clear);
     /**/
 MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
 
-/** called when a player dies to e.g. remove stuff he was carrying. */
+/** called when a player dies to e.g. remove stuff they were carrying. */
 #define EV_PlayerDies(i, o) \
 	/** inflictor  		*/ i(entity, MUTATOR_ARGV_0_entity) \
     /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
@@ -112,7 +112,7 @@ MUTATOR_HOOKABLE(ClientObituary, EV_ClientObituary);
     /**/
 MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
 
-/** called when a player dies to e.g. remove stuff he was carrying */
+/** called when a player dies to e.g. remove stuff they were carrying */
 #define EV_PlayHitsound(i, o) \
     /** victim */ i(entity, MUTATOR_ARGV_0_entity) \
     /** attacker */ i(entity, MUTATOR_ARGV_1_entity) \
@@ -423,7 +423,7 @@ MUTATOR_HOOKABLE(MonsterCheckBossFlag, EV_MonsterCheckBossFlag);
     /**/
 MUTATOR_HOOKABLE(AllowMobSpawning, EV_AllowMobSpawning);
 
-/** called when a player gets damaged to e.g. remove stuff he was carrying. */
+/** called when a player gets damaged to e.g. remove stuff they were carrying. */
 #define EV_PlayerDamage_SplitHealthArmor(i, o) \
 	/** inflictor  		*/ i(entity, MUTATOR_ARGV_0_entity) \
     /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
@@ -621,7 +621,10 @@ MUTATOR_HOOKABLE(SetWeaponreplace, EV_SetWeaponreplace);
     /**/
 MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
-/** called when a bot checks a target to attack */
+/**
+ * called when a bot checks a target to attack
+ * return false to allow the bot to attack the target (inverted logic)
+ */
 #define EV_BotShouldAttack(i, o) \
     /** bot */    i(entity, MUTATOR_ARGV_0_entity) \
     /** target */ i(entity, MUTATOR_ARGV_1_entity) \

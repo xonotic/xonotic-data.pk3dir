@@ -1,7 +1,7 @@
 #include "sv_clanarena.qh"
 
 float autocvar_g_ca_damage2score = 100;
-bool autocvar_g_ca_spectate_enemies;
+bool autocvar_g_ca_prevent_stalemate;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -44,22 +44,99 @@ void CA_count_alive_players()
 
 void nades_Clear(entity player);
 
+int CA_PreventStalemate()
+{
+	//LOG_INFO("PreventStalemate running");
+	int winnerTeam = 0;
+	int secondTeam = 0;
+
+	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	{
+		if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)))
+		{
+			secondTeam = winnerTeam;
+			winnerTeam = Team_IndexToTeam(i);
+		}
+		else
+		{
+			if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+				secondTeam = Team_IndexToTeam(i);
+		}
+	}
+
+	if(Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+	{
+		LOG_INFOF("Stalemate broken by alive players. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)",
+			Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)),
+			Team_ColorCode(secondTeam), Team_ColorName(secondTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)));
+		return winnerTeam;
+	}
+
+	// Equality. Let's check which team has more health now
+	//LOG_INFO("Equality. Checking health now.");
+	winnerTeam = 0;
+	secondTeam = 0;
+	int winnerTeamHealth = 0;
+	int secondTeamHealth = 0;
+	int teamIndex, teamHealth;
+
+	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	{
+		teamIndex = i;
+		teamHealth = 0;
+
+		// Add up health for the players in this team
+		FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it) && it.team == Team_IndexToTeam(teamIndex),
+		{
+			if (IS_DEAD(it))
+				continue;
+			teamHealth += GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR);
+		});
+
+		// Set the winner teams
+		if(!winnerTeam || teamHealth > winnerTeamHealth)
+		{
+			secondTeam = winnerTeam;
+			secondTeamHealth = winnerTeamHealth;
+			winnerTeam = Team_IndexToTeam(i);
+			winnerTeamHealth = teamHealth;
+		}
+		else
+		{
+			if(!secondTeam || teamHealth > secondTeamHealth)
+			{
+				secondTeam = Team_IndexToTeam(i);
+				secondTeamHealth = teamHealth;
+			}
+		}
+	}
+
+	if(winnerTeamHealth != secondTeamHealth)
+	{
+		LOG_INFOF("Stalemate broken by team health. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)",
+			Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), winnerTeamHealth,
+			Team_ColorCode(secondTeam), Team_ColorName(secondTeam), secondTeamHealth);
+		return winnerTeam;
+	}
+	else
+		return -2; // Equality. Can't avoid the stalemate.
+}
+
 float CA_CheckWinner()
 {
+	int winner_team = 0;
+
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
-
-		allowed_to_spawn = false;
-		game_stopped = true;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-		return 1;
+		if(autocvar_g_ca_prevent_stalemate)
+			winner_team = CA_PreventStalemate();
+		else
+			winner_team = -2;
 	}
 
 	CA_count_alive_players();
-	int winner_team = Team_GetWinnerAliveTeam();
+	if (!winner_team)
+		winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
 		return 0;
 
@@ -73,6 +150,11 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
+	}
+	else if(winner_team == -2)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 	}
 
 	allowed_to_spawn = false;
@@ -188,10 +270,18 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
+
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
+	g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;
+	observe_blocked_if_eliminated = (g_ca_spectate_enemies == -1);
+	// we can avoid sending observe_blocked_if_eliminated to all clients here (with ClientData_Touch)
+	// since it will get sent whenever the client spectates someone anyway
+
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		if (INGAME(it) || IS_BOT_CLIENT(it))
@@ -284,7 +374,10 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		INGAME_STATUS_CLEAR(player);
 	}
 	if (INGAME(player))
+	{
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+		player.would_spectate = observe_blocked_if_eliminated; // if blocked from observing force to spectate now
+	}
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	if (!INGAME(player))
@@ -425,7 +518,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && INGAME(client))
+	if (g_ca_spectate_enemies != 1 && INGAME(client))
 	if (DIFF_TEAM(targ, client))
 		return true;
 }
@@ -434,7 +527,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
@@ -449,7 +542,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && INGAME(client)
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
 		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }

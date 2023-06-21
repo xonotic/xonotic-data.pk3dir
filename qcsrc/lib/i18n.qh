@@ -14,7 +14,7 @@ ERASEABLE
 string language_filename(string s)
 {
 	string fn = prvm_language;
-	if (fn == "" || fn == "dump") return s;
+	if (fn == "" || fn == "en" || fn == "dump") return s;
 	fn = strcat(s, ".", fn);
 	int fh = fopen(fn, FILE_READ);
 	if (fh >= 0)

@@ -6,6 +6,7 @@
 #include "radiobutton.qh"
 #include "commandbutton.qh"
 #include "slider.qh"
+#include <common/campaign_common.qh>
 
 void welcomeDialog_resetStrings(entity me)
 {
@@ -56,6 +57,23 @@ void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 			strcpy(me.serverinfo_name, bufstr_get(argsbuf, ++i));
 		else if(s == "WELCOME")
 			strcpy(me.serverinfo_MOTD, bufstr_get(argsbuf, ++i));
+		else if(s == "CAMPAIGN")
+		{
+			strcpy(me.serverinfo_name, campaign_title);
+
+			int level = stoi(bufstr_get(argsbuf, ++i)) - 1;
+			string campaign_msg;
+			if (level < 0 || level >= campaign_entries)
+				campaign_msg = strcat("^1Error: invalid level number ", itos(level + 1));
+			else
+			{
+				string desc = strcat(campaign_shortdesc[level], "\n\n", campaign_longdesc[level]);
+				desc = strreplace("\n", "\\n", desc);
+				campaign_msg = strreplace("_LEVEL_DESC", desc, bufstr_get(argsbuf, ++i));
+			}
+			strcpy(me.serverinfo_MOTD, campaign_msg);
+			break;
+		}
 		else if(s == "RESET")
 		{
 			welcomeDialog_resetStrings(me);
@@ -82,6 +100,17 @@ void XonoticWelcomeDialog_draw(entity me)
 		localcmd("\n+show_info0; defer 2 -show_info0\n");
 		me.close(me);
 	}
+
+	if (isdemo())
+	{
+		me.joinButton_ent.disabled = true;
+		me.spectateButton_ent.disabled = true;
+	}
+	else
+	{
+		me.joinButton_ent.disabled = false;
+		me.spectateButton_ent.disabled = false;
+	}
 }
 
 void XonoticWelcomeDialog_fill(entity me)
@@ -101,5 +130,5 @@ void XonoticWelcomeDialog_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns / 2, me.joinButton_ent = makeXonoticCommandButton(_("Join"), '0 1 0', "cmd join", COMMANDBUTTON_CLOSE));
 			me.joinButton_ent.preferredFocusPriority = 1;
-		me.TD(me, 1, me.columns / 2, makeXonoticCommandButton(_("Spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns / 2, me.spectateButton_ent = makeXonoticCommandButton(_("Spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));
 }

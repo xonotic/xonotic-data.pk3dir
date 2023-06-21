@@ -31,6 +31,7 @@ REGISTER_MUTATOR(ft, false)
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
 .float freezetag_frozen_force;
+.float freezetag_frozen_armor;
 const float ICE_MAX_ALPHA = 1;
 const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;

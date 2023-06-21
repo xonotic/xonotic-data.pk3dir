@@ -11,16 +11,16 @@ void dom_Initialize();
 
 REGISTER_MUTATOR(dom, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		int fraglimit_override = autocvar_g_domination_point_limit;
+		int point_limit = autocvar_g_domination_point_limit;
 		if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
-			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+			point_limit = autocvar_g_domination_roundbased_point_limit;
 
 		GameRules_teams(true);
-        GameRules_limit_score(fraglimit_override);
-        GameRules_limit_lead(autocvar_g_domination_point_leadlimit);
+		GameRules_limit_score(point_limit);
+		GameRules_limit_lead(autocvar_g_domination_point_leadlimit);
 
 		dom_Initialize();
 	}

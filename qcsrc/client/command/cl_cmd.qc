@@ -176,15 +176,18 @@ void LocalCommand_debugmodel(int request, int argc)
 		{
 			string modelname = argv(1);
 
-			entity debugmodel_entity = new(debugmodel);
-			precache_model(modelname);
-			_setmodel(debugmodel_entity, modelname);
-			setorigin(debugmodel_entity, view_origin);
-			debugmodel_entity.angles = view_angles;
-			debugmodel_entity.draw = DrawDebugModel;
-			IL_PUSH(g_drawables, debugmodel_entity);
-
-			return;
+			if (modelname != "")
+			{
+				entity debugmodel_entity = new(debugmodel);
+				precache_model(modelname);
+				_setmodel(debugmodel_entity, modelname);
+				setorigin(debugmodel_entity, view_origin);
+				debugmodel_entity.angles = view_angles;
+				debugmodel_entity.draw = DrawDebugModel;
+				IL_PUSH(g_drawables, debugmodel_entity);
+				return;
+			}
+			// fall through
 		}
 
 		default:
@@ -267,7 +270,7 @@ void LocalCommand_hud(int request, int argc)
 				{
 					if (argv(2) == "help")
 					{
-						LOG_HELP(" quickmenu [[default | file | \"\"] submenu file]");
+						LOG_HELP(" quickmenu [[default | file | \"\"] <submenu> <filename>]");
 						LOG_HELP("Called without options (or with \"\") loads either the default quickmenu or a quickmenu file if hud_panel_quickmenu_file is set to a valid filename.");
 						LOG_HELP("A submenu name can be given to open the quickmenu directly in a submenu; it requires to specify 'default', 'file' or '\"\"' option.");
 						LOG_HELP("A file name can also be given to open a different quickmenu");
@@ -551,8 +554,6 @@ void GameCommand(string command)
 // Please add client commands to the function above this, as this is only for special reasons.
 // NOTE: showaccuracy is kept as legacy command
 #define CONSOLE_COMMANDS_NORMAL() \
-	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
-	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
 	CONSOLE_COMMAND("+showaccuracy", { }) \
 	CONSOLE_COMMAND("-showaccuracy", { }) \
 	/* nothing */
