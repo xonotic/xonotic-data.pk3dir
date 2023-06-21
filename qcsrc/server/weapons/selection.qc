@@ -102,7 +102,6 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 		return true;
 	}
 	if (complain)
-	if(IS_REAL_CLIENT(this))
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
