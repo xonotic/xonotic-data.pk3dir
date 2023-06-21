@@ -551,7 +551,7 @@ void preMenuDraw()
 		line = eY * fs.y;
 		string l1, l2;
 		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
-		l2 = "http://www.xonotic.org/";
+		l2 = "https://xonotic.org";
 		if(_Nex_ExtResponseSystem_UpdateToURL)
 			l2 = _Nex_ExtResponseSystem_UpdateToURL;
 
