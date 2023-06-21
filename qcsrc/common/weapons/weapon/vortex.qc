@@ -130,10 +130,13 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, false, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	{
+		GIVE_MEDAL(actor, YODA);
+	}
+
 	if(impressive_hits && actor.vortex_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		GIVE_MEDAL(actor, IMPRESSIVE);
 		impressive_hits = 0; // only every second time
 	}
 

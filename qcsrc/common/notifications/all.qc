@@ -419,6 +419,7 @@ void Create_Notification_Entity(entity notif,
 		case MSG_CENTER:
 		case MSG_MULTI:
 		case MSG_CHOICE:
+		case MSG_MEDAL:
 			break;
 		default:
 			LOG_INFOF(
@@ -757,6 +758,17 @@ void Create_Notification_Entity_Choice(entity notif,
 			}
 		}
 
+void Create_Notification_Entity_Medal(entity notif,
+										float var_cvar,
+										string namestring,
+										/* MSG_MEDAL */
+										string icon,
+										Notification anncename)
+	{
+		notif.nent_floatcount = 1;
+		if (icon != "") { notif.nent_icon = strzone(icon); }
+		if (anncename) { notif.nent_msgannce = anncename; }
+	}
 
 // ===============
 //  Cvar Handling
@@ -829,6 +841,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 	int NOTIF_CENTER_COUNT = 0;
 	int NOTIF_MULTI_COUNT = 0;
 	int NOTIF_CHOICE_COUNT = 0;
+	int NOTIF_MEDAL_COUNT = 0;
 	FOREACH(Notifications, true, {
 		switch (it.nent_type)
 		{
@@ -837,6 +850,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 			case MSG_CENTER: ++NOTIF_CENTER_COUNT; break;
 			case MSG_MULTI: ++NOTIF_MULTI_COUNT; break;
 			case MSG_CHOICE: ++NOTIF_CHOICE_COUNT; break;
+			case MSG_MEDAL: ++NOTIF_MEDAL_COUNT; break;
 		}
 	});
 
@@ -874,6 +888,13 @@ void Dump_Notifications(int fh, bool alsoprint)
 		NOTIF_WRITE_ENTITY_CHOICE(it,
 			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
 			"Allow choice for this notification 0 = off, 1 = only in warmup mode, 2 = always"
+		);
+	});
+
+	NOTIF_WRITE(sprintf("\n// MSG_MEDAL notifications:\n"));
+	FOREACH(Notifications, it.nent_type == MSG_MEDAL && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
+		NOTIF_WRITE_ENTITY(it,
+			"0 = off, 1 = enabled"
 		);
 	});
 
@@ -965,19 +986,21 @@ void Dump_Notifications(int fh, bool alsoprint)
 	);
 
 	LOG_INFOF("Notification counts (total = %d): "
-		"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n",
+		"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d, MSG_MEDAL = %d\n",
 		(
 			NOTIF_ANNCE_COUNT +
 			NOTIF_INFO_COUNT +
 			NOTIF_CENTER_COUNT +
 			NOTIF_MULTI_COUNT +
-			NOTIF_CHOICE_COUNT
+			NOTIF_CHOICE_COUNT +
+			NOTIF_MEDAL_COUNT
 		),
 		NOTIF_ANNCE_COUNT,
 		NOTIF_INFO_COUNT,
 		NOTIF_CENTER_COUNT,
 		NOTIF_MULTI_COUNT,
-		NOTIF_CHOICE_COUNT
+		NOTIF_CHOICE_COUNT,
+		NOTIF_MEDAL_COUNT
 	);
 	#undef NOTIF_WRITE_HARDCODED
 	#undef NOTIF_WRITE_ENTITY
@@ -1180,7 +1203,7 @@ void Local_Notification_centerprint_Add(
 	centerprint_Add(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 
-void Local_Notification_Queue_Run(MSG net_type, entity notif)
+void Local_Notification_Queue_Run(MSG net_type, entity notif, float f1)
 {		
 	switch (net_type)
 	{
@@ -1189,10 +1212,22 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif)
 			Local_Notification_sound(notif.nent_channel, notif.nent_snd, notif.nent_vol, notif.nent_position);
 			break;
 		}
+
+		case MSG_MEDAL:
+		{
+			centerprint_Medal(notif.nent_icon, f1);
+			if(notif.nent_msgannce)
+				Local_Notification_sound(
+					notif.nent_msgannce.nent_channel,
+					notif.nent_msgannce.nent_snd,
+					notif.nent_msgannce.nent_vol,
+					notif.nent_msgannce.nent_position);
+			break;
+		}
 	}
 }
 
-void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
+void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time, float f1)
 {	
 	// Guess length if required
 	if(queue_time == 0)
@@ -1200,7 +1235,7 @@ void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
 
 	if(queue_time == -1 || time > notif_queue_next_time) {
 		// Run immediately
-		Local_Notification_Queue_Run(net_type, notif);
+		Local_Notification_Queue_Run(net_type, notif, f1);
 		notif_queue_next_time = time + queue_time;
 	} else {
 		// Put in queue
@@ -1209,6 +1244,7 @@ void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
 		notif_queue_type[notif_queue_length] = net_type;
 		notif_queue_entity[notif_queue_length] = notif;
 		notif_queue_time[notif_queue_length] = notif_queue_next_time;
+		notif_queue_f1[notif_queue_length] = f1;
 		
 		notif_queue_next_time += queue_time;
 		++notif_queue_length;
@@ -1220,7 +1256,7 @@ void Local_Notification_Queue_Process()
 	if(!notif_queue_length || notif_queue_time[0] > time)
 		return;
 
-	Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0]);
+	Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0], notif_queue_f1[0]);
 
 	// Shift queue to the left
 	--notif_queue_length;
@@ -1228,6 +1264,7 @@ void Local_Notification_Queue_Process()
 		notif_queue_type[j] = notif_queue_type[j+1];
 		notif_queue_entity[j] = notif_queue_entity[j+1];
 		notif_queue_time[j] = notif_queue_time[j+1];
+		notif_queue_f1[j] = notif_queue_f1[j+1];
 	}
 }
 
@@ -1303,7 +1340,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		case MSG_ANNCE:
 		{
 			#ifdef CSQC
-			Local_Notification_Queue_Add(net_type, notif, notif.nent_queuetime);
+			Local_Notification_Queue_Add(net_type, notif, notif.nent_queuetime, f1);
 			#else
 			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
 			#endif
@@ -1413,6 +1450,18 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 				f1, f2, f3, f4);
 			break;
 		}
+
+		#ifdef CSQC
+		case MSG_MEDAL:
+		{
+			Local_Notification_Queue_Add(
+				net_type,
+				notif,
+				(notif.nent_msgannce ? MSG_MEDAL_TIME : 0),
+				f1);
+			break;
+		}
+		#endif
 	}
 }
 

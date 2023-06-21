@@ -169,6 +169,7 @@ void Obituary_SpecialDeath(
 
 float Obituary_WeaponDeath(
 	entity notif_target,
+	entity attacker,
 	float murder,
 	int deathtype,
 	string s1, string s2, string s3,
@@ -201,6 +202,20 @@ float Obituary_WeaponDeath(
 			s1, s2, s3, "",
 			f1, f2, 0, 0
 		);
+
+		// Special deaths for medals
+		if(attacker) {
+			switch(death_message) {
+				case WEAPON_SHOTGUN_MURDER_SLAP:
+					if(!cvar("g_melee_only")) { // don't spam humiliation if we're in melee_only mode
+						GIVE_MEDAL(attacker, HUMILIATION);
+					}
+					break;
+				case WEAPON_ELECTRO_MURDER_COMBO:
+					GIVE_MEDAL(attacker, ELECTROBITCH);
+					break;
+			}
+		}
 	}
 	else
 	{
@@ -292,7 +307,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				}
 			}
 		}
-		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, NULL, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -335,7 +350,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
-					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
+					GIVE_MEDAL(attacker, KILLSTREAK_##countb); \
 					if (!warmup_stage) \
 						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break;
@@ -351,6 +366,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
+				GIVE_MEDAL(attacker, FIRSTBLOOD);
 				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
@@ -363,6 +379,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				kill_count_to_attacker = CS(attacker).killcount;
 				kill_count_to_target = 0;
 			}
+
+			// Excellent check
+			if(attacker.lastkill && attacker.lastkill > time - autocvar_g_medals_excellent_time) {
+				GIVE_MEDAL(attacker, EXCELLENT);
+			}
+			attacker.lastkill = time;
 
 			if(targ.istypefrag)
 			{
@@ -415,7 +437,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(attacker).m_id;
 
-			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
+			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}

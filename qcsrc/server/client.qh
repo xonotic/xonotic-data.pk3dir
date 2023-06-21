@@ -57,6 +57,8 @@ int autocvar_sv_spectate;
 bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
 
+float autocvar_g_medals_excellent_time = 2;
+
 // WEAPONTODO
 .string weaponorder_byimpulse;
 
@@ -410,3 +412,8 @@ void Join(entity this);
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
 
 const int MAX_SPECTATORS = 7;
+
+float _medal_times;
+#define GIVE_MEDAL(entity,medalname) \
+	_medal_times = GameRules_scoring_add(entity, MEDAL_##medalname, 1); \
+	Send_Notification(NOTIF_ONE, entity, MSG_MEDAL, MEDAL_##medalname, _medal_times);

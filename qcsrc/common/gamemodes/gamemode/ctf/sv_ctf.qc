@@ -614,6 +614,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	if(!old_time || new_time < old_time)
 		GameRules_scoring_add(player, CTF_CAPTIME, new_time - old_time);
 
+	GIVE_MEDAL(player, CAPTURE);
+
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
 #if 0
@@ -626,8 +628,10 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		WaypointSprite_Kill(player.wps_flagcarrier);
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 
-		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
-			{ GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
+		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper)) {
+			GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist));
+			GIVE_MEDAL(enemy_flag.ctf_dropper, ASSIST);
+		}
 	}
 
 	flag.enemy = toucher;
@@ -2250,8 +2254,26 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
-		GameRules_scoring_add_team(frag_attacker, SCORE, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
-		GameRules_scoring_add(frag_attacker, CTF_FCKILLS, 1);
+		if(frag_target.flagcarried) {
+			// Killing an enemy flag carrier
+			GameRules_scoring_add_team(frag_attacker, SCORE, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
+			GameRules_scoring_add(frag_attacker, CTF_FCKILLS, 1);
+		} else if(frag_attacker.flagcarried) {
+			// Defense medal for killing a flag carrier
+			GIVE_MEDAL(frag_attacker, DEFENSE);
+		} else {
+			entity tmp_entity;
+			for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+			if(tmp_entity.ctf_status == FLAG_BASE && CTF_SAMETEAM(tmp_entity, frag_attacker))
+			{
+				if(CTF_IS_NEAR(frag_target, tmp_entity, '1 1 1' * 1500))
+				{
+					// Defense medal for killing an enemy near your flag
+					GIVE_MEDAL(frag_attacker, DEFENSE);
+				}
+				break;
+			}
+		}
 	}
 
 	if(frag_target.flagcarried)

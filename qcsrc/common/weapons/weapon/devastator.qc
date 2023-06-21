@@ -22,8 +22,9 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
-						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+					if(IsFlying(directhitentity)) {
+						GIVE_MEDAL(this.realowner, AIRSHOT);
+					}
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;

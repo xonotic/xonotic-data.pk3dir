@@ -45,6 +45,10 @@ float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
 
+float centerprint_medal_expire_time;
+string centerprint_medal_icon;
+float centerprint_medal_times;
+
 string centerprint_title;
 string centerprint_title_left;
 string centerprint_title_right;
@@ -149,6 +153,19 @@ void centerprint_KillAll()
 		centerprint_msgID[i] = 0;
 		strfree(centerprint_messages[i]);
 	}
+}
+
+void centerprint_Medal(string icon, float times)
+{
+	if(!autocvar_hud_panel_centerprint_medals) return;
+
+	centerprint_medal_expire_time = time + MSG_MEDAL_TIME;
+	centerprint_medal_times = times;
+	if(centerprint_medal_icon)
+		strunzone(centerprint_medal_icon);
+	centerprint_medal_icon = strzone(strcat("gfx/medal/", icon));
+
+	centerprint_showing = true;
 }
 
 void centerprint_SetDuelTitle(string left, string right)
@@ -265,6 +282,43 @@ void HUD_CenterPrint()
 	if (autocvar_hud_panel_centerprint_flip)
 		pos.y += panel_size.y;
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
+
+	// Draw medals first
+	// TODO : This should be moved to a separate panel
+	if (autocvar_hud_panel_centerprint_medals && time < centerprint_medal_expire_time) {
+		float height = vid_conheight/50 * 4;
+		pos.y -= height;
+
+		if(time < centerprint_medal_expire_time - MSG_MEDAL_FADE_TIME)
+			a = 1;
+		else
+			a = (centerprint_medal_expire_time - time) / MSG_MEDAL_FADE_TIME;
+
+		vector tmp_in = pos;
+
+		vector mysize = draw_getimagesize(centerprint_medal_icon);
+		vector newsize = vec2(height*(mysize.x/mysize.y), height);
+		vector fontsize = '1 1 0' * (newsize.y/2);
+
+		tmp_in.x += (panel_size.x - newsize.x) / 2; // center medal icon
+
+		if(centerprint_medal_times < autocvar_hud_panel_centerprint_medals_max) {
+			tmp_in.x -= ((newsize.x * 1.1) * (centerprint_medal_times - 1) / 2);
+			for(int t = 0; t < centerprint_medal_times; t++) {
+				drawpic(tmp_in, centerprint_medal_icon, newsize, '1 1 1', a, DRAWFLAG_NORMAL);
+				tmp_in.x += newsize.x * 1.1;
+			}
+		} else {
+			drawpic(tmp_in, centerprint_medal_icon, newsize, '1 1 1', a, DRAWFLAG_NORMAL);
+			tmp_in.x += newsize.x + fontsize.x * 0.25; // draw times next to it
+			tmp_in.y += (newsize.y - fontsize.y) / 2;
+			drawstring(tmp_in, ftos(centerprint_medal_times), fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+		}
+
+		pos.y += height;
+
+		all_messages_expired = false;
+	}
 
 	// Show title if available
 	if(centerprint_title != "" || centerprint_title_left != "") {

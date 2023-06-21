@@ -132,12 +132,17 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	SendCSQCVaporizerBeamParticle(actor, impressive_hits);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	{
+		GIVE_MEDAL(actor, YODA);
+	}
+
+	/* We're going to disable Impressive medals for the vaporizer.
 	if(impressive_hits && actor.vaporizer_lasthit)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
 		impressive_hits = 0; // only every second time
 	}
+	*/
 
 	actor.vaporizer_lasthit = impressive_hits;
 
