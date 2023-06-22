@@ -75,10 +75,9 @@ test_sv_game:
     - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-    - EXPECT=3db0ae13a7c4437997f04036773b6b3e
-    - HASH=$(${ENGINE} +timestamps 1 +exec serverbench.cfg
+    - EXPECT=0697ef57c3dca0ff122074b29495c5da
+    - HASH=$(${ENGINE} +exec serverbench.cfg
       | tee /dev/stderr
-      | sed -e 's,^\[[^]]*\] ,,'
       | grep '^:'
       | grep -v '^:gamestart:'
       | grep -v '^:anticheat:'

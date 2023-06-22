@@ -39,6 +39,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	if(pushed_entity && pushed_entity.gravity)
 		grav *= pushed_entity.gravity;
 
+	// Q3 has frametime-dependent gravity, but its trigger_push velocity calculation doesn't account for that.
+	// This discrepancy can be simulated accurately which ensures that all entities will arrive
+	// where they would in Q3 with gravity 800 at 125fps, even if entity-specific gravity is applied.
+	// This can be hard-coded because we don't support the Q3 world.gravity field at this time.
+	// See physicsCPMA.cfg for maths and test results.
+	if (Q3COMPAT_COMMON)
+		grav /= 750/800; // exact float, unlike 800/750
+
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
@@ -598,8 +606,8 @@ spawnfunc(trigger_push)
 {
 	SetMovedir(this);
 
-	trigger_init(this);
-
+	WarpZoneLib_ExactTrigger_Init(this, false);
+	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
 	settouch(this, trigger_push_touch);

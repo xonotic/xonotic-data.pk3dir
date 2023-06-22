@@ -6,6 +6,7 @@
 #include "radiobutton.qh"
 #include "commandbutton.qh"
 #include "slider.qh"
+#include <common/campaign_common.qh>
 
 void welcomeDialog_resetStrings(entity me)
 {
@@ -56,6 +57,23 @@ void XonoticWelcomeDialog_readInputArgs(entity me, int argsbuf)
 			strcpy(me.serverinfo_name, bufstr_get(argsbuf, ++i));
 		else if(s == "WELCOME")
 			strcpy(me.serverinfo_MOTD, bufstr_get(argsbuf, ++i));
+		else if(s == "CAMPAIGN")
+		{
+			strcpy(me.serverinfo_name, campaign_title);
+
+			int level = stoi(bufstr_get(argsbuf, ++i)) - 1;
+			string campaign_msg;
+			if (level < 0 || level >= campaign_entries)
+				campaign_msg = strcat("^1Error: invalid level number ", itos(level + 1));
+			else
+			{
+				string desc = strcat(campaign_shortdesc[level], "\n\n", campaign_longdesc[level]);
+				desc = strreplace("\n", "\\n", desc);
+				campaign_msg = strreplace("_LEVEL_DESC", desc, bufstr_get(argsbuf, ++i));
+			}
+			strcpy(me.serverinfo_MOTD, campaign_msg);
+			break;
+		}
 		else if(s == "RESET")
 		{
 			welcomeDialog_resetStrings(me);

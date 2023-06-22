@@ -5,7 +5,6 @@
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
-float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
 float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;
@@ -18,8 +17,6 @@ void StartItem(entity this, entity a);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
-
-bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 

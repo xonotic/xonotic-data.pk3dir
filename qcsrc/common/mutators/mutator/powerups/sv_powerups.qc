@@ -79,18 +79,15 @@ MUTATOR_HOOKFUNCTION(powerups, MonsterValidTarget)
 
 void powerups_DropItem_Think(entity this)
 {
-	TakeResource(this, RES_HEALTH, 1);
-	
-	if(GetResource(this, RES_HEALTH) < 1) {
-		RemoveItem(this);
-		return;
-	}
-	
 	// Only needed to update if the timer of the powerup is running
 	if(!GetResource(this, RES_ARMOR))
-		WaypointSprite_UpdateHealth(this.waypointsprite_attached, GetResource(this, RES_HEALTH));
-	
-	this.nextthink = time + 1;
+	{
+		float timeleft = floor(this.wait - time);
+		if (timeleft)
+			WaypointSprite_UpdateHealth(this.waypointsprite_attached, timeleft);
+		else
+			WaypointSprite_Kill(this.waypointsprite_attached);
+	}
 }
 
 void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
@@ -121,28 +118,23 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 		case ITEM_Invisibility: e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
 		case ITEM_Speed: e.speed_finished = finished; maxtime = autocvar_g_balance_powerup_speed_time; break;
 	}
-	Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), time_to_live);
-	e.item_spawnshieldtime = time + 0.5;
+	vector vel = W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false);
+	if (!Item_InitializeLoot(e, item.m_canonical_spawnfunc, this.origin, vel, time_to_live))
+		return;
 
 	if(!freezeTimer)
 		Item_SetExpiring(e, true);
-	
-	// Use health as time left to live
-	SetResourceExplicit(e, RES_HEALTH, time_to_live);
-	
+
 	// Use armor as timer freezer
 	if(freezeTimer)
 		SetResourceExplicit(e, RES_ARMOR, 1);
-	
+
 	// Create waypoint displaying time left of the powerup
 	entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, e, '0 0 1' * e.maxs.z, NULL, 0, e, waypointsprite_attached, true, RADARICON_Item);
 	wp.wp_extra = item.m_id;
 	WaypointSprite_UpdateMaxHealth(e.waypointsprite_attached, maxtime);
 	WaypointSprite_UpdateHealth(e.waypointsprite_attached, timeleft);
-	
-	// Start dropping its time to live
-	setthink(e, powerups_DropItem_Think);
-	e.nextthink = time + 1;
+	// Item_Think() will call powerups_DropItem_Think() to update the waypoint
 }
 
 MUTATOR_HOOKFUNCTION(powerups, ItemTouched)
@@ -169,9 +161,9 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 MUTATOR_HOOKFUNCTION(powerups, PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || game_stopped || !autocvar_g_powerups_drop) return;
-	
+
 	entity player = M_ARGV(0, entity);
-	
+
 	FOREACH(StatusEffect, it.instanceOfPowerups,
 	{
 		if(StatusEffects_active(it, player)) {
