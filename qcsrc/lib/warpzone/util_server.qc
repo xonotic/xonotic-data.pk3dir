@@ -9,7 +9,7 @@
 #endif
 #include "common.qh"
 
-void WarpZoneLib_ExactTrigger_Init(entity this)
+void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel)
 {
 	vector mi, ma;
 	if (this.movedir == '0 0 0')
@@ -46,5 +46,7 @@ void WarpZoneLib_ExactTrigger_Init(entity this)
 	else
 		setsize(this, this.mins, this.maxs);
 	set_movetype(this, MOVETYPE_NONE);
-	this.model = "";
+
+	if (unsetmodel)
+		this.model = "";
 }
