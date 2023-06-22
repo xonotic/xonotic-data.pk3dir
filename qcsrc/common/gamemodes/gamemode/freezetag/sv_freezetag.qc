@@ -429,6 +429,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
+{
+	eliminatedPlayers.SendFlags |= 1;
+}
+
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {

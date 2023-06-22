@@ -236,8 +236,9 @@ void cvar_changes_init()
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADCVAR("g_require_stats");
-		BADCVAR("g_muteban_list");
+		BADCVAR("g_chatban_list");
 		BADCVAR("g_playban_list");
+		BADCVAR("g_playban_minigames");
 		BADCVAR("g_voteban_list");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");

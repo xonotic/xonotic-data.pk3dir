@@ -551,7 +551,7 @@ void preMenuDraw()
 		line = eY * fs.y;
 		string l1, l2;
 		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
-		l2 = "http://www.xonotic.org/";
+		l2 = "https://xonotic.org";
 		if(_Nex_ExtResponseSystem_UpdateToURL)
 			l2 = _Nex_ExtResponseSystem_UpdateToURL;
 
@@ -662,8 +662,8 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_CTF) \
 	GAMETYPE(MAPINFO_TYPE_CA) \
 	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_MAYHEM) \
 	GAMETYPE(MAPINFO_TYPE_MAYHEM) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_MAYHEM) \
 	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
 	GAMETYPE(MAPINFO_TYPE_TEAM_KEEPAWAY) \
 	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \

@@ -231,6 +231,7 @@ entity EFFECT_CAP(int teamid)
 
 EFFECT(0, ITEM_PICKUP,              "item_pickup")
 EFFECT(0, ITEM_RESPAWN,             "item_respawn")
+EFFECT(0, ITEM_DESPAWN,             "item_despawn")
 
 EFFECT(0, ONS_GENERATOR_DAMAGED,    "torch_small")
 EFFECT(0, ONS_GENERATOR_GIB,        "onslaught_generator_gib_explode")
