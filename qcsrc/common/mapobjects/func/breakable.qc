@@ -99,8 +99,13 @@ void func_breakable_look_destroyed(entity this)
 	if(this.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
 		this.dropped_origin = this.origin;
 
+	this.solid = SOLID_NOT; // before setorigin/_setmodel to prevent area grid linking
+
 	if(this.mdl_dead == "")
+	{
+		setorigin (this, this.origin); // unlink
 		this.effects |= EF_NODRAW;
+	}
 	else {
 		if (this.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floorZ = this.absmin.z;
@@ -111,20 +116,18 @@ void func_breakable_look_destroyed(entity this)
 		ApplyMinMaxScaleAngles(this);
 		this.effects &= ~EF_NODRAW;
 	}
-
-	this.solid = SOLID_NOT;
 }
 
 void func_breakable_look_restore(entity this)
 {
+	this.solid = SOLID_BSP; // before _setmodel/setorigin to ensure area grid linking
+
 	_setmodel(this, this.mdl);
 	ApplyMinMaxScaleAngles(this);
 	this.effects &= ~EF_NODRAW;
 
 	if(this.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
 		setorigin(this, this.dropped_origin);
-
-	this.solid = SOLID_BSP;
 }
 
 void func_breakable_behave_destroyed(entity this)

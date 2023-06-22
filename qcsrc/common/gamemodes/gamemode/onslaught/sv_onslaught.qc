@@ -555,6 +555,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		this.owner.iscaptured = true;
 		this.solid = SOLID_BBOX;
+		setorigin(this, this.origin); // setorigin after change to solid field to ensure area grid linking
 
 		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 
@@ -601,13 +602,13 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
 	entity e = new(onslaught_controlpoint_icon);
 
+	e.solid = SOLID_NOT; // before setsize/setorigin to prevent area grid linking
 	setsize(e, CPICON_MIN, CPICON_MAX);
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
-	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);
