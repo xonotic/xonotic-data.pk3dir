@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-22 07:22+0200\n"
+"POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/team-xonotic/"
@@ -4401,10 +4401,8 @@ msgstr ""
 "這輪競賽限制為 ^F2%s^BG 位玩家。"
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
-msgstr "^K1由於你被此伺服器封禁，你不可以加入遊戲。不過你可以遊玩小遊戲"
+msgid "^K1You aren't allowed to play because you are banned in this server"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"

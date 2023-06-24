@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-22 07:22+0200\n"
+"POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -3484,6 +3484,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4注: ^F1XONOTIC %s^BG は利用できますが、あなたは ^F2XONOTIC %s^BG がまだあ"
+"ります。 ^F3https://www.xonotic.org^BG から更新を入手してください!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -4427,12 +4429,8 @@ msgstr ""
 "この試合は^F2%s^BGプレイヤーに制限されています。"
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
+msgid "^K1You aren't allowed to play because you are banned in this server"
 msgstr ""
-"^K1このサーバーでは禁止されているため、プレイすることはできませんが、ミニゲー"
-"ムはプレイできます"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"

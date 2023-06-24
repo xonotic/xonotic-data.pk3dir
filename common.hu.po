@@ -11,14 +11,15 @@
 # MmAaXx500 <viktor.balogh2000@gmail.com>, 2018
 # Peter Ferenczy <fpeterhu@gmail.com>, 2017
 # divVerent <divVerent@gmail.com>, 2011
+# Titusz Érsek, 2023
 # MmAaXx500 <viktor.balogh2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-22 07:22+0200\n"
+"POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: MmAaXx500 <viktor.balogh2000@gmail.com>, 2018\n"
+"Last-Translator: Titusz Érsek, 2023\n"
 "Language-Team: Hungarian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/hu/)\n"
 "Language: hu\n"
@@ -31,6 +32,8 @@ msgstr ""
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
 msgstr ""
+"^2Sikeresen exportálva %s fájlba! (Megjegyzés: a data/data/ könyvtárba lett "
+"mentve)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
@@ -40,7 +43,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Cím a(z) %s elérési úton."
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -52,25 +55,25 @@ msgstr ""
 msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
-msgstr ""
+msgstr "^1Többsoros üzenet %s-kor, ami ^BOLDtovább tart, mint a normális érték"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Üzenet %s-kor"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "Átlagos üzenet"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "játszik ellene:"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Player^7: Ez a csevej terület"
+msgstr "^3Player^7: Ez a csevegőterület."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
@@ -94,7 +97,7 @@ msgstr "^1Nyomd meg a ^3%s^1 gombot, hogy nézőként lépj be!"
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
-msgstr "Elsődleges"
+msgstr "Elsődleges tüzelés"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
@@ -131,12 +134,12 @@ msgstr "fegyver eldobása"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
-msgstr "másodlagos"
+msgstr "Másodlagos tüzelés"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Nyomd meg a ^3%s^1 gombot a kameramód-váltáshoz."
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -169,12 +172,12 @@ msgstr "^2Jelenleg ^1BEMELEGÍTÉS^7 zajlik!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 több játékosra van szükség, hogy a játék elkezdődhessen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^31%d^2 több játékosra van szükség, hogy a játék elkezdődhessen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
@@ -208,7 +211,7 @@ msgstr " Nyomd meg a ^3%s%s gombot a kiegyenlítéshez!"
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr ""
+msgstr "Válassz csapatot!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
@@ -243,7 +246,7 @@ msgstr "Játékos %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Starndard gyorsmenü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -263,11 +266,11 @@ msgstr "Folytatás..."
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "Chat"
-msgstr ""
+msgstr "Csevegés"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Nyilvános üzenet küldése számára:"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^:-) / nice one"
@@ -4360,9 +4363,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
+msgid "^K1You aren't allowed to play because you are banned in this server"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720

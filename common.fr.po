@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-22 07:22+0200\n"
+"POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -3563,6 +3563,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4NOTE : ^F1Xonotic %s^BG est disponible, or vous avez toujours ^F2Xonotic "
+"%s^BG - obtenez la mise à jour depuis ^F3https://xonotic.org^BG !"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -4524,12 +4526,8 @@ msgstr ""
 "Cette partie est limitée à ^F2%s^BG joueurs."
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
-msgstr ""
-"^K1Vous n'êtes pas autorisé à jouer car vous êtes banni de ce serveur, mais "
-"vous pouvez jouer aux mini jeux"
+msgid "^K1You aren't allowed to play because you are banned in this server"
+msgstr "^K1Vous n'êtes pas autorisé à jouer car vous êtes banni de ce serveur"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"

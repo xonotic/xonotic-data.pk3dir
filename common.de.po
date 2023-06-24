@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-22 07:22+0200\n"
+"POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
@@ -4526,12 +4526,8 @@ msgstr ""
 "Dieses Spiel ist auf ^F2%s^BG Spieler begrenzt."
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
+msgid "^K1You aren't allowed to play because you are banned in this server"
 msgstr ""
-"^K1Du darfst nicht auf diesem Server spielen, weil du gesperrt bist, aber du "
-"kannst Minispiele spielen"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"

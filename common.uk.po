@@ -7,19 +7,20 @@
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 # Basil <cigariscigar@gmail.com>, 2011,2013
 # Ihor Andreev, 2021
-# Ігор <ihor@noleron.com>, 2021
-# Ігор <ihor@noleron.com>, 2021
+# Ihor <ihor@noleron.com>, 2021
+# Ihor <ihor@noleron.com>, 2021
 # Illia Serediuk, 2022
 # Illia Serediuk, 2022
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
-# Ігор <ihor@noleron.com>, 2021
+# Ihor <ihor@noleron.com>, 2021
+# Ihor <ihor@noleron.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-22 07:22+0200\n"
+"POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ігор <ihor@noleron.com>, 2021\n"
+"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -4390,9 +4391,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
+msgid "^K1You aren't allowed to play because you are banned in this server"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720
