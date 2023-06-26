@@ -5,7 +5,6 @@
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
-float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
 float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;

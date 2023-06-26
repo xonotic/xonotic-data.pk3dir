@@ -754,6 +754,29 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
+		case "movetoauto":
+		case "movetored":
+		case "movetoblue":
+		case "movetoyellow":
+		case "movetopink":
+		case "movetospec":
+		{
+			entity victim = GetIndexedEntity(argc, (startpos + 1));
+			float accepted = VerifyClientEntity(victim, true, false);
+			if (accepted > 0)
+			{
+				vote_parsed_command = vote_command;
+				vote_parsed_display = sprintf("^1%s #%d ^7%s", first_command, etof(victim), victim.netname);
+			}
+			else
+			{
+				print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n"));
+				return 0;
+			}
+
+			break;
+		}
+
 		case "kick":
 		case "kickban":    // catch all kick/kickban commands
 		{
@@ -806,6 +829,22 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "fraglimit": // include restrictions on the maximum votable frag limit
+		{
+			float fraglimit_vote = stof(argv(startpos + 1));
+			float fraglimit_min = 0;
+			float fraglimit_max = 999999;
+			if(fraglimit_vote > fraglimit_max || fraglimit_vote < fraglimit_min)
+			{
+				print_to(caller, strcat("Invalid fraglimit vote, accepted values are between ", ftos(fraglimit_min), " and ", ftos(fraglimit_max), "."));
+				return -1;
+			}
+			vote_parsed_command = strcat("fraglimit ", ftos(fraglimit_vote));
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
 		case "timelimit": // include restrictions on the maximum votable time limit
 		{
 			float timelimit_vote = stof(argv(startpos + 1));
@@ -814,7 +853,6 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
 				return -1;
 			}
-			timelimit_vote = bound(autocvar_timelimit_min, timelimit_vote, autocvar_timelimit_max);
 			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 

@@ -8,6 +8,54 @@ bool autocvar_g_survival_reward_survival = true;
 
 void nades_Clear(entity player);
 
+entity survivalStatuses;
+void SurvivalStatuses_Init();
+
+void SurvivalStatuses_Send()
+{
+	// SendFlags can be set to anything != 0, SurvivalStatuses_SendEntity won't use its value
+	// Dr. Jaska: this was a lie, the flags were not reset until now
+	survivalStatuses.SendFlags = 1;
+}
+
+bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
+{
+	Stream out = MSG_ENTITY;
+	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
+
+	// TODO: optimize this instead of always setting it on
+	sendflags = BIT(0); // reset all flags and make all players survivors
+
+	if ((dest.survival_status == SURV_STATUS_HUNTER) || round_handler_AwaitingNextRound())
+		sendflags |= BIT(1); // send hunter statuses
+
+	serialize(byte, out, sendflags);
+	if (sendflags & BIT(1)) {
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			entity e = edict_num(i);
+			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+				bool is_hunter = (INGAME(e) && e.survival_status == SURV_STATUS_HUNTER);
+				if (is_hunter)
+					f |= BIT(b);
+			}
+			serialize(byte, out, f);
+		}
+	}
+	//print(sprintf("sent flags %f to %s\n", sendflags, dest.netname));
+	return true;
+}
+
+void SurvivalStatuses_Init()
+{
+	if(survivalStatuses)
+	{
+		backtrace("Can't spawn survivalStatuses again!");
+		return;
+	}
+	Net_LinkEntity(survivalStatuses = new_pure(survivalStatuses), false, 0, SurvivalStatuses_SendEntity);
+}
+
 void Surv_UpdateScores(bool timed_out)
 {
 	// give players their hard-earned kills now that the round is over
@@ -48,6 +96,7 @@ float Surv_CheckWinner()
 		allowed_to_spawn = false;
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+		SurvivalStatuses_Send();
 		return 1;
 	}
 
@@ -85,6 +134,7 @@ float Surv_CheckWinner()
 	allowed_to_spawn = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+	SurvivalStatuses_Send();
 
 	FOREACH_CLIENT(true,
 	{
@@ -119,6 +169,7 @@ void Surv_RoundStart()
 		total_hunters++;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
+	SurvivalStatuses_Send();
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -181,6 +232,7 @@ void surv_Initialize() // run at the start of a match, initiates game mode
 	round_handler_Spawn(Surv_CheckPlayers, Surv_CheckWinner, Surv_RoundStart);
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	EliminatedPlayers_Init(surv_isEliminated);
+	SurvivalStatuses_Init();
 }
 
 
@@ -205,21 +257,6 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 
 	if(frag_attacker.survival_status == SURV_STATUS_HUNTER)
 		M_ARGV(5, bool) = true; // anonymous attacker
-}
-
-MUTATOR_HOOKFUNCTION(surv, PlayerPreThink)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(IS_PLAYER(player) || INGAME_JOINED(player))
-	{
-		// update the scoreboard colour display to out the real killer at the end of the round
-		// running this every frame to avoid cheats
-		int plcolor = SURV_COLOR_PREY;
-		if(player.survival_status == SURV_STATUS_HUNTER && game_stopped)
-			plcolor = SURV_COLOR_HUNTER;
-		setcolor(player, plcolor);
-	}
 }
 
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
@@ -258,6 +295,9 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
+
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -273,6 +313,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
+	SurvivalStatuses_Send();
 	return true;
 }
 
@@ -330,7 +371,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 
 	// killed an ally! punishment is death
 	if(autocvar_g_survival_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.survival_status == frag_target.survival_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't
+	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
 }

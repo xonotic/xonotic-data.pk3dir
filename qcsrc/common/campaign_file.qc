@@ -62,8 +62,13 @@ float CampaignFile_Load(int offset, float n)
 				CAMPAIGN_GETARG; campaign_fraglimit[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_timelimit[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_mutators[campaign_entries] = strzone(a);
+				#ifdef SVQC
+				CAMPAIGN_GETARG;
+				CAMPAIGN_GETARG;
+				#else
 				CAMPAIGN_GETARG; campaign_shortdesc[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_longdesc[campaign_entries] = strzone(strreplace("\\n", "\n", a));
+				#endif
 
 				if(i > entlen)
 					error("syntax error in campaign file: line has not enough fields");
@@ -95,8 +100,10 @@ void CampaignFile_Unload()
 			strfree(campaign_fraglimit[i]);
 			strfree(campaign_timelimit[i]);
 			strfree(campaign_mutators[i]);
+			#ifndef SVQC
 			strfree(campaign_shortdesc[i]);
 			strfree(campaign_longdesc[i]);
+			#endif
 		}
 		campaign_entries = 0;
 	}

@@ -455,7 +455,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_INFO_NOTIF(VERSION_BETA,                            N_CONSOLE,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "")
     MSG_INFO_NOTIF(VERSION_OLD,                             N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "")
-    MSG_INFO_NOTIF(VERSION_OUTDATED,                        N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!"), "")
+    MSG_INFO_NOTIF(VERSION_OUTDATED,                        N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3https://xonotic.org^BG!"), "")
 
     MSG_INFO_NOTIF(WEAPON_ACCORDEON_MURDER,                 N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weapontuba",               _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ACCORDEON_SUICIDE,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapontuba",               _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"), "")
@@ -713,7 +713,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
     MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
-    MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server, but you can play minigames")), "")
+    MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server")), "")
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
@@ -785,9 +785,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
 
-    MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
     MSG_CENTER_NOTIF(SURVIVAL_HUNTER_WIN,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Hunters^BG win the round"), "")
-    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
     MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
     MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)

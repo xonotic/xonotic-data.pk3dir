@@ -982,7 +982,7 @@ bool findinlist_abbrev(string tofind, string list)
 		return false; // empty list or search, just return
 
 	// this function allows abbreviated strings!
-	FOREACH_WORD(list, it == substring(tofind, 0, strlen(it)),
+	FOREACH_WORD(list, it != "" && it == substring(tofind, 0, strlen(it)),
 	{
 		return true;
 	});
@@ -1010,6 +1010,8 @@ bool PlayerInIDList(entity p, string idlist)
 
 bool PlayerInList(entity player, string list)
 {
+	if (list == "")
+		return false;
 	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
 }
 
@@ -1042,9 +1044,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
-		WriteString(msg_type, Campaign_GetTitle());
 		WriteByte(msg_type, Campaign_GetLevelNum());
-		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
 	WriteString(msg_type, autocvar_hostname);
